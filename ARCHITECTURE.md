@@ -102,9 +102,9 @@ graph LR
     end
     
     subgraph "Source (src/)"
-        FUNC1[add_numbers()]
-        FUNC2[calculate_average()]
-        FUNC3[find_maximum()]
+        FUNC1[add_numbers]
+        FUNC2[calculate_average]
+        FUNC3[find_maximum]
     end
     
     SCRIPT --> IMPORT
