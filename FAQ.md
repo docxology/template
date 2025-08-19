@@ -106,9 +106,13 @@
 3. Review the examples and workflow guides
 4. Join the community discussions
 
+For detailed documentation, see **[`README.md`](README.md)**, **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, and **[`WORKFLOW.md`](WORKFLOW.md)**.
+
 ### **Q: Can I request new features?**
 **A:** Yes! Use the feature request issue template to suggest improvements. We welcome all suggestions that would benefit the broader community.
 
 ---
 
 **Still have questions? [Open an issue](https://github.com/docxology/template/issues) and we'll help you out! 🚀**
+
+For more information, see **[`CONTRIBUTING.md`](CONTRIBUTING.md)** and **[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)**.

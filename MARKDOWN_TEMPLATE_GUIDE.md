@@ -1,6 +1,6 @@
 # Markdown Template Guide
 
-This document explains the comprehensive markdown template structure and cross-referencing system implemented in this project.
+This document explains the comprehensive markdown template structure and cross-referencing system implemented in this project. For related information, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`WORKFLOW.md`](WORKFLOW.md)**, and **[`README.md`](README.md)**.
 
 ## Template Structure
 
@@ -340,3 +340,5 @@ This template provides a complete framework for academic writing with:
 - **Thin orchestrator pattern** ensuring maintainability and testability
 
 The system demonstrates best practices for academic writing while maintaining the flexibility to adapt to different research domains and writing styles, all while enforcing the architectural principles of the generic project template.
+
+For more details on architecture and workflow, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.

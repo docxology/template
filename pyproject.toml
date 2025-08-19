@@ -1,3 +1,17 @@
+# Research Project Template Configuration
+# 
+# This is a comprehensive template for research projects with test-driven development,
+# automated PDF generation, and professional documentation structure.
+#
+# For documentation and usage, see:
+# - README.md - Project overview and quick start
+# - ARCHITECTURE.md - System design overview  
+# - WORKFLOW.md - Development workflow guide
+# - THIN_ORCHESTRATOR_SUMMARY.md - Architecture implementation
+# - EXAMPLES_SHOWCASE.md - Real-world usage examples
+#
+# Repository: https://github.com/docxology/template
+
 [project]
 name = "research-project-template"
 version = "0.1.0"

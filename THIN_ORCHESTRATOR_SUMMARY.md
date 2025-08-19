@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document summarizes the implementation of the **thin orchestrator pattern** in the project template, where scripts in `@scripts/` are lightweight wrappers that import and use the fully-tested methods from `@src/` modules.
+This document summarizes the implementation of the **thin orchestrator pattern** in the project template, where scripts in `@scripts/` are lightweight wrappers that import and use the fully-tested methods from `@src/` modules. For related information, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`WORKFLOW.md`](WORKFLOW.md)**, and **[`README.md`](README.md)**.
 
 ## What Was Implemented
 
@@ -188,3 +188,5 @@ This architecture ensures:
 - **Quality**: Automated validation of the entire system
 
 The template now serves as a **comprehensive demonstration** of how to create maintainable, testable, and well-architected research projects using the thin orchestrator pattern.
+
+For more details on architecture and workflow, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.

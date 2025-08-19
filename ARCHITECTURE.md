@@ -1,6 +1,6 @@
 # Generic Project Architecture: Complete System Overview
 
-This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline.
+This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline. For related information, see **[`WORKFLOW.md`](WORKFLOW.md)**, **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
 
 ## System Architecture Overview
 
@@ -402,3 +402,5 @@ This ensures:
 - **Quality**: Automated validation of the entire system
 
 This architecture ensures that the generic project template maintains the highest standards of code quality, documentation coherence, and maintainability while providing a clear, scalable structure for development and collaboration.
+
+For more details on implementation, see **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.

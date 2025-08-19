@@ -1,6 +1,6 @@
 # Generic Project Development Workflow: The render_pdf.sh Paradigm
 
-This document explains the complete development workflow that ensures source code, tests, and documentation remain in perfect coherence.
+This document explains the complete development workflow that ensures source code, tests, and documentation remain in perfect coherence. For related information, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
 
 ## Overview
 
@@ -346,3 +346,5 @@ This ensures:
 - **Quality**: Automated validation of the entire system
 
 This workflow ensures that the generic project template maintains the highest standards of code quality, documentation coherence, and maintainability while providing a clear, scalable structure for development and collaboration.
+
+For more details on architecture and implementation, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** and **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**.

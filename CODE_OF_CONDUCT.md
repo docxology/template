@@ -71,3 +71,5 @@ For answers to common questions about this code of conduct, see the FAQ at [http
 ---
 
 **Thank you for helping make our community welcoming and inclusive for everyone! 🌟**
+
+For contribution guidelines and project information, see **[`CONTRIBUTING.md`](CONTRIBUTING.md)** and **[`README.md`](README.md)**.

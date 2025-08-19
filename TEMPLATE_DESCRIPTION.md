@@ -49,11 +49,13 @@ This template provides a **complete foundation** for research projects with:
 
 ## 📖 **Documentation Included**
 
-- **`ARCHITECTURE.md`** - System design overview
-- **`WORKFLOW.md`** - Development workflow guide
-- **`MARKDOWN_TEMPLATE_GUIDE.md`** - Writing and formatting guide
-- **`EXAMPLES.md`** - Usage examples and customization
-- **`THIN_ORCHESTRATOR_SUMMARY.md`** - Pattern implementation details
+- **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System design overview
+- **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow guide
+- **[`MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md)** - Writing and formatting guide
+- **[`EXAMPLES.md`](EXAMPLES.md)** - Usage examples and customization
+- **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation details
+- **[`README.md`](README.md)** - Complete project overview
+- **[`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)** - Real-world usage examples
 
 ## 🎉 **Get Started**
 
@@ -66,3 +68,5 @@ This template provides a **complete foundation** for research projects with:
 ---
 
 **Transform your research workflow with this professional template! 🚀**
+
+For detailed setup and usage instructions, see **[`README.md`](README.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.

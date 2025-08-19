@@ -267,12 +267,16 @@ flowchart TD
 
 ## 📚 Documentation
 
-- **`repo_utilities/README.md`** - Detailed utility documentation
-- **`ARCHITECTURE.md`** - System architecture overview
-- **`WORKFLOW.md`** - Development workflow guide
-- **`MARKDOWN_TEMPLATE_GUIDE.md`** - Markdown and cross-referencing guide
-- **`EXAMPLES.md`** - Project renaming examples
-- **`THIN_ORCHESTRATOR_SUMMARY.md`** - Thin orchestrator pattern implementation
+- **[`repo_utilities/README.md`](repo_utilities/README.md)** - Detailed utility documentation
+- **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System architecture overview
+- **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow guide
+- **[`MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown and cross-referencing guide
+- **[`EXAMPLES.md`](EXAMPLES.md)** - Project renaming examples
+- **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
+- **[`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)** - Real-world usage examples
+- **[`ROADMAP.md`](ROADMAP.md)** - Development roadmap and future plans
+- **[`SECURITY.md`](SECURITY.md)** - Security policy and best practices
+- **[`TEMPLATE_DESCRIPTION.md`](TEMPLATE_DESCRIPTION.md)** - Template overview and features
 
 ## 🤝 Contributing
 
@@ -281,6 +285,8 @@ flowchart TD
 3. Add tests for new functionality
 4. Update documentation as needed
 5. **Maintain thin orchestrator pattern** - scripts use src/ methods
+
+For detailed contribution guidelines, see **[`CONTRIBUTING.md`](CONTRIBUTING.md)** and **[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)**.
 
 ## 📄 License
 
@@ -320,9 +326,10 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 
 ### Getting Help
 
-- Check the `repo_utilities/README.md` for detailed troubleshooting
+- Check the **[`repo_utilities/README.md`](repo_utilities/README.md)** for detailed troubleshooting
 - Review the test output for specific error messages
 - Ensure all required dependencies are installed
+- See **[`FAQ.md`](FAQ.md)** for common questions and solutions
 
 ## 🔄 Migration from QuadMath
 

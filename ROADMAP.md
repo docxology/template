@@ -1,6 +1,6 @@
 # 🗺️ Development Roadmap
 
-This roadmap outlines the planned development and improvements for the Research Project Template. We welcome community input and contributions to help shape the future of this template.
+This roadmap outlines the planned development and improvements for the Research Project Template. We welcome community input and contributions to help shape the future of this template. For current status and architecture, see **[`README.md`](README.md)**, **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, and **[`WORKFLOW.md`](WORKFLOW.md)**.
 
 ## 🎯 **Vision Statement**
 
@@ -167,3 +167,5 @@ Our vision is to create the **most comprehensive and user-friendly research proj
 ---
 
 **This roadmap is a living document that evolves with community input and needs. [Share your ideas](https://github.com/docxology/template/issues) and help shape the future of research project templates! 🚀**
+
+For current implementation details, see **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** and **[`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)**.

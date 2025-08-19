@@ -1,6 +1,6 @@
 # 🌟 Examples Showcase
 
-This showcase demonstrates how the Research Project Template can be used for various types of projects. Each example shows the template's flexibility and power in real-world scenarios.
+This showcase demonstrates how the Research Project Template can be used for various types of projects. Each example shows the template's flexibility and power in real-world scenarios. For related information, see **[`EXAMPLES.md`](EXAMPLES.md)**, **[`README.md`](README.md)**, and **[`ARCHITECTURE.md`](ARCHITECTURE.md)**.
 
 ## 🎓 **Academic Research Papers**
 
@@ -222,3 +222,5 @@ Your examples help others understand the template's potential and inspire new us
 ---
 
 **Ready to create your own success story? [Use this template](https://github.com/docxology/template) and start building! 🚀**
+
+For detailed setup instructions, see **[`README.md`](README.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.
