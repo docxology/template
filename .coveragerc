@@ -1,0 +1,11 @@
+[run]
+branch = True
+source = src
+
+[report]
+omit =
+    **/tests/*
+    **/site-packages/*
+fail_under = 100
+show_missing = True
+precision = 0

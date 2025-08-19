@@ -1,0 +1,158 @@
+# Generic Project Template: Test-Driven Development with Markdown Coherence
+# Enforces unified paradigm: source code, tests, documentation developed together
+
+# =============================================================================
+# CORE ARCHITECTURE
+# =============================================================================
+# Repository workflow:
+# 1. src/ implements mathematical functionality (100% tested)
+# 2. tests/ validate all functionality with 100% coverage
+# 3. scripts/ are THIN ORCHESTRATORS that import and use src/ modules
+# 4. markdown/ documents mathematical concepts
+# 5. render_pdf.sh orchestrates entire pipeline
+
+# =============================================================================
+# THIN ORCHESTRATOR PATTERN - CRITICAL
+# =============================================================================
+# SCRIPTS ARE THIN ORCHESTRATORS - NO BUSINESS LOGIC
+# 
+# Key Principles:
+# - src/ contains ALL business logic, algorithms, mathematical implementations
+# - scripts/ are lightweight wrappers that import and use src/ methods
+# - tests/ ensure 100% coverage of src/ functionality
+# - render_pdf.sh validates entire pipeline
+#
+# Scripts MUST:
+# 1. Import methods from src/ modules (e.g., from example import add_numbers)
+# 2. Use src/ methods for all computation (never implement algorithms)
+# 3. Handle only I/O, visualization, orchestration
+# 4. Demonstrate proper integration patterns
+# 5. Be testable through src/ method mocking
+#
+# Scripts MUST NOT:
+# 1. Implement mathematical algorithms (use src/ instead)
+# 2. Duplicate business logic (import from src/ instead)
+# 3. Contain complex computations (delegate to src/ instead)
+# 4. Define new data structures (extend src/ instead)
+
+# =============================================================================
+# MARKDOWN STRUCTURE
+# =============================================================================
+# Academic paper structure:
+# 00_preamble.md - LaTeX preamble and styling
+# 01_introduction.md - Introduction with section references
+# 02_methodology.md - Mathematical framework with equations
+# 03_experimental_results.md - Results with figure references
+# 04_discussion.md - Discussion with cross-references
+# 05_conclusion.md - Conclusion
+# 10_symbols_glossary.md - Auto-generated API reference
+#
+# Cross-referencing:
+# - Sections: \ref{sec:section_name}
+# - Equations: \eqref{eq:equation_name}
+# - Figures: \ref{fig:figure_name}
+# - Tables: \ref{tab:table_name}
+#
+# Equation environments: \begin{equation}\label{eq:name} ... \end{equation}
+# Figure integration: \begin{figure}[h] \includegraphics{../output/figures/figure.png} \caption{} \label{fig:name} \end{figure}
+
+# =============================================================================
+# BUILD PIPELINE
+# =============================================================================
+# render_pdf.sh ensures coherence:
+# 1. Runs all generation scripts (validates src/ code works)
+# 2. Validates markdown integrity (images, references, equations)
+# 3. Auto-generates glossary from src/ API
+# 4. Builds PDFs only after validation passes
+# 5. Creates manifest of all generated artifacts
+
+# =============================================================================
+# TEST SUITE - NO MOCK METHODS
+# =============================================================================
+# Tests ensure 100% coverage and validate:
+# - All mathematical functions work correctly
+# - Scripts can import and use src/ modules
+# - Generated outputs are deterministic
+# - Markdown reflects implemented functionality
+#
+# CRITICAL: NO MOCK METHODS - ALWAYS USE REAL DATA AND REAL METHODS
+# - Use real data analysis, real computations, real file I/O
+# - Create temporary directories and files for testing
+# - Use deterministic seeds for reproducible results
+# - Test actual behavior, not mocked behavior
+# - Validate real integration between components
+#
+# TDD workflow:
+# 1. Write tests first using REAL methods and data
+# 2. Ensure 100% coverage via .coveragerc
+# 3. Run: uv run pytest tests/ --cov=src --cov-report=term-missing
+# 4. All tests must pass before commit
+# 5. Use real examples, deterministic RNG, NO MOCKS EVER
+
+# =============================================================================
+# SOURCE CODE STANDARDS
+# =============================================================================
+# - Use uv for dependencies; pyproject.toml is authoritative
+# - Organize under src/ with clear separation of concerns
+# - All public APIs must have type hints
+# - Use descriptive names, avoid 1-2 character names
+# - Prefer guard clauses, handle errors first
+# - Keep comments concise, explain "why"
+# - Maintain consistent formatting
+# - Prefer absolute imports, avoid circular imports
+
+# =============================================================================
+# FIGURE GENERATION
+# =============================================================================
+# Scripts MUST import from src/ modules (thin orchestrator pattern)
+# - All business logic from src/ modules
+# - Scripts handle visualization, I/O, orchestration only
+# - Output structure: output/figures/, output/data/, output/pdf/, output/tex/
+# - Use MPLBACKEND=Agg for headless operation
+# - Save with tight layout, labels, deterministic seeds
+# - Include CSV/NPZ alongside PNG/MP4 when feasible
+# - Print output paths to stdout for manifest collection
+
+# =============================================================================
+# MARKDOWN VALIDATION
+# =============================================================================
+# All markdown must pass validation:
+# - Images exist and properly referenced
+# - Internal links have valid anchors
+# - Equations have unique labels
+# - No bare URLs (use informative link text)
+# - Reference code using inline code formatting
+# - Figures refer to output/ files generated by scripts
+
+# =============================================================================
+# DEVELOPMENT WORKFLOW
+# =============================================================================
+# 1. Run tests: uv run pytest tests/ --cov=src --cov-report=term-missing
+# 2. Run render_pdf.sh after changes to validate coherence
+# 3. Source changes reflected in tests AND documentation
+# 4. Documentation changes validated and generate working PDFs
+# 5. Scripts work with current src/ code
+# 6. All outputs deterministic and reproducible
+#
+# Script checklist:
+# - [ ] Imports from src/ modules
+# - [ ] Uses src/ methods for computation
+# - [ ] Handles only I/O, visualization, orchestration
+# - [ ] Proper error handling for imports
+# - [ ] Prints output paths
+# - [ ] Sets MPLBACKEND=Agg
+# - [ ] Clear documentation of src/ integration
+
+# =============================================================================
+# KEY PRINCIPLES
+# =============================================================================
+# 1. src/ modules → tests/ validation → scripts/ generation → markdown/ documentation
+# 2. render_pdf.sh ensures all connections valid before building outputs
+# 3. Changes in any component reflected in all connected components
+# 4. Test suite validates entire pipeline, not just individual modules
+# 5. Documentation auto-generated where possible for code-doc sync
+# 6. Scripts are THIN ORCHESTRATORS using src/ methods
+# 7. Business logic ONLY in src/ - scripts handle orchestration
+# 8. 100% test coverage ensures reliable methods for scripts
+# 9. Thin orchestrator pattern ensures maintainability and testability
+
