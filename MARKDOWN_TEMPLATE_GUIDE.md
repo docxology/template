@@ -1,6 +1,6 @@
 # Markdown Template Guide
 
-This document explains the comprehensive markdown template structure and cross-referencing system implemented in this project. For related information, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`WORKFLOW.md`](WORKFLOW.md)**, and **[`README.md`](README.md)**.
+This document explains the comprehensive markdown template structure and cross-referencing system implemented in this project. For related information, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`WORKFLOW.md`](WORKFLOW.md)**, and **[`README.md`](README.md)**.
 
 ## Template Structure
 

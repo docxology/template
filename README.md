@@ -22,6 +22,8 @@ This is a **GitHub Template Repository** that gives you:
 3. **Customize the project name** and configuration
 4. **Start building your research project!**
 
+**📖 Need help?** See **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for comprehensive guidance from basic usage to advanced workflows.
+
 ## Project Structure
 
 The project follows a standardized structure with clear separation of concerns:
@@ -267,6 +269,7 @@ flowchart TD
 
 ## 📚 Documentation
 
+- **[`HOW_TO_USE.md`](HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced
 - **[`repo_utilities/README.md`](repo_utilities/README.md)** - Detailed utility documentation
 - **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System architecture overview
 - **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow guide

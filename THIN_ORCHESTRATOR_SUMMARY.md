@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document summarizes the implementation of the **thin orchestrator pattern** in the project template, where scripts in `@scripts/` are lightweight wrappers that import and use the fully-tested methods from `@src/` modules. For related information, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`WORKFLOW.md`](WORKFLOW.md)**, and **[`README.md`](README.md)**.
+This document summarizes the implementation of the **thin orchestrator pattern** in the project template, where scripts in `@scripts/` are lightweight wrappers that import and use the fully-tested methods from `@src/` modules. For related information, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`WORKFLOW.md`](WORKFLOW.md)**, and **[`README.md`](README.md)**.
 
 ## What Was Implemented
 

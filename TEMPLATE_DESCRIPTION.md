@@ -49,6 +49,7 @@ This template provides a **complete foundation** for research projects with:
 
 ## 📖 **Documentation Included**
 
+- **[`HOW_TO_USE.md`](HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced
 - **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System design overview
 - **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow guide
 - **[`MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md)** - Writing and formatting guide
@@ -69,4 +70,4 @@ This template provides a **complete foundation** for research projects with:
 
 **Transform your research workflow with this professional template! 🚀**
 
-For detailed setup and usage instructions, see **[`README.md`](README.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.
+For detailed setup and usage instructions, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for comprehensive guidance, **[`README.md`](README.md)** for overview, and **[`WORKFLOW.md`](WORKFLOW.md)** for development process.
