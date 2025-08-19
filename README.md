@@ -286,6 +286,29 @@ flowchart TD
 
 This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details.
 
+## 📚 Citation
+
+If you use this template in your research, please cite:
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
+
+**BibTeX:**
+```bibtex
+@software{friedman_daniel_ari_2025_16903352,
+  author       = {Daniel Ari Friedman},
+  title        = {docxology/template: 0.1},
+  month        = aug,
+  year         = 2025,
+  publisher    = {Zenodo},
+  version      = {0.1},
+  doi          = {10.5281/zenodo.16903352},
+  url          = {https://doi.org/10.5281/zenodo.16903352}
+}
+```
+
+**Plain text:**
+Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.org/10.5281/zenodo.16903352
+
 ## 🆘 Troubleshooting
 
 ### Common Issues
