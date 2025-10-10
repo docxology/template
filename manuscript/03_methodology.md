@@ -36,7 +36,7 @@ where $x^*$ is the optimal solution, $C > 0$ is a constant, and $\rho \in (0,1)$
 
 ## Implementation Details
 
-The algorithm implementation follows the pseudocode shown in Figure \ref{fig:experimental_setup}. The key insight is that we can decompose the objective function \eqref{eq:objective} into separable components, allowing for efficient parallel computation.
+The algorithm implementation follows the pseudocode shown in Figure \ref{fig:experimental_setup}. The key insight is that we can decompose the objective function \eqref{eq:objective} into separable components, allowing for efficient parallel computation. This approach builds upon the optimization techniques described in recent literature \cite{optimization2022}.
 
 \begin{figure}[h]
 \centering

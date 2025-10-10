@@ -18,7 +18,7 @@ export LANG="${LANG:-C.UTF-8}"
 # =============================================================================
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-MARKDOWN_DIR="$REPO_ROOT/markdown"
+MARKDOWN_DIR="$REPO_ROOT/manuscript"
 OUTPUT_DIR="$REPO_ROOT/output"
 PREAMBLE_MD="$MARKDOWN_DIR/00_preamble.md"
 CLEAN_SCRIPT="$REPO_ROOT/repo_utilities/clean_output.sh"
@@ -278,8 +278,8 @@ create_ide_friendly_pdf() {
     --toc-depth=3
     --number-sections
     -V secnumdepth=3
-    -V mainfont="Liberation Serif"
-    -V monofont="Liberation Mono"
+    -V mainfont="Times New Roman"
+    -V monofont="Courier New"
     -V fontsize=12pt
     -V linestretch=1.15
     -V geometry:margin=2cm
@@ -537,8 +537,9 @@ discover_markdown_modules() {
     return 1
   fi
   
-  # Find all markdown files, exclude preamble, and sort them, return only the filenames
-  find "$MARKDOWN_DIR" -maxdepth 1 -name "*.md" -print0 | sort -z | xargs -0 basename -a | grep -v "^00_preamble\.md$"
+  # Find only manuscript markdown files (exclude documentation and preamble)
+  # Manuscript files: 01_abstract.md, 02_introduction.md, 03_methodology.md, 04_experimental_results.md, 05_discussion.md, 06_conclusion.md, 07_references.md, 10_symbols_glossary.md
+  find "$MARKDOWN_DIR" -maxdepth 1 \( -name "0[1-7]_*.md" -o -name "10_symbols_glossary.md" \) -print0 | sort -z | xargs -0 basename -a
 }
 
 # =============================================================================
@@ -567,8 +568,8 @@ build_one() {
     --toc-depth=3
     --number-sections
     -V secnumdepth=3
-    -V mainfont="Liberation Serif"
-    -V monofont="Liberation Mono"
+    -V mainfont="Times New Roman"
+    -V monofont="Courier New"
     -V fontsize=11pt
     -V linestretch=1.2
     -V geometry:margin=1.5cm
@@ -610,19 +611,26 @@ build_one() {
     log_info "Using comprehensive xelatex compilation for $base"
     
     # First run - generate initial PDF
-    if xelatex -interaction=nonstopmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" >/dev/null 2>&1; then
+    log_info "Running first xelatex pass for $base"
+    if xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" 2>&1 | tee "$PDF_DIR/${base}_compile.log" | grep -q "Output written"; then
       log_info "First xelatex run completed for $base"
     else
-      log_warn "First xelatex run had warnings for $base (continuing)"
+      log_warn "First xelatex run had issues for $base - check $PDF_DIR/${base}_compile.log"
     fi
-    
+
+    # Run bibtex if bibliography is referenced
+    if [ -f "$REPO_ROOT/manuscript/references.bib" ]; then
+      log_info "Running bibtex for $base"
+      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "$base" 2>&1 | tee -a "$PDF_DIR/${base}_compile.log" || true)
+    fi
+
     # Second run - resolve references
     log_info "Running second xelatex pass for $base"
-    xelatex -interaction=nonstopmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" >/dev/null 2>&1 || true
-    
+    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" 2>&1 | tee -a "$PDF_DIR/${base}_compile.log" | grep -q "Output written" || true
+
     # Third run - ensure all references are resolved
     log_info "Running final xelatex pass for $base"
-    xelatex -interaction=nonstopmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" >/dev/null 2>&1 || true
+    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" 2>&1 | tee -a "$PDF_DIR/${base}_compile.log" | grep -q "Output written" || true
     
     # Clean up auxiliary files
     rm -f "$PDF_DIR/${base}.aux" "$PDF_DIR/${base}.log" "$PDF_DIR/${base}.toc" 2>/dev/null || true
@@ -695,8 +703,8 @@ build_combined() {
     --toc-depth=3
     --number-sections
     -V secnumdepth=3
-    -V mainfont="Liberation Serif"
-    -V monofont="Liberation Mono"
+    -V mainfont="Times New Roman"
+    -V monofont="Courier New"
     -V fontsize=11pt
     -V linestretch=1.2
     -V geometry:margin=1.5cm
@@ -741,19 +749,26 @@ build_combined() {
     log_info "Using comprehensive xelatex compilation for combined document"
     
     # First run - generate initial PDF
-    if xelatex -interaction=nonstopmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" >/dev/null 2>&1; then
+    log_info "Running first xelatex pass for combined document"
+    if xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" 2>&1 | tee "$PDF_DIR/project_combined_compile.log" | grep -q "Output written"; then
       log_info "First xelatex run completed for combined document"
     else
-      log_warn "First xelatex run had warnings for combined document (continuing)"
+      log_warn "First xelatex run had issues for combined document - check $PDF_DIR/project_combined_compile.log"
     fi
-    
+
+    # Run bibtex if bibliography is referenced
+    if [ -f "$REPO_ROOT/manuscript/references.bib" ]; then
+      log_info "Running bibtex for combined document"
+      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "project_combined" 2>&1 | tee -a "$PDF_DIR/project_combined_compile.log" || true)
+    fi
+
     # Second run - resolve references
     log_info "Running second xelatex pass for combined document"
-    xelatex -interaction=nonstopmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" >/dev/null 2>&1 || true
-    
+    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" 2>&1 | tee -a "$PDF_DIR/project_combined_compile.log" | grep -q "Output written" || true
+
     # Third run - ensure all references are resolved
     log_info "Running final xelatex pass for combined document"
-    xelatex -interaction=nonstopmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" >/dev/null 2>&1 || true
+    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" 2>&1 | tee -a "$PDF_DIR/project_combined_compile.log" | grep -q "Output written" || true
     
     # Clean up auxiliary files
     rm -f "$PDF_DIR/project_combined.aux" "$PDF_DIR/project_combined.log" "$PDF_DIR/project_combined.toc" 2>/dev/null || true
@@ -777,7 +792,7 @@ main() {
   
   log_info "🚀 Starting COMPLETE project PDF generation pipeline..."
   log_info "Repository root: $REPO_ROOT"
-  log_info "Markdown source: $MARKDOWN_DIR"
+    log_info "Manuscript source: $MARKDOWN_DIR"
   log_info "Output directory: $OUTPUT_DIR"
   
   # Step 0: Automatic cleanup

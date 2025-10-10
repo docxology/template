@@ -1,6 +1,6 @@
 # Generic Project Development Workflow: The render_pdf.sh Paradigm
 
-This document explains the complete development workflow that ensures source code, tests, and documentation remain in perfect coherence. For related information, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
+This document explains the complete development workflow that ensures source code, tests, and documentation remain in perfect coherence. For related information, see **[`docs/HOW_TO_USE.md`](docs/HOW_TO_USE.md)** for complete usage guidance, **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**, **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](docs/README.md)**.
 
 ## Overview
 
@@ -347,4 +347,4 @@ This ensures:
 
 This workflow ensures that the generic project template maintains the highest standards of code quality, documentation coherence, and maintainability while providing a clear, scalable structure for development and collaboration.
 
-For more details on architecture and implementation, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** and **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**.
+For more details on architecture and implementation, see **[`ARCHITECTURE.md`](docs/ARCHITECTURE.md)** and **[`THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)**.

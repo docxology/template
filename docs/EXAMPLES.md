@@ -1,6 +1,6 @@
 # Project Renaming Examples
 
-This file shows examples of how to use `rename_project.sh` to transform the generic template into specific projects. For related information, see **[`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)**, **[`README.md`](README.md)**, and **[`ARCHITECTURE.md`](ARCHITECTURE.md)**.
+This file shows examples of how to use `rename_project.sh` to transform the generic template into specific projects. For related information, see **[`EXAMPLES_SHOWCASE.md`](docs/EXAMPLES_SHOWCASE.md)**, **[`README.md`](docs/README.md)**, and **[`ARCHITECTURE.md`](docs/ARCHITECTURE.md)**.
 
 ## Example 1: Machine Learning Research Project
 
@@ -322,4 +322,4 @@ The `rename_project.sh` script transforms the generic template into a project-sp
 
 This enables rapid project setup while maintaining the high-quality standards established by the template.
 
-For more examples and showcase projects, see **[`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)**.
+For more examples and showcase projects, see **[`EXAMPLES_SHOWCASE.md`](docs/EXAMPLES_SHOWCASE.md)**.

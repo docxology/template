@@ -1,6 +1,6 @@
 # Markdown Template Guide
 
-This document explains the comprehensive markdown template structure and cross-referencing system implemented in this project. For related information, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`WORKFLOW.md`](WORKFLOW.md)**, and **[`README.md`](README.md)**.
+This document explains the comprehensive markdown template structure and cross-referencing system implemented in this project. For related information, see **[`docs/HOW_TO_USE.md`](docs/HOW_TO_USE.md)** for complete usage guidance, **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**, **[`docs/WORKFLOW.md`](docs/WORKFLOW.md)**, and **[`README.md`](docs/README.md)**.
 
 ## Template Structure
 
@@ -8,13 +8,14 @@ The template demonstrates a complete academic paper structure with the following
 
 ### Core Sections
 
-1. **`00_preamble.md`** - LaTeX preamble with enhanced styling and packages
-2. **`01_introduction.md`** - Introduction with section references and overview
-3. **`02_methodology.md`** - Mathematical framework with numbered equations
-4. **`03_experimental_results.md`** - Results with figure and equation references
-5. **`04_discussion.md`** - Discussion with cross-references to previous sections
-6. **`05_conclusion.md`** - Conclusion summarizing all contributions
-7. **`10_symbols_glossary.md`** - Auto-generated API reference from `src/`
+1. **`manuscript/00_preamble.md`** - LaTeX preamble with enhanced styling and packages
+2. **`manuscript/01_abstract.md`** - Research overview and key contributions
+3. **`manuscript/02_introduction.md`** - Introduction with section references and overview
+4. **`manuscript/03_methodology.md`** - Mathematical framework with numbered equations
+5. **`manuscript/04_experimental_results.md`** - Results with figure and equation references
+6. **`manuscript/05_discussion.md`** - Discussion with cross-references to previous sections
+7. **`manuscript/06_conclusion.md`** - Conclusion summarizing all contributions
+8. **`manuscript/10_symbols_glossary.md`** - Auto-generated API reference from `src/`
 
 ## Cross-Referencing System
 
@@ -183,7 +184,7 @@ Figures are referenced in markdown using relative paths:
 
 ## Validation System
 
-### Markdown Validation
+### Manuscript Validation
 
 The `validate_markdown.py` script checks:
 - Image file existence
@@ -206,9 +207,9 @@ The `render_pdf.sh` script:
 
 1. **Runs tests** with 100% coverage requirement
 2. **Executes scripts** to generate figures and data (validating src/ integration)
-3. **Validates markdown** for references and images
+3. **Validates manuscript** for references and images
 4. **Generates glossary** from source code
-5. **Builds individual PDFs** for each markdown file
+5. **Builds individual PDFs** for each manuscript file
 6. **Creates combined PDF** with all sections
 7. **Exports LaTeX** source files
 
@@ -341,4 +342,4 @@ This template provides a complete framework for academic writing with:
 
 The system demonstrates best practices for academic writing while maintaining the flexibility to adapt to different research domains and writing styles, all while enforcing the architectural principles of the generic project template.
 
-For more details on architecture and workflow, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.
+For more details on architecture and workflow, see **[`ARCHITECTURE.md`](docs/ARCHITECTURE.md)** and **[`WORKFLOW.md`](docs/WORKFLOW.md)**.

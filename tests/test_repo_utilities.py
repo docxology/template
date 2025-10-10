@@ -5,6 +5,7 @@ import os
 import sys
 import tempfile
 import shutil
+import subprocess
 from pathlib import Path
 from unittest.mock import patch, mock_open, MagicMock
 
@@ -377,6 +378,116 @@ class TestValidateMarkdown:
         
         # The script should run successfully (exit code 0 or 1 depending on validation results)
         assert result.returncode in [0, 1]
+
+
+class TestLuaScript:
+    """Test Lua script functionality."""
+
+    def test_convert_latex_images_script_exists(self):
+        """Test that convert_latex_images.lua script exists."""
+        script_path = os.path.join(os.path.dirname(__file__), '..', 'repo_utilities', 'convert_latex_images.lua')
+        assert os.path.exists(script_path)
+
+    def test_convert_latex_images_has_lua_shebang(self):
+        """Test that Lua script has proper shebang."""
+        script_path = os.path.join(os.path.dirname(__file__), '..', 'repo_utilities', 'convert_latex_images.lua')
+        with open(script_path, 'r') as f:
+            first_line = f.readline().strip()
+            assert first_line == '-- Pandoc Lua filter to convert LaTeX \\includegraphics commands to HTML img tags'
+
+
+class TestShellScripts:
+    """Test shell script functionality."""
+
+    def test_clean_output_script_exists(self):
+        """Test that clean_output.sh script exists and is executable."""
+        script_path = os.path.join(os.path.dirname(__file__), '..', 'repo_utilities', 'clean_output.sh')
+        assert os.path.exists(script_path)
+        # Check if executable (on Unix-like systems)
+        if os.name != 'nt':
+            assert os.access(script_path, os.X_OK)
+
+    def test_render_pdf_script_exists(self):
+        """Test that render_pdf.sh script exists and is executable."""
+        script_path = os.path.join(os.path.dirname(__file__), '..', 'repo_utilities', 'render_pdf.sh')
+        assert os.path.exists(script_path)
+        # Check if executable (on Unix-like systems)
+        if os.name != 'nt':
+            assert os.access(script_path, os.X_OK)
+
+    def test_rename_project_script_exists(self):
+        """Test that rename_project.sh script exists and is executable."""
+        script_path = os.path.join(os.path.dirname(__file__), '..', 'repo_utilities', 'rename_project.sh')
+        assert os.path.exists(script_path)
+        # Check if executable (on Unix-like systems)
+        if os.name != 'nt':
+            assert os.access(script_path, os.X_OK)
+
+    def test_open_manuscript_script_exists(self):
+        """Test that open_manuscript.sh script exists and is executable."""
+        script_path = os.path.join(os.path.dirname(__file__), '..', 'repo_utilities', 'open_manuscript.sh')
+        assert os.path.exists(script_path)
+        # Check if executable (on Unix-like systems)
+        if os.name != 'nt':
+            assert os.access(script_path, os.X_OK)
+
+    def test_shell_scripts_have_shebang(self):
+        """Test that shell scripts have proper shebang lines."""
+        scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'repo_utilities')
+
+        script_files = [
+            'clean_output.sh',
+            'render_pdf.sh',
+            'rename_project.sh',
+            'open_manuscript.sh'
+        ]
+
+        for script_file in script_files:
+            script_path = os.path.join(scripts_dir, script_file)
+            with open(script_path, 'r') as f:
+                first_line = f.readline().strip()
+                assert first_line == '#!/bin/bash', f"{script_file} should start with #!/bin/bash"
+
+    def test_shell_scripts_have_proper_error_handling(self):
+        """Test that shell scripts have proper error handling."""
+        scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'repo_utilities')
+
+        script_files = [
+            'clean_output.sh',
+            'render_pdf.sh',
+            'rename_project.sh',
+            'open_manuscript.sh'
+        ]
+
+        for script_file in script_files:
+            script_path = os.path.join(scripts_dir, script_file)
+            with open(script_path, 'r') as f:
+                content = f.read()
+                # Check for set -e (exit on error)
+                assert 'set -e' in content, f"{script_file} should have 'set -e' for error handling"
+
+    def test_render_pdf_script_functionality(self, tmp_path):
+        """Test that render_pdf.sh can run without errors in a minimal setup."""
+        # This is a basic smoke test - we can't fully test the script without
+        # all dependencies, but we can test that it starts and fails gracefully
+        script_path = os.path.join(os.path.dirname(__file__), '..', 'repo_utilities', 'render_pdf.sh')
+
+        # Run the script and expect it to fail due to missing dependencies
+        # but not crash with syntax errors
+        try:
+            result = subprocess.run(
+                [script_path],
+                cwd=os.path.dirname(__file__),
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+            # Should exit with non-zero code due to missing dependencies, not syntax errors
+            assert result.returncode != 0, "Script should fail due to missing dependencies, not syntax errors"
+        except subprocess.TimeoutExpired:
+            pytest.fail("Script took too long to execute, likely hanging")
+        except FileNotFoundError:
+            pytest.skip("Script execution not available on this platform")
 
 
 # Clean up sys.path

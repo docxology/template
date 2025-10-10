@@ -1,6 +1,6 @@
 # Generic Project Architecture: Complete System Overview
 
-This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline. For related information, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`WORKFLOW.md`](WORKFLOW.md)**, **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
+This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline. For related information, see **[`docs/HOW_TO_USE.md`](docs/HOW_TO_USE.md)** for complete usage guidance, **[`docs/WORKFLOW.md`](docs/WORKFLOW.md)**, **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](docs/README.md)**.
 
 ## System Architecture Overview
 
@@ -11,13 +11,15 @@ graph TB
             SRC[Source Code<br/>src/]
             TESTS[Tests<br/>tests/]
             SCRIPTS[Scripts<br/>scripts/]
-            MD[Markdown<br/>markdown/]
+            MD[Documentation<br/>docs/]
+            MANUSCRIPT[Manuscript<br/>manuscript/]
         end
         
         subgraph "Thin Orchestrator Pattern"
             SRC -->|"100% tested<br/>methods"| SCRIPTS
             SCRIPTS -->|"import & use"| SRC
             SCRIPTS -->|"generate"| OUTPUTS
+            MANUSCRIPT -->|"reference"| OUTPUTS
         end
         
         subgraph "Build Pipeline"
@@ -131,17 +133,17 @@ graph LR
 6. Save data to `output/data/`
 7. Print output paths for manifest collection
 
-### 4. Documentation (`markdown/`)
+### 4. Documentation (`docs/`)
 **Purpose**: Document mathematical concepts with references to implemented code.
 
 **Structure**:
-- `00_preamble.md`: LaTeX preamble and styling
-- `01_introduction.md`: Project introduction and overview
-- `02_methodology.md`: Mathematical framework and equations
-- `03_experimental_results.md`: Results with figure references
-- `04_discussion.md`: Discussion and cross-references
-- `05_conclusion.md`: Summary and conclusions
-- `10_symbols_glossary.md`: Auto-generated API reference from `src/`
+- `manuscript/00_preamble.md`: LaTeX preamble and styling
+- `manuscript/01_introduction.md`: Project introduction and overview
+- `manuscript/02_methodology.md`: Mathematical framework and equations
+- `manuscript/03_experimental_results.md`: Results with figure references
+- `manuscript/04_discussion.md`: Discussion and cross-references
+- `manuscript/05_conclusion.md`: Summary and conclusions
+- `manuscript/10_symbols_glossary.md`: Auto-generated API reference from `src/`
 
 **Content Requirements**:
 - Reference source code using inline code formatting
@@ -233,8 +235,8 @@ pandoc [markdown_file] -o [output_tex]
 
 ### Input Dependencies
 1. **Source code** (`src/`) - Mathematical implementations
-2. **Markdown files** (`markdown/`) - Documentation content
-3. **LaTeX preamble** (`markdown/00_preamble.md`) - Formatting
+2. **Markdown files** (`manuscript/`) - Manuscript content
+3. **LaTeX preamble** (`manuscript/00_preamble.md`) - Formatting
 
 ### Processing Pipeline
 ```mermaid
@@ -242,6 +244,7 @@ graph LR
     subgraph "Input"
         SRC[src/ modules]
         MD[Markdown files]
+        MANUSCRIPT[manuscript/ files]
         PREAMBLE[LaTeX preamble]
     end
     
@@ -262,17 +265,20 @@ graph LR
     SRC --> TESTS
     SRC --> SCRIPTS
     MD --> VALIDATION
+    MANUSCRIPT --> VALIDATION
     SRC --> GLOSSARY
     SCRIPTS --> FIGS
     SCRIPTS --> DATA
     MD --> PDFS
+    MANUSCRIPT --> PDFS
     MD --> TEX
+    MANUSCRIPT --> TEX
     
     classDef input fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
     
-    class SRC,MD,PREAMBLE input
+    class SRC,MD,MANUSCRIPT,PREAMBLE input
     class TESTS,SCRIPTS,VALIDATION,GLOSSARY process
     class FIGS,DATA,PDFS,TEX output
 ```
@@ -403,4 +409,4 @@ This ensures:
 
 This architecture ensures that the generic project template maintains the highest standards of code quality, documentation coherence, and maintainability while providing a clear, scalable structure for development and collaboration.
 
-For more details on implementation, see **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.
+For more details on implementation, see **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)** and **[`docs/WORKFLOW.md`](docs/WORKFLOW.md)**.

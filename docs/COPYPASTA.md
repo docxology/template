@@ -4,10 +4,10 @@ This file contains pre-written, copyable content for sharing the **[Research Pro
 
 **🔗 Quick Links:**
 - **[GitHub Template](https://github.com/docxology/template)** - Click "Use this template"
-- **[How To Use Guide](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced
+- **[How To Use Guide](docs/https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced
 - **[Documentation](https://github.com/docxology/template#readme)** - Complete project overview
-- **[Architecture Guide](https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** - System design details
-- **[Workflow Guide](https://github.com/docxology/template/blob/main/WORKFLOW.md)** - Development process
+- **[Architecture Guide](docs/https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** - System design details
+- **[Workflow Guide](docs/https://github.com/docxology/template/blob/main/WORKFLOW.md)** - Development process
 
 ## 🚀 **One-Sentence Descriptions**
 
@@ -25,16 +25,16 @@ This file contains pre-written, copyable content for sharing the **[Research Pro
 ## 📝 **One-Paragraph Descriptions**
 
 ### **Technical Overview** 🔧
-This **[comprehensive GitHub template](https://github.com/docxology/template)** implements a **[thin orchestrator pattern](https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** with **100% test coverage requirements**. The template automatically generates publication-ready PDFs from markdown sources, includes automated figure generation from Python scripts, and maintains perfect coherence between source code, tests, and documentation. It's perfect for academic papers, scientific documentation, technical reports, and any project requiring professional output with automated quality assurance. The **[architecture](https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** ensures maintainable, testable code while keeping scripts lightweight and focused.
+This **[comprehensive GitHub template](https://github.com/docxology/template)** implements a **[thin orchestrator pattern](docs/https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** with **100% test coverage requirements**. The template automatically generates publication-ready PDFs from markdown sources, includes automated figure generation from Python scripts, and maintains perfect coherence between source code, tests, and documentation. It's perfect for academic papers, scientific documentation, technical reports, and any project requiring professional output with automated quality assurance. The **[architecture](docs/https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** ensures maintainable, testable code while keeping scripts lightweight and focused.
 
 ### **Academic Focus** 🎓
-A revolutionary research project template that transforms how scientists and researchers approach documentation. It provides a standardized structure with **[test-driven development](https://github.com/docxology/template/blob/main/WORKFLOW.md)**, automated PDF generation from markdown, and professional LaTeX formatting. The template includes cross-referencing systems, automated glossary generation from source code, and ensures all figures and data are properly integrated. Perfect for thesis projects, research papers, and scientific documentation. The **[markdown guide](https://github.com/docxology/template/blob/main/MARKDOWN_TEMPLATE_GUIDE.md)** shows how to create publication-ready content with proper equations and references.
+A revolutionary research project template that transforms how scientists and researchers approach documentation. It provides a standardized structure with **[test-driven development](docs/https://github.com/docxology/template/blob/main/WORKFLOW.md)**, automated PDF generation from markdown, and professional LaTeX formatting. The template includes cross-referencing systems, automated glossary generation from source code, and ensures all figures and data are properly integrated. Perfect for thesis projects, research papers, and scientific documentation. The **[markdown guide](docs/https://github.com/docxology/template/blob/main/MARKDOWN_TEMPLATE_GUIDE.md)** shows how to create publication-ready content with proper equations and references.
 
 ### **Developer Experience** 💻
-Built for developers who need professional research output, this template enforces clean architecture through the **[thin orchestrator pattern](https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** where scripts import and use tested methods from source modules. It includes comprehensive testing with 100% coverage requirements, automated build pipelines, and generates multiple output formats including PDF, LaTeX, and HTML. The template maintains perfect synchronization between code, tests, and documentation. The **[workflow guide](https://github.com/docxology/template/blob/main/WORKFLOW.md)** shows the complete development process from tests to publication.
+Built for developers who need professional research output, this template enforces clean architecture through the **[thin orchestrator pattern](docs/https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** where scripts import and use tested methods from source modules. It includes comprehensive testing with 100% coverage requirements, automated build pipelines, and generates multiple output formats including PDF, LaTeX, and HTML. The template maintains perfect synchronization between code, tests, and documentation. The **[workflow guide](docs/https://github.com/docxology/template/blob/main/WORKFLOW.md)** shows the complete development process from tests to publication.
 
 ### **Quick Start** ⚡
-Get started immediately with this **[research project template](https://github.com/docxology/template)** that provides everything you need: complete project structure, test-driven development setup, automated PDF generation, and professional documentation workflows. Simply click "Use this template" on GitHub, customize your project details, and start building. The template includes comprehensive examples, automated testing, and generates publication-ready outputs with minimal configuration. Check the **[how to use guide](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** for step-by-step instructions and the **[examples showcase](https://github.com/docxology/template/blob/main/EXAMPLES_SHOWCASE.md)** for real-world usage patterns.
+Get started immediately with this **[research project template](https://github.com/docxology/template)** that provides everything you need: complete project structure, test-driven development setup, automated PDF generation, and professional documentation workflows. Simply click "Use this template" on GitHub, customize your project details, and start building. The template includes comprehensive examples, automated testing, and generates publication-ready outputs with minimal configuration. Check the **[how to use guide](docs/https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** for step-by-step instructions and the **[examples showcase](docs/https://github.com/docxology/template/blob/main/EXAMPLES_SHOWCASE.md)** for real-world usage patterns.
 
 ## 🔧 **Code Snippets**
 
@@ -92,7 +92,7 @@ uv run python repo_utilities/validate_markdown.py
 🚀 New research project template! Test-driven development + automated PDF generation + professional LaTeX output. Perfect for academic papers, thesis projects, and scientific documentation. 100% test coverage enforced. #Research #Academic #OpenSource
 
 ### **💼 LinkedIn Post**
-Excited to share this **[comprehensive research project template](https://github.com/docxology/template)** I've been working on! It provides a standardized structure for research projects with **[test-driven development](https://github.com/docxology/template/blob/main/WORKFLOW.md)**, automated PDF generation from markdown, and professional documentation workflows. Perfect for academics, researchers, and developers who need publication-ready outputs. The template enforces clean architecture through the **[thin orchestrator pattern](https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** and includes comprehensive testing with 100% coverage requirements. Check it out and let me know what you think!
+Excited to share this **[comprehensive research project template](https://github.com/docxology/template)** I've been working on! It provides a standardized structure for research projects with **[test-driven development](docs/https://github.com/docxology/template/blob/main/WORKFLOW.md)**, automated PDF generation from markdown, and professional documentation workflows. Perfect for academics, researchers, and developers who need publication-ready outputs. The template enforces clean architecture through the **[thin orchestrator pattern](docs/https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** and includes comprehensive testing with 100% coverage requirements. Check it out and let me know what you think!
 
 ### **📱 Reddit Post Title**
 [GitHub Template] Research Project Template with Test-Driven Development, Automated PDF Generation, and Professional Documentation Structure
@@ -107,7 +107,7 @@ I've created a **[comprehensive GitHub template](https://github.com/docxology/te
 ✅ **Automated figure generation** from Python scripts  
 ✅ **Cross-referencing system** for complex documents  
 
-The template is designed for academic papers, scientific documentation, thesis projects, and any research requiring professional output. It automatically validates code quality, generates figures, and creates publication-ready PDFs. Check out the **[examples showcase](https://github.com/docxology/template/blob/main/EXAMPLES_SHOWCASE.md)** for real-world usage patterns.
+The template is designed for academic papers, scientific documentation, thesis projects, and any research requiring professional output. It automatically validates code quality, generates figures, and creates publication-ready PDFs. Check out the **[examples showcase](docs/https://github.com/docxology/template/blob/main/EXAMPLES_SHOWCASE.md)** for real-world usage patterns.
 
 Would love feedback from researchers and developers who might use this!
 
@@ -134,7 +134,7 @@ uv sync
 ./repo_utilities/render_pdf.sh
 ```
 
-The template automatically handles LaTeX compilation, figure integration, and generates publication-ready PDFs. Perfect for academic papers and research documentation. Check the **[how to use guide](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** for comprehensive step-by-step instructions and the **[architecture guide](https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** for detailed system design.
+The template automatically handles LaTeX compilation, figure integration, and generates publication-ready PDFs. Perfect for academic papers and research documentation. Check the **[how to use guide](docs/https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** for comprehensive step-by-step instructions and the **[architecture guide](docs/https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** for detailed system design.
 
 ### **🐙 GitHub Discussion Response**
 This **[template](https://github.com/docxology/template)** solves exactly the problem you're describing! It provides:
@@ -145,7 +145,7 @@ This **[template](https://github.com/docxology/template)** solves exactly the pr
 🖼️ **4. Figure Integration**: Automated generation and integration of figures from Python scripts  
 🔗 **5. Cross-Referencing**: Built-in system for equations, figures, and sections  
 
-The **[thin orchestrator pattern](https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** ensures your scripts use tested methods from source modules, making the codebase maintainable and reliable. Perfect for research projects where accuracy and reproducibility matter. The **[how to use guide](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** provides comprehensive step-by-step instructions, and the **[workflow guide](https://github.com/docxology/template/blob/main/WORKFLOW.md)** shows the complete development process.
+The **[thin orchestrator pattern](docs/https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** ensures your scripts use tested methods from source modules, making the codebase maintainable and reliable. Perfect for research projects where accuracy and reproducibility matter. The **[how to use guide](docs/https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** provides comprehensive step-by-step instructions, and the **[workflow guide](docs/https://github.com/docxology/template/blob/main/WORKFLOW.md)** shows the complete development process.
 
 ### **🎓 Academic Forum Post**
 I've developed a **[research project template](https://github.com/docxology/template)** that addresses many of the workflow issues we discuss here. It implements:
@@ -164,7 +164,7 @@ I've developed a **[research project template](https://github.com/docxology/temp
 ✅ Reproducible research workflows  
 ✅ Integration with existing Python ecosystems  
 
-The template is designed for academic papers, thesis projects, and scientific documentation. It automatically validates code quality and generates professional outputs, saving significant time on formatting and quality assurance. The **[how to use guide](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** provides comprehensive step-by-step instructions, and the **[examples showcase](https://github.com/docxology/template/blob/main/EXAMPLES_SHOWCASE.md)** demonstrates real-world applications across different research domains.
+The template is designed for academic papers, thesis projects, and scientific documentation. It automatically validates code quality and generates professional outputs, saving significant time on formatting and quality assurance. The **[how to use guide](docs/https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** provides comprehensive step-by-step instructions, and the **[examples showcase](docs/https://github.com/docxology/template/blob/main/EXAMPLES_SHOWCASE.md)** demonstrates real-world applications across different research domains.
 
 ## 📧 **Email Templates**
 
@@ -185,7 +185,7 @@ The template is designed for research projects requiring professional output and
 
 You can find it at: [GitHub Template](https://github.com/docxology/template)
 
-The **[how to use guide](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** provides comprehensive step-by-step instructions for getting started at any level of complexity.
+The **[how to use guide](docs/https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** provides comprehensive step-by-step instructions for getting started at any level of complexity.
 
 Would be happy to discuss how this might fit into your research workflow.
 
@@ -207,7 +207,7 @@ I've developed a comprehensive research project template and would value your fe
 
 It's designed for academic papers and research documentation, with a focus on reproducibility and professional output.
 
-The **[how to use guide](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** shows how it can be used at different levels of complexity, from basic document creation to advanced test-driven development.
+The **[how to use guide](docs/https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** shows how it can be used at different levels of complexity, from basic document creation to advanced test-driven development.
 
 Could you take a look and let me know what you think? Any suggestions for improvements would be greatly appreciated.
 
@@ -359,15 +359,15 @@ graph LR
 ✅ **Publication-ready outputs** for academic use  
 
 ### **📖 Documentation Navigation**
-🚀 **[How To Use Guide](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced  
-🏗️ **[Architecture Guide](https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** - System design overview  
-⚡ **[Workflow Guide](https://github.com/docxology/template/blob/main/WORKFLOW.md)** - Development process  
-📝 **[Markdown Guide](https://github.com/docxology/template/blob/main/MARKDOWN_TEMPLATE_GUIDE.md)** - Writing & formatting  
-🎯 **[Examples Showcase](https://github.com/docxology/template/blob/main/EXAMPLES_SHOWCASE.md)** - Real-world usage  
-🔧 **[Thin Orchestrator Summary](https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation  
-🗺️ **[Development Roadmap](https://github.com/docxology/template/blob/main/ROADMAP.md)** - Future plans  
-🤝 **[Contributing Guide](https://github.com/docxology/template/blob/main/CONTRIBUTING.md)** - How to contribute  
-❓ **[FAQ](https://github.com/docxology/template/blob/main/FAQ.md)** - Common questions
+🚀 **[How To Use Guide](docs/https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced  
+🏗️ **[Architecture Guide](docs/https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** - System design overview  
+⚡ **[Workflow Guide](docs/https://github.com/docxology/template/blob/main/WORKFLOW.md)** - Development process  
+📝 **[Markdown Guide](docs/https://github.com/docxology/template/blob/main/MARKDOWN_TEMPLATE_GUIDE.md)** - Writing & formatting  
+🎯 **[Examples Showcase](docs/https://github.com/docxology/template/blob/main/EXAMPLES_SHOWCASE.md)** - Real-world usage  
+🔧 **[Thin Orchestrator Summary](docs/https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation  
+🗺️ **[Development Roadmap](docs/https://github.com/docxology/template/blob/main/ROADMAP.md)** - Future plans  
+🤝 **[Contributing Guide](docs/https://github.com/docxology/template/blob/main/CONTRIBUTING.md)** - How to contribute  
+❓ **[FAQ](docs/https://github.com/docxology/template/blob/main/FAQ.md)** - Common questions
 
 ## 📊 **Feature Comparison Table**
 
@@ -419,14 +419,14 @@ graph LR
 - [ ] Add your business logic to `src/` modules
 - [ ] Create tests in `tests/` directory (100% coverage required)
 
-**📖 Need guidance?** See **[`HOW_TO_USE.md`](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** for step-by-step instructions at your experience level.
+**📖 Need guidance?** See **[`HOW_TO_USE.md`](docs/https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** for step-by-step instructions at your experience level.
 
 ### **📚 Learning Resources**
-- [ ] Read **[HOW_TO_USE.md](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** for **complete usage guide**
+- [ ] Read **[HOW_TO_USE.md](docs/https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** for **complete usage guide**
 - [ ] Read **[README.md](https://github.com/docxology/template#readme)** for overview
-- [ ] Study **[ARCHITECTURE.md](https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** for system design
-- [ ] Follow **[WORKFLOW.md](https://github.com/docxology/template/blob/main/WORKFLOW.md)** for development process
-- [ ] Check **[EXAMPLES_SHOWCASE.md](https://github.com/docxology/template/blob/main/EXAMPLES_SHOWCASE.md)** for real-world usage
+- [ ] Study **[ARCHITECTURE.md](docs/https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** for system design
+- [ ] Follow **[WORKFLOW.md](docs/https://github.com/docxology/template/blob/main/WORKFLOW.md)** for development process
+- [ ] Check **[EXAMPLES_SHOWCASE.md](docs/https://github.com/docxology/template/blob/main/EXAMPLES_SHOWCASE.md)** for real-world usage
 
 ---
 

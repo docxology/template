@@ -38,13 +38,13 @@ That's it! You now have a complete research project structure.
 
 If you want to focus purely on writing without any programming:
 
-#### **1. Edit Markdown Files**
-Navigate to `markdown/` and edit the existing files:
-- `01_introduction.md` - Your project introduction
-- `02_methodology.md` - Your methods and approach
-- `03_experimental_results.md` - Your results and findings
-- `04_discussion.md` - Your analysis and discussion
-- `05_conclusion.md` - Your conclusions
+#### **1. Edit Manuscript Files**
+Navigate to `manuscript/` and edit the existing files:
+- `manuscript/01_introduction.md` - Your project introduction
+- `manuscript/02_methodology.md` - Your methods and approach
+- `manuscript/03_experimental_results.md` - Your results and findings
+- `manuscript/04_discussion.md` - Your analysis and discussion
+- `manuscript/05_conclusion.md` - Your conclusions
 
 #### **2. Add Your Content**
 Replace the template content with your research:
@@ -118,7 +118,7 @@ AUTHOR_EMAIL="your.email@university.edu"
 ```
 
 #### **Custom Styling**
-Modify `markdown/00_preamble.md` for custom LaTeX styling:
+Modify `manuscript/00_preamble.md` for custom LaTeX styling:
 ```latex
 % Custom colors
 \definecolor{myblue}{RGB}{0,114,178}
@@ -467,7 +467,7 @@ uv run pytest tests/ --cov=src --cov-report=html
 uv run python scripts/ml_visualizations.py
 
 # Build ML-specific documentation
-pandoc markdown/*.md -o output/ml_report.pdf --pdf-engine=xelatex
+pandoc manuscript/*.md -o output/ml_report.pdf --pdf-engine=xelatex
 ```
 
 #### **Integration with External Tools**
@@ -606,8 +606,8 @@ pandoc --version
 # Check LaTeX installation
 xelatex --version
 
-# Verify markdown syntax
-uv run python repo_utilities/validate_markdown.py
+   # Verify manuscript syntax
+   uv run python repo_utilities/validate_markdown.py
 ```
 
 #### **Figure Generation Problems**
@@ -625,9 +625,9 @@ ls -la output/figures/
 ### **Getting Help**
 
 1. **Check the documentation**:
-   - **[`README.md`](README.md)** - Project overview
-   - **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System design
-   - **[`WORKFLOW.md`](WORKFLOW.md)** - Development process
+   - **[`README.md`](docs/README.md)** - Project overview
+   - **[`ARCHITECTURE.md`](docs/ARCHITECTURE.md)** - System design
+   - **[`WORKFLOW.md`](docs/WORKFLOW.md)** - Development process
 
 2. **Review error messages** - Most issues have clear error descriptions
 
@@ -682,10 +682,10 @@ ls -la output/figures/
 
 ### **Resources for Each Level**
 
-- **Levels 1-3**: **[`README.md`](README.md)**, **[`MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md)**
-- **Levels 4-6**: **[`EXAMPLES.md`](EXAMPLES.md)**, **[`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)**
-- **Levels 7-9**: **[`WORKFLOW.md`](WORKFLOW.md)**, **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**
-- **Levels 10-12**: **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`ROADMAP.md`](ROADMAP.md)**
+- **Levels 1-3**: **[`README.md`](docs/README.md)**, **[`docs/MARKDOWN_TEMPLATE_GUIDE.md`](docs/MARKDOWN_TEMPLATE_GUIDE.md)**
+- **Levels 4-6**: **[`EXAMPLES.md`](docs/EXAMPLES.md)**, **[`EXAMPLES_SHOWCASE.md`](docs/EXAMPLES_SHOWCASE.md)**
+- **Levels 7-9**: **[`WORKFLOW.md`](docs/WORKFLOW.md)**, **[`THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)**
+- **Levels 10-12**: **[`ARCHITECTURE.md`](docs/ARCHITECTURE.md)**, **[`ROADMAP.md`](docs/ROADMAP.md)**
 
 ### **Community Support**
 
@@ -697,4 +697,4 @@ ls -la output/figures/
 
 **Ready to transform your research workflow? Start at your comfort level and gradually advance through the levels. The template grows with you! 🚀**
 
-For detailed implementation guidance, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.
+For detailed implementation guidance, see **[`ARCHITECTURE.md`](docs/ARCHITECTURE.md)** and **[`WORKFLOW.md`](docs/WORKFLOW.md)**.

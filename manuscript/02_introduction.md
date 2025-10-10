@@ -39,6 +39,7 @@ The manuscript is organized into several key sections:
 4. **Experimental Results** (Section \ref{sec:experimental_results}): Performance evaluation and validation
 5. **Discussion** (Section \ref{sec:discussion}): Theoretical implications and comparisons
 6. **Conclusion** (Section \ref{sec:conclusion}): Summary and future directions
+7. **References** (Section \ref{sec:references}): Bibliography and cited works
 
 ## Example Figure
 

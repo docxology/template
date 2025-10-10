@@ -95,7 +95,7 @@ Our security team consists of:
 - **Security Lead**: [Name] - [Email]
 - **Security Reviewers**: [Names] - [Emails]
 
-For project security practices and development guidelines, see **[`CONTRIBUTING.md`](CONTRIBUTING.md)** and **[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)**.
+For project security practices and development guidelines, see **[`CONTRIBUTING.md`](docs/CONTRIBUTING.md)** and **[`CODE_OF_CONDUCT.md`](docs/CODE_OF_CONDUCT.md)**.
 
 ---
 

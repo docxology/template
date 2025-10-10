@@ -8,7 +8,7 @@
 # 1. src/ implements mathematical functionality (100% tested)
 # 2. tests/ validate all functionality with 100% coverage
 # 3. scripts/ are THIN ORCHESTRATORS that import and use src/ modules
-# 4. markdown/ documents mathematical concepts
+# 4. docs/ contains documentation and manuscript sections (manuscript sections generate PDFs)
 # 5. render_pdf.sh orchestrates entire pipeline
 
 # =============================================================================
@@ -38,14 +38,16 @@
 # =============================================================================
 # MARKDOWN STRUCTURE
 # =============================================================================
-# Academic paper structure:
-# 00_preamble.md - LaTeX preamble and styling
-# 01_introduction.md - Introduction with section references
-# 02_methodology.md - Mathematical framework with equations
-# 03_experimental_results.md - Results with figure references
-# 04_discussion.md - Discussion with cross-references
-# 05_conclusion.md - Conclusion
-# 10_symbols_glossary.md - Auto-generated API reference
+# Academic paper structure (manuscript sections that generate PDFs):
+# 00_preamble.md - LaTeX preamble and styling (does not generate PDF)
+# 01_abstract.md - Research overview and key contributions (generates PDF)
+# 02_introduction.md - Overview and project structure (generates PDF)
+# 03_methodology.md - Mathematical framework and algorithms (generates PDF)
+# 04_experimental_results.md - Performance evaluation and validation (generates PDF)
+# 05_discussion.md - Theoretical implications and comparisons (generates PDF)
+# 06_conclusion.md - Summary and future directions (generates PDF)
+# 07_references.md - Bibliography and cited works (generates PDF)
+# 10_symbols_glossary.md - Auto-generated API reference (generates PDF)
 #
 # Cross-referencing:
 # - Sections: \ref{sec:section_name}
@@ -61,9 +63,9 @@
 # =============================================================================
 # render_pdf.sh ensures coherence:
 # 1. Runs all generation scripts (validates src/ code works)
-# 2. Validates markdown integrity (images, references, equations)
+# 2. Validates manuscript markdown integrity (images, references, equations)
 # 3. Auto-generates glossary from src/ API
-# 4. Builds PDFs only after validation passes
+# 4. Builds PDFs for manuscript sections only after validation passes
 # 5. Creates manifest of all generated artifacts
 
 # =============================================================================
@@ -107,7 +109,7 @@
 # Scripts MUST import from src/ modules (thin orchestrator pattern)
 # - All business logic from src/ modules
 # - Scripts handle visualization, I/O, orchestration only
-# - Output structure: output/figures/, output/data/, output/pdf/, output/tex/
+# - Output structure: output/figures/, output/data/, output/pdf/ (manuscript sections only), output/tex/
 # - Use MPLBACKEND=Agg for headless operation
 # - Save with tight layout, labels, deterministic seeds
 # - Include CSV/NPZ alongside PNG/MP4 when feasible
@@ -116,7 +118,7 @@
 # =============================================================================
 # MARKDOWN VALIDATION
 # =============================================================================
-# All markdown must pass validation:
+# All manuscript markdown must pass validation:
 # - Images exist and properly referenced
 # - Internal links have valid anchors
 # - Equations have unique labels
@@ -129,8 +131,8 @@
 # =============================================================================
 # 1. Run tests: uv run pytest tests/ --cov=src --cov-report=term-missing
 # 2. Run render_pdf.sh after changes to validate coherence
-# 3. Source changes reflected in tests AND documentation
-# 4. Documentation changes validated and generate working PDFs
+# 3. Source changes reflected in tests AND manuscript documentation
+# 4. Manuscript changes validated and generate working PDFs
 # 5. Scripts work with current src/ code
 # 6. All outputs deterministic and reproducible
 #
@@ -146,11 +148,11 @@
 # =============================================================================
 # KEY PRINCIPLES
 # =============================================================================
-# 1. src/ modules → tests/ validation → scripts/ generation → markdown/ documentation
+# 1. src/ modules → tests/ validation → scripts/ generation → docs/ documentation (manuscript sections generate PDFs)
 # 2. render_pdf.sh ensures all connections valid before building outputs
 # 3. Changes in any component reflected in all connected components
 # 4. Test suite validates entire pipeline, not just individual modules
-# 5. Documentation auto-generated where possible for code-doc sync
+# 5. Manuscript documentation auto-generated where possible for code-doc sync
 # 6. Scripts are THIN ORCHESTRATORS using src/ methods
 # 7. Business logic ONLY in src/ - scripts handle orchestration
 # 8. 100% test coverage ensures reliable methods for scripts

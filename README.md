@@ -22,7 +22,7 @@ This is a **GitHub Template Repository** that gives you:
 3. **Customize the project name** and configuration
 4. **Start building your research project!**
 
-**📖 Need help?** See **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for comprehensive guidance from basic usage to advanced workflows.
+**📖 Need help?** See **[`docs/HOW_TO_USE.md`](docs/HOW_TO_USE.md)** for comprehensive guidance from basic usage to advanced workflows.
 
 ## Project Structure
 
@@ -34,7 +34,8 @@ graph TB
         SRC[src/<br/>Core business logic<br/>100% tested]
         TESTS[tests/<br/>Test suite<br/>100% coverage]
         SCRIPTS[scripts/<br/>Thin orchestrators<br/>Use src/ methods]
-        MD[markdown/<br/>Documentation<br/>Cross-referenced]
+        MD[docs/<br/>Documentation<br/>Cross-referenced]
+        MANUSCRIPT[manuscript/<br/>Research sections<br/>Generate PDFs]
         REPO_UTILS[repo_utilities/<br/>Build tools<br/>Generic utilities]
         OUTPUT[output/<br/>Generated files<br/>PDFs, figures, data]
     end
@@ -43,6 +44,7 @@ graph TB
         SRC -->|"provides tested methods"| SCRIPTS
         SCRIPTS -->|"import & use"| SRC
         SCRIPTS -->|"generate"| OUTPUT
+        MANUSCRIPT -->|"reference"| OUTPUT
         TESTS -->|"validate"| SRC
     end
     
@@ -50,6 +52,7 @@ graph TB
         RENDER[render_pdf.sh<br/>Orchestrator]
         RENDER -->|"runs tests"| TESTS
         RENDER -->|"executes scripts"| SCRIPTS
+        RENDER -->|"processes manuscript"| MANUSCRIPT
         RENDER -->|"builds PDFs"| OUTPUT
     end
     
@@ -58,7 +61,7 @@ graph TB
     classDef pipeline fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
     classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
     
-    class SRC,TESTS,SCRIPTS,MD,REPO_UTILS core
+    class SRC,TESTS,SCRIPTS,MD,MANUSCRIPT,REPO_UTILS core
     class SRC,SCRIPTS pattern
     class RENDER pipeline
     class OUTPUT output
@@ -67,7 +70,8 @@ graph TB
 - **`src/`** - **Core business logic** with comprehensive test coverage (100% required)
 - **`tests/`** - Test files ensuring all `src/` functionality works correctly
 - **`scripts/`** - **Thin orchestrators** that use `src/` methods to generate figures and data
-- **`markdown/`** - Source markdown files for the manuscript
+- **`docs/`** - Package-level documentation and guides
+- **`manuscript/`** - Research manuscript sections (generate PDFs)
 - **`output/`** - Generated outputs (PDFs, figures, data)
 - **`repo_utilities/`** - Generic utility scripts for any project
 
@@ -101,7 +105,7 @@ All source code in `src/` must have **100% test coverage** before PDF generation
 Project-specific scripts in the `scripts/` directory are automatically executed to generate figures and data. These scripts **import and use** the tested methods from `src/`, demonstrating proper integration patterns.
 
 ### Markdown to PDF Pipeline
-Individual markdown modules are converted to PDFs with proper figure integration, and a combined document is generated with comprehensive cross-referencing.
+Manuscript sections are converted to individual PDFs with proper figure integration, and a combined manuscript document is generated with comprehensive cross-referencing. Documentation files remain as markdown only.
 
 ### Generic and Reusable
 The utility scripts can be used with any project that follows this structure, making it easy to adopt for new research projects.
@@ -225,7 +229,7 @@ graph TD
     class PDFS,FIGS,DATA,TEX files
 ```
 
-- **`output/pdf/`** - Individual and combined PDFs
+- **`output/pdf/`** - Individual manuscript section PDFs and combined manuscript PDF
 - **`output/tex/`** - LaTeX source files
 - **`output/data/`** - Data files (CSV, NPZ, etc.)
 - **`output/figures/`** - Generated figures (PNG, etc.)
@@ -263,23 +267,23 @@ flowchart TD
 
 1. **Test Validation**: Ensures 100% test coverage
 2. **Script Execution**: Runs all Python scripts in `scripts/` (validating src/ integration)
-3. **Markdown Discovery**: Finds all `.md` files in `markdown/`
-4. **PDF Generation**: Creates individual and combined PDFs
+3. **Markdown Discovery**: Finds manuscript `.md` files in `manuscript/` (01_abstract.md through 10_symbols_glossary.md)
+4. **PDF Generation**: Creates individual manuscript section PDFs and combined manuscript PDF
 5. **Output Organization**: Places outputs in organized subdirectories
 
 ## 📚 Documentation
 
-- **[`HOW_TO_USE.md`](HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced
+- **[`docs/HOW_TO_USE.md`](docs/HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced
 - **[`repo_utilities/README.md`](repo_utilities/README.md)** - Detailed utility documentation
-- **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System architecture overview
-- **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow guide
-- **[`MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown and cross-referencing guide
-- **[`EXAMPLES.md`](EXAMPLES.md)** - Project renaming examples
-- **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
-- **[`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)** - Real-world usage examples
-- **[`ROADMAP.md`](ROADMAP.md)** - Development roadmap and future plans
-- **[`SECURITY.md`](SECURITY.md)** - Security policy and best practices
-- **[`TEMPLATE_DESCRIPTION.md`](TEMPLATE_DESCRIPTION.md)** - Template overview and features
+- **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** - System architecture overview
+- **[`docs/WORKFLOW.md`](docs/WORKFLOW.md)** - Development workflow guide
+- **[`docs/MARKDOWN_TEMPLATE_GUIDE.md`](docs/MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown and cross-referencing guide
+- **[`docs/EXAMPLES.md`](docs/EXAMPLES.md)** - Project renaming examples
+- **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
+- **[`docs/EXAMPLES_SHOWCASE.md`](docs/EXAMPLES_SHOWCASE.md)** - Real-world usage examples
+- **[`docs/ROADMAP.md`](docs/ROADMAP.md)** - Development roadmap and future plans
+- **[`docs/SECURITY.md`](docs/SECURITY.md)** - Security policy and best practices
+- **[`docs/TEMPLATE_DESCRIPTION.md`](docs/TEMPLATE_DESCRIPTION.md)** - Template overview and features
 
 ## 🤝 Contributing
 
@@ -289,7 +293,7 @@ flowchart TD
 4. Update documentation as needed
 5. **Maintain thin orchestrator pattern** - scripts use src/ methods
 
-For detailed contribution guidelines, see **[`CONTRIBUTING.md`](CONTRIBUTING.md)** and **[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)**.
+For detailed contribution guidelines, see **[`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md)** and **[`docs/CODE_OF_CONDUCT.md`](docs/CODE_OF_CONDUCT.md)**.
 
 ## 📄 License
 
@@ -332,7 +336,7 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 - Check the **[`repo_utilities/README.md`](repo_utilities/README.md)** for detailed troubleshooting
 - Review the test output for specific error messages
 - Ensure all required dependencies are installed
-- See **[`FAQ.md`](FAQ.md)** for common questions and solutions
+- See **[`docs/FAQ.md`](docs/FAQ.md)** for common questions and solutions
 
 ## 🔄 Migration from QuadMath
 

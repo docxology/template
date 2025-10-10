@@ -32,8 +32,8 @@ fi
 
 echo ""
 echo "🎯 All output directories cleaned!"
-echo "💡 Run 'repo_utilities/render_pdf.sh' to regenerate everything from markdown sources"
+echo "💡 Run 'repo_utilities/render_pdf.sh' to regenerate everything from manuscript sources"
 echo ""
-echo "📁 Markdown sources remain intact in: $REPO_ROOT/markdown/"
+echo "📁 Manuscript sources remain intact in: $REPO_ROOT/manuscript/"
 echo "🔧 Scripts remain intact in: $REPO_ROOT/scripts/"
 echo "📚 Source code remains intact in: $REPO_ROOT/src/"
