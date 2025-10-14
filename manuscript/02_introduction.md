@@ -67,13 +67,11 @@ All generated data is saved alongside figures for reproducibility:
 
 To generate the complete manuscript:
 
-```bash
-# Clean previous outputs
-./repo_utilities/clean_output.sh
+    # Clean previous outputs
+    ./repo_utilities/clean_output.sh
 
-# Generate everything (tests + scripts + PDFs)
-./repo_utilities/render_pdf.sh
-```
+    # Generate everything (tests + scripts + PDFs)
+    ./repo_utilities/render_pdf.sh
 
 The system will automatically:
 1. Run all tests with 100% coverage requirement
@@ -89,7 +87,7 @@ This template can be customized for any project by:
 1. Adding project-specific scripts to `scripts/`
 2. Modifying markdown files in `markdown/`
 3. Setting environment variables for author information
-4. Adjusting LaTeX preamble in `00_preamble.md`
+4. Adjusting LaTeX preamble in `preamble.md`
 5. Adding new sections with proper cross-references
 
 ## Cross-Referencing System

@@ -8,7 +8,7 @@ The template demonstrates a complete academic paper structure with the following
 
 ### Core Sections
 
-1. **`manuscript/00_preamble.md`** - LaTeX preamble with enhanced styling and packages
+1. **`manuscript/preamble.md`** - LaTeX preamble with enhanced styling and packages
 2. **`manuscript/01_abstract.md`** - Research overview and key contributions
 3. **`manuscript/02_introduction.md`** - Introduction with section references and overview
 4. **`manuscript/03_methodology.md`** - Mathematical framework with numbered equations

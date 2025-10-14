@@ -39,7 +39,7 @@
 # MARKDOWN STRUCTURE
 # =============================================================================
 # Academic paper structure (manuscript sections that generate PDFs):
-# 00_preamble.md - LaTeX preamble and styling (does not generate PDF)
+# preamble.md - LaTeX preamble and styling (does not generate PDF)
 # 01_abstract.md - Research overview and key contributions (generates PDF)
 # 02_introduction.md - Overview and project structure (generates PDF)
 # 03_methodology.md - Mathematical framework and algorithms (generates PDF)

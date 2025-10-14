@@ -57,6 +57,13 @@ This ensures that the algorithm converges even when the gradient varies signific
 
 The computational complexity of our approach is $O(n \log n)$ per iteration, where $n$ is the problem dimension. This is achieved through the efficient data structures shown in Figure \ref{fig:data_structure}.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/data_structure.png}
+\caption{Efficient data structures used in our implementation}
+\label{fig:data_structure}
+\end{figure}
+
 The memory requirements scale as:
 
 \begin{equation}\label{eq:memory}

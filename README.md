@@ -195,7 +195,7 @@ if __name__ == "__main__":
 
 ### Markdown Structure
 
-- `00_preamble.md` - LaTeX preamble and styling
+- `preamble.md` - LaTeX preamble and styling
 - `01_introduction.md` - Project introduction
 - Additional numbered markdown files for sections
 

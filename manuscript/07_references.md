@@ -1,4 +1,4 @@
 # References {#sec:references}
 
-\nocite{*} % Include all references from bibliography
+\nocite{*}
 \bibliography{references}

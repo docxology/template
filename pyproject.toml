@@ -37,6 +37,8 @@ classifiers = [
 dependencies = [
   "numpy>=1.22",
   "matplotlib>=3.7",
+  "pypdf>=5.0",
+  "reportlab>=4.0",
 ]
 
 [project.optional-dependencies]
@@ -50,6 +52,31 @@ dev = [
 [tool.pytest.ini_options]
 addopts = "-q"
 pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__pycache__/*",
+    "*/tmp/*",
+    "*/temp/*",
+    "/private/var/folders/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]
 
 [dependency-groups]
 dev = [

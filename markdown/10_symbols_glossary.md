@@ -16,4 +16,9 @@ This glossary is auto-generated from the public API in `src/`.
 | `glossary_gen` | `build_api_index` | function | Scan `src_dir` and collect public functions/classes with summaries. |
 | `glossary_gen` | `generate_markdown_table` | function | Generate a Markdown table from API entries. |
 | `glossary_gen` | `inject_between_markers` | function | Replace content between begin_marker and end_marker (inclusive markers preserved). |
+| `pdf_validator` | `PDFValidationError` | class | Raised when PDF validation encounters an error. |
+| `pdf_validator` | `extract_first_n_words` | function | Extract the first N words from text, preserving punctuation. |
+| `pdf_validator` | `extract_text_from_pdf` | function | Extract all text content from a PDF file. |
+| `pdf_validator` | `scan_for_issues` | function | Scan extracted text for common rendering issues. |
+| `pdf_validator` | `validate_pdf_rendering` | function | Perform comprehensive validation of PDF rendering. |
 <!-- END: AUTO-API-GLOSSARY -->

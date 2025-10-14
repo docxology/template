@@ -118,7 +118,7 @@ AUTHOR_EMAIL="your.email@university.edu"
 ```
 
 #### **Custom Styling**
-Modify `manuscript/00_preamble.md` for custom LaTeX styling:
+Modify `manuscript/preamble.md` for custom LaTeX styling:
 ```latex
 % Custom colors
 \definecolor{myblue}{RGB}{0,114,178}

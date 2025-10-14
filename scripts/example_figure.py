@@ -39,7 +39,7 @@ def main() -> None:
     try:
         from example import add_numbers, multiply_numbers, calculate_average, find_maximum, find_minimum
         print("✅ Successfully imported functions from src/example.py")
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
         return
     

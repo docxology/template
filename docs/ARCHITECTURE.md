@@ -137,7 +137,7 @@ graph LR
 **Purpose**: Document mathematical concepts with references to implemented code.
 
 **Structure**:
-- `manuscript/00_preamble.md`: LaTeX preamble and styling
+- `manuscript/preamble.md`: LaTeX preamble and styling
 - `manuscript/01_introduction.md`: Project introduction and overview
 - `manuscript/02_methodology.md`: Mathematical framework and equations
 - `manuscript/03_experimental_results.md`: Results with figure references
@@ -236,7 +236,7 @@ pandoc [markdown_file] -o [output_tex]
 ### Input Dependencies
 1. **Source code** (`src/`) - Mathematical implementations
 2. **Markdown files** (`manuscript/`) - Manuscript content
-3. **LaTeX preamble** (`manuscript/00_preamble.md`) - Formatting
+3. **LaTeX preamble** (`manuscript/preamble.md`) - Formatting
 
 ### Processing Pipeline
 ```mermaid

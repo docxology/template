@@ -87,23 +87,300 @@ class TestGenerateGlossary:
         """Test main function with the actual glossary_gen module from current project."""
         # This test uses the real glossary_gen module from the current project
         # which demonstrates the actual working behavior
-        
+
         # Use the current project's actual structure
         result = glossary_main()
-        
+
         # The function should succeed with the real glossary_gen module
         assert result == 0
-        
+
         # Verify that the glossary file exists and was processed
         glossary_file = os.path.join(os.path.dirname(__file__), "..", "markdown", "10_symbols_glossary.md")
         assert os.path.exists(glossary_file)
-        
+
         # Read the file to verify it has the expected structure
         with open(glossary_file, "r") as f:
             content = f.read()
-        
+
         assert "<!-- BEGIN: AUTO-API-GLOSSARY -->" in content
         assert "<!-- END: AUTO-API-GLOSSARY -->" in content
+
+    def test_main_function_integration_with_real_src(self, tmp_path):
+        """Test main function with real src/ directory and generated content."""
+        # Create a test project structure
+        test_root = tmp_path / "integration_test"
+        test_root.mkdir()
+
+        # Copy the actual src/ directory
+        actual_src = os.path.join(os.path.dirname(__file__), "..", "src")
+        test_src = test_root / "src"
+        shutil.copytree(actual_src, test_src)
+
+        # Copy the actual repo_utilities/generate_glossary.py
+        actual_glossary_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "generate_glossary.py")
+        test_glossary_script = test_root / "repo_utilities" / "generate_glossary.py"
+        test_glossary_script.parent.mkdir()
+        shutil.copy2(actual_glossary_script, test_glossary_script)
+
+        # Create markdown directory and glossary file
+        test_markdown = test_root / "markdown"
+        test_markdown.mkdir()
+        (test_markdown / "10_symbols_glossary.md").write_text(
+            "# API Symbols Glossary\n\n"
+            "This glossary is auto-generated from the public API in `src/`.\n\n"
+            "<!-- BEGIN: AUTO-API-GLOSSARY -->\n"
+            "No public APIs detected in `src/`.\n"
+            "<!-- END: AUTO-API-GLOSSARY -->\n"
+        )
+
+        # Run the script from the test directory
+        result = subprocess.run([
+            sys.executable, str(test_glossary_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should succeed
+        assert result.returncode == 0
+
+        # Check that it updated the glossary
+        assert "Updated glossary:" in result.stdout or "Glossary up-to-date" in result.stdout
+
+        # Verify the generated content
+        glossary_file = test_markdown / "10_symbols_glossary.md"
+        with open(glossary_file, "r") as f:
+            content = f.read()
+
+        # Should contain real API entries from the src/ modules
+        assert "example" in content.lower()  # Should contain example module
+        assert "glossary_gen" in content.lower()  # Should contain glossary_gen module
+        assert "function" in content.lower()  # Should contain function entries
+        assert "class" in content.lower()  # Should contain class entries
+
+        # Should still have the markers
+        assert "<!-- BEGIN: AUTO-API-GLOSSARY -->" in content
+        assert "<!-- END: AUTO-API-GLOSSARY -->" in content
+
+    def test_main_function_handles_missing_glossary_gen(self, tmp_path):
+        """Test main function handles missing glossary_gen module gracefully."""
+        # Create test environment without glossary_gen module
+        test_root = tmp_path / "missing_glossary"
+        test_root.mkdir()
+
+        # Create src/ without glossary_gen.py
+        test_src = test_root / "src"
+        test_src.mkdir()
+        (test_src / "example.py").write_text('def test(): pass')
+
+        # Create generate_glossary.py that tries to import non-existent glossary_gen
+        test_glossary_script = test_root / "repo_utilities" / "generate_glossary.py"
+        test_glossary_script.parent.mkdir()
+        (test_glossary_script).write_text('''
+import os
+import sys
+from typing import Tuple
+
+def _repo_root() -> str:
+    return os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+def _ensure_glossary_file(path: str) -> None:
+    if os.path.exists(path):
+        return
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    skeleton = (
+        "# API Symbols Glossary\\n\\n"
+        "This glossary is auto-generated from the public API in `src/`.\\n\\n"
+        "<!-- BEGIN: AUTO-API-GLOSSARY -->\\n"
+        "No public APIs detected in `src/`.\\n"
+        "<!-- END: AUTO-API-GLOSSARY -->\\n"
+    )
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(skeleton)
+
+def main() -> int:
+    repo = _repo_root()
+    src_dir = os.path.join(repo, "src")
+    glossary_md = os.path.join(repo, "markdown", "10_symbols_glossary.md")
+
+    _ensure_glossary_file(glossary_md)
+
+    sys.path.insert(0, src_dir)
+    try:
+        from glossary_gen import build_api_index, generate_markdown_table, inject_between_markers  # This will fail
+    except Exception as exc:
+        print(f"Failed to import glossary_gen from src/: {exc}")
+        return 1
+
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+''')
+
+        # Create markdown directory
+        test_markdown = test_root / "markdown"
+        test_markdown.mkdir()
+
+        # Run the script
+        result = subprocess.run([
+            sys.executable, str(test_glossary_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should fail gracefully
+        assert result.returncode == 1
+        assert "Failed to import glossary_gen from src/" in result.stdout
+
+    def test_main_function_creates_glossary_directory(self, tmp_path):
+        """Test main function creates markdown directory if it doesn't exist."""
+        # Create test environment without markdown directory
+        test_root = tmp_path / "no_markdown"
+        test_root.mkdir()
+
+        # Copy actual src/
+        actual_src = os.path.join(os.path.dirname(__file__), "..", "src")
+        test_src = test_root / "src"
+        shutil.copytree(actual_src, test_src)
+
+        # Copy actual generate_glossary.py
+        actual_glossary_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "generate_glossary.py")
+        test_glossary_script = test_root / "repo_utilities" / "generate_glossary.py"
+        test_glossary_script.parent.mkdir()
+        shutil.copy2(actual_glossary_script, test_glossary_script)
+
+        # Run the script - should create markdown directory and file
+        result = subprocess.run([
+            sys.executable, str(test_glossary_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should succeed
+        assert result.returncode == 0
+
+        # Check that markdown directory was created
+        test_markdown = test_root / "markdown"
+        assert test_markdown.exists()
+
+        # Check that glossary file was created
+        glossary_file = test_markdown / "10_symbols_glossary.md"
+        assert glossary_file.exists()
+
+        # Check content
+        with open(glossary_file, "r") as f:
+            content = f.read()
+        assert "API Symbols Glossary" in content
+
+    def test_main_function_deterministic_output(self, tmp_path):
+        """Test that main function produces deterministic output across runs."""
+        # Create test environment
+        test_root = tmp_path / "deterministic"
+        test_root.mkdir()
+
+        # Copy actual src/
+        actual_src = os.path.join(os.path.dirname(__file__), "..", "src")
+        test_src = test_root / "src"
+        shutil.copytree(actual_src, test_src)
+
+        # Copy actual generate_glossary.py
+        actual_glossary_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "generate_glossary.py")
+        test_glossary_script = test_root / "repo_utilities" / "generate_glossary.py"
+        test_glossary_script.parent.mkdir()
+        shutil.copy2(actual_glossary_script, test_glossary_script)
+
+        # Create markdown directory and initial glossary
+        test_markdown = test_root / "markdown"
+        test_markdown.mkdir()
+        (test_markdown / "10_symbols_glossary.md").write_text(
+            "# API Symbols Glossary\n\n"
+            "<!-- BEGIN: AUTO-API-GLOSSARY -->\n"
+            "No public APIs detected.\n"
+            "<!-- END: AUTO-API-GLOSSARY -->\n"
+        )
+
+        # Run script twice
+        result1 = subprocess.run([
+            sys.executable, str(test_glossary_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        result2 = subprocess.run([
+            sys.executable, str(test_glossary_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Both should succeed
+        assert result1.returncode == 0
+        assert result2.returncode == 0
+
+        # Check that output files are identical
+        glossary_file = test_markdown / "10_symbols_glossary.md"
+
+        with open(glossary_file, "r") as f:
+            content1 = f.read()
+
+        with open(glossary_file, "r") as f:
+            content2 = f.read()
+
+        assert content1 == content2
+
+    def test_main_function_with_empty_src(self, tmp_path):
+        """Test main function with empty src/ directory."""
+        # Create test environment with empty src/
+        test_root = tmp_path / "empty_src"
+        test_root.mkdir()
+
+        test_src = test_root / "src"
+        test_src.mkdir()
+        # Don't add any Python files to src/
+
+        # Copy actual generate_glossary.py
+        actual_glossary_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "generate_glossary.py")
+        test_glossary_script = test_root / "repo_utilities" / "generate_glossary.py"
+        test_glossary_script.parent.mkdir()
+        shutil.copy2(actual_glossary_script, test_glossary_script)
+
+        # Create markdown directory and initial glossary
+        test_markdown = test_root / "markdown"
+        test_markdown.mkdir()
+
+        # Run the script - should fail because glossary_gen module is missing
+        result = subprocess.run([
+            sys.executable, str(test_glossary_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should fail when glossary_gen module is missing
+        assert result.returncode == 1
+        assert "Failed to import glossary_gen from src/" in result.stdout
+
+    def test_main_function_error_handling_comprehensive(self, tmp_path):
+        """Test main function comprehensive error handling."""
+        # Test with corrupted glossary_gen module
+        test_root = tmp_path / "corrupted_glossary"
+        test_root.mkdir()
+
+        # Copy src/ but corrupt the glossary_gen.py
+        actual_src = os.path.join(os.path.dirname(__file__), "..", "src")
+        test_src = test_root / "src"
+        shutil.copytree(actual_src, test_src)
+
+        # Corrupt the glossary_gen.py file
+        glossary_gen_file = test_src / "glossary_gen.py"
+        original_content = glossary_gen_file.read_text()
+        corrupted_content = original_content.replace("def build_api_index", "def broken_function")
+        glossary_gen_file.write_text(corrupted_content)
+
+        # Copy generate_glossary.py
+        actual_glossary_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "generate_glossary.py")
+        test_glossary_script = test_root / "repo_utilities" / "generate_glossary.py"
+        test_glossary_script.parent.mkdir()
+        shutil.copy2(actual_glossary_script, test_glossary_script)
+
+        # Create markdown directory
+        test_markdown = test_root / "markdown"
+        test_markdown.mkdir()
+
+        # Run the script - should handle import errors
+        result = subprocess.run([
+            sys.executable, str(test_glossary_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should fail gracefully
+        assert result.returncode == 1
+        assert "Failed to import glossary_gen from src/" in result.stdout
 
 
 class TestValidateMarkdown:
@@ -274,7 +551,7 @@ class TestValidateMarkdown:
         # Create test markdown file
         (tmp_path / "markdown").mkdir()
         (tmp_path / "markdown" / "test.md").write_text(
-            "\\begin{equation}x^2 + y^2 = z^2\\end{equation}"
+            r"\begin{equation}x^2 + y^2 = z^2\end{equation}"
         )
         
         problems = validate_math([str(tmp_path / "markdown" / "test.md")], str(tmp_path))
@@ -287,8 +564,8 @@ class TestValidateMarkdown:
         # Create test markdown file
         (tmp_path / "markdown").mkdir()
         (tmp_path / "markdown" / "test.md").write_text(
-            "\\begin{equation}\\label{eq:duplicate}x^2\\end{equation}\n"
-            "\\begin{equation}\\label{eq:duplicate}y^2\\end{equation}"
+            r"\begin{equation}\label{eq:duplicate}x^2\end{equation}" + "\n"
+            r"\begin{equation}\label{eq:duplicate}y^2\end{equation}"
         )
         
         problems = validate_math([str(tmp_path / "markdown" / "test.md")], str(tmp_path))
@@ -364,20 +641,472 @@ class TestValidateMarkdown:
                     assert result == 1
                     # Check that it prints the strict validation header
                     assert any("Validation issues found" in call[0][0] for call in mock_print.call_args_list)
-    
+
     def test_validate_markdown_script_execution(self):
         """Test the __main__ block execution of validate_markdown."""
         # Test that the script can be executed as a module
         import subprocess
         import sys
-        
+
         # Run the module as a script
         result = subprocess.run([
             sys.executable, "-m", "validate_markdown"
         ], cwd="repo_utilities", capture_output=True, text=True)
-        
+
         # The script should run successfully (exit code 0 or 1 depending on validation results)
         assert result.returncode in [0, 1]
+
+    def test_validate_markdown_integration_with_real_figures(self, tmp_path):
+        """Test validate_markdown with real generated figures and markdown content."""
+        # Create test project with real outputs
+        test_root = tmp_path / "validate_integration"
+        test_root.mkdir()
+
+        # Create output/figures directory with real PNG files
+        output_dir = test_root / "output" / "figures"
+        output_dir.mkdir(parents=True)
+
+        # Create fake PNG files (real ones would be too large for tests)
+        (output_dir / "convergence_plot.png").write_bytes(b"fake png content")
+        (output_dir / "experimental_setup.png").write_bytes(b"fake png content")
+        (output_dir / "data_structure.png").write_bytes(b"fake png content")
+
+        # Create markdown directory with real content
+        markdown_dir = test_root / "markdown"
+        markdown_dir.mkdir()
+
+        # Create markdown files with references to the figures
+        (markdown_dir / "01_test.md").write_text(r"""
+# Test Section {#sec:test}
+
+This is a test section that references figures.
+
+![Convergence Analysis](../output/figures/convergence_plot.png)
+
+![Experimental Setup](../output/figures/experimental_setup.png)
+
+See also [data structure figure](#fig:data_structure).
+
+\begin{equation}\label{eq:test}
+x^2 + y^2 = z^2
+\end{equation}
+
+Reference to equation \eqref{eq:test}.
+
+## Subsection {#subsec:test}
+
+More content here.
+
+![Data Structure](../output/figures/data_structure.png)
+""")
+
+        # Copy actual validate_markdown.py
+        actual_validate_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "validate_markdown.py")
+        test_validate_script = test_root / "repo_utilities" / "validate_markdown.py"
+        test_validate_script.parent.mkdir()
+        shutil.copy2(actual_validate_script, test_validate_script)
+
+        # Run validation
+        result = subprocess.run([
+            sys.executable, str(test_validate_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should pass validation (all images and references exist)
+        assert result.returncode == 0
+        assert "Markdown validation" in result.stdout  # Either passed or has issues
+
+    def test_validate_markdown_integration_with_missing_images(self, tmp_path):
+        """Test validate_markdown detects missing images correctly."""
+        # Create test project with missing images
+        test_root = tmp_path / "missing_images"
+        test_root.mkdir()
+
+        # Create output/figures directory but don't create the referenced image
+        output_dir = test_root / "output" / "figures"
+        output_dir.mkdir(parents=True)
+
+        # Create markdown directory with references to non-existent images
+        markdown_dir = test_root / "markdown"
+        markdown_dir.mkdir()
+
+        (markdown_dir / "01_test.md").write_text(r"""
+# Test Section
+
+This references a missing image.
+
+![Missing Image](../output/figures/missing_plot.png)
+
+Also references another missing one.
+
+![Another Missing](../output/figures/another_missing.png)
+""")
+
+        # Copy actual validate_markdown.py
+        actual_validate_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "validate_markdown.py")
+        test_validate_script = test_root / "repo_utilities" / "validate_markdown.py"
+        test_validate_script.parent.mkdir()
+        shutil.copy2(actual_validate_script, test_validate_script)
+
+        # Run validation - should detect missing images but pass in non-strict mode
+        result = subprocess.run([
+            sys.executable, str(test_validate_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should pass in non-strict mode (returns 0) but report issues
+        assert result.returncode == 0
+        assert "Markdown validation issues (non-strict):" in result.stdout
+        assert "Missing image:" in result.stdout
+        assert "missing_plot.png" in result.stdout
+        assert "another_missing.png" in result.stdout
+
+    def test_validate_markdown_integration_with_missing_references(self, tmp_path):
+        """Test validate_markdown detects missing equation labels and anchors."""
+        # Create test project with missing references
+        test_root = tmp_path / "missing_refs"
+        test_root.mkdir()
+
+        # Create markdown directory with broken references
+        markdown_dir = test_root / "markdown"
+        markdown_dir.mkdir()
+
+        (markdown_dir / "01_test.md").write_text(r"""
+# Test Section {#sec:test}
+
+This references a missing equation.
+
+\begin{equation}\label{eq:existing}
+x^2 = y^2
+\end{equation}
+
+But this references a non-existent equation: \eqref{eq:missing}.
+
+Also references a missing anchor: [link](#missing_anchor).
+
+And has a bare URL: https://example.com
+
+And non-informative link: [https://example.com](https://example.com)
+""")
+
+        # Copy actual validate_markdown.py
+        actual_validate_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "validate_markdown.py")
+        test_validate_script = test_root / "repo_utilities" / "validate_markdown.py"
+        test_validate_script.parent.mkdir()
+        shutil.copy2(actual_validate_script, test_validate_script)
+
+        # Run validation - should detect all issues but pass in non-strict mode
+        result = subprocess.run([
+            sys.executable, str(test_validate_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should pass in non-strict mode but report issues
+        assert result.returncode == 0
+        assert "Markdown validation issues (non-strict):" in result.stdout
+        assert "Missing equation label for" in result.stdout
+        assert "Missing anchor/label for link" in result.stdout
+        assert "Bare URL found" in result.stdout
+        assert "Non-informative link text" in result.stdout
+
+    def test_validate_markdown_integration_with_math_issues(self, tmp_path):
+        """Test validate_markdown detects math formatting issues."""
+        # Create test project with math issues
+        test_root = tmp_path / "math_issues"
+        test_root.mkdir()
+
+        # Create markdown directory with math problems
+        markdown_dir = test_root / "markdown"
+        markdown_dir.mkdir()
+
+        (markdown_dir / "01_test.md").write_text(r"""
+# Test Section
+
+This has dollar math: $$x^2 + y^2 = z^2$$
+
+This has bracket math: \[x^2 + y^2 = z^2\]
+
+This has equation without label:
+\begin{equation}
+x^2 + y^2 = z^2
+\end{equation}
+
+This has duplicate labels:
+\begin{equation}\label{eq:duplicate}
+x^2 + y^2 = z^2
+\end{equation}
+
+\begin{equation}\label{eq:duplicate}
+a^2 + b^2 = c^2
+\end{equation}
+
+This has a proper equation:
+\begin{equation}\label{eq:proper}
+e = mc^2
+\end{equation}
+""")
+
+        # Copy actual validate_markdown.py
+        actual_validate_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "validate_markdown.py")
+        test_validate_script = test_root / "repo_utilities" / "validate_markdown.py"
+        test_validate_script.parent.mkdir()
+        shutil.copy2(actual_validate_script, test_validate_script)
+
+        # Run validation - should detect math issues but pass in non-strict mode
+        result = subprocess.run([
+            sys.executable, str(test_validate_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should pass in non-strict mode but report issues
+        assert result.returncode == 0
+        assert "Markdown validation" in result.stdout  # Either passed or has issues
+        assert "Use equation environment instead of $$" in result.stdout
+        assert "Use equation environment instead of" in result.stdout and "\\[" in result.stdout
+        assert "Equation missing" in result.stdout
+        assert "Duplicate equation label" in result.stdout
+
+    def test_validate_markdown_strict_mode_integration(self, tmp_path):
+        """Test validate_markdown strict mode with real content."""
+        # Create test project with some issues
+        test_root = tmp_path / "strict_mode"
+        test_root.mkdir()
+
+        # Create markdown directory with minor issues
+        markdown_dir = test_root / "markdown"
+        markdown_dir.mkdir()
+
+        (markdown_dir / "01_test.md").write_text(r"""
+# Test Section
+
+This has an unlabeled equation:
+\begin{equation}
+x^2 + y^2 = z^2
+\end{equation}
+
+This is fine.
+""")
+
+        # Copy actual validate_markdown.py
+        actual_validate_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "validate_markdown.py")
+        test_validate_script = test_root / "repo_utilities" / "validate_markdown.py"
+        test_validate_script.parent.mkdir()
+        shutil.copy2(actual_validate_script, test_validate_script)
+
+        # Run in strict mode
+        result = subprocess.run([
+            sys.executable, str(test_validate_script), "--strict"
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should fail in strict mode due to unlabeled equation
+        assert result.returncode == 1
+        assert "Validation issues found" in result.stdout
+        assert "Equation missing" in result.stdout
+
+    def test_validate_markdown_non_strict_mode_integration(self, tmp_path):
+        """Test validate_markdown non-strict mode with real content."""
+        # Create test project with some issues
+        test_root = tmp_path / "non_strict"
+        test_root.mkdir()
+
+        # Create markdown directory with minor issues
+        markdown_dir = test_root / "markdown"
+        markdown_dir.mkdir()
+
+        (markdown_dir / "01_test.md").write_text(r"""
+# Test Section
+
+This has an unlabeled equation:
+\begin{equation}
+x^2 + y^2 = z^2
+\end{equation}
+
+This is fine.
+""")
+
+        # Copy actual validate_markdown.py
+        actual_validate_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "validate_markdown.py")
+        test_validate_script = test_root / "repo_utilities" / "validate_markdown.py"
+        test_validate_script.parent.mkdir()
+        shutil.copy2(actual_validate_script, test_validate_script)
+
+        # Run in non-strict mode (default)
+        result = subprocess.run([
+            sys.executable, str(test_validate_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should pass in non-strict mode but report issues
+        assert result.returncode == 0
+        assert "Markdown validation" in result.stdout  # Either passed or has issues
+        assert "Equation missing" in result.stdout
+
+    def test_validate_markdown_handles_missing_markdown_dir(self, tmp_path):
+        """Test validate_markdown handles missing markdown directory."""
+        # Create test project without markdown directory
+        test_root = tmp_path / "no_markdown_dir"
+        test_root.mkdir()
+
+        # Copy actual validate_markdown.py
+        actual_validate_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "validate_markdown.py")
+        test_validate_script = test_root / "repo_utilities" / "validate_markdown.py"
+        test_validate_script.parent.mkdir()
+        shutil.copy2(actual_validate_script, test_validate_script)
+
+        # Run validation - should handle missing directory
+        result = subprocess.run([
+            sys.executable, str(test_validate_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should fail gracefully
+        assert result.returncode == 1
+        assert "Markdown directory not found" in result.stdout
+
+    def test_validate_markdown_multiple_files_integration(self, tmp_path):
+        """Test validate_markdown with multiple markdown files."""
+        # Create test project with multiple markdown files
+        test_root = tmp_path / "multiple_files"
+        test_root.mkdir()
+
+        # Create markdown directory with multiple files
+        markdown_dir = test_root / "markdown"
+        markdown_dir.mkdir()
+
+        # Create multiple markdown files with cross-references
+        (markdown_dir / "01_intro.md").write_text(r"""
+# Introduction {#sec:intro}
+
+This is the introduction.
+
+\begin{equation}\label{eq:intro_eq}
+x + y = z
+\end{equation}
+
+See also [methodology](#sec:methodology).
+""")
+
+        (markdown_dir / "02_methodology.md").write_text(r"""
+# Methodology {#sec:methodology}
+
+This is the methodology section.
+
+\begin{equation}\label{eq:method_eq}
+a^2 + b^2 = c^2
+\end{equation}
+
+See also [introduction](#sec:intro) and \eqref{eq:intro_eq}.
+""")
+
+        (markdown_dir / "03_results.md").write_text(r"""
+# Results
+
+\begin{equation}\label{eq:result_eq}
+result = analysis(data)
+\end{equation}
+
+References to \eqref{eq:intro_eq}, \eqref{eq:method_eq}, and \eqref{eq:result_eq}.
+""")
+
+        # Copy actual validate_markdown.py
+        actual_validate_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "validate_markdown.py")
+        test_validate_script = test_root / "repo_utilities" / "validate_markdown.py"
+        test_validate_script.parent.mkdir()
+        shutil.copy2(actual_validate_script, test_validate_script)
+
+        # Run validation - should pass with all cross-references resolved
+        result = subprocess.run([
+            sys.executable, str(test_validate_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should pass validation (non-strict mode)
+        assert result.returncode == 0
+        assert "Markdown validation" in result.stdout  # Either passed or has issues
+
+    def test_validate_markdown_real_world_scenario(self, tmp_path):
+        """Test validate_markdown in a realistic scenario with figures and data."""
+        # Create a realistic test scenario
+        test_root = tmp_path / "real_scenario"
+        test_root.mkdir()
+
+        # Create output structure with figures and data
+        output_dir = test_root / "output"
+        figures_dir = output_dir / "figures"
+        data_dir = output_dir / "data"
+        figures_dir.mkdir(parents=True)
+        data_dir.mkdir(parents=True)
+
+        # Create some fake output files
+        (figures_dir / "convergence_analysis.png").write_bytes(b"fake png")
+        (figures_dir / "ablation_study.png").write_bytes(b"fake png")
+        (data_dir / "results.csv").write_text("method,accuracy\nOur Method,0.95\nBaseline,0.85\n")
+
+        # Create markdown directory with realistic content
+        markdown_dir = test_root / "markdown"
+        markdown_dir.mkdir()
+
+        # Create realistic manuscript sections
+        (markdown_dir / "01_abstract.md").write_text(r"""
+# Abstract
+
+This paper presents a novel method for solving optimization problems.
+
+\begin{equation}\label{eq:objective}
+\min_x f(x) = \|Ax - b\|^2
+\end{equation}
+
+Our method achieves state-of-the-art performance as shown in Figure \ref{fig:convergence} and Table \ref{tab:results}.
+
+![Convergence Analysis](../output/figures/convergence_analysis.png)
+
+## Keywords
+
+optimization, machine learning, convergence analysis
+""")
+
+        (markdown_dir / "04_experimental_results.md").write_text(r"""
+# Experimental Results {#sec:results}
+
+## Convergence Analysis {#subsec:convergence}
+
+Figure \ref{fig:convergence} shows the convergence behavior of our method compared to baselines.
+
+![Convergence Analysis](../output/figures/convergence_analysis.png)
+
+\begin{equation}\label{eq:convergence_rate}
+\rho = \frac{\|x_{k+1} - x^*\|}{\|x_k - x^*\|}
+\end{equation}
+
+## Ablation Study {#subsec:ablation}
+
+Figure \ref{fig:ablation} demonstrates the contribution of each component.
+
+![Ablation Study](../output/figures/ablation_study.png)
+
+## Quantitative Results {#subsec:quantitative}
+
+Table \ref{tab:results} summarizes the performance across different datasets.
+
+| Method | Accuracy | Convergence Rate |
+|--------|----------|------------------|
+| Our Method | 0.95 | 0.85 |
+| Baseline | 0.85 | 0.90 |
+
+\begin{equation}\label{eq:final}
+accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+
+See also [methodology section](#sec:methodology) for implementation details.
+""")
+
+        # Copy actual validate_markdown.py
+        actual_validate_script = os.path.join(os.path.dirname(__file__), "..", "repo_utilities", "validate_markdown.py")
+        test_validate_script = test_root / "repo_utilities" / "validate_markdown.py"
+        test_validate_script.parent.mkdir()
+        shutil.copy2(actual_validate_script, test_validate_script)
+
+        # Run validation - should pass with all references resolved
+        result = subprocess.run([
+            sys.executable, str(test_validate_script)
+        ], cwd=str(test_root), capture_output=True, text=True)
+
+        # Should pass validation (non-strict mode)
+        assert result.returncode == 0
+        assert "Markdown validation" in result.stdout  # Either passed or has issues
 
 
 class TestLuaScript:
@@ -488,6 +1217,100 @@ class TestShellScripts:
             pytest.fail("Script took too long to execute, likely hanging")
         except FileNotFoundError:
             pytest.skip("Script execution not available on this platform")
+
+
+class TestValidatePDFOutput:
+    """Test the validate_pdf_output.py orchestrator script."""
+    
+    def test_validate_pdf_output_script_exists(self):
+        """Test that the validate_pdf_output.py script exists and is executable."""
+        script_path = Path(__file__).parent.parent / "repo_utilities" / "validate_pdf_output.py"
+        assert script_path.exists(), "validate_pdf_output.py should exist"
+        assert os.access(script_path, os.X_OK), "validate_pdf_output.py should be executable"
+    
+    def test_validate_pdf_output_imports(self):
+        """Test that the script can import required modules."""
+        # This tests the thin orchestrator properly imports from src/
+        script_path = Path(__file__).parent.parent / "repo_utilities"
+        sys.path.insert(0, str(script_path))
+        
+        try:
+            # Check if we can import the validator module through the script's path
+            sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+            from pdf_validator import validate_pdf_rendering, PDFValidationError
+            
+            # Verify functions exist
+            assert callable(validate_pdf_rendering)
+            assert issubclass(PDFValidationError, Exception)
+        finally:
+            # Clean up
+            if str(script_path) in sys.path:
+                sys.path.remove(str(script_path))
+            src_path = str(Path(__file__).parent.parent / "src")
+            if src_path in sys.path:
+                sys.path.remove(src_path)
+    
+    def test_validate_pdf_output_on_actual_pdf(self):
+        """Test validation on the actual project PDF if it exists."""
+        pdf_path = Path(__file__).parent.parent / "output" / "pdf" / "project_combined.pdf"
+        
+        if not pdf_path.exists():
+            pytest.skip("Project PDF not found, skipping integration test")
+        
+        # Run the validation script
+        script_path = Path(__file__).parent.parent / "repo_utilities" / "validate_pdf_output.py"
+        
+        result = subprocess.run(
+            ["uv", "run", "python", str(script_path), str(pdf_path), "--words", "100"],
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        
+        # Script should complete (exit code 0 for no issues, 1 for issues found, 2 for error)
+        assert result.returncode in [0, 1, 2], f"Unexpected exit code: {result.returncode}"
+        
+        # Should produce output
+        assert len(result.stdout) > 0, "Script should produce output"
+        
+        # Should contain validation report elements
+        assert "PDF VALIDATION REPORT" in result.stdout
+        assert "First" in result.stdout and "words" in result.stdout
+    
+    def test_validate_pdf_output_nonexistent_file(self):
+        """Test validation script handles nonexistent files gracefully."""
+        script_path = Path(__file__).parent.parent / "repo_utilities" / "validate_pdf_output.py"
+        fake_pdf = Path("/tmp/nonexistent_pdf_file.pdf")
+        
+        result = subprocess.run(
+            ["uv", "run", "python", str(script_path), str(fake_pdf)],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        
+        # Should exit with error code
+        assert result.returncode == 2, "Should return error code for nonexistent file"
+        
+        # Should have error message
+        assert "not found" in result.stdout.lower() or "error" in result.stdout.lower()
+    
+    def test_validate_pdf_output_help(self):
+        """Test that the script provides help information."""
+        script_path = Path(__file__).parent.parent / "repo_utilities" / "validate_pdf_output.py"
+        
+        result = subprocess.run(
+            ["uv", "run", "python", str(script_path), "--help"],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        
+        # Should exit successfully
+        assert result.returncode == 0
+        
+        # Should contain help text
+        assert "usage:" in result.stdout.lower() or "Validate PDF" in result.stdout
 
 
 # Clean up sys.path

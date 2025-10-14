@@ -163,14 +163,27 @@ def validate_math(md_paths: List[str], repo_root: str) -> List[str]:
 
 def main() -> int:
     """Main function to run markdown validation.
-    
+
     Returns:
         0 on success, 1 on failure or validation issues
     """
     repo_root = _repo_root()
-    markdown_dir = os.path.join(repo_root, "markdown")
-    if not os.path.isdir(markdown_dir):
-        print(f"Markdown directory not found: {markdown_dir}")
+
+    # Try multiple possible locations for markdown files
+    possible_markdown_dirs = [
+        os.path.join(repo_root, "markdown"),  # Standard location
+        os.path.join(os.getcwd(), "markdown"),  # Current working directory (for tests)
+        "markdown"  # Relative to current directory
+    ]
+
+    markdown_dir = None
+    for potential_dir in possible_markdown_dirs:
+        if os.path.isdir(potential_dir):
+            markdown_dir = potential_dir
+            break
+
+    if markdown_dir is None:
+        print(f"Markdown directory not found. Tried: {possible_markdown_dirs}")
         return 1
 
     md_paths = find_markdown_files(markdown_dir)

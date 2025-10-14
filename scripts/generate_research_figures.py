@@ -44,7 +44,7 @@ def generate_convergence_plot(figure_dir: str, data_dir: str) -> str:
     try:
         from example import add_numbers, multiply_numbers, calculate_average
         print("✅ Using src/ functions for convergence plot")
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
         return ""
     
@@ -117,9 +117,9 @@ def generate_experimental_setup(figure_dir: str, data_dir: str) -> str:
         print(f"Number of components: {num_components}")
         print(f"  Is even: {is_even(num_components)}")
         print(f"  Is odd: {is_odd(num_components)}")
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
-    
+
     fig, ax = plt.subplots(figsize=(12, 8))
     
     # Create a simple flowchart-like diagram
@@ -194,7 +194,7 @@ def generate_data_structure_plot(figure_dir: str, data_dir: str) -> str:
         print(figure_path)
         return figure_path
 
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
         return ""
 
@@ -232,7 +232,7 @@ def generate_step_size_analysis(figure_dir: str, data_dir: str) -> str:
         print(figure_path)
         return figure_path
 
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
         return ""
 
@@ -279,7 +279,7 @@ def generate_scalability_analysis(figure_dir: str, data_dir: str) -> str:
         print(figure_path)
         return figure_path
 
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
         return ""
 
@@ -317,7 +317,7 @@ def generate_dataset_summary_table(data_dir: str) -> str:
         print(csv_path)
         return csv_path
 
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
         return ""
 
@@ -363,7 +363,7 @@ def generate_performance_comparison_table(data_dir: str) -> str:
         print(csv_path)
         return csv_path
 
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
         return ""
 
@@ -398,7 +398,7 @@ def generate_ablation_study(figure_dir: str, data_dir: str) -> str:
         print(figure_path)
         return figure_path
 
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
         return ""
 
@@ -444,7 +444,7 @@ def generate_hyperparameter_sensitivity(figure_dir: str, data_dir: str) -> str:
         print(figure_path)
         return figure_path
 
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
         return ""
 
@@ -488,7 +488,7 @@ def generate_image_classification_results(figure_dir: str, data_dir: str) -> str
         print(figure_path)
         return figure_path
 
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
         return ""
 
@@ -529,7 +529,7 @@ def generate_recommendation_scalability(figure_dir: str, data_dir: str) -> str:
         print(figure_path)
         return figure_path
 
-    except ImportError as e:
+    except (ImportError, SyntaxError) as e:
         print(f"❌ Failed to import from src/example.py: {e}")
         return ""
 
