@@ -38,9 +38,9 @@ DOI="${DOI:-}"
 PROJECT_TITLE="${PROJECT_TITLE:-Project Title}"
 
 if [ -n "$DOI" ]; then
-    AUTHOR_TEX="$AUTHOR_NAME\\\\ ORCID: $AUTHOR_ORCID\\\\ Email: $AUTHOR_EMAIL\\\\ DOI: $DOI"
+    AUTHOR_DETAILS="ORCID: $AUTHOR_ORCID\\\\ Email: $AUTHOR_EMAIL\\\\ DOI: $DOI"
 else
-    AUTHOR_TEX="$AUTHOR_NAME\\\\ ORCID: $AUTHOR_ORCID\\\\ Email: $AUTHOR_EMAIL"
+    AUTHOR_DETAILS="ORCID: $AUTHOR_ORCID\\\\ Email: $AUTHOR_EMAIL"
 fi
 
 # =============================================================================
@@ -271,7 +271,7 @@ create_ide_friendly_pdf() {
     -f markdown+implicit_figures+tex_math_dollars+tex_math_single_backslash+raw_tex+autolink_bare_uris
     -s
     -V title="$PROJECT_TITLE"
-    -V author="$AUTHOR_TEX"
+    -V author="$AUTHOR_DETAILS"
     -V date="$(date '+%B %d, %Y')"
     --pdf-engine=xelatex
     --toc
@@ -322,7 +322,7 @@ create_web_optimized_pdf() {
     -f markdown+implicit_figures+tex_math_dollars+tex_math_single_backslash+raw_tex+autolink_bare_uris
     -s
     -V title="$PROJECT_TITLE"
-    -V author="$AUTHOR_TEX"
+    -V author="$AUTHOR_DETAILS"
     -V date="$(date '+%B %d, %Y')"
     --pdf-engine=wkhtmltopdf
     --toc
@@ -561,7 +561,7 @@ build_one() {
     -f markdown+implicit_figures+tex_math_dollars+tex_math_single_backslash+raw_tex+autolink_bare_uris
     -s
     -V title="$title"
-    -V author="$AUTHOR_TEX"
+    -V author="$AUTHOR_DETAILS"
     -V date="$(date '+%B %d, %Y')"
     --pdf-engine=xelatex
     --toc
@@ -649,17 +649,41 @@ build_combined() {
   local preamble_tex="$1"
   local modules=("$@")
   local combined_md="$OUTPUT_DIR/project_combined.md"
-  
+
   log_info "Step 5: Building combined document..."
-  
-  # Build combined markdown with special handling for abstract
+
+  # Build combined markdown with proper title page and abstract handling
   {
     : > "$combined_md"
-    
+
+    # Add a proper title page before the abstract (using LaTeX to avoid section numbering)
+    cat > "$combined_md" << EOF
+\begin{titlepage}
+\centering
+\textbf{\Huge $PROJECT_TITLE}
+
+\bigskip
+
+\textbf{\Large $AUTHOR_NAME}
+
+\smallskip
+
+$AUTHOR_DETAILS
+
+\bigskip
+
+\textbf{\large $(date '+%B %d, %Y')}
+
+\end{titlepage}
+
+\newpage
+
+EOF
+
     # Handle abstract specially - it should appear before TOC
     local abstract_module=""
     local other_modules=()
-    
+
     for module in "${modules[@]}"; do
       if [[ "$module" == "01_abstract.md" ]]; then
         abstract_module="$module"
@@ -667,13 +691,13 @@ build_combined() {
         other_modules+=("$module")
       fi
     done
-    
-    # Add abstract first (without page break)
+
+    # Add abstract after title page
     if [ -n "$abstract_module" ]; then
       cat "$MARKDOWN_DIR/$abstract_module" >> "$combined_md"
       printf '\n\n\\newpage\n\n' >> "$combined_md"
     fi
-    
+
     # Add other modules with page breaks
     for i in "${!other_modules[@]}"; do
       if [ $i -gt 0 ]; then
@@ -686,8 +710,31 @@ build_combined() {
       fi
     done
   }
-  
+
   log_info "Generated combined markdown: $combined_md"
+
+  # Fix bibliography placement - move it to the very end
+  log_info "Fixing bibliography placement..."
+
+  # Find the references section and move bibliography to end
+  if grep -q "bibliography{references}" "$combined_md"; then
+    # Create a temporary file without the bibliography line and nocite
+    local temp_md="$OUTPUT_DIR/temp_combined.md"
+    # Remove bibliography and nocite commands from their current location
+    sed '/bibliography{references}/d; /\\nocite{\*}/d' "$combined_md" > "$temp_md"
+
+    # Add nocite and bibliography at the very end
+    echo "" >> "$temp_md"
+    echo "\\nocite{*}" >> "$temp_md"
+    echo "\\bibliography{references}" >> "$temp_md"
+
+    # Replace original file
+    mv "$temp_md" "$combined_md"
+
+    log_info "✅ Bibliography and nocite moved to end of document"
+  else
+    log_warn "No bibliography command found in combined markdown"
+  fi
   
   # Generate TeX file for combined document
   log_info "Generating combined TeX file..."
@@ -696,7 +743,7 @@ build_combined() {
     -f markdown+implicit_figures+tex_math_dollars+tex_math_single_backslash+raw_tex+autolink_bare_uris
     -s
     -V title="$PROJECT_TITLE"
-    -V author="$AUTHOR_TEX"
+    -V author="$AUTHOR_DETAILS"
     -V date="$(date '+%B %d, %Y')"
     --pdf-engine=xelatex
     --toc

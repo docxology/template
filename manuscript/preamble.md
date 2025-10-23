@@ -180,7 +180,7 @@ This file contains LaTeX preamble commands that will be inserted at the beginnin
 
 % Configure bibliography
 \bibliographystyle{unsrt}  % Unsorted bibliography style
-\bibliography{references}  % Bibliography file (if it exists)
+% Bibliography is handled in 07_references.md
 
 % Simple page break support for document structure
 % Note: Page breaks are handled in the markdown generation, not here

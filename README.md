@@ -14,6 +14,11 @@ This is a **GitHub Template Repository** that gives you:
 - ✅ **Thin orchestrator pattern** for maintainable code
 - ✅ **Ready-to-use utilities** for any research project
 - ✅ **Professional documentation** structure
+- ✅ **Advanced quality analysis** and document metrics
+- ✅ **Reproducibility tools** for scientific workflows
+- ✅ **Integrity verification** and validation
+- ✅ **Publishing tools** for academic dissemination
+- ✅ **Scientific development** best practices
 
 ## 🚀 Quick Start
 
@@ -147,17 +152,42 @@ pip install -r requirements.txt
 
 ## 🔧 Customization
 
-### Project Metadata
+### Project Metadata Configuration
 
-Set environment variables to customize output:
+The system is **fully configurable** through environment variables. Set these before running the pipeline:
 
 ```bash
+# Basic configuration
 export AUTHOR_NAME="Your Name"
 export AUTHOR_ORCID="0000-0000-0000-0000"
 export AUTHOR_EMAIL="your.email@example.com"
-export DOI="10.5281/zenodo.12345678"
 export PROJECT_TITLE="Your Project Title"
+
+# Optional DOI (if available)
+export DOI="10.5281/zenodo.12345678"
 ```
+
+### Complete Configuration Example
+
+```bash
+# Set all metadata for your project
+export AUTHOR_NAME="Dr. Jane Smith"
+export PROJECT_TITLE="Advanced Optimization Framework for Machine Learning"
+export AUTHOR_EMAIL="jane.smith@university.edu"
+export AUTHOR_ORCID="0000-0000-0000-1234"
+export DOI="10.5281/zenodo.12345678"
+
+# Generate with custom configuration
+./repo_utilities/render_pdf.sh
+```
+
+**Configuration is applied to:**
+- PDF metadata (title, author, creation date)
+- LaTeX document properties
+- Generated file headers
+- Cross-reference systems
+
+**See [`AGENTS.md`](AGENTS.md) for complete configuration documentation.**
 
 ### Adding Project-Specific Scripts
 
@@ -273,14 +303,31 @@ flowchart TD
 
 ## 📚 Documentation
 
+### Core Documentation
+- **[`AGENTS.md`](AGENTS.md)** - **Complete system documentation** - Everything you need to know
 - **[`docs/HOW_TO_USE.md`](docs/HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced
 - **[`repo_utilities/README.md`](repo_utilities/README.md)** - Detailed utility documentation
+- **[`docs/DOCUMENTATION_INDEX.md`](docs/DOCUMENTATION_INDEX.md)** - **Complete documentation index** - All documentation files organized
+
+### Architecture & Design
 - **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)** - System architecture overview
 - **[`docs/WORKFLOW.md`](docs/WORKFLOW.md)** - Development workflow guide
+- **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
+
+### Advanced Modules
+- **[`src/quality_checker.py`](src/quality_checker.py)** - Document quality analysis and metrics
+- **[`src/reproducibility.py`](src/reproducibility.py)** - Build reproducibility and environment tracking
+- **[`src/integrity.py`](src/integrity.py)** - File integrity and cross-reference validation
+- **[`src/publishing.py`](src/publishing.py)** - Academic publishing workflow tools
+- **[`src/scientific_dev.py`](src/scientific_dev.py)** - Scientific computing best practices
+- **[`src/build_verifier.py`](src/build_verifier.py)** - Build process validation and verification
+
+### Usage Guides
 - **[`docs/MARKDOWN_TEMPLATE_GUIDE.md`](docs/MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown and cross-referencing guide
 - **[`docs/EXAMPLES.md`](docs/EXAMPLES.md)** - Project renaming examples
-- **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
 - **[`docs/EXAMPLES_SHOWCASE.md`](docs/EXAMPLES_SHOWCASE.md)** - Real-world usage examples
+
+### Development & Maintenance
 - **[`docs/ROADMAP.md`](docs/ROADMAP.md)** - Development roadmap and future plans
 - **[`docs/SECURITY.md`](docs/SECURITY.md)** - Security policy and best practices
 - **[`docs/TEMPLATE_DESCRIPTION.md`](docs/TEMPLATE_DESCRIPTION.md)** - Template overview and features

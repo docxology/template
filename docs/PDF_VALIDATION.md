@@ -229,3 +229,4 @@ Check the compilation logs in `output/pdf/*_compile.log` for detailed LaTeX warn
 - [Project Architecture](ARCHITECTURE.md)
 - [Development Workflow](WORKFLOW.md)
 
+
