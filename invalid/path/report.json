@@ -1,10 +1,10 @@
 {
-  "environment_hash": "705fce7c5ef1b44555b526a10bdac39f65ba107e47cb62f1d02dac14ae18fd97",
-  "dependency_hash": "73d4d44481b8a921c068cbe014f4bf2035f959f6166b285fb259050eb236d4ed",
-  "code_hash": "5fa045eff98017c53dfc4b264cfb9116a668b3cf1aea0d31bdea4dd475f77ad7",
+  "environment_hash": "c79857a2386fc443df307566b8eb8c4e75f408e060a76843a8a6136de84ce139",
+  "dependency_hash": "ab33309706a61cdbbbf75f097bbfa7868b15dc398596b36db367a8832f9670ed",
+  "code_hash": "f8b72eea6a48c1e6072ab719263b910f4aaa8513b1d6dda8cb1f5bff6d42f2fd",
   "data_hash": "no_data_directory",
-  "overall_hash": "f3a5ac53e6c0a319d1fe909e2b28c9ac4bba4f80fa56ef7a9ea13763ded24725",
-  "timestamp": "2025-10-23T10:59:14.859246",
+  "overall_hash": "417e94dd4ac6bc273af5291c579301db715afec2c233a3a294dce3ff84d8e2a2",
+  "timestamp": "2025-11-02T11:55:26.626480",
   "platform_info": {
     "system": "Darwin",
     "release": "25.0.0",
@@ -18,7 +18,7 @@
   "dependency_info": [
     {
       "package": "charset-normalizer",
-      "version": "3.4.3",
+      "version": "3.4.4",
       "source": "uv"
     },
     {
@@ -28,7 +28,7 @@
     },
     {
       "package": "coverage",
-      "version": "7.10.4",
+      "version": "7.11.0",
       "source": "uv"
     },
     {
@@ -38,12 +38,12 @@
     },
     {
       "package": "fonttools",
-      "version": "4.59.0",
+      "version": "4.60.1",
       "source": "uv"
     },
     {
       "package": "iniconfig",
-      "version": "2.1.0",
+      "version": "2.3.0",
       "source": "uv"
     },
     {
@@ -53,12 +53,12 @@
     },
     {
       "package": "matplotlib",
-      "version": "3.10.5",
+      "version": "3.10.7",
       "source": "uv"
     },
     {
       "package": "mypy",
-      "version": "1.17.1",
+      "version": "1.18.2",
       "source": "uv"
     },
     {
@@ -68,7 +68,7 @@
     },
     {
       "package": "numpy",
-      "version": "2.3.2",
+      "version": "2.3.4",
       "source": "uv"
     },
     {
@@ -83,7 +83,7 @@
     },
     {
       "package": "pillow",
-      "version": "11.3.0",
+      "version": "12.0.0",
       "source": "uv"
     },
     {
@@ -103,22 +103,22 @@
     },
     {
       "package": "pyparsing",
-      "version": "3.2.3",
+      "version": "3.2.5",
       "source": "uv"
     },
     {
       "package": "pypdf",
-      "version": "6.1.1",
+      "version": "6.1.3",
       "source": "uv"
     },
     {
       "package": "pytest",
-      "version": "8.4.1",
+      "version": "8.4.2",
       "source": "uv"
     },
     {
       "package": "pytest-cov",
-      "version": "6.2.1",
+      "version": "7.0.0",
       "source": "uv"
     },
     {
@@ -143,7 +143,7 @@
     },
     {
       "package": "typing-extensions",
-      "version": "4.14.1",
+      "version": "4.15.0",
       "source": "uv"
     }
   ],

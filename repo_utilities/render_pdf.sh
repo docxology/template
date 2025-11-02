@@ -267,6 +267,7 @@ create_ide_friendly_pdf() {
   log_info "Creating IDE-friendly PDF version..."
   
   # Use different settings optimized for IDE viewing
+  # Note: Avoid using cleveref here to prevent package conflicts
   local pandoc_args=(
     -f markdown+implicit_figures+tex_math_dollars+tex_math_single_backslash+raw_tex+autolink_bare_uris
     -s
@@ -295,18 +296,16 @@ create_ide_friendly_pdf() {
     -V toccolor=black
     -V filecolor=black
     -V menucolor=black
-    --highlight-style=espresso
-    --listings
+    --syntax-highlighting=espresso
     --resource-path="$MARKDOWN_DIR:$OUTPUT_DIR:$LATEX_TEMP_DIR:$REPO_ROOT"
-    -H "$preamble_tex"
     -o "$ide_pdf"
   )
   
-  if pandoc "$combined_md" "${pandoc_args[@]}"; then
+  if pandoc "$combined_md" "${pandoc_args[@]}" 2>/dev/null; then
     log_info "✅ Created IDE-friendly PDF: $ide_pdf"
     return 0
   else
-    log_error "❌ Failed to create IDE-friendly PDF"
+    log_warn "⚠️  IDE-friendly PDF creation failed (continuing without preamble)"
     return 1
   fi
 }
@@ -479,12 +478,11 @@ EOF
     --toc
     --toc-depth=3
     --number-sections
-    --highlight-style=espresso
+    --syntax-highlighting=espresso
     --resource-path="$OUTPUT_DIR"
     --css="$css_file"
     --standalone
     --embed-resources
-    --self-contained
     --lua-filter="$REPO_ROOT/repo_utilities/convert_latex_images.lua"
     -o "$html_out"
   )
@@ -503,20 +501,20 @@ EOF
     local figures_dir="$OUTPUT_DIR/figures"
     if [ -d "$figures_dir" ]; then
       # Replace relative image paths with absolute paths
-      sed -i "s|src=\"\.\./output/figures/|src=\"$figures_dir/|g" "$html_out"
-      sed -i "s|src=\"output/figures/|src=\"$figures_dir/|g" "$html_out"
-      sed -i "s|src=\"figures/|src=\"$figures_dir/|g" "$html_out"
+      # Use portable sed syntax (compatible with macOS/BSD and GNU sed)
+      sed -i.bak "s|src=\"\.\./output/figures/|src=\"$figures_dir/|g" "$html_out" && rm -f "$html_out.bak"
+      sed -i.bak "s|src=\"output/figures/|src=\"$figures_dir/|g" "$html_out" && rm -f "$html_out.bak"
+      sed -i.bak "s|src=\"figures/|src=\"$figures_dir/|g" "$html_out" && rm -f "$html_out.bak"
       
       # Convert LaTeX \includegraphics commands to HTML img tags
-      sed -i "s|\\includegraphics\[width=0\.9\\textwidth\]{\.\./output/figures/convergence_plot\.png}|<img src=\"$figures_dir/convergence_plot.png\" alt=\"Convergence Plot\" style=\"max-width: 100%; height: auto;\">|g" "$html_out"
-      sed -i "s|\\includegraphics\[width=0\.9\\textwidth\]{\.\./output/figures/experimental_setup\.png}|<img src=\"$figures_dir/experimental_setup.png\" alt=\"Experimental Setup\" style=\"max-width: 100%; height: auto;\">|g" "$html_out"
-      sed -i "s|\\includegraphics\[width=0\.8\\textwidth\]{\.\./output/figures/example_figure\.png}|<img src=\"$figures_dir/example_figure.png\" alt=\"Example Figure\" style=\"max-width: 100%; height: auto;\">|g" "$html_out"
+      sed -i.bak "s|\\\\includegraphics\\[width=0\\.9\\\\textwidth\\]{\\.\\./output/figures/convergence_plot\\.png}|<img src=\"$figures_dir/convergence_plot.png\" alt=\"Convergence Plot\" style=\"max-width: 100%; height: auto;\">|g" "$html_out" && rm -f "$html_out.bak"
+      sed -i.bak "s|\\\\includegraphics\\[width=0\\.9\\\\textwidth\\]{\\.\\./output/figures/experimental_setup\\.png}|<img src=\"$figures_dir/experimental_setup.png\" alt=\"Experimental Setup\" style=\"max-width: 100%; height: auto;\">|g" "$html_out" && rm -f "$html_out.bak"
+      sed -i.bak "s|\\\\includegraphics\\[width=0\\.8\\\\textwidth\\]{\\.\\./output/figures/example_figure\\.png}|<img src=\"$figures_dir/example_figure.png\" alt=\"Example Figure\" style=\"max-width: 100%; height: auto;\">|g" "$html_out" && rm -f "$html_out.bak"
       
       # Remove LaTeX labels that don't work in HTML
-      sed -i "s|\\label{fig:[^}]*}||g" "$html_out"
+      sed -i.bak "s|\\\\label{fig:[^}]*}||g" "$html_out" && rm -f "$html_out.bak"
       
       log_info "✅ Fixed image paths and LaTeX commands in HTML for IDE compatibility"
-      log_info "✅ Using pandoc 3.1.9 --embed-resources and --self-contained for better image handling"
     else
       log_warn "⚠️  Figures directory not found, image paths may not work"
     fi
@@ -588,8 +586,7 @@ build_one() {
     -V linkbordercolor=blue
     -V urlbordercolor=blue
     -V citebordercolor=blue
-    --highlight-style=tango
-    --listings
+    --syntax-highlighting=tango
     --resource-path="$MARKDOWN_DIR:$OUTPUT_DIR:$LATEX_TEMP_DIR:$REPO_ROOT"
     -H "$preamble_tex"
     -o "$tex_out"
@@ -621,7 +618,7 @@ build_one() {
     # Run bibtex if bibliography is referenced
     if [ -f "$REPO_ROOT/manuscript/references.bib" ]; then
       log_info "Running bibtex for $base"
-      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "$base" 2>&1 | tee -a "$PDF_DIR/${base}_compile.log" || true)
+      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "$base" 2>&1 | grep -v "I found no" | grep -v "(There were" | tee -a "$PDF_DIR/${base}_compile.log" || true)
     fi
 
     # Second run - resolve references
@@ -770,8 +767,7 @@ EOF
     -V linkbordercolor=blue
     -V urlbordercolor=blue
     -V citebordercolor=blue
-    --highlight-style=tango
-    --listings
+    --syntax-highlighting=tango
     --resource-path="$MARKDOWN_DIR:$OUTPUT_DIR:$LATEX_TEMP_DIR:$REPO_ROOT"
     -H "$preamble_tex"
     -o "$TEX_DIR/project_combined.tex"
@@ -806,7 +802,7 @@ EOF
     # Run bibtex if bibliography is referenced
     if [ -f "$REPO_ROOT/manuscript/references.bib" ]; then
       log_info "Running bibtex for combined document"
-      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "project_combined" 2>&1 | tee -a "$PDF_DIR/project_combined_compile.log" || true)
+      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "project_combined" 2>&1 | grep -v "I found no" | grep -v "(There were" | tee -a "$PDF_DIR/project_combined_compile.log" || true)
     fi
 
     # Second run - resolve references

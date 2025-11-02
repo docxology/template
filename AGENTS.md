@@ -7,14 +7,15 @@ This document provides **comprehensive documentation** for the Research Project 
 ## 📋 Table of Contents
 
 1. [Core Architecture](#core-architecture)
-2. [Configuration System](#configuration-system)
-3. [Rendering Pipeline](#rendering-pipeline)
-4. [Validation Systems](#validation-systems)
-5. [Testing Framework](#testing-framework)
-6. [Output Formats](#output-formats)
-7. [Advanced Modules](#advanced-modules)
-8. [Troubleshooting](#troubleshooting)
-9. [Maintenance](#maintenance)
+2. [Directory-Level Documentation](#directory-level-documentation)
+3. [Configuration System](#configuration-system)
+4. [Rendering Pipeline](#rendering-pipeline)
+5. [Validation Systems](#validation-systems)
+6. [Testing Framework](#testing-framework)
+7. [Output Formats](#output-formats)
+8. [Advanced Modules](#advanced-modules)
+9. [Troubleshooting](#troubleshooting)
+10. [Maintenance](#maintenance)
 
 ## 🏗️ Core Architecture
 
@@ -28,19 +29,74 @@ This document provides **comprehensive documentation** for the Research Project 
 
 **Violation of this pattern breaks the architecture**.
 
+## 📚 Directory-Level Documentation
+
+Each directory contains comprehensive documentation for easy navigation:
+
+### Source Code Directories
+
+| Directory | AGENTS.md | README.md | Purpose |
+|-----------|-----------|-----------|---------|
+| [`src/`](src/) | [AGENTS.md](src/AGENTS.md) | [README.md](src/README.md) | Core business logic with 100% test coverage |
+| [`tests/`](tests/) | [AGENTS.md](tests/AGENTS.md) | [README.md](tests/README.md) | Test suite ensuring code quality |
+| [`scripts/`](scripts/) | [AGENTS.md](scripts/AGENTS.md) | [README.md](scripts/README.md) | Thin orchestrators using src/ methods |
+
+### Content Directories
+
+| Directory | AGENTS.md | README.md | Purpose |
+|-----------|-----------|-----------|---------|
+| [`manuscript/`](manuscript/) | [AGENTS.md](manuscript/AGENTS.md) | [README.md](manuscript/README.md) | Research manuscript sections |
+| [`docs/`](docs/) | [AGENTS.md](docs/AGENTS.md) | [README.md](docs/README.md) | Project documentation hub |
+
+### Utility Directories
+
+| Directory | AGENTS.md | README.md | Purpose |
+|-----------|-----------|-----------|---------|
+| [`repo_utilities/`](repo_utilities/) | [AGENTS.md](repo_utilities/AGENTS.md) | [README.md](repo_utilities/README.md) | Build orchestration and utilities |
+
+### Documentation Navigation
+
+**For detailed information:**
+- Read directory-specific **AGENTS.md** files for comprehensive details
+- Each AGENTS.md covers architecture, usage, and best practices
+
+**For quick reference:**
+- Check directory-specific **README.md** files for fast answers
+- Each README.md provides quick start and essential commands
+
+**Root documentation:**
+- This file (root **AGENTS.md**) - Complete system overview
+- [README.md](README.md) - Project quick start and introduction
+
 ### Directory Structure
 
 ```
 template/
 ├── src/                 # Core business logic (100% tested)
+│   ├── AGENTS.md        # → Detailed src/ documentation
+│   └── README.md        # → Quick src/ reference
 ├── tests/              # Test suite (100% coverage required)
+│   ├── AGENTS.md        # → Testing philosophy and guide
+│   └── README.md        # → Quick testing reference
 ├── scripts/            # Thin orchestrators (use src/ methods)
+│   ├── AGENTS.md        # → Script architecture and patterns
+│   └── README.md        # → Quick script reference
 ├── manuscript/         # Research sections (generate PDFs)
+│   ├── AGENTS.md        # → Manuscript structure guide
+│   └── README.md        # → Quick manuscript reference
 ├── docs/               # Documentation
+│   ├── AGENTS.md        # → Documentation organization
+│   └── README.md        # → Quick documentation index
 ├── output/             # Generated files (all disposable)
 ├── repo_utilities/     # Build tools and utilities
+│   ├── AGENTS.md        # → Build utilities documentation
+│   └── README.md        # → Quick utilities reference
 └── pyproject.toml      # Dependencies and configuration
 ```
+
+**Each directory now has comprehensive documentation:**
+- **AGENTS.md** - Detailed directory-specific documentation
+- **README.md** - Quick reference and navigation
 
 ## ⚙️ Configuration System
 
