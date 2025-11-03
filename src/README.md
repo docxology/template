@@ -70,3 +70,4 @@ uv run pytest tests/ --cov=src --cov-report=html
 - [`../tests/AGENTS.md`](../tests/AGENTS.md) - Testing guide
 - [`../scripts/README.md`](../scripts/README.md) - How scripts use src/
 
+

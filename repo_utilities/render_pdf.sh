@@ -95,12 +95,6 @@ check_dependencies() {
     exit 1
   fi
   
-  # Check for pdflatex for IDE-friendly PDF generation
-  if ! command -v pdflatex >/dev/null 2>&1; then
-    log_warn "pdflatex not found. IDE-friendly PDF generation may fail."
-    echo "Install: sudo apt-get install -y texlive-latex-base" >&2
-  fi
-  
   log_info "All dependencies satisfied"
 }
 
@@ -257,101 +251,8 @@ run_repo_utilities() {
 }
 
 # =============================================================================
-# IDE-FRIENDLY PDF GENERATION
+# HTML GENERATION FOR IDE AND WEB VIEWING
 # =============================================================================
-
-create_ide_friendly_pdf() {
-  local combined_md="$OUTPUT_DIR/project_combined.md"
-  local ide_pdf="$PDF_DIR/project_combined_ide_friendly.pdf"
-  
-  log_info "Creating IDE-friendly PDF version..."
-  
-  # Use different settings optimized for IDE viewing
-  # Note: Avoid using cleveref here to prevent package conflicts
-  local pandoc_args=(
-    -f markdown+implicit_figures+tex_math_dollars+tex_math_single_backslash+raw_tex+autolink_bare_uris
-    -s
-    -V title="$PROJECT_TITLE"
-    -V author="$AUTHOR_DETAILS"
-    -V date="$(date '+%B %d, %Y')"
-    --pdf-engine=xelatex
-    --toc
-    --toc-depth=3
-    --number-sections
-    -V secnumdepth=3
-    -V mainfont="Times New Roman"
-    -V monofont="Courier New"
-    -V fontsize=12pt
-    -V linestretch=1.15
-    -V geometry:margin=2cm
-    -V geometry:top=2cm
-    -V geometry:bottom=2cm
-    -V geometry:left=2.5cm
-    -V geometry:right=2.5cm
-    -V geometry:includeheadfoot
-    -V colorlinks=false
-    -V linkcolor=black
-    -V urlcolor=black
-    -V citecolor=black
-    -V toccolor=black
-    -V filecolor=black
-    -V menucolor=black
-    --syntax-highlighting=espresso
-    --resource-path="$MARKDOWN_DIR:$OUTPUT_DIR:$LATEX_TEMP_DIR:$REPO_ROOT"
-    -o "$ide_pdf"
-  )
-  
-  if pandoc "$combined_md" "${pandoc_args[@]}" 2>/dev/null; then
-    log_info "✅ Created IDE-friendly PDF: $ide_pdf"
-    return 0
-  else
-    log_warn "⚠️  IDE-friendly PDF creation failed (continuing without preamble)"
-    return 1
-  fi
-}
-
-create_web_optimized_pdf() {
-  local combined_md="$OUTPUT_DIR/project_combined.md"
-  local web_pdf="$PDF_DIR/project_combined_web.pdf"
-  
-  log_info "Creating web-optimized PDF version..."
-  
-  # Use web-optimized settings
-  local pandoc_args=(
-    -f markdown+implicit_figures+tex_math_dollars+tex_math_single_backslash+raw_tex+autolink_bare_uris
-    -s
-    -V title="$PROJECT_TITLE"
-    -V author="$AUTHOR_DETAILS"
-    -V date="$(date '+%B %d, %Y')"
-    --pdf-engine=wkhtmltopdf
-    --toc
-    --toc-depth=3
-    --number-sections
-    -V fontsize=14pt
-    -V linestretch=1.3
-    -V geometry:margin=1cm
-    -V geometry:top=1cm
-    -V geometry:bottom=1cm
-    -V geometry:left=1.5cm
-    -V geometry:right=1.5cm
-    --resource-path="$MARKDOWN_DIR:$OUTPUT_DIR:$LATEX_TEMP_DIR:$REPO_ROOT"
-    -o "$web_pdf"
-  )
-  
-  # Check if wkhtmltopdf is available
-  if ! command -v wkhtmltopdf >/dev/null 2>&1; then
-    log_warn "wkhtmltopdf not available, skipping web-optimized PDF"
-    return 0
-  fi
-  
-  if pandoc "$combined_md" "${pandoc_args[@]}"; then
-    log_info "✅ Created web-optimized PDF: $web_pdf"
-    return 0
-  else
-    log_warn "Failed to create web-optimized PDF (continuing)"
-    return 0
-  fi
-}
 
 create_html_version() {
   local combined_md="$OUTPUT_DIR/project_combined.md"
@@ -927,23 +828,9 @@ main() {
     log_error "❌ Combined document failed"
   fi
   
-  # Step 5.5: Create additional PDF versions for better IDE compatibility
-  log_info "Step 5.5: Creating additional PDF versions for IDE compatibility..."
+  # Step 5.5: Create HTML version for IDE and web viewing
+  log_info "Step 5.5: Creating HTML version for IDE and web viewing..."
   
-  # Create IDE-friendly version
-  if create_ide_friendly_pdf; then
-    log_info "✅ IDE-friendly PDF created successfully"
-  else
-    log_warn "⚠️  IDE-friendly PDF creation failed (continuing)"
-  fi
-  
-  # Create web-optimized version
-  if create_web_optimized_pdf; then
-    log_info "✅ Web-optimized PDF created successfully"
-  else
-    log_warn "⚠️  Web-optimized PDF creation failed (continuing)"
-  fi
-
   # Create HTML version for IDE viewing
   if create_html_version; then
     log_info "✅ HTML version created successfully"
@@ -960,13 +847,7 @@ main() {
   done
   expected_pdfs+=("$PDF_DIR/project_combined.pdf")
   
-  # Add additional PDF versions to expected list
-  if [ -f "$PDF_DIR/project_combined_ide_friendly.pdf" ]; then
-    expected_pdfs+=("$PDF_DIR/project_combined_ide_friendly.pdf")
-  fi
-  if [ -f "$PDF_DIR/project_combined_web.pdf" ]; then
-    expected_pdfs+=("$PDF_DIR/project_combined_web.pdf")
-  fi
+  # Add HTML version to expected list if it exists
   if [ -f "$OUTPUT_DIR/project_combined.html" ]; then
     expected_pdfs+=("$OUTPUT_DIR/project_combined.html")
   fi
@@ -1003,17 +884,6 @@ main() {
     log_info "🎯 ALL modules built successfully!"
     log_info "📚 Complete manuscript available: $PDF_DIR/project_combined.pdf"
     
-    # Provide guidance on PDF versions
-    if [ -f "$PDF_DIR/project_combined_ide_friendly.pdf" ]; then
-      log_info "💻 IDE-friendly version: $PDF_DIR/project_combined_ide_friendly.pdf"
-      log_info "   (Use this version for better rendering in IDEs and text editors)"
-    fi
-    
-    if [ -f "$PDF_DIR/project_combined_web.pdf" ]; then
-      log_info "🌐 Web-optimized version: $PDF_DIR/project_combined_web.pdf"
-      log_info "   (Use this version for web viewing and mobile devices)"
-    fi
-
     if [ -f "$OUTPUT_DIR/project_combined.html" ]; then
       log_info "🖥️  HTML version: $OUTPUT_DIR/project_combined.html"
       log_info "   (Use this version for IDE viewing and web browsers)"

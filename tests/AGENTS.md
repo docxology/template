@@ -345,3 +345,4 @@ def test_integration_with_other_modules():
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 - [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow
 
+
