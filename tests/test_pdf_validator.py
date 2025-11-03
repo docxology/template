@@ -126,7 +126,7 @@ def test_scan_for_issues_detects_multiple_patterns():
     test_text = """
     This has ?? unresolved reference.
     [WARNING] some warning here
-    Error: compilation error
+    Error: Compilation failed
     Missing citation: [?]
     """
     
@@ -295,6 +295,37 @@ def test_scan_for_issues_case_sensitive():
     # Both should detect ??
     assert issues_lower["unresolved_references"] == 1
     assert issues_upper["unresolved_references"] == 1
+
+
+def test_scan_for_issues_ignores_scientific_error_terms():
+    """Test that scientific error terms don't trigger false positives."""
+    text = """
+    The final error: 1.2e-6
+    Standard error: 0.03
+    Measurement error: negligible
+    Root mean squared error: 0.15
+    """
+    
+    issues = scan_for_issues(text)
+    
+    # Should not detect scientific "error:" as system errors
+    assert issues["errors"] == 0
+    assert issues["total_issues"] == 0
+
+
+def test_scan_for_issues_detects_real_errors():
+    """Test that real system errors are still detected."""
+    text = """
+    Error: Compilation failed with exit code 1
+    [ERROR] File not found
+       Error: Invalid syntax on line 42
+    """
+    
+    issues = scan_for_issues(text)
+    
+    # Should detect these as real errors
+    assert issues["errors"] >= 2  # At least [ERROR] and "Error: C"
+    assert issues["total_issues"] > 0
 
 
 def test_validate_pdf_rendering_with_real_combined_pdf():

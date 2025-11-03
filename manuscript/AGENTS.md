@@ -16,8 +16,14 @@ The `manuscript/` directory contains research manuscript sections in markdown fo
 | `04_experimental_results.md` | Performance evaluation and validation | ✅ |
 | `05_discussion.md` | Theoretical implications and comparisons | ✅ |
 | `06_conclusion.md` | Summary and future directions | ✅ |
-| `07_references.md` | Bibliography and cited works | ✅ |
-| `10_symbols_glossary.md` | Auto-generated API reference from `src/` | ✅ |
+| `08_acknowledgments.md` | Funding, collaborators, and acknowledgments | ✅ |
+| `09_appendix.md` | Technical details, proofs, and derivations | ✅ |
+| **Supplemental Sections** | | |
+| `S01_supplemental_methods.md` | Extended methodological details | ✅ |
+| `S02_supplemental_results.md` | Additional experimental results | ✅ |
+| **Reference Sections** | | |
+| `98_symbols_glossary.md` | Auto-generated API reference from `src/` | ✅ |
+| `99_references.md` | Bibliography and cited works (always last) | ✅ |
 
 ### Supporting Files (No PDF Generation)
 
@@ -28,12 +34,33 @@ The `manuscript/` directory contains research manuscript sections in markdown fo
 
 ## Numbering Convention
 
-Files are numbered to control ordering:
-- `01-07`: Standard manuscript sections (sequential)
-- `10`: Glossary (generated from `src/` API)
-- `preamble.md`: Special file for LaTeX configuration
+Files are numbered to control document ordering:
 
-This ordering ensures proper document flow in the combined PDF.
+### Main Sections (01-09)
+- `01-06`: Core manuscript sections (Abstract → Conclusion)
+- `08`: Acknowledgments
+- `09`: Appendix
+
+### Supplemental Sections (S01-S0N)
+- `S01-S99`: Supplemental material (methods, results, etc.)
+- Prefix `S` identifies supplemental content
+- Numbered sequentially: `S01`, `S02`, `S03`, etc.
+
+### Reference Sections (98-99)
+- `98`: Auto-generated API glossary
+- `99`: Bibliography (always last section)
+
+**Ordering guarantees:**
+1. Main sections (01-09) appear first
+2. Supplemental sections (S01-S0N) appear after main content
+3. References (99) always appears last
+4. Glossary (98) appears just before references
+
+**Adding new sections:**
+- Main sections: Use next available number (e.g., `07_`, `10_`)
+- Supplemental sections: Use next `S##` number (e.g., `S03_`, `S04_`)
+- References: Always keep as `99_references.md`
+- Glossary: Always keep as `98_symbols_glossary.md`
 
 ## preamble.md - LaTeX Styling
 
@@ -85,6 +112,8 @@ According to \cite{author2023}, the method...
 ## Introduction {#sec:introduction}
 
 As discussed in \ref{sec:introduction}...
+
+Supplemental methods in \ref{sec:supplemental_methods}...
 ```
 
 ### Equation References
@@ -166,7 +195,7 @@ Figures must reference files in `output/figures/`:
 - PNG format recommended
 - Descriptive labels (e.g., `fig:convergence`)
 
-## 10_symbols_glossary.md - Auto-Generation
+## 98_symbols_glossary.md - Auto-Generation
 
 This file is **automatically generated** from `src/` module APIs:
 
@@ -187,8 +216,7 @@ This glossary is auto-generated from the public API in `src/`.
 1. `repo_utilities/generate_glossary.py` scans `src/`
 2. Extracts public functions and classes
 3. Builds markdown table
-4. Injects between markers in `markdown/10_symbols_glossary.md`
-5. Copied to `manuscript/10_symbols_glossary.md` during build
+4. Writes directly to `manuscript/98_symbols_glossary.md`
 
 **Do NOT edit** the auto-generated content between markers.
 
@@ -201,7 +229,7 @@ This glossary is auto-generated from the public API in `src/`.
 ./repo_utilities/render_pdf.sh
 ```
 
-Output: `output/pdf/01_abstract.pdf`, `02_introduction.pdf`, etc.
+Output: `output/pdf/01_abstract.pdf`, `02_introduction.pdf`, `S01_supplemental_methods.pdf`, etc.
 
 ### Combined Manuscript PDF
 
@@ -216,9 +244,10 @@ Output: `output/pdf/project_combined.pdf`
 - Custom title page
 - Abstract (before TOC)
 - Table of contents
-- All numbered sections
-- Bibliography
-- API glossary
+- All numbered main sections (01-09)
+- All supplemental sections (S01-S0N)
+- API glossary (98)
+- Bibliography (99, always last)
 
 ## Editing Workflow
 
@@ -226,6 +255,7 @@ Output: `output/pdf/project_combined.pdf`
 Edit any `*.md` file in `manuscript/` directory:
 ```bash
 vim manuscript/02_introduction.md
+vim manuscript/S01_supplemental_methods.md
 ```
 
 ### 2. Generate Figures (if needed)
@@ -264,6 +294,51 @@ open output/pdf/project_combined.pdf
 # Or HTML version (better for IDEs)
 open output/project_combined.html
 ```
+
+## Adding New Sections
+
+### Adding Main Sections
+
+1. Create new file with next available number:
+   ```bash
+   vim manuscript/07_new_section.md
+   ```
+
+2. Include section header with label:
+   ```markdown
+   # New Section {#sec:newsection}
+   
+   Content here...
+   ```
+
+3. Build and verify ordering:
+   ```bash
+   ./repo_utilities/render_pdf.sh
+   ```
+
+### Adding Supplemental Sections
+
+1. Create new file with `S##` prefix:
+   ```bash
+   vim manuscript/S03_supplemental_figures.md
+   ```
+
+2. Include section header with label:
+   ```markdown
+   # Supplemental Figures {#sec:supplemental_figures}
+   
+   Extended figures and visualizations...
+   ```
+
+3. Reference from main text:
+   ```markdown
+   Additional results in \ref{sec:supplemental_figures}...
+   ```
+
+4. Build and verify:
+   ```bash
+   ./repo_utilities/render_pdf.sh
+   ```
 
 ## Configuration
 
@@ -338,6 +413,12 @@ python3 repo_utilities/validate_pdf_output.py output/pdf/01_abstract.pdf
 - Use `\eqref{}` to reference equations
 - Avoid `$$` or `\[...\]`
 
+### Supplemental Material
+- Use for extended methods, additional results
+- Reference from main text appropriately
+- Maintain consistent formatting with main text
+- Number supplemental figures/tables distinctly (e.g., S1, S2)
+
 ## Output Formats
 
 ### Standard PDF (`project_combined.pdf`)
@@ -383,6 +464,18 @@ python3 repo_utilities/validate_pdf_output.py
 cat output/pdf/project_combined_compile.log
 ```
 
+### Section Ordering Issues
+```bash
+# List sections in order
+ls -1 manuscript/*.md | grep -E '^[0-9]|^S[0-9]'
+
+# Verify order matches:
+# 01-09: Main sections
+# S01-S0N: Supplemental sections
+# 98: Glossary
+# 99: References
+```
+
 ## See Also
 
 - [`preamble.md`](preamble.md) - LaTeX configuration
@@ -390,4 +483,3 @@ cat output/pdf/project_combined_compile.log
 - [`../docs/MARKDOWN_TEMPLATE_GUIDE.md`](../docs/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown guide
 - [`../repo_utilities/README.md`](../repo_utilities/README.md) - Build tools
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
-

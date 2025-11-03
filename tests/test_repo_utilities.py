@@ -95,7 +95,7 @@ class TestGenerateGlossary:
         assert result == 0
 
         # Verify that the glossary file exists and was processed
-        glossary_file = os.path.join(os.path.dirname(__file__), "..", "markdown", "10_symbols_glossary.md")
+        glossary_file = os.path.join(os.path.dirname(__file__), "..", "manuscript", "98_symbols_glossary.md")
         assert os.path.exists(glossary_file)
 
         # Read the file to verify it has the expected structure
@@ -122,10 +122,10 @@ class TestGenerateGlossary:
         test_glossary_script.parent.mkdir()
         shutil.copy2(actual_glossary_script, test_glossary_script)
 
-        # Create markdown directory and glossary file
-        test_markdown = test_root / "markdown"
-        test_markdown.mkdir()
-        (test_markdown / "10_symbols_glossary.md").write_text(
+        # Create manuscript directory and glossary file
+        test_manuscript = test_root / "manuscript"
+        test_manuscript.mkdir()
+        (test_manuscript / "98_symbols_glossary.md").write_text(
             "# API Symbols Glossary\n\n"
             "This glossary is auto-generated from the public API in `src/`.\n\n"
             "<!-- BEGIN: AUTO-API-GLOSSARY -->\n"
@@ -145,7 +145,7 @@ class TestGenerateGlossary:
         assert "Updated glossary:" in result.stdout or "Glossary up-to-date" in result.stdout
 
         # Verify the generated content
-        glossary_file = test_markdown / "10_symbols_glossary.md"
+        glossary_file = test_manuscript / "98_symbols_glossary.md"
         with open(glossary_file, "r") as f:
             content = f.read()
 
@@ -198,7 +198,7 @@ def _ensure_glossary_file(path: str) -> None:
 def main() -> int:
     repo = _repo_root()
     src_dir = os.path.join(repo, "src")
-    glossary_md = os.path.join(repo, "markdown", "10_symbols_glossary.md")
+    glossary_md = os.path.join(repo, "manuscript", "98_symbols_glossary.md")
 
     _ensure_glossary_file(glossary_md)
 
@@ -215,9 +215,9 @@ if __name__ == "__main__":
     raise SystemExit(main())
 ''')
 
-        # Create markdown directory
-        test_markdown = test_root / "markdown"
-        test_markdown.mkdir()
+        # Create manuscript directory
+        test_manuscript = test_root / "manuscript"
+        test_manuscript.mkdir()
 
         # Run the script
         result = subprocess.run([
@@ -253,12 +253,12 @@ if __name__ == "__main__":
         # Should succeed
         assert result.returncode == 0
 
-        # Check that markdown directory was created
-        test_markdown = test_root / "markdown"
-        assert test_markdown.exists()
+        # Check that manuscript directory was created
+        test_manuscript = test_root / "manuscript"
+        assert test_manuscript.exists()
 
         # Check that glossary file was created
-        glossary_file = test_markdown / "10_symbols_glossary.md"
+        glossary_file = test_manuscript / "98_symbols_glossary.md"
         assert glossary_file.exists()
 
         # Check content
@@ -283,10 +283,10 @@ if __name__ == "__main__":
         test_glossary_script.parent.mkdir()
         shutil.copy2(actual_glossary_script, test_glossary_script)
 
-        # Create markdown directory and initial glossary
-        test_markdown = test_root / "markdown"
-        test_markdown.mkdir()
-        (test_markdown / "10_symbols_glossary.md").write_text(
+        # Create manuscript directory and initial glossary
+        test_manuscript = test_root / "manuscript"
+        test_manuscript.mkdir()
+        (test_manuscript / "98_symbols_glossary.md").write_text(
             "# API Symbols Glossary\n\n"
             "<!-- BEGIN: AUTO-API-GLOSSARY -->\n"
             "No public APIs detected.\n"
@@ -307,7 +307,7 @@ if __name__ == "__main__":
         assert result2.returncode == 0
 
         # Check that output files are identical
-        glossary_file = test_markdown / "10_symbols_glossary.md"
+        glossary_file = test_manuscript / "98_symbols_glossary.md"
 
         with open(glossary_file, "r") as f:
             content1 = f.read()
@@ -334,7 +334,7 @@ if __name__ == "__main__":
         shutil.copy2(actual_glossary_script, test_glossary_script)
 
         # Create markdown directory and initial glossary
-        test_markdown = test_root / "markdown"
+        test_markdown = test_root / "manuscript"
         test_markdown.mkdir()
 
         # Run the script - should fail because glossary_gen module is missing
@@ -369,9 +369,9 @@ if __name__ == "__main__":
         test_glossary_script.parent.mkdir()
         shutil.copy2(actual_glossary_script, test_glossary_script)
 
-        # Create markdown directory
-        test_markdown = test_root / "markdown"
-        test_markdown.mkdir()
+        # Create manuscript directory
+        test_manuscript = test_root / "manuscript"
+        test_manuscript.mkdir()
 
         # Run the script - should handle import errors
         result = subprocess.run([
@@ -395,12 +395,12 @@ class TestValidateMarkdown:
     def test_find_markdown_files(self, tmp_path):
         """Test find_markdown_files finds and sorts markdown files."""
         # Create test markdown files
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "02_second.md").write_text("content")
-        (tmp_path / "markdown" / "01_first.md").write_text("content")
-        (tmp_path / "markdown" / "not_md.txt").write_text("content")
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "02_second.md").write_text("content")
+        (tmp_path / "manuscript" / "01_first.md").write_text("content")
+        (tmp_path / "manuscript" / "not_md.txt").write_text("content")
         
-        files = find_markdown_files(str(tmp_path / "markdown"))
+        files = find_markdown_files(str(tmp_path / "manuscript"))
         
         assert len(files) == 2
         assert "01_first.md" in files[0]
@@ -409,18 +409,18 @@ class TestValidateMarkdown:
     def test_collect_symbols(self, tmp_path):
         """Test collect_symbols extracts labels and anchors."""
         # Create test markdown files
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test1.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test1.md").write_text(
             "\\begin{equation}\\label{eq:test1}\\end{equation}\n"
             "# Section {#sec:test1}\n"
         )
-        (tmp_path / "markdown" / "test2.md").write_text(
+        (tmp_path / "manuscript" / "test2.md").write_text(
             "\\begin{equation}\\label{eq:test2}\\end{equation}\n"
             "## Subsection {#subsec:test2}\n"
         )
         
-        labels, anchors = collect_symbols([str(tmp_path / "markdown" / "test1.md"), 
-                                         str(tmp_path / "markdown" / "test2.md")])
+        labels, anchors = collect_symbols([str(tmp_path / "manuscript" / "test1.md"), 
+                                         str(tmp_path / "manuscript" / "test2.md")])
         
         assert labels == {"eq:test1", "eq:test2"}
         assert anchors == {"sec:test1", "subsec:test2"}
@@ -428,12 +428,12 @@ class TestValidateMarkdown:
     def test_validate_images_missing_image(self, tmp_path):
         """Test validate_images detects missing images."""
         # Create test markdown file
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text(
             "![alt text](../output/figures/missing.png)"
         )
         
-        problems = validate_images([str(tmp_path / "markdown" / "test.md")], str(tmp_path))
+        problems = validate_images([str(tmp_path / "manuscript" / "test.md")], str(tmp_path))
         
         assert len(problems) == 1
         assert "Missing image: ../output/figures/missing.png" in problems[0]
@@ -441,28 +441,28 @@ class TestValidateMarkdown:
     def test_validate_images_existing_image(self, tmp_path):
         """Test validate_images doesn't flag existing images."""
         # Create test markdown file and image
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text(
             "![alt text](../output/figures/existing.png)"
         )
         (tmp_path / "output" / "figures").mkdir(parents=True)
         (tmp_path / "output" / "figures" / "existing.png").write_text("fake image")
         
-        problems = validate_images([str(tmp_path / "markdown" / "test.md")], str(tmp_path))
+        problems = validate_images([str(tmp_path / "manuscript" / "test.md")], str(tmp_path))
         
         assert len(problems) == 0
     
     def test_validate_images_absolute_path(self, tmp_path):
         """Test validate_images with absolute image paths."""
         # Create test markdown file with absolute path
-        (tmp_path / "markdown").mkdir()
+        (tmp_path / "manuscript").mkdir()
         abs_image_path = str(tmp_path / "absolute_image.png")
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript" / "test.md").write_text(
             f"![alt text]({abs_image_path})"
         )
         
         # Don't create the image file so it will be missing
-        problems = validate_images([str(tmp_path / "markdown" / "test.md")], str(tmp_path))
+        problems = validate_images([str(tmp_path / "manuscript" / "test.md")], str(tmp_path))
         
         assert len(problems) == 1
         assert abs_image_path in problems[0]
@@ -470,12 +470,12 @@ class TestValidateMarkdown:
     def test_validate_refs_missing_equation_label(self, tmp_path):
         """Test validate_refs detects missing equation labels."""
         # Create test markdown file
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text(
             "Reference to \\eqref{eq:missing}"
         )
         
-        problems = validate_refs([str(tmp_path / "markdown" / "test.md")], set(), set(), str(tmp_path))
+        problems = validate_refs([str(tmp_path / "manuscript" / "test.md")], set(), set(), str(tmp_path))
         
         assert len(problems) == 1
         assert "Missing equation label for \\eqref{eq:missing}" in problems[0]
@@ -483,12 +483,12 @@ class TestValidateMarkdown:
     def test_validate_refs_missing_anchor(self, tmp_path):
         """Test validate_refs detects missing anchors."""
         # Create test markdown file
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text(
             "Link to [section](#missing_anchor)"
         )
         
-        problems = validate_refs([str(tmp_path / "markdown" / "test.md")], set(), set(), str(tmp_path))
+        problems = validate_refs([str(tmp_path / "manuscript" / "test.md")], set(), set(), str(tmp_path))
         
         assert len(problems) == 1
         assert "Missing anchor/label for link (#missing_anchor)" in problems[0]
@@ -496,12 +496,12 @@ class TestValidateMarkdown:
     def test_validate_refs_bare_url(self, tmp_path):
         """Test validate_refs detects bare URLs."""
         # Create test markdown file
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text(
             "Visit https://example.com for more info"
         )
         
-        problems = validate_refs([str(tmp_path / "markdown" / "test.md")], set(), set(), str(tmp_path))
+        problems = validate_refs([str(tmp_path / "manuscript" / "test.md")], set(), set(), str(tmp_path))
         
         assert len(problems) == 1
         assert "Bare URL found" in problems[0]
@@ -509,12 +509,12 @@ class TestValidateMarkdown:
     def test_validate_refs_non_informative_link(self, tmp_path):
         """Test validate_refs detects non-informative link text."""
         # Create test markdown file
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text(
             "[https://example.com](https://example.com)"
         )
         
-        problems = validate_refs([str(tmp_path / "markdown" / "test.md")], set(), set(), str(tmp_path))
+        problems = validate_refs([str(tmp_path / "manuscript" / "test.md")], set(), set(), str(tmp_path))
         
         # The regex patterns can detect multiple issues with the same text
         assert len(problems) >= 1
@@ -523,12 +523,12 @@ class TestValidateMarkdown:
     def test_validate_math_dollar_math(self, tmp_path):
         """Test validate_math detects dollar math notation."""
         # Create test markdown file with $$ math
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text(
             "Math: $$x^2 + y^2 = z^2$$"
         )
         
-        problems = validate_math([str(tmp_path / "markdown" / "test.md")], str(tmp_path))
+        problems = validate_math([str(tmp_path / "manuscript" / "test.md")], str(tmp_path))
         
         assert len(problems) == 1
         assert "Use equation environment instead of $$" in problems[0]
@@ -536,12 +536,12 @@ class TestValidateMarkdown:
     def test_validate_math_bracket_math(self, tmp_path):
         """Test validate_math detects bracket math notation."""
         # Create test markdown file
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text(
             "Math: \\[x^2 + y^2 = z^2\\]"
         )
         
-        problems = validate_math([str(tmp_path / "markdown" / "test.md")], str(tmp_path))
+        problems = validate_math([str(tmp_path / "manuscript" / "test.md")], str(tmp_path))
         
         assert len(problems) == 1
         assert "Use equation environment instead of \\[ \\]" in problems[0]
@@ -549,12 +549,12 @@ class TestValidateMarkdown:
     def test_validate_math_missing_label(self, tmp_path):
         """Test validate_math detects equations without labels."""
         # Create test markdown file
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text(
             r"\begin{equation}x^2 + y^2 = z^2\end{equation}"
         )
         
-        problems = validate_math([str(tmp_path / "markdown" / "test.md")], str(tmp_path))
+        problems = validate_math([str(tmp_path / "manuscript" / "test.md")], str(tmp_path))
         
         assert len(problems) == 1
         assert "Equation missing \\label{...}" in problems[0]
@@ -562,13 +562,13 @@ class TestValidateMarkdown:
     def test_validate_math_duplicate_label(self, tmp_path):
         """Test validate_math detects duplicate equation labels."""
         # Create test markdown file
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text(
             r"\begin{equation}\label{eq:duplicate}x^2\end{equation}" + "\n"
             r"\begin{equation}\label{eq:duplicate}y^2\end{equation}"
         )
         
-        problems = validate_math([str(tmp_path / "markdown" / "test.md")], str(tmp_path))
+        problems = validate_math([str(tmp_path / "manuscript" / "test.md")], str(tmp_path))
         
         assert len(problems) == 1
         assert "Duplicate equation label '{eq:duplicate}'" in problems[0]
@@ -576,17 +576,17 @@ class TestValidateMarkdown:
     def test_validate_math_valid_equations(self, tmp_path):
         """Test validate_math accepts valid labeled equations."""
         # Create test markdown file
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text(
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text(
             "\\begin{equation}\\label{eq:valid1}x^2 + y^2 = z^2\\end{equation}\n"
             "\\begin{equation}\\label{eq:valid2}a^2 + b^2 = c^2\\end{equation}"
         )
         
-        problems = validate_math([str(tmp_path / "markdown" / "test.md")], str(tmp_path))
+        problems = validate_math([str(tmp_path / "manuscript" / "test.md")], str(tmp_path))
         
         assert len(problems) == 0
     
-    def test_main_markdown_dir_not_found(self):
+    def test_main_manuscript_dir_not_found(self):
         """Test main function handles missing markdown directory."""
         with patch('validate_markdown.os.path.isdir', return_value=False):
             with patch('builtins.print') as mock_print:
@@ -594,13 +594,13 @@ class TestValidateMarkdown:
                 
                 assert result == 1
                 mock_print.assert_called_once()
-                assert "Markdown directory not found" in mock_print.call_args[0][0]
+                assert "Manuscript directory not found" in mock_print.call_args[0][0]
     
     def test_main_no_problems(self, tmp_path):
         """Test main function returns 0 when no problems found."""
         # Create test markdown directory with valid content
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text("# Test\n\nNo problems here.")
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text("# Test\n\nNo problems here.")
         
         with patch('validate_markdown._repo_root', return_value=str(tmp_path)):
             with patch('builtins.print') as mock_print:
@@ -613,8 +613,8 @@ class TestValidateMarkdown:
     def test_main_with_problems_non_strict(self, tmp_path):
         """Test main function returns 0 with problems in non-strict mode."""
         # Create test markdown directory with problems that will actually be detected
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text("\\begin{equation}x^2\\end{equation}")
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text("\\begin{equation}x^2\\end{equation}")
         
         with patch('validate_markdown._repo_root', return_value=str(tmp_path)):
             with patch('validate_markdown.sys.argv', ['validate_markdown.py']):
@@ -629,8 +629,8 @@ class TestValidateMarkdown:
     def test_main_with_problems_strict(self, tmp_path):
         """Test main function returns 1 with problems in strict mode."""
         # Create test markdown directory with problems that will actually be detected
-        (tmp_path / "markdown").mkdir()
-        (tmp_path / "markdown" / "test.md").write_text("\\begin{equation}x^2\\end{equation}")
+        (tmp_path / "manuscript").mkdir()
+        (tmp_path / "manuscript" / "test.md").write_text("\\begin{equation}x^2\\end{equation}")
         
         with patch('validate_markdown._repo_root', return_value=str(tmp_path)):
             with patch('validate_markdown.sys.argv', ['validate_markdown.py', '--strict']):
@@ -672,11 +672,11 @@ class TestValidateMarkdown:
         (output_dir / "data_structure.png").write_bytes(b"fake png content")
 
         # Create markdown directory with real content
-        markdown_dir = test_root / "markdown"
-        markdown_dir.mkdir()
+        manuscript_dir = test_root / "manuscript"
+        manuscript_dir.mkdir()
 
         # Create markdown files with references to the figures
-        (markdown_dir / "01_test.md").write_text(r"""
+        (manuscript_dir / "01_test.md").write_text(r"""
 # Test Section {#sec:test}
 
 This is a test section that references figures.
@@ -726,10 +726,10 @@ More content here.
         output_dir.mkdir(parents=True)
 
         # Create markdown directory with references to non-existent images
-        markdown_dir = test_root / "markdown"
-        markdown_dir.mkdir()
+        manuscript_dir = test_root / "manuscript"
+        manuscript_dir.mkdir()
 
-        (markdown_dir / "01_test.md").write_text(r"""
+        (manuscript_dir / "01_test.md").write_text(r"""
 # Test Section
 
 This references a missing image.
@@ -766,10 +766,10 @@ Also references another missing one.
         test_root.mkdir()
 
         # Create markdown directory with broken references
-        markdown_dir = test_root / "markdown"
-        markdown_dir.mkdir()
+        manuscript_dir = test_root / "manuscript"
+        manuscript_dir.mkdir()
 
-        (markdown_dir / "01_test.md").write_text(r"""
+        (manuscript_dir / "01_test.md").write_text(r"""
 # Test Section {#sec:test}
 
 This references a missing equation.
@@ -813,10 +813,10 @@ And non-informative link: [https://example.com](https://example.com)
         test_root.mkdir()
 
         # Create markdown directory with math problems
-        markdown_dir = test_root / "markdown"
-        markdown_dir.mkdir()
+        manuscript_dir = test_root / "manuscript"
+        manuscript_dir.mkdir()
 
-        (markdown_dir / "01_test.md").write_text(r"""
+        (manuscript_dir / "01_test.md").write_text(r"""
 # Test Section
 
 This has dollar math: $$x^2 + y^2 = z^2$$
@@ -869,10 +869,10 @@ e = mc^2
         test_root.mkdir()
 
         # Create markdown directory with minor issues
-        markdown_dir = test_root / "markdown"
-        markdown_dir.mkdir()
+        manuscript_dir = test_root / "manuscript"
+        manuscript_dir.mkdir()
 
-        (markdown_dir / "01_test.md").write_text(r"""
+        (manuscript_dir / "01_test.md").write_text(r"""
 # Test Section
 
 This has an unlabeled equation:
@@ -906,10 +906,10 @@ This is fine.
         test_root.mkdir()
 
         # Create markdown directory with minor issues
-        markdown_dir = test_root / "markdown"
-        markdown_dir.mkdir()
+        manuscript_dir = test_root / "manuscript"
+        manuscript_dir.mkdir()
 
-        (markdown_dir / "01_test.md").write_text(r"""
+        (manuscript_dir / "01_test.md").write_text(r"""
 # Test Section
 
 This has an unlabeled equation:
@@ -936,10 +936,10 @@ This is fine.
         assert "Markdown validation" in result.stdout  # Either passed or has issues
         assert "Equation missing" in result.stdout
 
-    def test_validate_markdown_handles_missing_markdown_dir(self, tmp_path):
+    def test_validate_markdown_handles_missing_manuscript_dir(self, tmp_path):
         """Test validate_markdown handles missing markdown directory."""
         # Create test project without markdown directory
-        test_root = tmp_path / "no_markdown_dir"
+        test_root = tmp_path / "no_manuscript_dir"
         test_root.mkdir()
 
         # Copy actual validate_markdown.py
@@ -955,7 +955,7 @@ This is fine.
 
         # Should fail gracefully
         assert result.returncode == 1
-        assert "Markdown directory not found" in result.stdout
+        assert "Manuscript directory not found" in result.stdout
 
     def test_validate_markdown_multiple_files_integration(self, tmp_path):
         """Test validate_markdown with multiple markdown files."""
@@ -964,11 +964,11 @@ This is fine.
         test_root.mkdir()
 
         # Create markdown directory with multiple files
-        markdown_dir = test_root / "markdown"
-        markdown_dir.mkdir()
+        manuscript_dir = test_root / "manuscript"
+        manuscript_dir.mkdir()
 
         # Create multiple markdown files with cross-references
-        (markdown_dir / "01_intro.md").write_text(r"""
+        (manuscript_dir / "01_intro.md").write_text(r"""
 # Introduction {#sec:intro}
 
 This is the introduction.
@@ -980,7 +980,7 @@ x + y = z
 See also [methodology](#sec:methodology).
 """)
 
-        (markdown_dir / "02_methodology.md").write_text(r"""
+        (manuscript_dir / "02_methodology.md").write_text(r"""
 # Methodology {#sec:methodology}
 
 This is the methodology section.
@@ -992,7 +992,7 @@ a^2 + b^2 = c^2
 See also [introduction](#sec:intro) and \eqref{eq:intro_eq}.
 """)
 
-        (markdown_dir / "03_results.md").write_text(r"""
+        (manuscript_dir / "03_results.md").write_text(r"""
 # Results
 
 \begin{equation}\label{eq:result_eq}
@@ -1036,11 +1036,11 @@ References to \eqref{eq:intro_eq}, \eqref{eq:method_eq}, and \eqref{eq:result_eq
         (data_dir / "results.csv").write_text("method,accuracy\nOur Method,0.95\nBaseline,0.85\n")
 
         # Create markdown directory with realistic content
-        markdown_dir = test_root / "markdown"
-        markdown_dir.mkdir()
+        manuscript_dir = test_root / "manuscript"
+        manuscript_dir.mkdir()
 
         # Create realistic manuscript sections
-        (markdown_dir / "01_abstract.md").write_text(r"""
+        (manuscript_dir / "01_abstract.md").write_text(r"""
 # Abstract
 
 This paper presents a novel method for solving optimization problems.
@@ -1058,7 +1058,7 @@ Our method achieves state-of-the-art performance as shown in Figure \ref{fig:con
 optimization, machine learning, convergence analysis
 """)
 
-        (markdown_dir / "04_experimental_results.md").write_text(r"""
+        (manuscript_dir / "04_experimental_results.md").write_text(r"""
 # Experimental Results {#sec:results}
 
 ## Convergence Analysis {#subsec:convergence}

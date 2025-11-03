@@ -169,24 +169,24 @@ def main() -> int:
     """
     repo_root = _repo_root()
 
-    # Try multiple possible locations for markdown files
-    possible_markdown_dirs = [
-        os.path.join(repo_root, "markdown"),  # Standard location
-        os.path.join(os.getcwd(), "markdown"),  # Current working directory (for tests)
-        "markdown"  # Relative to current directory
+    # Try multiple possible locations for manuscript files
+    possible_manuscript_dirs = [
+        os.path.join(repo_root, "manuscript"),  # Standard location
+        os.path.join(os.getcwd(), "manuscript"),  # Current working directory (for tests)
+        "manuscript"  # Relative to current directory
     ]
 
-    markdown_dir = None
-    for potential_dir in possible_markdown_dirs:
+    manuscript_dir = None
+    for potential_dir in possible_manuscript_dirs:
         if os.path.isdir(potential_dir):
-            markdown_dir = potential_dir
+            manuscript_dir = potential_dir
             break
 
-    if markdown_dir is None:
-        print(f"Markdown directory not found. Tried: {possible_markdown_dirs}")
+    if manuscript_dir is None:
+        print(f"Manuscript directory not found. Tried: {possible_manuscript_dirs}")
         return 1
 
-    md_paths = find_markdown_files(markdown_dir)
+    md_paths = find_markdown_files(manuscript_dir)
     labels, anchors = collect_symbols(md_paths)
 
     problems: List[str] = []

@@ -1,8 +1,6 @@
 # API Symbols Glossary {#sec:glossary}
 
-This glossary is auto-generated from the public API in `src/`.
-
-**Note:** This file is maintained at `markdown/10_symbols_glossary.md` and copied to `manuscript/98_symbols_glossary.md` during the build process.
+This glossary is auto-generated from the public API in `src/` by `repo_utilities/generate_glossary.py`.
 
 <!-- BEGIN: AUTO-API-GLOSSARY -->
 | Module | Name | Kind | Summary |

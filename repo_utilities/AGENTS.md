@@ -336,7 +336,7 @@ inject_between_markers(text, "<!-- BEGIN -->", "<!-- END -->", table)
 2. Extracts public functions and classes
 3. Gets first sentence of docstrings
 4. Generates markdown table
-5. Updates `markdown/10_symbols_glossary.md`
+5. Writes directly to `manuscript/98_symbols_glossary.md`
 
 **Usage:**
 ```bash

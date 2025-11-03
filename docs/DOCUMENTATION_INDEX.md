@@ -33,6 +33,8 @@ This index provides a comprehensive overview of all documentation files in the R
 
 ### **Advanced Usage**
 - **[`docs/MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown and cross-referencing guide
+- **[`docs/MANUSCRIPT_NUMBERING_SYSTEM.md`](MANUSCRIPT_NUMBERING_SYSTEM.md)** - Manuscript section numbering system
+- **[`docs/TEST_IMPROVEMENTS_SUMMARY.md`](TEST_IMPROVEMENTS_SUMMARY.md)** - Test suite enhancements
 - **[`scripts/README.md`](../scripts/README.md)** - Thin orchestrator pattern guide
 
 ## 🔧 **Development & Maintenance**
@@ -53,6 +55,7 @@ docs/
 ├── 00_preamble.md              # LaTeX preamble documentation
 ├── AGENTS.md                   # Directory documentation guide
 ├── ARCHITECTURE.md             # System architecture overview
+├── BUILD_OUTPUT_ANALYSIS.md    # Build system performance analysis
 ├── CODE_OF_CONDUCT.md          # Community standards
 ├── CONTRIBUTING.md             # Contribution guidelines
 ├── COPYPASTA.md                # Ready-to-use content
@@ -61,12 +64,15 @@ docs/
 ├── EXAMPLES_SHOWCASE.md        # Real-world examples
 ├── FAQ.md                      # Frequently asked questions
 ├── HOW_TO_USE.md               # Complete usage guide
+├── MANUSCRIPT_NUMBERING_SYSTEM.md  # Section numbering guide
+├── MARKDOWN_DIRECTORY_ELIMINATION.md # Streamlined build pipeline
 ├── MARKDOWN_TEMPLATE_GUIDE.md  # Markdown guide
 ├── PDF_VALIDATION.md           # PDF validation documentation
 ├── README.md                   # Directory quick start
 ├── ROADMAP.md                  # Development roadmap
 ├── SECURITY.md                 # Security policy
 ├── TEMPLATE_DESCRIPTION.md     # Template overview
+├── TEST_IMPROVEMENTS_SUMMARY.md    # Test suite documentation
 ├── THIN_ORCHESTRATOR_SUMMARY.md # Pattern implementation
 └── WORKFLOW.md                 # Development workflow
 ```
@@ -119,10 +125,11 @@ All documentation files include comprehensive cross-references:
 - ✅ **Best practices** - Established patterns and guidelines included
 
 ### **Documentation Completeness**
-- ✅ **15 documentation files** covering all aspects
+- ✅ **19 documentation files** covering all aspects
 - ✅ **Complete cross-referencing** system
 - ✅ **Real-world examples** and showcase projects
 - ✅ **Technical implementation** details
+- ✅ **Build system analysis** and performance metrics
 - ✅ **Troubleshooting** and FAQ sections
 - ✅ **Future development** roadmap
 

@@ -88,8 +88,10 @@ def scan_for_issues(text: str) -> Dict[str, int]:
     # Count warnings (case-insensitive)
     issues['warnings'] = len(re.findall(r'\[WARNING\]|Warning:', text, re.IGNORECASE))
     
-    # Count errors (case-insensitive)
-    issues['errors'] = len(re.findall(r'\[ERROR\]|Error:', text, re.IGNORECASE))
+    # Count errors (case-insensitive, but exclude common false positives)
+    # Match [ERROR] or "Error:" only when it appears to be a system message
+    # Exclude scientific terms like "standard error:", "final error:", "measurement error:"
+    issues['errors'] = len(re.findall(r'\[ERROR\]|^\s*Error:\s|Error:\s+[A-Z]', text, re.MULTILINE))
     
     # Count missing citations [?]
     issues['missing_citations'] = len(re.findall(r'\[\?\]', text))

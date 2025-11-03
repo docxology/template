@@ -38,7 +38,8 @@ def main() -> int:
     """
     repo = _repo_root()
     src_dir = os.path.join(repo, "src")
-    glossary_md = os.path.join(repo, "markdown", "10_symbols_glossary.md")
+    # Write directly to manuscript/98_symbols_glossary.md
+    glossary_md = os.path.join(repo, "manuscript", "98_symbols_glossary.md")
 
     # Ensure file exists with markers
     _ensure_glossary_file(glossary_md)

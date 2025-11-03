@@ -240,7 +240,7 @@ run_repo_utilities() {
     runner="python3"
   fi
   
-  # Run glossary generation
+  # Run glossary generation (writes directly to manuscript/98_symbols_glossary.md)
   log_info "Generating API glossary..."
   if ! $runner "$REPO_ROOT/repo_utilities/generate_glossary.py"; then
     log_error "Glossary generation failed - cannot proceed"
@@ -535,9 +535,22 @@ discover_markdown_modules() {
     return 1
   fi
   
-  # Find manuscript markdown files with numerical ordering (01_*, 02_*, etc.)
-  # This finds: 01_abstract.md, 02_introduction.md, 03_methodology.md, etc.
-  find "$MARKDOWN_DIR" -maxdepth 1 -name "[0-9][0-9]_*.md" -print0 | sort -z | xargs -0 basename -a
+  # Find manuscript markdown files with proper ordering:
+  # - Main sections: 01-09 (core manuscript)
+  # - Supplemental sections: S01-S0N (additional material)
+  # - Glossary: 98 (API reference - always second to last)
+  # - References: 99 (bibliography - always last)
+  # Output order: main (01-09) → supplemental (S##) → glossary (98) → references (99)
+  (
+    # Main sections (01-09)
+    find "$MARKDOWN_DIR" -maxdepth 1 -name "0[0-9]_*.md" -print0 2>/dev/null | xargs -0 basename -a 2>/dev/null | sort
+    # Supplemental sections (S01-S99)
+    find "$MARKDOWN_DIR" -maxdepth 1 -name "S[0-9][0-9]_*.md" -print0 2>/dev/null | xargs -0 basename -a 2>/dev/null | sort
+    # Glossary (98)
+    find "$MARKDOWN_DIR" -maxdepth 1 -name "98_*.md" -print0 2>/dev/null | xargs -0 basename -a 2>/dev/null
+    # References (99 - always last)
+    find "$MARKDOWN_DIR" -maxdepth 1 -name "99_*.md" -print0 2>/dev/null | xargs -0 basename -a 2>/dev/null
+  ) | grep -v "^$"
 }
 
 # =============================================================================
@@ -644,6 +657,7 @@ build_one() {
 
 build_combined() {
   local preamble_tex="$1"
+  shift  # Remove first argument so modules array only contains markdown files
   local modules=("$@")
   local combined_md="$OUTPUT_DIR/project_combined.md"
 

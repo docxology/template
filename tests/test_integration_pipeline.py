@@ -32,13 +32,13 @@ class TestFullPipelineIntegration:
         # Copy repo_utilities/ directory
         shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
 
-        # Create output and markdown directories
+        # Create output and manuscript directories
         (test_root / "output" / "figures").mkdir(parents=True)
         (test_root / "output" / "data").mkdir(parents=True)
-        (test_root / "markdown").mkdir()
+        (test_root / "manuscript").mkdir()
 
         # Create a basic markdown file that references outputs
-        (test_root / "markdown" / "01_test.md").write_text(r"""
+        (test_root / "manuscript" / "01_test.md").write_text(r"""
 # Test Section {#sec:test}
 
 This is a test section that references figures and equations.
@@ -106,7 +106,7 @@ More content here.
         assert "Updated glossary:" in result4.stdout or "Glossary up-to-date" in result4.stdout
 
         # Verify glossary was created/updated
-        glossary_file = test_root / "markdown" / "10_symbols_glossary.md"
+        glossary_file = test_root / "manuscript" / "98_symbols_glossary.md"
         assert glossary_file.exists()
 
         # Check that glossary contains real API entries
@@ -137,7 +137,7 @@ More content here.
         shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
 
         # Create manuscript structure
-        manuscript_dir = test_root / "markdown"
+        manuscript_dir = test_root / "manuscript"
         manuscript_dir.mkdir()
 
         # Create realistic manuscript sections
@@ -255,10 +255,10 @@ accuracy = \frac{TP}{TP + FP}
         # Create output and markdown directories
         (test_root / "output" / "figures").mkdir(parents=True)
         (test_root / "output" / "data").mkdir(parents=True)
-        (test_root / "markdown").mkdir()
+        (test_root / "manuscript").mkdir()
 
         # Create markdown with some issues
-        (test_root / "markdown" / "01_test.md").write_text(r"""
+        (test_root / "manuscript" / "01_test.md").write_text(r"""
 # Test Section
 
 This has an unlabeled equation:
@@ -311,10 +311,10 @@ This is fine.
         # Create directories
         (test_root / "output" / "figures").mkdir(parents=True)
         (test_root / "output" / "data").mkdir(parents=True)
-        (test_root / "markdown").mkdir()
+        (test_root / "manuscript").mkdir()
 
         # Create basic markdown
-        (test_root / "markdown" / "01_test.md").write_text(r"""
+        (test_root / "manuscript" / "01_test.md").write_text(r"""
 # Test Section {#sec:test}
 
 \begin{equation}\label{eq:test}
@@ -373,7 +373,7 @@ x^2 + y^2 = z^2
         (test_root / "repo_utilities").mkdir()
         (test_root / "output" / "figures").mkdir(parents=True)
         (test_root / "output" / "data").mkdir(parents=True)
-        (test_root / "markdown").mkdir()
+        (test_root / "manuscript").mkdir()
 
         # Create scripts that will fail due to missing dependencies
         (test_root / "scripts" / "example_figure.py").write_text("""
@@ -401,7 +401,7 @@ if __name__ == "__main__":
 """)
 
         # Create markdown with references to non-existent outputs
-        (test_root / "markdown" / "01_test.md").write_text(r"""
+        (test_root / "manuscript" / "01_test.md").write_text(r"""
 # Test Section
 
 ![Missing Figure](../output/figures/missing.png)
@@ -419,7 +419,7 @@ import os
 import sys
 
 def main():
-    if not os.path.exists(os.path.join(os.path.dirname(__file__), "..", "markdown")):
+    if not os.path.exists(os.path.join(os.path.dirname(__file__), "..", "manuscript")):
         print("Markdown directory not found")
         return 1
 
@@ -450,13 +450,13 @@ if __name__ == "__main__":
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
         shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
 
-        # Create output and markdown directories
+        # Create output and manuscript directories
         (test_root / "output" / "figures").mkdir(parents=True)
         (test_root / "output" / "data").mkdir(parents=True)
-        (test_root / "markdown").mkdir()
+        (test_root / "manuscript").mkdir()
 
         # Create markdown that references outputs from multiple scripts
-        (test_root / "markdown" / "01_integration_test.md").write_text(r"""
+        (test_root / "manuscript" / "01_integration_test.md").write_text(r"""
 # Integration Test {#sec:integration}
 
 This section tests integration between multiple scripts.
@@ -524,7 +524,7 @@ This demonstrates that all components work together properly.
         assert (test_root / "output" / "data" / "convergence_data.npz").exists()
 
         # Verify glossary was generated
-        glossary_file = test_root / "markdown" / "10_symbols_glossary.md"
+        glossary_file = test_root / "manuscript" / "98_symbols_glossary.md"
         assert glossary_file.exists()
 
         with open(glossary_file, "r") as f:
@@ -546,7 +546,7 @@ This demonstrates that all components work together properly.
         # Create output and markdown directories
         (test_root / "output" / "figures").mkdir(parents=True)
         (test_root / "output" / "data").mkdir(parents=True)
-        (test_root / "markdown").mkdir()
+        (test_root / "manuscript").mkdir()
 
         # Create larger markdown files to test scalability
         large_content = ""
@@ -565,7 +565,7 @@ Reference to equation \eqref{{eq:section_{i}}}.
 ![Figure for Section {i}](../output/figures/section_{i}_figure.png)
 
 """
-        (test_root / "markdown" / "01_large_test.md").write_text(large_content)
+        (test_root / "manuscript" / "01_large_test.md").write_text(large_content)
 
         # Run scripts (they should handle large content gracefully)
         research_script = test_root / "scripts" / "generate_research_figures.py"
@@ -604,7 +604,7 @@ Reference to equation \eqref{{eq:section_{i}}}.
         shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
 
         # Create manuscript structure
-        manuscript_dir = test_root / "markdown"
+        manuscript_dir = test_root / "manuscript"
         manuscript_dir.mkdir()
 
         # Create a realistic academic paper
@@ -807,7 +807,7 @@ For implementation details, see the API documentation in the symbols glossary.
         assert (test_root / "output" / "figures" / "example_figure.png").exists()
         assert (test_root / "output" / "figures" / "convergence_plot.png").exists()
 
-        glossary_file = test_root / "markdown" / "10_symbols_glossary.md"
+        glossary_file = test_root / "manuscript" / "98_symbols_glossary.md"
         assert glossary_file.exists()
 
         with open(glossary_file, "r") as f:
