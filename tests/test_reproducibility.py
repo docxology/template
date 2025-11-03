@@ -406,12 +406,16 @@ class TestEdgeCases:
         # Code and data hashes might be empty for empty directory
 
     def test_save_reproducibility_report_invalid_path(self, tmp_path):
-        """Test saving report to invalid path."""
+        """Test saving report to nested path that doesn't exist yet."""
         report = reproducibility.generate_reproducibility_report(tmp_path)
-        invalid_path = Path("invalid/path/report.json")
+        # Use tmp_path to avoid polluting repository with test artifacts
+        invalid_path = tmp_path / "nested" / "path" / "report.json"
 
-        # Should not raise exception
+        # Should not raise exception - function creates directories as needed
         reproducibility.save_reproducibility_report(report, invalid_path)
+        
+        # Verify file was created
+        assert invalid_path.exists()
 
     def test_load_reproducibility_report_nonexistent(self):
         """Test loading nonexistent report."""
