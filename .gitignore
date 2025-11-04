@@ -1,8 +1,3 @@
-
-# Project-specific files
-.project_config
-.env
-
 # Python
 __pycache__/
 *.py[cod]
@@ -62,19 +57,7 @@ coverage.xml
 ehthumbs.db
 Thumbs.db
 
-# Build outputs
-output/
-*.pdf
-*.tex
-*.log
-*.aux
-*.out
-*.toc
-*.lof
-*.lot
-*.fls
-*.fdb_latexmk
-*.synctex.gz
+# Build outputs should be including in versioning! 
 
 # Temporary files
 *.tmp

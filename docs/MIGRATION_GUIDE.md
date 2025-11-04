@@ -599,3 +599,4 @@ For detailed guidance, see:
 - [Architecture](ARCHITECTURE.md) - Understanding structure
 - [Common Workflows](COMMON_WORKFLOWS.md) - Step-by-step guides
 
+

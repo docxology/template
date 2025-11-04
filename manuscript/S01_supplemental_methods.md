@@ -162,3 +162,4 @@ The learning rate $\alpha_0$ has the strongest impact on convergence speed, whil
 
 
 
+

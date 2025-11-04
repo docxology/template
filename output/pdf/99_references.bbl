@@ -1,0 +1,24 @@
+\begin{thebibliography}{1}
+
+\bibitem{example2023}
+John Smith and Jane Johnson.
+\newblock Example research paper.
+\newblock {\em Journal of Example Research}, 42(3):123--145, 2023.
+
+\bibitem{template2024}
+Template Team.
+\newblock {\em Research Project Template: A Comprehensive Guide}.
+\newblock Academic Press, New York, NY, 2024.
+
+\bibitem{optimization2022}
+Alice Brown and Robert Wilson.
+\newblock Advanced optimization techniques for machine learning.
+\newblock In {\em Proceedings of the International Conference on Machine
+  Learning}, pages 456--467. ICML, 2022.
+
+\bibitem{pandoc2024}
+{Pandoc Development Team}.
+\newblock Pandoc: A universal document converter, 2024.
+\newblock Accessed: 2024-10-09.
+
+\end{thebibliography}

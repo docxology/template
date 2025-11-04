@@ -495,3 +495,4 @@ For more information, see:
 - [Architecture](ARCHITECTURE.md) - Project structure
 - [Best Practices](BEST_PRACTICES.md) - Management practices
 
+
