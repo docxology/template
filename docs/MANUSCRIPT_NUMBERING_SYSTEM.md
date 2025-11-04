@@ -181,11 +181,11 @@ fi
 - Section Ordering details
 - Quick reference commands
 
-### 3. **markdown/10_symbols_glossary.md**
-**Added note:**
+### 3. **manuscript/98_symbols_glossary.md**
+**Current status:**
 ```markdown
-**Note:** This file is maintained at `markdown/10_symbols_glossary.md` 
-and copied to `manuscript/98_symbols_glossary.md` during the build process.
+**Note:** This glossary is auto-generated from src/ by repo_utilities/generate_glossary.py
+and written directly to manuscript/98_symbols_glossary.md during the build process.
 ```
 
 ---

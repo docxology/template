@@ -12,6 +12,9 @@ This index provides a comprehensive overview of all documentation files in the R
 ### **Quick Reference**
 - **[`docs/COPYPASTA.md`](COPYPASTA.md)** - Ready-to-use content for sharing the template
 - **[`docs/FAQ.md`](FAQ.md)** - Frequently asked questions and common issues
+- **[`docs/QUICK_START_CHEATSHEET.md`](QUICK_START_CHEATSHEET.md)** - One-page essential commands reference
+- **[`docs/COMMON_WORKFLOWS.md`](COMMON_WORKFLOWS.md)** - Step-by-step workflow recipes
+- **[`docs/GLOSSARY.md`](GLOSSARY.md)** - Comprehensive glossary of terms
 - **[`repo_utilities/README.md`](../repo_utilities/README.md)** - Detailed utility documentation
 
 ## 🏗️ **Architecture & Design**
@@ -27,9 +30,15 @@ This index provides a comprehensive overview of all documentation files in the R
 ## 📝 **Usage Guides**
 
 ### **Getting Started**
+- **[`docs/GETTING_STARTED.md`](GETTING_STARTED.md)** - Basic usage guide (Levels 1-3)
 - **[`docs/EXAMPLES.md`](EXAMPLES.md)** - Project renaming and customization examples
 - **[`docs/EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)** - Real-world usage examples
 - **[`docs/TEMPLATE_DESCRIPTION.md`](TEMPLATE_DESCRIPTION.md)** - Template overview and features
+
+### **Skill-Level Guides**
+- **[`docs/INTERMEDIATE_USAGE.md`](INTERMEDIATE_USAGE.md)** - Intermediate usage guide (Levels 4-6)
+- **[`docs/ADVANCED_USAGE.md`](ADVANCED_USAGE.md)** - Advanced usage guide (Levels 7-9)
+- **[`docs/EXPERT_USAGE.md`](EXPERT_USAGE.md)** - Expert usage guide (Levels 10-12)
 
 ### **Advanced Usage**
 - **[`docs/MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown and cross-referencing guide
@@ -47,34 +56,85 @@ This index provides a comprehensive overview of all documentation files in the R
 ### **Future Development**
 - **[`docs/ROADMAP.md`](ROADMAP.md)** - Development roadmap and future plans
 
+## 🧪 **Advanced Modules**
+
+### **Module Guides**
+- **[`docs/ADVANCED_MODULES_GUIDE.md`](ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all 6 advanced modules
+- **[`docs/API_REFERENCE.md`](API_REFERENCE.md)** - Complete API documentation for all src/ modules
+
+## ⚙️ **Operational Guides**
+
+### **Dependency & Build Management**
+- **[`docs/DEPENDENCY_MANAGEMENT.md`](DEPENDENCY_MANAGEMENT.md)** - Complete guide for uv package manager
+- **[`docs/BUILD_SYSTEM.md`](BUILD_SYSTEM.md)** - Complete build system reference
+- **[`docs/PERFORMANCE_OPTIMIZATION.md`](PERFORMANCE_OPTIMIZATION.md)** - Build time optimization and caching strategies
+
+### **CI/CD & Automation**
+- **[`docs/CI_CD_INTEGRATION.md`](CI_CD_INTEGRATION.md)** - GitHub Actions and CI/CD integration guide
+
+### **Troubleshooting & Support**
+- **[`docs/TROUBLESHOOTING_GUIDE.md`](TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting guide
+- **[`docs/FAQ.md`](FAQ.md)** - Frequently asked questions and common issues
+
+## 📚 **Reference Materials**
+
+### **Best Practices & Guidelines**
+- **[`docs/BEST_PRACTICES.md`](BEST_PRACTICES.md)** - Consolidated best practices compilation
+- **[`docs/VERSION_CONTROL.md`](VERSION_CONTROL.md)** - Git workflows and version control best practices
+
+### **Project Management**
+- **[`docs/MULTI_PROJECT_MANAGEMENT.md`](MULTI_PROJECT_MANAGEMENT.md)** - Managing multiple projects using the template
+- **[`docs/MIGRATION_GUIDE.md`](MIGRATION_GUIDE.md)** - Step-by-step migration from other templates
+- **[`docs/BACKUP_RECOVERY.md`](BACKUP_RECOVERY.md)** - Backup strategies and recovery procedures
+
+### **Changelog**
+- **[`CHANGELOG.md`](../CHANGELOG.md)** - Complete changelog tracking all changes
+
 ## 📁 **File Organization**
 
 ### **Directory Structure**
 ```
 docs/
-├── 00_preamble.md              # LaTeX preamble documentation
-├── AGENTS.md                   # Directory documentation guide
-├── ARCHITECTURE.md             # System architecture overview
-├── BUILD_OUTPUT_ANALYSIS.md    # Build system performance analysis
-├── CODE_OF_CONDUCT.md          # Community standards
-├── CONTRIBUTING.md             # Contribution guidelines
-├── COPYPASTA.md                # Ready-to-use content
-├── DOCUMENTATION_INDEX.md      # Complete documentation index
-├── EXAMPLES.md                 # Renaming examples
-├── EXAMPLES_SHOWCASE.md        # Real-world examples
-├── FAQ.md                      # Frequently asked questions
-├── HOW_TO_USE.md               # Complete usage guide
-├── MANUSCRIPT_NUMBERING_SYSTEM.md  # Section numbering guide
-├── MARKDOWN_DIRECTORY_ELIMINATION.md # Streamlined build pipeline
-├── MARKDOWN_TEMPLATE_GUIDE.md  # Markdown guide
-├── PDF_VALIDATION.md           # PDF validation documentation
-├── README.md                   # Directory quick start
-├── ROADMAP.md                  # Development roadmap
-├── SECURITY.md                 # Security policy
-├── TEMPLATE_DESCRIPTION.md     # Template overview
-├── TEST_IMPROVEMENTS_SUMMARY.md    # Test suite documentation
-├── THIN_ORCHESTRATOR_SUMMARY.md # Pattern implementation
-└── WORKFLOW.md                 # Development workflow
+├── 00_preamble.md                      # LaTeX preamble documentation
+├── ADVANCED_MODULES_GUIDE.md          # Advanced modules guide
+├── ADVANCED_USAGE.md                   # Advanced usage (Levels 7-9)
+├── AGENTS.md                           # Directory documentation guide
+├── API_REFERENCE.md                    # Complete API documentation
+├── ARCHITECTURE.md                     # System architecture overview
+├── BACKUP_RECOVERY.md                  # Backup and recovery strategies
+├── BEST_PRACTICES.md                   # Consolidated best practices
+├── BUILD_SYSTEM.md                     # Complete build system documentation
+├── CI_CD_INTEGRATION.md                # CI/CD integration guide
+├── CODE_OF_CONDUCT.md                  # Community standards
+├── COMMON_WORKFLOWS.md                 # Step-by-step workflow recipes
+├── CONTRIBUTING.md                     # Contribution guidelines
+├── COPYPASTA.md                        # Ready-to-use content
+├── DEPENDENCY_MANAGEMENT.md            # uv package manager guide
+├── DOCUMENTATION_INDEX.md              # Complete documentation index (this file)
+├── EXAMPLES.md                         # Renaming examples
+├── EXAMPLES_SHOWCASE.md                # Real-world examples
+├── EXPERT_USAGE.md                     # Expert usage (Levels 10-12)
+├── FAQ.md                              # Frequently asked questions
+├── GETTING_STARTED.md                  # Getting started (Levels 1-3)
+├── GLOSSARY.md                         # Comprehensive glossary
+├── HOW_TO_USE.md                       # Complete usage guide (navigation hub)
+├── INTERMEDIATE_USAGE.md               # Intermediate usage (Levels 4-6)
+├── MANUSCRIPT_NUMBERING_SYSTEM.md      # Section numbering guide
+├── MARKDOWN_TEMPLATE_GUIDE.md          # Markdown guide
+├── MIGRATION_GUIDE.md                  # Migration from other templates
+├── MULTI_PROJECT_MANAGEMENT.md         # Managing multiple projects
+├── PDF_VALIDATION.md                   # PDF validation documentation
+├── PERFORMANCE_OPTIMIZATION.md         # Build time optimization
+├── QUICK_START_CHEATSHEET.md           # Essential commands reference
+├── README.md                           # Directory quick start
+├── ROADMAP.md                          # Development roadmap
+├── SECURITY.md                         # Security policy
+├── TEMPLATE_DESCRIPTION.md             # Template overview
+├── TEST_IMPROVEMENTS_SUMMARY.md        # Test suite documentation
+├── THIN_ORCHESTRATOR_SUMMARY.md        # Pattern implementation
+├── TROUBLESHOOTING_GUIDE.md            # Comprehensive troubleshooting
+├── VERSION_CONTROL.md                  # Git workflows and best practices
+└── WORKFLOW.md                         # Development workflow
 ```
 
 ### **Documentation Categories**
@@ -83,10 +143,13 @@ docs/
 |----------|-------|---------|
 | **Core** | README.md, AGENTS.md, HOW_TO_USE.md | Essential documentation for all users |
 | **Architecture** | ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md, WORKFLOW.md | System design and implementation |
-| **Usage** | EXAMPLES.md, EXAMPLES_SHOWCASE.md, MARKDOWN_TEMPLATE_GUIDE.md | How-to guides and examples |
+| **Usage** | EXAMPLES.md, EXAMPLES_SHOWCASE.md, MARKDOWN_TEMPLATE_GUIDE.md, GETTING_STARTED.md, INTERMEDIATE_USAGE.md, ADVANCED_USAGE.md, EXPERT_USAGE.md | How-to guides and examples by skill level |
 | **Development** | CONTRIBUTING.md, CODE_OF_CONDUCT.md, ROADMAP.md | Contributing and future development |
-| **Reference** | FAQ.md, COPYPASTA.md, DOCUMENTATION_INDEX.md | Quick reference and sharing content |
-| **Advanced** | PDF_VALIDATION.md, TEMPLATE_DESCRIPTION.md | Technical implementation details |
+| **Reference** | FAQ.md, COPYPASTA.md, DOCUMENTATION_INDEX.md, QUICK_START_CHEATSHEET.md, COMMON_WORKFLOWS.md, GLOSSARY.md | Quick reference and sharing content |
+| **Advanced Modules** | ADVANCED_MODULES_GUIDE.md, API_REFERENCE.md | Advanced module documentation |
+| **Operational** | DEPENDENCY_MANAGEMENT.md, BUILD_SYSTEM.md, PERFORMANCE_OPTIMIZATION.md, CI_CD_INTEGRATION.md, TROUBLESHOOTING_GUIDE.md | Operational workflows and guides |
+| **Best Practices** | BEST_PRACTICES.md, VERSION_CONTROL.md, MULTI_PROJECT_MANAGEMENT.md, MIGRATION_GUIDE.md, BACKUP_RECOVERY.md | Best practices and project management |
+| **Technical** | PDF_VALIDATION.md, TEMPLATE_DESCRIPTION.md | Technical implementation details |
 
 ## 🔗 **Cross-Referencing System**
 
@@ -124,13 +187,19 @@ All documentation files include comprehensive cross-references:
 - ✅ **Troubleshooting** - Common issues and solutions documented
 - ✅ **Best practices** - Established patterns and guidelines included
 
+### **Build System**
+- **[`docs/BUILD_SYSTEM.md`](BUILD_SYSTEM.md)** - Complete build system reference (status, performance, fixes)
+
 ### **Documentation Completeness**
-- ✅ **19 documentation files** covering all aspects
+- ✅ **42+ documentation files** covering all aspects
 - ✅ **Complete cross-referencing** system
 - ✅ **Real-world examples** and showcase projects
 - ✅ **Technical implementation** details
 - ✅ **Build system analysis** and performance metrics
 - ✅ **Troubleshooting** and FAQ sections
+- ✅ **Advanced modules** comprehensive guides
+- ✅ **Operational workflows** (CI/CD, dependencies, performance)
+- ✅ **Reference materials** (API, best practices, migration)
 - ✅ **Future development** roadmap
 
 ---

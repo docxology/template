@@ -79,7 +79,7 @@ graph TB
         SRC[src/<br/>Core business logic]
         TESTS[tests/<br/>100% coverage tests]
         SCRIPTS[scripts/<br/>Thin orchestrators]
-        MD[markdown/<br/>Documentation]
+        MANUSCRIPT[manuscript/<br/>Research manuscript]
         REPO_UTILS[repo_utilities/<br/>Build tools]
         OUTPUT[output/<br/>Generated files]
     end
@@ -94,7 +94,7 @@ graph TB
     ROOT --> SRC
     ROOT --> TESTS
     ROOT --> SCRIPTS
-    ROOT --> MD
+    ROOT --> MANUSCRIPT
     ROOT --> REPO_UTILS
     ROOT --> OUTPUT
     
@@ -106,7 +106,7 @@ graph TB
     classDef dir fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef file fill:#fff3e0,stroke:#e65100,stroke-width:2px
     
-    class ROOT,SRC,TESTS,SCRIPTS,MD,REPO_UTILS,OUTPUT dir
+    class ROOT,SRC,TESTS,SCRIPTS,MANUSCRIPT,REPO_UTILS,OUTPUT dir
     class PYPROJECT,README,CURSORRULES,RENDER file
 ```
 
@@ -159,7 +159,7 @@ Validate that everything works:
 Edit additional files as needed:
 - `.project_config` - Project metadata
 - `.env.template` - Environment variables
-- Markdown files in `markdown/`
+- Manuscript files in `manuscript/`
 
 ## Generated Files
 

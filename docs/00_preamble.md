@@ -1,5 +1,9 @@
 # LaTeX Preamble
 
+> **Styling configuration** for generated PDFs
+
+**Quick Reference:** [Getting Started](GETTING_STARTED.md#level-3-basic-customization) | [Markdown Guide](MARKDOWN_TEMPLATE_GUIDE.md) | [Build System](BUILD_SYSTEM.md)
+
 This file contains LaTeX preamble commands that will be inserted at the beginning of each generated document.
 
 ```latex

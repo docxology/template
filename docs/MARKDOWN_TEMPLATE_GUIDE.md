@@ -249,7 +249,7 @@ Generated outputs include:
 
 ### Adding New Sections
 
-1. Create new markdown file in `markdown/`
+1. Create new markdown file in `manuscript/`
 2. Add section label: `{#sec:new_section}`
 3. Include cross-references to existing content
 4. Add to the build pipeline (automatic)

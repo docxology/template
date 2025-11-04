@@ -1,9 +1,9 @@
 # 🚀 Research Project Template
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/BUILD_VERIFICATION_REPORT.md)
-[![Test Coverage](https://img.shields.io/badge/coverage-81.90%25-green)](docs/BUILD_OUTPUT_ANALYSIS.md)
-[![Tests](https://img.shields.io/badge/tests-320%2F322%20passing-brightgreen)](docs/BUILD_OUTPUT_ANALYSIS.md)
-[![Documentation](https://img.shields.io/badge/docs-25%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/BUILD_SYSTEM.md)
+[![Test Coverage](https://img.shields.io/badge/coverage-81.90%25-green)](docs/BUILD_SYSTEM.md)
+[![Tests](https://img.shields.io/badge/tests-320%2F322%20passing-brightgreen)](docs/BUILD_SYSTEM.md)
+[![Documentation](https://img.shields.io/badge/docs-42%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
 
 > **Template Repository** - Click "Use this template" to create a new research project with this structure
@@ -19,7 +19,7 @@ This is a **GitHub Template Repository** that gives you:
 - ✅ **Automated PDF generation** from markdown sources
 - ✅ **Thin orchestrator pattern** for maintainable code
 - ✅ **Ready-to-use utilities** for any research project
-- ✅ **Professional documentation** structure (25+ comprehensive guides)
+- ✅ **Professional documentation** structure (42+ comprehensive guides)
 - ✅ **Advanced quality analysis** and document metrics
 - ✅ **Reproducibility tools** for scientific workflows
 - ✅ **Integrity verification** and validation
@@ -55,7 +55,7 @@ This is a **GitHub Template Repository** that gives you:
 3. **[Development Workflow](docs/WORKFLOW.md)** - Complete development process
 4. **[Markdown Guide](docs/MARKDOWN_TEMPLATE_GUIDE.md)** - Writing and formatting
 
-**Advanced topics:** Check **[Build Analysis](docs/BUILD_OUTPUT_ANALYSIS.md)** and **[PDF Validation](docs/PDF_VALIDATION.md)**
+**Advanced topics:** Check **[Build System](docs/BUILD_SYSTEM.md)** and **[PDF Validation](docs/PDF_VALIDATION.md)**
 
 </td>
 </tr>
@@ -70,7 +70,7 @@ This is a **GitHub Template Repository** that gives you:
 3. **[Development Roadmap](docs/ROADMAP.md)** - Future plans
 4. **[Security Policy](docs/SECURITY.md)** - Security practices
 
-**Recent improvements:** See **[Build System Fixes](docs/BUILD_SYSTEM_FIX_SUMMARY.md)** and **[Test Improvements](docs/TEST_IMPROVEMENTS_SUMMARY.md)**
+**Recent improvements:** See **[Build System](docs/BUILD_SYSTEM.md)** and **[Test Improvements](docs/TEST_IMPROVEMENTS_SUMMARY.md)**
 
 </td>
 <td width="50%" valign="top">
@@ -79,7 +79,7 @@ This is a **GitHub Template Repository** that gives you:
 **Need technical details?**
 
 1. **[Complete System Reference](AGENTS.md)** - Everything you need to know
-2. **[Build Verification Report](docs/BUILD_VERIFICATION_REPORT.md)** - System validation
+2. **[Build System](docs/BUILD_SYSTEM.md)** - Complete build system reference
 3. **[Manuscript Numbering](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization
 4. **[Documentation Index](docs/DOCUMENTATION_INDEX.md)** - Complete reference
 
@@ -103,9 +103,7 @@ graph TB
     end
     
     subgraph Build["🔧 Build & Quality"]
-        BUILD_ANAL[BUILD_OUTPUT_ANALYSIS.md<br/>Performance Analysis]
-        BUILD_FIX[BUILD_SYSTEM_FIX_SUMMARY.md<br/>Recent Improvements]
-        BUILD_VER[BUILD_VERIFICATION_REPORT.md<br/>System Validation]
+        BUILD_SYS[BUILD_SYSTEM.md<br/>Complete Build Reference]
         PDF_VAL[PDF_VALIDATION.md<br/>Quality Checks]
     end
     
@@ -183,7 +181,7 @@ pytest tests/ --cov=src --cov-report=html
 
 ## 📊 System Health & Metrics
 
-**Current Build Status** (See **[Build Verification Report](docs/BUILD_VERIFICATION_REPORT.md)** for complete analysis):
+**Current Build Status** (See **[Build System](docs/BUILD_SYSTEM.md)** for complete analysis):
 
 ```mermaid
 graph LR
@@ -195,7 +193,7 @@ graph LR
     end
     
     subgraph Documentation["📚 Documentation"]
-        DOCS[25+ documentation files<br/>Comprehensive coverage]
+        DOCS[42+ documentation files<br/>Comprehensive coverage]
         CROSS[Complete cross-referencing<br/>All links validated]
         EXAMPLES[Real-world examples<br/>Multiple use cases]
     end
@@ -216,11 +214,11 @@ graph LR
 ```
 
 **Key Metrics:**
-- **Test Coverage**: 81.90% (exceeds 70% requirement) - [Details](docs/BUILD_OUTPUT_ANALYSIS.md#test-suite-analysis)
-- **Build Time**: 75 seconds (optimal) - [Performance Analysis](docs/BUILD_OUTPUT_ANALYSIS.md#build-pipeline-performance)
-- **Tests Passing**: 320 out of 322 (99.4%) - [Test Report](docs/BUILD_VERIFICATION_REPORT.md#test-suite-analysis)
-- **PDFs Generated**: 13 (all sections) - [Output Summary](docs/BUILD_OUTPUT_ANALYSIS.md#final-outputs-summary)
-- **Documentation**: 25+ comprehensive files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
+- **Test Coverage**: 81.90% (exceeds 70% requirement) - [Details](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+- **Build Time**: 75 seconds (optimal) - [Performance Analysis](docs/BUILD_SYSTEM.md#stage-breakdown)
+- **Tests Passing**: 320 out of 322 (99.4%) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+- **PDFs Generated**: 13 (all sections) - [Output Summary](docs/BUILD_SYSTEM.md#generated-files)
+- **Documentation**: 42+ comprehensive files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 
 ## 🎓 Learning Paths
 
@@ -247,7 +245,7 @@ flowchart TD
     PATH3 --> HOW_TO3[HOW_TO_USE.md<br/>Levels 7-9:<br/>Test-Driven Dev]
     PATH3 --> ARCH3[ARCHITECTURE.md<br/>System Design]
     PATH3 --> WORKFLOW3[WORKFLOW.md<br/>Development Process]
-    PATH3 --> BUILD3[BUILD_OUTPUT_ANALYSIS.md<br/>Performance Metrics]
+    PATH3 --> BUILD3[BUILD_SYSTEM.md<br/>Performance Metrics]
     
     PATH4 --> AGENTS4[AGENTS.md<br/>Complete Reference]
     PATH4 --> ARCH4[ARCHITECTURE.md<br/>Design Overview]
@@ -284,7 +282,7 @@ flowchart TD
 
 1. Read **[HOW_TO_USE.md](docs/HOW_TO_USE.md)** (Levels 7-9)
 2. Study **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** and **[WORKFLOW.md](docs/WORKFLOW.md)**
-3. Review **[BUILD_OUTPUT_ANALYSIS.md](docs/BUILD_OUTPUT_ANALYSIS.md)** for metrics
+3. Review **[BUILD_SYSTEM.md](docs/BUILD_SYSTEM.md)** for metrics
 
 ### Path 4: Understand the System
 **Goal:** Deep dive into architecture and design
@@ -310,7 +308,7 @@ graph TB
         SRC[src/<br/>Core business logic<br/>100% tested]
         TESTS[tests/<br/>Test suite<br/>100% coverage]
         SCRIPTS[scripts/<br/>Thin orchestrators<br/>Use src/ methods]
-        DOCS[docs/<br/>Documentation<br/>25+ comprehensive guides]
+        DOCS[docs/<br/>Documentation<br/>42+ comprehensive guides]
         MANUSCRIPT[manuscript/<br/>Research sections<br/>Generate PDFs]
         REPO_UTILS[repo_utilities/<br/>Build tools<br/>Generic utilities]
         OUTPUT[output/<br/>Generated files<br/>PDFs, figures, data]
@@ -348,7 +346,7 @@ graph TB
 - **`src/`** - **Core business logic** with comprehensive test coverage (100% required) - [Details](src/AGENTS.md)
 - **`tests/`** - Test files ensuring all `src/` functionality works correctly - [Testing Guide](tests/AGENTS.md)
 - **`scripts/`** - **Thin orchestrators** that use `src/` methods to generate figures and data - [Script Guide](scripts/AGENTS.md)
-- **`docs/`** - Package-level documentation (25+ guides) - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
+- **`docs/`** - Package-level documentation (42+ guides) - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 - **`manuscript/`** - Research manuscript sections (generate PDFs) - [Manuscript Guide](manuscript/AGENTS.md)
 - **`output/`** - Generated outputs (PDFs, figures, data) - **All files disposable**
 - **`repo_utilities/`** - Generic utility scripts for any project - [Utilities Guide](repo_utilities/AGENTS.md)
@@ -395,7 +393,7 @@ Scripts in `scripts/` demonstrate proper integration with `src/` modules:
 
 All source code in `src/` must have **100% test coverage** before PDF generation proceeds. This ensures that the methods used by scripts are fully validated.
 
-**Current Coverage**: 81.90% (exceeds 70% requirement) - [Test Report](docs/BUILD_OUTPUT_ANALYSIS.md#test-suite-analysis)
+**Current Coverage**: 81.90% (exceeds 70% requirement) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 
 ### Automated Script Execution
 **[Script guide](scripts/AGENTS.md)** | **[Examples](docs/EXAMPLES_SHOWCASE.md)**
@@ -407,10 +405,10 @@ Project-specific scripts in the `scripts/` directory are automatically executed 
 
 Manuscript sections are converted to individual PDFs with proper figure integration, and a combined manuscript document is generated with comprehensive cross-referencing.
 
-**Build Performance**: 75 seconds for complete regeneration - [Performance Analysis](docs/BUILD_OUTPUT_ANALYSIS.md#build-pipeline-performance)
+**Build Performance**: 75 seconds for complete regeneration - [Performance Analysis](docs/BUILD_SYSTEM.md#stage-breakdown)
 
 ### Build System Validation
-**[Build analysis](docs/BUILD_OUTPUT_ANALYSIS.md)** | **[Verification report](docs/BUILD_VERIFICATION_REPORT.md)** | **[Recent fixes](docs/BUILD_SYSTEM_FIX_SUMMARY.md)**
+**[Build System](docs/BUILD_SYSTEM.md)** - Complete reference (status, performance, fixes)
 
 The build system has been comprehensively validated:
 - All 13 PDFs generate successfully
@@ -573,11 +571,11 @@ pytest tests/ --cov=src --cov-report=term-missing
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducible results
 
-**Current Status**: 81.90% coverage, 320/322 tests passing - [Full Analysis](docs/BUILD_OUTPUT_ANALYSIS.md#test-suite-analysis)
+**Current Status**: 81.90% coverage, 320/322 tests passing - [Full Analysis](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 
 ## 📤 Output
 
-**[Build analysis](docs/BUILD_OUTPUT_ANALYSIS.md)** | **[PDF validation](docs/PDF_VALIDATION.md)**
+**[Build System](docs/BUILD_SYSTEM.md)** | **[PDF validation](docs/PDF_VALIDATION.md)**
 
 Generated outputs are organized in the `output/` directory:
 
@@ -602,11 +600,11 @@ graph TD
 
 **All files in `output/` are disposable and regenerated by the build pipeline.**
 
-**Generation Time**: 75 seconds for complete rebuild - [Performance Details](docs/BUILD_OUTPUT_ANALYSIS.md#build-pipeline-performance)
+**Generation Time**: 75 seconds for complete rebuild - [Performance Details](docs/BUILD_SYSTEM.md#stage-breakdown)
 
 ## 🔍 How It Works
 
-**[Complete workflow](docs/WORKFLOW.md)** | **[Architecture](docs/ARCHITECTURE.md)** | **[Build verification](docs/BUILD_VERIFICATION_REPORT.md)**
+**[Complete workflow](docs/WORKFLOW.md)** | **[Architecture](docs/ARCHITECTURE.md)** | **[Build System](docs/BUILD_SYSTEM.md)**
 
 ```mermaid
 flowchart TD
@@ -644,11 +642,11 @@ flowchart TD
 
 **Pipeline Stages:**
 
-1. **Test Validation**: Ensures 100% test coverage - [Test Report](docs/BUILD_OUTPUT_ANALYSIS.md#stage-1-test-suite-27-seconds)
-2. **Script Execution**: Runs all Python scripts in `scripts/` (validating src/ integration) - [Script Details](docs/BUILD_OUTPUT_ANALYSIS.md#stage-2-script-execution-1-second)
-3. **Repository Utilities**: Generates glossary and validates markdown - [Utility Details](docs/BUILD_OUTPUT_ANALYSIS.md#stage-25-repository-utilities-1-second)
+1. **Test Validation**: Ensures 100% test coverage - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+2. **Script Execution**: Runs all Python scripts in `scripts/` (validating src/ integration) - [Script Details](docs/BUILD_SYSTEM.md#stage-2-script-execution-1-2-seconds)
+3. **Repository Utilities**: Generates glossary and validates markdown - [Utility Details](docs/BUILD_SYSTEM.md#stage-3-repository-utilities-1-second)
 4. **Markdown Discovery**: Finds manuscript `.md` files in `manuscript/` - [Numbering System](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)
-5. **PDF Generation**: Creates individual manuscript section PDFs and combined manuscript PDF - [PDF Analysis](docs/BUILD_OUTPUT_ANALYSIS.md#stage-4-individual-module-pdfs-32-seconds)
+5. **PDF Generation**: Creates individual manuscript section PDFs and combined manuscript PDF - [PDF Analysis](docs/BUILD_SYSTEM.md#stage-4-individual-module-pdfs-32-35-seconds)
 6. **Output Validation**: Validates PDF quality - [PDF Validation](docs/PDF_VALIDATION.md)
 7. **Output Organization**: Places outputs in organized subdirectories
 
@@ -668,16 +666,14 @@ flowchart TD
 - **[docs/FAQ.md](docs/FAQ.md)** - Frequently asked questions and solutions
 
 ### Build System & Quality
-- **[docs/BUILD_OUTPUT_ANALYSIS.md](docs/BUILD_OUTPUT_ANALYSIS.md)** - Comprehensive build performance analysis (24 pages)
-- **[docs/BUILD_SYSTEM_FIX_SUMMARY.md](docs/BUILD_SYSTEM_FIX_SUMMARY.md)** - Recent build system improvements
-- **[docs/BUILD_VERIFICATION_REPORT.md](docs/BUILD_VERIFICATION_REPORT.md)** - Complete system validation report
+- **[docs/BUILD_SYSTEM.md](docs/BUILD_SYSTEM.md)** - Complete build system reference (status, performance, fixes)
 - **[docs/PDF_VALIDATION.md](docs/PDF_VALIDATION.md)** - PDF quality validation system
 
 ### Development & Architecture
 - **[docs/THIN_ORCHESTRATOR_SUMMARY.md](docs/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
 - **[docs/MARKDOWN_TEMPLATE_GUIDE.md](docs/MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown writing and cross-referencing guide
 - **[docs/MANUSCRIPT_NUMBERING_SYSTEM.md](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization system
-- **[docs/MARKDOWN_DIRECTORY_ELIMINATION.md](docs/MARKDOWN_DIRECTORY_ELIMINATION.md)** - Simplified build structure
+- **[docs/MARKDOWN_DIRECTORY_ELIMINATION.md](docs/archive/MARKDOWN_DIRECTORY_ELIMINATION.md)** - Historical: Simplified build structure
 
 ### Community & Contribution
 - **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** - Contribution guidelines and process
@@ -705,12 +701,28 @@ flowchart TD
 - **[repo_utilities/README.md](repo_utilities/README.md)** - Utilities quick reference
 
 ### Advanced Modules
+- **[docs/ADVANCED_MODULES_GUIDE.md](docs/ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all 6 advanced modules
+- **[docs/API_REFERENCE.md](docs/API_REFERENCE.md)** - Complete API documentation for all src/ modules
 - **[src/quality_checker.py](src/quality_checker.py)** - Document quality analysis and metrics
 - **[src/reproducibility.py](src/reproducibility.py)** - Build reproducibility and environment tracking
 - **[src/integrity.py](src/integrity.py)** - File integrity and cross-reference validation
 - **[src/publishing.py](src/publishing.py)** - Academic publishing workflow tools
 - **[src/scientific_dev.py](src/scientific_dev.py)** - Scientific computing best practices
 - **[src/build_verifier.py](src/build_verifier.py)** - Build process validation and verification
+
+### Operational Guides
+- **[docs/DEPENDENCY_MANAGEMENT.md](docs/DEPENDENCY_MANAGEMENT.md)** - Complete guide for uv package manager
+- **[docs/PERFORMANCE_OPTIMIZATION.md](docs/PERFORMANCE_OPTIMIZATION.md)** - Build time optimization and caching strategies
+- **[docs/CI_CD_INTEGRATION.md](docs/CI_CD_INTEGRATION.md)** - GitHub Actions and CI/CD integration guide
+- **[docs/TROUBLESHOOTING_GUIDE.md](docs/TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting guide
+
+### Best Practices & Reference
+- **[docs/BEST_PRACTICES.md](docs/BEST_PRACTICES.md)** - Consolidated best practices compilation
+- **[docs/VERSION_CONTROL.md](docs/VERSION_CONTROL.md)** - Git workflows and version control best practices
+- **[docs/MULTI_PROJECT_MANAGEMENT.md](docs/MULTI_PROJECT_MANAGEMENT.md)** - Managing multiple projects using the template
+- **[docs/MIGRATION_GUIDE.md](docs/MIGRATION_GUIDE.md)** - Step-by-step migration from other templates
+- **[docs/BACKUP_RECOVERY.md](docs/BACKUP_RECOVERY.md)** - Backup strategies and recovery procedures
+- **[CHANGELOG.md](CHANGELOG.md)** - Complete changelog tracking all changes
 
 ## 🤝 Contributing
 
@@ -725,9 +737,9 @@ We welcome contributions! To contribute:
 5. **Maintain thin orchestrator pattern** - scripts use src/ methods - [Pattern Guide](docs/THIN_ORCHESTRATOR_SUMMARY.md)
 
 **Recent Improvements:**
-- Build system optimizations - [Details](docs/BUILD_SYSTEM_FIX_SUMMARY.md)
+- Build system optimizations - [Details](docs/BUILD_SYSTEM.md#historical-fixes)
 - Test suite enhancements - [Details](docs/TEST_IMPROVEMENTS_SUMMARY.md)
-- Simplified directory structure - [Details](docs/MARKDOWN_DIRECTORY_ELIMINATION.md)
+- Simplified directory structure - [Historical](docs/archive/MARKDOWN_DIRECTORY_ELIMINATION.md)
 
 ## 📄 License
 
@@ -758,22 +770,22 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 
 ## 🆘 Troubleshooting
 
-**[Complete troubleshooting guide](docs/FAQ.md)** | **[Build analysis](docs/BUILD_OUTPUT_ANALYSIS.md)**
+**[Complete troubleshooting guide](docs/TROUBLESHOOTING_GUIDE.md)** | **[FAQ](docs/FAQ.md)** | **[Build System](docs/BUILD_SYSTEM.md)**
 
 ### Common Issues
 
 - **Tests Fail**: Ensure 100% coverage and all tests pass - [Testing Guide](tests/AGENTS.md) | [Test Improvements](docs/TEST_IMPROVEMENTS_SUMMARY.md)
 - **Scripts Fail**: Check Python dependencies and error handling - [Script Guide](scripts/AGENTS.md)
-- **PDF Generation Fails**: Verify pandoc and xelatex installation - [Build Analysis](docs/BUILD_OUTPUT_ANALYSIS.md)
+- **PDF Generation Fails**: Verify pandoc and xelatex installation - [Build System](docs/BUILD_SYSTEM.md#troubleshooting)
 - **Coverage Below 100%**: Add tests for uncovered code - [Workflow](docs/WORKFLOW.md)
-- **Build System Issues**: Check recent fixes - [Build System Fix Summary](docs/BUILD_SYSTEM_FIX_SUMMARY.md)
+- **Build System Issues**: Check recent fixes - [Build System](docs/BUILD_SYSTEM.md#historical-fixes)
 - **PDF Quality Issues**: Run validation - [PDF Validation](docs/PDF_VALIDATION.md)
 - **Reference Issues**: Check markdown validation - [Markdown Guide](docs/MARKDOWN_TEMPLATE_GUIDE.md)
 
 ### Getting Help
 
 - Check the **[FAQ](docs/FAQ.md)** for common questions and solutions
-- Review the **[Build Verification Report](docs/BUILD_VERIFICATION_REPORT.md)** for system status
+- Review the **[Build System](docs/BUILD_SYSTEM.md)** for system status
 - Check the **[repo_utilities/README.md](repo_utilities/README.md)** for detailed troubleshooting
 - Review the test output for specific error messages
 - Ensure all required dependencies are installed
@@ -781,9 +793,7 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 
 ### Debug Resources
 
-- **Build Performance**: [BUILD_OUTPUT_ANALYSIS.md](docs/BUILD_OUTPUT_ANALYSIS.md)
-- **System Validation**: [BUILD_VERIFICATION_REPORT.md](docs/BUILD_VERIFICATION_REPORT.md)
-- **Recent Fixes**: [BUILD_SYSTEM_FIX_SUMMARY.md](docs/BUILD_SYSTEM_FIX_SUMMARY.md)
+- **Build System**: [BUILD_SYSTEM.md](docs/BUILD_SYSTEM.md) - Complete reference (performance, status, fixes)
 - **PDF Quality**: [PDF_VALIDATION.md](docs/PDF_VALIDATION.md)
 
 ## 🔄 Migration from QuadMath
@@ -812,7 +822,7 @@ The thin orchestrator pattern provides:
 - **Performance**: 75-second build time for complete regeneration
 - **Reliability**: 320/322 tests passing (99.4% success rate)
 
-**System Status**: ✅ **FULLY OPERATIONAL** - [Verification Report](docs/BUILD_VERIFICATION_REPORT.md)
+**System Status**: ✅ **FULLY OPERATIONAL** - [Build System](docs/BUILD_SYSTEM.md)
 
 ---
 
@@ -828,7 +838,7 @@ The thin orchestrator pattern provides:
 - [Architecture Overview](docs/ARCHITECTURE.md)
 - [Thin Orchestrator Pattern](docs/THIN_ORCHESTRATOR_SUMMARY.md)
 - [Development Workflow](docs/WORKFLOW.md)
-- [Build Analysis](docs/BUILD_OUTPUT_ANALYSIS.md)
+- [Build System](docs/BUILD_SYSTEM.md)
 
 ### Contributors
 - [Contributing Guidelines](docs/CONTRIBUTING.md)
@@ -838,7 +848,7 @@ The thin orchestrator pattern provides:
 
 ### Advanced Users
 - [Complete System Reference](AGENTS.md)
-- [Build Verification Report](docs/BUILD_VERIFICATION_REPORT.md)
+- [Build System](docs/BUILD_SYSTEM.md)
 - [PDF Validation](docs/PDF_VALIDATION.md)
 - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 

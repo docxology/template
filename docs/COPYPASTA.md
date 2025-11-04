@@ -248,7 +248,7 @@ graph TB
         SRC[📁 src/<br/>Core business logic<br/>100% tested]
         TESTS[🧪 tests/<br/>Test suite<br/>100% coverage]
         SCRIPTS[📜 scripts/<br/>Thin orchestrators<br/>Use src/ methods]
-        MD[📚 markdown/<br/>Documentation<br/>Cross-referenced]
+        MANUSCRIPT[📚 manuscript/<br/>Research manuscript<br/>Cross-referenced]
         REPO_UTILS[🔧 repo_utilities/<br/>Build tools<br/>Generic utilities]
         OUTPUT[📤 output/<br/>Generated files<br/>PDFs, figures, data]
     end
@@ -272,7 +272,7 @@ graph TB
     classDef pipeline fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
     classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
     
-    class SRC,TESTS,SCRIPTS,MD,REPO_UTILS core
+    class SRC,TESTS,SCRIPTS,MANUSCRIPT,REPO_UTILS core
     class SRC,SCRIPTS pattern
     class RENDER pipeline
     class OUTPUT output
@@ -415,7 +415,7 @@ graph LR
 ### **🔧 Customization Steps**
 - [ ] Edit `repo_utilities/rename_project.sh` with your project details
 - [ ] Run `./repo_utilities/rename_project.sh` to customize
-- [ ] Update markdown files with your content
+- [ ] Update manuscript files with your content
 - [ ] Add your business logic to `src/` modules
 - [ ] Create tests in `tests/` directory (100% coverage required)
 

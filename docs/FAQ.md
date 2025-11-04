@@ -95,7 +95,42 @@
 **A:** Yes, the template is licensed under the Apache License 2.0, which allows commercial use, modification, and distribution.
 
 ### **Q: How do I stay updated with template improvements?**
-**A:** Watch the repository for updates, check the changelog, and consider contributing improvements back to the community.
+**A:** Watch the repository for updates, check the [CHANGELOG.md](../CHANGELOG.md), and consider contributing improvements back to the community.
+
+## 🧪 **Advanced Modules**
+
+### **Q: What are the advanced modules?**
+**A:** The template includes 6 advanced modules: quality_checker (document quality analysis), reproducibility (environment tracking), integrity (output verification), publishing (academic workflows), scientific_dev (scientific computing), and build_verifier (build validation). See [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) for complete documentation.
+
+### **Q: How do I use the advanced modules?**
+**A:** See the [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) for comprehensive usage examples and integration patterns. Each module includes API documentation and best practices.
+
+### **Q: Where can I find API documentation?**
+**A:** Complete API reference for all modules is available in [API Reference](API_REFERENCE.md), including function signatures, parameters, return values, and examples.
+
+## ⚙️ **CI/CD & Automation**
+
+### **Q: How do I set up CI/CD?**
+**A:** See the [CI/CD Integration Guide](CI_CD_INTEGRATION.md) for complete GitHub Actions setup, automated testing, and deployment workflows.
+
+### **Q: Can I automate PDF generation in CI?**
+**A:** Yes! The [CI/CD Integration Guide](CI_CD_INTEGRATION.md) includes examples for automated PDF generation in GitHub Actions and other CI systems.
+
+## 📦 **Dependency Management**
+
+### **Q: How do I manage dependencies with uv?**
+**A:** See the [Dependency Management Guide](DEPENDENCY_MANAGEMENT.md) for complete instructions on using uv for package management, including adding, updating, and removing dependencies.
+
+### **Q: What if I have dependency conflicts?**
+**A:** The [Dependency Management Guide](DEPENDENCY_MANAGEMENT.md) includes troubleshooting for dependency conflicts and resolution strategies.
+
+## ⚡ **Performance**
+
+### **Q: How can I optimize build times?**
+**A:** See the [Performance Optimization Guide](PERFORMANCE_OPTIMIZATION.md) for strategies to reduce build times, including parallel execution, caching, and optimization techniques.
+
+### **Q: What's the current build performance?**
+**A:** The build system achieves 75-second builds for complete regeneration. See [Build System](BUILD_SYSTEM.md) for detailed performance metrics and [Performance Optimization Guide](PERFORMANCE_OPTIMIZATION.md) for optimization strategies.
 
 ## 📞 **Getting Help**
 

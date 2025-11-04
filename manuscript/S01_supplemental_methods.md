@@ -161,3 +161,4 @@ $\lambda$ & 0.001 & [0, 0.01] & Low (±5\%) \\
 The learning rate $\alpha_0$ has the strongest impact on convergence speed, while regularization $\lambda$ primarily affects the final solution quality rather than convergence dynamics.
 
 
+

@@ -1,5 +1,9 @@
 # PDF Validation Feature
 
+> **Automated quality checking** for generated PDFs
+
+**Quick Reference:** [Build System](BUILD_SYSTEM.md) | [Common Workflows](COMMON_WORKFLOWS.md#generate-pdf-of-manuscript) | [FAQ](FAQ.md)
+
 ## Overview
 
 The PDF validation system automatically scans generated PDFs for rendering issues and structural problems. It detects unresolved references (??), missing citations, warnings, errors, and verifies document structure by extracting the first N words.

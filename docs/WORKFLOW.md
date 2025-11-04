@@ -20,7 +20,7 @@ graph TB
         SRC[Source Code<br/>src/]
         TESTS[Tests<br/>tests/]
         SCRIPTS[Scripts<br/>scripts/]
-        MD[Documentation<br/>markdown/]
+        MANUSCRIPT[Manuscript<br/>manuscript/]
     end
     
     subgraph "Validation & Generation"
@@ -190,7 +190,7 @@ This script:
 - **Print output paths** to stdout for manifest collection
 - **Use headless plotting** (MPLBACKEND=Agg)
 
-### Documentation (`markdown/`)
+### Documentation (`manuscript/`)
 - **References source code** using inline code formatting
 - **Displays generated figures** from `output/figures/`
 - **Passes validation** for images, references, and equations
@@ -321,7 +321,7 @@ coverage report -m
 
 ## Key Connections to Remember
 
-1. **src/ modules → tests/ validation → scripts/ generation → markdown/ documentation**
+1. **src/ modules → tests/ validation → scripts/ generation → manuscript/ documentation**
 2. **render_pdf.sh ensures all connections are valid before building outputs**
 3. **Changes in any component must be reflected in all connected components**
 4. **The test suite validates the entire pipeline, not just individual modules**

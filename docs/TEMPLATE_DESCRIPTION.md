@@ -8,7 +8,7 @@ This template provides a **complete foundation** for research projects with:
 - **`src/`** - Core business logic with 100% test coverage requirement
 - **`tests/`** - Comprehensive test suite ensuring code quality
 - **`scripts/`** - Thin orchestrators that use tested methods
-- **`markdown/`** - Source files for manuscripts and documentation
+- **`manuscript/`** - Research manuscript sections (generates PDFs)
 - **`output/`** - Generated PDFs, figures, and data
 - **`repo_utilities/`** - Build tools and utilities
 
@@ -62,7 +62,7 @@ This template provides a **complete foundation** for research projects with:
 
 1. **Use this template** to create your new repository
 2. **Customize** the project name and configuration
-3. **Add your content** to the markdown files
+3. **Add your content** to the manuscript files
 4. **Implement your logic** in the src/ directory
 5. **Run the build pipeline** to generate professional output
 
