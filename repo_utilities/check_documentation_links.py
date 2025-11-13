@@ -50,8 +50,9 @@ def extract_links(content: str, file_path: Path) -> Tuple[List[Dict], List[Dict]
                 'line': content[:match.start()].count('\n') + 1,
                 'file': str(file_path)
             })
-        # Check if it's an external link
-        elif link_target.startswith('http://') or link_target.startswith('https://'):
+        # Check if it's an external link (including URLs with paths)
+        elif (link_target.startswith('http://') or link_target.startswith('https://') or
+              '://' in link_target or link_target.startswith('mailto:')):
             external_links.append({
                 'text': link_text,
                 'target': link_target,
@@ -91,16 +92,27 @@ def check_file_reference(target: str, source_file: Path, repo_root: Path) -> Tup
         target_path = target_path.resolve()
         repo_root_resolved = repo_root.resolve()
         
-        # Check if file exists
-        if target_path.exists() and target_path.is_file():
-            # Check if it's within repo
-            try:
-                target_path.relative_to(repo_root_resolved)
+        # Check if it's within repo first
+        try:
+            target_path.relative_to(repo_root_resolved)
+        except ValueError:
+            return False, f"Path outside repository: {target_path}"
+        
+        # Check if file or directory exists
+        if target_path.exists():
+            if target_path.is_file():
                 return True, str(target_path.relative_to(repo_root_resolved))
-            except ValueError:
-                return False, f"File outside repository: {target_path}"
+            elif target_path.is_dir():
+                # Directory references are valid (e.g., [src/](src/))
+                return True, str(target_path.relative_to(repo_root_resolved))
+            else:
+                return False, f"Path exists but is not a file or directory: {target_path}"
         else:
-            return False, f"File does not exist: {target_path}"
+            # Check if it's a markdown file without extension
+            md_path = target_path.with_suffix('.md')
+            if md_path.exists() and md_path.is_file():
+                return True, str(md_path.relative_to(repo_root_resolved))
+            return False, f"File or directory does not exist: {target_path}"
     except Exception as e:
         return False, f"Error resolving path: {e}"
 

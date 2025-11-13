@@ -1,6 +1,6 @@
 # Generic Project Development Workflow: The render_pdf.sh Paradigm
 
-This document explains the complete development workflow that ensures source code, tests, and documentation remain in perfect coherence. For related information, see **[`docs/HOW_TO_USE.md`](docs/HOW_TO_USE.md)** for complete usage guidance, **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**, **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](docs/README.md)**.
+This document explains the complete development workflow that ensures source code, tests, and documentation remain in perfect coherence. For related information, see **[`docs/HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`docs/ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
 
 ## Overview
 

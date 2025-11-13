@@ -148,12 +148,12 @@ pytest --cov=src --cov-report=html
 
 ## 📚 **Resources**
 
-- **[`ARCHITECTURE.md`](docs/ARCHITECTURE.md)** - System design overview
-- **[`WORKFLOW.md`](docs/WORKFLOW.md)** - Development workflow guide
-- **[`MARKDOWN_TEMPLATE_GUIDE.md`](docs/MARKDOWN_TEMPLATE_GUIDE.md)** - Writing and formatting guide
-- **[`EXAMPLES.md`](docs/EXAMPLES.md)** - Usage examples and customization
-- **[`README.md`](docs/README.md)** - Project overview and quick start
-- **[`THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)** - Architecture implementation details
+- **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System design overview
+- **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow guide
+- **[`MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md)** - Writing and formatting guide
+- **[`EXAMPLES.md`](EXAMPLES.md)** - Usage examples and customization
+- **[`README.md`](README.md)** - Project overview and quick start
+- **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** - Architecture implementation details
 
 ## 🎉 **Thank You!**
 

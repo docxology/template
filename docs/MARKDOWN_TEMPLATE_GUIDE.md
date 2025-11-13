@@ -1,6 +1,6 @@
 # Markdown Template Guide
 
-This document explains the comprehensive markdown template structure and cross-referencing system implemented in this project. For related information, see **[`docs/HOW_TO_USE.md`](docs/HOW_TO_USE.md)** for complete usage guidance, **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**, **[`docs/WORKFLOW.md`](docs/WORKFLOW.md)**, and **[`README.md`](docs/README.md)**.
+This document explains the comprehensive markdown template structure and cross-referencing system implemented in this project. For related information, see **[`docs/HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`docs/ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`docs/WORKFLOW.md`](WORKFLOW.md)**, and **[`README.md`](README.md)**.
 
 ## Template Structure
 
@@ -342,4 +342,4 @@ This template provides a complete framework for academic writing with:
 
 The system demonstrates best practices for academic writing while maintaining the flexibility to adapt to different research domains and writing styles, all while enforcing the architectural principles of the generic project template.
 
-For more details on architecture and workflow, see **[`ARCHITECTURE.md`](docs/ARCHITECTURE.md)** and **[`WORKFLOW.md`](docs/WORKFLOW.md)**.
+For more details on architecture and workflow, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.

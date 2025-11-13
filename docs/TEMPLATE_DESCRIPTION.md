@@ -49,14 +49,14 @@ This template provides a **complete foundation** for research projects with:
 
 ## 📖 **Documentation Included**
 
-- **[`HOW_TO_USE.md`](docs/HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced
-- **[`ARCHITECTURE.md`](docs/ARCHITECTURE.md)** - System design overview
-- **[`WORKFLOW.md`](docs/WORKFLOW.md)** - Development workflow guide
-- **[`MARKDOWN_TEMPLATE_GUIDE.md`](docs/MARKDOWN_TEMPLATE_GUIDE.md)** - Writing and formatting guide
-- **[`EXAMPLES.md`](docs/EXAMPLES.md)** - Usage examples and customization
-- **[`THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation details
-- **[`README.md`](docs/README.md)** - Complete project overview
-- **[`EXAMPLES_SHOWCASE.md`](docs/EXAMPLES_SHOWCASE.md)** - Real-world usage examples
+- **[`HOW_TO_USE.md`](HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced
+- **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System design overview
+- **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow guide
+- **[`MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md)** - Writing and formatting guide
+- **[`EXAMPLES.md`](EXAMPLES.md)** - Usage examples and customization
+- **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation details
+- **[`README.md`](README.md)** - Complete project overview
+- **[`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)** - Real-world usage examples
 
 ## 🎉 **Get Started**
 
@@ -70,4 +70,4 @@ This template provides a **complete foundation** for research projects with:
 
 **Transform your research workflow with this professional template! 🚀**
 
-For detailed setup and usage instructions, see **[`HOW_TO_USE.md`](docs/HOW_TO_USE.md)** for comprehensive guidance, **[`README.md`](docs/README.md)** for overview, and **[`WORKFLOW.md`](docs/WORKFLOW.md)** for development process.
+For detailed setup and usage instructions, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for comprehensive guidance, **[`README.md`](README.md)** for overview, and **[`WORKFLOW.md`](WORKFLOW.md)** for development process.
