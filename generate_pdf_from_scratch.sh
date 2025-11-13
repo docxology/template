@@ -182,7 +182,27 @@ log_success() {
 }
 
 log_dim() {
-    local message="$1"
+    local message=""
+    # Handle both direct calls (with argument) and pipe usage (read from stdin)
+    if [ $# -gt 0 ]; then
+        message="$1"
+    else
+        # Read from stdin if no argument provided
+        while IFS= read -r line || [ -n "$line" ]; do
+            message="$line"
+            if [ $USE_COLORS -eq 1 ]; then
+                echo -e "${COLOR_DIM}   ${message}${COLOR_RESET}"
+            else
+                echo "   $message"
+            fi
+            if [ -n "$LOG_FILE" ]; then
+                echo "   $message" >> "$LOG_FILE"
+            fi
+        done
+        return 0
+    fi
+    
+    # Handle direct call with argument
     if [ $USE_COLORS -eq 1 ]; then
         echo -e "${COLOR_DIM}   ${message}${COLOR_RESET}"
     else
@@ -306,50 +326,308 @@ parse_args() {
     fi
 }
 
+# Detect OS for installation instructions
+detect_os() {
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        if command -v apt-get >/dev/null 2>&1; then
+            echo "debian"
+        elif command -v yum >/dev/null 2>&1; then
+            echo "rhel"
+        elif command -v pacman >/dev/null 2>&1; then
+            echo "arch"
+        else
+            echo "linux"
+        fi
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "macos"
+    else
+        echo "unknown"
+    fi
+}
+
+# Install system dependencies (if possible)
+install_system_dependency() {
+    local dep="$1"
+    local os=$(detect_os)
+    
+    if [ $DRY_RUN -eq 1 ]; then
+        log_info "[DRY RUN] Would attempt to install: $dep"
+        return 0
+    fi
+    
+    case "$os" in
+        debian)
+            log_info "Attempting to install $dep via apt-get..."
+            if command -v sudo >/dev/null 2>&1; then
+                sudo apt-get update -qq && sudo apt-get install -y "$dep" 2>&1 | log_dim || return 1
+            else
+                log_warn "sudo not available, cannot install $dep automatically"
+                return 1
+            fi
+            ;;
+        macos)
+            log_info "Attempting to install $dep via brew..."
+            if command -v brew >/dev/null 2>&1; then
+                brew install "$dep" 2>&1 | log_dim || return 1
+            else
+                log_warn "brew not available, cannot install $dep automatically"
+                return 1
+            fi
+            ;;
+        *)
+            log_warn "Automatic installation not supported on this OS"
+            return 1
+            ;;
+    esac
+}
+
+# Check and install Python dependencies via uv
+install_python_dependencies() {
+    log_debug "Checking Python dependencies..."
+    
+    if [ $DRY_RUN -eq 1 ]; then
+        log_info "[DRY RUN] Would install Python dependencies via uv"
+        return 0
+    fi
+    
+    # Check if uv is available
+    if ! command -v uv >/dev/null 2>&1; then
+        log_error "uv is required but not found"
+        log_info "Install uv: curl -LsSf https://astral.sh/uv/install.sh | sh"
+        return 1
+    fi
+    
+    # Check if pyproject.toml exists
+    if [ ! -f "$REPO_ROOT/pyproject.toml" ]; then
+        log_warn "pyproject.toml not found, skipping Python dependency installation"
+        return 0
+    fi
+    
+    log_info "Installing Python dependencies via uv..."
+    log_dim "This may take a few minutes on first run..."
+    
+    # Run uv sync to install all dependencies
+    if cd "$REPO_ROOT" && uv sync --quiet 2>&1 | log_dim; then
+        log_success "Python dependencies installed"
+        return 0
+    else
+        log_error "Failed to install Python dependencies"
+        log_info "Try running manually: cd $REPO_ROOT && uv sync"
+        return 1
+    fi
+}
+
 # Check dependencies
 check_dependencies() {
     log_debug "Checking dependencies..."
     
-    local missing_deps=()
+    local missing_system_deps=()
+    local missing_tools=()
+    local install_attempts=()
     
     # Check for required commands
     if ! command -v python3 >/dev/null 2>&1; then
-        missing_deps+=("python3")
+        missing_system_deps+=("python3")
+    else
+        # Verify Python version
+        local python_version=$(python3 --version 2>&1 | grep -oE '[0-9]+\.[0-9]+' | head -1)
+        local major_version=$(echo "$python_version" | cut -d. -f1)
+        local minor_version=$(echo "$python_version" | cut -d. -f2)
+        
+        if [ "$major_version" -lt 3 ] || ([ "$major_version" -eq 3 ] && [ "$minor_version" -lt 10 ]); then
+            log_error "Python 3.10+ required, found: $python_version"
+            missing_system_deps+=("python3>=3.10")
+        else
+            log_debug "Python version OK: $python_version"
+        fi
     fi
     
     if ! command -v uv >/dev/null 2>&1; then
-        missing_deps+=("uv")
+        missing_tools+=("uv")
+    else
+        log_debug "uv found: $(uv --version 2>&1 | head -1)"
     fi
     
-    if [ ${#missing_deps[@]} -gt 0 ]; then
-        log_error "Missing required dependencies: ${missing_deps[*]}"
-        log_info "Install missing dependencies:"
-        for dep in "${missing_deps[@]}"; do
+    # Check for PDF generation dependencies
+    if ! command -v pandoc >/dev/null 2>&1; then
+        missing_system_deps+=("pandoc")
+    else
+        log_debug "pandoc found: $(pandoc --version 2>&1 | head -1)"
+    fi
+    
+    if ! command -v xelatex >/dev/null 2>&1; then
+        missing_system_deps+=("texlive-xetex")
+    else
+        log_debug "xelatex found: $(xelatex --version 2>&1 | head -1)"
+    fi
+    
+    # Attempt to install missing system dependencies (if not in dry-run)
+    if [ ${#missing_system_deps[@]} -gt 0 ]; then
+        log_warn "Missing system dependencies: ${missing_system_deps[*]}"
+        
+        for dep in "${missing_system_deps[@]}"; do
+            # Map dependency names to package names
+            local package_name=""
             case "$dep" in
-                python3) log_info "  - python3: sudo apt-get install python3" ;;
-                uv) log_info "  - uv: See https://github.com/astral-sh/uv" ;;
+                python3|python3*)
+                    package_name="python3"
+                    ;;
+                pandoc)
+                    package_name="pandoc"
+                    ;;
+                texlive-xetex)
+                    local os=$(detect_os)
+                    case "$os" in
+                        debian) package_name="texlive-xetex texlive-fonts-recommended" ;;
+                        macos) package_name="basictex" ;;
+                        *) package_name="texlive-xetex" ;;
+                    esac
+                    ;;
+            esac
+            
+            if [ -n "$package_name" ]; then
+                log_info "Attempting to install: $package_name"
+                if install_system_dependency "$package_name"; then
+                    install_attempts+=("$package_name: installed")
+                    # Remove from missing list if installation succeeded
+                    missing_system_deps=("${missing_system_deps[@]/$dep}")
+                else
+                    install_attempts+=("$package_name: failed")
+                fi
+            fi
+        done
+    fi
+    
+    # Show installation results
+    if [ ${#install_attempts[@]} -gt 0 ]; then
+        echo ""
+        for attempt in "${install_attempts[@]}"; do
+            if [[ "$attempt" == *": installed" ]]; then
+                log_success "$attempt"
+            else
+                log_warn "$attempt"
+            fi
+        done
+        echo ""
+    fi
+    
+    # Check again after installation attempts
+    local still_missing=()
+    for dep in "${missing_system_deps[@]}"; do
+        case "$dep" in
+            python3|python3*)
+                if ! command -v python3 >/dev/null 2>&1; then
+                    still_missing+=("python3")
+                fi
+                ;;
+            pandoc)
+                if ! command -v pandoc >/dev/null 2>&1; then
+                    still_missing+=("pandoc")
+                fi
+                ;;
+            texlive-xetex)
+                if ! command -v xelatex >/dev/null 2>&1; then
+                    still_missing+=("texlive-xetex")
+                fi
+                ;;
+        esac
+    done
+    
+    # Report missing dependencies with installation instructions
+    if [ ${#still_missing[@]} -gt 0 ] || [ ${#missing_tools[@]} -gt 0 ]; then
+        log_error "Missing required dependencies: ${still_missing[*]} ${missing_tools[*]}"
+        echo ""
+        log_info "Installation instructions:"
+        
+        local os=$(detect_os)
+        for dep in "${still_missing[@]}" "${missing_tools[@]}"; do
+            case "$dep" in
+                python3)
+                    case "$os" in
+                        debian) log_info "  sudo apt-get update && sudo apt-get install -y python3 python3-pip" ;;
+                        macos) log_info "  brew install python3" ;;
+                        *) log_info "  Install Python 3.10+ from https://www.python.org/" ;;
+                    esac
+                    ;;
+                uv)
+                    log_info "  curl -LsSf https://astral.sh/uv/install.sh | sh"
+                    log_info "  Or: pip install uv"
+                    ;;
+                pandoc)
+                    case "$os" in
+                        debian) log_info "  sudo apt-get install -y pandoc" ;;
+                        macos) log_info "  brew install pandoc" ;;
+                        *) log_info "  Install from https://pandoc.org/installing.html" ;;
+                    esac
+                    ;;
+                texlive-xetex)
+                    case "$os" in
+                        debian) log_info "  sudo apt-get install -y texlive-xetex texlive-fonts-recommended" ;;
+                        macos) log_info "  brew install --cask mactex  # Or: brew install basictex" ;;
+                        *) log_info "  Install TeX Live with XeLaTeX support" ;;
+                    esac
+                    ;;
             esac
         done
-        exit 1
+        echo ""
+        
+        if [ $DRY_RUN -eq 0 ]; then
+            log_error "Please install missing dependencies and try again"
+            exit 1
+        fi
+    fi
+    
+    # Install Python dependencies
+    if ! install_python_dependencies; then
+        if [ $DRY_RUN -eq 0 ]; then
+            log_error "Failed to install Python dependencies"
+            exit 1
+        fi
     fi
     
     # Check for required scripts
+    local missing_scripts=()
     if [ ! -f "$REPO_ROOT/repo_utilities/clean_output.sh" ]; then
-        log_error "clean_output.sh not found: $REPO_ROOT/repo_utilities/clean_output.sh"
-        exit 1
+        missing_scripts+=("clean_output.sh")
     fi
     
     if [ ! -f "$REPO_ROOT/repo_utilities/render_pdf.sh" ]; then
-        log_error "render_pdf.sh not found: $REPO_ROOT/repo_utilities/render_pdf.sh"
-        exit 1
+        missing_scripts+=("render_pdf.sh")
     fi
     
     if [ ! -f "$REPO_ROOT/repo_utilities/validate_pdf_output.py" ]; then
-        log_error "validate_pdf_output.py not found: $REPO_ROOT/repo_utilities/validate_pdf_output.py"
+        missing_scripts+=("validate_pdf_output.py")
+    fi
+    
+    if [ ${#missing_scripts[@]} -gt 0 ]; then
+        log_error "Missing required scripts: ${missing_scripts[*]}"
+        log_error "Repository structure appears incomplete"
         exit 1
     fi
     
-    log_debug "All dependencies satisfied"
+    # Verify Python packages can be imported
+    log_debug "Verifying Python package imports..."
+    if command -v uv >/dev/null 2>&1 && [ $DRY_RUN -eq 0 ]; then
+        if cd "$REPO_ROOT" && uv run python3 -c "
+import sys
+try:
+    import numpy
+    import matplotlib
+    import pypdf
+    import reportlab
+    import yaml
+    print('All required Python packages available')
+except ImportError as e:
+    print(f'Missing package: {e}', file=sys.stderr)
+    sys.exit(1)
+" 2>&1 | log_dim; then
+            log_debug "Python package verification passed"
+        else
+            log_warn "Some Python packages may be missing, but continuing..."
+        fi
+    fi
+    
+    log_success "All dependencies satisfied"
 }
 
 # Filter output from render_pdf.sh (suppress harmless warnings)
