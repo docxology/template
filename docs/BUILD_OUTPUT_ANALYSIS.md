@@ -161,7 +161,7 @@ Markdown validation issues (non-strict):
 Generated preamble: /Users/4d/Documents/GitHub/template/output/latex_temp/preamble.tex
 ```
 
-The LaTeX preamble is successfully extracted from `00_preamble.md` and used for all PDF compilations.
+The LaTeX preamble is successfully extracted from `manuscript/preamble.md` and used for all PDF compilations.
 
 ---
 

@@ -88,14 +88,13 @@ This index provides a comprehensive overview of all documentation files in the R
 - **[`docs/BACKUP_RECOVERY.md`](BACKUP_RECOVERY.md)** - Backup strategies and recovery procedures
 
 ### **Changelog**
-- **[`CHANGELOG.md`](../CHANGELOG.md)** - Complete changelog tracking all changes
+- ~~**[`CHANGELOG.md`](../CHANGELOG.md)**~~ - Changelog (to be created)
 
 ## 📁 **File Organization**
 
 ### **Directory Structure**
 ```
 docs/
-├── 00_preamble.md                      # LaTeX preamble documentation
 ├── ADVANCED_MODULES_GUIDE.md          # Advanced modules guide
 ├── ADVANCED_USAGE.md                   # Advanced usage (Levels 7-9)
 ├── AGENTS.md                           # Directory documentation guide

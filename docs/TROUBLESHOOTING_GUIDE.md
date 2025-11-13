@@ -350,11 +350,14 @@ git diff uv.lock
 
 **Diagnostic:**
 ```bash
-# Clean and rebuild
+# Recommended: Enhanced from-scratch build with validation
+./generate_pdf_from_scratch.sh --verbose --log-file debug.log
+
+# Alternative: Manual steps
 ./repo_utilities/clean_output.sh
 ./repo_utilities/render_pdf.sh
 
-# Check each stage
+# Check each stage individually
 uv run pytest tests/ --cov=src
 python scripts/example_figure.py
 ./repo_utilities/render_pdf.sh
@@ -556,6 +559,11 @@ rm uv.lock
 # Reinstall
 uv sync
 uv run pytest tests/
+
+# Rebuild (recommended: use enhanced script)
+./generate_pdf_from_scratch.sh
+
+# Or manual rebuild
 ./repo_utilities/render_pdf.sh
 ```
 
@@ -581,7 +589,10 @@ uv run pytest tests/
 # Regenerate only figures
 python scripts/example_figure.py
 
-# Rebuild only PDFs
+# Rebuild only PDFs (recommended: use enhanced script)
+./generate_pdf_from_scratch.sh --skip-validation
+
+# Or manual rebuild
 ./repo_utilities/render_pdf.sh
 ```
 

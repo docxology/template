@@ -428,7 +428,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    }
    ```
 
-**See [docs/00_preamble.md](00_preamble.md) for complete preamble documentation.**
+**See [manuscript/preamble.md](../manuscript/preamble.md) for the LaTeX preamble configuration.**
 
 ### Add Bibliography
 

@@ -1,18 +1,22 @@
 \begin{titlepage}
 \centering
-\textbf{\Huge Project Title}
+\vspace*{2cm}
 
-\bigskip
+\textbf{\Huge Example Default Project Title}
+
+\vspace{3cm}
 
 \textbf{\Large Project Author}
 
-\smallskip
+\vspace{0.5cm}
 
-ORCID: 0000-0000-0000-0000\\ Email: author@example.com
+\textnormal{\small ORCID: 0000-0000-0000-1234} \\\textnormal{\small DOI: 10.5281/zenodo.12345678}
 
-\bigskip
+\vspace{3cm}
 
 \textbf{\large November 13, 2025}
+
+\vspace*{\fill}
 
 \end{titlepage}
 

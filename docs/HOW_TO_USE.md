@@ -240,7 +240,7 @@ Level 10-12: Expert Usage (1-2 months)
 ### Writing & Formatting
 - **[Markdown Template Guide](MARKDOWN_TEMPLATE_GUIDE.md)** - Complete formatting reference
 - **[Manuscript Numbering](MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization
-- **[LaTeX Preamble](00_preamble.md)** - Styling documentation
+- **[LaTeX Preamble](../manuscript/preamble.md)** - Styling configuration
 
 ### Examples & Help
 - **[Examples](EXAMPLES.md)** - Usage patterns

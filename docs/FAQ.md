@@ -95,7 +95,7 @@
 **A:** Yes, the template is licensed under the Apache License 2.0, which allows commercial use, modification, and distribution.
 
 ### **Q: How do I stay updated with template improvements?**
-**A:** Watch the repository for updates, check the [CHANGELOG.md](../CHANGELOG.md), and consider contributing improvements back to the community.
+**A:** Watch the repository for updates, check the repository releases and commit history, and consider contributing improvements back to the community.
 
 ## 🧪 **Advanced Modules**
 

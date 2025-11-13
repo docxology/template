@@ -70,14 +70,26 @@ uv run python repo_utilities/validate_pdf_output.py --help
 The validation is automatically integrated into `generate_pdf_from_scratch.sh`:
 
 ```bash
+# Standard usage (includes validation)
 ./generate_pdf_from_scratch.sh
+
+# Skip validation for faster iteration
+./generate_pdf_from_scratch.sh --skip-validation
+
+# With verbose logging and log file
+./generate_pdf_from_scratch.sh --verbose --log-file build.log
+
+# CI/CD usage (no colors, log file)
+./generate_pdf_from_scratch.sh --no-color --log-file ci_build.log
 ```
 
 This will:
 1. Clean output directory
 2. Regenerate all PDFs
-3. **Validate PDF output quality** (new stage)
+3. **Validate PDF output quality** (unless `--skip-validation` is used)
 4. Report any issues found
+
+**Note**: Use `--skip-validation` to skip the validation step for faster iteration during development. Always run full validation before final builds.
 
 ### Sample Output
 
@@ -214,7 +226,11 @@ Generate PDFs first:
 Or run the complete pipeline:
 
 ```bash
+# Standard build with validation
 ./generate_pdf_from_scratch.sh
+
+# With options
+./generate_pdf_from_scratch.sh --verbose --log-file build.log
 ```
 
 ### High number of ?? issues

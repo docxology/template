@@ -215,7 +215,7 @@ git push origin --tags
 **Release workflow:**
 ```bash
 # 1. Update version
-# Edit pyproject.toml, CHANGELOG.md
+# Edit pyproject.toml (CHANGELOG.md to be created)
 
 # 2. Commit changes
 git commit -m "chore: bump version to 0.2.0"

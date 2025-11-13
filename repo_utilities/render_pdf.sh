@@ -22,6 +22,7 @@ MARKDOWN_DIR="$REPO_ROOT/manuscript"
 OUTPUT_DIR="$REPO_ROOT/output"
 PREAMBLE_MD="$MARKDOWN_DIR/preamble.md"
 CLEAN_SCRIPT="$REPO_ROOT/repo_utilities/clean_output.sh"
+CONFIG_LOADER="$REPO_ROOT/repo_utilities/load_manuscript_config.py"
 
 # Output subdirectories (all disposable)
 PDF_DIR="$OUTPUT_DIR/pdf"
@@ -30,17 +31,33 @@ DATA_DIR="$OUTPUT_DIR/data"
 FIGURE_DIR="$OUTPUT_DIR/figures"
 LATEX_TEMP_DIR="$OUTPUT_DIR/latex_temp"
 
+# =============================================================================
+# LOAD MANUSCRIPT CONFIGURATION
+# =============================================================================
+# Load configuration from manuscript/config.yaml if it exists
+# Environment variables take precedence (backward compatibility)
+if [ -f "$CONFIG_LOADER" ]; then
+    # Source the config loader to set environment variables
+    # This allows config file values to be used as defaults
+    eval "$(python3 "$CONFIG_LOADER" 2>/dev/null)" || true
+fi
+
 # Author/metadata (configurable)
+# Priority: Environment variables > Config file > Defaults
 AUTHOR_NAME="${AUTHOR_NAME:-Project Author}"
 AUTHOR_ORCID="${AUTHOR_ORCID:-0000-0000-0000-0000}"
 AUTHOR_EMAIL="${AUTHOR_EMAIL:-author@example.com}"
 DOI="${DOI:-}"
 PROJECT_TITLE="${PROJECT_TITLE:-Project Title}"
 
-if [ -n "$DOI" ]; then
-    AUTHOR_DETAILS="ORCID: $AUTHOR_ORCID\\\\ Email: $AUTHOR_EMAIL\\\\ DOI: $DOI"
-else
-    AUTHOR_DETAILS="ORCID: $AUTHOR_ORCID\\\\ Email: $AUTHOR_EMAIL"
+# Format author details for LaTeX
+# Use AUTHOR_DETAILS if set by config loader, otherwise construct it
+if [ -z "${AUTHOR_DETAILS:-}" ]; then
+    if [ -n "$DOI" ]; then
+        AUTHOR_DETAILS="ORCID: $AUTHOR_ORCID\\\\ Email: $AUTHOR_EMAIL\\\\ DOI: $DOI"
+    else
+        AUTHOR_DETAILS="ORCID: $AUTHOR_ORCID\\\\ Email: $AUTHOR_EMAIL"
+    fi
 fi
 
 # =============================================================================
@@ -620,22 +637,44 @@ build_combined() {
     : > "$combined_md"
 
     # Add a proper title page before the abstract (using LaTeX to avoid section numbering)
+    # Format author details as smaller subtitle lines
+    local author_details_formatted=""
+    if [ -n "${AUTHOR_ORCID:-}" ] && [ "$AUTHOR_ORCID" != "0000-0000-0000-0000" ]; then
+      author_details_formatted="\\textnormal{\\small ORCID: $AUTHOR_ORCID}"
+    fi
+    if [ -n "${AUTHOR_EMAIL:-}" ] && [ "$AUTHOR_EMAIL" != "author@example.com" ]; then
+      if [ -n "$author_details_formatted" ]; then
+        author_details_formatted="$author_details_formatted \\\\"
+      fi
+      author_details_formatted="$author_details_formatted\\textnormal{\\small Email: $AUTHOR_EMAIL}"
+    fi
+    if [ -n "${DOI:-}" ]; then
+      if [ -n "$author_details_formatted" ]; then
+        author_details_formatted="$author_details_formatted \\\\"
+      fi
+      author_details_formatted="$author_details_formatted\\textnormal{\\small DOI: $DOI}"
+    fi
+    
     cat > "$combined_md" << EOF
 \begin{titlepage}
 \centering
+\vspace*{2cm}
+
 \textbf{\Huge $PROJECT_TITLE}
 
-\bigskip
+\vspace{3cm}
 
 \textbf{\Large $AUTHOR_NAME}
 
-\smallskip
+\vspace{0.5cm}
 
-$AUTHOR_DETAILS
+$author_details_formatted
 
-\bigskip
+\vspace{3cm}
 
 \textbf{\large $(date '+%B %d, %Y')}
+
+\vspace*{\fill}
 
 \end{titlepage}
 
@@ -790,6 +829,11 @@ EOF
   
   if [ -f "$PDF_DIR/project_combined.pdf" ]; then
     log_info "✅ Built combined PDF: $PDF_DIR/project_combined.pdf"
+    
+    # Copy to top level of output directory for easy access
+    cp "$PDF_DIR/project_combined.pdf" "$OUTPUT_DIR/project_combined.pdf"
+    log_info "✅ Copied combined PDF to: $OUTPUT_DIR/project_combined.pdf"
+    
     return 0
   else
     log_error "❌ Failed to build combined PDF"
@@ -903,6 +947,8 @@ main() {
     expected_pdfs+=("$PDF_DIR/${base}.pdf")
   done
   expected_pdfs+=("$PDF_DIR/project_combined.pdf")
+  # Top-level copy (created during build_combined if successful)
+  expected_pdfs+=("$OUTPUT_DIR/project_combined.pdf")
   
   # Add HTML version to expected list if it exists
   if [ -f "$OUTPUT_DIR/project_combined.html" ]; then
@@ -939,15 +985,20 @@ main() {
     exit 1
   else
     log_info "🎯 ALL modules built successfully!"
-    log_info "📚 Complete manuscript available: $PDF_DIR/project_combined.pdf"
+    
+    # Show both locations if combined PDF exists
+    if [ -f "$OUTPUT_DIR/project_combined.pdf" ]; then
+      log_info "📚 Complete manuscript available:"
+      log_info "   Top level: $OUTPUT_DIR/project_combined.pdf"
+      log_info "   PDF folder: $PDF_DIR/project_combined.pdf"
+    elif [ -f "$PDF_DIR/project_combined.pdf" ]; then
+      log_info "📚 Complete manuscript available: $PDF_DIR/project_combined.pdf"
+    fi
     
     if [ -f "$OUTPUT_DIR/project_combined.html" ]; then
       log_info "🖥️  HTML version: $OUTPUT_DIR/project_combined.html"
       log_info "   (Use this version for IDE viewing and web browsers)"
     fi
-    
-    log_info "📖 Standard version: $PDF_DIR/project_combined.pdf"
-    log_info "   (Use this version for printing and professional viewing)"
   fi
 }
 

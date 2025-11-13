@@ -51,7 +51,7 @@ The `docs/` directory contains comprehensive project documentation organized by 
 
 | File | Purpose |
 |------|---------|
-| `00_preamble.md` | Documentation preamble and styling |
+| `COPYPASTA.md` | Reusable documentation snippets |
 
 ## Documentation Philosophy
 
@@ -238,12 +238,6 @@ EXAMPLES.md  WORKFLOW.md    Technical Docs
 - [ ] Cross-referenced from related docs
 
 ## Special Files
-
-### 00_preamble.md
-Documentation-specific LaTeX preamble (if generating docs as PDFs):
-- Not rendered standalone
-- Provides styling for documentation PDFs
-- Similar to `manuscript/preamble.md` but for docs
 
 ### COPYPASTA.md
 Reusable documentation snippets:

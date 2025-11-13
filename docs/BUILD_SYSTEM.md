@@ -324,6 +324,44 @@ build_combined() {
 
 ---
 
+### Enhancement: generate_pdf_from_scratch.sh Improvements (January 2025)
+
+**Enhancement:** Comprehensive improvements to `generate_pdf_from_scratch.sh` script
+
+**Added Features:**
+- Command-line interface with multiple options (`--help`, `--dry-run`, `--skip-validation`, `--verbose`, `--debug`, `--no-color`, `--no-emoji`, `--log-file`)
+- Structured logging with timestamped messages and log levels (DEBUG, INFO, WARN, ERROR)
+- Log file support for debugging and archival
+- Color detection (automatic TTY detection, NO_COLOR environment variable support)
+- Accessibility features (optional emojis, graceful plain text fallback)
+- Robustness improvements (dependency validation, trap handlers, error context reporting)
+- REPO_ROOT pattern for consistent path handling
+- Proper exit code handling (0=success, 1=error, 2=validation warnings)
+
+**Usage Examples:**
+```bash
+# Standard usage
+./generate_pdf_from_scratch.sh
+
+# With verbose logging and log file
+./generate_pdf_from_scratch.sh --verbose --log-file build.log
+
+# Skip validation for faster iteration
+./generate_pdf_from_scratch.sh --skip-validation
+
+# CI/CD usage (no colors, log file)
+./generate_pdf_from_scratch.sh --no-color --log-file ci_build.log
+
+# Preview without executing
+./generate_pdf_from_scratch.sh --dry-run
+```
+
+**Result:** ✅ Enhanced usability, better debugging, CI/CD compatibility
+
+**Impact:** Improved developer experience, better integration with automated workflows
+
+---
+
 ## 🚨 Troubleshooting
 
 ### Build Fails
@@ -335,6 +373,10 @@ build_combined() {
 2. Check xelatex installed: `xelatex --version`
 3. Clean and rebuild:
    ```bash
+   # Recommended: Use enhanced script
+   ./generate_pdf_from_scratch.sh
+   
+   # Or manual steps
    ./repo_utilities/clean_output.sh
    ./repo_utilities/render_pdf.sh
    ```
@@ -366,6 +408,10 @@ build_combined() {
 2. Check spelling matches exactly
 3. Rebuild (references need multiple passes):
    ```bash
+   # Recommended: Use enhanced script
+   ./generate_pdf_from_scratch.sh
+   
+   # Or manual rebuild
    ./repo_utilities/render_pdf.sh
    ```
 
@@ -388,24 +434,30 @@ build_combined() {
 To verify everything works on your system:
 
 ```bash
-# 1. Clean start
-./repo_utilities/clean_output.sh
-
-# 2. Full regeneration
+# 1. Full regeneration (recommended - includes cleanup and validation)
 ./generate_pdf_from_scratch.sh
 
-# 3. Expected output:
+# With options:
+# ./generate_pdf_from_scratch.sh --verbose --log-file build.log
+# ./generate_pdf_from_scratch.sh --skip-validation  # Faster iteration
+# ./generate_pdf_from_scratch.sh --dry-run          # Preview without executing
+
+# Alternative: Manual steps
+# ./repo_utilities/clean_output.sh
+# ./repo_utilities/render_pdf.sh
+
+# 2. Expected output:
 # - Build completes in ~75 seconds
 # - 320 tests pass
 # - 13 PDFs generated
 # - No critical errors
 
-# 4. Verify outputs
+# 3. Verify outputs
 ls -la output/pdf/        # Should show 13 PDFs
 ls -la output/figures/    # Should show 10 figures
 ls -la output/data/       # Should show 2 data files
 
-# 5. Open manuscript
+# 4. Open manuscript
 ./repo_utilities/open_manuscript.sh
 ```
 

@@ -100,9 +100,52 @@ template/
 
 ## ⚙️ Configuration System
 
-### Environment Variables
+### Configuration File (Recommended)
 
-The system supports comprehensive configuration through environment variables:
+The system supports configuration through a YAML file in `manuscript/config.yaml`, providing a centralized, version-controllable way to manage all paper metadata.
+
+**Location**: `manuscript/config.yaml`  
+**Template**: `manuscript/config.yaml.example`
+
+**Example configuration**:
+```yaml
+paper:
+  title: "Novel Optimization Framework"
+  subtitle: ""  # Optional
+  version: "1.0"
+
+authors:
+  - name: "Dr. Jane Smith"
+    orcid: "0000-0000-0000-1234"
+    email: "jane.smith@university.edu"
+    affiliation: "University of Example"
+    corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.12345678"  # Optional
+  journal: ""  # Optional
+  volume: ""  # Optional
+  pages: ""  # Optional
+
+keywords:
+  - "optimization"
+  - "machine learning"
+
+metadata:
+  license: "Apache-2.0"
+  language: "en"
+```
+
+**Benefits**:
+- ✅ Version controllable (can be committed to git)
+- ✅ Single file for all metadata
+- ✅ Supports multiple authors with affiliations
+- ✅ Structured format (YAML)
+- ✅ Easy to edit and maintain
+
+### Environment Variables (Backward Compatible)
+
+For backward compatibility, environment variables still work and take precedence over config file values:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -113,26 +156,37 @@ The system supports comprehensive configuration through environment variables:
 | `PROJECT_TITLE` | `"Project Title"` | Project/research title |
 | `LOG_LEVEL` | `1` | Logging verbosity (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR) |
 
+**Priority order**:
+1. Environment variables (highest priority - override config file)
+2. Config file (`manuscript/config.yaml`)
+3. Default values (lowest priority)
+
 ### Configuration Examples
 
-#### Basic Configuration
+#### Using Configuration File (Recommended)
+```bash
+# Edit manuscript/config.yaml with your information
+vim manuscript/config.yaml
+
+# Build with config file values
+./repo_utilities/render_pdf.sh
+```
+
+#### Using Environment Variables
 ```bash
 export AUTHOR_NAME="Dr. Jane Smith"
 export PROJECT_TITLE="Novel Optimization Framework"
 export AUTHOR_EMAIL="jane.smith@university.edu"
 export AUTHOR_ORCID="0000-0000-0000-1234"
-```
+export DOI="10.5281/zenodo.12345678"  # Optional
 
-#### With DOI
-```bash
-export DOI="10.5281/zenodo.12345678"
-export AUTHOR_NAME="Research Team"
-export PROJECT_TITLE="Advanced Machine Learning Techniques"
+./repo_utilities/render_pdf.sh
 ```
 
 #### Verbose Logging
 ```bash
 export LOG_LEVEL=0  # Show all debug messages
+./repo_utilities/render_pdf.sh
 ```
 
 ### Runtime Configuration
@@ -142,6 +196,7 @@ Configuration is read at runtime by `render_pdf.sh` and applied to:
 - LaTeX document properties
 - Generated file headers
 - Cross-reference systems
+- Title page generation
 
 ## 🚀 Rendering Pipeline
 

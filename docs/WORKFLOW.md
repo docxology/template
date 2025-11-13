@@ -347,4 +347,4 @@ This ensures:
 
 This workflow ensures that the generic project template maintains the highest standards of code quality, documentation coherence, and maintainability while providing a clear, scalable structure for development and collaboration.
 
-For more details on architecture and implementation, see **[`ARCHITECTURE.md`](docs/ARCHITECTURE.md)** and **[`THIN_ORCHESTRATOR_SUMMARY.md`](docs/THIN_ORCHESTRATOR_SUMMARY.md)**.
+For more details on architecture and implementation, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** and **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**.

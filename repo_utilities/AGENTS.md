@@ -26,7 +26,7 @@ The `repo_utilities/` directory contains build orchestration tools and generic u
 |--------|---------|------|-------|
 | `render_pdf.sh` | Complete PDF generation pipeline | Bash | 1019 |
 | `clean_output.sh` | Clean all generated outputs | Bash | 40 |
-| `generate_pdf_from_scratch.sh` | Fresh build from clean state | Bash | ~100 |
+| `generate_pdf_from_scratch.sh` | Enhanced fresh build with logging and options | Bash | ~440 |
 
 **render_pdf.sh** - Master orchestrator:
 1. Cleans previous outputs
@@ -41,6 +41,15 @@ The `repo_utilities/` directory contains build orchestration tools and generic u
 - Removes `output/` directory (all disposable)
 - Removes `latex/` directory if present
 - Preserves all source files
+
+**generate_pdf_from_scratch.sh** - Enhanced PDF regeneration:
+- Cleans outputs, regenerates PDFs, and validates quality
+- Comprehensive command-line interface with multiple options
+- Structured logging with file support and log levels
+- Color detection and accessibility features
+- Dependency validation and error handling
+- Trap handlers for cleanup on interruption
+- REPO_ROOT pattern for path consistency
 
 ### Validation Tools
 
@@ -241,6 +250,114 @@ rm -rf "$LATEX_DIR"
 - Only removes `output/` and `latex/`
 - Never touches source files
 - All removed content is regenerable
+
+### generate_pdf_from_scratch.sh - Enhanced PDF Regeneration
+
+Comprehensive PDF regeneration script with advanced features:
+
+**Core Functionality:**
+1. Cleans previous outputs
+2. Regenerates all PDFs via `render_pdf.sh`
+3. Validates PDF quality
+4. Provides detailed progress reporting
+
+**Command-Line Options:**
+
+```bash
+# Show help
+./generate_pdf_from_scratch.sh --help
+
+# Dry run (preview without executing)
+./generate_pdf_from_scratch.sh --dry-run
+
+# Skip validation step (faster iteration)
+./generate_pdf_from_scratch.sh --skip-validation
+
+# Verbose logging
+./generate_pdf_from_scratch.sh --verbose
+
+# Debug logging (maximum detail)
+./generate_pdf_from_scratch.sh --debug
+
+# Disable colors (for CI/CD, pipes)
+./generate_pdf_from_scratch.sh --no-color
+
+# Disable emojis (for plain text environments)
+./generate_pdf_from_scratch.sh --no-emoji
+
+# Save logs to file
+./generate_pdf_from_scratch.sh --log-file build.log
+
+# Combine options
+./generate_pdf_from_scratch.sh --verbose --log-file build.log --no-color
+```
+
+**Environment Variables:**
+
+```bash
+# Log level control
+export LOG_LEVEL=0  # DEBUG (most verbose)
+export LOG_LEVEL=1  # INFO (default)
+export LOG_LEVEL=2  # WARN
+export LOG_LEVEL=3  # ERROR (least verbose)
+
+# Disable colors
+export NO_COLOR=1
+
+# Override repository root
+export REPO_ROOT=/path/to/project
+```
+
+**Features:**
+
+**Structured Logging:**
+- Timestamped log messages with levels (DEBUG, INFO, WARN, ERROR)
+- Log file support for debugging and archival
+- Aligned with `render_pdf.sh` logging patterns
+- Color-coded output (when TTY detected)
+
+**Robustness:**
+- Dependency validation (python3, uv, required scripts)
+- Trap handlers for cleanup on interruption (Ctrl+C, SIGTERM)
+- Proper exit code handling (0=success, 1=error, 2=validation warnings)
+- Error context reporting with actionable advice
+- REPO_ROOT pattern for consistent path handling
+
+**Accessibility:**
+- Automatic TTY detection (disables colors in pipes/redirects)
+- NO_COLOR environment variable support
+- Optional emoji output (disabled with --no-emoji)
+- Graceful fallback to plain text in all environments
+
+**Usage Examples:**
+
+```bash
+# Standard usage
+./generate_pdf_from_scratch.sh
+
+# With verbose logging and log file
+./generate_pdf_from_scratch.sh --verbose --log-file build_$(date +%Y%m%d).log
+
+# CI/CD usage (no colors, log file)
+./generate_pdf_from_scratch.sh --no-color --log-file ci_build.log
+
+# Quick iteration (skip validation)
+./generate_pdf_from_scratch.sh --skip-validation
+
+# Preview what would happen
+./generate_pdf_from_scratch.sh --dry-run
+```
+
+**Exit Codes:**
+- `0` - Success (all steps completed successfully)
+- `1` - Error (script or dependency failure)
+- `2` - Validation warnings (PDFs generated but validation found issues)
+
+**Integration:**
+- Automatically calls `clean_output.sh` and `render_pdf.sh`
+- Integrates with `validate_pdf_output.py` for quality checks
+- Respects all environment variables from `render_pdf.sh`
+- Compatible with CI/CD pipelines (NO_COLOR, log files)
 
 ### validate_markdown.py - Markdown Validation
 

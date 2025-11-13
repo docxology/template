@@ -39,6 +39,7 @@ dependencies = [
   "matplotlib>=3.7",
   "pypdf>=5.0",
   "reportlab>=4.0",
+  "pyyaml>=6.0",
 ]
 
 [project.optional-dependencies]

@@ -535,30 +535,44 @@ def test_process_negative():
 
 **Steps**:
 
-1. **Clean previous outputs**
+1. **Run complete from-scratch build (recommended)**
    ```bash
+   # Standard build with validation
+   ./generate_pdf_from_scratch.sh
+   
+   # With verbose logging and log file
+   ./generate_pdf_from_scratch.sh --verbose --log-file build.log
+   
+   # Skip validation for faster iteration
+   ./generate_pdf_from_scratch.sh --skip-validation
+   
+   # Preview without executing (dry run)
+   ./generate_pdf_from_scratch.sh --dry-run
+   ```
+
+   **Alternative: Manual steps**
+   ```bash
+   # Clean previous outputs
    ./repo_utilities/clean_output.sh
-   ```
-
-2. **Run complete build**
-   ```bash
+   
+   # Run complete build
    ./repo_utilities/render_pdf.sh
+   
+   # Validate PDF quality
+   python3 repo_utilities/validate_pdf_output.py
    ```
 
-3. **Check for errors**
+2. **Check for errors**
    - Tests must pass (320/322)
    - Scripts must succeed
    - Markdown validation must pass
    - PDF compilation must succeed
 
-4. **View output**
+3. **View output**
    ```bash
    open output/pdf/project_combined.pdf
-   ```
-
-5. **Validate PDF quality**
-   ```bash
-   python3 repo_utilities/validate_pdf_output.py
+   # Or use the open script
+   ./repo_utilities/open_manuscript.sh
    ```
 
 **Build Pipeline Stages**:
@@ -706,7 +720,11 @@ def test_process_negative():
 
 5. **Run complete build**
    ```bash
+   # Standard build
    ./generate_pdf_from_scratch.sh
+   
+   # With verbose logging for debugging
+   ./generate_pdf_from_scratch.sh --verbose --log-file build.log
    ```
 
 6. **Commit changes**

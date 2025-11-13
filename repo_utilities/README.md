@@ -8,6 +8,7 @@ This directory contains essential utilities for managing the research project re
 
 - **`clean_output.sh`** - Cleans all generated output directories
 - **`render_pdf.sh`** - Complete PDF generation pipeline with IDE compatibility
+- **`generate_pdf_from_scratch.sh`** - Enhanced PDF regeneration with logging and options
 - **`rename_project.sh`** - Renames the project and updates all references
 - **`generate_glossary.py`** - Generates API glossary from source code
 - **`validate_markdown.py`** - Validates markdown files for issues
@@ -46,7 +47,14 @@ The `render_pdf.sh` script now generates multiple manuscript versions optimized 
 
 ### Generate All Manuscript Versions
 ```bash
+# Standard build
 ./repo_utilities/render_pdf.sh
+
+# Or use enhanced from-scratch script
+./generate_pdf_from_scratch.sh
+
+# With options (see below)
+./generate_pdf_from_scratch.sh --verbose --log-file build.log
 ```
 
 ### Open Specific Manuscript Version
@@ -126,12 +134,56 @@ The HTML version includes custom CSS (`ide_style.css`) with:
 - Check dependencies: `./repo_utilities/render_pdf.sh` (will show missing tools)
 - Verify markdown files are valid: `./repo_utilities/validate_markdown.py`
 
+## generate_pdf_from_scratch.sh - Enhanced Features
+
+The `generate_pdf_from_scratch.sh` script provides enhanced PDF regeneration with comprehensive options:
+
+### Quick Reference
+
+```bash
+# Show help
+./generate_pdf_from_scratch.sh --help
+
+# Standard usage
+./generate_pdf_from_scratch.sh
+
+# Dry run (preview without executing)
+./generate_pdf_from_scratch.sh --dry-run
+
+# Skip validation (faster iteration)
+./generate_pdf_from_scratch.sh --skip-validation
+
+# Verbose logging
+./generate_pdf_from_scratch.sh --verbose
+
+# Debug logging
+./generate_pdf_from_scratch.sh --debug
+
+# Save logs to file
+./generate_pdf_from_scratch.sh --log-file build.log
+
+# CI/CD usage (no colors)
+./generate_pdf_from_scratch.sh --no-color --log-file ci.log
+```
+
+### Key Features
+
+- **Structured logging** with timestamped messages and log levels
+- **Log file support** for debugging and archival
+- **Color detection** (automatic TTY detection, NO_COLOR support)
+- **Accessibility** (optional emojis, graceful plain text fallback)
+- **Robustness** (dependency validation, trap handlers, error context)
+- **Command-line options** for flexible usage
+
+See [`AGENTS.md`](AGENTS.md) for complete documentation.
+
 ## Best Practices
 
 1. **For Development**: Use HTML version in IDEs
 2. **For Review**: Use standard PDF
 3. **For Sharing**: Use web-optimized PDF
 4. **For Printing**: Use standard PDF
+5. **For CI/CD**: Use `generate_pdf_from_scratch.sh --no-color --log-file`
 
 ## Future Enhancements
 

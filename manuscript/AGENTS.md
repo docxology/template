@@ -33,6 +33,8 @@ The `manuscript/` directory contains research manuscript sections in markdown fo
 |------|---------|
 | `preamble.md` | LaTeX preamble and document styling |
 | `references.bib` | BibTeX bibliography database |
+| `config.yaml` | Paper metadata configuration (title, authors, DOI, etc.) |
+| `config.yaml.example` | Configuration template with all options documented |
 
 ## Numbering Convention
 
@@ -344,7 +346,53 @@ open output/project_combined.html
 
 ## Configuration
 
-Metadata configured via environment variables before building:
+### Configuration File (Recommended)
+
+The manuscript configuration is managed through `manuscript/config.yaml`, which provides a centralized, version-controllable way to manage all paper metadata.
+
+**Location**: `manuscript/config.yaml`
+
+**Template**: `manuscript/config.yaml.example` (copy and customize)
+
+**Example configuration**:
+```yaml
+paper:
+  title: "Advanced Research Framework"
+  subtitle: ""  # Optional
+  version: "1.0"
+
+authors:
+  - name: "Dr. Jane Smith"
+    orcid: "0000-0000-0000-1234"
+    email: "jane.smith@university.edu"
+    affiliation: "University of Example"
+    corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.12345678"  # Optional
+  journal: ""  # Optional
+  volume: ""  # Optional
+  pages: ""  # Optional
+
+keywords:
+  - "optimization"
+  - "machine learning"
+
+metadata:
+  license: "Apache-2.0"
+  language: "en"
+```
+
+**Benefits**:
+- ✅ Version controllable (can be committed to git)
+- ✅ Single file for all metadata
+- ✅ Supports multiple authors
+- ✅ Structured format (YAML)
+- ✅ Easy to edit and maintain
+
+### Environment Variables (Backward Compatible)
+
+For backward compatibility, environment variables still work and take precedence over config file values:
 
 ```bash
 export AUTHOR_NAME="Dr. Jane Smith"
@@ -355,6 +403,31 @@ export DOI="10.5281/zenodo.12345678"  # Optional
 
 ./repo_utilities/render_pdf.sh
 ```
+
+**Priority order**:
+1. Environment variables (highest priority)
+2. Config file (`manuscript/config.yaml`)
+3. Default values (lowest priority)
+
+### Multiple Authors
+
+The config file supports multiple authors:
+
+```yaml
+authors:
+  - name: "Dr. Jane Smith"
+    orcid: "0000-0000-0000-1234"
+    email: "jane.smith@university.edu"
+    affiliation: "University of Example"
+    corresponding: true
+  - name: "Dr. John Doe"
+    orcid: "0000-0000-0000-5678"
+    email: "john.doe@university.edu"
+    affiliation: "Another University"
+    corresponding: false
+```
+
+The first author (or the one marked `corresponding: true`) is used for PDF metadata.
 
 ## Validation
 

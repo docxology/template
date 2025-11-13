@@ -37,7 +37,7 @@ This is a **GitHub Template Repository** that gives you:
 ### 📚 For New Users
 **Just getting started?**
 
-1. **[Quick Start Guide](#-quick-start)** - Get running in 5 minutes
+1. **[Quick Start Guide](#quick-start)** - Get running in 5 minutes
 2. **[How To Use Guide](docs/HOW_TO_USE.md)** - Complete usage from basic to advanced
 3. **[Examples Showcase](docs/EXAMPLES_SHOWCASE.md)** - Real-world applications
 4. **[FAQ](docs/FAQ.md)** - Common questions answered
@@ -83,7 +83,7 @@ This is a **GitHub Template Repository** that gives you:
 3. **[Manuscript Numbering](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization
 4. **[Documentation Index](docs/DOCUMENTATION_INDEX.md)** - Complete reference
 
-**Technical resources:** See **[LaTeX Preamble](docs/00_preamble.md)** and **[Copypasta](docs/COPYPASTA.md)**
+**Technical resources:** See **[LaTeX Preamble](manuscript/preamble.md)** and **[Copypasta](docs/COPYPASTA.md)**
 
 </td>
 </tr>
@@ -111,7 +111,7 @@ graph TB
         THIN_ORCH[THIN_ORCHESTRATOR_SUMMARY.md<br/>Architecture Pattern]
         MARKDOWN[MARKDOWN_TEMPLATE_GUIDE.md<br/>Writing Guide]
         MANUSCRIPT[MANUSCRIPT_NUMBERING_SYSTEM.md<br/>Section Organization]
-        ELIM[MARKDOWN_DIRECTORY_ELIMINATION.md<br/>Simplified Structure]
+        ELIM[Simplified Structure<br/>(Archived)]
     end
     
     subgraph Community["🤝 Community"]
@@ -131,7 +131,7 @@ graph TB
     subgraph Reference["📑 Reference"]
         DOC_INDEX[DOCUMENTATION_INDEX.md<br/>Complete Index]
         COPYPASTA[COPYPASTA.md<br/>Shareable Content]
-        PREAMBLE[00_preamble.md<br/>LaTeX Styling]
+        PREAMBLE[preamble.md<br/>LaTeX Styling]
         TEST_IMP[TEST_IMPROVEMENTS_SUMMARY.md<br/>Testing Enhancements]
     end
     
@@ -152,7 +152,7 @@ graph TB
     class Community community
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Start {#quick-start}
 
 ### Option 1: Use This Template (Recommended)
 
@@ -449,14 +449,15 @@ pip install -r requirements.txt
 ### 3. Generate Manuscript
 
 ```bash
-# Clean previous outputs
-./repo_utilities/clean_output.sh
-
-# Generate everything (tests + scripts + PDFs)
-./repo_utilities/render_pdf.sh
-
-# Or use the complete from-scratch script
+# Recommended: Enhanced from-scratch build (includes cleanup and validation)
 ./generate_pdf_from_scratch.sh
+
+# With options (verbose logging, log file)
+./generate_pdf_from_scratch.sh --verbose --log-file build.log
+
+# Alternative: Manual steps
+./repo_utilities/clean_output.sh
+./repo_utilities/render_pdf.sh
 ```
 
 **See [How To Use Guide](docs/HOW_TO_USE.md) for comprehensive setup instructions at all skill levels.**
@@ -467,7 +468,30 @@ pip install -r requirements.txt
 
 **[Complete configuration guide](AGENTS.md#configuration-system)**
 
-The system is **fully configurable** through environment variables. Set these before running the pipeline:
+The system supports **two configuration methods**:
+
+#### Method 1: Configuration File (Recommended)
+
+Edit `manuscript/config.yaml` with your paper metadata:
+
+```yaml
+paper:
+  title: "Your Project Title"
+
+authors:
+  - name: "Your Name"
+    orcid: "0000-0000-0000-0000"
+    email: "your.email@example.com"
+    affiliation: "Your Institution"
+    corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.12345678"  # Optional
+```
+
+See `manuscript/config.yaml.example` for all available options.
+
+#### Method 2: Environment Variables (Backward Compatible)
 
 ```bash
 # Basic configuration
@@ -478,25 +502,16 @@ export PROJECT_TITLE="Your Project Title"
 
 # Optional DOI (if available)
 export DOI="10.5281/zenodo.12345678"
-```
-
-### Complete Configuration Example
-
-```bash
-# Set all metadata for your project
-export AUTHOR_NAME="Dr. Jane Smith"
-export PROJECT_TITLE="Advanced Optimization Framework for Machine Learning"
-export AUTHOR_EMAIL="jane.smith@university.edu"
-export AUTHOR_ORCID="0000-0000-0000-1234"
-export DOI="10.5281/zenodo.12345678"
 
 # Generate with custom configuration
 ./repo_utilities/render_pdf.sh
 ```
 
+**Priority**: Environment variables override config file values.
+
 **Configuration is applied to:**
 - PDF metadata (title, author, creation date)
-- LaTeX document properties - [Preamble details](docs/00_preamble.md)
+- LaTeX document properties - [Preamble details](manuscript/preamble.md)
 - Generated file headers
 - Cross-reference systems
 
@@ -540,13 +555,13 @@ if __name__ == "__main__":
 
 **[Manuscript guide](manuscript/AGENTS.md)** | **[Numbering system](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)**
 
-- `preamble.md` - LaTeX preamble and styling - [Details](docs/00_preamble.md)
+- `preamble.md` - LaTeX preamble and styling - [Details](manuscript/preamble.md)
 - `01_abstract.md` through `06_conclusion.md` - Main sections
 - `S01_supplemental_methods.md` - Supplemental sections
 - `98_symbols_glossary.md` - Auto-generated API reference
 - `99_references.md` - Bibliography
 
-**Recent improvement**: Simplified structure with `markdown/` directory eliminated - [Details](docs/MARKDOWN_DIRECTORY_ELIMINATION.md)
+**Recent improvement**: Simplified structure with `markdown/` directory eliminated - ~~[Details](docs/MARKDOWN_DIRECTORY_ELIMINATION.md)~~ (archived)
 
 ## 📊 Testing
 
@@ -673,7 +688,7 @@ flowchart TD
 - **[docs/THIN_ORCHESTRATOR_SUMMARY.md](docs/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
 - **[docs/MARKDOWN_TEMPLATE_GUIDE.md](docs/MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown writing and cross-referencing guide
 - **[docs/MANUSCRIPT_NUMBERING_SYSTEM.md](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization system
-- **[docs/MARKDOWN_DIRECTORY_ELIMINATION.md](docs/archive/MARKDOWN_DIRECTORY_ELIMINATION.md)** - Historical: Simplified build structure
+- ~~**[docs/MARKDOWN_DIRECTORY_ELIMINATION.md](docs/archive/MARKDOWN_DIRECTORY_ELIMINATION.md)**~~ - Historical: Simplified build structure (archived)
 
 ### Community & Contribution
 - **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** - Contribution guidelines and process
@@ -683,7 +698,7 @@ flowchart TD
 
 ### Reference & Resources
 - **[docs/COPYPASTA.md](docs/COPYPASTA.md)** - Shareable content for promoting the template
-- **[docs/00_preamble.md](docs/00_preamble.md)** - LaTeX preamble and styling documentation
+- **[manuscript/preamble.md](manuscript/preamble.md)** - LaTeX preamble and styling configuration
 - **[docs/TEST_IMPROVEMENTS_SUMMARY.md](docs/TEST_IMPROVEMENTS_SUMMARY.md)** - Testing enhancements and standards
 
 ### Directory-Specific Documentation
@@ -722,7 +737,7 @@ flowchart TD
 - **[docs/MULTI_PROJECT_MANAGEMENT.md](docs/MULTI_PROJECT_MANAGEMENT.md)** - Managing multiple projects using the template
 - **[docs/MIGRATION_GUIDE.md](docs/MIGRATION_GUIDE.md)** - Step-by-step migration from other templates
 - **[docs/BACKUP_RECOVERY.md](docs/BACKUP_RECOVERY.md)** - Backup strategies and recovery procedures
-- **[CHANGELOG.md](CHANGELOG.md)** - Complete changelog tracking all changes
+- ~~**[CHANGELOG.md](CHANGELOG.md)**~~ - Changelog (to be created)
 
 ## 🤝 Contributing
 
@@ -739,7 +754,7 @@ We welcome contributions! To contribute:
 **Recent Improvements:**
 - Build system optimizations - [Details](docs/BUILD_SYSTEM.md#historical-fixes)
 - Test suite enhancements - [Details](docs/TEST_IMPROVEMENTS_SUMMARY.md)
-- Simplified directory structure - [Historical](docs/archive/MARKDOWN_DIRECTORY_ELIMINATION.md)
+- Simplified directory structure - ~~[Historical](docs/archive/MARKDOWN_DIRECTORY_ELIMINATION.md)~~ (archived)
 
 ## 📄 License
 
@@ -829,7 +844,7 @@ The thin orchestrator pattern provides:
 ## 🎯 Quick Links by User Type
 
 ### New Users
-- [Quick Start Guide](#-quick-start)
+- [Quick Start Guide](#quick-start)
 - [How To Use (Complete)](docs/HOW_TO_USE.md)
 - [Examples Showcase](docs/EXAMPLES_SHOWCASE.md)
 - [FAQ](docs/FAQ.md)

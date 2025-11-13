@@ -154,7 +154,7 @@ Document setup and styling configuration loaded before content. Defines packages
 
 **File**: `manuscript/preamble.md`
 
-**See**: [docs/00_preamble.md](00_preamble.md)
+**Location**: [`manuscript/preamble.md`](../manuscript/preamble.md)
 
 ## M
 
@@ -238,7 +238,7 @@ Required system dependencies and software that must be installed before using th
 **System**: pandoc, texlive-xetex, fonts
 **Python**: uv or pip, python 3.9+
 
-**See**: [Getting Started](#getting-started) | README.md
+**See**: [GETTING_STARTED.md](GETTING_STARTED.md) | [README.md](../README.md)
 
 ### Project Metadata
 Configuration information (author, title, DOI, etc.) applied to generated documents via environment variables.

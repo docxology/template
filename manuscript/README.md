@@ -12,12 +12,20 @@ vim manuscript/S01_supplemental_methods.md
 
 ### Build PDFs
 ```bash
-# Clean and build everything
+# Recommended: Enhanced from-scratch build (includes cleanup and validation)
+./generate_pdf_from_scratch.sh
+
+# With options
+./generate_pdf_from_scratch.sh --verbose --log-file build.log
+
+# Alternative: Manual steps
 ./repo_utilities/clean_output.sh
 ./repo_utilities/render_pdf.sh
 
 # View output
 open output/pdf/project_combined.pdf
+# Or use the open script
+./repo_utilities/open_manuscript.sh
 ```
 
 ## Structure
@@ -45,6 +53,8 @@ open output/pdf/project_combined.pdf
 ### Supporting Files
 - `preamble.md` - LaTeX configuration (no PDF)
 - `references.bib` - BibTeX bibliography
+- `config.yaml` - Paper metadata configuration (version-controllable)
+- `config.yaml.example` - Configuration template
 
 ## Numbering Convention
 
@@ -88,12 +98,37 @@ See \ref{fig:example}...
 
 ## Configuration
 
+### Method 1: Configuration File (Recommended)
+
+Edit `config.yaml` in the `manuscript/` directory:
+
+```yaml
+paper:
+  title: "My Research Paper"
+
+authors:
+  - name: "Dr. Jane Smith"
+    orcid: "0000-0000-0000-1234"
+    email: "jane@example.edu"
+    affiliation: "University of Example"
+    corresponding: true
+
+publication:
+  doi: "10.5281/zenodo.12345678"  # Optional
+```
+
+See `config.yaml.example` for all available options.
+
+### Method 2: Environment Variables (Backward Compatible)
+
 ```bash
 export AUTHOR_NAME="Dr. Jane Smith"
 export PROJECT_TITLE="My Research"
 export AUTHOR_EMAIL="jane@example.edu"
 ./repo_utilities/render_pdf.sh
 ```
+
+**Priority**: Environment variables override config file values.
 
 ## Validation
 

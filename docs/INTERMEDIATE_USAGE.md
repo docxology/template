@@ -566,17 +566,17 @@ open output/pdf/project_combined.pdf
 
 **Advanced workflow with validation**:
 ```bash
-# 1. Clean start
-./repo_utilities/clean_output.sh
-
-# 2. Full rebuild with validation
+# 1. Full rebuild with validation (recommended)
 ./generate_pdf_from_scratch.sh
 
-# 3. Validate PDF quality
-python3 repo_utilities/validate_pdf_output.py
+# With options:
+# ./generate_pdf_from_scratch.sh --verbose --log-file build.log
+# ./generate_pdf_from_scratch.sh --skip-validation  # Faster iteration
 
-# 4. Check for issues
-python3 repo_utilities/validate_markdown.py
+# Alternative: Manual steps
+# ./repo_utilities/clean_output.sh
+# ./repo_utilities/render_pdf.sh
+# python3 repo_utilities/validate_pdf_output.py
 ```
 
 ### Creating Custom Build Scripts

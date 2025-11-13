@@ -31,6 +31,8 @@ python3 scripts/example_figure.py
 
 # Validate markdown
 python3 repo_utilities/validate_markdown.py
+# Strict mode (fail on any issues)
+python3 repo_utilities/validate_markdown.py --strict
 
 # Open manuscript
 ./repo_utilities/open_manuscript.sh
@@ -40,6 +42,15 @@ python3 repo_utilities/validate_markdown.py
 ```bash
 # Complete from-scratch build
 ./generate_pdf_from_scratch.sh
+
+# With options (verbose logging, log file)
+./generate_pdf_from_scratch.sh --verbose --log-file build.log
+
+# Skip validation (faster iteration)
+./generate_pdf_from_scratch.sh --skip-validation
+
+# Dry run (preview without executing)
+./generate_pdf_from_scratch.sh --dry-run
 
 # Quick build (no clean)
 ./repo_utilities/render_pdf.sh
@@ -197,6 +208,8 @@ Reference it: \ref{fig:my_figure}
 4. **Check validation**: Run `validate_markdown.py` before PDF build
 5. **Clean outputs**: Use `clean_output.sh` for fresh builds
 6. **Read build logs**: Check `output/pdf/*_compile.log` for errors
+7. **Use enhanced script**: `generate_pdf_from_scratch.sh --help` for all options
+8. **CI/CD friendly**: Use `--no-color --log-file` for automated builds
 
 ---
 
