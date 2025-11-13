@@ -14,7 +14,7 @@ x_{k+1} = x_k - \alpha_k \nabla f_{i_k}(x_k) + \beta_k (x_k - x_{k-1})
 
 where $i_k$ is a randomly sampled index from $\{1, \ldots, n\}$ at iteration $k$.
 
-**Convergence Analysis**: Under appropriate sampling strategies, this variant achieves $O(1/\sqrt{k})$ convergence rate for non-strongly convex problems.
+**Convergence Analysis**: Under appropriate sampling strategies, this variant achieves $O(1/\sqrt{k})$ convergence rate for non-strongly convex problems, following the analysis in \cite{kingma2014, ruder2016}.
 
 ### S1.1.2 Mini-Batch Variant
 
@@ -46,7 +46,7 @@ The gradient is Lipschitz continuous:
 \|\nabla f(x) - \nabla f(y)\| \leq L \|x - y\|, \quad \forall x, y \in \mathcal{X}
 \end{equation}
 
-The condition number $\kappa = L/\mu$ determines the convergence rate: $\rho = \sqrt{1 - 1/\kappa}$.
+The condition number $\kappa = L/\mu$ determines the convergence rate: $\rho = \sqrt{1 - 1/\kappa}$, as established in \cite{nesterov2018, boyd2004}.
 
 ## S1.3 Additional Theoretical Results
 

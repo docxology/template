@@ -20,13 +20,13 @@ By the Lipschitz continuity of $\nabla f$, there exists a constant $L > 0$ such 
 \|\nabla f(x) - \nabla f(y)\| \leq L \|x - y\|, \quad \forall x, y \in \mathcal{X}
 \end{equation}
 
-Using strong convexity with parameter $\mu > 0$:
+Using strong convexity with parameter $\mu > 0$ \cite{boyd2004, nesterov2018}:
 
 \begin{equation}\label{eq:strong_convexity}
 f(y) \geq f(x) + \nabla f(x)^T (y - x) + \frac{\mu}{2} \|y - x\|^2
 \end{equation}
 
-Combining these properties with the adaptive step size rule \eqref{eq:adaptive_step}, we obtain the linear convergence rate with $\rho = \sqrt{1 - \mu/L}$. $\square$
+Combining these properties with the adaptive step size rule \eqref{eq:adaptive_step}, following the analysis framework in \cite{duchi2011, bertsekas2015}, we obtain the linear convergence rate with $\rho = \sqrt{1 - \mu/L}$. $\square$
 
 ### A.2 Complexity Analysis
 

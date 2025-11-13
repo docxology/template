@@ -2,26 +2,22 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
 \documentclass[
   11pt,
 ]{article}
-\usepackage{xcolor}
-\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{3}
+\usepackage{lmodern}
+\usepackage{setspace}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
   \setmonofont[]{Courier New}
 \fi
@@ -31,7 +27,6 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -42,9 +37,22 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{3}
 % Essential packages for academic documents
 \usepackage{amsmath,amssymb}          % Mathematical symbols and environments
 \usepackage{amsfonts}                 % Additional math fonts
@@ -229,20 +237,13 @@
 
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
-\usepackage{bookmark}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
-\hypersetup{
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={blue},
-  citecolor={blue},
-  urlcolor={blue},
-  pdfcreator={LaTeX via pandoc}}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
 \title{04 experimental results}
 \author{ORCID: 0000-0000-0000-0000\\ Email: author@example.com}
-\date{November 03, 2025}
+\date{November 13, 2025}
 
 \begin{document}
 \maketitle
@@ -253,9 +254,11 @@
 \tableofcontents
 }
 \setstretch{1.2}
-\section{Experimental Results}\label{sec:experimental_results}
+\hypertarget{sec:experimental_results}{%
+\section{Experimental Results}\label{sec:experimental_results}}
 
-\subsection{Experimental Setup}\label{experimental-setup}
+\hypertarget{experimental-setup}{%
+\subsection{Experimental Setup}\label{experimental-setup}}
 
 Our experimental evaluation follows the methodology described in Section
 \ref{sec:methodology}. We implemented the algorithm in Python using the
@@ -268,7 +271,8 @@ learning problems. Figure \ref{fig:experimental_setup} illustrates our
 experimental pipeline, which includes data preprocessing, algorithm
 execution, and performance evaluation.
 
-\subsection{Benchmark Datasets}\label{benchmark-datasets}
+\hypertarget{benchmark-datasets}{%
+\subsection{Benchmark Datasets}\label{benchmark-datasets}}
 
 We evaluated our approach on three main categories of problems:
 
@@ -306,15 +310,19 @@ Medium Non-convex & 1000 & Non-convex & 50 & -0.047 & 3.353 & -3.422 \\
 \label{tab:dataset_summary}
 \end{table}
 
-\subsection{Performance Comparison}\label{performance-comparison}
+\hypertarget{performance-comparison}{%
+\subsection{Performance Comparison}\label{performance-comparison}}
 
-\subsubsection{Convergence Analysis}\label{convergence-analysis}
+\hypertarget{convergence-analysis}{%
+\subsubsection{Convergence Analysis}\label{convergence-analysis}}
 
 Figure \ref{fig:convergence_plot} shows the convergence behavior of our
-algorithm compared to baseline methods. The results demonstrate that our
-approach achieves the theoretical convergence rate
+algorithm compared to baseline methods
+\cite{ruder2016, kingma2014, schmidt2017}. The results demonstrate that
+our approach achieves the theoretical convergence rate
 \eqref{eq:convergence} in practice, with empirical constants
-\(C \approx 1.2\) and \(\rho \approx 0.85\).
+\(C \approx 1.2\) and \(\rho \approx 0.85\), matching predictions from
+convex optimization theory \cite{nesterov2018}.
 
 \begin{figure}[h]
 \centering
@@ -334,7 +342,9 @@ stable convergence, as shown in the detailed analysis in Figure
 \label{fig:step_size_analysis}
 \end{figure}
 
-\subsubsection{Computational Efficiency}\label{computational-efficiency}
+\hypertarget{computational-efficiency}{%
+\subsubsection{Computational
+Efficiency}\label{computational-efficiency}}
 
 Our implementation achieves the theoretical \(O(n \log n)\) complexity
 per iteration, as demonstrated in Figure \ref{fig:scalability_analysis}.
@@ -349,7 +359,9 @@ our method suitable for problems that don't fit in main memory.
 \end{figure}
 
 Table \ref{tab:performance_comparison} provides a detailed comparison
-with state-of-the-art methods across different problem sizes.
+with state-of-the-art methods
+\cite{kingma2014, ruder2016, schmidt2017, reddi2018} across different
+problem sizes.
 
 \begin{table}[h]
 \centering
@@ -367,9 +379,11 @@ L-BFGS & 0.9 & $O(n^2)$ & 85.0 \\
 \label{tab:performance_comparison}
 \end{table}
 
-\subsection{Ablation Studies}\label{ablation-studies}
+\hypertarget{ablation-studies}{%
+\subsection{Ablation Studies}\label{ablation-studies}}
 
-\subsubsection{Component Analysis}\label{component-analysis}
+\hypertarget{component-analysis}{%
+\subsubsection{Component Analysis}\label{component-analysis}}
 
 We conducted extensive ablation studies to understand the contribution
 of each component. Figure \ref{fig:ablation_study} shows the impact of:
@@ -391,8 +405,9 @@ of each component. Figure \ref{fig:ablation_study} shows the impact of:
   The adaptive step size strategy \eqref{eq:adaptive_step}
 \end{itemize}
 
+\hypertarget{hyperparameter-sensitivity}{%
 \subsubsection{Hyperparameter
-Sensitivity}\label{hyperparameter-sensitivity}
+Sensitivity}\label{hyperparameter-sensitivity}}
 
 The algorithm performance is robust to hyperparameter choices within
 reasonable ranges. Figure \ref{fig:hyperparameter_sensitivity}
@@ -407,10 +422,12 @@ performance degradation.
 \label{fig:hyperparameter_sensitivity}
 \end{figure}
 
-\subsection{Real-world Applications}\label{real-world-applications}
+\hypertarget{real-world-applications}{%
+\subsection{Real-world Applications}\label{real-world-applications}}
 
+\hypertarget{case-study-1-image-classification}{%
 \subsubsection{Case Study 1: Image
-Classification}\label{case-study-1-image-classification}
+Classification}\label{case-study-1-image-classification}}
 
 We applied our optimization framework to train deep neural networks for
 image classification. The results, shown in Figure
@@ -429,8 +446,9 @@ The training curves follow the expected convergence pattern
 \eqref{eq:convergence}, with the algorithm finding good solutions in
 approximately 30\% fewer epochs.
 
+\hypertarget{case-study-2-recommendation-systems}{%
 \subsubsection{Case Study 2: Recommendation
-Systems}\label{case-study-2-recommendation-systems}
+Systems}\label{case-study-2-recommendation-systems}}
 
 For large-scale recommendation systems, our approach scales efficiently
 to problems with millions of users and items. Figure
@@ -444,15 +462,17 @@ confirming our theoretical analysis.
 \label{fig:recommendation_scalability}
 \end{figure}
 
-\subsection{Statistical Significance}\label{statistical-significance}
+\hypertarget{statistical-significance}{%
+\subsection{Statistical Significance}\label{statistical-significance}}
 
 All reported improvements are statistically significant at the
 \(p < 0.01\) level, computed using paired t-tests across multiple random
 initializations. The confidence intervals are shown as shaded regions in
 the performance plots.
 
+\hypertarget{limitations-and-future-work}{%
 \subsection{Limitations and Future
-Work}\label{limitations-and-future-work}
+Work}\label{limitations-and-future-work}}
 
 While our approach shows promising results, several limitations remain:
 
@@ -471,6 +491,8 @@ While our approach shows promising results, several limitations remain:
 \end{enumerate}
 
 Future work will address these limitations and extend the framework to
-broader problem classes.
+broader problem classes. Extended analysis and additional application
+examples are provided in Sections \ref{sec:supplemental_analysis} and
+\ref{sec:supplemental_applications}.
 
 \end{document}

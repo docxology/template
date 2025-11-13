@@ -2,26 +2,22 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
 \documentclass[
   11pt,
 ]{article}
-\usepackage{xcolor}
-\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{3}
+\usepackage{lmodern}
+\usepackage{setspace}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
   \setmonofont[]{Courier New}
 \fi
@@ -31,7 +27,6 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -42,9 +37,22 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{3}
 % Essential packages for academic documents
 \usepackage{amsmath,amssymb}          % Mathematical symbols and environments
 \usepackage{amsfonts}                 % Additional math fonts
@@ -229,20 +237,13 @@
 
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
-\usepackage{bookmark}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
-\hypersetup{
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={blue},
-  citecolor={blue},
-  urlcolor={blue},
-  pdfcreator={LaTeX via pandoc}}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
 \title{05 discussion}
 \author{ORCID: 0000-0000-0000-0000\\ Email: author@example.com}
-\date{November 03, 2025}
+\date{November 13, 2025}
 
 \begin{document}
 \maketitle
@@ -253,9 +254,11 @@
 \tableofcontents
 }
 \setstretch{1.2}
-\section{Discussion}\label{sec:discussion}
+\hypertarget{sec:discussion}{%
+\section{Discussion}\label{sec:discussion}}
 
-\subsection{Theoretical Implications}\label{theoretical-implications}
+\hypertarget{theoretical-implications}{%
+\subsection{Theoretical Implications}\label{theoretical-implications}}
 
 The experimental results presented in Section
 \ref{sec:experimental_results} have several important theoretical
@@ -267,7 +270,8 @@ The experimental setup shown in Figure \ref{fig:experimental_setup}
 demonstrates our comprehensive validation approach, which includes data
 preprocessing, algorithm execution, and performance evaluation.
 
-\subsubsection{Convergence Analysis}\label{convergence-analysis}
+\hypertarget{convergence-analysis}{%
+\subsubsection{Convergence Analysis}\label{convergence-analysis}}
 
 The empirical convergence constants \(C \approx 1.2\) and
 \(\rho \approx 0.85\) from our experiments suggest that the theoretical
@@ -279,7 +283,8 @@ role in this achievement. By dynamically adjusting the learning rate
 based on gradient history, the algorithm maintains stability while
 accelerating convergence.
 
-\subsubsection{Complexity Analysis}\label{complexity-analysis}
+\hypertarget{complexity-analysis}{%
+\subsubsection{Complexity Analysis}\label{complexity-analysis}}
 
 Our theoretical complexity analysis \(O(n \log n)\) per iteration is
 validated by the scalability results shown in Figure
@@ -290,10 +295,13 @@ The memory scaling \eqref{eq:memory} is particularly important for
 large-scale applications. Unlike many competing methods that require
 \(O(n^2)\) memory, our approach scales linearly with problem size.
 
+\hypertarget{comparison-with-existing-work}{%
 \subsection{Comparison with Existing
-Work}\label{comparison-with-existing-work}
+Work}\label{comparison-with-existing-work}}
 
-\subsubsection{State-of-the-Art Methods}\label{state-of-the-art-methods}
+\hypertarget{state-of-the-art-methods}{%
+\subsubsection{State-of-the-Art
+Methods}\label{state-of-the-art-methods}}
 
 We compared our approach with several state-of-the-art optimization
 methods:
@@ -303,11 +311,12 @@ methods:
 \tightlist
 \item
   \textbf{Gradient Descent}: Standard first-order method with fixed step
-  size
+  size \cite{ruder2016}
 \item
   \textbf{Adam}: Adaptive moment estimation with momentum
+  \cite{kingma2014}
 \item
-  \textbf{L-BFGS}: Limited-memory quasi-Newton method
+  \textbf{L-BFGS}: Limited-memory quasi-Newton method \cite{schmidt2017}
 \item
   \textbf{Our Method}: Novel approach combining regularization and
   adaptive step sizes
@@ -317,7 +326,8 @@ The results, summarized in Table \ref{tab:performance_comparison},
 demonstrate that our method achieves superior performance across
 multiple metrics.
 
-\subsubsection{Key Advantages}\label{key-advantages}
+\hypertarget{key-advantages}{%
+\subsubsection{Key Advantages}\label{key-advantages}}
 
 Our approach offers several key advantages over existing methods:
 
@@ -328,10 +338,12 @@ Our approach offers several key advantages over existing methods:
 Using this metric, our method shows an average improvement of 23.7\%
 over the best baseline method.
 
+\hypertarget{limitations-and-challenges}{%
 \subsection{Limitations and
-Challenges}\label{limitations-and-challenges}
+Challenges}\label{limitations-and-challenges}}
 
-\subsubsection{Theoretical Constraints}\label{theoretical-constraints}
+\hypertarget{theoretical-constraints}{%
+\subsubsection{Theoretical Constraints}\label{theoretical-constraints}}
 
 While our method performs well in practice, several theoretical
 limitations remain:
@@ -350,7 +362,8 @@ limitations remain:
   bounded
 \end{enumerate}
 
-\subsubsection{Practical Challenges}\label{practical-challenges}
+\hypertarget{practical-challenges}{%
+\subsubsection{Practical Challenges}\label{practical-challenges}}
 
 In real-world applications, we encountered several practical challenges:
 
@@ -361,10 +374,13 @@ In real-world applications, we encountered several practical challenges:
 Our method achieved a robustness score of 94.3\% across diverse problem
 instances, which is competitive with state-of-the-art methods.
 
+\hypertarget{future-research-directions}{%
 \subsection{Future Research
-Directions}\label{future-research-directions}
+Directions}\label{future-research-directions}}
 
-\subsubsection{Algorithmic Improvements}\label{algorithmic-improvements}
+\hypertarget{algorithmic-improvements}{%
+\subsubsection{Algorithmic
+Improvements}\label{algorithmic-improvements}}
 
 Several promising directions for future research emerged from our
 analysis:
@@ -383,7 +399,9 @@ analysis:
   objectives
 \end{enumerate}
 
-\subsubsection{Theoretical Developments}\label{theoretical-developments}
+\hypertarget{theoretical-developments}{%
+\subsubsection{Theoretical
+Developments}\label{theoretical-developments}}
 
 The theoretical analysis suggests several areas for future development:
 
@@ -394,9 +412,11 @@ T(n) = O\left(n \log n \cdot \log\left(\frac{1}{\epsilon}\right)\right)
 where \(\epsilon\) is the desired accuracy. This bound could potentially
 be improved through more sophisticated analysis techniques.
 
-\subsection{Broader Impact}\label{broader-impact}
+\hypertarget{broader-impact}{%
+\subsection{Broader Impact}\label{broader-impact}}
 
-\subsubsection{Scientific Applications}\label{scientific-applications}
+\hypertarget{scientific-applications}{%
+\subsubsection{Scientific Applications}\label{scientific-applications}}
 
 Our optimization framework has applications across multiple scientific
 domains:
@@ -406,15 +426,19 @@ domains:
 \tightlist
 \item
   \textbf{Machine Learning}: Training large-scale neural networks
+  \cite{kingma2014, wright2010}
 \item
   \textbf{Signal Processing}: Sparse signal reconstruction
+  \cite{beck2009, parikh2014}
 \item
   \textbf{Computational Biology}: Protein structure prediction
 \item
   \textbf{Climate Modeling}: Parameter estimation in complex systems
+  \cite{polak1997}
 \end{enumerate}
 
-\subsubsection{Industry Relevance}\label{industry-relevance}
+\hypertarget{industry-relevance}{%
+\subsubsection{Industry Relevance}\label{industry-relevance}}
 
 The efficiency improvements demonstrated in our experiments have direct
 implications for industry applications:
@@ -432,13 +456,16 @@ implications for industry applications:
   intervention
 \end{itemize}
 
-\subsection{Conclusion}\label{conclusion}
+\hypertarget{conclusion}{%
+\subsection{Conclusion}\label{conclusion}}
 
 The experimental validation of our theoretical framework demonstrates
 that the novel optimization approach achieves both theoretical
 guarantees and practical performance. The convergence analysis confirms
 the tightness of our bounds, while the scalability results validate our
-complexity analysis.
+complexity analysis. Extended theoretical analysis and additional
+application examples are provided in Sections
+\ref{sec:supplemental_analysis} and \ref{sec:supplemental_applications}.
 
 Future work will focus on extending the theoretical guarantees to
 broader problem classes and developing more sophisticated variants for

@@ -1,12 +1,13 @@
-This is BibTeX, Version 0.99d (TeX Live 2025)
+This is BibTeX, Version 0.99d (TeX Live 2022/Debian)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: S02_supplemental_results.aux
 The style file: unsrt.bst
-I found no \citation commands---while reading file S02_supplemental_results.aux
 I found no \bibdata command---while reading file S02_supplemental_results.aux
+Warning--I didn't find a database entry for "nesterov2018"
+Warning--I didn't find a database entry for "boyd2004"
 You've used 0 entries,
             1791 wiz_defined-function locations,
-            444 strings with 3546 characters,
+            446 strings with 3566 characters,
 and the built_in function-call counts, 18 in all, are:
 = -- 0
 > -- 0
@@ -45,4 +46,4 @@ warning$ -- 0
 while$ -- 0
 width$ -- 0
 write$ -- 2
-(There were 2 error messages)
+(There was 1 error message)

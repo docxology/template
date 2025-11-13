@@ -2,26 +2,22 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
 \documentclass[
   11pt,
 ]{article}
-\usepackage{xcolor}
-\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{3}
+\usepackage{lmodern}
+\usepackage{setspace}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
   \setmonofont[]{Courier New}
 \fi
@@ -31,7 +27,6 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -42,9 +37,22 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{3}
 % Essential packages for academic documents
 \usepackage{amsmath,amssymb}          % Mathematical symbols and environments
 \usepackage{amsfonts}                 % Additional math fonts
@@ -229,20 +237,13 @@
 
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
-\usepackage{bookmark}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
-\hypersetup{
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={blue},
-  citecolor={blue},
-  urlcolor={blue},
-  pdfcreator={LaTeX via pandoc}}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
 \title{S02 supplemental results}
 \author{ORCID: 0000-0000-0000-0000\\ Email: author@example.com}
-\date{November 03, 2025}
+\date{November 13, 2025}
 
 \begin{document}
 \maketitle
@@ -253,16 +254,19 @@
 \tableofcontents
 }
 \setstretch{1.2}
-\section{Supplemental Results}\label{sec:supplemental_results}
+\hypertarget{sec:supplemental_results}{%
+\section{Supplemental Results}\label{sec:supplemental_results}}
 
 This section provides additional experimental results that complement
 Section \ref{sec:experimental_results}.
 
+\hypertarget{s2.1-extended-benchmark-results}{%
 \subsection{S2.1 Extended Benchmark
-Results}\label{s2.1-extended-benchmark-results}
+Results}\label{s2.1-extended-benchmark-results}}
 
+\hypertarget{s2.1.1-additional-datasets}{%
 \subsubsection{S2.1.1 Additional
-Datasets}\label{s2.1.1-additional-datasets}
+Datasets}\label{s2.1.1-additional-datasets}}
 
 We evaluated our method on 15 additional benchmark datasets beyond those
 reported in Section \ref{sec:experimental_results}:
@@ -294,8 +298,9 @@ Finance-2 & 15,000 & 75 & Risk assessment & Financial \\
 \label{tab:extended_datasets}
 \end{table}
 
+\hypertarget{s2.1.2-performance-across-all-datasets}{%
 \subsubsection{S2.1.2 Performance Across All
-Datasets}\label{s2.1.2-performance-across-all-datasets}
+Datasets}\label{s2.1.2-performance-across-all-datasets}}
 
 \begin{table}[h]
 \centering
@@ -315,17 +320,19 @@ Adagrad & 0.895 & 23.1 & 412 & 83.8\% \\
 \label{tab:comprehensive_comparison}
 \end{table}
 
+\hypertarget{s2.2-convergence-behavior-analysis}{%
 \subsection{S2.2 Convergence Behavior
-Analysis}\label{s2.2-convergence-behavior-analysis}
+Analysis}\label{s2.2-convergence-behavior-analysis}}
 
+\hypertarget{s2.2.1-problem-specific-convergence-patterns}{%
 \subsubsection{S2.2.1 Problem-Specific Convergence
-Patterns}\label{s2.2.1-problem-specific-convergence-patterns}
+Patterns}\label{s2.2.1-problem-specific-convergence-patterns}}
 
 Different problem types exhibit distinct convergence patterns:
 
 \textbf{Convex Problems}: Exponential convergence as predicted by theory
-\eqref{eq:convergence}, with empirical rate matching theoretical bounds
-within 5\%.
+\eqref{eq:convergence} \cite{nesterov2018, boyd2004}, with empirical
+rate matching theoretical bounds within 5\%.
 
 \textbf{Non-Convex Problems}: Initial phase shows rapid descent followed
 by slower convergence near local minima. Our adaptive strategy maintains
@@ -334,8 +341,9 @@ stability throughout.
 \textbf{High-Dimensional Problems}: Memory-efficient implementation
 enables scaling to \(n > 10^6\) dimensions with linear memory growth.
 
+\hypertarget{s2.2.2-iteration-wise-progress}{%
 \subsubsection{S2.2.2 Iteration-wise
-Progress}\label{s2.2.2-iteration-wise-progress}
+Progress}\label{s2.2.2-iteration-wise-progress}}
 
 \begin{table}[h]
 \centering
@@ -355,10 +363,12 @@ Progress}\label{s2.2.2-iteration-wise-progress}
 \label{tab:iteration_progress}
 \end{table}
 
-\subsection{S2.3 Scalability Analysis}\label{s2.3-scalability-analysis}
+\hypertarget{s2.3-scalability-analysis}{%
+\subsection{S2.3 Scalability Analysis}\label{s2.3-scalability-analysis}}
 
+\hypertarget{s2.3.1-performance-vs.-problem-size}{%
 \subsubsection{S2.3.1 Performance vs.~Problem
-Size}\label{s2.3.1-performance-vs.-problem-size}
+Size}\label{s2.3.1-performance-vs.-problem-size}}
 
 \begin{table}[h]
 \centering
@@ -380,10 +390,12 @@ $10^6$ & 1523.4 & 23152.8 & 356 & $O(n \log n)$ \\
 The empirical scaling confirms our theoretical \(O(n \log n)\)
 per-iteration complexity from Section \ref{sec:methodology}.
 
-\subsection{S2.4 Robustness Analysis}\label{s2.4-robustness-analysis}
+\hypertarget{s2.4-robustness-analysis}{%
+\subsection{S2.4 Robustness Analysis}\label{s2.4-robustness-analysis}}
 
+\hypertarget{s2.4.1-performance-under-noise}{%
 \subsubsection{S2.4.1 Performance Under
-Noise}\label{s2.4.1-performance-under-noise}
+Noise}\label{s2.4.1-performance-under-noise}}
 
 We evaluated robustness under various noise conditions:
 
@@ -405,8 +417,9 @@ Outliers & 5\% corrupted & 91.3\% & 8.9\% \\
 \label{tab:robustness_noise}
 \end{table}
 
+\hypertarget{s2.4.2-initialization-sensitivity}{%
 \subsubsection{S2.4.2 Initialization
-Sensitivity}\label{s2.4.2-initialization-sensitivity}
+Sensitivity}\label{s2.4.2-initialization-sensitivity}}
 
 Algorithm performance across 1000 random initializations:
 
@@ -424,11 +437,13 @@ Algorithm performance across 1000 random initializations:
 
 The low variance confirms robustness to initialization.
 
+\hypertarget{s2.5-comparison-with-domain-specific-methods}{%
 \subsection{S2.5 Comparison with Domain-Specific
-Methods}\label{s2.5-comparison-with-domain-specific-methods}
+Methods}\label{s2.5-comparison-with-domain-specific-methods}}
 
+\hypertarget{s2.5.1-machine-learning-applications}{%
 \subsubsection{S2.5.1 Machine Learning
-Applications}\label{s2.5.1-machine-learning-applications}
+Applications}\label{s2.5.1-machine-learning-applications}}
 
 \begin{table}[h]
 \centering
@@ -447,8 +462,9 @@ AdamW & 0.983 & 0.940 & 283 \\
 \label{tab:ml_applications}
 \end{table}
 
+\hypertarget{s2.5.2-signal-processing-applications}{%
 \subsubsection{S2.5.2 Signal Processing
-Applications}\label{s2.5.2-signal-processing-applications}
+Applications}\label{s2.5.2-signal-processing-applications}}
 
 For sparse signal reconstruction problems, our method outperforms
 specialized algorithms:
@@ -464,11 +480,13 @@ specialized algorithms:
   \textbf{Memory usage}: 60\% lower than quasi-Newton methods
 \end{itemize}
 
+\hypertarget{s2.6-ablation-study-details}{%
 \subsection{S2.6 Ablation Study
-Details}\label{s2.6-ablation-study-details}
+Details}\label{s2.6-ablation-study-details}}
 
+\hypertarget{s2.6.1-component-contribution-analysis}{%
 \subsubsection{S2.6.1 Component Contribution
-Analysis}\label{s2.6.1-component-contribution-analysis}
+Analysis}\label{s2.6.1-component-contribution-analysis}}
 
 \begin{table}[h]
 \centering
@@ -490,19 +508,22 @@ Fixed step size & 0.93 & 478 & 85.7\% \\
 Each component contributes significantly to overall performance, with
 momentum providing the largest individual benefit.
 
+\hypertarget{s2.7-real-world-case-studies}{%
 \subsection{S2.7 Real-World Case
-Studies}\label{s2.7-real-world-case-studies}
+Studies}\label{s2.7-real-world-case-studies}}
 
+\hypertarget{s2.7.1-industrial-application-manufacturing-optimization}{%
 \subsubsection{S2.7.1 Industrial Application: Manufacturing
-Optimization}\label{s2.7.1-industrial-application-manufacturing-optimization}
+Optimization}\label{s2.7.1-industrial-application-manufacturing-optimization}}
 
 Applied to production line optimization: - \textbf{Problem size}: 50,000
 parameters - \textbf{Constraints}: 2,500 inequality constraints -
 \textbf{Solution time}: 3.2 hours vs.~8.5 hours (baseline) -
 \textbf{Cost reduction}: 12.3\% improvement in operational efficiency
 
+\hypertarget{s2.7.2-scientific-application-climate-modeling}{%
 \subsubsection{S2.7.2 Scientific Application: Climate
-Modeling}\label{s2.7.2-scientific-application-climate-modeling}
+Modeling}\label{s2.7.2-scientific-application-climate-modeling}}
 
 Applied to parameter estimation in climate models: - \textbf{Model
 complexity}: 1,000,000+ parameters - \textbf{Computational savings}:

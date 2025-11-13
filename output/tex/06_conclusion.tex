@@ -2,26 +2,22 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
 \documentclass[
   11pt,
 ]{article}
-\usepackage{xcolor}
-\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{3}
+\usepackage{lmodern}
+\usepackage{setspace}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
   \setmonofont[]{Courier New}
 \fi
@@ -31,7 +27,6 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -42,9 +37,22 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{3}
 % Essential packages for academic documents
 \usepackage{amsmath,amssymb}          % Mathematical symbols and environments
 \usepackage{amsfonts}                 % Additional math fonts
@@ -229,20 +237,13 @@
 
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
-\usepackage{bookmark}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
-\hypersetup{
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={blue},
-  citecolor={blue},
-  urlcolor={blue},
-  pdfcreator={LaTeX via pandoc}}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
 \title{06 conclusion}
 \author{ORCID: 0000-0000-0000-0000\\ Email: author@example.com}
-\date{November 03, 2025}
+\date{November 13, 2025}
 
 \begin{document}
 \maketitle
@@ -253,9 +254,11 @@
 \tableofcontents
 }
 \setstretch{1.2}
-\section{Conclusion}\label{sec:conclusion}
+\hypertarget{sec:conclusion}{%
+\section{Conclusion}\label{sec:conclusion}}
 
-\subsection{Summary of Contributions}\label{summary-of-contributions}
+\hypertarget{summary-of-contributions}{%
+\subsection{Summary of Contributions}\label{summary-of-contributions}}
 
 This work presents a novel optimization framework that achieves both
 theoretical guarantees and practical performance. Our main contributions
@@ -279,9 +282,12 @@ are:
   implementation validated by experimental results
 \end{enumerate}
 
-\subsection{Key Results}\label{key-results}
+\hypertarget{key-results}{%
+\subsection{Key Results}\label{key-results}}
 
-\subsubsection{Theoretical Achievements}\label{theoretical-achievements}
+\hypertarget{theoretical-achievements}{%
+\subsubsection{Theoretical
+Achievements}\label{theoretical-achievements}}
 
 The theoretical analysis presented in Section \ref{sec:methodology}
 establishes several important results:
@@ -299,7 +305,8 @@ establishes several important results:
   suitable for large-scale problems
 \end{itemize}
 
-\subsubsection{Experimental Validation}\label{experimental-validation}
+\hypertarget{experimental-validation}{%
+\subsubsection{Experimental Validation}\label{experimental-validation}}
 
 The experimental results from Section \ref{sec:experimental_results}
 confirm our theoretical predictions:
@@ -318,7 +325,9 @@ confirm our theoretical predictions:
   instances
 \end{itemize}
 
-\subsubsection{Performance Improvements}\label{performance-improvements}
+\hypertarget{performance-improvements}{%
+\subsubsection{Performance
+Improvements}\label{performance-improvements}}
 
 Our method demonstrates significant improvements over state-of-the-art
 approaches:
@@ -327,9 +336,11 @@ approaches:
 \text{Overall Improvement} = \frac{\text{Performance}_{\text{ours}} - \text{Performance}_{\text{best}}}{\text{Performance}_{\text{best}}} \times 100\% = 23.7\%
 \end{equation}
 
-\subsection{Broader Impact}\label{broader-impact}
+\hypertarget{broader-impact}{%
+\subsection{Broader Impact}\label{broader-impact}}
 
-\subsubsection{Scientific Applications}\label{scientific-applications}
+\hypertarget{scientific-applications}{%
+\subsubsection{Scientific Applications}\label{scientific-applications}}
 
 The optimization framework developed here has applications across
 multiple domains:
@@ -339,18 +350,20 @@ multiple domains:
 \tightlist
 \item
   \textbf{Machine Learning}: Efficient training of large-scale neural
-  networks
+  networks \cite{kingma2014, wright2010}
 \item
   \textbf{Signal Processing}: Sparse signal reconstruction and denoising
+  \cite{beck2009}
 \item
   \textbf{Computational Biology}: Protein structure prediction and
   molecular dynamics
 \item
   \textbf{Climate Modeling}: Parameter estimation in complex
-  environmental systems
+  environmental systems \cite{polak1997}
 \end{enumerate}
 
-\subsubsection{Industry Relevance}\label{industry-relevance}
+\hypertarget{industry-relevance}{%
+\subsubsection{Industry Relevance}\label{industry-relevance}}
 
 The practical benefits demonstrated in our experiments translate to
 real-world impact:
@@ -366,9 +379,11 @@ real-world impact:
   \textbf{Reliability}: High success rates reduce operational costs
 \end{itemize}
 
-\subsection{Future Directions}\label{future-directions}
+\hypertarget{future-directions}{%
+\subsection{Future Directions}\label{future-directions}}
 
-\subsubsection{Immediate Extensions}\label{immediate-extensions}
+\hypertarget{immediate-extensions}{%
+\subsubsection{Immediate Extensions}\label{immediate-extensions}}
 
 Several promising directions for immediate future work emerged from our
 analysis:
@@ -387,7 +402,8 @@ analysis:
   simultaneously
 \end{enumerate}
 
-\subsubsection{Long-term Vision}\label{long-term-vision}
+\hypertarget{long-term-vision}{%
+\subsubsection{Long-term Vision}\label{long-term-vision}}
 
 The theoretical foundation established here opens several long-term
 research directions:
@@ -397,16 +413,18 @@ research directions:
 \tightlist
 \item
   \textbf{Theoretical Advances}: Improving complexity bounds through
-  more sophisticated analysis
+  more sophisticated analysis (see Section
+  \ref{sec:supplemental_analysis})
 \item
   \textbf{Algorithmic Innovation}: Developing variants for specific
-  application domains
+  application domains (see Section \ref{sec:supplemental_applications})
 \item
   \textbf{Software Ecosystem}: Building comprehensive optimization
   libraries
 \end{enumerate}
 
-\subsection{Final Remarks}\label{final-remarks}
+\hypertarget{final-remarks}{%
+\subsection{Final Remarks}\label{final-remarks}}
 
 This work demonstrates that careful theoretical analysis combined with
 practical implementation can yield optimization methods that are both

@@ -1,12 +1,19 @@
-This is BibTeX, Version 0.99d (TeX Live 2025)
+This is BibTeX, Version 0.99d (TeX Live 2022/Debian)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: 03_methodology.aux
 The style file: unsrt.bst
 I found no \bibdata command---while reading file 03_methodology.aux
-Warning--I didn't find a database entry for "optimization2022"
+Warning--I didn't find a database entry for "boyd2004"
+Warning--I didn't find a database entry for "nesterov2018"
+Warning--I didn't find a database entry for "kingma2014"
+Warning--I didn't find a database entry for "duchi2011"
+Warning--I didn't find a database entry for "beck2009"
+Warning--I didn't find a database entry for "parikh2014"
+Warning--I didn't find a database entry for "schmidt2017"
+Warning--I didn't find a database entry for "wright2010"
 You've used 0 entries,
             1791 wiz_defined-function locations,
-            445 strings with 3542 characters,
+            452 strings with 3604 characters,
 and the built_in function-call counts, 18 in all, are:
 = -- 0
 > -- 0

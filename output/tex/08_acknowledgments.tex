@@ -2,26 +2,22 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
 \documentclass[
   11pt,
 ]{article}
-\usepackage{xcolor}
-\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{3}
+\usepackage{lmodern}
+\usepackage{setspace}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
   \setmonofont[]{Courier New}
 \fi
@@ -31,7 +27,6 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -42,9 +37,22 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{3}
 % Essential packages for academic documents
 \usepackage{amsmath,amssymb}          % Mathematical symbols and environments
 \usepackage{amsfonts}                 % Additional math fonts
@@ -229,20 +237,13 @@
 
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
-\usepackage{bookmark}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
-\hypersetup{
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={blue},
-  citecolor={blue},
-  urlcolor={blue},
-  pdfcreator={LaTeX via pandoc}}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
 \title{08 acknowledgments}
 \author{ORCID: 0000-0000-0000-0000\\ Email: author@example.com}
-\date{November 03, 2025}
+\date{November 13, 2025}
 
 \begin{document}
 \maketitle
@@ -253,23 +254,27 @@
 \tableofcontents
 }
 \setstretch{1.2}
-\section{Acknowledgments}\label{sec:acknowledgments}
+\hypertarget{sec:acknowledgments}{%
+\section{Acknowledgments}\label{sec:acknowledgments}}
 
 We gratefully acknowledge the contributions of many individuals and
 institutions that made this research possible.
 
-\subsection{Funding}\label{funding}
+\hypertarget{funding}{%
+\subsection{Funding}\label{funding}}
 
 This work was supported by {[}grant numbers and funding agencies to be
 specified{]}.
 
-\subsection{Computing Resources}\label{computing-resources}
+\hypertarget{computing-resources}{%
+\subsection{Computing Resources}\label{computing-resources}}
 
 Computational resources were provided by {[}institution/facility
 name{]}, enabling the large-scale experiments reported in Section
 \ref{sec:experimental_results}.
 
-\subsection{Collaborations}\label{collaborations}
+\hypertarget{collaborations}{%
+\subsection{Collaborations}\label{collaborations}}
 
 We thank our collaborators for valuable discussions and feedback
 throughout the development of this work:
@@ -286,7 +291,8 @@ throughout the development of this work:
   infrastructure support
 \end{itemize}
 
-\subsection{Data and Software}\label{data-and-software}
+\hypertarget{data-and-software}{%
+\subsection{Data and Software}\label{data-and-software}}
 
 This research builds upon open-source software tools and publicly
 available datasets. We acknowledge:
@@ -301,12 +307,14 @@ available datasets. We acknowledge:
   Public datasets used in our evaluation
 \end{itemize}
 
-\subsection{Feedback and Review}\label{feedback-and-review}
+\hypertarget{feedback-and-review}{%
+\subsection{Feedback and Review}\label{feedback-and-review}}
 
 We are grateful to the anonymous reviewers whose constructive feedback
 significantly improved this manuscript.
 
-\subsection{Institutional Support}\label{institutional-support}
+\hypertarget{institutional-support}{%
+\subsection{Institutional Support}\label{institutional-support}}
 
 This research was conducted with the support of {[}Institution Name{]},
 providing research facilities and academic resources essential to this

@@ -2,26 +2,22 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
 \documentclass[
   11pt,
 ]{article}
-\usepackage{xcolor}
-\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{3}
+\usepackage{lmodern}
+\usepackage{setspace}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
   \setmonofont[]{Courier New}
 \fi
@@ -31,7 +27,6 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -42,9 +37,22 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{3}
 % Essential packages for academic documents
 \usepackage{amsmath,amssymb}          % Mathematical symbols and environments
 \usepackage{amsfonts}                 % Additional math fonts
@@ -229,20 +237,13 @@
 
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
-\usepackage{bookmark}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
-\hypersetup{
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={blue},
-  citecolor={blue},
-  urlcolor={blue},
-  pdfcreator={LaTeX via pandoc}}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
 \title{02 introduction}
 \author{ORCID: 0000-0000-0000-0000\\ Email: author@example.com}
-\date{November 03, 2025}
+\date{November 13, 2025}
 
 \begin{document}
 \maketitle
@@ -253,16 +254,21 @@
 \tableofcontents
 }
 \setstretch{1.2}
-\section{Introduction}\label{sec:introduction}
+\hypertarget{sec:introduction}{%
+\section{Introduction}\label{sec:introduction}}
 
-\subsection{Overview}\label{overview}
+\hypertarget{overview}{%
+\subsection{Overview}\label{overview}}
 
 This is an example project that demonstrates the generic repository
 structure for tested code, manuscript editing, and PDF rendering. The
 work presents a novel optimization framework with comprehensive
-theoretical analysis and experimental validation.
+theoretical analysis and experimental validation, building upon
+foundational optimization theory \cite{boyd2004, nesterov2018} and
+recent advances in adaptive methods \cite{kingma2014, duchi2011}.
 
-\subsection{Project Structure}\label{project-structure}
+\hypertarget{project-structure}{%
+\subsection{Project Structure}\label{project-structure}}
 
 The project follows a standardized structure:
 
@@ -284,31 +290,38 @@ The project follows a standardized structure:
   project
 \end{itemize}
 
-\subsection{Key Features}\label{key-features}
+\hypertarget{key-features}{%
+\subsection{Key Features}\label{key-features}}
 
-\subsubsection{Test-Driven Development}\label{test-driven-development}
+\hypertarget{test-driven-development}{%
+\subsubsection{Test-Driven Development}\label{test-driven-development}}
 
 All source code must have 100\% test coverage before PDF generation
 proceeds, as enforced by the build system.
 
+\hypertarget{automated-script-execution}{%
 \subsubsection{Automated Script
-Execution}\label{automated-script-execution}
+Execution}\label{automated-script-execution}}
 
 Project-specific scripts in the \texttt{scripts/} directory are
 automatically executed to generate figures and data, ensuring
 reproducibility.
 
-\subsubsection{Markdown to PDF Pipeline}\label{markdown-to-pdf-pipeline}
+\hypertarget{markdown-to-pdf-pipeline}{%
+\subsubsection{Markdown to PDF
+Pipeline}\label{markdown-to-pdf-pipeline}}
 
 Individual markdown modules are converted to PDFs, and a combined
 document is generated with proper cross-referencing.
 
-\subsubsection{Generic and Reusable}\label{generic-and-reusable}
+\hypertarget{generic-and-reusable}{%
+\subsubsection{Generic and Reusable}\label{generic-and-reusable}}
 
 The utility scripts can be used with any project that follows this
 structure, making it easy to adopt for new research projects.
 
-\subsection{Manuscript Organization}\label{manuscript-organization}
+\hypertarget{manuscript-organization}{%
+\subsection{Manuscript Organization}\label{manuscript-organization}}
 
 The manuscript is organized into several key sections:
 
@@ -338,7 +351,8 @@ The manuscript is organized into several key sections:
   cited works
 \end{enumerate}
 
-\subsection{Example Figure}\label{example-figure}
+\hypertarget{example-figure}{%
+\subsection{Example Figure}\label{example-figure}}
 
 The following figure was generated by the example script:
 
@@ -356,7 +370,8 @@ shown in Figure \ref{fig:example_figure}, the system generates
 high-quality visualizations that are automatically integrated into the
 manuscript.
 
-\subsection{Data Availability}\label{data-availability}
+\hypertarget{data-availability}{%
+\subsection{Data Availability}\label{data-availability}}
 
 All generated data is saved alongside figures for reproducibility:
 
@@ -373,7 +388,8 @@ All generated data is saved alongside figures for reproducibility:
   \textbf{LaTeX}: Source files in \texttt{output/tex/}
 \end{itemize}
 
-\subsection{Usage}\label{usage}
+\hypertarget{usage}{%
+\subsection{Usage}\label{usage}}
 
 To generate the complete manuscript:
 
@@ -390,7 +406,8 @@ requirement 2. Execute project-specific scripts to generate figures and
 data 3. Validate markdown references and images 4. Generate individual
 and combined PDFs 5. Export LaTeX source files
 
-\subsection{Customization}\label{customization}
+\hypertarget{customization}{%
+\subsection{Customization}\label{customization}}
 
 This template can be customized for any project by:
 
@@ -409,7 +426,8 @@ This template can be customized for any project by:
   Adding new sections with proper cross-references
 \end{enumerate}
 
-\subsection{Cross-Referencing System}\label{cross-referencing-system}
+\hypertarget{cross-referencing-system}{%
+\subsection{Cross-Referencing System}\label{cross-referencing-system}}
 
 The manuscript demonstrates comprehensive cross-referencing:
 

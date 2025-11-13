@@ -61,7 +61,7 @@ Adagrad & 0.895 & 23.1 & 412 & 83.8\% \\
 
 Different problem types exhibit distinct convergence patterns:
 
-**Convex Problems**: Exponential convergence as predicted by theory \eqref{eq:convergence}, with empirical rate matching theoretical bounds within 5%.
+**Convex Problems**: Exponential convergence as predicted by theory \eqref{eq:convergence} \cite{nesterov2018, boyd2004}, with empirical rate matching theoretical bounds within 5%.
 
 **Non-Convex Problems**: Initial phase shows rapid descent followed by slower convergence near local minima. Our adaptive strategy maintains stability throughout.
 

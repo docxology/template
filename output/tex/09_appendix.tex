@@ -2,26 +2,22 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
 \documentclass[
   11pt,
 ]{article}
-\usepackage{xcolor}
-\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{3}
+\usepackage{lmodern}
+\usepackage{setspace}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
   \setmonofont[]{Courier New}
 \fi
@@ -31,7 +27,6 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -42,6 +37,18 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -53,13 +60,13 @@
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
 \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
 \newcommand{\BuiltInTok}[1]{#1}
 \newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
@@ -67,7 +74,7 @@
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
 \newcommand{\ExtensionTok}[1]{#1}
 \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\ImportTok}[1]{#1}
 \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
@@ -76,7 +83,7 @@
 \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
 \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
@@ -85,6 +92,7 @@
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{3}
 % Essential packages for academic documents
 \usepackage{amsmath,amssymb}          % Mathematical symbols and environments
 \usepackage{amsfonts}                 % Additional math fonts
@@ -269,20 +277,13 @@
 
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
-\usepackage{bookmark}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
-\hypersetup{
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={blue},
-  citecolor={blue},
-  urlcolor={blue},
-  pdfcreator={LaTeX via pandoc}}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
 \title{09 appendix}
 \author{ORCID: 0000-0000-0000-0000\\ Email: author@example.com}
-\date{November 03, 2025}
+\date{November 13, 2025}
 
 \begin{document}
 \maketitle
@@ -293,15 +294,18 @@
 \tableofcontents
 }
 \setstretch{1.2}
-\section{Appendix}\label{sec:appendix}
+\hypertarget{sec:appendix}{%
+\section{Appendix}\label{sec:appendix}}
 
 This appendix provides additional technical details and derivations that
 support the main results.
 
-\subsection{A. Detailed Proofs}\label{a.-detailed-proofs}
+\hypertarget{a.-detailed-proofs}{%
+\subsection{A. Detailed Proofs}\label{a.-detailed-proofs}}
 
+\hypertarget{a.1-proof-of-convergence-theorem-1}{%
 \subsubsection{A.1 Proof of Convergence (Theorem
-1)}\label{a.1-proof-of-convergence-theorem-1}
+1)}\label{a.1-proof-of-convergence-theorem-1}}
 
 The convergence rate established in \eqref{eq:convergence} follows from
 the following detailed analysis.
@@ -320,17 +324,20 @@ By the Lipschitz continuity of \(\nabla f\), there exists a constant
 \|\nabla f(x) - \nabla f(y)\| \leq L \|x - y\|, \quad \forall x, y \in \mathcal{X}
 \end{equation}
 
-Using strong convexity with parameter \(\mu > 0\):
+Using strong convexity with parameter \(\mu > 0\)
+\cite{boyd2004, nesterov2018}:
 
 \begin{equation}\label{eq:strong_convexity}
 f(y) \geq f(x) + \nabla f(x)^T (y - x) + \frac{\mu}{2} \|y - x\|^2
 \end{equation}
 
 Combining these properties with the adaptive step size rule
-\eqref{eq:adaptive_step}, we obtain the linear convergence rate with
-\(\rho = \sqrt{1 - \mu/L}\). \(\square\)
+\eqref{eq:adaptive_step}, following the analysis framework in
+\cite{duchi2011, bertsekas2015}, we obtain the linear convergence rate
+with \(\rho = \sqrt{1 - \mu/L}\). \(\square\)
 
-\subsubsection{A.2 Complexity Analysis}\label{a.2-complexity-analysis}
+\hypertarget{a.2-complexity-analysis}{%
+\subsubsection{A.2 Complexity Analysis}\label{a.2-complexity-analysis}}
 
 The computational complexity per iteration is derived as follows:
 
@@ -355,11 +362,13 @@ For structured problems, we can exploit the separable structure of
 \eqref{eq:objective} to achieve \(O(n \log n)\) complexity using
 efficient data structures (see Figure \ref{fig:data_structure}).
 
+\hypertarget{b.-additional-experimental-details}{%
 \subsection{B. Additional Experimental
-Details}\label{b.-additional-experimental-details}
+Details}\label{b.-additional-experimental-details}}
 
+\hypertarget{b.1-hyperparameter-tuning}{%
 \subsubsection{B.1 Hyperparameter
-Tuning}\label{b.1-hyperparameter-tuning}
+Tuning}\label{b.1-hyperparameter-tuning}}
 
 The following hyperparameters were used in our experiments:
 
@@ -379,8 +388,9 @@ Tolerance & $\epsilon$ & $10^{-6}$ & [10^{-8}, 10^{-4}] \\
 \label{tab:hyperparameters}
 \end{table}
 
+\hypertarget{b.2-computational-environment}{%
 \subsubsection{B.2 Computational
-Environment}\label{b.2-computational-environment}
+Environment}\label{b.2-computational-environment}}
 
 All experiments were conducted on: - \textbf{CPU}: Intel Xeon E5-2690 v4
 @ 2.60GHz (28 cores) - \textbf{RAM}: 128GB DDR4 - \textbf{GPU}: NVIDIA
@@ -388,7 +398,8 @@ Tesla V100 (32GB VRAM) for large-scale experiments - \textbf{OS}: Ubuntu
 20.04 LTS - \textbf{Python}: 3.10.12 - \textbf{NumPy}: 1.24.3 -
 \textbf{SciPy}: 1.10.1
 
-\subsubsection{B.3 Dataset Preparation}\label{b.3-dataset-preparation}
+\hypertarget{b.3-dataset-preparation}{%
+\subsubsection{B.3 Dataset Preparation}\label{b.3-dataset-preparation}}
 
 Datasets were preprocessed using standard normalization:
 
@@ -399,10 +410,12 @@ Datasets were preprocessed using standard normalization:
 where \(\mu\) and \(\sigma\) are the mean and standard deviation
 computed from the training set.
 
-\subsection{C. Extended Results}\label{c.-extended-results}
+\hypertarget{c.-extended-results}{%
+\subsection{C. Extended Results}\label{c.-extended-results}}
 
+\hypertarget{c.1-additional-benchmark-comparisons}{%
 \subsubsection{C.1 Additional Benchmark
-Comparisons}\label{c.1-additional-benchmark-comparisons}
+Comparisons}\label{c.1-additional-benchmark-comparisons}}
 
 Table \ref{tab:extended_comparison} provides detailed performance
 comparison across all tested methods.
@@ -423,15 +436,19 @@ L-BFGS & 16.2 & 198 & $1.1 \times 10^{-6}$ & 425 \\
 \label{tab:extended_comparison}
 \end{table}
 
-\subsubsection{C.2 Sensitivity Analysis}\label{c.2-sensitivity-analysis}
+\hypertarget{c.2-sensitivity-analysis}{%
+\subsubsection{C.2 Sensitivity
+Analysis}\label{c.2-sensitivity-analysis}}
 
 Detailed sensitivity analysis for all hyperparameters shows robust
 performance across wide parameter ranges, confirming the theoretical
 predictions from Section \ref{sec:methodology}.
 
-\subsection{D. Implementation Details}\label{d.-implementation-details}
+\hypertarget{d.-implementation-details}{%
+\subsection{D. Implementation Details}\label{d.-implementation-details}}
 
-\subsubsection{D.1 Pseudocode}\label{d.1-pseudocode}
+\hypertarget{d.1-pseudocode}{%
+\subsubsection{D.1 Pseudocode}\label{d.1-pseudocode}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -482,8 +499,9 @@ predictions from Section \ref{sec:methodology}.
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{d.2-performance-optimizations}{%
 \subsubsection{D.2 Performance
-Optimizations}\label{d.2-performance-optimizations}
+Optimizations}\label{d.2-performance-optimizations}}
 
 Key performance optimizations implemented: 1. Vectorized operations
 using NumPy 2. Sparse matrix representations when applicable 3. In-place

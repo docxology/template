@@ -2,26 +2,22 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
 \documentclass[
   11pt,
 ]{article}
-\usepackage{xcolor}
-\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{3}
+\usepackage{lmodern}
+\usepackage{setspace}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
   \setmonofont[]{Courier New}
 \fi
@@ -31,7 +27,6 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -42,9 +37,22 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{3}
 % Essential packages for academic documents
 \usepackage{amsmath,amssymb}          % Mathematical symbols and environments
 \usepackage{amsfonts}                 % Additional math fonts
@@ -229,20 +237,13 @@
 
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
-\usepackage{bookmark}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
-\hypersetup{
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={blue},
-  citecolor={blue},
-  urlcolor={blue},
-  pdfcreator={LaTeX via pandoc}}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
 \title{S01 supplemental methods}
 \author{ORCID: 0000-0000-0000-0000\\ Email: author@example.com}
-\date{November 03, 2025}
+\date{November 13, 2025}
 
 \begin{document}
 \maketitle
@@ -253,16 +254,19 @@
 \tableofcontents
 }
 \setstretch{1.2}
-\section{Supplemental Methods}\label{sec:supplemental_methods}
+\hypertarget{sec:supplemental_methods}{%
+\section{Supplemental Methods}\label{sec:supplemental_methods}}
 
 This section provides detailed methodological information that
 supplements Section \ref{sec:methodology}.
 
+\hypertarget{s1.1-extended-algorithm-variants}{%
 \subsection{S1.1 Extended Algorithm
-Variants}\label{s1.1-extended-algorithm-variants}
+Variants}\label{s1.1-extended-algorithm-variants}}
 
+\hypertarget{s1.1.1-stochastic-variant}{%
 \subsubsection{S1.1.1 Stochastic
-Variant}\label{s1.1.1-stochastic-variant}
+Variant}\label{s1.1.1-stochastic-variant}}
 
 For large-scale problems, we developed a stochastic variant of our
 algorithm:
@@ -276,10 +280,12 @@ iteration \(k\).
 
 \textbf{Convergence Analysis}: Under appropriate sampling strategies,
 this variant achieves \(O(1/\sqrt{k})\) convergence rate for
-non-strongly convex problems.
+non-strongly convex problems, following the analysis in
+\cite{kingma2014, ruder2016}.
 
+\hypertarget{s1.1.2-mini-batch-variant}{%
 \subsubsection{S1.1.2 Mini-Batch
-Variant}\label{s1.1.2-mini-batch-variant}
+Variant}\label{s1.1.2-mini-batch-variant}}
 
 To balance between computational efficiency and convergence speed:
 
@@ -290,11 +296,13 @@ x_{k+1} = x_k - \alpha_k \frac{1}{|B_k|} \sum_{i \in B_k} \nabla f_i(x_k) + \bet
 where \(B_k \subset \{1, \ldots, n\}\) is a mini-batch of size
 \(|B_k| = b\).
 
+\hypertarget{s1.2-detailed-convergence-analysis}{%
 \subsection{S1.2 Detailed Convergence
-Analysis}\label{s1.2-detailed-convergence-analysis}
+Analysis}\label{s1.2-detailed-convergence-analysis}}
 
+\hypertarget{s1.2.1-strong-convexity-assumptions}{%
 \subsubsection{S1.2.1 Strong Convexity
-Assumptions}\label{s1.2.1-strong-convexity-assumptions}
+Assumptions}\label{s1.2.1-strong-convexity-assumptions}}
 
 We assume the objective function \(f\) satisfies:
 
@@ -304,8 +312,9 @@ f(y) \geq f(x) + \nabla f(x)^T (y - x) + \frac{\mu}{2} \|y - x\|^2, \quad \foral
 
 where \(\mu > 0\) is the strong convexity parameter.
 
+\hypertarget{s1.2.2-lipschitz-continuity}{%
 \subsubsection{S1.2.2 Lipschitz
-Continuity}\label{s1.2.2-lipschitz-continuity}
+Continuity}\label{s1.2.2-lipschitz-continuity}}
 
 The gradient is Lipschitz continuous:
 
@@ -314,13 +323,16 @@ The gradient is Lipschitz continuous:
 \end{equation}
 
 The condition number \(\kappa = L/\mu\) determines the convergence rate:
-\(\rho = \sqrt{1 - 1/\kappa}\).
+\(\rho = \sqrt{1 - 1/\kappa}\), as established in
+\cite{nesterov2018, boyd2004}.
 
+\hypertarget{s1.3-additional-theoretical-results}{%
 \subsection{S1.3 Additional Theoretical
-Results}\label{s1.3-additional-theoretical-results}
+Results}\label{s1.3-additional-theoretical-results}}
 
+\hypertarget{s1.3.1-worst-case-complexity-bounds}{%
 \subsubsection{S1.3.1 Worst-Case Complexity
-Bounds}\label{s1.3.1-worst-case-complexity-bounds}
+Bounds}\label{s1.3.1-worst-case-complexity-bounds}}
 
 \textbf{Theorem S1}: Under the assumptions of Lipschitz continuity and
 strong convexity, the algorithm requires at most
@@ -337,8 +349,9 @@ have:
 since \(\log(1/\rho) \approx 1/\kappa\) for small \(1/\kappa\).
 \(\square\)
 
+\hypertarget{s1.3.2-expected-convergence-for-stochastic-variants}{%
 \subsubsection{S1.3.2 Expected Convergence for Stochastic
-Variants}\label{s1.3.2-expected-convergence-for-stochastic-variants}
+Variants}\label{s1.3.2-expected-convergence-for-stochastic-variants}}
 
 For the stochastic variant \eqref{eq:stochastic_update}:
 
@@ -348,11 +361,13 @@ For the stochastic variant \eqref{eq:stochastic_update}:
 
 where \(\sigma^2\) is the variance of the stochastic gradient estimates.
 
+\hypertarget{s1.4-implementation-considerations}{%
 \subsection{S1.4 Implementation
-Considerations}\label{s1.4-implementation-considerations}
+Considerations}\label{s1.4-implementation-considerations}}
 
+\hypertarget{s1.4.1-numerical-stability}{%
 \subsubsection{S1.4.1 Numerical
-Stability}\label{s1.4.1-numerical-stability}
+Stability}\label{s1.4.1-numerical-stability}}
 
 To ensure numerical stability, we implement the following safeguards:
 
@@ -369,8 +384,9 @@ To ensure numerical stability, we implement the following safeguards:
   \textbf{Momentum bounds}: \(0 \leq \beta_k \leq \beta_{\max} < 1\)
 \end{enumerate}
 
+\hypertarget{s1.4.2-initialization-strategies}{%
 \subsubsection{S1.4.2 Initialization
-Strategies}\label{s1.4.2-initialization-strategies}
+Strategies}\label{s1.4.2-initialization-strategies}}
 
 We tested three initialization strategies:
 
@@ -389,11 +405,13 @@ We tested three initialization strategies:
 Results show that warm start initialization reduces iterations by
 approximately 30\% for related problem instances.
 
+\hypertarget{s1.5-extended-mathematical-framework}{%
 \subsection{S1.5 Extended Mathematical
-Framework}\label{s1.5-extended-mathematical-framework}
+Framework}\label{s1.5-extended-mathematical-framework}}
 
+\hypertarget{s1.5.1-generalized-objective-function}{%
 \subsubsection{S1.5.1 Generalized Objective
-Function}\label{s1.5.1-generalized-objective-function}
+Function}\label{s1.5.1-generalized-objective-function}}
 
 The framework extends to more general objectives:
 
@@ -405,8 +423,9 @@ where: - \(\phi_i(x)\): Data fitting terms - \(R_j(x)\): Regularization
 terms (e.g., \(\ell_1\), \(\ell_2\), elastic net) - \(C_k(x)\):
 Constraint terms (penalty or barrier functions)
 
+\hypertarget{s1.5.2-adaptive-weight-selection}{%
 \subsubsection{S1.5.2 Adaptive Weight
-Selection}\label{s1.5.2-adaptive-weight-selection}
+Selection}\label{s1.5.2-adaptive-weight-selection}}
 
 Weights \(w_i\) can be adapted during optimization:
 
@@ -417,11 +436,13 @@ w_i^{(k+1)} = w_i^{(k)} \cdot \exp\left(-\gamma \frac{|\phi_i(x_k)|}{|\phi(x_k)|
 This reweighting scheme gives more emphasis to terms that are harder to
 optimize.
 
+\hypertarget{s1.6-convergence-diagnostics}{%
 \subsection{S1.6 Convergence
-Diagnostics}\label{s1.6-convergence-diagnostics}
+Diagnostics}\label{s1.6-convergence-diagnostics}}
 
+\hypertarget{s1.6.1-diagnostic-criteria}{%
 \subsubsection{S1.6.1 Diagnostic
-Criteria}\label{s1.6.1-diagnostic-criteria}
+Criteria}\label{s1.6.1-diagnostic-criteria}}
 
 We monitor the following quantities for convergence:
 
@@ -441,7 +462,9 @@ We monitor the following quantities for convergence:
 
 All four criteria must be satisfied for declared convergence.
 
-\subsubsection{S1.6.2 Failure Detection}\label{s1.6.2-failure-detection}
+\hypertarget{s1.6.2-failure-detection}{%
+\subsubsection{S1.6.2 Failure
+Detection}\label{s1.6.2-failure-detection}}
 
 Algorithm failure is detected if:
 
@@ -458,8 +481,9 @@ Algorithm failure is detected if:
   Objective function increases for consecutive iterations
 \end{enumerate}
 
+\hypertarget{s1.7-parameter-sensitivity}{%
 \subsection{S1.7 Parameter
-Sensitivity}\label{s1.7-parameter-sensitivity}
+Sensitivity}\label{s1.7-parameter-sensitivity}}
 
 Detailed sensitivity analysis for each parameter:
 

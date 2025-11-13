@@ -2,26 +2,22 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
 \documentclass[
   11pt,
 ]{article}
-\usepackage{xcolor}
-\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{3}
+\usepackage{lmodern}
+\usepackage{setspace}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
   \setmonofont[]{Courier New}
 \fi
@@ -31,7 +27,6 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -42,9 +37,22 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{3}
 % Essential packages for academic documents
 \usepackage{amsmath,amssymb}          % Mathematical symbols and environments
 \usepackage{amsfonts}                 % Additional math fonts
@@ -229,20 +237,13 @@
 
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
-\usepackage{bookmark}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
-\hypersetup{
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={blue},
-  citecolor={blue},
-  urlcolor={blue},
-  pdfcreator={LaTeX via pandoc}}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
 \title{01 abstract}
 \author{ORCID: 0000-0000-0000-0000\\ Email: author@example.com}
-\date{November 03, 2025}
+\date{November 13, 2025}
 
 \begin{document}
 \maketitle
@@ -253,20 +254,23 @@
 \tableofcontents
 }
 \setstretch{1.2}
-\section{Abstract}\label{sec:abstract}
+\hypertarget{sec:abstract}{%
+\section{Abstract}\label{sec:abstract}}
 
 This research presents a novel optimization framework that combines
 theoretical rigor with practical efficiency, developing a comprehensive
 mathematical framework that achieves both theoretical convergence
 guarantees and superior experimental performance across diverse
-optimization problems. Our work makes several significant contributions
-to the field of optimization: a unified approach combining
-regularization, adaptive step sizes, and momentum techniques; proven
-linear convergence with rate \(\rho \in (0,1)\) and optimal
-\(O(n \log n)\) complexity per iteration; efficient algorithm
-implementation validated on real-world problems; and comprehensive
-experimental evaluation across multiple problem domains. The core
-algorithm solves optimization problems of the form
+optimization problems. Building on foundational work in convex
+optimization \cite{boyd2004, nesterov2018} and recent advances in
+adaptive optimization \cite{kingma2014, duchi2011}, our work makes
+several significant contributions to the field of optimization: a
+unified approach combining regularization, adaptive step sizes, and
+momentum techniques; proven linear convergence with rate
+\(\rho \in (0,1)\) and optimal \(O(n \log n)\) complexity per iteration;
+efficient algorithm implementation validated on real-world problems; and
+comprehensive experimental evaluation across multiple problem domains.
+The core algorithm solves optimization problems of the form
 \(f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)\) using an
 iterative update rule with adaptive step sizes and momentum terms, where
 theoretical analysis establishes convergence guarantees and complexity
@@ -275,16 +279,17 @@ experimental evaluation demonstrates empirical convergence constants
 \(C \approx 1.2\) and \(\rho \approx 0.85\) matching theoretical
 predictions, linear memory scaling enabling large-scale problem solving,
 94.3\% success rate across diverse problem instances, and 23.7\% average
-improvement over state-of-the-art baseline methods. The framework has
-broad applications across machine learning, signal processing,
-computational biology, and climate modeling, with demonstrated
-efficiency improvements translating to significant computational cost
-savings and enabling larger problem sizes in real-world applications.
-Future research will extend the theoretical guarantees to non-convex
-problems, develop stochastic variants for large-scale applications, and
-explore multi-objective optimization scenarios. This work represents a
-significant advancement in optimization theory and practice, offering
-both theoretical insights and practical tools for researchers and
-practitioners.
+improvement over state-of-the-art baseline methods
+\cite{ruder2016, schmidt2017}. The framework has broad applications
+across machine learning \cite{kingma2014}, signal processing
+\cite{beck2009}, computational biology, and climate modeling
+\cite{polak1997}, with demonstrated efficiency improvements translating
+to significant computational cost savings and enabling larger problem
+sizes in real-world applications. Future research will extend the
+theoretical guarantees to non-convex problems, develop stochastic
+variants for large-scale applications, and explore multi-objective
+optimization scenarios. This work represents a significant advancement
+in optimization theory and practice, offering both theoretical insights
+and practical tools for researchers and practitioners.
 
 \end{document}

@@ -98,6 +98,51 @@ check_dependencies() {
   log_info "All dependencies satisfied"
 }
 
+# Detect pandoc version and set compatible options
+# Pandoc 3.1.9+ uses --syntax-highlighting and --embed-resources
+# Older versions use --highlight-style and --self-contained
+detect_pandoc_options() {
+  local pandoc_version
+  pandoc_version=$(pandoc --version | head -n 1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n 1)
+  
+  if [ -z "$pandoc_version" ]; then
+    log_warn "Could not detect pandoc version, using legacy options"
+    PANDOC_HIGHLIGHT_OPT="--highlight-style"
+    PANDOC_EMBED_OPT="--self-contained"
+    return
+  fi
+  
+  # Compare version properly: major.minor.patch
+  # Compare major first, then minor, then patch
+  local major minor patch
+  IFS='.' read -r major minor patch <<< "$pandoc_version"
+  local req_major=3 req_minor=1 req_patch=9
+  
+  # Compare versions: return true if current >= required
+  local use_new_options=0
+  if [ "$major" -gt "$req_major" ]; then
+    use_new_options=1
+  elif [ "$major" -eq "$req_major" ]; then
+    if [ "$minor" -gt "$req_minor" ]; then
+      use_new_options=1
+    elif [ "$minor" -eq "$req_minor" ]; then
+      if [ "$patch" -ge "$req_patch" ]; then
+        use_new_options=1
+      fi
+    fi
+  fi
+  
+  if [ "$use_new_options" -eq 1 ]; then
+    log_info "Detected pandoc $pandoc_version (>=3.1.9) - using modern options: --syntax-highlighting, --embed-resources"
+    PANDOC_HIGHLIGHT_OPT="--syntax-highlighting"
+    PANDOC_EMBED_OPT="--embed-resources"
+  else
+    log_info "Detected pandoc $pandoc_version (<3.1.9) - using legacy options: --highlight-style, --self-contained"
+    PANDOC_HIGHLIGHT_OPT="--highlight-style"
+    PANDOC_EMBED_OPT="--self-contained"
+  fi
+}
+
 # =============================================================================
 # AUTOMATIC CLEANUP
 # =============================================================================
@@ -369,7 +414,8 @@ a:hover {
 EOF
   
   # Create HTML version with proper resource path and LaTeX support
-  # Use new pandoc 3.1.9 features for better image handling
+  # Use version-appropriate pandoc options for better image handling
+  local highlight_opt="${PANDOC_HIGHLIGHT_OPT}=espresso"
   local pandoc_args=(
     -f markdown+implicit_figures+tex_math_dollars+tex_math_single_backslash+raw_tex+autolink_bare_uris
     -s
@@ -379,11 +425,11 @@ EOF
     --toc
     --toc-depth=3
     --number-sections
-    --syntax-highlighting=espresso
+    "$highlight_opt"
     --resource-path="$OUTPUT_DIR"
     --css="$css_file"
     --standalone
-    --embed-resources
+    "$PANDOC_EMBED_OPT"
     --lua-filter="$REPO_ROOT/repo_utilities/convert_latex_images.lua"
     -o "$html_out"
   )
@@ -500,7 +546,7 @@ build_one() {
     -V linkbordercolor=blue
     -V urlbordercolor=blue
     -V citebordercolor=blue
-    --syntax-highlighting=tango
+    "${PANDOC_HIGHLIGHT_OPT}=tango"
     --resource-path="$MARKDOWN_DIR:$OUTPUT_DIR:$LATEX_TEMP_DIR:$REPO_ROOT"
     -H "$preamble_tex"
     -o "$tex_out"
@@ -523,25 +569,30 @@ build_one() {
     
     # First run - generate initial PDF
     log_info "Running first xelatex pass for $base"
-    if xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" 2>&1 | tee "$PDF_DIR/${base}_compile.log" | grep -q "Output written"; then
-      log_info "First xelatex run completed for $base"
+    local compile_log="$PDF_DIR/${base}_compile.log"
+    if xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" > "$compile_log" 2>&1; then
+      if grep -q "Output written" "$compile_log"; then
+        log_info "First xelatex pass completed for $base"
+      else
+        log_warn "First xelatex pass completed but no output detected - check $compile_log"
+      fi
     else
-      log_warn "First xelatex run had issues for $base - check $PDF_DIR/${base}_compile.log"
+      log_warn "First xelatex pass failed for $base - check $compile_log"
     fi
 
     # Run bibtex if bibliography is referenced
     if [ -f "$REPO_ROOT/manuscript/references.bib" ]; then
       log_info "Running bibtex for $base"
-      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "$base" 2>&1 | grep -v "I found no" | grep -v "(There were" | tee -a "$PDF_DIR/${base}_compile.log" || true)
+      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "$base" >> "$compile_log" 2>&1 || true)
     fi
 
     # Second run - resolve references
     log_info "Running second xelatex pass for $base"
-    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" 2>&1 | tee -a "$PDF_DIR/${base}_compile.log" | grep -q "Output written" || true
+    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" >> "$compile_log" 2>&1 || true
 
     # Third run - ensure all references are resolved
     log_info "Running final xelatex pass for $base"
-    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" 2>&1 | tee -a "$PDF_DIR/${base}_compile.log" | grep -q "Output written" || true
+    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/$base.tex" >> "$compile_log" 2>&1 || true
     
     # Clean up auxiliary files
     rm -f "$PDF_DIR/${base}.aux" "$PDF_DIR/${base}.log" "$PDF_DIR/${base}.toc" 2>/dev/null || true
@@ -682,7 +733,7 @@ EOF
     -V linkbordercolor=blue
     -V urlbordercolor=blue
     -V citebordercolor=blue
-    --syntax-highlighting=tango
+    "${PANDOC_HIGHLIGHT_OPT}=tango"
     --resource-path="$MARKDOWN_DIR:$OUTPUT_DIR:$LATEX_TEMP_DIR:$REPO_ROOT"
     -H "$preamble_tex"
     -o "$TEX_DIR/project_combined.tex"
@@ -708,25 +759,30 @@ EOF
     
     # First run - generate initial PDF
     log_info "Running first xelatex pass for combined document"
-    if xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" 2>&1 | tee "$PDF_DIR/project_combined_compile.log" | grep -q "Output written"; then
-      log_info "First xelatex run completed for combined document"
+    local compile_log="$PDF_DIR/project_combined_compile.log"
+    if xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" > "$compile_log" 2>&1; then
+      if grep -q "Output written" "$compile_log"; then
+        log_info "First xelatex pass completed for combined document"
+      else
+        log_warn "First xelatex pass completed but no output detected - check $compile_log"
+      fi
     else
-      log_warn "First xelatex run had issues for combined document - check $PDF_DIR/project_combined_compile.log"
+      log_warn "First xelatex pass failed for combined document - check $compile_log"
     fi
 
     # Run bibtex if bibliography is referenced
     if [ -f "$REPO_ROOT/manuscript/references.bib" ]; then
       log_info "Running bibtex for combined document"
-      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "project_combined" 2>&1 | grep -v "I found no" | grep -v "(There were" | tee -a "$PDF_DIR/project_combined_compile.log" || true)
+      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "project_combined" >> "$compile_log" 2>&1 || true)
     fi
 
     # Second run - resolve references
     log_info "Running second xelatex pass for combined document"
-    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" 2>&1 | tee -a "$PDF_DIR/project_combined_compile.log" | grep -q "Output written" || true
+    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" >> "$compile_log" 2>&1 || true
 
     # Third run - ensure all references are resolved
     log_info "Running final xelatex pass for combined document"
-    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" 2>&1 | tee -a "$PDF_DIR/project_combined_compile.log" | grep -q "Output written" || true
+    xelatex -interaction=batchmode -output-directory="$PDF_DIR" "$TEX_DIR/project_combined.tex" >> "$compile_log" 2>&1 || true
     
     # Clean up auxiliary files
     rm -f "$PDF_DIR/project_combined.aux" "$PDF_DIR/project_combined.log" "$PDF_DIR/project_combined.toc" 2>/dev/null || true
@@ -758,6 +814,7 @@ main() {
   
   # Setup and validation
   check_dependencies
+  detect_pandoc_options
   setup_directories
   
   # Step 1: Run tests with 100% coverage

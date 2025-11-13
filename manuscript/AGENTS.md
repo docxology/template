@@ -21,6 +21,8 @@ The `manuscript/` directory contains research manuscript sections in markdown fo
 | **Supplemental Sections** | | |
 | `S01_supplemental_methods.md` | Extended methodological details | ✅ |
 | `S02_supplemental_results.md` | Additional experimental results | ✅ |
+| `S03_supplemental_analysis.md` | Extended theoretical analysis and complexity | ✅ |
+| `S04_supplemental_applications.md` | Additional application examples | ✅ |
 | **Reference Sections** | | |
 | `98_symbols_glossary.md` | Auto-generated API reference from `src/` | ✅ |
 | `99_references.md` | Bibliography and cited works (always last) | ✅ |

@@ -2,7 +2,7 @@
 
 ## Mathematical Framework
 
-Our approach is based on a novel optimization framework that combines multiple mathematical techniques. The core algorithm can be expressed as follows:
+Our approach is based on a novel optimization framework that combines multiple mathematical techniques, extending classical convex optimization methods \cite{boyd2004, nesterov2018} with modern adaptive strategies \cite{kingma2014, duchi2011}. The core algorithm can be expressed as follows:
 
 \begin{equation}\label{eq:objective}
 f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
@@ -36,7 +36,7 @@ where $x^*$ is the optimal solution, $C > 0$ is a constant, and $\rho \in (0,1)$
 
 ## Implementation Details
 
-The algorithm implementation follows the pseudocode shown in Figure \ref{fig:experimental_setup}. The key insight is that we can decompose the objective function \eqref{eq:objective} into separable components, allowing for efficient parallel computation. This approach builds upon the optimization techniques described in recent literature \cite{optimization2022}.
+The algorithm implementation follows the pseudocode shown in Figure \ref{fig:experimental_setup}. The key insight is that we can decompose the objective function \eqref{eq:objective} into separable components, allowing for efficient parallel computation. This approach builds upon proximal optimization techniques \cite{beck2009, parikh2014} and recent advances in large-scale optimization \cite{schmidt2017, wright2010}.
 
 \begin{figure}[h]
 \centering

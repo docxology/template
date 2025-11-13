@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is an example project that demonstrates the generic repository structure for tested code, manuscript editing, and PDF rendering. The work presents a novel optimization framework with comprehensive theoretical analysis and experimental validation.
+This is an example project that demonstrates the generic repository structure for tested code, manuscript editing, and PDF rendering. The work presents a novel optimization framework with comprehensive theoretical analysis and experimental validation, building upon foundational optimization theory \cite{boyd2004, nesterov2018} and recent advances in adaptive methods \cite{kingma2014, duchi2011}.
 
 ## Project Structure
 

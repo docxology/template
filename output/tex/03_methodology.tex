@@ -2,26 +2,22 @@
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
 \documentclass[
   11pt,
 ]{article}
-\usepackage{xcolor}
-\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \usepackage{amsmath,amssymb}
-\setcounter{secnumdepth}{3}
+\usepackage{lmodern}
+\usepackage{setspace}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math} % this also loads fontspec
+  \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-\usepackage{lmodern}
-\ifPDFTeX\else
-  % xetex/luatex font selection
   \setmainfont[]{Times New Roman}
   \setmonofont[]{Courier New}
 \fi
@@ -31,7 +27,6 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -42,9 +37,22 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{3}
 % Essential packages for academic documents
 \usepackage{amsmath,amssymb}          % Mathematical symbols and environments
 \usepackage{amsfonts}                 % Additional math fonts
@@ -229,20 +237,13 @@
 
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
-\usepackage{bookmark}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same}
-\hypersetup{
-  colorlinks=true,
-  linkcolor={blue},
-  filecolor={blue},
-  citecolor={blue},
-  urlcolor={blue},
-  pdfcreator={LaTeX via pandoc}}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
 \title{03 methodology}
 \author{ORCID: 0000-0000-0000-0000\\ Email: author@example.com}
-\date{November 03, 2025}
+\date{November 13, 2025}
 
 \begin{document}
 \maketitle
@@ -253,13 +254,17 @@
 \tableofcontents
 }
 \setstretch{1.2}
-\section{Methodology}\label{sec:methodology}
+\hypertarget{sec:methodology}{%
+\section{Methodology}\label{sec:methodology}}
 
-\subsection{Mathematical Framework}\label{mathematical-framework}
+\hypertarget{mathematical-framework}{%
+\subsection{Mathematical Framework}\label{mathematical-framework}}
 
 Our approach is based on a novel optimization framework that combines
-multiple mathematical techniques. The core algorithm can be expressed as
-follows:
+multiple mathematical techniques, extending classical convex
+optimization methods \cite{boyd2004, nesterov2018} with modern adaptive
+strategies \cite{kingma2014, duchi2011}. The core algorithm can be
+expressed as follows:
 
 \begin{equation}\label{eq:objective}
 f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
@@ -278,7 +283,8 @@ The optimization problem we solve is:
 where \(\mathcal{X}\) is the feasible set and \(g_i(x)\) are constraint
 functions.
 
-\subsection{Algorithm Description}\label{algorithm-description}
+\hypertarget{algorithm-description}{%
+\subsection{Algorithm Description}\label{algorithm-description}}
 
 Our iterative algorithm updates the solution according to:
 
@@ -296,14 +302,15 @@ coefficient. The convergence rate is characterized by:
 where \(x^*\) is the optimal solution, \(C > 0\) is a constant, and
 \(\rho \in (0,1)\) is the convergence rate.
 
-\subsection{Implementation Details}\label{implementation-details}
+\hypertarget{implementation-details}{%
+\subsection{Implementation Details}\label{implementation-details}}
 
 The algorithm implementation follows the pseudocode shown in Figure
 \ref{fig:experimental_setup}. The key insight is that we can decompose
 the objective function \eqref{eq:objective} into separable components,
 allowing for efficient parallel computation. This approach builds upon
-the optimization techniques described in recent literature
-\cite{optimization2022}.
+proximal optimization techniques \cite{beck2009, parikh2014} and recent
+advances in large-scale optimization \cite{schmidt2017, wright2010}.
 
 \begin{figure}[h]
 \centering
@@ -321,7 +328,8 @@ For numerical stability, we use the following adaptive step size rule:
 This ensures that the algorithm converges even when the gradient varies
 significantly across iterations.
 
-\subsection{Performance Analysis}\label{performance-analysis}
+\hypertarget{performance-analysis}{%
+\subsection{Performance Analysis}\label{performance-analysis}}
 
 The computational complexity of our approach is \(O(n \log n)\) per
 iteration, where \(n\) is the problem dimension. This is achieved
@@ -344,7 +352,8 @@ M(n) = O(n) + O(\log n) \cdot \text{number of iterations}
 This makes our method suitable for large-scale problems where memory is
 a constraint.
 
-\subsection{Validation Framework}\label{validation-framework}
+\hypertarget{validation-framework}{%
+\subsection{Validation Framework}\label{validation-framework}}
 
 To validate our theoretical results, we use the experimental setup
 illustrated in Figure \ref{fig:experimental_setup}. The performance

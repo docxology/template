@@ -37,7 +37,7 @@ Medium Non-convex & 1000 & Non-convex & 50 & -0.047 & 3.353 & -3.422 \\
 
 ### Convergence Analysis
 
-Figure \ref{fig:convergence_plot} shows the convergence behavior of our algorithm compared to baseline methods. The results demonstrate that our approach achieves the theoretical convergence rate \eqref{eq:convergence} in practice, with empirical constants $C \approx 1.2$ and $\rho \approx 0.85$.
+Figure \ref{fig:convergence_plot} shows the convergence behavior of our algorithm compared to baseline methods \cite{ruder2016, kingma2014, schmidt2017}. The results demonstrate that our approach achieves the theoretical convergence rate \eqref{eq:convergence} in practice, with empirical constants $C \approx 1.2$ and $\rho \approx 0.85$, matching predictions from convex optimization theory \cite{nesterov2018}.
 
 \begin{figure}[h]
 \centering
@@ -66,7 +66,7 @@ Our implementation achieves the theoretical $O(n \log n)$ complexity per iterati
 \label{fig:scalability_analysis}
 \end{figure}
 
-Table \ref{tab:performance_comparison} provides a detailed comparison with state-of-the-art methods across different problem sizes.
+Table \ref{tab:performance_comparison} provides a detailed comparison with state-of-the-art methods \cite{kingma2014, ruder2016, schmidt2017, reddi2018} across different problem sizes.
 
 \begin{table}[h]
 \centering
@@ -150,4 +150,4 @@ While our approach shows promising results, several limitations remain:
 2. **Hyperparameter Tuning**: Some parameters still require manual tuning for optimal performance
 3. **Theoretical Guarantees**: Convergence guarantees are currently limited to convex problems
 
-Future work will address these limitations and extend the framework to broader problem classes.
+Future work will address these limitations and extend the framework to broader problem classes. Extended analysis and additional application examples are provided in Sections \ref{sec:supplemental_analysis} and \ref{sec:supplemental_applications}.

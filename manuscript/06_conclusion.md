@@ -41,10 +41,10 @@ Our method demonstrates significant improvements over state-of-the-art approache
 
 The optimization framework developed here has applications across multiple domains:
 
-1. **Machine Learning**: Efficient training of large-scale neural networks
-2. **Signal Processing**: Sparse signal reconstruction and denoising
+1. **Machine Learning**: Efficient training of large-scale neural networks \cite{kingma2014, wright2010}
+2. **Signal Processing**: Sparse signal reconstruction and denoising \cite{beck2009}
 3. **Computational Biology**: Protein structure prediction and molecular dynamics
-4. **Climate Modeling**: Parameter estimation in complex environmental systems
+4. **Climate Modeling**: Parameter estimation in complex environmental systems \cite{polak1997}
 
 ### Industry Relevance
 
@@ -68,8 +68,8 @@ Several promising directions for immediate future work emerged from our analysis
 
 The theoretical foundation established here opens several long-term research directions:
 
-1. **Theoretical Advances**: Improving complexity bounds through more sophisticated analysis
-2. **Algorithmic Innovation**: Developing variants for specific application domains
+1. **Theoretical Advances**: Improving complexity bounds through more sophisticated analysis (see Section \ref{sec:supplemental_analysis})
+2. **Algorithmic Innovation**: Developing variants for specific application domains (see Section \ref{sec:supplemental_applications})
 3. **Software Ecosystem**: Building comprehensive optimization libraries
 
 ## Final Remarks

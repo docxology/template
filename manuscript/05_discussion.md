@@ -24,9 +24,9 @@ The memory scaling \eqref{eq:memory} is particularly important for large-scale a
 
 We compared our approach with several state-of-the-art optimization methods:
 
-1. **Gradient Descent**: Standard first-order method with fixed step size
-2. **Adam**: Adaptive moment estimation with momentum
-3. **L-BFGS**: Limited-memory quasi-Newton method
+1. **Gradient Descent**: Standard first-order method with fixed step size \cite{ruder2016}
+2. **Adam**: Adaptive moment estimation with momentum \cite{kingma2014}
+3. **L-BFGS**: Limited-memory quasi-Newton method \cite{schmidt2017}
 4. **Our Method**: Novel approach combining regularization and adaptive step sizes
 
 The results, summarized in Table \ref{tab:performance_comparison}, demonstrate that our method achieves superior performance across multiple metrics.
@@ -87,10 +87,10 @@ where $\epsilon$ is the desired accuracy. This bound could potentially be improv
 
 Our optimization framework has applications across multiple scientific domains:
 
-1. **Machine Learning**: Training large-scale neural networks
-2. **Signal Processing**: Sparse signal reconstruction
+1. **Machine Learning**: Training large-scale neural networks \cite{kingma2014, wright2010}
+2. **Signal Processing**: Sparse signal reconstruction \cite{beck2009, parikh2014}
 3. **Computational Biology**: Protein structure prediction
-4. **Climate Modeling**: Parameter estimation in complex systems
+4. **Climate Modeling**: Parameter estimation in complex systems \cite{polak1997}
 
 ### Industry Relevance
 
@@ -102,6 +102,6 @@ The efficiency improvements demonstrated in our experiments have direct implicat
 
 ## Conclusion
 
-The experimental validation of our theoretical framework demonstrates that the novel optimization approach achieves both theoretical guarantees and practical performance. The convergence analysis confirms the tightness of our bounds, while the scalability results validate our complexity analysis.
+The experimental validation of our theoretical framework demonstrates that the novel optimization approach achieves both theoretical guarantees and practical performance. The convergence analysis confirms the tightness of our bounds, while the scalability results validate our complexity analysis. Extended theoretical analysis and additional application examples are provided in Sections \ref{sec:supplemental_analysis} and \ref{sec:supplemental_applications}.
 
 Future work will focus on extending the theoretical guarantees to broader problem classes and developing more sophisticated variants for specific application domains. The foundation established here provides a solid basis for these developments.
