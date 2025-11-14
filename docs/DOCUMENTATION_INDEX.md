@@ -46,6 +46,11 @@ This index provides a comprehensive overview of all documentation files in the R
 - **[`docs/TEST_IMPROVEMENTS_SUMMARY.md`](TEST_IMPROVEMENTS_SUMMARY.md)** - Test suite enhancements
 - **[`scripts/README.md`](../scripts/README.md)** - Thin orchestrator pattern guide
 
+### **Scientific Computing Guides**
+- **[`docs/SCIENTIFIC_SIMULATION_GUIDE.md`](SCIENTIFIC_SIMULATION_GUIDE.md)** - Scientific simulation and analysis system guide
+- **[`docs/VISUALIZATION_GUIDE.md`](VISUALIZATION_GUIDE.md)** - Visualization system for publication-quality figures
+- **[`docs/IMAGE_MANAGEMENT.md`](IMAGE_MANAGEMENT.md)** - Image insertion, captioning, and cross-referencing guide
+
 ## 🔧 **Development & Maintenance**
 
 ### **Contributing**
@@ -117,6 +122,7 @@ docs/
 ├── GETTING_STARTED.md                  # Getting started (Levels 1-3)
 ├── GLOSSARY.md                         # Comprehensive glossary
 ├── HOW_TO_USE.md                       # Complete usage guide (navigation hub)
+├── IMAGE_MANAGEMENT.md                 # Image insertion and cross-referencing guide
 ├── INTERMEDIATE_USAGE.md               # Intermediate usage (Levels 4-6)
 ├── MANUSCRIPT_NUMBERING_SYSTEM.md      # Section numbering guide
 ├── MARKDOWN_TEMPLATE_GUIDE.md          # Markdown guide
@@ -127,12 +133,14 @@ docs/
 ├── QUICK_START_CHEATSHEET.md           # Essential commands reference
 ├── README.md                           # Directory quick start
 ├── ROADMAP.md                          # Development roadmap
+├── SCIENTIFIC_SIMULATION_GUIDE.md      # Scientific simulation and analysis guide
 ├── SECURITY.md                         # Security policy
 ├── TEMPLATE_DESCRIPTION.md             # Template overview
 ├── TEST_IMPROVEMENTS_SUMMARY.md        # Test suite documentation
 ├── THIN_ORCHESTRATOR_SUMMARY.md        # Pattern implementation
 ├── TROUBLESHOOTING_GUIDE.md            # Comprehensive troubleshooting
 ├── VERSION_CONTROL.md                  # Git workflows and best practices
+├── VISUALIZATION_GUIDE.md              # Visualization system guide
 └── WORKFLOW.md                         # Development workflow
 ```
 

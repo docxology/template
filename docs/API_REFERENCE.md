@@ -13,6 +13,26 @@ This document provides comprehensive API reference for all public functions and 
 - `glossary_gen.py` - API documentation generation
 - `pdf_validator.py` - PDF rendering validation
 
+### Data Processing Modules
+- `data_generator.py` - Synthetic data generation with configurable distributions
+- `data_processing.py` - Data cleaning, preprocessing, normalization, outlier detection
+- `statistics.py` - Descriptive statistics, hypothesis testing, correlation analysis
+- `metrics.py` - Performance metrics, convergence metrics, quality metrics
+- `validation.py` - Result validation, reproducibility verification, anomaly detection
+
+### Visualization & Figure Management Modules
+- `visualization.py` - Publication-quality figure generation with consistent styling
+- `plots.py` - Plot type implementations (line, scatter, bar, heatmap, contour)
+- `figure_manager.py` - Automatic figure numbering, caption generation, cross-referencing
+- `image_manager.py` - Automatic image insertion into markdown, caption management
+- `markdown_integration.py` - LaTeX figure block generation, section detection, reference insertion
+
+### Simulation & Analysis Modules
+- `simulation.py` - Core simulation framework with reproducibility and checkpointing
+- `parameters.py` - Parameter set management, validation, sweeps, serialization
+- `performance.py` - Convergence analysis, scalability metrics, benchmark comparisons
+- `reporting.py` - Automated report generation from simulation results
+
 ### Advanced Modules
 - `quality_checker.py` - Document quality analysis
 - `reproducibility.py` - Environment tracking and reproducibility
@@ -799,6 +819,129 @@ Verify build reproducibility by running build multiple times.
 from build_verifier import verify_build_reproducibility
 result = verify_build_reproducibility(["./build.sh"], {"output.pdf": "hash"})
 ```
+
+---
+
+## Module: data_generator
+
+Synthetic data generation with configurable distributions.
+
+### Functions
+
+#### `generate_synthetic_data(n_samples: int, n_features: int = 1, distribution: str = "normal", seed: Optional[int] = None, **kwargs) -> np.ndarray`
+
+Generate synthetic data with specified distribution.
+
+**Parameters:**
+- `n_samples` (int): Number of samples
+- `n_features` (int): Number of features (default: 1)
+- `distribution` (str): Distribution type (normal, uniform, exponential, poisson, beta)
+- `seed` (Optional[int]): Random seed
+- `**kwargs`: Distribution-specific parameters
+
+**Returns:**
+- `np.ndarray`: Array of generated data
+
+**Example:**
+```python
+from data_generator import generate_synthetic_data
+data = generate_synthetic_data(100, n_features=2, distribution="normal", mean=0.0, std=1.0)
+```
+
+---
+
+## Module: statistics
+
+Statistical analysis including descriptive statistics, hypothesis testing, and correlation analysis.
+
+### Functions
+
+#### `calculate_descriptive_stats(data: np.ndarray) -> DescriptiveStats`
+
+Calculate descriptive statistics for a dataset.
+
+**Returns:**
+- `DescriptiveStats`: Object with mean, std, median, min, max, quartiles, count
+
+**Example:**
+```python
+from statistics import calculate_descriptive_stats
+stats = calculate_descriptive_stats(data)
+print(f"Mean: {stats.mean}, Std: {stats.std}")
+```
+
+---
+
+## Module: visualization
+
+Publication-quality figure generation with consistent styling.
+
+### Classes
+
+#### `VisualizationEngine`
+
+Engine for generating publication-quality figures.
+
+**Methods:**
+- `create_figure(nrows, ncols, figsize, **kwargs)` - Create figure with subplots
+- `save_figure(figure, filename, formats, dpi)` - Save figure in multiple formats
+- `apply_publication_style(ax, title, xlabel, ylabel, grid, legend)` - Apply styling
+
+**Example:**
+```python
+from visualization import VisualizationEngine
+engine = VisualizationEngine(style="publication", output_dir="output/figures")
+fig, ax = engine.create_figure()
+engine.save_figure(fig, "my_figure", formats=["png", "pdf"])
+```
+
+---
+
+## Module: figure_manager
+
+Automatic figure numbering, caption generation, and cross-referencing.
+
+### Classes
+
+#### `FigureManager`
+
+Manages figures with automatic numbering and cross-referencing.
+
+**Methods:**
+- `register_figure(filename, caption, label, section, ...)` - Register a new figure
+- `get_figure(label)` - Get figure metadata by label
+- `generate_latex_figure_block(label)` - Generate LaTeX figure block
+- `generate_reference(label)` - Generate LaTeX reference
+
+**Example:**
+```python
+from figure_manager import FigureManager
+manager = FigureManager()
+fig_meta = manager.register_figure("convergence.png", "Convergence analysis", "fig:convergence")
+latex_block = manager.generate_latex_figure_block("fig:convergence")
+```
+
+---
+
+## Additional Modules
+
+For complete API documentation of all modules, see:
+- **[Source Code Documentation](../src/AGENTS.md)** - Complete module descriptions and function lists
+- **[Scientific Simulation Guide](SCIENTIFIC_SIMULATION_GUIDE.md)** - Simulation and analysis modules
+- **[Visualization Guide](VISUALIZATION_GUIDE.md)** - Visualization and figure management
+- **[Image Management Guide](IMAGE_MANAGEMENT.md)** - Image insertion and cross-referencing
+
+**Key Modules:**
+- `data_processing.py` - Data cleaning, normalization, outlier detection
+- `metrics.py` - Performance metrics, convergence metrics, quality metrics
+- `validation.py` - Result validation framework
+- `simulation.py` - Core simulation framework
+- `parameters.py` - Parameter management and sweeps
+- `performance.py` - Convergence and scalability analysis
+- `reporting.py` - Automated report generation
+- `plots.py` - Plot type implementations
+- `image_manager.py` - Image insertion into markdown
+- `markdown_integration.py` - Markdown integration utilities
 
 ---
 

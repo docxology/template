@@ -102,11 +102,42 @@ def scan_for_issues(text: str) -> Dict[str, int]:
     return issues
 
 
+def decode_pdf_hex_strings(text: str) -> str:
+    """
+    Decode PDF hex-encoded strings (e.g., /x45/x78 -> Ex) to readable text.
+    
+    PDFs sometimes store text as hex sequences like /x45/x78/x61/x6D/x70/x6C/x65
+    which should be decoded to "Example".
+    
+    Args:
+        text: Text potentially containing hex-encoded strings
+        
+    Returns:
+        Text with hex sequences decoded to readable characters
+    """
+    if not text:
+        return ""
+    
+    # Pattern: /x followed by exactly 2 hex digits
+    def decode_hex_match(match):
+        hex_code = match.group(1)
+        try:
+            return chr(int(hex_code, 16))
+        except (ValueError, OverflowError):
+            return match.group(0)  # Return original if decode fails
+    
+    # Replace /xHH patterns with decoded characters
+    decoded = re.sub(r'/x([0-9a-fA-F]{2})', decode_hex_match, text)
+    
+    return decoded
+
+
 def extract_first_n_words(text: str, n: int = 200) -> str:
     """
     Extract the first N words from text, preserving punctuation.
     
     Handles multiple whitespace and newlines gracefully.
+    Also decodes PDF hex-encoded strings for better readability.
     
     Args:
         text: Input text
@@ -118,8 +149,11 @@ def extract_first_n_words(text: str, n: int = 200) -> str:
     if not text:
         return ""
     
+    # Decode hex-encoded strings first
+    decoded_text = decode_pdf_hex_strings(text)
+    
     # Split on whitespace and filter empty strings
-    words = text.split()
+    words = decoded_text.split()
     
     # Take first n words
     selected_words = words[:n]

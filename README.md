@@ -725,6 +725,14 @@ flowchart TD
 - **[src/scientific_dev.py](src/scientific_dev.py)** - Scientific computing best practices
 - **[src/build_verifier.py](src/build_verifier.py)** - Build process validation and verification
 
+### Scientific Computing Modules
+- **[docs/SCIENTIFIC_SIMULATION_GUIDE.md](docs/SCIENTIFIC_SIMULATION_GUIDE.md)** - Scientific simulation and analysis system guide
+- **[docs/VISUALIZATION_GUIDE.md](docs/VISUALIZATION_GUIDE.md)** - Visualization system for publication-quality figures
+- **[docs/IMAGE_MANAGEMENT.md](docs/IMAGE_MANAGEMENT.md)** - Image insertion, captioning, and cross-referencing guide
+- **Data Processing**: `data_generator.py`, `data_processing.py`, `statistics.py`, `metrics.py`, `validation.py`
+- **Visualization**: `visualization.py`, `plots.py`, `figure_manager.py`, `image_manager.py`, `markdown_integration.py`
+- **Simulation**: `simulation.py`, `parameters.py`, `performance.py`, `reporting.py`
+
 ### Operational Guides
 - **[docs/DEPENDENCY_MANAGEMENT.md](docs/DEPENDENCY_MANAGEMENT.md)** - Complete guide for uv package manager
 - **[docs/PERFORMANCE_OPTIMIZATION.md](docs/PERFORMANCE_OPTIMIZATION.md)** - Build time optimization and caching strategies

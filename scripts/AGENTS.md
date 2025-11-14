@@ -86,6 +86,69 @@ The `scripts/` directory contains **thin orchestrators** that demonstrate proper
 
 **Key Pattern**: Shows how to generate multiple related figures using the same `src/` methods.
 
+### analysis_pipeline.py
+**Purpose**: Statistical analysis workflow demonstrating comprehensive data analysis
+
+**src/ Methods Used**:
+- `generate_classification_dataset()`, `generate_synthetic_data()` - Data generation
+- `normalize_data()`, `detect_outliers()`, `clean_data()` - Data processing
+- `calculate_accuracy()`, `calculate_precision_recall_f1()`, `calculate_all_metrics()` - Metrics
+- `analyze_scalability()`, `benchmark_comparison()` - Performance analysis
+- `calculate_descriptive_stats()`, `calculate_correlation()`, `calculate_confidence_interval()`, `anova_test()` - Statistics
+- `ValidationFramework` - Result validation
+- `plot_comparison()`, `plot_scatter()`, `plot_bar()` - Visualization
+- `FigureManager`, `ReportGenerator` - Figure and report management
+
+**What It Generates**:
+- `output/figures/analysis_comparison.png` - Statistical comparison plots
+- `output/figures/scatter_correlation.png` - Correlation scatter plots
+- `output/figures/statistical_comparison.png` - Statistical test results
+- `output/reports/analysis_report.md` - Analysis report
+
+**Key Pattern**: Demonstrates complete workflow from data generation through analysis to reporting.
+
+### scientific_simulation.py
+**Purpose**: Simulation framework demonstration with parameter management
+
+**src/ Methods Used**:
+- `generate_time_series()`, `generate_synthetic_data()` - Data generation
+- `ParameterSet`, `ParameterSweep` - Parameter management
+- `SimpleSimulation`, `SimulationBase` - Simulation framework
+- `analyze_convergence()`, `analyze_scalability()` - Performance analysis
+- `calculate_descriptive_stats()` - Statistical analysis
+- `ValidationFramework` - Result validation
+- `ReportGenerator` - Report generation
+- `FigureManager` - Figure management
+
+**What It Generates**:
+- `output/simulations/simulation_results.json` - Simulation results
+- `output/simulations/simulation_state.npz` - Simulation state
+- `output/figures/scientific_simulation_timeseries.png` - Time series visualization
+- `output/reports/simulation_report.md` - Simulation report
+
+**Key Pattern**: Shows how to set up and run simulations with proper parameter management and result tracking.
+
+### generate_scientific_figures.py
+**Purpose**: Automated scientific figure generation with markdown integration
+
+**src/ Methods Used**:
+- `generate_time_series()`, `generate_synthetic_data()` - Data generation
+- `FigureManager` - Figure management
+- `ImageManager` - Image insertion
+- `MarkdownIntegration` - Markdown integration
+- `analyze_convergence()` - Performance analysis
+- `plot_line()`, `plot_scatter()`, `plot_bar()`, `plot_convergence()`, `plot_comparison()` - Plotting
+- `calculate_descriptive_stats()` - Statistical analysis
+- `VisualizationEngine` - Visualization engine
+
+**What It Generates**:
+- `output/figures/convergence_analysis.png` - Convergence analysis figure
+- `output/figures/time_series_analysis.png` - Time series analysis
+- Automatically inserts figures into markdown files with captions
+- Updates cross-references in manuscript
+
+**Key Pattern**: Demonstrates automated figure generation with automatic markdown integration and cross-referencing.
+
 ## Script Structure
 
 ### Standard Template

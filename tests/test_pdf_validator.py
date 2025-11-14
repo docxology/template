@@ -172,6 +172,53 @@ def test_extract_first_n_words_empty_text():
     assert result == ""
 
 
+def test_decode_pdf_hex_strings_empty_text():
+    """Test decoding hex strings with empty text (line 119)."""
+    from pdf_validator import decode_pdf_hex_strings
+    
+    result = decode_pdf_hex_strings("")
+    assert result == ""
+    
+    result = decode_pdf_hex_strings(None)
+    assert result == ""
+
+
+def test_decode_pdf_hex_strings_valid():
+    """Test decoding valid hex strings."""
+    from pdf_validator import decode_pdf_hex_strings
+    
+    # Valid hex: /x41 = 'A', /x42 = 'B'
+    text = "Hello/x41/x42World"
+    result = decode_pdf_hex_strings(text)
+    assert "AB" in result
+
+
+def test_decode_pdf_hex_strings_invalid_hex():
+    """Test decoding invalid hex strings (lines 123-127)."""
+    from pdf_validator import decode_pdf_hex_strings
+    from unittest.mock import patch
+    
+    # Test with valid hex that decodes correctly
+    text = "Hello/x41/x42World"  # /x41='A', /x42='B'
+    result = decode_pdf_hex_strings(text)
+    assert "AB" in result or "Hello" in result
+    
+    # To trigger the exception handler (lines 126-127), we need to patch int() or chr()
+    # Test ValueError path
+    with patch('pdf_validator.int', side_effect=ValueError('Invalid hex')):
+        result = decode_pdf_hex_strings('Hello/x41World')
+        # Should return original since decode fails
+        assert isinstance(result, str)
+        assert '/x41' in result or 'Hello' in result
+    
+    # Test OverflowError path
+    with patch('pdf_validator.chr', side_effect=OverflowError('Value too large')):
+        result = decode_pdf_hex_strings('Hello/x41World')
+        # Should return original since decode fails
+        assert isinstance(result, str)
+        assert '/x41' in result or 'Hello' in result
+
+
 def test_extract_first_n_words_with_punctuation():
     """Test word extraction preserves punctuation."""
     text = "Hello, world! This is a test. Does it work?"

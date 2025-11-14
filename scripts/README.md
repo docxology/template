@@ -89,6 +89,58 @@ def generate_figure():
 - Generates research-quality figures with statistics
 - Demonstrates error handling for missing imports
 
+### 3. `analysis_pipeline.py` - Statistical Analysis Workflow
+**Purpose**: Demonstrates complete statistical analysis workflow
+**src/ Usage**:
+- `generate_classification_dataset()`, `generate_synthetic_data()` - Data generation
+- `normalize_data()`, `detect_outliers()`, `clean_data()` - Data processing
+- `calculate_accuracy()`, `calculate_precision_recall_f1()`, `calculate_all_metrics()` - Metrics
+- `analyze_scalability()`, `benchmark_comparison()` - Performance analysis
+- `calculate_descriptive_stats()`, `calculate_correlation()`, `anova_test()` - Statistics
+- `ValidationFramework` - Result validation
+- `plot_comparison()`, `plot_scatter()`, `plot_bar()` - Visualization
+- `FigureManager`, `ReportGenerator` - Figure and report management
+
+**What it does**:
+- Demonstrates complete workflow from data generation through analysis to reporting
+- Generates statistical comparison plots and analysis reports
+- Shows integration of multiple src/ modules in a single workflow
+
+### 4. `scientific_simulation.py` - Simulation Framework
+**Purpose**: Demonstrates simulation framework with parameter management
+**src/ Usage**:
+- `generate_time_series()`, `generate_synthetic_data()` - Data generation
+- `ParameterSet`, `ParameterSweep` - Parameter management
+- `SimpleSimulation`, `SimulationBase` - Simulation framework
+- `analyze_convergence()`, `analyze_scalability()` - Performance analysis
+- `calculate_descriptive_stats()` - Statistical analysis
+- `ValidationFramework` - Result validation
+- `ReportGenerator` - Report generation
+- `FigureManager` - Figure management
+
+**What it does**:
+- Shows how to set up and run simulations with proper parameter management
+- Generates simulation results, state files, and reports
+- Demonstrates result tracking and validation
+
+### 5. `generate_scientific_figures.py` - Automated Figure Generation
+**Purpose**: Demonstrates automated figure generation with markdown integration
+**src/ Usage**:
+- `generate_time_series()`, `generate_synthetic_data()` - Data generation
+- `FigureManager` - Figure management
+- `ImageManager` - Image insertion
+- `MarkdownIntegration` - Markdown integration
+- `analyze_convergence()` - Performance analysis
+- `plot_line()`, `plot_scatter()`, `plot_bar()`, `plot_convergence()`, `plot_comparison()` - Plotting
+- `calculate_descriptive_stats()` - Statistical analysis
+- `VisualizationEngine` - Visualization engine
+
+**What it does**:
+- Generates scientific figures automatically
+- Inserts figures into markdown files with captions
+- Updates cross-references in manuscript
+- Demonstrates automated workflow integration
+
 ## Integration Examples
 
 ### Data Processing with src/ Methods

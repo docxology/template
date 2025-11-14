@@ -151,3 +151,35 @@ While our approach shows promising results, several limitations remain:
 3. **Theoretical Guarantees**: Convergence guarantees are currently limited to convex problems
 
 Future work will address these limitations and extend the framework to broader problem classes. Extended analysis and additional application examples are provided in Sections \ref{sec:supplemental_analysis} and \ref{sec:supplemental_applications}.
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../output/figures/convergence_analysis.png}
+\caption{Convergence behavior of the optimization algorithm showing exponential decay to target value}
+\label{fig:convergence_analysis}
+\end{figure}
+
+ See Figure \ref{fig:convergence_analysis}.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../output/figures/time_series_analysis.png}
+\caption{Time series data showing sinusoidal trend with added noise}
+\label{fig:time_series_analysis}
+\end{figure}
+
+ See Figure \ref{fig:time_series_analysis}.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../output/figures/statistical_comparison.png}
+\caption{Comparison of different methods on accuracy metric}
+\label{fig:statistical_comparison}
+\end{figure}
+
+ See Figure \ref{fig:statistical_comparison}.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../output/figures/scatter_correlation.png}
+\caption{Scatter plot showing correlation between two variables}
+\label{fig:scatter_correlation}
+\end{figure}
