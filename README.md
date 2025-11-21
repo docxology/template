@@ -2,7 +2,7 @@
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/BUILD_SYSTEM.md)
 [![Test Coverage](https://img.shields.io/badge/coverage-81.90%25-green)](docs/BUILD_SYSTEM.md)
-[![Tests](https://img.shields.io/badge/tests-320%2F322%20passing-brightgreen)](docs/BUILD_SYSTEM.md)
+[![Tests](https://img.shields.io/badge/tests-320%2F322%20passing%20(825%20assertions)-brightgreen)](docs/BUILD_SYSTEM.md)
 [![Documentation](https://img.shields.io/badge/docs-42%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
 
@@ -186,7 +186,7 @@ pytest tests/ --cov=src --cov-report=html
 ```mermaid
 graph LR
     subgraph Status["✅ System Status"]
-        TESTS[Tests: 320/322 passing<br/>99.4% success rate]
+        TESTS[Tests: 320/322 cases passing<br/>825+ assertions<br/>99.4% success rate]
         COV[Coverage: 81.90%<br/>Exceeds 70% requirement]
         BUILD[Build Time: 75s<br/>Optimal performance]
         PDFS[PDFs: 13/13 generated<br/>All sections complete]
@@ -216,7 +216,7 @@ graph LR
 **Key Metrics:**
 - **Test Coverage**: 81.90% (exceeds 70% requirement) - [Details](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 - **Build Time**: 75 seconds (optimal) - [Performance Analysis](docs/BUILD_SYSTEM.md#stage-breakdown)
-- **Tests Passing**: 320 out of 322 (99.4%) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+- **Tests Passing**: 320 out of 322 test cases with 825+ assertions (99.4%) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 - **PDFs Generated**: 13 (all sections) - [Output Summary](docs/BUILD_SYSTEM.md#generated-files)
 - **Documentation**: 42+ comprehensive files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 
@@ -688,7 +688,6 @@ flowchart TD
 - **[docs/THIN_ORCHESTRATOR_SUMMARY.md](docs/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
 - **[docs/MARKDOWN_TEMPLATE_GUIDE.md](docs/MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown writing and cross-referencing guide
 - **[docs/MANUSCRIPT_NUMBERING_SYSTEM.md](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization system
-- ~~**[docs/MARKDOWN_DIRECTORY_ELIMINATION.md](docs/archive/MARKDOWN_DIRECTORY_ELIMINATION.md)**~~ - Historical: Simplified build structure (archived)
 
 ### Community & Contribution
 - **[docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)** - Contribution guidelines and process
@@ -700,6 +699,8 @@ flowchart TD
 - **[docs/COPYPASTA.md](docs/COPYPASTA.md)** - Shareable content for promoting the template
 - **[manuscript/preamble.md](manuscript/preamble.md)** - LaTeX preamble and styling configuration
 - **[docs/TEST_IMPROVEMENTS_SUMMARY.md](docs/TEST_IMPROVEMENTS_SUMMARY.md)** - Testing enhancements and standards
+- **[output/AGENTS.md](output/AGENTS.md)** - Generated outputs documentation
+- **[output/README.md](output/README.md)** - Generated outputs quick reference
 
 ### Directory-Specific Documentation
 - **[src/AGENTS.md](src/AGENTS.md)** - Source code module documentation
@@ -714,6 +715,8 @@ flowchart TD
 - **[docs/README.md](docs/README.md)** - Documentation quick reference
 - **[repo_utilities/AGENTS.md](repo_utilities/AGENTS.md)** - Build utilities documentation
 - **[repo_utilities/README.md](repo_utilities/README.md)** - Utilities quick reference
+- **[output/AGENTS.md](output/AGENTS.md)** - Generated outputs documentation
+- **[output/README.md](output/README.md)** - Generated outputs quick reference
 
 ### Advanced Modules
 - **[docs/ADVANCED_MODULES_GUIDE.md](docs/ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all 6 advanced modules
@@ -745,7 +748,6 @@ flowchart TD
 - **[docs/MULTI_PROJECT_MANAGEMENT.md](docs/MULTI_PROJECT_MANAGEMENT.md)** - Managing multiple projects using the template
 - **[docs/MIGRATION_GUIDE.md](docs/MIGRATION_GUIDE.md)** - Step-by-step migration from other templates
 - **[docs/BACKUP_RECOVERY.md](docs/BACKUP_RECOVERY.md)** - Backup strategies and recovery procedures
-- ~~**[CHANGELOG.md](CHANGELOG.md)**~~ - Changelog (to be created)
 
 ## 🤝 Contributing
 
@@ -762,7 +764,7 @@ We welcome contributions! To contribute:
 **Recent Improvements:**
 - Build system optimizations - [Details](docs/BUILD_SYSTEM.md#historical-fixes)
 - Test suite enhancements - [Details](docs/TEST_IMPROVEMENTS_SUMMARY.md)
-- Simplified directory structure - ~~[Historical](docs/archive/MARKDOWN_DIRECTORY_ELIMINATION.md)~~ (archived)
+- Simplified directory structure with markdown/ elimination
 
 ## 📄 License
 

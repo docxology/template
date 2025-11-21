@@ -65,6 +65,19 @@ Scripts **never** implement algorithms - they import and use `src/` methods.
 | `publishing.py` | Academic publishing workflow assistance | 872 | 81% |
 | `scientific_dev.py` | Scientific computing best practices | 978 | 86% |
 
+## Directory Files
+
+### .gitkeep File
+
+The `.gitkeep` file in `src/` is a placeholder used by git to track empty directories. It serves a historical purpose:
+
+- **Purpose**: Ensures `src/` directory is tracked in git even when initially empty
+- **History**: Created during initial template setup before any modules existed
+- **Current Status**: Directory now contains 23+ Python modules
+- **Can be safely deleted**: No longer needed since directory has content
+
+The `.gitkeep` file has no effect on the build system or code execution.
+
 ## Requirements
 
 ### Test Coverage

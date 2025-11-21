@@ -18,7 +18,7 @@ This document consolidates all build system information: current status, perform
 
 | Metric | Result | Status |
 |--------|--------|--------|
-| **Tests Passed** | 320/322 | ✅ Perfect (99.4%) |
+| **Tests Passed** | 320/322 (825 assertions) | ✅ Perfect (99.4%) |
 | **Test Coverage** | 81.90% | ✅ Exceeds 70% requirement |
 | **Scripts Executed** | 2/2 | ✅ All successful |
 | **Figures Generated** | 10/10 | ✅ Complete |

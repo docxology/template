@@ -11,7 +11,7 @@ The project follows a standardized structure:
 - **`src/`** - Source code with comprehensive test coverage
 - **`tests/`** - Test files ensuring 100% coverage
 - **`scripts/`** - Project-specific scripts for generating figures and data
-- **`markdown/`** - Source markdown files for the manuscript
+- **`manuscript/`** - Markdown source files for the manuscript
 - **`output/`** - Generated outputs (PDFs, figures, data)
 - **`repo_utilities/`** - Generic utility scripts for any project
 

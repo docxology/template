@@ -62,7 +62,7 @@ pytest --cov=src --cov-report=html
 ### 📚 **Documentation**
 - **Update README.md** if adding new features
 - **Add docstrings** to new functions
-- **Update relevant guides** in the markdown directory
+- **Update relevant guides** in the docs/ directory
 - **Include examples** for new functionality
 
 ### 🔄 **Commit Messages**
@@ -138,7 +138,7 @@ pytest --cov=src --cov-report=html
 ### 💬 **Questions?**
 - **Open an issue** with the "question" label
 - **Check existing issues** for similar questions
-- **Review the documentation** in the markdown directory
+- **Review the documentation** in the docs/ directory
 
 ### 🔍 **Stuck on Something?**
 - **Describe what you're trying to do**

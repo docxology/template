@@ -93,7 +93,6 @@ This index provides a comprehensive overview of all documentation files in the R
 - **[`docs/BACKUP_RECOVERY.md`](BACKUP_RECOVERY.md)** - Backup strategies and recovery procedures
 
 ### **Changelog**
-- ~~**[`CHANGELOG.md`](../CHANGELOG.md)**~~ - Changelog (to be created)
 
 ## 📁 **File Organization**
 

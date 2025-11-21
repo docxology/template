@@ -4,6 +4,17 @@
 
 The `scripts/` directory contains **thin orchestrators** that demonstrate proper integration with `src/` modules. Scripts import and use tested methods from `src/` - they never implement business logic themselves.
 
+### .gitkeep File
+
+The `.gitkeep` file in `scripts/` is a placeholder used by git to track empty directories. It serves a historical purpose:
+
+- **Purpose**: Ensures `scripts/` directory is tracked in git even when initially empty
+- **History**: Created during initial template setup before example scripts existed
+- **Current Status**: Directory now contains 5 active Python scripts
+- **Can be safely deleted**: No longer needed since directory has content
+
+The `.gitkeep` file has no effect on the build system or script execution.
+
 ## Thin Orchestrator Pattern
 
 ### Core Principle

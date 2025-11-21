@@ -4,6 +4,10 @@
 # This file contains all configurable metadata for the manuscript.
 # All fields are optional except for basic author information.
 # Empty strings will use defaults or be auto-generated.
+#
+# NOTE: Environment variables take precedence over this file (if set)
+# See .env.template for environment variable configuration
+# For complete configuration details, see AGENTS.md#configuration-system
 
 paper:
   # Main paper title (required for PDF generation)

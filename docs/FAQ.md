@@ -136,7 +136,7 @@
 
 ### **Q: Where can I get more help?**
 **A:** 
-1. Check the comprehensive documentation in the markdown directory
+1. Check the comprehensive documentation in the docs/ directory
 2. Open an issue on GitHub for specific problems
 3. Review the examples and workflow guides
 4. Join the community discussions
