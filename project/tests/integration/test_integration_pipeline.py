@@ -29,8 +29,13 @@ class TestFullPipelineIntegration:
         # Copy scripts/ directory
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
 
-        # Copy repo_utilities/ directory
-        shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
+        # Copy repo_utilities/ directory (from root level if available)
+        repo_utilities_src = os.path.join(actual_root, "repo_utilities")
+        repo_utilities_root = os.path.join(actual_root, "..", "repo_utilities")
+        if os.path.exists(repo_utilities_root):
+            shutil.copytree(repo_utilities_root, test_root / "repo_utilities")
+        elif os.path.exists(repo_utilities_src):
+            shutil.copytree(repo_utilities_src, test_root / "repo_utilities")
 
         # Create output and manuscript directories
         (test_root / "output" / "figures").mkdir(parents=True)
@@ -134,7 +139,10 @@ More content here.
         actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
-        shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
+        # Copy repo_utilities/ directory (from root level if available)
+        repo_utilities_root = os.path.join(actual_root, "..", "repo_utilities")
+        if os.path.exists(repo_utilities_root):
+            shutil.copytree(repo_utilities_root, test_root / "repo_utilities")
 
         # Create manuscript structure
         manuscript_dir = test_root / "manuscript"
@@ -250,7 +258,10 @@ accuracy = \frac{TP}{TP + FP}
         actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
-        shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
+        # Copy repo_utilities/ directory (from root level if available)
+        repo_utilities_root = os.path.join(actual_root, "..", "repo_utilities")
+        if os.path.exists(repo_utilities_root):
+            shutil.copytree(repo_utilities_root, test_root / "repo_utilities")
 
         # Create output and markdown directories
         (test_root / "output" / "figures").mkdir(parents=True)
@@ -306,7 +317,10 @@ This is fine.
         actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
-        shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
+        # Copy repo_utilities/ directory (from root level if available)
+        repo_utilities_root = os.path.join(actual_root, "..", "repo_utilities")
+        if os.path.exists(repo_utilities_root):
+            shutil.copytree(repo_utilities_root, test_root / "repo_utilities")
 
         # Create directories
         (test_root / "output" / "figures").mkdir(parents=True)
@@ -448,7 +462,10 @@ if __name__ == "__main__":
         actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
-        shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
+        # Copy repo_utilities/ directory (from root level if available)
+        repo_utilities_root = os.path.join(actual_root, "..", "repo_utilities")
+        if os.path.exists(repo_utilities_root):
+            shutil.copytree(repo_utilities_root, test_root / "repo_utilities")
 
         # Create output and manuscript directories
         (test_root / "output" / "figures").mkdir(parents=True)
@@ -541,7 +558,10 @@ This demonstrates that all components work together properly.
         actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
-        shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
+        # Copy repo_utilities/ directory (from root level if available)
+        repo_utilities_root = os.path.join(actual_root, "..", "repo_utilities")
+        if os.path.exists(repo_utilities_root):
+            shutil.copytree(repo_utilities_root, test_root / "repo_utilities")
 
         # Create output and markdown directories
         (test_root / "output" / "figures").mkdir(parents=True)
@@ -601,7 +621,10 @@ Reference to equation \eqref{{eq:section_{i}}}.
         actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
-        shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
+        # Copy repo_utilities/ directory (from root level if available)
+        repo_utilities_root = os.path.join(actual_root, "..", "repo_utilities")
+        if os.path.exists(repo_utilities_root):
+            shutil.copytree(repo_utilities_root, test_root / "repo_utilities")
 
         # Create manuscript structure
         manuscript_dir = test_root / "manuscript"

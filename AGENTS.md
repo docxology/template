@@ -19,27 +19,107 @@ This document provides **comprehensive documentation** for the Research Project 
 
 ## 🏗️ Core Architecture
 
+### Two-Layer Architecture with Entry Points
+
+**Template Infrastructure (Generic - Reusable)**
+- `infrastructure/` - Generic build/validation tools
+- `repo_utilities/` - Build orchestration utilities
+- `scripts/` - Entry point orchestrators (5 stages)
+- `tests/` - Infrastructure tests
+
+**Project-Specific (Customizable)**
+- `project/src/` - Research algorithms and analysis
+- `project/tests/` - Project test suite
+- `project/scripts/` - Project analysis scripts
+- `project/manuscript/` - Research manuscript
+
 ### Thin Orchestrator Pattern
 
 **CRITICAL**: All business logic resides in `src/` modules. Scripts are **thin orchestrators** that:
-- Import and use `src/` methods for computation
-- Handle I/O, visualization, and orchestration only
-- Demonstrate proper integration patterns
-- Are fully testable through `src/` method mocking
+
+**Root Entry Points (Generic):**
+- Coordinate build pipeline stages
+- Discover and invoke `project/scripts/`
+- Handle I/O, orchestration only
+- Work with ANY project structure
+
+**Project Scripts (Project-Specific):**
+- Import from `project/src/` for computation
+- Import from `infrastructure/` for utilities
+- Orchestrate domain-specific workflows
+- Handle I/O and visualization
 
 **Violation of this pattern breaks the architecture**.
+
+## 📚 Repository Structure
+
+The template separates **generic infrastructure** from **project-specific code**:
+
+```
+template/                           # Generic template repository
+├── infrastructure/                 # Generic build/validation tools (Layer 1)
+│   ├── AGENTS.md
+│   ├── README.md
+│   └── *.py                        # build_verifier, figure_manager, etc.
+├── repo_utilities/                 # Generic utility scripts
+│   ├── AGENTS.md
+│   ├── README.md
+│   ├── *.sh                        # render_pdf.sh, clean_output.sh, etc.
+│   └── *.py
+├── scripts/                        # Generic entry point orchestrators
+│   ├── AGENTS.md                   # Entry points: 00-setup, 01-tests, 02-analysis, 03-pdf, 04-validate
+│   ├── README.md
+│   ├── 00_setup_environment.py
+│   ├── 01_run_tests.py
+│   ├── 02_run_analysis.py          # Discovers & executes project/scripts/
+│   ├── 03_render_pdf.py
+│   ├── 04_validate_output.py
+│   └── run_all.py                  # Master orchestrator
+├── tests/                          # Infrastructure tests
+│   ├── AGENTS.md
+│   ├── README.md
+│   └── test_*.py                   # Tests for infrastructure/ modules
+└── project/                        # Example research project (can be replaced)
+    ├── src/                        # Project-specific scientific code (Layer 2)
+    │   ├── AGENTS.md
+    │   ├── README.md
+    │   ├── example.py
+    │   ├── data_generator.py
+    │   └── ...
+    ├── tests/                      # Project tests
+    │   ├── AGENTS.md
+    │   ├── README.md
+    │   └── test_*.py
+    ├── scripts/                    # Project-specific analysis scripts
+    │   ├── AGENTS.md
+    │   ├── README.md
+    │   ├── analysis_pipeline.py
+    │   └── example_figure.py
+    ├── manuscript/                 # Research manuscript markdown
+    ├── output/                     # Generated outputs (figures, PDFs)
+    └── pyproject.toml
+```
 
 ## 📚 Directory-Level Documentation
 
 Each directory contains comprehensive documentation for easy navigation:
 
-### Source Code Directories
+### Generic Infrastructure (Reusable)
 
 | Directory | AGENTS.md | README.md | Purpose |
 |-----------|-----------|-----------|---------|
-| [`src/`](src/) | [AGENTS.md](src/AGENTS.md) | [README.md](src/README.md) | Core business logic with 100% test coverage |
-| [`tests/`](tests/) | [AGENTS.md](tests/AGENTS.md) | [README.md](tests/README.md) | Test suite ensuring code quality |
-| [`scripts/`](scripts/) | [AGENTS.md](scripts/AGENTS.md) | [README.md](scripts/README.md) | Thin orchestrators using src/ methods |
+| [`infrastructure/`](infrastructure/) | [AGENTS.md](infrastructure/AGENTS.md) | [README.md](infrastructure/README.md) | Generic build/validation tools (Layer 1) |
+| [`scripts/`](scripts/) | [AGENTS.md](scripts/AGENTS.md) | [README.md](scripts/README.md) | Generic entry point orchestrators |
+| [`tests/`](tests/) | [AGENTS.md](tests/AGENTS.md) | [README.md](tests/README.md) | Infrastructure test suite |
+
+### Project-Specific (Customizable)
+
+| Directory | AGENTS.md | README.md | Purpose |
+|-----------|-----------|-----------|---------|
+| [`project/src/`](project/src/) | [AGENTS.md](project/src/AGENTS.md) | [README.md](project/src/README.md) | Project-specific scientific code (Layer 2) |
+| [`project/tests/`](project/tests/) | [AGENTS.md](project/tests/AGENTS.md) | [README.md](project/tests/README.md) | Project test suite |
+| [`project/scripts/`](project/scripts/) | [AGENTS.md](project/scripts/AGENTS.md) | [README.md](project/scripts/README.md) | Project-specific analysis scripts |
+| [`project/manuscript/`](project/manuscript/) | [AGENTS.md](project/manuscript/AGENTS.md) | [README.md](project/manuscript/README.md) | Research manuscript sections |
 
 ### Content Directories
 
@@ -71,35 +151,63 @@ Each directory contains comprehensive documentation for easy navigation:
 ### Directory Structure
 
 ```
-template/
-├── src/                 # Core business logic (100% tested)
-│   ├── AGENTS.md        # → Detailed src/ documentation
-│   └── README.md        # → Quick src/ reference
-├── tests/              # Test suite (100% coverage required)
-│   ├── AGENTS.md        # → Testing philosophy and guide
-│   └── README.md        # → Quick testing reference
-├── scripts/            # Thin orchestrators (use src/ methods)
-│   ├── AGENTS.md        # → Script architecture and patterns
-│   └── README.md        # → Quick script reference
-├── manuscript/         # Research sections (generate PDFs)
-│   ├── AGENTS.md        # → Manuscript structure guide
-│   └── README.md        # → Quick manuscript reference
-├── docs/               # Documentation
-│   ├── AGENTS.md        # → Documentation organization
-│   └── README.md        # → Quick documentation index
-├── output/             # Generated files (all disposable)
-├── repo_utilities/     # Build tools and utilities
-│   ├── AGENTS.md        # → Build utilities documentation
-│   └── README.md        # → Quick utilities reference
-└── pyproject.toml      # Dependencies and configuration
+template/                           # Generic Template
+├── infrastructure/                 # Generic build/validation tools (Layer 1)
+│   ├── AGENTS.md                   # Infrastructure documentation
+│   ├── README.md                   # Quick reference
+│   ├── build_verifier.py
+│   ├── figure_manager.py
+│   └── ...
+├── repo_utilities/                 # Build orchestration
+│   ├── AGENTS.md                   # Utilities documentation
+│   ├── README.md                   # Quick reference
+│   ├── render_pdf.sh
+│   └── ...
+├── scripts/                        # Entry Points (Generic Orchestrators)
+│   ├── AGENTS.md                   # Entry point documentation
+│   ├── README.md                   # Quick reference
+│   ├── 00_setup_environment.py     # Stage 0: Setup
+│   ├── 01_run_tests.py             # Stage 1: Test
+│   ├── 02_run_analysis.py          # Stage 2: Analysis (discovers project/scripts/)
+│   ├── 03_render_pdf.py            # Stage 3: PDF
+│   ├── 04_validate_output.py       # Stage 4: Validate
+│   └── run_all.py                  # Master orchestrator
+├── tests/                          # Infrastructure Tests
+│   ├── AGENTS.md
+│   ├── README.md
+│   └── test_*.py
+├── project/                        # Example Research Project (Customizable)
+│   ├── src/                        # Project scientific code (Layer 2)
+│   │   ├── AGENTS.md               # Project documentation
+│   │   ├── README.md
+│   │   ├── example.py
+│   │   └── ...
+│   ├── tests/                      # Project Tests
+│   │   ├── AGENTS.md
+│   │   ├── README.md
+│   │   └── test_*.py
+│   ├── scripts/                    # Project Analysis Scripts
+│   │   ├── AGENTS.md               # Project scripts documentation
+│   │   ├── README.md
+│   │   ├── analysis_pipeline.py
+│   │   └── example_figure.py
+│   ├── manuscript/                 # Research Manuscript
+│   ├── output/                     # Generated Files (disposable)
+│   └── pyproject.toml              # Project configuration
+├── docs/                           # Documentation
+│   ├── AGENTS.md
+│   └── README.md
+└── pyproject.toml                  # Root configuration
 ```
 
-**Each source directory has comprehensive documentation:**
+**Documentation in each directory:**
 - **AGENTS.md** - Detailed directory-specific documentation
 - **README.md** - Quick reference and navigation
 
-**Exception: Generated directories**
-- `output/` and all subdirectories do NOT have AGENTS.md or README.md files because they are regenerated on every build and cleaned by the pipeline
+**Note on src/ directory:**
+- Root `src/` no longer exists (was empty shells)
+- All code is in `infrastructure/` (generic) or `project/src/` (project-specific)
+- This separation enables reusability across projects
 
 ## ⚙️ Configuration System
 

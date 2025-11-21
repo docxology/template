@@ -52,8 +52,8 @@ dev = [
 
 [tool.pytest.ini_options]
 addopts = "-q"
-pythonpath = ["infrastructure"]  # For infrastructure tests at repo root
-testpaths = ["tests"]
+pythonpath = [".", "infrastructure", "project/src"]  # Root infrastructure + project src
+testpaths = ["tests", "project/tests"]  # Test both infrastructure and project
 
 [tool.coverage.run]
 source = ["src"]

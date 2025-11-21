@@ -1,110 +1,193 @@
 # scripts/ - Quick Reference
 
-Thin orchestrator scripts that coordinate src/ modules to generate figures, run analyses, and manage workflows.
+Generic entry point orchestrators for template pipeline. Work with any project structure.
 
 ## Overview
 
-Scripts in this directory follow the **thin orchestrator pattern**:
-- Import and use methods from `src/` for computation
-- Handle I/O, visualization, and orchestration
-- Demonstrate proper integration patterns
-- Are fully testable through `src/` method mocking
+Root-level scripts are **generic orchestrators** that:
+- Coordinate build pipeline stages
+- Discover and invoke `project/scripts/`
+- Handle I/O and orchestration
+- Work with ANY project
 
-## Available Scripts
+Project-specific analysis scripts go in `project/scripts/`, not here.
 
-| Script | Purpose |
-|--------|---------|
-| `analysis_pipeline.py` | End-to-end analysis orchestration |
-| `example_figure.py` | Example figure generation |
-| `generate_research_figures.py` | Generate publication-quality research figures |
-| `generate_scientific_figures.py` | Generate scientific visualization outputs |
-| `scientific_simulation.py` | Run scientific simulation workflows |
+## Pipeline Orchestration
+
+### Master Orchestrator (One-Line Execution)
+```bash
+python3 scripts/run_all.py
+```
+
+Executes the complete 5-stage pipeline end-to-end:
+
+| Stage | Script | Purpose |
+|-------|--------|---------|
+| **00** | `00_setup_environment.py` | Environment setup & validation |
+| **01** | `01_run_tests.py` | Test suite with coverage |
+| **02** | `02_run_analysis.py` | Discover & run `project/scripts/` |
+| **03** | `03_render_pdf.py` | PDF rendering orchestration |
+| **04** | `04_validate_output.py` | Output validation & reporting |
+
+### Individual Stage Scripts
+
+Each stage can also be run independently:
+
+```bash
+python3 scripts/00_setup_environment.py  # Setup environment
+python3 scripts/01_run_tests.py          # Run tests only
+python3 scripts/02_run_analysis.py       # Run project scripts
+python3 scripts/03_render_pdf.py         # Render PDFs only
+python3 scripts/04_validate_output.py    # Validate outputs only
+```
+
+## Entry Points
+
+### Stage 00: Setup Environment
+- Checks Python version
+- Verifies dependencies
+- Confirms build tools (pandoc, xelatex)
+- Validates directory structure
+
+### Stage 01: Run Tests
+- Executes `project/tests/` with pytest
+- Verifies coverage meets threshold (70%+)
+- Generic - does not implement tests
+
+### Stage 02: Run Analysis ⭐
+- **Discovers** `project/scripts/`
+- **Executes** each script in order
+- Generic orchestrator (not analysis)
+- Works with ANY project
+
+### Stage 03: Render PDF
+- Processes `project/manuscript/` markdown
+- Converts to LaTeX via pandoc
+- Compiles to PDF via xelatex
+- Generic - does not implement rendering
+
+### Stage 04: Validate Output
+- Checks generated PDFs for issues
+- Validates markdown references
+- Checks figure integrity
+- Generic validation
+
+## Project-Specific Scripts
+
+Analysis scripts belong in `project/scripts/`:
+
+```
+project/scripts/
+├── analysis_pipeline.py     # Project-specific analysis
+├── example_figure.py        # Project-specific figures
+└── README.md                # Project docs
+```
+
+These scripts:
+- Import from `project/src/` (computation)
+- Import from `infrastructure/` (utilities)
+- Are discovered and executed by `02_run_analysis.py`
+- Follow thin orchestrator pattern
 
 ## Common Operations
 
-### Running Individual Scripts
+### Complete End-to-End Build
 ```bash
-python3 scripts/generate_research_figures.py
-python3 scripts/scientific_simulation.py
+python3 scripts/run_all.py
 ```
 
-### Running All Scripts
+### Running Individual Stages
 ```bash
-# Via render_pdf pipeline
-./repo_utilities/render_pdf.sh
-
-# Manually (after tests pass)
-python3 scripts/*.py
+python3 scripts/01_run_tests.py
+python3 scripts/02_run_analysis.py
+python3 scripts/03_render_pdf.py
 ```
 
-### Pattern: Thin Orchestrator Example
-```python
-# ✅ CORRECT - Thin orchestrator
-import sys
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
-from scientific.visualization import create_convergence_plot
-from infrastructure.figure_manager import register_figure
-
-def main():
-    # Orchestrate using src/ functions
-    plot = create_convergence_plot(data)
-    register_figure('convergence_plot.png', 'Convergence', 'Algorithm convergence')
-
-if __name__ == '__main__':
-    main()
+### Running Project Scripts Directly
+```bash
+python3 project/scripts/analysis_pipeline.py
+python3 project/scripts/example_figure.py
 ```
 
-## Integration with Build Pipeline
+## Pipeline Architecture
 
-Scripts execute in stage 3 of the PDF rendering pipeline:
+```
+STAGE 00: Environment Setup
+  └─ Verify dependencies, create directories
+     └─ PASS → STAGE 01
+     
+STAGE 01: Run Tests
+  └─ Execute project/tests/ with coverage
+     └─ PASS → STAGE 02
+     
+STAGE 02: Run Analysis
+  └─ Discover & execute project/scripts/
+     └─ PASS → STAGE 03
+     
+STAGE 03: Render PDF
+  └─ Build project/manuscript/ → PDFs
+     └─ PASS → STAGE 04
+     
+STAGE 04: Validate Output
+  └─ Validate PDFs and outputs
+     └─ PASS → COMPLETE ✅
+```
 
-1. ✅ Clean previous outputs
-2. ✅ Run tests (100% coverage)
-3. ▶️ **Execute scripts** (this stage)
-4. Generate PDFs
-5. Validate output
+## Generic vs Project-Specific
 
-Scripts must:
-- Pass all `src/` tests before execution
-- Use only `src/` methods for computation
-- Generate deterministic outputs
-- Register figures with figure manager
+### Root Scripts (Generic) ✅
+- Coordinate build pipeline
+- Discover `project/scripts/`
+- Handle stages (setup, test, analysis, pdf, validate)
+- Work with ANY project
+
+### Project Scripts (Specific) ✅
+- Implement domain-specific analysis
+- Import from `project/src/`
+- Use `infrastructure/` tools
+- Are executed by `02_run_analysis.py`
 
 ## Key Principles
 
-### Thin Orchestrator Pattern
-- **Business logic**: All in `src/`
-- **Coordination**: In scripts
-- **Testing**: `src/` methods are 100% tested
-- **Reusability**: Scripts demonstrate patterns, src/ methods are reused
+### Orchestration Pattern
+- **Root scripts**: Generic pipeline coordination
+- **Project scripts**: Domain-specific implementation
+- **No duplication**: Each level has clear responsibility
+- **Generic discovery**: Root scripts find project scripts
 
-### No Algorithm Duplication
-- Don't duplicate algorithms from `src/`
-- Don't implement new algorithms in scripts
-- Extend `src/` first, then use in scripts
+### Thin Orchestrator
+- Import functions, don't implement algorithms
+- Coordinate components, don't implement logic
+- Handle I/O, don't implement computation
+- Testable through component tests
 
-### Deterministic Outputs
-- Use fixed random seeds
-- Document output generation
-- Register generated figures
+## Architecture Diagram
 
-## Testing Scripts
-
-Scripts are tested through their integration with `src/` modules:
-
-```bash
-# Test via src/ method tests
-python3 -m pytest tests/ --cov=src
-
-# The coverage includes script behavior through src/ usage
 ```
+scripts/ (Generic Entry Points)
+  ├─ 00_setup_environment.py → Check environment
+  ├─ 01_run_tests.py → Run tests
+  ├─ 02_run_analysis.py → Discover & run project/scripts/
+  ├─ 03_render_pdf.py → Build manuscript
+  └─ 04_validate_output.py → Validate outputs
+
+project/scripts/ (Project-Specific)
+  ├─ analysis_pipeline.py → Your analysis
+  └─ example_figure.py → Your figures
+```
+
+## Deploying with Different Project
+
+1. Create new `project/` with your research
+2. Add code to `project/src/`
+3. Add scripts to `project/scripts/`
+4. Run root entry points - they auto-discover your code
+
+Root entry points work with **ANY** project following this structure.
 
 ## See Also
 
-- [`AGENTS.md`](AGENTS.md) - Complete scripts documentation
-- [`../src/README.md`](../src/README.md) - Source code guide
+- [`AGENTS.md`](AGENTS.md) - Complete documentation
+- [`project/scripts/README.md`](../project/scripts/README.md) - Project scripts guide
 - [`../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
-- [`../.cursorrules/figure_generation.md`](../.cursorrules/figure_generation.md) - Figure generation
-
+- [`../AGENTS.md`](../AGENTS.md) - Complete system documentation

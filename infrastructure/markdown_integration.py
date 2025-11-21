@@ -9,8 +9,8 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from figure_manager import FigureManager
-from image_manager import ImageManager
+from infrastructure.figure_manager import FigureManager
+from infrastructure.image_manager import ImageManager
 
 
 class MarkdownIntegration:

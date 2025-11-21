@@ -10,7 +10,7 @@ import re
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from figure_manager import FigureManager, FigureMetadata
+from infrastructure.figure_manager import FigureManager, FigureMetadata
 
 
 class ImageManager:
