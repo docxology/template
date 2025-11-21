@@ -177,8 +177,8 @@ f(x) = \int_0^x t^2 dt
 ```
 
 **Do NOT use:**
-- `$$...$$` for display math (use equation environment)
-- `\[...\]` for display math (use equation environment)
+- Double dollar signs (e.g., `$$ ... $$`) for display math—use equation environment instead
+- Backslash square brackets (e.g., `\[ ... \]`) for display math—use equation environment instead
 
 ### Figure Integration
 
@@ -486,7 +486,7 @@ python3 repo_utilities/validate_pdf_output.py output/pdf/01_abstract.pdf
 - Use equation environment for display math
 - Label all important equations
 - Use `\eqref{}` to reference equations
-- Avoid `$$` or `\[...\]`
+- Avoid double dollar signs or backslash square brackets for display math
 
 ### Supplemental Material
 - Use for extended methods, additional results

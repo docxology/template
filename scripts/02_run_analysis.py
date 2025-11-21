@@ -65,10 +65,12 @@ def run_analysis_script(script_path: Path, repo_root: Path) -> int:
     
     cmd = [sys.executable, str(script_path)]
     
+    project_root = repo_root / "project"
+    
     try:
         result = subprocess.run(
             cmd,
-            cwd=str(repo_root),
+            cwd=str(project_root),
             capture_output=False,
             check=False
         )

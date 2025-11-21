@@ -41,7 +41,7 @@ def validate_pdfs() -> bool:
     log_stage("Validating PDF files...")
     
     repo_root = Path(__file__).parent.parent
-    pdf_dir = repo_root / "output" / "pdf"
+    pdf_dir = repo_root / "project" / "output" / "pdf"
     
     if not pdf_dir.exists():
         log_error("PDF directory not found")
@@ -75,7 +75,12 @@ def validate_markdown() -> bool:
     log_stage("Validating markdown files...")
     
     repo_root = Path(__file__).parent.parent
-    manuscript_dir = repo_root / "manuscript"
+    # Check project/manuscript first, then fall back to root manuscript/ for backward compatibility
+    manuscript_dir = repo_root / "project" / "manuscript"
+    
+    if not manuscript_dir.exists():
+        # Fallback for backward compatibility
+        manuscript_dir = repo_root / "manuscript"
     
     if not manuscript_dir.exists():
         log_warning("Manuscript directory not found")
@@ -125,9 +130,9 @@ def verify_outputs_exist() -> bool:
     repo_root = Path(__file__).parent.parent
     
     required_dirs = [
-        repo_root / "output" / "pdf",
-        repo_root / "output" / "figures",
-        repo_root / "output" / "data",
+        repo_root / "project" / "output" / "pdf",
+        repo_root / "project" / "output" / "figures",
+        repo_root / "project" / "output" / "data",
     ]
     
     all_exist = True
@@ -147,7 +152,7 @@ def generate_validation_report() -> None:
     log_stage("Generating validation report...")
     
     repo_root = Path(__file__).parent.parent
-    output_dir = repo_root / "output"
+    output_dir = repo_root / "project" / "output"
     
     report_lines = [
         "Validation Report",

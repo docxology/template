@@ -36,6 +36,13 @@ else
     log_warn "Output directory not found: $OUTPUT_DIR"
 fi
 
+# Clean root output directory if it exists (legacy/mistake)
+if [ -d "$REPO_ROOT/output" ]; then
+    log_info "Removing root output directory (legacy): $REPO_ROOT/output"
+    rm -rf "$REPO_ROOT/output"
+    log_success "Root output directory cleaned"
+fi
+
 # Clean latex directory (all disposable)
 if [ -d "$LATEX_DIR" ]; then
     log_info "Removing latex directory: $LATEX_DIR"

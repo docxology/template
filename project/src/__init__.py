@@ -23,14 +23,10 @@ __version__ = "1.0.0"
 __layer__ = "scientific"
 
 # Import core classes for convenient access
-try:
-    from .example import add_numbers, calculate_average
-    from .simulation import SimpleSimulation, SimulationBase
-    from .visualization import VisualizationEngine
-    from .statistics import calculate_descriptive_stats
-except ImportError:
-    # Graceful fallback if imports fail
-    pass
+from .example import add_numbers, calculate_average
+from .simulation import SimpleSimulation, SimulationBase
+from .visualization import VisualizationEngine
+from .statistics import calculate_descriptive_stats
 
 __all__ = [
     "example",

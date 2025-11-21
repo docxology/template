@@ -45,7 +45,8 @@ def main() -> int:
     # Ensure file exists with markers
     _ensure_glossary_file(glossary_md)
 
-    sys.path.insert(0, src_dir)
+    # Add repo root to path so infrastructure can be imported
+    sys.path.insert(0, repo)
     try:
         from infrastructure.glossary_gen import build_api_index, generate_markdown_table, inject_between_markers  # type: ignore
     except Exception as exc:

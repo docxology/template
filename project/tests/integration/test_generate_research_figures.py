@@ -112,12 +112,14 @@ if __name__ == "__main__":
 
     def test_convergence_plot_generation(self, tmp_path):
         """Test convergence_plot function generates proper output."""
-        # Setup test environment
+        # Setup test environment with proper project structure
         test_root = tmp_path / "test_convergence"
         test_root.mkdir()
 
-        src_dir = test_root / "src"
-        src_dir.mkdir()
+        # Create proper project structure
+        project_dir = test_root / "project"
+        src_dir = project_dir / "src"
+        src_dir.mkdir(parents=True)
         (src_dir / "example.py").write_text('''
 def add_numbers(a, b): return a + b
 def multiply_numbers(a, b): return a * b
@@ -125,30 +127,22 @@ def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers el
 ''')
 
         # Create a test script that calls the function
-        test_script = test_root / "test_convergence.py"
+        test_script = project_dir / "test_convergence.py"
         test_script.write_text("""
 import os
 import sys
 
 def _ensure_src_on_path():
-    # For testing, we need to find the actual src directory
-    # Try multiple possible locations
-    possible_paths = [
-        os.path.join(os.path.dirname(__file__), "..", "src"),  # Relative to test file
-        os.path.join(os.getcwd(), "src"),  # Relative to current working directory
-        "/Users/4d/Documents/GitHub/template/src"  # Absolute path for testing
-    ]
-
-    for src_path in possible_paths:
-        if os.path.exists(src_path):
-            if src_path not in sys.path:
-                sys.path.insert(0, src_path)
-            break
+    # Ensure src/ is on path
+    project_root = os.path.abspath(os.path.dirname(__file__))
+    src_path = os.path.join(project_root, "src")
+    if src_path not in sys.path:
+        sys.path.insert(0, src_path)
 
 def generate_convergence_plot(figure_dir, data_dir):
     _ensure_src_on_path()
     try:
-        from scientific.example import add_numbers, multiply_numbers, calculate_average
+        from example import add_numbers, multiply_numbers, calculate_average
         print("✅ Using src/ functions for convergence plot")
     except ImportError as e:
         print(f"❌ Failed to import from src/example.py: {e}")
@@ -225,7 +219,7 @@ if __name__ == "__main__":
         # Run the test script
         result = subprocess.run([
             sys.executable, str(test_script)
-        ], cwd=str(test_root), capture_output=True, text=True)
+        ], cwd=str(project_dir), capture_output=True, text=True)
 
         # Debug: Print stdout and stderr if the script failed
         if result.returncode != 0:
@@ -236,8 +230,8 @@ if __name__ == "__main__":
         assert result.returncode == 0
 
         # Check that files were created
-        figure_path = test_root / "output" / "figures" / "convergence_plot.png"
-        data_path = test_root / "output" / "data" / "convergence_data.npz"
+        figure_path = project_dir / "output" / "figures" / "convergence_plot.png"
+        data_path = project_dir / "output" / "data" / "convergence_data.npz"
 
         assert figure_path.exists()
         assert data_path.exists()

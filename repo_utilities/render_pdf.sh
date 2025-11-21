@@ -275,7 +275,8 @@ run_project_scripts() {
     log_info "Running: $script_name"
     
     # Capture both stdout and stderr for better debugging
-    if $runner "$script" 2>&1; then
+    # Run from project directory to ensure output goes to project/output
+    if (cd "$PROJECT_DIR" && $runner "$script" 2>&1); then
       log_info "✅ Success: $script_name"
     else
       log_error "❌ Failed: $script_name"
@@ -444,6 +445,8 @@ EOF
   # Create HTML version with proper resource path and LaTeX support
   # Use version-appropriate pandoc options for better image handling
   local highlight_opt="${PANDOC_HIGHLIGHT_OPT}=espresso"
+  # Include multiple resource paths to find figures in both locations (root and project)
+  local resource_paths="$OUTPUT_DIR:$REPO_ROOT/output:$REPO_ROOT/project/output"
   local pandoc_args=(
     -f markdown+implicit_figures+tex_math_dollars+tex_math_single_backslash+raw_tex+autolink_bare_uris
     -s
@@ -454,7 +457,7 @@ EOF
     --toc-depth=3
     --number-sections
     "$highlight_opt"
-    --resource-path="$OUTPUT_DIR"
+    --resource-path="$resource_paths"
     --css="$css_file"
     --standalone
     "$PANDOC_EMBED_OPT"
@@ -473,13 +476,21 @@ EOF
     cp "$html_out" "$html_backup"
     
     # Fix image paths to use absolute paths that work in IDEs
-    local figures_dir="$OUTPUT_DIR/figures"
-    if [ -d "$figures_dir" ]; then
+    # Try both possible figure directories (root and project)
+    local figures_dir=""
+    if [ -d "$OUTPUT_DIR/figures" ]; then
+      figures_dir="$OUTPUT_DIR/figures"
+    elif [ -d "$REPO_ROOT/project/output/figures" ]; then
+      figures_dir="$REPO_ROOT/project/output/figures"
+    fi
+    
+    if [ -n "$figures_dir" ]; then
       # Replace relative image paths with absolute paths
       # Use portable sed syntax (compatible with macOS/BSD and GNU sed)
       sed -i.bak "s|src=\"\.\./output/figures/|src=\"$figures_dir/|g" "$html_out" && rm -f "$html_out.bak"
       sed -i.bak "s|src=\"output/figures/|src=\"$figures_dir/|g" "$html_out" && rm -f "$html_out.bak"
       sed -i.bak "s|src=\"figures/|src=\"$figures_dir/|g" "$html_out" && rm -f "$html_out.bak"
+      sed -i.bak "s|src=\"project/output/figures/|src=\"$figures_dir/|g" "$html_out" && rm -f "$html_out.bak"
       
       # Convert LaTeX \includegraphics commands to HTML img tags
       sed -i.bak "s|\\\\includegraphics\\[width=0\\.9\\\\textwidth\\]{\\.\\./output/figures/convergence_plot\\.png}|<img src=\"$figures_dir/convergence_plot.png\" alt=\"Convergence Plot\" style=\"max-width: 100%; height: auto;\">|g" "$html_out" && rm -f "$html_out.bak"
@@ -491,7 +502,7 @@ EOF
       
       log_info "✅ Fixed image paths and LaTeX commands in HTML for IDE compatibility"
     else
-      log_warn "⚠️  Figures directory not found, image paths may not work"
+      log_warn "⚠️  Figures directory not found in expected locations, image paths may not work"
     fi
     
     return 0
@@ -748,6 +759,14 @@ EOF
   else
     log_warn "No bibliography command found in combined markdown"
   fi
+  
+  # FIX: Adjust figure paths for LaTeX compilation
+  # Markdown uses ../output/figures/ (relative to manuscript/) or output/figures/
+  # LaTeX compilation happens in project/output/, so we need figures/ (relative to output/)
+  log_info "Adjusting figure paths for LaTeX compilation..."
+  # Standardize to figures/
+  sed -i.bak 's|\.\./output/figures/|figures/|g' "$combined_md" && rm -f "$combined_md.bak"
+  sed -i.bak 's|output/figures/|figures/|g' "$combined_md" && rm -f "$combined_md.bak"
   
   # Generate TeX file for combined document
   log_info "Generating combined TeX file..."

@@ -75,7 +75,7 @@ def verify_pdf_outputs() -> bool:
     log_stage("Verifying PDF outputs...")
     
     repo_root = Path(__file__).parent.parent
-    pdf_dir = repo_root / "output" / "pdf"
+    pdf_dir = repo_root / "project" / "output" / "pdf"
     
     if not pdf_dir.exists():
         log_error("PDF output directory not found")

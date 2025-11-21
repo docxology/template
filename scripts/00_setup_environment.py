@@ -164,19 +164,27 @@ def setup_directories() -> bool:
 
 
 def verify_source_structure() -> bool:
-    """Verify source code structure exists."""
+    """Verify source code structure exists.
+    
+    Checks for the three core components of the repository architecture:
+    - infrastructure/ - Generic reusable build tools
+    - repo_utilities/ - Build orchestration scripts
+    - project/ - Standalone research project
+    """
     log_stage("Verifying source code structure...")
     
     repo_root = Path(__file__).parent.parent
     
+    # Core components (required for template operation)
     required_dirs = [
-        'src',
-        'tests',
-        'repo_utilities',
+        'infrastructure',      # Generic tools (build_verifier, figure_manager, etc.)
+        'repo_utilities',      # Build scripts (render_pdf.sh, validate_markdown.py, etc.)
+        'project',             # Standalone project with src/, tests/, scripts/, manuscript/
     ]
     
     optional_dirs = [
-        'manuscript',
+        'scripts',             # Optional: orchestration scripts (can be elsewhere)
+        'tests',               # Optional: infrastructure tests
     ]
     
     all_present = True

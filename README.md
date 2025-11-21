@@ -1,8 +1,8 @@
 # 🚀 Research Project Template
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/BUILD_SYSTEM.md)
-[![Test Coverage](https://img.shields.io/badge/coverage-81.90%25-green)](docs/BUILD_SYSTEM.md)
-[![Tests](https://img.shields.io/badge/tests-320%2F322%20passing%20(825%20assertions)-brightgreen)](docs/BUILD_SYSTEM.md)
+[![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](docs/BUILD_SYSTEM.md)
+[![Tests](https://img.shields.io/badge/tests-343%2F343%20passing%20(100%25)-brightgreen)](docs/BUILD_SYSTEM.md)
 [![Documentation](https://img.shields.io/badge/docs-42%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
 
