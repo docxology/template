@@ -339,6 +339,14 @@ source repo_utilities/logging.sh
 type log_info  # Should show function definition
 ```
 
+## Comprehensive Documentation
+
+For complete build system information and logging integration, see:
+
+- [`docs/BUILD_SYSTEM.md`](../docs/BUILD_SYSTEM.md) - Build system logging and performance
+- [`docs/TROUBLESHOOTING_GUIDE.md`](../docs/TROUBLESHOOTING_GUIDE.md) - Debugging and log file analysis
+- [`docs/CI_CD_INTEGRATION.md`](../docs/CI_CD_INTEGRATION.md) - CI/CD logging configuration
+
 ## See Also
 
 - [repo_utilities/logging.sh](../repo_utilities/logging.sh) - Library implementation

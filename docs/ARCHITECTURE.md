@@ -2,6 +2,14 @@
 
 This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline. For related information, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`WORKFLOW.md`](WORKFLOW.md)**, **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
 
+## Development Rules
+
+For specific architectural rules and standards during development, see:
+
+- **[`.cursorrules/core_architecture.md`](../.cursorrules/core_architecture.md)** - Architectural principles and core design
+- **[`.cursorrules/thin_orchestrator.md`](../.cursorrules/thin_orchestrator.md)** - Thin orchestrator pattern implementation
+- **[`.cursorrules/README.md`](../.cursorrules/README.md)** - Development rules overview
+
 ## System Architecture Overview
 
 ```mermaid

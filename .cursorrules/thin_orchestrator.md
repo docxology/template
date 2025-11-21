@@ -348,6 +348,15 @@ Script implementation checklist:
 - [ ] Clear logging of execution
 - [ ] Output paths printed to stdout
 
+## Comprehensive Documentation
+
+For complete information on the thin orchestrator pattern and its implementation, consult:
+
+- [`docs/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Comprehensive implementation guide
+- [`docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Integration patterns and workflow
+- [`docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) - System design overview
+- [`docs/EXAMPLES_SHOWCASE.md`](../docs/EXAMPLES_SHOWCASE.md) - Real-world usage examples
+
 ## See Also
 
 - [core_architecture.md](core_architecture.md) - Overall system design

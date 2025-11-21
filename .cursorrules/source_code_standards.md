@@ -274,6 +274,14 @@ git commit -m "update"
 - [ ] Comments explain WHY, not WHAT
 - [ ] No duplication of logic
 
+## Comprehensive Documentation
+
+For complete code quality guidelines and best practices, see:
+
+- [`docs/BEST_PRACTICES.md`](../docs/BEST_PRACTICES.md) - Consolidated best practices compilation
+- [`docs/API_REFERENCE.md`](../docs/API_REFERENCE.md) - Complete API documentation standards
+- [`docs/CONTRIBUTING.md`](../docs/CONTRIBUTING.md) - Contribution guidelines with code standards
+
 ## See Also
 
 - [testing.md](testing.md) - Testing standards

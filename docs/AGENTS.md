@@ -53,6 +53,25 @@ The `docs/` directory contains comprehensive project documentation organized by 
 |------|---------|
 | `COPYPASTA.md` | Reusable documentation snippets |
 
+## Development Rules
+
+The `.cursorrules/` directory contains modular development rules that complement this documentation. Each rule file covers specific development standards:
+
+| Rule Module | Focus Area |
+|-------------|-----------|
+| [`../.cursorrules/README.md`](../.cursorrules/README.md) | Rules directory overview and navigation |
+| [`../.cursorrules/core_architecture.md`](../.cursorrules/core_architecture.md) | System design and component relationships |
+| [`../.cursorrules/thin_orchestrator.md`](../.cursorrules/thin_orchestrator.md) | Script orchestration patterns |
+| [`../.cursorrules/testing.md`](../.cursorrules/testing.md) | Testing requirements and practices |
+| [`../.cursorrules/build_pipeline.md`](../.cursorrules/build_pipeline.md) | Build orchestration and validation |
+| [`../.cursorrules/documentation.md`](../.cursorrules/documentation.md) | Documentation standards |
+| [`../.cursorrules/markdown_structure.md`](../.cursorrules/markdown_structure.md) | Manuscript organization |
+| [`../.cursorrules/figure_generation.md`](../.cursorrules/figure_generation.md) | Figure generation patterns |
+| [`../.cursorrules/logging.md`](../.cursorrules/logging.md) | Logging standards |
+| [`../.cursorrules/source_code_standards.md`](../.cursorrules/source_code_standards.md) | Code quality and style |
+
+**Quick Access**: Use `.cursorrules/` files for rule reference during development; consult `docs/` files for comprehensive guides.
+
 ## Documentation Philosophy
 
 ### Show, Don't Tell

@@ -2,6 +2,15 @@
 
 Comprehensive project documentation organized by purpose and audience.
 
+## Development Rules Quick Access
+
+Development standards are defined in the `.cursorrules/` directory. Start with:
+
+- [`../.cursorrules/README.md`](../.cursorrules/README.md) - Development rules overview
+- [`../.cursorrules/core_architecture.md`](../.cursorrules/core_architecture.md) - System design rules  
+- [`../.cursorrules/testing.md`](../.cursorrules/testing.md) - Testing standards
+- See [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) for complete rules reference
+
 ## Quick Navigation
 
 ### New Users Start Here
@@ -15,6 +24,7 @@ Comprehensive project documentation organized by purpose and audience.
 2. [`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md) - Architecture pattern
 3. [`WORKFLOW.md`](WORKFLOW.md) - Development process
 4. [`CONTRIBUTING.md`](CONTRIBUTING.md) - How to contribute
+5. [`../.cursorrules/README.md`](../.cursorrules/README.md) - Development rules
 
 ## Documentation Categories
 

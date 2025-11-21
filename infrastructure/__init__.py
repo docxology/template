@@ -15,6 +15,8 @@ Modules:
     markdown_integration: Figure insertion and cross-reference management
     figure_manager: Automatic figure numbering and LaTeX generation
     image_manager: Image file management and insertion
+    markdown_validator: Markdown validation utilities (NEW)
+    config_loader: Configuration loading and formatting (NEW)
 """
 
 __version__ = "1.0.0"
@@ -41,5 +43,7 @@ __all__ = [
     "markdown_integration",
     "figure_manager",
     "image_manager",
+    "markdown_validator",
+    "config_loader",
 ]
 

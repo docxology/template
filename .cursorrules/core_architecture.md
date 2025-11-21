@@ -157,6 +157,15 @@ PDFs (final output)
 - Automated generation where possible
 - Consistent structure maintained
 
+## Comprehensive Documentation
+
+For in-depth guidance on these architectural principles, see:
+
+- [`docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) - Complete system architecture overview
+- [`docs/TWO_LAYER_ARCHITECTURE.md`](../docs/TWO_LAYER_ARCHITECTURE.md) - Two-layer architecture details
+- [`docs/DECISION_TREE.md`](../docs/DECISION_TREE.md) - Code placement decision guide
+- [`docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development process and workflow integration
+
 ## See Also
 
 - [thin_orchestrator.md](thin_orchestrator.md) - Detailed pattern explanation

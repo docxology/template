@@ -333,6 +333,14 @@ def test_performance_data_loading(benchmark):
 - Add tests for gaps
 - Maintain 100% coverage
 
+## Comprehensive Documentation
+
+For complete testing guidance and best practices, see:
+
+- [`docs/TEST_IMPROVEMENTS_SUMMARY.md`](../docs/TEST_IMPROVEMENTS_SUMMARY.md) - Testing enhancements overview
+- [`docs/BEST_PRACTICES.md`](../docs/BEST_PRACTICES.md) - Testing best practices section
+- [`docs/BUILD_SYSTEM.md`](../docs/BUILD_SYSTEM.md) - Coverage metrics and build integration
+
 ## See Also
 
 - [core_architecture.md](core_architecture.md) - System design

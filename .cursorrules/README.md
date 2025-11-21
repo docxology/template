@@ -171,9 +171,28 @@ From across all modules:
 ✅ **Logged**: Structured logging with consistency  
 ✅ **Integrated**: Everything works together
 
+## Corresponding Documentation
+
+Each rule module has corresponding comprehensive documentation in the `docs/` directory:
+
+| Rule Module | Comprehensive Guide |
+|-------------|-------------------|
+| `core_architecture.md` | [`docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md), [`docs/TWO_LAYER_ARCHITECTURE.md`](../docs/TWO_LAYER_ARCHITECTURE.md) |
+| `thin_orchestrator.md` | [`docs/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/THIN_ORCHESTRATOR_SUMMARY.md), [`docs/WORKFLOW.md`](../docs/WORKFLOW.md) |
+| `testing.md` | [`docs/TEST_IMPROVEMENTS_SUMMARY.md`](../docs/TEST_IMPROVEMENTS_SUMMARY.md), [`docs/BEST_PRACTICES.md`](../docs/BEST_PRACTICES.md) |
+| `build_pipeline.md` | [`docs/BUILD_SYSTEM.md`](../docs/BUILD_SYSTEM.md), [`docs/WORKFLOW.md`](../docs/WORKFLOW.md) |
+| `documentation.md` | [`docs/AGENTS.md`](../docs/AGENTS.md), [`docs/DOCUMENTATION_INDEX.md`](../docs/DOCUMENTATION_INDEX.md) |
+| `markdown_structure.md` | [`docs/MARKDOWN_TEMPLATE_GUIDE.md`](../docs/MARKDOWN_TEMPLATE_GUIDE.md), [`docs/MANUSCRIPT_NUMBERING_SYSTEM.md`](../docs/MANUSCRIPT_NUMBERING_SYSTEM.md) |
+| `figure_generation.md` | [`docs/VISUALIZATION_GUIDE.md`](../docs/VISUALIZATION_GUIDE.md), [`docs/IMAGE_MANAGEMENT.md`](../docs/IMAGE_MANAGEMENT.md) |
+| `logging.md` | [`docs/BUILD_SYSTEM.md`](../docs/BUILD_SYSTEM.md), [`docs/TROUBLESHOOTING_GUIDE.md`](../docs/TROUBLESHOOTING_GUIDE.md) |
+| `source_code_standards.md` | [`docs/BEST_PRACTICES.md`](../docs/BEST_PRACTICES.md), [`docs/API_REFERENCE.md`](../docs/API_REFERENCE.md) |
+
+**Note**: Use `.cursorrules/` files for quick rule reference during development. Consult corresponding `docs/` files for comprehensive guides and examples.
+
 ## See Also
 
 - [AGENTS.md](../AGENTS.md) - Complete system documentation
 - [README.md](../README.md) - Project overview
 - [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) - Detailed architecture
+- [docs/DOCUMENTATION_INDEX.md](../docs/DOCUMENTATION_INDEX.md) - Complete documentation index
 

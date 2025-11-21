@@ -360,6 +360,14 @@ xelatex document.tex  # 3+ times
 - [ ] Tested through `src/` module tests
 - [ ] Documentation includes figure examples
 
+## Comprehensive Documentation
+
+For complete guidance on figure generation and visualization, see:
+
+- [`docs/VISUALIZATION_GUIDE.md`](../docs/VISUALIZATION_GUIDE.md) - Publication-quality figure generation
+- [`docs/IMAGE_MANAGEMENT.md`](../docs/IMAGE_MANAGEMENT.md) - Image insertion and cross-referencing
+- [`docs/SCIENTIFIC_SIMULATION_GUIDE.md`](../docs/SCIENTIFIC_SIMULATION_GUIDE.md) - Scientific figure generation
+
 ## See Also
 
 - [thin_orchestrator.md](thin_orchestrator.md) - Script pattern details

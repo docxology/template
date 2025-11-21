@@ -303,6 +303,15 @@ grep -i error output/pdf/*_compile.log
 3. Archive if needed
 4. Commit documentation changes
 
+## Comprehensive Documentation
+
+For complete build system reference and performance optimization, consult:
+
+- [`docs/BUILD_SYSTEM.md`](../docs/BUILD_SYSTEM.md) - Complete build system reference (status, performance, fixes)
+- [`docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Workflow integration and development process
+- [`docs/PERFORMANCE_OPTIMIZATION.md`](../docs/PERFORMANCE_OPTIMIZATION.md) - Build time optimization strategies
+- [`docs/TROUBLESHOOTING_GUIDE.md`](../docs/TROUBLESHOOTING_GUIDE.md) - Troubleshooting common issues
+
 ## See Also
 
 - [logging.md](logging.md) - Logging during builds

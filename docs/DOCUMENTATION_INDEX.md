@@ -2,6 +2,23 @@
 
 This index provides a comprehensive overview of all documentation files in the Research Project Template, organized by category and purpose.
 
+## 🏗️ **Development Rules**
+
+Development standards are documented in the `.cursorrules/` directory:
+
+- **[`.cursorrules/README.md`](../.cursorrules/README.md)** - Rules directory overview with quick reference table
+- **[`.cursorrules/core_architecture.md`](../.cursorrules/core_architecture.md)** - System design principles
+- **[`.cursorrules/thin_orchestrator.md`](../.cursorrules/thin_orchestrator.md)** - Thin orchestrator pattern details
+- **[`.cursorrules/testing.md`](../.cursorrules/testing.md)** - Testing standards and 100% coverage requirements
+- **[`.cursorrules/build_pipeline.md`](../.cursorrules/build_pipeline.md)** - Build orchestration and pipeline stages
+- **[`.cursorrules/documentation.md`](../.cursorrules/documentation.md)** - Documentation requirements
+- **[`.cursorrules/markdown_structure.md`](../.cursorrules/markdown_structure.md)** - Manuscript organization
+- **[`.cursorrules/figure_generation.md`](../.cursorrules/figure_generation.md)** - Figure generation patterns
+- **[`.cursorrules/logging.md`](../.cursorrules/logging.md)** - Logging standards
+- **[`.cursorrules/source_code_standards.md`](../.cursorrules/source_code_standards.md)** - Code quality standards
+
+**Note**: Use `.cursorrules/` files as quick reference during development. Corresponding `docs/` files provide comprehensive guides.
+
 ## 🎯 **Core Documentation**
 
 ### **Primary Entry Points**

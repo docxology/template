@@ -280,6 +280,14 @@ python3 -m pytest tests/ --cov=src --cov-report=html
 - [ ] Updated when code changes
 - [ ] No references to output/ documentation in rules
 
+## Comprehensive Documentation
+
+For complete documentation standards and guides, see:
+
+- [`docs/AGENTS.md`](../docs/AGENTS.md) - Documentation philosophy and organization
+- [`docs/DOCUMENTATION_INDEX.md`](../docs/DOCUMENTATION_INDEX.md) - Complete documentation index
+- [`docs/MARKDOWN_TEMPLATE_GUIDE.md`](../docs/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown writing standards
+
 ## See Also
 
 - [../AGENTS.md](../AGENTS.md) - Root documentation

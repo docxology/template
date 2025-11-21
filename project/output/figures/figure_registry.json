@@ -1,0 +1,68 @@
+{
+  "fig:convergence_analysis": {
+    "figure_id": "figure_000",
+    "filename": "convergence_analysis.png",
+    "caption": "Convergence behavior of the optimization algorithm showing exponential decay to target value",
+    "label": "fig:convergence_analysis",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "generate_scientific_figures.py",
+    "metadata": {}
+  },
+  "fig:time_series_analysis": {
+    "figure_id": "figure_001",
+    "filename": "time_series_analysis.png",
+    "caption": "Time series data showing sinusoidal trend with added noise",
+    "label": "fig:time_series_analysis",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "generate_scientific_figures.py",
+    "metadata": {}
+  },
+  "fig:statistical_comparison": {
+    "figure_id": "figure_002",
+    "filename": "statistical_comparison.png",
+    "caption": "Comparison of different methods on accuracy metric",
+    "label": "fig:statistical_comparison",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "generate_scientific_figures.py",
+    "metadata": {}
+  },
+  "fig:scatter_correlation": {
+    "figure_id": "figure_003",
+    "filename": "scatter_correlation.png",
+    "caption": "Scatter plot showing correlation between two variables",
+    "label": "fig:scatter_correlation",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "generate_scientific_figures.py",
+    "metadata": {}
+  },
+  "fig:scientific_simulation_timeseries": {
+    "figure_id": "figure_004",
+    "filename": "scientific_simulation_timeseries.png",
+    "caption": "Time series data generated for scientific simulation analysis",
+    "label": "fig:scientific_simulation_timeseries",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "scientific_simulation.py",
+    "metadata": {}
+  },
+  "fig:analysis_comparison": {
+    "figure_id": "figure_005",
+    "filename": "analysis_comparison.png",
+    "caption": "Comparison of different methods on accuracy metric",
+    "label": "fig:analysis_comparison",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "analysis_pipeline.py",
+    "metadata": {}
+  }
+}

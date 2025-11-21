@@ -280,6 +280,15 @@ Figure \ref{fig:convergence} demonstrates...
 The convergence rate improves with...
 ```
 
+## Comprehensive Documentation
+
+For complete manuscript and markdown guidance, see:
+
+- [`docs/MARKDOWN_TEMPLATE_GUIDE.md`](../docs/MARKDOWN_TEMPLATE_GUIDE.md) - Comprehensive markdown writing guide
+- [`docs/MANUSCRIPT_NUMBERING_SYSTEM.md`](../docs/MANUSCRIPT_NUMBERING_SYSTEM.md) - Section numbering and organization
+- [`docs/IMAGE_MANAGEMENT.md`](../docs/IMAGE_MANAGEMENT.md) - Image insertion and cross-referencing
+- [`docs/PDF_VALIDATION.md`](../docs/PDF_VALIDATION.md) - PDF output validation
+
 ## See Also
 
 - [core_architecture.md](core_architecture.md) - System design
