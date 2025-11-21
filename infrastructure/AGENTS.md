@@ -44,7 +44,50 @@ This is **Layer 1** of the two-layer architecture:
 | `figure_manager.py` | Automatic figure numbering and LaTeX block generation | 84 | 100% |
 | `image_manager.py` | Image file management and insertion | 91 | 100% |
 
+### System Infrastructure (NEW)
+
+| Module | Purpose | Lines | Coverage |
+|--------|---------|-------|----------|
+| `logging_utils.py` | Unified Python logging with context managers and decorators | 350+ | 100% |
+| `exceptions.py` | Custom exception hierarchy with context preservation | 400+ | 100% |
+
 ## Module Descriptions
+
+### logging_utils.py (NEW)
+
+Unified Python logging system with consistent formatting.
+
+**Key Features:**
+- `setup_logger()` / `get_logger()` - Logger configuration
+- `log_operation()` - Context manager for operation tracking
+- `log_timing()` - Performance timing context manager
+- `log_function_call()` - Function call decorator
+- `log_success()`, `log_header()`, `log_progress()` - Utilities
+- Environment-based log level control (LOG_LEVEL=0-3)
+- Integration with bash logging.sh format
+
+**Use Case:** Consistent logging across all Python scripts
+
+### exceptions.py (NEW)
+
+Custom exception hierarchy with context preservation.
+
+**Key Classes:**
+- `TemplateError` - Base exception for all template errors
+- `ConfigurationError` - Configuration issues
+- `ValidationError` - Validation failures
+- `BuildError` - Build/compilation failures
+- `FileOperationError` - File I/O issues
+- `DependencyError` - Missing dependencies
+- `TestError` - Test failures
+- `IntegrationError` - Integration issues
+
+**Key Functions:**
+- `raise_with_context()` - Raise with keyword context
+- `format_file_context()` - Format file/line context
+- `chain_exceptions()` - Chain exception context
+
+**Use Case:** Consistent error handling with detailed context
 
 ### build_verifier.py
 
