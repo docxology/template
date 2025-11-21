@@ -30,3 +30,6 @@ omit = ["*/tests/*", "*/test_*.py"]
 precision = 2
 show_missing = true
 
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+

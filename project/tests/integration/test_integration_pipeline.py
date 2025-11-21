@@ -21,7 +21,7 @@ class TestFullPipelineIntegration:
         test_root.mkdir()
 
         # Copy the entire current project structure
-        actual_root = os.path.join(os.path.dirname(__file__), "..")
+        actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
 
         # Copy src/ directory
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
@@ -131,7 +131,7 @@ More content here.
         test_root.mkdir()
 
         # Copy src/ and scripts/
-        actual_root = os.path.join(os.path.dirname(__file__), "..")
+        actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
         shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
@@ -247,7 +247,7 @@ accuracy = \frac{TP}{TP + FP}
         test_root.mkdir()
 
         # Copy components
-        actual_root = os.path.join(os.path.dirname(__file__), "..")
+        actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
         shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
@@ -303,7 +303,7 @@ This is fine.
         test_root.mkdir()
 
         # Copy components
-        actual_root = os.path.join(os.path.dirname(__file__), "..")
+        actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
         shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
@@ -445,7 +445,7 @@ if __name__ == "__main__":
         test_root.mkdir()
 
         # Copy components
-        actual_root = os.path.join(os.path.dirname(__file__), "..")
+        actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
         shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
@@ -538,7 +538,7 @@ This demonstrates that all components work together properly.
         test_root.mkdir()
 
         # Copy components
-        actual_root = os.path.join(os.path.dirname(__file__), "..")
+        actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
         shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")
@@ -598,7 +598,7 @@ Reference to equation \eqref{{eq:section_{i}}}.
         test_root.mkdir()
 
         # Copy all components
-        actual_root = os.path.join(os.path.dirname(__file__), "..")
+        actual_root = os.path.join(os.path.dirname(__file__), "..", "..")
         shutil.copytree(os.path.join(actual_root, "src"), test_root / "src")
         shutil.copytree(os.path.join(actual_root, "scripts"), test_root / "scripts")
         shutil.copytree(os.path.join(actual_root, "repo_utilities"), test_root / "repo_utilities")

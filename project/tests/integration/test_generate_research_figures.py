@@ -17,12 +17,12 @@ class TestGenerateResearchFiguresScript:
 
     def test_script_exists_and_executable(self):
         """Test that the generate_research_figures.py script exists."""
-        script_path = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
         assert os.path.exists(script_path)
 
     def test_script_has_shebang(self):
         """Test that script has proper Python shebang."""
-        script_path = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
         with open(script_path, 'r') as f:
             first_line = f.readline().strip()
             assert first_line == "#!/usr/bin/env python3"
@@ -376,7 +376,7 @@ def is_even(n): return n % 2 == 0
 def is_odd(n): return not is_even(n)
 ''')
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
         test_script = test_root / "scripts" / "generate_research_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
@@ -443,7 +443,7 @@ def is_even(n): return n % 2 == 0
 def is_odd(n): return not is_even(n)
 ''')
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
         test_script = test_root / "scripts" / "generate_research_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
@@ -496,7 +496,7 @@ def broken_function(
     return 1
 ''')
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
         test_script = test_root / "scripts" / "generate_research_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
@@ -524,7 +524,7 @@ def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
 ''')
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
         test_script = test_root / "scripts" / "generate_research_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
@@ -553,7 +553,7 @@ def multiply_numbers(a, b): return a * b
 def calculate_average(numbers): return sum(numbers) / len(numbers) if numbers else None
 ''')
 
-        script_path = os.path.join(os.path.dirname(__file__), '..', 'scripts', 'generate_research_figures.py')
+        script_path = os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'generate_research_figures.py')
         test_script = test_root / "scripts" / "generate_research_figures.py"
         test_script.parent.mkdir()
         shutil.copy2(script_path, test_script)
