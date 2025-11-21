@@ -5,12 +5,12 @@ from textwrap import dedent
 
 import pytest
 
-from glossary_gen import (
+from infrastructure.glossary_gen import (
     build_api_index,
     generate_markdown_table,
     inject_between_markers,
 )
-from glossary_gen import _first_sentence  # type: ignore
+from infrastructure.glossary_gen import _first_sentence  # type: ignore
 
 
 def write(path: str, content: str) -> None:

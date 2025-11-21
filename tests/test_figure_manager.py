@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from figure_manager import FigureManager, FigureMetadata
+from infrastructure.figure_manager import FigureManager, FigureMetadata
 
 
 class TestFigureMetadata:

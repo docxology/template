@@ -4,36 +4,54 @@
 # Safely removes all generated output since everything is regenerated from markdown
 
 set -euo pipefail
+export LANG="${LANG:-C.UTF-8}"
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-OUTPUT_DIR="$REPO_ROOT/output"
-LATEX_DIR="$REPO_ROOT/latex"
+PROJECT_DIR="$REPO_ROOT/project"
+OUTPUT_DIR="$PROJECT_DIR/output"
+LATEX_DIR="$PROJECT_DIR/output/tex"
 
-echo "🧹 Cleaning project output directories..."
-echo "Repository root: $REPO_ROOT"
+# Source unified logging library
+LOGGING_SCRIPT="$REPO_ROOT/repo_utilities/logging.sh"
+if [ -f "$LOGGING_SCRIPT" ]; then
+    source "$LOGGING_SCRIPT"
+else
+    # Fallback basic logging
+    log_info() { echo "[INFO] $1"; }
+    log_success() { echo "✅ $1"; }
+    log_warn() { echo "⚠️ $1" >&2; }
+    log_header() { echo ""; echo "$1"; echo ""; }
+fi
+
+log_header "🧹 CLEANING PROJECT OUTPUT DIRECTORIES"
+
+log_info "Repository root: $REPO_ROOT"
 
 # Clean output directory (all disposable)
 if [ -d "$OUTPUT_DIR" ]; then
-    echo "Removing output directory: $OUTPUT_DIR"
+    log_info "Removing output directory: $OUTPUT_DIR"
     rm -rf "$OUTPUT_DIR"
-    echo "✅ Output directory cleaned"
+    log_success "Output directory cleaned"
 else
-    echo "ℹ️  Output directory not found: $OUTPUT_DIR"
+    log_warn "Output directory not found: $OUTPUT_DIR"
 fi
 
 # Clean latex directory (all disposable)
 if [ -d "$LATEX_DIR" ]; then
-    echo "Removing latex directory: $LATEX_DIR"
+    log_info "Removing latex directory: $LATEX_DIR"
     rm -rf "$LATEX_DIR"
-    echo "✅ Latex directory cleaned"
+    log_success "Latex directory cleaned"
 else
-    echo "ℹ️  Latex directory not found: $LATEX_DIR"
+    log_warn "Latex directory not found: $LATEX_DIR"
 fi
 
 echo ""
-echo "🎯 All output directories cleaned!"
-echo "💡 Run 'repo_utilities/render_pdf.sh' to regenerate everything from manuscript sources"
+log_success "All output directories cleaned!"
+log_info "Run 'repo_utilities/render_pdf.sh' to regenerate everything from manuscript sources"
 echo ""
-echo "📁 Manuscript sources remain intact in: $REPO_ROOT/manuscript/"
-echo "🔧 Scripts remain intact in: $REPO_ROOT/scripts/"
-echo "📚 Source code remains intact in: $REPO_ROOT/src/"
+log_info "Preserved directories:"
+log_dim "  📁 Project:    $PROJECT_DIR/"
+log_dim "  📁 Manuscript: $PROJECT_DIR/manuscript/"
+log_dim "  🔧 Scripts:    $PROJECT_DIR/scripts/"
+log_dim "  📚 Source:     $PROJECT_DIR/src/"
+log_dim "  🧪 Tests:      $PROJECT_DIR/tests/"

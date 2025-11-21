@@ -118,7 +118,11 @@ def main():
     # Determine repository root (parent of repo_utilities/)
     script_dir = Path(__file__).parent
     repo_root = script_dir.parent
-    config_path = repo_root / 'manuscript' / 'config.yaml'
+    # Try project/manuscript/config.yaml first (new monophyletic structure)
+    # Fall back to manuscript/config.yaml for backward compatibility
+    config_path = repo_root / 'project' / 'manuscript' / 'config.yaml'
+    if not config_path.exists():
+        config_path = repo_root / 'manuscript' / 'config.yaml'
     
     # Load configuration
     config = load_config(config_path)

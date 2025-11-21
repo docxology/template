@@ -37,16 +37,17 @@ def main() -> int:
         0 on success, 1 on failure
     """
     repo = _repo_root()
-    src_dir = os.path.join(repo, "src")
-    # Write directly to manuscript/98_symbols_glossary.md
-    glossary_md = os.path.join(repo, "manuscript", "98_symbols_glossary.md")
+    project_dir = os.path.join(repo, "project")
+    src_dir = os.path.join(project_dir, "src")
+    # Write directly to project/manuscript/98_symbols_glossary.md
+    glossary_md = os.path.join(project_dir, "manuscript", "98_symbols_glossary.md")
 
     # Ensure file exists with markers
     _ensure_glossary_file(glossary_md)
 
     sys.path.insert(0, src_dir)
     try:
-        from glossary_gen import build_api_index, generate_markdown_table, inject_between_markers  # type: ignore
+        from infrastructure.glossary_gen import build_api_index, generate_markdown_table, inject_between_markers  # type: ignore
     except Exception as exc:
         print(f"Failed to import glossary_gen from src/: {exc}")
         return 1

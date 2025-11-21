@@ -94,9 +94,12 @@ template/
 └── pyproject.toml      # Dependencies and configuration
 ```
 
-**Each directory now has comprehensive documentation:**
+**Each source directory has comprehensive documentation:**
 - **AGENTS.md** - Detailed directory-specific documentation
 - **README.md** - Quick reference and navigation
+
+**Exception: Generated directories**
+- `output/` and all subdirectories do NOT have AGENTS.md or README.md files because they are regenerated on every build and cleaned by the pipeline
 
 ## ⚙️ Configuration System
 

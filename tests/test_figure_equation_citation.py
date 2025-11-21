@@ -51,7 +51,7 @@ src_path = os.path.join(repo_root, "src")
 if src_path not in sys.path:
     sys.path.insert(0, src_path)
 
-from example import add_numbers
+from scientific.example import add_numbers
 
 # Generate figure
 output_dir = os.path.join(repo_root, "output")

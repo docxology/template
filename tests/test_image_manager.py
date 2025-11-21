@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from figure_manager import FigureManager
-from image_manager import ImageManager
+from infrastructure.figure_manager import FigureManager
+from infrastructure.image_manager import ImageManager
 
 
 class TestImageManager:

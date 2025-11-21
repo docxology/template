@@ -21,7 +21,7 @@ repo_root = Path(__file__).parent.parent
 sys.path.insert(0, str(repo_root / "src"))
 
 try:
-    from pdf_validator import (
+    from infrastructure.pdf_validator import (
         validate_pdf_rendering,
         PDFValidationError,
     )

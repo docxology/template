@@ -20,12 +20,19 @@ SKIP_VALIDATION=0
 LOG_FILE=""
 USE_EMOJIS=1
 
-# Log levels (aligned with render_pdf.sh)
+# Log levels (aligned with unified logging module)
 LOG_DEBUG=0
 LOG_INFO=1
 LOG_WARN=2
 LOG_ERROR=3
 LOG_LEVEL="${LOG_LEVEL:-$LOG_INFO}"
+
+# Attempt to source unified logging library for consistency
+LOGGING_SCRIPT="$REPO_ROOT/repo_utilities/logging.sh"
+USING_UNIFIED_LOGGING=0
+if [ -f "$LOGGING_SCRIPT" ]; then
+    source "$LOGGING_SCRIPT" 2>/dev/null && USING_UNIFIED_LOGGING=1
+fi
 
 # =============================================================================
 # COLOR AND VISUAL DETECTION
@@ -462,10 +469,10 @@ check_dependencies() {
     fi
     
     # Attempt to install missing system dependencies (if not in dry-run)
-    if [ ${#missing_system_deps[@]} -gt 0 ]; then
-        log_warn "Missing system dependencies: ${missing_system_deps[*]}"
+    if [ ${#missing_system_deps[@]:-0} -gt 0 ]; then
+        log_warn "Missing system dependencies: ${missing_system_deps[*]:-}"
         
-        for dep in "${missing_system_deps[@]}"; do
+        for dep in "${missing_system_deps[@]:-}"; do
             # Map dependency names to package names
             local package_name=""
             case "$dep" in
@@ -490,7 +497,13 @@ check_dependencies() {
                 if install_system_dependency "$package_name"; then
                     install_attempts+=("$package_name: installed")
                     # Remove from missing list if installation succeeded
-                    missing_system_deps=("${missing_system_deps[@]/$dep}")
+                    local new_missing_deps=()
+                    for existing_dep in "${missing_system_deps[@]:-}"; do
+                        if [ "$existing_dep" != "$dep" ]; then
+                            new_missing_deps+=("$existing_dep")
+                        fi
+                    done
+                    missing_system_deps=("${new_missing_deps[@]:-}")
                 else
                     install_attempts+=("$package_name: failed")
                 fi
@@ -499,9 +512,9 @@ check_dependencies() {
     fi
     
     # Show installation results
-    if [ ${#install_attempts[@]} -gt 0 ]; then
+    if [ ${#install_attempts[@]:-0} -gt 0 ]; then
         echo ""
-        for attempt in "${install_attempts[@]}"; do
+        for attempt in "${install_attempts[@]:-}"; do
             if [[ "$attempt" == *": installed" ]]; then
                 log_success "$attempt"
             else
@@ -513,7 +526,7 @@ check_dependencies() {
     
     # Check again after installation attempts
     local still_missing=()
-    for dep in "${missing_system_deps[@]}"; do
+    for dep in "${missing_system_deps[@]:-}"; do
         case "$dep" in
             python3|python3*)
                 if ! command -v python3 >/dev/null 2>&1; then
@@ -534,13 +547,13 @@ check_dependencies() {
     done
     
     # Report missing dependencies with installation instructions
-    if [ ${#still_missing[@]} -gt 0 ] || [ ${#missing_tools[@]} -gt 0 ]; then
-        log_error "Missing required dependencies: ${still_missing[*]} ${missing_tools[*]}"
+    if [ ${#still_missing[@]:-0} -gt 0 ] || [ ${#missing_tools[@]:-0} -gt 0 ]; then
+        log_error "Missing required dependencies: ${still_missing[*]:-} ${missing_tools[*]:-}"
         echo ""
         log_info "Installation instructions:"
         
         local os=$(detect_os)
-        for dep in "${still_missing[@]}" "${missing_tools[@]}"; do
+        for dep in "${still_missing[@]:-}" "${missing_tools[@]:-}"; do
             case "$dep" in
                 python3)
                     case "$os" in
@@ -819,6 +832,37 @@ else
             log_debug "Validation output: $VALIDATION_OUTPUT"
         fi
     fi
+fi
+
+# =============================================================================
+# BUILD STATISTICS
+# =============================================================================
+
+echo ""
+log_info "Collecting build statistics..."
+
+# Count generated files by type
+PDF_COUNT=$(find "$REPO_ROOT/output/pdf" -name "*.pdf" 2>/dev/null | wc -l)
+TEX_COUNT=$(find "$REPO_ROOT/output/tex" -name "*.tex" 2>/dev/null | wc -l)
+FIGURE_COUNT=$(find "$REPO_ROOT/output/figures" -name "*.png" -o -name "*.pdf" 2>/dev/null | wc -l)
+DATA_FILES=$(find "$REPO_ROOT/output/data" -type f 2>/dev/null | wc -l)
+REPORT_COUNT=$(find "$REPO_ROOT/output/reports" -name "*.md" 2>/dev/null | wc -l)
+
+echo ""
+if [ $USE_COLORS -eq 1 ]; then
+    echo -e "${COLOR_BOLD}📊 Build Summary:${COLOR_RESET}"
+    echo -e "   ${COLOR_GREEN}PDF Documents:${COLOR_RESET} $PDF_COUNT (sections + combined)"
+    echo -e "   ${COLOR_GREEN}LaTeX Files:${COLOR_RESET} $TEX_COUNT"
+    echo -e "   ${COLOR_GREEN}Figures Generated:${COLOR_RESET} $FIGURE_COUNT"
+    echo -e "   ${COLOR_GREEN}Data Files:${COLOR_RESET} $DATA_FILES"
+    echo -e "   ${COLOR_GREEN}Reports Generated:${COLOR_RESET} $REPORT_COUNT"
+else
+    echo "Build Summary:"
+    echo "   PDF Documents: $PDF_COUNT (sections + combined)"
+    echo "   LaTeX Files: $TEX_COUNT"
+    echo "   Figures Generated: $FIGURE_COUNT"
+    echo "   Data Files: $DATA_FILES"
+    echo "   Reports Generated: $REPORT_COUNT"
 fi
 
 # =============================================================================

@@ -16,7 +16,7 @@ from unittest.mock import patch, MagicMock
 # Add src/ to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-import build_verifier
+import infrastructure.build_verifier
 import integrity
 import publishing
 import quality_checker

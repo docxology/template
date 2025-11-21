@@ -171,7 +171,8 @@ def main() -> int:
 
     # Try multiple possible locations for manuscript files
     possible_manuscript_dirs = [
-        os.path.join(repo_root, "manuscript"),  # Standard location
+        os.path.join(repo_root, "project", "manuscript"),  # New monophyletic project location
+        os.path.join(repo_root, "manuscript"),  # Legacy location (backward compatibility)
         os.path.join(os.getcwd(), "manuscript"),  # Current working directory (for tests)
         "manuscript"  # Relative to current directory
     ]

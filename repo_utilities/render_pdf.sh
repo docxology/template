@@ -18,8 +18,12 @@ export LANG="${LANG:-C.UTF-8}"
 # =============================================================================
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-MARKDOWN_DIR="$REPO_ROOT/manuscript"
-OUTPUT_DIR="$REPO_ROOT/output"
+PROJECT_DIR="$REPO_ROOT/project"
+MARKDOWN_DIR="$PROJECT_DIR/manuscript"
+OUTPUT_DIR="$PROJECT_DIR/output"
+SCRIPTS_DIR="$PROJECT_DIR/scripts"
+TESTS_DIR="$PROJECT_DIR/tests"
+SRC_DIR="$PROJECT_DIR/src"
 PREAMBLE_MD="$MARKDOWN_DIR/preamble.md"
 CLEAN_SCRIPT="$REPO_ROOT/repo_utilities/clean_output.sh"
 CONFIG_LOADER="$REPO_ROOT/repo_utilities/load_manuscript_config.py"
@@ -61,37 +65,40 @@ if [ -z "${AUTHOR_DETAILS:-}" ]; then
 fi
 
 # =============================================================================
-# LOGGING FUNCTIONS
+# LOGGING SETUP - Use unified logging module
 # =============================================================================
 
-# Log levels
-LOG_DEBUG=0
-LOG_INFO=1
-LOG_WARN=2
-LOG_ERROR=3
-
-# Current log level (can be set via LOG_LEVEL environment variable)
-LOG_LEVEL="${LOG_LEVEL:-$LOG_INFO}"
-
-log() {
-  local level="$1"
-  local message="$2"
-  local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-  
-  if [ "$level" -ge "$LOG_LEVEL" ]; then
-    case "$level" in
-      $LOG_DEBUG) echo "[$timestamp] [DEBUG] $message" ;;
-      $LOG_INFO)  echo "[$timestamp] [INFO]  $message" ;;
-      $LOG_WARN)  echo "[$timestamp] [WARN]  $message" >&2 ;;
-      $LOG_ERROR) echo "[$timestamp] [ERROR] $message" >&2 ;;
-    esac
-  fi
-}
-
-log_info() { log $LOG_INFO "$1"; }
-log_warn() { log $LOG_WARN "$1"; }
-log_error() { log $LOG_ERROR "$1"; }
-log_debug() { log $LOG_DEBUG "$1"; }
+# Source unified logging library
+LOGGING_SCRIPT="$REPO_ROOT/repo_utilities/logging.sh"
+if [ -f "$LOGGING_SCRIPT" ]; then
+    source "$LOGGING_SCRIPT"
+else
+    # Fallback basic logging if library not available
+    LOG_DEBUG=0
+    LOG_INFO=1
+    LOG_WARN=2
+    LOG_ERROR=3
+    LOG_LEVEL="${LOG_LEVEL:-$LOG_INFO}"
+    
+    log() {
+        local level="$1"
+        local message="$2"
+        local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+        if [ "$level" -ge "$LOG_LEVEL" ]; then
+            case "$level" in
+                $LOG_DEBUG) echo "[$timestamp] [DEBUG] $message" ;;
+                $LOG_INFO) echo "[$timestamp] [INFO]  $message" ;;
+                $LOG_WARN) echo "[$timestamp] [WARN]  $message" >&2 ;;
+                $LOG_ERROR) echo "[$timestamp] [ERROR] $message" >&2 ;;
+            esac
+        fi
+    }
+    
+    log_info() { log $LOG_INFO "$1"; }
+    log_warn() { log $LOG_WARN "$1"; }
+    log_error() { log $LOG_ERROR "$1"; }
+    log_debug() { log $LOG_DEBUG "$1"; }
+fi
 
 # =============================================================================
 # UTILITY FUNCTIONS
@@ -212,10 +219,12 @@ run_tests_with_coverage() {
   
   # Run tests with coverage - ensure we get detailed output
   log_info "Running tests with coverage validation..."
+  cd "$PROJECT_DIR"
   if ! $runner python -m pytest tests/ --cov=src --cov-report=term-missing --cov-report=html --cov-fail-under=70 --cov-config=pyproject.toml -v; then
     log_error "Tests failed or coverage below 70%"
     exit 1
   fi
+  cd "$REPO_ROOT"
   
   log_info "✅ All tests passed with adequate coverage"
 }
@@ -225,9 +234,10 @@ run_tests_with_coverage() {
 # =============================================================================
 
 run_project_scripts() {
+  log_info "━━━ LAYER 2: Scientific Computation ━━━"
   log_info "Step 2: Executing ALL project-specific scripts..."
   
-  local scripts_dir="$REPO_ROOT/scripts"
+  local scripts_dir="$PROJECT_DIR/scripts"
   if [ ! -d "$scripts_dir" ]; then
     log_warn "Scripts directory not found: $scripts_dir"
     return 0
@@ -287,6 +297,7 @@ run_project_scripts() {
 # =============================================================================
 
 run_repo_utilities() {
+  log_info "━━━ LAYER 1: Infrastructure Validation ━━━"
   log_info "Step 2.5: Running repository utilities (glossary + markdown validation)..."
   
   local runner
@@ -591,16 +602,16 @@ build_one() {
       if grep -q "Output written" "$compile_log"; then
         log_info "First xelatex pass completed for $base"
       else
-        log_warn "First xelatex pass completed but no output detected - check $compile_log"
+        log_debug "First xelatex pass completed but no output detected (expected for pass 1) - see $compile_log"
       fi
     else
-      log_warn "First xelatex pass failed for $base - check $compile_log"
+      log_debug "First xelatex pass failed (expected - resolving cross-references) - see $compile_log"
     fi
 
     # Run bibtex if bibliography is referenced
-    if [ -f "$REPO_ROOT/manuscript/references.bib" ]; then
+    if [ -f "$MARKDOWN_DIR/references.bib" ]; then
       log_info "Running bibtex for $base"
-      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "$base" >> "$compile_log" 2>&1 || true)
+      (cd "$PDF_DIR" && BIBINPUTS="$MARKDOWN_DIR" bibtex "$base" >> "$compile_log" 2>&1 || true)
     fi
 
     # Second run - resolve references
@@ -803,16 +814,16 @@ EOF
       if grep -q "Output written" "$compile_log"; then
         log_info "First xelatex pass completed for combined document"
       else
-        log_warn "First xelatex pass completed but no output detected - check $compile_log"
+        log_debug "First xelatex pass completed but no output detected (expected for pass 1) - see $compile_log"
       fi
     else
-      log_warn "First xelatex pass failed for combined document - check $compile_log"
+      log_debug "First xelatex pass failed (expected - resolving cross-references) - see $compile_log"
     fi
 
     # Run bibtex if bibliography is referenced
-    if [ -f "$REPO_ROOT/manuscript/references.bib" ]; then
+    if [ -f "$MARKDOWN_DIR/references.bib" ]; then
       log_info "Running bibtex for combined document"
-      (cd "$PDF_DIR" && BIBINPUTS="$REPO_ROOT/manuscript" bibtex "project_combined" >> "$compile_log" 2>&1 || true)
+      (cd "$PDF_DIR" && BIBINPUTS="$MARKDOWN_DIR" bibtex "project_combined" >> "$compile_log" 2>&1 || true)
     fi
 
     # Second run - resolve references

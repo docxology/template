@@ -204,7 +204,7 @@ def main() -> int:
 
     sys.path.insert(0, src_dir)
     try:
-        from glossary_gen import build_api_index, generate_markdown_table, inject_between_markers  # This will fail
+        from infrastructure.glossary_gen import build_api_index, generate_markdown_table, inject_between_markers  # This will fail
     except Exception as exc:
         print(f"Failed to import glossary_gen from src/: {exc}")
         return 1
@@ -1237,7 +1237,7 @@ class TestValidatePDFOutput:
         try:
             # Check if we can import the validator module through the script's path
             sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-            from pdf_validator import validate_pdf_rendering, PDFValidationError
+            from infrastructure.pdf_validator import validate_pdf_rendering, PDFValidationError
             
             # Verify functions exist
             assert callable(validate_pdf_rendering)
