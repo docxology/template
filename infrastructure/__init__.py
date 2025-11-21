@@ -15,8 +15,10 @@ Modules:
     markdown_integration: Figure insertion and cross-reference management
     figure_manager: Automatic figure numbering and LaTeX generation
     image_manager: Image file management and insertion
-    markdown_validator: Markdown validation utilities (NEW)
-    config_loader: Configuration loading and formatting (NEW)
+    markdown_validator: Markdown validation utilities
+    config_loader: Configuration loading and formatting
+    logging_utils: Unified Python logging system (NEW)
+    exceptions: Custom exception hierarchy (NEW)
 """
 
 __version__ = "1.0.0"
@@ -28,6 +30,11 @@ try:
     from .integrity import verify_file_integrity, verify_cross_references
     from .quality_checker import analyze_document_quality
     from .pdf_validator import validate_pdf_rendering
+    from .logging_utils import setup_logger, get_logger, log_operation, log_timing
+    from .exceptions import (
+        TemplateError, ConfigurationError, ValidationError, BuildError,
+        FileOperationError, DependencyError, TestError, IntegrationError
+    )
 except ImportError:
     # Graceful fallback if imports fail
     pass
@@ -45,5 +52,7 @@ __all__ = [
     "image_manager",
     "markdown_validator",
     "config_loader",
+    "logging_utils",
+    "exceptions",
 ]
 

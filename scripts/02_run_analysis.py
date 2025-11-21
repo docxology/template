@@ -13,6 +13,11 @@ This thin orchestrator coordinates the analysis and figure generation stage:
 - Delegates to project-specific scripts
 
 Stage 3 of the pipeline orchestration.
+
+Architecture:
+    This is a generic entry point (Layer 1 - Infrastructure).
+    It discovers and executes project-specific scripts from project/scripts/
+    without knowing their implementation details. Follows thin orchestrator pattern.
 """
 from __future__ import annotations
 
@@ -20,32 +25,37 @@ import subprocess
 import sys
 from pathlib import Path
 
+# Add infrastructure to path for logging
+sys.path.insert(0, str(Path(__file__).parent.parent / "infrastructure"))
 
-def log_stage(message: str) -> None:
-    """Log a stage message."""
-    print(f"\n[STAGE-02] {message}")
+from logging_utils import get_logger, log_operation, log_success
+from exceptions import ScriptExecutionError, PipelineError
 
-
-def log_success(message: str) -> None:
-    """Log a success message."""
-    print(f"  ✅ {message}")
-
-
-def log_error(message: str) -> None:
-    """Log an error message."""
-    print(f"  ❌ {message}")
+# Set up logger for this module
+logger = get_logger(__name__)
 
 
 def discover_analysis_scripts() -> list[Path]:
-    """Discover all analysis scripts in project/ to execute."""
-    log_stage("Discovering analysis scripts in project/...")
+    """Discover all analysis scripts in project/ to execute.
+    
+    Returns:
+        List of Python script paths from project/scripts/ directory
+        
+    Example:
+        >>> scripts = discover_analysis_scripts()
+        >>> all(s.suffix == '.py' for s in scripts)
+        True
+    """
+    logger.info("[STAGE-02] Discovering analysis scripts in project/...")
     
     repo_root = Path(__file__).parent.parent
     project_scripts_dir = repo_root / "project" / "scripts"
     
     if not project_scripts_dir.exists():
-        log_error(f"Project scripts directory not found: {project_scripts_dir}")
-        return []
+        raise PipelineError(
+            "Project scripts directory not found",
+            context={"expected_path": str(project_scripts_dir)}
+        )
     
     # Find all Python scripts in project/scripts/ except README files
     scripts = sorted([
@@ -54,68 +64,93 @@ def discover_analysis_scripts() -> list[Path]:
     ])
     
     for script in scripts:
-        log_success(f"Found: {script.name}")
+        log_success(f"Found: {script.name}", logger)
     
     return scripts
 
 
 def run_analysis_script(script_path: Path, repo_root: Path) -> int:
-    """Execute a single analysis script."""
-    print(f"\n  Running: {script_path.name}")
+    """Execute a single analysis script.
+    
+    Args:
+        script_path: Path to the script to execute
+        repo_root: Repository root directory
+        
+    Returns:
+        Exit code from script execution
+        
+    Raises:
+        ScriptExecutionError: If script execution fails critically
+    """
+    logger.info(f"\n  Running: {script_path.name}")
     
     cmd = [sys.executable, str(script_path)]
     
     project_root = repo_root / "project"
     
     try:
-        result = subprocess.run(
-            cmd,
-            cwd=str(project_root),
-            capture_output=False,
-            check=False
-        )
+        with log_operation(f"Execute {script_path.name}", logger):
+            result = subprocess.run(
+                cmd,
+                cwd=str(project_root),
+                capture_output=False,
+                check=False
+            )
         
         if result.returncode == 0:
-            log_success(f"Script succeeded: {script_path.name}")
+            log_success(f"Script succeeded: {script_path.name}", logger)
         else:
-            log_error(f"Script failed: {script_path.name} (exit code: {result.returncode})")
+            logger.error(f"Script failed: {script_path.name} (exit code: {result.returncode})")
         
         return result.returncode
     except Exception as e:
-        log_error(f"Failed to execute {script_path.name}: {e}")
-        return 1
+        raise ScriptExecutionError(
+            f"Failed to execute {script_path.name}",
+            context={"script": str(script_path), "error": str(e)}
+        ) from e
 
 
 def run_analysis_pipeline(scripts: list[Path]) -> int:
-    """Execute all analysis scripts in sequence."""
-    log_stage("Executing analysis pipeline...")
+    """Execute all analysis scripts in sequence.
+    
+    Args:
+        scripts: List of script paths to execute
+        
+    Returns:
+        Exit code (0=success, non-zero=at least one script failed)
+    """
+    logger.info("[STAGE-02] Executing analysis pipeline...")
     
     repo_root = Path(__file__).parent.parent
     
     if not scripts:
-        print("  No analysis scripts found - skipping stage")
+        logger.info("  No analysis scripts found - skipping stage")
         return 0
     
     failed_scripts = []
     for i, script in enumerate(scripts, 1):
-        print(f"\n  [{i}/{len(scripts)}] Analysis script")
+        logger.info(f"\n  [{i}/{len(scripts)}] Analysis script")
         exit_code = run_analysis_script(script, repo_root)
         
         if exit_code != 0:
             failed_scripts.append(script.name)
     
     if failed_scripts:
-        print(f"\n❌ {len(failed_scripts)} script(s) failed:")
+        logger.error(f"\n❌ {len(failed_scripts)} script(s) failed:")
         for script_name in failed_scripts:
-            log_error(f"Failed: {script_name}")
+            logger.error(f"Failed: {script_name}")
         return 1
     
     return 0
 
 
 def verify_outputs() -> bool:
-    """Verify that analysis generated expected outputs."""
-    log_stage("Verifying analysis outputs...")
+    """Verify that analysis generated expected outputs.
+    
+    Returns:
+        True if outputs are valid, False otherwise
+    """
+    logger.info("[STAGE-02] Verifying analysis outputs...")
     
     repo_root = Path(__file__).parent.parent
     output_dirs = [
@@ -128,44 +163,56 @@ def verify_outputs() -> bool:
         if output_dir.exists():
             files = list(output_dir.glob("*"))
             if files:
-                log_success(f"Output directory has {len(files)} file(s): {output_dir.name}")
+                log_success(f"Output directory has {len(files)} file(s): {output_dir.name}", logger)
             else:
-                print(f"  ℹ️  Output directory is empty: {output_dir.name}")
+                logger.info(f"  ℹ️  Output directory is empty: {output_dir.name}")
         else:
             # Output directories may not exist yet, not an error
-            print(f"  ℹ️  Output directory not yet created: {output_dir.name}")
+            logger.info(f"  ℹ️  Output directory not yet created: {output_dir.name}")
     
     return all_valid
 
 
 def main() -> int:
-    """Execute analysis orchestration."""
-    print("\n" + "="*60)
-    print("STAGE 02: Run Analysis")
-    print("="*60)
+    """Execute analysis orchestration.
     
-    # Discover scripts
-    scripts = discover_analysis_scripts()
+    Returns:
+        Exit code (0=success, 1=failure)
+    """
+    logger.info("\n" + "="*60)
+    logger.info("STAGE 02: Run Analysis")
+    logger.info("="*60)
     
-    if not scripts:
-        print("  No analysis scripts found - skipping stage")
-        return 0
-    
-    # Run analysis pipeline
-    exit_code = run_analysis_pipeline(scripts)
-    
-    if exit_code == 0:
-        # Verify outputs
-        outputs_valid = verify_outputs()
+    try:
+        # Discover scripts
+        scripts = discover_analysis_scripts()
         
-        if outputs_valid:
-            print("\n✅ Analysis complete - ready for PDF rendering")
+        if not scripts:
+            logger.info("  No analysis scripts found - skipping stage")
+            return 0
+        
+        # Run analysis pipeline
+        exit_code = run_analysis_pipeline(scripts)
+        
+        if exit_code == 0:
+            # Verify outputs
+            outputs_valid = verify_outputs()
+            
+            if outputs_valid:
+                logger.info("\n✅ Analysis complete - ready for PDF rendering")
+            else:
+                logger.warning("\n⚠️  Analysis complete but output verification failed")
         else:
-            print("\n⚠️  Analysis complete but output verification failed")
-    else:
-        print("\n❌ Analysis failed - fix issues and try again")
-    
-    return exit_code
+            logger.error("\n❌ Analysis failed - fix issues and try again")
+        
+        return exit_code
+        
+    except (ScriptExecutionError, PipelineError) as e:
+        logger.error(f"Pipeline error: {e}", exc_info=True)
+        return 1
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}", exc_info=True)
+        return 1
 
 
 if __name__ == "__main__":
