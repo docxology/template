@@ -1,6 +1,6 @@
 # API Symbols Glossary {#sec:glossary}
 
-This glossary is auto-generated from the public API in `src/` by `repo_utilities/generate_glossary.py`.
+This glossary is auto-generated from the public API in `src/` modules.
 
 <!-- BEGIN: AUTO-API-GLOSSARY -->
 | Module | Name | Kind | Summary |

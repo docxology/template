@@ -15,48 +15,38 @@ git clone https://github.com/docxology/template.git
 uv sync
 
 # Run complete build
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 ```
 
 ### Daily Workflow Commands
 ```bash
-# Clean outputs
-./repo_utilities/clean_output.sh
-
 # Run tests only
 pytest tests/ --cov=src --cov-report=html
 
 # Generate figures only
-python3 scripts/example_figure.py
+python3 scripts/02_run_analysis.py
 
 # Validate markdown
-python3 repo_utilities/validate_markdown.py
-# Strict mode (fail on any issues)
-python3 repo_utilities/validate_markdown.py --strict
+python3 -m infrastructure.validation.cli markdown manuscript/
 
 # Open manuscript
-./repo_utilities/open_manuscript.sh
+open output/pdf/project_combined.pdf
 ```
 
 ### Build Pipeline Commands
 ```bash
-# Complete from-scratch build
-./generate_pdf_from_scratch.sh
+# Complete pipeline execution
+python3 scripts/run_all.py
 
-# With options (verbose logging, log file)
-./generate_pdf_from_scratch.sh --verbose --log-file build.log
-
-# Skip validation (faster iteration)
-./generate_pdf_from_scratch.sh --skip-validation
-
-# Dry run (preview without executing)
-./generate_pdf_from_scratch.sh --dry-run
-
-# Quick build (no clean)
-./repo_utilities/render_pdf.sh
+# With specific stage
+python3 scripts/00_setup_environment.py      # Setup
+python3 scripts/01_run_tests.py              # Test
+python3 scripts/02_run_analysis.py           # Analysis
+python3 scripts/03_render_pdf.py             # PDF
+python3 scripts/04_validate_output.py        # Validate
 
 # Validate PDFs
-python3 repo_utilities/validate_pdf_output.py
+python3 -m infrastructure.validation.cli pdf output/pdf/
 ```
 
 ## 📁 Directory Structure Quick Reference
@@ -65,11 +55,12 @@ python3 repo_utilities/validate_pdf_output.py
 template/
 ├── src/              # Core business logic (100% tested)
 ├── tests/            # Test suite (100% coverage required)
-├── scripts/          # Thin orchestrators (use src/ methods)
+├── scripts/          # Entry point orchestrators (generic)
+├── project/          # Project-specific code
+├── infrastructure/   # Reusable infrastructure modules
 ├── manuscript/       # Research sections (generate PDFs)
-├── docs/             # Documentation (25+ guides)
-├── output/           # Generated files (disposable)
-└── repo_utilities/   # Build tools (generic)
+├── docs/             # Documentation (42+ guides)
+└── output/           # Generated files (disposable)
 ```
 
 ## 🔧 Common Workflows
@@ -77,10 +68,10 @@ template/
 ### Create a New Document Section
 ```bash
 # 1. Create markdown file
-vim manuscript/07_new_section.md
+vim project/manuscript/07_new_section.md
 
 # 2. Add content with section label
-echo "# New Section {#sec:new_section}" > manuscript/07_new_section.md
+echo "# New Section {#sec:new_section}" > project/manuscript/07_new_section.md
 
 # 3. Rebuild
 ./repo_utilities/render_pdf.sh

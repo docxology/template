@@ -65,7 +65,7 @@ from ..literature import LiteratureSearch  # DON'T
 
 ```python
 # Good: Use infrastructure exceptions
-from infrastructure.exceptions import (
+from infrastructure.core.exceptions import (
     LiteratureSearchError, 
     LLMConnectionError,
     RenderingError
@@ -82,10 +82,12 @@ raise LiteratureSearchError(
 
 ```python
 # Good: Use infrastructure logging
-from infrastructure.logging_utils import get_logger
+from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 logger.info(f"Processing {count} items")
+
+# See python_logging.md for full guidelines
 ```
 
 ## Module-Specific Guidelines
@@ -222,34 +224,17 @@ def function_name(arg: str) -> str:
 
 ## Integration with Build System
 
-### Wrapper Scripts
-
-Create thin wrappers in `repo_utilities/`:
-
-```python
-#!/usr/bin/env python3
-from pathlib import Path
-import sys
-
-# Add root to path
-root = Path(__file__).parent.parent
-sys.path.insert(0, str(root))
-
-from infrastructure.module import MainClass
-
-def main():
-    # Thin orchestration only
-    client = MainClass()
-    result = client.process()
-    print(result)
-
-if __name__ == "__main__":
-    main()
-```
-
 ### Scripts Integration
 
-Update `scripts/02_run_analysis.py` to discover and use new modules.
+Infrastructure modules are integrated into the build pipeline through:
+
+1. **Setup** (`scripts/00_setup_environment.py`) - Environment validation
+2. **Testing** (`scripts/01_run_tests.py`) - Infrastructure and project tests
+3. **Analysis** (`scripts/02_run_analysis.py`) - Project script discovery and execution
+4. **PDF Rendering** (`scripts/03_render_pdf.py`) - Document generation
+5. **Validation** (`scripts/04_validate_output.py`) - Quality assurance
+
+Update these scripts to discover and use new infrastructure modules as needed.
 
 ## Quality Checklist
 

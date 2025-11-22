@@ -126,29 +126,34 @@ fm.register_figure("results.png", label="fig:results")
 
 ### ✅ CORRECT Pattern (Root Entry Points)
 
+Root entry points use **thin orchestrator pattern**:
+- Import infrastructure modules, not business logic
+- Coordinate between pipeline stages
+- Delegate all computation to imported modules
+- Work with ANY project following this structure
+
 ```python
-# scripts/02_run_analysis.py - Generic orchestrator
-from pathlib import Path
+# scripts/03_render_pdf.py - Generic orchestrator
+from infrastructure.rendering import RenderManager
 
-def discover_analysis_scripts() -> list[Path]:
-    """Discover scripts in project/scripts/"""
-    repo_root = Path(__file__).parent.parent
-    project_scripts = repo_root / "project" / "scripts"
+def run_render_pipeline() -> int:
+    """Orchestrate PDF rendering stage."""
+    # Use infrastructure modules
+    renderer = RenderManager()
     
-    return sorted([f for f in project_scripts.glob("*.py")])
-
-def main():
-    """Execute project scripts"""
-    scripts = discover_analysis_scripts()
-    for script in scripts:
-        # Invoke project script
-        subprocess.run([sys.executable, str(script)])
+    # Discover manuscript files and render
+    pdf = renderer.render_pdf(Path("manuscript.tex"))
+    
+    # Validate output
+    report = validate_pdf_rendering(pdf)
+    
+    return 0 if not report['summary']['has_issues'] else 1
 ```
 
 **Key Points:**
-- Does NOT implement analysis
-- Discovers `project/scripts/`
-- Delegates to project-specific code
+- Uses `infrastructure.<module>` imports
+- Delegates computation to modules
+- Coordinates pipeline stages
 - Works with ANY project
 
 ### ✅ CORRECT Pattern (Project Scripts)

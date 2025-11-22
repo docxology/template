@@ -38,7 +38,7 @@ python scripts/analysis_pipeline.py
 ### Build Manuscript
 ```bash
 cd ..
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
 ```
 
 ## Features
@@ -126,7 +126,7 @@ This project is designed to work with the template infrastructure:
 
 ```bash
 cd /path/to/template
-./repo_utilities/render_pdf.sh  # Builds manuscript PDFs
+python3 scripts/03_render_pdf.py  # Builds manuscript PDFs
 ```
 
 ## Dependencies

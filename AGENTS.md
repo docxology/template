@@ -19,18 +19,17 @@ This document provides **comprehensive documentation** for the Research Project 
 
 ## 🏗️ Core Architecture
 
-### Two-Layer Architecture with Entry Points
+### Two-Layer Architecture
 
-**Template Infrastructure (Generic - Reusable)**
-- `infrastructure/` - Generic build/validation tools
-- `repo_utilities/` - Build orchestration utilities
-- `scripts/` - Entry point orchestrators (5 stages)
-- `tests/` - Infrastructure tests
+**Layer 1: Infrastructure (Generic - Reusable)**
+- `infrastructure/` - Generic build/validation tools (reusable across projects)
+- `scripts/` - Entry point orchestrators (5-stage pipeline)
+- `tests/` - Infrastructure and integration tests
 
-**Project-Specific (Customizable)**
-- `project/src/` - Research algorithms and analysis
+**Layer 2: Project (Project-Specific - Customizable)**
+- `project/src/` - Research algorithms and analysis (domain-specific)
 - `project/tests/` - Project test suite
-- `project/scripts/` - Project analysis scripts
+- `project/scripts/` - Project analysis scripts (thin orchestrators)
 - `project/manuscript/` - Research manuscript
 
 ### Thin Orchestrator Pattern
@@ -61,11 +60,6 @@ template/                           # Generic template repository
 │   ├── AGENTS.md
 │   ├── README.md
 │   └── *.py                        # build_verifier, figure_manager, etc.
-├── repo_utilities/                 # Generic utility scripts
-│   ├── AGENTS.md
-│   ├── README.md
-│   ├── *.sh                        # render_pdf.sh, clean_output.sh, etc.
-│   └── *.py
 ├── scripts/                        # Generic entry point orchestrators
 │   ├── AGENTS.md                   # Entry points: 00-setup, 01-tests, 02-analysis, 03-pdf, 04-validate
 │   ├── README.md
@@ -121,18 +115,11 @@ Each directory contains comprehensive documentation for easy navigation:
 | [`project/scripts/`](project/scripts/) | [AGENTS.md](project/scripts/AGENTS.md) | [README.md](project/scripts/README.md) | Project-specific analysis scripts |
 | [`project/manuscript/`](project/manuscript/) | [AGENTS.md](project/manuscript/AGENTS.md) | [README.md](project/manuscript/README.md) | Research manuscript sections |
 
-### Content Directories
+### Documentation Directories
 
 | Directory | AGENTS.md | README.md | Purpose |
 |-----------|-----------|-----------|---------|
-| [`manuscript/`](manuscript/) | [AGENTS.md](manuscript/AGENTS.md) | [README.md](manuscript/README.md) | Research manuscript sections |
 | [`docs/`](docs/) | [AGENTS.md](docs/AGENTS.md) | [README.md](docs/README.md) | Project documentation hub |
-
-### Utility Directories
-
-| Directory | AGENTS.md | README.md | Purpose |
-|-----------|-----------|-----------|---------|
-| [`repo_utilities/`](repo_utilities/) | [AGENTS.md](repo_utilities/AGENTS.md) | [README.md](repo_utilities/README.md) | Build orchestration and utilities |
 
 ### Documentation Navigation
 
@@ -157,11 +144,6 @@ template/                           # Generic Template
 │   ├── README.md                   # Quick reference
 │   ├── build_verifier.py
 │   ├── figure_manager.py
-│   └── ...
-├── repo_utilities/                 # Build orchestration
-│   ├── AGENTS.md                   # Utilities documentation
-│   ├── README.md                   # Quick reference
-│   ├── render_pdf.sh
 │   └── ...
 ├── scripts/                        # Entry Points (Generic Orchestrators)
 │   ├── AGENTS.md                   # Entry point documentation
@@ -280,7 +262,7 @@ For backward compatibility, environment variables still work and take precedence
 vim manuscript/config.yaml
 
 # Build with config file values
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
 ```
 
 #### Using Environment Variables
@@ -291,13 +273,13 @@ export AUTHOR_EMAIL="jane.smith@university.edu"
 export AUTHOR_ORCID="0000-0000-0000-1234"
 export DOI="10.5281/zenodo.12345678"  # Optional
 
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
 ```
 
 #### Verbose Logging
 ```bash
 export LOG_LEVEL=0  # Show all debug messages
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
 ```
 
 ### Runtime Configuration
@@ -314,11 +296,11 @@ Configuration is read at runtime by `render_pdf.sh` and applied to:
 ### Complete Pipeline Execution
 
 ```bash
-# 1. Clean previous outputs
-./repo_utilities/clean_output.sh
+# 1. Clean previous outputs (using run_all.sh master orchestrator)
+python3 scripts/run_all.py --clean
 
 # 2. Generate everything (tests + scripts + PDFs)
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 ```
 
 ### Pipeline Stages
@@ -337,14 +319,14 @@ Configuration is read at runtime by `render_pdf.sh` and applied to:
 # Run only tests
 python3 -m pytest tests/ --cov=src --cov-report=html
 
-# Run only scripts
-python3 scripts/*.py
+# Run only project scripts
+python3 scripts/02_run_analysis.py
 
 # Validate markdown only
-python3 repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown manuscript/
 
 # Generate only PDFs
-./repo_utilities/render_pdf.sh  # (after manual setup)
+python3 scripts/03_render_pdf.py  # (after manual setup)
 ```
 
 ## ✅ Validation Systems
@@ -353,13 +335,13 @@ python3 repo_utilities/validate_markdown.py
 
 ```bash
 # Validate generated PDF for issues
-python3 repo_utilities/validate_pdf_output.py
+python3 -m infrastructure.validation.cli pdf output/pdf/
 
 # With verbose output
-python3 repo_utilities/validate_pdf_output.py --verbose
+python3 -m infrastructure.validation.cli pdf output/pdf/ --verbose
 
 # Specific PDF file
-python3 repo_utilities/validate_pdf_output.py output/pdf/01_abstract.pdf
+python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 ```
 
 **Validation Checks**:
@@ -373,10 +355,10 @@ python3 repo_utilities/validate_pdf_output.py output/pdf/01_abstract.pdf
 
 ```bash
 # Validate all markdown files
-python3 repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown manuscript/
 
 # Strict mode (fail on any issues)
-python3 repo_utilities/validate_markdown.py --strict
+python3 -m infrastructure.validation.cli markdown manuscript/ --strict
 ```
 
 **Validation Checks**:
@@ -405,11 +387,11 @@ python3 -m pytest tests/ --cov=src --cov-report=html --cov-report=term-missing
 
 ### Test Structure
 
-Tests follow the **thin orchestrator pattern**:
-- Import real methods from `src/` modules
+Tests follow the **thin orchestrator pattern** principles:
+- Import real methods from `src/` or `infrastructure/` modules  
 - Use real data and computation
 - Validate actual behavior (no mocks)
-- Ensure reproducible results
+- Ensure reproducible, deterministic results
 
 ### Test Categories
 
@@ -720,7 +702,7 @@ open output/project_combined.html
 ls -la output/
 
 # Check PDF validation
-python3 repo_utilities/validate_pdf_output.py
+python3 -m infrastructure.validation.cli pdf output/pdf/
 ```
 
 ## 🔧 Troubleshooting
@@ -751,7 +733,7 @@ python3 -c "import src.example; print('Import successful')"
 which xelatex
 
 # Validate markdown first
-python3 repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown manuscript/
 
 # Check compilation logs
 ls output/pdf/*_compile.log
@@ -773,10 +755,10 @@ brew install --cask mactex
 ```bash
 # Enable verbose logging
 export LOG_LEVEL=0
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
 
 # Run with debug output
-python3 repo_utilities/validate_pdf_output.py --verbose
+python3 -m infrastructure.validation.cli pdf output/pdf/ --verbose
 ```
 
 ### Log Files
@@ -814,7 +796,7 @@ Key log files for debugging:
 3. **Backup Strategy**
    ```bash
    # Clean outputs before backup
-   ./repo_utilities/clean_output.sh
+   python3 scripts/run_all.py --clean
 
    # Backup source files only
    tar -czf project_backup.tar.gz src/ tests/ scripts/ manuscript/ docs/

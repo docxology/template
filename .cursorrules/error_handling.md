@@ -2,12 +2,12 @@
 
 ## Exception Hierarchy
 
-All custom exceptions inherit from `TemplateError` in `infrastructure/exceptions.py`.
+All custom exceptions inherit from `TemplateError` in `infrastructure/core/exceptions.py`.
 
 ### Import Pattern
 
 ```python
-from exceptions import (
+from infrastructure.core.exceptions import (
     ValidationError,
     ConfigurationError,
     BuildError,
@@ -74,8 +74,8 @@ except TemplateError:
 
 ## See Also
 
-- [Error Handling Guide](../docs/ERROR_HANDLING_GUIDE.md)
-- [Logging](python_logging.md)
+- [Error Handling Guide](../docs/ERROR_HANDLING_GUIDE.md) - Comprehensive error handling patterns
+- [Logging](python_logging.md) - Logging standards
 
 
 

@@ -159,24 +159,21 @@ graph TB
 1. **Click "Use this template"** above to create a new repository
 2. **Clone your new repository**
 3. **Install dependencies**: `uv sync`
-4. **Generate your first document**: `./repo_utilities/render_pdf.sh`
+4. **Generate your first document**: `python3 scripts/03_render_pdf.py`
 
 **📖 Need help?** See **[How To Use Guide](docs/HOW_TO_USE.md)** for comprehensive guidance from basic usage to advanced workflows.
 
 ### Option 2: Quick Commands Reference
 
 ```bash
-# Clean previous outputs
-./repo_utilities/clean_output.sh
-
 # Generate everything (tests + scripts + PDFs)
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 
 # Run tests with coverage
 pytest tests/ --cov=src --cov-report=html
 
 # Open generated manuscript
-./repo_utilities/open_manuscript.sh
+open output/pdf/project_combined.pdf
 ```
 
 ## 📊 System Health & Metrics
@@ -304,40 +301,42 @@ The project follows a standardized structure with clear separation of concerns:
 
 ```mermaid
 graph TB
+    subgraph "Layer 1: Infrastructure"
+        INFRA[infrastructure/<br/>Generic tools<br/>Build & validation]
+        INFRA_SCRIPTS[scripts/<br/>Entry point orchestrators<br/>5-stage pipeline]
+    end
+    
+    subgraph "Layer 2: Project-Specific"
+        SRC[project/src/<br/>Scientific algorithms<br/>100% tested]
+        SCRIPTS[project/scripts/<br/>Analysis scripts<br/>Thin orchestrators]
+    end
+    
     subgraph "Project Components"
-        SRC[src/<br/>Core business logic<br/>100% tested]
         TESTS[tests/<br/>Test suite<br/>100% coverage]
-        SCRIPTS[scripts/<br/>Thin orchestrators<br/>Use src/ methods]
-        DOCS[docs/<br/>Documentation<br/>42+ comprehensive guides]
+        DOCS[docs/<br/>Documentation<br/>42+ guides]
         MANUSCRIPT[manuscript/<br/>Research sections<br/>Generate PDFs]
-        REPO_UTILS[repo_utilities/<br/>Build tools<br/>Generic utilities]
         OUTPUT[output/<br/>Generated files<br/>PDFs, figures, data]
     end
     
     subgraph "Thin Orchestrator Pattern"
-        SRC -->|"provides tested methods"| SCRIPTS
-        SCRIPTS -->|"import & use"| SRC
+        SRC -->|"import & use"| SCRIPTS
+        SRC -->|"import & use"| INFRA_SCRIPTS
+        INFRA -->|"provide utilities"| SCRIPTS
         SCRIPTS -->|"generate"| OUTPUT
+        INFRA_SCRIPTS -->|"orchestrate pipeline"| TESTS
+        INFRA_SCRIPTS -->|"orchestrate pipeline"| SCRIPTS
         MANUSCRIPT -->|"reference"| OUTPUT
         TESTS -->|"validate"| SRC
     end
     
-    subgraph "Build Pipeline"
-        RENDER[render_pdf.sh<br/>Orchestrator]
-        RENDER -->|"runs tests"| TESTS
-        RENDER -->|"executes scripts"| SCRIPTS
-        RENDER -->|"processes manuscript"| MANUSCRIPT
-        RENDER -->|"builds PDFs"| OUTPUT
-    end
+    classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef layer2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef core fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef output fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
     
-    classDef core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef pattern fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef pipeline fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
-    class SRC,TESTS,SCRIPTS,DOCS,MANUSCRIPT,REPO_UTILS core
-    class SRC,SCRIPTS pattern
-    class RENDER pipeline
+    class INFRA,INFRA_SCRIPTS layer1
+    class SRC,SCRIPTS layer2
+    class TESTS,DOCS,MANUSCRIPT core
     class OUTPUT output
 ```
 
@@ -345,11 +344,12 @@ graph TB
 
 - **`src/`** - **Core business logic** with comprehensive test coverage (100% required) - [Details](src/AGENTS.md)
 - **`tests/`** - Test files ensuring all `src/` functionality works correctly - [Testing Guide](tests/AGENTS.md)
-- **`scripts/`** - **Thin orchestrators** that use `src/` methods to generate figures and data - [Script Guide](scripts/AGENTS.md)
+- **`scripts/`** - **Entry point orchestrators** that discover and execute project-specific scripts - [Script Guide](scripts/AGENTS.md)
+- **`project/src/`** - **Project-specific scientific code** with 100% test coverage - [Project Details](project/src/AGENTS.md)
+- **`project/scripts/`** - **Project-specific analysis scripts** that use project/src/ methods
 - **`docs/`** - Package-level documentation (42+ guides) - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 - **`manuscript/`** - Research manuscript sections (generate PDFs) - [Manuscript Guide](manuscript/AGENTS.md)
 - **`output/`** - Generated outputs (PDFs, figures, data) - **All files disposable**
-- **`repo_utilities/`** - Generic utility scripts for any project - [Utilities Guide](repo_utilities/AGENTS.md)
 
 ## 🔑 Key Architectural Principles
 
@@ -449,18 +449,24 @@ pip install -r requirements.txt
 ### 3. Generate Manuscript
 
 ```bash
-# Recommended: Enhanced from-scratch build (includes cleanup and validation)
-./generate_pdf_from_scratch.sh
+# Complete pipeline execution (recommended)
+python3 scripts/run_all.py
 
-# With options (verbose logging, log file)
-./generate_pdf_from_scratch.sh --verbose --log-file build.log
-
-# Alternative: Manual steps
-./repo_utilities/clean_output.sh
-./repo_utilities/render_pdf.sh
+# Or run stages individually (using generic entry point orchestrators)
+python3 scripts/00_setup_environment.py      # Stage 0: Setup environment
+python3 scripts/01_run_tests.py              # Stage 1: Run tests
+python3 scripts/02_run_analysis.py           # Stage 2: Execute project/scripts/
+python3 scripts/03_render_pdf.py             # Stage 3: Render PDFs
+python3 scripts/04_validate_output.py        # Stage 4: Validate output
 ```
 
 **See [How To Use Guide](docs/HOW_TO_USE.md) for comprehensive setup instructions at all skill levels.**
+
+**Architecture Note:** The project uses a **two-layer architecture**:
+- **Layer 1 (infrastructure/)**: Generic, reusable tools
+- **Layer 2 (project/)**: Project-specific scientific code
+
+The root-level `scripts/` directory contains generic entry point orchestrators that discover and coordinate project-specific code in `project/scripts/`.
 
 ## 🔧 Customization
 
@@ -504,7 +510,7 @@ export PROJECT_TITLE="Your Project Title"
 export DOI="10.5281/zenodo.12345678"
 
 # Generate with custom configuration
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
 ```
 
 **Priority**: Environment variables override config file values.
@@ -519,10 +525,10 @@ export DOI="10.5281/zenodo.12345678"
 
 **[Script architecture guide](scripts/AGENTS.md)** | **[Thin orchestrator pattern](docs/THIN_ORCHESTRATOR_SUMMARY.md)**
 
-Place Python scripts in the `scripts/` directory. They should:
+Place Python scripts in the `project/scripts/` directory. They should:
 
-- **Import methods from `src/` modules** (thin orchestrator pattern)
-- **Use `src/` methods for all computation** (never implement algorithms)
+- **Import methods from `project/src/` modules** (thin orchestrator pattern)
+- **Use `project/src/` methods for all computation** (never implement algorithms)
 - **Generate figures/data** using tested methods
 - **Print file paths to stdout**
 - **Handle errors gracefully**
@@ -534,18 +540,18 @@ Example script structure:
 #!/usr/bin/env python3
 """Example project script demonstrating thin orchestrator pattern."""
 
-from example import add_numbers, calculate_average  # Import from src/
+from project.src.example import add_numbers, calculate_average  # Import from src/
 
 def main():
     # Use src/ methods for computation
     data = [1, 2, 3, 4, 5]
-    avg = calculate_average(data)  # From src/example.py
+    avg = calculate_average(data)  # From project/src/example.py
     
     # Script handles visualization and output
     # ... visualization code ...
     
     # Print paths for the system to capture
-    print("path/to/generated/file.png")
+    print("project/output/generated/file.png")
 
 if __name__ == "__main__":
     main()
@@ -567,24 +573,32 @@ if __name__ == "__main__":
 
 **[Testing guide](tests/AGENTS.md)** | **[Workflow](docs/WORKFLOW.md)** | **[Test improvements](docs/TEST_IMPROVEMENTS_SUMMARY.md)**
 
-The system enforces comprehensive test coverage:
+The system enforces comprehensive test coverage using TDD principles:
 
 ```bash
-# Run tests with coverage
+# Run all tests with coverage
 pytest tests/ --cov=src --cov-report=html
 
 # Or using uv
 uv run pytest tests/ --cov=src --cov-report=html
 
-# Generate detailed coverage report
+# Generate detailed coverage report with missing lines
 pytest tests/ --cov=src --cov-report=term-missing
+
+# Require 100% coverage (infrastructure modules)
+pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=100
 ```
 
-**Test Requirements:**
-- **Statement coverage**: 100% of all code lines executed
-- **Branch coverage**: 100% of all conditional branches taken
-- **No mocks**: All tests use real numerical examples
+**Test Requirements (Infrastructure Layer - Layer 1):**
+- **100% code coverage**: All modules must have complete coverage
+- **No mocks**: All tests use real data and computations
 - **Deterministic**: Fixed RNG seeds for reproducible results
+- **Integration testing**: Cross-module interaction validation
+
+**Test Requirements (Project Layer - Layer 2):**
+- **100% code coverage**: All project-specific code must be covered
+- **Real data testing**: Use actual domain data, not synthetic test data
+- **Reproducible**: Fixed seeds and deterministic computation
 
 **Current Status**: 81.90% coverage, 320/322 tests passing - [Full Analysis](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 
@@ -707,14 +721,16 @@ flowchart TD
 - **[src/README.md](src/README.md)** - Source code quick reference
 - **[tests/AGENTS.md](tests/AGENTS.md)** - Testing philosophy and guide
 - **[tests/README.md](tests/README.md)** - Testing quick reference
-- **[scripts/AGENTS.md](scripts/AGENTS.md)** - Script architecture and patterns
-- **[scripts/README.md](scripts/README.md)** - Script quick reference
+- **[scripts/AGENTS.md](scripts/AGENTS.md)** - Entry point orchestrators documentation
+- **[scripts/README.md](scripts/README.md)** - Entry points quick reference
+- **[project/src/AGENTS.md](project/src/AGENTS.md)** - Project code documentation
+- **[project/src/README.md](project/src/README.md)** - Project code quick reference
+- **[project/scripts/AGENTS.md](project/scripts/AGENTS.md)** - Project scripts documentation
+- **[project/scripts/README.md](project/scripts/README.md)** - Project scripts quick reference
 - **[manuscript/AGENTS.md](manuscript/AGENTS.md)** - Manuscript structure guide
 - **[manuscript/README.md](manuscript/README.md)** - Manuscript quick reference
 - **[docs/AGENTS.md](docs/AGENTS.md)** - Documentation organization guide
 - **[docs/README.md](docs/README.md)** - Documentation quick reference
-- **[repo_utilities/AGENTS.md](repo_utilities/AGENTS.md)** - Build utilities documentation
-- **[repo_utilities/README.md](repo_utilities/README.md)** - Utilities quick reference
 - **[output/AGENTS.md](output/AGENTS.md)** - Generated outputs documentation
 - **[output/README.md](output/README.md)** - Generated outputs quick reference
 
@@ -811,7 +827,7 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 
 - Check the **[FAQ](docs/FAQ.md)** for common questions and solutions
 - Review the **[Build System](docs/BUILD_SYSTEM.md)** for system status
-- Check the **[repo_utilities/README.md](repo_utilities/README.md)** for detailed troubleshooting
+- Review the **[scripts/README.md](scripts/README.md)** for entry point information
 - Review the test output for specific error messages
 - Ensure all required dependencies are installed
 - See **[DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** for complete reference
@@ -821,15 +837,15 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 - **Build System**: [BUILD_SYSTEM.md](docs/BUILD_SYSTEM.md) - Complete reference (performance, status, fixes)
 - **PDF Quality**: [PDF_VALIDATION.md](docs/PDF_VALIDATION.md)
 
-## 🔄 Migration from QuadMath
+## 🔄 Migration from Other Projects
 
-This template was adapted from the QuadMath project. To migrate your existing project:
+To adapt this template for your existing project:
 
-1. Copy the `repo_utilities/` folder to your project
+1. Copy the `infrastructure/` and `scripts/` directories to your project
 2. Adapt the `src/`, `tests/`, and `scripts/` structure
-3. Update markdown files to match the expected format - [Markdown Guide](docs/MARKDOWN_TEMPLATE_GUIDE.md)
+3. Update manuscript markdown files to match the expected format - [Markdown Guide](docs/MARKDOWN_TEMPLATE_GUIDE.md)
 4. Set appropriate environment variables for your project - [Configuration](AGENTS.md#configuration-system)
-5. Run the utility scripts to validate the setup - [Utilities Guide](repo_utilities/AGENTS.md)
+5. Run the entry points to validate the setup - [Scripts Guide](scripts/AGENTS.md)
 
 **See [EXAMPLES.md](docs/EXAMPLES.md) for project customization patterns.**
 

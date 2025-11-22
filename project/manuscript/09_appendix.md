@@ -56,7 +56,7 @@ The following hyperparameters were used in our experiments:
 Learning rate & $\alpha_0$ & 0.01 & [0.001, 0.1] \\
 Momentum & $\beta$ & 0.9 & [0.5, 0.99] \\
 Regularization & $\lambda$ & 0.001 & [0, 0.01] \\
-Tolerance & $\epsilon$ & $10^{-6}$ & [10^{-8}, 10^{-4}] \\
+Tolerance & $\epsilon$ & $10^{-6}$ & [$10^{-8}$, $10^{-4}$] \\
 \hline
 \end{tabular}
 \caption{Hyperparameter settings used in experiments}

@@ -2,16 +2,12 @@
 
 ## Unified Logging System
 
-All Python scripts use `infrastructure/logging_utils.py`.
+All Python scripts use `infrastructure/core/logging_utils.py`.
 
 ### Import Pattern
 
 ```python
-from pathlib import Path
-import sys
-
-sys.path.insert(0, str(Path(__file__).parent.parent / "infrastructure"))
-from logging_utils import get_logger, log_operation, log_success
+from infrastructure.core.logging_utils import get_logger, log_operation, log_success
 
 logger = get_logger(__name__)
 ```

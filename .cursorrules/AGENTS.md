@@ -31,7 +31,7 @@ This directory contains comprehensive development standards, coding guidelines, 
 ### 2. Thin Orchestrator Pattern
 
 - **Business logic** → `src/` or `infrastructure/`
-- **Orchestration** → `scripts/` or `repo_utilities/`
+- **Orchestration** → `scripts/` (entry points)
 - **No logic in scripts** - only coordination
 
 ### 3. Quality Standards
@@ -91,14 +91,14 @@ This directory contains comprehensive development standards, coding guidelines, 
 See [error_handling.md](error_handling.md)
 
 **Key Points**:
-- Use custom exception hierarchy from `infrastructure/exceptions.py`
+- Use custom exception hierarchy from `infrastructure/core/exceptions.py`
 - Always chain exceptions with `from`
 - Provide context in exceptions
 - Log before raising critical errors
 
 **Example**:
 ```python
-from infrastructure.exceptions import ValidationError
+from infrastructure.core.exceptions import ValidationError
 
 try:
     result = process_data(input)
@@ -118,7 +118,7 @@ See [python_logging.md](python_logging.md)
 
 **Example**:
 ```python
-from infrastructure.logging_utils import get_logger
+from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 logger.info(f"Processing {count} items")
@@ -134,15 +134,26 @@ See [infrastructure_modules.md](infrastructure_modules.md)
 - Complete AGENTS.md + README.md
 - Public API in `__init__.py`
 - Type hints on all functions
+- Follow thin orchestrator pattern
+- Use custom exceptions from `core.exceptions`
+- Use unified logging from `core.logging_utils`
 
 **Structure**:
 ```
 infrastructure/<module>/
 ├── __init__.py           # Public API
 ├── core.py              # Core logic
+├── cli.py               # Command-line interface (optional)
+├── config.py            # Configuration (optional)
 ├── AGENTS.md            # Detailed docs
 └── README.md            # Quick reference
 ```
+
+**Related Documentation:**
+- [../infrastructure/AGENTS.md](../infrastructure/AGENTS.md) - Module organization
+- [infrastructure_modules.md](infrastructure_modules.md) - Development standards
+- [error_handling.md](error_handling.md) - Exception patterns
+- [python_logging.md](python_logging.md) - Logging standards
 
 ## Testing Standards
 
@@ -238,8 +249,8 @@ import requests
 import pytest
 
 # Local infrastructure
-from infrastructure.logging_utils import get_logger
-from infrastructure.exceptions import TemplateError
+from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.exceptions import TemplateError
 
 # Local project
 from project.src import module
@@ -268,8 +279,8 @@ class ModuleConfig:
 ### Error Handling Pattern
 
 ```python
-from infrastructure.logging_utils import get_logger
-from infrastructure.exceptions import TemplateError
+from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.exceptions import TemplateError
 
 logger = get_logger(__name__)
 
@@ -300,7 +311,7 @@ template/
 │   └── manuscript/
 ├── scripts/               # Generic entry points
 ├── tests/                 # Infrastructure tests
-├── repo_utilities/        # Build utilities
+├── infrastructure/        # Reusable infrastructure
 ├── docs/                  # Documentation
 └── .cursorrules/          # Development standards (THIS DIR)
 ```
@@ -347,6 +358,37 @@ template/
 - [pytest Documentation](https://docs.pytest.org/)
 - [PEP 8 Style Guide](https://peps.python.org/pep-0008/)
 
+## Integration with Main Documentation
+
+The .cursorrules standards align with and support the main documentation:
+
+| Development Aspect | .cursorrules File | Main Documentation |
+|---|---|---|
+| System Design | [AGENTS.md](AGENTS.md) | [Root AGENTS.md](../AGENTS.md) |
+| Architecture | [AGENTS.md](AGENTS.md) | [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) |
+| Infrastructure | [infrastructure_modules.md](infrastructure_modules.md) | [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
+| Error Handling | [error_handling.md](error_handling.md) | [docs/TROUBLESHOOTING_GUIDE.md](../docs/TROUBLESHOOTING_GUIDE.md) |
+| Logging | [python_logging.md](python_logging.md) | [docs/LOGGING_GUIDE.md](../docs/LOGGING_GUIDE.md) |
+| Testing | This guide | [tests/AGENTS.md](../tests/AGENTS.md) |
+| Workflow | This guide | [docs/WORKFLOW.md](../docs/WORKFLOW.md) |
+
+## Cross-Reference Guide
+
+**For Architecture Decisions:**
+→ Check [AGENTS.md](AGENTS.md) for decision criteria  
+→ Read [../docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) for full architectural overview  
+→ Consult [../docs/THIN_ORCHESTRATOR_SUMMARY.md](../docs/THIN_ORCHESTRATOR_SUMMARY.md) for pattern details
+
+**For Infrastructure Development:**
+→ Check [infrastructure_modules.md](infrastructure_modules.md) for standards  
+→ Study [../infrastructure/AGENTS.md](../infrastructure/AGENTS.md) for module organization  
+→ Review [../infrastructure/README.md](../infrastructure/README.md) for quick patterns
+
+**For Code Quality:**
+→ Check [error_handling.md](error_handling.md) and [python_logging.md](python_logging.md)  
+→ Read [../docs/BEST_PRACTICES.md](../docs/BEST_PRACTICES.md) for comprehensive practices  
+→ See [../docs/ERROR_HANDLING_GUIDE.md](../docs/ERROR_HANDLING_GUIDE.md) for detailed patterns
+
 ## Maintenance
 
 This directory is maintained as part of the template repository. All updates should:
@@ -355,6 +397,7 @@ This directory is maintained as part of the template repository. All updates sho
 2. Update this AGENTS.md when adding new rule files
 3. Keep README.md in sync
 4. Follow the same standards described here
+5. Ensure cross-references to main documentation are accurate
 
 ---
 

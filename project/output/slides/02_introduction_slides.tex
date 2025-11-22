@@ -1,0 +1,287 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Introduction}\label{sec:introduction}
+
+\begin{frame}{Overview}
+\protect\phantomsection\label{overview}
+This is an example project that demonstrates the generic repository
+structure for tested code, manuscript editing, and PDF rendering. The
+work presents a novel optimization framework with comprehensive
+theoretical analysis and experimental validation, building upon
+foundational optimization theory \cite{boyd2004, nesterov2018} and
+recent advances in adaptive methods \cite{kingma2014, duchi2011}.
+\end{frame}
+
+\begin{frame}[fragile]{Project Structure}
+\protect\phantomsection\label{project-structure}
+The project follows a standardized structure:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\texttt{src/}} - Source code with comprehensive test coverage
+\item
+  \textbf{\texttt{tests/}} - Test files ensuring 100\% coverage
+\item
+  \textbf{\texttt{scripts/}} - Project-specific scripts for generating
+  figures and data
+\item
+  \textbf{\texttt{manuscript/}} - Markdown source files for the
+  manuscript
+\item
+  \textbf{\texttt{output/}} - Generated outputs (PDFs, figures, data)
+\item
+  \textbf{\texttt{repo\_utilities/}} - Generic utility scripts for any
+  project
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Key Features}
+\protect\phantomsection\label{key-features}
+\begin{block}{Test-Driven Development}
+\protect\phantomsection\label{test-driven-development}
+All source code must have 100\% test coverage before PDF generation
+proceeds, as enforced by the build system.
+\end{block}
+
+\begin{block}{Automated Script Execution}
+\protect\phantomsection\label{automated-script-execution}
+Project-specific scripts in the \texttt{scripts/} directory are
+automatically executed to generate figures and data, ensuring
+reproducibility.
+\end{block}
+
+\begin{block}{Markdown to PDF Pipeline}
+\protect\phantomsection\label{markdown-to-pdf-pipeline}
+Individual markdown modules are converted to PDFs, and a combined
+document is generated with proper cross-referencing.
+\end{block}
+
+\begin{block}{Generic and Reusable}
+\protect\phantomsection\label{generic-and-reusable}
+The utility scripts can be used with any project that follows this
+structure, making it easy to adopt for new research projects.
+\end{block}
+\end{frame}
+
+\begin{frame}{Manuscript Organization}
+\protect\phantomsection\label{manuscript-organization}
+The manuscript is organized into several key sections:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Abstract} (Section \ref{sec:abstract}): Research overview and
+  key contributions
+\item
+  \textbf{Introduction} (Section \ref{sec:introduction}): Overview and
+  project structure
+\item
+  \textbf{Methodology} (Section \ref{sec:methodology}): Mathematical
+  framework and algorithms
+\item
+  \textbf{Experimental Results} (Section
+  \ref{sec:experimental_results}): Performance evaluation and validation
+\item
+  \textbf{Discussion} (Section \ref{sec:discussion}): Theoretical
+  implications and comparisons
+\item
+  \textbf{Conclusion} (Section \ref{sec:conclusion}): Summary and future
+  directions
+\item
+  \textbf{References} (Section \ref{sec:references}): Bibliography and
+  cited works
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Example Figure}
+\protect\phantomsection\label{example-figure}
+The following figure was generated by the example script:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../output/figures/example_figure.png}
+\caption{Example project figure showing a mathematical function}
+\label{fig:example_figure}
+\end{figure}
+
+This demonstrates how figures are automatically integrated into the
+manuscript with proper cross-referencing capabilities. The figure shows
+a mathematical function that demonstrates the project's capabilities. As
+shown in Figure \ref{fig:example_figure}, the system generates
+high-quality visualizations that are automatically integrated into the
+manuscript.
+\end{frame}
+
+\begin{frame}[fragile]{Data Availability}
+\protect\phantomsection\label{data-availability}
+All generated data is saved alongside figures for reproducibility:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Figures}: PNG format in \texttt{output/figures/}
+\item
+  \textbf{Data}: NPZ and CSV formats in \texttt{output/data/}
+\item
+  \textbf{PDFs}: Individual and combined documents in
+  \texttt{output/pdf/}
+\item
+  \textbf{LaTeX}: Source files in \texttt{output/tex/}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Usage}
+\protect\phantomsection\label{usage}
+To generate the complete manuscript:
+
+\begin{verbatim}
+# Clean previous outputs
+./repo_utilities/clean_output.sh
+
+# Generate everything (tests + scripts + PDFs)
+./repo_utilities/render_pdf.sh
+\end{verbatim}
+
+The system will automatically: 1. Run all tests with 100\% coverage
+requirement 2. Execute project-specific scripts to generate figures and
+data 3. Validate markdown references and images 4. Generate individual
+and combined PDFs 5. Export LaTeX source files
+\end{frame}
+
+\begin{frame}[fragile]{Customization}
+\protect\phantomsection\label{customization}
+This template can be customized for any project by:
+
+\begin{enumerate}
+\tightlist
+\item
+  Adding project-specific scripts to \texttt{scripts/}
+\item
+  Modifying markdown files in \texttt{markdown/}
+\item
+  Setting environment variables for author information
+\item
+  Adjusting LaTeX preamble in \texttt{preamble.md}
+\item
+  Adding new sections with proper cross-references
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Cross-Referencing System}
+\protect\phantomsection\label{cross-referencing-system}
+The manuscript demonstrates comprehensive cross-referencing:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Section References}: Use
+  \texttt{\textbackslash{}ref\{sec:section\_name\}} to reference
+  sections
+\item
+  \textbf{Equation References}: Use
+  \texttt{\textbackslash{}eqref\{eq:objective\}} to reference equations
+  (see Section \ref{sec:methodology})
+\item
+  \textbf{Figure References}: Use
+  \texttt{\textbackslash{}ref\{fig:figure\_name\}} to reference figures
+\item
+  \textbf{Table References}: Use
+  \texttt{\textbackslash{}ref\{tab:table\_name\}} to reference tables
+\end{itemize}
+
+All references are automatically numbered and updated when the document
+is regenerated. For example, the main objective function
+\eqref{eq:objective} is defined in the methodology section.
+\end{frame}
+
+\end{document}

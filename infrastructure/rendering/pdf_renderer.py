@@ -58,6 +58,16 @@ class PDFRenderer:
         
         output_file = output_dir / (output_name or f"{source_file.stem}.pdf")
         
+        # Build resource paths to help pandoc find figures
+        resource_paths = []
+        manuscript_dir = Path(self.config.manuscript_dir)
+        figures_dir = Path(self.config.figures_dir)
+        
+        if manuscript_dir.exists():
+            resource_paths.extend(["--resource-path", str(manuscript_dir)])
+        if figures_dir.exists():
+            resource_paths.extend(["--resource-path", str(figures_dir)])
+        
         cmd = [
             self.config.pandoc_path,
             str(source_file),
@@ -65,6 +75,9 @@ class PDFRenderer:
             "--pdf-engine=xelatex",
             "--standalone"
         ]
+        
+        # Add resource paths
+        cmd.extend(resource_paths)
         
         logger.info(f"Rendering markdown to PDF: {source_file.name} -> {output_file.name}")
         
@@ -110,12 +123,14 @@ class PDFRenderer:
         
         # Convert combined markdown to LaTeX using Pandoc
         # This handles raw LaTeX commands properly
+        # --standalone: Create a complete LaTeX document with document class and preamble
         pandoc_to_tex = [
             self.config.pandoc_path,
             str(combined_md),
             "-o", str(combined_tex),
             "--from=markdown",
             "--to=latex",
+            "--standalone",
             "--number-sections",
             "--toc"
         ]
@@ -156,19 +171,20 @@ class PDFRenderer:
         if preamble_file.exists():
             preamble_content = self._extract_preamble(preamble_file)
         
-        # Generate title page from config.yaml
-        title_page_content = self._generate_title_page_latex(manuscript_dir)
+        # Generate title page preamble and body commands from config.yaml
+        title_page_preamble = self._generate_title_page_preamble(manuscript_dir)
+        title_page_body = self._generate_title_page_body(manuscript_dir)
         
-        if preamble_content or title_page_content:
-            # Insert preamble and title page into LaTeX file
+        if preamble_content or title_page_preamble:
+            # Insert preamble and title page preamble commands BEFORE \begin{document}
             begin_doc_idx = tex_content.find("\\begin{document}")
             if begin_doc_idx > 0:
                 # Build combined preamble content
                 combined_preamble = ""
                 if preamble_content:
                     combined_preamble += preamble_content + "\n\n"
-                if title_page_content:
-                    combined_preamble += title_page_content + "\n\n"
+                if title_page_preamble:
+                    combined_preamble += title_page_preamble + "\n\n"
                 
                 # Insert before \begin{document}
                 tex_content = (
@@ -177,7 +193,49 @@ class PDFRenderer:
                     tex_content[begin_doc_idx:]
                 )
         
+        # Insert title page body commands AFTER \begin{document}
+        if title_page_body:
+            begin_doc_idx = tex_content.find("\\begin{document}")
+            if begin_doc_idx > 0:
+                # Find position right after \begin{document}
+                end_of_begin_doc = tex_content.find("\n", begin_doc_idx) + 1
+                if end_of_begin_doc > begin_doc_idx:
+                    # Insert \maketitle and formatting after \begin{document}
+                    tex_content = (
+                        tex_content[:end_of_begin_doc] +
+                        "\n" + title_page_body + "\n\n" +
+                        tex_content[end_of_begin_doc:]
+                    )
+                    logger.info("✓ Inserted title page (\maketitle) after \\begin{document}")
+        
         combined_tex.write_text(tex_content)
+        
+        # Verify figure files exist before compilation
+        figures_dir = manuscript_dir.parent / "output" / "figures"
+        import re
+        fig_pattern = r'\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}'
+        referenced_figures = re.findall(fig_pattern, tex_content)
+        
+        if referenced_figures:
+            logger.info(f"Verifying {len(referenced_figures)} figure reference(s)...")
+            missing_figures = []
+            found_figures = []
+            
+            for fig_ref in referenced_figures:
+                # Extract filename from path
+                filename = fig_ref.split('/')[-1]
+                fig_path = figures_dir / filename
+                
+                if fig_path.exists():
+                    found_figures.append(filename)
+                    logger.debug(f"  ✓ Found: {filename}")
+                else:
+                    missing_figures.append(filename)
+                    logger.warning(f"  ✗ Missing: {filename}")
+            
+            logger.info(f"  Found: {len(found_figures)}/{len(referenced_figures)} figures")
+            if missing_figures:
+                logger.warning(f"  Missing {len(missing_figures)} figure(s): {', '.join(missing_figures)}")
         
         # Now compile LaTeX to PDF using xelatex
         cmd = [
@@ -303,52 +361,98 @@ class PDFRenderer:
         Converts relative paths like ../output/figures/ to paths relative to the
         LaTeX compilation directory, ensuring \includegraphics commands work correctly.
         
+        The LaTeX compiler runs from output/pdf/, so figures in output/figures/
+        should be referenced as ../figures/filename.png
+        
         Args:
             tex_content: LaTeX content to process
             manuscript_dir: Directory containing manuscript files
-            output_dir: Output directory where LaTeX is compiled
+            output_dir: Output directory where LaTeX is compiled (typically output/pdf/)
             
         Returns:
             LaTeX content with corrected figure paths
         """
         import re
         
-        # Pattern to match \includegraphics{...}
-        pattern = r'\\includegraphics\{([^}]+)\}'
+        # Pattern to match \includegraphics with or without options
+        # Handles both \includegraphics{path} and \includegraphics[options]{path}
+        pattern = r'\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}'
+        
+        figures_dir = manuscript_dir.parent / "output" / "figures"
+        fixed_count = 0
+        paths_fixed = []
         
         def fix_path(match):
-            old_path = match.group(1)
+            nonlocal fixed_count
             
-            # If path contains ../output/figures/, resolve it
+            old_path = match.group(1)
+            original_path = old_path
+            
+            # Handle various path formats
             if '../output/figures/' in old_path:
                 # Extract just the filename
                 filename = old_path.split('../output/figures/')[-1]
-                # Return path relative to compilation directory
-                # Since we're compiling in output_dir (which is output/pdf), figures are in ../figures/
-                new_path = f'../figures/{filename}'
-                return f'\\includegraphics{{{new_path}}}'
+            elif 'output/figures/' in old_path:
+                # Extract just the filename
+                filename = old_path.split('output/figures/')[-1]
+            elif '../figures/' in old_path:
+                # Already in correct format, skip
+                return match.group(0)
+            else:
+                # Could be just a filename, or an absolute path
+                filename = old_path.split('/')[-1] if '/' in old_path else old_path
             
-            # If path is already absolute or relative correctly, return as-is
-            return match.group(0)
+            # Build new path relative to compilation directory
+            # Since we're compiling in output_dir (output/pdf), figures are in ../figures/
+            new_path = f'../figures/{filename}'
+            
+            # Verify the figure file exists
+            fig_full_path = figures_dir / filename
+            if fig_full_path.exists():
+                fixed_count += 1
+                paths_fixed.append(f"{original_path} → {new_path}")
+                # Preserve options if present
+                full_match = match.group(0)
+                if '[' in full_match:
+                    # Extract options
+                    options_start = full_match.find('[')
+                    options_end = full_match.find(']')
+                    options = full_match[options_start:options_end+1]
+                    return f'\\includegraphics{options}{{{new_path}}}'
+                else:
+                    return f'\\includegraphics{{{new_path}}}'
+            else:
+                logger.warning(f"⚠️  Figure file not found: {fig_full_path}")
+                fixed_count += 1
+                paths_fixed.append(f"{original_path} → {new_path} (FILE NOT FOUND)")
+                return f'\\includegraphics{{{new_path}}}'
         
         # Apply path fixes
         tex_content = re.sub(pattern, fix_path, tex_content)
         
+        if fixed_count > 0:
+            logger.info(f"✓ Fixed {fixed_count} figure path(s)")
+            for path_info in paths_fixed:
+                logger.debug(f"  {path_info}")
+        
         return tex_content
 
-    def _generate_title_page_latex(self, manuscript_dir: Path) -> str:
-        """Generate LaTeX title page from config.yaml metadata.
+    def _generate_title_page_preamble(self, manuscript_dir: Path) -> str:
+        """Generate LaTeX title page preamble commands from config.yaml metadata.
+        
+        These commands (\\title, \\author, \\date) must be in the preamble
+        (before \\begin{document}).
         
         Args:
             manuscript_dir: Directory containing manuscript files and config.yaml
             
         Returns:
-            LaTeX code for title page, or empty string if config not found
+            LaTeX preamble commands for title page, or empty string if config not found
         """
         config_file = manuscript_dir / "config.yaml"
         
         if not config_file.exists():
-            logger.warning(f"Config file not found: {config_file}")
+            logger.debug(f"Config file not found: {config_file}")
             return ""
         
         try:
@@ -363,30 +467,69 @@ class PDFRenderer:
             authors = config.get('authors', [])
             
             title = paper.get('title', 'Research Paper')
+            subtitle = paper.get('subtitle', '')
             date = paper.get('date', '')
             
-            # Build title page LaTeX
-            title_page_lines = [
-                "\\maketitle",
-                "%% Generated title page from config.yaml",
-                "\\thispagestyle{empty}",
+            # Build preamble commands (must be before \begin{document})
+            preamble_lines = [
                 f"\\title{{{title}}}",
             ]
             
-            # Add authors
+            # Add subtitle if present
+            if subtitle:
+                preamble_lines[-1] = f"\\title{{{title}\\\\\\normalsize {subtitle}}}"
+            
+            # Add authors with proper formatting
             if authors:
                 author_names = [f["name"] for f in authors if "name" in f]
                 if author_names:
                     author_str = " \\and ".join(author_names)
-                    title_page_lines.append(f"\\author{{{author_str}}}")
+                    preamble_lines.append(f"\\author{{{author_str}}}")
             
-            # Add date if specified
+            # Add date if specified, otherwise use \today
             if date:
-                title_page_lines.append(f"\\date{{{date}}}")
+                preamble_lines.append(f"\\date{{{date}}}")
             else:
-                title_page_lines.append("\\date{\\today}")
+                preamble_lines.append("\\date{\\today}")
             
-            return "\n".join(title_page_lines)
+            logger.debug(f"Generated title page preamble with {len(preamble_lines)} commands")
+            return "\n".join(preamble_lines)
+            
+        except Exception as e:
+            logger.warning(f"Error reading config.yaml: {e}")
+            return ""
+
+    def _generate_title_page_body(self, manuscript_dir: Path) -> str:
+        """Generate LaTeX title page body command from config.yaml metadata.
+        
+        The \\maketitle command must be called AFTER \\begin{document}.
+        
+        Args:
+            manuscript_dir: Directory containing manuscript files and config.yaml
+            
+        Returns:
+            LaTeX \\maketitle command with proper formatting, or empty string if config not found
+        """
+        config_file = manuscript_dir / "config.yaml"
+        
+        if not config_file.exists():
+            return ""
+        
+        try:
+            with open(config_file, 'r') as f:
+                config = yaml.safe_load(f)
+            
+            if not config:
+                return ""
+            
+            # Build body commands (must be after \begin{document})
+            body_lines = [
+                "\\maketitle",
+                "\\thispagestyle{empty}",
+            ]
+            
+            logger.debug(f"Generated title page body with {len(body_lines)} commands")
+            return "\n".join(body_lines)
             
         except Exception as e:
             logger.warning(f"Error reading config.yaml: {e}")

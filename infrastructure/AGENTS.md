@@ -54,6 +54,30 @@ infrastructure/
     └── AGENTS.md/README.md  # Documentation
 ```
 
+## Key Design Principles
+
+### 1. Layered Architecture
+- **Layer 1 (infrastructure/)**: Generic, reusable tools for any project
+- All code is domain-independent
+- 100% test coverage required
+- Can be copied to other projects
+
+### 2. Thin Orchestrator Pattern
+- **Business logic**: Implemented in module core (e.g., `core.py`)
+- **Orchestration**: Delegated to CLI wrappers and entry points
+- **Scripts**: Only coordinate, never duplicate logic
+- **Reusability**: Each module stands alone or integrates with others
+
+### 3. Module Standardization
+- Each module has:
+  - `__init__.py` - Public API exports
+  - `core.py` - Core business logic (100% tested)
+  - `cli.py` - Command-line interface (optional)
+  - `config.py` - Configuration management (optional)
+  - `AGENTS.md` - Detailed documentation
+  - `README.md` - Quick reference
+- All public APIs have type hints and docstrings
+
 ## Module Organization
 
 ### Core Module (`core/`)
@@ -512,8 +536,16 @@ Planned additions:
 
 ## See Also
 
-- Module-specific documentation: `infrastructure/[module]/AGENTS.md`
-- Quick reference: `infrastructure/[module]/README.md`
-- [`README.md`](README.md) - Quick start guide
+**Module Documentation:**
+- Each module has detailed docs: `infrastructure/[module]/AGENTS.md`
+- Quick reference guides: `infrastructure/[module]/README.md`
+
+**Cross-Module Reference:**
+- [`README.md`](README.md) - Quick start guide for all modules
+- [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) - Development standards
+- [`../.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md) - Infrastructure standards
+
+**System Documentation:**
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
-- [`../docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) - System architecture
+- [`../docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) - System architecture overview
+- [`../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Orchestrator pattern details

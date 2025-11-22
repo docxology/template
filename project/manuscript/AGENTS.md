@@ -217,7 +217,7 @@ This glossary is auto-generated from the public API in `src/`.
 ```
 
 **Generation process:**
-1. `repo_utilities/generate_glossary.py` scans `src/`
+1. `scripts/03_render_pdf.py` scans `project/src/`
 2. Extracts public functions and classes
 3. Builds markdown table
 4. Writes directly to `manuscript/98_symbols_glossary.md`
@@ -230,16 +230,16 @@ This glossary is auto-generated from the public API in `src/`.
 
 ```bash
 # Builds all individual section PDFs
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
 ```
 
-Output: `output/pdf/01_abstract.pdf`, `02_introduction.pdf`, `S01_supplemental_methods.pdf`, etc.
+Output: `project/output/pdf/01_abstract.pdf`, `02_introduction.pdf`, `S01_supplemental_methods.pdf`, etc.
 
 ### Combined Manuscript PDF
 
 ```bash
 # Builds combined manuscript
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
 ```
 
 Output: `output/pdf/project_combined.pdf`
@@ -283,11 +283,14 @@ plt.savefig("output/figures/my_figure.png")
 
 ### 4. Validate and Build
 ```bash
-# Clean previous outputs
-./repo_utilities/clean_output.sh
+# Clean previous outputs  
+python3 scripts/run_all.py --clean
 
-# Build everything
-./repo_utilities/render_pdf.sh
+# Build everything (recommended)
+python3 scripts/run_all.py
+
+# Or run individual stages
+python3 scripts/03_render_pdf.py
 ```
 
 ### 5. Review Output
@@ -317,7 +320,7 @@ open output/project_combined.html
 
 3. Build and verify ordering:
    ```bash
-   ./repo_utilities/render_pdf.sh
+   python3 scripts/03_render_pdf.py
    ```
 
 ### Adding Supplemental Sections
@@ -341,7 +344,7 @@ open output/project_combined.html
 
 4. Build and verify:
    ```bash
-   ./repo_utilities/render_pdf.sh
+   python3 scripts/03_render_pdf.py
    ```
 
 ## Configuration
@@ -434,10 +437,10 @@ The first author (or the one marked `corresponding: true`) is used for PDF metad
 ### Markdown Validation
 ```bash
 # Check for issues
-python3 repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown manuscript/
 
 # Strict mode (fail on any issues)
-python3 repo_utilities/validate_markdown.py --strict
+python3 -m infrastructure.validation.cli markdown manuscript/ --strict
 ```
 
 **Validates:**
@@ -450,10 +453,10 @@ python3 repo_utilities/validate_markdown.py --strict
 ### PDF Validation
 ```bash
 # Check rendered PDF
-python3 repo_utilities/validate_pdf_output.py
+python3 -m infrastructure.validation.cli pdf project/output/pdf/
 
 # Specific section
-python3 repo_utilities/validate_pdf_output.py output/pdf/01_abstract.pdf
+python3 -m infrastructure.validation.cli pdf project/output/pdf/01_abstract.pdf
 ```
 
 **Detects:**
@@ -518,31 +521,31 @@ python3 repo_utilities/validate_pdf_output.py output/pdf/01_abstract.pdf
 ### Missing Figures
 ```bash
 # Ensure scripts generated figures
-ls output/figures/
+ls project/output/figures/
 
 # Check figure path in markdown
-grep "includegraphics" manuscript/*.md
+grep "includegraphics" project/manuscript/*.md
 ```
 
 ### Unresolved References
 ```bash
 # Validate all references
-python3 repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 # Check for ?? in PDF
-python3 repo_utilities/validate_pdf_output.py
+python3 -m infrastructure.validation.cli pdf project/output/pdf/
 ```
 
 ### LaTeX Errors
 ```bash
 # Check compilation log
-cat output/pdf/project_combined_compile.log
+cat project/output/pdf/project_combined_compile.log
 ```
 
 ### Section Ordering Issues
 ```bash
 # List sections in order
-ls -1 manuscript/*.md | grep -E '^[0-9]|^S[0-9]'
+ls -1 project/manuscript/*.md | grep -E '^[0-9]|^S[0-9]'
 
 # Verify order matches:
 # 01-09: Main sections
@@ -556,5 +559,5 @@ ls -1 manuscript/*.md | grep -E '^[0-9]|^S[0-9]'
 - [`preamble.md`](preamble.md) - LaTeX configuration
 - [`references.bib`](references.bib) - Bibliography
 - [`../docs/MARKDOWN_TEMPLATE_GUIDE.md`](../docs/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown guide
-- [`../repo_utilities/README.md`](../repo_utilities/README.md) - Build tools
+- [`../scripts/README.md`](../scripts/README.md) - Entry point orchestrators
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation

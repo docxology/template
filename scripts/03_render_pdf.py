@@ -205,7 +205,8 @@ def run_render_pipeline() -> int:
             slides_dir=str(project_root / "output" / "slides"),
             poster_dir=str(project_root / "output" / "posters"),
         )
-        manager = RenderManager(config)
+        figures_dir = project_root / "output" / "figures"
+        manager = RenderManager(config, manuscript_dir=manuscript_dir, figures_dir=figures_dir)
         logger.info("✅ Initialized RenderManager from infrastructure.rendering")
     except Exception as e:
         logger.error(f"Failed to initialize RenderManager: {e}")

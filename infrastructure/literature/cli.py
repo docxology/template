@@ -7,14 +7,14 @@ import argparse
 import sys
 from pathlib import Path
 
-from .core import LiteratureManager
+from .core import LiteratureSearch
 from .config import LiteratureConfig
 
 
 def search_command(args):
     """Handle literature search command."""
     config = LiteratureConfig()
-    manager = LiteratureManager(config)
+    manager = LiteratureSearch(config)
 
     print(f"Searching for: {args.query}...")
     results = manager.search_papers(

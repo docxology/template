@@ -71,7 +71,7 @@ class TestResearchWorkflow:
         mock_compile.side_effect = create_pdf
         
         # Mock publishing
-        mock_zenodo = mocker.patch("infrastructure.publishing_api.ZenodoClient")
+        mock_zenodo = mocker.patch("infrastructure.publishing.api.ZenodoClient")
         mock_instance = mock_zenodo.return_value
         mock_instance.create_deposition.return_value = "123"
         mock_instance.publish.return_value = "10.5281/zenodo.123"
@@ -175,7 +175,7 @@ class TestModuleInteroperability:
 
     def test_shared_logging(self):
         """Test that all modules use common logging."""
-        from infrastructure.logging_utils import get_logger
+        from infrastructure.core.logging_utils import get_logger
         
         # Create loggers for each module
         lit_logger = get_logger("infrastructure.literature")
@@ -208,29 +208,23 @@ class TestModuleInteroperability:
 
 
 class TestWrapperScripts:
-    """Test wrapper scripts in repo_utilities."""
+    """Test wrapper scripts in infrastructure CLIs."""
 
-    def test_literature_wrapper_exists(self):
-        """Test that literature search wrapper exists."""
-        script = Path("repo_utilities/search_literature.py")
-        assert script.exists()
-        content = script.read_text()
-        assert "LiteratureSearch" in content
-        assert "argparse" in content
+    def test_literature_cli_exists(self):
+        """Test that literature CLI exists."""
+        from infrastructure.literature import cli
+        assert hasattr(cli, 'main')
+        assert hasattr(cli, 'search_command')
 
-    def test_rendering_wrapper_exists(self):
-        """Test that rendering wrapper exists."""
-        script = Path("repo_utilities/render_all.py")
-        assert script.exists()
-        content = script.read_text()
-        assert "RenderManager" in content
+    def test_rendering_cli_exists(self):
+        """Test that rendering CLI exists."""
+        from infrastructure.rendering import cli
+        assert hasattr(cli, 'main')
 
-    def test_publishing_wrapper_exists(self):
-        """Test that publishing wrapper exists."""
-        script = Path("repo_utilities/publish_release.py")
-        assert script.exists()
-        content = script.read_text()
-        assert "create_github_release" in content
+    def test_publishing_cli_exists(self):
+        """Test that publishing CLI exists."""
+        from infrastructure.publishing import cli
+        assert hasattr(cli, 'main')
 
 
 if __name__ == "__main__":

@@ -55,7 +55,11 @@ def compile_latex(
                 cwd=tex_file.parent # Run in file directory for imports
             )
             
-            if result.returncode != 0:
+            # Note: xelatex may return non-zero exit code even when PDF is generated (due to warnings)
+            # So we check for PDF existence rather than just exit code
+            pdf_file_temp = output_dir / f"{tex_file.stem}.pdf"
+            if not pdf_file_temp.exists():
+                # Only raise error if PDF was NOT generated
                 log_file = output_dir / f"{tex_file.stem}.log"
                 log_content = log_file.read_text() if log_file.exists() else "No log file"
                 

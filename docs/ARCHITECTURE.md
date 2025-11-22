@@ -374,7 +374,10 @@ uv run python repo_utilities/validate_markdown.py
 ### 3. Integration
 ```bash
 # Run complete pipeline
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
+
+# Or individual stages
+python3 scripts/03_render_pdf.py  # PDF generation
 
 # Verify all outputs are generated
 # Check that PDFs build successfully
