@@ -32,8 +32,9 @@ project_root = Path(__file__).parent.parent
 repo_root = project_root.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(repo_root))  # Add repo root so we can import infrastructure.*
-from infrastructure.figure_manager import FigureManager
-    print("[LAYER-2-SCIENTIFIC] Loading and analyzing data from infrastructure/scientific integration...")
+from infrastructure.documentation.figure_manager import FigureManager
+
+print("[LAYER-2-SCIENTIFIC] Loading and analyzing data from infrastructure/scientific integration...")
 
 # Import src/ modules
 from data_generator import generate_classification_dataset, generate_synthetic_data

@@ -1,2 +1,1 @@
-"""Integration tests between layers."""
-
+"""Integration tests for infrastructure modules."""

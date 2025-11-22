@@ -57,7 +57,7 @@ coverage.xml
 ehthumbs.db
 Thumbs.db
 
-# Build outputs should be including in versioning! 
+# Build outputs should be included in versioning!
 
 # Temporary files
 *.tmp

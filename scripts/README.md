@@ -14,25 +14,34 @@ Project-specific analysis scripts go in `project/scripts/`, not here.
 
 ## Pipeline Orchestration
 
-### Master Orchestrator (One-Line Execution)
+### Master Orchestor - Complete Pipeline (One-Line Execution)
+
+**Shell Script (Recommended)**:
+```bash
+./run_all.sh
+```
+
+**Python Alternative**:
 ```bash
 python3 scripts/run_all.py
 ```
 
-Executes the complete 5-stage pipeline end-to-end:
+Both execute the complete 6-stage pipeline end-to-end:
 
-| Stage | Script | Purpose |
+| Stage | Python Script | Purpose |
 |-------|--------|---------|
-| **00** | `00_setup_environment.py` | Environment setup & validation |
-| **01** | `01_run_tests.py` | Test suite with coverage |
-| **02** | `02_run_analysis.py` | Discover & run `project/scripts/` |
-| **03** | `03_render_pdf.py` | PDF rendering orchestration |
-| **04** | `04_validate_output.py` | Output validation & reporting |
+| **0** | `00_setup_environment.py` | Environment setup & validation |
+| **1a** | `01_run_tests.py` (Infrastructure) | Infrastructure test suite with coverage |
+| **1b** | `01_run_tests.py` (Project) | Project test suite with coverage |
+| **2** | `02_run_analysis.py` | Discover & run `project/scripts/` |
+| **3** | `03_render_pdf.py` | PDF rendering orchestration |
+| **4** | `04_validate_output.py` | Output validation & reporting |
 
-### Individual Stage Scripts
+**Note**: The shell script (`run_all.sh`) automatically splits stage 1 into infrastructure and project tests.
 
-Each stage can also be run independently:
+### Running Individual Stages
 
+**Via Python Scripts**:
 ```bash
 python3 scripts/00_setup_environment.py  # Setup environment
 python3 scripts/01_run_tests.py          # Run tests only
@@ -40,6 +49,24 @@ python3 scripts/02_run_analysis.py       # Run project scripts
 python3 scripts/03_render_pdf.py         # Render PDFs only
 python3 scripts/04_validate_output.py    # Validate outputs only
 ```
+
+**Via Shell Script** (runs full pipeline):
+```bash
+./run_all.sh  # Complete pipeline with both infrastructure and project tests
+```
+
+### Understanding the Execution Flow
+
+The shell script (`run_all.sh`) orchestrates:
+
+1. **Environment Setup** - Validates Python, dependencies, build tools, directories
+2. **Infrastructure Tests** - Tests generic infrastructure modules (70%+ coverage)
+3. **Project Tests** - Tests project-specific code (70%+ coverage)
+4. **Analysis** - Runs project analysis scripts and generates figures
+5. **PDF Rendering** - Generates PDFs from markdown sources
+6. **Validation** - Validates all outputs and generates reports
+
+Each stage stops the pipeline if it fails, providing clear error messages.
 
 ## Entry Points
 

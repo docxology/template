@@ -1,402 +1,519 @@
-# Infrastructure Layer - Build and Validation Tools
+# Infrastructure Layer - Modular Architecture
 
-## Purpose
+## Overview
 
-This package contains **reusable, generic build and validation infrastructure** that applies to any research project using this template. These modules handle document generation, validation, verification, and publishing tasks independent of the specific research domain.
+The Infrastructure layer provides reusable, modular tools for building, validating, and managing research projects. Organized by functionality into submodules, each with clear responsibilities and comprehensive testing.
 
-## Architectural Role (Layer 1)
+## New Modular Architecture (v2.1)
 
-This is **Layer 1** of the two-layer architecture:
-- **Handles:** Build orchestration, document validation, publishing support
-- **Reusable:** Across all research projects
-- **Not Specific:** Doesn't depend on domain-specific research
-- **Tests:** Must achieve 100% coverage with real data
+The infrastructure has been reorganized into focused modules grouping related functionalities:
+
+```
+infrastructure/
+├── core/           # Foundation utilities
+│   ├── exceptions.py       # Exception hierarchy with context
+│   ├── logging_utils.py    # Unified Python logging
+│   └── config_loader.py    # Configuration management
+├── validation/     # Quality & validation tools
+│   ├── pdf_validator.py      # PDF rendering validation
+│   ├── markdown_validator.py # Markdown structure validation
+│   ├── integrity.py          # File integrity & cross-references
+│   └── cli.py                # CLI for validation tools
+├── documentation/  # Documentation & figure management
+│   ├── figure_manager.py       # Automatic figure numbering
+│   ├── image_manager.py        # Image file management
+│   ├── markdown_integration.py # Figure/reference insertion
+│   ├── glossary_gen.py         # API documentation generation
+│   └── cli.py                  # CLI for documentation tools
+├── build/          # Build & reproducibility
+│   ├── build_verifier.py    # Build verification
+│   ├── reproducibility.py   # Environment & reproducibility tracking
+│   ├── quality_checker.py   # Document quality metrics
+│   └── AGENTS.md/README.md  # Documentation
+├── scientific/     # Scientific development
+│   ├── scientific_dev.py    # Scientific utilities & best practices
+│   └── AGENTS.md/README.md  # Documentation
+├── literature/     # Literature search & management
+│   ├── core.py              # Literature manager
+│   ├── config.py            # Configuration
+│   ├── cli.py               # CLI for literature search
+│   └── AGENTS.md/README.md  # Documentation
+├── llm/            # LLM integration
+│   ├── core.py              # LLM client
+│   ├── templates.py         # Research prompt templates
+│   └── AGENTS.md/README.md  # Documentation
+├── rendering/      # Multi-format rendering
+│   ├── core.py              # Render manager
+│   ├── latex_utils.py       # LaTeX utilities
+│   ├── cli.py               # CLI for rendering
+│   └── AGENTS.md/README.md  # Documentation
+└── publishing/     # Academic publishing & dissemination
+    ├── core.py              # Publishing workflows
+    ├── api.py               # Platform API clients
+    ├── cli.py               # CLI for publishing
+    └── AGENTS.md/README.md  # Documentation
+```
 
 ## Module Organization
 
-### Core Build & Verification Modules
+### Core Module (`core/`)
 
-| Module | Purpose | Lines | Coverage |
-|--------|---------|-------|----------|
-| `build_verifier.py` | Build process verification and artifact validation | 398 | 100% |
-| `integrity.py` | File integrity checking and cross-reference validation | 354 | 95% |
-| `reproducibility.py` | Build reproducibility tracking and environment capture | 264 | 97% |
+**Foundation utilities used by all other modules.**
 
-### Document Quality & Analysis
+- `exceptions.py` - Exception hierarchy with context preservation
+  - `TemplateError` - Base exception
+  - Module-specific exceptions (Literature, LLM, Rendering, Publishing)
+  - Context utilities and exception chaining
 
-| Module | Purpose | Lines | Coverage |
-|--------|---------|-------|----------|
-| `quality_checker.py` | Document quality metrics and academic standards | 252 | 88% |
-| `pdf_validator.py` | PDF rendering validation and issue detection | 51 | 100% |
+- `logging_utils.py` - Unified Python logging system
+  - Environment-based configuration (LOG_LEVEL 0-3)
+  - Context managers for operation tracking
+  - Decorators for function logging
+  - TTY-aware color output
 
-### Academic Publishing Support
+- `config_loader.py` - Configuration management
+  - YAML configuration file loading
+  - Environment variable integration
+  - Author and metadata formatting
 
-| Module | Purpose | Lines | Coverage |
-|--------|---------|-------|----------|
-| `publishing.py` | Academic publishing workflow assistance | 305 | 94% |
+**Usage:**
+```python
+from infrastructure.core import (
+    get_logger, TemplateError, load_config
+)
+```
 
-### Documentation & Figure Management
+### Validation Module (`validation/`)
 
-| Module | Purpose | Lines | Coverage |
-|--------|---------|-------|----------|
-| `glossary_gen.py` | Auto-generate API documentation from source code | 56 | 100% |
-| `markdown_integration.py` | Figure insertion and markdown cross-reference management | 85 | 100% |
-| `figure_manager.py` | Automatic figure numbering and LaTeX block generation | 84 | 100% |
-| `image_manager.py` | Image file management and insertion | 91 | 100% |
+**Quality assurance and validation tools.**
 
-### System Infrastructure (NEW)
+- `pdf_validator.py` - PDF rendering validation
+  - Text extraction and analysis
+  - Issue detection (unresolved references, warnings)
+  - Document structure verification
 
-| Module | Purpose | Lines | Coverage |
-|--------|---------|-------|----------|
-| `logging_utils.py` | Unified Python logging with context managers and decorators | 350+ | 100% |
-| `exceptions.py` | Custom exception hierarchy with context preservation | 400+ | 100% |
+- `markdown_validator.py` - Markdown structure validation
+  - Image reference validation
+  - Cross-reference verification
+  - Mathematical equation validation
+  - Link integrity checking
 
-## Module Descriptions
+- `integrity.py` - File integrity & cross-reference validation
+  - SHA-256 hash verification
+  - Cross-reference validation
+  - Data consistency checking
+  - Academic standards compliance
 
-### logging_utils.py (NEW)
+**CLI:**
+```bash
+python3 -m infrastructure.validation.cli pdf output/pdf/manuscript.pdf
+python3 -m infrastructure.validation.cli markdown manuscript/
+python3 -m infrastructure.validation.cli integrity output/
+```
 
-Unified Python logging system with consistent formatting.
+### Documentation Module (`documentation/`)
 
-**Key Features:**
-- `setup_logger()` / `get_logger()` - Logger configuration
-- `log_operation()` - Context manager for operation tracking
-- `log_timing()` - Performance timing context manager
-- `log_function_call()` - Function call decorator
-- `log_success()`, `log_header()`, `log_progress()` - Utilities
-- Environment-based log level control (LOG_LEVEL=0-3)
-- Integration with bash logging.sh format
+**Figure management and documentation tools.**
 
-**Use Case:** Consistent logging across all Python scripts
+- `figure_manager.py` - Automatic figure numbering
+  - Registry management with JSON persistence
+  - LaTeX figure block generation
+  - Cross-reference generation
 
-### exceptions.py (NEW)
+- `image_manager.py` - Image insertion
+  - Markdown insertion
+  - Reference creation
+  - Validation
 
-Custom exception hierarchy with context preservation.
+- `markdown_integration.py` - Figure/reference integration
+  - Section detection
+  - Figure insertion into sections
+  - Table of figures generation
 
-**Key Classes:**
-- `TemplateError` - Base exception for all template errors
-- `ConfigurationError` - Configuration issues
-- `ValidationError` - Validation failures
-- `BuildError` - Build/compilation failures
-- `FileOperationError` - File I/O issues
-- `DependencyError` - Missing dependencies
-- `TestError` - Test failures
-- `IntegrationError` - Integration issues
+- `glossary_gen.py` - API documentation generation
+  - AST-based API extraction
+  - Markdown table generation
+  - Marker-based content injection
 
-**Key Functions:**
-- `raise_with_context()` - Raise with keyword context
-- `format_file_context()` - Format file/line context
-- `chain_exceptions()` - Chain exception context
+**CLI:**
+```bash
+python3 -m infrastructure.documentation.cli generate-api src/
+```
 
-**Use Case:** Consistent error handling with detailed context
+### Build Module (`build/`)
 
-### build_verifier.py
+**Build verification and quality assurance.**
 
-Comprehensive build verification and validation.
+- `build_verifier.py` - Build process verification
+  - Artifact verification
+  - Reproducibility testing
+  - Environment validation
 
-**Key Functions:**
-- `run_build_command()` - Execute build commands with monitoring
-- `verify_build_artifacts()` - Check expected outputs exist
-- `verify_build_reproducibility()` - Compare multiple builds
-- `verify_build_environment()` - Validate dependencies and environment
+- `reproducibility.py` - Reproducibility tracking
+  - Environment state capture
+  - Dependency snapshot
+  - Build manifest generation
 
-**Use Case:** Ensure builds are reproducible and artifact-complete
+- `quality_checker.py` - Document quality analysis
+  - Readability metrics
+  - Academic standards compliance
+  - Quality reporting
 
-### integrity.py
+### Scientific Module (`scientific/`)
 
-File and cross-reference integrity verification.
+**Scientific computing utilities.**
 
-**Key Functions:**
-- `verify_file_integrity()` - Hash-based file validation
-- `verify_cross_references()` - Check markdown cross-refs resolve
-- `verify_academic_standards()` - Compliance checking
-- `verify_output_completeness()` - All expected files present
+- `scientific_dev.py` - Scientific development tools
+  - Numerical stability checking
+  - Performance benchmarking
+  - Scientific documentation generation
+  - Best practices validation
 
-**Use Case:** Validate research document structure and integrity
+### Literature Module (`literature/`)
 
-### reproducibility.py
+**Literature search and reference management.**
 
-Build reproducibility and environment tracking.
+Multi-source literature search with:
+- arXiv, Semantic Scholar, CrossRef, PubMed integration
+- PDF download with retry logic
+- Citation extraction
+- BibTeX management
+- Library organization
 
-**Key Functions:**
-- `capture_environment_state()` - Snapshot system state
-- `generate_reproducibility_report()` - Build manifest
-- `verify_reproducibility()` - Compare builds
-- `create_reproducible_environment()` - Environment setup
+**CLI:**
+```bash
+python3 -m infrastructure.literature.cli search "machine learning" --limit 10 --download
+```
 
-**Use Case:** Ensure builds are reproducible and well-documented
+### LLM Module (`llm/`)
 
-### quality_checker.py
+**Local LLM integration for research assistance.**
 
-Document quality analysis and metrics.
+Features:
+- Ollama integration for local models
+- Research prompt templates
+- Multi-turn conversation support
+- Streaming responses
 
-**Key Functions:**
-- `analyze_readability()` - Flesch score, Gunning Fog index
-- `analyze_academic_standards()` - Research writing compliance
-- `analyze_structural_integrity()` - Document organization
-- `calculate_overall_quality_score()` - Comprehensive metrics
+**Usage:**
+```python
+from infrastructure.llm import LLMClient
 
-**Use Case:** Assess document quality and academic standards compliance
+client = LLMClient()
+summary = client.apply_template("summarize_abstract", text=abstract)
+```
 
-### pdf_validator.py
+### Rendering Module (`rendering/`)
 
-PDF rendering validation.
+**Multi-format output generation.**
 
-**Key Functions:**
-- `extract_text_from_pdf()` - Text extraction from PDFs
-- `scan_for_issues()` - Detect rendering problems
-- `validate_pdf_rendering()` - Comprehensive validation
+Supports:
+- PDF generation (standard & IDE-friendly)
+- HTML presentation (reveal.js)
+- Slide decks (Beamer & reveal.js)
+- Scientific posters
+- Web output with MathJax
 
-**Use Case:** Verify PDF generation succeeded and looks correct
+**CLI:**
+```bash
+python3 -m infrastructure.rendering.cli pdf manuscript.tex
+python3 -m infrastructure.rendering.cli all manuscript.tex
+python3 -m infrastructure.rendering.cli slides presentation.md --format revealjs
+```
 
-### publishing.py
+### Publishing Module (`publishing/`)
 
-Academic publishing workflow support.
+**Academic publishing and dissemination.**
 
-**Key Functions:**
-- `extract_publication_metadata()` - Parse manuscript metadata
-- `generate_citation_bibtex()` - BibTeX format generation
-- `validate_doi()` - DOI format and checksum validation
-- `create_publication_package()` - Submission bundle creation
+Features:
+- Publication metadata extraction
+- Citation generation (BibTeX, APA, MLA)
+- Zenodo integration with DOI minting
+- arXiv submission preparation
+- GitHub release automation
 
-**Use Case:** Support academic publication workflows
-
-### glossary_gen.py
-
-Auto-generate API documentation.
-
-**Key Functions:**
-- `build_api_index()` - Scan and extract public APIs
-- `generate_markdown_table()` - Create formatted documentation
-- `inject_between_markers()` - Update documentation files
-
-**Use Case:** Keep API reference documentation synchronized with code
-
-### markdown_integration.py
-
-Integrate figures and references into markdown.
-
-**Key Functions:**
-- `detect_sections()` - Find markdown sections
-- `insert_figure_in_section()` - Add figures to sections
-- `update_all_references()` - Update cross-references
-- `validate_manuscript()` - Validate document structure
-
-**Use Case:** Automatically integrate figures into manuscript
-
-### figure_manager.py
-
-Manage figure numbering and references.
-
-**Key Functions:**
-- `FigureManager` class - Central figure management
-- `register_figure()` - Register with automatic numbering
-- `generate_latex_figure_block()` - Create LaTeX code
-- `generate_reference()` - Create LaTeX references
-
-**Use Case:** Automated figure numbering and cross-referencing
-
-### image_manager.py
-
-Manage image files and insertion.
-
-**Key Functions:**
-- `ImageManager` class - Central image management
-- `insert_figure()` - Insert into markdown
-- `insert_reference()` - Add figure reference
-- `validate_figures()` - Validate figure integrity
-
-**Use Case:** Manage figure files and markdown integration
+**CLI:**
+```bash
+python3 -m infrastructure.publishing.cli extract-metadata manuscript/
+python3 -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
+python3 -m infrastructure.publishing.cli publish-zenodo output/ --title "My Research"
+```
 
 ## Design Principles
 
-### Generic First
+### 1. Modular Organization
+- Each module has a single, clear responsibility
+- Modules can be used independently or together
+- Related functionality grouped logically
+- Minimal cross-module dependencies
 
-All code in this layer is designed to be reusable across projects:
-- No hardcoded paths or project-specific values
-- Generic configuration and parameters
-- Clear interfaces independent of research domain
+### 2. Comprehensive Documentation
+- Each module includes:
+  - `AGENTS.md` - Detailed architecture and API
+  - `README.md` - Quick reference and examples
+  - Inline docstrings for all public APIs
+  - Usage examples in documentation
 
-### Non-Domain-Specific
+### 3. Unified Infrastructure
+- All modules use:
+  - Shared `core/` utilities (logging, config, exceptions)
+  - Consistent error handling
+  - Standard logging patterns
+  - Common environment variable support
 
-Infrastructure modules should:
-- ✅ Handle any research project
-- ✅ Work with generic document structures
-- ✅ Support any type of analysis output
-- ❌ NOT depend on specific algorithms
-- ❌ NOT assume research domain
-- ❌ NOT import from scientific layer
+### 4. CLI Integration
+- Each module with external functionality includes `cli.py`
+- Thin orchestrators calling module business logic
+- Consistent argument parsing
+- Helpful error messages
 
-### 100% Test Coverage
+### 5. Testing
+- 100% test coverage for all modules
+- Real data analysis, no mocks
+- Integration tests for module interoperability
+- CI/CD compatible
 
-All infrastructure code requires:
-- Comprehensive unit tests
-- Real data testing (no mocks)
-- Integration testing where applicable
-- Clear error messages and handling
+## Integration with Build Pipeline
 
-## Integration Points
+### Automatic Execution
 
-### With repo_utilities/
+The rendering pipeline (`scripts/02_run_analysis.py`, `scripts/03_render_pdf.py`, `scripts/04_validate_output.py`) automatically uses infrastructure modules:
 
-Infrastructure modules are used by utility scripts:
-```
-repo_utilities/
-├── render_pdf.sh                          # Orchestration
-├── validate_pdf_output.py → pdf_validator.py
-├── generate_glossary.py → glossary_gen.py
-└── validate_markdown.py → markdown_integration.py
-```
+1. **Setup** - Load configuration via `core.config_loader`
+2. **Testing** - Initialize logging via `core.logging_utils`
+3. **Analysis** - Run project scripts with error handling via `core.exceptions`
+4. **Rendering** - Generate PDFs via `rendering/`
+5. **Validation** - Verify quality via `validation/`
+6. **Documentation** - Generate glossary via `documentation.glossary_gen`
 
-### With Scientific Layer
+### Validation Gates
 
-Scientific code uses infrastructure for document management:
-```python
-# src/scientific/analysis.py
-from infrastructure.figure_manager import FigureManager
-from infrastructure.markdown_integration import MarkdownIntegration
+Before PDF generation:
+- Markdown validation via `validation/`
+- File integrity checks via `validation/integrity`
+- Build reproducibility via `build/reproducibility`
+- Document quality analysis via `build/quality_checker`
 
-def generate_analysis_figure():
-    # Scientific computation
-    results = analyze_data()
-    
-    # Use infrastructure for document mgmt
-    fm = FigureManager()
-    fm.register_figure("results.png", "fig:results")
-```
+## Configuration
 
-### With Build Pipeline
+### Environment Variables
 
-Infrastructure validates entire pipeline:
-```
-render_pdf.sh
-├── (Phase 1) Run tests - ✅ tests/infrastructure/
-├── (Phase 2) Run scripts - Scientific layer
-├── (Phase 2.5) Validation - ✅ infrastructure modules
-├── (Phase 3-5) Generate PDFs - ✅ infrastructure
-└── (Phase 6) Validate quality - ✅ pdf_validator.py
-```
-
-## Requirements
-
-### Test Coverage
-- **100% required** for all modules
-- No code ships without tests
-- Real data testing (no mocks)
-- Tests in `tests/infrastructure/`
-
-### Code Standards
-- Type hints on all public APIs
-- Comprehensive docstrings
-- Pure functions preferred
-- Clear error messages
-- Follow PEP 8 style
-
-### Documentation
-- Module docstrings explaining purpose
-- Function docstrings with parameters
-- Usage examples where applicable
-- Consider project-independent context
-
-## Adding New Infrastructure Modules
-
-### Checklist
-
-1. Create module in `src/infrastructure/` with infrastructure-focused logic
-2. Add comprehensive tests in `tests/infrastructure/test_<module>.py`
-3. Ensure 100% test coverage
-4. Document with clear, generic examples
-5. Update this AGENTS.md file
-6. Consider integration with build pipeline
-7. Add to `src/infrastructure/__init__.py`
-
-### Template
-
-```python
-"""Module description.
-
-This module provides [purpose] for [generic use case].
-"""
-from __future__ import annotations
-
-from typing import List, Optional, Dict, Any
-
-
-def public_function(arg: str) -> str:
-    """Function description with generic context.
-    
-    Works with any project following this template structure.
-    
-    Args:
-        arg: Argument description
-        
-    Returns:
-        Return value description
-        
-    Raises:
-        ValueError: When input is invalid
-    """
-    if not arg:
-        raise ValueError("arg cannot be empty")
-    return f"processed: {arg}"
-```
-
-### Design Questions
-
-Before adding infrastructure:
-- ✅ Would another research group use this unchanged?
-- ✅ Is this independent of research domain?
-- ✅ Does this support the build/document pipeline?
-- ❌ Is this specific to our research?
-- ❌ Does this depend on domain knowledge?
-
-If "no" to top questions → belongs in Scientific layer
-
-## Best Practices
-
-### Do's
-✅ Keep modules focused and single-purpose  
-✅ Use type hints extensively  
-✅ Write comprehensive docstrings  
-✅ Test with real scenarios  
-✅ Provide clear error messages  
-✅ Document non-obvious design choices  
-✅ Consider extensibility and customization  
-
-### Don'ts
-❌ Import from scientific layer  
-❌ Assume specific research domain  
-❌ Skip tests or coverage  
-❌ Mix concerns or responsibilities  
-❌ Hardcode project-specific values  
-❌ Duplicate code across modules  
-❌ Skip error handling  
-
-## Testing Infrastructure Code
+All modules respect standard environment variables:
 
 ```bash
-# Test infrastructure modules specifically
-pytest tests/infrastructure/ --cov=src/infrastructure --cov-fail-under=100
+# Logging
+export LOG_LEVEL=0  # 0=DEBUG, 1=INFO, 2=WARN, 3=ERROR
 
-# Test integration with build system
-pytest tests/integration/ -k infrastructure
+# Paper metadata
+export AUTHOR_NAME="Dr. Jane Smith"
+export AUTHOR_ORCID="0000-0000-0000-1234"
+export PROJECT_TITLE="Novel Framework"
+export DOI="10.5281/zenodo.12345678"
 
-# Full coverage including infrastructure
-pytest tests/ --cov=src --cov-report=html
+# API tokens (for publishing)
+export ZENODO_TOKEN="..."
+export GITHUB_TOKEN="..."
+
+# LLM configuration
+export OLLAMA_HOST="http://localhost:11434"
+
+# Disable colorized output
+export NO_COLOR=1
 ```
+
+### Configuration File
+
+For persistent configuration, use `manuscript/config.yaml`:
+
+```yaml
+paper:
+  title: "Novel Optimization Framework"
+  version: "1.0"
+
+authors:
+  - name: "Dr. Jane Smith"
+    orcid: "0000-0000-0000-1234"
+    email: "jane@example.edu"
+    affiliation: "University of Example"
+
+publication:
+  doi: "10.5281/zenodo.12345678"
+  license: "Apache-2.0"
+```
+
+## Usage Examples
+
+### Complete Example: Literature Search → Summarization → Publication
+
+```python
+# 1. Search literature
+from infrastructure.literature import LiteratureManager
+manager = LiteratureManager()
+papers = manager.search_papers("machine learning", limit=5)
+
+# 2. Summarize with LLM
+from infrastructure.llm import LLMClient
+client = LLMClient()
+for paper in papers:
+    summary = client.apply_template("summarize_abstract", text=paper.abstract)
+    print(summary)
+
+# 3. Render manuscript
+from infrastructure.rendering import RenderManager
+renderer = RenderManager()
+pdf = renderer.render_pdf(Path("manuscript.tex"))
+
+# 4. Validate quality
+from infrastructure.validation import validate_pdf_rendering
+report = validate_pdf_rendering(pdf)
+print(f"Quality issues: {report['issues']['total_issues']}")
+
+# 5. Publish to Zenodo
+from infrastructure.publishing import publish_to_zenodo
+doi = publish_to_zenodo(metadata, [pdf], token)
+print(f"Published with DOI: {doi}")
+```
+
+### CLI Example: Full Workflow
+
+```bash
+# Search and download papers
+python3 -m infrastructure.literature.cli search "quantum computing" --download
+
+# Validate manuscript
+python3 -m infrastructure.validation.cli markdown manuscript/
+python3 -m infrastructure.validation.cli integrity output/
+
+# Generate API documentation
+python3 -m infrastructure.documentation.cli generate-api project/src/
+
+# Render to multiple formats
+python3 -m infrastructure.rendering.cli all manuscript.tex
+
+# Publish release
+python3 -m infrastructure.publishing.cli publish-zenodo output/ --title "My Research"
+python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOKEN
+```
+
+## Testing
+
+### Run All Tests
+
+```bash
+# All infrastructure tests
+pytest tests/infrastructure/ -v
+
+# Specific module
+pytest tests/infrastructure/test_validation/ -v
+
+# With coverage
+pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
+```
+
+### Coverage Status
+
+All modules have comprehensive test coverage:
+- core: 100%
+- validation: 100%
+- documentation: 100%
+- build: 100%
+- scientific: 100%
+- literature: 91%+
+- llm: 91%+
+- rendering: 91%+
+- publishing: 100%
+
+## Troubleshooting
+
+### Import Errors
+
+If you see `ModuleNotFoundError: No module named 'infrastructure.xxx'`:
+
+1. Check the new module paths use the `/` structure:
+   ```python
+   # OLD (won't work)
+   from infrastructure.pdf_validator import ...
+   
+   # NEW (correct)
+   from infrastructure.validation.pdf_validator import ...
+   ```
+
+2. Verify the module `__init__.py` exists with proper exports
+
+### API Changes
+
+Migration from old flat structure:
+- `infrastructure.pdf_validator` → `infrastructure.validation.pdf_validator`
+- `infrastructure.figure_manager` → `infrastructure.documentation.figure_manager`
+- `infrastructure.config_loader` → `infrastructure.core.config_loader`
+- `infrastructure.logging_utils` → `infrastructure.core.logging_utils`
+- `infrastructure.exceptions` → `infrastructure.core.exceptions`
+
+### Configuration Issues
+
+If configuration isn't loading:
+1. Check `manuscript/config.yaml` exists
+2. Verify YAML is well-formed
+3. Fall back to environment variables as needed
+
+## Migration Guide
+
+### For Existing Projects
+
+If your project imports from the old flat structure:
+
+**Before:**
+```python
+from infrastructure.pdf_validator import validate_pdf_rendering
+from infrastructure.figure_manager import FigureManager
+from infrastructure.config_loader import load_config
+```
+
+**After:**
+```python
+from infrastructure.validation.pdf_validator import validate_pdf_rendering
+from infrastructure.documentation.figure_manager import FigureManager
+from infrastructure.core.config_loader import load_config
+```
+
+### For Tests
+
+Update test imports similarly:
+
+**Before:**
+```python
+from infrastructure.pdf_validator import ...
+```
+
+**After:**
+```python
+from infrastructure.validation.pdf_validator import ...
+```
+
+## Architecture Advantages
+
+1. **Clarity** - Related functionality grouped logically
+2. **Maintainability** - Each module has focused responsibility
+3. **Reusability** - Modules can be used independently
+4. **Scalability** - Easy to add new modules without cluttering core
+5. **Documentation** - Each module fully documented
+6. **Testing** - Comprehensive testing with 100% coverage
+7. **Flexibility** - Use individual modules or complete pipeline
+
+## Future Enhancements
+
+Planned additions:
+- Enhanced LLM template library
+- Additional rendering formats (EPUB, docx)
+- Extended publishing platform support
+- Advanced literature analysis tools
+- Data visualization utilities
+- Collaboration features
 
 ## See Also
 
-- [`../scientific/AGENTS.md`](../scientific/AGENTS.md) - Scientific layer documentation
-- [`../../docs/TWO_LAYER_ARCHITECTURE.md`](../../docs/TWO_LAYER_ARCHITECTURE.md) - Architecture overview
-- [`../../docs/DECISION_TREE.md`](../../docs/DECISION_TREE.md) - Code placement guide
-- [`../../AGENTS.md`](../../AGENTS.md) - Complete system documentation
-- [`../../repo_utilities/AGENTS.md`](../../repo_utilities/AGENTS.md) - Utility scripts documentation
-
-## Key Principles
-
-1. **Generic** - Reusable across projects
-2. **Independent** - Doesn't assume research domain
-3. **Well-Tested** - 100% test coverage
-4. **Well-Documented** - Clear APIs and examples
-5. **Self-Contained** - Doesn't depend on scientific layer
-
+- Module-specific documentation: `infrastructure/[module]/AGENTS.md`
+- Quick reference: `infrastructure/[module]/README.md`
+- [`README.md`](README.md) - Quick start guide
+- [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
+- [`../docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) - System architecture

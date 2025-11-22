@@ -27,24 +27,64 @@ The `tests/` directory ensures **100% test coverage** for all `src/` modules. Te
 
 ## Test Organization
 
-Tests are organized to mirror `src/` structure:
+Tests are organized to mirror `infrastructure/` module structure:
 
 ```
 tests/
-├── conftest.py              # Test configuration (adds src/ to path)
-├── test_example.py          # Tests for src/example.py
-├── test_glossary_gen.py     # Tests for src/glossary_gen.py
-├── test_pdf_validator.py    # Tests for src/pdf_validator.py
-├── test_build_verifier.py   # Tests for src/build_verifier.py
-├── test_integrity.py        # Tests for src/integrity.py
-├── test_quality_checker.py  # Tests for src/quality_checker.py
-├── test_reproducibility.py  # Tests for src/reproducibility.py
-├── test_publishing.py       # Tests for src/publishing.py
-├── test_scientific_dev.py   # Tests for src/scientific_dev.py
-├── test_example_figure.py   # Integration: scripts/example_figure.py
-├── test_generate_research_figures.py  # Integration: scripts/generate_research_figures.py
-├── test_repo_utilities.py   # Tests for repo_utilities/*.py
-└── test_integration_pipeline.py  # Full pipeline integration tests
+├── conftest.py              # Test configuration (adds infrastructure to path)
+├── infrastructure/          # Infrastructure module tests
+│   ├── conftest.py
+│   ├── build/               # Build module tests
+│   │   ├── test_build_verifier.py
+│   │   ├── test_quality_checker.py
+│   │   └── test_reproducibility.py
+│   ├── core/                # Core module tests
+│   │   ├── test_config_loader.py
+│   │   ├── test_exceptions.py
+│   │   └── test_logging_utils.py
+│   ├── documentation/       # Documentation module tests
+│   │   ├── test_figure_manager.py
+│   │   ├── test_image_manager.py
+│   │   ├── test_glossary_gen.py
+│   │   └── test_markdown_integration.py
+│   ├── literature/          # Literature module tests
+│   │   ├── test_core.py
+│   │   ├── test_api.py
+│   │   ├── test_config.py
+│   │   ├── test_cli.py
+│   │   └── test_integration.py
+│   ├── llm/                 # LLM module tests
+│   │   ├── test_core.py
+│   │   ├── test_context.py
+│   │   ├── test_templates.py
+│   │   ├── test_config.py
+│   │   └── test_validation.py
+│   ├── publishing/          # Publishing module tests
+│   │   ├── test_publishing.py
+│   │   ├── test_api.py
+│   │   └── test_cli.py
+│   ├── rendering/           # Rendering module tests
+│   │   ├── test_core.py
+│   │   ├── test_latex_utils.py
+│   │   ├── test_renderers.py
+│   │   ├── test_config.py
+│   │   ├── test_poster_renderer.py
+│   │   └── test_cli.py
+│   ├── scientific/          # Scientific module tests
+│   │   └── test_scientific_dev.py
+│   └── validation/          # Validation module tests
+│       ├── test_markdown_validator.py
+│       ├── test_pdf_validator.py
+│       ├── test_integrity.py
+│       ├── test_check_links.py
+│       ├── test_doc_scanner.py
+│       ├── test_repo_scanner.py
+│       └── test_cli.py
+├── integration/             # Integration tests
+│   └── test_module_interoperability.py
+├── test_coverage_completion.py  # Additional coverage tests
+├── test_figure_equation_citation.py  # Figure/equation/citation tests
+└── test_repo_utilities.py   # Repository utilities tests
 ```
 
 ## conftest.py

@@ -1,0 +1,31 @@
+import pytest
+from pathlib import Path
+from unittest.mock import MagicMock
+from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.api import SearchResult
+
+@pytest.fixture
+def mock_config(tmp_path):
+    config = LiteratureConfig()
+    config.download_dir = str(tmp_path / "pdfs")
+    config.bibtex_file = str(tmp_path / "refs.bib")
+    config.arxiv_delay = 0.0  # Speed up tests
+    return config
+
+@pytest.fixture
+def sample_result():
+    return SearchResult(
+        title="Test Paper",
+        authors=["Author One", "Author Two"],
+        year=2023,
+        abstract="This is a test abstract.",
+        url="http://example.com/paper",
+        doi="10.1234/test.123",
+        source="test",
+        pdf_url="http://example.com/paper.pdf",
+        venue="Journal of Testing"
+    )
+
+@pytest.fixture
+def mock_requests_get(mocker):
+    return mocker.patch("requests.get")

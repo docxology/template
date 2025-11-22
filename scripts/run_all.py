@@ -22,11 +22,11 @@ import sys
 import time
 from pathlib import Path
 
-# Add infrastructure to path for logging
-sys.path.insert(0, str(Path(__file__).parent.parent / "infrastructure"))
+# Add root to path for infrastructure imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from logging_utils import get_logger, log_header, log_success, log_timing
-from exceptions import PipelineError
+from infrastructure.core.logging_utils import get_logger, log_header, log_success, log_timing
+from infrastructure.core.exceptions import PipelineError
 
 # Set up logger for this module
 logger = get_logger(__name__)

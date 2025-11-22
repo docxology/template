@@ -15,10 +15,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-# Add infrastructure to path for logging
-sys.path.insert(0, str(Path(__file__).parent.parent / "infrastructure"))
+# Add root to path for infrastructure imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from logging_utils import get_logger, log_success, log_error, log_header, log_warning
+from infrastructure.core.logging_utils import get_logger, log_success, log_header
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -37,13 +37,13 @@ def validate_pdfs() -> bool:
     pdf_dir = repo_root / "project" / "output" / "pdf"
     
     if not pdf_dir.exists():
-        log_error("PDF directory not found")
+        logger.error("PDF directory not found")
         return False
     
     pdf_files = list(pdf_dir.glob("*.pdf"))
     
     if not pdf_files:
-        log_error("No PDF files to validate")
+        logger.error("No PDF files to validate")
         return False
     
     valid_count = 0
@@ -53,12 +53,12 @@ def validate_pdfs() -> bool:
             file_size = pdf_file.stat().st_size
             
             if file_size > 0:
-                log_success(f"PDF valid: {pdf_file.name} ({file_size} bytes)")
+                log_success(f"PDF valid: {pdf_file.name} ({file_size} bytes)", logger)
                 valid_count += 1
             else:
-                log_error(f"PDF empty: {pdf_file.name}")
+                logger.error(f"PDF empty: {pdf_file.name}")
         except Exception as e:
-            log_error(f"Cannot validate {pdf_file.name}: {e}")
+            logger.error(f"Cannot validate {pdf_file.name}: {e}")
     
     return valid_count == len(pdf_files)
 
@@ -101,7 +101,7 @@ def validate_markdown() -> bool:
             )
             
             if result.returncode == 0:
-                log_success("Markdown validation passed")
+                log_success("Markdown validation passed", logger)
                 return True
             else:
                 logger.warning("Markdown validation had issues (non-critical)")
@@ -132,9 +132,9 @@ def verify_outputs_exist() -> bool:
     for dir_path in required_dirs:
         if dir_path.exists():
             file_count = len(list(dir_path.glob("*")))
-            log_success(f"Directory exists: {dir_path.name} ({file_count} file(s))")
+            log_success(f"Directory exists: {dir_path.name} ({file_count} file(s))", logger)
         else:
-            log_error(f"Directory missing: {dir_path.name}")
+            logger.error(f"Directory missing: {dir_path.name}")
             all_exist = False
     
     return all_exist
@@ -211,10 +211,10 @@ def main() -> int:
             all_passed = False
     
     if all_passed:
-        log_success("\n✅ Validation complete - pipeline successful!")
+        log_success("\n✅ Validation complete - pipeline successful!", logger)
         return 0
     else:
-        log_error("\n❌ Validation failed - review issues above")
+        logger.error("\n❌ Validation failed - review issues above")
         return 1
 
 

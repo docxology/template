@@ -39,38 +39,90 @@ pytest tests/ -x
 
 ```
 tests/
-├── conftest.py                          # Configuration
-├── test_*.py                            # Unit tests (match src/ modules)
-├── test_integration_*.py                # Integration tests
-├── test_repo_utilities.py               # Utilities tests
+├── conftest.py                          # Root test configuration
+├── infrastructure/                      # Infrastructure module tests
+│   ├── build/                           # Build validation tests
+│   ├── core/                            # Core utilities tests
+│   ├── documentation/                   # Documentation handling tests
+│   ├── literature/                      # Literature search tests
+│   ├── llm/                             # LLM integration tests
+│   ├── publishing/                      # Publishing tools tests
+│   ├── rendering/                       # Rendering pipeline tests
+│   ├── scientific/                      # Scientific tools tests
+│   └── validation/                      # Validation tests
+├── integration/                         # Integration tests
+├── test_coverage_completion.py          # Additional coverage tests
 ├── test_figure_equation_citation.py     # Fig/Eq/Citation tests
-└── test_coverage_completion.py          # Additional coverage tests
+└── test_repo_utilities.py               # Repository utilities tests
 ```
 
 ## Test Categories
 
-### Core Unit Tests
-- `test_example.py` - Basic operations and template functions
-- `test_glossary_gen.py` - API documentation generation
-- `test_pdf_validator.py` - PDF validation and rendering
+### Infrastructure Module Tests
 
-### Advanced Module Tests
-- `test_build_verifier.py` - Build verification (400 lines)
-- `test_integrity.py` - Integrity checking (496 lines)
-- `test_quality_checker.py` - Quality analysis (463 lines)
-- `test_reproducibility.py` - Reproducibility tracking (427 lines)
-- `test_publishing.py` - Publishing tools (427 lines)
-- `test_scientific_dev.py` - Scientific best practices (339 lines)
+**Build Module** (`infrastructure/build/`)
+- `test_build_verifier.py` - Build verification and validation
+- `test_quality_checker.py` - Document quality analysis
+- `test_reproducibility.py` - Build reproducibility tracking
+
+**Core Module** (`infrastructure/core/`)
+- `test_config_loader.py` - Configuration file handling
+- `test_exceptions.py` - Custom exception handling
+- `test_logging_utils.py` - Logging utilities
+
+**Documentation Module** (`infrastructure/documentation/`)
+- `test_figure_manager.py` - Figure management and registration
+- `test_image_manager.py` - Image handling in markdown
+- `test_glossary_gen.py` - API documentation generation
+- `test_markdown_integration.py` - Markdown processing integration
+
+**Literature Module** (`infrastructure/literature/`)
+- `test_core.py` - Literature search core functionality
+- `test_api.py` - API client implementations (arXiv, Semantic Scholar, etc.)
+- `test_config.py` - Literature search configuration
+- `test_cli.py` - CLI wrapper for search
+- `test_integration.py` - Full workflow integration
+
+**LLM Module** (`infrastructure/llm/`)
+- `test_core.py` - LLM client core functionality
+- `test_context.py` - Conversation context management
+- `test_templates.py` - Template system for common tasks
+- `test_config.py` - LLM configuration
+- `test_validation.py` - Input validation
+
+**Publishing Module** (`infrastructure/publishing/`)
+- `test_publishing.py` - Publishing metadata and citations
+- `test_api.py` - Platform API clients (Zenodo, arXiv, GitHub)
+- `test_cli.py` - CLI wrapper for publishing
+
+**Rendering Module** (`infrastructure/rendering/`)
+- `test_core.py` - Render manager core
+- `test_latex_utils.py` - LaTeX compilation utilities
+- `test_renderers.py` - PDF, HTML, and slides renderers
+- `test_config.py` - Rendering configuration
+- `test_poster_renderer.py` - Scientific poster generation
+- `test_cli.py` - CLI wrapper for rendering
+
+**Scientific Module** (`infrastructure/scientific/`)
+- `test_scientific_dev.py` - Scientific computing best practices
+
+**Validation Module** (`infrastructure/validation/`)
+- `test_markdown_validator.py` - Markdown validation
+- `test_pdf_validator.py` - PDF validation
+- `test_integrity.py` - Integrity verification
+- `test_check_links.py` - Documentation link checking
+- `test_doc_scanner.py` - Comprehensive documentation scanning
+- `test_repo_scanner.py` - Repository accuracy/completeness
+- `test_cli.py` - CLI wrapper for validation
 
 ### Integration Tests
-- `test_integration_pipeline.py` - End-to-end pipeline (821 lines)
-- `test_example_figure.py` - Figure generation (452 lines)
-- `test_generate_research_figures.py` - Research figures (588 lines)
-- `test_repo_utilities.py` - Repository utilities (1318 lines)
+- `test_module_interoperability.py` - Cross-module integration (239 lines)
+- `test_integration/` - Integration test suite
 
 ### Specialized Tests
-- `test_figure_equation_citation.py` - Figure/equation/citation handling (NEW)
-- `test_coverage_completion.py` - Additional coverage for edge cases (NEW)
+- `test_figure_equation_citation.py` - Figure/equation/citation handling
+- `test_coverage_completion.py` - Additional coverage for edge cases
+- `test_repo_utilities.py` - Repository utilities (1318 lines)
 
 ## Debugging
 

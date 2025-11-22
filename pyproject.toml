@@ -40,6 +40,7 @@ dependencies = [
   "pypdf>=5.0",
   "reportlab>=4.0",
   "pyyaml>=6.0",
+  "requests>=2.31.0",
 ]
 
 [project.optional-dependencies]
@@ -56,7 +57,7 @@ pythonpath = [".", "infrastructure", "project/src"]  # Root infrastructure + pro
 testpaths = ["tests", "project/tests"]  # Test both infrastructure and project
 
 [tool.coverage.run]
-source = ["src"]
+source = ["infrastructure", "project/src"]
 omit = [
     "*/tests/*",
     "*/test_*",
@@ -86,5 +87,6 @@ dev = [
     "pydocstyle>=6.3.0",
     "pytest>=8.4.1",
     "pytest-cov>=4.0",
+    "pytest-mock>=3.10",
 ]
 

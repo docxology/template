@@ -13,15 +13,15 @@ import sys
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-# Add src/ to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+# Add repo root to path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-import infrastructure.build_verifier
-import integrity
-import publishing
-import quality_checker
-import reproducibility
-import scientific_dev
+from infrastructure.build import build_verifier
+from infrastructure.validation import integrity
+from infrastructure.publishing import core as publishing
+from infrastructure.build import quality_checker
+from infrastructure.build import reproducibility
+from infrastructure.scientific import scientific_dev
 
 
 class TestBuildVerifierCompleteCoverage:

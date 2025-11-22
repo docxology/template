@@ -17,10 +17,10 @@ import shutil
 import subprocess
 from pathlib import Path
 
-# Add infrastructure to path for logging
-sys.path.insert(0, str(Path(__file__).parent.parent / "infrastructure"))
+# Add root to path for infrastructure imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from logging_utils import get_logger, log_success, log_error, log_header
+from infrastructure.core.logging_utils import get_logger, log_success, log_header
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -49,6 +49,7 @@ def check_dependencies() -> bool:
         'matplotlib',
         'pytest',
         'scipy',
+        'requests',
     ]
     
     missing_packages = []
@@ -154,10 +155,11 @@ def setup_directories() -> bool:
 def verify_source_structure() -> bool:
     """Verify source code structure exists.
     
-    Checks for the three core components of the repository architecture:
+    Checks for the core components of the repository architecture:
     - infrastructure/ - Generic reusable build tools
-    - repo_utilities/ - Build orchestration scripts
     - project/ - Standalone research project
+    - scripts/ - Python orchestration scripts
+    - tests/ - Infrastructure tests
     """
     logger.info("Verifying source code structure...")
     
@@ -166,13 +168,13 @@ def verify_source_structure() -> bool:
     # Core components (required for template operation)
     required_dirs = [
         'infrastructure',      # Generic tools (build_verifier, figure_manager, etc.)
-        'repo_utilities',      # Build scripts (render_pdf.sh, validate_markdown.py, etc.)
         'project',             # Standalone project with src/, tests/, scripts/, manuscript/
     ]
     
     optional_dirs = [
         'scripts',             # Optional: orchestration scripts (can be elsewhere)
         'tests',               # Optional: infrastructure tests
+        'repo_utilities',      # Optional: legacy build scripts (render_pdf.sh, etc.)
     ]
     
     all_present = True
@@ -238,7 +240,7 @@ def main() -> int:
             result = check_fn()
             results.append((check_name, result))
         except Exception as e:
-            log_error(f"Error during {check_name}: {e}")
+            logger.error(f"Error during {check_name}: {e}")
             results.append((check_name, False))
     
     # Summary
@@ -255,7 +257,7 @@ def main() -> int:
         log_success("\n✅ Environment setup complete - ready to proceed")
         return 0
     else:
-        log_error("\n❌ Environment setup failed - fix issues and try again")
+        logger.error("\n❌ Environment setup failed - fix issues and try again")
         return 1
 
 

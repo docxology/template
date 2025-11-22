@@ -325,7 +325,7 @@ def generate_dataset_summary_table(data_dir: str) -> str:
             for dataset in datasets:
                 f.write(f"{dataset['name']},{dataset['size']},{dataset['type']},{dataset['features']},{dataset['avg_value']:.3f},{dataset['max_value']:.3f},{dataset['min_value']:.3f}\n")
 
-        print(f"Generated: {figure_path}")
+        print(f"Generated: {csv_path}")
         return csv_path
 
     except (ImportError, SyntaxError) as e:
@@ -371,7 +371,7 @@ def generate_performance_comparison_table(data_dir: str) -> str:
             for method in methods:
                 f.write(f"{method},{performance_data[method]['Convergence Rate']},{performance_data[method]['Memory Usage']},{performance_data[method]['Success Rate']}\n")
 
-        print(f"Generated: {figure_path}")
+        print(f"Generated: {csv_path}")
         return csv_path
 
     except (ImportError, SyntaxError) as e:
