@@ -15,10 +15,18 @@ from __future__ import annotations
 
 import os
 import sys
+
+# Ensure src/ and infrastructure/ are on Python path FIRST
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+repo_root = os.path.abspath(os.path.join(project_root, ".."))
+src_path = os.path.join(project_root, "src")
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+
 import matplotlib.pyplot as plt
 import numpy as np
-
-
 def _ensure_src_on_path() -> None:
     """Ensure src/ and infrastructure/ are on Python path for imports."""
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -27,7 +35,7 @@ def _ensure_src_on_path() -> None:
     if src_path not in sys.path:
         sys.path.insert(0, src_path)
     if repo_root not in sys.path:
-        sys.path.insert(0, repo_root)  # Add repo root so we can import infrastructure.*
+        sys.path.insert(0, repo_root)
 
 
 def main() -> None:
@@ -132,9 +140,9 @@ def main() -> None:
             f.write(f"{xi:.6f},{yi:.6f},{ypi:.6f}\n")
     
     # Print generated paths (this is what the render system captures)
-    print(figure_path)
-    print(data_path)
-    print(csv_path)
+    print(f"Generated: {figure_path}")
+    print(f"Generated: {data_path}")
+    print(f"Generated: {csv_path}")
     
     print(f"✅ Generated example figure using src/ functions: {figure_path}")
     print(f"✅ Generated example data: {data_path}")

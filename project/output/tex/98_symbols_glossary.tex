@@ -1,0 +1,422 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+\documentclass[
+  11pt,
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1.5cm,top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm,includeheadfoot]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{3}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+  \setmainfont[]{Times New Roman}
+  \setmonofont[]{Courier New}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage{setspace}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+% Essential packages for academic documents
+\usepackage{amsmath,amssymb}          % Mathematical symbols and environments
+\usepackage{amsfonts}                 % Additional math fonts
+\usepackage{amsthm}                   % Theorem environments
+\usepackage{graphicx}                 % Include graphics
+\usepackage{float}                    % Better float placement
+\usepackage{booktabs}                 % Professional tables
+\usepackage{longtable}                % Long tables spanning pages
+\usepackage{array}                    % Advanced table formatting
+\usepackage{multirow}                 % Multi-row table cells
+\usepackage{caption}                  % Enhanced caption formatting
+\usepackage{subcaption}               % Sub-figures and sub-tables
+\usepackage{bm}                       % Bold math symbols
+\usepackage{url}                      % URL formatting
+\usepackage{hyperref}                 % Hyperlinks and cross-references
+\usepackage{cleveref}                 % Intelligent cross-referencing
+\usepackage[capitalise]{cleveref}     % Capitalize cross-reference labels
+\usepackage{natbib}                   % Bibliography support
+\usepackage{doi}                      % DOI links
+
+% Configure figure numbering and captions
+\renewcommand{\figurename}{Figure}
+\captionsetup{
+    justification=centering,
+    font=small,
+    labelfont=bf,
+    labelsep=period
+}
+
+% Configure table numbering and captions
+\renewcommand{\tablename}{Table}
+\captionsetup[table]{
+    justification=centering,
+    font=small,
+    labelfont=bf,
+    labelsep=period
+}
+
+% Configure section numbering
+\setcounter{secnumdepth}{3}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+
+% Configure equation numbering
+\numberwithin{equation}{section}
+
+% Configure hyperref for proper linking
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue,
+    filecolor=blue,
+    pdfborder={0 0 0},
+    bookmarks=true,
+    bookmarksnumbered=true,
+    bookmarkstype=toc,
+    pdftitle={Research Project Template},
+    pdfauthor={Template Author},
+    pdfsubject={Academic Research},
+    pdfkeywords={research, template, academic, LaTeX},
+    pdfcreator={render_pdf.sh},
+    pdfproducer={XeLaTeX}
+}
+
+% Configure cleveref for intelligent cross-references
+\crefname{section}{Section}{Sections}
+\crefname{subsection}{Subsection}{Subsections}
+\crefname{subsubsection}{Subsubsection}{Subsubsections}
+\crefname{equation}{Equation}{Equations}
+\crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+\crefname{appendix}{Appendix}{Appendices}
+
+% Configure fonts for Unicode support with fallbacks
+\usepackage{newunicodechar}
+\newunicodechar{⁴}{\textsuperscript{4}}
+\newunicodechar{₄}{\textsubscript{4}}
+\newunicodechar{²}{\textsuperscript{2}}
+\newunicodechar{₀}{\textsubscript{0}}
+\newunicodechar{₁}{\textsubscript{1}}
+\newunicodechar{₂}{\textsubscript{2}}
+\newunicodechar{₃}{\textsubscript{3}}
+
+% Use standard fonts for better compatibility
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+% Enhanced code block styling for better contrast and readability
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\usepackage{listings}
+
+% Define custom colors for code blocks
+\definecolor{codebg}{RGB}{248, 248, 248}      % Very light gray background
+\definecolor{codeborder}{RGB}{200, 200, 200}  % Medium gray border
+\definecolor{codefg}{RGB}{34, 34, 34}         % Dark gray text
+\definecolor{commentcolor}{RGB}{102, 102, 102} % Comment color
+\definecolor{keywordcolor}{RGB}{0, 0, 0}       % Keyword color
+\definecolor{stringcolor}{RGB}{0, 102, 0}      % String color
+
+% Configure Verbatim environment for inline code
+\DefineVerbatimEnvironment{Verbatim}{Verbatim}{%
+    fontsize=\small,
+    frame=single,
+    framerule=0.5pt,
+    framesep=3pt,
+    rulecolor=\color{codeborder},
+    bgcolor=\color{codebg},
+    fgcolor=\color{codefg}
+}
+
+% Configure code block styling
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{%
+    fontsize=\footnotesize,
+    frame=single,
+    framerule=0.5pt,
+    framesep=5pt,
+    rulecolor=\color{codeborder},
+    bgcolor=\color{codebg},
+    fgcolor=\color{codefg}
+}
+
+% Style inline code with \texttt
+\renewcommand{\texttt}[1]{%
+    \colorbox{codebg}{\color{codefg}\ttfamily #1}%
+}
+
+% Configure listings package for code blocks
+\lstset{
+    backgroundcolor=\color{codebg},
+    basicstyle=\footnotesize\ttfamily\color{codefg},
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{commentcolor},
+    deletekeywords={...},
+    escapeinside={\%*}{*)},
+    extendedchars=true,
+    frame=single,
+    framerule=0.5pt,
+    framesep=5pt,
+    keepspaces=true,
+    keywordstyle=\color{keywordcolor}\bfseries,
+    language=Python,
+    morekeywords={*,...},
+    numbers=left,
+    numbersep=5pt,
+    numberstyle=\tiny\color{codefg},
+    rulecolor=\color{codeborder},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    stepnumber=1,
+    stringstyle=\color{stringcolor},
+    tabsize=4,
+    title=\lstname
+}
+
+% Override any Pandoc default lstset configurations
+\AtBeginDocument{
+    \lstset{
+        backgroundcolor=\color{codebg},
+        basicstyle=\footnotesize\ttfamily\color{codefg},
+        frame=single,
+        framerule=0.5pt,
+        framesep=5pt,
+        rulecolor=\color{codeborder},
+        numbers=left,
+        numbersep=5pt,
+        numberstyle=\tiny\color{codefg}
+    }
+}
+
+% Configure bibliography
+\bibliographystyle{unsrt}  % Unsorted bibliography style
+% Bibliography is handled in 07_references.md
+
+% Simple page break support for document structure
+% Note: Page breaks are handled in the markdown generation, not here
+
+% Ensure proper spacing and formatting
+\frenchspacing  % Single space after periods
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{98 symbols glossary}
+\author{ORCID: 0000-0000-0000-1234\ Email: author@example.com\ DOI: 10.5281/zenodo.12345678}
+\date{November 21, 2025}
+
+\begin{document}
+\maketitle
+
+{
+\hypersetup{linkcolor=black}
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\setstretch{1.2}
+\section{API Symbols Glossary}\label{sec:glossary}
+
+This glossary is auto-generated from the public API in \texttt{src/} by
+\texttt{repo\_utilities/generate\_glossary.py}.
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Module
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Kind
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Summary
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\texttt{data\_generator} & \texttt{generate\_classification\_dataset} &
+function & Generate classification dataset. \\
+\texttt{data\_generator} & \texttt{generate\_correlated\_data} &
+function & Generate correlated multivariate data. \\
+\texttt{data\_generator} & \texttt{generate\_synthetic\_data} & function
+& Generate synthetic data with specified distribution. \\
+\texttt{data\_generator} & \texttt{generate\_time\_series} & function &
+Generate time series data. \\
+\texttt{data\_generator} & \texttt{inject\_noise} & function & Inject
+noise into data. \\
+\texttt{data\_generator} & \texttt{validate\_data} & function & Validate
+data quality. \\
+\texttt{data\_processing} & \texttt{clean\_data} & function & Clean data
+by removing or filling invalid values. \\
+\texttt{data\_processing} & \texttt{create\_validation\_pipeline} &
+function & Create a data validation pipeline. \\
+\texttt{data\_processing} & \texttt{detect\_outliers} & function &
+Detect outliers in data. \\
+\texttt{data\_processing} & \texttt{extract\_features} & function &
+Extract features from data. \\
+\texttt{data\_processing} & \texttt{normalize\_data} & function &
+Normalize data using specified method. \\
+\texttt{data\_processing} & \texttt{remove\_outliers} & function &
+Remove outliers from data. \\
+\texttt{data\_processing} & \texttt{standardize\_data} & function &
+Standardize data to zero mean and unit variance. \\
+\texttt{data\_processing} & \texttt{transform\_data} & function & Apply
+transformation to data. \\
+\texttt{example} & \texttt{add\_numbers} & function & Add two numbers
+together. \\
+\texttt{example} & \texttt{calculate\_average} & function & Calculate
+the average of a list of numbers. \\
+\texttt{example} & \texttt{find\_maximum} & function & Find the maximum
+value in a list of numbers. \\
+\texttt{example} & \texttt{find\_minimum} & function & Find the minimum
+value in a list of numbers. \\
+\texttt{example} & \texttt{is\_even} & function & Check if a number is
+even. \\
+\texttt{example} & \texttt{is\_odd} & function & Check if a number is
+odd. \\
+\texttt{example} & \texttt{multiply\_numbers} & function & Multiply two
+numbers together. \\
+\texttt{metrics} & \texttt{CustomMetric} & class & Framework for custom
+metrics. \\
+\texttt{metrics} & \texttt{calculate\_accuracy} & function & Calculate
+accuracy for classification. \\
+\texttt{metrics} & \texttt{calculate\_all\_metrics} & function &
+Calculate all applicable metrics. \\
+\texttt{metrics} & \texttt{calculate\_convergence\_metrics} & function &
+Calculate convergence metrics. \\
+\texttt{metrics} & \texttt{calculate\_effect\_size} & function &
+Calculate effect size (Cohen's d). \\
+\texttt{metrics} & \texttt{calculate\_p\_value\_approximation} &
+function & Approximate p-value from test statistic. \\
+\texttt{metrics} & \texttt{calculate\_precision\_recall\_f1} & function
+& Calculate precision, recall, and F1 score. \\
+\texttt{metrics} & \texttt{calculate\_psnr} & function & Calculate Peak
+Signal-to-Noise Ratio (PSNR). \\
+\texttt{metrics} & \texttt{calculate\_snr} & function & Calculate
+Signal-to-Noise Ratio (SNR). \\
+\texttt{metrics} & \texttt{calculate\_ssim} & function & Calculate
+Structural Similarity Index (SSIM). \\
+\texttt{parameters} & \texttt{ParameterConstraint} & class & Constraint
+for parameter validation. \\
+\texttt{parameters} & \texttt{ParameterSet} & class & A set of
+parameters with validation. \\
+\texttt{parameters} & \texttt{ParameterSweep} & class & Configuration
+for parameter sweeps. \\
+\texttt{performance} & \texttt{ConvergenceMetrics} & class & Metrics for
+convergence analysis. \\
+\texttt{performance} & \texttt{ScalabilityMetrics} & class & Metrics for
+scalability analysis. \\
+\texttt{performance} & \texttt{analyze\_convergence} & function &
+Analyze convergence of a sequence. \\
+\texttt{performance} & \texttt{analyze\_scalability} & function &
+Analyze scalability of an algorithm. \\
+\texttt{performance} & \texttt{benchmark\_comparison} & function &
+Compare multiple methods on benchmarks. \\
+\texttt{performance} & \texttt{calculate\_efficiency} & function &
+Calculate efficiency (speedup / resource\_ratio). \\
+\texttt{performance} & \texttt{calculate\_speedup} & function &
+Calculate speedup relative to baseline. \\
+\texttt{performance} & \texttt{check\_statistical\_significance} &
+function & Test statistical significance between two groups. \\
+\texttt{plots} & \texttt{plot\_3d\_surface} & function & Create a 3D
+surface plot. \\
+\texttt{plots} & \texttt{plot\_bar} & function & Create a bar chart. \\
+\texttt{plots} & \texttt{plot\_comparison} & function & Plot comparison
+of methods. \\
+\texttt{plots} & \texttt{plot\_contour} & function & Create a contour
+plot. \\
+\texttt{plots} & \texttt{plot\_convergence} & function & Plot
+convergence curve. \\
+\texttt{plots} & \texttt{plot\_heatmap} & function & Create a
+heatmap. \\
+\texttt{plots} & \texttt{plot\_line} & function & Create a line plot. \\
+\texttt{plots} & \texttt{plot\_scatter} & function & Create a scatter
+plot. \\
+\texttt{reporting} & \texttt{ReportGenerator} & class & Generate reports
+from simulation and analysis results. \\
+\texttt{simulation} & \texttt{SimpleSimulation} & class & Simple example
+simulation for testing. \\
+\texttt{simulation} & \texttt{SimulationBase} & class & Base class for
+scientific simulations. \\
+\texttt{simulation} & \texttt{SimulationState} & class & Represents the
+state of a simulation run. \\
+\texttt{statistics} & \texttt{DescriptiveStats} & class & Descriptive
+statistics for a dataset. \\
+\texttt{statistics} & \texttt{anova\_test} & function & Perform one-way
+ANOVA test. \\
+\texttt{statistics} & \texttt{calculate\_confidence\_interval} &
+function & Calculate confidence interval for mean. \\
+\texttt{statistics} & \texttt{calculate\_correlation} & function &
+Calculate correlation between two variables. \\
+\texttt{statistics} & \texttt{calculate\_descriptive\_stats} & function
+& Calculate descriptive statistics. \\
+\texttt{statistics} & \texttt{fit\_distribution} & function & Fit a
+distribution to data. \\
+\texttt{statistics} & \texttt{t\_test} & function & Perform t-test. \\
+\texttt{validation} & \texttt{ValidationFramework} & class & Framework
+for validating simulation and analysis results. \\
+\texttt{validation} & \texttt{ValidationResult} & class & Result of a
+validation check. \\
+\texttt{visualization} & \texttt{VisualizationEngine} & class & Engine
+for generating publication-quality figures. \\
+\texttt{visualization} & \texttt{create\_multi\_panel\_figure} &
+function & Create a multi-panel figure. \\
+\end{longtable}
+}
+
+\end{document}

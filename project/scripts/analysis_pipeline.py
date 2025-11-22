@@ -32,11 +32,12 @@ project_root = Path(__file__).parent.parent
 repo_root = project_root.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(repo_root))  # Add repo root so we can import infrastructure.*
+from infrastructure.figure_manager import FigureManager
+    print("[LAYER-2-SCIENTIFIC] Loading and analyzing data from infrastructure/scientific integration...")
 
 # Import src/ modules
 from data_generator import generate_classification_dataset, generate_synthetic_data
 from data_processing import normalize_data, detect_outliers, clean_data
-from infrastructure.figure_manager import FigureManager
 from metrics import calculate_accuracy, calculate_precision_recall_f1, calculate_all_metrics
 from performance import analyze_scalability, benchmark_comparison
 from reporting import ReportGenerator
@@ -53,7 +54,6 @@ from plots import plot_comparison, plot_scatter, plot_bar
 
 def load_and_analyze_data() -> None:
     """Load and analyze simulation data."""
-    logger.info("[LAYER-2-SCIENTIFIC] Loading and analyzing data from infrastructure/scientific integration...")
     
     # Generate synthetic data
     data = generate_synthetic_data(
@@ -65,7 +65,7 @@ def load_and_analyze_data() -> None:
     
     # Clean data using scientific layer
     cleaned_data = clean_data(data, remove_nan=True, fill_method="mean")
-    logger.info(f"  [LAYER-2] Data shape after cleaning: {cleaned_data.shape}")
+    print(f"  [LAYER-2] Data shape after cleaning: {cleaned_data.shape}")
     
     # Calculate descriptive statistics
     stats = calculate_descriptive_stats(cleaned_data)

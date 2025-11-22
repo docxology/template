@@ -21,10 +21,9 @@ project_root = Path(__file__).parent.parent
 repo_root = project_root.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(repo_root))  # Add repo root so we can import infrastructure.*
-
+from infrastructure.figure_manager import FigureManager
 # Import src/ modules
 from data_generator import generate_time_series, generate_synthetic_data
-from infrastructure.figure_manager import FigureManager
 from parameters import ParameterSet, ParameterSweep
 from performance import analyze_convergence, analyze_scalability
 from reporting import ReportGenerator

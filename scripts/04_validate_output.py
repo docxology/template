@@ -15,25 +15,18 @@ import subprocess
 import sys
 from pathlib import Path
 
+# Add infrastructure to path for logging
+sys.path.insert(0, str(Path(__file__).parent.parent / "infrastructure"))
+
+from logging_utils import get_logger, log_success, log_error, log_header, log_warning
+
+# Set up logger for this module
+logger = get_logger(__name__)
+
 
 def log_stage(message: str) -> None:
-    """Log a stage message."""
-    print(f"\n[STAGE-04] {message}")
-
-
-def log_success(message: str) -> None:
-    """Log a success message."""
-    print(f"  ✅ {message}")
-
-
-def log_error(message: str) -> None:
-    """Log an error message."""
-    print(f"  ❌ {message}")
-
-
-def log_warning(message: str) -> None:
-    """Log a warning message."""
-    print(f"  ⚠️  {message}")
+    """Log a stage start message."""
+    logger.info(f"\n  {message}")
 
 
 def validate_pdfs() -> bool:
@@ -83,20 +76,20 @@ def validate_markdown() -> bool:
         manuscript_dir = repo_root / "manuscript"
     
     if not manuscript_dir.exists():
-        log_warning("Manuscript directory not found")
+        logger.warning("Manuscript directory not found")
         return True
     
     markdown_files = list(manuscript_dir.glob("*.md"))
     
     if not markdown_files:
-        log_warning("No markdown files found")
+        logger.warning("No markdown files found")
         return True
     
     # Check for validation script
     validate_script = repo_root / "repo_utilities" / "validate_markdown.py"
     
     if validate_script.exists():
-        print(f"\n  Running markdown validation script...")
+        logger.info("Running markdown validation script...")
         
         try:
             result = subprocess.run(
@@ -111,15 +104,15 @@ def validate_markdown() -> bool:
                 log_success("Markdown validation passed")
                 return True
             else:
-                log_warning("Markdown validation had issues (non-critical)")
+                logger.warning("Markdown validation had issues (non-critical)")
                 if result.stdout:
-                    print(f"\n{result.stdout}")
+                    logger.debug(f"Validation output: {result.stdout}")
                 return True  # Non-critical
         except Exception as e:
-            log_warning(f"Could not run markdown validation: {e}")
+            logger.warning(f"Could not run markdown validation: {e}")
             return True  # Non-critical
     else:
-        log_warning("Markdown validation script not found")
+        logger.warning("Markdown validation script not found")
         return True
 
 
@@ -178,16 +171,14 @@ def generate_validation_report() -> None:
         "",
     ])
     
-    # Print report
+    # Log report
     report_text = "\n".join(report_lines)
-    print(f"\n{report_text}")
+    logger.info(f"\n{report_text}")
 
 
 def main() -> int:
     """Execute validation orchestration."""
-    print("\n" + "="*60)
-    print("STAGE 04: Validate Output")
-    print("="*60)
+    log_header("STAGE 04: Validate Output")
     
     checks = [
         ("PDF validation", validate_pdfs),
@@ -201,29 +192,29 @@ def main() -> int:
             result = check_fn()
             results.append((check_name, result))
         except Exception as e:
-            log_error(f"Error during {check_name}: {e}")
+            logger.error(f"Error during {check_name}: {e}", exc_info=True)
             results.append((check_name, False))
     
     # Generate report
     generate_validation_report()
     
     # Summary
-    print("\n" + "="*60)
-    print("Validation Summary")
-    print("="*60)
+    logger.info("\n" + "="*60)
+    logger.info("Validation Summary")
+    logger.info("="*60)
     
     all_passed = True
     for check_name, result in results:
         status = "✅ PASS" if result else "❌ FAIL"
-        print(f"{status}: {check_name}")
+        logger.info(f"{status}: {check_name}")
         if not result:
             all_passed = False
     
     if all_passed:
-        print("\n✅ Validation complete - pipeline successful!")
+        log_success("\n✅ Validation complete - pipeline successful!")
         return 0
     else:
-        print("\n❌ Validation failed - review issues above")
+        log_error("\n❌ Validation failed - review issues above")
         return 1
 
 

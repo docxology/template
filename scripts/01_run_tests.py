@@ -16,31 +16,24 @@ import subprocess
 import sys
 from pathlib import Path
 
+# Add infrastructure to path for logging
+sys.path.insert(0, str(Path(__file__).parent.parent / "infrastructure"))
 
-def log_stage(message: str) -> None:
-    """Log a stage message."""
-    print(f"\n[STAGE-01] {message}")
+from logging_utils import get_logger, log_success, log_error, log_header
 
-
-def log_success(message: str) -> None:
-    """Log a success message."""
-    print(f"  ✅ {message}")
-
-
-def log_error(message: str) -> None:
-    """Log an error message."""
-    print(f"  ❌ {message}")
+# Set up logger for this module
+logger = get_logger(__name__)
 
 
 def run_tests() -> int:
     """Execute pytest test suite with coverage."""
-    log_stage("Running test suite with coverage analysis...")
+    logger.info("Running test suite with coverage analysis...")
     
     repo_root = Path(__file__).parent.parent
     test_dir = repo_root / "tests"
     
     if not test_dir.exists():
-        log_error("Tests directory not found")
+        logger.error("Tests directory not found")
         return 1
     
     # Build pytest command - run project tests excluding problematic integration tests
@@ -58,7 +51,7 @@ def run_tests() -> int:
         "--tb=short",
     ]
     
-    print(f"\nExecuting: {' '.join(cmd)}\n")
+    logger.info(f"Executing: {' '.join(cmd)}")
     
     try:
         # Set up environment with correct Python paths
@@ -72,30 +65,26 @@ def run_tests() -> int:
         result = subprocess.run(cmd, cwd=str(repo_root), env=env, check=False)
         return result.returncode
     except Exception as e:
-        log_error(f"Failed to run tests: {e}")
+        logger.error(f"Failed to run tests: {e}", exc_info=True)
         return 1
 
 
 def report_results(exit_code: int) -> None:
     """Report test execution results."""
-    print("\n" + "="*60)
-    print("Test Execution Summary")
-    print("="*60)
+    log_header("Test Execution Summary", logger)
     
     if exit_code == 0:
-        log_success("All tests passed")
-        log_success("Coverage threshold met (70%+)")
-        print("\n✅ Tests complete - ready for analysis")
+        log_success("All tests passed", logger)
+        log_success("Coverage threshold met (70%+)", logger)
+        log_success("Tests complete - ready for analysis", logger)
     else:
-        log_error("Test suite failed")
-        print("\n❌ Tests failed - fix issues and try again")
+        logger.error("Test suite failed")
+        logger.error("Tests failed - fix issues and try again")
 
 
 def main() -> int:
     """Execute test suite orchestration."""
-    print("\n" + "="*60)
-    print("STAGE 01: Run Tests")
-    print("="*60)
+    log_header("STAGE 01: Run Tests", logger)
     
     exit_code = run_tests()
     report_results(exit_code)

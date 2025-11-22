@@ -15,20 +15,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+# Add infrastructure to path for logging
+sys.path.insert(0, str(Path(__file__).parent.parent / "infrastructure"))
 
-def log_stage(message: str) -> None:
-    """Log a stage message."""
-    print(f"\n[STAGE-03] {message}")
+from logging_utils import get_logger, log_success, log_error, log_header
 
-
-def log_success(message: str) -> None:
-    """Log a success message."""
-    print(f"  ✅ {message}")
-
-
-def log_error(message: str) -> None:
-    """Log an error message."""
-    print(f"  ❌ {message}")
+# Set up logger for this module
+logger = get_logger(__name__)
 
 
 def find_render_script() -> Path | None:
@@ -37,20 +30,20 @@ def find_render_script() -> Path | None:
     render_script = repo_root / "repo_utilities" / "render_pdf.sh"
     
     if render_script.exists():
-        log_success(f"Found render script: {render_script.name}")
+        log_success(f"Found render script: {render_script.name}", logger)
         return render_script
     else:
-        log_error(f"Render script not found: {render_script}")
+        logger.error(f"Render script not found: {render_script}")
         return None
 
 
 def run_render_pipeline(render_script: Path) -> int:
     """Execute the PDF rendering pipeline."""
-    log_stage("Executing PDF rendering pipeline...")
+    logger.info("Executing PDF rendering pipeline...")
     
     repo_root = Path(__file__).parent.parent
     
-    print(f"\nExecuting: {render_script.name}\n")
+    logger.info(f"Running: {render_script.name}")
     
     try:
         result = subprocess.run(
@@ -60,50 +53,48 @@ def run_render_pipeline(render_script: Path) -> int:
         )
         
         if result.returncode == 0:
-            log_success("PDF rendering completed successfully")
+            log_success("PDF rendering completed successfully", logger)
         else:
-            log_error(f"PDF rendering failed (exit code: {result.returncode})")
+            logger.error(f"PDF rendering failed (exit code: {result.returncode})")
         
         return result.returncode
     except Exception as e:
-        log_error(f"Failed to execute render pipeline: {e}")
+        logger.error(f"Failed to execute render pipeline: {e}", exc_info=True)
         return 1
 
 
 def verify_pdf_outputs() -> bool:
     """Verify that PDFs were generated."""
-    log_stage("Verifying PDF outputs...")
+    logger.info("Verifying PDF outputs...")
     
     repo_root = Path(__file__).parent.parent
     pdf_dir = repo_root / "project" / "output" / "pdf"
     
     if not pdf_dir.exists():
-        log_error("PDF output directory not found")
+        logger.error("PDF output directory not found")
         return False
     
     pdf_files = list(pdf_dir.glob("*.pdf"))
     
     if pdf_files:
-        log_success(f"Generated {len(pdf_files)} PDF file(s)")
+        log_success(f"Generated {len(pdf_files)} PDF file(s)", logger)
         for pdf_file in pdf_files:
             size_mb = pdf_file.stat().st_size / (1024 * 1024)
-            print(f"    • {pdf_file.name} ({size_mb:.2f} MB)")
+            logger.info(f"  • {pdf_file.name} ({size_mb:.2f} MB)")
         return True
     else:
-        log_error("No PDF files found in output directory")
+        logger.error("No PDF files found in output directory")
         return False
 
 
 def main() -> int:
     """Execute PDF rendering orchestration."""
-    print("\n" + "="*60)
-    print("STAGE 03: Render PDF")
-    print("="*60)
+    log_header("STAGE 03: Render PDF", logger)
     
     # Find render script
     render_script = find_render_script()
     if not render_script:
-        print("\n❌ Cannot proceed - render script not found")
+        logger.error("Cannot proceed - render script not found")
         return 1
     
     # Run rendering pipeline
@@ -114,11 +105,11 @@ def main() -> int:
         outputs_valid = verify_pdf_outputs()
         
         if outputs_valid:
-            print("\n✅ PDF rendering complete - ready for validation")
+            log_success("PDF rendering complete - ready for validation", logger)
         else:
-            print("\n⚠️  PDF rendering completed but output verification failed")
+            logger.warning("PDF rendering completed but output verification failed")
     else:
-        print("\n❌ PDF rendering failed - check logs for details")
+        logger.error("PDF rendering failed - check logs for details")
     
     return exit_code
 

@@ -17,44 +17,32 @@ import shutil
 import subprocess
 from pathlib import Path
 
+# Add infrastructure to path for logging
+sys.path.insert(0, str(Path(__file__).parent.parent / "infrastructure"))
 
-def log_stage(message: str) -> None:
-    """Log a stage message."""
-    print(f"\n[STAGE-00] {message}")
+from logging_utils import get_logger, log_success, log_error, log_header
 
-
-def log_success(message: str) -> None:
-    """Log a success message."""
-    print(f"  ✅ {message}")
-
-
-def log_error(message: str) -> None:
-    """Log an error message."""
-    print(f"  ❌ {message}")
-
-
-def log_warning(message: str) -> None:
-    """Log a warning message."""
-    print(f"  ⚠️  {message}")
+# Set up logger for this module
+logger = get_logger(__name__)
 
 
 def check_python_version() -> bool:
     """Verify Python 3.8+ is available."""
-    log_stage("Checking Python version...")
+    logger.info("Checking Python version...")
     version_info = sys.version_info
     version_str = f"{version_info.major}.{version_info.minor}.{version_info.micro}"
     
     if version_info.major < 3 or (version_info.major == 3 and version_info.minor < 8):
-        log_error(f"Python 3.8+ required, found {version_str}")
+        logger.error(f"Python 3.8+ required, found {version_str}")
         return False
     
-    log_success(f"Python {version_str} available")
+    log_success(f"Python {version_str} available", logger)
     return True
 
 
 def check_dependencies() -> bool:
     """Verify required packages are installed, install if missing."""
-    log_stage("Checking dependencies...")
+    logger.info("Checking dependencies...")
     
     required_packages = [
         'numpy',
@@ -67,9 +55,9 @@ def check_dependencies() -> bool:
     for package in required_packages:
         try:
             __import__(package)
-            log_success(f"Package '{package}' available")
+            log_success(f"Package '{package}' available", logger)
         except ImportError:
-            log_error(f"Package '{package}' not found")
+            logger.error(f"Package '{package}' not found")
             missing_packages.append(package)
     
     # If packages are missing, try to install them using uv
@@ -81,46 +69,46 @@ def check_dependencies() -> bool:
 
 def install_missing_packages(packages: list[str]) -> bool:
     """Install missing packages using uv."""
-    log_stage(f"Installing {len(packages)} missing package(s) with uv...")
+    logger.info(f"Installing {len(packages)} missing package(s) with uv...")
     
     # Check if uv is available
     if not shutil.which('uv'):
-        log_error("uv package manager not found - cannot auto-install dependencies")
-        log_error("Install uv with: pip install uv")
-        log_error("Or install packages manually: pip install " + " ".join(packages))
+        logger.error("uv package manager not found - cannot auto-install dependencies")
+        logger.error("Install uv with: pip install uv")
+        logger.error("Or install packages manually: pip install " + " ".join(packages))
         return False
     
     try:
         # Install all missing packages at once
         cmd = ['uv', 'pip', 'install'] + packages
-        print(f"\n  Running: {' '.join(cmd)}\n")
+        logger.info(f"Running: {' '.join(cmd)}")
         
         result = subprocess.run(cmd, check=False)
         
         if result.returncode == 0:
             # Verify installation
-            log_stage("Verifying installation...")
+            logger.info("Verifying installation...")
             all_installed = True
             for package in packages:
                 try:
                     __import__(package)
-                    log_success(f"Package '{package}' installed successfully")
+                    log_success(f"Package '{package}' installed successfully", logger)
                 except ImportError:
-                    log_error(f"Package '{package}' installation failed")
+                    logger.error(f"Package '{package}' installation failed")
                     all_installed = False
             
             return all_installed
         else:
-            log_error(f"uv installation failed (exit code: {result.returncode})")
+            logger.error(f"uv installation failed (exit code: {result.returncode})")
             return False
     except Exception as e:
-        log_error(f"Failed to install packages: {e}")
+        logger.error(f"Failed to install packages: {e}", exc_info=True)
         return False
 
 
 def check_build_tools() -> bool:
     """Verify build tools are available."""
-    log_stage("Checking build tools...")
+    logger.info("Checking build tools...")
     
     tools = {
         'pandoc': 'Document conversion',
@@ -130,9 +118,9 @@ def check_build_tools() -> bool:
     all_present = True
     for tool, purpose in tools.items():
         if shutil.which(tool):
-            log_success(f"'{tool}' available ({purpose})")
+            log_success(f"'{tool}' available ({purpose})", logger)
         else:
-            log_error(f"'{tool}' not found ({purpose})")
+            logger.error(f"'{tool}' not found ({purpose})")
             all_present = False
     
     return all_present
@@ -140,7 +128,7 @@ def check_build_tools() -> bool:
 
 def setup_directories() -> bool:
     """Create required directory structure."""
-    log_stage("Setting up directory structure...")
+    logger.info("Setting up directory structure...")
     
     repo_root = Path(__file__).parent.parent
     
@@ -156,10 +144,10 @@ def setup_directories() -> bool:
         for directory in directories:
             dir_path = repo_root / directory
             dir_path.mkdir(parents=True, exist_ok=True)
-            log_success(f"Directory ready: {directory}")
+            log_success(f"Directory ready: {directory}", logger)
         return True
     except Exception as e:
-        log_error(f"Failed to create directories: {e}")
+        logger.error(f"Failed to create directories: {e}", exc_info=True)
         return False
 
 
@@ -171,7 +159,7 @@ def verify_source_structure() -> bool:
     - repo_utilities/ - Build orchestration scripts
     - project/ - Standalone research project
     """
-    log_stage("Verifying source code structure...")
+    logger.info("Verifying source code structure...")
     
     repo_root = Path(__file__).parent.parent
     
@@ -191,51 +179,49 @@ def verify_source_structure() -> bool:
     for directory in required_dirs:
         dir_path = repo_root / directory
         if dir_path.exists() and dir_path.is_dir():
-            log_success(f"Directory found: {directory}")
+            log_success(f"Directory found: {directory}", logger)
         else:
-            log_error(f"Directory not found: {directory}")
+            logger.error(f"Directory not found: {directory}")
             all_present = False
     
     # Check optional directories
     for directory in optional_dirs:
         dir_path = repo_root / directory
         if dir_path.exists() and dir_path.is_dir():
-            log_success(f"Directory found: {directory} (optional)")
+            log_success(f"Directory found: {directory} (optional)", logger)
         else:
-            log_warning(f"Directory not found: {directory} (optional)")
+            logger.warning(f"Directory not found: {directory} (optional)")
     
     return all_present
 
 
 def set_environment_variables() -> bool:
     """Configure environment variables for pipeline."""
-    log_stage("Setting environment variables...")
+    logger.info("Setting environment variables...")
     
     try:
         # Set matplotlib backend for headless operation
         os.environ['MPLBACKEND'] = 'Agg'
-        log_success("MPLBACKEND=Agg")
+        log_success("MPLBACKEND=Agg", logger)
         
         # Ensure UTF-8 encoding
         os.environ['PYTHONIOENCODING'] = 'utf-8'
-        log_success("PYTHONIOENCODING=utf-8")
+        log_success("PYTHONIOENCODING=utf-8", logger)
         
         # Set project root in environment
         repo_root = Path(__file__).parent.parent
         os.environ['PROJECT_ROOT'] = str(repo_root)
-        log_success(f"PROJECT_ROOT={repo_root}")
+        log_success(f"PROJECT_ROOT={repo_root}", logger)
         
         return True
     except Exception as e:
-        log_error(f"Failed to set environment variables: {e}")
+        logger.error(f"Failed to set environment variables: {e}", exc_info=True)
         return False
 
 
 def main() -> int:
     """Execute environment setup orchestration."""
-    print("\n" + "="*60)
-    print("STAGE 00: Environment Setup")
-    print("="*60)
+    log_header("STAGE 00: Environment Setup", logger)
     
     checks = [
         ("Python version", check_python_version),
@@ -256,22 +242,20 @@ def main() -> int:
             results.append((check_name, False))
     
     # Summary
-    print("\n" + "="*60)
-    print("Setup Summary")
-    print("="*60)
+    log_header("Setup Summary")
     
     all_passed = True
     for check_name, result in results:
         status = "✅ PASS" if result else "❌ FAIL"
-        print(f"{status}: {check_name}")
+        logger.info(f"{status}: {check_name}")
         if not result:
             all_passed = False
     
     if all_passed:
-        print("\n✅ Environment setup complete - ready to proceed")
+        log_success("\n✅ Environment setup complete - ready to proceed")
         return 0
     else:
-        print("\n❌ Environment setup failed - fix issues and try again")
+        log_error("\n❌ Environment setup failed - fix issues and try again")
         return 1
 
 

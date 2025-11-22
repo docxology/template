@@ -12,11 +12,19 @@ from __future__ import annotations
 
 import os
 import sys
+
+# Ensure src/ and infrastructure/ are on Python path FIRST
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+repo_root = os.path.abspath(os.path.join(project_root, ".."))
+src_path = os.path.join(project_root, "src")
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
+if repo_root not in sys.path:
+    sys.path.insert(0, repo_root)
+
 import matplotlib.pyplot as plt
 import numpy as np
 from typing import Tuple, List
-
-
 def _ensure_src_on_path() -> None:
     """Ensure src/ and infrastructure/ are on Python path for imports."""
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -25,7 +33,7 @@ def _ensure_src_on_path() -> None:
     if src_path not in sys.path:
         sys.path.insert(0, src_path)
     if repo_root not in sys.path:
-        sys.path.insert(0, repo_root)  # Add repo root so we can import infrastructure.*
+        sys.path.insert(0, repo_root)
 
 
 def _setup_directories() -> Tuple[str, str, str]:
@@ -103,8 +111,8 @@ def generate_convergence_plot(figure_dir: str, data_dir: str) -> str:
     np.savez(data_path, iterations=iterations, our_method=our_method, baseline=baseline,
               our_avg=our_avg, base_avg=base_avg)
     
-    print(figure_path)
-    print(data_path)
+    print(f"Generated: {figure_path}")
+    print(f"Generated: {figure_path}")
     return figure_path
 
 
@@ -151,7 +159,7 @@ def generate_experimental_setup(figure_dir: str, data_dir: str) -> str:
     fig.savefig(figure_path, dpi=300, bbox_inches='tight')
     plt.close(fig)
     
-    print(figure_path)
+    print(f"Generated: {figure_path}")
     return figure_path
 
 
@@ -194,7 +202,7 @@ def generate_data_structure_plot(figure_dir: str, data_dir: str) -> str:
         fig.savefig(figure_path, dpi=300, bbox_inches='tight')
         plt.close(fig)
 
-        print(figure_path)
+        print(f"Generated: {figure_path}")
         return figure_path
 
     except (ImportError, SyntaxError) as e:
@@ -232,7 +240,7 @@ def generate_step_size_analysis(figure_dir: str, data_dir: str) -> str:
         fig.savefig(figure_path, dpi=300, bbox_inches='tight')
         plt.close(fig)
 
-        print(figure_path)
+        print(f"Generated: {figure_path}")
         return figure_path
 
     except (ImportError, SyntaxError) as e:
@@ -279,7 +287,7 @@ def generate_scalability_analysis(figure_dir: str, data_dir: str) -> str:
         fig.savefig(figure_path, dpi=300, bbox_inches='tight')
         plt.close(fig)
 
-        print(figure_path)
+        print(f"Generated: {figure_path}")
         return figure_path
 
     except (ImportError, SyntaxError) as e:
@@ -317,7 +325,7 @@ def generate_dataset_summary_table(data_dir: str) -> str:
             for dataset in datasets:
                 f.write(f"{dataset['name']},{dataset['size']},{dataset['type']},{dataset['features']},{dataset['avg_value']:.3f},{dataset['max_value']:.3f},{dataset['min_value']:.3f}\n")
 
-        print(csv_path)
+        print(f"Generated: {figure_path}")
         return csv_path
 
     except (ImportError, SyntaxError) as e:
@@ -363,7 +371,7 @@ def generate_performance_comparison_table(data_dir: str) -> str:
             for method in methods:
                 f.write(f"{method},{performance_data[method]['Convergence Rate']},{performance_data[method]['Memory Usage']},{performance_data[method]['Success Rate']}\n")
 
-        print(csv_path)
+        print(f"Generated: {figure_path}")
         return csv_path
 
     except (ImportError, SyntaxError) as e:
@@ -398,7 +406,7 @@ def generate_ablation_study(figure_dir: str, data_dir: str) -> str:
         fig.savefig(figure_path, dpi=300, bbox_inches='tight')
         plt.close(fig)
 
-        print(figure_path)
+        print(f"Generated: {figure_path}")
         return figure_path
 
     except (ImportError, SyntaxError) as e:
@@ -444,7 +452,7 @@ def generate_hyperparameter_sensitivity(figure_dir: str, data_dir: str) -> str:
         fig.savefig(figure_path, dpi=300, bbox_inches='tight')
         plt.close(fig)
 
-        print(figure_path)
+        print(f"Generated: {figure_path}")
         return figure_path
 
     except (ImportError, SyntaxError) as e:
@@ -488,7 +496,7 @@ def generate_image_classification_results(figure_dir: str, data_dir: str) -> str
         fig.savefig(figure_path, dpi=300, bbox_inches='tight')
         plt.close(fig)
 
-        print(figure_path)
+        print(f"Generated: {figure_path}")
         return figure_path
 
     except (ImportError, SyntaxError) as e:
@@ -529,7 +537,7 @@ def generate_recommendation_scalability(figure_dir: str, data_dir: str) -> str:
         fig.savefig(figure_path, dpi=300, bbox_inches='tight')
         plt.close(fig)
 
-        print(figure_path)
+        print(f"Generated: {figure_path}")
         return figure_path
 
     except (ImportError, SyntaxError) as e:

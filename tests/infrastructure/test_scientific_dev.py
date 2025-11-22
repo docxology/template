@@ -10,8 +10,6 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 
 # Import the module to test
-import sys
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 import scientific_dev
 
 

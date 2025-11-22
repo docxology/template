@@ -12,9 +12,7 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 
 # Import the module to test
-import sys
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-import infrastructure.build_verifier
+import infrastructure.build_verifier as build_verifier
 
 
 class TestBuildVerificationReport:

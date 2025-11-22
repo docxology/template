@@ -24,6 +24,14 @@ from datetime import datetime
 import tempfile
 import shutil
 
+try:
+    from .logging_utils import get_logger
+except ImportError:
+    # Fallback for direct imports
+    from logging_utils import get_logger
+
+logger = get_logger(__name__)
+
 
 class BuildVerificationReport:
     """Container for build verification results."""
@@ -306,8 +314,7 @@ from build_verifier import (
 
 def main():
     """Main build verification function."""
-    print("🔍 Starting comprehensive build verification...")
-    print()
+    logger.info("🔍 Starting comprehensive build verification...")
 
     # Create verification report
     report = BuildVerificationReport()
@@ -315,25 +322,24 @@ def main():
     start_time = time.time()
 
     # 1. Verify build environment
-    print("1. Verifying build environment...")
+    logger.info("1. Verifying build environment...")
     environment = verify_build_environment()
 
     if not environment['dependencies_available']:
-        print("❌ Environment verification failed")
+        logger.error("❌ Environment verification failed")
         for issue in environment['issues']:
-            print(f"   • {issue}")
+            logger.error(f"   • {issue}")
         return 1
 
-    print("✅ Environment verification passed")
+    logger.info("✅ Environment verification passed")
     for tool, info in environment['required_tools'].items():
         if info['available']:
-            print(f"   ✅ {tool}: {info.get('version', 'OK')}")
+            logger.info(f"   ✅ {tool}: {info.get('version', 'OK')}")
         else:
-            print(f"   ❌ {tool}: {info.get('error', 'Not available')}")
-    print()
+            logger.error(f"   ❌ {tool}: {info.get('error', 'Not available')}")
 
     # 2. Run build command
-    print("2. Running build command...")
+    logger.info("2. Running build command...")
     build_command = ['./repo_utilities/render_pdf.sh']
 
     exit_code, stdout, stderr = run_build_command(build_command)
@@ -342,17 +348,16 @@ def main():
     report.build_duration = time.time() - start_time
 
     if exit_code != 0:
-        print(f"❌ Build failed with exit code {exit_code}")
+        logger.error(f"❌ Build failed with exit code {exit_code}")
         if stderr:
-            print(f"Error output: {stderr}")
+            logger.error(f"Error output: {stderr}")
         return 1
 
-    print("✅ Build completed successfully")
-    print(f"   Duration: {report.build_duration:.1f}s")
-    print()
+    logger.info("✅ Build completed successfully")
+    logger.info(f"   Duration: {report.build_duration:.1f}s")
 
     # 3. Verify build artifacts
-    print("3. Verifying build artifacts...")
+    logger.info("3. Verifying build artifacts...")
     output_dir = Path("output")
     expected_files = {
         'pdf': [
@@ -380,20 +385,19 @@ def main():
     artifacts = verify_build_artifacts(output_dir, expected_files)
 
     if not artifacts['verification_passed']:
-        print("❌ Artifact verification failed")
+        logger.error("❌ Artifact verification failed")
         for missing in artifacts['missing_files']:
-            print(f"   • Missing: {missing}")
+            logger.error(f"   • Missing: {missing}")
         for unexpected in artifacts['unexpected_files']:
-            print(f"   • Unexpected: {unexpected}")
+            logger.error(f"   • Unexpected: {unexpected}")
         return 1
 
-    print("✅ Artifact verification passed")
-    print(f"   • Files created: {artifacts['file_count']}")
-    print(f"   • Files expected: {artifacts['total_expected']}")
-    print()
+    logger.info("✅ Artifact verification passed")
+    logger.info(f"   • Files created: {artifacts['file_count']}")
+    logger.info(f"   • Files expected: {artifacts['total_expected']}")
 
     # 4. Test reproducibility
-    print("4. Testing build reproducibility...")
+    logger.info("4. Testing build reproducibility...")
     expected_outputs = {
         'output/pdf/project_combined.pdf': 'Test Project',
         'output/project_combined.html': 'Test Project'
@@ -402,18 +406,17 @@ def main():
     reproducibility = verify_build_reproducibility(build_command, expected_outputs, iterations=2)
 
     if not reproducibility['consistent_results']:
-        print("❌ Reproducibility test failed")
+        logger.error("❌ Reproducibility test failed")
         for issue in reproducibility['issues']:
-            print(f"   • {issue}")
+            logger.error(f"   • {issue}")
         return 1
 
-    print("✅ Reproducibility test passed")
-    print(f"   • Iterations completed: {reproducibility['iterations_completed']}")
-    print(f"   • Duration variance: {reproducibility['duration_variance']:.3f}s")
-    print()
+    logger.info("✅ Reproducibility test passed")
+    logger.info(f"   • Iterations completed: {reproducibility['iterations_completed']}")
+    logger.info(f"   • Duration variance: {reproducibility['duration_variance']:.3f}s")
 
     # 5. Final verification
-    print("5. Final verification...")
+    logger.info("5. Final verification...")
 
     # Check main PDF content
     pdf_path = Path("output/pdf/project_combined.pdf")
@@ -424,24 +427,21 @@ def main():
             first_page_text = reader.pages[0].extract_text()
 
             if "Test Project" in first_page_text:
-                print("✅ PDF contains expected title")
+                logger.info("✅ PDF contains expected title")
             else:
-                print("⚠️  PDF title verification uncertain")
+                logger.warning("⚠️  PDF title verification uncertain")
         except Exception as e:
-            print(f"⚠️  PDF content verification failed: {e}")
+            logger.warning(f"⚠️  PDF content verification failed: {e}")
     else:
-        print("❌ Main PDF not found")
+        logger.error("❌ Main PDF not found")
         return 1
 
-    print()
-    print("🎉 BUILD VERIFICATION COMPLETED SUCCESSFULLY!")
-    print()
-    print("Summary:")
-    print(f"• Build duration: {report.build_duration:.1f}s")
-    print(f"• Exit code: {report.exit_code}")
-    print(f"• Artifacts created: {artifacts['file_count']}")
-    print(f"• Build reproducible: Yes")
-    print()
+    logger.info("🎉 BUILD VERIFICATION COMPLETED SUCCESSFULLY!")
+    logger.info("Summary:")
+    logger.info(f"• Build duration: {report.build_duration:.1f}s")
+    logger.info(f"• Exit code: {report.exit_code}")
+    logger.info(f"• Artifacts created: {artifacts['file_count']}")
+    logger.info(f"• Build reproducible: Yes")
 
     return 0
 
