@@ -3,16 +3,21 @@
 
 This thin orchestrator coordinates the output copying stage:
 1. Cleans the top-level output/ directory
-2. Copies final deliverables from project/output/
-3. Validates all expected files were copied
+2. Recursively copies entire project/output/ to top-level output/
+3. Copies combined PDF to root for convenient access
+4. Validates all expected files were copied
 
-Stage 5 of the pipeline orchestration - copies final deliverables to
+Stage 5 of the pipeline orchestration - copies all project outputs to
 the top-level output/ directory for easy access.
 
-Final deliverables copied:
-- Combined PDF manuscript
-- All presentation slides (PDF format)
-- All web outputs (HTML format)
+Complete project outputs copied:
+- PDF manuscript (pdf/ directory + root copy of project_combined.pdf)
+- Presentation slides (slides/ directory - all formats and metadata)
+- Web outputs (web/ directory - all HTML files)
+- Generated figures (figures/ directory - all images and PDFs)
+- Data files (data/ directory - all CSV, NPZ files)
+- Reports (reports/ directory - all markdown/analysis files)
+- Simulations (simulations/ directory - all simulation outputs and checkpoints)
 """
 from __future__ import annotations
 
@@ -76,12 +81,18 @@ def clean_output_directory(output_dir: Path) -> bool:
 
 
 def copy_final_deliverables(project_root: Path, output_dir: Path) -> dict:
-    """Copy final deliverables to top-level output directory.
+    """Copy all project outputs to top-level output directory.
     
-    Copies:
-    - Combined PDF: project/output/pdf/project_combined.pdf → output/project_combined.pdf
-    - Slides: project/output/slides/*.pdf → output/slides/
-    - Web: project/output/web/*.html → output/web/
+    Recursively copies entire project/output/ directory structure, preserving:
+    - pdf/ - Complete PDF directory with manuscript and metadata
+    - web/ - HTML web outputs
+    - slides/ - Beamer slides and metadata
+    - figures/ - Generated figures and visualizations
+    - data/ - Data files (CSV, NPZ, etc.)
+    - reports/ - Generated analysis and simulation reports
+    - simulations/ - Simulation outputs and checkpoints
+    
+    Also copies combined PDF to root for convenient access.
     
     Args:
         project_root: Path to repository root
@@ -90,95 +101,88 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> dict:
     Returns:
         Dictionary with copy statistics
     """
-    log_stage("Copying final deliverables...")
+    log_stage("Copying all project outputs...")
     
     project_output = project_root / "project" / "output"
+    
     stats = {
+        "pdf_files": 0,
+        "web_files": 0,
+        "slides_files": 0,
+        "figures_files": 0,
+        "data_files": 0,
+        "reports_files": 0,
+        "simulations_files": 0,
         "combined_pdf": 0,
-        "slides_copied": 0,
-        "web_copied": 0,
+        "total_files": 0,
         "errors": [],
     }
     
-    # 1. Copy combined PDF
-    combined_pdf_src = project_output / "pdf" / "project_combined.pdf"
+    if not project_output.exists():
+        msg = f"Project output directory not found: {project_output}"
+        logger.warning(msg)
+        stats["errors"].append(msg)
+        return stats
+    
+    # Recursively copy entire project/output/ directory
+    try:
+        logger.debug(f"Recursively copying: {project_output} → {output_dir}")
+        shutil.copytree(project_output, output_dir, dirs_exist_ok=True)
+        log_success("Recursively copied project/output/ directory", logger)
+    except Exception as e:
+        msg = f"Failed to copy project output directory: {e}"
+        logger.error(msg)
+        stats["errors"].append(msg)
+        return stats
+    
+    # Count files in each subdirectory and copy combined PDF to root
+    subdirs = {
+        "pdf": "pdf_files",
+        "web": "web_files",
+        "slides": "slides_files",
+        "figures": "figures_files",
+        "data": "data_files",
+        "reports": "reports_files",
+        "simulations": "simulations_files",
+    }
+    
+    for subdir_name, stats_key in subdirs.items():
+        subdir = output_dir / subdir_name
+        if subdir.exists():
+            files = list(subdir.glob("**/*"))
+            file_count = len([f for f in files if f.is_file()])
+            stats[stats_key] = file_count
+            stats["total_files"] += file_count
+            logger.debug(f"  {subdir_name}/: {file_count} file(s)")
+    
+    # Copy combined PDF to root for convenient access
+    combined_pdf_src = output_dir / "pdf" / "project_combined.pdf"
     combined_pdf_dst = output_dir / "project_combined.pdf"
     
     if combined_pdf_src.exists():
         try:
             shutil.copy2(combined_pdf_src, combined_pdf_dst)
             file_size_mb = combined_pdf_src.stat().st_size / (1024 * 1024)
-            log_success(f"Copied combined PDF ({file_size_mb:.2f} MB)", logger)
+            log_success(f"Copied combined PDF to root ({file_size_mb:.2f} MB)", logger)
             stats["combined_pdf"] = 1
         except Exception as e:
-            msg = f"Failed to copy combined PDF: {e}"
-            logger.error(msg)
+            msg = f"Failed to copy combined PDF to root: {e}"
+            logger.warning(msg)
             stats["errors"].append(msg)
     else:
-        msg = f"Combined PDF not found: {combined_pdf_src}"
-        logger.warning(msg)
-        stats["errors"].append(msg)
-    
-    # 2. Copy slides
-    slides_src = project_output / "slides"
-    slides_dst = output_dir / "slides"
-    
-    if slides_src.exists():
-        try:
-            slides_dst.mkdir(parents=True, exist_ok=True)
-            
-            slides = list(slides_src.glob("*.pdf"))
-            for slide in slides:
-                shutil.copy2(slide, slides_dst / slide.name)
-                stats["slides_copied"] += 1
-            
-            if slides:
-                log_success(f"Copied {len(slides)} slide(s)", logger)
-            else:
-                logger.warning("No slide PDFs found in slides directory")
-        except Exception as e:
-            msg = f"Failed to copy slides: {e}"
-            logger.error(msg)
-            stats["errors"].append(msg)
-    else:
-        logger.warning(f"Slides directory not found: {slides_src}")
-    
-    # 3. Copy web outputs
-    web_src = project_output / "web"
-    web_dst = output_dir / "web"
-    
-    if web_src.exists():
-        try:
-            web_dst.mkdir(parents=True, exist_ok=True)
-            
-            html_files = list(web_src.glob("*.html"))
-            for html_file in html_files:
-                shutil.copy2(html_file, web_dst / html_file.name)
-                stats["web_copied"] += 1
-            
-            # Copy CSS and other assets if present
-            for asset in web_src.glob("*.css"):
-                shutil.copy2(asset, web_dst / asset.name)
-            
-            for asset in web_src.glob("*.js"):
-                shutil.copy2(asset, web_dst / asset.name)
-            
-            if html_files:
-                log_success(f"Copied {len(html_files)} web page(s)", logger)
-            else:
-                logger.warning("No HTML files found in web directory")
-        except Exception as e:
-            msg = f"Failed to copy web outputs: {e}"
-            logger.error(msg)
-            stats["errors"].append(msg)
-    else:
-        logger.warning(f"Web directory not found: {web_src}")
+        logger.debug(f"Combined PDF not found at: {combined_pdf_src}")
     
     return stats
 
 
 def validate_copied_outputs(output_dir: Path) -> bool:
-    """Validate all expected files were copied successfully.
+    """Validate all project outputs were copied successfully.
+    
+    Checks:
+    - Combined PDF exists at root and in pdf/ directory
+    - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations)
+    - Each directory contains files
+    - All files are readable
     
     Args:
         output_dir: Path to top-level output directory
@@ -190,38 +194,38 @@ def validate_copied_outputs(output_dir: Path) -> bool:
     
     validation_passed = True
     
-    # Check combined PDF
+    # Check combined PDF at root
     combined_pdf = output_dir / "project_combined.pdf"
     if combined_pdf.exists() and combined_pdf.stat().st_size > 0:
         size_mb = combined_pdf.stat().st_size / (1024 * 1024)
-        log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
+        log_success(f"Combined PDF at root valid ({size_mb:.2f} MB)", logger)
     else:
-        logger.error("Combined PDF missing or empty")
+        logger.error("Combined PDF at root missing or empty")
         validation_passed = False
     
-    # Check slides directory
-    slides_dir = output_dir / "slides"
-    if slides_dir.exists():
-        slides = list(slides_dir.glob("*.pdf"))
-        if slides:
-            total_size_mb = sum(f.stat().st_size for f in slides) / (1024 * 1024)
-            log_success(f"Slides directory valid ({len(slides)} PDFs, {total_size_mb:.2f} MB)", logger)
-        else:
-            logger.warning("Slides directory exists but is empty")
-    else:
-        logger.warning("Slides directory not created")
+    # Check all expected subdirectories
+    expected_dirs = {
+        "pdf": "PDF manuscripts and metadata",
+        "web": "HTML web outputs",
+        "slides": "Beamer slide presentations",
+        "figures": "Generated figures and images",
+        "data": "Data files and datasets",
+        "reports": "Analysis and simulation reports",
+        "simulations": "Simulation outputs and checkpoints",
+    }
     
-    # Check web directory
-    web_dir = output_dir / "web"
-    if web_dir.exists():
-        html_files = list(web_dir.glob("*.html"))
-        if html_files:
-            total_size_kb = sum(f.stat().st_size for f in html_files) / 1024
-            log_success(f"Web directory valid ({len(html_files)} HTML files, {total_size_kb:.1f} KB)", logger)
+    for dir_name, description in expected_dirs.items():
+        subdir = output_dir / dir_name
+        if subdir.exists():
+            files = list(subdir.glob("**/*"))
+            file_count = len([f for f in files if f.is_file()])
+            if file_count > 0:
+                total_size_mb = sum(f.stat().st_size for f in files if f.is_file()) / (1024 * 1024)
+                log_success(f"{dir_name}/ valid ({file_count} files, {total_size_mb:.2f} MB)", logger)
+            else:
+                logger.warning(f"{dir_name}/ directory exists but is empty")
         else:
-            logger.warning("Web directory exists but is empty")
-    else:
-        logger.warning("Web directory not created")
+            logger.warning(f"{dir_name}/ directory not found ({description})")
     
     return validation_passed
 
@@ -232,8 +236,8 @@ def validate_output_structure(output_dir: Path) -> dict:
     Checks:
     - Output directory exists
     - Combined PDF exists and is > 100KB (should be substantial)
-    - Slides directory has PDFs (if present)
-    - Web directory has HTML files (if present)
+    - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations)
+    - Each subdirectory contains files
     - All files are readable
     
     Args:
@@ -256,11 +260,11 @@ def validate_output_structure(output_dir: Path) -> dict:
         result["issues"].append("Output directory does not exist")
         return result
     
-    # Check combined PDF
+    # Check combined PDF at root
     combined_pdf = output_dir / "project_combined.pdf"
     if not combined_pdf.exists():
         result["valid"] = False
-        result["missing_files"].append("project_combined.pdf")
+        result["missing_files"].append("project_combined.pdf (root)")
     else:
         size_bytes = combined_pdf.stat().st_size
         size_mb = size_bytes / (1024 * 1024)
@@ -271,35 +275,41 @@ def validate_output_structure(output_dir: Path) -> dict:
                 f"Combined PDF is unusually small: {size_mb:.2f} MB"
             )
         
-        result["directory_structure"]["combined_pdf"] = {
+        result["directory_structure"]["project_combined_pdf"] = {
             "exists": True,
             "size_mb": round(size_mb, 2),
             "readable": combined_pdf.is_file()
         }
     
-    # Check subdirectories
-    for subdir_name in ["slides", "web"]:
+    # Check all expected subdirectories
+    expected_dirs = ["pdf", "web", "slides", "figures", "data", "reports", "simulations"]
+    
+    for subdir_name in expected_dirs:
         subdir = output_dir / subdir_name
         
         if subdir.exists():
-            files = list(subdir.glob("*"))
+            files = list(subdir.glob("**/*"))
             file_count = len([f for f in files if f.is_file()])
+            total_size_mb = sum(f.stat().st_size for f in files if f.is_file()) / (1024 * 1024)
             
             result["directory_structure"][subdir_name] = {
                 "exists": True,
                 "files": file_count,
+                "size_mb": round(total_size_mb, 2),
                 "readable": subdir.is_dir()
             }
             
             if file_count == 0:
                 result["suspicious_sizes"].append(
-                    f"{subdir_name} directory is empty"
+                    f"{subdir_name}/ directory is empty"
                 )
         else:
             result["directory_structure"][subdir_name] = {
                 "exists": False,
-                "files": 0
+                "files": 0,
+                "size_mb": 0.0
             }
+            result["issues"].append(f"Missing directory: {subdir_name}/")
     
     return result
 
@@ -317,17 +327,25 @@ def generate_output_summary(output_dir: Path, stats: dict, structure_validation:
     logger.info("="*60)
     
     logger.info(f"\nOutput directory: {output_dir}")
-    logger.info(f"\nFiles copied:")
-    logger.info(f"  • Combined PDF: {stats['combined_pdf']}")
-    logger.info(f"  • Slides: {stats['slides_copied']}")
-    logger.info(f"  • Web pages: {stats['web_copied']}")
+    logger.info(f"\nFiles copied by directory:")
+    logger.info(f"  • PDF files: {stats['pdf_files']}")
+    logger.info(f"  • Web files: {stats['web_files']}")
+    logger.info(f"  • Slides files: {stats['slides_files']}")
+    logger.info(f"  • Figures: {stats['figures_files']}")
+    logger.info(f"  • Data files: {stats['data_files']}")
+    logger.info(f"  • Reports: {stats['reports_files']}")
+    logger.info(f"  • Simulations: {stats['simulations_files']}")
+    logger.info(f"  • Combined PDF (root): {stats['combined_pdf']}")
+    logger.info(f"\n  Total files copied: {stats['total_files']}")
     
     # Include structure validation if provided
     if structure_validation:
         logger.info(f"\nDirectory structure:")
         for item, info in structure_validation.get("directory_structure", {}).items():
             if info.get("exists"):
-                if "size_mb" in info:
+                if "size_mb" in info and "files" in info:
+                    logger.info(f"  ✓ {item}: {info['files']} files, {info['size_mb']} MB")
+                elif "size_mb" in info:
                     logger.info(f"  ✓ {item}: {info['size_mb']} MB")
                 elif "files" in info:
                     logger.info(f"  ✓ {item}: {info['files']} files")
@@ -372,8 +390,8 @@ def main() -> int:
         generate_output_summary(output_dir, stats, structure_validation)
         
         # Determine success/failure
-        if stats["combined_pdf"] > 0 and validation_passed:
-            log_success("\n✅ Output copying complete - all deliverables ready!", logger)
+        if stats["total_files"] > 0 and validation_passed:
+            log_success("\n✅ Output copying complete - all project outputs ready!", logger)
             return 0
         else:
             logger.error("\n❌ Output copying incomplete - check warnings above")
