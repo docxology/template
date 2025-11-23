@@ -22,16 +22,14 @@ These modules provide generic build, validation, and development infrastructure 
 - `figure_manager.py` - Automatic figure numbering and LaTeX block generation
 - `image_manager.py` - Image file management and insertion
 
-#### In repo_utilities/
-- `render_pdf.sh` - Master PDF generation orchestrator
-- `clean_output.sh` - Clean generated outputs
-- `generate_pdf_from_scratch.sh` - Enhanced PDF regeneration with logging
-- `validate_markdown.py` - Markdown integrity validation
-- `validate_pdf_output.py` - PDF quality validation (thin orchestrator)
-- `generate_glossary.py` - API glossary generation (thin orchestrator)
-- `open_manuscript.sh` - Manuscript viewer
-- `rename_project.sh` - Project renaming utility
-- `logging.sh` - Logging infrastructure
+#### In scripts/
+- `run_all.py` - Master pipeline orchestrator (6 stages)
+- `00_setup_environment.py` - Environment setup & validation
+- `01_run_tests.py` - Test execution with coverage
+- `02_run_analysis.py` - Analysis script discovery & execution
+- `03_render_pdf.py` - PDF rendering orchestration
+- `04_validate_output.py` - Output validation & reporting
+- `05_copy_outputs.py` - Copy final deliverables
 
 #### Supporting Files
 - `ide_style.css` - HTML rendering styling

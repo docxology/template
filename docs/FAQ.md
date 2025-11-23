@@ -27,7 +27,7 @@
 ## 📚 **Documentation & PDF Generation**
 
 ### **Q: How does the PDF generation work?**
-**A:** The template uses Pandoc to convert markdown files to LaTeX, then XeLaTeX to generate PDFs. The `render_pdf.sh` script orchestrates the entire process, including figure generation and cross-referencing.
+**A:** The template uses Pandoc to convert markdown files to LaTeX, then XeLaTeX to generate PDFs. The `scripts/run_all.py` orchestrator (or `./run_all.sh`) executes all 6 pipeline stages, including figure generation, PDF rendering, and cross-referencing.
 
 ### **Q: Can I customize the PDF output format?**
 **A:** Yes! The LaTeX templates and Pandoc configurations can be customized. You can modify styles, add custom formatting, or even generate other formats like HTML or Word documents.

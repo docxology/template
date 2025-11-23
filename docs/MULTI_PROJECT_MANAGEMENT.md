@@ -149,7 +149,7 @@ done
 **Update specific components:**
 ```bash
 # Update only build scripts
-cp template/repo_utilities/render_pdf.sh project/repo_utilities/
+cp -r template/scripts/* project/scripts/
 
 # Update only documentation structure
 cp -r template/docs/* project/docs/
@@ -222,7 +222,7 @@ done
 ./run-all-projects.sh "uv run pytest tests/"
 
 # Build all projects
-./run-all-projects.sh "./repo_utilities/render_pdf.sh"
+./run-all-projects.sh "python3 scripts/run_all.py"
 
 # Update dependencies
 ./run-all-projects.sh "uv sync --upgrade"
@@ -259,7 +259,7 @@ done
 - scripts/custom_analysis.py - Project-specific analysis
 
 ## Modified Files
-- repo_utilities/render_pdf.sh - Added custom validation step
+- scripts/03_render_pdf.py - Added custom validation step
 
 ## Additional Dependencies
 - scipy>=1.10 - For advanced analysis
@@ -270,8 +270,8 @@ done
 **Ensure customizations remain compatible:**
 ```bash
 # Before template updates
-git diff template-repo/repo_utilities/render_pdf.sh \
-          repo_utilities/render_pdf.sh
+git diff template-repo/scripts/03_render_pdf.py \
+          scripts/03_render_pdf.py
 
 # Review changes
 # Apply selectively
@@ -357,7 +357,7 @@ done
 # Ensure all projects build
 for project in */; do
     cd "$project"
-    ./repo_utilities/render_pdf.sh || echo "$project failed"
+    python3 scripts/run_all.py || echo "$project failed"
     cd ..
 done
 ```
@@ -458,10 +458,10 @@ for project in */; do
     git tag backup-before-update
     
     # Update files
-    cp "$TEMPLATE_DIR/repo_utilities/render_pdf.sh" repo_utilities/
+    cp -r "$TEMPLATE_DIR/scripts/" scripts/
     
     # Test
-    ./repo_utilities/render_pdf.sh || echo "Failed: $project"
+    python3 scripts/run_all.py || echo "Failed: $project"
     
     cd ..
 done

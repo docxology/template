@@ -237,7 +237,7 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 **Automation:**
 ```bash
 # Automated validation
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 uv run python repo_utilities/validate_pdf_output.py
 ```
 

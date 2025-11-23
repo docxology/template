@@ -1,8 +1,14 @@
 """Comprehensive tests for src/validation.py to ensure 100% coverage."""
+import sys
+from pathlib import Path
+
 import numpy as np
 import pytest
 
-from validation import ValidationFramework, ValidationResult
+# Add project src to path
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
+from src.validation import ValidationFramework, ValidationResult
 
 
 class TestValidationResult:

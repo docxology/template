@@ -152,7 +152,7 @@ jobs:
       run: uv sync
     
     - name: Run build pipeline
-      run: ./repo_utilities/render_pdf.sh
+      run: python3 scripts/run_all.py
     
     - name: Validate PDFs
       run: |
@@ -296,7 +296,7 @@ jobs:
         AUTHOR_ORCID: ${{ secrets.AUTHOR_ORCID }}
         PROJECT_TITLE: ${{ secrets.PROJECT_TITLE }}
       run: |
-        ./repo_utilities/render_pdf.sh
+        python3 scripts/run_all.py
     
     - name: Upload PDFs
       uses: actions/upload-artifact@v3
@@ -351,13 +351,13 @@ jobs:
         uv sync
     
     - name: Generate PDFs
-      run: ./repo_utilities/render_pdf.sh
+      run: python3 scripts/run_all.py
     
     - name: Create release package
       run: |
         mkdir -p release
-        cp output/pdf/project_combined.pdf release/
-        cp -r output/figures release/
+        cp output/project_combined.pdf release/
+        cp -r project/output/figures release/
         tar -czf release.tar.gz release/
     
     - name: Upload release assets

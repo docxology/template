@@ -26,7 +26,7 @@ Testing metric ensuring all conditional branches (if/else, switch cases) are exe
 **See**: [Test Coverage](#test-coverage)
 
 ### Build Pipeline
-Automated sequence of operations that validates tests, runs scripts, generates documentation, and builds PDFs. Orchestrated by `render_pdf.sh`.
+Automated sequence of operations that validates tests, runs scripts, generates documentation, and builds PDFs. Orchestrated by `scripts/run_all.py` (6-stage pipeline).
 
 **Stages**: Tests → Scripts → Validation → Glossary → Individual PDFs → Combined PDF
 
@@ -42,7 +42,7 @@ Core algorithms, mathematical functions, and computational methods. Must reside 
 ### Combined PDF
 Single PDF document containing all manuscript sections in proper order. Generated from individual section PDFs by the build pipeline.
 
-**File**: `output/pdf/project_combined.pdf`
+**File**: `output/project_combined.pdf` (top-level, copied by stage 5)
 
 **See**: [PDF Generation](#pdf-generation)
 
@@ -268,7 +268,7 @@ LaTeX-based cross-referencing that automatically numbers and links sections, equ
 ### Render Pipeline
 Another name for [Build Pipeline](#build-pipeline). The complete sequence from tests to final PDF.
 
-**Script**: `./repo_utilities/render_pdf.sh`
+**Script**: `python3 scripts/run_all.py`
 
 ### Reproducibility
 Ability to regenerate exact same results from source. Ensured through deterministic RNG seeds, fixed dependencies, and comprehensive testing.

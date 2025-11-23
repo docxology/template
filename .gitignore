@@ -57,6 +57,10 @@ coverage.xml
 ehthumbs.db
 Thumbs.db
 
+# Output directories (generated - do not commit)
+/output/
+/project/output/
+
 # Build outputs should be included in versioning!
 
 # Temporary files

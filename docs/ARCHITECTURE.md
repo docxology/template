@@ -32,7 +32,7 @@ graph TB
         
         subgraph "Build Pipeline"
             REPO_UTILS[Repo Utilities<br/>repo_utilities/]
-            RENDER[render_pdf.sh<br/>Orchestrator]
+            RENDER[run_all.py<br/>Pipeline Orchestrator]
         end
         
         subgraph "Outputs"
@@ -160,32 +160,33 @@ graph LR
 - Pass all validation checks
 - Include proper LaTeX equation environments
 
-## The render_pdf.sh Pipeline
+## The Pipeline Orchestrator
 
 ### Complete Pipeline Flow
 
 ```mermaid
 flowchart TD
-    START([Start render_pdf.sh]) --> CLEAN[Clean all outputs]
-    CLEAN --> TESTS[Run tests with 100% coverage]
-    TESTS --> SCRIPTS[Execute all scripts]
-    SCRIPTS --> UTILS[Run repo utilities]
-    UTILS --> PREAMBLE[Generate LaTeX preamble]
-    PREAMBLE --> DISCOVER[Discover markdown modules]
-    DISCOVER --> BUILD_INDIV[Build individual PDFs]
-    BUILD_INDIV --> BUILD_COMB[Build combined PDF]
-    BUILD_COMB --> VALIDATE[Validate all PDFs]
-    VALIDATE --> SUCCESS[Build successful]
+    START([Start run_all.py]) --> STAGE0[Stage 0: Setup Environment]
+    STAGE0 --> STAGE1[Stage 1: Run Tests]
+    STAGE1 --> STAGE2[Stage 2: Run Analysis]
+    STAGE2 --> STAGE3[Stage 3: Render PDF]
+    STAGE3 --> STAGE4[Stage 4: Validate Output]
+    STAGE4 --> STAGE5[Stage 5: Copy Outputs]
+    STAGE5 --> SUCCESS[Build successful]
     
-    TESTS -->|Fail| FAIL1[Tests failed]
-    SCRIPTS -->|Fail| FAIL2[Scripts failed]
-    BUILD_INDIV -->|Fail| FAIL3[PDF build failed]
-    VALIDATE -->|Fail| FAIL4[Validation failed]
+    STAGE0 -->|Fail| FAIL0[Setup failed]
+    STAGE1 -->|Fail| FAIL1[Tests failed]
+    STAGE2 -->|Fail| FAIL2[Analysis failed]
+    STAGE3 -->|Fail| FAIL3[PDF build failed]
+    STAGE4 -->|Fail| FAIL4[Validation failed]
+    STAGE5 -->|Fail| FAIL5[Copy failed]
     
-    FAIL1 --> END([Exit with error])
+    FAIL0 --> END([Exit with error])
+    FAIL1 --> END
     FAIL2 --> END
     FAIL3 --> END
     FAIL4 --> END
+    FAIL5 --> END
     
     SUCCESS --> END
     
@@ -194,8 +195,8 @@ flowchart TD
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     
     class SUCCESS success
-    class FAIL1,FAIL2,FAIL3,FAIL4 failure
-    class CLEAN,TESTS,SCRIPTS,UTILS,PREAMBLE,DISCOVER,BUILD_INDIV,BUILD_COMB,VALIDATE process
+    class FAIL0,FAIL1,FAIL2,FAIL3,FAIL4,FAIL5 failure
+    class STAGE0,STAGE1,STAGE2,STAGE3,STAGE4,STAGE5 process
 ```
 
 ### Phase 1: Code Validation
@@ -399,7 +400,7 @@ python3 scripts/03_render_pdf.py  # PDF generation
 2. **Test-Driven Development**: Tests validate functionality before implementation
 3. **Automated Validation**: All components are automatically checked for coherence
 4. **Reproducible Outputs**: All results are deterministic and verifiable
-5. **Integrated Workflow**: One command (`render_pdf.sh`) validates the entire system
+5. **Integrated Workflow**: One command (`python3 scripts/run_all.py`) validates the entire system
 6. **Thin Orchestrator Pattern**: Scripts import and use src/ methods, never implement algorithms
 
 ## Thin Orchestrator Pattern
@@ -409,7 +410,7 @@ The architecture enforces a **thin orchestrator pattern** where:
 - **`src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods
 - **`tests/`** ensures 100% coverage of `src/` functionality
-- **`render_pdf.sh`** orchestrates the entire pipeline
+- **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
 
 This ensures:
 - **Maintainability**: Single source of truth for business logic

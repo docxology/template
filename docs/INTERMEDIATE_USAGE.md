@@ -497,10 +497,10 @@ print('output/data/analysis_data.csv')
 
 ### Understanding the Build Pipeline
 
-The `render_pdf.sh` script orchestrates everything:
+The pipeline orchestrator (`scripts/run_all.py`) orchestrates everything:
 
 ```bash
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 ```
 
 **What happens**:
@@ -558,24 +558,23 @@ pytest tests/test_my_module.py --cov=src.my_module
 vim scripts/my_figure.py
 
 # 5. Run complete build
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 
-# 6. View result
-open output/pdf/project_combined.pdf
+# 6. View result (top-level output after stage 5)
+open output/project_combined.pdf
 ```
 
 **Advanced workflow with validation**:
 ```bash
-# 1. Full rebuild with validation (recommended)
-./generate_pdf_from_scratch.sh
+# 1. Full rebuild with validation (recommended - all 6 stages)
+python3 scripts/run_all.py
 
-# With options:
-# ./generate_pdf_from_scratch.sh --verbose --log-file build.log
-# ./generate_pdf_from_scratch.sh --skip-validation  # Faster iteration
+# Or use shell wrapper
+./run_all.sh
 
 # Alternative: Manual steps
-# ./repo_utilities/clean_output.sh
-# ./repo_utilities/render_pdf.sh
+# # Pipeline automatically handles cleanup
+# python3 scripts/run_all.py
 # python3 repo_utilities/validate_pdf_output.py
 ```
 

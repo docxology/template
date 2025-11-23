@@ -30,7 +30,7 @@ python3 scripts/02_run_analysis.py
 python3 -m infrastructure.validation.cli markdown manuscript/
 
 # Open manuscript
-open output/pdf/project_combined.pdf
+open output/project_combined.pdf  # Top-level output
 ```
 
 ### Build Pipeline Commands
@@ -74,7 +74,7 @@ vim project/manuscript/07_new_section.md
 echo "# New Section {#sec:new_section}" > project/manuscript/07_new_section.md
 
 # 3. Rebuild
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 ```
 
 ### Add a New Figure
@@ -196,11 +196,11 @@ Reference it: \ref{fig:my_figure}
 1. **Always run tests first**: `pytest tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `src/`
 3. **100% coverage required**: No exceptions for `src/` code
-4. **Check validation**: Run `validate_markdown.py` before PDF build
-5. **Clean outputs**: Use `clean_output.sh` for fresh builds
-6. **Read build logs**: Check `output/pdf/*_compile.log` for errors
-7. **Use enhanced script**: `generate_pdf_from_scratch.sh --help` for all options
-8. **CI/CD friendly**: Use `--no-color --log-file` for automated builds
+4. **Run complete pipeline**: `python3 scripts/run_all.py` executes all stages
+5. **Pipeline stages**: 6 stages (00-05) from setup to final deliverables
+6. **Read build logs**: Check `project/output/pdf/*_compile.log` for errors
+7. **Individual stages**: Run `python3 scripts/XX_stage_name.py` for specific stages
+8. **CI/CD friendly**: Pipeline scripts support automated builds
 
 ---
 

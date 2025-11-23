@@ -135,6 +135,81 @@ The PDFRenderer splits title page generation into two phases:
 \thispagestyle{empty}
 ```
 
+## Bibliography and Citation Processing
+
+The rendering system automatically processes citations in your manuscript using BibTeX.
+
+### Citation Workflow
+
+1. **Markdown Processing**: Pandoc processes LaTeX `\cite{}` commands using `--citeproc`
+2. **Bibliography Processing**: BibTeX runs to match citations with `references.bib` entries
+3. **Reference Resolution**: Additional LaTeX passes resolve all citation references
+
+### Bibliography Setup
+
+Create `manuscript/references.bib` with standard BibTeX format:
+
+```bibtex
+@article{smith2024,
+  title={Article Title},
+  author={Smith, Jane and Doe, John},
+  journal={Journal Name},
+  volume={10},
+  pages={123--145},
+  year={2024},
+  doi={10.1234/example}
+}
+
+@book{jones2023,
+  title={Book Title},
+  author={Jones, Alice},
+  publisher={Academic Press},
+  year={2023}
+}
+```
+
+### Citation Usage
+
+Cite in manuscript using LaTeX syntax:
+
+```latex
+According to recent research \cite{smith2024}, the methods improve performance.
+
+Multiple sources \cite{smith2024, jones2023} support this approach.
+```
+
+### Compilation Process
+
+The `render_combined()` method executes this sequence:
+
+1. **Pass 1**: Initial xelatex compilation (generates `.aux` file)
+2. **BibTeX**: Processes bibliography and generates `.bbl` file
+3. **Passes 2-4**: Additional xelatex passes resolve all citations and references
+
+This ensures:
+- All citations are resolved correctly
+- Cross-references are complete
+- Table of contents is accurate
+- Bibliography is properly formatted
+
+### Troubleshooting Citations
+
+**Citations showing as "?"**:
+- Verify bibliography file exists: `manuscript/references.bib`
+- Check citation keys match exactly (case-sensitive)
+- Ensure BibTeX entries are properly formatted
+- Run full build: `python3 scripts/run_all.py`
+
+**Missing bibliography entries**:
+- Check LaTeX log for BibTeX warnings
+- Verify entry keys in `.bib` file match `\cite{}` commands
+- Use unique, descriptive keys: `author_year` format recommended
+
+**Bibliography not appearing**:
+- Ensure `\bibliography{references}` command is in document
+- Check `99_references.md` contains `\bibliography{references}` and `\nocite{*}`
+- Verify bibliography style: `\bibliographystyle{unsrt}` is set
+
 ## Figure Handling
 
 Figures referenced in manuscript markdown are automatically integrated into the PDF.
@@ -174,22 +249,34 @@ See Figure \ref{fig:my_figure} for details.
 
 ### Path Conversion
 
-Markdown uses relative paths:
+The rendering system automatically handles figure path resolution with several features:
+
+**Path Normalization**:
+- Converts various path formats to correct LaTeX relative paths
+- Supports: `../output/figures/`, `output/figures/`, `../figures/`
+- All converted to: `../figures/filename` (relative to compilation directory)
+
+**Unicode Support**:
+- Handles Unicode characters in filenames (e.g., `figure_ñ_test.png`)
+- Normalizes Unicode using NFC composition form
+- Safely handles accents, diacritics, and special characters
+
+**Path Formats Recognized**:
 ```
-../output/figures/figure.png
+../output/figures/figure.png  → ../figures/figure.png
+output/figures/figure.png     → ../figures/figure.png
+../figures/figure.png         → ../figures/figure.png (unchanged)
+./figures/figure.png          → ../figures/figure.png
+figure.png                    → ../figures/figure.png
 ```
 
-These are automatically converted for LaTeX compilation:
-```
-../figures/figure.png
-```
+(LaTeX compiles from `output/pdf/` directory, so all paths are relative to that location)
 
-(LaTeX compiles from `output/pdf/` directory)
-
-### Verification
+### Verification and Path Resolution
 
 Before LaTeX compilation, the renderer:
 - Extracts all `\includegraphics` references
+- Normalizes paths to handle various formats
 - Checks if files exist in `project/output/figures/`
 - Logs the status of each figure
 - Warns about missing figures but continues (graceful degradation)
@@ -197,11 +284,18 @@ Before LaTeX compilation, the renderer:
 **Example output**:
 ```
 Verifying 14 figure reference(s)...
-  ✓ Found: convergence_plot.png
-  ✓ Found: scalability_analysis.png
-  ✗ Missing: future_figure.png (warnings logged)
+✓ Fixed 14 figure path(s)
+  ../output/figures/convergence_plot.png → ../figures/convergence_plot.png
+  ../output/figures/scalability_analysis.png → ../figures/scalability_analysis.png
+  ../output/figures/future_figure.png → ../figures/future_figure.png (FILE NOT FOUND)
 Found: 13/14 figures
 ```
+
+**Enhanced Path Resolution Features**:
+- Unicode normalization for special characters
+- Multiple path format support
+- Graceful handling of missing figures
+- Detailed logging of path transformations
 
 ### Troubleshooting
 
@@ -226,13 +320,19 @@ Found: 13/14 figures
    - Check spelling and case sensitivity
    - Ensure file is in PNG/PDF/JPG format
    - Verify file is readable
+   - For Unicode filenames, ensure encoding is correct
+
+5. **Check path format in markdown**:
+   - Use: `\includegraphics{../output/figures/name.png}`
+   - Avoid: `\includegraphics{name.png}` (ambiguous path)
 
 #### Missing Figure Warnings
 
 If you see warnings about missing figures:
-- Generate the figures by running analysis scripts
+- Generate the figures by running analysis scripts: `python3 scripts/02_run_analysis.py`
 - Verify figure paths in markdown are correct
-- Figures are optional; PDF will render without them
+- Check filenames match exactly (case-sensitive)
+- Figures are optional; PDF will render without them, but compilation continues
 
 ## Testing
 

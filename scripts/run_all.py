@@ -44,7 +44,7 @@ def discover_orchestrators() -> list[Path]:
     Example:
         >>> orchestrators = discover_orchestrators()
         >>> len(orchestrators)
-        5
+        6
     """
     repo_root = Path(__file__).parent.parent
     scripts_dir = repo_root / "scripts"
@@ -55,6 +55,7 @@ def discover_orchestrators() -> list[Path]:
         scripts_dir / "02_run_analysis.py",
         scripts_dir / "03_render_pdf.py",
         scripts_dir / "04_validate_output.py",
+        scripts_dir / "05_copy_outputs.py",
     ]
     
     available = [s for s in orchestrators if s.exists()]

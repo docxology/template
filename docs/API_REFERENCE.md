@@ -4,7 +4,9 @@
 
 **Quick Reference:** [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) | [Source Code Docs](../src/AGENTS.md) | [Getting Started](GETTING_STARTED.md)
 
-This document provides comprehensive API reference for all public functions and classes in the `src/` directory. All modules maintain 100% test coverage and follow the thin orchestrator pattern.
+This document provides comprehensive API reference for all public functions and classes in the `infrastructure/` modules. All modules maintain 100% test coverage and follow the thin orchestrator pattern.
+
+**Note**: These modules are part of the infrastructure layer. For project-specific code, see `project/src/`.
 
 ## Module Organization
 
@@ -279,7 +281,7 @@ Extract text content from PDF file.
 **Example:**
 ```python
 from pathlib import Path
-from pdf_validator import extract_text_from_pdf
+from infrastructure.validation import extract_text_from_pdf
 text = extract_text_from_pdf(Path("output/pdf/document.pdf"))
 ```
 
@@ -302,7 +304,7 @@ Scan extracted text for common rendering issues.
 
 **Example:**
 ```python
-from pdf_validator import extract_text_from_pdf, scan_for_issues
+from infrastructure.validation import extract_text_from_pdf, scan_for_issues
 text = extract_text_from_pdf(pdf_path)
 issues = scan_for_issues(text)
 print(f"Found {issues['total_issues']} issues")
@@ -323,7 +325,7 @@ Extract the first N words from text, preserving punctuation.
 
 **Example:**
 ```python
-from pdf_validator import extract_text_from_pdf, extract_first_n_words
+from infrastructure.validation import extract_text_from_pdf, extract_first_n_words
 text = extract_text_from_pdf(pdf_path)
 preview = extract_first_n_words(text, n=100)
 print(preview)
@@ -352,7 +354,7 @@ Perform comprehensive validation of PDF rendering.
 **Example:**
 ```python
 from pathlib import Path
-from pdf_validator import validate_pdf_rendering
+from infrastructure.validation import validate_pdf_rendering
 report = validate_pdf_rendering(Path("output/pdf/document.pdf"))
 if report['summary']['has_issues']:
     print("PDF has issues:", report['issues'])
@@ -395,7 +397,7 @@ Analyze document quality and return comprehensive metrics.
 **Example:**
 ```python
 from pathlib import Path
-from quality_checker import analyze_document_quality
+from infrastructure.build import analyze_document_quality
 metrics = analyze_document_quality(Path("output/pdf/document.pdf"))
 print(f"Overall Score: {metrics.overall_score:.2f}")
 ```
@@ -418,7 +420,7 @@ Analyze text readability using multiple metrics.
 
 **Example:**
 ```python
-from quality_checker import analyze_readability
+from infrastructure.build import analyze_readability
 metrics = analyze_readability("Your document text here...")
 print(f"Flesch Score: {metrics['flesch_score']:.2f}")
 ```
@@ -437,7 +439,7 @@ Generate a formatted quality report.
 
 **Example:**
 ```python
-from quality_checker import analyze_document_quality, generate_quality_report
+from infrastructure.build import analyze_document_quality, generate_quality_report
 metrics = analyze_document_quality(pdf_path)
 report = generate_quality_report(metrics)
 print(report)
@@ -482,7 +484,7 @@ Generate a comprehensive reproducibility report.
 **Example:**
 ```python
 from pathlib import Path
-from reproducibility import generate_reproducibility_report
+from infrastructure.build import generate_reproducibility_report
 report = generate_reproducibility_report(Path("output"))
 print(f"Environment Hash: {report.environment_hash}")
 ```
@@ -498,7 +500,7 @@ Capture the current environment state for reproducibility.
 
 **Example:**
 ```python
-from reproducibility import capture_environment_state
+from infrastructure.build import capture_environment_state
 env = capture_environment_state()
 print(f"Python: {env['platform']['python_version']}")
 ```
@@ -520,7 +522,7 @@ Verify reproducibility by comparing reports.
 
 **Example:**
 ```python
-from reproducibility import verify_reproducibility
+from infrastructure.build import verify_reproducibility
 result = verify_reproducibility(current, baseline)
 if result['reproducible']:
     print("✅ Builds are reproducible")
@@ -563,7 +565,7 @@ Perform comprehensive integrity verification.
 **Example:**
 ```python
 from pathlib import Path
-from integrity import verify_output_integrity
+from infrastructure.validation import verify_output_integrity
 report = verify_output_integrity(Path("output"))
 if report.overall_integrity:
     print("✅ All integrity checks passed")
@@ -584,7 +586,7 @@ Verify cross-reference integrity in markdown files.
 **Example:**
 ```python
 from pathlib import Path
-from integrity import verify_cross_references
+from infrastructure.validation import verify_cross_references
 files = list(Path("manuscript").glob("*.md"))
 integrity = verify_cross_references(files)
 ```
@@ -631,7 +633,7 @@ Extract publication metadata from markdown files.
 **Example:**
 ```python
 from pathlib import Path
-from publishing import extract_publication_metadata
+from infrastructure.publishing import extract_publication_metadata
 files = list(Path("manuscript").glob("*.md"))
 metadata = extract_publication_metadata(files)
 print(f"Title: {metadata.title}")
@@ -651,7 +653,7 @@ Generate BibTeX citation.
 
 **Example:**
 ```python
-from publishing import generate_citation_bibtex
+from infrastructure.publishing import generate_citation_bibtex
 bibtex = generate_citation_bibtex(metadata)
 print(bibtex)
 ```
@@ -670,7 +672,7 @@ Validate DOI format and checksum.
 
 **Example:**
 ```python
-from publishing import validate_doi
+from infrastructure.publishing import validate_doi
 if validate_doi("10.5281/zenodo.12345678"):
     print("✅ Valid DOI")
 ```
@@ -795,7 +797,7 @@ Verify that expected build artifacts are present.
 **Example:**
 ```python
 from pathlib import Path
-from build_verifier import verify_build_artifacts
+from infrastructure.build import verify_build_artifacts
 expected = {"pdf": ["document.pdf"], "figures": ["figure.png"]}
 result = verify_build_artifacts(Path("output"), expected)
 ```
@@ -816,7 +818,7 @@ Verify build reproducibility by running build multiple times.
 
 **Example:**
 ```python
-from build_verifier import verify_build_reproducibility
+from infrastructure.build import verify_build_reproducibility
 result = verify_build_reproducibility(["./build.sh"], {"output.pdf": "hash"})
 ```
 
@@ -915,7 +917,7 @@ Manages figures with automatic numbering and cross-referencing.
 
 **Example:**
 ```python
-from figure_manager import FigureManager
+from infrastructure.documentation import FigureManager
 manager = FigureManager()
 fig_meta = manager.register_figure("convergence.png", "Convergence analysis", "fig:convergence")
 latex_block = manager.generate_latex_figure_block("fig:convergence")

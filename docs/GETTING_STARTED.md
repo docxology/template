@@ -76,12 +76,15 @@ uv sync
 ### Step 3: Generate Your First PDF
 
 ```bash
-# Generate everything
-./repo_utilities/render_pdf.sh
+# Generate everything (runs all 6 pipeline stages)
+python3 scripts/run_all.py
+
+# Or use shell wrapper
+./run_all.sh
 
 # Open the result
-open output/pdf/project_combined.pdf  # macOS
-xdg-open output/pdf/project_combined.pdf  # Linux
+open output/project_combined.pdf  # macOS (top-level output/)
+xdg-open output/project_combined.pdf  # Linux
 ```
 
 **🎉 Success!** You should see a professional PDF document.
@@ -167,19 +170,18 @@ manuscript/
 
 ### Generate Your PDF
 
-1. **Clean previous outputs**
+1. **Run complete pipeline**
    ```bash
-   ./repo_utilities/clean_output.sh
-   ```
-
-2. **Generate new PDF**
-   ```bash
-   ./repo_utilities/render_pdf.sh
+   # Runs all 6 stages including cleanup
+   python3 scripts/run_all.py
+   
+   # Or use shell wrapper
+   ./run_all.sh
    ```
 
 3. **View the result**
    ```bash
-   open output/pdf/project_combined.pdf
+   open output/project_combined.pdf  # Top-level output (after stage 5)
    ```
 
 **What You Get**:
@@ -352,7 +354,7 @@ export PROJECT_TITLE="Impact of Machine Learning on Climate Prediction"
 export DOI="10.5281/zenodo.12345678"
 
 # Generate with your metadata
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 ```
 
 #### Method 2: Create .env File
@@ -379,7 +381,7 @@ export DOI="10.5281/zenodo.12345678"
 4. **Source and build**
    ```bash
    source .env
-   ./repo_utilities/render_pdf.sh
+   python3 scripts/run_all.py
    ```
 
 **What Gets Updated**:
@@ -465,7 +467,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 
 4. **Rebuild to see citations**
    ```bash
-   ./repo_utilities/render_pdf.sh
+   python3 scripts/run_all.py
    ```
 
 ---
@@ -488,7 +490,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 | **Reference shows ??** | Check label spelling matches |
 | **Equation not numbered** | Use `\begin{equation}...\end{equation}` |
 | **Figure not found** | Check path is `../output/figures/` |
-| **PDF won't build** | Run `./repo_utilities/clean_output.sh` first |
+| **PDF won't build** | Run `python3 scripts/run_all.py` (includes cleanup) |
 
 ### Keyboard Shortcuts
 
@@ -515,8 +517,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 2. Check xelatex installed: `xelatex --version`
 3. Clean and rebuild:
    ```bash
-   ./repo_utilities/clean_output.sh
-   ./repo_utilities/render_pdf.sh
+   python3 scripts/run_all.py
    ```
 
 ### References Show ??
@@ -526,9 +527,9 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 **Solutions**:
 1. Check label exists: Search for `{#sec:labelname}`
 2. Check spelling matches exactly
-3. Rebuild (references need two passes):
+3. Rebuild (references need multiple passes):
    ```bash
-   ./repo_utilities/render_pdf.sh
+   python3 scripts/run_all.py
    ```
 
 ### Math Not Rendering
@@ -547,9 +548,8 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 
 **Solutions**:
 1. Check relative path: `../output/figures/name.png`
-2. Verify file exists: `ls output/figures/`
-3. Run scripts first: `python3 scripts/example_figure.py`
-4. Rebuild: `./repo_utilities/render_pdf.sh`
+2. Verify file exists: `ls project/output/figures/`
+3. Run complete pipeline (includes script execution): `python3 scripts/run_all.py`
 
 ---
 

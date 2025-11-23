@@ -6,13 +6,16 @@ This directory contains comprehensive development standards, coding guidelines, 
 
 ## Files
 
-| File | Purpose |
-|------|---------|
-| [AGENTS.md](AGENTS.md) | This file - overview and navigation |
-| [README.md](README.md) | Quick reference guide |
-| [error_handling.md](error_handling.md) | Error handling and exception patterns |
-| [python_logging.md](python_logging.md) | Logging standards and best practices |
-| [infrastructure_modules.md](infrastructure_modules.md) | Infrastructure module development standards |
+| File | Purpose | Best For |
+|------|---------|----------|
+| [AGENTS.md](AGENTS.md) | This file - overview and navigation | Understanding the complete system |
+| [README.md](README.md) | Quick reference guide | Finding quick answers |
+| [error_handling.md](error_handling.md) | Error handling and exception patterns | Writing error handling code |
+| [python_logging.md](python_logging.md) | Logging standards and best practices | Adding logging to code |
+| [infrastructure_modules.md](infrastructure_modules.md) | Infrastructure module development standards | Creating new infrastructure modules |
+| [testing_standards.md](testing_standards.md) | Testing patterns and 100% coverage (NEW) | Writing tests with pytest |
+| [documentation_standards.md](documentation_standards.md) | AGENTS.md and README.md writing guide (NEW) | Writing documentation |
+| [type_hints_standards.md](type_hints_standards.md) | Type annotation patterns (NEW) | Adding type hints |
 
 ## Key Principles
 
@@ -44,20 +47,23 @@ This directory contains comprehensive development standards, coding guidelines, 
 
 ## Quick Start
 
-### For AI Agents
+### For AI Agents (New to the System)
 
-1. Read [AGENTS.md](AGENTS.md) (this file) for overview
-2. Read domain-specific rule file for your task:
-   - `error_handling.md` - Exception handling
-   - `python_logging.md` - Logging
-   - `infrastructure_modules.md` - Infrastructure development
-3. Follow the standards strictly
+1. **Start here**: Read [AGENTS.md](AGENTS.md) (this file) for complete overview
+2. **Pick your task** - Read the appropriate guide:
+   - **Writing code**: [error_handling.md](error_handling.md), [python_logging.md](python_logging.md), [type_hints_standards.md](type_hints_standards.md)
+   - **Creating modules**: [infrastructure_modules.md](infrastructure_modules.md), [testing_standards.md](testing_standards.md)
+   - **Writing docs**: [documentation_standards.md](documentation_standards.md)
+   - **Writing tests**: [testing_standards.md](testing_standards.md)
+3. **Follow the standards** - Apply the patterns and examples from the guide
+4. **Cross-reference** - See "See Also" sections for related guides
 
-### For Developers
+### For Developers (Quick Reference)
 
-1. Read [README.md](README.md) for quick reference
-2. Check specific guideline files as needed
-3. Use as reference during development
+1. **Quick lookup**: Use [README.md](README.md) for fast pattern references
+2. **Deep dive**: Read specific guide files as needed
+3. **Copy patterns**: Use code examples from appropriate guide
+4. **Reference**: Keep this directory open during development
 
 ## Development Workflow
 
@@ -358,6 +364,21 @@ template/
 - [pytest Documentation](https://docs.pytest.org/)
 - [PEP 8 Style Guide](https://peps.python.org/pep-0008/)
 
+## All Development Guidelines
+
+This directory provides modular development standards. Each file covers specific aspects:
+
+| File | Purpose | Best For |
+|------|---------|----------|
+| [AGENTS.md](AGENTS.md) | Overview & navigation | Understanding the system |
+| [README.md](README.md) | Quick reference | Finding patterns fast |
+| [error_handling.md](error_handling.md) | Exception patterns | Writing error handling |
+| [python_logging.md](python_logging.md) | Logging standards | Adding logging to code |
+| [infrastructure_modules.md](infrastructure_modules.md) | Infrastructure development | Creating new modules |
+| [testing_standards.md](testing_standards.md) | Testing patterns | Writing tests (NEW) |
+| [documentation_standards.md](documentation_standards.md) | Documentation guidelines | Writing docs (NEW) |
+| [type_hints_standards.md](type_hints_standards.md) | Type annotation patterns | Adding type hints (NEW) |
+
 ## Integration with Main Documentation
 
 The .cursorrules standards align with and support the main documentation:
@@ -369,8 +390,9 @@ The .cursorrules standards align with and support the main documentation:
 | Infrastructure | [infrastructure_modules.md](infrastructure_modules.md) | [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
 | Error Handling | [error_handling.md](error_handling.md) | [docs/TROUBLESHOOTING_GUIDE.md](../docs/TROUBLESHOOTING_GUIDE.md) |
 | Logging | [python_logging.md](python_logging.md) | [docs/LOGGING_GUIDE.md](../docs/LOGGING_GUIDE.md) |
-| Testing | This guide | [tests/AGENTS.md](../tests/AGENTS.md) |
-| Workflow | This guide | [docs/WORKFLOW.md](../docs/WORKFLOW.md) |
+| Testing | [testing_standards.md](testing_standards.md) | [tests/AGENTS.md](../tests/AGENTS.md) |
+| Workflow | [documentation_standards.md](documentation_standards.md) | [docs/WORKFLOW.md](../docs/WORKFLOW.md) |
+| Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/TYPE_SAFETY.md](../docs/TYPE_SAFETY.md) |
 
 ## Cross-Reference Guide
 
@@ -389,18 +411,64 @@ The .cursorrules standards align with and support the main documentation:
 → Read [../docs/BEST_PRACTICES.md](../docs/BEST_PRACTICES.md) for comprehensive practices  
 → See [../docs/ERROR_HANDLING_GUIDE.md](../docs/ERROR_HANDLING_GUIDE.md) for detailed patterns
 
+## Quick Navigation Guide
+
+### By Development Activity
+
+| Activity | Start Here | Then Read |
+|----------|-----------|-----------|
+| Writing functions | [type_hints_standards.md](type_hints_standards.md) | [error_handling.md](error_handling.md), [python_logging.md](python_logging.md) |
+| Handling errors | [error_handling.md](error_handling.md) | [python_logging.md](python_logging.md) for context |
+| Adding logging | [python_logging.md](python_logging.md) | [error_handling.md](error_handling.md) for error logging |
+| Writing tests | [testing_standards.md](testing_standards.md) | [error_handling.md](error_handling.md) for error testing |
+| Creating modules | [infrastructure_modules.md](infrastructure_modules.md) | All of the above standards |
+| Writing docs | [documentation_standards.md](documentation_standards.md) | Specific guide for your doc type |
+| Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
+
+### By File Size & Detail Level
+
+**Quick Reference (< 100 lines)**
+- [README.md](README.md) - Fast patterns lookup
+
+**Medium Details (100-300 lines)**
+- [error_handling.md](error_handling.md) - Exception patterns
+- [python_logging.md](python_logging.md) - Logging standards
+- [type_hints_standards.md](type_hints_standards.md) - Type annotation patterns
+
+**Comprehensive Guides (300-600 lines)**
+- [testing_standards.md](testing_standards.md) - Complete testing guide
+- [infrastructure_modules.md](infrastructure_modules.md) - Module development guide
+- [documentation_standards.md](documentation_standards.md) - Documentation writing guide
+
+**System Overview (400+ lines)**
+- [AGENTS.md](AGENTS.md) - This file - complete system overview
+
 ## Maintenance
 
 This directory is maintained as part of the template repository. All updates should:
 
 1. Maintain consistency across files
 2. Update this AGENTS.md when adding new rule files
-3. Keep README.md in sync
+3. Keep README.md in sync with new guides
 4. Follow the same standards described here
 5. Ensure cross-references to main documentation are accurate
+6. Test all code examples in guides
+7. Keep "See Also" sections current
+
+### Adding New Guidelines
+
+When creating a new .cursorrules file:
+
+1. Add entry to Files table in this file
+2. Add entry to Files section in README.md
+3. Create "See Also" section linking to related guides
+4. Include code examples for all patterns
+5. Test all examples before committing
+6. Update integration table with main docs
 
 ---
 
-**Version**: 2.0.0  
+**Version**: 2.1.0  
 **Last Updated**: 2025-11-22  
+**Status**: All 8 guideline files complete and cross-referenced  
 **Maintainer**: Template Team

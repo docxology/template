@@ -36,26 +36,27 @@ This document consolidates all build system information: current status, perform
 
 ```mermaid
 flowchart TD
-    START([Start render_pdf.sh]) --> CLEAN[Clean all outputs]
-    CLEAN --> TESTS[Run tests with 100% coverage]
-    TESTS --> SCRIPTS[Execute all scripts]
-    SCRIPTS --> UTILS[Run repo utilities]
-    UTILS --> PREAMBLE[Generate LaTeX preamble]
-    PREAMBLE --> DISCOVER[Discover markdown modules]
-    DISCOVER --> BUILD_INDIV[Build individual PDFs]
-    BUILD_INDIV --> BUILD_COMB[Build combined PDF]
-    BUILD_COMB --> VALIDATE[Validate all PDFs]
-    VALIDATE --> SUCCESS[Build successful]
+    START([Start run_all.py]) --> STAGE0[Stage 0: Setup Environment]
+    STAGE0 --> STAGE1[Stage 1: Run Tests]
+    STAGE1 --> STAGE2[Stage 2: Run Analysis]
+    STAGE2 --> STAGE3[Stage 3: Render PDF]
+    STAGE3 --> STAGE4[Stage 4: Validate Output]
+    STAGE4 --> STAGE5[Stage 5: Copy Outputs]
+    STAGE5 --> SUCCESS[Build successful]
     
-    TESTS -->|Fail| FAIL1[Tests failed]
-    SCRIPTS -->|Fail| FAIL2[Scripts failed]
-    BUILD_INDIV -->|Fail| FAIL3[PDF build failed]
-    VALIDATE -->|Fail| FAIL4[Validation failed]
+    STAGE0 -->|Fail| FAIL0[Setup failed]
+    STAGE1 -->|Fail| FAIL1[Tests failed]
+    STAGE2 -->|Fail| FAIL2[Analysis failed]
+    STAGE3 -->|Fail| FAIL3[PDF build failed]
+    STAGE4 -->|Fail| FAIL4[Validation failed]
+    STAGE5 -->|Fail| FAIL5[Copy failed]
     
-    FAIL1 --> END([Exit with error])
+    FAIL0 --> END([Exit with error])
+    FAIL1 --> END
     FAIL2 --> END
     FAIL3 --> END
     FAIL4 --> END
+    FAIL5 --> END
     
     SUCCESS --> END
     
@@ -64,8 +65,8 @@ flowchart TD
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     
     class SUCCESS success
-    class FAIL1,FAIL2,FAIL3,FAIL4 failure
-    class CLEAN,TESTS,SCRIPTS,UTILS,PREAMBLE,DISCOVER,BUILD_INDIV,BUILD_COMB,VALIDATE process
+    class FAIL0,FAIL1,FAIL2,FAIL3,FAIL4,FAIL5 failure
+    class STAGE0,STAGE1,STAGE2,STAGE3,STAGE4,STAGE5 process
 ```
 
 ### Stage Breakdown
@@ -324,41 +325,38 @@ build_combined() {
 
 ---
 
-### Enhancement: generate_pdf_from_scratch.sh Improvements (January 2025)
+### Current Pipeline Architecture (2025)
 
-**Enhancement:** Comprehensive improvements to `generate_pdf_from_scratch.sh` script
+**Pipeline:** 6-stage Python orchestrator system
 
-**Added Features:**
-- Command-line interface with multiple options (`--help`, `--dry-run`, `--skip-validation`, `--verbose`, `--debug`, `--no-color`, `--no-emoji`, `--log-file`)
-- Structured logging with timestamped messages and log levels (DEBUG, INFO, WARN, ERROR)
-- Log file support for debugging and archival
-- Color detection (automatic TTY detection, NO_COLOR environment variable support)
-- Accessibility features (optional emojis, graceful plain text fallback)
-- Robustness improvements (dependency validation, trap handlers, error context reporting)
-- REPO_ROOT pattern for consistent path handling
-- Proper exit code handling (0=success, 1=error, 2=validation warnings)
+**Stages:**
+- **Stage 0**: Environment setup & validation (`scripts/00_setup_environment.py`)
+- **Stage 1**: Run tests with coverage (`scripts/01_run_tests.py`)
+- **Stage 2**: Execute analysis scripts (`scripts/02_run_analysis.py`)
+- **Stage 3**: Render PDFs from markdown (`scripts/03_render_pdf.py`)
+- **Stage 4**: Validate outputs (`scripts/04_validate_output.py`)
+- **Stage 5**: Copy final deliverables (`scripts/05_copy_outputs.py`)
 
-**Usage Examples:**
+**Usage:**
 ```bash
-# Standard usage
-./generate_pdf_from_scratch.sh
+# Run complete pipeline (all 6 stages)
+python3 scripts/run_all.py
 
-# With verbose logging and log file
-./generate_pdf_from_scratch.sh --verbose --log-file build.log
+# Or use shell wrapper
+./run_all.sh
 
-# Skip validation for faster iteration
-./generate_pdf_from_scratch.sh --skip-validation
-
-# CI/CD usage (no colors, log file)
-./generate_pdf_from_scratch.sh --no-color --log-file ci_build.log
-
-# Preview without executing
-./generate_pdf_from_scratch.sh --dry-run
+# Run individual stages
+python3 scripts/00_setup_environment.py  # Stage 0
+python3 scripts/01_run_tests.py          # Stage 1
+python3 scripts/02_run_analysis.py       # Stage 2
+python3 scripts/03_render_pdf.py         # Stage 3
+python3 scripts/04_validate_output.py    # Stage 4
+python3 scripts/05_copy_outputs.py       # Stage 5
 ```
 
-**Result:** ✅ Enhanced usability, better debugging, CI/CD compatibility
+**Result:** ✅ Streamlined, maintainable pipeline with clear stage separation
 
-**Impact:** Improved developer experience, better integration with automated workflows
+**Impact:** Better error handling, clearer logging, easier debugging
 
 ---
 
@@ -371,14 +369,13 @@ build_combined() {
 **Solutions:**
 1. Check pandoc installed: `pandoc --version`
 2. Check xelatex installed: `xelatex --version`
-3. Clean and rebuild:
+3. Run complete pipeline:
    ```bash
-   # Recommended: Use enhanced script
-   ./generate_pdf_from_scratch.sh
+   # Run all stages
+   python3 scripts/run_all.py
    
-   # Or manual steps
-   ./repo_utilities/clean_output.sh
-   ./repo_utilities/render_pdf.sh
+   # Or use shell wrapper
+   ./run_all.sh
    ```
 
 ### Tests Fail
@@ -408,11 +405,8 @@ build_combined() {
 2. Check spelling matches exactly
 3. Rebuild (references need multiple passes):
    ```bash
-   # Recommended: Use enhanced script
-   ./generate_pdf_from_scratch.sh
-   
-   # Or manual rebuild
-   ./repo_utilities/render_pdf.sh
+   # Run complete pipeline (includes multiple LaTeX passes)
+   python3 scripts/run_all.py
    ```
 
 ### Coverage Below 100%
@@ -434,31 +428,27 @@ build_combined() {
 To verify everything works on your system:
 
 ```bash
-# 1. Full regeneration (recommended - includes cleanup and validation)
-./generate_pdf_from_scratch.sh
+# 1. Run complete pipeline (all 6 stages)
+python3 scripts/run_all.py
 
-# With options:
-# ./generate_pdf_from_scratch.sh --verbose --log-file build.log
-# ./generate_pdf_from_scratch.sh --skip-validation  # Faster iteration
-# ./generate_pdf_from_scratch.sh --dry-run          # Preview without executing
-
-# Alternative: Manual steps
-# ./repo_utilities/clean_output.sh
-# ./repo_utilities/render_pdf.sh
+# Or use shell wrapper
+./run_all.sh
 
 # 2. Expected output:
-# - Build completes in ~75 seconds
-# - 320 tests pass
-# - 13 PDFs generated
+# - Build completes in ~75-80 seconds
+# - All tests pass
+# - PDFs generated in project/output/pdf/
+# - Final deliverables copied to output/
 # - No critical errors
 
 # 3. Verify outputs
-ls -la output/pdf/        # Should show 13 PDFs
-ls -la output/figures/    # Should show 10 figures
-ls -la output/data/       # Should show 2 data files
+ls -la output/                    # Top-level deliverables
+ls -la output/project_combined.pdf # Combined manuscript
+ls -la output/slides/              # Presentation slides
+ls -la output/web/                 # Web outputs
 
 # 4. Open manuscript
-./repo_utilities/open_manuscript.sh
+open output/project_combined.pdf
 ```
 
 **Expected result:** Professional PDF manuscript with all content properly rendered.

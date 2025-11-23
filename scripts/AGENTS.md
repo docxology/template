@@ -78,11 +78,23 @@ Root scripts are **thin orchestrators** that:
 
 **Generic:** Works for any project output
 
-### 6. Run All (`run_all.py`)
+### 6. Copy Outputs (`05_copy_outputs.py`)
+
+**Purpose:** Copy final deliverables to top-level output directory
+
+- Cleans top-level `output/` directory
+- Copies combined PDF manuscript
+- Copies all presentation slides (PDF format)
+- Copies all web outputs (HTML format)
+- Validates all files copied successfully
+
+**Generic:** Works for any project with rendered outputs
+
+### 7. Run All (`run_all.py`)
 
 **Purpose:** Execute complete pipeline
 
-- Orchestrates all 5 stages sequentially
+- Orchestrates all 6 stages sequentially
 - Stops on first failure
 - Provides summary report
 - Generic pipeline
@@ -204,6 +216,7 @@ Stages:
 3. **02_run_analysis.py** - Executes `project/scripts/*.py`
 4. **03_render_pdf.py** - PDFs generated?
 5. **04_validate_output.py** - Output valid?
+6. **05_copy_outputs.py** - Final deliverables copied?
 
 Each stage is **generic** and works with any project structure.
 

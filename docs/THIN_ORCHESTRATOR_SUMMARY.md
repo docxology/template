@@ -38,7 +38,7 @@ This document summarizes the implementation of the **thin orchestrator pattern**
 - **`src/`**: Contains ALL business logic, algorithms, and mathematical implementations
 - **`scripts/`**: Lightweight wrappers that import and use src/ methods
 - **`tests/`**: Ensures 100% coverage of src/ functionality
-- **`render_pdf.sh`**: Orchestrates the entire pipeline
+- **`scripts/run_all.py`**: Orchestrates the entire 6-stage pipeline
 
 #### Script Requirements
 - **MUST**: Import methods from `@src/` modules
@@ -77,7 +77,7 @@ def generate_figure():
 ```
 
 ### 3. **Integration with Build System**
-The `render_pdf.sh` script automatically:
+The `scripts/run_all.py` orchestrator automatically:
 1. **Runs tests** with 100% coverage requirement (ensuring src/ methods work)
 2. **Executes scripts** (validating src/ integration)
 3. **Generates figures** (using tested src/ methods)
@@ -178,7 +178,7 @@ The thin orchestrator pattern has been successfully implemented, establishing a 
 - **`@src/`** contains all business logic with 100% test coverage
 - **`@scripts/`** are lightweight wrappers that use tested src/ methods
 - **`@tests/`** validates all src/ functionality
-- **`render_pdf.sh`** orchestrates the complete pipeline
+- **`scripts/run_all.py`** orchestrates the complete 6-stage pipeline
 
 This architecture ensures:
 - **Maintainability**: Single source of truth for business logic

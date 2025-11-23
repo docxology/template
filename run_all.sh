@@ -43,6 +43,7 @@ declare -a STAGE_NAMES=(
     "Project Analysis"
     "PDF Rendering"
     "Output Validation"
+    "Copy Outputs"
 )
 
 declare -a STAGE_SCRIPTS=(
@@ -52,6 +53,7 @@ declare -a STAGE_SCRIPTS=(
     "scripts/02_run_analysis.py"
     "scripts/03_render_pdf.py"
     "scripts/04_validate_output.py"
+    "scripts/05_copy_outputs.py"
 )
 
 declare -a STAGE_RESULTS=()
@@ -217,6 +219,20 @@ run_validation() {
     fi
 }
 
+run_copy_outputs() {
+    log_stage 7 "${STAGE_NAMES[6]}"
+    
+    cd "$REPO_ROOT"
+    
+    if python3 scripts/05_copy_outputs.py; then
+        log_success "Output copying complete"
+        return 0
+    else
+        log_error "Output copying failed"
+        return 1
+    fi
+}
+
 # ============================================================================
 # Main Pipeline
 # ============================================================================
@@ -289,6 +305,16 @@ main() {
     local stage_end=$(date +%s)
     STAGE_RESULTS[5]=0
     STAGE_DURATIONS[5]=$(get_elapsed_time "$stage_start" "$stage_end")
+    
+    # Stage 7: Copy Outputs
+    local stage_start=$(date +%s)
+    if ! run_copy_outputs; then
+        log_error "Pipeline failed at Stage 7 (Copy Outputs)"
+        return 1
+    fi
+    local stage_end=$(date +%s)
+    STAGE_RESULTS[6]=0
+    STAGE_DURATIONS[6]=$(get_elapsed_time "$stage_start" "$stage_end")
     
     # Success - print summary
     local pipeline_end=$(date +%s)

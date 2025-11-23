@@ -8,7 +8,7 @@
 ./run_all.sh
 ```
 
-This executes all stages sequentially: environment setup, infrastructure tests, project tests, analysis, PDF rendering, and output validation.
+This executes all stages sequentially: environment setup, infrastructure tests, project tests, analysis, PDF rendering, output validation, and output copying.
 
 ## Pipeline Stages
 
@@ -72,6 +72,19 @@ This executes all stages sequentially: environment setup, infrastructure tests, 
 - Verifies output directory structure
 - Generates validation report
 
+**Output**: Validation report in console
+
+### Stage 7: Copy Outputs
+**Purpose**: Copy final deliverables to top-level output directory
+
+- Cleans top-level `output/` directory
+- Copies combined PDF: `project_combined.pdf`
+- Copies presentation slides: `slides/*.pdf`
+- Copies web outputs: `web/*.html`
+- Validates all files copied successfully
+
+**Output**: `output/`, `output/slides/`, `output/web/`
+
 ## Usage
 
 ### Basic Usage
@@ -121,14 +134,16 @@ Stage Results:
   ✓ Stage 4: Project Analysis (5s)
   ✓ Stage 5: PDF Rendering (120s)
   ✓ Stage 6: Output Validation (8s)
+  ✓ Stage 7: Copy Outputs (2s)
 
-Total Execution Time: 3m 28s
+Total Execution Time: 3m 30s
 
 Generated Outputs:
   • Coverage reports: htmlcov/
   • PDF files: project/output/pdf/
   • Figures: project/output/figures/
   • Data files: project/output/data/
+  • Final deliverables: output/
 
 ✓ Pipeline complete - ready for deployment
 ```

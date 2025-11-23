@@ -23,7 +23,7 @@ This document provides **comprehensive documentation** for the Research Project 
 
 **Layer 1: Infrastructure (Generic - Reusable)**
 - `infrastructure/` - Generic build/validation tools (reusable across projects)
-- `scripts/` - Entry point orchestrators (5-stage pipeline)
+- `scripts/` - Entry point orchestrators (6-stage pipeline: stages 00-05)
 - `tests/` - Infrastructure and integration tests
 
 **Layer 2: Project (Project-Specific - Customizable)**
@@ -61,13 +61,14 @@ template/                           # Generic template repository
 │   ├── README.md
 │   └── *.py                        # build_verifier, figure_manager, etc.
 ├── scripts/                        # Generic entry point orchestrators
-│   ├── AGENTS.md                   # Entry points: 00-setup, 01-tests, 02-analysis, 03-pdf, 04-validate
+│   ├── AGENTS.md                   # Entry points: 00-setup, 01-tests, 02-analysis, 03-pdf, 04-validate, 05-copy
 │   ├── README.md
 │   ├── 00_setup_environment.py
 │   ├── 01_run_tests.py
 │   ├── 02_run_analysis.py          # Discovers & executes project/scripts/
 │   ├── 03_render_pdf.py
 │   ├── 04_validate_output.py
+│   ├── 05_copy_outputs.py          # Copies final deliverables
 │   └── run_all.py                  # Master orchestrator
 ├── tests/                          # Infrastructure tests
 │   ├── AGENTS.md

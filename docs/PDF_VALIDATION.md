@@ -15,7 +15,7 @@ Following the **thin orchestrator pattern**, the implementation consists of:
 1. **Business Logic** (`src/pdf_validator.py`): Core validation algorithms
 2. **Orchestrator** (`repo_utilities/validate_pdf_output.py`): I/O and user interface
 3. **Tests** (`tests/test_pdf_validator.py`): 100% coverage with real data
-4. **Integration** (`generate_pdf_from_scratch.sh`): Automated validation in build pipeline
+4. **Integration** (`scripts/run_all.py`): Automated validation in build pipeline (Stage 4)
 
 ## Components
 
@@ -67,20 +67,17 @@ uv run python repo_utilities/validate_pdf_output.py --help
 
 #### Automated Validation
 
-The validation is automatically integrated into `generate_pdf_from_scratch.sh`:
+The validation is automatically integrated into the pipeline (Stage 4):
 
 ```bash
 # Standard usage (includes validation)
-./generate_pdf_from_scratch.sh
+python3 scripts/run_all.py
 
-# Skip validation for faster iteration
-./generate_pdf_from_scratch.sh --skip-validation
+# Or use shell wrapper
+./run_all.sh
 
-# With verbose logging and log file
-./generate_pdf_from_scratch.sh --verbose --log-file build.log
-
-# CI/CD usage (no colors, log file)
-./generate_pdf_from_scratch.sh --no-color --log-file ci_build.log
+# Run only validation stage (skip other stages)
+python3 scripts/04_validate_output.py
 ```
 
 This will:
@@ -220,17 +217,17 @@ uv run python repo_utilities/validate_pdf_output.py
 Generate PDFs first:
 
 ```bash
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 ```
 
 Or run the complete pipeline:
 
 ```bash
 # Standard build with validation
-./generate_pdf_from_scratch.sh
+python3 scripts/run_all.py
 
 # With options
-./generate_pdf_from_scratch.sh --verbose --log-file build.log
+python3 scripts/run_all.py --verbose --log-file build.log
 ```
 
 ### High number of ?? issues

@@ -85,6 +85,8 @@ def validate_markdown() -> bool:
         logger.warning("No markdown files found")
         return True
     
+    log_success(f"Found {len(markdown_files)} markdown file(s)", logger)
+    
     # Check for validation script
     validate_script = repo_root / "repo_utilities" / "validate_markdown.py"
     
@@ -112,7 +114,7 @@ def validate_markdown() -> bool:
             logger.warning(f"Could not run markdown validation: {e}")
             return True  # Non-critical
     else:
-        logger.warning("Markdown validation script not found")
+        logger.info("Markdown validation script not found (optional)")
         return True
 
 

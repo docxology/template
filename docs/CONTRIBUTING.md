@@ -98,7 +98,7 @@ pytest
 pytest --cov=src --cov-report=html
 
 # Test the build pipeline
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 ```
 
 ### 4. **Submit a Pull Request**

@@ -1,4 +1,4 @@
-# Generic Project Development Workflow: The render_pdf.sh Paradigm
+# Generic Project Development Workflow: The Pipeline Orchestrator Paradigm
 
 This document explains the complete development workflow that ensures source code, tests, and documentation remain in perfect coherence. For related information, see **[`docs/HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`docs/ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
 
@@ -10,7 +10,7 @@ The generic project template implements a **unified test-driven development para
 - **Tests** validate all functionality with 100% coverage
 - **Scripts** are **thin orchestrators** that import and use `src/` methods
 - **Documentation** references code and displays generated outputs
-- **`render_pdf.sh`** orchestrates the entire pipeline
+- **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
 
 ## Complete Workflow Diagram
 
@@ -31,7 +31,7 @@ graph TB
     end
     
     subgraph "Build Pipeline"
-        RENDER[render_pdf.sh<br/>Orchestrator]
+        RENDER[run_all.py<br/>Pipeline Orchestrator]
         PDFS[PDF Generation<br/>Individual + Combined]
         LATEX[LaTeX Export<br/>For further processing]
     end
@@ -63,9 +63,9 @@ graph TB
     class RENDER,PDFS,LATEX pipeline
 ```
 
-## How render_pdf.sh Works with Markdown and Code
+## How the Pipeline Orchestrator Works with Markdown and Code
 
-The `render_pdf.sh` script is the central orchestrator that ensures complete coherence between all components:
+The `scripts/run_all.py` orchestrator (or `./run_all.sh`) executes 6 stages sequentially, ensuring complete coherence between all components:
 
 ### 1. Code Validation Phase
 - **Runs all generation scripts** - This validates that `src/` code works correctly
@@ -122,7 +122,7 @@ flowchart TD
 2. **Implement functionality** - Write code to pass tests
 3. **Validate integration** - Ensure scripts can use the code
 4. **Update documentation** - Reflect changes in markdown
-5. **Run complete pipeline** - Use `render_pdf.sh` to validate coherence
+5. **Run complete pipeline** - Use `python3 scripts/run_all.py` to validate coherence
 
 ## Step-by-Step Workflow
 
@@ -157,16 +157,20 @@ uv run python repo_utilities/validate_markdown.py
 ### 3. Integration Phase
 
 ```bash
-# Run the complete pipeline
-./repo_utilities/render_pdf.sh
+# Run the complete pipeline (all 6 stages)
+python3 scripts/run_all.py
+
+# Or use shell wrapper
+./run_all.sh
 ```
 
-This script:
-- Runs all generation scripts (validates src/ code works)
-- Validates markdown references and images
-- Generates auto-updated glossary from src/ API
-- Builds individual and combined PDFs
-- Exports LaTeX for further processing
+The pipeline orchestrator executes 6 stages:
+- **Stage 0**: Environment setup & validation
+- **Stage 1**: Run tests with coverage (validates src/ code works)
+- **Stage 2**: Execute analysis scripts (generates figures and data)
+- **Stage 3**: Render PDFs from markdown (validates references, builds PDFs)
+- **Stage 4**: Validate outputs (checks PDF quality and integrity)
+- **Stage 5**: Copy final deliverables (copies to top-level output/)
 
 ## Key Components
 
@@ -242,10 +246,10 @@ uv run python scripts/generate_research_figures.py
 uv run python repo_utilities/validate_markdown.py
 
 # Build complete PDF pipeline
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 
 # Clean all generated outputs (regeneratable)
-./repo_utilities/clean_output.sh
+# Pipeline automatically handles cleanup
 
 # Check specific coverage
 coverage report -m
@@ -253,14 +257,9 @@ coverage report -m
 
 ## Output Management
 
-### Clean Output Script
+### Output Management
 
-The `clean_output.sh` script safely removes all generated outputs since everything is regenerated from markdown sources:
-
-```bash
-# Clean all generated outputs
-./repo_utilities/clean_output.sh
-```
+The pipeline automatically manages outputs. All outputs are regenerated from markdown sources during the build process, ensuring consistency.
 
 This script:
 - Removes `output/` directory (all disposable)
@@ -322,7 +321,7 @@ coverage report -m
 ## Key Connections to Remember
 
 1. **src/ modules → tests/ validation → scripts/ generation → manuscript/ documentation**
-2. **render_pdf.sh ensures all connections are valid before building outputs**
+2. **The pipeline orchestrator ensures all connections are valid before building outputs**
 3. **Changes in any component must be reflected in all connected components**
 4. **The test suite validates the entire pipeline, not just individual modules**
 5. **Documentation is auto-generated where possible to maintain code-doc sync**
@@ -336,7 +335,7 @@ The workflow enforces a **thin orchestrator pattern** where:
 - **`src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods
 - **`tests/`** ensures 100% coverage of `src/` functionality
-- **`render_pdf.sh`** orchestrates the entire pipeline
+- **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
 
 This ensures:
 - **Maintainability**: Single source of truth for business logic

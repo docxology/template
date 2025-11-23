@@ -1,8 +1,14 @@
 """Comprehensive tests for src/statistics.py to ensure 100% coverage."""
+import sys
+from pathlib import Path
+
 import numpy as np
 import pytest
 
-from statistics import (
+# Add project src to path
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+
+from src.statistics import (
     DescriptiveStats,
     anova_test,
     calculate_confidence_interval,

@@ -267,7 +267,7 @@ Manages figures with automatic numbering, captioning, and cross-referencing.
 
 **Usage:**
 ```python
-from figure_manager import FigureManager
+from infrastructure.documentation import FigureManager
 
 manager = FigureManager()
 fig_meta = manager.register_figure(
@@ -358,7 +358,7 @@ python3 scripts/generate_scientific_figures.py
 
 The scientific simulation system integrates seamlessly with the existing build pipeline:
 
-1. **Scripts are automatically executed** by `render_pdf.sh`
+1. **Scripts are automatically executed** by `scripts/02_run_analysis.py` (Stage 2)
 2. **Figures are generated** in `output/figures/`
 3. **Figures are registered** in `output/figures/figure_registry.json`
 4. **Figures can be automatically inserted** into markdown files

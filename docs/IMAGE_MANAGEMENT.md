@@ -9,8 +9,7 @@ This guide covers automatic image insertion, captioning, and cross-referencing i
 The `ImageManager` class handles automatic insertion of figures into markdown files:
 
 ```python
-from image_manager import ImageManager
-from figure_manager import FigureManager
+from infrastructure.documentation import ImageManager, FigureManager
 
 figure_manager = FigureManager()
 image_manager = ImageManager(figure_manager)

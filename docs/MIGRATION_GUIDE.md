@@ -373,10 +373,10 @@ uv run pytest tests/ --cov=src
 **Build outputs:**
 ```bash
 # Clean outputs
-./repo_utilities/clean_output.sh
+# Pipeline automatically handles cleanup
 
 # Run build
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 
 # Verify outputs
 ls -la output/pdf/
@@ -493,7 +493,7 @@ tar -czf outputs_backup.tar.gz output/
 cd old_project && ./build.sh
 
 # Run new build
-cd new_project && ./repo_utilities/render_pdf.sh
+cd new_project && python3 scripts/run_all.py
 
 # Compare outputs
 diff -r old_project/output/ new_project/output/

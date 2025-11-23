@@ -31,7 +31,7 @@ This repository implements a sophisticated, well-architected test-driven develop
    - Clear patterns and examples
 
 4. **Build Pipeline**: Production Quality
-   - 7-stage orchestration (clean, validate, test, execute, generate, HTML, validate)
+   - 6-stage orchestration (setup, test, analysis, render PDF, validate, copy outputs)
    - Deterministic outputs
    - Comprehensive logging
    - Error recovery
@@ -488,7 +488,7 @@ This template serves as an exemplary model for research projects and technical s
    - Better maintainability
    - Clearer organization
 
-4. ✅ **Logging Integration** (render_pdf.sh, clean_output.sh, generate_pdf_from_scratch.sh)
+4. ✅ **Logging Integration** (scripts/run_all.py and all stage scripts)
    - Uses unified logging
    - Better consistency
    - Improved error reporting

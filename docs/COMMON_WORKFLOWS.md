@@ -44,13 +44,13 @@
 
 3. **Generate the PDF**
    ```bash
-   ./repo_utilities/clean_output.sh
-   ./repo_utilities/render_pdf.sh
+   # Run complete pipeline (all 6 stages)
+   python3 scripts/run_all.py
    ```
 
 4. **View the result**
    ```bash
-   open output/pdf/01_abstract.pdf
+   open project/output/pdf/01_abstract.pdf  # Individual section PDFs
    ```
 
 **Expected Result**: Professional PDF with your content formatted
@@ -88,7 +88,7 @@
 
 4. **Rebuild manuscript**
    ```bash
-   ./repo_utilities/render_pdf.sh
+   python3 scripts/run_all.py
    ```
 
 5. **Reference from other sections**
@@ -230,7 +230,7 @@
 
 4. **Rebuild**
    ```bash
-   ./repo_utilities/render_pdf.sh
+   python3 scripts/run_all.py
    ```
 
 **Expected Result**: Numbered equations with clickable references
@@ -535,31 +535,21 @@ def test_process_negative():
 
 **Steps**:
 
-1. **Run complete from-scratch build (recommended)**
+1. **Run complete pipeline (recommended)**
    ```bash
-   # Standard build with validation
-   ./generate_pdf_from_scratch.sh
+   # Standard build - executes all 6 stages (00-05)
+   python3 scripts/run_all.py
    
-   # With verbose logging and log file
-   ./generate_pdf_from_scratch.sh --verbose --log-file build.log
+   # Or use shell script wrapper
+   ./run_all.sh
    
-   # Skip validation for faster iteration
-   ./generate_pdf_from_scratch.sh --skip-validation
-   
-   # Preview without executing (dry run)
-   ./generate_pdf_from_scratch.sh --dry-run
-   ```
-
-   **Alternative: Manual steps**
-   ```bash
-   # Clean previous outputs
-   ./repo_utilities/clean_output.sh
-   
-   # Run complete build
-   ./repo_utilities/render_pdf.sh
-   
-   # Validate PDF quality
-   python3 repo_utilities/validate_pdf_output.py
+   # Run individual stages if needed
+   python3 scripts/00_setup_environment.py  # Stage 0: Setup
+   python3 scripts/01_run_tests.py          # Stage 1: Tests
+   python3 scripts/02_run_analysis.py       # Stage 2: Analysis
+   python3 scripts/03_render_pdf.py         # Stage 3: PDF rendering
+   python3 scripts/04_validate_output.py    # Stage 4: Validation
+   python3 scripts/05_copy_outputs.py       # Stage 5: Copy deliverables
    ```
 
 2. **Check for errors**
@@ -570,20 +560,22 @@ def test_process_negative():
 
 3. **View output**
    ```bash
-   open output/pdf/project_combined.pdf
-   # Or use the open script
-   ./repo_utilities/open_manuscript.sh
+   # Combined PDF is copied to top-level output/ directory
+   open output/project_combined.pdf
+   
+   # Or view in project output directory
+   open project/output/pdf/project_combined.pdf
    ```
 
-**Build Pipeline Stages**:
-1. Test validation (27s)
-2. Script execution (1s)
-3. Repository utilities (1s)
-4. Individual PDFs (32s)
-5. Combined PDF (10s)
-6. Validation (1s)
+**Build Pipeline Stages** (6 stages total):
+1. **Stage 0**: Environment setup & validation (~1s)
+2. **Stage 1**: Run tests with coverage (~27s)
+3. **Stage 2**: Execute analysis scripts (~2s)
+4. **Stage 3**: Render PDFs from markdown (~45s)
+5. **Stage 4**: Validate outputs (~1s)
+6. **Stage 5**: Copy final deliverables (~1s)
 
-**Total Time**: ~75 seconds
+**Total Time**: ~75-80 seconds
 
 **Troubleshooting**:
 - Tests fail → Fix coverage issues
@@ -632,7 +624,7 @@ def test_process_negative():
 
 4. **Generate with custom metadata**
    ```bash
-   ./repo_utilities/render_pdf.sh
+   python3 scripts/run_all.py
    ```
 
 **Applied To**:
@@ -672,7 +664,7 @@ def test_process_negative():
 
 4. **Rebuild**
    ```bash
-   ./repo_utilities/render_pdf.sh
+   python3 scripts/run_all.py
    ```
 
 **Naming Convention**:
@@ -720,11 +712,11 @@ def test_process_negative():
 
 5. **Run complete build**
    ```bash
-   # Standard build
-   ./generate_pdf_from_scratch.sh
+   # Standard build - executes all 6 stages
+   python3 scripts/run_all.py
    
-   # With verbose logging for debugging
-   ./generate_pdf_from_scratch.sh --verbose --log-file build.log
+   # Or use shell wrapper
+   ./run_all.sh
    ```
 
 6. **Commit changes**

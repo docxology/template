@@ -123,9 +123,9 @@ fm.register_figure("results.png", label="fig:results")
 │  (Build orchestration, validation, document management) │
 │                                                         │
 │  ┌──────────────────┬────────────────────────────────┐ │
-│  │ render_pdf.sh    │ repo_utilities/*.py             │ │
-│  │ clean_output.sh  │ - generate_glossary.py        │ │
-│  │ logging.sh       │ - validate_markdown.py        │ │
+│  │ run_all.py       │ scripts/*.py                   │ │
+│  │ (6-stage)        │ - 00_setup_environment.py   │ │
+│  │                  │ - 01_run_tests.py            │ │
 │  │                  │ - validate_pdf_output.py      │ │
 │  └──────────────────┴────────────────────────────────┘ │
 │                                                         │
@@ -284,13 +284,13 @@ tests/
 ### Build Pipeline - Layer Transitions
 
 ```
-User runs: ./generate_pdf_from_scratch.sh
+User runs: python3 scripts/run_all.py
     │
     ▼
 ┌─────────────────────────────────────────────┐
-│ PHASE 0: LAYER 1 - Cleanup                  │
-│ - Run clean_output.sh                       │
-│ - Remove previous outputs                   │
+│ STAGE 0: LAYER 1 - Setup Environment        │
+│ - Validate Python, dependencies            │
+│ - Check build tools                        │
 └─────────────────────────────────────────────┘
     │
     ▼
@@ -473,7 +473,7 @@ Success: All PDFs generated, all layers working
    - Include usage examples
 
 5. **Integrate with build pipeline:**
-   - Update render_pdf.sh if needed
+   - Update scripts/run_all.py if needed
    - Update repo_utilities/ if applicable
 
 ---
@@ -599,7 +599,7 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 
 3. **Update imports:**
    - `from example import` → `from scientific.example import`
-   - `from build_verifier import` → `from infrastructure.build_verifier import`
+   - `from build_verifier import` → `from infrastructure.build import`
 
 4. **Update tests:**
    - Organize tests/ with infrastructure/ and scientific/ subdirectories
@@ -608,7 +608,7 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 5. **Validate:**
    ```bash
    pytest tests/ --cov=src --cov-fail-under=95
-   ./generate_pdf_from_scratch.sh
+   python3 scripts/run_all.py
    ```
 
 ---

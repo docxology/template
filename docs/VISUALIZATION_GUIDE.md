@@ -69,7 +69,7 @@ ax = plot_convergence(iterations, values, target=0.0)
 ### Registering Figures
 
 ```python
-from figure_manager import FigureManager
+from infrastructure.documentation import FigureManager
 
 manager = FigureManager()
 fig_meta = manager.register_figure(

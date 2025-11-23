@@ -26,7 +26,7 @@ LICENSE="MIT"
 - `pyproject.toml`: name becomes "deep-learning-optimization"
 - `README.md`: Title becomes "Deep Learning Optimization"
 - All markdown files: Generic references become project-specific
-- `render_pdf.sh`: Default author becomes "Dr. Alex Chen"
+- Pipeline scripts: Default author becomes "Dr. Alex Chen" (via config.yaml or environment variables)
 
 ## Example 2: Data Science Package
 
@@ -88,7 +88,7 @@ graph TB
         PYPROJECT[pyproject.toml<br/>Project config]
         README[README.md<br/>Project docs]
         CURSORRULES[.cursorrules<br/>Development rules]
-        RENDER[render_pdf.sh<br/>Build pipeline]
+        RENDER[run_all.py<br/>Pipeline Orchestrator]
     end
     
     ROOT --> SRC
@@ -144,15 +144,15 @@ The script will show what was updated:
 ✅ Updated pyproject.toml
 ✅ Updated README.md
 ✅ Updated .cursorrules
-✅ Updated render_pdf.sh
+✅ Updated pipeline configuration
 ✅ Updated markdown files
 ```
 
 ### 4. Test the Build Process
 Validate that everything works:
 ```bash
-./repo_utilities/clean_output.sh
-./repo_utilities/render_pdf.sh
+# Pipeline automatically handles cleanup
+python3 scripts/run_all.py
 ```
 
 ### 5. Customize Further
@@ -174,7 +174,7 @@ After running `rename_project.sh`, you'll get:
 ### Updated Documentation
 - **All markdown files** - Generic references become project-specific
 - **`.cursorrules`** - Development guidelines updated
-- **`render_pdf.sh`** - Author information updated
+- **Pipeline configuration** - Author information updated (config.yaml or environment variables)
 
 ## Project Customization Examples
 

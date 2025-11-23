@@ -1,6 +1,6 @@
 {
   "fig:analysis_comparison": {
-    "figure_id": "figure_030",
+    "figure_id": "figure_000",
     "filename": "analysis_comparison.png",
     "caption": "Comparison of different methods on accuracy metric",
     "label": "fig:analysis_comparison",
@@ -11,7 +11,7 @@
     "metadata": {}
   },
   "fig:convergence_analysis": {
-    "figure_id": "figure_031",
+    "figure_id": "figure_001",
     "filename": "convergence_analysis.png",
     "caption": "Convergence behavior of the optimization algorithm showing exponential decay to target value",
     "label": "fig:convergence_analysis",
@@ -22,7 +22,7 @@
     "metadata": {}
   },
   "fig:time_series_analysis": {
-    "figure_id": "figure_032",
+    "figure_id": "figure_002",
     "filename": "time_series_analysis.png",
     "caption": "Time series data showing sinusoidal trend with added noise",
     "label": "fig:time_series_analysis",
@@ -33,7 +33,7 @@
     "metadata": {}
   },
   "fig:statistical_comparison": {
-    "figure_id": "figure_033",
+    "figure_id": "figure_003",
     "filename": "statistical_comparison.png",
     "caption": "Comparison of different methods on accuracy metric",
     "label": "fig:statistical_comparison",
@@ -44,7 +44,7 @@
     "metadata": {}
   },
   "fig:scatter_correlation": {
-    "figure_id": "figure_034",
+    "figure_id": "figure_004",
     "filename": "scatter_correlation.png",
     "caption": "Scatter plot showing correlation between two variables",
     "label": "fig:scatter_correlation",
@@ -55,7 +55,7 @@
     "metadata": {}
   },
   "fig:scientific_simulation_timeseries": {
-    "figure_id": "figure_035",
+    "figure_id": "figure_005",
     "filename": "scientific_simulation_timeseries.png",
     "caption": "Time series data generated for scientific simulation analysis",
     "label": "fig:scientific_simulation_timeseries",

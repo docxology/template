@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import subprocess
+import unicodedata
+import re
 from pathlib import Path
 from typing import Optional, List
 import yaml
@@ -90,6 +92,52 @@ class PDFRenderer:
                 f"Failed to render markdown to PDF: {e.stderr}",
                 context={"source": str(source_file), "target": str(output_file)}
             )
+
+    def _process_bibliography(self, tex_file: Path, output_dir: Path, bib_file: Path) -> bool:
+        """Process bibliography using bibtex/biber.
+        
+        Args:
+            tex_file: Path to the LaTeX file
+            output_dir: Directory containing LaTeX auxiliary files
+            bib_file: Path to bibliography file
+            
+        Returns:
+            True if bibliography processing succeeded, False otherwise
+        """
+        if not bib_file.exists():
+            logger.warning(f"Bibliography file not found: {bib_file}")
+            return False
+        
+        # Determine which bibliography processor to use
+        bibtex_cmd = "bibtex"
+        aux_file = output_dir / f"{tex_file.stem}.aux"
+        
+        if not aux_file.exists():
+            logger.warning(f"Auxiliary file not found: {aux_file}")
+            return False
+        
+        try:
+            # Run bibtex to generate bibliography
+            cmd = [bibtex_cmd, str(aux_file)]
+            logger.info(f"Processing bibliography with {bibtex_cmd}...")
+            
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                cwd=str(output_dir)
+            )
+            
+            if result.returncode != 0:
+                logger.warning(f"Bibliography processing warning: {result.stderr[:200]}")
+                # Don't fail on warnings - bibtex often returns non-zero for minor issues
+            
+            logger.debug(f"✓ Bibliography processed: {bibtex_cmd} {aux_file.stem}")
+            return True
+            
+        except Exception as e:
+            logger.warning(f"Bibliography processing failed: {e}")
+            return False
 
     def render_combined(self, source_files: List[Path], manuscript_dir: Path) -> Path:
         """Render multiple markdown files as a combined PDF.
@@ -206,7 +254,7 @@ class PDFRenderer:
                         "\n" + title_page_body + "\n\n" +
                         tex_content[end_of_begin_doc:]
                     )
-                    logger.info("✓ Inserted title page (\maketitle) after \\begin{document}")
+                    logger.info(r"✓ Inserted title page (\maketitle) after \begin{document}")
         
         combined_tex.write_text(tex_content)
         
@@ -251,10 +299,29 @@ class PDFRenderer:
             logger.info(f"  Bibliography: {bib_file.name}")
         
         try:
-            # Run xelatex multiple passes for proper cross-references, TOC, and bibliography
-            # Up to 4 passes: 1st = initial, 2nd/3rd = cross-refs, 4th = final checks
+            # Run xelatex with bibliography processing for proper cross-references, TOC, and bibliography
+            # Pass 1: Initial xelatex compilation
+            # Pass 2: Bibtex processing (if bibliography exists)
+            # Pass 3-4: Additional xelatex passes for reference resolution
+            
+            logger.info(f"  LaTeX compilation pass 1/4...")
+            result = subprocess.run(cmd, check=False, capture_output=True, text=True)
+            
+            # Check for critical errors on first pass
+            if "Fatal error occurred" in result.stdout or (result.returncode > 1 and not output_file.exists()):
+                raise RenderingError(
+                    f"XeLaTeX compilation failed (pass 1)",
+                    context={"source": str(combined_tex), "output": str(output_file)}
+                )
+            
+            # Process bibliography if it exists
+            if bib_exists:
+                logger.info(f"  Bibliography processing...")
+                self._process_bibliography(combined_tex, output_dir, bib_file)
+            
+            # Additional passes for reference resolution (especially after bibtex)
             max_passes = 4
-            for run in range(max_passes):
+            for run in range(1, max_passes):
                 logger.info(f"  LaTeX compilation pass {run+1}/{max_passes}...")
                 result = subprocess.run(cmd, check=False, capture_output=True, text=True)
                 
@@ -264,8 +331,8 @@ class PDFRenderer:
                         logger.warning(f"⚠️  PDF generated but with warnings (run {run+1})")
                         break
                     else:
-                        # Only fail if it's the first run or critical error
-                        if run == 0 or "!" in result.stdout:
+                        # Only fail on critical errors after first pass
+                        if "!" in result.stdout:
                             raise RenderingError(
                                 f"XeLaTeX compilation failed (run {run+1})",
                                 context={"source": str(combined_tex), "output": str(output_file)}
@@ -276,7 +343,7 @@ class PDFRenderer:
                 if log_file.exists():
                     log_content = log_file.read_text()
                     # If no warnings/issues found, we can stop early
-                    if run > 0 and "Rerun" not in log_content and "undefined" not in log_content.lower():
+                    if "Rerun" not in log_content and "undefined" not in log_content.lower():
                         logger.info(f"  All references resolved after pass {run+1}")
                         break
             
@@ -356,7 +423,7 @@ class PDFRenderer:
         return ""
 
     def _fix_figure_paths(self, tex_content: str, manuscript_dir: Path, output_dir: Path) -> str:
-        """Fix figure paths in LaTeX content for proper compilation.
+        r"""Fix figure paths in LaTeX content for proper compilation.
         
         Converts relative paths like ../output/figures/ to paths relative to the
         LaTeX compilation directory, ensuring \includegraphics commands work correctly.
@@ -372,8 +439,6 @@ class PDFRenderer:
         Returns:
             LaTeX content with corrected figure paths
         """
-        import re
-        
         # Pattern to match \includegraphics with or without options
         # Handles both \includegraphics{path} and \includegraphics[options]{path}
         pattern = r'\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}'
@@ -382,33 +447,61 @@ class PDFRenderer:
         fixed_count = 0
         paths_fixed = []
         
+        def normalize_path(path_str: str) -> str:
+            """Normalize path to handle Unicode and encoding issues."""
+            # Normalize Unicode characters using NFC (composition form)
+            normalized = unicodedata.normalize('NFC', path_str)
+            return normalized
+        
+        def extract_filename(path_str: str) -> str:
+            """Extract filename from various path formats."""
+            # Normalize first
+            path_str = normalize_path(path_str)
+            
+            # Handle various path formats
+            path_variations = [
+                '../output/figures/',
+                'output/figures/',
+                '../figures/',
+                './figures/',
+            ]
+            
+            for prefix in path_variations:
+                if prefix in path_str:
+                    return path_str.split(prefix)[-1]
+            
+            # If no prefix matched, could be just a filename or absolute path
+            if '/' in path_str or '\\' in path_str:
+                # Split by last / or \
+                return re.split(r'[/\\]', path_str)[-1]
+            else:
+                # Just a filename
+                return path_str
+        
         def fix_path(match):
             nonlocal fixed_count
             
             old_path = match.group(1)
             original_path = old_path
             
-            # Handle various path formats
-            if '../output/figures/' in old_path:
-                # Extract just the filename
-                filename = old_path.split('../output/figures/')[-1]
-            elif 'output/figures/' in old_path:
-                # Extract just the filename
-                filename = old_path.split('output/figures/')[-1]
-            elif '../figures/' in old_path:
-                # Already in correct format, skip
+            # Check if already in correct format
+            if old_path.startswith('../figures/'):
                 return match.group(0)
-            else:
-                # Could be just a filename, or an absolute path
-                filename = old_path.split('/')[-1] if '/' in old_path else old_path
+            
+            # Extract filename, handling encoding issues
+            filename = extract_filename(old_path)
             
             # Build new path relative to compilation directory
             # Since we're compiling in output_dir (output/pdf), figures are in ../figures/
             new_path = f'../figures/{filename}'
             
-            # Verify the figure file exists
+            # Verify the figure file exists (try both normalized and non-normalized)
             fig_full_path = figures_dir / filename
-            if fig_full_path.exists():
+            fig_normalized = figures_dir / normalize_path(filename)
+            
+            file_exists = fig_full_path.exists() or fig_normalized.exists()
+            
+            if file_exists:
                 fixed_count += 1
                 paths_fixed.append(f"{original_path} → {new_path}")
                 # Preserve options if present
@@ -425,15 +518,25 @@ class PDFRenderer:
                 logger.warning(f"⚠️  Figure file not found: {fig_full_path}")
                 fixed_count += 1
                 paths_fixed.append(f"{original_path} → {new_path} (FILE NOT FOUND)")
-                return f'\\includegraphics{{{new_path}}}'
+                # Still return fixed path so compilation continues
+                full_match = match.group(0)
+                if '[' in full_match:
+                    options_start = full_match.find('[')
+                    options_end = full_match.find(']')
+                    options = full_match[options_start:options_end+1]
+                    return f'\\includegraphics{options}{{{new_path}}}'
+                else:
+                    return f'\\includegraphics{{{new_path}}}'
         
         # Apply path fixes
         tex_content = re.sub(pattern, fix_path, tex_content)
         
         if fixed_count > 0:
             logger.info(f"✓ Fixed {fixed_count} figure path(s)")
-            for path_info in paths_fixed:
+            for path_info in paths_fixed[:10]:  # Show first 10
                 logger.debug(f"  {path_info}")
+            if len(paths_fixed) > 10:
+                logger.debug(f"  ... and {len(paths_fixed) - 10} more")
         
         return tex_content
 

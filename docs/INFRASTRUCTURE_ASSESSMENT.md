@@ -95,7 +95,7 @@ publishing.track_metrics(doi)
 
 ### Eliminated Redundancies
 
-1. **PDF Rendering**: Consolidated from `repo_utilities/render_pdf.sh` → `infrastructure/rendering/`
+1. **PDF Rendering**: Implemented in `infrastructure/rendering/`, orchestrated by `scripts/03_render_pdf.py`
 2. **Configuration**: Unified config system across all modules
 3. **Exception Handling**: Single hierarchy for all modules
 4. **Logging**: Shared logging utilities
@@ -154,7 +154,7 @@ publishing.track_metrics(doi)
 - [x] LaTeX compilation utilities
 - [x] Configuration system
 - [x] Complete documentation
-- [x] Wrapper script (`repo_utilities/render_all.py`)
+- [x] Pipeline orchestrator (`scripts/run_all.py`)
 - [x] 10 tests (all passing)
 
 #### Publishing Extension ✅
@@ -339,8 +339,9 @@ Located in `scripts/`:
 
 ### Utility Scripts (Generic - Reusable)
 
-Located in `repo_utilities/`:
-- ✅ `render_pdf.sh` - PDF generation (now calls rendering module)
+Located in `scripts/`:
+- ✅ `run_all.py` - Complete pipeline orchestrator (6 stages)
+- ✅ `03_render_pdf.py` - PDF generation (calls rendering module)
 - ✅ `search_literature.py` - **NEW** Literature search CLI
 - ✅ `render_all.py` - **NEW** Multi-format rendering CLI
 - ✅ `publish_release.py` - **NEW** Publishing automation CLI

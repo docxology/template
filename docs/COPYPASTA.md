@@ -41,8 +41,7 @@ Get started immediately with this **[research project template](https://github.c
 ### **🚀 Running the Build Pipeline**
 ```bash
 # Clean all outputs and regenerate everything
-./repo_utilities/clean_output.sh
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 ```
 
 ### **🧪 Running Tests**
@@ -66,10 +65,10 @@ pytest tests/ --cov=src --cov-report=term-missing
 uv sync
 
 # Run complete pipeline
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 
-# Clean outputs
-./repo_utilities/clean_output.sh
+# Run complete pipeline (includes cleanup)
+python3 scripts/run_all.py
 ```
 
 ### **📊 Development Workflow**
@@ -83,7 +82,7 @@ uv run python scripts/example_figure.py
 uv run python repo_utilities/validate_markdown.py
 
 # 4. Build complete pipeline
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 ```
 
 ## 📱 **Social Media Posts**
@@ -131,7 +130,7 @@ cd template
 uv sync
 
 # Generate everything
-./repo_utilities/render_pdf.sh
+python3 scripts/run_all.py
 ```
 
 The template automatically handles LaTeX compilation, figure integration, and generates publication-ready PDFs. Perfect for academic papers and research documentation. Check the **[how to use guide](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** for comprehensive step-by-step instructions and the **[architecture guide](https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** for detailed system design.
@@ -261,7 +260,7 @@ graph TB
     end
     
     subgraph "Build Pipeline"
-        RENDER[🚀 render_pdf.sh<br/>Orchestrator]
+        RENDER[🚀 run_all.py<br/>Pipeline Orchestrator]
         RENDER -->|"runs tests"| TESTS
         RENDER -->|"executes scripts"| SCRIPTS
         RENDER -->|"builds PDFs"| OUTPUT
@@ -410,7 +409,7 @@ graph LR
 - [ ] Click **[Use this template](https://github.com/docxology/template)** on GitHub
 - [ ] Clone your new repository
 - [ ] Run `uv sync` to install dependencies
-- [ ] Execute `./repo_utilities/render_pdf.sh` to test the pipeline
+- [ ] Execute `python3 scripts/run_all.py` to test the pipeline
 
 ### **🔧 Customization Steps**
 - [ ] Edit `repo_utilities/rename_project.sh` with your project details

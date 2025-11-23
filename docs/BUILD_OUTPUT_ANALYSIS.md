@@ -217,7 +217,7 @@ The citation exists and is properly formatted. ✅
 **Result:** ✅ **SUCCESSFUL**
 
 ```
-✅ Built combined PDF: /Users/4d/Documents/GitHub/template/output/pdf/project_combined.pdf
+✅ Built combined PDF: /Users/4d/Documents/GitHub/template/output/project_combined.pdf (copied to top-level by stage 5)
 ✅ Combined document built successfully
 ```
 
@@ -413,7 +413,7 @@ cat: /Users/4d/Documents/GitHub/template/manuscript//Users/4d/Documents/GitHub/t
    - None - all critical functionality works correctly
 
 2. **Medium Priority (Code Quality):**
-   - Fix path concatenation warning in `render_pdf.sh` (cosmetic only)
+   - All path handling now in Python scripts (no shell script warnings)
    - Add more descriptive error messages for missing environment variables
    - Consider making IDE-friendly PDF generation more robust
 
@@ -446,13 +446,11 @@ To verify everything works on your system:
 
 ```bash
 # 1. Clean start
-./repo_utilities/clean_output.sh
+# 1. Run complete pipeline (all 6 stages)
+python3 scripts/run_all.py
 
-# 2. Full regeneration
-./generate_pdf_from_scratch.sh
-
-# 3. Open final manuscript
-./repo_utilities/open_manuscript.sh
+# 2. Open final manuscript
+open output/project_combined.pdf
 ```
 
 Expected result: Complete PDF manuscript with all figures, equations, and citations properly rendered.

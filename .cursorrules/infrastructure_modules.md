@@ -269,10 +269,202 @@ Before committing:
 - Test with real data
 - Design for reusability
 
+## Complete Example Module
+
+### Module Structure
+
+```
+infrastructure/example_module/
+├── __init__.py           # Public API exports
+├── core.py              # Core functionality
+├── cli.py               # Command-line interface (optional)
+├── config.py            # Configuration management (optional)
+├── AGENTS.md            # Comprehensive documentation
+└── README.md            # Quick reference
+```
+
+### __init__.py Example
+
+```python
+"""Example module - brief description.
+
+Complete module description including main features and use cases.
+
+Example:
+    >>> from infrastructure.example_module import process_data
+    >>> result = process_data("input")
+    >>> print(result)
+    'processed'
+"""
+
+from .core import process_data, validate_input, ExampleError
+from .config import ExampleConfig
+
+__all__ = [
+    "process_data",
+    "validate_input",
+    "ExampleError",
+    "ExampleConfig",
+]
+```
+
+### core.py Example
+
+```python
+"""Core functionality for example module."""
+
+from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.exceptions import ValidationError
+
+logger = get_logger(__name__)
+
+class ExampleError(Exception):
+    """Example module error."""
+    pass
+
+def process_data(data: str) -> str:
+    """Process data.
+    
+    Args:
+        data: Input data
+        
+    Returns:
+        Processed result
+        
+    Raises:
+        ValidationError: If data is invalid
+        
+    Example:
+        >>> process_data("hello")
+        'HELLO'
+    """
+    logger.debug(f"Processing data: {data}")
+    
+    try:
+        result = validate_input(data)
+        logger.info(f"Processing completed: {result}")
+        return result.upper()
+    except ValueError as e:
+        logger.error(f"Processing failed: {e}")
+        raise ValidationError("Invalid data") from e
+
+def validate_input(data: str) -> str:
+    """Validate input data.
+    
+    Args:
+        data: Input to validate
+        
+    Returns:
+        Validated data
+        
+    Raises:
+        ValueError: If invalid
+    """
+    if not isinstance(data, str):
+        raise ValueError("Data must be string")
+    if len(data) == 0:
+        raise ValueError("Data cannot be empty")
+    return data
+```
+
+### config.py Example
+
+```python
+"""Configuration for example module."""
+
+from dataclasses import dataclass
+import os
+
+@dataclass
+class ExampleConfig:
+    """Example module configuration."""
+    
+    timeout: int = 30
+    retries: int = 3
+    debug: bool = False
+    
+    @classmethod
+    def from_env(cls) -> "ExampleConfig":
+        """Load configuration from environment variables.
+        
+        Environment variables:
+            EXAMPLE_TIMEOUT: Request timeout in seconds (default: 30)
+            EXAMPLE_RETRIES: Number of retries (default: 3)
+            EXAMPLE_DEBUG: Enable debug mode (default: false)
+        
+        Returns:
+            ExampleConfig instance
+        """
+        return cls(
+            timeout=int(os.getenv("EXAMPLE_TIMEOUT", "30")),
+            retries=int(os.getenv("EXAMPLE_RETRIES", "3")),
+            debug=os.getenv("EXAMPLE_DEBUG", "false").lower() == "true",
+        )
+```
+
+### cli.py Example
+
+```python
+"""Command-line interface for example module."""
+
+import argparse
+from infrastructure.core.logging_utils import get_logger
+from .core import process_data
+from .config import ExampleConfig
+
+logger = get_logger(__name__)
+
+def main() -> int:
+    """Main entry point.
+    
+    Returns:
+        Exit code
+    """
+    parser = argparse.ArgumentParser(description="Example module CLI")
+    parser.add_argument("data", help="Data to process")
+    parser.add_argument("--debug", action="store_true", help="Enable debug mode")
+    
+    args = parser.parse_args()
+    
+    try:
+        config = ExampleConfig(debug=args.debug)
+        result = process_data(args.data)
+        print(f"Result: {result}")
+        return 0
+    except Exception as e:
+        logger.error(f"Error: {e}", exc_info=True)
+        return 1
+
+if __name__ == "__main__":
+    exit(main())
+```
+
+## Integration Checklist
+
+Before merging a new infrastructure module:
+
+- [ ] Module structure matches recommended organization
+- [ ] 100% test coverage verified
+- [ ] All public APIs have type hints
+- [ ] AGENTS.md covers all features
+- [ ] README.md has working quick-start
+- [ ] Error handling uses custom exceptions
+- [ ] Logging uses unified system
+- [ ] Configuration documented
+- [ ] CLI interface working (if applicable)
+- [ ] No imports from project-specific code
+- [ ] infrastructure/__init__.py updated
+- [ ] infrastructure/AGENTS.md updated
+- [ ] Tests pass locally
+- [ ] No linter errors
+
 ## References
 
-- [Infrastructure AGENTS.md](../infrastructure/AGENTS.md)
-- [Two-Layer Architecture](../docs/TWO_LAYER_ARCHITECTURE.md)
-- [Testing Guide](../docs/TESTING_GUIDE.md)
-- [Error Handling Guide](../docs/ERROR_HANDLING_GUIDE.md)
+- [Infrastructure AGENTS.md](../infrastructure/AGENTS.md) - Module organization
+- [Two-Layer Architecture](../docs/TWO_LAYER_ARCHITECTURE.md) - Architecture explanation
+- [Testing Guide](testing_standards.md) - Testing infrastructure code
+- [Error Handling Guide](error_handling.md) - Exception patterns
+- [Logging Guide](python_logging.md) - Logging standards
+- [Documentation Guide](documentation_standards.md) - Writing module docs
+- [Type Hints Guide](type_hints_standards.md) - Type annotation patterns
 

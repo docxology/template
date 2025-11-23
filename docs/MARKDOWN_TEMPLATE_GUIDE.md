@@ -203,7 +203,7 @@ The `generate_glossary.py` script:
 
 ### Complete Pipeline
 
-The `render_pdf.sh` script:
+The pipeline orchestrator (`scripts/run_all.py`):
 
 1. **Runs tests** with 100% coverage requirement
 2. **Executes scripts** to generate figures and data (validating src/ integration)
@@ -310,7 +310,7 @@ This template enforces the **thin orchestrator pattern** where:
 - **`src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods
 - **`tests/`** ensures 100% coverage of `src/` functionality
-- **`render_pdf.sh`** orchestrates the entire pipeline
+- **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
 
 ### Script Requirements
 

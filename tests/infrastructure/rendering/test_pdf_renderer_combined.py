@@ -395,3 +395,4 @@ class TestFigureVerification:
             assert (figures_dir / "exists.png").exists()
             assert not (figures_dir / "missing.png").exists()
 
+

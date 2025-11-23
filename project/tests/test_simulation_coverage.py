@@ -4,7 +4,7 @@ import pytest
 from unittest.mock import patch, mock_open
 from simulation import SimulationBase, SimpleSimulation, SimulationState
 
-class TestAbstractMethodsCoverage(SimulationBase):
+class AbstractMethodsCoverageHelper(SimulationBase):
     """Helper class to call abstract methods for coverage."""
     def __init__(self):
         super().__init__()
@@ -25,7 +25,7 @@ def test_abstract_methods_coverage():
     # However, our helper class implements them but calls super().
     
     # This is a bit tricky with ABCs. If we implement them, we can instantiate.
-    sim = TestAbstractMethodsCoverage()
+    sim = AbstractMethodsCoverageHelper()
     
     # Call the methods to execute the 'pass' statements in the base class
     sim.initialize()

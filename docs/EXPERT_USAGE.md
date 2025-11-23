@@ -213,7 +213,7 @@ jobs:
     
     - name: Run build pipeline
       run: |
-        ./repo_utilities/render_pdf.sh
+        python3 scripts/run_all.py
     
     - name: Upload PDFs
       uses: actions/upload-artifact@v3
