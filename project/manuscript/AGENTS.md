@@ -109,6 +109,30 @@ Citations in markdown:
 According to \cite{author2023}, the method...
 ```
 
+### Bibliography Processing Workflow
+
+The citation system uses **BibTeX with plainnat style** for robust bibliography management:
+
+**Processing Flow:**
+1. Manuscript markdown files contain `\cite{key}` commands
+2. During PDF rendering, Pandoc preserves these LaTeX citation commands (no `--citeproc`)
+3. The `references.bib` file is **copied into the build directory** to satisfy BibTeX security constraints
+4. XeLaTeX generates `.aux` file listing all citations
+5. BibTeX processes the `.aux` file and generates `.bbl` (bibliography list) file
+6. XeLaTeX performs multiple compilation passes to resolve all citations and cross-references
+
+**Key Points:**
+- Citation keys are **case-sensitive** (use exact keys from `references.bib`)
+- All cited entries must exist in `references.bib`
+- The References section uses `\bibliography{references}` and `\nocite{*}` commands in `99_references.md`
+- Bibliography style is set to `plainnat` for numbered citations like `[1]`, `[2]`
+
+**Bibliography Security:**
+- BibTeX operates in "paranoid" security mode by default
+- It restricts file access across directories
+- Solution: Copy `references.bib` into the compilation directory before running BibTeX
+- This ensures all files are local to the execution context
+
 ## Cross-Referencing
 
 ### Section References
@@ -141,6 +165,28 @@ Using \eqref{eq:myequation}, we derive...
 
 As shown in \ref{fig:example}...
 ```
+
+### Figure Insertion and Path Resolution
+
+**Figure Storage:**
+- All figures are generated to or placed in `project/output/figures/`
+- Supported formats: PNG, PDF, JPG, JPEG
+
+**Path References:**
+- Use relative paths from the `project/` directory: `../output/figures/filename.png`
+- Paths are resolved relative to the manuscript compilation directory
+- The rendering system handles path resolution automatically
+
+**Figure Generation Workflow:**
+1. Scripts in `project/scripts/` generate figures to `project/output/figures/`
+2. Markdown files reference figures using `\includegraphics[width=...]{../output/figures/filename.png}`
+3. Figure labels use LaTeX `\label{fig:label_name}` for cross-referencing
+4. References to figures use `\ref{fig:label_name}` or embedded in figure captions
+
+**Figure Registry:**
+- `project/output/figures/figure_registry.json` maintains a record of all generated figures
+- Includes metadata for each figure (path, label, description)
+- Used by validation systems to verify all figure references
 
 ### Table References
 ```markdown

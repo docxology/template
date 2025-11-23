@@ -150,6 +150,68 @@ The build system automatically orders sections:
 
 This ensures proper document flow with supplemental material clearly separated from main content.
 
+## Citation Management
+
+### Adding Citations
+
+1. Add the bibliography entry to `references.bib`:
+```bibtex
+@article{mykey2024,
+  title={Paper Title},
+  author={Author, Name},
+  journal={Journal Name},
+  year={2024}
+}
+```
+
+2. Cite in markdown using `\cite{}`:
+```markdown
+According to recent research \cite{mykey2024}, this technique...
+```
+
+### Bibliography Processing
+
+- Citations are processed using **BibTeX** with the `plainnat` style
+- The bibliography file (`references.bib`) is copied into the build directory to satisfy BibTeX security constraints
+- All `\cite{}` commands are resolved to numbered citations `[1], [2], ...` during PDF compilation
+- The References section is auto-generated from all cited entries in `references.bib`
+
+## Figure Management
+
+### Adding Figures
+
+1. Generate or save figures to `../output/figures/`
+2. Reference in markdown using LaTeX includegraphics:
+```markdown
+\includegraphics[width=0.9\textwidth]{../output/figures/my_figure.png}
+Figure \ref{fig:my_label} shows...
+```
+
+3. Add labels to your figures:
+```markdown
+\label{fig:my_label}
+```
+
+### Figure Path Resolution
+
+- Figure paths use relative references (`../output/figures/filename.png`)
+- The rendering system resolves paths relative to the `project/` directory
+- All referenced figures must exist before PDF generation
+
+## Troubleshooting
+
+### Citations showing as [?]
+
+- Verify bibliography entry exists in `references.bib`
+- Check for typos in citation keys (case-sensitive)
+- Run `run_all.sh` to regenerate from scratch
+
+### Figures not appearing
+
+- Verify file exists in `project/output/figures/`
+- Check path references use correct relative paths
+- Ensure image format is supported (PNG, PDF, JPG)
+
 ## See Also
 
 - [`AGENTS.md`](AGENTS.md) - Detailed documentation

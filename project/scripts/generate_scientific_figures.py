@@ -206,7 +206,8 @@ def insert_figures_into_manuscript(figure_labels: list[str]) -> None:
     print("\nInserting figures into manuscript...")
     
     # Setup markdown integration
-    manuscript_dir = repo_root / "manuscript"
+    # Use project_root/manuscript since we are in project/scripts/
+    manuscript_dir = project_root / "manuscript"
     markdown_integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
     
     # Find target markdown file (experimental results section)
@@ -238,7 +239,8 @@ def validate_all_figures() -> None:
     """Validate all generated figures."""
     print("\nValidating figures...")
     
-    manuscript_dir = repo_root / "manuscript"
+    # Use project_root/manuscript since we are in project/scripts/
+    manuscript_dir = project_root / "manuscript"
     markdown_integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
     
     # Validate manuscript

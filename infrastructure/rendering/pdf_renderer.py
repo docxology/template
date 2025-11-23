@@ -96,6 +96,27 @@ class PDFRenderer:
     def _process_bibliography(self, tex_file: Path, output_dir: Path, bib_file: Path) -> bool:
         """Process bibliography using bibtex/biber.
         
+        SECURITY AND COMPATIBILITY CONSIDERATIONS:
+        
+        BibTeX operates in "paranoid" mode by default (openout_any=p) which restricts
+        file access across directories. This causes two issues:
+        
+        1. Bibliography File Access: BibTeX cannot read the bibliography file if it's
+           in a different directory than the LaTeX compilation directory. Solution: Copy
+           the bibliography file into the compilation directory before running bibtex.
+        
+        2. Output File Restrictions: BibTeX refuses to write to the .blg (log) file
+           in directories other than the compilation directory. This is a security
+           restriction and is not critical - the bibliography still gets processed
+           correctly even though the log file isn't written.
+        
+        COMPILATION WORKFLOW:
+        - The .aux file (auxiliary) contains citation references from the LaTeX document
+        - BibTeX reads the .aux file to find what citations are needed
+        - BibTeX reads the .bib file to find the bibliography entries
+        - BibTeX writes a .bbl file with formatted bibliography entries
+        - LaTeX then includes the .bbl file in the final document
+        
         Args:
             tex_file: Path to the LaTeX file
             output_dir: Directory containing LaTeX auxiliary files
@@ -117,8 +138,19 @@ class PDFRenderer:
             return False
         
         try:
+            # Copy bibliography file to output directory to avoid bibtex paranoid mode issues
+            # This allows bibtex to access the bibliography file without security restrictions
+            local_bib = output_dir / bib_file.name
+            import shutil
+            shutil.copy2(str(bib_file), str(local_bib))
+            logger.debug(f"Copied bibliography file to: {local_bib}")
+            
             # Run bibtex to generate bibliography
-            cmd = [bibtex_cmd, str(aux_file)]
+            # Important: bibtex must be invoked with a filename relative to the
+            # working directory (not an absolute path), otherwise it will refuse
+            # to write auxiliary files in paranoid mode. Since we set cwd to the
+            # output directory, pass only the aux filename.
+            cmd = [bibtex_cmd, aux_file.name]
             logger.info(f"Processing bibliography with {bibtex_cmd}...")
             
             result = subprocess.run(
@@ -180,15 +212,15 @@ class PDFRenderer:
             "--to=latex",
             "--standalone",
             "--number-sections",
-            "--toc"
+            "--toc",
+            "--natbib"  # Use natbib for bibliography support with BibTeX
         ]
         
-        # Add bibliography if it exists
-        if bib_exists:
-            pandoc_to_tex.extend([
-                "--bibliography=" + str(bib_file),
-                "--citeproc"
-            ])
+        # Note: We do NOT use --citeproc here because we want to preserve LaTeX \cite{}
+        # commands for BibTeX processing. Using --citeproc would have pandoc process
+        # citations directly, bypassing BibTeX. Instead, we let BibTeX handle citations
+        # during the LaTeX compilation phase (see _process_bibliography() below).
+        # The --natbib flag ensures that LaTeX \cite{} commands are properly formatted.
         
         # Add resource paths for figure resolution
         figures_dir = manuscript_dir.parent / "output" / "figures"
@@ -353,17 +385,13 @@ class PDFRenderer:
                 # Rename temporary PDF to final name
                 temp_pdf.rename(output_file)
                 logger.info(f"✅ Successfully generated: {output_file.name}")
-                # Clean up temporary files
-                combined_md.unlink(missing_ok=True)
-                combined_tex.unlink(missing_ok=True)
-                (output_dir / "_combined_manuscript.log").unlink(missing_ok=True)
+                # Note: Temporary files (_combined_manuscript.md, .tex, .log, .bbl, .aux)
+                # are preserved for debugging and reference purposes
                 return output_file
             elif output_file.exists():
                 logger.info(f"✅ Successfully generated: {output_file.name}")
-                # Clean up temporary files
-                combined_md.unlink(missing_ok=True)
-                combined_tex.unlink(missing_ok=True)
-                (output_dir / "_combined_manuscript.log").unlink(missing_ok=True)
+                # Note: Temporary files (_combined_manuscript.md, .tex, .log, .bbl, .aux)
+                # are preserved for debugging and reference purposes
                 return output_file
             else:
                 raise RenderingError(

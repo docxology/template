@@ -179,8 +179,8 @@ This file contains LaTeX preamble commands that will be inserted at the beginnin
 }
 
 % Configure bibliography
-\bibliographystyle{unsrt}  % Unsorted bibliography style
-% Bibliography is handled in 07_references.md
+% Note: Using plainnat with natbib package for proper citation processing
+% The bibliography style and commands (\bibliographystyle and \bibliography) are in 99_references.md
 
 % Simple page break support for document structure
 % Note: Page breaks are handled in the markdown generation, not here
