@@ -250,10 +250,22 @@ class PDFRenderer:
         preamble_content = ""
         if preamble_file.exists():
             preamble_content = self._extract_preamble(preamble_file)
+            if preamble_content:
+                logger.info(f"✓ Extracted preamble from {preamble_file.name}")
+            else:
+                logger.warning(f"⚠️  Preamble file found but no LaTeX content extracted")
+        else:
+            logger.debug(f"No preamble file found at {preamble_file}")
         
         # Generate title page preamble and body commands from config.yaml
         title_page_preamble = self._generate_title_page_preamble(manuscript_dir)
         title_page_body = self._generate_title_page_body(manuscript_dir)
+        
+        # Ensure graphicx package is always included (required for \includegraphics)
+        graphicx_required = r'\usepackage{graphicx}'
+        if graphicx_required not in tex_content:
+            logger.info("⚠️  graphicx package not found in preamble, adding it")
+            preamble_content = graphicx_required + "\n" + preamble_content
         
         if preamble_content or title_page_preamble:
             # Insert preamble and title page preamble commands BEFORE \begin{document}
@@ -272,6 +284,7 @@ class PDFRenderer:
                     combined_preamble +
                     tex_content[begin_doc_idx:]
                 )
+                logger.debug(f"✓ Inserted preamble ({len(combined_preamble)} chars) before \\begin{{document}}")
         
         # Insert title page body commands AFTER \begin{document}
         if title_page_body:
@@ -306,16 +319,30 @@ class PDFRenderer:
                 filename = fig_ref.split('/')[-1]
                 fig_path = figures_dir / filename
                 
+                # Try both normalized and non-normalized paths
+                fig_normalized = figures_dir / unicodedata.normalize('NFC', filename)
+                
                 if fig_path.exists():
                     found_figures.append(filename)
                     logger.debug(f"  ✓ Found: {filename}")
+                elif fig_normalized.exists():
+                    found_figures.append(filename)
+                    logger.debug(f"  ✓ Found (normalized): {filename}")
                 else:
                     missing_figures.append(filename)
                     logger.warning(f"  ✗ Missing: {filename}")
+                    # Check if file exists with similar name
+                    if figures_dir.exists():
+                        similar = [f.name for f in figures_dir.iterdir() 
+                                  if f.name.lower().startswith(filename.split('.')[0].lower())]
+                        if similar:
+                            logger.debug(f"    Similar files found: {', '.join(similar)}")
             
             logger.info(f"  Found: {len(found_figures)}/{len(referenced_figures)} figures")
             if missing_figures:
-                logger.warning(f"  Missing {len(missing_figures)} figure(s): {', '.join(missing_figures)}")
+                logger.warning(f"  Missing {len(missing_figures)} figure(s): {', '.join(missing_figures[:5])}")
+                if len(missing_figures) > 5:
+                    logger.warning(f"  ... and {len(missing_figures) - 5} more missing figures")
         
         # Now compile LaTeX to PDF using xelatex
         cmd = [
@@ -378,6 +405,19 @@ class PDFRenderer:
                     if "Rerun" not in log_content and "undefined" not in log_content.lower():
                         logger.info(f"  All references resolved after pass {run+1}")
                         break
+                    
+                    # Check for graphics-specific issues
+                    if run == max_passes - 1:  # Last pass
+                        graphics_issues = self._check_latex_log_for_graphics_errors(log_file)
+                        if graphics_issues["graphics_errors"]:
+                            for error in graphics_issues["graphics_errors"]:
+                                logger.warning(f"  Graphics error: {error}")
+                        if graphics_issues["missing_files"]:
+                            for missing in graphics_issues["missing_files"]:
+                                logger.warning(f"  Missing file: {missing}")
+                        if graphics_issues["graphics_warnings"]:
+                            for warning in graphics_issues["graphics_warnings"]:
+                                logger.warning(f"  Graphics warning: {warning[:100]}...")
             
             # Check if the temporary PDF was created and rename it
             temp_pdf = output_dir / "_combined_manuscript.pdf"
@@ -430,6 +470,7 @@ class PDFRenderer:
         """Extract LaTeX preamble from markdown file.
         
         Looks for content between ```latex and ``` blocks.
+        Handles various markdown code fence formats.
         
         Args:
             preamble_file: Path to preamble.md file
@@ -437,18 +478,27 @@ class PDFRenderer:
         Returns:
             LaTeX preamble content or empty string if not found
         """
-        content = preamble_file.read_text()
+        try:
+            content = preamble_file.read_text()
+        except Exception as e:
+            logger.warning(f"Failed to read preamble file: {e}")
+            return ""
         
-        # Look for ```latex ... ``` blocks
+        # Look for ```latex ... ``` blocks (handles various line ending styles)
         import re
-        pattern = r'```latex\n(.*?)\n```'
+        # Pattern handles different line endings and optional whitespace
+        pattern = r'```\s*latex\s*\n(.*?)\n\s*```'
         matches = re.findall(pattern, content, re.DOTALL)
         
         if matches:
             # Combine all latex blocks
-            return "\n".join(matches)
-        
-        return ""
+            preamble_lines = [match.strip() for match in matches]
+            result = "\n".join(preamble_lines)
+            logger.debug(f"Extracted {len(matches)} LaTeX preamble block(s) ({len(result)} chars)")
+            return result
+        else:
+            logger.debug(f"No LaTeX code blocks found in {preamble_file.name}")
+            return ""
 
     def _fix_figure_paths(self, tex_content: str, manuscript_dir: Path, output_dir: Path) -> str:
         r"""Fix figure paths in LaTeX content for proper compilation.
@@ -565,8 +615,60 @@ class PDFRenderer:
                 logger.debug(f"  {path_info}")
             if len(paths_fixed) > 10:
                 logger.debug(f"  ... and {len(paths_fixed) - 10} more")
+        else:
+            # No paths fixed - check if there are any figure references at all
+            if pattern and re.search(pattern, tex_content):
+                logger.debug("No figure paths needed fixing (already in correct format)")
         
         return tex_content
+
+    def _check_latex_log_for_graphics_errors(self, log_file: Path) -> dict:
+        """Parse LaTeX log file for graphics-related errors and warnings.
+        
+        Args:
+            log_file: Path to LaTeX .log file
+            
+        Returns:
+            Dictionary with graphics issues found
+        """
+        result = {
+            "graphics_errors": [],
+            "graphics_warnings": [],
+            "missing_files": []
+        }
+        
+        if not log_file.exists():
+            return result
+        
+        try:
+            log_content = log_file.read_text(errors='ignore')
+            
+            # Look for common graphics-related error patterns
+            import re
+            
+            # Pattern for file not found errors
+            file_not_found = re.findall(r'File `([^`]+)` not found', log_content)
+            result["missing_files"].extend(file_not_found)
+            
+            # Pattern for graphics package warnings
+            graphics_warnings = re.findall(
+                r'((?:Package graphics|Graphics Error).*?)(?=\n(?:!|\s*$))',
+                log_content,
+                re.IGNORECASE
+            )
+            result["graphics_warnings"].extend(graphics_warnings)
+            
+            # Check for undefined control sequences related to graphics
+            if r'\includegraphics' in log_content and 'Undefined' in log_content:
+                result["graphics_errors"].append(
+                    "includegraphics command undefined - graphicx package may not be loaded"
+                )
+            
+            return result
+            
+        except Exception as e:
+            logger.warning(f"Error parsing LaTeX log: {e}")
+            return result
 
     def _generate_title_page_preamble(self, manuscript_dir: Path) -> str:
         """Generate LaTeX title page preamble commands from config.yaml metadata.

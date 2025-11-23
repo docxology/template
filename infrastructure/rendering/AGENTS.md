@@ -241,6 +241,8 @@ Use LaTeX figure blocks in markdown:
 See Figure \ref{fig:my_figure} for details.
 ```
 
+**CRITICAL**: Ensure `\usepackage{graphicx}` is included in your preamble (or in `manuscript/preamble.md`). The rendering system automatically ensures this package is loaded before compilation, but it's good to know this requirement.
+
 ### Supported Formats
 
 - PNG (recommended for compatibility)
@@ -301,30 +303,51 @@ Found: 13/14 figures
 
 #### Figures Not Appearing
 
-1. **Check figure generation**:
+**Symptoms**: PDF renders but figures are missing (blank spaces or placeholders).
+
+1. **Verify graphicx package is loaded**:
    ```bash
-   ls -la project/output/figures/
+   grep "usepackage{graphicx}" project/output/pdf/_combined_manuscript.tex
+   ```
+   If not found, the rendering system will automatically add it. Check build output for confirmation.
+
+2. **Check figure generation**:
+   ```bash
+   ls -la project/output/figures/ | grep -E "\.png|\.pdf|\.jpg"
+   ```
+   Generate missing figures: `python3 scripts/02_run_analysis.py`
+
+3. **Verify references in markdown**:
+   ```bash
+   grep -r "includegraphics" project/manuscript/ | head -10
    ```
 
-2. **Verify references in markdown**:
+4. **Check LaTeX compilation log for graphics errors**:
    ```bash
-   grep -r "includegraphics" project/manuscript/
+   tail -150 project/output/pdf/_combined_manuscript.log | grep -A2 -B2 "graphics\|Error\|Warning"
    ```
+   Look for:
+   - "File not found" errors
+   - "Undefined control sequence" (missing graphicx package)
+   - "Cannot find graphics" warnings
 
-3. **Check LaTeX compilation log**:
-   ```bash
-   tail -100 project/output/pdf/_combined_manuscript.log | grep -i "graphics\|error"
-   ```
-
-4. **Verify figure exists with correct filename**:
-   - Check spelling and case sensitivity
-   - Ensure file is in PNG/PDF/JPG format
-   - Verify file is readable
-   - For Unicode filenames, ensure encoding is correct
-
-5. **Check path format in markdown**:
-   - Use: `\includegraphics{../output/figures/name.png}`
+5. **Verify figure path format**:
+   - Correct: `\includegraphics{../output/figures/name.png}`
+   - Also works: `\includegraphics[width=0.8\textwidth]{../output/figures/name.png}`
    - Avoid: `\includegraphics{name.png}` (ambiguous path)
+
+6. **Check file details**:
+   - Filename spelling (case-sensitive on Unix)
+   - File format (PNG/PDF/JPG only)
+   - File is readable: `file project/output/figures/your_figure.png`
+   - For Unicode filenames, check encoding: `ls -l project/output/figures/`
+
+7. **Manually test LaTeX compilation** (advanced):
+   ```bash
+   cd project/output/pdf/
+   xelatex _combined_manuscript.tex
+   ```
+   Look for graphics-related errors in output
 
 #### Missing Figure Warnings
 

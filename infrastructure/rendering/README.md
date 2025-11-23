@@ -77,10 +77,12 @@ Place figures in `project/output/figures/` and reference in markdown:
 Reference in text: Figure \ref{fig:your_figure}
 ```
 
+**Important**: The rendering system automatically ensures `\usepackage{graphicx}` is included in the LaTeX preamble. This package is required for `\includegraphics` commands. If not in your custom preamble (`manuscript/preamble.md`), it will be added automatically during compilation.
+
 **Note**: Figure paths are automatically corrected during rendering. The system handles:
-- Path normalization for various formats
+- Path normalization for various formats (`../output/figures/`, `output/figures/`, etc.)
 - Unicode characters in filenames
-- Missing figure warnings (compilation continues gracefully)
+- Missing figure warnings (compilation continues gracefully, but logs the issue)
 
 ## Common Tasks
 
@@ -144,17 +146,49 @@ Key sections:
 
 ### Figures not appearing in PDF
 
-**Cause**: Incorrect file paths or missing figure files.
+**Cause**: Missing `graphicx` package, incorrect file paths, or missing figure files.
 
 **Solutions**:
-1. Verify figures are in `project/output/figures/` directory
-2. Check figure paths in markdown are correct: `../output/figures/name.png`
-3. Check figure filename matches exactly (case-sensitive):
+1. **Verify graphicx package is loaded** (the system should add it automatically):
+   ```bash
+   grep "usepackage{graphicx}" project/output/pdf/_combined_manuscript.tex
+   ```
+   If missing, ensure `manuscript/preamble.md` contains `\usepackage{graphicx}` or check build logs.
+
+2. **Generate missing figures**:
+   ```bash
+   python3 scripts/02_run_analysis.py
+   ```
+
+3. **Verify figures are in correct location**:
+   ```bash
+   ls -la project/output/figures/ | grep -E "\.png|\.pdf|\.jpg"
+   ```
+
+4. **Check figure paths in markdown** are correct:
+   ```bash
+   grep -r "includegraphics" project/manuscript/ | head -5
+   ```
+   Should be: `\includegraphics{../output/figures/name.png}`
+
+5. **Check filename matches exactly** (case-sensitive):
    ```bash
    ls project/output/figures/ | grep "your_figure"
    ```
-4. For Unicode filenames, ensure they're properly saved
-5. Check LaTeX compilation log for warnings: `cat project/output/pdf/*.log | grep -i "graphic\|image"`
+
+6. **Check LaTeX compilation log** for graphics-specific errors:
+   ```bash
+   tail -150 project/output/pdf/_combined_manuscript.log | grep -i "graphic\|Error"
+   ```
+   Look for:
+   - "File not found" (figure file doesn't exist)
+   - "Undefined control sequence" (graphicx package missing)
+   - "Cannot find" (file path problem)
+
+7. **For Unicode filenames**, ensure proper encoding:
+   ```bash
+   file project/output/figures/your_figure.png
+   ```
 
 ### LaTeX Compilation Errors
 

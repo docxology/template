@@ -269,30 +269,110 @@ cat document.log | grep Error
 ```
 Warning: Figure not found or figures not visible in PDF
 ⚠️  Figure file not found: output/figures/figure.png
+Figures appearing as blank spaces in PDF
 ```
+
+**Root Cause Analysis**:
+
+The rendering system can fail to display figures for several reasons:
+1. **Missing graphicx package** - The LaTeX `\usepackage{graphicx}` may not be loaded
+2. **Figure files not found** - Files don't exist in `project/output/figures/`
+3. **Path resolution issues** - Incorrect relative paths in LaTeX
+4. **File access problems** - Permissions or encoding issues
 
 **Diagnosis:**
 ```bash
-# Check if figures exist
-ls -la project/output/figures/
+# 1. Verify graphicx package is included
+grep "usepackage{graphicx}" project/output/pdf/_combined_manuscript.tex
 
-# Check figure references in markdown
-grep -r "includegraphics" project/manuscript/
+# 2. Check if figures exist
+ls -la project/output/figures/ | grep -E "\.png|\.pdf|\.jpg"
 
-# Verify figure paths in LaTeX source
-ls project/output/pdf/_combined_manuscript.tex && grep includegraphics project/output/pdf/_combined_manuscript.tex | head -5
+# 3. Check figure references in markdown
+grep -r "includegraphics" project/manuscript/ | head -5
 
-# Check LaTeX compilation log
-tail -50 project/output/pdf/_combined_manuscript.log | grep -i "graphics\|error\|warning"
+# 4. Verify figure paths in LaTeX source
+grep "includegraphics" project/output/pdf/_combined_manuscript.tex | head -5
+
+# 5. Check LaTeX compilation log for graphics errors
+tail -150 project/output/pdf/_combined_manuscript.log | grep -A2 -B2 "graphics\|Error\|Warning" | head -30
+
+# 6. Check for specific graphics errors
+grep -i "undefined.*includegraphics\|file.*not found" project/output/pdf/_combined_manuscript.log
 ```
 
 **Solutions:**
-1. Generate missing figures by running analysis scripts
-2. Verify figure filenames match exactly (case-sensitive)
-3. Check file format is PNG, PDF, or JPG
-4. Ensure figures are in `project/output/figures/`
-5. Verify paths in markdown use `../output/figures/filename`
-6. Run full PDF rendering again (paths are fixed automatically)
+
+1. **Ensure graphicx package is loaded** (system adds it automatically):
+   ```bash
+   # Check if it's in the generated LaTeX
+   grep "\\\\usepackage{graphicx}" project/output/pdf/_combined_manuscript.tex
+   
+   # If not found, it should be added automatically. Check build output.
+   # If missing, add to manuscript/preamble.md:
+   echo "\usepackage{graphicx}" >> project/manuscript/preamble.md
+   ```
+
+2. **Generate missing figures**:
+   ```bash
+   python3 scripts/02_run_analysis.py
+   ls -la project/output/figures/
+   ```
+
+3. **Verify figure filenames** (case-sensitive on Unix):
+   ```bash
+   # List all figures
+   ls project/output/figures/
+   
+   # Search for similar filenames
+   ls project/output/figures/ | grep -i "your_figure_name"
+   ```
+
+4. **Check file format** (PNG/PDF/JPG only):
+   ```bash
+   file project/output/figures/your_figure.png
+   # Should output something like: PNG image data, 800 x 600, 8-bit RGB
+   ```
+
+5. **Fix paths in markdown**:
+   ```bash
+   # Correct format
+   grep "includegraphics\[width" project/manuscript/*.md | head -2
+   # Should show: \includegraphics[width=0.8\textwidth]{../output/figures/name.png}
+   
+   # Update if paths are wrong
+   sed -i 's|{figures/|{../output/figures/|g' project/manuscript/*.md
+   ```
+
+6. **Run full rebuild**:
+   ```bash
+   python3 scripts/run_all.py --clean
+   ```
+
+7. **For Unicode filenames**, ensure proper encoding:
+   ```bash
+   file project/output/figures/*
+   # Check encoding of filenames with special characters
+   ls -la project/output/figures/ | cat -v
+   ```
+
+**Advanced Debugging**:
+```bash
+# Check if LaTeX can find figures
+cd project/output/pdf/
+xelatex --interaction=nonstopmode _combined_manuscript.tex 2>&1 | grep -i "graphics\|error"
+
+# Extract log file for detailed analysis
+pdfinfo project_combined.pdf
+```
+
+**Expected Output** (after fix):
+```
+✓ Fixed 14 figure path(s)
+  ../output/figures/convergence_plot.png → ../figures/convergence_plot.png
+  ../output/figures/scalability_analysis.png → ../figures/scalability_analysis.png
+Found: 14/14 figures
+```
 
 ### Title Page Issues
 
