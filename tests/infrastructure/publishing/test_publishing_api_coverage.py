@@ -170,3 +170,4 @@ class TestPublishingApiIntegration:
         # Module should be importable
         assert api is not None
 
+

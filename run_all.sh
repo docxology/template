@@ -10,6 +10,8 @@
 #   Stage 2: Analysis & Figures
 #   Stage 3: PDF Rendering
 #   Stage 4: Output Validation
+#   Stage 5: Copy Outputs
+#   Stage 6: LLM Manuscript Review (optional - requires Ollama)
 #
 # All stages are run in sequence, stopping on first failure.
 # Provides detailed progress reporting and final summary.
@@ -44,6 +46,7 @@ declare -a STAGE_NAMES=(
     "PDF Rendering"
     "Output Validation"
     "Copy Outputs"
+    "LLM Manuscript Review"
 )
 
 declare -a STAGE_SCRIPTS=(
@@ -54,6 +57,7 @@ declare -a STAGE_SCRIPTS=(
     "scripts/03_render_pdf.py"
     "scripts/04_validate_output.py"
     "scripts/05_copy_outputs.py"
+    "scripts/06_llm_review.py"
 )
 
 declare -a STAGE_RESULTS=()
@@ -118,7 +122,7 @@ format_duration() {
 
 clean_output_directories() {
     echo
-    echo -e "${YELLOW}[0/7] Clean Output Directories${NC}"
+    echo -e "${YELLOW}[0/8] Clean Output Directories${NC}"
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     
     local project_output="$REPO_ROOT/project/output"
@@ -128,11 +132,11 @@ clean_output_directories() {
     if [[ -d "$project_output" ]]; then
         log_info "Cleaning project/output/..."
         rm -rf "$project_output"/*
-        # Recreate essential subdirectories
-        mkdir -p "$project_output"/{pdf,figures,data,reports,simulations,slides,web}
+        # Recreate essential subdirectories (including llm for LLM review outputs)
+        mkdir -p "$project_output"/{pdf,figures,data,reports,simulations,slides,web,llm}
         log_success "Cleaned project/output/ (recreated subdirectories)"
     else
-        mkdir -p "$project_output"/{pdf,figures,data,reports,simulations,slides,web}
+        mkdir -p "$project_output"/{pdf,figures,data,reports,simulations,slides,web,llm}
         log_info "Created project/output/ directory structure"
     fi
     
@@ -140,10 +144,10 @@ clean_output_directories() {
     if [[ -d "$root_output" ]]; then
         log_info "Cleaning output/..."
         rm -rf "$root_output"/*
-        mkdir -p "$root_output"/{pdf,figures,data,reports,simulations,slides,web}
+        mkdir -p "$root_output"/{pdf,figures,data,reports,simulations,slides,web,llm}
         log_success "Cleaned output/ (recreated subdirectories)"
     else
-        mkdir -p "$root_output"/{pdf,figures,data,reports,simulations,slides,web}
+        mkdir -p "$root_output"/{pdf,figures,data,reports,simulations,slides,web,llm}
         log_info "Created output/ directory structure"
     fi
     
@@ -173,11 +177,14 @@ run_infrastructure_tests() {
     cd "$REPO_ROOT"
     
     log_info "Running infrastructure module tests..."
+    log_info "(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)"
     
     # Run infrastructure tests with integration tests for full coverage
     # (excluding problematic module interoperability tests that expect non-existent repo_utilities)
+    # Skip requires_ollama tests - they are slow and require external Ollama service
     if python3 -m pytest tests/infrastructure/ tests/test_coverage_completion.py \
         --ignore=tests/integration/test_module_interoperability.py \
+        -m "not requires_ollama" \
         --cov=infrastructure \
         --cov-report=term-missing \
         --cov-report=html \
@@ -271,6 +278,30 @@ run_copy_outputs() {
     fi
 }
 
+run_llm_review() {
+    log_stage 8 "${STAGE_NAMES[7]}"
+    
+    cd "$REPO_ROOT"
+    
+    log_info "Running LLM manuscript review (requires Ollama)..."
+    
+    # Run LLM review - exit code 2 means skipped (Ollama not available)
+    local exit_code
+    python3 scripts/06_llm_review.py
+    exit_code=$?
+    
+    if [[ $exit_code -eq 0 ]]; then
+        log_success "LLM manuscript review complete"
+        return 0
+    elif [[ $exit_code -eq 2 ]]; then
+        log_info "LLM review skipped (Ollama not available)"
+        return 0  # Not a failure, just skipped
+    else
+        log_error "LLM manuscript review failed"
+        return 1
+    fi
+}
+
 # ============================================================================
 # Main Pipeline
 # ============================================================================
@@ -357,6 +388,16 @@ main() {
     STAGE_RESULTS[6]=0
     STAGE_DURATIONS[6]=$(get_elapsed_time "$stage_start" "$stage_end")
     
+    # Stage 8: LLM Manuscript Review (optional - graceful skip if Ollama unavailable)
+    local stage_start=$(date +%s)
+    if ! run_llm_review; then
+        log_error "Pipeline failed at Stage 8 (LLM Manuscript Review)"
+        return 1
+    fi
+    local stage_end=$(date +%s)
+    STAGE_RESULTS[7]=0
+    STAGE_DURATIONS[7]=$(get_elapsed_time "$stage_start" "$stage_end")
+    
     # Success - print summary
     local pipeline_end=$(date +%s)
     local total_duration=$(get_elapsed_time "$pipeline_start" "$pipeline_end")
@@ -391,6 +432,7 @@ print_summary() {
     echo "  • PDF files: project/output/pdf/"
     echo "  • Figures: project/output/figures/"
     echo "  • Data files: project/output/data/"
+    echo "  • LLM reviews: project/output/llm/ (if Ollama available)"
     echo
     log_success "Pipeline complete - ready for deployment"
     echo

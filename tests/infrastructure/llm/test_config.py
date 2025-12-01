@@ -17,16 +17,16 @@ class TestLLMConfig:
         config = LLMConfig()
         assert config is not None
         assert config.base_url == "http://localhost:11434"
-        assert config.default_model == "llama3"
+        assert config.default_model == "qwen3:4b"
 
     def test_config_defaults(self):
         """Test config default values."""
         config = LLMConfig()
         assert config.base_url == "http://localhost:11434"
-        assert config.default_model == "llama3"
+        assert config.default_model == "qwen3:4b"
         assert config.temperature == 0.7
         assert config.max_tokens == 2048
-        assert config.context_window == 4096
+        assert config.context_window == 131072  # 128K default for large context models
         assert config.timeout == 60.0
         assert config.top_p == 0.9
         assert config.seed is None
@@ -113,7 +113,7 @@ class TestLLMConfigFromEnv:
         assert config is not None
         assert isinstance(config, LLMConfig)
         assert config.base_url == "http://localhost:11434"
-        assert config.default_model == "llama3"
+        assert config.default_model == "qwen3:4b"
         assert config.temperature == 0.7
 
     def test_config_from_env_ollama_host(self, clean_llm_env):
@@ -169,6 +169,11 @@ class TestLLMConfigFromEnv:
         os.environ["LLM_CONTEXT_WINDOW"] = "16384"
         config = LLMConfig.from_env()
         assert config.context_window == 16384
+
+    def test_config_from_env_context_window_default(self, clean_llm_env):
+        """Test default context_window matches class default (131072 = 128K tokens)."""
+        config = LLMConfig.from_env()
+        assert config.context_window == 131072  # Must match class default
 
     def test_config_from_env_timeout(self, clean_llm_env):
         """Test LLM_TIMEOUT environment variable."""

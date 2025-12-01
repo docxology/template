@@ -82,3 +82,4 @@ class TestValidateMarkdownCliIntegration:
         # Module should be importable
         assert validate_markdown_cli is not None
 
+

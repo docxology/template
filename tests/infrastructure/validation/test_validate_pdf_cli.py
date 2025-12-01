@@ -33,3 +33,4 @@ class TestValidatePdfCliIntegration:
         pdf_file.write_bytes(b"%PDF-1.4 mock content")
         assert validate_pdf_cli is not None
 
+

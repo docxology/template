@@ -34,7 +34,7 @@ from infrastructure.core.exceptions import PipelineError
 logger = get_logger(__name__)
 
 
-def clean_output_directories() -> None:
+def clean_output_directories(total_stages: int) -> float:
     """Clean output directories for a fresh pipeline start.
     
     Removes all contents from both project/output/ and output/ directories,
@@ -42,7 +42,14 @@ def clean_output_directories() -> None:
     
     This ensures each pipeline run starts with a clean state and all
     generated outputs are fresh.
+    
+    Args:
+        total_stages: Total number of stages for display
+        
+    Returns:
+        Duration of the clean operation in seconds
     """
+    start_time = time.time()
     repo_root = Path(__file__).parent.parent
     
     output_dirs = [
@@ -52,7 +59,7 @@ def clean_output_directories() -> None:
     
     subdirs = ["pdf", "figures", "data", "reports", "simulations", "slides", "web"]
     
-    logger.info("\n[0/N] Clean Output Directories")
+    logger.info(f"\n[0/{total_stages}] Clean Output Directories")
     logger.info("-" * 70)
     
     for output_dir in output_dirs:
@@ -76,6 +83,7 @@ def clean_output_directories() -> None:
         log_success(f"Cleaned {relative_path}/ (recreated subdirectories)", logger)
     
     log_success("Output directories cleaned - fresh start", logger)
+    return time.time() - start_time
 
 
 def discover_orchestrators() -> list[Path]:
@@ -151,11 +159,12 @@ def run_stage(stage_script: Path, stage_num: int, total_stages: int) -> int:
         return 1
 
 
-def run_pipeline(orchestrators: list[Path]) -> int:
+def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0) -> int:
     """Execute all pipeline stages in sequence.
     
     Args:
         orchestrators: List of orchestrator script paths to execute
+        clean_duration: Duration of the clean stage (if already run)
         
     Returns:
         Exit code (0=all stages succeeded, 1=at least one stage failed)
@@ -168,12 +177,20 @@ def run_pipeline(orchestrators: list[Path]) -> int:
     
     log_header("COMPLETE PIPELINE ORCHESTRATION", logger)
     
-    logger.info(f"\nFound {len(orchestrators)} stage(s) to execute:")
+    total_stages = len(orchestrators) + 1  # +1 for clean stage
+    logger.info(f"\nFound {total_stages} stage(s) to execute (including clean):")
+    logger.info("  0. Clean Output Directories")
     for i, script in enumerate(orchestrators, 1):
         logger.info(f"  {i}. {script.name}")
     
-    # Track execution
-    stage_results = []
+    # Track execution - include clean stage
+    stage_results = [
+        {
+            'name': 'clean_output_directories',
+            'exit_code': 0,
+            'duration': clean_duration,
+        }
+    ]
     start_time = time.time()
     
     # Execute each stage
@@ -195,7 +212,7 @@ def run_pipeline(orchestrators: list[Path]) -> int:
             log_success(f"Stage {i} completed ({stage_duration:.1f}s)", logger)
     
     # Generate summary
-    total_duration = time.time() - start_time
+    total_duration = time.time() - start_time + clean_duration
     return_summary(stage_results, total_duration)
     
     # Return appropriate exit code
@@ -217,7 +234,7 @@ def return_summary(results: list[dict], total_duration: float) -> None:
     logger.info(f"\nStages Executed: {len(results)}")
     logger.info(f"Total Time: {total_duration:.1f}s\n")
     
-    for i, result in enumerate(results, 1):
+    for i, result in enumerate(results):
         stage_name = result['name'].replace('_', ' ').title()
         exit_code = result['exit_code']
         duration = result['duration']
@@ -227,6 +244,7 @@ def return_summary(results: list[dict], total_duration: float) -> None:
         else:
             status = "❌ FAIL"
         
+        # Stage 0 is clean, others are 1-indexed
         logger.info(f"{status}: Stage {i:02d} - {stage_name} ({duration:.1f}s)")
     
     # Final summary
@@ -259,17 +277,19 @@ def main() -> int:
     """)
     
     try:
-        # Stage 0: Clean output directories for fresh start
-        clean_output_directories()
-        
-        # Discover stages
+        # Discover stages first to get total count
         orchestrators = discover_orchestrators()
         
         if not orchestrators:
             raise PipelineError("No pipeline stages found")
         
-        # Run pipeline
-        exit_code = run_pipeline(orchestrators)
+        total_stages = len(orchestrators) + 1  # +1 for clean stage
+        
+        # Stage 0: Clean output directories for fresh start
+        clean_duration = clean_output_directories(total_stages)
+        
+        # Run pipeline with clean duration
+        exit_code = run_pipeline(orchestrators, clean_duration)
         
         # Final exit
         if exit_code == 0:

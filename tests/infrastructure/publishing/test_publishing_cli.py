@@ -325,3 +325,4 @@ class TestCliModuleStructure:
         assert hasattr(cli, 'generate_citation_command')
         assert hasattr(cli, 'publish_zenodo_command')
 
+

@@ -317,8 +317,8 @@ python3 scripts/run_all.py
 ### Manual Execution Options
 
 ```bash
-# Run only tests
-python3 -m pytest tests/ --cov=src --cov-report=html
+# Run complete test suite (infrastructure + project)
+python3 scripts/01_run_tests.py
 
 # Run only project scripts
 python3 scripts/02_run_analysis.py
@@ -372,11 +372,12 @@ python3 -m infrastructure.validation.cli markdown manuscript/ --strict
 ### Test Coverage
 
 ```bash
-# Run tests with coverage report
-python3 -m pytest tests/ --cov=src --cov-report=html
+# Run both infrastructure and project tests via orchestrator
+python3 scripts/01_run_tests.py
 
-# Generate coverage report only
-python3 -m pytest tests/ --cov=src --cov-report=html --cov-report=term-missing
+# Or run manually with coverage reports
+python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
+python3 -m pytest project/tests/ --cov=project/src --cov-report=html
 ```
 
 **Coverage Requirements**:
@@ -404,17 +405,17 @@ Tests follow the **thin orchestrator pattern** principles:
 ### Running Tests
 
 ```bash
-# All tests with coverage
-python3 -m pytest tests/ --cov=src --cov-report=term-missing
+# All tests via orchestrator (recommended)
+python3 scripts/01_run_tests.py
 
 # Specific test file
-python3 -m pytest tests/test_example.py -v
+python3 -m pytest project/tests/test_example.py -v
 
-# Integration tests only
-python3 -m pytest tests/test_integration_pipeline.py
+# Infrastructure tests with coverage
+python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
 
-# With HTML coverage report
-python3 -m pytest tests/ --cov=src --cov-report=html
+# Project tests with coverage
+python3 -m pytest project/tests/ --cov=project/src --cov-report=html
 ```
 
 ## 📤 Output Formats
@@ -713,11 +714,12 @@ python3 -m infrastructure.validation.cli pdf output/pdf/
 
 #### Tests Failing
 ```bash
-# Ensure coverage requirements met
-python3 -m pytest tests/ --cov=src --cov-report=term-missing
+# Ensure coverage requirements met for both suites
+python3 scripts/01_run_tests.py
 
-# Check for missing test coverage
-# Look for lines marked "missing" in coverage report
+# Or run individually with coverage reports
+python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
+python3 -m pytest project/tests/ --cov=project/src --cov-fail-under=70
 ```
 
 #### Scripts Failing
@@ -883,12 +885,3 @@ Key log files for debugging:
 - ✅ Reproducible outputs (deterministic with fixed seeds)
 - ✅ 40 new tests (100% passing) for new modules
 - ✅ 85%+ coverage on new infrastructure modules
-
-**Documentation Updates:**
-- ✅ 4 new module AGENTS.md files
-- ✅ 4 new module README.md files
-- ✅ .cursorrules/ comprehensive development standards
-- ✅ Integration test suite demonstrating interoperability
-- ✅ Complete API reference for all new modules
-
-**Ready for production use and research deployment (v2.0).**

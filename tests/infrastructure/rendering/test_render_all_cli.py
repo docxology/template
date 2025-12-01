@@ -76,3 +76,4 @@ class TestRenderAllCliModule:
         """Test that RenderManager is imported."""
         assert hasattr(render_all_cli, 'RenderManager')
 
+

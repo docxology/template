@@ -12,9 +12,10 @@ Development standards and coding guidelines for the Research Project Template.
 - **error_handling.md** - Exception handling patterns
 - **python_logging.md** - Logging standards and best practices
 - **infrastructure_modules.md** - Infrastructure module development guide
-- **testing_standards.md** - Testing patterns and coverage (NEW)
-- **documentation_standards.md** - AGENTS.md and README.md writing guide (NEW)
-- **type_hints_standards.md** - Type annotation patterns (NEW)
+- **testing_standards.md** - Testing patterns and coverage
+- **documentation_standards.md** - AGENTS.md and README.md writing guide
+- **type_hints_standards.md** - Type annotation patterns
+- **llm_standards.md** - LLM/Ollama integration patterns (NEW)
 
 ## Key Principles
 
@@ -190,6 +191,7 @@ Before commit:
 - Testing → [testing_standards.md](testing_standards.md)
 - Building modules → [infrastructure_modules.md](infrastructure_modules.md)
 - Writing docs → [documentation_standards.md](documentation_standards.md)
+- Using LLM/Ollama → [llm_standards.md](llm_standards.md)
 
 ## More Info
 

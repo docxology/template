@@ -34,3 +34,4 @@ class TestGenerateGlossaryCli:
                 except Exception:
                     pass  # May require additional setup
 
+

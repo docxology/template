@@ -174,7 +174,6 @@ def verify_source_structure() -> bool:
     optional_dirs = [
         'scripts',             # Optional: orchestration scripts (can be elsewhere)
         'tests',               # Optional: infrastructure tests
-        'repo_utilities',      # Optional: legacy build scripts (render_pdf.sh, etc.)
     ]
     
     all_present = True

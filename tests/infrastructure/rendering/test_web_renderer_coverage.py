@@ -129,3 +129,4 @@ class TestWebRendererIntegration:
         # Module should be importable
         assert web_renderer is not None
 
+

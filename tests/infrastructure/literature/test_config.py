@@ -1,4 +1,8 @@
-"""Tests for infrastructure.literature.config module."""
+"""Tests for infrastructure.literature.config module.
+
+Tests pure logic configuration without network access.
+"""
+import os
 import pytest
 from pathlib import Path
 
@@ -19,11 +23,14 @@ class TestLiteratureConfig:
     def test_config_defaults(self):
         """Test config default values."""
         config = LiteratureConfig()
-        # Verify reasonable defaults
-        assert config.max_results >= 10
-        assert config.timeout >= 10
-        assert isinstance(config.download_dir, str)
-        assert isinstance(config.bibtex_file, str)
+        assert config.default_limit == 10
+        assert config.max_results == 100
+        assert config.timeout == 30
+        assert config.arxiv_delay == 3.0
+        assert config.download_dir == "literature/pdfs"
+        assert config.bibtex_file == "literature/references.bib"
+        assert "arxiv" in config.sources
+        assert "semanticscholar" in config.sources
 
     def test_config_custom_values(self, tmp_path):
         """Test config with custom values."""
@@ -43,5 +50,129 @@ class TestLiteratureConfig:
         config = LiteratureConfig()
         assert isinstance(config.sources, list)
         assert len(config.sources) > 0
-        assert "arxiv" in config.sources or "semanticscholar" in config.sources
+        assert "arxiv" in config.sources
+        assert "semanticscholar" in config.sources
+
+
+class TestLiteratureConfigFromEnv:
+    """Test LiteratureConfig.from_env() method."""
+
+    def test_from_env_default_values(self, monkeypatch):
+        """Test from_env with no environment variables set."""
+        # Clear any existing literature env vars
+        for key in list(os.environ.keys()):
+            if key.startswith("LITERATURE_") or key == "SEMANTICSCHOLAR_API_KEY":
+                monkeypatch.delenv(key, raising=False)
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.default_limit == 10
+        assert config.max_results == 100
+        assert config.arxiv_delay == 3.0
+        assert config.semanticscholar_api_key is None
+        assert config.sources == ["arxiv", "semanticscholar"]
+
+    def test_from_env_custom_limit(self, monkeypatch):
+        """Test from_env reads LITERATURE_DEFAULT_LIMIT."""
+        monkeypatch.setenv("LITERATURE_DEFAULT_LIMIT", "25")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.default_limit == 25
+
+    def test_from_env_max_results(self, monkeypatch):
+        """Test from_env reads LITERATURE_MAX_RESULTS."""
+        monkeypatch.setenv("LITERATURE_MAX_RESULTS", "200")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.max_results == 200
+
+    def test_from_env_arxiv_delay(self, monkeypatch):
+        """Test from_env reads LITERATURE_ARXIV_DELAY."""
+        monkeypatch.setenv("LITERATURE_ARXIV_DELAY", "5.5")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.arxiv_delay == 5.5
+
+    def test_from_env_semanticscholar_api_key(self, monkeypatch):
+        """Test from_env reads SEMANTICSCHOLAR_API_KEY."""
+        monkeypatch.setenv("SEMANTICSCHOLAR_API_KEY", "my-api-key-123")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.semanticscholar_api_key == "my-api-key-123"
+
+    def test_from_env_download_dir(self, monkeypatch):
+        """Test from_env reads LITERATURE_DOWNLOAD_DIR."""
+        monkeypatch.setenv("LITERATURE_DOWNLOAD_DIR", "/custom/downloads")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.download_dir == "/custom/downloads"
+
+    def test_from_env_timeout(self, monkeypatch):
+        """Test from_env reads LITERATURE_TIMEOUT."""
+        monkeypatch.setenv("LITERATURE_TIMEOUT", "60")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.timeout == 60
+
+    def test_from_env_bibtex_file(self, monkeypatch):
+        """Test from_env reads LITERATURE_BIBTEX_FILE."""
+        monkeypatch.setenv("LITERATURE_BIBTEX_FILE", "/custom/refs.bib")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.bibtex_file == "/custom/refs.bib"
+
+    def test_from_env_sources_comma_separated(self, monkeypatch):
+        """Test from_env parses LITERATURE_SOURCES as comma-separated."""
+        monkeypatch.setenv("LITERATURE_SOURCES", "arxiv,semanticscholar,crossref")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.sources == ["arxiv", "semanticscholar", "crossref"]
+
+    def test_from_env_sources_with_whitespace(self, monkeypatch):
+        """Test from_env strips whitespace from sources."""
+        monkeypatch.setenv("LITERATURE_SOURCES", "arxiv , semanticscholar , pubmed")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.sources == ["arxiv", "semanticscholar", "pubmed"]
+
+    def test_from_env_user_agent(self, monkeypatch):
+        """Test from_env reads LITERATURE_USER_AGENT."""
+        monkeypatch.setenv("LITERATURE_USER_AGENT", "CustomBot/1.0")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.user_agent == "CustomBot/1.0"
+
+    def test_from_env_all_values(self, monkeypatch):
+        """Test from_env with all environment variables set."""
+        monkeypatch.setenv("LITERATURE_DEFAULT_LIMIT", "15")
+        monkeypatch.setenv("LITERATURE_MAX_RESULTS", "150")
+        monkeypatch.setenv("LITERATURE_USER_AGENT", "TestBot/2.0")
+        monkeypatch.setenv("LITERATURE_ARXIV_DELAY", "2.0")
+        monkeypatch.setenv("SEMANTICSCHOLAR_API_KEY", "test-key")
+        monkeypatch.setenv("LITERATURE_DOWNLOAD_DIR", "/tmp/pdfs")
+        monkeypatch.setenv("LITERATURE_TIMEOUT", "45")
+        monkeypatch.setenv("LITERATURE_BIBTEX_FILE", "/tmp/refs.bib")
+        monkeypatch.setenv("LITERATURE_SOURCES", "arxiv")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.default_limit == 15
+        assert config.max_results == 150
+        assert config.user_agent == "TestBot/2.0"
+        assert config.arxiv_delay == 2.0
+        assert config.semanticscholar_api_key == "test-key"
+        assert config.download_dir == "/tmp/pdfs"
+        assert config.timeout == 45
+        assert config.bibtex_file == "/tmp/refs.bib"
+        assert config.sources == ["arxiv"]
 

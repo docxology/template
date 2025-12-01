@@ -210,3 +210,4 @@ class TestDocScannerStatistics:
         
         assert 'phase1' in scanner.results.statistics or True
 
+

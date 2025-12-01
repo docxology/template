@@ -13,9 +13,10 @@ This directory contains comprehensive development standards, coding guidelines, 
 | [error_handling.md](error_handling.md) | Error handling and exception patterns | Writing error handling code |
 | [python_logging.md](python_logging.md) | Logging standards and best practices | Adding logging to code |
 | [infrastructure_modules.md](infrastructure_modules.md) | Infrastructure module development standards | Creating new infrastructure modules |
-| [testing_standards.md](testing_standards.md) | Testing patterns and 100% coverage (NEW) | Writing tests with pytest |
-| [documentation_standards.md](documentation_standards.md) | AGENTS.md and README.md writing guide (NEW) | Writing documentation |
-| [type_hints_standards.md](type_hints_standards.md) | Type annotation patterns (NEW) | Adding type hints |
+| [testing_standards.md](testing_standards.md) | Testing patterns and 100% coverage | Writing tests with pytest |
+| [documentation_standards.md](documentation_standards.md) | AGENTS.md and README.md writing guide | Writing documentation |
+| [type_hints_standards.md](type_hints_standards.md) | Type annotation patterns | Adding type hints |
+| [llm_standards.md](llm_standards.md) | LLM/Ollama integration patterns (NEW) | Using local LLMs for research |
 
 ## Key Principles
 
@@ -375,9 +376,10 @@ This directory provides modular development standards. Each file covers specific
 | [error_handling.md](error_handling.md) | Exception patterns | Writing error handling |
 | [python_logging.md](python_logging.md) | Logging standards | Adding logging to code |
 | [infrastructure_modules.md](infrastructure_modules.md) | Infrastructure development | Creating new modules |
-| [testing_standards.md](testing_standards.md) | Testing patterns | Writing tests (NEW) |
-| [documentation_standards.md](documentation_standards.md) | Documentation guidelines | Writing docs (NEW) |
-| [type_hints_standards.md](type_hints_standards.md) | Type annotation patterns | Adding type hints (NEW) |
+| [testing_standards.md](testing_standards.md) | Testing patterns | Writing tests |
+| [documentation_standards.md](documentation_standards.md) | Documentation guidelines | Writing docs |
+| [type_hints_standards.md](type_hints_standards.md) | Type annotation patterns | Adding type hints |
+| [llm_standards.md](llm_standards.md) | LLM/Ollama patterns | Using local LLMs |
 
 ## Integration with Main Documentation
 
@@ -393,6 +395,7 @@ The .cursorrules standards align with and support the main documentation:
 | Testing | [testing_standards.md](testing_standards.md) | [tests/AGENTS.md](../tests/AGENTS.md) |
 | Workflow | [documentation_standards.md](documentation_standards.md) | [docs/WORKFLOW.md](../docs/WORKFLOW.md) |
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/TYPE_SAFETY.md](../docs/TYPE_SAFETY.md) |
+| LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) |
 
 ## Cross-Reference Guide
 
@@ -424,6 +427,7 @@ The .cursorrules standards align with and support the main documentation:
 | Creating modules | [infrastructure_modules.md](infrastructure_modules.md) | All of the above standards |
 | Writing docs | [documentation_standards.md](documentation_standards.md) | Specific guide for your doc type |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
+| Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
 
 ### By File Size & Detail Level
 
@@ -439,6 +443,7 @@ The .cursorrules standards align with and support the main documentation:
 - [testing_standards.md](testing_standards.md) - Complete testing guide
 - [infrastructure_modules.md](infrastructure_modules.md) - Module development guide
 - [documentation_standards.md](documentation_standards.md) - Documentation writing guide
+- [llm_standards.md](llm_standards.md) - LLM/Ollama integration guide
 
 **System Overview (400+ lines)**
 - [AGENTS.md](AGENTS.md) - This file - complete system overview
@@ -468,7 +473,7 @@ When creating a new .cursorrules file:
 
 ---
 
-**Version**: 2.1.0  
-**Last Updated**: 2025-11-22  
-**Status**: All 8 guideline files complete and cross-referenced  
+**Version**: 2.2.0  
+**Last Updated**: 2025-12-01  
+**Status**: All 9 guideline files complete and cross-referenced  
 **Maintainer**: Template Team

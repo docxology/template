@@ -77,3 +77,4 @@ class TestDocScannerIntegration:
         # Module should be importable and usable
         assert doc_scanner is not None
 
+

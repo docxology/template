@@ -98,3 +98,4 @@ class TestPdfRendererErrors:
             except Exception:
                 pass  # Expected to fail
 
+

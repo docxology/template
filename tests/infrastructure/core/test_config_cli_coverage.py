@@ -32,3 +32,4 @@ class TestConfigCli:
                 except SystemExit:
                     pass
 
+

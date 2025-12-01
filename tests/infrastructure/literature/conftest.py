@@ -9,6 +9,7 @@ def mock_config(tmp_path):
     config = LiteratureConfig()
     config.download_dir = str(tmp_path / "pdfs")
     config.bibtex_file = str(tmp_path / "refs.bib")
+    config.library_index_file = str(tmp_path / "library.json")
     config.arxiv_delay = 0.0  # Speed up tests
     return config
 

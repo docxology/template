@@ -233,8 +233,8 @@ f(x) = \int_0^x t^2 dt
 ```
 
 **Do NOT use:**
-- Double dollar signs (e.g., `$$ ... $$`) for display math—use equation environment instead
-- Backslash square brackets (e.g., `\[ ... \]`) for display math—use equation environment instead
+- Double dollar signs for display math—use equation environment instead
+- Backslash square brackets for display math—use equation environment instead
 
 ### Figure Integration
 

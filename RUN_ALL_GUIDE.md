@@ -182,18 +182,35 @@ Review errors above and fix issues before retrying
 
 ## Comparison: Shell vs Python
 
+Both orchestrators run the complete pipeline with equivalent functionality:
+
 ### Shell Script (`run_all.sh`)
-- ✅ Easier to use - just type `./run_all.sh`
+- ✅ Recommended for interactive use - just type `./run_all.sh`
 - ✅ Better progress reporting with colors
 - ✅ Automatic environment configuration
-- ✅ Recommended for most users
-- ✅ Separates infrastructure and project tests
+- ✅ 7 stages with visual progress indicators
+- ✅ Native bash execution (no Python startup overhead)
 
 ### Python Orchestrator (`python3 scripts/run_all.py`)
-- ✅ Programmatic access for CI/CD
-- ✅ Better for automation
-- ✅ Python-based error handling
-- Combines all tests into single stage
+- ✅ Programmatic access for CI/CD integration
+- ✅ Better for automated pipelines
+- ✅ Consistent Python logging across all stages
+- ✅ 6 stages (tests combined into single stage)
+- ✅ Easier integration with Python tooling
+
+### Stage Mapping
+
+| Shell (`run_all.sh`) | Python (`run_all.py`) |
+|----------------------|----------------------|
+| Stage 1: Setup Environment | Stage 1: Setup Environment |
+| Stage 2: Infrastructure Tests | Stage 2: Run Tests (both) |
+| Stage 3: Project Tests | *(combined above)* |
+| Stage 4: Project Analysis | Stage 3: Analysis |
+| Stage 5: PDF Rendering | Stage 4: PDF Rendering |
+| Stage 6: Output Validation | Stage 5: Validation |
+| Stage 7: Copy Outputs | Stage 6: Copy Outputs |
+
+Both run identical tests and produce identical outputs. Choose based on preference.
 
 ## Configuration Files
 

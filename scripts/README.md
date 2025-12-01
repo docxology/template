@@ -26,16 +26,17 @@ Project-specific analysis scripts go in `project/scripts/`, not here.
 python3 scripts/run_all.py
 ```
 
-Both execute the complete 6-stage pipeline end-to-end:
+Both execute the complete 8-stage pipeline end-to-end:
 
 | Stage | Python Script | Purpose |
 |-------|--------|---------|
 | **0** | `00_setup_environment.py` | Environment setup & validation |
-| **1** | `01_run_tests.py` | Test suite with coverage |
+| **1** | `01_run_tests.py` | Infrastructure tests (49%+) & project tests (70%+) |
 | **2** | `02_run_analysis.py` | Discover & run `project/scripts/` |
 | **3** | `03_render_pdf.py` | PDF rendering orchestration |
 | **4** | `04_validate_output.py` | Output validation & reporting |
 | **5** | `05_copy_outputs.py` | Copy final deliverables to top-level output/ |
+| **6** | `06_llm_review.py` | LLM manuscript review (optional, requires Ollama) |
 
 **Note**: Each stage can be run independently, or all stages execute sequentially via `run_all.py` or `run_all.sh`.
 
@@ -108,6 +109,18 @@ Each stage stops the pipeline if it fails, providing clear error messages.
 - Copies all web outputs (HTML)
 - Validates all files copied
 
+### Stage 06: LLM Manuscript Review (Optional)
+- Checks Ollama availability
+- Extracts full text from combined PDF (no truncation by default)
+- Generates four types of reviews with detailed metrics
+- Saves reviews to `output/llm/` with generation stats
+- **Requires**: Running Ollama server with at least one model
+
+**Environment Variables:**
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `LLM_MAX_INPUT_LENGTH` | `500000` | Max chars to send to LLM. Set to `0` for unlimited. |
+
 ## Project-Specific Scripts
 
 Analysis scripts belong in `project/scripts/`:
@@ -170,7 +183,11 @@ STAGE 04: Validate Output
      
 STAGE 05: Copy Outputs
   └─ Copy deliverables to output/
-     └─ PASS → COMPLETE ✅
+     └─ PASS → STAGE 06
+     
+STAGE 06: LLM Review (Optional)
+  └─ Generate manuscript reviews with Ollama
+     └─ PASS/SKIP → COMPLETE ✅
 ```
 
 ## Generic vs Project-Specific
@@ -210,7 +227,8 @@ scripts/ (Generic Entry Points)
   ├─ 02_run_analysis.py → Discover & run project/scripts/
   ├─ 03_render_pdf.py → Build manuscript
   ├─ 04_validate_output.py → Validate outputs
-  └─ 05_copy_outputs.py → Copy deliverables
+  ├─ 05_copy_outputs.py → Copy deliverables
+  └─ 06_llm_review.py → LLM manuscript review (optional)
 
 project/scripts/ (Project-Specific)
   ├─ analysis_pipeline.py → Your analysis

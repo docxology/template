@@ -153,3 +153,4 @@ class TestValidatePdfCliIntegration:
         # Module should be importable
         assert validate_pdf_cli is not None
 
+

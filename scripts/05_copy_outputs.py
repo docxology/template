@@ -18,6 +18,7 @@ Complete project outputs copied:
 - Data files (data/ directory - all CSV, NPZ files)
 - Reports (reports/ directory - all markdown/analysis files)
 - Simulations (simulations/ directory - all simulation outputs and checkpoints)
+- LLM reviews (llm/ directory - LLM-generated manuscript reviews)
 """
 from __future__ import annotations
 
@@ -91,6 +92,7 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> dict:
     - data/ - Data files (CSV, NPZ, etc.)
     - reports/ - Generated analysis and simulation reports
     - simulations/ - Simulation outputs and checkpoints
+    - llm/ - LLM-generated manuscript reviews
     
     Also copies combined PDF to root for convenient access.
     
@@ -113,6 +115,7 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> dict:
         "data_files": 0,
         "reports_files": 0,
         "simulations_files": 0,
+        "llm_files": 0,
         "combined_pdf": 0,
         "total_files": 0,
         "errors": [],
@@ -144,6 +147,7 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> dict:
         "data": "data_files",
         "reports": "reports_files",
         "simulations": "simulations_files",
+        "llm": "llm_files",
     }
     
     for subdir_name, stats_key in subdirs.items():
@@ -180,7 +184,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
     
     Checks:
     - Combined PDF exists at root and in pdf/ directory
-    - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations)
+    - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations, llm)
     - Each directory contains files
     - All files are readable
     
@@ -212,7 +216,11 @@ def validate_copied_outputs(output_dir: Path) -> bool:
         "data": "Data files and datasets",
         "reports": "Analysis and simulation reports",
         "simulations": "Simulation outputs and checkpoints",
+        "llm": "LLM-generated manuscript reviews",
     }
+    
+    # Directories that are optional or populated later in the pipeline
+    optional_dirs = {"llm"}  # LLM stage runs after copy outputs
     
     for dir_name, description in expected_dirs.items():
         subdir = output_dir / dir_name
@@ -223,9 +231,16 @@ def validate_copied_outputs(output_dir: Path) -> bool:
                 total_size_mb = sum(f.stat().st_size for f in files if f.is_file()) / (1024 * 1024)
                 log_success(f"{dir_name}/ valid ({file_count} files, {total_size_mb:.2f} MB)", logger)
             else:
-                logger.warning(f"{dir_name}/ directory exists but is empty")
+                # Only warn for required directories, info for optional
+                if dir_name in optional_dirs:
+                    logger.debug(f"{dir_name}/ not yet populated (generated in later stage)")
+                else:
+                    logger.warning(f"{dir_name}/ directory exists but is empty")
         else:
-            logger.warning(f"{dir_name}/ directory not found ({description})")
+            if dir_name in optional_dirs:
+                logger.debug(f"{dir_name}/ not found (optional, generated in later stage)")
+            else:
+                logger.warning(f"{dir_name}/ directory not found ({description})")
     
     return validation_passed
 
@@ -236,7 +251,7 @@ def validate_output_structure(output_dir: Path) -> dict:
     Checks:
     - Output directory exists
     - Combined PDF exists and is > 100KB (should be substantial)
-    - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations)
+    - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations, llm)
     - Each subdirectory contains files
     - All files are readable
     
@@ -282,7 +297,9 @@ def validate_output_structure(output_dir: Path) -> dict:
         }
     
     # Check all expected subdirectories
-    expected_dirs = ["pdf", "web", "slides", "figures", "data", "reports", "simulations"]
+    expected_dirs = ["pdf", "web", "slides", "figures", "data", "reports", "simulations", "llm"]
+    # Directories that are optional or populated later in the pipeline
+    optional_dirs = {"llm"}  # LLM stage runs after copy outputs
     
     for subdir_name in expected_dirs:
         subdir = output_dir / subdir_name
@@ -296,10 +313,12 @@ def validate_output_structure(output_dir: Path) -> dict:
                 "exists": True,
                 "files": file_count,
                 "size_mb": round(total_size_mb, 2),
-                "readable": subdir.is_dir()
+                "readable": subdir.is_dir(),
+                "optional": subdir_name in optional_dirs
             }
             
-            if file_count == 0:
+            # Only flag empty directories as suspicious if not optional
+            if file_count == 0 and subdir_name not in optional_dirs:
                 result["suspicious_sizes"].append(
                     f"{subdir_name}/ directory is empty"
                 )
@@ -307,9 +326,12 @@ def validate_output_structure(output_dir: Path) -> dict:
             result["directory_structure"][subdir_name] = {
                 "exists": False,
                 "files": 0,
-                "size_mb": 0.0
+                "size_mb": 0.0,
+                "optional": subdir_name in optional_dirs
             }
-            result["issues"].append(f"Missing directory: {subdir_name}/")
+            # Only add issue for required directories
+            if subdir_name not in optional_dirs:
+                result["issues"].append(f"Missing directory: {subdir_name}/")
     
     return result
 
@@ -335,6 +357,7 @@ def generate_output_summary(output_dir: Path, stats: dict, structure_validation:
     logger.info(f"  • Data files: {stats['data_files']}")
     logger.info(f"  • Reports: {stats['reports_files']}")
     logger.info(f"  • Simulations: {stats['simulations_files']}")
+    logger.info(f"  • LLM reviews: {stats['llm_files']}")
     logger.info(f"  • Combined PDF (root): {stats['combined_pdf']}")
     logger.info(f"\n  Total files copied: {stats['total_files']}")
     

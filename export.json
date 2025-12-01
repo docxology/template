@@ -1,0 +1,465 @@
+{
+  "version": "1.0",
+  "exported": "2025-12-01T07:04:59.607469",
+  "count": 21,
+  "entries": [
+    {
+      "citation_key": "watson2020active",
+      "title": "Active Inference or Control as Inference? A Unifying View",
+      "authors": [
+        "Joe Watson",
+        "Abraham Imohiosen",
+        "Jan Peters"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2010.00262v1",
+      "pdf_path": "literature/pdfs/watson2020active.pdf",
+      "added_date": "2025-12-01T07:01:34.675588",
+      "abstract": "Active inference (AI) is a persuasive theoretical framework from computational neuroscience that seeks to describe action and perception as inference-based computation. However, this framework has yet to provide practical sensorimotor control algorithms that are competitive with alternative approaches. In this work, we frame active inference through the lens of control as inference (CaI), a body of work that presents trajectory optimization as inference. From the wider view of `probabilistic numerics', CaI offers principled, numerically robust optimal control solvers that provide uncertainty quantification, and can scale to nonlinear problems with approximate inference. We show that AI may be framed as partially-observed CaI when the cost function is defined specifically in the observation states.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2010.00262v1"
+      }
+    },
+    {
+      "citation_key": "sennesh2022deriving",
+      "title": "Deriving time-averaged active inference from control principles",
+      "authors": [
+        "Eli Sennesh",
+        "Jordan Theriault",
+        "Jan-Willem van de Meent",
+        "Lisa Feldman Barrett",
+        "Karen Quigley"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2208.10601v1",
+      "pdf_path": "literature/pdfs/sennesh2022deriving.pdf",
+      "added_date": "2025-12-01T07:01:34.678688",
+      "abstract": "Active inference offers a principled account of behavior as minimizing average sensory surprise over time. Applications of active inference to control problems have heretofore tended to focus on finite-horizon or discounted-surprise problems, despite deriving from the infinite-horizon, average-surprise imperative of the free-energy principle. Here we derive an infinite-horizon, average-surprise formulation of active inference from optimal control principles. Our formulation returns to the roots of active inference in neuroanatomy and neurophysiology, formally reconnecting active inference to optimal feedback control. Our formulation provides a unified objective functional for sensorimotor control and allows for reference states to vary over time.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2208.10601v1"
+      }
+    },
+    {
+      "citation_key": "heins2022spin",
+      "title": "Spin glass systems as collective active inference",
+      "authors": [
+        "Conor Heins",
+        "Brennan Klein",
+        "Daphne Demekas",
+        "Miguel Aguilera",
+        "Christopher Buckley"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2207.06970v1",
+      "pdf_path": "literature/pdfs/heins2022spin.pdf",
+      "added_date": "2025-12-01T07:01:34.679102",
+      "abstract": "An open question in the study of emergent behaviour in multi-agent Bayesian systems is the relationship, if any, between individual and collective inference. In this paper we explore the correspondence between generative models that exist at two distinct scales, using spin glass models as a sandbox system to investigate this question. We show that the collective dynamics of a specific type of active inference agent is equivalent to sampling from the stationary distribution of a spin glass system. A collective of specifically-designed active inference agents can thus be described as implementing a form of sampling-based inference (namely, from a Boltzmann machine) at the higher level. However, this equivalence is very fragile, breaking upon simple modifications to the generative models of the individual agents or the nature of their interactions. We discuss the implications of this correspondence and its fragility for the study of multiscale systems composed of Bayesian agents.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2207.06970v1"
+      }
+    },
+    {
+      "citation_key": "maele2023integrating",
+      "title": "Integrating cognitive map learning and active inference for planning in ambiguous environments",
+      "authors": [
+        "Toon Van de Maele",
+        "Bart Dhoedt",
+        "Tim Verbelen",
+        "Giovanni Pezzulo"
+      ],
+      "year": 2023,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2308.08307v1",
+      "pdf_path": "literature/pdfs/maele2023integrating.pdf",
+      "added_date": "2025-12-01T07:01:34.679452",
+      "abstract": "Living organisms need to acquire both cognitive maps for learning the structure of the world and planning mechanisms able to deal with the challenges of navigating ambiguous environments. Although significant progress has been made in each of these areas independently, the best way to integrate them is an open research question. In this paper, we propose the integration of a statistical model of cognitive map formation within an active inference agent that supports planning under uncertainty. Specifically, we examine the clone-structured cognitive graph (CSCG) model of cognitive map formation and compare a naive clone graph agent with an active inference-driven clone graph agent, in three spatial navigation scenarios. Our findings demonstrate that while both agents are effective in simple scenarios, the active inference agent is more effective when planning in challenging scenarios, in which sensory observations provide ambiguous information about location.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2308.08307v1"
+      }
+    },
+    {
+      "citation_key": "kouw2025message",
+      "title": "Message passing-based inference in an autoregressive active inference agent",
+      "authors": [
+        "Wouter M. Kouw",
+        "Tim N. Nisslbeck",
+        "Wouter L. N. Nuijten"
+      ],
+      "year": 2025,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2509.25482v1",
+      "pdf_path": "literature/pdfs/kouw2025message.pdf",
+      "added_date": "2025-12-01T07:01:34.679751",
+      "abstract": "We present the design of an autoregressive active inference agent in the form of message passing on a factor graph. Expected free energy is derived and distributed across a planning graph. The proposed agent is validated on a robot navigation task, demonstrating exploration and exploitation in a continuous-valued observation space with bounded continuous-valued actions. Compared to a classical optimal controller, the agent modulates action based on predictive uncertainty, arriving later but with a better model of the robot's dynamics.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2509.25482v1"
+      }
+    },
+    {
+      "citation_key": "friston2020some",
+      "title": "Some interesting observations on the free energy principle",
+      "authors": [
+        "Karl Friston",
+        "Lancelot Da Costa",
+        "Thomas Parr"
+      ],
+      "year": 2020,
+      "doi": "10.3390/e23081076",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2002.04501v1",
+      "pdf_path": "literature/pdfs/friston2020some.pdf",
+      "added_date": "2025-12-01T07:01:50.507269",
+      "abstract": "Biehl et al (2020) present some interesting observations on an early formulation of the free energy principle in (Friston, 2013). We use these observations to scaffold a discussion of the technical arguments that underwrite the free energy principle. This discussion focuses on solenoidal coupling between various (subsets of) states in sparsely coupled systems that possess a Markov blanket - and the distinction between exact and approximate Bayesian inference, implied by the ensuing Bayesian mechanics.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2002.04501v1"
+      }
+    },
+    {
+      "citation_key": "collaboration2005dark",
+      "title": "The Dark Energy Survey",
+      "authors": [
+        " The Dark Energy Survey Collaboration"
+      ],
+      "year": 2005,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/astro-ph/0510346v1",
+      "pdf_path": "literature/pdfs/collaboration2005dark.pdf",
+      "added_date": "2025-12-01T07:01:50.920930",
+      "abstract": "We describe the Dark Energy Survey (DES), a proposed optical-near infrared survey of 5000 sq. deg of the South Galactic Cap to ~24th magnitude in SDSS griz, that would use a new 3 sq. deg CCD camera to be mounted on the Blanco 4-m telescope at Cerro Telolo Inter-American Observatory (CTIO). The survey data will allow us to measure the dark energy and dark matter densities and the dark energy equation of state through four independent methods: galaxy clusters, weak gravitational lensing tomography, galaxy angular clustering, and supernova distances. These methods are doubly complementary: they constrain different combinations of cosmological model parameters and are subject to different systematic errors. By deriving the four sets of measurements from the same data set with a common analysis framework, we will obtain important cross checks of the systematic errors and thereby make a substantial and robust advance in the precision of dark energy measurements.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/astro-ph/0510346v1"
+      }
+    },
+    {
+      "citation_key": "collaboration2012large",
+      "title": "Large Synoptic Survey Telescope: Dark Energy Science Collaboration",
+      "authors": [
+        " LSST Dark Energy Science Collaboration"
+      ],
+      "year": 2012,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1211.0310v1",
+      "pdf_path": "literature/pdfs/collaboration2012large.pdf",
+      "added_date": "2025-12-01T07:01:51.232985",
+      "abstract": "This white paper describes the LSST Dark Energy Science Collaboration (DESC), whose goal is the study of dark energy and related topics in fundamental physics with data from the Large Synoptic Survey Telescope (LSST). It provides an overview of dark energy science and describes the current and anticipated state of the field. It makes the case for the DESC by laying out a robust analytical framework for dark energy science that has been defined by its members and the comprehensive three-year work plan they have developed for implementing that framework. The analysis working groups cover five key probes of dark energy: weak lensing, large scale structure, galaxy clusters, Type Ia supernovae, and strong lensing. The computing working groups span cosmological simulations, galaxy catalogs, photon simulations and a systematic software and computational framework for LSST dark energy data analysis. The technical working groups make the connection between dark energy science and the LSST system. The working groups have close linkages, especially through the use of the photon simulations to study the impact of instrument design and survey strategy on analysis methodology and cosmological parameter estimation. The white paper describes several high priority tasks identified by each of the 16 working groups. Over the next three years these tasks will help prepare for LSST analysis, make synergistic connections with ongoing cosmological surveys and provide the dark energy community with state of the art analysis tools. Members of the community are invited to join the LSST DESC, according to the membership policies described in the white paper. Applications to sign up for associate membership may be made by submitting the Web form at http://www.slac.stanford.edu/exp/lsst/desc/signup.html with a short statement of the work they wish to pursue that is relevant to the LSST DESC.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1211.0310v1"
+      }
+    },
+    {
+      "citation_key": "thomas2022knowledge",
+      "title": "Knowledge as Fruits of Ignorance: A global Free Energy Principle of our way of thinking",
+      "authors": [
+        "Cailleteau Thomas"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2206.05684v1",
+      "pdf_path": "literature/pdfs/thomas2022knowledge.pdf",
+      "added_date": "2025-12-01T07:01:51.233413",
+      "abstract": "In this second article, we show a simple use of the Ignorance as defined in \"Jaynes & Shannon's Constrained Ignorance and Surprise\". By giving an example about the journey of a person, we believe to show some simple, obvious but mathematically encoded philosophical implications about how we could think, learn and memorize. In this basic model we will separate how we learn from Ignorance, and how we anticipate the world using Bayes formula, both should however be more entangled to best reflect reality. In fact, as we have seen after achieving this work, applying Ignorance on the system constituting a person finally turns out to be the global approach of its local counterpart on systems like neurons, cells and other complex probabilistic systems, described using the free energy principle, a much more complex and detailed approach. The aim of this article is therefore to show, as seen from a person, another aspect of the application of the free energy principle which represents the constrained Shannon's entropy, and leads to Bayes'formula. We show that, using only ignorance as a single quantity, and its minimization as the main process, we can take into account his understandings, assertions, doubts and assumptions about how he perceives the world, by describing them mathematically.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2206.05684v1"
+      }
+    },
+    {
+      "citation_key": "glazebrook2005dark",
+      "title": "Dark Energy and Cosmic Sound: w(z) Surveys with the Gemini/Subaru Wide-Field Multi-Object Spectrograph",
+      "authors": [
+        "Karl Glazebrook",
+        "Daniel Eisenstein",
+        "Arjun Dey",
+        "Bob Nichol",
+        "The WFMOS Feasibility Study Dark Energy Team"
+      ],
+      "year": 2005,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/astro-ph/0507457v2",
+      "pdf_path": "literature/pdfs/glazebrook2005dark.pdf",
+      "added_date": "2025-12-01T07:01:51.233778",
+      "abstract": "This white paper gives an overview of the proposed Gemini/Subaru Wide-Field Multi-Object Spectrograph (WFMOS) and the proposed redshift surveys of 2.6 million galaxies with 0.5<z<3.3 over 2000 deg^2 of sky. These surveys will probe the baryonic acoustic oscillations in the galaxy power spectrum with unprecedented precision and over a range of redshifts and deliver dark energy w(z) constraints an order of magnitude better than current limits. We discuss the requirements on precursor observations and on calibrations, the systematics in the method and the quantitative precision obtainaible in distance-redshift and expansion-rate-redshift measurements which feed in to the w(z) precision. We also outline the technological and scientific strengths and risks which might be associated with the project and the relationship of WFMOS to other baryon oscillation experiments.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/astro-ph/0507457v2"
+      }
+    },
+    {
+      "citation_key": "piat2004precise",
+      "title": "Precise measurement of CMB polarisation from Dome-C: the BRAIN and CLOVER experiments",
+      "authors": [
+        "M. Piat",
+        "C. Rosset",
+        "the BRAIN",
+        "CLOVER Collaboration"
+      ],
+      "year": 2004,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/astro-ph/0412590v2",
+      "pdf_path": "literature/pdfs/piat2004precise.pdf",
+      "added_date": "2025-12-01T07:02:58.985579",
+      "abstract": "The characterisation of CMB polarisation is one of the next challenge in observationnal cosmology. This is especially true for the so-called B-modes that are at least 3 order of magnitude lower than CMB temperature fluctuations. A precise measurement of the angular power spectrum of these B-modes will give important constraints on inflation parameters. In this talk, I will describe two complementary experiments, BRAIN and CLOVER, dedicated to CMB polarisation measurement. These experiments are proposed to be installed in Dome-C, Antarctica, to take advantage of the extreme dryness of the atmosphere and to allow long integration time.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/astro-ph/0412590v2"
+      }
+    },
+    {
+      "citation_key": "messaoudi2020efficient",
+      "title": "Efficient embedding network for 3D brain tumor segmentation",
+      "authors": [
+        "Hicham Messaoudi",
+        "Ahror Belaid",
+        "Mohamed Lamine Allaoui",
+        "Ahcene Zetout",
+        "Mohand Said Allili",
+        "Souhil Tliba",
+        "Douraied Ben Salem",
+        "Pierre-Henri Conze"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2011.11052v1",
+      "pdf_path": "literature/pdfs/messaoudi2020efficient.pdf",
+      "added_date": "2025-12-01T07:02:59.860315",
+      "abstract": "3D medical image processing with deep learning greatly suffers from a lack of data. Thus, studies carried out in this field are limited compared to works related to 2D natural image analysis, where very large datasets exist. As a result, powerful and efficient 2D convolutional neural networks have been developed and trained. In this paper, we investigate a way to transfer the performance of a two-dimensional classiffication network for the purpose of three-dimensional semantic segmentation of brain tumors. We propose an asymmetric U-Net network by incorporating the EfficientNet model as part of the encoding branch. As the input data is in 3D, the first layers of the encoder are devoted to the reduction of the third dimension in order to fit the input of the EfficientNet network. Experimental results on validation and test data from the BraTS 2020 challenge demonstrate that the proposed method achieve promising performance.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2011.11052v1"
+      }
+    },
+    {
+      "citation_key": "himst2020deep",
+      "title": "Deep Active Inference for Partially Observable MDPs",
+      "authors": [
+        "Otto van der Himst",
+        "Pablo Lanillos"
+      ],
+      "year": 2020,
+      "doi": "10.1007/978-3-030-64919-7_8",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2009.03622v1",
+      "pdf_path": "literature/pdfs/himst2020deep.pdf",
+      "added_date": "2025-12-01T07:04:53.442848",
+      "abstract": "Deep active inference has been proposed as a scalable approach to perception and action that deals with large policy and state spaces. However, current models are limited to fully observable domains. In this paper, we describe a deep active inference model that can learn successful policies directly from high-dimensional sensory inputs. The deep learning architecture optimizes a variant of the expected free energy and encodes the continuous state representation by means of a variational autoencoder. We show, in the OpenAI benchmark, that our approach has comparable or better performance than deep Q-learning, a state-of-the-art deep reinforcement learning algorithm.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2009.03622v1"
+      }
+    },
+    {
+      "citation_key": "collis2024learning",
+      "title": "Learning in Hybrid Active Inference Models",
+      "authors": [
+        "Poppy Collis",
+        "Ryan Singh",
+        "Paul F Kinghorn",
+        "Christopher L Buckley"
+      ],
+      "year": 2024,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2409.01066v1",
+      "pdf_path": "literature/pdfs/collis2024learning.pdf",
+      "added_date": "2025-12-01T07:04:54.159862",
+      "abstract": "An open problem in artificial intelligence is how systems can flexibly learn discrete abstractions that are useful for solving inherently continuous problems. Previous work in computational neuroscience has considered this functional integration of discrete and continuous variables during decision-making under the formalism of active inference (Parr, Friston & de Vries, 2017; Parr & Friston, 2018). However, their focus is on the expressive physical implementation of categorical decisions and the hierarchical mixed generative model is assumed to be known. As a consequence, it is unclear how this framework might be extended to learning. We therefore present a novel hierarchical hybrid active inference agent in which a high-level discrete active inference planner sits above a low-level continuous active inference controller. We make use of recent work in recurrent switching linear dynamical systems (rSLDS) which implement end-to-end learning of meaningful discrete representations via the piecewise linear decomposition of complex continuous dynamics (Linderman et al., 2016). The representations learned by the rSLDS inform the structure of the hybrid decision-making agent and allow us to (1) specify temporally-abstracted sub-goals in a method reminiscent of the options framework, (2) lift the exploration into discrete space allowing us to exploit information-theoretic exploration bonuses and (3) `cache' the approximate solutions to low-level problems in the discrete planner. We apply our model to the sparse Continuous Mountain Car task, demonstrating fast system identification via enhanced exploration and successful planning through the delineation of abstract sub-goals.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2409.01066v1"
+      }
+    },
+    {
+      "citation_key": "baioumy2021towards",
+      "title": "Towards Stochastic Fault-tolerant Control using Precision Learning and Active Inference",
+      "authors": [
+        "Mohamed Baioumy",
+        "Corrado Pezzato",
+        "Carlos Hernandez Corbato",
+        "Nick Hawes",
+        "Riccardo Ferrari"
+      ],
+      "year": 2021,
+      "doi": "10.1007/978-3-030-93736-2_48",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2109.05870v1",
+      "pdf_path": "literature/pdfs/baioumy2021towards.pdf",
+      "added_date": "2025-12-01T07:04:54.552032",
+      "abstract": "This work presents a fault-tolerant control scheme for sensory faults in robotic manipulators based on active inference. In the majority of existing schemes, a binary decision of whether a sensor is healthy (functional) or faulty is made based on measured data. The decision boundary is called a threshold and it is usually deterministic. Following a faulty decision, fault recovery is obtained by excluding the malfunctioning sensor. We propose a stochastic fault-tolerant scheme based on active inference and precision learning which does not require a priori threshold definitions to trigger fault recovery. Instead, the sensor precision, which represents its health status, is learned online in a model-free way allowing the system to gradually, and not abruptly exclude a failing unit. Experiments on a robotic manipulator show promising results and directions for future work are discussed.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2109.05870v1"
+      }
+    },
+    {
+      "citation_key": "nisslbeck2024coupled",
+      "title": "Coupled autoregressive active inference agents for control of multi-joint dynamical systems",
+      "authors": [
+        "Tim N. Nisslbeck",
+        "Wouter M. Kouw"
+      ],
+      "year": 2024,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2410.10415v1",
+      "pdf_path": "literature/pdfs/nisslbeck2024coupled.pdf",
+      "added_date": "2025-12-01T07:04:54.928867",
+      "abstract": "We propose an active inference agent to identify and control a mechanical system with multiple bodies connected by joints. This agent is constructed from multiple scalar autoregressive model-based agents, coupled together by virtue of sharing memories. Each subagent infers parameters through Bayesian filtering and controls by minimizing expected free energy over a finite time horizon. We demonstrate that a coupled agent of this kind is able to learn the dynamics of a double mass-spring-damper system, and drive it to a desired position through a balance of explorative and exploitative actions. It outperforms the uncoupled subagents in terms of surprise and goal alignment.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2410.10415v1"
+      }
+    },
+    {
+      "citation_key": "schubert2025active",
+      "title": "Active Inference for an Intelligent Agent in Autonomous Reconnaissance Missions",
+      "authors": [
+        "Johan Schubert",
+        "Farzad Kamrani",
+        "Tove Gustavi"
+      ],
+      "year": 2025,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2510.17450v1",
+      "pdf_path": "literature/pdfs/schubert2025active.pdf",
+      "added_date": "2025-12-01T07:04:55.640860",
+      "abstract": "We develop an active inference route-planning method for the autonomous control of intelligent agents. The aim is to reconnoiter a geographical area to maintain a common operational picture. To achieve this, we construct an evidence map that reflects our current understanding of the situation, incorporating both positive and \"negative\" sensor observations of possible target objects collected over time, and diffusing the evidence across the map as time progresses. The generative model of active inference uses Dempster-Shafer theory and a Gaussian sensor model, which provides input to the agent. The generative process employs a Bayesian approach to update a posterior probability distribution. We calculate the variational free energy for all positions within the area by assessing the divergence between a pignistic probability distribution of the evidence map and a posterior probability distribution of a target object based on the observations, including the level of surprise associated with receiving new observations. Using the free energy, we direct the agents' movements in a simulation by taking an incremental step toward a position that minimizes the free energy. This approach addresses the challenge of exploration and exploitation, allowing agents to balance searching extensive areas of the geographical map while tracking identified target objects.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2510.17450v1"
+      }
+    },
+    {
+      "citation_key": "he2024large",
+      "title": "Large Language Models (LLMs) Inference Offloading and Resource Allocation in Cloud-Edge Computing: An Active Inference Approach",
+      "authors": [
+        "Ying He",
+        "Jingcheng Fang",
+        "F. Yu",
+        "V. Leung"
+      ],
+      "year": 2024,
+      "doi": "10.1109/TMC.2024.3415661",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/4b82d9fbaf5427ff3799de777ffbe3efbf98b81d",
+      "pdf_path": null,
+      "added_date": "2025-12-01T07:04:56.030682",
+      "abstract": "With the increasing popularity and demands for large language model applications on mobile devices, it is difficult for resource-limited mobile terminals to run large-model inference tasks efficiently. Traditional deep reinforcement learning (DRL) based approaches have been used to offload large language models (LLMs) inference tasks to servers. However, existing DRL solutions suffer from data inefficiency, insensitivity to latency requirements, and non-adaptability to task load variations, which will degrade the performance of LLMs. In this paper, we propose a novel approach based on active inference for LLMs inference task offloading and resource allocation in cloud-edge computing. Extensive simulation results show that our proposed method has superior performance over mainstream DRLs, improves in data utilization efficiency, and is more adaptable to changing task load scenarios.",
+      "venue": "IEEE Transactions on Mobile Computing",
+      "citation_count": 50,
+      "metadata": {}
+    },
+    {
+      "citation_key": "friston2024from",
+      "title": "From pixels to planning: scale-free active inference",
+      "authors": [
+        "Karl J. Friston",
+        "Conor Heins",
+        "Tim Verbelen",
+        "Lancelot Da Costa",
+        "Tommaso Salvatori",
+        "Dimitrije Markovic",
+        "Alexander Tschantz",
+        "Magnus T. Koudahl",
+        "Christopher L. Buckley",
+        "Thomas Parr"
+      ],
+      "year": 2024,
+      "doi": "10.48550/arXiv.2407.20292",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/72cc98148b7c0092ce4babcb03d3c021753935bc",
+      "pdf_path": null,
+      "added_date": "2025-12-01T07:04:56.031262",
+      "abstract": "This paper describes a discrete state-space model -- and accompanying methods -- for generative modelling. This model generalises partially observed Markov decision processes to include paths as latent variables, rendering it suitable for active inference and learning in a dynamic setting. Specifically, we consider deep or hierarchical forms using the renormalisation group. The ensuing renormalising generative models (RGM) can be regarded as discrete homologues of deep convolutional neural networks or continuous state-space models in generalised coordinates of motion. By construction, these scale-invariant models can be used to learn compositionality over space and time, furnishing models of paths or orbits; i.e., events of increasing temporal depth and itinerancy. This technical note illustrates the automatic discovery, learning and deployment of RGMs using a series of applications. We start with image classification and then consider the compression and generation of movies and music. Finally, we apply the same variational principles to the learning of Atari-like games.",
+      "venue": "arXiv.org",
+      "citation_count": 15,
+      "metadata": {}
+    },
+    {
+      "citation_key": "bouizegarene2024narrative",
+      "title": "Narrative as active inference: an integrative account of cognitive and social functions in adaptation",
+      "authors": [
+        "Nabil Bouizegarene",
+        "M. Ramstead",
+        "Axel Constant",
+        "K. Friston",
+        "Laurence J. Kirmayer"
+      ],
+      "year": 2024,
+      "doi": "10.3389/fpsyg.2024.1345480",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/7c7b1aaa0e31360dd888770184e3b6d3c38c829a",
+      "pdf_path": "literature/pdfs/bouizegarene2024narrative.pdf",
+      "added_date": "2025-12-01T07:04:56.031739",
+      "abstract": "While the ubiquity and importance of narratives for human adaptation is widely recognized, there is no integrative framework for understanding the roles of narrative in human adaptation. Research has identified several cognitive and social functions of narratives that are conducive to well-being and adaptation as well as to coordinated social practices and enculturation. In this paper, we characterize the cognitive and social functions of narratives in terms of active inference, to support the claim that one of the main adaptive functions of narrative is to generate more useful (i.e., accurate, parsimonious) predictions for the individual, as well as to coordinate group action (over multiple timescales) through shared predictions about collective behavior. Active inference is a theory that depicts the fundamental tendency of living organisms to adapt by proactively inferring the causes of their sensations (including their own actions). We review narrative research on identity, event segmentation, episodic memory, future projections, storytelling practices, enculturation, and master narratives. We show how this research dovetails with the active inference framework and propose an account of the cognitive and social functions of narrative that emphasizes that narratives are for the future—even when they are focused on recollecting or recounting the past. Understanding narratives as cognitive and cultural tools for mutual prediction in social contexts can guide research on narrative in adaptive behavior and psychopathology, based on a parsimonious mechanistic model of some of the basic adaptive functions of narrative.",
+      "venue": "Frontiers in Psychology",
+      "citation_count": 19,
+      "metadata": {
+        "pdf_url": "https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1345480/pdf"
+      }
+    },
+    {
+      "citation_key": "albarracin2024feeling",
+      "title": "Feeling our place in the world: an active inference account of self-esteem",
+      "authors": [
+        "Mahault Albarracin",
+        "Gabriel Bouchard-Joly",
+        "Z. Sheikhbahaee",
+        "Mark Miller",
+        "R. J. Pitliya",
+        "Pierre Poirier"
+      ],
+      "year": 2024,
+      "doi": "10.1093/nc/niae007",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/61d1429db543660df4c2682efed81e4a399800c1",
+      "pdf_path": null,
+      "added_date": "2025-12-01T07:04:58.143928",
+      "abstract": "Abstract Self-esteem, the evaluation of one’s own worth or value, is a critical aspect of psychological well-being and mental health. In this paper, we propose an active inference account of self-esteem, casting it as a sociometer or an inferential capacity to interpret one’s standing within a social group. This approach allows us to explore the interaction between an individual’s self-perception and the expectations of their social environment.When there is a mismatch between these perceptions and expectations, the individual needs to adjust their actions or update their self-perception to better align with their current experiences. We also consider this hypothesis in relation with recent research on affective inference, suggesting that self-esteem enables the individual to track and respond to this discrepancy through affective states such as anxiety or positive affect. By acting as an inferential sociometer, self-esteem allows individuals to navigate and adapt to their social environment, ultimately impacting their psychological well-being and mental health.",
+      "venue": "Neuroscience of Consciousness",
+      "citation_count": 15,
+      "metadata": {
+        "pdf_url": "https://academic.oup.com/nc/article-pdf/2024/1/niae007/57135828/niae007.pdf"
+      }
+    }
+  ]
+}

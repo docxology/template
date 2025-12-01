@@ -77,3 +77,4 @@ class TestRepoScannerStatistics:
         
         assert results.statistics is not None or True
 
+

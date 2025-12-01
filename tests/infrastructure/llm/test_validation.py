@@ -237,3 +237,199 @@ class TestCompleteValidation:
                 mode="structured",
                 schema={"type": "object"}
             )
+
+
+class TestJSONValidationEdgeCases:
+    """Test edge cases for JSON validation - covers line 25."""
+
+    def test_validate_generic_code_block(self):
+        """Test JSON wrapped in generic code blocks (not ```json).
+        
+        Covers line 25: code block extraction without explicit json tag.
+        """
+        # Code block without 'json' tag
+        generic_block = "```\n{\"key\": \"value\"}\n```"
+        result = OutputValidator.validate_json(generic_block)
+        assert result["key"] == "value"
+
+    def test_validate_code_block_with_text_before(self):
+        """Test code block with surrounding text."""
+        content = "Here is the JSON:\n```\n{\"result\": true}\n```\nEnd."
+        result = OutputValidator.validate_json(content)
+        assert result["result"] is True
+
+    def test_validate_nested_json(self):
+        """Test deeply nested JSON validation."""
+        nested_json = '{"a": {"b": {"c": {"d": 1}}}}'
+        result = OutputValidator.validate_json(nested_json)
+        assert result["a"]["b"]["c"]["d"] == 1
+
+    def test_validate_json_array(self):
+        """Test JSON array validation."""
+        json_array = '[1, 2, 3]'
+        result = OutputValidator.validate_json(json_array)
+        assert result == [1, 2, 3]
+
+
+class TestTypeCheckingEdgeCases:
+    """Test edge cases for type checking - covers line 116."""
+
+    def test_check_unknown_type(self):
+        """Test _check_type with unknown type returns True.
+        
+        Covers line 116: unknown type handling.
+        """
+        # Unknown type should return True (permissive)
+        schema = {
+            "type": "object",
+            "properties": {
+                "field": {"type": "unknowntype"}  # Unknown type
+            }
+        }
+        data = {"field": "any value"}
+        # Should pass because unknown types are permissive
+        assert OutputValidator.validate_structure(data, schema) is True
+
+    def test_check_null_type(self):
+        """Test type checking with null type in schema."""
+        schema = {
+            "type": "object",
+            "properties": {
+                "field": {"type": "null"}  # Not in type_map
+            }
+        }
+        data = {"field": None}
+        # Should pass because "null" is unknown type
+        assert OutputValidator.validate_structure(data, schema) is True
+
+    def test_check_type_boolean(self):
+        """Test boolean type checking."""
+        schema = {
+            "type": "object",
+            "properties": {
+                "flag": {"type": "boolean"}
+            }
+        }
+        data = {"flag": True}
+        assert OutputValidator.validate_structure(data, schema) is True
+        
+        # Wrong type
+        data_wrong = {"flag": "true"}  # String, not boolean
+        with pytest.raises(ValidationError):
+            OutputValidator.validate_structure(data_wrong, schema)
+
+    def test_check_type_number(self):
+        """Test number type checking (int and float)."""
+        schema = {
+            "type": "object",
+            "properties": {
+                "value": {"type": "number"}
+            }
+        }
+        # Int is a number
+        assert OutputValidator.validate_structure({"value": 42}, schema) is True
+        # Float is a number
+        assert OutputValidator.validate_structure({"value": 3.14}, schema) is True
+
+    def test_check_type_array(self):
+        """Test array type checking."""
+        schema = {
+            "type": "object",
+            "properties": {
+                "items": {"type": "array"}
+            }
+        }
+        assert OutputValidator.validate_structure({"items": [1, 2, 3]}, schema) is True
+        
+        # Wrong type
+        with pytest.raises(ValidationError):
+            OutputValidator.validate_structure({"items": "not an array"}, schema)
+
+    def test_check_type_object(self):
+        """Test object type checking."""
+        schema = {
+            "type": "object",
+            "properties": {
+                "data": {"type": "object"}
+            }
+        }
+        assert OutputValidator.validate_structure({"data": {"nested": True}}, schema) is True
+
+
+class TestCompleteValidationEdgeCases:
+    """Test edge cases for complete validation - covers lines 166, 178."""
+
+    def test_validate_complete_with_formatting_issues(self):
+        """Test validate_complete logs warning for formatting issues.
+        
+        Covers line 166: warning logging for formatting issues.
+        """
+        # Content with double spaces (formatting issue)
+        content = "This  has  double  spaces but is otherwise valid."
+        # Should still return True for standard mode (formatting is warning only)
+        result = OutputValidator.validate_complete(content, mode="standard")
+        assert result is True
+
+    def test_validate_complete_whitespace_only(self):
+        """Test validate_complete with whitespace only content."""
+        with pytest.raises(ValidationError):
+            OutputValidator.validate_complete("   \n\t  ")
+
+    def test_validate_complete_newline_only(self):
+        """Test validate_complete with newline only content."""
+        with pytest.raises(ValidationError):
+            OutputValidator.validate_complete("\n\n\n")
+
+    def test_validate_complete_structured_without_schema(self):
+        """Test structured mode without schema."""
+        content = '{"key": "value"}'
+        # Without schema, structured mode returns True (falls through)
+        result = OutputValidator.validate_complete(content, mode="structured")
+        assert result is True
+
+    def test_validate_complete_unknown_mode(self):
+        """Test unknown mode falls through to return True."""
+        content = "Valid content"
+        result = OutputValidator.validate_complete(content, mode="unknown_mode")
+        assert result is True
+
+
+class TestCitationValidationEdgeCases:
+    """Test edge cases for citation validation."""
+
+    def test_extract_multiple_citation_types(self):
+        """Test extracting multiple citation types."""
+        content = "As shown (Smith 2020), also see [1] and @bibtex2021."
+        citations = OutputValidator.validate_citations(content)
+        # Should find multiple citations
+        assert len(citations) >= 2
+
+    def test_extract_no_citations(self):
+        """Test content with no citations."""
+        content = "This text has no citations whatsoever."
+        citations = OutputValidator.validate_citations(content)
+        assert len(citations) == 0
+
+    def test_extract_multi_author_citation(self):
+        """Test multi-author citation extraction."""
+        content = "Previous work (Smith & Jones 2020) shows..."
+        citations = OutputValidator.validate_citations(content)
+        assert len(citations) >= 1
+
+
+class TestFormattingValidationEdgeCases:
+    """Test edge cases for formatting validation."""
+
+    def test_formatting_both_issues(self):
+        """Test content with both punctuation and spacing issues."""
+        bad_content = "What???  Double  spaces!!!"
+        assert OutputValidator.validate_formatting(bad_content) is False
+
+    def test_formatting_empty_string(self):
+        """Test formatting validation with empty string."""
+        assert OutputValidator.validate_formatting("") is True
+
+    def test_formatting_unicode(self):
+        """Test formatting validation with unicode content."""
+        unicode_content = "This has émojis 🎉 and accénts."
+        assert OutputValidator.validate_formatting(unicode_content) is True

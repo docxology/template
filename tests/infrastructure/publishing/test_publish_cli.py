@@ -59,3 +59,4 @@ class TestPublishCliModule:
         """Test that publishing module is imported."""
         assert hasattr(publish_cli, 'publishing')
 
+

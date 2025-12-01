@@ -289,3 +289,4 @@ class TestCliModuleStructure:
         """Test that RenderManager is imported."""
         assert hasattr(cli, 'RenderManager')
 
+

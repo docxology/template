@@ -87,3 +87,4 @@ class TestRepoScannerIntegration:
         # Module should be importable
         assert repo_scanner is not None
 
+

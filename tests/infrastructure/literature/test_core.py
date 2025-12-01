@@ -35,7 +35,8 @@ def test_download_paper(mock_config, sample_result, mocker):
     path = searcher.download_paper(sample_result)
 
     assert path == Path("test.pdf")
-    mock_handler_instance.download_pdf.assert_called_with(sample_result.pdf_url)
+    # Now passes result for citation key naming
+    mock_handler_instance.download_pdf.assert_called_with(sample_result.pdf_url, result=sample_result)
 
 def test_add_to_library(mock_config, sample_result, mocker):
     mock_ref_manager = mocker.patch("infrastructure.literature.core.ReferenceManager")

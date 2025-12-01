@@ -81,7 +81,7 @@ class LLMConfig:
     
     Supports environment variable configuration:
         OLLAMA_HOST: Base URL (default: http://localhost:11434)
-        OLLAMA_MODEL: Default model (default: llama3)
+        OLLAMA_MODEL: Default model (default: qwen3:4b)
         LLM_TEMPERATURE: Temperature (default: 0.7)
         LLM_MAX_TOKENS: Max tokens (default: 2048)
         LLM_CONTEXT_WINDOW: Context window (default: 4096)
@@ -106,14 +106,14 @@ class LLMConfig:
     timeout: float = 60.0
     
     # Model settings
-    default_model: str = "llama3"
-    fallback_models: List[str] = field(default_factory=lambda: ["mistral", "phi3"])
+    default_model: str = "qwen3:4b"  # Fast with 128K context, excellent instruction following
+    fallback_models: List[str] = field(default_factory=lambda: ["llama3-gradient", "llama3", "mistral"])
     
     # Generation settings
     temperature: float = 0.7
     max_tokens: int = 2048
     top_p: float = 0.9
-    context_window: int = 4096
+    context_window: int = 131072  # 128K default, qwen3:4b supports 128K
     num_ctx: Optional[int] = None  # Ollama-specific context size
     seed: Optional[int] = None  # Default seed for reproducibility
     
@@ -179,10 +179,10 @@ class LLMConfig:
         
         return cls(
             base_url=os.environ.get("OLLAMA_HOST", "http://localhost:11434"),
-            default_model=os.environ.get("OLLAMA_MODEL", "llama3"),
+            default_model=os.environ.get("OLLAMA_MODEL", "qwen3:4b"),
             temperature=_get_float("LLM_TEMPERATURE", 0.7),
             max_tokens=_get_int("LLM_MAX_TOKENS", 2048),
-            context_window=_get_int("LLM_CONTEXT_WINDOW", 4096),
+            context_window=_get_int("LLM_CONTEXT_WINDOW", 131072),
             timeout=_get_float("LLM_TIMEOUT", 60.0),
             num_ctx=_get_optional_int("LLM_NUM_CTX"),
             seed=_get_optional_int("LLM_SEED"),

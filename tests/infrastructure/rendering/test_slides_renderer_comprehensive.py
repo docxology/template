@@ -138,3 +138,4 @@ class TestSlidesRendererIntegration:
         # Module should be usable
         assert slides_renderer is not None
 
+

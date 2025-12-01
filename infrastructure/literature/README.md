@@ -4,10 +4,22 @@ Tools for searching papers, downloading PDFs, and managing citations.
 
 ## Features
 
-- **Multi-source Search**: Unified search across arXiv and Semantic Scholar.
-- **PDF Management**: Automatic downloading and organization.
-- **Reference Management**: Auto-generation of BibTeX entries.
-- **Deduplication**: Intelligent merging of results from multiple sources.
+- **Multi-source Search**: Unified search across arXiv and Semantic Scholar
+- **PDF Management**: Automatic downloading with citation key naming
+- **Reference Management**: BibTeX generation with deduplication
+- **Library Index**: JSON-based tracking of all papers with metadata
+- **Environment Configuration**: Load settings from environment variables
+- **CLI Interface**: Command-line search, download, and library management
+
+## Output Files
+
+```
+literature/
+├── references.bib    # BibTeX entries
+├── library.json      # JSON index with full metadata
+└── pdfs/             # Downloaded PDFs
+    └── author2024title.pdf
+```
 
 ## Quick Start
 
@@ -20,11 +32,86 @@ searcher = LiteratureSearch()
 # Search
 papers = searcher.search("machine learning", limit=5)
 
-# Process
+# Process results
 for paper in papers:
-    print(paper.title)
+    print(f"{paper.title} ({paper.year})")
+    
+    # Add to library (BibTeX + JSON)
+    citation_key = searcher.add_to_library(paper)
+    
+    # Download PDF (named as citation_key.pdf)
     if paper.pdf_url:
         searcher.download_paper(paper)
-    searcher.add_to_library(paper)
+
+# Get library stats
+stats = searcher.get_library_stats()
+print(f"Total papers: {stats['total_entries']}")
 ```
 
+## CLI Usage
+
+```bash
+# Basic search (adds to library automatically)
+python3 -m infrastructure.literature.cli search "deep learning"
+
+# Search with options
+python3 -m infrastructure.literature.cli search "transformers" \
+    --limit 20 \
+    --sources arxiv,semanticscholar \
+    --download
+
+# List papers in library
+python3 -m infrastructure.literature.cli library list
+
+# Show library statistics
+python3 -m infrastructure.literature.cli library stats
+
+# Export library
+python3 -m infrastructure.literature.cli library export --output export.json
+```
+
+## Configuration
+
+### Environment Variables
+
+```bash
+export LITERATURE_DEFAULT_LIMIT=20
+export LITERATURE_DOWNLOAD_DIR=/path/to/pdfs
+export LITERATURE_LIBRARY_INDEX=/path/to/library.json
+export SEMANTICSCHOLAR_API_KEY=your-api-key
+```
+
+### Programmatic
+
+```python
+from infrastructure.literature import LiteratureConfig
+
+config = LiteratureConfig(
+    download_dir="custom/pdfs",
+    bibtex_file="custom/refs.bib",
+    library_index_file="custom/library.json"
+)
+searcher = LiteratureSearch(config)
+
+# Or load from environment
+config = LiteratureConfig.from_env()
+```
+
+## Public API
+
+```python
+from infrastructure.literature import (
+    LiteratureSearch,   # Main search interface
+    LiteratureConfig,   # Configuration dataclass
+    SearchResult,       # Search result dataclass
+    PDFHandler,         # PDF download handler
+    ReferenceManager,   # BibTeX management
+    LibraryIndex,       # JSON library index
+    LibraryEntry,       # Library entry dataclass
+)
+```
+
+## See Also
+
+- [`AGENTS.md`](AGENTS.md) - Detailed documentation
+- [`../AGENTS.md`](../AGENTS.md) - Infrastructure overview

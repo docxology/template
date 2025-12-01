@@ -127,3 +127,4 @@ class TestRenderCliIntegration:
         # Module should be importable
         assert render_all_cli is not None
 
+
