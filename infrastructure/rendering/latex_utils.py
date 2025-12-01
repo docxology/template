@@ -34,9 +34,13 @@ def compile_latex(
         
     output_dir.mkdir(parents=True, exist_ok=True)
     
+    # IMPORTANT: -shell-escape is required for XeTeX to properly determine PNG image
+    # dimensions. Without this flag, XeTeX cannot read PNG bounding box information
+    # and will produce "Division by 0" errors when including graphics.
     cmd = [
         compiler,
         "-interaction=nonstopmode",
+        "-shell-escape",
         f"-output-directory={output_dir}",
         str(tex_file)
     ]

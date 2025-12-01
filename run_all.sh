@@ -113,6 +113,44 @@ format_duration() {
 }
 
 # ============================================================================
+# Clean Output Directories
+# ============================================================================
+
+clean_output_directories() {
+    echo
+    echo -e "${YELLOW}[0/7] Clean Output Directories${NC}"
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    
+    local project_output="$REPO_ROOT/project/output"
+    local root_output="$REPO_ROOT/output"
+    
+    # Clean project/output/
+    if [[ -d "$project_output" ]]; then
+        log_info "Cleaning project/output/..."
+        rm -rf "$project_output"/*
+        # Recreate essential subdirectories
+        mkdir -p "$project_output"/{pdf,figures,data,reports,simulations,slides,web}
+        log_success "Cleaned project/output/ (recreated subdirectories)"
+    else
+        mkdir -p "$project_output"/{pdf,figures,data,reports,simulations,slides,web}
+        log_info "Created project/output/ directory structure"
+    fi
+    
+    # Clean root output/
+    if [[ -d "$root_output" ]]; then
+        log_info "Cleaning output/..."
+        rm -rf "$root_output"/*
+        mkdir -p "$root_output"/{pdf,figures,data,reports,simulations,slides,web}
+        log_success "Cleaned output/ (recreated subdirectories)"
+    else
+        mkdir -p "$root_output"/{pdf,figures,data,reports,simulations,slides,web}
+        log_info "Created output/ directory structure"
+    fi
+    
+    log_success "Output directories cleaned - fresh start"
+}
+
+# ============================================================================
 # Stage Execution Functions
 # ============================================================================
 
@@ -245,6 +283,9 @@ main() {
     log_info "Repository: $REPO_ROOT"
     log_info "Python: $(python3 --version)"
     echo
+    
+    # Stage 0: Clean output directories for fresh start
+    clean_output_directories
     
     # Stage 1: Setup Environment
     local stage_start=$(date +%s)

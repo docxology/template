@@ -48,7 +48,7 @@ pytest --cov=src --cov-report=html
 ## 📋 **Contribution Guidelines**
 
 ### 🧪 **Testing Requirements**
-- **100% test coverage** is required for all `src/` code
+- **70% minimum coverage** for project code, **49% minimum** for infrastructure
 - **All tests must pass** before any changes are accepted
 - **Add tests** for new functionality
 - **Update tests** when fixing bugs

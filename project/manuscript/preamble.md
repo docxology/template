@@ -8,6 +8,7 @@ This file contains LaTeX preamble commands that will be inserted at the beginnin
 \usepackage{amsfonts}                 % Additional math fonts
 \usepackage{amsthm}                   % Theorem environments
 \usepackage{graphicx}                 % Include graphics
+\usepackage[margin=1in]{geometry}     % Wider margins (1 inch all sides)
 \usepackage{float}                    % Better float placement
 \usepackage{booktabs}                 % Professional tables
 \usepackage{longtable}                % Long tables spanning pages
@@ -53,10 +54,10 @@ This file contains LaTeX preamble commands that will be inserted at the beginnin
 % Configure hyperref for proper linking
 \hypersetup{
     colorlinks=true,
-    linkcolor=blue,
-    citecolor=blue,
-    urlcolor=blue,
-    filecolor=blue,
+    linkcolor=red,
+    citecolor=red,
+    urlcolor=red,
+    filecolor=red,
     pdfborder={0 0 0},
     bookmarks=true,
     bookmarksnumbered=true,
@@ -188,3 +189,4 @@ This file contains LaTeX preamble commands that will be inserted at the beginnin
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
 \linespread{1.2}  % Slightly increased line spacing for readability
+```

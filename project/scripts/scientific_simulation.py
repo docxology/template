@@ -104,7 +104,8 @@ def generate_analysis_figures() -> None:
     
     # Analyze convergence
     convergence = analyze_convergence(values, target=None)
-    print(f"  Convergence: {convergence.is_converged}")
+    convergence_status = "reached" if convergence.is_converged else "not yet reached (expected for demo sinusoidal data)"
+    print(f"  Convergence: {convergence_status}")
     
     # Calculate statistics
     stats = calculate_descriptive_stats(values)

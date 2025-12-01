@@ -33,7 +33,7 @@ Automated sequence of operations that validates tests, runs scripts, generates d
 **See**: [BUILD_SYSTEM.md](BUILD_SYSTEM.md)
 
 ### Business Logic
-Core algorithms, mathematical functions, and computational methods. Must reside in `src/` directory with 100% test coverage. Scripts should never implement business logic.
+Core algorithms, mathematical functions, and computational methods. Must reside in `src/` directory with comprehensive test coverage. Scripts should never implement business logic.
 
 **See**: [Thin Orchestrator Pattern](#thin-orchestrator-pattern)
 
@@ -47,7 +47,7 @@ Single PDF document containing all manuscript sections in proper order. Generate
 **See**: [PDF Generation](#pdf-generation)
 
 ### Coverage Requirement
-Mandatory 100% test coverage for all code in `src/` directory. Enforced by build pipeline before PDF generation.
+Comprehensive test coverage required: 70% minimum for project code, 49% minimum for infrastructure. Enforced by build pipeline before PDF generation.
 
 **Check**: `pytest tests/ --cov=src --cov-report=term-missing`
 
@@ -219,7 +219,7 @@ Process of converting markdown sources to professional PDF documents using Pando
 
 **Pipeline**: Markdown → Pandoc → LaTeX → XeLaTeX → PDF
 
-**Time**: ~75 seconds for complete rebuild
+**Time**: ~58 seconds for complete rebuild
 
 **See**: [BUILD_SYSTEM.md](BUILD_SYSTEM.md)
 
@@ -275,7 +275,7 @@ Ability to regenerate exact same results from source. Ensured through determinis
 
 **Tools**: Version locking, seed fixing, environment capture
 
-**See**: [src/reproducibility.py](../src/reproducibility.py)
+**See**: [infrastructure/build/reproducibility.py](../infrastructure/build/reproducibility.py)
 
 ## S
 
@@ -300,15 +300,15 @@ Unique identifier for manuscript section used in cross-references.
 **See**: [Cross-Reference](#cross-reference)
 
 ### Source Code
-Core business logic residing in `src/` directory. Must have 100% test coverage.
+Core business logic residing in `src/` directory. Must have comprehensive test coverage.
 
 **Requirements**:
 - Type hints on public APIs
 - Docstrings on all functions
 - No circular imports
-- 100% test coverage
+- Comprehensive test coverage
 
-**See**: [src/AGENTS.md](../src/AGENTS.md)
+**See**: [infrastructure/AGENTS.md](../infrastructure/AGENTS.md), [project/src/AGENTS.md](../project/src/AGENTS.md)
 
 ### Statement Coverage
 Testing metric ensuring every line of code is executed during tests. Required to be 100% for all `src/` code.
@@ -339,7 +339,7 @@ GitHub repository type that can be used to create new repositories with same str
 **Use**: Click "Use this template" button on GitHub
 
 ### Test Coverage
-Percentage of code executed during test runs. This template requires 100% coverage for `src/` code.
+Percentage of code executed during test runs. This template requires 70% minimum coverage for project code and 49% minimum for infrastructure.
 
 **Types**:
 - Statement coverage (every line)
@@ -352,7 +352,7 @@ Percentage of code executed during test runs. This template requires 100% covera
 ### Test Suite
 Collection of all test files in `tests/` directory. Ensures all functionality works correctly.
 
-**Status**: 320/322 tests passing (99.4%)
+**Status**: 878 tests passing (558 infra + 320 project, 100%)
 
 **Run**: `pytest tests/`
 
@@ -362,7 +362,8 @@ Collection of all test files in `tests/` directory. Ensures all functionality wo
 Process of validating code correctness through automated test cases. No mocks allowed - all tests use real data.
 
 **Requirements**:
-- 100% coverage
+- 70% minimum for project code (currently 99.88%)
+- 49% minimum for infrastructure (currently 55.89%)
 - Real data (no mocks)
 - Deterministic results
 - All tests must pass
@@ -375,7 +376,7 @@ Core architectural principle where scripts are lightweight wrappers that import 
 **Principles**:
 - ALL business logic in `src/`
 - Scripts only orchestrate
-- 100% test coverage of `src/`
+- Comprehensive test coverage of `src/`
 - Clear separation of concerns
 
 **Benefits**: Maintainability, testability, reusability, clarity
@@ -414,7 +415,7 @@ Automated checking of various aspects: tests, markdown, PDFs, coverage, etc.
 - Test validation (pytest)
 - Markdown validation (validate_markdown.py)
 - PDF validation (validate_pdf_output.py)
-- Coverage validation (.coveragerc)
+- Coverage validation (pyproject.toml `[tool.coverage.*]`)
 
 **See**: [Build Pipeline](#build-pipeline)
 

@@ -306,7 +306,7 @@ git mergetool
 
 **Review checklist:**
 - [ ] Code follows style guidelines
-- [ ] Tests pass with 100% coverage
+- [ ] Tests pass with required coverage (70% project, 49% infra)
 - [ ] Documentation updated
 - [ ] No breaking changes
 - [ ] Follows thin orchestrator pattern

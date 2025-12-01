@@ -37,7 +37,7 @@ This document summarizes the implementation of the **thin orchestrator pattern**
 #### Clear Separation of Concerns
 - **`src/`**: Contains ALL business logic, algorithms, and mathematical implementations
 - **`scripts/`**: Lightweight wrappers that import and use src/ methods
-- **`tests/`**: Ensures 100% coverage of src/ functionality
+- **`tests/`**: Ensures comprehensive coverage of all functionality
 - **`scripts/run_all.py`**: Orchestrates the entire 6-stage pipeline
 
 #### Script Requirements
@@ -78,7 +78,7 @@ def generate_figure():
 
 ### 3. **Integration with Build System**
 The `scripts/run_all.py` orchestrator automatically:
-1. **Runs tests** with 100% coverage requirement (ensuring src/ methods work)
+1. **Runs tests** with coverage requirements (ensuring src/ methods work)
 2. **Executes scripts** (validating src/ integration)
 3. **Generates figures** (using tested src/ methods)
 4. **Builds PDFs** (with integrated figures)
@@ -91,7 +91,7 @@ The `scripts/run_all.py` orchestrator automatically:
 - Scripts automatically use updated functionality
 
 ### 2. **Testability**
-- 100% test coverage of core functionality
+- Comprehensive test coverage of core functionality
 - Scripts can be tested by mocking src/ imports
 - Integration testing validates the entire pipeline
 
@@ -150,7 +150,7 @@ def calculate_average(data):
 - [x] PDF generation with integrated figures
 
 ### 🔄 **Working Pipeline**
-1. **Tests**: Ensure 100% coverage of src/ methods
+1. **Tests**: Ensure comprehensive coverage of src/ methods
 2. **Scripts**: Import and use tested src/ methods
 3. **Figures**: Generated using src/ methods
 4. **PDFs**: Include figures with proper cross-references
@@ -167,7 +167,7 @@ def calculate_average(data):
 
 ### Extending src/ Modules
 1. Add new mathematical functions to src/
-2. Ensure 100% test coverage
+2. Ensure comprehensive test coverage
 3. Update scripts to use new functionality
 4. Validate integration through build system
 
@@ -175,7 +175,7 @@ def calculate_average(data):
 
 The thin orchestrator pattern has been successfully implemented, establishing a clear architecture where:
 
-- **`@src/`** contains all business logic with 100% test coverage
+- **`@src/`** contains all business logic with comprehensive test coverage
 - **`@scripts/`** are lightweight wrappers that use tested src/ methods
 - **`@tests/`** validates all src/ functionality
 - **`scripts/run_all.py`** orchestrates the complete 6-stage pipeline

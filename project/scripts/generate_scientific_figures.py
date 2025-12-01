@@ -232,7 +232,10 @@ def insert_figures_into_manuscript(figure_labels: list[str]) -> None:
     
     # Update references
     updated = markdown_integration.update_all_references(target_file)
-    print(f"  Updated {updated} references")
+    if updated == 0:
+        print(f"  Reference scan complete: {updated} updates (figures already present or no new references)")
+    else:
+        print(f"  Reference scan complete: {updated} reference(s) updated")
 
 
 def validate_all_figures() -> None:

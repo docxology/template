@@ -7,6 +7,7 @@ This master orchestrator coordinates the entire build pipeline:
 3. STAGE 02: Run Analysis - Execute analysis and figure generation
 4. STAGE 03: Render PDF - Generate PDFs from markdown
 5. STAGE 04: Validate Output - Validate all generated outputs
+6. STAGE 05: Copy Outputs - Copy final deliverables to root output/
 
 One-line execution for complete end-to-end build.
 
@@ -17,6 +18,7 @@ Architecture:
 """
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 import time
@@ -30,6 +32,50 @@ from infrastructure.core.exceptions import PipelineError
 
 # Set up logger for this module
 logger = get_logger(__name__)
+
+
+def clean_output_directories() -> None:
+    """Clean output directories for a fresh pipeline start.
+    
+    Removes all contents from both project/output/ and output/ directories,
+    then recreates the expected subdirectory structure.
+    
+    This ensures each pipeline run starts with a clean state and all
+    generated outputs are fresh.
+    """
+    repo_root = Path(__file__).parent.parent
+    
+    output_dirs = [
+        repo_root / "project" / "output",
+        repo_root / "output",
+    ]
+    
+    subdirs = ["pdf", "figures", "data", "reports", "simulations", "slides", "web"]
+    
+    logger.info("\n[0/N] Clean Output Directories")
+    logger.info("-" * 70)
+    
+    for output_dir in output_dirs:
+        relative_path = output_dir.relative_to(repo_root)
+        
+        if output_dir.exists():
+            logger.info(f"  Cleaning {relative_path}/...")
+            # Remove all contents
+            for item in output_dir.iterdir():
+                if item.is_dir():
+                    shutil.rmtree(item)
+                else:
+                    item.unlink()
+        else:
+            logger.info(f"  Creating {relative_path}/...")
+        
+        # Recreate subdirectory structure
+        for subdir in subdirs:
+            (output_dir / subdir).mkdir(parents=True, exist_ok=True)
+        
+        log_success(f"Cleaned {relative_path}/ (recreated subdirectories)", logger)
+    
+    log_success("Output directories cleaned - fresh start", logger)
 
 
 def discover_orchestrators() -> list[Path]:
@@ -213,6 +259,9 @@ def main() -> int:
     """)
     
     try:
+        # Stage 0: Clean output directories for fresh start
+        clean_output_directories()
+        
         # Discover stages
         orchestrators = discover_orchestrators()
         

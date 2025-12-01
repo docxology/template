@@ -371,7 +371,7 @@ The scientific simulation system integrates seamlessly with the existing build p
 3. **Validate results** - Use `ValidationFramework` to check outputs
 4. **Generate reports** - Use `ReportGenerator` for documentation
 5. **Follow reproducibility** - Always use seeds for random operations
-6. **Test thoroughly** - Ensure 100% test coverage for all `src/` modules
+6. **Test thoroughly** - Ensure comprehensive test coverage for all `src/` modules
 
 ## See Also
 

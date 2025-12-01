@@ -15,7 +15,7 @@
 
 [project]
 name = "research-project-template"
-version = "0.1.0"
+version = "2.0.0"
 description = "A comprehensive template for research projects with test-driven development, automated PDF generation, and professional documentation structure"
 authors = [{ name = "Research Template Team" }]
 readme = "README.md"
@@ -52,11 +52,25 @@ dev = [
 [tool.uv]
 
 [tool.pytest.ini_options]
-addopts = "-q"
-pythonpath = [".", "infrastructure", "project/src"]  # Root infrastructure + project src
-testpaths = ["tests", "project/tests"]  # Test both infrastructure and project
+# Pytest configuration (consolidated from pytest.ini)
+pythonpath = [".", "infrastructure", "project/src"]
+testpaths = ["tests", "project/tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers --disable-warnings"
+markers = [
+    "requires_ollama: mark test as requiring running Ollama server (skip with -m 'not requires_ollama')",
+    "slow: mark test as slow running",
+    "integration: mark test as integration test",
+]
+# pytest-asyncio configuration (fixes deprecation warning)
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "function"
 
 [tool.coverage.run]
+# Coverage configuration (consolidated from .coveragerc)
+branch = true
 source = ["infrastructure", "project/src"]
 omit = [
     "*/tests/*",
@@ -64,10 +78,16 @@ omit = [
     "*/__pycache__/*",
     "*/tmp/*",
     "*/temp/*",
+    "*/site-packages/*",
     "/private/var/folders/*",
 ]
 
 [tool.coverage.report]
+# fail_under = 70 aligns with project target
+# See AGENTS.md#coverage-system and docs/BUILD_SYSTEM.md for details
+fail_under = 70
+show_missing = true
+precision = 2
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",

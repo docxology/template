@@ -60,19 +60,26 @@ START: New code to write?
 
 **Example: Figure Manager**
 ```python
-# src/infrastructure/figure_manager.py
+# infrastructure/documentation/figure_manager.py
 
 class FigureManager:
     """Manage figure numbering and references.
     
     This is infrastructure - works for ANY research project.
     """
-    def register_figure(self, path: str, label: str) -> None:
+    def register_figure(
+        self,
+        filename: str,
+        caption: str,
+        label: Optional[str] = None,
+        section: Optional[str] = None,
+        **kwargs
+    ) -> FigureMetadata:
         """Register a figure with automatic numbering."""
         pass
     
-    def generate_latex_ref(self, label: str) -> str:
-        """Generate LaTeX reference to figure."""
+    def generate_latex_figure_block(self, label: str) -> str:
+        """Generate LaTeX figure block."""
         pass
 ```
 
@@ -389,8 +396,7 @@ Rule: If it can be tested independently, it goes in src/.
 
 ```python
 # src/scientific/my_analysis.py
-from infrastructure.figure_manager import FigureManager
-from infrastructure.markdown_integration import MarkdownIntegration
+from infrastructure.documentation import FigureManager, MarkdownIntegration
 
 def analyze_and_report(data):
     # Scientific computation
@@ -398,7 +404,11 @@ def analyze_and_report(data):
     
     # Use infrastructure for document management
     fm = FigureManager()
-    fm.register_figure("results.png", label="fig:results")
+    fm.register_figure(
+        filename="results.png",
+        caption="Analysis results",
+        label="fig:results"
+    )
     
     return results
 ```
@@ -427,8 +437,8 @@ Choose based on WHAT you're testing, not WHERE:
 # tests/infrastructure/test_figure_manager.py
 def test_figure_numbering():
     fm = FigureManager()
-    fm.register_figure("a.png", "fig:a")
-    assert fm.next_number == 2
+    fm.register_figure(filename="a.png", caption="Figure A", label="fig:a")
+    assert len(fm.figures) == 1
 
 # Scientific code → tests/scientific/
 # tests/scientific/test_simulation.py
@@ -483,6 +493,8 @@ Add to src/scientific/
 ---
 
 When in doubt: **Ask yourself** — "Would another research group use this unchanged?" If yes → Infrastructure. If no → Scientific.
+
+
 
 
 

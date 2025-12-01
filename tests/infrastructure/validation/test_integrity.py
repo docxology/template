@@ -784,6 +784,63 @@ class TestEdgeCases:
         
         manifest = integrity.load_integrity_manifest(manifest_path)
         assert manifest is None
+    
+    def test_verify_output_completeness_missing_tex_file(self, tmp_path):
+        """Test output completeness with missing tex file (covers lines 613-614)."""
+        tex_dir = tmp_path / "tex"
+        tex_dir.mkdir()
+        # Create some but not all expected tex files
+        (tex_dir / "01_abstract.tex").write_text("\\section{Abstract}")
+        # Missing other expected files like 02_introduction.tex
+        
+        completeness = integrity.verify_output_completeness(tmp_path)
+        
+        assert completeness['latex_complete'] == False
+        assert any("LaTeX:" in out for out in completeness['missing_outputs'])
+    
+    def test_verify_output_completeness_empty_tex_file(self, tmp_path):
+        """Test output completeness with empty tex file (covers lines 616-617)."""
+        tex_dir = tmp_path / "tex"
+        tex_dir.mkdir()
+        # Create an empty tex file
+        empty_tex = tex_dir / "01_abstract.tex"
+        empty_tex.write_text("")  # Empty file
+        
+        completeness = integrity.verify_output_completeness(tmp_path)
+        
+        assert completeness['latex_complete'] == False
+        assert any("Empty LaTeX" in out for out in completeness['incomplete_outputs'])
+    
+    def test_verify_output_completeness_empty_html(self, tmp_path):
+        """Test output completeness with empty HTML file (covers lines 625-626)."""
+        html_file = tmp_path / "project_combined.html"
+        html_file.write_text("")  # Empty file
+        
+        completeness = integrity.verify_output_completeness(tmp_path)
+        
+        assert completeness['html_complete'] == False
+        assert any("Empty HTML" in out for out in completeness['incomplete_outputs'])
+    
+    def test_create_integrity_manifest_with_subdirectories(self, tmp_path):
+        """Test manifest creation with subdirectories (covers lines 670-671)."""
+        # Create nested directory structure
+        subdir1 = tmp_path / "subdir1"
+        subdir2 = tmp_path / "subdir2"
+        subdir1.mkdir()
+        subdir2.mkdir()
+        
+        # Create files in each subdirectory
+        (subdir1 / "file1.txt").write_text("Content 1")
+        (subdir2 / "file2.txt").write_text("Content 2")
+        (subdir2 / "file3.txt").write_text("Content 3")
+        
+        manifest = integrity.create_integrity_manifest(tmp_path)
+        
+        # Should have directory structure entries
+        assert 'subdir1' in manifest['directory_structure']
+        assert 'subdir2' in manifest['directory_structure']
+        assert manifest['directory_structure']['subdir1']['file_count'] == 1
+        assert manifest['directory_structure']['subdir2']['file_count'] == 2
 
     def test_verify_integrity_against_manifest_added_file(self, tmp_path):
         """Test integrity verification with added file."""

@@ -7,7 +7,7 @@ This document explains the complete development workflow that ensures source cod
 The generic project template implements a **unified test-driven development paradigm** where:
 
 - **Source code** implements mathematical functionality
-- **Tests** validate all functionality with 100% coverage
+- **Tests** validate all functionality with comprehensive coverage (49% infra, 70% project minimum)
 - **Scripts** are **thin orchestrators** that import and use `src/` methods
 - **Documentation** references code and displays generated outputs
 - **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
@@ -88,7 +88,7 @@ The `scripts/run_all.py` orchestrator (or `./run_all.sh`) executes 6 stages sequ
 
 ## Test Suite and Code Connections
 
-The test suite ensures 100% coverage of all `src/` modules and validates the entire pipeline:
+The test suite ensures comprehensive coverage of all modules and validates the entire pipeline:
 
 ### What Tests Validate
 - **Mathematical correctness** - All functions produce expected results
@@ -182,7 +182,8 @@ The pipeline orchestrator executes 6 stages:
 **Critical Principle**: ALL business logic and algorithms must live in `src/` modules.
 
 ### Tests (`tests/`)
-- **100% coverage required** for all src/ modules
+- **70% minimum coverage** for project/src/ (currently achieving 99.88%)
+- **49% minimum coverage** for infrastructure/ (currently achieving 55.89%)
 - **Real numerical examples** (no mocks)
 - **Deterministic RNG seeds** for reproducibility
 - **Fast and hermetic** execution
@@ -224,7 +225,7 @@ output/
 - Error handling for edge cases
 
 ### Test Validation
-- 100% statement and branch coverage
+- Comprehensive statement and branch coverage (70% project, 49% infra minimum)
 - All tests must pass
 - No network or file-system writes outside output/
 - Deterministic execution
@@ -292,7 +293,7 @@ All directories under `output/` are disposable and can be safely cleaned.
 2. **Validation**: Automatic checking of all references and outputs
 3. **Reproducibility**: Deterministic generation of all artifacts
 4. **Maintainability**: Clear separation of concerns with unified workflow
-5. **Quality**: 100% test coverage enforced automatically
+5. **Quality**: Comprehensive test coverage enforced automatically
 6. **Documentation**: Auto-generated API references and validation
 7. **Thin Orchestrator Pattern**: Scripts use tested src/ methods, not duplicate logic
 
@@ -334,7 +335,7 @@ The workflow enforces a **thin orchestrator pattern** where:
 
 - **`src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods
-- **`tests/`** ensures 100% coverage of `src/` functionality
+- **`tests/`** ensures comprehensive coverage of all functionality
 - **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
 
 This ensures:

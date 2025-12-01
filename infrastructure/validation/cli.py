@@ -26,19 +26,23 @@ def validate_pdf_command(args):
     print(f"\nValidation Results:")
     print(f"Total issues found: {report['issues']['total_issues']}")
 
-    if report['issues']['unresolved_refs']:
-        print(f"Unresolved references: {len(report['issues']['unresolved_refs'])}")
+    # report['issues'] values are integers (counts), not lists
+    unresolved_refs_count = report['issues'].get('unresolved_references', 0)
+    if unresolved_refs_count > 0:
+        print(f"Unresolved references: {unresolved_refs_count}")
         if args.verbose:
-            for ref in report['issues']['unresolved_refs'][:5]:
-                print(f"  - {ref}")
+            print("  (See PDF for details)")
 
-    if report['issues']['missing_citations']:
-        print(f"Missing citations: {len(report['issues']['missing_citations'])}")
+    missing_citations_count = report['issues'].get('missing_citations', 0)
+    if missing_citations_count > 0:
+        print(f"Missing citations: {missing_citations_count}")
 
-    if args.verbose and report['preview']['first_words']:
-        print(f"\nFirst words:\n{' '.join(report['preview']['first_words'][:50])}")
+    if args.verbose and report.get('first_words'):
+        words_preview = report['first_words'][:500] if report['first_words'] else ""
+        if words_preview:
+            print(f"\nFirst words:\n{words_preview}")
 
-    sys.exit(0 if report['summary']['has_issues'] == False else 1)
+    sys.exit(0 if not report['summary']['has_issues'] else 1)
 
 
 def validate_markdown_command(args):
@@ -73,15 +77,26 @@ def verify_integrity_command(args):
     print(f"Verifying integrity of: {output_dir}...")
     report = verify_output_integrity(output_dir)
 
-    print(f"\nIntegrity Report:")
-    print(f"Files checked: {report.get('total_files', 0)}")
-    print(f"Issues found: {report.get('total_issues', 0)}")
+    # IntegrityReport is an object, not a dict
+    total_files = len(report.file_integrity)
+    total_issues = len(report.issues)
 
-    if args.verbose and report.get('issues'):
-        for issue in report['issues'][:10]:
+    print(f"\nIntegrity Report:")
+    print(f"Files checked: {total_files}")
+    print(f"Issues found: {total_issues}")
+    print(f"Overall integrity: {'PASS' if report.overall_integrity else 'FAIL'}")
+
+    if args.verbose and report.issues:
+        print("\nIssues:")
+        for issue in report.issues[:10]:
             print(f"  - {issue}")
 
-    sys.exit(0 if report.get('total_issues', 0) == 0 else 1)
+    if args.verbose and report.warnings:
+        print("\nWarnings:")
+        for warning in report.warnings[:10]:
+            print(f"  - {warning}")
+
+    sys.exit(0 if report.overall_integrity else 1)
 
 
 def main():

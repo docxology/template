@@ -18,11 +18,11 @@
 
 ### **Q: What's the difference between `src/` and `scripts/`?**
 **A:** 
-- **`src/`** contains all business logic, algorithms, and mathematical implementations with 100% test coverage
+- **`src/`** contains all business logic, algorithms, and mathematical implementations with comprehensive test coverage
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods to generate figures, data, and outputs
 
-### **Q: Do I need to keep the 100% test coverage requirement?**
-**A:** While not strictly required, maintaining 100% test coverage ensures code quality and reliability. The build pipeline enforces this to maintain professional standards.
+### **Q: What are the test coverage requirements?**
+**A:** Coverage requirements are: 70% minimum for project code (currently achieving 99.88%) and 49% minimum for infrastructure (currently achieving 55.89%). The build pipeline enforces these to maintain professional standards.
 
 ## 📚 **Documentation & PDF Generation**
 
@@ -64,7 +64,7 @@
 
 ### **Q: The build pipeline fails - what should I check?**
 **A:** 
-1. Ensure all tests pass with 100% coverage
+1. Ensure all tests pass with required coverage (70% project, 49% infra)
 2. Check that all required dependencies are installed
 3. Verify that your markdown files are properly formatted
 4. Check the build logs for specific error messages

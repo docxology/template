@@ -1,6 +1,6 @@
 # Testing Guide
 
-> **Test-driven development** with 100% coverage requirement
+> **Test-driven development** with comprehensive coverage requirements
 
 **Quick Reference:** [Logging Guide](LOGGING_GUIDE.md) | [Error Handling Guide](ERROR_HANDLING_GUIDE.md)
 
@@ -84,8 +84,8 @@ def test_with_fixture(temp_data_file):
 
 ## Coverage Requirements
 
-- 100% coverage for project/src/
-- 100% coverage for infrastructure/
+- **70% minimum** for project/src/ (currently achieving 99.88%)
+- **49% minimum** for infrastructure/ (currently achieving 55.89%)
 - No mock methods - use real data
 - Test all error paths
 
@@ -114,6 +114,8 @@ open htmlcov/index.html
 
 - [Logging Guide](LOGGING_GUIDE.md)
 - [Error Handling Guide](ERROR_HANDLING_GUIDE.md)
+
+
 
 
 

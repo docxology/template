@@ -128,6 +128,21 @@ def main() -> None:
     fig.savefig(figure_path, dpi=300, bbox_inches='tight')
     plt.close(fig)
     
+    # Register figure with FigureManager for cross-referencing
+    try:
+        from infrastructure.documentation.figure_manager import FigureManager
+        fm = FigureManager(registry_file=os.path.join(figure_dir, "figure_registry.json"))
+        fm.register_figure(
+            filename="example_figure.png",
+            caption="Example project figure showing data processing with src/ functions",
+            label="fig:example_figure",
+            section="introduction",
+            generated_by="example_figure.py"
+        )
+        print(f"  Registered figure: fig:example_figure")
+    except ImportError as e:
+        print(f"  ⚠️  Could not register figure (FigureManager not available): {e}")
+    
     # Save data
     data_path = os.path.join(data_dir, "example_data.npz")
     np.savez(data_path, x=x, y=y, y_processed=y_processed, 

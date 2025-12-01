@@ -6,9 +6,10 @@ This document provides a comprehensive overview of how the generic project templ
 
 For specific architectural rules and standards during development, see:
 
-- **[`.cursorrules/core_architecture.md`](../.cursorrules/core_architecture.md)** - Architectural principles and core design
-- **[`.cursorrules/thin_orchestrator.md`](../.cursorrules/thin_orchestrator.md)** - Thin orchestrator pattern implementation
-- **[`.cursorrules/README.md`](../.cursorrules/README.md)** - Development rules overview
+- **[`.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md)** - Complete development standards and guidelines
+- **[`.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md)** - Infrastructure module development
+- **[`.cursorrules/README.md`](../.cursorrules/README.md)** - Quick reference and patterns
+- **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
 
 ## System Architecture Overview
 
@@ -79,11 +80,11 @@ graph TB
 - **CRITICAL**: Contain ALL business logic and algorithms
 
 ### 2. Test Suite (`tests/`)
-**Purpose**: Validates all source code functionality with 100% coverage.
+**Purpose**: Validates all source code functionality with comprehensive coverage.
 
 **Coverage Requirements**:
-- **Statement coverage**: 100% of all code lines executed
-- **Branch coverage**: 100% of all conditional branches taken
+- **Infrastructure**: 49% minimum (currently achieving 55.89%)
+- **Project code**: 70% minimum (currently achieving 99.88%)
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducible results
 
@@ -310,7 +311,7 @@ output/
 ## Quality Assurance Mechanisms
 
 ### 1. Test Coverage Enforcement
-- **100% coverage required** via `.coveragerc`
+- **70% project coverage, 49% infrastructure** minimum via build pipeline
 - **Automated validation** in build pipeline
 - **Real numerical examples** ensure mathematical correctness
 
@@ -358,7 +359,7 @@ See Figure \ref{fig:example} and Equation \eqref{eq:example}.
 ```bash
 # Write tests first (TDD)
 # Implement functionality
-# Ensure 100% test coverage
+# Ensure coverage requirements met
 # Update documentation if needed
 ```
 
@@ -390,7 +391,7 @@ python3 scripts/03_render_pdf.py  # PDF generation
 2. **Validation**: Automatic checking of all references and outputs
 3. **Reproducibility**: Deterministic generation of all artifacts
 4. **Maintainability**: Clear separation of concerns with unified workflow
-5. **Quality**: 100% test coverage enforced automatically
+5. **Quality**: Comprehensive test coverage enforced automatically
 6. **Documentation**: Auto-generated API references and validation
 7. **Thin Orchestrator Pattern**: Scripts use tested src/ methods, not duplicate logic
 
@@ -409,7 +410,7 @@ The architecture enforces a **thin orchestrator pattern** where:
 
 - **`src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods
-- **`tests/`** ensures 100% coverage of `src/` functionality
+- **`tests/`** ensures comprehensive coverage of `src/` functionality
 - **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
 
 This ensures:

@@ -393,6 +393,60 @@ def log_progress(
     logger.info(f"[{current}/{total} - {percent}%] {task}")
 
 
+def log_stage(
+    stage_num: int,
+    total_stages: int,
+    stage_name: str,
+    logger: Optional[logging.Logger] = None
+) -> None:
+    """Log a pipeline stage header with consistent formatting.
+    
+    Provides standardized stage header formatting across all pipeline scripts.
+    
+    Args:
+        stage_num: Current stage number (1-based)
+        total_stages: Total number of stages
+        stage_name: Name of the stage
+        logger: Logger instance (creates one if None)
+        
+    Example:
+        >>> log_stage(3, 7, "PDF Rendering")
+        ℹ️ [2025-11-21 12:00:00] [INFO]
+        ℹ️ [2025-11-21 12:00:00] [INFO] [3/7] PDF Rendering
+        ℹ️ [2025-11-21 12:00:00] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    """
+    if logger is None:
+        logger = get_logger(__name__)
+    
+    separator = "━" * 46
+    logger.info("")
+    logger.info(f"[{stage_num}/{total_stages}] {stage_name}")
+    logger.info(separator)
+
+
+def log_substep(
+    message: str,
+    logger: Optional[logging.Logger] = None
+) -> None:
+    """Log a substep within a stage with consistent indentation.
+    
+    Adds a leading newline and indentation for visual separation.
+    
+    Args:
+        message: Substep description
+        logger: Logger instance (creates one if None)
+        
+    Example:
+        >>> log_substep("Validating PDF files...")
+        ℹ️ [2025-11-21 12:00:00] [INFO]
+        ℹ️ [2025-11-21 12:00:00] [INFO]   Validating PDF files...
+    """
+    if logger is None:
+        logger = get_logger(__name__)
+    
+    logger.info(f"\n  {message}")
+
+
 # =============================================================================
 # MODULE INITIALIZATION
 # =============================================================================

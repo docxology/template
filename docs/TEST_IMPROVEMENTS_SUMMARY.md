@@ -287,7 +287,7 @@ class TestFigureGeneration:
 
 ## 🚀 Next Steps
 
-To achieve 100% coverage, focus on:
+To improve coverage toward higher targets, focus on:
 
 1. **Build Verifier** (66% → 100%)
    - Add more integration tests

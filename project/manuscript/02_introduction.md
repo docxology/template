@@ -94,9 +94,9 @@ This template can be customized for any project by:
 
 The manuscript demonstrates comprehensive cross-referencing:
 
-- **Section References**: Use `\ref{sec:section_name}` to reference sections
-- **Equation References**: Use `\eqref{eq:objective}` to reference equations (see Section \ref{sec:methodology})
-- **Figure References**: Use `\ref{fig:figure_name}` to reference figures
-- **Table References**: Use `\ref{tab:table_name}` to reference tables
+- **Section References**: Use the ref command with `sec:` prefix for sections
+- **Equation References**: Use the eqref command with `eq:` prefix for equations (see Section \ref{sec:methodology})
+- **Figure References**: Use the ref command with figure labels
+- **Table References**: Use the ref command with `tab:` prefix for tables
 
 All references are automatically numbered and updated when the document is regenerated. For example, the main objective function \eqref{eq:objective} is defined in the methodology section.

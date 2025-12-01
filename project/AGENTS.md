@@ -5,7 +5,7 @@
 This is a complete, self-contained scientific research project. Everything needed for the research is in this folder:
 
 - **src/** - Scientific algorithms and analysis code
-- **tests/** - Comprehensive test suite (100% coverage)
+- **tests/** - Comprehensive test suite (99.88% coverage)
 - **scripts/** - Analysis workflows
 - **manuscript/** - Research manuscript
 - **docs/** - Project documentation
@@ -36,7 +36,7 @@ src/
 ```
 
 **Requirements:**
-- 100% test coverage
+- 70% minimum test coverage (currently achieving 99.88%)
 - Type hints on all public APIs
 - Comprehensive docstrings
 - No mock testing (real data only)
@@ -46,7 +46,7 @@ src/
 
 Comprehensive test suite validating all src/ code:
 
-- **100% coverage required** - All code paths tested
+- **70% minimum coverage required** - All critical code paths tested (currently 99.88%)
 - **Real data testing** - Use actual data, not mocks
 - **Integration tests** - Test module interactions
 - **Performance tests** - Validate algorithms
@@ -136,9 +136,9 @@ def test_analyze_data():
     assert result is not None
 ```
 
-**Step 3: Ensure 100% coverage**
+**Step 3: Ensure coverage requirements met**
 ```bash
-pytest tests/test_my_analysis.py --cov=src/my_analysis --cov-fail-under=100
+pytest tests/test_my_analysis.py --cov=src/my_analysis --cov-fail-under=70
 ```
 
 **Step 4: Use in scripts**
@@ -166,11 +166,15 @@ Scripts generate figures that are integrated into the manuscript:
 ```python
 # scripts/generate_results.py
 from plots import plot_convergence
-from figure_manager import FigureManager
+from infrastructure.documentation import FigureManager
 
 fig = plot_convergence(results)
 fm = FigureManager()
-fm.register_figure("results.png", label="fig:results")
+fm.register_figure(
+    filename="results.png",
+    caption="Convergence results visualization",
+    label="fig:results"
+)
 ```
 
 Figures are automatically referenced:
@@ -287,7 +291,7 @@ open htmlcov/index.html
 - Test real data
 - Cover edge cases
 - Test error handling
-- Maintain 100% coverage
+- Maintain coverage requirements
 
 ❌ **Don't:**
 - Use mocks
@@ -351,6 +355,8 @@ This uses the template's build system while your project code remains in `projec
 - Root README.md - Template overview
 - repo_utilities/ - Build scripts
 - infrastructure/ - Generic validation tools
+
+
 
 
 

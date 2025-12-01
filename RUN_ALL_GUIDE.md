@@ -197,12 +197,13 @@ Review errors above and fix issues before retrying
 
 ## Configuration Files
 
-The pipeline uses several configuration files:
+The pipeline uses the following configuration files:
 
-- `.coveragerc` - Coverage threshold and source paths
-- `pytest.ini` - Test discovery and pytest options
-- `pyproject.toml` - Python project configuration
-- `conftest.py` - Test path configuration
+- `pyproject.toml` - All Python configuration (pytest, coverage, dependencies)
+  - `[tool.pytest.ini_options]` - Test discovery and pytest options
+  - `[tool.coverage.run]` - Coverage collection settings
+  - `[tool.coverage.report]` - Coverage report and thresholds
+- `conftest.py` - Test path configuration and fixtures
 
 These are automatically managed - no manual configuration needed.
 
@@ -218,7 +219,7 @@ chmod +x run_all.sh
 Verify `conftest.py` is in the repository root and contains proper path setup.
 
 ### Coverage threshold not met
-Check `.coveragerc` for `fail_under = 70`. Increase test coverage in `tests/` and `project/tests/`.
+Check `pyproject.toml` `[tool.coverage.report]` for `fail_under = 70`. Increase test coverage in `tests/` and `project/tests/`.
 
 ### PDF rendering fails
 Ensure pandoc and xelatex are installed:

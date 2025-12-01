@@ -1,187 +1,336 @@
+"""Tests for infrastructure.llm.core module.
+
+Tests LLMClient functionality using real data (No Mocks Policy):
+- Pure logic tests (config, context, options) use real data
+- Network-dependent tests marked with @pytest.mark.requires_ollama
+"""
 import pytest
 import requests
-from unittest.mock import MagicMock, patch
-from infrastructure.llm.core import LLMClient
+
+from infrastructure.llm.core import LLMClient, ResponseMode
+from infrastructure.llm.config import LLMConfig, GenerationOptions
+from infrastructure.llm.context import ConversationContext
 from infrastructure.core.exceptions import LLMConnectionError
 
-def test_query_success(mock_client, mock_requests_post):
-    mock_response = MagicMock()
-    mock_response.status_code = 200
-    mock_response.json.return_value = {"message": {"content": "Response"}}
-    mock_requests_post.return_value = mock_response
 
-    response = mock_client.query("Hello")
-    assert response == "Response"
-    assert len(mock_client.context.messages) == 2 # User + Assistant
+class TestLLMClientInitialization:
+    """Test LLMClient initialization with real configurations."""
 
-def test_query_connection_error(mock_client, mock_requests_post):
-    mock_requests_post.side_effect = requests.exceptions.RequestException("Connection refused")
-    
-    with pytest.raises(LLMConnectionError):
-        mock_client.query("Hello")
+    def test_client_with_default_config(self, clean_llm_env):
+        """Test client initializes with default config."""
+        client = LLMClient()
+        assert client.config is not None
+        assert client.config.base_url == "http://localhost:11434"
+        assert client.context is not None
 
-def test_fallback_models(mock_client, mock_requests_post):
-    # Fail first model, succeed second
-    mock_response = MagicMock()
-    mock_response.status_code = 200
-    mock_response.json.return_value = {"message": {"content": "Fallback Response"}}
-    
-    mock_requests_post.side_effect = [
-        requests.exceptions.RequestException("Primary failed"),
-        mock_response
-    ]
-    
-    response = mock_client.query("Hello")
-    assert response == "Fallback Response"
-    assert mock_requests_post.call_count == 2
+    def test_client_with_custom_config(self, default_config):
+        """Test client initializes with custom config."""
+        client = LLMClient(default_config)
+        assert client.config == default_config
+        assert client.config.default_model == "llama3"
 
-def test_apply_template(mock_client, mock_requests_post):
-    mock_response = MagicMock()
-    mock_response.status_code = 200
-    mock_response.json.return_value = {"message": {"content": "Summary"}}
-    mock_requests_post.return_value = mock_response
-    
-    response = mock_client.apply_template("summarize_abstract", text="Abstract")
-    assert response == "Summary"
-    
-    # Check prompt contains template text
-    call_args = mock_requests_post.call_args
-    payload = call_args[1]['json']
-    last_msg = payload['messages'][-1]['content']
-    assert "Please summarize" in last_msg
-    assert "Abstract" in last_msg
+    def test_client_context_initialized(self, default_config):
+        """Test client context is properly initialized."""
+        client = LLMClient(default_config)
+        assert isinstance(client.context, ConversationContext)
+        assert client.context.max_tokens == default_config.context_window
 
-def test_stream_query(mock_client, mock_requests_post):
-    mock_response = MagicMock()
-    mock_response.status_code = 200
-    # Mock streaming lines
-    lines = [
-        b'{"message": {"content": "Part 1"}}',
-        b'{"message": {"content": "Part 2"}}'
-    ]
-    mock_response.iter_lines.return_value = lines
-    # Context manager mock
-    mock_requests_post.return_value.__enter__.return_value = mock_response
-    
-    chunks = list(mock_client.stream_query("Hello"))
-    assert chunks == ["Part 1", "Part 2"]
-    assert mock_client.context.messages[-1].content == "Part 1Part 2"
 
-def test_query_short_mode(mock_client, mock_requests_post):
-    """Test short response mode (< 150 tokens)."""
-    mock_response = MagicMock()
-    mock_response.json.return_value = {"message": {"content": "Brief answer"}}
-    mock_requests_post.return_value = mock_response
-    
-    result = mock_client.query_short("What is X?")
-    assert result == "Brief answer"
-    
-    # Check that short mode instruction was added
-    call_args = mock_requests_post.call_args
-    payload = call_args[1]['json']
-    last_msg = payload['messages'][-1]['content']
-    assert "concise" in last_msg.lower()
+class TestSystemPromptInjection:
+    """Test system prompt injection behavior with real data."""
 
-def test_query_long_mode(mock_client, mock_requests_post):
-    """Test long response mode (> 500 tokens)."""
-    mock_response = MagicMock()
-    long_response = "Detailed answer " * 50
-    mock_response.json.return_value = {"message": {"content": long_response}}
-    mock_requests_post.return_value = mock_response
-    
-    result = mock_client.query_long("Explain in detail...")
-    assert "answer" in result.lower()
-    
-    # Check that long mode instruction was added
-    call_args = mock_requests_post.call_args
-    payload = call_args[1]['json']
-    last_msg = payload['messages'][-1]['content']
-    assert "comprehensive" in last_msg.lower()
+    def test_system_prompt_injected_by_default(self, config_with_system_prompt):
+        """Test system prompt is injected on initialization."""
+        client = LLMClient(config_with_system_prompt)
+        
+        messages = client.context.get_messages()
+        assert len(messages) == 1
+        assert messages[0]["role"] == "system"
+        assert messages[0]["content"] == "You are a helpful research assistant."
 
-def test_query_structured_mode(mock_client, mock_requests_post):
-    """Test structured JSON response mode."""
-    test_json = '{"summary": "test", "items": [1, 2, 3]}'
-    mock_response = MagicMock()
-    mock_response.json.return_value = {"message": {"content": test_json}}
-    mock_requests_post.return_value = mock_response
-    
-    schema = {
-        "type": "object",
-        "properties": {
-            "summary": {"type": "string"},
-            "items": {"type": "array"}
-        }
-    }
-    result = mock_client.query_structured("Extract data", schema=schema)
-    assert isinstance(result, dict)
-    assert result["summary"] == "test"
-    assert result["items"] == [1, 2, 3]
+    def test_system_prompt_not_injected_when_disabled(self, default_config):
+        """Test system prompt not injected when disabled."""
+        # default_config has auto_inject_system_prompt=False
+        client = LLMClient(default_config)
+        
+        messages = client.context.get_messages()
+        assert len(messages) == 0
 
-def test_query_structured_markdown_json(mock_client, mock_requests_post):
-    """Test structured response with markdown-wrapped JSON."""
-    markdown_json = "```json\n{\"key\": \"value\"}\n```"
-    mock_response = MagicMock()
-    mock_response.json.return_value = {"message": {"content": markdown_json}}
-    mock_requests_post.return_value = mock_response
-    
-    result = mock_client.query_structured("Get data")
-    assert isinstance(result, dict)
-    assert result["key"] == "value"
+    def test_reset_reinjects_system_prompt(self, config_with_system_prompt):
+        """Test reset re-injects system prompt."""
+        client = LLMClient(config_with_system_prompt)
+        
+        # Add some messages
+        client.context.add_message("user", "Test message")
+        assert len(client.context.get_messages()) == 2
+        
+        # Reset
+        client.reset()
+        
+        messages = client.context.get_messages()
+        assert len(messages) == 1
+        assert messages[0]["role"] == "system"
 
-def test_stream_short_mode(mock_client, mock_requests_post):
-    """Test streaming short response mode."""
-    mock_response = MagicMock()
-    lines = [
-        b'{"message": {"content": "Part "}}',
-        b'{"message": {"content": "1"}}'
-    ]
-    mock_response.iter_lines.return_value = lines
-    mock_requests_post.return_value.__enter__.return_value = mock_response
-    
-    chunks = list(mock_client.stream_short("What?"))
-    assert len(chunks) == 2
+    def test_set_system_prompt(self, config_with_system_prompt):
+        """Test setting new system prompt."""
+        client = LLMClient(config_with_system_prompt)
+        
+        client.set_system_prompt("New system prompt")
+        
+        messages = client.context.get_messages()
+        assert len(messages) == 1
+        assert messages[0]["content"] == "New system prompt"
 
-def test_stream_long_mode(mock_client, mock_requests_post):
-    """Test streaming long response mode."""
-    mock_response = MagicMock()
-    lines = [
-        b'{"message": {"content": "Detailed "}}',
-        b'{"message": {"content": "answer"}}'
-    ]
-    mock_response.iter_lines.return_value = lines
-    mock_requests_post.return_value.__enter__.return_value = mock_response
-    
-    chunks = list(mock_client.stream_long("Explain"))
-    assert len(chunks) == 2
+    def test_set_system_prompt_clears_context(self, config_with_system_prompt):
+        """Test set_system_prompt clears existing context."""
+        client = LLMClient(config_with_system_prompt)
+        
+        # Add messages
+        client.context.add_message("user", "Question")
+        client.context.add_message("assistant", "Answer")
+        
+        # Set new system prompt
+        client.set_system_prompt("New prompt")
+        
+        # Should only have new system prompt
+        messages = client.context.get_messages()
+        assert len(messages) == 1
+        assert messages[0]["content"] == "New prompt"
 
-def test_get_available_models(mock_client, mock_requests_post):
-    """Test fetching available models from Ollama."""
-    mock_response = MagicMock()
-    mock_response.json.return_value = {
-        "models": [
-            {"name": "llama3:latest"},
-            {"name": "mistral:latest"},
-            {"name": "llama3:7b"}
-        ]
-    }
-    
-    with patch('requests.get', return_value=mock_response):
-        models = mock_client.get_available_models()
-        assert len(models) >= 2  # Deduplicated
 
-def test_check_connection_success(mock_client, mock_requests_post):
-    """Test successful connection check."""
-    mock_response = MagicMock()
-    mock_response.status_code = 200
-    
-    with patch('requests.get', return_value=mock_response):
-        result = mock_client.check_connection()
-        assert result is True
+class TestResponseMode:
+    """Test ResponseMode enum."""
 
-def test_check_connection_failure():
-    """Test failed connection check."""
-    client = LLMClient()
-    with patch('infrastructure.llm.core.requests.get', side_effect=requests.exceptions.RequestException("Connection error")):
+    def test_response_mode_values(self):
+        """Test ResponseMode enum values."""
+        assert ResponseMode.SHORT == "short"
+        assert ResponseMode.LONG == "long"
+        assert ResponseMode.STRUCTURED == "structured"
+        assert ResponseMode.RAW == "raw"
+
+    def test_response_mode_string_comparison(self):
+        """Test ResponseMode can be compared as strings."""
+        assert ResponseMode.SHORT == "short"
+        assert ResponseMode.LONG.value == "long"
+
+
+class TestContextManagement:
+    """Test context management in LLMClient."""
+
+    def test_reset_clears_context(self, default_config):
+        """Test reset clears conversation context."""
+        client = LLMClient(default_config)
+        
+        # Add messages
+        client.context.add_message("user", "Message 1")
+        client.context.add_message("assistant", "Response 1")
+        assert len(client.context.messages) == 2
+        
+        # Reset
+        client.reset()
+        
+        # Should be empty (no auto-inject)
+        assert len(client.context.messages) == 0
+
+    def test_reset_with_auto_inject(self, config_with_system_prompt):
+        """Test reset re-injects system prompt."""
+        client = LLMClient(config_with_system_prompt)
+        
+        # Add messages beyond system prompt
+        client.context.add_message("user", "Question")
+        assert len(client.context.messages) == 2
+        
+        # Reset
+        client.reset()
+        
+        # Should only have system prompt
+        assert len(client.context.messages) == 1
+        assert client.context.messages[0].role == "system"
+
+
+class TestGenerationOptionsIntegration:
+    """Test GenerationOptions integration with LLMClient."""
+
+    def test_options_to_ollama_format(self, default_config, generation_options):
+        """Test options convert to Ollama format correctly."""
+        ollama_opts = generation_options.to_ollama_options(default_config)
+        
+        assert ollama_opts["temperature"] == 0.5
+        assert ollama_opts["num_predict"] == 500
+        assert ollama_opts["seed"] == 42
+        assert ollama_opts["stop"] == ["END"]
+
+    def test_default_options_use_config(self, default_config):
+        """Test default options use config values."""
+        opts = GenerationOptions()
+        ollama_opts = opts.to_ollama_options(default_config)
+        
+        assert ollama_opts["temperature"] == default_config.temperature
+        assert ollama_opts["num_predict"] == default_config.max_tokens
+        assert ollama_opts["top_p"] == default_config.top_p
+
+
+class TestClientHelperMethods:
+    """Test LLMClient helper methods that don't require network."""
+
+    def test_check_connection_returns_bool(self, default_config):
+        """Test check_connection returns boolean."""
+        # Use non-existent host to ensure it fails quickly
+        config = LLMConfig(base_url="http://localhost:99999", timeout=0.1)
+        client = LLMClient(config)
+        
         result = client.check_connection()
-        assert result is False
+        assert isinstance(result, bool)
+        assert result is False  # Should fail to connect
 
+
+# =============================================================================
+# INTEGRATION TESTS (Require Ollama)
+# =============================================================================
+
+@pytest.mark.requires_ollama
+class TestLLMClientWithOllama:
+    """Integration tests requiring running Ollama server.
+    
+    Run with: pytest -m requires_ollama
+    Skip with: pytest -m "not requires_ollama"
+    """
+
+    @pytest.fixture(autouse=True)
+    def check_ollama(self):
+        """Skip tests if Ollama is not available."""
+        client = LLMClient()
+        if not client.check_connection():
+            pytest.skip("Ollama server not available")
+
+    def test_query_basic(self):
+        """Test basic query to Ollama."""
+        client = LLMClient()
+        response = client.query("Say 'hello' and nothing else.")
+        
+        assert response is not None
+        assert len(response) > 0
+        assert "hello" in response.lower()
+
+    def test_query_with_options(self):
+        """Test query with generation options."""
+        client = LLMClient()
+        opts = GenerationOptions(temperature=0.0, max_tokens=50)
+        
+        response = client.query("Say 'test' and nothing else.", options=opts)
+        assert response is not None
+        assert len(response) > 0
+
+    def test_query_short(self):
+        """Test short response mode."""
+        client = LLMClient()
+        response = client.query_short("What is 2+2?")
+        
+        assert response is not None
+        assert len(response) < 600  # Should be concise
+
+    def test_query_long(self):
+        """Test long response mode."""
+        client = LLMClient()
+        response = client.query_long("Explain what a computer is.")
+        
+        assert response is not None
+        assert len(response) > 100  # Should be detailed
+
+    def test_query_structured(self):
+        """Test structured JSON response."""
+        client = LLMClient()
+        schema = {
+            "type": "object",
+            "properties": {
+                "answer": {"type": "string"}
+            }
+        }
+        
+        result = client.query_structured(
+            "Return JSON with answer='yes'",
+            schema=schema
+        )
+        
+        assert isinstance(result, dict)
+        assert "answer" in result
+
+    def test_query_raw(self):
+        """Test raw query without system prompt."""
+        config = LLMConfig(auto_inject_system_prompt=False)
+        client = LLMClient(config)
+        
+        response = client.query_raw("Complete: Hello")
+        assert response is not None
+        assert len(response) > 0
+
+    def test_stream_query(self):
+        """Test streaming query."""
+        client = LLMClient()
+        chunks = []
+        
+        for chunk in client.stream_query("Say 'hi'"):
+            chunks.append(chunk)
+        
+        assert len(chunks) > 0
+        full_response = "".join(chunks)
+        assert len(full_response) > 0
+
+    def test_get_available_models(self):
+        """Test fetching available models."""
+        client = LLMClient()
+        models = client.get_available_models()
+        
+        assert isinstance(models, list)
+        # Should have at least one model if Ollama is running
+        assert len(models) > 0
+
+    def test_context_maintained_across_queries(self):
+        """Test context is maintained across queries."""
+        client = LLMClient()
+        
+        # First query
+        client.query("My name is TestUser.")
+        
+        # Second query referencing first
+        response = client.query("What is my name?")
+        
+        assert "TestUser" in response or "test" in response.lower()
+
+    def test_reset_context_clears_history(self):
+        """Test reset_context clears conversation history."""
+        client = LLMClient()
+        
+        # Build up context
+        client.query("Remember: secret code is 42.")
+        
+        # Reset and query
+        response = client.query("What is the secret code?", reset_context=True)
+        
+        # Should not remember the code
+        assert "42" not in response or "don't" in response.lower() or "not" in response.lower()
+
+    def test_apply_template(self):
+        """Test applying a research template."""
+        client = LLMClient()
+        
+        response = client.apply_template(
+            "summarize_abstract",
+            text="This study examines the effects of X on Y."
+        )
+        
+        assert response is not None
+        assert len(response) > 0
+
+    def test_seed_reproducibility(self):
+        """Test seed produces consistent results."""
+        client = LLMClient()
+        opts = GenerationOptions(temperature=0.0, seed=42, max_tokens=50)
+        
+        response1 = client.query("Complete: The sky is", options=opts, reset_context=True)
+        response2 = client.query("Complete: The sky is", options=opts, reset_context=True)
+        
+        # With same seed and temp=0, responses should be similar
+        # (Not always identical due to model internals)
+        assert response1 is not None
+        assert response2 is not None

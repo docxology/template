@@ -40,6 +40,8 @@ from .logging_utils import (
     log_success,
     log_header,
     log_progress,
+    log_stage,
+    log_substep,
     set_global_log_level,
 )
 from .config_loader import (
@@ -80,6 +82,8 @@ __all__ = [
     "log_success",
     "log_header",
     "log_progress",
+    "log_stage",
+    "log_substep",
     "set_global_log_level",
     # Configuration
     "load_config",

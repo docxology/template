@@ -48,8 +48,8 @@ That's it! You now have a complete research project structure.
 - ✅ **Complete project structure** with clear organization
 - ✅ **Professional PDF generation** from markdown
 - ✅ **Cross-referencing system** for equations and figures
-- ✅ **Automated testing** framework (320/322 tests passing)
-- ✅ **Build pipeline** that validates everything (75-second builds)
+- ✅ **Automated testing** framework (878 tests passing: 558 infrastructure + 320 project)
+- ✅ **Build pipeline** that validates everything (58-second builds)
 - ✅ **25+ comprehensive guides** for all skill levels
 
 ## 📖 Guides by Skill Level
@@ -102,7 +102,7 @@ That's it! You now have a complete research project structure.
 
 **What you'll learn**:
 - Practice test-driven development (TDD)
-- Achieve and maintain 100% test coverage
+- Achieve and maintain comprehensive test coverage
 - Build complex mathematical workflows
 - Implement comprehensive testing strategies
 - Ensure reproducible research results
@@ -281,7 +281,7 @@ Having issues? Here's where to look:
 
 **Common Issues**:
 - Tests fail → [Advanced Usage Guide](ADVANCED_USAGE.md#level-7-test-driven-development)
-- Coverage below 100% → [Common Workflows](COMMON_WORKFLOWS.md#fix-coverage-below-100)
+- Coverage below requirements → [Common Workflows](COMMON_WORKFLOWS.md#fix-coverage-below-requirements)
 - PDF generation fails → [FAQ](FAQ.md#q-my-pdfs-arent-generating-correctly)
 - Figures not appearing → [Intermediate Usage](INTERMEDIATE_USAGE.md#level-4-add-basic-figures)
 
@@ -305,6 +305,6 @@ Having issues? Here's where to look:
 
 **Ready to start?** Choose your skill level above and dive in!
 
-**System Status**: ✅ All operational | **Build Time**: 75s | **Coverage**: 81.90% | **Tests**: 320/322 passing
+**System Status**: ✅ All operational | **Build Time**: 58s | **Coverage**: 99.88% (project), 55.89% (infra) | **Tests**: 878 passing
 
 **Need help?** Start with **[Getting Started Guide](GETTING_STARTED.md)** or check the **[FAQ](FAQ.md)**

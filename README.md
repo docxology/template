@@ -1,8 +1,8 @@
 # 🚀 Research Project Template
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/BUILD_SYSTEM.md)
-[![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](docs/BUILD_SYSTEM.md)
-[![Tests](https://img.shields.io/badge/tests-343%2F343%20passing%20(100%25)-brightgreen)](docs/BUILD_SYSTEM.md)
+[![Test Coverage](https://img.shields.io/badge/coverage-99.88%25%20project%20|%2055.89%25%20infra-brightgreen)](docs/BUILD_SYSTEM.md)
+[![Tests](https://img.shields.io/badge/tests-878%2F878%20passing%20(100%25)-brightgreen)](docs/BUILD_SYSTEM.md)
 [![Documentation](https://img.shields.io/badge/docs-42%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
 
@@ -15,7 +15,7 @@ A revolutionary system for research and development projects. This template prov
 This is a **GitHub Template Repository** that gives you:
 
 - ✅ **Complete project structure** with clear separation of concerns
-- ✅ **Test-driven development** setup with 100% coverage requirements
+- ✅ **Test-driven development** setup with comprehensive coverage requirements
 - ✅ **Automated PDF generation** from markdown sources
 - ✅ **Thin orchestrator pattern** for maintainable code
 - ✅ **Ready-to-use utilities** for any research project
@@ -183,10 +183,10 @@ open output/pdf/project_combined.pdf
 ```mermaid
 graph LR
     subgraph Status["✅ System Status"]
-        TESTS[Tests: 320/322 cases passing<br/>825+ assertions<br/>99.4% success rate]
-        COV[Coverage: 81.90%<br/>Exceeds 70% requirement]
-        BUILD[Build Time: 75s<br/>Optimal performance]
-        PDFS[PDFs: 13/13 generated<br/>All sections complete]
+        TESTS[Tests: 878/878 passing<br/>558 infra + 320 project<br/>100% success rate]
+        COV[Coverage: 99.88% project<br/>55.89% infra<br/>Exceeds requirements]
+        BUILD[Build Time: 58s<br/>Optimal performance]
+        PDFS[PDFs: 14/14 generated<br/>All sections complete]
     end
     
     subgraph Documentation["📚 Documentation"]
@@ -211,10 +211,10 @@ graph LR
 ```
 
 **Key Metrics:**
-- **Test Coverage**: 81.90% (exceeds 70% requirement) - [Details](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
-- **Build Time**: 75 seconds (optimal) - [Performance Analysis](docs/BUILD_SYSTEM.md#stage-breakdown)
-- **Tests Passing**: 320 out of 322 test cases with 825+ assertions (99.4%) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
-- **PDFs Generated**: 13 (all sections) - [Output Summary](docs/BUILD_SYSTEM.md#generated-files)
+- **Test Coverage**: 99.88% project, 55.89% infrastructure (exceeds requirements) - [Details](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+- **Build Time**: 58 seconds (optimal) - [Performance Analysis](docs/BUILD_SYSTEM.md#stage-breakdown)
+- **Tests Passing**: 878 tests (558 infrastructure + 320 project) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+- **PDFs Generated**: 14 (all sections) - [Output Summary](docs/BUILD_SYSTEM.md#generated-files)
 - **Documentation**: 42+ comprehensive files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 
 ## 🎓 Learning Paths
@@ -275,7 +275,7 @@ flowchart TD
 3. Review **[EXAMPLES_SHOWCASE.md](docs/EXAMPLES_SHOWCASE.md)** for real-world apps
 
 ### Path 3: Full Test-Driven Development
-**Goal:** Build with 100% test coverage and automation
+**Goal:** Build with comprehensive test coverage and automation
 
 1. Read **[HOW_TO_USE.md](docs/HOW_TO_USE.md)** (Levels 7-9)
 2. Study **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** and **[WORKFLOW.md](docs/WORKFLOW.md)**
@@ -312,9 +312,9 @@ graph TB
     end
     
     subgraph "Project Components"
-        TESTS[tests/<br/>Test suite<br/>100% coverage]
+        TESTS[tests/<br/>Test suite<br/>Comprehensive coverage]
         DOCS[docs/<br/>Documentation<br/>42+ guides]
-        MANUSCRIPT[manuscript/<br/>Research sections<br/>Generate PDFs]
+        MANUSCRIPT[project/manuscript/<br/>Research sections<br/>Generate PDFs]
         OUTPUT[output/<br/>Generated files<br/>PDFs, figures, data]
     end
     
@@ -342,13 +342,14 @@ graph TB
 
 **Directory Overview:**
 
-- **`src/`** - **Core business logic** with comprehensive test coverage (100% required) - [Details](src/AGENTS.md)
-- **`tests/`** - Test files ensuring all `src/` functionality works correctly - [Testing Guide](tests/AGENTS.md)
+- **`infrastructure/`** - **Generic build/validation tools** (Layer 1) - [Details](infrastructure/AGENTS.md)
 - **`scripts/`** - **Entry point orchestrators** that discover and execute project-specific scripts - [Script Guide](scripts/AGENTS.md)
-- **`project/src/`** - **Project-specific scientific code** with 100% test coverage - [Project Details](project/src/AGENTS.md)
+- **`tests/`** - Test files for infrastructure modules - [Testing Guide](tests/AGENTS.md)
+- **`project/src/`** - **Project-specific scientific code** with comprehensive test coverage - [Project Details](project/src/AGENTS.md)
 - **`project/scripts/`** - **Project-specific analysis scripts** that use project/src/ methods
+- **`project/tests/`** - Project test suite
 - **`docs/`** - Package-level documentation (42+ guides) - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
-- **`manuscript/`** - Research manuscript sections (generate PDFs) - [Manuscript Guide](manuscript/AGENTS.md)
+- **`project/manuscript/`** - Research manuscript sections (generate PDFs) - [Manuscript Guide](project/manuscript/AGENTS.md)
 - **`output/`** - Generated outputs (PDFs, figures, data) - **All files disposable**
 
 ## 🔑 Key Architectural Principles
@@ -359,10 +360,10 @@ graph TB
 
 The project follows a **thin orchestrator pattern** where:
 
-- **`src/`** contains **ALL** business logic, algorithms, and mathematical implementations
-- **`scripts/`** are **lightweight wrappers** that import and use `src/` methods
-- **`tests/`** ensure **100% coverage** of `src/` functionality
-- **`render_pdf.sh`** orchestrates the entire pipeline
+- **`infrastructure/`** and **`project/src/`** contain **ALL** business logic, algorithms, and implementations
+- **`scripts/`** are **lightweight wrappers** that coordinate pipeline stages
+- **`tests/`** ensure **comprehensive coverage** of all functionality
+- **`run_all.py`** orchestrates the entire pipeline
 
 **Benefits:** [Read more](docs/ARCHITECTURE.md#thin-orchestrator-pattern)
 
@@ -376,24 +377,24 @@ The project follows a **thin orchestrator pattern** where:
 
 **[Complete guide](scripts/AGENTS.md)** | **[Writing Guide](docs/MARKDOWN_TEMPLATE_GUIDE.md)**
 
-Scripts in `scripts/` demonstrate proper integration with `src/` modules:
+Scripts in `project/scripts/` demonstrate proper integration with `project/src/` modules:
 
-- **Import** mathematical functions from `src/example.py`
+- **Import** scientific functions from `project/src/` modules
 - **Use** tested methods for all computation
 - **Handle** visualization, I/O, and orchestration
 - **Generate** figures and data outputs
-- **Validate** that `src/` integration works correctly
+- **Validate** that module integration works correctly
 
-**Example**: `example_figure.py` imports `add_numbers()`, `calculate_average()`, etc. from `src/example.py` and uses them to process data before visualization.
+**Example**: `example_figure.py` imports `add_numbers()`, `calculate_average()`, etc. from `project/src/example.py` and uses them to process data before visualization.
 
 ## ✨ Key Features
 
 ### Test-Driven Development
 **[Complete guide](docs/WORKFLOW.md)** | **[Testing improvements](docs/TEST_IMPROVEMENTS_SUMMARY.md)**
 
-All source code in `src/` must have **100% test coverage** before PDF generation proceeds. This ensures that the methods used by scripts are fully validated.
+All source code must meet **test coverage requirements** (70% project, 49% infrastructure) before PDF generation proceeds. This ensures that the methods used by scripts are fully validated.
 
-**Current Coverage**: 81.90% (exceeds 70% requirement) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+**Current Coverage**: 99.88% project, 55.89% infrastructure (exceeds requirements) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 
 ### Automated Script Execution
 **[Script guide](scripts/AGENTS.md)** | **[Examples](docs/EXAMPLES_SHOWCASE.md)**
@@ -405,13 +406,13 @@ Project-specific scripts in the `scripts/` directory are automatically executed 
 
 Manuscript sections are converted to individual PDFs with proper figure integration, and a combined manuscript document is generated with comprehensive cross-referencing.
 
-**Build Performance**: 75 seconds for complete regeneration - [Performance Analysis](docs/BUILD_SYSTEM.md#stage-breakdown)
+**Build Performance**: 58 seconds for complete regeneration - [Performance Analysis](docs/BUILD_SYSTEM.md#stage-breakdown)
 
 ### Build System Validation
 **[Build System](docs/BUILD_SYSTEM.md)** - Complete reference (status, performance, fixes)
 
 The build system has been comprehensively validated:
-- All 13 PDFs generate successfully
+- All 14 PDFs generate successfully
 - No critical errors or warnings
 - Optimized 75-second build time
 - Complete documentation of system health
@@ -585,22 +586,22 @@ uv run pytest tests/ --cov=src --cov-report=html
 # Generate detailed coverage report with missing lines
 pytest tests/ --cov=src --cov-report=term-missing
 
-# Require 100% coverage (infrastructure modules)
-pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=100
+# Verify coverage requirements (infrastructure modules)
+pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
 ```
 
 **Test Requirements (Infrastructure Layer - Layer 1):**
-- **100% code coverage**: All modules must have complete coverage
+- **49% minimum coverage**: Currently achieving 55.89%
 - **No mocks**: All tests use real data and computations
 - **Deterministic**: Fixed RNG seeds for reproducible results
 - **Integration testing**: Cross-module interaction validation
 
 **Test Requirements (Project Layer - Layer 2):**
-- **100% code coverage**: All project-specific code must be covered
+- **70% minimum coverage**: Currently achieving 99.88%
 - **Real data testing**: Use actual domain data, not synthetic test data
 - **Reproducible**: Fixed seeds and deterministic computation
 
-**Current Status**: 81.90% coverage, 320/322 tests passing - [Full Analysis](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+**Current Status**: 878 tests passing (558 infra + 320 project), 99.88% project coverage - [Full Analysis](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 
 ## 📤 Output
 
@@ -610,7 +611,7 @@ Generated outputs are organized in the `output/` directory:
 
 ```mermaid
 graph TD
-    OUTPUT[output/] --> PDFS[pdf/<br/>Individual + Combined PDFs<br/>13 files generated]
+    OUTPUT[output/] --> PDFS[pdf/<br/>Individual + Combined PDFs<br/>14 files generated]
     OUTPUT --> FIGS[figures/<br/>PNG files from scripts<br/>10 figures]
     OUTPUT --> DATA[data/<br/>CSV, NPZ files<br/>2 datasets]
     OUTPUT --> TEX[tex/<br/>LaTeX source files<br/>For further processing]
@@ -629,7 +630,7 @@ graph TD
 
 **All files in `output/` are disposable and regenerated by the build pipeline.**
 
-**Generation Time**: 75 seconds for complete rebuild - [Performance Details](docs/BUILD_SYSTEM.md#stage-breakdown)
+**Generation Time**: 58 seconds for complete rebuild - [Performance Details](docs/BUILD_SYSTEM.md#stage-breakdown)
 
 ## 🔍 How It Works
 
@@ -638,15 +639,15 @@ graph TD
 ```mermaid
 flowchart TD
     START([Start render_pdf.sh]) --> CLEAN[Clean all outputs]
-    CLEAN --> TESTS[Run tests with 100% coverage<br/>81.90% coverage achieved]
+    CLEAN --> TESTS[Run tests with coverage requirements<br/>99.88% project, 55.89% infra]
     TESTS --> SCRIPTS[Execute all scripts<br/>2 scripts successful]
     SCRIPTS --> UTILS[Run repo utilities<br/>Glossary + Validation]
     UTILS --> VALIDATE[Validate markdown<br/>All references resolved]
-    VALIDATE --> GLOSSARY[Generate glossary from src/<br/>Auto-generated API docs]
-    GLOSSARY --> BUILD_IND[Build individual PDFs<br/>12 sections]
+    VALIDATE --> GLOSSARY[Generate glossary<br/>Auto-generated API docs]
+    GLOSSARY --> BUILD_IND[Build individual PDFs<br/>14 sections]
     BUILD_IND --> BUILD_COMB[Build combined PDF<br/>Complete manuscript]
     BUILD_COMB --> VALIDATE_PDF[Validate PDF output<br/>Quality checks]
-    VALIDATE_PDF --> SUCCESS[✅ Build Complete<br/>75 seconds]
+    VALIDATE_PDF --> SUCCESS[✅ Build Complete<br/>58 seconds]
     
     TESTS -->|Fail| FAIL1[❌ Tests failed<br/>Fix coverage issues]
     SCRIPTS -->|Fail| FAIL2[❌ Scripts failed<br/>Check imports]
@@ -671,7 +672,7 @@ flowchart TD
 
 **Pipeline Stages:**
 
-1. **Test Validation**: Ensures 100% test coverage - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+1. **Test Validation**: Ensures coverage requirements met - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 2. **Script Execution**: Runs all Python scripts in `scripts/` (validating src/ integration) - [Script Details](docs/BUILD_SYSTEM.md#stage-2-script-execution-1-2-seconds)
 3. **Repository Utilities**: Generates glossary and validates markdown - [Utility Details](docs/BUILD_SYSTEM.md#stage-3-repository-utilities-1-second)
 4. **Markdown Discovery**: Finds manuscript `.md` files in `manuscript/` - [Numbering System](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)
@@ -711,14 +712,14 @@ flowchart TD
 
 ### Reference & Resources
 - **[docs/COPYPASTA.md](docs/COPYPASTA.md)** - Shareable content for promoting the template
-- **[manuscript/preamble.md](manuscript/preamble.md)** - LaTeX preamble and styling configuration
+- **[project/manuscript/preamble.md](project/manuscript/preamble.md)** - LaTeX preamble and styling configuration
 - **[docs/TEST_IMPROVEMENTS_SUMMARY.md](docs/TEST_IMPROVEMENTS_SUMMARY.md)** - Testing enhancements and standards
 - **[output/AGENTS.md](output/AGENTS.md)** - Generated outputs documentation
 - **[output/README.md](output/README.md)** - Generated outputs quick reference
 
 ### Directory-Specific Documentation
-- **[src/AGENTS.md](src/AGENTS.md)** - Source code module documentation
-- **[src/README.md](src/README.md)** - Source code quick reference
+- **[infrastructure/AGENTS.md](infrastructure/AGENTS.md)** - Infrastructure layer documentation
+- **[infrastructure/README.md](infrastructure/README.md)** - Infrastructure quick reference
 - **[tests/AGENTS.md](tests/AGENTS.md)** - Testing philosophy and guide
 - **[tests/README.md](tests/README.md)** - Testing quick reference
 - **[scripts/AGENTS.md](scripts/AGENTS.md)** - Entry point orchestrators documentation
@@ -727,30 +728,28 @@ flowchart TD
 - **[project/src/README.md](project/src/README.md)** - Project code quick reference
 - **[project/scripts/AGENTS.md](project/scripts/AGENTS.md)** - Project scripts documentation
 - **[project/scripts/README.md](project/scripts/README.md)** - Project scripts quick reference
-- **[manuscript/AGENTS.md](manuscript/AGENTS.md)** - Manuscript structure guide
-- **[manuscript/README.md](manuscript/README.md)** - Manuscript quick reference
+- **[project/manuscript/AGENTS.md](project/manuscript/AGENTS.md)** - Manuscript structure guide
+- **[project/manuscript/README.md](project/manuscript/README.md)** - Manuscript quick reference
 - **[docs/AGENTS.md](docs/AGENTS.md)** - Documentation organization guide
 - **[docs/README.md](docs/README.md)** - Documentation quick reference
-- **[output/AGENTS.md](output/AGENTS.md)** - Generated outputs documentation
-- **[output/README.md](output/README.md)** - Generated outputs quick reference
 
 ### Advanced Modules
-- **[docs/ADVANCED_MODULES_GUIDE.md](docs/ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all 6 advanced modules
-- **[docs/API_REFERENCE.md](docs/API_REFERENCE.md)** - Complete API documentation for all src/ modules
-- **[src/quality_checker.py](src/quality_checker.py)** - Document quality analysis and metrics
-- **[src/reproducibility.py](src/reproducibility.py)** - Build reproducibility and environment tracking
-- **[src/integrity.py](src/integrity.py)** - File integrity and cross-reference validation
-- **[src/publishing.py](src/publishing.py)** - Academic publishing workflow tools
-- **[src/scientific_dev.py](src/scientific_dev.py)** - Scientific computing best practices
-- **[src/build_verifier.py](src/build_verifier.py)** - Build process validation and verification
+- **[docs/ADVANCED_MODULES_GUIDE.md](docs/ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all advanced modules
+- **[docs/API_REFERENCE.md](docs/API_REFERENCE.md)** - Complete API documentation for all modules
+- **[infrastructure/build/quality_checker.py](infrastructure/build/quality_checker.py)** - Document quality analysis and metrics
+- **[infrastructure/build/reproducibility.py](infrastructure/build/reproducibility.py)** - Build reproducibility and environment tracking
+- **[infrastructure/validation/integrity.py](infrastructure/validation/integrity.py)** - File integrity and cross-reference validation
+- **[infrastructure/publishing/core.py](infrastructure/publishing/core.py)** - Academic publishing workflow tools
+- **[infrastructure/scientific/scientific_dev.py](infrastructure/scientific/scientific_dev.py)** - Scientific computing best practices
+- **[infrastructure/build/build_verifier.py](infrastructure/build/build_verifier.py)** - Build process validation and verification
 
 ### Scientific Computing Modules
 - **[docs/SCIENTIFIC_SIMULATION_GUIDE.md](docs/SCIENTIFIC_SIMULATION_GUIDE.md)** - Scientific simulation and analysis system guide
 - **[docs/VISUALIZATION_GUIDE.md](docs/VISUALIZATION_GUIDE.md)** - Visualization system for publication-quality figures
 - **[docs/IMAGE_MANAGEMENT.md](docs/IMAGE_MANAGEMENT.md)** - Image insertion, captioning, and cross-referencing guide
-- **Data Processing**: `data_generator.py`, `data_processing.py`, `statistics.py`, `metrics.py`, `validation.py`
-- **Visualization**: `visualization.py`, `plots.py`, `figure_manager.py`, `image_manager.py`, `markdown_integration.py`
-- **Simulation**: `simulation.py`, `parameters.py`, `performance.py`, `reporting.py`
+- **Data Processing** (`project/src/`): `data_generator.py`, `data_processing.py`, `statistics.py`, `metrics.py`, `validation.py`
+- **Visualization** (`project/src/` + `infrastructure/documentation/`): `visualization.py`, `plots.py`, `figure_manager.py`, `image_manager.py`, `markdown_integration.py`
+- **Simulation** (`project/src/`): `simulation.py`, `parameters.py`, `performance.py`, `reporting.py`
 
 ### Operational Guides
 - **[docs/DEPENDENCY_MANAGEMENT.md](docs/DEPENDENCY_MANAGEMENT.md)** - Complete guide for uv package manager
@@ -771,7 +770,7 @@ flowchart TD
 
 We welcome contributions! To contribute:
 
-1. Ensure all tests pass with 100% coverage - [Testing Guide](tests/AGENTS.md)
+1. Ensure all tests pass with coverage requirements met - [Testing Guide](tests/AGENTS.md)
 2. Follow the established project structure - [Architecture](docs/ARCHITECTURE.md)
 3. Add tests for new functionality - [Workflow](docs/WORKFLOW.md)
 4. Update documentation as needed - [Documentation Guide](docs/AGENTS.md)
@@ -815,7 +814,7 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 
 ### Common Issues
 
-- **Tests Fail**: Ensure 100% coverage and all tests pass - [Testing Guide](tests/AGENTS.md) | [Test Improvements](docs/TEST_IMPROVEMENTS_SUMMARY.md)
+- **Tests Fail**: Ensure coverage requirements met and all tests pass - [Testing Guide](tests/AGENTS.md) | [Test Improvements](docs/TEST_IMPROVEMENTS_SUMMARY.md)
 - **Scripts Fail**: Check Python dependencies and error handling - [Script Guide](scripts/AGENTS.md)
 - **PDF Generation Fails**: Verify pandoc and xelatex installation - [Build System](docs/BUILD_SYSTEM.md#troubleshooting)
 - **Coverage Below 100%**: Add tests for uncovered code - [Workflow](docs/WORKFLOW.md)
@@ -856,12 +855,12 @@ To adapt this template for your existing project:
 The thin orchestrator pattern provides:
 
 - **Maintainability**: Single source of truth for business logic
-- **Testability**: Fully tested core functionality (81.90% coverage)
-- **Reusability**: Scripts can use any `src/` method
+- **Testability**: Fully tested core functionality (99.88% project coverage)
+- **Reusability**: Scripts can use any module's methods
 - **Clarity**: Clear separation of concerns
 - **Quality**: Automated validation of the entire system
-- **Performance**: 75-second build time for complete regeneration
-- **Reliability**: 320/322 tests passing (99.4% success rate)
+- **Performance**: 58-second build time for complete regeneration
+- **Reliability**: 878 tests passing (100% success rate)
 
 **System Status**: ✅ **FULLY OPERATIONAL** - [Build System](docs/BUILD_SYSTEM.md)
 

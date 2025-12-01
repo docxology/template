@@ -5,7 +5,7 @@
 This template provides a **complete foundation** for research projects with:
 
 ### 📁 **Professional Project Structure**
-- **`src/`** - Core business logic with 100% test coverage requirement
+- **`src/`** - Core business logic with comprehensive test coverage
 - **`tests/`** - Comprehensive test suite ensuring code quality
 - **`scripts/`** - Thin orchestrators that use tested methods
 - **`manuscript/`** - Research manuscript sections (generates PDFs)
@@ -13,7 +13,7 @@ This template provides a **complete foundation** for research projects with:
 - **`repo_utilities/`** - Build tools and utilities
 
 ### 🧪 **Test-Driven Development**
-- **100% test coverage requirement** for all source code
+- **Comprehensive test coverage** for all source code
 - **Automated testing** before any build process
 - **Quality assurance** built into the workflow
 

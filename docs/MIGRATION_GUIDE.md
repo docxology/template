@@ -76,7 +76,7 @@ Migration involves adapting your existing project structure to match the templat
 **Validate migration:**
 
 1. **Run tests** - Ensure all tests pass
-2. **Check coverage** - Verify 100% coverage
+2. **Check coverage** - Verify coverage requirements met
 3. **Build PDFs** - Generate outputs
 4. **Validate outputs** - Check PDF quality
 
@@ -478,7 +478,7 @@ tar -czf outputs_backup.tar.gz output/
 **Verify migration success:**
 
 - [ ] All tests pass
-- [ ] 100% code coverage achieved
+- [ ] Code coverage requirements met (70% project, 49% infra)
 - [ ] Build completes successfully
 - [ ] PDFs generate correctly
 - [ ] Cross-references work

@@ -37,7 +37,7 @@ src/infrastructure/
 **Key Characteristics:**
 - Generic and reusable across projects
 - Handles template infrastructure concerns
-- 100% test coverage required
+- 49% minimum test coverage (currently achieving 55.89%)
 - No domain-specific logic
 - Interfaces with project files (manuscript/, output/)
 
@@ -49,7 +49,11 @@ from infrastructure.markdown_integration import MarkdownIntegration
 
 # These manage the document structure, not the science
 fm = FigureManager()
-fm.register_figure("convergence_plot.png", label="fig:convergence")
+fm.register_figure(
+    filename="convergence_plot.png",
+    caption="Algorithm convergence comparison",
+    label="fig:convergence"
+)
 ```
 
 ---
@@ -91,7 +95,7 @@ scripts/
 - Domain-specific and research-focused
 - Implements algorithms and computations
 - Calls infrastructure when needed
-- 100% test coverage required
+- 70% minimum test coverage (currently achieving 99.88%)
 - Follows thin orchestrator pattern
 
 **Usage Pattern:**
@@ -108,7 +112,11 @@ stats = calculate_descriptive_stats(results)
 
 # Infrastructure: Manage figures
 fm = FigureManager()
-fm.register_figure("results.png", label="fig:results")
+fm.register_figure(
+    filename="results.png",
+    caption="Simulation results",
+    label="fig:results"
+)
 ```
 
 ---
@@ -185,12 +193,18 @@ from infrastructure.image_manager import ImageManager
 **✅ Layer 2 → Layer 1:** Scientific code can import infrastructure
 ```python
 from scientific.visualization import plot_results
-from infrastructure.figure_manager import FigureManager
+from infrastructure.documentation import FigureManager
 
 # Use infrastructure for figure management
 fig = plot_results(data)
+fig.savefig("output/figures/results.png")
+
 fm = FigureManager()
-fm.register_figure(fig, label="fig:results")
+fm.register_figure(
+    filename="results.png",
+    caption="Results visualization",
+    label="fig:results"
+)
 ```
 
 **✅ Layer 2 → Layer 2:** Scientific modules can import from other scientific modules

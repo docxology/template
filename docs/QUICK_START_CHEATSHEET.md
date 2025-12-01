@@ -53,8 +53,8 @@ python3 -m infrastructure.validation.cli pdf output/pdf/
 
 ```
 template/
-├── src/              # Core business logic (100% tested)
-├── tests/            # Test suite (100% coverage required)
+├── src/              # Core business logic (comprehensively tested)
+├── tests/            # Test suite (70% project, 49% infra minimum)
 ├── scripts/          # Entry point orchestrators (generic)
 ├── project/          # Project-specific code
 ├── infrastructure/   # Reusable infrastructure modules
@@ -95,7 +95,7 @@ vim scripts/my_figure.py
 # 1. Create module
 vim src/my_module.py
 
-# 2. Create tests (100% coverage required)
+# 2. Create tests (70% minimum coverage required)
 vim tests/test_my_module.py
 
 # 3. Run tests
@@ -164,9 +164,9 @@ Reference it: \ref{fig:my_figure}
 ## 📊 Key Metrics
 
 **Current System Status:**
-- **Tests**: 320/322 passing (99.4%)
-- **Coverage**: 81.90% (exceeds 70%)
-- **Build Time**: 75 seconds
+- **Tests**: 878/878 passing (558 infra + 320 project)
+- **Coverage**: 99.88% project, 55.89% infra (exceeds requirements)
+- **Build Time**: 58 seconds
 - **PDFs Generated**: 13 sections
 - **Documentation**: 25+ comprehensive guides
 
@@ -195,7 +195,7 @@ Reference it: \ref{fig:my_figure}
 
 1. **Always run tests first**: `pytest tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `src/`
-3. **100% coverage required**: No exceptions for `src/` code
+3. **Coverage requirements**: 70% minimum for project code, 49% for infrastructure
 4. **Run complete pipeline**: `python3 scripts/run_all.py` executes all stages
 5. **Pipeline stages**: 6 stages (00-05) from setup to final deliverables
 6. **Read build logs**: Check `project/output/pdf/*_compile.log` for errors

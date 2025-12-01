@@ -191,6 +191,11 @@ class PDFRenderer:
         
         output_file = output_dir / "project_combined.pdf"
         
+        # Remove existing output file to ensure fresh compilation
+        if output_file.exists():
+            output_file.unlink()
+            logger.debug(f"Removed existing output file: {output_file.name}")
+        
         # Check if bibliography exists
         bib_file = manuscript_dir / "references.bib"
         bib_exists = bib_file.exists()
@@ -262,10 +267,15 @@ class PDFRenderer:
         title_page_body = self._generate_title_page_body(manuscript_dir)
         
         # Ensure graphicx package is always included (required for \includegraphics)
+        # Check preamble_content (from preamble.md), not tex_content (Pandoc output)
         graphicx_required = r'\usepackage{graphicx}'
-        if graphicx_required not in tex_content:
+        if preamble_content and graphicx_required not in preamble_content:
             logger.info("⚠️  graphicx package not found in preamble, adding it")
             preamble_content = graphicx_required + "\n" + preamble_content
+        elif not preamble_content:
+            # No preamble at all, ensure graphicx is included
+            logger.info("⚠️  No preamble found, adding graphicx package")
+            preamble_content = graphicx_required
         
         if preamble_content or title_page_preamble:
             # Insert preamble and title page preamble commands BEFORE \begin{document}
@@ -345,11 +355,20 @@ class PDFRenderer:
                     logger.warning(f"  ... and {len(missing_figures) - 5} more missing figures")
         
         # Now compile LaTeX to PDF using xelatex
+        # IMPORTANT: 
+        # 1. -shell-escape is required for XeTeX to properly determine PNG image
+        #    dimensions. Without this flag, XeTeX cannot read PNG bounding box information
+        #    and will produce "Division by 0" errors when including graphics.
+        # 2. We run xelatex from the output directory (cwd=output_dir) rather than using
+        #    -output-directory flag. This is because the tex file contains relative paths
+        #    like "../figures/file.png" which must be resolved relative to the compilation
+        #    directory. Using -output-directory would resolve paths from the current working
+        #    directory instead, causing figure loading failures.
         cmd = [
             "xelatex",
             "-interaction=nonstopmode",
-            "-output-directory=" + str(output_dir),
-            str(combined_tex)
+            "-shell-escape",
+            combined_tex.name  # Just the filename, since we set cwd to output_dir
         ]
         
         logger.info(f"Rendering combined manuscript to PDF: {output_file.name}")
@@ -363,11 +382,15 @@ class PDFRenderer:
             # Pass 2: Bibtex processing (if bibliography exists)
             # Pass 3-4: Additional xelatex passes for reference resolution
             
+            # Temporary PDF file created during compilation (before renaming to final output)
+            temp_pdf = output_dir / "_combined_manuscript.pdf"
+            
             logger.info(f"  LaTeX compilation pass 1/4...")
-            result = subprocess.run(cmd, check=False, capture_output=True, text=True)
+            result = subprocess.run(cmd, check=False, capture_output=True, text=True, cwd=str(output_dir))
             
             # Check for critical errors on first pass
-            if "Fatal error occurred" in result.stdout or (result.returncode > 1 and not output_file.exists()):
+            # Note: Use temp_pdf (not output_file) since output_file is created by renaming temp_pdf
+            if "Fatal error occurred" in result.stdout or (result.returncode > 1 and not temp_pdf.exists()):
                 raise RenderingError(
                     f"XeLaTeX compilation failed (pass 1)",
                     context={"source": str(combined_tex), "output": str(output_file)}
@@ -382,7 +405,7 @@ class PDFRenderer:
             max_passes = 4
             for run in range(1, max_passes):
                 logger.info(f"  LaTeX compilation pass {run+1}/{max_passes}...")
-                result = subprocess.run(cmd, check=False, capture_output=True, text=True)
+                result = subprocess.run(cmd, check=False, capture_output=True, text=True, cwd=str(output_dir))
                 
                 # Check for critical errors
                 if "Fatal error occurred" in result.stdout or result.returncode > 1:
@@ -420,7 +443,6 @@ class PDFRenderer:
                                 logger.warning(f"  Graphics warning: {warning[:100]}...")
             
             # Check if the temporary PDF was created and rename it
-            temp_pdf = output_dir / "_combined_manuscript.pdf"
             if temp_pdf.exists():
                 # Rename temporary PDF to final name
                 temp_pdf.rename(output_file)

@@ -112,7 +112,6 @@ def generate_convergence_plot(figure_dir: str, data_dir: str) -> str:
               our_avg=our_avg, base_avg=base_avg)
     
     print(f"Generated: {figure_path}")
-    print(f"Generated: {figure_path}")
     return figure_path
 
 
@@ -545,6 +544,87 @@ def generate_recommendation_scalability(figure_dir: str, data_dir: str) -> str:
         return ""
 
 
+def _register_figures_with_manager(figures: List[str], figure_dir: str) -> None:
+    """Register generated figures with FigureManager for cross-referencing."""
+    try:
+        from infrastructure.documentation import FigureManager
+        import os
+        
+        # FigureManager uses registry_file parameter, not output_dir
+        registry_file = os.path.join(figure_dir, "figure_registry.json")
+        fm = FigureManager(registry_file=registry_file)
+        
+        # Define figure metadata for registration
+        figure_metadata = {
+            "convergence_plot.png": {
+                "label": "fig:convergence_plot",
+                "caption": "Algorithm convergence comparison showing our method vs baseline",
+                "section": "experimental_results"
+            },
+            "experimental_setup.png": {
+                "label": "fig:experimental_setup",
+                "caption": "Experimental pipeline showing data flow through processing stages",
+                "section": "methodology"
+            },
+            "data_structure.png": {
+                "label": "fig:data_structure",
+                "caption": "Algorithmic complexity comparison for different operations",
+                "section": "methodology"
+            },
+            "step_size_analysis.png": {
+                "label": "fig:step_size_analysis",
+                "caption": "Step size sensitivity analysis showing impact on convergence",
+                "section": "experimental_results"
+            },
+            "scalability_analysis.png": {
+                "label": "fig:scalability_analysis",
+                "caption": "Scalability analysis comparing algorithm performance across problem sizes",
+                "section": "experimental_results"
+            },
+            "ablation_study.png": {
+                "label": "fig:ablation_study",
+                "caption": "Ablation study showing contribution of each component",
+                "section": "experimental_results"
+            },
+            "hyperparameter_sensitivity.png": {
+                "label": "fig:hyperparameter_sensitivity",
+                "caption": "Hyperparameter sensitivity analysis for learning rate and momentum",
+                "section": "experimental_results"
+            },
+            "image_classification_results.png": {
+                "label": "fig:image_classification_results",
+                "caption": "Image classification training curves comparing optimization methods",
+                "section": "experimental_results"
+            },
+            "recommendation_scalability.png": {
+                "label": "fig:recommendation_scalability",
+                "caption": "Recommendation system scalability with varying users and items",
+                "section": "experimental_results"
+            }
+        }
+        
+        registered_count = 0
+        for fig_path in figures:
+            filename = os.path.basename(fig_path)
+            if filename in figure_metadata:
+                meta = figure_metadata[filename]
+                fm.register_figure(
+                    filename=filename,
+                    caption=meta["caption"],
+                    label=meta["label"],
+                    section=meta["section"]
+                )
+                registered_count += 1
+        
+        # Note: FigureManager auto-saves on each register_figure() call
+        print(f"\n✅ Registered {registered_count} figures with FigureManager")
+        
+    except ImportError:
+        print("\n⚠️  FigureManager not available, skipping figure registration")
+    except Exception as e:
+        print(f"\n⚠️  Could not register figures: {e}")
+
+
 def main() -> None:
     """Generate all research figures and tables using src/ modules."""
     os.environ.setdefault("MPLBACKEND", "Agg")
@@ -584,6 +664,9 @@ def main() -> None:
     print(f"\n✅ Generated {len(tables)} data tables:")
     for table in tables:
         print(f"   - {os.path.basename(table)}")
+
+    # Register figures with FigureManager for cross-referencing
+    _register_figures_with_manager(figures, figure_dir)
 
     print(f"\n📁 All outputs saved to: {output_dir}")
     print(f"   Figures: {figure_dir}")

@@ -205,7 +205,7 @@ The `generate_glossary.py` script:
 
 The pipeline orchestrator (`scripts/run_all.py`):
 
-1. **Runs tests** with 100% coverage requirement
+1. **Runs tests** with coverage requirements (70% project, 49% infra)
 2. **Executes scripts** to generate figures and data (validating src/ integration)
 3. **Validates manuscript** for references and images
 4. **Generates glossary** from source code
@@ -271,7 +271,7 @@ Generated outputs include:
 ### Adding New Source Code
 
 1. **Create new modules** in `src/` directory
-2. **Add comprehensive tests** in `tests/` directory (100% coverage required)
+2. **Add comprehensive tests** in `tests/` directory (coverage requirements apply)
 3. **Update scripts** to import and use new `src/` methods
 4. **Validate integration** through the build pipeline
 
@@ -299,7 +299,7 @@ The validation system will report:
 2. **Broken references**: Check label spelling and existence
 3. **Validation errors**: Address each reported issue
 4. **Build failures**: Fix all validation issues before rebuilding
-5. **Import errors**: Ensure `src/` modules have 100% test coverage
+5. **Import errors**: Ensure `src/` modules meet coverage requirements
 
 ## Architecture Compliance
 
@@ -309,7 +309,7 @@ This template enforces the **thin orchestrator pattern** where:
 
 - **`src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods
-- **`tests/`** ensures 100% coverage of `src/` functionality
+- **`tests/`** ensures comprehensive coverage of `src/` functionality
 - **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
 
 ### Script Requirements

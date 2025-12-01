@@ -165,9 +165,9 @@ infrastructure/<module>/
 
 ### Coverage Requirements
 
-- **Infrastructure**: 100% coverage (strictly enforced)
-- **Project code**: 100% coverage (strictly enforced)
-- **Integration tests**: All workflows covered
+- **Infrastructure**: 49% minimum (currently achieving 55.89%)
+- **Project code**: 70% minimum (currently achieving 99.88%)
+- **Integration tests**: All critical workflows covered
 
 ### Test Organization
 

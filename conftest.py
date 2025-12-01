@@ -7,6 +7,11 @@ This configuration enables:
 4. Headless matplotlib rendering
 
 Path configuration is CRITICAL and must happen before any test imports.
+
+Pytest and coverage settings are defined in pyproject.toml:
+- [tool.pytest.ini_options] - Test discovery and execution
+- [tool.coverage.run] - Coverage collection settings
+- [tool.coverage.report] - Coverage report configuration
 """
 import os
 import sys

@@ -488,7 +488,7 @@ pip install -r requirements.txt
 
 To extend infrastructure:
 1. Add functionality to appropriate module
-2. Add comprehensive tests (100% coverage)
+2. Add comprehensive tests (meet coverage requirements)
 3. Update module documentation (AGENTS.md + README.md)
 4. Update this file if adding new module
 

@@ -202,5 +202,6 @@ Current coverage by module:
 
 - [`AGENTS.md`](AGENTS.md) - Detailed testing guide
 - [`conftest.py`](conftest.py) - Test configuration
-- [`../src/README.md`](../src/README.md) - Modules being tested
+- [`../infrastructure/README.md`](../infrastructure/README.md) - Infrastructure modules being tested
+- [`../project/src/README.md`](../project/src/README.md) - Project modules being tested
 - [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow

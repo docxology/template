@@ -142,6 +142,56 @@ class TestValidateImages:
         
         assert len(problems) == 1
         assert abs_image_path in problems[0]
+    
+    def test_relative_path_not_absolute_after_normpath(self, tmp_path, monkeypatch):
+        """Test validate_images with relative path that stays relative after normpath.
+        
+        This covers line 94 where abs_path is joined with repo_root when not absolute.
+        """
+        # Create a manuscript directory with an image reference
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir(parents=True)
+        
+        (manuscript / "test.md").write_text(
+            "![alt text](../output/figures/test.png)"
+        )
+        
+        # Change to tmp_path so we can use relative paths
+        monkeypatch.chdir(tmp_path)
+        
+        # Pass RELATIVE path to markdown file - this triggers line 94
+        # because dirname("manuscript/test.md") = "manuscript"
+        # and join("manuscript", "../output/figures/test.png") = "output/figures/test.png" (relative!)
+        relative_md_path = "manuscript/test.md"
+        
+        problems = validate_images([relative_md_path], tmp_path)
+        
+        # Should report missing image since we didn't create it
+        assert len(problems) == 1
+        assert "output/figures/test.png" in problems[0] or "../output/figures/test.png" in problems[0]
+    
+    def test_relative_path_exists_after_repo_root_join(self, tmp_path):
+        """Test validate_images with relative path that exists when joined with repo_root.
+        
+        This covers line 94 with a file that actually exists.
+        """
+        manuscript = tmp_path / "manuscript"
+        manuscript.mkdir()
+        
+        # Create the image in a relative location from manuscript
+        figures_dir = manuscript / "figures"
+        figures_dir.mkdir()
+        (figures_dir / "local_image.png").write_text("fake image")
+        
+        # Reference with simple relative path
+        (manuscript / "test.md").write_text(
+            "![alt text](figures/local_image.png)"
+        )
+        
+        problems = validate_images([str(manuscript / "test.md")], tmp_path)
+        
+        # Image exists, should have no problems
+        assert len(problems) == 0
 
 
 class TestValidateRefs:

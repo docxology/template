@@ -14,7 +14,7 @@
 - [Add a new Python module](#add-a-new-python-module)
 - [Write tests for my code](#write-tests-for-my-code)
 - [Debug test failures](#debug-test-failures)
-- [Fix coverage below 100%](#fix-coverage-below-100)
+- [Fix coverage below requirements](#fix-coverage-below-requirements)
 - [Generate PDF of manuscript](#generate-pdf-of-manuscript)
 - [Customize project metadata](#customize-project-metadata)
 - [Add supplemental materials](#add-supplemental-materials)
@@ -127,7 +127,7 @@
        }
    ```
 
-2. **Create tests (100% coverage required)**
+2. **Create tests (70% minimum coverage required)**
    ```bash
    vim tests/test_data_analysis.py
    ```
@@ -345,7 +345,7 @@ python3 repo_utilities/validate_markdown.py
        assert abs(std - 1.5811388) < 1e-6
    ```
 
-3. **Ensure 100% coverage**
+3. **Ensure comprehensive coverage**
    ```bash
    pytest tests/test_statistics.py --cov=src.statistics --cov-report=term-missing
    ```
@@ -363,7 +363,7 @@ python3 repo_utilities/validate_markdown.py
 
 **Key Rules**:
 - ALL business logic in `src/`
-- 100% test coverage required
+- Comprehensive test coverage required (70% project, 49% infra)
 - Scripts only orchestrate, never implement algorithms
 
 **See Also**: [Thin Orchestrator Pattern](THIN_ORCHESTRATOR_SUMMARY.md)
@@ -372,7 +372,7 @@ python3 repo_utilities/validate_markdown.py
 
 ## Write Tests for My Code
 
-**Goal**: Achieve 100% test coverage for src/ modules
+**Goal**: Achieve comprehensive test coverage for src/ modules
 
 **Prerequisites**: Understanding of pytest
 
@@ -417,7 +417,7 @@ python3 repo_utilities/validate_markdown.py
 
 6. **Repeat until 100%**
 
-**Expected Result**: All code paths tested, 100% coverage achieved
+**Expected Result**: All critical code paths tested, coverage requirements met
 
 **Requirements**:
 - Statement coverage: 100%
@@ -478,9 +478,9 @@ pytest -x
 
 ---
 
-## Fix Coverage Below 100%
+## Fix Coverage Below Requirements
 
-**Goal**: Achieve required 100% test coverage
+**Goal**: Achieve required test coverage (70% project, 49% infra)
 
 **Steps**:
 
@@ -523,7 +523,7 @@ def test_process_negative():
     assert process(-5) == 0
 ```
 
-**Expected Result**: 100% coverage achieved
+**Expected Result**: Coverage requirements achieved (70% project, 49% infra)
 
 **See Also**: [Test Improvements](TEST_IMPROVEMENTS_SUMMARY.md)
 
@@ -553,7 +553,7 @@ def test_process_negative():
    ```
 
 2. **Check for errors**
-   - Tests must pass (320/322)
+   - Tests must pass (878/878)
    - Scripts must succeed
    - Markdown validation must pass
    - PDF compilation must succeed
@@ -702,7 +702,7 @@ def test_process_negative():
 
 3. **Make changes**
    - Follow thin orchestrator pattern
-   - Maintain 100% test coverage
+   - Maintain required test coverage
    - Update documentation
 
 4. **Run tests**
@@ -732,7 +732,7 @@ def test_process_negative():
    ```
 
 **Contribution Checklist**:
-- [ ] Tests pass (320/322+)
+- [ ] Tests pass (878/878)
 - [ ] Coverage maintained/improved
 - [ ] Documentation updated
 - [ ] Thin orchestrator pattern followed

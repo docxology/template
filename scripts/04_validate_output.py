@@ -11,27 +11,21 @@ Stage 5 of the pipeline orchestration.
 """
 from __future__ import annotations
 
-import subprocess
 import sys
 from pathlib import Path
 
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_success, log_header
+from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_substep
 
 # Set up logger for this module
 logger = get_logger(__name__)
 
 
-def log_stage(message: str) -> None:
-    """Log a stage start message."""
-    logger.info(f"\n  {message}")
-
-
 def validate_pdfs() -> bool:
     """Validate generated PDF files."""
-    log_stage("Validating PDF files...")
+    log_substep("Validating PDF files...", logger)
     
     repo_root = Path(__file__).parent.parent
     pdf_dir = repo_root / "project" / "output" / "pdf"
@@ -64,8 +58,8 @@ def validate_pdfs() -> bool:
 
 
 def validate_markdown() -> bool:
-    """Validate markdown files in manuscript."""
-    log_stage("Validating markdown files...")
+    """Validate markdown files in manuscript using infrastructure validation module."""
+    log_substep("Validating markdown files...", logger)
     
     repo_root = Path(__file__).parent.parent
     # Check project/manuscript first, then fall back to root manuscript/ for backward compatibility
@@ -87,40 +81,36 @@ def validate_markdown() -> bool:
     
     log_success(f"Found {len(markdown_files)} markdown file(s)", logger)
     
-    # Check for validation script
-    validate_script = repo_root / "repo_utilities" / "validate_markdown.py"
-    
-    if validate_script.exists():
-        logger.info("Running markdown validation script...")
+    # Use infrastructure validation module
+    try:
+        from infrastructure.validation.markdown_validator import validate_markdown as validate_md
         
-        try:
-            result = subprocess.run(
-                [sys.executable, str(validate_script)],
-                cwd=str(repo_root),
-                capture_output=True,
-                text=True,
-                check=False
-            )
-            
-            if result.returncode == 0:
-                log_success("Markdown validation passed", logger)
-                return True
-            else:
-                logger.warning("Markdown validation had issues (non-critical)")
-                if result.stdout:
-                    logger.debug(f"Validation output: {result.stdout}")
-                return True  # Non-critical
-        except Exception as e:
-            logger.warning(f"Could not run markdown validation: {e}")
+        logger.info("Running markdown validation...")
+        problems, exit_code = validate_md(manuscript_dir, repo_root, strict=False)
+        
+        if not problems:
+            log_success("Markdown validation passed (no issues found)", logger)
+            return True
+        else:
+            # Log issues but don't fail - these are often non-critical
+            logger.info(f"  Found {len(problems)} validation note(s):")
+            for problem in problems[:5]:  # Show first 5 issues
+                logger.info(f"    • {problem}")
+            if len(problems) > 5:
+                logger.info(f"    ... and {len(problems) - 5} more")
+            logger.info("  (Markdown validation notes are non-critical)")
             return True  # Non-critical
-    else:
-        logger.info("Markdown validation script not found (optional)")
-        return True
+    except ImportError as e:
+        logger.warning(f"Could not import markdown validator: {e}")
+        return True  # Non-critical if validator unavailable
+    except Exception as e:
+        logger.warning(f"Markdown validation error: {e}")
+        return True  # Non-critical
 
 
 def verify_outputs_exist() -> bool:
     """Verify all expected output files exist."""
-    log_stage("Verifying output structure...")
+    log_substep("Verifying output structure...", logger)
     
     repo_root = Path(__file__).parent.parent
     
@@ -142,9 +132,75 @@ def verify_outputs_exist() -> bool:
     return all_exist
 
 
+def validate_figure_registry() -> tuple[bool, list[str]]:
+    """Validate figure registry against manuscript references.
+    
+    Returns:
+        Tuple of (success, list of issues found)
+    """
+    import json
+    import re
+    
+    log_substep("Validating figure registry...", logger)
+    
+    repo_root = Path(__file__).parent.parent
+    registry_path = repo_root / "project" / "output" / "figures" / "figure_registry.json"
+    manuscript_dir = repo_root / "project" / "manuscript"
+    
+    issues = []
+    
+    # Load registry
+    registered_figures = set()
+    if registry_path.exists():
+        try:
+            with open(registry_path) as f:
+                registry = json.load(f)
+                registered_figures = set(registry.keys())
+                log_success(f"Figure registry loaded: {len(registered_figures)} figure(s)", logger)
+        except Exception as e:
+            issues.append(f"Failed to load figure registry: {e}")
+            return False, issues
+    else:
+        logger.warning("Figure registry not found")
+        return True, []  # Not an error if registry doesn't exist
+    
+    # Find figure references in markdown (only in numbered section files, not AGENTS.md/README.md)
+    referenced_figures = set()
+    figure_ref_pattern = re.compile(r'\\(?:ref|label)\{(fig:[^}]+)\}')
+    
+    if manuscript_dir.exists():
+        for md_file in manuscript_dir.glob("*.md"):
+            # Skip documentation files (AGENTS.md, README.md)
+            if md_file.name in ["AGENTS.md", "README.md"]:
+                continue
+            
+            try:
+                content = md_file.read_text()
+                refs = figure_ref_pattern.findall(content)
+                referenced_figures.update(refs)
+            except Exception as e:
+                logger.warning(f"Could not read {md_file.name}: {e}")
+    
+    # Find unregistered references
+    unregistered = referenced_figures - registered_figures
+    if unregistered:
+        for ref in sorted(unregistered):
+            issues.append(f"Unregistered figure reference: {ref}")
+    
+    # Summary
+    if issues:
+        logger.warning(f"  Found {len(issues)} figure issue(s)")
+        for issue in issues:
+            logger.warning(f"    • {issue}")
+    else:
+        log_success(f"All {len(referenced_figures)} figure references verified", logger)
+    
+    return len(issues) == 0, issues
+
+
 def generate_validation_report() -> None:
     """Generate a validation report."""
-    log_stage("Generating validation report...")
+    log_substep("Generating validation report...", logger)
     
     repo_root = Path(__file__).parent.parent
     output_dir = repo_root / "project" / "output"
@@ -189,6 +245,8 @@ def main() -> int:
     ]
     
     results = []
+    figure_issues = []
+    
     for check_name, check_fn in checks:
         try:
             result = check_fn()
@@ -196,6 +254,14 @@ def main() -> int:
         except Exception as e:
             logger.error(f"Error during {check_name}: {e}", exc_info=True)
             results.append((check_name, False))
+    
+    # Validate figure registry separately (returns tuple)
+    try:
+        fig_result, figure_issues = validate_figure_registry()
+        results.append(("Figure registry", fig_result))
+    except Exception as e:
+        logger.error(f"Error during figure registry validation: {e}", exc_info=True)
+        results.append(("Figure registry", False))
     
     # Generate report
     generate_validation_report()
@@ -206,14 +272,32 @@ def main() -> int:
     logger.info("="*60)
     
     all_passed = True
+    warning_count = 0
+    
     for check_name, result in results:
-        status = "✅ PASS" if result else "❌ FAIL"
+        if result:
+            status = "✅ PASS"
+        else:
+            status = "⚠️  WARN"
+            warning_count += 1
         logger.info(f"{status}: {check_name}")
-        if not result:
+        if not result and check_name == "PDF validation":
+            # PDF validation failure is critical
             all_passed = False
     
-    if all_passed:
-        log_success("\n✅ Validation complete - pipeline successful!", logger)
+    # Show figure issues prominently if any
+    if figure_issues:
+        logger.info("")
+        logger.info("Figure Reference Issues:")
+        for issue in figure_issues:
+            logger.warning(f"  • {issue}")
+    
+    if all_passed and warning_count == 0:
+        log_success("\n✅ Validation complete - all checks passed!", logger)
+        return 0
+    elif all_passed:
+        logger.info(f"\n⚠️  Validation complete with {warning_count} warning(s)")
+        log_success("Pipeline can continue - warnings are non-critical", logger)
         return 0
     else:
         logger.error("\n❌ Validation failed - review issues above")

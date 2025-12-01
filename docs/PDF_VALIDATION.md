@@ -14,7 +14,7 @@ Following the **thin orchestrator pattern**, the implementation consists of:
 
 1. **Business Logic** (`src/pdf_validator.py`): Core validation algorithms
 2. **Orchestrator** (`repo_utilities/validate_pdf_output.py`): I/O and user interface
-3. **Tests** (`tests/test_pdf_validator.py`): 100% coverage with real data
+3. **Tests** (`tests/test_pdf_validator.py`): Comprehensive coverage with real data
 4. **Integration** (`scripts/run_all.py`): Automated validation in build pipeline (Stage 4)
 
 ## Components
@@ -115,7 +115,7 @@ Conference on Machine Learning, pages 456–467. ICML, 2022...
 
 ### Unit Tests (test_pdf_validator.py)
 
-- ✅ 100% test coverage of `src/pdf_validator.py`
+- ✅ Comprehensive test coverage of `src/pdf_validator.py`
 - ✅ Tests with real PDFs (no mocks)
 - ✅ Tests edge cases and error handling
 - ✅ Validates against actual project PDF when available
@@ -186,7 +186,7 @@ Following TDD principles:
 2. Implement business logic in `src/pdf_validator.py`
 3. Create thin orchestrator in `repo_utilities/validate_pdf_output.py`
 4. Integrate into build pipeline
-5. Verify 100% test coverage
+5. Verify test coverage requirements met
 
 ## Future Enhancements
 

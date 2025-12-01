@@ -7,7 +7,7 @@ Complete, self-contained scientific research project with integrated testing, ma
 ```
 project/
 ├── src/                    # Scientific code (models, analysis, utilities)
-├── tests/                  # Test suite (100% coverage)
+├── tests/                  # Test suite (comprehensive coverage)
 ├── scripts/                # Analysis scripts (thin orchestrators)
 ├── manuscript/             # Research manuscript sections
 ├── docs/                   # Project-specific documentation
@@ -43,7 +43,7 @@ python3 scripts/03_render_pdf.py
 
 ## Features
 
-- **100% test coverage** - All scientific code tested with real data
+- **Comprehensive test coverage** - All scientific code tested with real data (99.88%)
 - **Modular design** - Clean separation of concerns
 - **Reproducible** - Deterministic computation with seeded randomness
 - **Documented** - Comprehensive documentation and docstrings
@@ -61,7 +61,7 @@ Scientific code implementing algorithms, data processing, analysis, and visualiz
 - ... and more
 
 ### tests/
-Test suite with 100% coverage of src/ modules.
+Test suite with comprehensive coverage of src/ modules (99.88%).
 
 - Real data testing (no mocks)
 - Integration tests
@@ -88,7 +88,7 @@ Research manuscript in Markdown format.
 1. **Implement in src/**
    - Add module to `src/`
    - Add comprehensive tests
-   - Ensure 100% coverage
+   - Ensure coverage requirements met
 
 2. **Use in scripts/**
    - Import from src/

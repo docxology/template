@@ -13,25 +13,25 @@ This file contains pre-written, copyable content for sharing the **[Research Pro
 
 ### **Short & Punchy**
 - **GitHub Template**: A comprehensive research project template with test-driven development, automated PDF generation, and professional documentation structure.
-- **Research Workflow**: Complete template for academic papers with 100% test coverage, automated figure generation, and LaTeX/PDF output.
+- **Research Workflow**: Complete template for academic papers with comprehensive test coverage, automated figure generation, and LaTeX/PDF output.
 - **Academic Template**: Professional research project structure with thin orchestrator pattern, automated testing, and publication-ready PDF generation.
 - **Science Template**: Test-driven development template for research projects with automated documentation, figure generation, and LaTeX compilation.
 
 ### **Feature-Focused**
 - **Automated Research**: Template that automatically generates PDFs from markdown with integrated figures, cross-references, and professional formatting.
-- **Test-Driven Science**: Research template enforcing 100% test coverage with thin orchestrator pattern for maintainable scientific code.
+- **Test-Driven Science**: Research template enforcing comprehensive test coverage with thin orchestrator pattern for maintainable scientific code.
 - **Publication Ready**: Academic template that generates publication-ready PDFs with proper LaTeX formatting, figure integration, and cross-referencing.
 
 ## 📝 **One-Paragraph Descriptions**
 
 ### **Technical Overview** 🔧
-This **[comprehensive GitHub template](https://github.com/docxology/template)** implements a **[thin orchestrator pattern](https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** with **100% test coverage requirements**. The template automatically generates publication-ready PDFs from markdown sources, includes automated figure generation from Python scripts, and maintains perfect coherence between source code, tests, and documentation. It's perfect for academic papers, scientific documentation, technical reports, and any project requiring professional output with automated quality assurance. The **[architecture](https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** ensures maintainable, testable code while keeping scripts lightweight and focused.
+This **[comprehensive GitHub template](https://github.com/docxology/template)** implements a **[thin orchestrator pattern](https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** with **comprehensive test coverage requirements**. The template automatically generates publication-ready PDFs from markdown sources, includes automated figure generation from Python scripts, and maintains perfect coherence between source code, tests, and documentation. It's perfect for academic papers, scientific documentation, technical reports, and any project requiring professional output with automated quality assurance. The **[architecture](https://github.com/docxology/template/blob/main/ARCHITECTURE.md)** ensures maintainable, testable code while keeping scripts lightweight and focused.
 
 ### **Academic Focus** 🎓
 A revolutionary research project template that transforms how scientists and researchers approach documentation. It provides a standardized structure with **[test-driven development](https://github.com/docxology/template/blob/main/WORKFLOW.md)**, automated PDF generation from markdown, and professional LaTeX formatting. The template includes cross-referencing systems, automated glossary generation from source code, and ensures all figures and data are properly integrated. Perfect for thesis projects, research papers, and scientific documentation. The **[markdown guide](https://github.com/docxology/template/blob/main/MARKDOWN_TEMPLATE_GUIDE.md)** shows how to create publication-ready content with proper equations and references.
 
 ### **Developer Experience** 💻
-Built for developers who need professional research output, this template enforces clean architecture through the **[thin orchestrator pattern](https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** where scripts import and use tested methods from source modules. It includes comprehensive testing with 100% coverage requirements, automated build pipelines, and generates multiple output formats including PDF, LaTeX, and HTML. The template maintains perfect synchronization between code, tests, and documentation. The **[workflow guide](https://github.com/docxology/template/blob/main/WORKFLOW.md)** shows the complete development process from tests to publication.
+Built for developers who need professional research output, this template enforces clean architecture through the **[thin orchestrator pattern](https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** where scripts import and use tested methods from source modules. It includes comprehensive testing with coverage requirements, automated build pipelines, and generates multiple output formats including PDF, LaTeX, and HTML. The template maintains perfect synchronization between code, tests, and documentation. The **[workflow guide](https://github.com/docxology/template/blob/main/WORKFLOW.md)** shows the complete development process from tests to publication.
 
 ### **Quick Start** ⚡
 Get started immediately with this **[research project template](https://github.com/docxology/template)** that provides everything you need: complete project structure, test-driven development setup, automated PDF generation, and professional documentation workflows. Simply click "Use this template" on GitHub, customize your project details, and start building. The template includes comprehensive examples, automated testing, and generates publication-ready outputs with minimal configuration. Check the **[how to use guide](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** for step-by-step instructions and the **[examples showcase](https://github.com/docxology/template/blob/main/EXAMPLES_SHOWCASE.md)** for real-world usage patterns.
@@ -46,7 +46,7 @@ python3 scripts/run_all.py
 
 ### **🧪 Running Tests**
 ```bash
-# Run tests with coverage (100% required)
+# Run tests with coverage
 uv run pytest tests/ --cov=src --cov-report=term-missing
 
 # Or with pip
@@ -74,7 +74,7 @@ python3 scripts/run_all.py
 ### **📊 Development Workflow**
 ```bash
 # 1. Make changes to src/ code
-# 2. Run tests to ensure 100% coverage
+# 2. Run tests to ensure coverage requirements met
 uv run pytest tests/ --cov=src --cov-report=term-missing
 
 # 3. Generate figures and validate
@@ -88,10 +88,10 @@ python3 scripts/run_all.py
 ## 📱 **Social Media Posts**
 
 ### **🐦 Twitter/X (280 chars)**
-🚀 New research project template! Test-driven development + automated PDF generation + professional LaTeX output. Perfect for academic papers, thesis projects, and scientific documentation. 100% test coverage enforced. #Research #Academic #OpenSource
+🚀 New research project template! Test-driven development + automated PDF generation + professional LaTeX output. Perfect for academic papers, thesis projects, and scientific documentation. Comprehensive test coverage enforced. #Research #Academic #OpenSource
 
 ### **💼 LinkedIn Post**
-Excited to share this **[comprehensive research project template](https://github.com/docxology/template)** I've been working on! It provides a standardized structure for research projects with **[test-driven development](https://github.com/docxology/template/blob/main/WORKFLOW.md)**, automated PDF generation from markdown, and professional documentation workflows. Perfect for academics, researchers, and developers who need publication-ready outputs. The template enforces clean architecture through the **[thin orchestrator pattern](https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** and includes comprehensive testing with 100% coverage requirements. Check it out and let me know what you think!
+Excited to share this **[comprehensive research project template](https://github.com/docxology/template)** I've been working on! It provides a standardized structure for research projects with **[test-driven development](https://github.com/docxology/template/blob/main/WORKFLOW.md)**, automated PDF generation from markdown, and professional documentation workflows. Perfect for academics, researchers, and developers who need publication-ready outputs. The template enforces clean architecture through the **[thin orchestrator pattern](https://github.com/docxology/template/blob/main/THIN_ORCHESTRATOR_SUMMARY.md)** and includes comprehensive testing with coverage requirements. Check it out and let me know what you think!
 
 ### **📱 Reddit Post Title**
 [GitHub Template] Research Project Template with Test-Driven Development, Automated PDF Generation, and Professional Documentation Structure
@@ -99,7 +99,7 @@ Excited to share this **[comprehensive research project template](https://github
 ### **📱 Reddit Post Body**
 I've created a **[comprehensive GitHub template](https://github.com/docxology/template)** for research projects that I think could be really useful for the community. It includes:
 
-✅ **Test-driven development** with 100% coverage requirements  
+✅ **Test-driven development** with comprehensive coverage requirements  
 ✅ **Automated PDF generation** from markdown with LaTeX  
 ✅ **Thin orchestrator pattern** for maintainable code  
 ✅ **Professional documentation** structure  
@@ -116,7 +116,7 @@ Would love feedback from researchers and developers who might use this!
 Here's a **[comprehensive research project template](https://github.com/docxology/template)** that handles exactly what you're looking for:
 
 **🚀 Key Features:**
-✅ Test-driven development with 100% coverage  
+✅ Test-driven development with comprehensive coverage  
 ✅ Automated PDF generation from markdown  
 ✅ Professional LaTeX output with cross-referencing  
 ✅ Automated figure generation from Python scripts  
@@ -139,7 +139,7 @@ The template automatically handles LaTeX compilation, figure integration, and ge
 This **[template](https://github.com/docxology/template)** solves exactly the problem you're describing! It provides:
 
 🔧 **1. Standardized Structure**: Clear separation between source code, tests, scripts, and documentation  
-🧪 **2. Automated Quality**: 100% test coverage enforcement and automated validation  
+🧪 **2. Automated Quality**: Comprehensive test coverage and automated validation  
 📚 **3. Professional Output**: Publication-ready PDFs with proper LaTeX formatting  
 🖼️ **4. Figure Integration**: Automated generation and integration of figures from Python scripts  
 🔗 **5. Cross-Referencing**: Built-in system for equations, figures, and sections  
@@ -150,7 +150,7 @@ The **[thin orchestrator pattern](https://github.com/docxology/template/blob/mai
 I've developed a **[research project template](https://github.com/docxology/template)** that addresses many of the workflow issues we discuss here. It implements:
 
 **🔬 Core Principles:**
-✅ Test-driven development with enforced 100% coverage  
+✅ Test-driven development with enforced coverage requirements  
 ✅ Automated documentation generation from source code  
 ✅ Professional PDF output with LaTeX compilation  
 ✅ Integrated figure and data generation  
@@ -174,7 +174,7 @@ Hi [Name],
 
 I wanted to share a research project template I've developed that I think could be valuable for your team. It provides:
 
-- **Automated Quality Assurance**: 100% test coverage enforcement
+- **Automated Quality Assurance**: Comprehensive test coverage enforcement
 - **Professional Documentation**: Publication-ready PDFs with LaTeX
 - **Standardized Workflow**: Consistent project structure and processes
 - **Figure Integration**: Automated generation and integration of research figures
@@ -222,11 +222,11 @@ Thanks!
 ⚡ "Professional Research Outputs with Zero Configuration"  
 🧪 "Test-Driven Development Meets Academic Publishing"  
 📚 "Automated PDF Generation for Research Projects"  
-✅ "Research Template with 100% Test Coverage"  
+✅ "Research Template with Comprehensive Test Coverage"  
 
 ### **💎 Value Propositions**
 ⏰ **Save Time**: Automated PDF generation eliminates manual formatting  
-🔒 **Ensure Quality**: 100% test coverage enforced automatically  
+🔒 **Ensure Quality**: Comprehensive test coverage enforced automatically  
 📖 **Professional Output**: Publication-ready LaTeX and PDF generation  
 🔄 **Maintain Consistency**: Standardized structure across all projects  
 🤝 **Enable Collaboration**: Clear workflows for team research projects  
@@ -244,8 +244,8 @@ Thanks!
 ```mermaid
 graph TB
     subgraph "Research Project Template"
-        SRC[📁 src/<br/>Core business logic<br/>100% tested]
-        TESTS[🧪 tests/<br/>Test suite<br/>100% coverage]
+        SRC[📁 src/<br/>Core business logic<br/>Tested]
+        TESTS[🧪 tests/<br/>Test suite<br/>Comprehensive coverage]
         SCRIPTS[📜 scripts/<br/>Thin orchestrators<br/>Use src/ methods]
         MANUSCRIPT[📚 manuscript/<br/>Research manuscript<br/>Cross-referenced]
         REPO_UTILS[🔧 repo_utilities/<br/>Build tools<br/>Generic utilities]
@@ -283,9 +283,9 @@ flowchart TD
     START([🚀 Start Development]) --> TESTS[🧪 Write Tests First]
     TESTS --> IMPLEMENT[💻 Implement Functionality]
     IMPLEMENT --> VALIDATE[✅ Run Tests & Check Coverage]
-    VALIDATE -->|Coverage < 100%| ADD_TESTS[➕ Add Missing Tests]
+    VALIDATE -->|Coverage below requirements| ADD_TESTS[➕ Add Missing Tests]
     ADD_TESTS --> VALIDATE
-    VALIDATE -->|Coverage = 100%| INTEGRATION[🔗 Test Script Integration]
+    VALIDATE -->|Coverage requirements met| INTEGRATION[🔗 Test Script Integration]
     INTEGRATION --> DOCS[📚 Update Documentation]
     DOCS --> PIPELINE[🚀 Run Complete Pipeline]
     PIPELINE --> SUCCESS[🎉 Development Complete]
@@ -348,7 +348,7 @@ graph LR
 💬 **[Discussions](https://github.com/docxology/template/discussions)** - Join the community  
 
 ### **🚀 Key Features to Highlight**
-✅ **Test-driven development** with 100% coverage  
+✅ **Test-driven development** with comprehensive coverage  
 ✅ **Automated PDF generation** from markdown  
 ✅ **Professional LaTeX output** with cross-referencing  
 ✅ **Automated figure generation** from Python scripts  
@@ -373,7 +373,7 @@ graph LR
 | Feature | Traditional Approach | This Template | Benefit |
 |---------|---------------------|---------------|---------|
 | **Project Structure** | Manual organization | 🏗️ Standardized structure | Consistency across projects |
-| **Testing** | Optional coverage | 🧪 100% coverage enforced | Reliable, bug-free code |
+| **Testing** | Optional coverage | 🧪 Coverage requirements enforced | Reliable, bug-free code |
 | **Documentation** | Manual updates | 📚 Auto-synchronized | Code-doc always in sync |
 | **PDF Generation** | Manual LaTeX editing | 🚀 Automated from markdown | Save hours of formatting |
 | **Figure Integration** | Manual file management | 🖼️ Automated generation | Seamless figure inclusion |
@@ -416,7 +416,7 @@ graph LR
 - [ ] Run `./repo_utilities/rename_project.sh` to customize
 - [ ] Update manuscript files with your content
 - [ ] Add your business logic to `src/` modules
-- [ ] Create tests in `tests/` directory (100% coverage required)
+- [ ] Create tests in `tests/` directory (coverage requirements apply)
 
 **📖 Need guidance?** See **[`HOW_TO_USE.md`](https://github.com/docxology/template/blob/main/HOW_TO_USE.md)** for step-by-step instructions at your experience level.
 

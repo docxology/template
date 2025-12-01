@@ -59,16 +59,14 @@ The `.cursorrules/` directory contains modular development rules that complement
 
 | Rule Module | Focus Area |
 |-------------|-----------|
-| [`../.cursorrules/README.md`](../.cursorrules/README.md) | Rules directory overview and navigation |
-| [`../.cursorrules/core_architecture.md`](../.cursorrules/core_architecture.md) | System design and component relationships |
-| [`../.cursorrules/thin_orchestrator.md`](../.cursorrules/thin_orchestrator.md) | Script orchestration patterns |
-| [`../.cursorrules/testing.md`](../.cursorrules/testing.md) | Testing requirements and practices |
-| [`../.cursorrules/build_pipeline.md`](../.cursorrules/build_pipeline.md) | Build orchestration and validation |
-| [`../.cursorrules/documentation.md`](../.cursorrules/documentation.md) | Documentation standards |
-| [`../.cursorrules/markdown_structure.md`](../.cursorrules/markdown_structure.md) | Manuscript organization |
-| [`../.cursorrules/figure_generation.md`](../.cursorrules/figure_generation.md) | Figure generation patterns |
-| [`../.cursorrules/logging.md`](../.cursorrules/logging.md) | Logging standards |
-| [`../.cursorrules/source_code_standards.md`](../.cursorrules/source_code_standards.md) | Code quality and style |
+| [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) | Complete overview and navigation guide |
+| [`../.cursorrules/README.md`](../.cursorrules/README.md) | Quick reference and patterns |
+| [`../.cursorrules/error_handling.md`](../.cursorrules/error_handling.md) | Exception handling patterns |
+| [`../.cursorrules/python_logging.md`](../.cursorrules/python_logging.md) | Logging standards and best practices |
+| [`../.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md) | Infrastructure module development |
+| [`../.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md) | Testing patterns and 100% coverage |
+| [`../.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md) | AGENTS.md and README.md writing guide |
+| [`../.cursorrules/type_hints_standards.md`](../.cursorrules/type_hints_standards.md) | Type annotation patterns |
 
 **Quick Access**: Use `.cursorrules/` files for rule reference during development; consult `docs/` files for comprehensive guides.
 
@@ -173,7 +171,7 @@ pytest tests/
 
 # Good: Complete with output
 $ pytest tests/ --cov=src
-===== 100% coverage =====
+===== Coverage: 99.88% =====
 ```
 
 ## Documentation Maintenance
@@ -222,7 +220,8 @@ EXAMPLES.md  WORKFLOW.md    Technical Docs
 - **ARCHITECTURE.md** references:
   - THIN_ORCHESTRATOR_SUMMARY.md (pattern details)
   - WORKFLOW.md (how to work with architecture)
-  - ../src/AGENTS.md (implementation details)
+  - ../infrastructure/AGENTS.md (infrastructure implementation details)
+  - ../project/src/AGENTS.md (project implementation details)
 
 - **WORKFLOW.md** references:
   - CONTRIBUTING.md (contribution process)

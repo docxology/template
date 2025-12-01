@@ -13,8 +13,8 @@ This document consolidates best practices from across all documentation, providi
 **Follow the established structure:**
 ```
 project/
-├── src/              # Business logic (100% tested)
-├── tests/            # Test suite (100% coverage)
+├── src/              # Business logic (comprehensively tested)
+├── tests/            # Test suite (70% project, 49% infra minimum)
 ├── scripts/          # Thin orchestrators
 ├── manuscript/       # Research sections
 ├── docs/             # Documentation
@@ -76,9 +76,10 @@ from example import add_numbers, calculate_average
 
 ### Test Coverage
 
-**Maintain 100% coverage:**
-- All `src/` modules must have 100% coverage
-- Test all code paths
+**Maintain comprehensive coverage:**
+- **Project code**: 70% minimum (currently achieving 99.88%)
+- **Infrastructure**: 49% minimum (currently achieving 55.89%)
+- Test all critical code paths
 - Include edge cases
 - Test error handling
 
@@ -87,7 +88,7 @@ from example import add_numbers, calculate_average
 # Run with coverage
 uv run pytest tests/ --cov=src --cov-report=term-missing
 
-# Verify 100% coverage
+# Verify coverage meets requirements
 # Look for lines marked ">>>>>" (missing coverage)
 ```
 
@@ -203,7 +204,7 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 
 **Follow the established pipeline:**
 1. Clean outputs
-2. Run tests (100% coverage)
+2. Run tests (verify coverage requirements met)
 3. Execute scripts
 4. Validate markdown
 5. Generate glossary
@@ -247,7 +248,7 @@ uv run python repo_utilities/validate_pdf_output.py
 
 **Review checklist:**
 - [ ] Code follows style guidelines
-- [ ] Tests pass with 100% coverage
+- [ ] Tests pass with required coverage (70% project, 49% infra)
 - [ ] Documentation updated
 - [ ] No breaking changes
 - [ ] Follows thin orchestrator pattern
@@ -451,7 +452,7 @@ save_output(result, output_path)
 ### Testing Quality
 
 **Comprehensive testing:**
-- 100% coverage requirement
+- Coverage requirements: 70% project, 49% infrastructure
 - Test edge cases
 - Test error paths
 - Test integration
@@ -495,7 +496,7 @@ save_output(result, output_path)
 Key best practices:
 
 1. **Code Organization** - Clear structure, separation of concerns
-2. **Testing** - 100% coverage, real data, TDD
+2. **Testing** - Comprehensive coverage, real data, TDD
 3. **Documentation** - Current, accurate, comprehensive
 4. **Build System** - Automated, validated, optimized
 5. **Collaboration** - Clear communication, code review

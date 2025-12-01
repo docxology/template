@@ -169,7 +169,7 @@ def calculate_std_dev(values):
     return calculate_variance(values) ** 0.5
 ```
 
-**Step 3: Create tests (100% coverage required)**
+**Step 3: Create tests (comprehensive coverage required)**
 
 ```python
 # tests/test_statistics.py
@@ -297,7 +297,7 @@ When adding new analysis capabilities:
 1. **Design the API** - What functions do you need?
 2. **Write tests first** (TDD) - Define expected behavior
 3. **Implement in `src/`** - Write the business logic
-4. **Achieve 100% coverage** - Test all code paths
+4. **Achieve required coverage** - Test all critical code paths (70% project, 49% infra)
 5. **Use in scripts** - Create thin orchestrators
 
 ### Example: Correlation Analysis
@@ -416,7 +416,7 @@ def linear_regression(x: list[float], y: list[float]) -> tuple[float, float]:
 pytest tests/test_correlation.py --cov=src.correlation --cov-report=term-missing
 ```
 
-Ensure 100% coverage before proceeding.
+Ensure coverage requirements are met before proceeding.
 
 **Step 5: Use in scripts**
 
@@ -504,14 +504,14 @@ python3 scripts/run_all.py
 ```
 
 **What happens**:
-1. **Tests** (27s) - Validates 100% coverage
+1. **Tests** (27s) - Validates coverage requirements
 2. **Scripts** (1s) - Executes all figure generation
 3. **Utilities** (1s) - Validates markdown, generates glossary
 4. **Individual PDFs** (32s) - Builds each section
 5. **Combined PDF** (10s) - Assembles complete document
 6. **Validation** (1s) - Checks for rendering issues
 
-**Total**: ~75 seconds
+**Total**: ~58 seconds
 
 **See [BUILD_SYSTEM.md](BUILD_SYSTEM.md) for detailed breakdown.**
 
@@ -735,7 +735,7 @@ After completing this guide, you should be able to:
 
 - [x] Generate custom figures using thin orchestrator pattern
 - [x] Add new analysis modules to `src/` with tests
-- [x] Achieve 100% test coverage for new code
+- [x] Achieve required test coverage for new code
 - [x] Save both figures and data files
 - [x] Run automated build pipelines
 - [x] Create custom build scripts for specific workflows

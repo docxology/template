@@ -77,7 +77,7 @@ graph TB
     subgraph "Renamed Project"
         ROOT[project_name/]
         SRC[src/<br/>Core business logic]
-        TESTS[tests/<br/>100% coverage tests]
+        TESTS[tests/<br/>Comprehensive tests]
         SCRIPTS[scripts/<br/>Thin orchestrators]
         MANUSCRIPT[manuscript/<br/>Research manuscript]
         REPO_UTILS[repo_utilities/<br/>Build tools]
@@ -287,7 +287,7 @@ def main():
 
 After renaming, ensure:
 
-- [ ] All tests pass with 100% coverage
+- [ ] All tests pass with required coverage
 - [ ] Scripts can import from src/ modules
 - [ ] Markdown validation passes
 - [ ] PDF generation works
@@ -315,7 +315,7 @@ After renaming, ensure:
 The `rename_project.sh` script transforms the generic template into a project-specific structure while maintaining:
 
 - **Thin orchestrator pattern** - Scripts use src/ methods
-- **100% test coverage** - All functionality validated
+- **Comprehensive test coverage** - All functionality validated
 - **Automated build pipeline** - Complete PDF generation
 - **Generic utilities** - Reusable across projects
 - **Clear architecture** - Separation of concerns

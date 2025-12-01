@@ -333,5 +333,140 @@ class TestEdgeCases:
         assert benchmark.execution_time >= 0
 
 
+class TestValidationNonNumeric:
+    """Test validation with non-numeric test cases (covers lines 287-308)."""
+    
+    def test_validate_with_string_output(self):
+        """Test validation with string outputs (lines 287-295)."""
+        def string_function(x):
+            return f"result_{x}"
+        
+        test_cases = [
+            (1, "result_1"),  # Should PASS - exact equality
+            (2, "result_2"),  # Should PASS
+            (3, "result_3"),  # Should PASS
+        ]
+        validation = scientific_dev.validate_scientific_implementation(string_function, test_cases)
+        
+        assert validation['passed_tests'] == 3
+        assert validation['failed_tests'] == 0
+        assert validation['accuracy_score'] == 1.0
+    
+    def test_validate_with_string_output_failure(self):
+        """Test validation with string outputs that fail (lines 296-304)."""
+        def string_function(x):
+            return f"wrong_{x}"
+        
+        test_cases = [
+            (1, "result_1"),  # Should FAIL
+            (2, "result_2"),  # Should FAIL
+        ]
+        validation = scientific_dev.validate_scientific_implementation(string_function, test_cases)
+        
+        assert validation['passed_tests'] == 0
+        assert validation['failed_tests'] == 2
+        assert validation['accuracy_score'] == 0.0
+        # Check details include failed status
+        assert any(d['status'] == 'FAILED' for d in validation['details'])
+    
+    def test_validate_with_exception(self):
+        """Test validation when function raises exception (lines 306-314)."""
+        def raising_function(x):
+            raise ValueError("Intentional error")
+        
+        test_cases = [(1, 2), (2, 4)]
+        validation = scientific_dev.validate_scientific_implementation(raising_function, test_cases)
+        
+        assert validation['failed_tests'] == 2
+        assert validation['accuracy_score'] == 0.0
+        # Check details include error status
+        assert any(d['status'] == 'ERROR' for d in validation['details'])
+
+
+class TestPerformanceRecommendations:
+    """Test performance report recommendations (covers lines 459-467)."""
+    
+    def test_generate_performance_report_slow_functions(self):
+        """Test performance report with slow functions (lines 459-461)."""
+        from infrastructure.scientific.scientific_dev import BenchmarkResult
+        
+        results = [
+            # Slow function (> 0.1s)
+            BenchmarkResult("slow_func", 0.15, 10.0, 100, {}, "Slow", "2024-01-01 10:00:00"),
+            # Very slow function
+            BenchmarkResult("very_slow_func", 0.25, 10.0, 100, {}, "Very slow", "2024-01-01 10:00:01"),
+            # Fast function
+            BenchmarkResult("fast_func", 0.001, 10.0, 100, {}, "Fast", "2024-01-01 10:00:02"),
+        ]
+        
+        report = scientific_dev.generate_performance_report(results)
+        
+        assert "Performance Optimization" in report
+        assert "slow_func" in report
+        assert "Consider optimizing" in report
+    
+    def test_generate_performance_report_memory_intensive(self):
+        """Test performance report with memory-intensive functions (lines 463-467)."""
+        from infrastructure.scientific.scientific_dev import BenchmarkResult
+        
+        results = [
+            # Memory-intensive function (> 100MB)
+            BenchmarkResult("memory_hog", 0.01, 150.0, 100, {}, "Memory hog", "2024-01-01 10:00:00"),
+            # Very memory-intensive function
+            BenchmarkResult("memory_hog2", 0.01, 200.0, 100, {}, "Memory hog 2", "2024-01-01 10:00:01"),
+            # Normal function
+            BenchmarkResult("normal_func", 0.01, 10.0, 100, {}, "Normal", "2024-01-01 10:00:02"),
+        ]
+        
+        report = scientific_dev.generate_performance_report(results)
+        
+        assert "Memory Optimization" in report
+        assert "memory_hog" in report
+        assert "Review memory usage" in report
+    
+    def test_generate_performance_report_both_issues(self):
+        """Test performance report with both slow and memory-intensive functions."""
+        from infrastructure.scientific.scientific_dev import BenchmarkResult
+        
+        results = [
+            BenchmarkResult("problem_func", 0.2, 250.0, 100, {}, "Has both issues", "2024-01-01 10:00:00"),
+        ]
+        
+        report = scientific_dev.generate_performance_report(results)
+        
+        assert "Performance Optimization" in report
+        assert "Memory Optimization" in report
+
+
+class TestComplianceExceptionHandling:
+    """Test compliance checking exception handling (covers lines 795-796)."""
+    
+    def test_check_research_compliance_with_exception(self):
+        """Test compliance check when source inspection fails."""
+        # Create an object that looks like a function but causes inspect.getsource to fail
+        class FakeFunction:
+            __name__ = "fake_function"
+            
+            def __call__(self, x):
+                return x
+        
+        fake_func = FakeFunction()
+        
+        # This should trigger the exception handling path (lines 795-796)
+        compliance = scientific_dev.check_research_compliance(fake_func)
+        
+        # Should still return a result with default values
+        assert 'compliance_score' in compliance
+        assert isinstance(compliance['compliance_score'], (int, float))
+    
+    def test_check_research_compliance_builtin(self):
+        """Test compliance check on built-in function."""
+        # Built-in functions don't have inspectable source
+        compliance = scientific_dev.check_research_compliance(len)
+        
+        # Should handle gracefully
+        assert 'compliance_score' in compliance
+
+
 if __name__ == "__main__":
     pytest.main([__file__])

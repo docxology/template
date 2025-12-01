@@ -6,9 +6,9 @@ Comprehensive project documentation organized by purpose and audience.
 
 Development standards are defined in the `.cursorrules/` directory. Start with:
 
-- [`../.cursorrules/README.md`](../.cursorrules/README.md) - Development rules overview
-- [`../.cursorrules/core_architecture.md`](../.cursorrules/core_architecture.md) - System design rules  
-- [`../.cursorrules/testing.md`](../.cursorrules/testing.md) - Testing standards
+- [`../.cursorrules/README.md`](../.cursorrules/README.md) - Quick reference and patterns
+- [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) - Complete development standards
+- [`../.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md) - Testing patterns and coverage
 - See [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) for complete rules reference
 
 ## Quick Navigation

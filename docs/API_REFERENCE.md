@@ -1,10 +1,10 @@
 # API Reference
 
-> **Complete API documentation** for all `src/` modules
+> **Complete API documentation** for all infrastructure modules
 
-**Quick Reference:** [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) | [Source Code Docs](../src/AGENTS.md) | [Getting Started](GETTING_STARTED.md)
+**Quick Reference:** [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) | [Infrastructure Docs](../infrastructure/AGENTS.md) | [Getting Started](GETTING_STARTED.md)
 
-This document provides comprehensive API reference for all public functions and classes in the `infrastructure/` modules. All modules maintain 100% test coverage and follow the thin orchestrator pattern.
+This document provides comprehensive API reference for all public functions and classes in the `infrastructure/` modules. All modules follow the thin orchestrator pattern with comprehensive test coverage.
 
 **Note**: These modules are part of the infrastructure layer. For project-specific code, see `project/src/`.
 
@@ -928,7 +928,8 @@ latex_block = manager.generate_latex_figure_block("fig:convergence")
 ## Additional Modules
 
 For complete API documentation of all modules, see:
-- **[Source Code Documentation](../src/AGENTS.md)** - Complete module descriptions and function lists
+- **[Infrastructure Documentation](../infrastructure/AGENTS.md)** - Complete infrastructure module descriptions
+- **[Project Source Documentation](../project/src/AGENTS.md)** - Project-specific module descriptions
 - **[Scientific Simulation Guide](SCIENTIFIC_SIMULATION_GUIDE.md)** - Simulation and analysis modules
 - **[Visualization Guide](VISUALIZATION_GUIDE.md)** - Visualization and figure management
 - **[Image Management Guide](IMAGE_MANAGEMENT.md)** - Image insertion and cross-referencing
@@ -949,22 +950,23 @@ For complete API documentation of all modules, see:
 
 ## Summary
 
-This API reference covers all public functions and classes in the `src/` directory. All modules:
+This API reference covers all public functions and classes in the `infrastructure/` and `project/src/` directories. All modules:
 
 - Follow the thin orchestrator pattern
-- Maintain 100% test coverage
+- Maintain required test coverage (70% project, 49% infra)
 - Include comprehensive type hints
 - Provide detailed docstrings
 
 For usage examples, see [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md).
 
-For implementation details, see [Source Code Documentation](../src/AGENTS.md).
+For implementation details, see [Infrastructure Documentation](../infrastructure/AGENTS.md) and [Project Source Documentation](../project/src/AGENTS.md).
 
 ---
 
 **Related Documentation:**
 - [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) - Usage examples
-- [Source Code Docs](../src/AGENTS.md) - Module implementation
+- [Infrastructure Docs](../infrastructure/AGENTS.md) - Infrastructure module implementation
+- [Project Source Docs](../project/src/AGENTS.md) - Project module implementation
 - [Best Practices](BEST_PRACTICES.md) - Usage recommendations
 
 

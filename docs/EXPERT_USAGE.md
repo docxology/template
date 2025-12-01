@@ -377,7 +377,7 @@ git checkout -b feature/new-algorithm
 vim src/new_algorithm.py
 vim tests/test_new_algorithm.py
 
-# Ensure 100% coverage
+# Ensure coverage requirements met
 pytest tests/ --cov=src --cov-report=term-missing
 
 # Commit with conventional commit messages
@@ -385,7 +385,7 @@ git add src/new_algorithm.py tests/test_new_algorithm.py
 git commit -m "feat: add new optimization algorithm
 
 - Implements gradient-free optimization
-- Includes comprehensive tests (100% coverage)
+- Includes comprehensive tests (meets coverage requirements)
 - Adds examples in scripts/
 
 Closes #123"
@@ -401,7 +401,7 @@ git push origin feature/new-algorithm
 ### Architecture Extensions
 
 1. **Maintain thin orchestrator pattern**
-2. **Keep 100% test coverage**
+2. **Maintain required test coverage**
 3. **Document all extensions**
 4. **Preserve backward compatibility**
 5. **Use semantic versioning**

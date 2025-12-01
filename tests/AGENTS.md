@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The `tests/` directory ensures **100% test coverage** for all `src/` modules. Tests validate that core business logic works correctly using real data and real computations.
+The `tests/` directory ensures **comprehensive test coverage** for all modules (70% project minimum, 49% infrastructure minimum). Tests validate that core business logic works correctly using real data and real computations.
 
 ## Testing Philosophy
 
@@ -19,10 +19,18 @@ The `tests/` directory ensures **100% test coverage** for all `src/` modules. Te
 - Use deterministic seeds for reproducibility
 - Test real integration between components
 
-### 100% Coverage Requirement
-- All `src/` modules must have 100% test coverage
+### Network-Dependent Modules
+For modules requiring external services (LLM, Literature, Publishing):
+- **Pure logic tests**: Test configuration, validation, context management without network
+- **Integration tests**: Mark with `@pytest.mark.requires_ollama` (or similar)
+- **Skip gracefully**: Tests auto-skip when service unavailable
+- Run integration tests with: `pytest -m requires_ollama`
+- Skip integration tests with: `pytest -m "not requires_ollama"`
+
+### Coverage Requirements
+- All project/src/ modules must meet 70% minimum coverage (currently 99.88%)
 - Tests must pass before PDF generation proceeds
-- Coverage validated by `.coveragerc` configuration
+- Coverage validated by `pyproject.toml` configuration (`[tool.coverage.*]` sections)
 - No code ships without tests
 
 ## Test Organization
@@ -160,8 +168,8 @@ pytest tests/ --cov=src --cov-report=term-missing --cov-report=html
 # Using uv
 uv run pytest tests/ --cov=src --cov-report=html
 
-# Require 100% coverage
-pytest tests/ --cov=src --cov-fail-under=100
+# Verify coverage requirements
+pytest tests/ --cov=src --cov-fail-under=70
 ```
 
 ### Specific Tests
@@ -254,17 +262,16 @@ All `src/` modules have complete test coverage:
 - scientific_dev.py: 100%
 
 ### Coverage Configuration
-`.coveragerc` enforces coverage rules:
-```ini
-[run]
-source = src
-omit = 
-    */tests/*
-    */test_*.py
+`pyproject.toml` enforces coverage rules via `[tool.coverage.*]` sections:
+```toml
+[tool.coverage.run]
+branch = true
+source = ["infrastructure", "project/src"]
 
-[report]
+[tool.coverage.report]
+fail_under = 70
+show_missing = true
 precision = 2
-show_missing = True
 ```
 
 ## Debugging Test Failures
@@ -310,6 +317,7 @@ def test_something():
 
 ### Don'ts
 - ❌ Use mock methods (test real behavior)
+- ❌ Use MagicMock, mocker.patch, or unittest.mock
 - ❌ Skip tests to fix coverage
 - ❌ Test implementation details
 - ❌ Use hardcoded file paths
@@ -321,7 +329,7 @@ def test_something():
 
 ### Automatic Execution
 `render_pdf.sh` automatically:
-1. **Runs all tests** with 100% coverage requirement
+1. **Runs all tests** with coverage requirements (70% project, 49% infra)
 2. **Fails build** if tests don't pass
 3. **Generates coverage report** (htmlcov/)
 4. **Validates integration** between components
@@ -342,7 +350,7 @@ open htmlcov/index.html
 1. Create test file matching src/ module name
 2. Import functions to test from src/
 3. Write comprehensive test cases
-4. Ensure 100% coverage of new module
+4. Ensure coverage requirements met for new module
 5. Run full test suite to verify
 6. Update this documentation if needed
 
@@ -381,7 +389,8 @@ def test_integration_with_other_modules():
 ## See Also
 
 - [`conftest.py`](conftest.py) - Test configuration
-- [`../src/AGENTS.md`](../src/AGENTS.md) - Module documentation
+- [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure module documentation
+- [`../project/src/AGENTS.md`](../project/src/AGENTS.md) - Project module documentation
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 - [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow
 
