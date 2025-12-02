@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "updated": "2025-12-02T06:37:52.587565",
-  "count": 565,
+  "updated": "2025-12-02T07:36:52.282314",
+  "count": 585,
   "entries": {
     "watson2020active": {
       "citation_key": "watson2020active",
@@ -407,7 +407,7 @@
       "doi": "10.48550/arXiv.2407.20292",
       "source": "semanticscholar",
       "url": "https://www.semanticscholar.org/paper/72cc98148b7c0092ce4babcb03d3c021753935bc",
-      "pdf_path": null,
+      "pdf_path": "literature/pdfs/friston2024from.pdf",
       "added_date": "2025-12-01T07:04:56.031262",
       "abstract": "This paper describes a discrete state-space model -- and accompanying methods -- for generative modelling. This model generalises partially observed Markov decision processes to include paths as latent variables, rendering it suitable for active inference and learning in a dynamic setting. Specifically, we consider deep or hierarchical forms using the renormalisation group. The ensuing renormalising generative models (RGM) can be regarded as discrete homologues of deep convolutional neural networks or continuous state-space models in generalised coordinates of motion. By construction, these scale-invariant models can be used to learn compositionality over space and time, furnishing models of paths or orbits; i.e., events of increasing temporal depth and itinerancy. This technical note illustrates the automatic discovery, learning and deployment of RGMs using a series of applications. We start with image classification and then consider the compression and generation of movies and music. Finally, we apply the same variational principles to the learning of Atari-like games.",
       "venue": "arXiv.org",
@@ -9761,7 +9761,7 @@
       "doi": null,
       "source": "semanticscholar",
       "url": "https://www.semanticscholar.org/paper/a44cf961a4495f5a789dfa240e2675f7fffa615e",
-      "pdf_path": null,
+      "pdf_path": "literature/pdfs/friston2019free.pdf",
       "added_date": "2025-12-01T20:32:25.746232",
       "abstract": "This monograph attempts a theory of every 'thing' that can be distinguished from other things in a statistical sense. The ensuing statistical independencies, mediated by Markov blankets, speak to a recursive composition of ensembles (of things) at increasingly higher spatiotemporal scales. This decomposition provides a description of small things; e.g., quantum mechanics - via the Schrodinger equation, ensembles of small things - via statistical mechanics and related fluctuation theorems, through to big things - via classical mechanics. These descriptions are complemented with a Bayesian mechanics for autonomous or active things. Although this work provides a formulation of every thing, its main contribution is to examine the implications of Markov blankets for self-organisation to nonequilibrium steady-state. In brief, we recover an information geometry and accompanying free energy principle that allows one to interpret the internal states of something as representing or making inferences about its external states. The ensuing Bayesian mechanics is compatible with quantum, statistical and classical mechanics and may offer a formal description of lifelike particles.",
       "venue": "",
@@ -12460,6 +12460,509 @@
       "citation_count": 55,
       "metadata": {
         "pdf_url": "https://link.springer.com/content/pdf/10.1007%2FJHEP09%282017%29125.pdf"
+      }
+    },
+    "svozil2002dangerous": {
+      "citation_key": "svozil2002dangerous",
+      "title": "The dangerous misconceptions of Sir Karl Raimund Popper",
+      "authors": [
+        "Karl Svozil"
+      ],
+      "year": 2002,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/physics/0207115v3",
+      "pdf_path": "literature/pdfs/svozil2002dangerous.pdf",
+      "added_date": "2025-12-02T07:36:17.856190",
+      "abstract": "Insofar as Sir Karl Raimund Popper's writings deal with political statements, they are evident; yet insofar as they deal with scientific issues, they are misleading. If applied to the concrete implementation of science, such as distribution of research funds and (peer) review, they would seriously impede progress.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/physics/0207115v3"
+      }
+    },
+    "cooray2017bayesian": {
+      "citation_key": "cooray2017bayesian",
+      "title": "Bayesian Belief Updating of Spatiotemporal Seizure Dynamics",
+      "authors": [
+        "Gerald K Cooray",
+        "Richard Rosch",
+        "Torsten Baldeweg",
+        "Louis Lemieux",
+        "Karl Friston",
+        "Biswa Sengupta"
+      ],
+      "year": 2017,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1705.07278v2",
+      "pdf_path": "literature/pdfs/cooray2017bayesian.pdf",
+      "added_date": "2025-12-02T07:36:18.358055",
+      "abstract": "Epileptic seizure activity shows complicated dynamics in both space and time. To understand the evolution and propagation of seizures spatially extended sets of data need to be analysed. We have previously described an efficient filtering scheme using variational Laplace that can be used in the Dynamic Causal Modelling (DCM) framework [Friston, 2003] to estimate the temporal dynamics of seizures recorded using either invasive or non-invasive electrical recordings (EEG/ECoG). Spatiotemporal dynamics are modelled using a partial differential equation -- in contrast to the ordinary differential equation used in our previous work on temporal estimation of seizure dynamics [Cooray, 2016]. We provide the requisite theoretical background for the method and test the ensuing scheme on simulated seizure activity data and empirical invasive ECoG data. The method provides a framework to assimilate the spatial and temporal dynamics of seizure activity, an aspect of great physiological and clinical importance.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1705.07278v2"
+      }
+    },
+    "jafarian2019structure": {
+      "citation_key": "jafarian2019structure",
+      "title": "Structure Learning in Coupled Dynamical Systems and Dynamic Causal Modelling",
+      "authors": [
+        "Amirhossein Jafarian",
+        "Peter Zeidman",
+        "Vladimir Litvak",
+        "Karl Friston"
+      ],
+      "year": 2019,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1904.03093v2",
+      "pdf_path": "literature/pdfs/jafarian2019structure.pdf",
+      "added_date": "2025-12-02T07:36:20.084634",
+      "abstract": "Identifying a coupled dynamical system out of many plausible candidates, each of which could serve as the underlying generator of some observed measurements, is a profoundly ill posed problem that commonly arises when modelling real world phenomena. In this review, we detail a set of statistical procedures for inferring the structure of nonlinear coupled dynamical systems (structure learning), which has proved useful in neuroscience research. A key focus here is the comparison of competing models of (ie, hypotheses about) network architectures and implicit coupling functions in terms of their Bayesian model evidence. These methods are collectively referred to as dynamical casual modelling (DCM). We focus on a relatively new approach that is proving remarkably useful; namely, Bayesian model reduction (BMR), which enables rapid evaluation and comparison of models that differ in their network architecture. We illustrate the usefulness of these techniques through modelling neurovascular coupling (cellular pathways linking neuronal and vascular systems), whose function is an active focus of research in neurobiology and the imaging of coupled neuronal systems.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1904.03093v2"
+      }
+    },
+    "friston2020sophisticated": {
+      "citation_key": "friston2020sophisticated",
+      "title": "Sophisticated Inference",
+      "authors": [
+        "Karl Friston",
+        "Lancelot Da Costa",
+        "Danijar Hafner",
+        "Casper Hesp",
+        "Thomas Parr"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2006.04120v1",
+      "pdf_path": "literature/pdfs/friston2020sophisticated.pdf",
+      "added_date": "2025-12-02T07:36:23.755951",
+      "abstract": "Active inference offers a first principle account of sentient behaviour, from which special and important cases can be derived, e.g., reinforcement learning, active learning, Bayes optimal inference, Bayes optimal design, etc. Active inference resolves the exploitation-exploration dilemma in relation to prior preferences, by placing information gain on the same footing as reward or value. In brief, active inference replaces value functions with functionals of (Bayesian) beliefs, in the form of an expected (variational) free energy. In this paper, we consider a sophisticated kind of active inference, using a recursive form of expected free energy. Sophistication describes the degree to which an agent has beliefs about beliefs. We consider agents with beliefs about the counterfactual consequences of action for states of affairs and beliefs about those latent states. In other words, we move from simply considering beliefs about 'what would happen if I did that' to 'what would I believe about what would happen if I did that'. The recursive form of the free energy functional effectively implements a deep tree search over actions and outcomes in the future. Crucially, this search is over sequences of belief states, as opposed to states per se. We illustrate the competence of this scheme, using numerical simulations of deep decision problems.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2006.04120v1"
+      }
+    },
+    "fagerholm2020principle": {
+      "citation_key": "fagerholm2020principle",
+      "title": "The principle of stationary action in neural systems",
+      "authors": [
+        "Erik D. Fagerholm",
+        "Karl J. Friston",
+        "Rosalyn J. Moran",
+        "Robert Leech"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2010.02993v1",
+      "pdf_path": "literature/pdfs/fagerholm2020principle.pdf",
+      "added_date": "2025-12-02T07:36:26.210235",
+      "abstract": "The principle of stationary action is a cornerstone of modern physics, providing a powerful framework for investigating dynamical systems found in classical mechanics through to quantum field theory. However, computational neuroscience, despite its heavy reliance on concepts in physics, is anomalous in this regard as its main equations of motion are not compatible with a Lagrangian formulation and hence with the principle of stationary action. Taking the Dynamic Causal Modelling neuronal state equation, Hodgkin-Huxley model, and the Leaky Integrate-and-Fire model as examples, we show that it is possible to write complex oscillatory forms of these equations in terms of a single Lagrangian. We therefore bring mathematical descriptions in computational neuroscience under the remit of the principle of stationary action and use this reformulation to express symmetries and associated conservation laws arising in neural systems.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2010.02993v1"
+      }
+    },
+    "fagerholm2018breaking": {
+      "citation_key": "fagerholm2018breaking",
+      "title": "Breaking the bonds of weak coupling: the dynamic causal modelling of oscillator amplitudes",
+      "authors": [
+        "Erik D. Fagerholm",
+        "Rosalyn J. Moran",
+        "Inês R. Violante",
+        "Robert Leech",
+        "Karl J. Friston"
+      ],
+      "year": 2018,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1812.06315v1",
+      "pdf_path": "literature/pdfs/fagerholm2018breaking.pdf",
+      "added_date": "2025-12-02T07:36:26.520280",
+      "abstract": "Models of coupled oscillators are useful in describing a wide variety of phenomena in physics, biology and economics. These models typically rest on the premise that the oscillators are weakly coupled, meaning that amplitudes can be assumed to be constant and dynamics can therefore be described purely in terms of phase differences. Whilst mathematically convenient, the restrictive nature of the weak coupling assumption can limit the explanatory power of these phase-coupled oscillator models. We therefore propose an extension to the weakly-coupled oscillator model that incorporates both amplitude and phase as dependent variables. We use the bilinear neuronal state equations of dynamic causal modelling as a foundation in deriving coupled differential equations that describe the activity of both weakly and strongly coupled oscillators. We show that weakly-coupled oscillator models are inadequate in describing the processes underlying the temporally variable signals observed in a variety of systems. We demonstrate that phase-coupled models perform well on simulations of weakly coupled systems but fail when connectivity is no longer weak. On the other hand, using Bayesian model selection, we show that our phase-amplitude coupling model can describe non-weakly coupled systems more effectively despite the added complexity associated with using amplitude as an extra dependent variable. We demonstrate the advantage of our phase-amplitude model in the context of model-generated data, as well as of a simulation of inter-connected pendula, neural local field potential recordings in rodents under anaesthesia and international economic gross domestic product data.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1812.06315v1"
+      }
+    },
+    "jafarian2020parametric": {
+      "citation_key": "jafarian2020parametric",
+      "title": "Parametric dynamic causal modelling",
+      "authors": [
+        "Amirhossein Jafarian",
+        "Peter Zeidman",
+        "Rob. C Wykes",
+        "Matthew Walker",
+        "Karl J. Friston"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2008.11650v1",
+      "pdf_path": "literature/pdfs/jafarian2020parametric.pdf",
+      "added_date": "2025-12-02T07:36:27.318834",
+      "abstract": "This technical note introduces parametric dynamic causal modelling, a method for inferring slow changes in biophysical parameters that control fluctuations of fast neuronal states. The application domain we have in mind is inferring slow changes in variables (e.g., extracellular ion concentrations or synaptic efficacy) that underlie phase transitions in brain activity (e.g., paroxysmal seizure activity). The scheme is efficient and yet retains a biophysical interpretation, in virtue of being based on established neural mass models that are equipped with a slow dynamic on the parameters (such as synaptic rate constants or effective connectivity). In brief, we use an adiabatic approximation to summarise fast fluctuations in hidden neuronal states (and their expression in sensors) in terms of their second order statistics; namely, their complex cross spectra. This allows one to specify and compare models of slowly changing parameters (using Bayesian model reduction) that generate a sequence of empirical cross spectra of electrophysiological recordings. Crucially, we use the slow fluctuations in the spectral power of neuronal activity as empirical priors on changes in synaptic parameters. This introduces a circular causality, in which synaptic parameters underwrite fast neuronal activity that, in turn, induces activity-dependent plasticity in synaptic parameters. In this foundational paper, we describe the underlying model, establish its face validity using simulations and provide an illustrative application to a chemoconvulsant animal model of seizure activity.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2008.11650v1"
+      }
+    },
+    "yang2020bayesian": {
+      "citation_key": "yang2020bayesian",
+      "title": "Bayesian data assimilation for estimating epidemic evolution: a COVID-19 study",
+      "authors": [
+        "Xian Yang",
+        "Shuo Wang",
+        "Yuting Xing",
+        "Ling Li",
+        "Richard Yi Da Xu",
+        "Karl J. Friston",
+        "Yike Guo"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2101.01532v2",
+      "pdf_path": "literature/pdfs/yang2020bayesian.pdf",
+      "added_date": "2025-12-02T07:36:28.116084",
+      "abstract": "The evolution of epidemiological parameters, such as instantaneous reproduction number Rt, is important for understanding the transmission dynamics of infectious diseases. Current estimates of time-varying epidemiological parameters often face problems such as lagging observations, averaging inference, and improper quantification of uncertainties. To address these problems, we propose a Bayesian data assimilation framework for time-varying parameter estimation. Specifically, this framework is applied to Rt estimation, resulting in the state-of-the-art DARt system. With DARt, time misalignment caused by lagging observations is tackled by incorporating observation delays into the joint inference of infections and Rt; the drawback of averaging is overcome by instantaneously updating upon new observations and developing a model selection mechanism that captures abrupt changes; the uncertainty is quantified and reduced by employing Bayesian smoothing. We validate the performance of DARt and demonstrate its power in revealing the transmission dynamics of COVID-19. The proposed approach provides a promising solution for accurate and timely estimating transmission dynamics from reported data.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2101.01532v2"
+      }
+    },
+    "slifer2013novel": {
+      "citation_key": "slifer2013novel",
+      "title": "Novel Physics With Tensor Polarized Targets",
+      "authors": [
+        "Karl Slifer",
+        "Elena Long"
+      ],
+      "year": 2013,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1311.4835v3",
+      "pdf_path": "literature/pdfs/slifer2013novel.pdf",
+      "added_date": "2025-12-02T07:36:40.763652",
+      "abstract": "The Jefferson Lab PAC recently approved an experiment which will use an enhanced tensor po- larized solid target. This exciting development holds the potential of initiating a new field of tensor spin physics at JLab. Experiments which utilize tensor polarized targets can help clarify how nuclear properties arise from partonic degrees of freedom, provide unique insight into short range correlations and quark angular momentum, and help pin down the polarization of the quark sea.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1311.4835v3"
+      }
+    },
+    "friston2020second": {
+      "citation_key": "friston2020second",
+      "title": "Second waves, social distancing, and the spread of COVID-19 across America",
+      "authors": [
+        "Karl J. Friston",
+        "Thomas Parr",
+        "Peter Zeidman",
+        "Adeel Razi",
+        "Guillaume Flandin",
+        "Jean Daunizeau",
+        "Oliver J. Hulme",
+        "Alexander J. Billig",
+        "Vladimir Litvak",
+        "Cathy J. Price",
+        "Rosalyn J. Moran",
+        "Christian Lambert"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2004.13017v1",
+      "pdf_path": "literature/pdfs/friston2020second.pdf",
+      "added_date": "2025-12-02T07:36:41.405422",
+      "abstract": "We recently described a dynamic causal model of a COVID-19 outbreak within a single region. Here, we combine several of these (epidemic) models to create a (pandemic) model of viral spread among regions. Our focus is on a second wave of new cases that may result from loss of immunity--and the exchange of people between regions--and how mortality rates can be ameliorated under different strategic responses. In particular, we consider hard or soft social distancing strategies predicated on national (Federal) or regional (State) estimates of the prevalence of infection in the population. The modelling is demonstrated using timeseries of new cases and deaths from the United States to estimate the parameters of a factorial (compartmental) epidemiological model of each State and, crucially, coupling between States. Using Bayesian model reduction, we identify the effective connectivity between States that best explains the initial phases of the outbreak in the United States. Using the ensuing posterior parameter estimates, we then evaluate the likely outcomes of different policies in terms of mortality, working days lost due to lockdown and demands upon critical care. The provisional results of this modelling suggest that social distancing and loss of immunity are the two key factors that underwrite a return to endemic equilibrium.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2004.13017v1"
+      }
+    },
+    "wegner2022frontal": {
+      "citation_key": "wegner2022frontal",
+      "title": "Frontal effective connectivity increases with task demands and time on task: a Dynamic Causal Model of electrocorticogram in macaque monkeys",
+      "authors": [
+        "Katharina Wegner",
+        "Charles R. E. Wilson",
+        "Emmanuel Procyk",
+        "Karl J. Friston",
+        "Frederik Van de Steen",
+        "Dimitris A. Pinotsis",
+        "Daniele Marinazzo"
+      ],
+      "year": 2022,
+      "doi": "10.51628/001c.68433",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2202.10021v3",
+      "pdf_path": "literature/pdfs/wegner2022frontal.pdf",
+      "added_date": "2025-12-02T07:36:42.344389",
+      "abstract": "We apply Dynamic Causal Models to electrocorticogram recordings from two macaque monkeys performing a problem-solving task that engages working memory, and induces time-on-task effects. We thus provide a computational account of changes in effective connectivity within two regions of the fronto-parietal network, the dorsolateral prefrontal cortex and the pre-supplementary motor area. We find that forward connections between the two regions increased in strength when task demands increased, and as the experimental session progressed. Similarities in the effects of task demands and time on task allow us to interpret changes in frontal connectivity in terms of increased attentional effort allocation that compensates cognitive fatigue.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2202.10021v3"
+      }
+    },
+    "fagerholm2019dynamic": {
+      "citation_key": "fagerholm2019dynamic",
+      "title": "Dynamic causal modelling of phase-amplitude interactions",
+      "authors": [
+        "Erik D. Fagerholm",
+        "Rosalyn J. Moran",
+        "Ines R. Violante",
+        "Robert Leech",
+        "Karl J. Friston"
+      ],
+      "year": 2019,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1909.08509v1",
+      "pdf_path": "literature/pdfs/fagerholm2019dynamic.pdf",
+      "added_date": "2025-12-02T07:36:44.959899",
+      "abstract": "Models of coupled oscillators are used to describe a wide variety of phenomena in neuroimaging. These models typically rest on the premise that oscillator dynamics do not evolve beyond their respective limit cycles, and hence that interactions can be described purely in terms of phase differences. Whilst mathematically convenient, the restrictive nature of phase-only models can limit their explanatory power. We therefore propose a generalisation of dynamic causal modelling that incorporates both phase and amplitude. This allows for the separate quantifications of phase and amplitude contributions to the connectivity between neural regions. We establish, using model-generated data and simulations of coupled pendula, that phase-only models perform well only under weak coupling conditions. We also show that, despite their higher complexity, phase-amplitude models can describe strongly coupled systems more effectively than their phase-only counterparts. We relate our findings to four metrics commonly used in neuroimaging: the Kuramoto order parameter, cross-correlation, phase-lag index, and spectral entropy. We find that, with the exception of spectral entropy, the phase-amplitude model is able to capture all metrics more effectively than the phase-only model. We then demonstrate, using local field potential recordings in rodents and functional magnetic resonance imaging in macaque monkeys, that amplitudes in oscillator models play an important role in describing neural dynamics in anaesthetised brain states.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1909.08509v1"
+      }
+    },
+    "friston2020dynamic": {
+      "citation_key": "friston2020dynamic",
+      "title": "Dynamic causal modelling of COVID-19",
+      "authors": [
+        "Karl J. Friston",
+        "Thomas Parr",
+        "Peter Zeidman",
+        "Adeel Razi",
+        "Guillaume Flandin",
+        "Jean Daunizeau",
+        "Oliver J. Hulme",
+        "Alexander J. Billig",
+        "Vladimir Litvak",
+        "Rosalyn J. Moran",
+        "Cathy J. Price",
+        "Christian Lambert"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2004.04463v1",
+      "pdf_path": "literature/pdfs/friston2020dynamic.pdf",
+      "added_date": "2025-12-02T07:36:46.127762",
+      "abstract": "This technical report describes a dynamic causal model of the spread of coronavirus through a population. The model is based upon ensemble or population dynamics that generate outcomes, like new cases and deaths over time. The purpose of this model is to quantify the uncertainty that attends predictions of relevant outcomes. By assuming suitable conditional dependencies, one can model the effects of interventions (e.g., social distancing) and differences among populations (e.g., herd immunity) to predict what might happen in different circumstances. Technically, this model leverages state-of-the-art variational (Bayesian) model inversion and comparison procedures, originally developed to characterise the responses of neuronal ensembles to perturbations. Here, this modelling is applied to epidemiological populations to illustrate the kind of inferences that are supported and how the model per se can be optimised given timeseries data. Although the purpose of this paper is to describe a modelling protocol, the results illustrate some interesting perspectives on the current pandemic; for example, the nonlinear effects of herd immunity that speak to a self-organised mitigation process.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2004.04463v1"
+      }
+    },
+    "friston2020tracking": {
+      "citation_key": "friston2020tracking",
+      "title": "Tracking and tracing in the UK: a dynamic causal modelling study",
+      "authors": [
+        "Karl J. Friston",
+        "Thomas Parr",
+        "Peter Zeidman",
+        "Adeel Razi",
+        "Guillaume Flandin",
+        "Jean Daunizeau",
+        "Oliver J. Hulme",
+        "Alexander J. Billig",
+        "Vladimir Litvak",
+        "Cathy J. Price",
+        "Rosalyn J. Moran",
+        "Christian Lambert"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2005.07994v1",
+      "pdf_path": "literature/pdfs/friston2020tracking.pdf",
+      "added_date": "2025-12-02T07:36:47.317728",
+      "abstract": "By equipping a previously reported dynamic causal model of COVID-19 with an isolation state, we modelled the effects of self-isolation consequent on tracking and tracing. Specifically, we included a quarantine or isolation state occupied by people who believe they might be infected but are asymptomatic, and only leave if they test negative. We recovered maximum posteriori estimates of the model parameters using time series of new cases, daily deaths, and tests for the UK. These parameters were used to simulate the trajectory of the outbreak in the UK over an 18-month period. Several clear-cut conclusions emerged from these simulations. For example, under plausible (graded) relaxations of social distancing, a rebound of infections within weeks is unlikely. The emergence of a later second wave depends almost exclusively on the rate at which we lose immunity, inherited from the first wave. There exists no testing strategy that can attenuate mortality rates, other than by deferring or delaying a second wave. A sufficiently powerful tracking and tracing policy--implemented at the time of writing (10th May 2020)--will defer any second wave beyond a time horizon of 18 months. Crucially, this deferment is within current testing capabilities (requiring an efficacy of tracing and tracking of about 20% of asymptomatic infected cases, with less than 50,000 tests per day). These conclusions are based upon a dynamic causal model for which we provide some construct and face validation, using a comparative analysis of the United Kingdom and Germany, supplemented with recent serological studies.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2005.07994v1"
+      }
+    },
+    "friston2020effective": {
+      "citation_key": "friston2020effective",
+      "title": "Effective immunity and second waves: a dynamic causal modelling study",
+      "authors": [
+        "Karl J. Friston",
+        "Thomas Parr",
+        "Peter Zeidman",
+        "Adeel Razi",
+        "Guillaume Flandin",
+        "Jean Daunizeau",
+        "Oliver J. Hulme",
+        "Alexander J. Billig",
+        "Vladimir Litvak",
+        "Cathy J. Price",
+        "Rosalyn J. Moran",
+        "Anthony Costello",
+        "Deenan Pillay",
+        "Christian Lambert"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2006.09429v1",
+      "pdf_path": "literature/pdfs/friston2020effective.pdf",
+      "added_date": "2025-12-02T07:36:48.075735",
+      "abstract": "This technical report addresses a pressing issue in the trajectory of the coronavirus outbreak; namely, the rate at which effective immunity is lost following the first wave of the pandemic. This is a crucial epidemiological parameter that speaks to both the consequences of relaxing lockdown and the propensity for a second wave of infections. Using a dynamic causal model of reported cases and deaths from multiple countries, we evaluated the evidence models of progressively longer periods of immunity. The results speak to an effective population immunity of about three months that, under the model, defers any second wave for approximately six months in most countries. This may have implications for the window of opportunity for tracking and tracing, as well as for developing vaccination programmes, and other therapeutic interventions.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2006.09429v1"
+      }
+    },
+    "parr2020dynamic": {
+      "citation_key": "parr2020dynamic",
+      "title": "Dynamic causal modelling of immune heterogeneity",
+      "authors": [
+        "Thomas Parr",
+        "Anjali Bhat",
+        "Peter Zeidman",
+        "Aimee Goel",
+        "Alexander J. Billig",
+        "Rosalyn Moran",
+        "Karl J. Friston"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2009.08411v1",
+      "pdf_path": "literature/pdfs/parr2020dynamic.pdf",
+      "added_date": "2025-12-02T07:36:49.006991",
+      "abstract": "An interesting inference drawn by some Covid-19 epidemiological models is that there exists a proportion of the population who are not susceptible to infection -- even at the start of the current pandemic. This paper introduces a model of the immune response to a virus. This is based upon the same sort of mean-field dynamics as used in epidemiology. However, in place of the location, clinical status, and other attributes of people in an epidemiological model, we consider the state of a virus, B and T-lymphocytes, and the antibodies they generate. Our aim is to formalise some key hypotheses as to the mechanism of resistance. We present a series of simple simulations illustrating changes to the dynamics of the immune response under these hypotheses. These include attenuated viral cell entry, pre-existing cross-reactive humoral (antibody-mediated) immunity, and enhanced T-cell dependent immunity. Finally, we illustrate the potential application of this sort of model by illustrating variational inversion (using simulated data) of this model to illustrate its use in testing hypotheses. In principle, this furnishes a fast and efficient immunological assay--based on sequential serology--that provides a (i) quantitative measure of latent immunological responses and (ii) a Bayes optimal classification of the different kinds of immunological response (c.f., glucose tolerance tests used to test for insulin resistance). This may be especially useful in assessing SARS-CoV-2 vaccines.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2009.08411v1"
+      }
+    },
+    "schilling2022predictive": {
+      "citation_key": "schilling2022predictive",
+      "title": "Predictive coding and stochastic resonance as fundamental principles of auditory perception",
+      "authors": [
+        "Achim Schilling",
+        "William Sedley",
+        "Richard Gerum",
+        "Claus Metzner",
+        "Konstantin Tziridis",
+        "Andreas Maier",
+        "Holger Schulze",
+        "Fan-Gang Zeng",
+        "Karl J. Friston",
+        "Patrick Krauss"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2204.03354v2",
+      "pdf_path": "literature/pdfs/schilling2022predictive.pdf",
+      "added_date": "2025-12-02T07:36:49.465255",
+      "abstract": "How is information processed in the brain during perception? Mechanistic insight is achieved only when experiments are employed to test formal or computational models. In analogy to lesion studies, phantom perception may serve as a vehicle to understand the fundamental processing principles underlying auditory perception. With a special focus on tinnitus -- as the prime example of auditory phantom perception -- we review recent work at the intersection of artificial intelligence, psychology, and neuroscience. In particular, we discuss why everyone with tinnitus suffers from hearing loss, but not everyone with hearing loss suffers from tinnitus. We argue that the increase of sensory precision due to Bayesian inference could be caused by intrinsic neural noise and lead to a prediction error in the cerebral cortex. Hence, two fundamental processing principles - being ubiquitous in the brain - provide the most explanatory power for the emergence of tinnitus: predictive coding as a top-down, and stochastic resonance as a complementary bottom-up mechanism. We conclude that both principles play a crucial role in healthy auditory perception.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2204.03354v2"
+      }
+    },
+    "fagerholm2019estimating": {
+      "citation_key": "fagerholm2019estimating",
+      "title": "Estimating quantities conserved by virtue of scale invariance in timeseries",
+      "authors": [
+        "Erik D. Fagerholm",
+        "W. M. C. Foulkes",
+        "Yasir Gallero-Salas",
+        "Fritjof Helmchen",
+        "Karl J. Friston",
+        "Rosalyn J. Moran",
+        "Robert Leech"
+      ],
+      "year": 2019,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1911.00775v1",
+      "pdf_path": "literature/pdfs/fagerholm2019estimating.pdf",
+      "added_date": "2025-12-02T07:36:49.827609",
+      "abstract": "In contrast to the symmetries of translation in space, rotation in space, and translation in time, the known laws of physics are not universally invariant under transformation of scale. However, the action can be invariant under change of scale in the special case of a scale free dynamical system that can be described in terms of a Lagrangian, that itself scales inversely with time. Crucially, this means symmetries under change of scale can exist in dynamical systems under certain constraints. Our contribution lies in the derivation of a generalised scale invariant Lagrangian - in the form of a power series expansion - that satisfies these constraints. This generalised Lagrangian furnishes a normal form for dynamic causal models (i.e., state space models based upon differential equations) that can be used to distinguish scale invariance (scale symmetry) from scale freeness in empirical data. We establish face validity with an analysis of simulated data and then show how scale invariance can be identified - and how the associated conserved quantities can be estimated - in neuronal timeseries.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1911.00775v1"
+      }
+    },
+    "fagerholm2020fighting": {
+      "citation_key": "fagerholm2020fighting",
+      "title": "Fighting seizures with seizures: diffusion and stability in neural systems",
+      "authors": [
+        "Erik D. Fagerholm",
+        "Chayanin Tangwiriyasakul",
+        "Karl J. Friston",
+        "Inês R. Violante",
+        "Steven Williams",
+        "David W. Carmichael",
+        "Suejen Perani",
+        "Federico E. Turkheimer",
+        "Rosalyn J. Moran",
+        "Robert Leech",
+        "Mark P. Richardson"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2005.00805v1",
+      "pdf_path": "literature/pdfs/fagerholm2020fighting.pdf",
+      "added_date": "2025-12-02T07:36:50.559285",
+      "abstract": "Seizure activity is a ubiquitous and pernicious pathophysiology that, in principle, should yield to mathematical treatments of (neuronal) ensemble dynamics - and therefore interventions on stochastic chaos. A seizure can be characterised as a deviation of neural activity from a stable dynamical regime, i.e. one in which signals fluctuate only within a limited range. In silico treatments of neural activity are an important tool for understanding how the brain can achieve stability, as well as how pathology can lead to seizures and potential strategies for mitigating instabilities, e.g. via external stimulation. Here, we demonstrate that the (neuronal) state equation used in Dynamic Causal Modelling generalises to a Fokker-Planck formalism when propagation of neuronal activity along structural connections is considered. Using the Jacobian of this generalised state equation, we show that an initially unstable system can be rendered stable via a reduction in diffusivity (i.e., connectivity that disperses neuronal fluctuations). We show, for neural systems prone to epileptic seizures, that such a reduction can be achieved via external stimulation. Specifically, we show that this stimulation should be applied in such a way as to temporarily mirror epileptic activity in the areas adjoining an affected brain region - thus 'fighting seizures with seizures'. We offer proof of principle using simulations based on functional neuroimaging data collected from patients with idiopathic generalised epilepsy, in which we successfully suppress pathological activity in a distinct sub-network. Our hope is that this technique can form the basis for real-time monitoring and intervention devices that are capable of suppressing or even preventing seizures in a non-invasive manner.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2005.00805v1"
+      }
+    },
+    "fagerholm2019network": {
+      "citation_key": "fagerholm2019network",
+      "title": "Network constraints in scale free dynamical systems",
+      "authors": [
+        "Erik D. Fagerholm",
+        "W. M. C. Foulkes",
+        "Yasir Gallero-Salas",
+        "Fritjof Helmchen",
+        "Karl J. Friston",
+        "Robert Leech",
+        "Rosalyn J. Moran"
+      ],
+      "year": 2019,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1908.06678v1",
+      "pdf_path": "literature/pdfs/fagerholm2019network.pdf",
+      "added_date": "2025-12-02T07:36:51.606111",
+      "abstract": "Scale free dynamics are observed in a variety of physical and biological systems. These include neural activity in which evidence for scale freeness has been reported using a range of imaging modalities. Here, we derive the ways in which connections within a network must transform - relative to system size - in order to maintain scale freeness and test these theoretical transformations via simulations. First, we explore the known invariance of planetary motion for orbits varying in size. Using parametric empirical Bayesian modelling and a generic dynamical systems model, we show that we recover Kepler's third law from orbital timeseries, using our proposed transformations; thereby providing construct validation. We then demonstrate that the dynamical critical exponent is inversely proportional to the time rescaling exponent, in the context of coarse graining operations. Using murine calcium imaging data, we then show that the dynamical critical exponent can be estimated in an empirical biological setting. Specifically, we compare dynamical critical exponents - associated with spontaneous and task states in two regions of imaged cortex - that are classified as task-relevant and task-irrelevant. We find, consistently across animals, that the task-irrelevant region exhibits higher dynamical critical exponents during spontaneous activity than during task performance. Conversely, the task-relevant region is associated with higher dynamical critical exponents in task vs. spontaneous states. These data support the idea that higher dynamical critical exponents, within relevant cortical structures, underwrite neuronal processing due to the implicit increase in cross-scale information transmission.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1908.06678v1"
       }
     }
   }

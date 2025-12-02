@@ -201,14 +201,14 @@ class LibraryIndex:
         if doi:
             for key, entry in self._entries.items():
                 if entry.doi == doi:
-                    logger.info(f"Entry with DOI {doi} already exists: {key}")
+                    logger.debug(f"Entry already exists (DOI match): {key}")
                     return key
         
         # Check for existing entry by exact title
         norm_title = title.lower().strip()
         for key, entry in self._entries.items():
             if entry.title.lower().strip() == norm_title:
-                logger.info(f"Entry with title '{title}' already exists: {key}")
+                logger.debug(f"Entry already exists (title match): {key}")
                 return key
         
         # Generate citation key
@@ -216,7 +216,7 @@ class LibraryIndex:
         
         # Check if already exists (same key means same paper)
         if citation_key in self._entries:
-            logger.info(f"Entry {citation_key} already exists")
+            logger.debug(f"Entry already exists: {citation_key} (skipping)")
             return citation_key
         
         # Store pdf_url in metadata

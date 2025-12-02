@@ -152,7 +152,7 @@ class ReferenceManager:
                 # Extract key from entry
                 key = entry.split(',')[0].split('{')[1]
                 if key in content:
-                    logger.info(f"Reference {key} already exists in BibTeX")
+                    logger.debug(f"Reference {key} already exists in BibTeX (skipping)")
                     return
 
             with open(path, 'a') as f:

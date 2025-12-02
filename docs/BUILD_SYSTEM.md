@@ -10,8 +10,8 @@ This document consolidates all build system information: current status, perform
 
 ## 📊 Current System Status
 
-**Last Verified:** November 30, 2025  
-**Build Time:** 58 seconds  
+**Last Verified:** December 2, 2025  
+**Build Time:** 84 seconds (without optional LLM review)  
 **Status:** ✅ **FULLY OPERATIONAL**
 
 ### Build Success Metrics
@@ -29,7 +29,7 @@ This document consolidates all build system information: current status, perform
 | **Combined PDF** | 1/1 | ✅ Successful (2.27 MB) |
 | **HTML Version** | 14/14 | ✅ Generated |
 | **Slides** | 102/102 | ✅ Generated |
-| **Total Build Time** | 58 seconds | ✅ Optimal |
+| **Total Build Time** | 84 seconds (without optional LLM review) | ✅ Optimal |
 
 ---
 
@@ -76,20 +76,27 @@ flowchart TD
 
 | Stage | Time | Percentage | Description |
 |-------|------|------------|-------------|
-| **Setup Environment** | 0s | 0% | Dependency validation |
-| **Infrastructure Tests** | 6s | 10% | 558 tests with coverage |
-| **Project Tests** | 3s | 5% | 320 tests with coverage |
-| **Project Analysis** | 4s | 7% | 5 scripts, figure generation |
-| **PDF Rendering** | 44s | 76% | 14 sections + combined PDF |
-| **Output Validation** | 1s | 2% | PDF and structure validation |
+| **Setup Environment** | 1s | 1% | Dependency validation |
+| **Infrastructure Tests** | 23s | 27% | 558 tests with coverage |
+| **Project Tests** | 3s | 4% | 320 tests with coverage |
+| **Project Analysis** | 6s | 7% | 5 scripts, figure generation |
+| **PDF Rendering** | 50s | 60% | 14 sections + combined PDF |
+| **Output Validation** | 1s | 1% | PDF and structure validation |
 | **Copy Outputs** | 0s | 0% | Final deliverables |
-| **Total** | **58s** | **100%** | Complete pipeline |
+| **Total** | **84s** | **100%** | Complete pipeline (without optional LLM review) |
+| **LLM Review** | ~20m | *Optional* | Manuscript review (requires Ollama) |
+
+**Note:** The LLM review stage (Stage 8) is optional and adds approximately 20 minutes to the total execution time. The core pipeline completes in 84 seconds without this stage.
 
 ---
 
 ## 📈 Detailed Performance Analysis
 
-### Stage 1: Test Suite (27 seconds)
+### Stage 1: Test Suite (26 seconds)
+
+**Breakdown:**
+- Infrastructure Tests: 23 seconds (558 tests)
+- Project Tests: 3 seconds (320 tests)
 
 **Result:** ✅ **ALL TESTS PASSING**
 
@@ -110,7 +117,7 @@ flowchart TD
 
 **Analysis:** All core modules have excellent coverage. The `build_verifier.py` module has lower coverage (68%) but still exceeds the 70% requirement when averaged with other modules.
 
-### Stage 2: Script Execution (1-2 seconds)
+### Stage 2: Script Execution (6 seconds)
 
 **Result:** ✅ **ALL SCRIPTS SUCCESSFUL**
 
@@ -146,7 +153,11 @@ flowchart TD
 - The manuscript sections themselves use proper `\begin{equation}...\end{equation}` environments
 - These warnings do not affect PDF generation quality
 
-### Stage 4: Individual Module PDFs (32-35 seconds)
+### Stage 4: PDF Rendering (50 seconds)
+
+**Breakdown:**
+- Individual section PDFs + slides + HTML: ~45 seconds
+- Combined PDF generation: ~5 seconds
 
 **Result:** ✅ **ALL 12 MODULES BUILT SUCCESSFULLY**
 
@@ -275,7 +286,7 @@ output/
 ### Strengths
 
 1. ✅ **Complete Test Coverage** - All functionality validated
-2. ✅ **Fast Build Time** - 58 seconds for complete regeneration
+2. ✅ **Fast Build Time** - 84 seconds for complete regeneration (without optional LLM review)
 3. ✅ **Comprehensive Output** - 14 PDFs + HTML + data files
 4. ✅ **Proper Architecture** - Thin orchestrator pattern followed
 5. ✅ **Automated Pipeline** - From tests to final PDF without manual intervention
@@ -500,7 +511,7 @@ The build system is **production-ready** and performs excellently:
 - ✅ **All scripts execute successfully** (5/5 successful)
 - ✅ **All figures and data generated** (28 total: 23 figures + 5 data files)
 - ✅ **Manuscript is complete and properly formatted**
-- ✅ **Build time is optimal** (58 seconds)
+- ✅ **Build time is optimal** (84 seconds without optional LLM review)
 - ✅ **No critical errors or warnings**
 
 **The system is ready for research use and can generate high-quality academic manuscripts from markdown sources with full automation.**

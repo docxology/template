@@ -47,6 +47,7 @@ class SummarizationResult:
         quality_score: Quality validation score (0.0 to 1.0).
         validation_errors: List of quality validation issues.
         summary_path: Path to the saved summary file if successful.
+        skipped: Whether this summary was skipped because it already exists.
     """
     citation_key: str
     success: bool
@@ -60,6 +61,7 @@ class SummarizationResult:
     quality_score: float = 0.0
     validation_errors: List[str] = field(default_factory=list)
     summary_path: Optional[Path] = None
+    skipped: bool = False
 
     @property
     def compression_ratio(self) -> float:

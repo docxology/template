@@ -229,8 +229,22 @@ python3 literature_search_summarize.py
 - Searches both arXiv and Semantic Scholar (union of results)
 - Downloads PDFs and adds to BibTeX library
 - Generates structured summaries using local Ollama LLM
+- **Automatically skips existing summaries** - checks for `{citation_key}_summary.md` files before generating
 - Shows detailed timing and word count statistics
 - Saves summaries to `literature/summaries/`
+
+**Skip Existing Summaries:**
+The workflow automatically detects and skips summary generation for papers that already have summary files. This check happens:
+1. **File existence check** (primary) - Checks if `literature/summaries/{citation_key}_summary.md` exists
+2. **Progress tracker check** (secondary) - Checks if progress tracker marks paper as "summarized"
+
+If a summary file exists, the workflow:
+- Skips expensive LLM summarization
+- Returns a success result with the existing file path
+- Updates progress tracker to mark as "summarized"
+- Logs that the summary was skipped
+
+This ensures idempotent runs - multiple executions with the same papers won't regenerate summaries unnecessarily.
 
 **Output:**
 ```

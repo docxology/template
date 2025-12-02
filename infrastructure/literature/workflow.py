@@ -41,8 +41,11 @@ class WorkflowResult:
         papers_found: Total papers found in search.
         papers_downloaded: Number of successful downloads.
         papers_failed_download: Number of failed downloads.
+        papers_already_existed: Number of papers that already existed.
+        papers_newly_downloaded: Number of newly downloaded papers.
         summaries_generated: Number of successful summaries.
         summaries_failed: Number of failed summaries.
+        summaries_skipped: Number of summaries skipped (already exist).
         total_time: Total workflow execution time.
         download_results: Detailed download results.
         summarization_results: Detailed summarization results.
@@ -56,6 +59,7 @@ class WorkflowResult:
     papers_newly_downloaded: int = 0
     summaries_generated: int = 0
     summaries_failed: int = 0
+    summaries_skipped: int = 0
     total_time: float = 0.0
     download_results: List[DownloadResult] = field(default_factory=list)
     summarization_results: List[SummarizationResult] = field(default_factory=list)
@@ -121,6 +125,17 @@ class LiteratureWorkflow:
     def set_progress_tracker(self, progress_tracker: ProgressTracker):
         """Set the progress tracker for this workflow."""
         self.progress_tracker = progress_tracker
+
+    def _get_summary_path(self, citation_key: str) -> Path:
+        """Get expected summary file path for a citation key.
+        
+        Args:
+            citation_key: Citation key for the paper.
+            
+        Returns:
+            Path to expected summary file.
+        """
+        return Path("literature/summaries") / f"{citation_key}_summary.md"
 
     def execute_search_and_summarize(
         self,
@@ -217,8 +232,9 @@ class LiteratureWorkflow:
             )
 
             result.summarization_results = summarization_results
-            result.summaries_generated = sum(1 for r in summarization_results if r.success)
+            result.summaries_generated = sum(1 for r in summarization_results if r.success and not getattr(r, 'skipped', False))
             result.summaries_failed = sum(1 for r in summarization_results if not r.success)
+            result.summaries_skipped = sum(1 for r in summarization_results if getattr(r, 'skipped', False))
 
             # Final progress save
             if self.progress_tracker:
@@ -277,7 +293,11 @@ class LiteratureWorkflow:
             elif download_result.failure_reason == "no_pdf_url":
                 logger.warning(f"No PDF URL available for: {result.title[:50]}...")
             else:
-                logger.error(f"Failed to download PDF ({download_result.failure_reason}): {download_result.failure_message}")
+                # Truncate long error messages (especially URLs)
+                error_msg = download_result.failure_message or "Unknown error"
+                if len(error_msg) > 200:
+                    error_msg = error_msg[:197] + "..."
+                logger.error(f"Failed to download PDF ({download_result.failure_reason}): {error_msg}")
 
         # Log download summary
         failures = [r for r in all_results if not r.success]
@@ -304,7 +324,6 @@ class LiteratureWorkflow:
         logger.info(f"  Newly downloaded: {newly_downloaded}")
         logger.info(f"  Failed: {failed}")
         logger.info("=" * 50)
-
         logger.info(f"Successfully downloaded {len(downloaded)} of {len(search_results)} papers")
         return downloaded, all_results
 
@@ -317,23 +336,54 @@ class LiteratureWorkflow:
         if not self.summarizer:
             raise ValueError("Summarizer not configured")
 
-        # Filter out already summarized papers
+        # Filter out already summarized papers (check both progress tracker and file existence)
         to_process = []
+        skipped_results = []
         for result, pdf_path in downloaded:
             citation_key = pdf_path.stem
+            summary_path = self._get_summary_path(citation_key)
+            
+            # Check if summary file already exists (source of truth)
+            if summary_path.exists():
+                logger.debug(f"Summary already exists, skipping: {summary_path.name}")
+                # Create a success result for the existing summary
+                skipped_result = SummarizationResult(
+                    citation_key=citation_key,
+                    success=True,
+                    summary_path=summary_path,
+                    skipped=True
+                )
+                skipped_results.append(skipped_result)
+                # Update progress tracker if available
+                if self.progress_tracker:
+                    self.progress_tracker.update_entry_status(
+                        citation_key, "summarized",
+                        summary_path=str(summary_path),
+                        summary_attempts=0,
+                        summary_time=0.0
+                    )
+                continue
+            
+            # Also check progress tracker status
             progress_entry = (self.progress_tracker.current_progress.entries.get(citation_key)
                             if self.progress_tracker.current_progress else None)
 
             if not (progress_entry and progress_entry.status == "summarized"):
                 to_process.append((result, pdf_path))
 
+        if skipped_results:
+            logger.info(f"Skipped {len(skipped_results)} existing summaries")
+
         if not to_process:
-            logger.info("All papers already summarized")
-            return []
+            if skipped_results:
+                logger.info("All papers already have summaries")
+            else:
+                logger.info("All papers already summarized")
+            return skipped_results
 
         logger.info(f"Processing {len(to_process)} papers with up to {max_workers} parallel workers")
 
-        results = []
+        results = skipped_results.copy()
 
         if max_workers > 1:
             # Parallel processing
@@ -372,6 +422,27 @@ class LiteratureWorkflow:
     def _summarize_single_paper(self, result: SearchResult, pdf_path: Path) -> SummarizationResult:
         """Summarize a single paper with progress tracking."""
         citation_key = pdf_path.stem
+        summary_path = self._get_summary_path(citation_key)
+
+        # Check if summary already exists (defensive check, should have been filtered earlier)
+        if summary_path.exists():
+            logger.info(f"Summary already exists, skipping: {summary_path.name}")
+            # Return success result with existing path
+            skipped_result = SummarizationResult(
+                citation_key=citation_key,
+                success=True,
+                summary_path=summary_path,
+                skipped=True
+            )
+            # Update progress tracker
+            if self.progress_tracker:
+                self.progress_tracker.update_entry_status(
+                    citation_key, "summarized",
+                    summary_path=str(summary_path),
+                    summary_attempts=0,
+                    summary_time=0.0
+                )
+            return skipped_result
 
         # Update progress
         if self.progress_tracker:
@@ -453,6 +524,7 @@ class LiteratureWorkflow:
             },
             "summarization": {
                 "successful": result.summaries_generated,
+                "skipped": result.summaries_skipped,
                 "failed": result.summaries_failed,
                 "success_rate": result.success_rate,
                 "completion_rate": result.completion_rate,

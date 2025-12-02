@@ -122,6 +122,16 @@ AI-generated paper summaries using local LLM integration:
 - Tokens: 1,247 input, 387 output
 ```
 
+**Skip Existing Summaries:**
+The summarization workflow automatically detects and skips generation for papers that already have summary files. When running `literature_search_summarize.py`:
+
+1. **File existence check** - Before generating a summary, the workflow checks if `literature/summaries/{citation_key}_summary.md` already exists
+2. **Automatic skip** - If the file exists, summarization is skipped and the existing file is used
+3. **Progress tracking** - Skipped summaries are still tracked in progress and marked as "summarized"
+4. **Idempotent runs** - Multiple executions with the same papers won't regenerate summaries unnecessarily
+
+This ensures efficient processing and prevents duplicate work when resuming interrupted runs or re-running the same search.
+
 ## Workflow Integration
 
 ### Literature Search Pipeline
@@ -129,7 +139,7 @@ AI-generated paper summaries using local LLM integration:
 1. **Search** - Use `infrastructure/literature/` CLI or API
 2. **Download** - Automatic PDF retrieval with fallback to open access
 3. **Index** - Add to library.json and references.bib
-4. **Summarize** - Optional LLM summarization to summaries/
+4. **Summarize** - Optional LLM summarization to summaries/ (automatically skips existing summaries)
 5. **Cite** - Reference in manuscript with `\cite{key}`
 
 ### Manuscript Integration

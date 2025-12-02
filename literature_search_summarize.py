@@ -280,6 +280,9 @@ def main():
         print(f"Papers newly downloaded: {result.papers_newly_downloaded}")
         print(f"Download failures: {result.papers_failed_download}")
         print(f"Papers summarized: {stats['summarization']['successful']}")
+        if result.summaries_skipped > 0:
+            print(f"Summaries skipped (already exist): {result.summaries_skipped}")
+        print(f"Summary failures: {result.summaries_failed}")
         print(f"Success rate: {result.success_rate:.1f}%")
         print(f"Completion rate: {result.completion_rate:.1f}%")
 
