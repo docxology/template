@@ -3,7 +3,7 @@
   "keywords": [],
   "total_papers": 487,
   "start_time": 1764698581.5675032,
-  "last_update": 1764702669.324082,
+  "last_update": 1764702413.579544,
   "entries": {
     "nisslbeck2024coupled": {
       "citation_key": "nisslbeck2024coupled",
@@ -4419,13 +4419,13 @@
     "kouw2023informationseeking": {
       "citation_key": "kouw2023informationseeking",
       "pdf_path": "literature/pdfs/kouw2023informationseeking.pdf",
-      "status": "summarized",
+      "status": "downloaded",
       "download_attempts": 0,
-      "summary_attempts": 1,
+      "summary_attempts": 0,
       "last_error": null,
-      "summary_path": "literature/summaries/kouw2023informationseeking_summary.md",
-      "download_time": 1764702495.422049,
-      "summary_time": 173.71932077407837
+      "summary_path": null,
+      "download_time": null,
+      "summary_time": null
     },
     "vries2025expected": {
       "citation_key": "vries2025expected",
@@ -4452,12 +4452,12 @@
     "millidge2020whence": {
       "citation_key": "millidge2020whence",
       "pdf_path": "literature/pdfs/millidge2020whence.pdf",
-      "status": "processing",
+      "status": "downloaded",
       "download_attempts": 0,
       "summary_attempts": 0,
       "last_error": null,
       "summary_path": null,
-      "download_time": 1764702495.424704,
+      "download_time": null,
       "summary_time": null
     },
     "boom2023changing": {
@@ -5464,18 +5464,18 @@
     "macqueen2025importance": {
       "citation_key": "macqueen2025importance",
       "pdf_path": "literature/pdfs/macqueen2025importance.pdf",
-      "status": "processing",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/macqueen2025importance_summary.md",
       "download_time": 1764701268.554991,
-      "summary_time": null
+      "summary_time": 62.51947498321533
     },
     "simonelli2024human": {
       "citation_key": "simonelli2024human",
       "pdf_path": "literature/pdfs/simonelli2024human.pdf",
-      "status": "downloaded",
+      "status": "processing",
       "download_attempts": 0,
       "summary_attempts": 0,
       "last_error": null,
@@ -5778,358 +5778,6 @@
       "last_error": null,
       "summary_path": null,
       "download_time": 1764701268.730966,
-      "summary_time": null
-    },
-    "collaboration2005dark": {
-      "citation_key": "collaboration2005dark",
-      "pdf_path": "literature/pdfs/collaboration2005dark.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/collaboration2005dark_summary.md",
-      "download_time": 1764702495.36375,
-      "summary_time": 0.0
-    },
-    "collaboration2012large": {
-      "citation_key": "collaboration2012large",
-      "pdf_path": "literature/pdfs/collaboration2012large.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/collaboration2012large_summary.md",
-      "download_time": 1764702495.3729699,
-      "summary_time": 0.0
-    },
-    "glazebrook2005dark": {
-      "citation_key": "glazebrook2005dark",
-      "pdf_path": "literature/pdfs/glazebrook2005dark.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/glazebrook2005dark_summary.md",
-      "download_time": 1764702495.381546,
-      "summary_time": 0.0
-    },
-    "group1999evaluation": {
-      "citation_key": "group1999evaluation",
-      "pdf_path": "literature/pdfs/group1999evaluation.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/group1999evaluation_summary.md",
-      "download_time": 1764702495.3869572,
-      "summary_time": 0.0
-    },
-    "group2004calibration": {
-      "citation_key": "group2004calibration",
-      "pdf_path": "literature/pdfs/group2004calibration.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/group2004calibration_summary.md",
-      "download_time": 1764702495.3923562,
-      "summary_time": 0.0
-    },
-    "dobbs2015free": {
-      "citation_key": "dobbs2015free",
-      "pdf_path": "literature/pdfs/dobbs2015free.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/dobbs2015free_summary.md",
-      "download_time": 1764702495.397474,
-      "summary_time": 0.0
-    },
-    "friston2020some": {
-      "citation_key": "friston2020some",
-      "pdf_path": "literature/pdfs/friston2020some.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/friston2020some_summary.md",
-      "download_time": 1764702495.4031339,
-      "summary_time": 0.0
-    },
-    "ahmad2021free": {
-      "citation_key": "ahmad2021free",
-      "pdf_path": "literature/pdfs/ahmad2021free.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/ahmad2021free_summary.md",
-      "download_time": 1764702495.4087849,
-      "summary_time": 0.0
-    },
-    "fritzsch2014quantum": {
-      "citation_key": "fritzsch2014quantum",
-      "pdf_path": "literature/pdfs/fritzsch2014quantum.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/fritzsch2014quantum_summary.md",
-      "download_time": 1764702495.414094,
-      "summary_time": 0.0
-    },
-    "sparavigna2012distortional": {
-      "citation_key": "sparavigna2012distortional",
-      "pdf_path": "literature/pdfs/sparavigna2012distortional.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/sparavigna2012distortional_summary.md",
-      "download_time": 1764702495.419251,
-      "summary_time": 0.0
-    },
-    "tschantz2020derivation": {
-      "citation_key": "tschantz2020derivation",
-      "pdf_path": "literature/pdfs/tschantz2020derivation.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/tschantz2020derivation_summary.md",
-      "download_time": 1764702495.430311,
-      "summary_time": 0.0
-    },
-    "connolly2018expected": {
-      "citation_key": "connolly2018expected",
-      "pdf_path": "literature/pdfs/connolly2018expected.pdf",
-      "status": "summarized",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": "literature/summaries/connolly2018expected_summary.md",
-      "download_time": 1764702495.441987,
-      "summary_time": 0.0
-    },
-    "fermin2021insula": {
-      "citation_key": "fermin2021insula",
-      "pdf_path": "literature/pdfs/fermin2021insula.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.448194,
-      "summary_time": null
-    },
-    "lee2023lifeinspired": {
-      "citation_key": "lee2023lifeinspired",
-      "pdf_path": "literature/pdfs/lee2023lifeinspired.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.4537349,
-      "summary_time": null
-    },
-    "balar2025integrative": {
-      "citation_key": "balar2025integrative",
-      "pdf_path": "literature/pdfs/balar2025integrative.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.459299,
-      "summary_time": null
-    },
-    "zhou2025interoceptive": {
-      "citation_key": "zhou2025interoceptive",
-      "pdf_path": "literature/pdfs/zhou2025interoceptive.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.464813,
-      "summary_time": null
-    },
-    "kriegman2018interoceptive": {
-      "citation_key": "kriegman2018interoceptive",
-      "pdf_path": "literature/pdfs/kriegman2018interoceptive.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.469974,
-      "summary_time": null
-    },
-    "kang2020interoception": {
-      "citation_key": "kang2020interoception",
-      "pdf_path": "literature/pdfs/kang2020interoception.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.475643,
-      "summary_time": null
-    },
-    "okoshi2025cyberoception": {
-      "citation_key": "okoshi2025cyberoception",
-      "pdf_path": "literature/pdfs/okoshi2025cyberoception.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.481605,
-      "summary_time": null
-    },
-    "lin2025attachment": {
-      "citation_key": "lin2025attachment",
-      "pdf_path": "literature/pdfs/lin2025attachment.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.486784,
-      "summary_time": null
-    },
-    "daikoku2024body": {
-      "citation_key": "daikoku2024body",
-      "pdf_path": "literature/pdfs/daikoku2024body.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.492557,
-      "summary_time": null
-    },
-    "khalid2025slimllms": {
-      "citation_key": "khalid2025slimllms",
-      "pdf_path": "literature/pdfs/khalid2025slimllms.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.498123,
-      "summary_time": null
-    },
-    "group2025performance": {
-      "citation_key": "group2025performance",
-      "pdf_path": "literature/pdfs/group2025performance.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.503486,
-      "summary_time": null
-    },
-    "aharrouche2006energy": {
-      "citation_key": "aharrouche2006energy",
-      "pdf_path": "literature/pdfs/aharrouche2006energy.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.509221,
-      "summary_time": null
-    },
-    "silveirinha2016effective": {
-      "citation_key": "silveirinha2016effective",
-      "pdf_path": "literature/pdfs/silveirinha2016effective.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.5145159,
-      "summary_time": null
-    },
-    "nasrolahpour2022fractional": {
-      "citation_key": "nasrolahpour2022fractional",
-      "pdf_path": "literature/pdfs/nasrolahpour2022fractional.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.5199099,
-      "summary_time": null
-    },
-    "stupka2016lowfrequency": {
-      "citation_key": "stupka2016lowfrequency",
-      "pdf_path": "literature/pdfs/stupka2016lowfrequency.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.5252259,
-      "summary_time": null
-    },
-    "kechriniotis2012connection": {
-      "citation_key": "kechriniotis2012connection",
-      "pdf_path": "literature/pdfs/kechriniotis2012connection.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.531028,
-      "summary_time": null
-    },
-    "jones2019signatures": {
-      "citation_key": "jones2019signatures",
-      "pdf_path": "literature/pdfs/jones2019signatures.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.536981,
-      "summary_time": null
-    },
-    "lallena2003two": {
-      "citation_key": "lallena2003two",
-      "pdf_path": "literature/pdfs/lallena2003two.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.542489,
-      "summary_time": null
-    },
-    "maluf2011electromagnetic": {
-      "citation_key": "maluf2011electromagnetic",
-      "pdf_path": "literature/pdfs/maluf2011electromagnetic.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.551129,
-      "summary_time": null
-    },
-    "fernandezcorbaton2018computation": {
-      "citation_key": "fernandezcorbaton2018computation",
-      "pdf_path": "literature/pdfs/fernandezcorbaton2018computation.pdf",
-      "status": "downloaded",
-      "download_attempts": 0,
-      "summary_attempts": 0,
-      "last_error": null,
-      "summary_path": null,
-      "download_time": 1764702495.556353,
       "summary_time": null
     }
   }
