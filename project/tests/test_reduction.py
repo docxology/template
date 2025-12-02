@@ -46,21 +46,18 @@ class TestCallingAxiom:
 class TestCrossingAxiom:
     """Tests for axiom J2 (Crossing): ⟨ ⟩⟨ ⟩ = ⟨ ⟩."""
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_two_marks(self):
         """Test ⟨ ⟩⟨ ⟩ reduces to ⟨ ⟩."""
         form = juxtapose(make_mark(), make_mark())
         result = reduce_form(form)
         assert result == make_mark()
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_three_marks(self):
         """Test ⟨ ⟩⟨ ⟩⟨ ⟩ reduces to ⟨ ⟩."""
         form = juxtapose(make_mark(), make_mark(), make_mark())
         result = reduce_form(form)
         assert result == make_mark()
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_crossing_demonstration(self):
         """Test crossing axiom demonstration."""
         trace = demonstrate_crossing()

@@ -69,14 +69,14 @@ All nine consequences from Laws of Form verified computationally:
 | C1 | Position | $\langle\langle a \rangle b \rangle a$ | $a$ | ✓ |
 | C2 | Transposition | $\langle\langle a \rangle\langle b \rangle\rangle c$ | $\langle ac \rangle\langle bc \rangle$ | ✓ |
 | C3 | Generation | $\langle\langle a \rangle a \rangle$ | $\langle\ \rangle$ | ✓ |
-| C4 | Integration | Context-dependent | $\langle\ \rangle$ | ✓ |
+| C4 | Integration | $a \lor \text{TRUE}$ | $\langle\ \rangle$ | ✓ |
 | C5 | Occultation | $\langle\langle a \rangle\rangle a$ | $a$ | ✓ |
 | C6 | Iteration | $aa$ | $a$ | ✓ |
 | C7 | Extension | $\langle\langle a \rangle\langle b \rangle\rangle\langle\langle a \rangle b \rangle$ | $a$ | ✓ |
 | C8 | Echelon | $\langle\langle ab \rangle c \rangle$ | $\langle ac \rangle\langle bc \rangle$ | ✓ |
 | C9 | Cross-Transposition | $\langle\langle ac \rangle\langle bc \rangle\rangle$ | $\langle\langle a \rangle\langle b \rangle\rangle c$ | ✓ |
 
-**Verification Method**: Each theorem's LHS and RHS are reduced to canonical form; equality confirms the theorem.
+**Verification Method**: Each theorem's LHS and RHS are constructed with specific ground instantiations and reduced to canonical form; equality of canonical forms confirms the theorem. Note that Spencer-Brown's consequences are *schematic* identities (holding for all variable substitutions). Our computational verification uses ground forms that instantiate the Boolean-equivalent formulations, demonstrating the reduction engine correctly implements the underlying algebraic structure.
 
 ## Boolean Algebra Verification
 

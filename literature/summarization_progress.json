@@ -3,7 +3,7 @@
   "keywords": [],
   "total_papers": 592,
   "start_time": 1764706272.4024901,
-  "last_update": 1764706594.3735502,
+  "last_update": 1764707315.1966238,
   "entries": {
     "sedlak2023equilibrium": {
       "citation_key": "sedlak2023equilibrium",
@@ -30,73 +30,73 @@
     "mazzaglia2022free": {
       "citation_key": "mazzaglia2022free",
       "pdf_path": "literature/pdfs/mazzaglia2022free.pdf",
-      "status": "processing",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/mazzaglia2022free_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 160.52347016334534
     },
     "kirchhoff2018markov": {
       "citation_key": "kirchhoff2018markov",
       "pdf_path": "literature/pdfs/kirchhoff2018markov.pdf",
-      "status": "downloaded",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/kirchhoff2018markov_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 74.98117923736572
     },
     "tsai2020validation": {
       "citation_key": "tsai2020validation",
       "pdf_path": "literature/pdfs/tsai2020validation.pdf",
-      "status": "downloaded",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/tsai2020validation_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 178.50956201553345
     },
     "main2024distributed": {
       "citation_key": "main2024distributed",
       "pdf_path": "literature/pdfs/main2024distributed.pdf",
-      "status": "downloaded",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/main2024distributed_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 159.8273868560791
     },
     "giese2021extension": {
       "citation_key": "giese2021extension",
       "pdf_path": "literature/pdfs/giese2021extension.pdf",
-      "status": "downloaded",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/giese2021extension_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 73.66284680366516
     },
     "ramstead2020is": {
       "citation_key": "ramstead2020is",
       "pdf_path": "literature/pdfs/ramstead2020is.pdf",
-      "status": "downloaded",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/ramstead2020is_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 73.23610591888428
     },
     "benedikt2025future": {
       "citation_key": "benedikt2025future",
       "pdf_path": "literature/pdfs/benedikt2025future.pdf",
-      "status": "downloaded",
+      "status": "processing",
       "download_attempts": 0,
       "summary_attempts": 0,
       "last_error": null,

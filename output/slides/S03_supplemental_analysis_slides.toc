@@ -1,9 +1,0 @@
-\beamer@sectionintoc {1}{Supplemental Analysis: Pragmatist and Neo-Materialist Foundations}{1}{0}{1}
-\beamer@subsectionintoc {1}{1}{S3.1 North American Pragmatism and the Calculus of Indications}{2}{0}{1}
-\beamer@subsectionintoc {1}{2}{S3.2 Process Philosophy and the Mark}{6}{0}{1}
-\beamer@subsectionintoc {1}{3}{S3.3 Neo-Materialism and Agential Realism}{8}{0}{1}
-\beamer@subsectionintoc {1}{4}{S3.4 Deleuze and Immanence}{11}{0}{1}
-\beamer@subsectionintoc {1}{5}{S3.5 Brian Massumi and Affect}{14}{0}{1}
-\beamer@subsectionintoc {1}{6}{S3.6 New Materialism and Matter's Agency}{17}{0}{1}
-\beamer@subsectionintoc {1}{7}{S3.7 Synthesis: Pragmatist-Materialist Containment}{20}{0}{1}
-\beamer@subsectionintoc {1}{8}{S3.8 Key Texts and Lineages}{24}{0}{1}

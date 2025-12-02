@@ -117,7 +117,6 @@ class TestAxioms:
         assert theorem.name == "J1 (Calling)"
         assert theorem.verify() == True
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_crossing_axiom(self):
         """Test J2 (Crossing) axiom."""
         theorem = axiom_crossing()
@@ -135,14 +134,12 @@ class TestAxioms:
 class TestConsequences:
     """Tests for derived theorems."""
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_theorem_generation(self):
         """Test generation theorem (excluded middle)."""
         theorem = theorem_generation()
         assert "Generation" in theorem.name or "C3" in theorem.name
         assert theorem.verify() == True
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_theorem_iteration(self):
         """Test iteration theorem (idempotence)."""
         theorem = theorem_iteration()
@@ -191,7 +188,6 @@ class TestSpecificTheorems:
         result = theorem.verify()
         assert theorem.status in [TheoremStatus.VERIFIED, TheoremStatus.FAILED]
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_all_axioms_verified(self):
         """Test all axioms can be verified."""
         for axiom in get_all_axioms():

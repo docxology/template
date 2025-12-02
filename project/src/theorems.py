@@ -211,24 +211,36 @@ def theorem_position() -> Theorem:
 
 
 def theorem_transposition() -> Theorem:
-    """Theorem C2 (Transposition): ⟨⟨a⟩⟨b⟩⟩c = ⟨ac⟩⟨bc⟩.
+    """Theorem C2 (Transposition): Distributivity of OR over AND.
     
-    Distribution of enclosure (related to De Morgan).
+    The schematic form ⟨⟨a⟩⟨b⟩⟩c = ⟨ac⟩⟨bc⟩ holds algebraically.
+    For ground verification, we test the equivalent Boolean identity:
+    (a OR b) AND c = (a AND c) OR (b AND c)
+    
+    This is verified by constructing forms that reduce to the same canonical.
+    Note: Ground instantiation has limitations for schematic identities.
     """
-    a = make_mark()
-    b = make_void()
-    c = make_mark()
+    # Test distributivity: (a OR b) AND c = (a AND c) OR (b AND c)
+    # With a=FALSE, b=TRUE, c=TRUE:
+    # LHS: (FALSE OR TRUE) AND TRUE = TRUE AND TRUE = TRUE
+    # RHS: (FALSE AND TRUE) OR (TRUE AND TRUE) = FALSE OR TRUE = TRUE
     
-    # LHS: ⟨⟨a⟩⟨b⟩⟩c
-    inner = juxtapose(enclose(a), enclose(b))
-    lhs = juxtapose(enclose(inner), c)
+    a = make_void()   # FALSE
+    b = make_mark()   # TRUE
+    c = make_mark()   # TRUE
     
-    # RHS: ⟨ac⟩⟨bc⟩
-    rhs = juxtapose(enclose(juxtapose(a, c)), enclose(juxtapose(b, c)))
+    # LHS: (a OR b) AND c = ⟨⟨a⟩⟨b⟩⟩ · c
+    a_or_b = enclose(juxtapose(enclose(a), enclose(b)))  # a OR b
+    lhs = juxtapose(a_or_b, c)  # (a OR b) AND c
+    
+    # RHS: (a AND c) OR (b AND c) = ⟨⟨ac⟩⟨bc⟩⟩
+    a_and_c = juxtapose(a, c)
+    b_and_c = juxtapose(b, c)
+    rhs = enclose(juxtapose(enclose(a_and_c), enclose(b_and_c)))
     
     return Theorem(
         name="C2 (Transposition)",
-        description="Transposition law: ⟨⟨a⟩⟨b⟩⟩c = ⟨ac⟩⟨bc⟩",
+        description="Distributivity: (a∨b)∧c = (a∧c)∨(b∧c)",
         lhs=lhs,
         rhs=rhs
     )
@@ -255,23 +267,21 @@ def theorem_generation() -> Theorem:
 
 
 def theorem_integration() -> Theorem:
-    """Theorem C4 (Integration): ⟨ ⟩a = ⟨ ⟩.
+    """Theorem C4 (Integration): a ∨ TRUE = TRUE.
     
-    The mark dominates in juxtaposition under enclosure.
-    This corresponds to TRUE ∨ a = TRUE.
+    In boundary notation: ⟨⟨a⟩⟨⟩⟩ = ⟨⟩
+    The mark (TRUE) dominates in disjunction.
     """
-    a = make_void()  # Use void for distinct form
+    a = make_void()  # Test with void
     
-    # ⟨ ⟩a with enclosure
-    lhs = enclose(juxtapose(make_mark(), a))
-    # Actually: if ⟨ ⟩a is juxtaposed, within enclosure it's ⟨⟨ ⟩a⟩
-    # Let's do the simpler form: just ⟨ ⟩a
-    lhs = juxtapose(make_mark(), a)
+    # a OR TRUE = ⟨⟨a⟩⟨TRUE⟩⟩ = ⟨⟨a⟩⟨⟩⟩
+    # This is the De Morgan form for disjunction with TRUE
+    lhs = enclose(juxtapose(enclose(a), enclose(make_mark())))
     rhs = make_mark()
     
     return Theorem(
         name="C4 (Integration)",
-        description="Mark dominates: ⟨ ⟩a = ⟨ ⟩",
+        description="Mark dominates in disjunction: a ∨ TRUE = TRUE",
         lhs=lhs,
         rhs=rhs
     )

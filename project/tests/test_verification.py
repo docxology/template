@@ -89,14 +89,12 @@ class TestAxiomVerifier:
         result = verifier.verify_calling_axiom()
         assert result.status == VerificationStatus.PASSED
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_crossing_axiom_verified(self):
         """Test J2 (Crossing) axiom is verified."""
         verifier = AxiomVerifier()
         result = verifier.verify_crossing_axiom()
         assert result.status == VerificationStatus.PASSED
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_verify_all_axioms(self):
         """Test all axioms verified."""
         verifier = AxiomVerifier()
@@ -114,7 +112,6 @@ class TestConsistencyVerifier:
         result = verifier.verify_non_contradiction()
         assert result.status == VerificationStatus.PASSED
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_excluded_middle(self):
         """Test excluded middle verified."""
         verifier = ConsistencyVerifier()
@@ -127,14 +124,12 @@ class TestConsistencyVerifier:
         result = verifier.verify_double_negation()
         assert result.status == VerificationStatus.PASSED
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_idempotence(self):
         """Test idempotence verified."""
         verifier = ConsistencyVerifier()
         result = verifier.verify_idempotence()
         assert result.status == VerificationStatus.PASSED
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_verify_all_consistency(self):
         """Test all consistency checks pass."""
         verifier = ConsistencyVerifier()
@@ -173,13 +168,11 @@ class TestSemanticVerifier:
 class TestVerificationFunctions:
     """Tests for verification convenience functions."""
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_verify_axioms(self):
         """Test verify_axioms function."""
         report = verify_axioms()
         assert report.all_passed
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_verify_consistency(self):
         """Test verify_consistency function."""
         report = verify_consistency()
@@ -190,7 +183,6 @@ class TestVerificationFunctions:
         report = verify_semantics()
         assert report.all_passed
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_full_verification(self):
         """Test full_verification function."""
         report = full_verification()

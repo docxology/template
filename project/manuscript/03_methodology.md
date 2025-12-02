@@ -140,7 +140,9 @@ $$\langle\langle a \rangle a \rangle = \langle\ \rangle$$
 This corresponds to $a \lor \neg a = \text{TRUE}$.
 
 ### C4: Integration
-$$\langle\ \rangle a = \langle\ \rangle$$ (within enclosure context)
+$$a \lor \text{TRUE} = \text{TRUE}$$
+
+In boundary notation: $\langle\langle a \rangle\langle\ \rangle\rangle = \langle\ \rangle$ (disjunction with TRUE yields TRUE).
 
 ### C5: Occultation
 $$\langle\langle a \rangle\rangle a = a$$

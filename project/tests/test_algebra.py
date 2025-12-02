@@ -194,7 +194,6 @@ class TestTautologyContradiction:
         """Test mark is satisfiable."""
         assert is_satisfiable(make_mark())
     
-    @pytest.mark.xfail(reason="Crossing axiom reduction needs fix - will address later")
     def test_excluded_middle(self):
         """Test a ∨ ¬a is tautology."""
         # ⟨⟨a⟩a⟩ should be TRUE

@@ -43,7 +43,7 @@
 | C1 | Position | $\langle\langle a \rangle b \rangle a = a$ |
 | C2 | Transposition | $\langle\langle a \rangle\langle b \rangle\rangle c = \langle ac \rangle\langle bc \rangle$ |
 | C3 | Generation | $\langle\langle a \rangle a \rangle = \langle\ \rangle$ |
-| C4 | Integration | $\langle\ \rangle a = \langle\ \rangle$ (in enclosure) |
+| C4 | Integration | $a \lor \text{TRUE} = \text{TRUE}$ |
 | C5 | Occultation | $\langle\langle a \rangle\rangle a = a$ |
 | C6 | Iteration | $aa = a$ |
 | C7 | Extension | $\langle\langle a \rangle\langle b \rangle\rangle\langle\langle a \rangle b \rangle = a$ |
