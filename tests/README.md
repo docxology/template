@@ -30,7 +30,8 @@ pytest tests/ -x
 
 ## Coverage Requirements
 
-- **100% coverage** required for all `src/` modules
+- **70% minimum coverage** required for project/src/ modules
+- **49% minimum coverage** required for infrastructure/ modules
 - Tests must pass before PDF generation
 - Real data only (no mocks)
 - Coverage report: `htmlcov/index.html`
@@ -196,7 +197,8 @@ Current coverage by module:
 - `reproducibility.py`: 74% (improving)
 - `scientific_dev.py`: 86% (improving)
 
-**Overall**: 79% (Target: 100%)
+**Project**: 99.88% (Target: 70%+)
+**Infrastructure**: 55.89% (Target: 49%+)
 
 ## See Also
 

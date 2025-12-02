@@ -1,5 +1,9 @@
 # ❓ Frequently Asked Questions
 
+> **Common questions** and answers about the Research Project Template
+
+**Quick Reference:** [Getting Started](GETTING_STARTED.md) | [Troubleshooting](TROUBLESHOOTING_GUIDE.md) | [How To Use](HOW_TO_USE.md)
+
 ## 🚀 **Getting Started**
 
 ### **Q: What is this template for?**

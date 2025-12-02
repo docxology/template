@@ -26,19 +26,21 @@ Project-specific analysis scripts go in `project/scripts/`, not here.
 python3 scripts/run_all.py
 ```
 
-Both execute the complete 8-stage pipeline end-to-end:
+The shell script executes the complete 8-stage pipeline, while Python scripts provide fine-grained control:
 
-| Stage | Python Script | Purpose |
-|-------|--------|---------|
-| **0** | `00_setup_environment.py` | Environment setup & validation |
-| **1** | `01_run_tests.py` | Infrastructure tests (49%+) & project tests (70%+) |
-| **2** | `02_run_analysis.py` | Discover & run `project/scripts/` |
-| **3** | `03_render_pdf.py` | PDF rendering orchestration |
-| **4** | `04_validate_output.py` | Output validation & reporting |
-| **5** | `05_copy_outputs.py` | Copy final deliverables to top-level output/ |
-| **6** | `06_llm_review.py` | LLM manuscript review (optional, requires Ollama) |
+| Shell Stage | Python Script | Purpose |
+|-------------|---------------|---------|
+| **0** | *(clean only)* | Clean output directories |
+| **1** | `00_setup_environment.py` | Environment setup & validation |
+| **2** | *(infrastructure tests)* | Run infrastructure test suite |
+| **3** | *(project tests)* | Run project test suite |
+| **4** | `02_run_analysis.py` | Discover & run `project/scripts/` |
+| **5** | `03_render_pdf.py` | PDF rendering orchestration |
+| **6** | `04_validate_output.py` | Output validation & reporting |
+| **7** | `05_copy_outputs.py` | Copy final deliverables to top-level output/ |
+| **8** | `06_llm_review.py` | LLM manuscript review (optional, requires Ollama) |
 
-**Note**: Each stage can be run independently, or all stages execute sequentially via `run_all.py` or `run_all.sh`.
+**Note**: Shell script combines tests into stages 2-3, Python scripts provide separate test control via `01_run_tests.py`.
 
 ### Running Individual Stages
 
@@ -161,33 +163,42 @@ python3 project/scripts/example_figure.py
 ## Pipeline Architecture
 
 ```
-STAGE 00: Environment Setup
+Shell Script Pipeline (run_all.sh):
+STAGE 0: Clean Output Directories
+  └─ Clean project/output/ and output/
+    └─ PASS → STAGE 1
+
+STAGE 1: Setup Environment
   └─ Verify dependencies, create directories
-     └─ PASS → STAGE 01
-     
-STAGE 01: Run Tests
-  └─ Execute project/tests/ with coverage
-     └─ PASS → STAGE 02
-     
-STAGE 02: Run Analysis
+    └─ PASS → STAGE 2
+
+STAGE 2: Infrastructure Tests
+  └─ Run infrastructure test suite (49%+ coverage)
+    └─ PASS → STAGE 3
+
+STAGE 3: Project Tests
+  └─ Run project test suite (70%+ coverage)
+    └─ PASS → STAGE 4
+
+STAGE 4: Project Analysis
   └─ Discover & execute project/scripts/
-     └─ PASS → STAGE 03
-     
-STAGE 03: Render PDF
+    └─ PASS → STAGE 5
+
+STAGE 5: PDF Rendering
   └─ Build project/manuscript/ → PDFs
-     └─ PASS → STAGE 04
-     
-STAGE 04: Validate Output
+    └─ PASS → STAGE 6
+
+STAGE 6: Output Validation
   └─ Validate PDFs and outputs
-     └─ PASS → STAGE 05
-     
-STAGE 05: Copy Outputs
-  └─ Copy deliverables to output/
-     └─ PASS → STAGE 06
-     
-STAGE 06: LLM Review (Optional)
+    └─ PASS → STAGE 7
+
+STAGE 7: Copy Outputs
+  └─ Copy deliverables to top-level output/
+    └─ PASS → STAGE 8
+
+STAGE 8: LLM Review (Optional)
   └─ Generate manuscript reviews with Ollama
-     └─ PASS/SKIP → COMPLETE ✅
+    └─ PASS/SKIP → COMPLETE ✅
 ```
 
 ## Generic vs Project-Specific

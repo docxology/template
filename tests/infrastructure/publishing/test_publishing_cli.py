@@ -326,3 +326,4 @@ class TestCliModuleStructure:
         assert hasattr(cli, 'publish_zenodo_command')
 
 
+

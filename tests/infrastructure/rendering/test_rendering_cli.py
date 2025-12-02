@@ -290,3 +290,4 @@ class TestCliModuleStructure:
         assert hasattr(cli, 'RenderManager')
 
 
+

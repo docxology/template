@@ -23,10 +23,13 @@ class TestLiteratureConfig:
     def test_config_defaults(self):
         """Test config default values."""
         config = LiteratureConfig()
-        assert config.default_limit == 10
+        assert config.default_limit == 25  # Increased for better coverage
         assert config.max_results == 100
         assert config.timeout == 30
         assert config.arxiv_delay == 3.0
+        assert config.semanticscholar_delay == 1.5
+        assert config.retry_attempts == 3
+        assert config.retry_delay == 5.0
         assert config.download_dir == "literature/pdfs"
         assert config.bibtex_file == "literature/references.bib"
         assert "arxiv" in config.sources
@@ -66,9 +69,12 @@ class TestLiteratureConfigFromEnv:
         
         config = LiteratureConfig.from_env()
         
-        assert config.default_limit == 10
+        assert config.default_limit == 25  # Increased default
         assert config.max_results == 100
         assert config.arxiv_delay == 3.0
+        assert config.semanticscholar_delay == 1.5
+        assert config.retry_attempts == 3
+        assert config.retry_delay == 5.0
         assert config.semanticscholar_api_key is None
         assert config.sources == ["arxiv", "semanticscholar"]
 
@@ -95,6 +101,30 @@ class TestLiteratureConfigFromEnv:
         config = LiteratureConfig.from_env()
         
         assert config.arxiv_delay == 5.5
+
+    def test_from_env_semanticscholar_delay(self, monkeypatch):
+        """Test from_env reads LITERATURE_SEMANTICSCHOLAR_DELAY."""
+        monkeypatch.setenv("LITERATURE_SEMANTICSCHOLAR_DELAY", "2.5")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.semanticscholar_delay == 2.5
+
+    def test_from_env_retry_attempts(self, monkeypatch):
+        """Test from_env reads LITERATURE_RETRY_ATTEMPTS."""
+        monkeypatch.setenv("LITERATURE_RETRY_ATTEMPTS", "5")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.retry_attempts == 5
+
+    def test_from_env_retry_delay(self, monkeypatch):
+        """Test from_env reads LITERATURE_RETRY_DELAY."""
+        monkeypatch.setenv("LITERATURE_RETRY_DELAY", "10.0")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.retry_delay == 10.0
 
     def test_from_env_semanticscholar_api_key(self, monkeypatch):
         """Test from_env reads SEMANTICSCHOLAR_API_KEY."""
@@ -158,7 +188,10 @@ class TestLiteratureConfigFromEnv:
         monkeypatch.setenv("LITERATURE_MAX_RESULTS", "150")
         monkeypatch.setenv("LITERATURE_USER_AGENT", "TestBot/2.0")
         monkeypatch.setenv("LITERATURE_ARXIV_DELAY", "2.0")
+        monkeypatch.setenv("LITERATURE_SEMANTICSCHOLAR_DELAY", "3.0")
         monkeypatch.setenv("SEMANTICSCHOLAR_API_KEY", "test-key")
+        monkeypatch.setenv("LITERATURE_RETRY_ATTEMPTS", "5")
+        monkeypatch.setenv("LITERATURE_RETRY_DELAY", "10.0")
         monkeypatch.setenv("LITERATURE_DOWNLOAD_DIR", "/tmp/pdfs")
         monkeypatch.setenv("LITERATURE_TIMEOUT", "45")
         monkeypatch.setenv("LITERATURE_BIBTEX_FILE", "/tmp/refs.bib")
@@ -170,9 +203,141 @@ class TestLiteratureConfigFromEnv:
         assert config.max_results == 150
         assert config.user_agent == "TestBot/2.0"
         assert config.arxiv_delay == 2.0
+        assert config.semanticscholar_delay == 3.0
         assert config.semanticscholar_api_key == "test-key"
+        assert config.retry_attempts == 5
+        assert config.retry_delay == 10.0
         assert config.download_dir == "/tmp/pdfs"
         assert config.timeout == 45
         assert config.bibtex_file == "/tmp/refs.bib"
         assert config.sources == ["arxiv"]
+
+
+class TestLiteratureConfigUnpaywall:
+    """Test Unpaywall and download retry configuration options."""
+
+    def test_unpaywall_defaults(self):
+        """Test Unpaywall config default values."""
+        config = LiteratureConfig()
+        assert config.use_unpaywall is True
+        assert config.unpaywall_email == "research@4dresearch.com"
+
+    def test_unpaywall_custom_values(self):
+        """Test Unpaywall config with custom values."""
+        config = LiteratureConfig(
+            use_unpaywall=True,
+            unpaywall_email="test@example.com"
+        )
+        assert config.use_unpaywall is True
+        assert config.unpaywall_email == "test@example.com"
+
+    def test_from_env_unpaywall_enabled(self, monkeypatch):
+        """Test from_env reads LITERATURE_USE_UNPAYWALL."""
+        monkeypatch.setenv("LITERATURE_USE_UNPAYWALL", "true")
+        monkeypatch.setenv("UNPAYWALL_EMAIL", "user@university.edu")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.use_unpaywall is True
+        assert config.unpaywall_email == "user@university.edu"
+
+    def test_from_env_unpaywall_disabled(self, monkeypatch):
+        """Test from_env with LITERATURE_USE_UNPAYWALL=false."""
+        monkeypatch.setenv("LITERATURE_USE_UNPAYWALL", "false")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.use_unpaywall is False
+
+    def test_from_env_unpaywall_yes(self, monkeypatch):
+        """Test from_env accepts 'yes' for boolean."""
+        monkeypatch.setenv("LITERATURE_USE_UNPAYWALL", "yes")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.use_unpaywall is True
+
+    def test_from_env_unpaywall_1(self, monkeypatch):
+        """Test from_env accepts '1' for boolean."""
+        monkeypatch.setenv("LITERATURE_USE_UNPAYWALL", "1")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.use_unpaywall is True
+
+
+class TestLiteratureConfigDownloadRetry:
+    """Test download retry configuration options."""
+
+    def test_download_retry_defaults(self):
+        """Test download retry config default values."""
+        config = LiteratureConfig()
+        assert config.download_retry_attempts == 2
+        assert config.download_retry_delay == 2.0
+        assert config.use_browser_user_agent is True
+
+    def test_download_retry_custom_values(self):
+        """Test download retry config with custom values."""
+        config = LiteratureConfig(
+            download_retry_attempts=5,
+            download_retry_delay=3.0,
+            use_browser_user_agent=False
+        )
+        assert config.download_retry_attempts == 5
+        assert config.download_retry_delay == 3.0
+        assert config.use_browser_user_agent is False
+
+    def test_from_env_download_retry_attempts(self, monkeypatch):
+        """Test from_env reads LITERATURE_DOWNLOAD_RETRY_ATTEMPTS."""
+        monkeypatch.setenv("LITERATURE_DOWNLOAD_RETRY_ATTEMPTS", "4")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.download_retry_attempts == 4
+
+    def test_from_env_download_retry_delay(self, monkeypatch):
+        """Test from_env reads LITERATURE_DOWNLOAD_RETRY_DELAY."""
+        monkeypatch.setenv("LITERATURE_DOWNLOAD_RETRY_DELAY", "5.5")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.download_retry_delay == 5.5
+
+    def test_from_env_browser_user_agent_false(self, monkeypatch):
+        """Test from_env reads LITERATURE_USE_BROWSER_USER_AGENT."""
+        monkeypatch.setenv("LITERATURE_USE_BROWSER_USER_AGENT", "false")
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.use_browser_user_agent is False
+
+    def test_from_env_browser_user_agent_default_true(self, monkeypatch):
+        """Test browser User-Agent defaults to true."""
+        # Clear the env var to test default
+        monkeypatch.delenv("LITERATURE_USE_BROWSER_USER_AGENT", raising=False)
+        
+        config = LiteratureConfig.from_env()
+        
+        assert config.use_browser_user_agent is True
+
+
+class TestBrowserUserAgents:
+    """Test browser User-Agent constants."""
+
+    def test_browser_user_agents_exist(self):
+        """Test BROWSER_USER_AGENTS is defined and non-empty."""
+        from infrastructure.literature.config import BROWSER_USER_AGENTS
+        
+        assert BROWSER_USER_AGENTS is not None
+        assert len(BROWSER_USER_AGENTS) > 0
+
+    def test_browser_user_agents_are_strings(self):
+        """Test all browser User-Agents are strings."""
+        from infrastructure.literature.config import BROWSER_USER_AGENTS
+        
+        for ua in BROWSER_USER_AGENTS:
+            assert isinstance(ua, str)
+            assert len(ua) > 0
+            # Should contain browser identifiers
+            assert "Mozilla" in ua or "Safari" in ua or "Chrome" in ua
 

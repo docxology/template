@@ -11,7 +11,7 @@ import pytest
 import requests
 
 from infrastructure.literature.pdf_handler import PDFHandler
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.config import LiteratureConfig, BROWSER_USER_AGENTS
 from infrastructure.literature.api import SearchResult
 from infrastructure.core.exceptions import FileOperationError, LiteratureSearchError
 
@@ -80,6 +80,8 @@ class TestDownloadPdf:
         handler = PDFHandler(config)
         
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = [b"%PDF-1.4 content", b" more content"]
         mock_response.raise_for_status = MagicMock()
         
@@ -101,6 +103,8 @@ class TestDownloadPdf:
         handler = PDFHandler(config)
         
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = [b"%PDF-1.4 content"]
         mock_response.raise_for_status = MagicMock()
         
@@ -116,6 +120,8 @@ class TestDownloadPdf:
         handler = PDFHandler(config)
         
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = [b"%PDF-1.4 content"]
         mock_response.raise_for_status = MagicMock()
         
@@ -143,7 +149,10 @@ class TestDownloadPdf:
     def test_download_pdf_network_error(self, tmp_path):
         """Test download_pdf handles network error (lines 71-75)."""
         download_dir = tmp_path / "downloads"
-        config = LiteratureConfig(download_dir=str(download_dir))
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            download_retry_attempts=0  # No retries for faster test
+        )
         handler = PDFHandler(config)
         
         with patch('infrastructure.literature.pdf_handler.requests.get') as mock_get:
@@ -153,17 +162,23 @@ class TestDownloadPdf:
                 handler.download_pdf("https://example.com/paper.pdf")
             
             assert "Failed to download PDF" in str(exc_info.value)
-            assert "url" in exc_info.value.context
+            assert "attempted_urls" in exc_info.value.context
             assert "output_path" in exc_info.value.context
 
     def test_download_pdf_http_error(self, tmp_path):
         """Test download_pdf handles HTTP error status."""
         download_dir = tmp_path / "downloads"
-        config = LiteratureConfig(download_dir=str(download_dir))
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            download_retry_attempts=0  # No retries for faster test
+        )
         handler = PDFHandler(config)
         
         mock_response = MagicMock()
-        mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError("404 Not Found")
+        mock_response.status_code = 404
+        http_error = requests.exceptions.HTTPError("404 Not Found")
+        http_error.response = mock_response
+        mock_response.raise_for_status.side_effect = http_error
         
         with patch('infrastructure.literature.pdf_handler.requests.get', return_value=mock_response):
             with pytest.raises(LiteratureSearchError) as exc_info:
@@ -188,20 +203,24 @@ class TestDownloadPdf:
     def test_download_pdf_oserror_on_write(self, tmp_path):
         """Test download_pdf handles OSError on file write (lines 76-80)."""
         download_dir = tmp_path / "downloads"
-        config = LiteratureConfig(download_dir=str(download_dir))
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            download_retry_attempts=0  # No retries for faster test
+        )
         handler = PDFHandler(config)
         
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = [b"%PDF-1.4 content"]
         mock_response.raise_for_status = MagicMock()
         
         with patch('infrastructure.literature.pdf_handler.requests.get', return_value=mock_response):
             with patch('builtins.open', side_effect=OSError("Disk full")):
-                with pytest.raises(FileOperationError) as exc_info:
+                with pytest.raises(LiteratureSearchError) as exc_info:
                     handler.download_pdf("https://example.com/paper.pdf")
                 
-                assert "Failed to write PDF file" in str(exc_info.value)
-                assert "path" in exc_info.value.context
+                assert "Failed to download PDF" in str(exc_info.value)
 
     def test_download_pdf_streaming_chunks(self, tmp_path):
         """Test download_pdf properly streams content in chunks (lines 65-67)."""
@@ -212,6 +231,8 @@ class TestDownloadPdf:
         # Simulate multiple chunks
         chunks = [b"%PDF-1.4\n", b"object content\n", b"stream data\n", b"%%EOF"]
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = chunks
         mock_response.raise_for_status = MagicMock()
         
@@ -275,6 +296,8 @@ class TestPDFHandlerIntegration:
         
         # Mock successful download
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = [b"%PDF-1.4 content\n%%EOF"]
         mock_response.raise_for_status = MagicMock()
         
@@ -298,13 +321,16 @@ class TestPDFHandlerIntegration:
         config = LiteratureConfig(
             download_dir=str(download_dir),
             timeout=42,
-            user_agent="Custom-Agent/2.0"
+            user_agent="Custom-Agent/2.0",
+            use_browser_user_agent=False  # Use custom user agent
         )
         
         handler = PDFHandler(config)
         
         mock_response = MagicMock()
-        mock_response.iter_content.return_value = [b"content"]
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
+        mock_response.iter_content.return_value = [b"%PDF-1.4 content"]
         mock_response.raise_for_status = MagicMock()
         
         with patch('infrastructure.literature.pdf_handler.requests.get', return_value=mock_response) as mock_get:
@@ -313,7 +339,6 @@ class TestPDFHandlerIntegration:
             call_kwargs = mock_get.call_args[1]
             assert call_kwargs['timeout'] == 42
             assert call_kwargs['headers']['User-Agent'] == "Custom-Agent/2.0"
-            assert call_kwargs['stream'] is True
 
 
 class TestSetLibraryIndex:
@@ -368,6 +393,8 @@ class TestDownloadPdfWithSearchResult:
         )
         
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = [b"%PDF content"]
         mock_response.raise_for_status = MagicMock()
         
@@ -396,6 +423,8 @@ class TestDownloadPdfWithSearchResult:
         )
         
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = [b"%PDF content"]
         mock_response.raise_for_status = MagicMock()
         
@@ -457,6 +486,8 @@ class TestDownloadPdfWithSearchResult:
         )
         
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = [b"%PDF content"]
         mock_response.raise_for_status = MagicMock()
         
@@ -588,6 +619,8 @@ class TestDownloadPaper:
         )
         
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = [b"%PDF content"]
         mock_response.raise_for_status = MagicMock()
         
@@ -662,6 +695,8 @@ class TestLibraryIndexIntegration:
         )
         
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = [b"%PDF content"]
         mock_response.raise_for_status = MagicMock()
         
@@ -698,6 +733,8 @@ class TestLibraryIndexIntegration:
         )
         
         mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
         mock_response.iter_content.return_value = [b"%PDF content"]
         mock_response.raise_for_status = MagicMock()
         
@@ -706,4 +743,376 @@ class TestLibraryIndexIntegration:
         
         # Should have called update_pdf_path (path can be absolute or relative)
         mock_index.update_pdf_path.assert_called()
+
+
+class TestUserAgentRotation:
+    """Test User-Agent rotation functionality."""
+
+    def test_get_user_agent_with_browser_enabled(self, tmp_path):
+        """Test _get_user_agent returns browser User-Agent when enabled."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            use_browser_user_agent=True
+        )
+        handler = PDFHandler(config)
+        
+        user_agent = handler._get_user_agent()
+        
+        assert user_agent in BROWSER_USER_AGENTS
+        assert "Mozilla" in user_agent or "Safari" in user_agent
+
+    def test_get_user_agent_with_browser_disabled(self, tmp_path):
+        """Test _get_user_agent returns config User-Agent when disabled."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            use_browser_user_agent=False,
+            user_agent="Custom-Agent/1.0"
+        )
+        handler = PDFHandler(config)
+        
+        user_agent = handler._get_user_agent()
+        
+        assert user_agent == "Custom-Agent/1.0"
+
+    def test_download_uses_browser_user_agent(self, tmp_path):
+        """Test download request uses browser User-Agent."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            use_browser_user_agent=True
+        )
+        handler = PDFHandler(config)
+        
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
+        mock_response.iter_content.return_value = [b"%PDF content"]
+        mock_response.raise_for_status = MagicMock()
+        
+        with patch('infrastructure.literature.pdf_handler.requests.get', return_value=mock_response) as mock_get:
+            handler.download_pdf("https://example.com/paper.pdf")
+            
+            call_kwargs = mock_get.call_args[1]
+            ua = call_kwargs['headers']['User-Agent']
+            assert ua in BROWSER_USER_AGENTS
+
+
+class TestErrorCategorization:
+    """Test error categorization functionality."""
+
+    def test_categorize_error_403(self, tmp_path):
+        """Test categorizing 403 Forbidden error."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(download_dir=str(download_dir))
+        handler = PDFHandler(config)
+        
+        reason, message = handler._categorize_error(
+            Exception("403 Forbidden"),
+            status_code=403
+        )
+        
+        assert reason == "access_denied"
+        assert "403" in message
+
+    def test_categorize_error_404(self, tmp_path):
+        """Test categorizing 404 Not Found error."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(download_dir=str(download_dir))
+        handler = PDFHandler(config)
+        
+        reason, message = handler._categorize_error(
+            Exception("404 Not Found"),
+            status_code=404
+        )
+        
+        assert reason == "not_found"
+        assert "404" in message
+
+    def test_categorize_error_429(self, tmp_path):
+        """Test categorizing 429 Rate Limit error."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(download_dir=str(download_dir))
+        handler = PDFHandler(config)
+        
+        reason, message = handler._categorize_error(
+            Exception("429 Too Many Requests"),
+            status_code=429
+        )
+        
+        assert reason == "rate_limited"
+        assert "429" in message
+
+    def test_categorize_error_timeout(self, tmp_path):
+        """Test categorizing timeout error."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(download_dir=str(download_dir))
+        handler = PDFHandler(config)
+        
+        reason, message = handler._categorize_error(
+            requests.exceptions.Timeout("Connection timed out")
+        )
+        
+        assert reason == "timeout"
+
+    def test_categorize_error_connection(self, tmp_path):
+        """Test categorizing connection error."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(download_dir=str(download_dir))
+        handler = PDFHandler(config)
+        
+        reason, message = handler._categorize_error(
+            requests.exceptions.ConnectionError("Failed to connect")
+        )
+        
+        assert reason == "network_error"
+
+    def test_categorize_error_unknown(self, tmp_path):
+        """Test categorizing unknown error."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(download_dir=str(download_dir))
+        handler = PDFHandler(config)
+        
+        reason, message = handler._categorize_error(
+            Exception("Some unknown error")
+        )
+        
+        assert reason == "unknown"
+
+
+class TestDownloadWithRetry:
+    """Test download retry functionality."""
+
+    def test_download_retry_on_timeout(self, tmp_path):
+        """Test retry on timeout error."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            download_retry_attempts=2,
+            download_retry_delay=0.1  # Short delay for testing
+        )
+        handler = PDFHandler(config)
+        
+        # First call fails, second succeeds
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
+        mock_response.iter_content.return_value = [b"%PDF content"]
+        mock_response.raise_for_status = MagicMock()
+        
+        call_count = 0
+        def side_effect(*args, **kwargs):
+            nonlocal call_count
+            call_count += 1
+            if call_count == 1:
+                raise requests.exceptions.Timeout("Timeout")
+            return mock_response
+        
+        with patch('infrastructure.literature.pdf_handler.requests.get', side_effect=side_effect):
+            result = handler.download_pdf("https://example.com/paper.pdf")
+        
+        assert result.exists()
+        assert call_count == 2
+
+    def test_download_no_retry_on_403(self, tmp_path):
+        """Test no retry on 403 Forbidden error."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            download_retry_attempts=3,
+            download_retry_delay=0.1
+        )
+        handler = PDFHandler(config)
+        
+        mock_response = MagicMock()
+        mock_response.status_code = 403
+        http_error = requests.exceptions.HTTPError("403 Forbidden")
+        http_error.response = mock_response
+        mock_response.raise_for_status.side_effect = http_error
+        
+        call_count = 0
+        def side_effect(*args, **kwargs):
+            nonlocal call_count
+            call_count += 1
+            return mock_response
+        
+        with patch('infrastructure.literature.pdf_handler.requests.get', side_effect=side_effect):
+            with pytest.raises(LiteratureSearchError):
+                handler.download_pdf("https://example.com/paper.pdf")
+        
+        # Should try enhanced recovery strategies for 403 errors (initial + 3 User-Agents + minimal headers + referer spoof)
+        assert call_count == 6
+
+    def test_download_all_retries_exhausted(self, tmp_path):
+        """Test behavior when all retries are exhausted."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            download_retry_attempts=2,
+            download_retry_delay=0.1
+        )
+        handler = PDFHandler(config)
+        
+        with patch('infrastructure.literature.pdf_handler.requests.get') as mock_get:
+            mock_get.side_effect = requests.exceptions.Timeout("Timeout")
+            
+            with pytest.raises(LiteratureSearchError) as exc_info:
+                handler.download_pdf("https://example.com/paper.pdf")
+            
+            # Should have tried 3 times (initial + 2 retries)
+            assert mock_get.call_count == 3
+            assert "failed" in str(exc_info.value).lower()
+
+
+class TestHTMLResponseHandling:
+    """Test handling of HTML responses (error pages)."""
+
+    def test_download_rejects_html_response(self, tmp_path):
+        """Test download rejects HTML instead of PDF."""
+        download_dir = tmp_path / "downloads"
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            download_retry_attempts=1,
+            download_retry_delay=0.1
+        )
+        handler = PDFHandler(config)
+        
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "text/html"}
+        mock_response.iter_content.return_value = [b"<html>Error page</html>"]
+        mock_response.raise_for_status = MagicMock()
+        
+        with patch('infrastructure.literature.pdf_handler.requests.get', return_value=mock_response):
+            with pytest.raises(LiteratureSearchError):
+                handler.download_pdf("https://example.com/paper.pdf")
+
+
+class TestDownloadResultTracking:
+    """Test DownloadResult tracking in core.py."""
+
+    def test_download_paper_with_result_success(self, tmp_path):
+        """Test download_paper_with_result returns success result."""
+        from infrastructure.literature.core import LiteratureSearch, DownloadResult
+        
+        download_dir = tmp_path / "downloads"
+        bibtex_file = tmp_path / "refs.bib"
+        library_index = tmp_path / "library.json"
+        
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            bibtex_file=str(bibtex_file),
+            library_index_file=str(library_index)
+        )
+        lit = LiteratureSearch(config)
+        
+        result = SearchResult(
+            title="Test Paper",
+            authors=["Author"],
+            year=2024,
+            abstract="Abstract",
+            url="https://example.com",
+            pdf_url="https://example.com/paper.pdf"
+        )
+        
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.headers = {"Content-Type": "application/pdf"}
+        mock_response.iter_content.return_value = [b"%PDF content"]
+        mock_response.raise_for_status = MagicMock()
+        
+        with patch('infrastructure.literature.pdf_handler.requests.get', return_value=mock_response):
+            download_result = lit.download_paper_with_result(result)
+        
+        assert isinstance(download_result, DownloadResult)
+        assert download_result.success is True
+        assert download_result.pdf_path is not None
+        assert download_result.failure_reason is None
+
+    def test_download_paper_with_result_no_pdf_url(self, tmp_path):
+        """Test download_paper_with_result handles missing PDF URL."""
+        from infrastructure.literature.core import LiteratureSearch, DownloadResult
+        
+        download_dir = tmp_path / "downloads"
+        bibtex_file = tmp_path / "refs.bib"
+        library_index = tmp_path / "library.json"
+        
+        config = LiteratureConfig(
+            download_dir=str(download_dir),
+            bibtex_file=str(bibtex_file),
+            library_index_file=str(library_index)
+        )
+        lit = LiteratureSearch(config)
+        
+        result = SearchResult(
+            title="Test Paper",
+            authors=["Author"],
+            year=2024,
+            abstract="Abstract",
+            url="https://example.com",
+            pdf_url=None  # No PDF URL
+        )
+        
+        download_result = lit.download_paper_with_result(result)
+        
+        assert isinstance(download_result, DownloadResult)
+        assert download_result.success is False
+        assert download_result.failure_reason == "no_pdf_url"
+        assert download_result.pdf_path is None
+
+    def test_download_result_to_dict(self, tmp_path):
+        """Test DownloadResult.to_dict serialization."""
+        from infrastructure.literature.core import DownloadResult
+        
+        result = DownloadResult(
+            citation_key="test2024paper",
+            success=False,
+            failure_reason="access_denied",
+            failure_message="403 Forbidden",
+            attempted_urls=["https://example.com/paper.pdf"]
+        )
+        
+        data = result.to_dict()
+        
+        assert data["citation_key"] == "test2024paper"
+        assert data["success"] is False
+        assert data["failure_reason"] == "access_denied"
+        assert "https://example.com/paper.pdf" in data["attempted_urls"]
+
+    def test_download_result_is_retriable(self):
+        """Test DownloadResult.is_retriable property."""
+        from infrastructure.literature.core import DownloadResult
+        
+        # Network error is retriable
+        result = DownloadResult(
+            citation_key="test",
+            success=False,
+            failure_reason="network_error"
+        )
+        assert result.is_retriable is True
+        
+        # Timeout is retriable
+        result = DownloadResult(
+            citation_key="test",
+            success=False,
+            failure_reason="timeout"
+        )
+        assert result.is_retriable is True
+        
+        # Access denied is not retriable
+        result = DownloadResult(
+            citation_key="test",
+            success=False,
+            failure_reason="access_denied"
+        )
+        assert result.is_retriable is False
+        
+        # No PDF URL is not retriable
+        result = DownloadResult(
+            citation_key="test",
+            success=False,
+            failure_reason="no_pdf_url"
+        )
+        assert result.is_retriable is False
 

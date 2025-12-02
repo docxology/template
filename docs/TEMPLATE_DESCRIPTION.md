@@ -1,4 +1,8 @@
-# Research Project Template
+# 📚 Research Project Template
+
+> **Complete foundation** for professional research projects with automated workflows
+
+**Quick Reference:** [How To Use](HOW_TO_USE.md) | [Examples](EXAMPLES.md) | [Architecture](ARCHITECTURE.md)
 
 ## 🎯 What You Get
 

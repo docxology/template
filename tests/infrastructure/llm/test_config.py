@@ -27,7 +27,7 @@ class TestLLMConfig:
         assert config.temperature == 0.7
         assert config.max_tokens == 2048
         assert config.context_window == 131072  # 128K default for large context models
-        assert config.timeout == 60.0
+        assert config.timeout == 300.0  # 5 minutes default for long-form tasks
         assert config.top_p == 0.9
         assert config.seed is None
         assert config.num_ctx is None
@@ -83,7 +83,7 @@ class TestLLMConfig:
     def test_config_timeout(self):
         """Test timeout configuration."""
         config = LLMConfig()
-        assert config.timeout == 60.0
+        assert config.timeout == 300.0  # 5 minutes default for long-form tasks
         
         config_custom = LLMConfig(timeout=30.0)
         assert config_custom.timeout == 30.0
@@ -220,7 +220,7 @@ class TestLLMConfigMethods:
         
         # Original unchanged
         assert config.temperature == 0.7
-        assert config.timeout == 60.0
+        assert config.timeout == 300.0  # Default is now 5 minutes
         assert config.seed is None
 
     def test_config_with_overrides_preserves_other_values(self):

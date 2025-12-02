@@ -16,7 +16,10 @@ This directory contains comprehensive development standards, coding guidelines, 
 | [testing_standards.md](testing_standards.md) | Testing patterns and 100% coverage | Writing tests with pytest |
 | [documentation_standards.md](documentation_standards.md) | AGENTS.md and README.md writing guide | Writing documentation |
 | [type_hints_standards.md](type_hints_standards.md) | Type annotation patterns | Adding type hints |
-| [llm_standards.md](llm_standards.md) | LLM/Ollama integration patterns (NEW) | Using local LLMs for research |
+| [llm_standards.md](llm_standards.md) | LLM/Ollama integration patterns | Using local LLMs for research |
+| [code_style.md](code_style.md) | Code formatting and style standards | Writing consistent, readable code |
+| [git_workflow.md](git_workflow.md) | Git workflow and commit standards | Managing version control |
+| [api_design.md](api_design.md) | API design and interface standards | Creating clean, consistent APIs |
 
 ## Key Principles
 
@@ -379,6 +382,9 @@ This directory provides modular development standards. Each file covers specific
 | [testing_standards.md](testing_standards.md) | Testing patterns | Writing tests |
 | [documentation_standards.md](documentation_standards.md) | Documentation guidelines | Writing docs |
 | [type_hints_standards.md](type_hints_standards.md) | Type annotation patterns | Adding type hints |
+| [code_style.md](code_style.md) | Code formatting standards | Writing consistent code |
+| [git_workflow.md](git_workflow.md) | Git workflow standards | Managing version control |
+| [api_design.md](api_design.md) | API design standards | Creating clean APIs |
 | [llm_standards.md](llm_standards.md) | LLM/Ollama patterns | Using local LLMs |
 
 ## Integration with Main Documentation
@@ -393,7 +399,10 @@ The .cursorrules standards align with and support the main documentation:
 | Error Handling | [error_handling.md](error_handling.md) | [docs/TROUBLESHOOTING_GUIDE.md](../docs/TROUBLESHOOTING_GUIDE.md) |
 | Logging | [python_logging.md](python_logging.md) | [docs/LOGGING_GUIDE.md](../docs/LOGGING_GUIDE.md) |
 | Testing | [testing_standards.md](testing_standards.md) | [tests/AGENTS.md](../tests/AGENTS.md) |
-| Workflow | [documentation_standards.md](documentation_standards.md) | [docs/WORKFLOW.md](../docs/WORKFLOW.md) |
+| Code Style | [code_style.md](code_style.md) | [docs/CODE_STYLE.md](../docs/CODE_STYLE.md) |
+| Git Workflow | [git_workflow.md](git_workflow.md) | [docs/GIT_WORKFLOW.md](../docs/GIT_WORKFLOW.md) |
+| API Design | [api_design.md](api_design.md) | [docs/API_DESIGN.md](../docs/API_DESIGN.md) |
+| Documentation | [documentation_standards.md](documentation_standards.md) | [docs/WORKFLOW.md](../docs/WORKFLOW.md) |
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/TYPE_SAFETY.md](../docs/TYPE_SAFETY.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) |
 
@@ -421,6 +430,9 @@ The .cursorrules standards align with and support the main documentation:
 | Activity | Start Here | Then Read |
 |----------|-----------|-----------|
 | Writing functions | [type_hints_standards.md](type_hints_standards.md) | [error_handling.md](error_handling.md), [python_logging.md](python_logging.md) |
+| Code formatting | [code_style.md](code_style.md) | [type_hints_standards.md](type_hints_standards.md) for consistency |
+| Git workflow | [git_workflow.md](git_workflow.md) | [testing_standards.md](testing_standards.md) for commit testing |
+| API design | [api_design.md](api_design.md) | [type_hints_standards.md](type_hints_standards.md) for type safety |
 | Handling errors | [error_handling.md](error_handling.md) | [python_logging.md](python_logging.md) for context |
 | Adding logging | [python_logging.md](python_logging.md) | [error_handling.md](error_handling.md) for error logging |
 | Writing tests | [testing_standards.md](testing_standards.md) | [error_handling.md](error_handling.md) for error testing |
@@ -438,8 +450,11 @@ The .cursorrules standards align with and support the main documentation:
 - [error_handling.md](error_handling.md) - Exception patterns
 - [python_logging.md](python_logging.md) - Logging standards
 - [type_hints_standards.md](type_hints_standards.md) - Type annotation patterns
+- [code_style.md](code_style.md) - Code formatting standards
+- [git_workflow.md](git_workflow.md) - Git workflow standards
 
 **Comprehensive Guides (300-600 lines)**
+- [api_design.md](api_design.md) - API design standards
 - [testing_standards.md](testing_standards.md) - Complete testing guide
 - [infrastructure_modules.md](infrastructure_modules.md) - Module development guide
 - [documentation_standards.md](documentation_standards.md) - Documentation writing guide
@@ -473,7 +488,7 @@ When creating a new .cursorrules file:
 
 ---
 
-**Version**: 2.2.0  
-**Last Updated**: 2025-12-01  
-**Status**: All 9 guideline files complete and cross-referenced  
+**Version**: 2.3.0
+**Last Updated**: 2025-12-02
+**Status**: All 12 guideline files complete and cross-referenced
 **Maintainer**: Template Team

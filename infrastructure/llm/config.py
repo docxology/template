@@ -85,7 +85,7 @@ class LLMConfig:
         LLM_TEMPERATURE: Temperature (default: 0.7)
         LLM_MAX_TOKENS: Max tokens (default: 2048)
         LLM_CONTEXT_WINDOW: Context window (default: 4096)
-        LLM_TIMEOUT: Request timeout in seconds (default: 60)
+        LLM_TIMEOUT: Request timeout in seconds (default: 300)
         LLM_NUM_CTX: Ollama num_ctx parameter (optional)
         LLM_SEED: Default seed for reproducibility (optional)
     
@@ -103,7 +103,7 @@ class LLMConfig:
     """
     # Connection settings
     base_url: str = "http://localhost:11434"
-    timeout: float = 60.0
+    timeout: float = 300.0  # 5 minutes - adequate for long-form generation tasks
     
     # Model settings
     default_model: str = "qwen3:4b"  # Fast with 128K context, excellent instruction following
@@ -183,7 +183,7 @@ class LLMConfig:
             temperature=_get_float("LLM_TEMPERATURE", 0.7),
             max_tokens=_get_int("LLM_MAX_TOKENS", 2048),
             context_window=_get_int("LLM_CONTEXT_WINDOW", 131072),
-            timeout=_get_float("LLM_TIMEOUT", 60.0),
+            timeout=_get_float("LLM_TIMEOUT", 300.0),
             num_ctx=_get_optional_int("LLM_NUM_CTX"),
             seed=_get_optional_int("LLM_SEED"),
             system_prompt=os.environ.get("LLM_SYSTEM_PROMPT", cls.system_prompt),

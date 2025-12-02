@@ -841,6 +841,33 @@ Pandoc is noting that some cross-reference formats are being processed or adjust
 2. If references are broken, review markdown syntax
 3. Ensure all `@fig:` labels are defined in manuscript
 
+### pypdf "Ignoring wrong pointing object" Warnings
+
+**What you'll see:**
+```
+Ignoring wrong pointing object 0 0 (offset 0)
+Ignoring wrong pointing object 76 0 (offset 0)
+Ignoring wrong pointing object 85 0 (offset 0)
+```
+
+**What it means:**
+These warnings come from the pypdf library during PDF text extraction. They indicate that the PDF file contains malformed cross-reference table entries that point to invalid offsets within the file.
+
+**Is it a problem?**
+**No.** These warnings are harmless and expected. The pypdf library gracefully handles these malformed objects by ignoring them and continuing with text extraction. The PDF processing completes successfully despite the warnings.
+
+**Why it occurs:**
+PDF files can contain cross-reference tables that map object identifiers to their locations in the file. When these tables contain errors or point to invalid locations, pypdf logs these warnings but continues processing. This is common with PDFs created by various tools or that have been through multiple conversions.
+
+**What to do:**
+You can safely ignore these warnings. The system has been updated to suppress these warnings during normal operation (they may still appear at DEBUG logging level). If you need to see them for troubleshooting, set `LOG_LEVEL=0` in your environment.
+
+**Technical details:**
+- These warnings appear during `PdfReader` instantiation and page extraction
+- They don't affect text extraction quality or completeness
+- The warnings are now captured and logged at DEBUG level only
+- No action is required - the PDF processing continues normally
+
 ### Python SyntaxWarnings (Fixed)
 
 **What you might have seen:**

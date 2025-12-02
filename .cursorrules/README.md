@@ -15,7 +15,11 @@ Development standards and coding guidelines for the Research Project Template.
 - **testing_standards.md** - Testing patterns and coverage
 - **documentation_standards.md** - AGENTS.md and README.md writing guide
 - **type_hints_standards.md** - Type annotation patterns
-- **llm_standards.md** - LLM/Ollama integration patterns (NEW)
+- **llm_standards.md** - LLM/Ollama integration patterns
+- **code_style.md** - Code formatting and style standards
+- **git_workflow.md** - Git workflow and commit standards
+- **security.md** - Security standards and guidelines
+- **api_design.md** - API design and interface standards
 
 ## Key Principles
 

@@ -1,4 +1,8 @@
-# Project Renaming Examples
+# 📋 Project Renaming Examples
+
+> **Step-by-step guide** for transforming the template into specific research projects
+
+**Quick Reference:** [Examples Showcase](EXAMPLES_SHOWCASE.md) | [Architecture](ARCHITECTURE.md) | [How To Use](HOW_TO_USE.md)
 
 This file shows examples of how to use `rename_project.sh` to transform the generic template into specific projects. For related information, see **[`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)**, **[`README.md`](README.md)**, and **[`ARCHITECTURE.md`](ARCHITECTURE.md)**.
 

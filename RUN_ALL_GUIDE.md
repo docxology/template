@@ -12,6 +12,16 @@ This executes all stages sequentially: environment setup, infrastructure tests, 
 
 ## Pipeline Stages
 
+### Stage 0: Clean Output Directories
+**Purpose**: Prepare for fresh pipeline execution
+
+- Removes all contents from `project/output/` and `output/` directories
+- Recreates essential subdirectory structure (`pdf/`, `figures/`, `data/`, `reports/`, `simulations/`, `slides/`, `web/`, `llm/`)
+- Ensures each pipeline run starts with clean state
+- Prevents stale outputs from previous runs
+
+**Exit**: Always succeeds (creates directories if they don't exist)
+
 ### Stage 1: Setup Environment
 **Purpose**: Verify environment is ready for execution
 
@@ -85,6 +95,20 @@ This executes all stages sequentially: environment setup, infrastructure tests, 
 
 **Output**: `output/`, `output/slides/`, `output/web/`
 
+### Stage 8: LLM Manuscript Review
+**Purpose**: Generate AI-powered manuscript analysis (optional, requires Ollama)
+
+- Checks Ollama availability and selects best model
+- Extracts full text from combined manuscript PDF
+- Generates executive summary of key findings
+- Generates writing quality and methodology review
+- Generates improvement suggestions with actionable recommendations
+- Validates review quality and retries if needed
+- Saves all reviews to `output/llm/` with detailed metrics
+
+**Output**: `output/llm/` directory with review files and metadata
+**Optional**: Skips gracefully if Ollama not running
+
 ## Usage
 
 ### Basic Usage
@@ -111,11 +135,11 @@ The script provides:
   Repository: /Users/4d/Documents/GitHub/template
   Python: Python 3.11.0
 
-[1/6] Setup Environment
+[1/8] Setup Environment
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✓ Environment setup complete
 
-[2/6] Infrastructure Tests
+[2/8] Infrastructure Tests
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Running infrastructure module tests...
 ✓ Infrastructure tests passed
@@ -128,6 +152,7 @@ The script provides:
 ✓ All stages completed successfully!
 
 Stage Results:
+  ✓ Stage 0: Clean Output Directories (1s)
   ✓ Stage 1: Setup Environment (12s)
   ✓ Stage 2: Infrastructure Tests (45s)
   ✓ Stage 3: Project Tests (38s)
@@ -135,14 +160,16 @@ Stage Results:
   ✓ Stage 5: PDF Rendering (120s)
   ✓ Stage 6: Output Validation (8s)
   ✓ Stage 7: Copy Outputs (2s)
+  ✓ Stage 8: LLM Manuscript Review (15s)
 
-Total Execution Time: 3m 30s
+Total Execution Time: 3m 45s
 
 Generated Outputs:
   • Coverage reports: htmlcov/
   • PDF files: project/output/pdf/
   • Figures: project/output/figures/
   • Data files: project/output/data/
+  • LLM reviews: output/llm/ (if Ollama available)
   • Final deliverables: output/
 
 ✓ Pipeline complete - ready for deployment
@@ -180,6 +207,14 @@ The script uses strict error handling:
 Review errors above and fix issues before retrying
 ```
 
+**Example with Stage 8 failure**:
+```
+✗ Pipeline failed at Stage 8 (LLM Manuscript Review)
+
+Ollama is not running. Please start Ollama with 'ollama serve' and retry,
+or remove Stage 8 from the pipeline if LLM reviews are not needed.
+```
+
 ## Comparison: Shell vs Python
 
 Both orchestrators run the complete pipeline with equivalent functionality:
@@ -188,20 +223,21 @@ Both orchestrators run the complete pipeline with equivalent functionality:
 - ✅ Recommended for interactive use - just type `./run_all.sh`
 - ✅ Better progress reporting with colors
 - ✅ Automatic environment configuration
-- ✅ 7 stages with visual progress indicators
+- ✅ 8 stages + 1 clean stage with visual progress indicators
 - ✅ Native bash execution (no Python startup overhead)
 
 ### Python Orchestrator (`python3 scripts/run_all.py`)
 - ✅ Programmatic access for CI/CD integration
 - ✅ Better for automated pipelines
 - ✅ Consistent Python logging across all stages
-- ✅ 6 stages (tests combined into single stage)
+- ✅ 6 stages + 1 clean stage (tests combined into single stage)
 - ✅ Easier integration with Python tooling
 
 ### Stage Mapping
 
 | Shell (`run_all.sh`) | Python (`run_all.py`) |
 |----------------------|----------------------|
+| Stage 0: Clean Output Directories | Stage 0: Clean Output Directories |
 | Stage 1: Setup Environment | Stage 1: Setup Environment |
 | Stage 2: Infrastructure Tests | Stage 2: Run Tests (both) |
 | Stage 3: Project Tests | *(combined above)* |
@@ -209,6 +245,7 @@ Both orchestrators run the complete pipeline with equivalent functionality:
 | Stage 5: PDF Rendering | Stage 4: PDF Rendering |
 | Stage 6: Output Validation | Stage 5: Validation |
 | Stage 7: Copy Outputs | Stage 6: Copy Outputs |
+| Stage 8: LLM Manuscript Review | *(not implemented)* |
 
 Both run identical tests and produce identical outputs. Choose based on preference.
 

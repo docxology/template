@@ -34,3 +34,4 @@ class TestValidatePdfCliIntegration:
         assert validate_pdf_cli is not None
 
 
+

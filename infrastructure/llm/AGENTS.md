@@ -133,7 +133,7 @@ The module reads configuration from environment variables:
 | `LLM_TEMPERATURE` | `0.7` | Generation temperature |
 | `LLM_MAX_TOKENS` | `2048` | Maximum tokens per response |
 | `LLM_CONTEXT_WINDOW` | `131072` | Context window size (128K default) |
-| `LLM_TIMEOUT` | `60` | Request timeout (seconds) |
+| `LLM_TIMEOUT` | `300` | Request timeout (seconds) |
 | `LLM_NUM_CTX` | `None` | Ollama num_ctx parameter |
 | `LLM_SEED` | `None` | Default seed for reproducibility |
 | `LLM_SYSTEM_PROMPT` | Research assistant | Custom system prompt |

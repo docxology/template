@@ -60,3 +60,4 @@ class TestPublishCliModule:
         assert hasattr(publish_cli, 'publishing')
 
 
+

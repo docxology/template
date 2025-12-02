@@ -6,6 +6,10 @@ from infrastructure.llm.validation import (
     detect_repetition,
     calculate_unique_content_ratio,
     deduplicate_sections,
+    _calculate_similarity,
+    _jaccard_similarity,
+    _tfidf_cosine_similarity,
+    _sequence_similarity,
     is_off_topic,
     has_on_topic_signals,
     detect_conversational_phrases,
@@ -503,6 +507,41 @@ This is the third section with yet another unique topic C.
         assert has_rep is False
         assert unique_ratio == 1.0
 
+    def test_detect_repetition_semantic_similarity(self):
+        """Test that semantically similar but differently worded content is not flagged."""
+        text = """
+## Overview
+This section provides an introduction to machine learning algorithms and their applications in data science.
+
+## Introduction
+This part discusses machine learning methods and their use in analyzing scientific data.
+"""
+        has_rep, duplicates, unique_ratio = detect_repetition(text, similarity_threshold=0.8)
+        # Should not detect as repetition despite similar topics
+        assert has_rep is False
+        assert unique_ratio >= 0.8
+
+    def test_detect_repetition_different_similarity_methods(self):
+        """Test repetition detection with different similarity methods."""
+        repeated_section = "This is repeated content about machine learning. " * 3
+        text = f"""
+## Section 1
+{repeated_section}
+
+## Section 2
+{repeated_section}
+"""
+
+        # Test with different methods
+        has_rep_jaccard, _, _ = detect_repetition(text, similarity_method="jaccard")
+        has_rep_tfidf, _, _ = detect_repetition(text, similarity_method="tfidf")
+        has_rep_hybrid, _, _ = detect_repetition(text, similarity_method="hybrid")
+
+        # All should detect repetition
+        assert has_rep_jaccard is True
+        assert has_rep_tfidf is True
+        assert has_rep_hybrid is True
+
 
 class TestUniqueContentRatio:
     """Test unique content ratio calculation."""
@@ -531,25 +570,25 @@ class TestDeduplicateSections:
     """Test section deduplication."""
 
     def test_deduplicate_removes_repeated_sections(self):
-        """Test that repeated sections are removed."""
+        """Test that repeated sections are removed when safe to do so."""
         text = """
 ## Introduction
-This is the introduction.
+This is a comprehensive introduction with substantial unique content about the research methodology and background.
 
 ## Methods
-This describes the methods.
+This describes the methods in detail with comprehensive information about algorithms, data processing, and experimental setup.
 
 ## Methods
-This describes the methods.
+This describes the methods in detail with comprehensive information about algorithms, data processing, and experimental setup.
 
 ## Methods
-This describes the methods.
+This describes the methods in detail with comprehensive information about algorithms, data processing, and experimental setup.
 
 ## Results
-These are the results.
+These are the comprehensive results with detailed analysis, statistical significance, and interpretation of findings.
 """
-        result = deduplicate_sections(text, max_repetitions=1)
-        # Should have only one Methods section
+        result = deduplicate_sections(text, max_repetitions=1, mode="aggressive", similarity_threshold=0.7, min_content_preservation=0.5)
+        # With sufficient unique content, deduplication should work
         assert result.count("## Methods") <= 2  # Original + max_repetitions
 
     def test_deduplicate_keeps_unique_sections(self):
@@ -577,21 +616,145 @@ Content C is also unique.
     def test_deduplicate_paragraphs(self):
         """Test paragraph-level deduplication."""
         text = """
-First paragraph.
+First paragraph with unique content.
 
-This is a repeated paragraph about something.
+This is a repeated paragraph about machine learning algorithms and their applications in data science.
 
-Some different content here.
+Some different content here about experimental results.
 
-This is a repeated paragraph about something.
+This is a repeated paragraph about machine learning algorithms and their applications in data science.
 
-This is a repeated paragraph about something.
+This is a repeated paragraph about machine learning algorithms and their applications in data science.
 
-Final paragraph.
+Final paragraph with unique conclusions.
 """
-        result = deduplicate_sections(text, max_repetitions=1)
-        # Should have fewer "repeated paragraph" occurrences
+        result = deduplicate_sections(text, max_repetitions=1, mode="aggressive", similarity_threshold=0.7, min_content_preservation=0.4)
+        # Should have fewer "repeated paragraph" occurrences in aggressive mode
         assert result.count("repeated paragraph") <= 2
+
+    def test_deduplicate_conservative_mode(self):
+        """Test conservative deduplication mode preserves more content."""
+        text = """
+## Methods
+Machine learning algorithms are used.
+
+## Methods
+Machine learning methods are applied.
+
+## Methods
+Machine learning techniques are utilized.
+"""
+        result = deduplicate_sections(text, mode="conservative", max_repetitions=1)
+        # Conservative mode should preserve more content
+        assert len(result) > len(text) * 0.8  # Should preserve most content
+
+    def test_deduplicate_aggressive_mode(self):
+        """Test aggressive deduplication mode removes more content."""
+        text = """
+## Introduction
+This is a substantial introduction with detailed background information about the research field.
+
+## Methods
+This is identical content that should be deduplicated in aggressive mode with detailed methodology.
+
+## Methods
+This is identical content that should be deduplicated in aggressive mode with detailed methodology.
+
+## Methods
+This is identical content that should be deduplicated in aggressive mode with detailed methodology.
+
+## Results
+This is a substantial results section with detailed findings and analysis.
+"""
+        result = deduplicate_sections(text, mode="aggressive", max_repetitions=1, similarity_threshold=0.9, min_content_preservation=0.5)
+        # Should remove duplicates more aggressively for identical content
+        assert result.count("## Methods") <= 2
+        # Should preserve other sections
+        assert "## Introduction" in result
+        assert "## Results" in result
+
+    def test_deduplicate_content_preservation(self):
+        """Test that content preservation limits are respected."""
+        # Create text where deduplication would remove too much
+        text = """
+## Unique Section 1
+This is unique content that should be preserved.
+
+## Similar Section A
+Machine learning algorithms data science.
+
+## Similar Section B
+Machine learning methods data analysis.
+
+## Similar Section C
+Machine learning techniques data processing.
+
+## Unique Section 2
+This is also unique content to preserve.
+"""
+        result = deduplicate_sections(
+            text,
+            mode="aggressive",
+            similarity_threshold=0.7,
+            min_content_preservation=0.8
+        )
+        # Should preserve at least 80% of content due to preservation limit
+        preservation_ratio = len(result) / len(text)
+        assert preservation_ratio >= 0.8
+
+    def test_deduplicate_semantic_similarity(self):
+        """Test that semantically similar but valid content is preserved."""
+        text = """
+## Overview
+This section provides an introduction to machine learning algorithms and their applications.
+
+## Methods
+This part discusses machine learning methods and their use in data analysis.
+
+## Results
+These sections present different results from the machine learning experiments.
+"""
+        result = deduplicate_sections(text, similarity_threshold=0.8)
+        # Should preserve all sections as they are conceptually different
+        assert "## Overview" in result
+        assert "## Methods" in result
+        assert "## Results" in result
+
+
+class TestSimilarityCalculations:
+    """Test improved similarity calculation methods."""
+
+    def test_calculate_similarity_jaccard(self):
+        """Test Jaccard similarity calculation."""
+        text1 = "machine learning algorithms data"
+        text2 = "machine learning methods data"
+        similarity = _calculate_similarity(text1, text2, method="jaccard")
+        assert similarity > 0.5  # High overlap
+
+    def test_calculate_similarity_tfidf(self):
+        """Test TF-IDF cosine similarity."""
+        text1 = "machine learning algorithms"
+        text2 = "machine learning methods"
+        similarity = _calculate_similarity(text1, text2, method="tfidf")
+        assert similarity > 0.0
+
+    def test_calculate_similarity_hybrid(self):
+        """Test hybrid similarity calculation."""
+        text1 = "machine learning algorithms data science"
+        text2 = "machine learning methods data analysis"
+        similarity = _calculate_similarity(text1, text2, method="hybrid")
+        assert similarity > 0.3  # Should combine multiple methods
+
+    def test_calculate_similarity_identical(self):
+        """Test identical texts have perfect similarity."""
+        text = "machine learning algorithms data science"
+        similarity = _calculate_similarity(text, text, method="hybrid")
+        assert similarity == 1.0
+
+    def test_calculate_similarity_empty(self):
+        """Test empty texts have zero similarity."""
+        similarity = _calculate_similarity("", "text", method="hybrid")
+        assert similarity == 0.0
 
 
 class TestOutputValidatorRepetition:

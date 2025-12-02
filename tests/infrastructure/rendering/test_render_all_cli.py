@@ -77,3 +77,4 @@ class TestRenderAllCliModule:
         assert hasattr(render_all_cli, 'RenderManager')
 
 
+

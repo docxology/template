@@ -154,6 +154,7 @@ template/                           # Generic Template
 │   ├── 02_run_analysis.py          # Stage 2: Analysis (discovers project/scripts/)
 │   ├── 03_render_pdf.py            # Stage 3: PDF
 │   ├── 04_validate_output.py       # Stage 4: Validate
+│   ├── 05_copy_outputs.py          # Stage 5: Copy outputs
 │   └── run_all.py                  # Master orchestrator
 ├── tests/                          # Infrastructure Tests
 │   ├── AGENTS.md

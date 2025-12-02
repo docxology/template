@@ -836,11 +836,35 @@ def generate_review_with_metrics(
                 metrics.output_words = len(error_response.split())
                 return error_response, metrics
     
-    # Post-processing: clean up any remaining repetitive content
+    # Post-processing: clean up any remaining repetitive content with safety checks
     original_length = len(response)
-    response = deduplicate_sections(response, max_repetitions=2)
-    if len(response) < original_length * 0.9:  # Significant cleanup occurred
-        logger.info(f"    Cleaned repetitive content: {original_length} → {len(response)} chars")
+
+    # Only apply deduplication if severe repetition is detected
+    has_rep, _, unique_ratio = detect_repetition(response, similarity_threshold=0.8)
+    if has_rep and unique_ratio < 0.3:  # Only for severe repetition cases
+        # Use conservative deduplication to avoid removing valid content
+        response = deduplicate_sections(
+            response,
+            max_repetitions=2,
+            mode="conservative",
+            similarity_threshold=0.9,  # Very strict similarity requirement
+            min_content_preservation=0.8  # Preserve at least 80% of content
+        )
+
+        reduction_ratio = len(response) / original_length
+        if reduction_ratio < 0.95:  # Only log significant changes
+            logger.info(
+                f"    Cleaned severe repetition: {original_length} → {len(response)} chars "
+                f"({reduction_ratio:.1%} preserved)"
+            )
+
+        # Safety check: never remove more than 30% of content
+        if reduction_ratio < 0.7:
+            logger.warning(
+                f"    Deduplication removed too much content ({reduction_ratio:.1%}). "
+                f"Restoring original response."
+            )
+            response = best_response  # Restore the original response
     
     # Calculate output metrics
     metrics.generation_time_seconds = time.time() - start_time

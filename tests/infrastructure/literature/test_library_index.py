@@ -477,3 +477,4 @@ class TestLibraryIndexIntegration:
         index2 = LibraryIndex(mock_config)
         assert len(index2.list_entries()) == 10
 
+

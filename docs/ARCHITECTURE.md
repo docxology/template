@@ -1,4 +1,8 @@
-# Generic Project Architecture: Complete System Overview
+# 🏗️ Generic Project Architecture: Complete System Overview
+
+> **Comprehensive overview** of the template's design, components, and build pipeline
+
+**Quick Reference:** [How To Use](HOW_TO_USE.md) | [Workflow](WORKFLOW.md) | [Thin Orchestrator Summary](THIN_ORCHESTRATOR_SUMMARY.md)
 
 This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline. For related information, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`WORKFLOW.md`](WORKFLOW.md)**, **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
 

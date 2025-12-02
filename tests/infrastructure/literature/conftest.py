@@ -11,6 +11,9 @@ def mock_config(tmp_path):
     config.bibtex_file = str(tmp_path / "refs.bib")
     config.library_index_file = str(tmp_path / "library.json")
     config.arxiv_delay = 0.0  # Speed up tests
+    config.semanticscholar_delay = 0.0  # Speed up tests
+    config.retry_delay = 0.0  # Speed up tests
+    config.retry_attempts = 1  # Speed up tests
     return config
 
 @pytest.fixture

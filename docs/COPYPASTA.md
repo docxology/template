@@ -1,5 +1,9 @@
 # 📋 COPYPASTA.md - Ready-to-Use Content for Sharing
 
+> **Pre-written content** for sharing the Research Project Template across platforms
+
+**Quick Reference:** [Template](https://github.com/docxology/template) | [How To Use](HOW_TO_USE.md) | [Documentation](README.md)
+
 This file contains pre-written, copyable content for sharing the **[Research Project Template](https://github.com/docxology/template)** in forums, social media, documentation, and other platforms. All content is optimized for easy copying and pasting.
 
 **🔗 Quick Links:**

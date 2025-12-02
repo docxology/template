@@ -78,3 +78,4 @@ class TestDocScannerIntegration:
         assert doc_scanner is not None
 
 
+

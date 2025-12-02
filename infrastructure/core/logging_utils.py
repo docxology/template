@@ -360,8 +360,8 @@ def log_header(message: str, logger: Optional[logging.Logger] = None) -> None:
         logger = get_logger(__name__)
     
     emoji = EMOJIS['rocket'] if USE_EMOJIS else ''
-    separator = "=" * 60
-    
+    separator = "=" * 50
+
     logger.info("")
     logger.info(separator)
     logger.info(message)

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Literature Search module provides a unified interface for discovering scientific papers, managing references, and downloading full-text PDFs. It abstracts away the complexity of interacting with multiple academic databases (arXiv, Semantic Scholar) and handling different response formats.
+The Literature Search module provides a unified interface for discovering scientific papers, managing references, and downloading full-text PDFs. It abstracts away the complexity of interacting with multiple academic databases (arXiv, Semantic Scholar, Unpaywall) and handling different response formats.
 
 ## Output Files
 
@@ -10,9 +10,10 @@ All literature outputs are saved to the `literature/` directory:
 
 ```
 literature/
-├── references.bib    # BibTeX entries for citations
-├── library.json      # JSON index with full metadata
-└── pdfs/             # Downloaded PDFs (named by citation key)
+├── references.bib        # BibTeX entries for citations
+├── library.json          # JSON index with full metadata
+├── failed_downloads.json # Failed downloads for retry (if any)
+└── pdfs/                 # Downloaded PDFs (named by citation key)
     ├── smith2024machine.pdf
     └── jones2023deep.pdf
 ```
@@ -33,6 +34,7 @@ This module follows the **thin orchestrator pattern**:
 LiteratureSearch (core.py)
 ├── ArxivSource (api.py)
 ├── SemanticScholarSource (api.py)
+├── UnpaywallSource (api.py)     # NEW: Open access PDF resolution
 ├── LibraryIndex (library_index.py)
 ├── PDFHandler (pdf_handler.py)
 └── ReferenceManager (reference_manager.py)
@@ -43,6 +45,12 @@ LiteratureConfig (config.py)
 SearchResult (api.py)
 └── Normalized result dataclass
 
+UnpaywallResult (api.py)         # NEW: Unpaywall lookup result
+└── OA status and PDF URL
+
+DownloadResult (core.py)         # NEW: Download tracking
+└── Success/failure with reason
+
 LibraryEntry (library_index.py)
 └── Paper metadata dataclass
 ```
@@ -52,11 +60,11 @@ LibraryEntry (library_index.py)
 | File | Purpose |
 |------|---------|
 | `__init__.py` | Public API exports |
-| `core.py` | Main `LiteratureSearch` class |
-| `api.py` | API clients for arXiv, Semantic Scholar |
-| `config.py` | Configuration dataclass |
+| `core.py` | Main `LiteratureSearch` class + `DownloadResult` |
+| `api.py` | API clients for arXiv, Semantic Scholar, Unpaywall |
+| `config.py` | Configuration dataclass + browser User-Agents |
 | `library_index.py` | JSON library index manager |
-| `pdf_handler.py` | PDF downloading with citation key naming |
+| `pdf_handler.py` | PDF downloading with retry logic and fallbacks |
 | `reference_manager.py` | BibTeX generation |
 | `cli.py` | Command-line interface |
 
@@ -148,10 +156,13 @@ python3 -m infrastructure.literature.cli library export --output export.json
 from infrastructure.literature import LiteratureConfig
 
 config = LiteratureConfig(
-    default_limit=10,           # Results per search
+    default_limit=25,           # Results per source per search
     max_results=100,            # Maximum total results
     arxiv_delay=3.0,            # Seconds between arXiv requests
+    semanticscholar_delay=1.5,  # Seconds between Semantic Scholar requests
     semanticscholar_api_key="your-key",  # Optional API key
+    retry_attempts=3,           # Retry failed requests
+    retry_delay=5.0,            # Base delay for exponential backoff
     download_dir="literature/pdfs",
     bibtex_file="literature/references.bib",
     library_index_file="literature/library.json",
@@ -166,16 +177,24 @@ Load configuration from environment with `LiteratureConfig.from_env()`:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `LITERATURE_DEFAULT_LIMIT` | Results per search | 10 |
+| `LITERATURE_DEFAULT_LIMIT` | Results per source per search | 25 |
 | `LITERATURE_MAX_RESULTS` | Maximum total results | 100 |
 | `LITERATURE_USER_AGENT` | User agent string | Research-Template-Bot/1.0 |
 | `LITERATURE_ARXIV_DELAY` | Seconds between arXiv requests | 3.0 |
+| `LITERATURE_SEMANTICSCHOLAR_DELAY` | Seconds between Semantic Scholar requests | 1.5 |
 | `SEMANTICSCHOLAR_API_KEY` | Semantic Scholar API key | None |
+| `LITERATURE_RETRY_ATTEMPTS` | Retry attempts for failed requests | 3 |
+| `LITERATURE_RETRY_DELAY` | Base delay for exponential backoff | 5.0 |
 | `LITERATURE_DOWNLOAD_DIR` | PDF download directory | literature/pdfs |
 | `LITERATURE_TIMEOUT` | Request timeout (seconds) | 30 |
 | `LITERATURE_BIBTEX_FILE` | BibTeX file path | literature/references.bib |
 | `LITERATURE_LIBRARY_INDEX` | JSON index file path | literature/library.json |
 | `LITERATURE_SOURCES` | Comma-separated sources | arxiv,semanticscholar |
+| `LITERATURE_USE_UNPAYWALL` | Enable Unpaywall fallback (true/false) | false |
+| `UNPAYWALL_EMAIL` | Email for Unpaywall API (required if enabled) | "" |
+| `LITERATURE_DOWNLOAD_RETRY_ATTEMPTS` | Retry attempts for PDF downloads | 2 |
+| `LITERATURE_DOWNLOAD_RETRY_DELAY` | Base delay for download retry (seconds) | 2.0 |
+| `LITERATURE_USE_BROWSER_USER_AGENT` | Use browser User-Agent for downloads | true |
 
 ## Sources
 
@@ -187,7 +206,41 @@ Load configuration from environment with `LiteratureConfig.from_env()`:
 ### Semantic Scholar
 - **API**: Graph API (https://api.semanticscholar.org/graph/v1)
 - **Auth**: Optional API key for higher rate limits
+- **Rate Limit**: 1.5 seconds between requests with exponential backoff retry
+
+### Unpaywall (Optional Fallback)
+- **API**: Unpaywall API (https://api.unpaywall.org/v2)
+- **Auth**: Requires email address (no API key needed)
+- **Purpose**: Finds legal open access versions of paywalled papers
+- **Usage**: Enable with `LITERATURE_USE_UNPAYWALL=true` and `UNPAYWALL_EMAIL=your@email.com`
 - **Features**: Citation counts, open access PDF links, venue information
+- **Retry Logic**: Automatic retry with exponential backoff on rate limit (429) errors
+
+## Interactive Summarization Script
+
+The repository includes an interactive script for searching, downloading, and summarizing papers using a local LLM:
+
+```bash
+python3 literature_search_summarize.py
+```
+
+**Features:**
+- Prompts for comma-separated keywords
+- Searches both arXiv and Semantic Scholar (union of results)
+- Downloads PDFs and adds to BibTeX library
+- Generates structured summaries using local Ollama LLM
+- Shows detailed timing and word count statistics
+- Saves summaries to `literature/summaries/`
+
+**Output:**
+```
+literature/
+├── pdfs/                    # Downloaded PDFs
+├── summaries/               # LLM-generated summaries
+│   └── {citation_key}_summary.md
+├── library.json             # JSON index
+└── references.bib           # BibTeX entries
+```
 
 ## API Reference
 

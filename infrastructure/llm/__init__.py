@@ -25,6 +25,7 @@ from infrastructure.llm.context import ConversationContext, Message
 from infrastructure.llm.templates import (
     ResearchTemplate,
     get_template,
+    PaperSummarization,
     ManuscriptExecutiveSummary,
     ManuscriptQualityReview,
     ManuscriptMethodologyReview,
@@ -71,6 +72,7 @@ __all__ = [
     # Templates
     "ResearchTemplate",
     "get_template",
+    "PaperSummarization",
     # Manuscript review templates
     "ManuscriptExecutiveSummary",
     "ManuscriptQualityReview",

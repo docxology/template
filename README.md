@@ -459,6 +459,7 @@ python3 scripts/01_run_tests.py              # Stage 1: Run tests
 python3 scripts/02_run_analysis.py           # Stage 2: Execute project/scripts/
 python3 scripts/03_render_pdf.py             # Stage 3: Render PDFs
 python3 scripts/04_validate_output.py        # Stage 4: Validate output
+python3 scripts/05_copy_outputs.py           # Stage 5: Copy final deliverables
 ```
 
 **See [How To Use Guide](docs/HOW_TO_USE.md) for comprehensive setup instructions at all skill levels.**

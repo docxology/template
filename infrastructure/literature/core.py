@@ -1,6 +1,7 @@
 """Core logic for literature search module."""
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 from pathlib import Path
 
@@ -17,6 +18,53 @@ from infrastructure.literature.reference_manager import ReferenceManager
 from infrastructure.literature.library_index import LibraryIndex
 
 logger = get_logger(__name__)
+
+
+@dataclass
+class DownloadResult:
+    """Result of a PDF download attempt with status tracking.
+    
+    Tracks success/failure status and categorizes failure reasons for
+    reporting and potential retry operations.
+    
+    Attributes:
+        citation_key: Unique identifier for the paper.
+        success: Whether the download succeeded.
+        pdf_path: Path to downloaded PDF if successful.
+        failure_reason: Category of failure if unsuccessful.
+        failure_message: Detailed error message.
+        attempted_urls: List of URLs that were attempted.
+        result: The original SearchResult for reference.
+    """
+    citation_key: str
+    success: bool
+    pdf_path: Optional[Path] = None
+    failure_reason: Optional[str] = None  # "no_pdf_url", "access_denied", "network_error", "timeout"
+    failure_message: Optional[str] = None
+    attempted_urls: List[str] = field(default_factory=list)
+    result: Optional[SearchResult] = None
+    already_existed: bool = False  # True if PDF was already downloaded
+    
+    @property
+    def is_retriable(self) -> bool:
+        """Check if this download failure might succeed on retry.
+        
+        Network errors and timeouts are potentially retriable.
+        Access denied and missing URLs are not.
+        """
+        return self.failure_reason in ("network_error", "timeout")
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for serialization."""
+        return {
+            "citation_key": self.citation_key,
+            "success": self.success,
+            "pdf_path": str(self.pdf_path) if self.pdf_path else None,
+            "failure_reason": self.failure_reason,
+            "failure_message": self.failure_message,
+            "attempted_urls": self.attempted_urls,
+            "already_existed": self.already_existed,
+        }
 
 
 class LiteratureSearch:
@@ -106,6 +154,81 @@ class LiteratureSearch:
             return None
             
         return self.pdf_handler.download_pdf(result.pdf_url, result=result)
+    
+    def download_paper_with_result(self, result: SearchResult) -> DownloadResult:
+        """Download PDF for a search result with detailed result tracking.
+        
+        Similar to download_paper but returns a DownloadResult with
+        detailed success/failure information for reporting.
+        
+        Args:
+            result: Search result with pdf_url.
+            
+        Returns:
+            DownloadResult with download status and details.
+        """
+        # Generate citation key
+        citation_key = self.library_index.generate_citation_key(
+            result.title, result.authors, result.year
+        )
+        
+        # Check for missing PDF URL
+        if not result.pdf_url:
+            logger.warning(f"No PDF URL for paper: {result.title}")
+            return DownloadResult(
+                citation_key=citation_key,
+                success=False,
+                failure_reason="no_pdf_url",
+                failure_message="No PDF URL available in search result",
+                attempted_urls=[],
+                result=result
+            )
+        
+        # Check if PDF already exists before attempting download
+        expected_pdf_path = Path(self.config.download_dir) / f"{citation_key}.pdf"
+        already_existed = expected_pdf_path.exists()
+
+        # Attempt download
+        attempted_urls = [result.pdf_url]
+        try:
+            pdf_path = self.pdf_handler.download_pdf(result.pdf_url, result=result)
+            return DownloadResult(
+                citation_key=citation_key,
+                success=True,
+                pdf_path=pdf_path,
+                attempted_urls=attempted_urls,
+                result=result,
+                already_existed=already_existed
+            )
+        except Exception as e:
+            # Extract failure reason from exception context if available
+            failure_reason = "unknown"
+            failure_message = str(e)
+            
+            if hasattr(e, 'context') and isinstance(e.context, dict):
+                failure_reason = e.context.get('failure_reason', 'unknown')
+                if 'attempted_urls' in e.context:
+                    attempted_urls = e.context['attempted_urls']
+            
+            # Categorize common errors
+            error_str = str(e).lower()
+            if '403' in error_str or 'forbidden' in error_str:
+                failure_reason = "access_denied"
+            elif '404' in error_str or 'not found' in error_str:
+                failure_reason = "not_found"
+            elif 'timeout' in error_str:
+                failure_reason = "timeout"
+            elif 'connection' in error_str:
+                failure_reason = "network_error"
+            
+            return DownloadResult(
+                citation_key=citation_key,
+                success=False,
+                failure_reason=failure_reason,
+                failure_message=failure_message,
+                attempted_urls=attempted_urls,
+                result=result
+            )
 
     def add_to_library(self, result: SearchResult) -> str:
         """Add paper to local library.
