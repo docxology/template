@@ -1,6 +1,6 @@
 {
   "model": "llama3-gradient:latest",
-  "timestamp": "2025-12-02T10:38:56.534165",
+  "timestamp": "2025-12-02T10:56:29.128259",
   "source_pdf": "/Users/4d/Documents/GitHub/template/project/output/pdf/project_combined.pdf",
   "reviews_generated": [
     "executive_summary",
@@ -21,37 +21,37 @@
       "input_chars": 77255,
       "input_words": 14544,
       "input_tokens_est": 19313,
-      "output_chars": 2049,
-      "output_words": 320,
-      "output_tokens_est": 512,
-      "generation_time_seconds": 59.32
+      "output_chars": 21963,
+      "output_words": 3388,
+      "output_tokens_est": 5490,
+      "generation_time_seconds": 211.72
     },
     "quality_review": {
       "input_chars": 77255,
       "input_words": 14544,
       "input_tokens_est": 19313,
-      "output_chars": 18897,
-      "output_words": 3220,
-      "output_tokens_est": 4724,
-      "generation_time_seconds": 368.62
+      "output_chars": 21773,
+      "output_words": 3598,
+      "output_tokens_est": 5443,
+      "generation_time_seconds": 210.77
     },
     "methodology_review": {
       "input_chars": 77255,
       "input_words": 14544,
       "input_tokens_est": 19313,
-      "output_chars": 19360,
-      "output_words": 2915,
-      "output_tokens_est": 4840,
-      "generation_time_seconds": 417.84
+      "output_chars": 21175,
+      "output_words": 3575,
+      "output_tokens_est": 5293,
+      "generation_time_seconds": 237.71
     },
     "improvement_suggestions": {
       "input_chars": 77255,
       "input_words": 14544,
       "input_tokens_est": 19313,
-      "output_chars": 6285,
-      "output_words": 1097,
-      "output_tokens_est": 1571,
-      "generation_time_seconds": 78.46
+      "output_chars": 7320,
+      "output_words": 1136,
+      "output_tokens_est": 1830,
+      "generation_time_seconds": 111.43
     }
   },
   "format_compliance": {
@@ -81,7 +81,7 @@
       }
     }
   },
-  "total_generation_time_seconds": 924.25,
+  "total_generation_time_seconds": 771.64,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,

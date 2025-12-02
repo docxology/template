@@ -1,17 +1,14 @@
 {
   "iteration": 0,
-  "parameters": {
-    "max_iterations": 50,
-    "target_value": 7.0
-  },
+  "parameters": {},
   "results": {
     "iteration_0": {
-      "value": -0.7506147172558728,
-      "error": 7.750614717255873,
-      "step_size": -0.7506147172558728
+      "value": 0.4967141530112327,
+      "error": 9.503285846988767,
+      "step_size": 0.4967141530112327
     }
   },
   "metadata": {},
-  "timestamp": "2025-12-02 10:22:18",
-  "seed": 44
+  "timestamp": "2025-12-02 10:57:52",
+  "seed": 42
 }
