@@ -366,14 +366,18 @@ a\)</span></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Verification Method</strong>: Each theorem’s LHS and RHS are
-constructed with specific ground instantiations and reduced to canonical
-form; equality of canonical forms confirms the theorem. Note that
-Spencer-Brown’s consequences are <em>schematic</em> identities (holding
-for all variable substitutions). Our computational verification uses
-ground forms that instantiate the Boolean-equivalent formulations,
-demonstrating the reduction engine correctly implements the underlying
-algebraic structure.</p>
+<p><strong>Verification Method</strong>: Each theorem’s LHS (left-hand
+side) and RHS (right-hand side) are constructed with specific
+<strong>ground instantiations</strong> (concrete forms where variables
+are replaced with actual values) and reduced to <strong>canonical
+form</strong> (the simplest irreducible representation); equality of
+canonical forms confirms the theorem. Note that Spencer-Brown’s
+consequences are <em>schematic</em> identities (holding for all variable
+substitutions). Our computational verification uses <strong>ground
+forms</strong> (forms without variables, where all values are concrete)
+that instantiate the Boolean-equivalent formulations, demonstrating the
+reduction engine correctly implements the underlying algebraic
+structure.</p>
 <h2 id="boolean-algebra-verification">Boolean Algebra Verification</h2>
 <h3 id="de-morgans-laws">De Morgan’s Laws</h3>
 <table>
@@ -472,7 +476,9 @@ b\)</span></td>
 </table>
 <h2 id="complexity-analysis">Complexity Analysis</h2>
 <h3 id="reduction-step-distribution">Reduction Step Distribution</h3>
-<p>Analysis of 500 randomly generated forms (depth ≤ 6, width ≤ 4):</p>
+<p><strong>Reduction steps</strong> measure how many times reduction
+rules must be applied before a form reaches canonical form. Analysis of
+500 randomly generated forms (depth ≤ 6, width ≤ 4):</p>
 <table>
 <thead>
 <tr>
@@ -525,7 +531,10 @@ b\)</span></td>
 <p>The reduction complexity scales approximately linearly with form size
 for typical forms:</p>
 <p><span class="math display">\[\text{Steps} \approx O(n)\]</span></p>
-<p>where <span class="math inline">\(n\)</span> is the initial form
+<p>where <span class="math inline">\(n\)</span> is the initial form size
+(total number of marks and operations). This <strong>polynomial-time
+complexity</strong> means the reduction algorithm is computationally
+efficient, with execution time growing at most linearly with input
 size.</p>
 <p><strong>Worst-case patterns</strong>: - Deep calling chains: <span
 class="math inline">\(O(\text{depth})\)</span> - Wide crossing patterns:
@@ -628,8 +637,9 @@ class="math inline">\(O(\text{depth})\)</span> - Wide crossing patterns:
 </table>
 <h2 id="semantic-evaluation">Semantic Evaluation</h2>
 <h3 id="truth-table-verification">Truth Table Verification</h3>
-<p>For ground forms (no variables), evaluation matches expected Boolean
-semantics:</p>
+<p>For <strong>ground forms</strong> (forms without variables, where all
+values are concrete), <strong>evaluation</strong> (computing the truth
+value) matches expected Boolean semantics:</p>
 <table>
 <thead>
 <tr>

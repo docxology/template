@@ -76,7 +76,7 @@ All nine consequences from Laws of Form verified computationally:
 | C8 | Echelon | $\langle\langle ab \rangle c \rangle$ | $\langle ac \rangle\langle bc \rangle$ | ✓ |
 | C9 | Cross-Transposition | $\langle\langle ac \rangle\langle bc \rangle\rangle$ | $\langle\langle a \rangle\langle b \rangle\rangle c$ | ✓ |
 
-**Verification Method**: Each theorem's LHS and RHS are constructed with specific ground instantiations and reduced to canonical form; equality of canonical forms confirms the theorem. Note that Spencer-Brown's consequences are *schematic* identities (holding for all variable substitutions). Our computational verification uses ground forms that instantiate the Boolean-equivalent formulations, demonstrating the reduction engine correctly implements the underlying algebraic structure.
+**Verification Method**: Each theorem's LHS (left-hand side) and RHS (right-hand side) are constructed with specific **ground instantiations** (concrete forms where variables are replaced with actual values) and reduced to **canonical form** (the simplest irreducible representation); equality of canonical forms confirms the theorem. Note that Spencer-Brown's consequences are *schematic* identities (holding for all variable substitutions). Our computational verification uses **ground forms** (forms without variables, where all values are concrete) that instantiate the Boolean-equivalent formulations, demonstrating the reduction engine correctly implements the underlying algebraic structure.
 
 ## Boolean Algebra Verification
 
@@ -104,7 +104,7 @@ All nine consequences from Laws of Form verified computationally:
 
 ### Reduction Step Distribution
 
-Analysis of 500 randomly generated forms (depth ≤ 6, width ≤ 4):
+**Reduction steps** measure how many times reduction rules must be applied before a form reaches canonical form. Analysis of 500 randomly generated forms (depth ≤ 6, width ≤ 4):
 
 | Depth | Mean Steps | Std Dev | Max Steps |
 |-------|------------|---------|-----------|
@@ -121,7 +121,7 @@ The reduction complexity scales approximately linearly with form size for typica
 
 $$\text{Steps} \approx O(n)$$
 
-where $n$ is the initial form size.
+where $n$ is the initial form size (total number of marks and operations). This **polynomial-time complexity** means the reduction algorithm is computationally efficient, with execution time growing at most linearly with input size.
 
 **Worst-case patterns**:
 - Deep calling chains: $O(\text{depth})$
@@ -164,7 +164,7 @@ where $n$ is the initial form size.
 
 ### Truth Table Verification
 
-For ground forms (no variables), evaluation matches expected Boolean semantics:
+For **ground forms** (forms without variables, where all values are concrete), **evaluation** (computing the truth value) matches expected Boolean semantics:
 
 | Form | Expected | Evaluated |
 |------|----------|-----------|

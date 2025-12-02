@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 DEC 2025 12:30
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 DEC 2025 13:21
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1323,34 +1323,34 @@ Package caption Info: End \AtBeginDocument code.
 
 ]
 
-LaTeX Warning: Citation `kunen1980' on page 2 undefined on input line 250.
+LaTeX Warning: Citation `kunen1980' on page 2 undefined on input line 254.
 
 
 LaTeX Warning: Citation `spencerbrown1969' on page 2 undefined on input line 25
-0.
+4.
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 250.
+(Font)              scaled to size 7.8961pt on input line 254.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 250.
+(Font)              scaled to size 5.64008pt on input line 254.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2
-50.
+54.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 250.
+(Font)              scaled to size 11.28131pt on input line 254.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 250.
+(Font)              scaled to size 7.89691pt on input line 254.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 250.
+(Font)              scaled to size 5.64066pt on input line 254.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 250.
+(Font)              scaled to size 11.27914pt on input line 254.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 250.
+(Font)              scaled to size 7.8954pt on input line 254.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 250.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 250
+(Font)              scaled to size 5.63957pt on input line 254.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 254
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1359,7 +1359,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 250
+LaTeX Font Info:    Trying to load font information for U+msb on input line 254
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1368,19 +1368,19 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-Overfull \hbox (33.59213pt too wide) in alignment at lines 250--250
+Overfull \hbox (33.59213pt too wide) in alignment at lines 254--254
  [] [] [] 
  []
 
 
-Overfull \hbox (33.59213pt too wide) in alignment at lines 250--250
+Overfull \hbox (33.59213pt too wide) in alignment at lines 254--254
  [] [] [] 
  []
 
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 250.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 254.
 
-Overfull \vbox (899.1763pt too high) detected at line 250
+Overfull \vbox (954.06908pt too high) detected at line 254
  []
 
 
@@ -1389,16 +1389,16 @@ Overfull \vbox (899.1763pt too high) detected at line 250
 
 ]
 
-LaTeX Warning: Citation `lambek1986' on page 3 undefined on input line 292.
+LaTeX Warning: Citation `lambek1986' on page 3 undefined on input line 296.
 
 
-LaTeX Warning: Citation `awodey2010' on page 3 undefined on input line 292.
+LaTeX Warning: Citation `awodey2010' on page 3 undefined on input line 296.
 
 
-LaTeX Warning: Citation `hottbook' on page 3 undefined on input line 292.
+LaTeX Warning: Citation `hottbook' on page 3 undefined on input line 296.
 
 
-Overfull \vbox (93.63383pt too high) detected at line 292
+Overfull \vbox (93.63383pt too high) detected at line 296
  []
 
 
@@ -1407,28 +1407,28 @@ Overfull \vbox (93.63383pt too high) detected at line 292
 
 ]
 
-LaTeX Warning: Citation `varela1991' on page 4 undefined on input line 355.
+LaTeX Warning: Citation `varela1991' on page 4 undefined on input line 368.
 
 
-LaTeX Warning: Citation `thompson2007' on page 4 undefined on input line 355.
+LaTeX Warning: Citation `thompson2007' on page 4 undefined on input line 368.
 
 
-LaTeX Warning: Citation `friston2010' on page 4 undefined on input line 355.
+LaTeX Warning: Citation `friston2010' on page 4 undefined on input line 368.
 
 
 LaTeX Warning: Citation `isomura2022experimental' on page 4 undefined on input 
-line 355.
+line 368.
 
 
 LaTeX Warning: Citation `sennesh2022deriving' on page 4 undefined on input line
- 355.
+ 368.
 
 
-LaTeX Warning: Citation `watson2020active' on page 4 undefined on input line 35
-5.
+LaTeX Warning: Citation `watson2020active' on page 4 undefined on input line 36
+8.
 
 
-Overfull \vbox (123.58685pt too high) detected at line 355
+Overfull \vbox (245.98691pt too high) detected at line 368
  []
 
 
@@ -1468,7 +1468,7 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  31011 strings out of 473832
  624297 string characters out of 5729482
- 1183952 words of memory out of 5000000
+ 1184952 words of memory out of 5000000
  53532 multiletter control sequences out of 15000+600000
  562356 words of font info for 66 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

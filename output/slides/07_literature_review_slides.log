@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 DEC 2025 12:30
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 DEC 2025 13:21
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1340,34 +1340,34 @@ Overfull \vbox (235.1873pt too high) detected at line 228
 
 ]
 
-LaTeX Warning: Citation `friston2010' on page 4 undefined on input line 291.
+LaTeX Warning: Citation `friston2010' on page 4 undefined on input line 313.
 
 
 LaTeX Warning: Citation `isomura2022experimental' on page 4 undefined on input 
-line 291.
+line 313.
 
 
 LaTeX Warning: Citation `isomura2022experimental' on page 4 undefined on input 
-line 291.
+line 313.
 
 
 LaTeX Warning: Citation `sennesh2022deriving' on page 4 undefined on input line
- 291.
+ 313.
 
 
 LaTeX Warning: Citation `hinrichs2025geometric' on page 4 undefined on input li
-ne 291.
+ne 313.
 
 
 LaTeX Warning: Citation `valsson2014variational' on page 4 undefined on input l
-ine 291.
+ine 313.
 
 
-LaTeX Warning: Citation `gaybalmaz2017free' on page 4 undefined on input line 2
-91.
+LaTeX Warning: Citation `gaybalmaz2017free' on page 4 undefined on input line 3
+13.
 
 
-Overfull \vbox (109.11769pt too high) detected at line 291
+Overfull \vbox (415.11783pt too high) detected at line 313
  []
 
 
@@ -1376,19 +1376,19 @@ Overfull \vbox (109.11769pt too high) detected at line 291
 
 ]
 
-LaTeX Warning: Citation `biere2009' on page 5 undefined on input line 344.
+LaTeX Warning: Citation `biere2009' on page 5 undefined on input line 368.
 
 
-LaTeX Warning: Citation `bertot2004' on page 5 undefined on input line 344.
+LaTeX Warning: Citation `bertot2004' on page 5 undefined on input line 368.
 
 
-LaTeX Warning: Citation `nipkow2002' on page 5 undefined on input line 344.
+LaTeX Warning: Citation `nipkow2002' on page 5 undefined on input line 368.
 
 
-LaTeX Warning: Citation `micheli1994' on page 5 undefined on input line 344.
+LaTeX Warning: Citation `micheli1994' on page 5 undefined on input line 368.
 
 
-Overfull \vbox (7.15703pt too high) detected at line 344
+Overfull \vbox (48.57025pt too high) detected at line 368
  []
 
 
@@ -1397,22 +1397,22 @@ Overfull \vbox (7.15703pt too high) detected at line 344
 
 ]
 
-LaTeX Warning: Citation `bateson1972' on page 6 undefined on input line 395.
+LaTeX Warning: Citation `bateson1972' on page 6 undefined on input line 419.
 
 
-LaTeX Warning: Citation `maturana1980' on page 6 undefined on input line 395.
+LaTeX Warning: Citation `maturana1980' on page 6 undefined on input line 419.
 
 
-LaTeX Warning: Citation `varela1991' on page 6 undefined on input line 395.
+LaTeX Warning: Citation `varela1991' on page 6 undefined on input line 419.
 
 
-LaTeX Warning: Citation `thompson2007' on page 6 undefined on input line 395.
+LaTeX Warning: Citation `thompson2007' on page 6 undefined on input line 419.
 
 
-LaTeX Warning: Citation `wiener1948' on page 6 undefined on input line 395.
+LaTeX Warning: Citation `wiener1948' on page 6 undefined on input line 419.
 
 
-LaTeX Warning: Citation `vonfoerster1981' on page 6 undefined on input line 395
+LaTeX Warning: Citation `vonfoerster1981' on page 6 undefined on input line 419
 .
 
 
@@ -1452,11 +1452,11 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  29369 strings out of 473832
  593306 string characters out of 5729482
- 1135855 words of memory out of 5000000
+ 1139855 words of memory out of 5000000
  51912 multiletter control sequences out of 15000+600000
  562356 words of font info for 66 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1082b,498s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1082b,502s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/project/output/slides/07_
 literature_review_slides.pdf (8 pages).

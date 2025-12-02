@@ -358,9 +358,13 @@ via membership</p>
 (primitive) - Enclosure is NOT (one rule) - Juxtaposition is AND
 (spatial) - Everything else derived</p>
 <p>The reduction algorithm in Containment Theory operates in polynomial
-time for ground forms, while SAT solving (Boolean satisfiability) is
-NP-complete. This does not contradict—the boundary calculus solves
-<em>evaluation</em>, not <em>satisfiability</em>.</p>
+time for ground forms (forms without variables), while SAT solving
+(Boolean satisfiability—determining if a formula has a satisfying
+assignment) is NP-complete (computationally intractable in the worst
+case). This does not contradict—the boundary calculus solves
+<em>evaluation</em> (computing the truth value of a given form), not
+<em>satisfiability</em> (finding variable assignments that make a
+formula true).</p>
 <h2 id="theoretical-implications">Theoretical Implications</h2>
 <h3 id="foundations-of-mathematics">Foundations of Mathematics</h3>
 <p>Containment Theory suggests that mathematical foundations need not be
@@ -444,10 +448,20 @@ class="math inline">\(b\)</span></th>
 <strong>Negation</strong>: Crossing boundaries -
 <strong>Conjunction</strong>: Simultaneous attention -
 <strong>Oscillation</strong>: Self-reflective awareness</p>
-<p>Free energy principles in cognitive science relate to maintaining
-distinction boundaries. Recent work on active inference demonstrates
-that cognitive agents minimize surprise by maintaining coherent internal
-models—a process analogous to form reduction in boundary logic.</p>
+<p><strong>Connection to Free Energy Principle</strong>: As an
+application domain, boundary logic shows interesting connections to the
+<strong>Free Energy Principle</strong> (FEP) in cognitive science . The
+FEP is a theoretical framework proposing that biological systems
+minimize variational free energy (a measure of prediction error). While
+FEP is not the focus of this work, we note that maintaining distinction
+boundaries in boundary logic is analogous to maintaining coherent
+internal models in FEP. Recent work on <strong>active inference</strong>
+—a framework derived from FEP—demonstrates that cognitive agents
+minimize surprise by maintaining coherent internal models, a process
+structurally similar to form reduction in boundary logic. This
+connection suggests potential applications of Containment Theory in
+cognitive modeling, though such applications are beyond the scope of
+this foundational work.</p>
 <h3 id="formal-verification">Formal Verification</h3>
 <p>Boundary logic offers potential advantages for verification: -
 Explicit reduction traces (proof witnesses) - Polynomial-time evaluation
@@ -467,11 +481,14 @@ richer foundations</li>
 Limitations</h3>
 <ol type="1">
 <li><strong>Variable handling</strong>: Current implementation focuses
-on ground forms</li>
+on ground forms (forms without variables), limiting verification to
+specific instantiations rather than general schematic proofs</li>
 <li><strong>Proof automation</strong>: Limited to reduction-based
-verification</li>
+verification; more sophisticated proof strategies could be
+developed</li>
 <li><strong>Visualization</strong>: Nested boundaries become complex at
-high depth</li>
+high depth, making manual inspection difficult for deeply nested
+forms</li>
 </ol>
 <h2 id="future-directions">Future Directions</h2>
 <h3 id="extensions">Extensions</h3>

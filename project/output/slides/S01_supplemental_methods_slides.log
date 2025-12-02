@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 DEC 2025 12:30
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 DEC 2025 13:21
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1342,7 +1342,7 @@ hods_slides.nav)
 (/Users/4d/Documents/GitHub/template/project/output/slides/S01_supplemental_met
 hods_slides.vrb
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 9.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 10.
 )
 
 [3
@@ -1408,23 +1408,23 @@ hods_slides.vrb)
 
 ]
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.30151pt on input line 235.
+(Font)              scaled to size 10.30151pt on input line 237.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.21106pt on input line 235.
+(Font)              scaled to size 7.21106pt on input line 237.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.15076pt on input line 235.
+(Font)              scaled to size 5.15076pt on input line 237.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.30258pt on input line 235.
+(Font)              scaled to size 10.30258pt on input line 237.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.2118pt on input line 235.
+(Font)              scaled to size 7.2118pt on input line 237.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.15129pt on input line 235.
+(Font)              scaled to size 5.15129pt on input line 237.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.3006pt on input line 235.
+(Font)              scaled to size 10.3006pt on input line 237.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.21042pt on input line 235.
+(Font)              scaled to size 7.21042pt on input line 237.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.1503pt on input line 235.
+(Font)              scaled to size 5.1503pt on input line 237.
 
 
 [7

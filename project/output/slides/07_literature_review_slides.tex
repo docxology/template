@@ -229,44 +229,66 @@ connect to boundary logic through:
 
 \begin{frame}{Variational and Inference Frameworks}
 \protect\phantomsection\label{variational-and-inference-frameworks}
+This section reviews connections between boundary logic and variational
+inference frameworks, particularly the Free Energy Principle. These are
+\textbf{application domains and theoretical connections}, not the
+primary focus of Containment Theory, which remains the computational
+verification of boundary logic as an alternative foundation to Set
+Theory.
+
 \begin{block}{Free Energy Principle}
 \protect\phantomsection\label{free-energy-principle}
-The free energy principle \cite{friston2010,isomura2022experimental}
-provides connections to boundary logic through:
+The \textbf{Free Energy Principle} (FEP)
+\cite{friston2010,isomura2022experimental} is a theoretical framework in
+cognitive science proposing that biological systems minimize variational
+free energy (a measure of surprise or prediction error). As an
+application area, FEP shows interesting structural parallels with
+boundary logic:
 
 \begin{itemize}
 \tightlist
 \item
-  Distinction as minimizing variational free energy
+  Distinction-making in boundary logic parallels minimizing variational
+  free energy in FEP
 \item
-  Boundaries as Markov blankets
+  Boundaries in boundary logic are analogous to \textbf{Markov blankets}
+  in FEP (statistical boundaries separating internal and external
+  states)
 \item
-  Inference through boundary maintenance
+  Inference through boundary maintenance in boundary logic mirrors how
+  agents maintain coherent internal models by managing boundaries in FEP
 \end{itemize}
 
 Isomura et al.~\cite{isomura2022experimental} experimentally validated
 the free energy principle using neural networks, demonstrating that
-systems maintaining boundaries exhibit inference-like behavior.
+systems maintaining boundaries exhibit inference-like behavior. This
+suggests potential applications of boundary logic in cognitive modeling,
+though such applications are beyond the scope of this foundational work.
 \end{block}
 
 \begin{block}{Active Inference}
 \protect\phantomsection\label{active-inference}
-Active inference frameworks
+\textbf{Active inference} frameworks
 \cite{sennesh2022deriving,hinrichs2025geometric} extend the free energy
-principle to action:
+principle to action, providing another connection point with boundary
+logic:
 
 \begin{itemize}
 \tightlist
 \item
-  Agents maintain boundaries through action
+  Agents maintain boundaries through action, similar to how forms
+  maintain structure through reduction
 \item
-  Perception and action unified through boundary management
+  Perception and action unified through boundary management in active
+  inference parallel the unified operations in boundary logic
 \item
-  Self-organization through distinction maintenance
+  Self-organization through distinction maintenance in active inference
+  resonates with the self-referential structures in boundary logic
 \end{itemize}
 
 These connections suggest boundary logic may provide formal tools for
-understanding cognitive and biological systems.
+understanding cognitive and biological systems, representing a promising
+direction for future applied research.
 \end{block}
 
 \begin{block}{Variational Methods}
@@ -302,11 +324,13 @@ through:
 \item
   Both address Boolean reasoning
 \item
-  SAT is NP-complete (decision problem)
+  SAT is NP-complete (computationally intractable decision problem:
+  determining if a formula has a satisfying assignment)
 \item
-  Boundary evaluation is polynomial (evaluation problem)
+  Boundary evaluation is polynomial (efficiently computable evaluation
+  problem: computing the truth value of a given form)
 \item
-  Different computational contexts
+  Different computational contexts (satisfiability vs.~evaluation)
 \end{itemize}
 \end{block}
 

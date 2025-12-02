@@ -60,14 +60,23 @@
 ### Boundary
 A line of demarcation creating inside and outside; the fundamental operation in the calculus of indications.
 
+### Boundary Logic
+A logical system built from the primitive act of drawing distinctions (boundaries); synonymous with the calculus of indications and Containment Theory.
+
 ### Calling
 Axiom J1: Double enclosure returns to the original form. Also known as involution or double negation elimination.
+
+### Calculus of Indications
+Spencer-Brown's original name for the formal system of boundary logic; the calculus built from the primitive notion of distinction.
 
 ### Canonical Form
 The irreducible form of an expression after all reduction rules have been applied. Only void and mark are canonical.
 
 ### Condensation
 See Crossing.
+
+### Confluence
+The property that all reduction sequences from a given form lead to the same canonical form (also called the Church-Rosser property).
 
 ### Containment Theory
 The approach to mathematical foundations using spatial containment (boundaries) rather than set membership.
@@ -87,8 +96,14 @@ C.S. Peirce's diagrammatic logic system, a precursor to Spencer-Brown's calculus
 ### Form
 Any well-formed expression in the calculus of indications, built from void, mark, enclosure, and juxtaposition.
 
+### Ground Form
+A form without variables, where all values are concrete (either void or mark). Ground forms can be directly evaluated to canonical form.
+
 ### Icon
 (Peirce) A sign that represents by resembling what it signifies; the mark is iconic of distinction.
+
+### Isomorphism
+A structure-preserving mapping between two mathematical systems that shows they are essentially equivalent. Boundary logic is isomorphic to Boolean algebra.
 
 ### Imaginary Value
 A self-referential form satisfying $j = \langle j \rangle$; neither marked nor void but oscillating between states.

@@ -4,7 +4,7 @@
 
 ### Data Structure Design
 
-The `Form` class represents boundary expressions with the following structure:
+A **form** is any well-formed expression in the calculus of indications. The `Form` class represents boundary expressions with the following structure:
 
 ```python
 @dataclass
@@ -35,7 +35,7 @@ Two forms are **structurally equal** if:
 2. Same `is_marked` value
 3. Contents are pairwise equal (recursive)
 
-Note: Structural equality differs from **semantic equality** (reduction to same canonical form).
+Note: **Structural equality** (same form structure) differs from **semantic equality** (reduction to same **canonical form**—the irreducible representation after all reductions).
 
 ## S1.2 Reduction Engine Architecture
 

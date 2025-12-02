@@ -175,6 +175,18 @@
 </head>
 <body>
 <h1 id="introduction">Introduction</h1>
+<h2 id="purpose-and-scope">Purpose and Scope</h2>
+<p>This manuscript presents <strong>Containment Theory</strong>—a
+computationally verified alternative foundation to classical Set Theory
+for discrete mathematics. We develop a complete computational framework
+for boundary logic (also called the calculus of indications),
+demonstrating its equivalence to Boolean algebra while offering distinct
+advantages in axiomatic economy, geometric intuition, and handling of
+self-reference. Our primary contribution is rigorous computational
+verification of all theoretical claims in G. Spencer-Brown’s <em>Laws of
+Form</em> (1969), establishing Containment Theory as a viable
+alternative foundation with only two axioms compared to Set Theory’s
+nine or more.</p>
 <h2 id="the-foundation-problem">The Foundation Problem</h2>
 <p>Mathematics rests upon foundations, and for over a century, Set
 Theory has served as the dominant foundation for mathematical reasoning.
@@ -185,22 +197,33 @@ including the axiom of infinity, axiom of choice, and carefully crafted
 restrictions to avoid paradoxes like Russell’s.</p>
 <p>In 1969, G. Spencer-Brown proposed a radical alternative in <em>Laws
 of Form</em> : a calculus requiring only two axioms, built on the
-primitive notion of <strong>distinction</strong> rather than membership.
-This calculus—variously called boundary logic, the calculus of
-indications, or Containment Theory—offers a foundation of remarkable
-parsimony while maintaining complete equivalence to Boolean algebra and
-propositional logic.</p>
+primitive notion of <strong>distinction</strong> (the act of separating
+inside from outside, this from that) rather than membership. This
+calculus—variously called <strong>boundary logic</strong>, the
+<strong>calculus of indications</strong>, or <strong>Containment
+Theory</strong>—offers a foundation of remarkable parsimony while
+maintaining complete equivalence to Boolean algebra and propositional
+logic.</p>
+<p><strong>Containment Theory</strong> is our term for this approach to
+mathematical foundations using spatial containment (boundaries) rather
+than set membership. <strong>Boundary logic</strong> refers to the
+logical system built from boundary distinctions, while the
+<strong>calculus of indications</strong> is Spencer-Brown’s original
+name for the formal system. Throughout this manuscript, we use these
+terms interchangeably to refer to Spencer-Brown’s system.</p>
 <h2 id="historical-context">Historical Context</h2>
 <h3 id="spencer-browns-laws-of-form-1969">Spencer-Brown’s Laws of Form
 (1969)</h3>
 <p>George Spencer-Brown developed the calculus of indications from a
 simple observation: the most fundamental cognitive act is <strong>making
 a distinction</strong>—separating inside from outside, this from that .
-The <em>mark</em> or <em>cross</em>, written <span
-class="math inline">\(\langle\ \rangle\)</span>, represents this primary
-distinction: it creates a boundary that distinguishes the space inside
-from the space outside. This insight aligns with cybernetic thinking
-about observation and distinction .</p>
+A <strong>distinction</strong> is the act of drawing a boundary that
+creates two regions: an inside and an outside. The <em>mark</em> or
+<em>cross</em>, written <span class="math inline">\(\langle\
+\rangle\)</span>, represents this primary distinction: it creates a
+boundary that distinguishes the space inside from the space outside.
+This insight aligns with cybernetic thinking about observation and
+distinction .</p>
 <p>From this single primitive, Spencer-Brown derived two axioms:</p>
 <ol type="1">
 <li><strong>The Law of Calling</strong> (Involution): <span
@@ -245,36 +268,84 @@ computation, suggesting that boundary representations may offer
 advantages beyond Boolean logic.</p>
 <h2 id="motivation-for-this-work">Motivation for This Work</h2>
 <p>Despite its theoretical elegance, Containment Theory remains
-underexplored in mainstream mathematics and computer science. This work
-aims to:</p>
+underexplored in mainstream mathematics and computer science. While
+Spencer-Brown’s original work and subsequent extensions by Kauffman and
+Bricken provide compelling theoretical foundations, there has been
+limited computational verification of the claims and systematic
+comparison with established foundations like Set Theory. This work
+addresses these gaps by:</p>
 <ol type="1">
-<li><strong>Provide rigorous computational verification</strong> of the
-theoretical claims in Laws of Form</li>
-<li><strong>Establish precise correspondence</strong> between boundary
-logic and Boolean algebra</li>
-<li><strong>Analyze complexity properties</strong> of the reduction
-algorithm</li>
-<li><strong>Compare foundational properties</strong> with Set Theory
-systematically</li>
-<li><strong>Create accessible tools</strong> for exploring and verifying
-boundary logic</li>
+<li><p><strong>Providing rigorous computational verification</strong> of
+all theoretical claims in Laws of Form, including both axioms and all
+nine derived consequences, through a complete implementation with
+comprehensive test coverage</p></li>
+<li><p><strong>Establishing precise correspondence</strong> between
+boundary logic and Boolean algebra through systematic verification of De
+Morgan’s laws, Boolean axioms, and truth table equivalence</p></li>
+<li><p><strong>Analyzing complexity properties</strong> of the reduction
+algorithm, demonstrating polynomial-time termination and providing
+empirical complexity metrics for various form patterns</p></li>
+<li><p><strong>Comparing foundational properties</strong> with Set
+Theory systematically across multiple dimensions: axiomatic economy,
+expressiveness, self-reference handling, and geometric
+interpretation</p></li>
+<li><p><strong>Creating accessible tools</strong> for exploring and
+verifying boundary logic, including a complete Python implementation,
+visualization capabilities, and comprehensive documentation</p></li>
 </ol>
+<p>These contributions collectively establish Containment Theory as a
+computationally verified alternative foundation for discrete
+mathematics, with clear advantages in parsimony and geometric intuition
+while maintaining full Boolean completeness.</p>
 <h2 id="document-structure">Document Structure</h2>
-<p>This manuscript presents:</p>
+<p>This manuscript is organized as follows to guide readers through the
+theoretical foundations, computational verification, and broader
+implications of Containment Theory:</p>
 <ul>
-<li><strong>Methodology</strong> (Section 3): Formal definition of the
-calculus, axioms, reduction rules, and Boolean correspondence</li>
-<li><strong>Results</strong> (Section 4): Computational verification of
-theorems, complexity analysis, and proof demonstrations</li>
-<li><strong>Discussion</strong> (Section 5): Comparison with Set Theory,
-philosophical implications, and applications</li>
-<li><strong>Conclusion</strong> (Section 6): Summary of contributions
-and future directions</li>
+<li><p><strong>Methodology</strong> (Section 3): Provides the formal
+definition of the calculus of indications, including the two fundamental
+axioms (Calling and Crossing), the reduction algorithm for transforming
+forms to canonical representations, and the precise correspondence
+between boundary logic and Boolean algebra. Readers will find complete
+definitions of all technical terms, including forms, enclosures,
+juxtapositions, and canonical forms.</p></li>
+<li><p><strong>Experimental Results</strong> (Section 4): Presents
+comprehensive computational verification of all theoretical claims,
+including verification of both axioms, all nine derived consequences
+(C1-C9) from Laws of Form, De Morgan’s laws, and fundamental Boolean
+axioms. This section also includes complexity analysis demonstrating
+polynomial-time reduction for ground forms and test coverage metrics
+confirming the reliability of the implementation.</p></li>
+<li><p><strong>Discussion</strong> (Section 5): Compares Containment
+Theory with classical Set Theory across multiple dimensions—axiomatic
+economy, expressiveness, self-reference handling, and geometric
+intuition. The section also explores theoretical implications for
+foundations of mathematics, connections to cognitive science and active
+inference frameworks, and potential applications in circuit design and
+formal verification.</p></li>
+<li><p><strong>Conclusion</strong> (Section 6): Summarizes the key
+contributions of this work, including the computational framework,
+formal verification results, complexity analysis, and comparative
+analysis with Set Theory. The section also outlines future research
+directions, including extensions to predicate logic, arithmetic
+integration, and applications in quantum computing and neural
+networks.</p></li>
+<li><p><strong>Literature Review</strong> (Section 7): Provides
+comprehensive coverage of foundational works (Spencer-Brown, Kauffman,
+Bricken), related formal systems (Set Theory, Boolean algebra, category
+theory), and connections to variational inference frameworks and
+cognitive science.</p></li>
+<li><p><strong>Supplemental Materials</strong> (Sections S01-S04):
+Include extended methodological details, additional experimental
+results, philosophical foundations (pragmatist and neo-materialist
+perspectives), and application examples across multiple
+domains.</p></li>
 </ul>
 <p>The computational framework accompanying this manuscript provides a
 complete implementation of boundary logic with verified test coverage
 exceeding 70%, enabling readers to explore and verify all claims
-independently.</p>
+independently. All source code, test suites, and documentation are
+available in the accompanying repository.</p>
 <h2 id="notation">Notation</h2>
 <p>Throughout this work, we use the following notation:</p>
 <table>

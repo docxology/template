@@ -78,25 +78,27 @@ Homotopy Type Theory \cite{hottbook} and other type-theoretic approaches connect
 
 ## Variational and Inference Frameworks
 
+This section reviews connections between boundary logic and variational inference frameworks, particularly the Free Energy Principle. These are **application domains and theoretical connections**, not the primary focus of Containment Theory, which remains the computational verification of boundary logic as an alternative foundation to Set Theory.
+
 ### Free Energy Principle
 
-The free energy principle \cite{friston2010,isomura2022experimental} provides connections to boundary logic through:
+The **Free Energy Principle** (FEP) \cite{friston2010,isomura2022experimental} is a theoretical framework in cognitive science proposing that biological systems minimize variational free energy (a measure of surprise or prediction error). As an application area, FEP shows interesting structural parallels with boundary logic:
 
-- Distinction as minimizing variational free energy
-- Boundaries as Markov blankets
-- Inference through boundary maintenance
+- Distinction-making in boundary logic parallels minimizing variational free energy in FEP
+- Boundaries in boundary logic are analogous to **Markov blankets** in FEP (statistical boundaries separating internal and external states)
+- Inference through boundary maintenance in boundary logic mirrors how agents maintain coherent internal models by managing boundaries in FEP
 
-Isomura et al. \cite{isomura2022experimental} experimentally validated the free energy principle using neural networks, demonstrating that systems maintaining boundaries exhibit inference-like behavior.
+Isomura et al. \cite{isomura2022experimental} experimentally validated the free energy principle using neural networks, demonstrating that systems maintaining boundaries exhibit inference-like behavior. This suggests potential applications of boundary logic in cognitive modeling, though such applications are beyond the scope of this foundational work.
 
 ### Active Inference
 
-Active inference frameworks \cite{sennesh2022deriving,hinrichs2025geometric} extend the free energy principle to action:
+**Active inference** frameworks \cite{sennesh2022deriving,hinrichs2025geometric} extend the free energy principle to action, providing another connection point with boundary logic:
 
-- Agents maintain boundaries through action
-- Perception and action unified through boundary management
-- Self-organization through distinction maintenance
+- Agents maintain boundaries through action, similar to how forms maintain structure through reduction
+- Perception and action unified through boundary management in active inference parallel the unified operations in boundary logic
+- Self-organization through distinction maintenance in active inference resonates with the self-referential structures in boundary logic
 
-These connections suggest boundary logic may provide formal tools for understanding cognitive and biological systems.
+These connections suggest boundary logic may provide formal tools for understanding cognitive and biological systems, representing a promising direction for future applied research.
 
 ### Variational Methods
 
@@ -115,9 +117,9 @@ The variational principle in boundary logic—reducing to canonical forms—para
 Boolean satisfiability (SAT) \cite{biere2009} relates to boundary logic through:
 
 - Both address Boolean reasoning
-- SAT is NP-complete (decision problem)
-- Boundary evaluation is polynomial (evaluation problem)
-- Different computational contexts
+- SAT is NP-complete (computationally intractable decision problem: determining if a formula has a satisfying assignment)
+- Boundary evaluation is polynomial (efficiently computable evaluation problem: computing the truth value of a given form)
+- Different computational contexts (satisfiability vs. evaluation)
 
 ### Proof Assistants
 

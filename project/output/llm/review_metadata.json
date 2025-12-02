@@ -1,0 +1,78 @@
+{
+  "model": "llama3-gradient:latest",
+  "timestamp": "2025-12-02T13:46:21.049713",
+  "source_pdf": "/Users/4d/Documents/GitHub/template/project/output/pdf/project_combined.pdf",
+  "reviews_generated": [
+    "translation_zh",
+    "translation_hi",
+    "translation_ru"
+  ],
+  "max_input_length": 500000,
+  "manuscript_metrics": {
+    "total_chars": 120421,
+    "total_words": 24478,
+    "total_tokens_est": 30105,
+    "truncated": false,
+    "truncated_chars": 120421
+  },
+  "review_metrics": {
+    "translation_zh": {
+      "input_chars": 120421,
+      "input_words": 24478,
+      "input_tokens_est": 30105,
+      "output_chars": 20997,
+      "output_words": 3329,
+      "output_tokens_est": 5249,
+      "generation_time_seconds": 155.44
+    },
+    "translation_hi": {
+      "input_chars": 120421,
+      "input_words": 24478,
+      "input_tokens_est": 30105,
+      "output_chars": 10298,
+      "output_words": 1594,
+      "output_tokens_est": 2574,
+      "generation_time_seconds": 156.19
+    },
+    "translation_ru": {
+      "input_chars": 120421,
+      "input_words": 24478,
+      "input_tokens_est": 30105,
+      "output_chars": 6401,
+      "output_words": 1079,
+      "output_tokens_est": 1600,
+      "generation_time_seconds": 125.39
+    }
+  },
+  "format_compliance": {
+    "overall_rate": 100.0,
+    "compliant_reviews": 3,
+    "total_reviews": 3,
+    "per_review": {
+      "translation_zh": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "translation_hi": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "translation_ru": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      }
+    }
+  },
+  "total_generation_time_seconds": 437.02,
+  "config": {
+    "temperature_summary": 0.3,
+    "temperature_review": 0.3,
+    "temperature_suggestions": 0.4,
+    "max_tokens": 4096,
+    "timeout_seconds": 300.0,
+    "system_prompt": "manuscript_review"
+  }
+}

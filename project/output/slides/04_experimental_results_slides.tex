@@ -250,12 +250,15 @@ C9 & Cross-Transposition &
 \end{longtable}
 }
 
-\textbf{Verification Method}: Each theorem's LHS and RHS are constructed
-with specific ground instantiations and reduced to canonical form;
-equality of canonical forms confirms the theorem. Note that
-Spencer-Brown's consequences are \emph{schematic} identities (holding
-for all variable substitutions). Our computational verification uses
-ground forms that instantiate the Boolean-equivalent formulations,
+\textbf{Verification Method}: Each theorem's LHS (left-hand side) and
+RHS (right-hand side) are constructed with specific \textbf{ground
+instantiations} (concrete forms where variables are replaced with actual
+values) and reduced to \textbf{canonical form} (the simplest irreducible
+representation); equality of canonical forms confirms the theorem. Note
+that Spencer-Brown's consequences are \emph{schematic} identities
+(holding for all variable substitutions). Our computational verification
+uses \textbf{ground forms} (forms without variables, where all values
+are concrete) that instantiate the Boolean-equivalent formulations,
 demonstrating the reduction engine correctly implements the underlying
 algebraic structure.
 \end{block}
@@ -323,7 +326,9 @@ Double Negation & \(\neg\neg a = a\) & ✓ \\
 \protect\phantomsection\label{complexity-analysis}
 \begin{block}{Reduction Step Distribution}
 \protect\phantomsection\label{reduction-step-distribution}
-Analysis of 500 randomly generated forms (depth ≤ 6, width ≤ 4):
+\textbf{Reduction steps} measure how many times reduction rules must be
+applied before a form reaches canonical form. Analysis of 500 randomly
+generated forms (depth ≤ 6, width ≤ 4):
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}llll@{}}
@@ -349,7 +354,10 @@ for typical forms:
 
 \[\text{Steps} \approx O(n)\]
 
-where \(n\) is the initial form size.
+where \(n\) is the initial form size (total number of marks and
+operations). This \textbf{polynomial-time complexity} means the
+reduction algorithm is computationally efficient, with execution time
+growing at most linearly with input size.
 
 \textbf{Worst-case patterns}: - Deep calling chains: \(O(\text{depth})\)
 - Wide crossing patterns: \(O(\text{width})\) - Mixed patterns:
@@ -426,8 +434,9 @@ Double negation & \(\neg\neg a = a\) & ✓ \\
 \protect\phantomsection\label{semantic-evaluation}
 \begin{block}{Truth Table Verification}
 \protect\phantomsection\label{truth-table-verification}
-For ground forms (no variables), evaluation matches expected Boolean
-semantics:
+For \textbf{ground forms} (forms without variables, where all values are
+concrete), \textbf{evaluation} (computing the truth value) matches
+expected Boolean semantics:
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}lll@{}}

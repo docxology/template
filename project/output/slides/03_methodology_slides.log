@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 DEC 2025 12:30
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 DEC 2025 13:21
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1323,31 +1323,31 @@ s.nav)
 
 ]
 
-LaTeX Warning: Citation `spencerbrown1969' on page 2 undefined on input line 14
-5.
+LaTeX Warning: Citation `spencerbrown1969' on page 2 undefined on input line 15
+3.
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 145.
+(Font)              scaled to size 7.8961pt on input line 153.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 145.
+(Font)              scaled to size 5.64008pt on input line 153.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-45.
+53.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 145.
+(Font)              scaled to size 11.28131pt on input line 153.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 145.
+(Font)              scaled to size 7.89691pt on input line 153.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 145.
+(Font)              scaled to size 5.64066pt on input line 153.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 145.
+(Font)              scaled to size 11.27914pt on input line 153.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 145.
+(Font)              scaled to size 7.8954pt on input line 153.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 145.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 145
+(Font)              scaled to size 5.63957pt on input line 153.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 153
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1356,7 +1356,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 145
+LaTeX Font Info:    Trying to load font information for U+msb on input line 153
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1365,7 +1365,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-Overfull \vbox (88.89888pt too high) detected at line 145
+Overfull \vbox (211.29893pt too high) detected at line 153
  []
 
 
@@ -1373,7 +1373,7 @@ Overfull \vbox (88.89888pt too high) detected at line 145
 [2
 
 ]
-Overfull \vbox (70.05327pt too high) detected at line 177
+Overfull \vbox (83.65327pt too high) detected at line 186
  []
 
 
@@ -1386,7 +1386,7 @@ Overfull \vbox (70.05327pt too high) detected at line 177
 
 (/Users/4d/Documents/GitHub/template/project/output/slides/03_methodology_slide
 s.vrb)
-Overfull \vbox (300.30174pt too high) detected at line 247
+Overfull \vbox (483.91278pt too high) detected at line 270
  []
 
 
@@ -1395,14 +1395,14 @@ Overfull \vbox (300.30174pt too high) detected at line 247
 
 ]
 
-LaTeX Warning: Citation `huntington1904' on page 5 undefined on input line 297.
+LaTeX Warning: Citation `huntington1904' on page 5 undefined on input line 323.
 
 
 
-LaTeX Warning: Citation `stone1936' on page 5 undefined on input line 297.
+LaTeX Warning: Citation `stone1936' on page 5 undefined on input line 323.
 
 
-Overfull \vbox (84.17743pt too high) detected at line 297
+Overfull \vbox (137.96425pt too high) detected at line 323
  []
 
 
@@ -1410,7 +1410,7 @@ Overfull \vbox (84.17743pt too high) detected at line 297
 [5
 
 ]
-Overfull \vbox (330.45305pt too high) detected at line 354
+Overfull \vbox (344.05305pt too high) detected at line 381
  []
 
 
@@ -1421,7 +1421,7 @@ Overfull \vbox (330.45305pt too high) detected at line 354
 ! Undefined control sequence.
 \beamer@doifinframe ...e truth value \(\llbracket 
                                                   f \rrbracket \) of a form ...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1432,7 +1432,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ... \(\llbracket f \rrbracket 
                                                   \) of a form \(f\): \par \...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1443,7 +1443,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...m \(f\): \par \[\llbracket 
                                                   \text {void} \rrbracket = ...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1454,7 +1454,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...et \text {void} \rrbracket 
                                                   = \text {FALSE}\] \[\llbra...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1465,7 +1465,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...ext {FALSE}\] \[\llbracket 
                                                   \langle \ \rangle \rrbrack...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1476,7 +1476,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...angle \ \rangle \rrbracket 
                                                   = \text {TRUE}\] \[\llbrac...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1487,7 +1487,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...text {TRUE}\] \[\llbracket 
                                                   \langle a \rangle \rrbrack...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1498,7 +1498,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...angle a \rangle \rrbracket 
                                                   = \neg \llbracket a \rrbra...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1509,7 +1509,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...rbracket = \neg \llbracket 
                                                   a \rrbracket \] \[\llbrack...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1520,7 +1520,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...eg \llbracket a \rrbracket 
                                                   \] \[\llbracket ab \rrbrac...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1531,7 +1531,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...\rrbracket \] \[\llbracket 
                                                   ab \rrbracket = \llbracket...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1542,7 +1542,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...\[\llbracket ab \rrbracket 
                                                   = \llbracket a \rrbracket ...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1553,7 +1553,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...ab \rrbracket = \llbracket 
                                                   a \rrbracket \land \llbrac...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1564,7 +1564,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ... = \llbracket a \rrbracket 
                                                   \land \llbracket b \rrbrac...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1575,7 +1575,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...rrbracket \land \llbracket 
                                                   b \rrbracket \] \{\#eq:sem...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1586,7 +1586,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...nd \llbracket b \rrbracket 
                                                   \] \{\#eq:semantics\} \end...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1597,7 +1597,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ... value: - J1: \(\llbracket 
                                                   \langle \langle a \rangle ...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1608,7 +1608,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...\rangle \rangle \rrbracket 
                                                   = \neg \neg \llbracket a \...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1619,7 +1619,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...ket = \neg \neg \llbracket 
                                                   a \rrbracket = \llbracket ...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1630,7 +1630,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...eg \llbracket a \rrbracket 
                                                   = \llbracket a \rrbracket ...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1641,7 +1641,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ... a \rrbracket = \llbracket 
                                                   a \rrbracket \) ✓ - J2: \(...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1652,7 +1652,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ... = \llbracket a \rrbracket 
                                                   \) ✓ - J2: \(\llbracket \l...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1665,7 +1665,7 @@ x-text;!
 ! Undefined control sequence.
 \beamer@doifinframe ...et \) ✓ - J2: \(\llbracket 
                                                   \langle \ \rangle \langle ...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1676,7 +1676,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...angle \ \rangle \rrbracket 
                                                   = \text {TRUE} \land \text...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1687,7 +1687,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ... \text {TRUE} = \llbracket 
                                                   \langle \ \rangle \rrbrack...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1698,7 +1698,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 \beamer@doifinframe ...angle \ \rangle \rrbracket 
                                                   \) ✓ \end {block} \end {be...
-l.379 \end{frame}
+l.406 \end{frame}
                  
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -1753,11 +1753,11 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  31045 strings out of 473832
  625337 string characters out of 5729482
- 1165285 words of memory out of 5000000
+ 1170285 words of memory out of 5000000
  53559 multiletter control sequences out of 15000+600000
  562372 words of font info for 68 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1076b,536s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1076b,540s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/project/output/slides/03_
 methodology_slides.pdf (8 pages).

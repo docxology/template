@@ -243,8 +243,9 @@
 <h2 id="s1.1-form-construction-implementation">S1.1 Form Construction
 Implementation</h2>
 <h3 id="data-structure-design">Data Structure Design</h3>
-<p>The <code>Form</code> class represents boundary expressions with the
-following structure:</p>
+<p>A <strong>form</strong> is any well-formed expression in the calculus
+of indications. The <code>Form</code> class represents boundary
+expressions with the following structure:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Form:</span>
@@ -296,8 +297,10 @@ void at the base level</p>
 <p>Two forms are <strong>structurally equal</strong> if: 1. Same
 <code>form_type</code> 2. Same <code>is_marked</code> value 3. Contents
 are pairwise equal (recursive)</p>
-<p>Note: Structural equality differs from <strong>semantic
-equality</strong> (reduction to same canonical form).</p>
+<p>Note: <strong>Structural equality</strong> (same form structure)
+differs from <strong>semantic equality</strong> (reduction to same
+<strong>canonical form</strong>—the irreducible representation after all
+reductions).</p>
 <h2 id="s1.2-reduction-engine-architecture">S1.2 Reduction Engine
 Architecture</h2>
 <h3 id="pattern-matching-strategy">Pattern Matching Strategy</h3>

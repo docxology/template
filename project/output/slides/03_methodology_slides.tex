@@ -117,20 +117,28 @@ The mark creates a bounded region. Content placed inside the mark is
 
 \begin{block}{Definition 1: Form}
 \protect\phantomsection\label{definition-1-form}
-A \textbf{form} is defined recursively:
+A \textbf{form} is any well-formed expression in the calculus of
+indications, built recursively from primitive elements and operations. A
+\textbf{form} is defined recursively:
 
 \begin{enumerate}
 \tightlist
 \item
-  The \textbf{void} (empty space) is a form
+  The \textbf{void} (empty space, denoted \(\emptyset\)) is a form. The
+  \textbf{void} represents the unmarked state, corresponding to FALSE in
+  Boolean logic.
 \item
-  The \textbf{mark} \(\langle\ \rangle\) is a form
+  The \textbf{mark} \(\langle\ \rangle\) is a form. The \textbf{mark}
+  (also called the cross) represents the primary distinction,
+  corresponding to TRUE in Boolean logic.
 \item
-  If \(a\) is a form, then \(\langle a \rangle\) (enclosure of \(a\)) is
-  a form
+  If \(a\) is a form, then \(\langle a \rangle\) is a form. This
+  operation is called \textbf{enclosure} (placing a boundary around
+  \(a\)), which represents logical negation: NOT \(a\).
 \item
-  If \(a\) and \(b\) are forms, then \(ab\) (juxtaposition of \(a\) and
-  \(b\)) is a form
+  If \(a\) and \(b\) are forms, then \(ab\) is a form. This operation is
+  called \textbf{juxtaposition} (placing forms side by side), which
+  represents logical conjunction: \(a\) AND \(b\).
 \end{enumerate}
 
 Nothing else is a form.
@@ -168,7 +176,8 @@ relative to being ``outside of \(a\)''---returning you to \(a\).
 \{\#eq:crossing\}
 
 \textbf{Interpretation}: Multiple marks in juxtaposition condense to a
-single mark. The marked state is idempotent.
+single mark. The marked state is idempotent (applying the operation
+multiple times yields the same result as applying it once).
 
 \textbf{Proof sketch}: Two boundaries side by side both indicate ``the
 marked state.'' Indicating the same thing twice does not change what is
@@ -178,11 +187,17 @@ indicated.
 
 \begin{frame}[fragile]{Reduction Algorithm}
 \protect\phantomsection\label{reduction-algorithm}
+\textbf{Reduction} is the process of applying the axioms (Calling and
+Crossing) to simplify a form toward its simplest possible
+representation. The reduction algorithm systematically applies reduction
+rules until no further simplification is possible.
+
 \begin{block}{Definition 3: Canonical Form}
 \protect\phantomsection\label{definition-3-canonical-form}
 A form is in \textbf{canonical form} if no reduction rule can be
-applied. The only canonical forms are: - The void \(\emptyset\) - The
-mark \(\langle\ \rangle\)
+applied. \textbf{Canonical form} is the irreducible representation of a
+form after all possible reductions. The only canonical forms are: - The
+void \(\emptyset\) - The mark \(\langle\ \rangle\)
 \end{block}
 
 \begin{block}{Reduction Rules}
@@ -225,11 +240,11 @@ function REDUCE(form):
 \begin{block}{Theorem 1: Termination}
 \protect\phantomsection\label{theorem-1-termination}
 \textbf{Claim}: The reduction algorithm terminates for all well-formed
-inputs.
+inputs (forms constructed according to Definition 1).
 
 \textbf{Proof}: Each rule application strictly decreases either: - The
-depth of the form (calling), or - The size of the form (crossing, void
-elimination)
+depth of the form (calling reduction), or - The size of the form
+(crossing reduction, void elimination)
 
 Since both metrics are non-negative integers, the algorithm must
 terminate.
@@ -238,11 +253,19 @@ terminate.
 \begin{block}{Theorem 2: Confluence}
 \protect\phantomsection\label{theorem-2-confluence}
 \textbf{Claim}: All reduction sequences from a given form lead to the
-same canonical form.
+same canonical form (confluence property).
+
+\textbf{Confluence} (also called the Church-Rosser property) means that
+if a form can be reduced in multiple ways, all reduction paths
+eventually converge to the same canonical form. This ensures that the
+result of reduction is unique and independent of the order in which
+rules are applied.
 
 \textbf{Proof sketch}: The rules are non-overlapping (each pattern is
 distinct) and local (applying one rule does not invalidate others). The
-Church-Rosser property follows.
+Church-Rosser property (also called confluence) follows: if a form can
+be reduced in multiple ways, all reduction paths eventually converge to
+the same canonical form.
 \end{block}
 \end{frame}
 
@@ -250,8 +273,11 @@ Church-Rosser property follows.
 \protect\phantomsection\label{boolean-algebra-correspondence}
 \begin{block}{The Isomorphism}
 \protect\phantomsection\label{the-isomorphism}
-Boundary logic is isomorphic to Boolean algebra
-\cite{huntington1904,stone1936}:
+An \textbf{isomorphism} is a structure-preserving mapping between two
+mathematical systems that shows they are essentially equivalent.
+Boundary logic is \textbf{isomorphic} to Boolean algebra
+\cite{huntington1904,stone1936}, meaning there exists a one-to-one
+correspondence that preserves all logical operations:
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
@@ -298,8 +324,9 @@ The NAND gate, functionally complete:
 
 \begin{frame}{Derived Theorems (Consequences)}
 \protect\phantomsection\label{derived-theorems-consequences}
-Spencer-Brown derives nine consequences (C1-C9) from the axioms. We
-verify each computationally:
+Spencer-Brown derives nine consequences (C1-C9) from the two axioms.
+These are theorems that follow logically from the axioms and can be
+proven by reduction. We verify each computationally:
 
 \begin{block}{C1: Position}
 \protect\phantomsection\label{c1-position}

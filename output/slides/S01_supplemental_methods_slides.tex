@@ -142,8 +142,9 @@ Implementation}\label{s1.1-form-construction-implementation}
 
 \begin{frame}[fragile]{Data Structure Design}
 \protect\phantomsection\label{data-structure-design}
-The \texttt{Form} class represents boundary expressions with the
-following structure:
+A \textbf{form} is any well-formed expression in the calculus of
+indications. The \texttt{Form} class represents boundary expressions
+with the following structure:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -184,8 +185,9 @@ Two forms are \textbf{structurally equal} if: 1. Same
 \texttt{form\_type} 2. Same \texttt{is\_marked} value 3. Contents are
 pairwise equal (recursive)
 
-Note: Structural equality differs from \textbf{semantic equality}
-(reduction to same canonical form).
+Note: \textbf{Structural equality} (same form structure) differs from
+\textbf{semantic equality} (reduction to same \textbf{canonical
+form}---the irreducible representation after all reductions).
 \end{frame}
 
 \subsection{S1.2 Reduction Engine

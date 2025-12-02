@@ -2,16 +2,16 @@
 
 ## Summary of Contributions
 
-This work establishes Containment Theory as a computationally verified alternative foundation for Boolean reasoning. Our primary contributions are:
+This work establishes **Containment Theory** as a computationally verified alternative foundation for Boolean reasoning and discrete mathematics. Our primary contributions are:
 
 ### 1. Rigorous Implementation
 
 We provide a complete computational framework implementing:
-- **Form construction**: Void, mark, enclosure, and juxtaposition operations
-- **Reduction engine**: Polynomial-time reduction to canonical forms with step traces
-- **Theorem verification**: Automated checking of all nine Spencer-Brown consequences
-- **Boolean correspondence**: Verified isomorphism to Boolean algebra
-- **Evaluation semantics**: Sound extraction of truth values
+- **Form construction**: Operations for creating void, mark, enclosure, and juxtaposition forms
+- **Reduction engine**: Polynomial-time algorithm for reducing forms to canonical representations (void or mark) with detailed step-by-step traces
+- **Theorem verification**: Automated checking of all nine Spencer-Brown consequences (C1-C9) through computational reduction
+- **Boolean correspondence**: Verified isomorphism between boundary logic and Boolean algebra through systematic truth table verification
+- **Evaluation semantics**: Sound extraction of truth values from forms, preserving semantic equivalence
 
 ### 2. Formal Verification
 
@@ -25,10 +25,10 @@ All theoretical claims are computationally verified:
 ### 3. Complexity Analysis
 
 We establish:
-- Termination guarantee for all well-formed inputs
-- Polynomial-time complexity for typical forms
-- Confluence of reduction sequences
-- Explicit complexity scaling analysis
+- Termination guarantee for all well-formed inputs (forms constructed according to the recursive definition)
+- Polynomial-time complexity for typical forms, with empirical analysis showing linear scaling
+- Confluence of reduction sequences (all reduction paths converge to the same canonical form)
+- Explicit complexity scaling analysis demonstrating how reduction steps scale with form depth and size
 
 ### 4. Comparative Analysis
 
@@ -74,11 +74,13 @@ Digital logic gains:
 
 ### For Cognitive Science
 
-The calculus provides formal tools for studying \cite{varela1991,thompson2007,friston2010}:
+The calculus provides formal tools for studying cognitive processes \cite{varela1991,thompson2007,friston2010}:
 - Distinction as primitive cognitive act
 - Negation as boundary crossing
 - Self-reference as oscillation
 - Attention as juxtaposition
+
+Note that while connections to frameworks like the Free Energy Principle are explored in the Discussion section, these represent application domains rather than the primary focus of this foundational work.
 
 ## Future Work
 

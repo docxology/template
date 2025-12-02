@@ -93,19 +93,23 @@
 
 \begin{frame}{Summary of Contributions}
 \protect\phantomsection\label{summary-of-contributions}
-This work establishes Containment Theory as a computationally verified
-alternative foundation for Boolean reasoning. Our primary contributions
-are:
+This work establishes \textbf{Containment Theory} as a computationally
+verified alternative foundation for Boolean reasoning and discrete
+mathematics. Our primary contributions are:
 
 \begin{block}{1. Rigorous Implementation}
 \protect\phantomsection\label{rigorous-implementation}
 We provide a complete computational framework implementing: -
-\textbf{Form construction}: Void, mark, enclosure, and juxtaposition
-operations - \textbf{Reduction engine}: Polynomial-time reduction to
-canonical forms with step traces - \textbf{Theorem verification}:
-Automated checking of all nine Spencer-Brown consequences -
-\textbf{Boolean correspondence}: Verified isomorphism to Boolean algebra
-- \textbf{Evaluation semantics}: Sound extraction of truth values
+\textbf{Form construction}: Operations for creating void, mark,
+enclosure, and juxtaposition forms - \textbf{Reduction engine}:
+Polynomial-time algorithm for reducing forms to canonical
+representations (void or mark) with detailed step-by-step traces -
+\textbf{Theorem verification}: Automated checking of all nine
+Spencer-Brown consequences (C1-C9) through computational reduction -
+\textbf{Boolean correspondence}: Verified isomorphism between boundary
+logic and Boolean algebra through systematic truth table verification -
+\textbf{Evaluation semantics}: Sound extraction of truth values from
+forms, preserving semantic equivalence
 \end{block}
 
 \begin{block}{2. Formal Verification}
@@ -118,9 +122,13 @@ confirmed - Consistency (non-contradiction) proven
 
 \begin{block}{3. Complexity Analysis}
 \protect\phantomsection\label{complexity-analysis}
-We establish: - Termination guarantee for all well-formed inputs -
-Polynomial-time complexity for typical forms - Confluence of reduction
-sequences - Explicit complexity scaling analysis
+We establish: - Termination guarantee for all well-formed inputs (forms
+constructed according to the recursive definition) - Polynomial-time
+complexity for typical forms, with empirical analysis showing linear
+scaling - Confluence of reduction sequences (all reduction paths
+converge to the same canonical form) - Explicit complexity scaling
+analysis demonstrating how reduction steps scale with form depth and
+size
 \end{block}
 
 \begin{block}{4. Comparative Analysis}
@@ -179,10 +187,14 @@ Boolean functions
 
 \begin{block}{For Cognitive Science}
 \protect\phantomsection\label{for-cognitive-science}
-The calculus provides formal tools for studying
+The calculus provides formal tools for studying cognitive processes
 \cite{varela1991,thompson2007,friston2010}: - Distinction as primitive
 cognitive act - Negation as boundary crossing - Self-reference as
 oscillation - Attention as juxtaposition
+
+Note that while connections to frameworks like the Free Energy Principle
+are explored in the Discussion section, these represent application
+domains rather than the primary focus of this foundational work.
 \end{block}
 \end{frame}
 

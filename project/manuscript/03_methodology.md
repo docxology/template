@@ -12,12 +12,12 @@ The mark creates a bounded region. Content placed inside the mark is **contained
 
 ### Definition 1: Form
 
-A **form** is defined recursively:
+A **form** is any well-formed expression in the calculus of indications, built recursively from primitive elements and operations. A **form** is defined recursively:
 
-1. The **void** (empty space) is a form
-2. The **mark** $\langle\ \rangle$ is a form
-3. If $a$ is a form, then $\langle a \rangle$ (enclosure of $a$) is a form
-4. If $a$ and $b$ are forms, then $ab$ (juxtaposition of $a$ and $b$) is a form
+1. The **void** (empty space, denoted $\emptyset$) is a form. The **void** represents the unmarked state, corresponding to FALSE in Boolean logic.
+2. The **mark** $\langle\ \rangle$ is a form. The **mark** (also called the cross) represents the primary distinction, corresponding to TRUE in Boolean logic.
+3. If $a$ is a form, then $\langle a \rangle$ is a form. This operation is called **enclosure** (placing a boundary around $a$), which represents logical negation: NOT $a$.
+4. If $a$ and $b$ are forms, then $ab$ is a form. This operation is called **juxtaposition** (placing forms side by side), which represents logical conjunction: $a$ AND $b$.
 
 Nothing else is a form.
 
@@ -43,15 +43,17 @@ $$\langle\langle a \rangle\rangle = a$$ {#eq:calling}
 
 $$\langle\ \rangle\langle\ \rangle = \langle\ \rangle$$ {#eq:crossing}
 
-**Interpretation**: Multiple marks in juxtaposition condense to a single mark. The marked state is idempotent.
+**Interpretation**: Multiple marks in juxtaposition condense to a single mark. The marked state is idempotent (applying the operation multiple times yields the same result as applying it once).
 
 **Proof sketch**: Two boundaries side by side both indicate "the marked state." Indicating the same thing twice does not change what is indicated.
 
 ## Reduction Algorithm
 
+**Reduction** is the process of applying the axioms (Calling and Crossing) to simplify a form toward its simplest possible representation. The reduction algorithm systematically applies reduction rules until no further simplification is possible.
+
 ### Definition 3: Canonical Form
 
-A form is in **canonical form** if no reduction rule can be applied. The only canonical forms are:
+A form is in **canonical form** if no reduction rule can be applied. **Canonical form** is the irreducible representation of a form after all possible reductions. The only canonical forms are:
 - The void $\emptyset$
 - The mark $\langle\ \rangle$
 
@@ -85,25 +87,27 @@ function REDUCE(form):
 
 ### Theorem 1: Termination
 
-**Claim**: The reduction algorithm terminates for all well-formed inputs.
+**Claim**: The reduction algorithm terminates for all well-formed inputs (forms constructed according to Definition 1).
 
 **Proof**: Each rule application strictly decreases either:
-- The depth of the form (calling), or
-- The size of the form (crossing, void elimination)
+- The depth of the form (calling reduction), or
+- The size of the form (crossing reduction, void elimination)
 
 Since both metrics are non-negative integers, the algorithm must terminate.
 
 ### Theorem 2: Confluence
 
-**Claim**: All reduction sequences from a given form lead to the same canonical form.
+**Claim**: All reduction sequences from a given form lead to the same canonical form (confluence property).
 
-**Proof sketch**: The rules are non-overlapping (each pattern is distinct) and local (applying one rule does not invalidate others). The Church-Rosser property follows.
+**Confluence** (also called the Church-Rosser property) means that if a form can be reduced in multiple ways, all reduction paths eventually converge to the same canonical form. This ensures that the result of reduction is unique and independent of the order in which rules are applied.
+
+**Proof sketch**: The rules are non-overlapping (each pattern is distinct) and local (applying one rule does not invalidate others). The Church-Rosser property (also called confluence) follows: if a form can be reduced in multiple ways, all reduction paths eventually converge to the same canonical form.
 
 ## Boolean Algebra Correspondence
 
 ### The Isomorphism
 
-Boundary logic is isomorphic to Boolean algebra \cite{huntington1904,stone1936}:
+An **isomorphism** is a structure-preserving mapping between two mathematical systems that shows they are essentially equivalent. Boundary logic is **isomorphic** to Boolean algebra \cite{huntington1904,stone1936}, meaning there exists a one-to-one correspondence that preserves all logical operations:
 
 | Boundary Logic | Boolean Algebra | Propositional Logic |
 |----------------|-----------------|---------------------|
@@ -126,7 +130,7 @@ $$a \text{ NAND } b = \neg(a \land b) = \langle ab \rangle$$ {#eq:nand}
 
 ## Derived Theorems (Consequences)
 
-Spencer-Brown derives nine consequences (C1-C9) from the axioms. We verify each computationally:
+Spencer-Brown derives nine consequences (C1-C9) from the two axioms. These are theorems that follow logically from the axioms and can be proven by reduction. We verify each computationally:
 
 ### C1: Position
 $$\langle\langle a \rangle b \rangle a = a$$

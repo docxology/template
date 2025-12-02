@@ -307,26 +307,33 @@ Containment Theory presents an alternative foundation to classical Set
 Theory, replacing the primitive notion of membership (\(\in\)) with
 spatial containment through boundary distinctions. Building on G.
 Spencer-Brown's \emph{Laws of Form} (1969), we develop a complete
-computational framework for boundary logic that demonstrates its
-equivalence to Boolean algebra while offering distinct advantages in
-parsimony, geometric intuition, and handling of self-reference.
+computational framework for \textbf{boundary logic} (also called the
+\textbf{calculus of indications}) that demonstrates its equivalence to
+Boolean algebra while offering distinct advantages in parsimony,
+geometric intuition, and handling of self-reference. \textbf{Boundary
+logic} is a logical system built from the primitive act of drawing
+distinctions (boundaries), while the \textbf{calculus of indications} is
+Spencer-Brown's original name for this formal system.
 
-The calculus of indications operates from just two axioms:
-\textbf{Calling} (\(\langle\langle a \rangle\rangle = a\), double
-crossing returns) and \textbf{Crossing}
-(\(\langle\ \rangle\langle\ \rangle = \langle\ \rangle\), marks
-condense). From these primitives, we derive the complete Boolean
-algebra, establishing that the marked state \(\langle\ \rangle\)
-corresponds to TRUE and the unmarked void to FALSE, with enclosure
-\(\langle a \rangle\) representing negation and juxtaposition \(ab\)
-representing conjunction.
+The calculus operates from just two axioms: \textbf{Calling}
+(\(\langle\langle a \rangle\rangle = a\), where double enclosure returns
+to the original form) and \textbf{Crossing}
+(\(\langle\ \rangle\langle\ \rangle = \langle\ \rangle\), where multiple
+marks condense to a single mark). From these primitives, we derive the
+complete Boolean algebra, establishing that the marked state
+\(\langle\ \rangle\) corresponds to TRUE and the unmarked void (empty
+space) corresponds to FALSE, with enclosure \(\langle a \rangle\)
+representing negation and juxtaposition \(ab\) representing conjunction.
 
-We present a reduction engine that transforms arbitrary boundary forms
-to canonical representations, prove termination in polynomial time for
-ground forms, and verify all derived theorems computationally. Our
-implementation achieves formal verification of Spencer-Brown's
+We present a \textbf{reduction engine} that transforms arbitrary
+boundary \textbf{forms} (expressions built from marks, enclosures, and
+juxtapositions) to \textbf{canonical representations} (either void or
+mark---the simplest irreducible forms), prove termination in polynomial
+time for \textbf{ground forms} (forms without variables, where all
+values are concrete), and verify all derived theorems computationally.
+Our implementation achieves formal verification of Spencer-Brown's nine
 consequences (C1-C9), De Morgan's laws, and the fundamental Boolean
-axioms through reduction to canonical forms.
+axioms through systematic reduction to canonical forms.
 
 The comparison with Set Theory reveals that boundary logic achieves
 logical completeness with minimal axiomatic commitment (2 vs 9+ axioms
@@ -349,6 +356,19 @@ of indications
 
 \section{Introduction}\label{introduction}
 
+\subsection{Purpose and Scope}\label{purpose-and-scope}
+
+This manuscript presents \textbf{Containment Theory}---a computationally
+verified alternative foundation to classical Set Theory for discrete
+mathematics. We develop a complete computational framework for boundary
+logic (also called the calculus of indications), demonstrating its
+equivalence to Boolean algebra while offering distinct advantages in
+axiomatic economy, geometric intuition, and handling of self-reference.
+Our primary contribution is rigorous computational verification of all
+theoretical claims in G. Spencer-Brown's \emph{Laws of Form} (1969),
+establishing Containment Theory as a viable alternative foundation with
+only two axioms compared to Set Theory's nine or more.
+
 \subsection{The Foundation Problem}\label{the-foundation-problem}
 
 Mathematics rests upon foundations, and for over a century, Set Theory
@@ -361,11 +381,21 @@ restrictions to avoid paradoxes like Russell's.
 
 In 1969, G. Spencer-Brown proposed a radical alternative in \emph{Laws
 of Form} \cite{spencerbrown1969}: a calculus requiring only two axioms,
-built on the primitive notion of \textbf{distinction} rather than
-membership. This calculus---variously called boundary logic, the
-calculus of indications, or Containment Theory---offers a foundation of
-remarkable parsimony while maintaining complete equivalence to Boolean
-algebra \cite{huntington1904,stone1936} and propositional logic.
+built on the primitive notion of \textbf{distinction} (the act of
+separating inside from outside, this from that) rather than membership.
+This calculus---variously called \textbf{boundary logic}, the
+\textbf{calculus of indications}, or \textbf{Containment
+Theory}---offers a foundation of remarkable parsimony while maintaining
+complete equivalence to Boolean algebra \cite{huntington1904,stone1936}
+and propositional logic.
+
+\textbf{Containment Theory} is our term for this approach to
+mathematical foundations using spatial containment (boundaries) rather
+than set membership. \textbf{Boundary logic} refers to the logical
+system built from boundary distinctions, while the \textbf{calculus of
+indications} is Spencer-Brown's original name for the formal system.
+Throughout this manuscript, we use these terms interchangeably to refer
+to Spencer-Brown's system.
 
 \subsection{Historical Context}\label{historical-context}
 
@@ -375,11 +405,13 @@ algebra \cite{huntington1904,stone1936} and propositional logic.
 George Spencer-Brown developed the calculus of indications from a simple
 observation: the most fundamental cognitive act is \textbf{making a
 distinction}---separating inside from outside, this from that
-\cite{spencerbrown1969}. The \emph{mark} or \emph{cross}, written
-\(\langle\ \rangle\), represents this primary distinction: it creates a
-boundary that distinguishes the space inside from the space outside.
-This insight aligns with cybernetic thinking about observation and
-distinction \cite{bateson1972,vonfoerster1981}.
+\cite{spencerbrown1969}. A \textbf{distinction} is the act of drawing a
+boundary that creates two regions: an inside and an outside. The
+\emph{mark} or \emph{cross}, written \(\langle\ \rangle\), represents
+this primary distinction: it creates a boundary that distinguishes the
+space inside from the space outside. This insight aligns with cybernetic
+thinking about observation and distinction
+\cite{bateson1972,vonfoerster1981}.
 
 From this single primitive, Spencer-Brown derived two axioms:
 
@@ -445,52 +477,99 @@ advantages beyond Boolean logic.
 \subsection{Motivation for This Work}\label{motivation-for-this-work}
 
 Despite its theoretical elegance, Containment Theory remains
-underexplored in mainstream mathematics and computer science. This work
-aims to:
+underexplored in mainstream mathematics and computer science. While
+Spencer-Brown's original work and subsequent extensions by Kauffman and
+Bricken provide compelling theoretical foundations, there has been
+limited computational verification of the claims and systematic
+comparison with established foundations like Set Theory. This work
+addresses these gaps by:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\tightlist
 \item
-  \textbf{Provide rigorous computational verification} of the
-  theoretical claims in Laws of Form
+  \textbf{Providing rigorous computational verification} of all
+  theoretical claims in Laws of Form, including both axioms and all nine
+  derived consequences, through a complete implementation with
+  comprehensive test coverage
 \item
-  \textbf{Establish precise correspondence} between boundary logic and
-  Boolean algebra
+  \textbf{Establishing precise correspondence} between boundary logic
+  and Boolean algebra through systematic verification of De Morgan's
+  laws, Boolean axioms, and truth table equivalence
 \item
-  \textbf{Analyze complexity properties} of the reduction algorithm
+  \textbf{Analyzing complexity properties} of the reduction algorithm,
+  demonstrating polynomial-time termination and providing empirical
+  complexity metrics for various form patterns
 \item
-  \textbf{Compare foundational properties} with Set Theory
-  systematically
+  \textbf{Comparing foundational properties} with Set Theory
+  systematically across multiple dimensions: axiomatic economy,
+  expressiveness, self-reference handling, and geometric interpretation
 \item
-  \textbf{Create accessible tools} for exploring and verifying boundary
-  logic
+  \textbf{Creating accessible tools} for exploring and verifying
+  boundary logic, including a complete Python implementation,
+  visualization capabilities, and comprehensive documentation
 \end{enumerate}
+
+These contributions collectively establish Containment Theory as a
+computationally verified alternative foundation for discrete
+mathematics, with clear advantages in parsimony and geometric intuition
+while maintaining full Boolean completeness.
 
 \subsection{Document Structure}\label{document-structure}
 
-This manuscript presents:
+This manuscript is organized as follows to guide readers through the
+theoretical foundations, computational verification, and broader
+implications of Containment Theory:
 
 \begin{itemize}
-\tightlist
 \item
-  \textbf{Methodology} (Section 3): Formal definition of the calculus,
-  axioms, reduction rules, and Boolean correspondence
+  \textbf{Methodology} (Section 3): Provides the formal definition of
+  the calculus of indications, including the two fundamental axioms
+  (Calling and Crossing), the reduction algorithm for transforming forms
+  to canonical representations, and the precise correspondence between
+  boundary logic and Boolean algebra. Readers will find complete
+  definitions of all technical terms, including forms, enclosures,
+  juxtapositions, and canonical forms.
 \item
-  \textbf{Results} (Section 4): Computational verification of theorems,
-  complexity analysis, and proof demonstrations
+  \textbf{Experimental Results} (Section 4): Presents comprehensive
+  computational verification of all theoretical claims, including
+  verification of both axioms, all nine derived consequences (C1-C9)
+  from Laws of Form, De Morgan's laws, and fundamental Boolean axioms.
+  This section also includes complexity analysis demonstrating
+  polynomial-time reduction for ground forms and test coverage metrics
+  confirming the reliability of the implementation.
 \item
-  \textbf{Discussion} (Section 5): Comparison with Set Theory,
-  philosophical implications, and applications
+  \textbf{Discussion} (Section 5): Compares Containment Theory with
+  classical Set Theory across multiple dimensions---axiomatic economy,
+  expressiveness, self-reference handling, and geometric intuition. The
+  section also explores theoretical implications for foundations of
+  mathematics, connections to cognitive science and active inference
+  frameworks, and potential applications in circuit design and formal
+  verification.
 \item
-  \textbf{Conclusion} (Section 6): Summary of contributions and future
-  directions
+  \textbf{Conclusion} (Section 6): Summarizes the key contributions of
+  this work, including the computational framework, formal verification
+  results, complexity analysis, and comparative analysis with Set
+  Theory. The section also outlines future research directions,
+  including extensions to predicate logic, arithmetic integration, and
+  applications in quantum computing and neural networks.
+\item
+  \textbf{Literature Review} (Section 7): Provides comprehensive
+  coverage of foundational works (Spencer-Brown, Kauffman, Bricken),
+  related formal systems (Set Theory, Boolean algebra, category theory),
+  and connections to variational inference frameworks and cognitive
+  science.
+\item
+  \textbf{Supplemental Materials} (Sections S01-S04): Include extended
+  methodological details, additional experimental results, philosophical
+  foundations (pragmatist and neo-materialist perspectives), and
+  application examples across multiple domains.
 \end{itemize}
 
 The computational framework accompanying this manuscript provides a
 complete implementation of boundary logic with verified test coverage
 exceeding 70\%, enabling readers to explore and verify all claims
-independently.
+independently. All source code, test suites, and documentation are
+available in the accompanying repository.
 
 \subsection{Notation}\label{notation}
 
@@ -546,21 +625,29 @@ The mark creates a bounded region. Content placed inside the mark is
 
 \subsubsection{Definition 1: Form}\label{definition-1-form}
 
-A \textbf{form} is defined recursively:
+A \textbf{form} is any well-formed expression in the calculus of
+indications, built recursively from primitive elements and operations. A
+\textbf{form} is defined recursively:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  The \textbf{void} (empty space) is a form
+  The \textbf{void} (empty space, denoted \(\emptyset\)) is a form. The
+  \textbf{void} represents the unmarked state, corresponding to FALSE in
+  Boolean logic.
 \item
-  The \textbf{mark} \(\langle\ \rangle\) is a form
+  The \textbf{mark} \(\langle\ \rangle\) is a form. The \textbf{mark}
+  (also called the cross) represents the primary distinction,
+  corresponding to TRUE in Boolean logic.
 \item
-  If \(a\) is a form, then \(\langle a \rangle\) (enclosure of \(a\)) is
-  a form
+  If \(a\) is a form, then \(\langle a \rangle\) is a form. This
+  operation is called \textbf{enclosure} (placing a boundary around
+  \(a\)), which represents logical negation: NOT \(a\).
 \item
-  If \(a\) and \(b\) are forms, then \(ab\) (juxtaposition of \(a\) and
-  \(b\)) is a form
+  If \(a\) and \(b\) are forms, then \(ab\) is a form. This operation is
+  called \textbf{juxtaposition} (placing forms side by side), which
+  represents logical conjunction: \(a\) AND \(b\).
 \end{enumerate}
 
 Nothing else is a form.
@@ -597,7 +684,8 @@ relative to being ``outside of \(a\)''---returning you to \(a\).
 \{\#eq:crossing\}
 
 \textbf{Interpretation}: Multiple marks in juxtaposition condense to a
-single mark. The marked state is idempotent.
+single mark. The marked state is idempotent (applying the operation
+multiple times yields the same result as applying it once).
 
 \textbf{Proof sketch}: Two boundaries side by side both indicate ``the
 marked state.'' Indicating the same thing twice does not change what is
@@ -605,12 +693,18 @@ indicated.
 
 \subsection{Reduction Algorithm}\label{reduction-algorithm}
 
+\textbf{Reduction} is the process of applying the axioms (Calling and
+Crossing) to simplify a form toward its simplest possible
+representation. The reduction algorithm systematically applies reduction
+rules until no further simplification is possible.
+
 \subsubsection{Definition 3: Canonical
 Form}\label{definition-3-canonical-form}
 
 A form is in \textbf{canonical form} if no reduction rule can be
-applied. The only canonical forms are: - The void \(\emptyset\) - The
-mark \(\langle\ \rangle\)
+applied. \textbf{Canonical form} is the irreducible representation of a
+form after all possible reductions. The only canonical forms are: - The
+void \(\emptyset\) - The mark \(\langle\ \rangle\)
 
 \subsubsection{Reduction Rules}\label{reduction-rules}
 
@@ -652,11 +746,11 @@ function REDUCE(form):
 \subsubsection{Theorem 1: Termination}\label{theorem-1-termination}
 
 \textbf{Claim}: The reduction algorithm terminates for all well-formed
-inputs.
+inputs (forms constructed according to Definition 1).
 
 \textbf{Proof}: Each rule application strictly decreases either: - The
-depth of the form (calling), or - The size of the form (crossing, void
-elimination)
+depth of the form (calling reduction), or - The size of the form
+(crossing reduction, void elimination)
 
 Since both metrics are non-negative integers, the algorithm must
 terminate.
@@ -664,19 +758,30 @@ terminate.
 \subsubsection{Theorem 2: Confluence}\label{theorem-2-confluence}
 
 \textbf{Claim}: All reduction sequences from a given form lead to the
-same canonical form.
+same canonical form (confluence property).
+
+\textbf{Confluence} (also called the Church-Rosser property) means that
+if a form can be reduced in multiple ways, all reduction paths
+eventually converge to the same canonical form. This ensures that the
+result of reduction is unique and independent of the order in which
+rules are applied.
 
 \textbf{Proof sketch}: The rules are non-overlapping (each pattern is
 distinct) and local (applying one rule does not invalidate others). The
-Church-Rosser property follows.
+Church-Rosser property (also called confluence) follows: if a form can
+be reduced in multiple ways, all reduction paths eventually converge to
+the same canonical form.
 
 \subsection{Boolean Algebra
 Correspondence}\label{boolean-algebra-correspondence}
 
 \subsubsection{The Isomorphism}\label{the-isomorphism}
 
-Boundary logic is isomorphic to Boolean algebra
-\cite{huntington1904,stone1936}:
+An \textbf{isomorphism} is a structure-preserving mapping between two
+mathematical systems that shows they are essentially equivalent.
+Boundary logic is \textbf{isomorphic} to Boolean algebra
+\cite{huntington1904,stone1936}, meaning there exists a one-to-one
+correspondence that preserves all logical operations:
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
@@ -721,8 +826,9 @@ The NAND gate, functionally complete:
 \subsection{Derived Theorems
 (Consequences)}\label{derived-theorems-consequences}
 
-Spencer-Brown derives nine consequences (C1-C9) from the axioms. We
-verify each computationally:
+Spencer-Brown derives nine consequences (C1-C9) from the two axioms.
+These are theorems that follow logically from the axioms and can be
+proven by reduction. We verify each computationally:
 
 \subsubsection{C1: Position}\label{c1-position}
 
@@ -976,12 +1082,15 @@ C9 & Cross-Transposition &
 \end{longtable}
 }
 
-\textbf{Verification Method}: Each theorem's LHS and RHS are constructed
-with specific ground instantiations and reduced to canonical form;
-equality of canonical forms confirms the theorem. Note that
-Spencer-Brown's consequences are \emph{schematic} identities (holding
-for all variable substitutions). Our computational verification uses
-ground forms that instantiate the Boolean-equivalent formulations,
+\textbf{Verification Method}: Each theorem's LHS (left-hand side) and
+RHS (right-hand side) are constructed with specific \textbf{ground
+instantiations} (concrete forms where variables are replaced with actual
+values) and reduced to \textbf{canonical form} (the simplest irreducible
+representation); equality of canonical forms confirms the theorem. Note
+that Spencer-Brown's consequences are \emph{schematic} identities
+(holding for all variable substitutions). Our computational verification
+uses \textbf{ground forms} (forms without variables, where all values
+are concrete) that instantiate the Boolean-equivalent formulations,
 demonstrating the reduction engine correctly implements the underlying
 algebraic structure.
 
@@ -1050,7 +1159,9 @@ Double Negation & \(\neg\neg a = a\) & ✓ \\
 \subsubsection{Reduction Step
 Distribution}\label{reduction-step-distribution}
 
-Analysis of 500 randomly generated forms (depth ≤ 6, width ≤ 4):
+\textbf{Reduction steps} measure how many times reduction rules must be
+applied before a form reaches canonical form. Analysis of 500 randomly
+generated forms (depth ≤ 6, width ≤ 4):
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}llll@{}}
@@ -1076,7 +1187,10 @@ for typical forms:
 
 \[\text{Steps} \approx O(n)\]
 
-where \(n\) is the initial form size.
+where \(n\) is the initial form size (total number of marks and
+operations). This \textbf{polynomial-time complexity} means the
+reduction algorithm is computationally efficient, with execution time
+growing at most linearly with input size.
 
 \textbf{Worst-case patterns}: - Deep calling chains: \(O(\text{depth})\)
 - Wide crossing patterns: \(O(\text{width})\) - Mixed patterns:
@@ -1150,8 +1264,9 @@ Double negation & \(\neg\neg a = a\) & ✓ \\
 
 \subsubsection{Truth Table Verification}\label{truth-table-verification}
 
-For ground forms (no variables), evaluation matches expected Boolean
-semantics:
+For \textbf{ground forms} (forms without variables, where all values are
+concrete), \textbf{evaluation} (computing the truth value) matches
+expected Boolean semantics:
 
 {\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}lll@{}}
@@ -1388,9 +1503,13 @@ Enclosure is NOT (one rule) - Juxtaposition is AND (spatial) -
 Everything else derived
 
 The reduction algorithm in Containment Theory operates in polynomial
-time for ground forms, while SAT solving (Boolean satisfiability) is
-NP-complete. This does not contradict---the boundary calculus solves
-\emph{evaluation}, not \emph{satisfiability}.
+time for ground forms (forms without variables), while SAT solving
+(Boolean satisfiability---determining if a formula has a satisfying
+assignment) is NP-complete (computationally intractable in the worst
+case). This does not contradict---the boundary calculus solves
+\emph{evaluation} (computing the truth value of a given form), not
+\emph{satisfiability} (finding variable assignments that make a formula
+true).
 
 \subsection{Theoretical Implications}\label{theoretical-implications}
 
@@ -1480,12 +1599,21 @@ distinctions - \textbf{Negation}: Crossing boundaries -
 \textbf{Conjunction}: Simultaneous attention - \textbf{Oscillation}:
 Self-reflective awareness
 
-Free energy principles in cognitive science
-\cite{friston2010,isomura2022experimental} relate to maintaining
-distinction boundaries. Recent work on active inference
-\cite{sennesh2022deriving,watson2020active} demonstrates that cognitive
-agents minimize surprise by maintaining coherent internal models---a
-process analogous to form reduction in boundary logic.
+\textbf{Connection to Free Energy Principle}: As an application domain,
+boundary logic shows interesting connections to the \textbf{Free Energy
+Principle} (FEP) in cognitive science
+\cite{friston2010,isomura2022experimental}. The FEP is a theoretical
+framework proposing that biological systems minimize variational free
+energy (a measure of prediction error). While FEP is not the focus of
+this work, we note that maintaining distinction boundaries in boundary
+logic is analogous to maintaining coherent internal models in FEP.
+Recent work on \textbf{active inference}
+\cite{sennesh2022deriving,watson2020active}---a framework derived from
+FEP---demonstrates that cognitive agents minimize surprise by
+maintaining coherent internal models, a process structurally similar to
+form reduction in boundary logic. This connection suggests potential
+applications of Containment Theory in cognitive modeling, though such
+applications are beyond the scope of this foundational work.
 
 \subsubsection{Formal Verification}\label{formal-verification}
 
@@ -1520,11 +1648,14 @@ Limitations}\label{current-implementation-limitations}
 \tightlist
 \item
   \textbf{Variable handling}: Current implementation focuses on ground
-  forms
+  forms (forms without variables), limiting verification to specific
+  instantiations rather than general schematic proofs
 \item
-  \textbf{Proof automation}: Limited to reduction-based verification
+  \textbf{Proof automation}: Limited to reduction-based verification;
+  more sophisticated proof strategies could be developed
 \item
-  \textbf{Visualization}: Nested boundaries become complex at high depth
+  \textbf{Visualization}: Nested boundaries become complex at high
+  depth, making manual inspection difficult for deeply nested forms
 \end{enumerate}
 
 \subsection{Future Directions}\label{future-directions}
@@ -1578,20 +1709,24 @@ Limitations}\label{current-implementation-limitations}
 
 \subsection{Summary of Contributions}\label{summary-of-contributions}
 
-This work establishes Containment Theory as a computationally verified
-alternative foundation for Boolean reasoning. Our primary contributions
-are:
+This work establishes \textbf{Containment Theory} as a computationally
+verified alternative foundation for Boolean reasoning and discrete
+mathematics. Our primary contributions are:
 
 \subsubsection{1. Rigorous
 Implementation}\label{rigorous-implementation}
 
 We provide a complete computational framework implementing: -
-\textbf{Form construction}: Void, mark, enclosure, and juxtaposition
-operations - \textbf{Reduction engine}: Polynomial-time reduction to
-canonical forms with step traces - \textbf{Theorem verification}:
-Automated checking of all nine Spencer-Brown consequences -
-\textbf{Boolean correspondence}: Verified isomorphism to Boolean algebra
-- \textbf{Evaluation semantics}: Sound extraction of truth values
+\textbf{Form construction}: Operations for creating void, mark,
+enclosure, and juxtaposition forms - \textbf{Reduction engine}:
+Polynomial-time algorithm for reducing forms to canonical
+representations (void or mark) with detailed step-by-step traces -
+\textbf{Theorem verification}: Automated checking of all nine
+Spencer-Brown consequences (C1-C9) through computational reduction -
+\textbf{Boolean correspondence}: Verified isomorphism between boundary
+logic and Boolean algebra through systematic truth table verification -
+\textbf{Evaluation semantics}: Sound extraction of truth values from
+forms, preserving semantic equivalence
 
 \subsubsection{2. Formal Verification}\label{formal-verification-1}
 
@@ -1602,9 +1737,13 @@ confirmed - Consistency (non-contradiction) proven
 
 \subsubsection{3. Complexity Analysis}\label{complexity-analysis-1}
 
-We establish: - Termination guarantee for all well-formed inputs -
-Polynomial-time complexity for typical forms - Confluence of reduction
-sequences - Explicit complexity scaling analysis
+We establish: - Termination guarantee for all well-formed inputs (forms
+constructed according to the recursive definition) - Polynomial-time
+complexity for typical forms, with empirical analysis showing linear
+scaling - Confluence of reduction sequences (all reduction paths
+converge to the same canonical form) - Explicit complexity scaling
+analysis demonstrating how reduction steps scale with form depth and
+size
 
 \subsubsection{4. Comparative Analysis}\label{comparative-analysis}
 
@@ -1657,10 +1796,14 @@ Boolean functions
 
 \subsubsection{For Cognitive Science}\label{for-cognitive-science}
 
-The calculus provides formal tools for studying
+The calculus provides formal tools for studying cognitive processes
 \cite{varela1991,thompson2007,friston2010}: - Distinction as primitive
 cognitive act - Negation as boundary crossing - Self-reference as
 oscillation - Attention as juxtaposition
+
+Note that while connections to frameworks like the Free Energy Principle
+are explored in the Discussion section, these represent application
+domains rather than the primary focus of this foundational work.
 
 \subsection{Future Work}\label{future-work}
 
@@ -1881,43 +2024,65 @@ connect to boundary logic through:
 \subsection{Variational and Inference
 Frameworks}\label{variational-and-inference-frameworks}
 
+This section reviews connections between boundary logic and variational
+inference frameworks, particularly the Free Energy Principle. These are
+\textbf{application domains and theoretical connections}, not the
+primary focus of Containment Theory, which remains the computational
+verification of boundary logic as an alternative foundation to Set
+Theory.
+
 \subsubsection{Free Energy Principle}\label{free-energy-principle}
 
-The free energy principle \cite{friston2010,isomura2022experimental}
-provides connections to boundary logic through:
+The \textbf{Free Energy Principle} (FEP)
+\cite{friston2010,isomura2022experimental} is a theoretical framework in
+cognitive science proposing that biological systems minimize variational
+free energy (a measure of surprise or prediction error). As an
+application area, FEP shows interesting structural parallels with
+boundary logic:
 
 \begin{itemize}
 \tightlist
 \item
-  Distinction as minimizing variational free energy
+  Distinction-making in boundary logic parallels minimizing variational
+  free energy in FEP
 \item
-  Boundaries as Markov blankets
+  Boundaries in boundary logic are analogous to \textbf{Markov blankets}
+  in FEP (statistical boundaries separating internal and external
+  states)
 \item
-  Inference through boundary maintenance
+  Inference through boundary maintenance in boundary logic mirrors how
+  agents maintain coherent internal models by managing boundaries in FEP
 \end{itemize}
 
 Isomura et al.~\cite{isomura2022experimental} experimentally validated
 the free energy principle using neural networks, demonstrating that
-systems maintaining boundaries exhibit inference-like behavior.
+systems maintaining boundaries exhibit inference-like behavior. This
+suggests potential applications of boundary logic in cognitive modeling,
+though such applications are beyond the scope of this foundational work.
 
 \subsubsection{Active Inference}\label{active-inference}
 
-Active inference frameworks
+\textbf{Active inference} frameworks
 \cite{sennesh2022deriving,hinrichs2025geometric} extend the free energy
-principle to action:
+principle to action, providing another connection point with boundary
+logic:
 
 \begin{itemize}
 \tightlist
 \item
-  Agents maintain boundaries through action
+  Agents maintain boundaries through action, similar to how forms
+  maintain structure through reduction
 \item
-  Perception and action unified through boundary management
+  Perception and action unified through boundary management in active
+  inference parallel the unified operations in boundary logic
 \item
-  Self-organization through distinction maintenance
+  Self-organization through distinction maintenance in active inference
+  resonates with the self-referential structures in boundary logic
 \end{itemize}
 
 These connections suggest boundary logic may provide formal tools for
-understanding cognitive and biological systems.
+understanding cognitive and biological systems, representing a promising
+direction for future applied research.
 
 \subsubsection{Variational Methods}\label{variational-methods}
 
@@ -1951,11 +2116,13 @@ through:
 \item
   Both address Boolean reasoning
 \item
-  SAT is NP-complete (decision problem)
+  SAT is NP-complete (computationally intractable decision problem:
+  determining if a formula has a satisfying assignment)
 \item
-  Boundary evaluation is polynomial (evaluation problem)
+  Boundary evaluation is polynomial (efficiently computable evaluation
+  problem: computing the truth value of a given form)
 \item
-  Different computational contexts
+  Different computational contexts (satisfiability vs.~evaluation)
 \end{itemize}
 
 \subsubsection{Proof Assistants}\label{proof-assistants}
@@ -2417,8 +2584,9 @@ Implementation}\label{s1.1-form-construction-implementation}
 
 \subsubsection{Data Structure Design}\label{data-structure-design}
 
-The \texttt{Form} class represents boundary expressions with the
-following structure:
+A \textbf{form} is any well-formed expression in the calculus of
+indications. The \texttt{Form} class represents boundary expressions
+with the following structure:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2458,8 +2626,9 @@ Two forms are \textbf{structurally equal} if: 1. Same
 \texttt{form\_type} 2. Same \texttt{is\_marked} value 3. Contents are
 pairwise equal (recursive)
 
-Note: Structural equality differs from \textbf{semantic equality}
-(reduction to same canonical form).
+Note: \textbf{Structural equality} (same form structure) differs from
+\textbf{semantic equality} (reduction to same \textbf{canonical
+form}---the irreducible representation after all reductions).
 
 \subsection{S1.2 Reduction Engine
 Architecture}\label{s1.2-reduction-engine-architecture}
@@ -4364,10 +4533,21 @@ representational.
 A line of demarcation creating inside and outside; the fundamental
 operation in the calculus of indications.
 
+\subsubsection{Boundary Logic}\label{boundary-logic}
+
+A logical system built from the primitive act of drawing distinctions
+(boundaries); synonymous with the calculus of indications and
+Containment Theory.
+
 \subsubsection{Calling}\label{calling}
 
 Axiom J1: Double enclosure returns to the original form. Also known as
 involution or double negation elimination.
+
+\subsubsection{Calculus of Indications}\label{calculus-of-indications}
+
+Spencer-Brown's original name for the formal system of boundary logic;
+the calculus built from the primitive notion of distinction.
 
 \subsubsection{Canonical Form}\label{canonical-form}
 
@@ -4377,6 +4557,11 @@ been applied. Only void and mark are canonical.
 \subsubsection{Condensation}\label{condensation}
 
 See Crossing.
+
+\subsubsection{Confluence}\label{confluence}
+
+The property that all reduction sequences from a given form lead to the
+same canonical form (also called the Church-Rosser property).
 
 \subsubsection{Containment Theory}\label{containment-theory}
 
@@ -4408,10 +4593,21 @@ calculus.
 Any well-formed expression in the calculus of indications, built from
 void, mark, enclosure, and juxtaposition.
 
+\subsubsection{Ground Form}\label{ground-form}
+
+A form without variables, where all values are concrete (either void or
+mark). Ground forms can be directly evaluated to canonical form.
+
 \subsubsection{Icon}\label{icon}
 
 (Peirce) A sign that represents by resembling what it signifies; the
 mark is iconic of distinction.
+
+\subsubsection{Isomorphism}\label{isomorphism}
+
+A structure-preserving mapping between two mathematical systems that
+shows they are essentially equivalent. Boundary logic is isomorphic to
+Boolean algebra.
 
 \subsubsection{Imaginary Value}\label{imaginary-value}
 

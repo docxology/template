@@ -187,19 +187,29 @@ represented by the <strong>mark</strong> or <strong>cross</strong>:</p>
 <strong>contained</strong> within the boundary; content outside is in
 the <strong>void</strong>.</p>
 <h3 id="definition-1-form">Definition 1: Form</h3>
-<p>A <strong>form</strong> is defined recursively:</p>
+<p>A <strong>form</strong> is any well-formed expression in the calculus
+of indications, built recursively from primitive elements and
+operations. A <strong>form</strong> is defined recursively:</p>
 <ol type="1">
-<li>The <strong>void</strong> (empty space) is a form</li>
+<li>The <strong>void</strong> (empty space, denoted <span
+class="math inline">\(\emptyset\)</span>) is a form. The
+<strong>void</strong> represents the unmarked state, corresponding to
+FALSE in Boolean logic.</li>
 <li>The <strong>mark</strong> <span class="math inline">\(\langle\
-\rangle\)</span> is a form</li>
+\rangle\)</span> is a form. The <strong>mark</strong> (also called the
+cross) represents the primary distinction, corresponding to TRUE in
+Boolean logic.</li>
 <li>If <span class="math inline">\(a\)</span> is a form, then <span
-class="math inline">\(\langle a \rangle\)</span> (enclosure of <span
-class="math inline">\(a\)</span>) is a form</li>
+class="math inline">\(\langle a \rangle\)</span> is a form. This
+operation is called <strong>enclosure</strong> (placing a boundary
+around <span class="math inline">\(a\)</span>), which represents logical
+negation: NOT <span class="math inline">\(a\)</span>.</li>
 <li>If <span class="math inline">\(a\)</span> and <span
 class="math inline">\(b\)</span> are forms, then <span
-class="math inline">\(ab\)</span> (juxtaposition of <span
-class="math inline">\(a\)</span> and <span
-class="math inline">\(b\)</span>) is a form</li>
+class="math inline">\(ab\)</span> is a form. This operation is called
+<strong>juxtaposition</strong> (placing forms side by side), which
+represents logical conjunction: <span class="math inline">\(a\)</span>
+AND <span class="math inline">\(b\)</span>.</li>
 </ol>
 <p>Nothing else is a form.</p>
 <h3 id="definition-2-depth-and-size">Definition 2: Depth and Size</h3>
@@ -228,14 +238,22 @@ class="math inline">\(a\)</span>.</p>
 <p><span class="math display">\[\langle\ \rangle\langle\ \rangle =
 \langle\ \rangle\]</span> {#eq:crossing}</p>
 <p><strong>Interpretation</strong>: Multiple marks in juxtaposition
-condense to a single mark. The marked state is idempotent.</p>
+condense to a single mark. The marked state is idempotent (applying the
+operation multiple times yields the same result as applying it
+once).</p>
 <p><strong>Proof sketch</strong>: Two boundaries side by side both
 indicate “the marked state.” Indicating the same thing twice does not
 change what is indicated.</p>
 <h2 id="reduction-algorithm">Reduction Algorithm</h2>
+<p><strong>Reduction</strong> is the process of applying the axioms
+(Calling and Crossing) to simplify a form toward its simplest possible
+representation. The reduction algorithm systematically applies reduction
+rules until no further simplification is possible.</p>
 <h3 id="definition-3-canonical-form">Definition 3: Canonical Form</h3>
 <p>A form is in <strong>canonical form</strong> if no reduction rule can
-be applied. The only canonical forms are: - The void <span
+be applied. <strong>Canonical form</strong> is the irreducible
+representation of a form after all possible reductions. The only
+canonical forms are: - The void <span
 class="math inline">\(\emptyset\)</span> - The mark <span
 class="math inline">\(\langle\ \rangle\)</span></p>
 <h3 id="reduction-rules">Reduction Rules</h3>
@@ -268,22 +286,33 @@ Canonical Form</h3>
     return form</code></pre>
 <h3 id="theorem-1-termination">Theorem 1: Termination</h3>
 <p><strong>Claim</strong>: The reduction algorithm terminates for all
-well-formed inputs.</p>
+well-formed inputs (forms constructed according to Definition 1).</p>
 <p><strong>Proof</strong>: Each rule application strictly decreases
-either: - The depth of the form (calling), or - The size of the form
-(crossing, void elimination)</p>
+either: - The depth of the form (calling reduction), or - The size of
+the form (crossing reduction, void elimination)</p>
 <p>Since both metrics are non-negative integers, the algorithm must
 terminate.</p>
 <h3 id="theorem-2-confluence">Theorem 2: Confluence</h3>
 <p><strong>Claim</strong>: All reduction sequences from a given form
-lead to the same canonical form.</p>
+lead to the same canonical form (confluence property).</p>
+<p><strong>Confluence</strong> (also called the Church-Rosser property)
+means that if a form can be reduced in multiple ways, all reduction
+paths eventually converge to the same canonical form. This ensures that
+the result of reduction is unique and independent of the order in which
+rules are applied.</p>
 <p><strong>Proof sketch</strong>: The rules are non-overlapping (each
 pattern is distinct) and local (applying one rule does not invalidate
-others). The Church-Rosser property follows.</p>
+others). The Church-Rosser property (also called confluence) follows: if
+a form can be reduced in multiple ways, all reduction paths eventually
+converge to the same canonical form.</p>
 <h2 id="boolean-algebra-correspondence">Boolean Algebra
 Correspondence</h2>
 <h3 id="the-isomorphism">The Isomorphism</h3>
-<p>Boundary logic is isomorphic to Boolean algebra :</p>
+<p>An <strong>isomorphism</strong> is a structure-preserving mapping
+between two mathematical systems that shows they are essentially
+equivalent. Boundary logic is <strong>isomorphic</strong> to Boolean
+algebra , meaning there exists a one-to-one correspondence that
+preserves all logical operations:</p>
 <table>
 <colgroup>
 <col style="width: 29%" />
@@ -344,8 +373,9 @@ class="math inline">\(b\)</span></td>
 {#eq:nand}</p>
 <h2 id="derived-theorems-consequences">Derived Theorems
 (Consequences)</h2>
-<p>Spencer-Brown derives nine consequences (C1-C9) from the axioms. We
-verify each computationally:</p>
+<p>Spencer-Brown derives nine consequences (C1-C9) from the two axioms.
+These are theorems that follow logically from the axioms and can be
+proven by reduction. We verify each computationally:</p>
 <h3 id="c1-position">C1: Position</h3>
 <p><span class="math display">\[\langle\langle a \rangle b \rangle a =
 a\]</span></p>

@@ -180,26 +180,36 @@ Set Theory, replacing the primitive notion of membership (<span
 class="math inline">\(\in\)</span>) with spatial containment through
 boundary distinctions. Building on G. Spencer-Brown’s <em>Laws of
 Form</em> (1969), we develop a complete computational framework for
-boundary logic that demonstrates its equivalence to Boolean algebra
-while offering distinct advantages in parsimony, geometric intuition,
-and handling of self-reference.</p>
-<p>The calculus of indications operates from just two axioms:
-<strong>Calling</strong> (<span class="math inline">\(\langle\langle a
-\rangle\rangle = a\)</span>, double crossing returns) and
+<strong>boundary logic</strong> (also called the <strong>calculus of
+indications</strong>) that demonstrates its equivalence to Boolean
+algebra while offering distinct advantages in parsimony, geometric
+intuition, and handling of self-reference. <strong>Boundary
+logic</strong> is a logical system built from the primitive act of
+drawing distinctions (boundaries), while the <strong>calculus of
+indications</strong> is Spencer-Brown’s original name for this formal
+system.</p>
+<p>The calculus operates from just two axioms: <strong>Calling</strong>
+(<span class="math inline">\(\langle\langle a \rangle\rangle =
+a\)</span>, where double enclosure returns to the original form) and
 <strong>Crossing</strong> (<span class="math inline">\(\langle\
-\rangle\langle\ \rangle = \langle\ \rangle\)</span>, marks condense).
-From these primitives, we derive the complete Boolean algebra,
-establishing that the marked state <span class="math inline">\(\langle\
-\rangle\)</span> corresponds to TRUE and the unmarked void to FALSE,
-with enclosure <span class="math inline">\(\langle a \rangle\)</span>
-representing negation and juxtaposition <span
-class="math inline">\(ab\)</span> representing conjunction.</p>
-<p>We present a reduction engine that transforms arbitrary boundary
-forms to canonical representations, prove termination in polynomial time
-for ground forms, and verify all derived theorems computationally. Our
-implementation achieves formal verification of Spencer-Brown’s
-consequences (C1-C9), De Morgan’s laws, and the fundamental Boolean
-axioms through reduction to canonical forms.</p>
+\rangle\langle\ \rangle = \langle\ \rangle\)</span>, where multiple
+marks condense to a single mark). From these primitives, we derive the
+complete Boolean algebra, establishing that the marked state <span
+class="math inline">\(\langle\ \rangle\)</span> corresponds to TRUE and
+the unmarked void (empty space) corresponds to FALSE, with enclosure
+<span class="math inline">\(\langle a \rangle\)</span> representing
+negation and juxtaposition <span class="math inline">\(ab\)</span>
+representing conjunction.</p>
+<p>We present a <strong>reduction engine</strong> that transforms
+arbitrary boundary <strong>forms</strong> (expressions built from marks,
+enclosures, and juxtapositions) to <strong>canonical
+representations</strong> (either void or mark—the simplest irreducible
+forms), prove termination in polynomial time for <strong>ground
+forms</strong> (forms without variables, where all values are concrete),
+and verify all derived theorems computationally. Our implementation
+achieves formal verification of Spencer-Brown’s nine consequences
+(C1-C9), De Morgan’s laws, and the fundamental Boolean axioms through
+systematic reduction to canonical forms.</p>
 <p>The comparison with Set Theory reveals that boundary logic achieves
 logical completeness with minimal axiomatic commitment (2 vs 9+ axioms
 in ZFC), provides native geometric interpretation through nested
