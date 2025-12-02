@@ -339,6 +339,7 @@ for chunk in client.stream_query("...", options=opts):
 | `literature_review` | Synthesize multiple summaries | `summaries` |
 | `code_doc` | Generate Python docstrings | `code` |
 | `data_interpret` | Interpret statistical results | `stats` |
+| `manuscript_translation_abstract` | Generate technical abstract and translate to target language | `text`, `target_language` |
 
 ### Using Templates
 
@@ -592,6 +593,72 @@ except ValidationError as e:
 ## Manuscript Review Integration
 
 The LLM module is used by `scripts/06_llm_review.py` to generate comprehensive manuscript reviews. This section documents best practices for long-form review generation.
+
+### Review Types
+
+The system generates four standard review types plus optional translations:
+
+1. **Executive Summary** - Key findings and contributions overview
+2. **Quality Review** - Writing clarity and style assessment
+3. **Methodology Review** - Structure and methods evaluation
+4. **Improvement Suggestions** - Actionable recommendations
+5. **Translations** (optional) - Technical abstract in multiple languages
+
+### Translation Feature
+
+The translation feature generates a medium-length technical abstract (~200-400 words) in English, then translates it to configured target languages.
+
+**Configuration:**
+
+Translations are configured in `project/manuscript/config.yaml`:
+
+```yaml
+llm:
+  translations:
+    enabled: true
+    languages:
+      - zh  # Chinese (Simplified)
+      - hi  # Hindi
+      - ru  # Russian
+```
+
+**Supported Languages:**
+
+| Code | Language |
+|------|----------|
+| `zh` | Chinese (Simplified) |
+| `hi` | Hindi |
+| `ru` | Russian |
+
+**Usage:**
+
+```python
+from infrastructure.llm import ManuscriptTranslationAbstract, TRANSLATION_LANGUAGES
+from infrastructure.core.config_loader import get_translation_languages
+
+# Get configured languages
+languages = get_translation_languages(repo_root)  # ['zh', 'hi', 'ru']
+
+# Generate translation for each language
+for lang_code in languages:
+    template = ManuscriptTranslationAbstract()
+    target_language = TRANSLATION_LANGUAGES[lang_code]
+    prompt = template.render(text=manuscript_text, target_language=target_language)
+    response = client.query(prompt, options=options)
+```
+
+**Output Structure:**
+
+The translation template generates:
+- `## English Abstract` - 200-400 word technical summary
+- `## {Language} Translation` - Complete translation preserving technical terminology
+
+**Validation:**
+
+Translation reviews are validated for:
+- Presence of English abstract section
+- Presence of translation section
+- Minimum word count (400 words total: ~200 English + ~200 translation)
 
 ### Review Generation Best Practices
 

@@ -1,0 +1,286 @@
+{
+  "run_id": "run_1764689812",
+  "keywords": [
+    "karl friston"
+  ],
+  "total_papers": 25,
+  "start_time": 1764689812.2981272,
+  "last_update": 1764691136.021961,
+  "entries": {
+    "svozil2002dangerous": {
+      "citation_key": "svozil2002dangerous",
+      "pdf_path": "literature/pdfs/svozil2002dangerous.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/svozil2002dangerous_summary.md",
+      "download_time": 1764689812.298545,
+      "summary_time": 60.39917802810669
+    },
+    "friston2020some": {
+      "citation_key": "friston2020some",
+      "pdf_path": "literature/pdfs/friston2020some.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 0,
+      "last_error": null,
+      "summary_path": "literature/summaries/friston2020some_summary.md",
+      "download_time": 1764689812.298711,
+      "summary_time": 0.0
+    },
+    "cooray2017bayesian": {
+      "citation_key": "cooray2017bayesian",
+      "pdf_path": "literature/pdfs/cooray2017bayesian.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/cooray2017bayesian_summary.md",
+      "download_time": 1764689812.2988648,
+      "summary_time": 37.9736270904541
+    },
+    "friston2019free": {
+      "citation_key": "friston2019free",
+      "pdf_path": "literature/pdfs/friston2019free.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/friston2019free_summary.md",
+      "download_time": 1764689812.2990239,
+      "summary_time": 29.105292797088623
+    },
+    "biehl2018geometry": {
+      "citation_key": "biehl2018geometry",
+      "pdf_path": "literature/pdfs/biehl2018geometry.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/biehl2018geometry_summary.md",
+      "download_time": 1764689812.299189,
+      "summary_time": 41.84979200363159
+    },
+    "jafarian2019structure": {
+      "citation_key": "jafarian2019structure",
+      "pdf_path": "literature/pdfs/jafarian2019structure.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/jafarian2019structure_summary.md",
+      "download_time": 1764689812.299378,
+      "summary_time": 77.97618103027344
+    },
+    "friston2024from": {
+      "citation_key": "friston2024from",
+      "pdf_path": "literature/pdfs/friston2024from.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/friston2024from_summary.md",
+      "download_time": 1764689812.299563,
+      "summary_time": 53.20281791687012
+    },
+    "friston2020sophisticated": {
+      "citation_key": "friston2020sophisticated",
+      "pdf_path": "literature/pdfs/friston2020sophisticated.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/friston2020sophisticated_summary.md",
+      "download_time": 1764689812.299757,
+      "summary_time": 79.45682215690613
+    },
+    "fagerholm2020principle": {
+      "citation_key": "fagerholm2020principle",
+      "pdf_path": "literature/pdfs/fagerholm2020principle.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/fagerholm2020principle_summary.md",
+      "download_time": 1764689812.2999601,
+      "summary_time": 42.63276791572571
+    },
+    "sajid2019active": {
+      "citation_key": "sajid2019active",
+      "pdf_path": "literature/pdfs/sajid2019active.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/sajid2019active_summary.md",
+      "download_time": 1764689812.300171,
+      "summary_time": 78.15099692344666
+    },
+    "fagerholm2018breaking": {
+      "citation_key": "fagerholm2018breaking",
+      "pdf_path": "literature/pdfs/fagerholm2018breaking.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/fagerholm2018breaking_summary.md",
+      "download_time": 1764689812.3004532,
+      "summary_time": 75.05656099319458
+    },
+    "jafarian2020parametric": {
+      "citation_key": "jafarian2020parametric",
+      "pdf_path": "literature/pdfs/jafarian2020parametric.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/jafarian2020parametric_summary.md",
+      "download_time": 1764689812.3007958,
+      "summary_time": 31.323536157608032
+    },
+    "yang2020bayesian": {
+      "citation_key": "yang2020bayesian",
+      "pdf_path": "literature/pdfs/yang2020bayesian.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/yang2020bayesian_summary.md",
+      "download_time": 1764689812.301215,
+      "summary_time": 36.788933753967285
+    },
+    "slifer2013novel": {
+      "citation_key": "slifer2013novel",
+      "pdf_path": "literature/pdfs/slifer2013novel.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/slifer2013novel_summary.md",
+      "download_time": 1764689812.301655,
+      "summary_time": 25.981721878051758
+    },
+    "friston2020second": {
+      "citation_key": "friston2020second",
+      "pdf_path": "literature/pdfs/friston2020second.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/friston2020second_summary.md",
+      "download_time": 1764689812.3020842,
+      "summary_time": 35.28980803489685
+    },
+    "wegner2022frontal": {
+      "citation_key": "wegner2022frontal",
+      "pdf_path": "literature/pdfs/wegner2022frontal.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/wegner2022frontal_summary.md",
+      "download_time": 1764689812.302529,
+      "summary_time": 32.34748291969299
+    },
+    "fagerholm2019dynamic": {
+      "citation_key": "fagerholm2019dynamic",
+      "pdf_path": "literature/pdfs/fagerholm2019dynamic.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/fagerholm2019dynamic_summary.md",
+      "download_time": 1764689812.302965,
+      "summary_time": 80.2420289516449
+    },
+    "friston2020dynamic": {
+      "citation_key": "friston2020dynamic",
+      "pdf_path": "literature/pdfs/friston2020dynamic.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/friston2020dynamic_summary.md",
+      "download_time": 1764689812.303421,
+      "summary_time": 37.50769591331482
+    },
+    "friston2020tracking": {
+      "citation_key": "friston2020tracking",
+      "pdf_path": "literature/pdfs/friston2020tracking.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/friston2020tracking_summary.md",
+      "download_time": 1764689812.3038762,
+      "summary_time": 77.20730495452881
+    },
+    "friston2020effective": {
+      "citation_key": "friston2020effective",
+      "pdf_path": "literature/pdfs/friston2020effective.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/friston2020effective_summary.md",
+      "download_time": 1764689812.3043468,
+      "summary_time": 45.555126905441284
+    },
+    "parr2020dynamic": {
+      "citation_key": "parr2020dynamic",
+      "pdf_path": "literature/pdfs/parr2020dynamic.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/parr2020dynamic_summary.md",
+      "download_time": 1764689812.3048372,
+      "summary_time": 77.70577883720398
+    },
+    "schilling2022predictive": {
+      "citation_key": "schilling2022predictive",
+      "pdf_path": "literature/pdfs/schilling2022predictive.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/schilling2022predictive_summary.md",
+      "download_time": 1764689812.305324,
+      "summary_time": 76.47279000282288
+    },
+    "fagerholm2019estimating": {
+      "citation_key": "fagerholm2019estimating",
+      "pdf_path": "literature/pdfs/fagerholm2019estimating.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/fagerholm2019estimating_summary.md",
+      "download_time": 1764689812.305863,
+      "summary_time": 70.89545226097107
+    },
+    "fagerholm2020fighting": {
+      "citation_key": "fagerholm2020fighting",
+      "pdf_path": "literature/pdfs/fagerholm2020fighting.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/fagerholm2020fighting_summary.md",
+      "download_time": 1764689812.30635,
+      "summary_time": 42.25974202156067
+    },
+    "fagerholm2019network": {
+      "citation_key": "fagerholm2019network",
+      "pdf_path": "literature/pdfs/fagerholm2019network.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/fagerholm2019network_summary.md",
+      "download_time": 1764689812.306838,
+      "summary_time": 78.20994114875793
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "updated": "2025-12-02T07:36:52.282314",
-  "count": 585,
+  "updated": "2025-12-02T08:34:43.656761",
+  "count": 634,
   "entries": {
     "watson2020active": {
       "citation_key": "watson2020active",
@@ -12963,6 +12963,1011 @@
       "citation_count": null,
       "metadata": {
         "pdf_url": "https://arxiv.org/pdf/1908.06678v1"
+      }
+    },
+    "maluf2018variations": {
+      "citation_key": "maluf2018variations",
+      "title": "Variations of the Energy of Free Particles in the pp-Wave Spacetimes",
+      "authors": [
+        "J. W. Maluf",
+        "J. F. da Rocha-Neto",
+        "S. C. Ulhoa",
+        "F. L. Carneiro"
+      ],
+      "year": 2018,
+      "doi": "10.3390/universe4070074",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1805.05513v2",
+      "pdf_path": "literature/pdfs/maluf2018variations.pdf",
+      "added_date": "2025-12-02T07:59:54.083917",
+      "abstract": "We consider the action of exact plane gravitational waves, or pp-waves, on free particles. The analysis is carried out by investigating the variations of the geodesic trajectories of the particles, before and after the passage of the wave. The initial velocities of the particles are non-vanishing. We evaluate numerically the Kinetic energy per unit mass of the free particles, and obtain interesting, quasi-periodic behaviour of the variations of the Kinetic energy with respect to the width $λ$ of the gaussian that represents the wave. The variation of the energy of the free particle is expected to be exactly minus the variation of the energy of the gravitational field, and therefore provides an estimation of the local variation of the gravitational energy. The investigation is carried out in the context of short bursts of gravitational waves, and of waves described by normalised gaussians, that yield impulsive waves in a certain limit.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1805.05513v2"
+      }
+    },
+    "guerra2025multigrid": {
+      "citation_key": "guerra2025multigrid",
+      "title": "Multigrid methods for total variation",
+      "authors": [
+        "Felipe Guerra",
+        "Tuomo Valkonen"
+      ],
+      "year": 2025,
+      "doi": "10.1007/978-3-031-92369-2_1",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2502.18659v1",
+      "pdf_path": "literature/pdfs/guerra2025multigrid.pdf",
+      "added_date": "2025-12-02T07:59:56.601353",
+      "abstract": "Based on a nonsmooth coherence condition, we construct and prove the convergence of a forward-backward splitting method that alternates between steps on a fine and a coarse grid. Our focus is a total variation regularised inverse imaging problems, specifically, their dual problems, for which we develop in detail the relevant coarse-grid problems. We demonstrate the performance of our method on total variation denoising and magnetic resonance imaging.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2502.18659v1"
+      }
+    },
+    "safdari2015shape": {
+      "citation_key": "safdari2015shape",
+      "title": "On the shape of the free boundary of variational inequalities with gradient constraints",
+      "authors": [
+        "Mohammad Safdari"
+      ],
+      "year": 2015,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1508.02026v1",
+      "pdf_path": "literature/pdfs/safdari2015shape.pdf",
+      "added_date": "2025-12-02T07:59:58.576522",
+      "abstract": "In this paper we derive an estimate on the number of local maxima of the free boundary of some variational inequalities with pointwise gradient constraints. This also gives an estimate on the number of connected components of the free boundary.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1508.02026v1"
+      }
+    },
+    "lobzaev2024protein": {
+      "citation_key": "lobzaev2024protein",
+      "title": "Protein engineering using variational free energy approximation",
+      "authors": [
+        "E. Lobzaev",
+        "Michael A. Herrera",
+        "Martyna Kasprzyk",
+        "G. Stracquadanio"
+      ],
+      "year": 2024,
+      "doi": "10.1038/s41467-024-54814-w",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/4eab7d751c1112eb2dce7f626c09db280b0a140f",
+      "pdf_path": null,
+      "added_date": "2025-12-02T07:59:59.255248",
+      "abstract": "Engineering proteins is a challenging task requiring the exploration of a vast design space. Traditionally, this is achieved using Directed Evolution (DE), which is a laborious process. Generative deep learning, instead, can learn biological features of functional proteins from sequence and structural datasets and return novel variants. However, most models do not generate thermodynamically stable proteins, thus leading to many non-functional variants. Here we propose a model called PRotein Engineering by Variational frEe eNergy approximaTion (PREVENT), which generates stable and functional variants by learning the sequence and thermodynamic landscape of a protein. We evaluate PREVENT by designing 40 variants of the conditionally essential E. coli phosphotransferase N-acetyl-L-glutamate kinase (EcNAGK). We find 85% of the variants to be functional, with 55% of them showing similar growth rate compared to the wildtype enzyme, despite harbouring up to 9 mutations. Our results support a new approach that can significantly accelerate protein engineering. Generative deep learning models can generate novel proteins, but these are often not functional due to thermodynamic instability. Here, authors present a method to learn both the sequence and thermodynamic landscape of a protein and generate new functional variants.",
+      "venue": "Nature Communications",
+      "citation_count": 4,
+      "metadata": {}
+    },
+    "sutter2023variational": {
+      "citation_key": "sutter2023variational",
+      "title": "Variational free energy based macroscopical modeling of ferroelectroelasticity",
+      "authors": [
+        "F. Sutter",
+        "M. Kamlah"
+      ],
+      "year": 2023,
+      "doi": "10.1016/j.jmps.2023.105341",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/33060bb74166497b39e041fc5997c3a0d4dae640",
+      "pdf_path": null,
+      "added_date": "2025-12-02T07:59:59.277048",
+      "abstract": "",
+      "venue": "Journal of the mechanics and physics of solids",
+      "citation_count": 1,
+      "metadata": {
+        "pdf_url": "https://doi.org/10.1016/j.jmps.2023.105341"
+      }
+    },
+    "li2025deep": {
+      "citation_key": "li2025deep",
+      "title": "Deep Variational Free Energy Calculation of Hydrogen Hugoniot",
+      "authors": [
+        "Zihang Li",
+        "Hao Xie",
+        "Xi-Shang Dong",
+        "Lei Wang"
+      ],
+      "year": 2025,
+      "doi": "10.48550/arXiv.2507.18540",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/2b6af51a937df3579d3ab9d81bef8fdca43a14f4",
+      "pdf_path": null,
+      "added_date": "2025-12-02T08:00:07.722730",
+      "abstract": "We develop a deep variational free energy framework to compute the equation of state of hydrogen in the warm dense matter region. This method parameterizes the variational density matrix of hydrogen nuclei and electrons at finite temperature using three deep generative models: a normalizing flow model that represents the Boltzmann distribution of the classical nuclei, an autoregressive transformer that models the distribution of electrons in excited states, and a permutational equivariant flow model that constructs backflow coordinates for electrons in Hartree-Fock orbitals. By jointly optimizing the three neural networks to minimize the variational free energy, we obtain the equation of state and related thermodynamic properties of dense hydrogen. We compare our results with other theoretical and experimental results on the deuterium Hugoniot curve, aiming to resolve existing discrepancies. The calculated results provide a valuable benchmark for deuterium in the warm dense matter region.",
+      "venue": "arXiv.org",
+      "citation_count": 2,
+      "metadata": {}
+    },
+    "xie2022deep": {
+      "citation_key": "xie2022deep",
+      "title": "Deep Variational Free Energy Approach to Dense Hydrogen.",
+      "authors": [
+        "H.-j. Xie",
+        "Ziqun Li",
+        "Han Wang",
+        "Linfeng Zhang",
+        "Lei Wang"
+      ],
+      "year": 2022,
+      "doi": "10.1103/PhysRevLett.131.126501",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/7ae5080c0945d722ee31068bea317af151e73cfe",
+      "pdf_path": "literature/pdfs/xie2022deep.pdf",
+      "added_date": "2025-12-02T08:00:07.745619",
+      "abstract": "We developed a deep generative model-based variational free energy approach to the equations of state of dense hydrogen. We employ a normalizing flow network to model the proton Boltzmann distribution and a fermionic neural network to model the electron wave function at given proton positions. By jointly optimizing the two neural networks we reached a comparable variational free energy to the previous coupled electron-ion Monte Carlo calculation. The predicted equation of state of dense hydrogen under planetary conditions is denser than the findings of ab initio molecular dynamics calculation and empirical chemical model. Moreover, direct access to the entropy and free energy of dense hydrogen opens new opportunities in planetary modeling and high-pressure physics research.",
+      "venue": "Physical Review Letters",
+      "citation_count": 12,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2209.06095"
+      }
+    },
+    "beckers2022principled": {
+      "citation_key": "beckers2022principled",
+      "title": "Principled Pruning of Bayesian Neural Networks Through Variational Free Energy Minimization",
+      "authors": [
+        "Jim Beckers",
+        "Bart Van Erp",
+        "Ziyue Zhao",
+        "K. Kondrashov",
+        "Bert de Vries"
+      ],
+      "year": 2022,
+      "doi": "10.1109/OJSP.2023.3337718",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/90229121782f3ebfae75645a5c97cc9a03cb5051",
+      "pdf_path": "literature/pdfs/beckers2022principled.pdf",
+      "added_date": "2025-12-02T08:00:09.188624",
+      "abstract": "Bayesian model reduction provides an efficient approach for comparing the performance of all nested sub-models of a model, without re-evaluating any of these sub-models. Until now, Bayesian model reduction has been applied mainly in the computational neuroscience community on simple models. In this paper, we formulate and apply Bayesian model reduction to perform principled pruning of Bayesian neural networks, based on variational free energy minimization. Direct application of Bayesian model reduction, however, gives rise to approximation errors. Therefore, a novel iterative pruning algorithm is presented to alleviate the problems arising with naive Bayesian model reduction, as supported experimentally on the publicly available UCI datasets for different inference algorithms. This novel parameter pruning scheme solves the shortcomings of current state-of-the-art pruning methods that are used by the signal processing community. The proposed approach has a clear stopping criterion and minimizes the same objective that is used during training. Next to these benefits, our experiments indicate better model performance in comparison to state-of-the-art pruning schemes.",
+      "venue": "IEEE Open Journal of Signal Processing",
+      "citation_count": 9,
+      "metadata": {
+        "pdf_url": "https://ieeexplore.ieee.org/ielx7/8782710/9006934/10334001.pdf"
+      }
+    },
+    "giese2021extension": {
+      "citation_key": "giese2021extension",
+      "title": "Extension of the Variational Free Energy Profile and Multistate Bennett Acceptance Ratio Methods for High-Dimensional Potential of Mean Force Profile Analysis.",
+      "authors": [
+        "Timothy J. Giese",
+        "S. Ekesan",
+        "D. York"
+      ],
+      "year": 2021,
+      "doi": "10.1021/acs.jpca.1c00736",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/1735030e1206de9f2f2e9db8b7c85453305a7b39",
+      "pdf_path": null,
+      "added_date": "2025-12-02T08:00:10.517506",
+      "abstract": "We redevelop the variational free energy profile (vFEP) method using a cardinal B-spline basis to extend the method for analyzing free energy surfaces (FESs) involving three or more reaction coordinates. We also implemented software for evaluating high-dimensional profiles based on the multistate Bennett acceptance ratio (MBAR) method which constructs an unbiased probability density from global reweighting of the observed samples. The MBAR method takes advantage of a fast algorithm for solving the unbinned weighted histogram (UWHAM)/MBAR equations which replaces the solution of simultaneous equations with a nonlinear optimization of a convex function. We make use of cardinal B-splines and multiquadric radial basis functions to obtain smooth, differentiable MBAR profiles in arbitrary high dimensions. The cardinal B-spline vFEP and MBAR methods are compared using three example systems that examine 1D, 2D, and 3D profiles. Both methods are found to be useful and produce nearly indistinguishable results. The vFEP method is found to be 150 times faster than MBAR when applied to periodic 2D profiles, but the MBAR method is 4.5 times faster than vFEP when evaluating unbounded 3D profiles. In agreement with previous comparisons, we find the vFEP method produces superior FESs when the overlap between umbrella window simulations decreases. Finally, the associative reaction mechanism of hammerhead ribozyme is characterized using 3D, 4D, and 6D profiles, and the higher-dimensional profiles are found to have smaller reaction barriers by as much as 1.5 kcal/mol. The methods presented here have been implemented into the FE-ToolKit software package along with new methods for network-wide free energy analysis in drug discovery.",
+      "venue": "Journal of Physical Chemistry A",
+      "citation_count": 21,
+      "metadata": {
+        "pdf_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8141047"
+      }
+    },
+    "baltieri2021kalman": {
+      "citation_key": "baltieri2021kalman",
+      "title": "Kalman filters as the steady-state solution of gradient descent on variational free energy",
+      "authors": [
+        "M. Baltieri",
+        "Takuya Isomura"
+      ],
+      "year": 2021,
+      "doi": null,
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/e8b97e604cbc2a9430fcb017133491d3d4d2d50c",
+      "pdf_path": null,
+      "added_date": "2025-12-02T08:00:27.392473",
+      "abstract": "The Kalman filter is an algorithm for the estimation of hidden variables in dynamical systems under linear Gauss-Markov assumptions with widespread applications across different fields. Recently, its Bayesian interpretation has received a growing amount of attention especially in neuroscience, robotics and machine learning. In neuroscience, in particular, models of perception and control under the banners of predictive coding, optimal feedback control, active inference and more generally the so-called Bayesian brain hypothesis, have all heavily relied on ideas behind the Kalman filter. Active inference, an algorithmic theory based on the free energy principle, specifically builds on approximate Bayesian inference methods proposing a variational account of neural computation and behaviour in terms of gradients of variational free energy. Using this ambitious framework, several works have discussed different possible relations between free energy minimisation and standard Kalman filters. With a few exceptions, however, such relations point at a mere qualitative resemblance or are built on a set of very diverse comparisons based on purported differences between free energy minimisation and Kalman filtering. In this work, we present a straightforward derivation of Kalman filters consistent with active inference via a variational treatment of free energy minimisation in terms of gradient descent. The approach considered here offers a more direct link between models of neural dynamics as gradient descent and standard accounts of perception and decision making based on probabilistic inference, further bridging the gap between hypotheses about neural implementation and computational principles in brain and behavioural sciences.",
+      "venue": "arXiv.org",
+      "citation_count": 6,
+      "metadata": {}
+    },
+    "xie2022deep2": {
+      "citation_key": "xie2022deep2",
+      "title": "A deep variational free energy approach to dense hydrogen",
+      "authors": [
+        "Hao Xie",
+        "Zi-Hang Li",
+        "Han Wang",
+        "Linfeng Zhang",
+        "Lei Wang"
+      ],
+      "year": 2022,
+      "doi": "10.48550/arXiv.2209.06095",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/a1205a1b4b19e489f9696ca15c75ff62502a473d",
+      "pdf_path": null,
+      "added_date": "2025-12-02T08:00:27.414454",
+      "abstract": "",
+      "venue": "arXiv.org",
+      "citation_count": 0,
+      "metadata": {}
+    },
+    "henriksen2020variational": {
+      "citation_key": "henriksen2020variational",
+      "title": "Variational Free Energy and Economics Optimizing With Biases and Bounded Rationality",
+      "authors": [
+        "M. Henriksen"
+      ],
+      "year": 2020,
+      "doi": "10.3389/fpsyg.2020.549187",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/7db285472b4c974058229640990fe43b432865aa",
+      "pdf_path": "literature/pdfs/henriksen2020variational.pdf",
+      "added_date": "2025-12-02T08:00:27.428565",
+      "abstract": "The purpose of this paper is to offer a new framework for understanding action, optimization, and choice when applied to economic theory more generally. By drawing upon the concept known as the variational free energy principle, the paper will explore how this principle can be used to temper rational choice theory by re-formulating how agents optimize. The approach will result in agent behavior that encompasses a wide range of so-called cognitive biases, as seen in the scientific literature of behavioral economics, but instead of using these biases as further indications of market inefficiencies or market failures, the paper will likewise attempt to show the limits to which these biases can inform or critique standard economic theory. The paper therefore offers up a “middle of the road” approach, in which the neoclassical agent is not quite as “rational” as rational choice theory assumes, but at the same time, not quite as irrational as behavioral economics would often have us believe.",
+      "venue": "Frontiers in Psychology",
+      "citation_count": 7,
+      "metadata": {
+        "pdf_url": "https://www.frontiersin.org/articles/10.3389/fpsyg.2020.549187/pdf"
+      }
+    },
+    "isomura2018vitro": {
+      "citation_key": "isomura2018vitro",
+      "title": "In vitro neural networks minimise variational free energy",
+      "authors": [
+        "Takuya Isomura",
+        "Karl J. Friston"
+      ],
+      "year": 2018,
+      "doi": "10.1038/s41598-018-35221-w",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/5037b0342ba925b418068e69f1b734685ac6dc0d",
+      "pdf_path": "literature/pdfs/isomura2018vitro.pdf",
+      "added_date": "2025-12-02T08:00:30.144594",
+      "abstract": "In this work, we address the neuronal encoding problem from a Bayesian perspective. Specifically, we ask whether neuronal responses in an in vitro neuronal network are consistent with ideal Bayesian observer responses under the free energy principle. In brief, we stimulated an in vitro cortical cell culture with stimulus trains that had a known statistical structure. We then asked whether recorded neuronal responses were consistent with variational message passing based upon free energy minimisation (i.e., evidence maximisation). Effectively, this required us to solve two problems: first, we had to formulate the Bayes-optimal encoding of the causes or sources of sensory stimulation, and then show that these idealised responses could account for observed electrophysiological responses. We describe a simulation of an optimal neural network (i.e., the ideal Bayesian neural code) and then consider the mapping from idealised in silico responses to recorded in vitro responses. Our objective was to find evidence for functional specialisation and segregation in the in vitro neural network that reproduced in silico learning via free energy minimisation. Finally, we combined the in vitro and in silico results to characterise learning in terms of trajectories in a variational information plane of accuracy and complexity.",
+      "venue": "Scientific Reports",
+      "citation_count": 54,
+      "metadata": {
+        "pdf_url": "https://www.nature.com/articles/s41598-018-35221-w.pdf"
+      }
+    },
+    "ramstead2020is": {
+      "citation_key": "ramstead2020is",
+      "title": "Is the Free-Energy Principle a Formal Theory of Semantics? From Variational Density Dynamics to Neural and Phenotypic Representations",
+      "authors": [
+        "M. Ramstead",
+        "Karl J. Friston",
+        "Inês Hipólito"
+      ],
+      "year": 2020,
+      "doi": "10.3390/e22080889",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/8493a53d586e4f345358c13ec81ba7c413a7f646",
+      "pdf_path": null,
+      "added_date": "2025-12-02T08:00:38.875405",
+      "abstract": "The aim of this paper is twofold: (1) to assess whether the construct of neural representations plays an explanatory role under the variational free-energy principle and its corollary process theory, active inference; and (2) if so, to assess which philosophical stance—in relation to the ontological and epistemological status of representations—is most appropriate. We focus on non-realist (deflationary and fictionalist-instrumentalist) approaches. We consider a deflationary account of mental representation, according to which the explanatorily relevant contents of neural representations are mathematical, rather than cognitive, and a fictionalist or instrumentalist account, according to which representations are scientifically useful fictions that serve explanatory (and other) aims. After reviewing the free-energy principle and active inference, we argue that the model of adaptive phenotypes under the free-energy principle can be used to furnish a formal semantics, enabling us to assign semantic content to specific phenotypic states (the internal states of a Markovian system that exists far from equilibrium). We propose a modified fictionalist account—an organism-centered fictionalism or instrumentalism. We argue that, under the free-energy principle, pursuing even a deflationary account of the content of neural representations licenses the appeal to the kind of semantic content involved in the ‘aboutness’ or intentionality of cognitive systems; our position is thus coherent with, but rests on distinct assumptions from, the realist position. We argue that the free-energy principle thereby explains the aboutness or intentionality in living systems and hence their capacity to parse their sensory stream using an ontology or set of semantic factors.",
+      "venue": "Entropy",
+      "citation_count": 75,
+      "metadata": {
+        "pdf_url": "https://www.mdpi.com/1099-4300/22/8/889/pdf?version=1597656881"
+      }
+    },
+    "friston2007variational": {
+      "citation_key": "friston2007variational",
+      "title": "Variational free energy and the Laplace approximation",
+      "authors": [
+        "Karl J. Friston",
+        "J. Mattout",
+        "N. Trujillo-Barreto",
+        "J. Ashburner",
+        "W. Penny"
+      ],
+      "year": 2007,
+      "doi": "10.1016/j.neuroimage.2006.08.035",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/329705a255360c8f86a10d909a92794ed8a0857a",
+      "pdf_path": "literature/pdfs/friston2007variational.pdf",
+      "added_date": "2025-12-02T08:00:42.015187",
+      "abstract": "",
+      "venue": "NeuroImage",
+      "citation_count": 928,
+      "metadata": {
+        "pdf_url": "http://www.fil.ion.ucl.ac.uk/~karl/Variational%20free%20energy%20and%20the%20Laplace%20approximation.pdf"
+      }
+    },
+    "yang2018refining": {
+      "citation_key": "yang2018refining",
+      "title": "Refining Collective Coordinates and Improving Free Energy Representation in Variational Enhanced Sampling.",
+      "authors": [
+        "Y. Yang",
+        "M. Parrinello"
+      ],
+      "year": 2018,
+      "doi": "10.1021/acs.jctc.8b00231",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/17fe6d3c7c4e133d112ba48fdc8a3a69288f79b6",
+      "pdf_path": "literature/pdfs/yang2018refining.pdf",
+      "added_date": "2025-12-02T08:00:46.523584",
+      "abstract": "Collective variables are used often in many enhanced sampling methods, and their choice is a crucial factor in determining sampling efficiency. However, at times, searching for good collective variables can be challenging. In a recent paper, we combined time-lagged independent component analysis with well-tempered metadynamics in order to obtain improved collective variables from metadynamics runs that use lower quality collective variables [ McCarty, J.; Parrinello, M. J. Chem. Phys. 2017 , 147 , 204109 ]. In this work, we extend these ideas to variationally enhanced sampling. This leads to an efficient scheme that is able to make use of the many advantages of the variational scheme. We apply the method to alanine-3 in water. From an alanine-3 variationally enhanced sampling trajectory in which all the six dihedral angles are biased, we extract much better collective variables able to describe in exquisite detail the protein complex free energy surface in a low dimensional representation. The success of this investigation is helped by a more accurate way of calculating the correlation functions needed in the time-lagged independent component analysis and from the introduction of a new basis set to describe the dihedral angles arrangement.",
+      "venue": "Journal of Chemical Theory and Computation",
+      "citation_count": 28,
+      "metadata": {
+        "pdf_url": "https://figshare.com/articles/journal_contribution/Refining_Collective_Coordinates_and_Improving_Free_Energy_Representation_in_Variational_Enhanced_Sampling/6260792/1/files/11442353.pdf"
+      }
+    },
+    "chen2023free": {
+      "citation_key": "chen2023free",
+      "title": "On the free energy of vector spin glasses with nonconvex interactions",
+      "authors": [
+        "Hong-Bin Chen",
+        "J. Mourrat"
+      ],
+      "year": 2023,
+      "doi": "10.2140/pmp.2025.6.1",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/1ae8d8e4f21f092fd4624387e1c1a35187f9d4e5",
+      "pdf_path": null,
+      "added_date": "2025-12-02T08:00:51.450732",
+      "abstract": "The limit free energy of spin-glass models with convex interactions can be represented as a variational problem involving an explicit functional. Models with non-convex interactions are much less well-understood, and simple variational formulas involving the same functional are known to be invalid in general. We show here that a slightly weaker property of the limit free energy does extend to non-convex models. Indeed, under the assumption that the limit free energy exists, we show that this limit can always be represented as a critical value of the said functional. Up to a small perturbation of the parameters defining the model, we also show that any subsequential limit of the law of the overlap matrix is a critical point of this functional. We believe that these results capture the fundamental conclusions of the non-rigorous replica method.",
+      "venue": "Probability and Mathematical Physics",
+      "citation_count": 24,
+      "metadata": {}
+    },
+    "hartmann2017variational": {
+      "citation_key": "hartmann2017variational",
+      "title": "Variational Characterization of Free Energy: Theory and Algorithms",
+      "authors": [
+        "C. Hartmann",
+        "Lorenz Richter",
+        "C. Schütte",
+        "Wei Zhang"
+      ],
+      "year": 2017,
+      "doi": "10.3390/e19110626",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/7c3dfeefc47c334e61b98a6d87dcf2a7ff547521",
+      "pdf_path": null,
+      "added_date": "2025-12-02T08:00:51.462487",
+      "abstract": "The article surveys and extends variational formulations of the thermodynamic free energy and discusses their information-theoretic content from the perspective of mathematical statistics. We revisit the well-known Jarzynski equality for nonequilibrium free energy sampling within the framework of importance sampling and Girsanov change-of-measure transformations. The implications of the different variational formulations for designing efficient stochastic optimization and nonequilibrium simulation algorithms for computing free energies are discussed and illustrated.",
+      "venue": "Entropy",
+      "citation_count": 55,
+      "metadata": {
+        "pdf_url": "https://www.mdpi.com/1099-4300/19/11/626/pdf?version=1511188324"
+      }
+    },
+    "cyron2017mechanobiological": {
+      "citation_key": "cyron2017mechanobiological",
+      "title": "Mechanobiological free energy: a variational approach to tensional homeostasis in tissue equivalents",
+      "authors": [
+        "C. Cyron",
+        "R. Aydin"
+      ],
+      "year": 2017,
+      "doi": "10.1002/zamm.201600126",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/3901e7e3e6597893e8eef61d031b15c7a3bb4842",
+      "pdf_path": null,
+      "added_date": "2025-12-02T08:00:53.026544",
+      "abstract": "",
+      "venue": "",
+      "citation_count": 20,
+      "metadata": {
+        "pdf_url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/zamm.201600126"
+      }
+    },
+    "gaybalmaz2017free": {
+      "citation_key": "gaybalmaz2017free",
+      "title": "A free energy Lagrangian variational formulation of the Navier–Stokes–Fourier system",
+      "authors": [
+        "F. Gay-Balmaz",
+        "Hiroaki Yoshimura"
+      ],
+      "year": 2017,
+      "doi": "10.1142/S0219887819400061",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/88aadc9281b66479ebde738158f2209ae0a814e0",
+      "pdf_path": "literature/pdfs/gaybalmaz2017free.pdf",
+      "added_date": "2025-12-02T08:00:54.675221",
+      "abstract": "We present a variational formulation for the Navier–Stokes–Fourier system based on a free energy Lagrangian. This formulation is a systematic infinite-dimensional extension of the variational approach to the thermodynamics of discrete systems using the free energy, which complements the Lagrangian variational formulation using the internal energy developed in [F. Gay-Balmaz and H. Yoshimura, A Lagrangian variational formulation for nonequilibrium thermodynamics, Part II: Continuum systems, J. Geom. Phys. 111 (2017) 194–212] as one employs temperature, rather than entropy, as an independent variable. The variational derivation is first expressed in the material (or Lagrangian) representation, from which the spatial (or Eulerian) representation is deduced. The variational framework is intrinsically written in a differential-geometric form that allows the treatment of the Navier–Stokes–Fourier system on Riemannian manifolds.",
+      "venue": "International Journal of Geometric Methods in Modern Physics (IJGMMP)",
+      "citation_count": 16,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1706.09010"
+      }
+    },
+    "valsson2014variational": {
+      "citation_key": "valsson2014variational",
+      "title": "Variational approach to enhanced sampling and free energy calculations.",
+      "authors": [
+        "O. Valsson",
+        "M. Parrinello"
+      ],
+      "year": 2014,
+      "doi": "10.1103/PhysRevLett.113.090601",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/4708b42a7ed23633e083c549e5fa7d5ca6866702",
+      "pdf_path": "literature/pdfs/valsson2014variational.pdf",
+      "added_date": "2025-12-02T08:00:57.554388",
+      "abstract": "The ability of widely used sampling methods, such as molecular dynamics or Monte Carlo simulations, to explore complex free energy landscapes is severely hampered by the presence of kinetic bottlenecks. A large number of solutions have been proposed to alleviate this problem. Many are based on the introduction of a bias potential which is a function of a small number of collective variables. However constructing such a bias is not simple. Here we introduce a functional of the bias potential and an associated variational principle. The bias that minimizes the functional relates in a simple way to the free energy surface. This variational principle can be turned into a practical, efficient, and flexible sampling method. A number of numerical examples are presented which include the determination of a three-dimensional free energy surface. We argue that, beside being numerically advantageous, our variational approach provides a convenient and novel standpoint for looking at the sampling problem.",
+      "venue": "Physical Review Letters",
+      "citation_count": 224,
+      "metadata": {
+        "pdf_url": "http://arxiv.org/pdf/1407.0477"
+      }
+    },
+    "watanabe2009upper": {
+      "citation_key": "watanabe2009upper",
+      "title": "Upper bound for variational free energy of Bayesian networks",
+      "authors": [
+        "Kazuho Watanabe",
+        "Motoki Shiga",
+        "Sumio Watanabe"
+      ],
+      "year": 2009,
+      "doi": "10.1007/s10994-008-5099-x",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/97fc3fec51e89bf7be8a58c53271bedc791e8edd",
+      "pdf_path": "literature/pdfs/watanabe2009upper.pdf",
+      "added_date": "2025-12-02T08:00:59.667542",
+      "abstract": "",
+      "venue": "Machine-mediated learning",
+      "citation_count": 40,
+      "metadata": {
+        "pdf_url": "https://link.springer.com/content/pdf/10.1007/s10994-008-5099-x.pdf"
+      }
+    },
+    "mackay2001local": {
+      "citation_key": "mackay2001local",
+      "title": "Local Minima, Symmetry-breaking, and Model Pruning in Variational Free Energy Minimization",
+      "authors": [
+        "D. Mackay"
+      ],
+      "year": 2001,
+      "doi": null,
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/f009659777096291db6db7508a9d47f8795a285b",
+      "pdf_path": null,
+      "added_date": "2025-12-02T08:01:02.560217",
+      "abstract": "",
+      "venue": "",
+      "citation_count": 48,
+      "metadata": {}
+    },
+    "lin2005variational": {
+      "citation_key": "lin2005variational",
+      "title": "A variational free energy minimization interpretation of multiuser detection in CDMA",
+      "authors": [
+        "D. Lin",
+        "Teng Joon Lim"
+      ],
+      "year": 2005,
+      "doi": "10.1109/GLOCOM.2005.1577915",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/b32c2b2a92b57332246ea63eab55ece5e3453bf2",
+      "pdf_path": null,
+      "added_date": "2025-12-02T08:01:02.572894",
+      "abstract": "",
+      "venue": "GLOBECOM '05. IEEE Global Telecommunications Conference, 2005.",
+      "citation_count": 15,
+      "metadata": {}
+    },
+    "silva2022solving": {
+      "citation_key": "silva2022solving",
+      "title": "Solving the Job Shop Scheduling Problem with Ant Colony Optimization",
+      "authors": [
+        "Alysson Ribeiro da Silva"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2209.05284v1",
+      "pdf_path": "literature/pdfs/silva2022solving.pdf",
+      "added_date": "2025-12-02T08:34:23.468117",
+      "abstract": "The Job Shop Schedule Problem (JSSP) refers to the ability of an agent to allocate tasks that should be executed in a specified time in a machine from a cluster. The task allocation can be achieved from several methods, however, this report it is explored the ability of the Ant Colony Optimization to generate feasible solutions for several JSSP instances. This proposal models the JSSP as a complete graph since disjunct models can prevent the ACO from exploring all the search space. Several instances of the JSSP were used to evaluate the proposal. Results suggest that the algorithm can reach optimum solutions for easy and harder instances with a selection of parameters.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2209.05284v1"
+      }
+    },
+    "philippe2022first": {
+      "citation_key": "philippe2022first",
+      "title": "First Competitive Ant Colony Scheme for the CARP",
+      "authors": [
+        "Lacomme Philippe",
+        "Prins Christian",
+        "Tanguy Alain"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2212.02228v1",
+      "pdf_path": "literature/pdfs/philippe2022first.pdf",
+      "added_date": "2025-12-02T08:34:23.727965",
+      "abstract": "This paper addresses the Capacitated Arc Routing Problem (CARP) using an Ant Colony Optimization scheme. Ant Colony schemes can compute solutions for medium scale instances of VRP. The proposed Ant Colony is dedicated to large-scale instances of CARP with more than 140 nodes and 190 arcs to service. The Ant Colony scheme is coupled with a local search procedure and provides high quality solutions. The benchmarks we carried out prove possible to obtain solutions as profitable as CARPET ones can be obtained using such scheme when a sufficient number of iterations is devoted to the ants. It competes with the Genetic Algorithm of Lacomme et al. regarding solution quality but it is more time consuming on large scale instances. The method has been intensively benchmarked on the well-known instances of Eglese, DeArmon and the last ones of Belenguer and Benavent. This research report is a step forward CARP resolution by Ant Colony proving ant schemes can compete with Taboo search methods and Genetic Algorithms",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2212.02228v1"
+      }
+    },
+    "mane2022overview": {
+      "citation_key": "mane2022overview",
+      "title": "Overview and Applications of GPGPU Based Parallel Ant Colony Optimization",
+      "authors": [
+        "Sandeep U Mane",
+        "Pooja S. Lokare",
+        "Harsha R. Gaikwad"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2203.11487v1",
+      "pdf_path": "literature/pdfs/mane2022overview.pdf",
+      "added_date": "2025-12-02T08:34:24.616855",
+      "abstract": "Ant Colony Optimization algorithm is a magnificent heuristics technique based on the behavior of ants. Parallel computing is a means to achieve the desired results in commensurable execution time. Parallelization of Ant Colony Optimization is utilized to solve large and complex problems. This paper discusses a review of different parallelization approaches for Ant Colony Optimization and its various applications. Parallel Ant Colony Optimization has proved to be a successful approach for highly constrained problems such as routing, scheduling, timetabling, etc. Parallelization of Ant Colony Optimization reduces the execution time, increases the size of the problem, etc.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2203.11487v1"
+      }
+    },
+    "ghaffari2015distributed": {
+      "citation_key": "ghaffari2015distributed",
+      "title": "Distributed House-Hunting in Ant Colonies",
+      "authors": [
+        "Mohsen Ghaffari",
+        "Cameron Musco",
+        "Tsvetomira Radeva",
+        "Nancy Lynch"
+      ],
+      "year": 2015,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1505.03799v1",
+      "pdf_path": "literature/pdfs/ghaffari2015distributed.pdf",
+      "added_date": "2025-12-02T08:34:24.985231",
+      "abstract": "We introduce the study of the ant colony house-hunting problem from a distributed computing perspective. When an ant colony's nest becomes unsuitable due to size constraints or damage, the colony must relocate to a new nest. The task of identifying and evaluating the quality of potential new nests is distributed among all ants. The ants must additionally reach consensus on a final nest choice and the full colony must be transported to this single new nest. Our goal is to use tools and techniques from distributed computing theory in order to gain insight into the house-hunting process.   We develop a formal model for the house-hunting problem inspired by the behavior of the Temnothorax genus of ants. We then show a Ω(log n) lower bound on the time for all n ants to agree on one of k candidate nests. We also present two algorithms that solve the house-hunting problem in our model. The first algorithm solves the problem in optimal O(log n) time but exhibits some features not characteristic of natural ant behavior. The second algorithm runs in O(k log n) time and uses an extremely simple and natural rule for each ant to decide on the new nest.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1505.03799v1"
+      }
+    },
+    "abdelmoaty2024comparative": {
+      "citation_key": "abdelmoaty2024comparative",
+      "title": "Comparative Analysis of Four Prominent Ant Colony Optimization Variants: Ant System, Rank-Based Ant System, Max-Min Ant System, and Ant Colony System",
+      "authors": [
+        "Ahmed Mohamed Abdelmoaty",
+        "Ibrahim Ihab Ibrahim"
+      ],
+      "year": 2024,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2405.15397v1",
+      "pdf_path": "literature/pdfs/abdelmoaty2024comparative.pdf",
+      "added_date": "2025-12-02T08:34:25.297598",
+      "abstract": "This research conducts a comparative analysis of four Ant Colony Optimization (ACO) variants -- Ant System (AS), Rank-Based Ant System (ASRank), Max-Min Ant System (MMAS), and Ant Colony System (ACS) -- for solving the Traveling Salesman Problem (TSP). Our findings demonstrate that algorithm performance is significantly influenced by problem scale and instance type. ACS excels in smaller TSP instances due to its rapid convergence, while PACS proves more adaptable for medium-sized problems. MMAS consistently achieves competitive results across all scales, particularly for larger instances, due to its ability to avoid local optima. ASRank, however, struggles to match the performance of the other algorithms. This research provides insights into the strengths and weaknesses of these ACO variants, guiding the selection of the most suitable algorithm for specific TSP applications.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2405.15397v1"
+      }
+    },
+    "ramos2004artificial": {
+      "citation_key": "ramos2004artificial",
+      "title": "Artificial Ant Colonies in Digital Image Habitats - A Mass Behaviour Effect Study on Pattern Recognition",
+      "authors": [
+        "Vitorino Ramos",
+        "Filipe Almeida"
+      ],
+      "year": 2004,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/cs/0412086v1",
+      "pdf_path": "literature/pdfs/ramos2004artificial.pdf",
+      "added_date": "2025-12-02T08:34:25.642437",
+      "abstract": "Some recent studies have pointed that, the self-organization of neurons into brain-like structures, and the self-organization of ants into a swarm are similar in many respects. If possible to implement, these features could lead to important developments in pattern recognition systems, where perceptive capabilities can emerge and evolve from the interaction of many simple local rules. The principle of the method is inspired by the work of Chialvo and Millonas who developed the first numerical simulation in which swarm cognitive map formation could be explained. From this point, an extended model is presented in order to deal with digital image habitats, in which artificial ants could be able to react to the environment and perceive it. Evolution of pheromone fields point that artificial ant colonies could react and adapt appropriately to any type of digital habitat. KEYWORDS: Swarm Intelligence, Self-Organization, Stigmergy, Artificial Ant Systems, Pattern Recognition and Perception, Image Segmentation, Gestalt Perception Theory, Distributed Computation.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/cs/0412086v1"
+      }
+    },
+    "macktoobian2022selforganizing": {
+      "citation_key": "macktoobian2022selforganizing",
+      "title": "Self-organizing nest migration dynamics synthesis for ant colony systems",
+      "authors": [
+        "Matin Macktoobian"
+      ],
+      "year": 2022,
+      "doi": "10.1007/s11047-022-09923-0",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2210.03975v1",
+      "pdf_path": "literature/pdfs/macktoobian2022selforganizing.pdf",
+      "added_date": "2025-12-02T08:34:26.150014",
+      "abstract": "In this study, we synthesize a novel dynamical approach for ant colonies enabling them to migrate to new nest sites in a self-organizing fashion. In other words, we realize ant colony migration as a self-organizing phenotype-level collective behavior. For this purpose, we first segment the edges of the graph of ants' pathways. Then, each segment, attributed to its own pheromone profile, may host an ant. So, multiple ants may occupy an edge at the same time. Thanks to this segment-wise edge formulation, ants have more selection options in the course of their pathway determination, thereby increasing the diversity of their colony's emergent behaviors. In light of the continuous pheromone dynamics of segments, each edge owns a spatio-temporal piece-wise continuous pheromone profile in which both deposit and evaporation processes are unified. The passive dynamics of the proposed migration mechanism is sufficiently rich so that an ant colony can migrate to the vicinity of a new nest site in a self-organizing manner without any external supervision. In particular, we perform extensive simulations to test our migration dynamics applied to a colony including 500 ants traversing a pathway graph comprising 200 nodes and 4000 edges which are segmented based on various resolutions. The obtained results exhibit the effectiveness of our strategy.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2210.03975v1"
+      }
+    },
+    "pang2009experiment": {
+      "citation_key": "pang2009experiment",
+      "title": "Experiment Study of Entropy Convergence of Ant Colony Optimization",
+      "authors": [
+        "Chao-Yang Pang",
+        "Chong-Bao Wang",
+        "Ben-Qiong Hu"
+      ],
+      "year": 2009,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/0905.1751v4",
+      "pdf_path": "literature/pdfs/pang2009experiment.pdf",
+      "added_date": "2025-12-02T08:34:27.359464",
+      "abstract": "Ant colony optimization (ACO) has been applied to the field of combinatorial optimization widely. But the study of convergence theory of ACO is rare under general condition. In this paper, the authors try to find the evidence to prove that entropy is related to the convergence of ACO, especially to the estimation of the minimum iteration number of convergence. Entropy is a new view point possibly to studying the ACO convergence under general condition. Key Words: Ant Colony Optimization, Convergence of ACO, Entropy",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/0905.1751v4"
+      }
+    },
+    "yang2024tensorized": {
+      "citation_key": "yang2024tensorized",
+      "title": "Tensorized Ant Colony Optimization for GPU Acceleration",
+      "authors": [
+        "Luming Yang",
+        "Tao Jiang",
+        "Ran Cheng"
+      ],
+      "year": 2024,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2404.04895v2",
+      "pdf_path": "literature/pdfs/yang2024tensorized.pdf",
+      "added_date": "2025-12-02T08:34:27.918261",
+      "abstract": "Ant Colony Optimization (ACO) is renowned for its effectiveness in solving Traveling Salesman Problems, yet it faces computational challenges in CPU-based environments, particularly with large-scale instances. In response, we introduce a Tensorized Ant Colony Optimization (TensorACO) to utilize the advancements of GPU acceleration. As the core, TensorACO fully transforms ant system and ant path into tensor forms, a process we refer to as tensorization. For the tensorization of ant system, we propose a preprocessing method to reduce the computational overhead by calculating the probability transition matrix. In the tensorization of ant path, we propose an index mapping method to accelerate the update of pheromone matrix by replacing the mechanism of sequential path update with parallel matrix operations. Additionally, we introduce an Adaptive Independent Roulette (AdaIR) method to overcome the challenges of parallelizing ACO's selection mechanism on GPUs. Comprehensive experiments demonstrate the superior performance of TensorACO achieving up to 1921$\\times$ speedup over standard ACO. Moreover, the AdaIR method further improves TensorACO's convergence speed by 80% and solution quality by 2%. Source codes are available at https://github.com/EMI-Group/tensoraco.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2404.04895v2"
+      }
+    },
+    "lin2024carbon": {
+      "citation_key": "lin2024carbon",
+      "title": "A Carbon Aware Ant Colony System (CAACS)",
+      "authors": [
+        "Marina Lin",
+        "Laura P. Schaposnik"
+      ],
+      "year": 2024,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2407.09404v2",
+      "pdf_path": "literature/pdfs/lin2024carbon.pdf",
+      "added_date": "2025-12-02T08:34:28.478177",
+      "abstract": "In an era where sustainability is becoming increasingly crucial, we introduce a new Carbon-Aware Ant Colony System (CAACS) Algorithm that addresses the Generalized Traveling Salesman Problem (GTSP) while minimizing carbon emissions. This novel approach leverages the natural efficiency of ant colony pheromone trails to find optimal routes, balancing both environmental and economic objectives. By integrating sustainability into transportation models, CAACS provides a powerful tool for real-world applications, including network design, delivery route planning, and commercial aircraft logistics. Our algorithm's unique bi-objective optimization advances the study of sustainable transportation solutions.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2407.09404v2"
+      }
+    },
+    "lloyd2018solving": {
+      "citation_key": "lloyd2018solving",
+      "title": "Solving Sudoku with Ant Colony Optimisation",
+      "authors": [
+        "Huw Lloyd",
+        "Martyn Amos"
+      ],
+      "year": 2018,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1805.03545v1",
+      "pdf_path": "literature/pdfs/lloyd2018solving.pdf",
+      "added_date": "2025-12-02T08:34:29.810614",
+      "abstract": "In this paper we present a new Ant Colony Optimisation-based algorithm for Sudoku, which out-performs existing methods on large instances. Our method includes a novel anti-stagnation operator, which we call Best Value Evaporation.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1805.03545v1"
+      }
+    },
+    "kim2024ant": {
+      "citation_key": "kim2024ant",
+      "title": "Ant Colony Sampling with GFlowNets for Combinatorial Optimization",
+      "authors": [
+        "Minsu Kim",
+        "Sanghyeok Choi",
+        "Hyeonah Kim",
+        "Jiwoo Son",
+        "Jinkyoo Park",
+        "Yoshua Bengio"
+      ],
+      "year": 2024,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2403.07041v4",
+      "pdf_path": "literature/pdfs/kim2024ant.pdf",
+      "added_date": "2025-12-02T08:34:30.549206",
+      "abstract": "We present the Generative Flow Ant Colony Sampler (GFACS), a novel meta-heuristic method that hierarchically combines amortized inference and parallel stochastic search. Our method first leverages Generative Flow Networks (GFlowNets) to amortize a \\emph{multi-modal} prior distribution over combinatorial solution space that encompasses both high-reward and diversified solutions. This prior is iteratively updated via parallel stochastic search in the spirit of Ant Colony Optimization (ACO), leading to the posterior distribution that generates near-optimal solutions. Extensive experiments across seven combinatorial optimization problems demonstrate GFACS's promising performances.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2403.07041v4"
+      }
+    },
+    "pang2009apply": {
+      "citation_key": "pang2009apply",
+      "title": "Apply Ant Colony Algorithm to Search All Extreme Points of Function",
+      "authors": [
+        "Chao-Yang Pang",
+        "Hui Liu",
+        "Xia Li",
+        "Yun-Fei Wang",
+        "Ben-Qiong Hu"
+      ],
+      "year": 2009,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/0911.3209v1",
+      "pdf_path": "literature/pdfs/pang2009apply.pdf",
+      "added_date": "2025-12-02T08:34:32.072864",
+      "abstract": "To find all extreme points of multimodal functions is called extremum problem, which is a well known difficult issue in optimization fields. Applying ant colony optimization (ACO) to solve this problem is rarely reported. The method of applying ACO to solve extremum problem is explored in this paper. Experiment shows that the solution error of the method presented in this paper is less than 10^-8. keywords: Extremum Problem; Ant Colony Optimization (ACO)",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/0911.3209v1"
+      }
+    },
+    "raza2014ant": {
+      "citation_key": "raza2014ant",
+      "title": "Ant Colony Optimization for Inferring Key Gene Interactions",
+      "authors": [
+        "Khalid Raza",
+        "Mahish Kohli"
+      ],
+      "year": 2014,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1406.1626v1",
+      "pdf_path": "literature/pdfs/raza2014ant.pdf",
+      "added_date": "2025-12-02T08:34:32.737777",
+      "abstract": "Inferring gene interaction network from gene expression data is an important task in systems biology research. The gene interaction network, especially key interactions, plays an important role in identifying biomarkers for disease that further helps in drug design. Ant colony optimization is an optimization algorithm based on natural evolution and has been used in many optimization problems. In this paper, we applied ant colony optimization algorithm for inferring the key gene interactions from gene expression data. The algorithm has been tested on two different kinds of benchmark datasets and observed that it successfully identify some key gene interactions.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1406.1626v1"
+      }
+    },
+    "rukundo2021advances": {
+      "citation_key": "rukundo2021advances",
+      "title": "Advances on image interpolation based on ant colony algorithm",
+      "authors": [
+        "Olivier Rukundo",
+        "Hanqiang Cao"
+      ],
+      "year": 2021,
+      "doi": "10.1186/s40064-016-2040-9",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2104.12863v1",
+      "pdf_path": "literature/pdfs/rukundo2021advances.pdf",
+      "added_date": "2025-12-02T08:34:33.062854",
+      "abstract": "This paper presents an advance on image interpolation based on ant colony algorithm (AACA) for high-resolution image scaling. The difference between the proposed algorithm and the previously proposed optimization of bilinear interpolation based on ant colony algorithm (OBACA) is that AACA uses global weighting, whereas OBACA uses a local weighting scheme. The strength of the proposed global weighting of the AACA algorithm depends on employing solely the pheromone matrix information present on any group of four adjacent pixels to decide which case deserves a maximum global weight value or not. Experimental results are further provided to show the higher performance of the proposed AACA algorithm with reference to the algorithms mentioned in this paper.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2104.12863v1"
+      }
+    },
+    "skinderowicz2016gpubased": {
+      "citation_key": "skinderowicz2016gpubased",
+      "title": "The GPU-based Parallel Ant Colony System",
+      "authors": [
+        "Rafał Skinderowicz"
+      ],
+      "year": 2016,
+      "doi": "10.1016/j.jpdc.2016.04.014",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1605.02669v2",
+      "pdf_path": "literature/pdfs/skinderowicz2016gpubased.pdf",
+      "added_date": "2025-12-02T08:34:34.719099",
+      "abstract": "The Ant Colony System (ACS) is, next to Ant Colony Optimization (ACO) and the MAX-MIN Ant System (MMAS), one of the most efficient metaheuristic algorithms inspired by the behavior of ants. In this article we present three novel parallel versions of the ACS for the graphics processing units (GPUs). To the best of our knowledge, this is the first such work on the ACS which shares many key elements of the ACO and the MMAS, but differences in the process of building solutions and updating the pheromone trails make obtaining an efficient parallel version for the GPUs a difficult task. The proposed parallel versions of the ACS differ mainly in their implementations of the pheromone memory. The first two use the standard pheromone matrix, and the third uses a novel selective pheromone memory. Computational experiments conducted on several Travelling Salesman Problem (TSP) instances of sizes ranging from 198 to 2392 cities showed that the parallel ACS on Nvidia Kepler GK104 GPU (1536 CUDA cores) is able to obtain a speedup up to 24.29x vs the sequential ACS running on a single core of Intel Xeon E5-2670 CPU. The parallel ACS with the selective pheromone memory achieved speedups up to 16.85x, but in most cases the obtained solutions were of significantly better quality than for the sequential ACS.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1605.02669v2"
+      }
+    },
+    "chaudhuri2013dynamic": {
+      "citation_key": "chaudhuri2013dynamic",
+      "title": "A Dynamic Algorithm for the Longest Common Subsequence Problem using Ant Colony Optimization Technique",
+      "authors": [
+        "Arindam Chaudhuri"
+      ],
+      "year": 2013,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1307.1905v1",
+      "pdf_path": "literature/pdfs/chaudhuri2013dynamic.pdf",
+      "added_date": "2025-12-02T08:34:35.438186",
+      "abstract": "We present a dynamic algorithm for solving the Longest Common Subsequence Problem using Ant Colony Optimization Technique. The Ant Colony Optimization Technique has been applied to solve many problems in Optimization Theory, Machine Learning and Telecommunication Networks etc. In particular, application of this theory in NP-Hard Problems has a remarkable significance. Given two strings, the traditional technique for finding Longest Common Subsequence is based on Dynamic Programming which consists of creating a recurrence relation and filling a table of size . The proposed algorithm draws analogy with behavior of ant colonies function and this new computational paradigm is known as Ant System. It is a viable new approach to Stochastic Combinatorial Optimization. The main characteristics of this model are positive feedback, distributed computation, and the use of constructive greedy heuristic. Positive feedback accounts for rapid discovery of good solutions, distributed computation avoids premature convergence and greedy heuristic helps find acceptable solutions in minimum number of stages. We apply the proposed methodology to Longest Common Subsequence Problem and give the simulation results. The effectiveness of this approach is demonstrated by efficient Computational Complexity. To the best of our knowledge, this is the first Ant Colony Optimization Algorithm for Longest Common Subsequence Problem.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1307.1905v1"
+      }
+    },
+    "ismkhan2014accelerating": {
+      "citation_key": "ismkhan2014accelerating",
+      "title": "Accelerating the ANT Colony Optimization By Smart ANTs, Using Genetic Operator",
+      "authors": [
+        "Hassan Ismkhan"
+      ],
+      "year": 2014,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1411.2897v1",
+      "pdf_path": "literature/pdfs/ismkhan2014accelerating.pdf",
+      "added_date": "2025-12-02T08:34:35.916021",
+      "abstract": "This paper research review Ant colony optimization (ACO) and Genetic Algorithm (GA), both are two powerful meta-heuristics. This paper explains some major defects of these two algorithm at first then proposes a new model for ACO in which, artificial ants use a quick genetic operator and accelerate their actions in selecting next state. Experimental results show that proposed hybrid algorithm is effective and its performance including speed and accuracy beats other version.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1411.2897v1"
+      }
+    },
+    "lin2014hybrid": {
+      "citation_key": "lin2014hybrid",
+      "title": "Hybrid Ant Colony Algorithm Clonal Selection in the Application of the Cloud's Resource Scheduling",
+      "authors": [
+        "Jianbiao Lin",
+        "Yukun Zhong",
+        "Xiaowei Lin",
+        "Hui Lin",
+        "Qiang Zeng"
+      ],
+      "year": 2014,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1411.2528v1",
+      "pdf_path": "literature/pdfs/lin2014hybrid.pdf",
+      "added_date": "2025-12-02T08:34:36.358865",
+      "abstract": "In this paper, thinking over characteristics of ant colony optimization Algorithm, taking into account the characteristics of cloud computing, combined with clonal selection algorithm (CSA) global optimum advantage of the convergence of the clonal selection algorithm (CSA) into every ACO iteration, speeding up the convergence rate, and the introduction of reverse mutation strategy, ant colony optimization algorithm avoids local optimum. Depth study of the cloud environment ant colony clonal selection algorithm resource scheduling policy, clonal selection algorithm converges to solve optimization problems when sufficient condition for global optimal solution based on clonal selection algorithm for various applications such as BCA and CLONALG algorithm, using these sufficient condition to meet and simulation platform CloudSim achieve a simulation by extending the cloud. Experimental results show that this task can be shortened fusion algorithm running time cloud environment, improve resource utilization. Demonstrate the effectiveness of the method.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1411.2528v1"
+      }
+    },
+    "kumar2013load": {
+      "citation_key": "kumar2013load",
+      "title": "Load Balancing using Ant Colony in Cloud Computing",
+      "authors": [
+        "Ranjan Kumar",
+        "G. Sahoo"
+      ],
+      "year": 2013,
+      "doi": "10.2013/VOL3/NO.5",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1312.2074v1",
+      "pdf_path": "literature/pdfs/kumar2013load.pdf",
+      "added_date": "2025-12-02T08:34:36.648800",
+      "abstract": "Ants are very small insects.They are capable to find food even they are complete blind. The ants lives in their nest and their job is to search food while they get hungry. We are not interested in their living style, such as how they live, how they sleep. But we are interested in how they search for food, and how they find the shortest path. The technique for finding the shortest path are now applying in cloud computing. The Ant Colony approach towards Cloud Computing gives better performance.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1312.2074v1"
+      }
+    },
+    "tran2025neufaco": {
+      "citation_key": "tran2025neufaco",
+      "title": "NeuFACO: Neural Focused Ant Colony Optimization for Traveling Salesman Problem",
+      "authors": [
+        "Dat Thanh Tran",
+        "Khai Quang Tran",
+        "Khoi Anh Pham",
+        "Van Khu Vu",
+        "Dong Duc Do"
+      ],
+      "year": 2025,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2509.16938v2",
+      "pdf_path": "literature/pdfs/tran2025neufaco.pdf",
+      "added_date": "2025-12-02T08:34:37.571546",
+      "abstract": "This study presents Neural Focused Ant Colony Optimization (NeuFACO), a non-autoregressive framework for the Traveling Salesman Problem (TSP) that combines advanced reinforcement learning with enhanced Ant Colony Optimization (ACO). NeuFACO employs Proximal Policy Optimization (PPO) with entropy regularization to train a graph neural network for instance-specific heuristic guidance, which is integrated into an optimized ACO framework featuring candidate lists, restricted tour refinement, and scalable local search. By leveraging amortized inference alongside ACO stochastic exploration, NeuFACO efficiently produces high-quality solutions across diverse TSP instances.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2509.16938v2"
+      }
+    },
+    "chavarriamolina2019clustering": {
+      "citation_key": "chavarriamolina2019clustering",
+      "title": "Clustering via Ant Colonies: Parameter Analysis and Improvement of the Algorithm",
+      "authors": [
+        "Jeffry Chavarria-Molina",
+        "Juan Jose Fallas-Monge",
+        "Javier Trejos-Zelaya"
+      ],
+      "year": 2019,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1912.01105v1",
+      "pdf_path": "literature/pdfs/chavarriamolina2019clustering.pdf",
+      "added_date": "2025-12-02T08:34:40.697316",
+      "abstract": "An ant colony optimization approach for partitioning a set of objects is proposed. In order to minimize the intra-variance, or within sum-of-squares, of the partitioned classes, we construct ant-like solutions by a constructive approach that selects objects to be put in a class with a probability that depends on the distance between the object and the centroid of the class (visibility) and the pheromone trail; the latter depends on the class memberships that have been defined along the iterations. The procedure is improved with the application of K-means algorithm in some iterations of the ant colony method. We performed a simulation study in order to evaluate the method with a Monte Carlo experiment that controls some sensitive parameters of the clustering problem. After some tuning of the parameters, the method has also been applied to some benchmark real-data sets. Encouraging results were obtained in nearly all cases.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1912.01105v1"
+      }
+    },
+    "haryanto2015warehouse": {
+      "citation_key": "haryanto2015warehouse",
+      "title": "Warehouse Layout Method Based on Ant Colony and Backtracking Algorithm",
+      "authors": [
+        "Ardy Wibowo Haryanto",
+        "Adhi Kusnadi",
+        "Yustinus Eko Soelistio"
+      ],
+      "year": 2015,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1508.04872v1",
+      "pdf_path": "literature/pdfs/haryanto2015warehouse.pdf",
+      "added_date": "2025-12-02T08:34:41.433818",
+      "abstract": "Warehouse is one of the important aspects of a company. Therefore, it is necessary to improve Warehouse Management System (WMS) to have a simple function that can determine the layout of the storage goods. In this paper we propose an improved warehouse layout method based on ant colony algorithm and backtracking algorithm. The method works on two steps. First, it generates a solutions parameter tree from backtracking algorithm. Then second, it deducts the solutions parameter by using a combination of ant colony algorithm and backtracking algorithm. This method was tested by measuring the time needed to build the tree and to fill up the space using two scenarios. The method needs 0.294 to 33.15 seconds to construct the tree and 3.23 seconds (best case) to 61.41 minutes (worst case) to fill up the warehouse. This method is proved to be an attractive alternative solution for warehouse layout system.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1508.04872v1"
+      }
+    },
+    "skackauskas2023herder": {
+      "citation_key": "skackauskas2023herder",
+      "title": "Herder Ants: Ant Colony Optimization with Aphids for Discrete Event-Triggered Dynamic Optimization Problems",
+      "authors": [
+        "Jonas Skackauskas",
+        "Tatiana Kalganova"
+      ],
+      "year": 2023,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2304.07646v1",
+      "pdf_path": "literature/pdfs/skackauskas2023herder.pdf",
+      "added_date": "2025-12-02T08:34:41.751250",
+      "abstract": "Currently available dynamic optimization strategies for Ant Colony Optimization (ACO) algorithm offer a trade-off of slower algorithm convergence or significant penalty to solution quality after each dynamic change occurs. This paper proposes a discrete dynamic optimization strategy called Ant Colony Optimization (ACO) with Aphids, modelled after a real-world symbiotic relationship between ants and aphids. ACO with Aphids strategy is designed to improve solution quality of discrete domain Dynamic Optimization Problems (DOPs) with event-triggered discrete dynamism. The proposed strategy aims to improve the inter-state convergence rate throughout the entire dynamic optimization. It does so by minimizing the fitness penalty and maximizing the convergence speed that occurs after the dynamic change. This strategy is tested against Full-Restart and Pheromone-Sharing strategies implemented on the same ACO core algorithm solving Dynamic Multidimensional Knapsack Problem (DMKP) benchmarks. ACO with Aphids has demonstrated superior performance over the Pheromone-Sharing strategy in every test on average gap reduced by 29.2%. Also, ACO with Aphids has outperformed the Full-Restart strategy for large datasets groups, and the overall average gap is reduced by 52.5%.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2304.07646v1"
+      }
+    },
+    "qiu2024novel": {
+      "citation_key": "qiu2024novel",
+      "title": "A Novel Quantum Algorithm for Ant Colony Optimization",
+      "authors": [
+        "Qian Qiu",
+        "Mohan Wu",
+        "Qichun Sun",
+        "Xiaogang Li",
+        "Hua Xu"
+      ],
+      "year": 2024,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2403.00367v1",
+      "pdf_path": "literature/pdfs/qiu2024novel.pdf",
+      "added_date": "2025-12-02T08:34:43.062528",
+      "abstract": "Quantum ant colony optimization (QACO) has drew much attention since it combines the advantages of quantum computing and ant colony optimization (ACO) algorithms and overcomes some limitations of the traditional ACO algorithm. However, due to the hardware resource limitations of currently available quantum computers, such as the limited number of qubits, lack of high-fidelity gating operation, and low noisy tolerance, the practical application of the QACO is quite challenging. In this paper, we introduce a hybrid quantum-classical algorithm by combining the clustering algorithm with QACO algorithm, so that this extended QACO can handle large-scale optimization problems, which makes the practical application of QACO based on available quantum computation resource possible. To verify the effectiveness and performance of the algorithm, we tested the developed QACO algorithm with the Travelling Salesman Problem (TSP) as benchmarks. The developed QACO algorithm shows better performance under multiple data set. In addition, the developed QACO algorithm also manifests the robustness to noise of calculation process, which is typically a major barrier for practical application of quantum computers. Our work shows that the combination of the clustering algorithm with QACO has effectively extended the application scenario of QACO in current NISQ era of quantum computing.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2403.00367v1"
       }
     }
   }

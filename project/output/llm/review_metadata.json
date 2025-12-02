@@ -1,12 +1,15 @@
 {
   "model": "llama3-gradient:latest",
-  "timestamp": "2025-12-02T07:15:17.425357",
+  "timestamp": "2025-12-02T08:34:38.612657",
   "source_pdf": "/Users/4d/Documents/GitHub/template/project/output/pdf/project_combined.pdf",
   "reviews_generated": [
     "executive_summary",
     "quality_review",
     "methodology_review",
-    "improvement_suggestions"
+    "improvement_suggestions",
+    "translation_zh",
+    "translation_hi",
+    "translation_ru"
   ],
   "max_input_length": 500000,
   "manuscript_metrics": {
@@ -21,43 +24,70 @@
       "input_chars": 77255,
       "input_words": 14544,
       "input_tokens_est": 19313,
-      "output_chars": 25466,
-      "output_words": 3641,
-      "output_tokens_est": 6366,
-      "generation_time_seconds": 346.08
+      "output_chars": 3871,
+      "output_words": 586,
+      "output_tokens_est": 967,
+      "generation_time_seconds": 152.09
     },
     "quality_review": {
       "input_chars": 77255,
       "input_words": 14544,
       "input_tokens_est": 19313,
-      "output_chars": 3181,
-      "output_words": 532,
-      "output_tokens_est": 795,
-      "generation_time_seconds": 82.33
+      "output_chars": 22172,
+      "output_words": 3649,
+      "output_tokens_est": 5543,
+      "generation_time_seconds": 245.15
     },
     "methodology_review": {
       "input_chars": 77255,
       "input_words": 14544,
       "input_tokens_est": 19313,
-      "output_chars": 20753,
-      "output_words": 3521,
-      "output_tokens_est": 5188,
-      "generation_time_seconds": 412.08
+      "output_chars": 3517,
+      "output_words": 545,
+      "output_tokens_est": 879,
+      "generation_time_seconds": 29.83
     },
     "improvement_suggestions": {
       "input_chars": 77255,
       "input_words": 14544,
       "input_tokens_est": 19313,
-      "output_chars": 21640,
-      "output_words": 3607,
-      "output_tokens_est": 5410,
-      "generation_time_seconds": 336.78
+      "output_chars": 25251,
+      "output_words": 3798,
+      "output_tokens_est": 6312,
+      "generation_time_seconds": 122.65
+    },
+    "translation_zh": {
+      "input_chars": 77255,
+      "input_words": 14544,
+      "input_tokens_est": 19313,
+      "output_chars": 2387,
+      "output_words": 290,
+      "output_tokens_est": 596,
+      "generation_time_seconds": 28.26
+    },
+    "translation_hi": {
+      "input_chars": 77255,
+      "input_words": 14544,
+      "input_tokens_est": 19313,
+      "output_chars": 10293,
+      "output_words": 1852,
+      "output_tokens_est": 2573,
+      "generation_time_seconds": 122.54
+    },
+    "translation_ru": {
+      "input_chars": 77255,
+      "input_words": 14544,
+      "input_tokens_est": 19313,
+      "output_chars": 19528,
+      "output_words": 3413,
+      "output_tokens_est": 4882,
+      "generation_time_seconds": 122.63
     }
   },
   "format_compliance": {
     "overall_rate": 100.0,
-    "compliant_reviews": 4,
-    "total_reviews": 4,
+    "compliant_reviews": 7,
+    "total_reviews": 7,
     "per_review": {
       "executive_summary": {
         "compliant": true,
@@ -78,10 +108,25 @@
         "compliant": true,
         "issues": [],
         "conversational_phrases": 0
+      },
+      "translation_zh": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "translation_hi": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "translation_ru": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
       }
     }
   },
-  "total_generation_time_seconds": 1177.27,
+  "total_generation_time_seconds": 823.15,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,

@@ -88,6 +88,24 @@ metadata:
   # Paper language (ISO 639-1 code)
   language: "en"
 
+# LLM Review Settings (optional)
+# Controls LLM-powered manuscript review features
+llm:
+  translations:
+    # Enable/disable translation generation during LLM review
+    enabled: true  # Set to false to disable translation generation
+    
+    # List of target languages for technical abstract translation
+    # Supported languages: zh (Chinese Simplified), hi (Hindi), ru (Russian)
+    languages:
+      - zh  # Chinese (Simplified)
+      - hi  # Hindi
+      - ru  # Russian
+    
+    # Note: Translations generate a 200-400 word technical abstract in English,
+    # then translate it to each configured language. Each translation is saved
+    # as a separate file (e.g., translation_zh.md) in output/llm/
+
 # Notes:
 # - Environment variables (AUTHOR_NAME, PROJECT_TITLE, etc.) will override
 #   values in this file if set

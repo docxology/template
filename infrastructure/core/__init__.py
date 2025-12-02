@@ -49,6 +49,7 @@ from .config_loader import (
     get_config_as_dict,
     get_config_as_env_vars,
     find_config_file,
+    get_translation_languages,
 )
 
 __all__ = [
@@ -90,5 +91,6 @@ __all__ = [
     "get_config_as_dict",
     "get_config_as_env_vars",
     "find_config_file",
+    "get_translation_languages",
 ]
 

@@ -46,6 +46,7 @@ import requests
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger, log_success, log_header
+from infrastructure.core.config_loader import get_translation_languages
 from infrastructure.llm import (
     LLMClient,
     LLMConfig,
@@ -59,6 +60,7 @@ from infrastructure.llm import (
     ManuscriptQualityReview,
     ManuscriptMethodologyReview,
     ManuscriptImprovementSuggestions,
+    ManuscriptTranslationAbstract,
     detect_repetition,
     deduplicate_sections,
     is_off_topic,
@@ -68,7 +70,7 @@ from infrastructure.llm import (
     check_model_loaded,
     preload_model,
 )
-from infrastructure.llm.templates import REVIEW_MIN_WORDS
+from infrastructure.llm.templates import REVIEW_MIN_WORDS, TRANSLATION_LANGUAGES
 from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError
 
 # Set up logger for this module
@@ -328,6 +330,26 @@ def validate_review_quality(
         # Require at least 1 priority OR recommendation content
         if len(found_priorities) < 1 and not has_recommendations:
             issues.append(f"Missing priority sections or recommendations")
+    
+    elif review_type == "translation":
+        # Check for English abstract section
+        has_english = any([
+            "english abstract" in response_lower,
+            "## english" in response_lower,
+            "abstract" in response_lower and "english" in response_lower,
+        ])
+        details["has_english_section"] = has_english
+        
+        # Check for translation section (any language keyword)
+        translation_keywords = ["translation", "chinese", "hindi", "russian", "中文", "हिंदी", "русский"]
+        has_translation = any(kw in response_lower for kw in translation_keywords)
+        details["has_translation_section"] = has_translation
+        
+        # Both sections required
+        if not has_english:
+            issues.append("Missing English abstract section")
+        if not has_translation:
+            issues.append("Missing translation section")
     
     is_valid = len(issues) == 0
     return is_valid, issues, details
@@ -990,6 +1012,87 @@ def generate_improvement_suggestions(
     )
 
 
+def generate_translation(
+    client: LLMClient,
+    text: str,
+    language_code: str,
+    model_name: str = "",
+) -> Tuple[str, ReviewMetrics]:
+    """Generate technical abstract translation to target language.
+    
+    Creates a medium-length technical abstract in English (~200-400 words),
+    then translates it to the specified target language.
+    
+    Args:
+        client: LLMClient instance
+        text: Manuscript text
+        language_code: Target language code (e.g., 'zh', 'hi', 'ru')
+        model_name: Model name for model-specific adjustments
+        
+    Returns:
+        Tuple of (translation markdown, metrics)
+    """
+    # Get full language name for the prompt
+    target_language = TRANSLATION_LANGUAGES.get(language_code, language_code)
+    
+    log_stage(f"Generating translation ({target_language})...")
+    
+    metrics = ReviewMetrics(
+        input_chars=len(text),
+        input_words=len(text.split()),
+        input_tokens_est=estimate_tokens(text),
+    )
+    
+    # Reset context to prevent pollution from previous reviews
+    client.reset()
+    
+    # Render the template with manuscript text and target language
+    template = ManuscriptTranslationAbstract()
+    prompt = template.render(text=text, target_language=target_language)
+    
+    # Adjust temperature for smaller models
+    is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
+    temperature = 0.4 if is_small_model else 0.3
+    
+    options = GenerationOptions(
+        temperature=temperature,
+        max_tokens=4096,
+    )
+    
+    start_time = time.time()
+    
+    try:
+        response = client.query(prompt, options=options)
+        
+        # Validate response quality
+        is_valid, issues, details = validate_review_quality(
+            response, "translation", model_name=model_name
+        )
+        
+        if not is_valid:
+            logger.info(f"    Validation issues: {', '.join(issues[:2])}")
+        
+    except Exception as e:
+        metrics.generation_time_seconds = time.time() - start_time
+        logger.error(f"Failed to generate translation ({target_language}): {e}")
+        error_response = f"*Error generating translation to {target_language}: {e}*"
+        metrics.output_chars = len(error_response)
+        metrics.output_words = len(error_response.split())
+        return error_response, metrics
+    
+    # Calculate output metrics
+    metrics.generation_time_seconds = time.time() - start_time
+    metrics.output_chars = len(response)
+    metrics.output_words = len(response.split())
+    metrics.output_tokens_est = estimate_tokens(response)
+    metrics.preview = response[:150].replace('\n', ' ') + "..." if len(response) > 150 else response
+    
+    log_success(f"translation ({target_language}) generated", logger)
+    logger.info(f"    Output: {metrics.output_chars:,} chars ({metrics.output_words:,} words) in {metrics.generation_time_seconds:.1f}s")
+    
+    return response, metrics
+
+
 def extract_action_items(reviews: Dict[str, str]) -> str:
     """Extract actionable items from reviews into a TODO checklist.
     
@@ -1183,6 +1286,40 @@ def save_review_outputs(
         
         metrics_summary += f"\n**Total Generation Time:** {session_metrics.total_generation_time:.1f}s\n"
         
+        # Build navigation table with optional translation links
+        nav_rows = [
+            "| [Action Items](#action-items-checklist) | Prioritized TODO list |",
+            "| [Executive Summary](#executive-summary) | Key findings overview |",
+            "| [Quality Review](#quality-review) | Writing quality assessment |",
+            "| [Methodology Review](#methodology-review) | Methods evaluation |",
+            "| [Improvement Suggestions](#improvement-suggestions) | Detailed recommendations |",
+        ]
+        
+        # Add translation links if translations were generated
+        translation_keys = [k for k in reviews.keys() if k.startswith("translation_")]
+        for trans_key in translation_keys:
+            lang_code = trans_key.replace("translation_", "")
+            lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
+            nav_rows.append(f"| [Translation ({lang_name})](#translation-{lang_code}) | Technical abstract in {lang_name} |")
+        
+        nav_rows.append("| [Generation Metrics](#generation-metrics) | Review statistics |")
+        nav_table = "\n".join(nav_rows)
+        
+        # Build translations section if any translations were generated
+        translations_section = ""
+        if translation_keys:
+            translations_section = "\n---\n\n# Translations\n\n"
+            for trans_key in translation_keys:
+                lang_code = trans_key.replace("translation_", "")
+                lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
+                translations_section += f"""## Translation ({lang_name}) {{#translation-{lang_code}}}
+
+{reviews.get(trans_key, '*Not generated*')}
+
+---
+
+"""
+        
         combined_content = f"""# LLM Manuscript Review
 
 *Generated by {model_name} on {date_str}*
@@ -1194,12 +1331,7 @@ def save_review_outputs(
 
 | Section | Description |
 |---------|-------------|
-| [Action Items](#action-items-checklist) | Prioritized TODO list |
-| [Executive Summary](#executive-summary) | Key findings overview |
-| [Quality Review](#quality-review) | Writing quality assessment |
-| [Methodology Review](#methodology-review) | Methods evaluation |
-| [Improvement Suggestions](#improvement-suggestions) | Detailed recommendations |
-| [Generation Metrics](#generation-metrics) | Review statistics |
+{nav_table}
 
 ---
 
@@ -1244,7 +1376,7 @@ The following items are extracted from the review for easy tracking:
 # Improvement Suggestions
 
 {reviews.get('improvement_suggestions', '*Not generated*')}
-
+{translations_section}
 ---
 
 ## Review Metadata
@@ -1467,6 +1599,16 @@ def main() -> int:
         response, metrics = generate_improvement_suggestions(client, text, model_name)
         reviews["improvement_suggestions"] = response
         session_metrics.reviews["improvement_suggestions"] = metrics
+        
+        # Step 4b: Generate translations (if configured)
+        translation_languages = get_translation_languages(repo_root)
+        if translation_languages:
+            logger.info(f"\n  Generating translations for {len(translation_languages)} language(s)...")
+            for lang_code in translation_languages:
+                lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
+                response, metrics = generate_translation(client, text, lang_code, model_name)
+                reviews[f"translation_{lang_code}"] = response
+                session_metrics.reviews[f"translation_{lang_code}"] = metrics
         
         session_metrics.total_generation_time = time.time() - total_start
         

@@ -98,6 +98,7 @@ Root scripts are **thin orchestrators** that:
 - Checks Ollama availability and selects best model
 - Extracts full text from combined PDF manuscript
 - Generates executive summary, quality review, methodology review, and improvement suggestions
+- Generates translations (if configured) - technical abstract in multiple languages
 - Saves all reviews with detailed metrics to `output/llm/`
 - Tracks input/output sizes, token estimates, and generation times
 
@@ -111,6 +112,9 @@ Root scripts are **thin orchestrators** that:
 - `quality_review.md` - Writing clarity and style assessment
 - `methodology_review.md` - Structure and methods evaluation
 - `improvement_suggestions.md` - Actionable recommendations
+- `translation_zh.md` - Technical abstract in Chinese (if configured)
+- `translation_hi.md` - Technical abstract in Hindi (if configured)
+- `translation_ru.md` - Technical abstract in Russian (if configured)
 - `combined_review.md` - All reviews with generation metrics
 - `review_metadata.json` - Model, config, and detailed metrics
 
@@ -143,6 +147,7 @@ Uses structure-only validation for general-purpose use:
 | quality_review | 300 | 500-700 | Detailed quality assessment |
 | methodology_review | 300 | 500-700 | Methods and structure analysis |
 | improvement_suggestions | 200 | 500-800 | Focused actionable items |
+| translation | 400 | 200-400 (English) + translation | Technical abstract + target language |
 
 Small models (3B-8B parameters) automatically receive 20% lower thresholds.
 
@@ -155,6 +160,22 @@ Small models (3B-8B parameters) automatically receive 20% lower thresholds.
 | "Missing scoring rubric" | Score not in expected format | Validation accepts X/5, Rating: X, etc. |
 | Response too short | Model stopped early | Retry with increased temperature |
 | Generic book language | Model ignoring manuscript | Off-topic detection triggers retry |
+
+**Translation Configuration:**
+
+Translations are configured in `project/manuscript/config.yaml`:
+
+```yaml
+llm:
+  translations:
+    enabled: true  # Set to false to disable
+    languages:
+      - zh  # Chinese (Simplified)
+      - hi  # Hindi
+      - ru  # Russian
+```
+
+When enabled, the system generates a technical abstract (~200-400 words) in English, then translates it to each configured language. Each translation is saved as a separate file (e.g., `translation_zh.md`) and included in the combined review.
 
 **Environment Variables:**
 | Variable | Default | Description |

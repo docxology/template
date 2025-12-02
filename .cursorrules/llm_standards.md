@@ -330,6 +330,23 @@ def validate_review_quality(response: str, review_type: str) -> Tuple[bool, List
         if found < 2:
             issues.append(f"Missing priority sections (found {found}/3)")
     
+    elif review_type == "translation":
+        # Check for English abstract and translation sections
+        has_english = any([
+            "english abstract" in response.lower(),
+            "## english" in response.lower(),
+        ])
+        has_translation = any([
+            "translation" in response.lower(),
+            "chinese" in response.lower(),
+            "hindi" in response.lower(),
+            "russian" in response.lower(),
+        ])
+        if not has_english:
+            issues.append("Missing English abstract section")
+        if not has_translation:
+            issues.append("Missing translation section")
+    
     return len(issues) == 0, issues
 ```
 
@@ -472,6 +489,7 @@ for chunk in client.stream_long("Detailed explanation..."):
 | `literature_review` | Synthesize multiple summaries | `summaries` |
 | `code_doc` | Generate Python docstrings | `code` |
 | `data_interpret` | Interpret statistical results | `stats` |
+| `manuscript_translation_abstract` | Generate technical abstract and translate to target language | `text`, `target_language` |
 
 ### Using Templates
 
@@ -507,6 +525,48 @@ Provide your analysis with these sections:
 template = MethodologyReview()
 result = template.render(content=methodology_text)
 ```
+
+### Translation Templates
+
+The system includes a translation template for generating technical abstracts in multiple languages:
+
+```python
+from infrastructure.llm import ManuscriptTranslationAbstract, TRANSLATION_LANGUAGES
+
+# Supported languages
+TRANSLATION_LANGUAGES = {
+    "zh": "Chinese (Simplified)",
+    "hi": "Hindi",
+    "ru": "Russian",
+}
+
+# Generate translation
+template = ManuscriptTranslationAbstract()
+prompt = template.render(
+    text=manuscript_text,
+    target_language=TRANSLATION_LANGUAGES["zh"]
+)
+response = client.query(prompt, options=options)
+```
+
+**Configuration:**
+
+Translations are configured in `project/manuscript/config.yaml`:
+
+```yaml
+llm:
+  translations:
+    enabled: true
+    languages:
+      - zh  # Chinese (Simplified)
+      - hi  # Hindi
+      - ru  # Russian
+```
+
+The translation template generates:
+1. A 200-400 word technical abstract in English
+2. A complete translation in the target language
+3. Both sections with proper headers
 
 ## Context Management
 
@@ -608,6 +668,7 @@ The validation system uses minimum word counts to ensure substantive reviews:
 | quality_review | 300 | 500-700 | Detailed quality assessment |
 | methodology_review | 300 | 500-700 | Methods and structure analysis |
 | improvement_suggestions | 200 | 500-800 | Focused actionable items |
+| translation | 400 | 200-400 (English) + translation | Technical abstract + target language |
 
 ```python
 # Small models (3B-8B) get 20% lower thresholds automatically
@@ -718,8 +779,8 @@ with patch("infrastructure.llm.LLMClient"):  # NEVER use mocks
 
 ---
 
-**Version**: 1.0.0  
-**Last Updated**: 2025-12-01  
-**Status**: Complete  
+**Version**: 1.1.0  
+**Last Updated**: 2025-12-02  
+**Status**: Complete (includes translation feature)  
 **Maintainer**: Template Team
 

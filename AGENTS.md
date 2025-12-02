@@ -229,6 +229,15 @@ keywords:
 metadata:
   license: "Apache-2.0"
   language: "en"
+
+# LLM Review Settings (optional)
+llm:
+  translations:
+    enabled: true  # Set to false to disable translation generation
+    languages:
+      - zh  # Chinese (Simplified)
+      - hi  # Hindi
+      - ru  # Russian
 ```
 
 **Benefits**:
@@ -616,6 +625,7 @@ searcher.export_bibtex("references.bib")
 - Data interpretation
 - Section drafting assistance
 - Citation formatting
+- Technical abstract translation (Chinese, Hindi, Russian)
 
 **Usage:**
 ```python

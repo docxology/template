@@ -17,6 +17,7 @@ from infrastructure.core.config_loader import (
     get_config_as_dict,
     get_config_as_env_vars,
     find_config_file,
+    get_translation_languages,
     YAML_AVAILABLE,
 )
 
@@ -347,4 +348,128 @@ class TestIntegration:
         config_dict = get_config_as_dict(tmp_path)
         assert config_dict['PROJECT_TITLE'] == 'Integration Test'
         assert config_dict['AUTHOR_NAME'] == 'Test Author'
+
+
+class TestGetTranslationLanguages:
+    """Test get_translation_languages function."""
+    
+    def test_returns_empty_when_no_config(self, tmp_path):
+        """Test returns empty list when config file doesn't exist."""
+        result = get_translation_languages(tmp_path)
+        assert result == []
+    
+    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
+    def test_returns_empty_when_translations_disabled(self, tmp_path):
+        """Test returns empty list when translations are disabled."""
+        import yaml
+        config = {
+            'llm': {
+                'translations': {
+                    'enabled': False,
+                    'languages': ['zh', 'hi', 'ru']
+                }
+            }
+        }
+        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+        
+        result = get_translation_languages(tmp_path)
+        assert result == []
+    
+    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
+    def test_returns_empty_when_no_llm_section(self, tmp_path):
+        """Test returns empty list when no llm section in config."""
+        import yaml
+        config = {
+            'paper': {'title': 'Test'}
+        }
+        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+        
+        result = get_translation_languages(tmp_path)
+        assert result == []
+    
+    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
+    def test_returns_languages_when_enabled(self, tmp_path):
+        """Test returns language list when translations are enabled."""
+        import yaml
+        config = {
+            'llm': {
+                'translations': {
+                    'enabled': True,
+                    'languages': ['zh', 'hi', 'ru']
+                }
+            }
+        }
+        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+        
+        result = get_translation_languages(tmp_path)
+        assert result == ['zh', 'hi', 'ru']
+    
+    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
+    def test_returns_single_language(self, tmp_path):
+        """Test returns single language when only one configured."""
+        import yaml
+        config = {
+            'llm': {
+                'translations': {
+                    'enabled': True,
+                    'languages': ['zh']
+                }
+            }
+        }
+        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+        
+        result = get_translation_languages(tmp_path)
+        assert result == ['zh']
+    
+    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
+    def test_returns_empty_for_invalid_languages_type(self, tmp_path):
+        """Test returns empty list when languages is not a list."""
+        import yaml
+        config = {
+            'llm': {
+                'translations': {
+                    'enabled': True,
+                    'languages': 'zh'  # String instead of list
+                }
+            }
+        }
+        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+        
+        result = get_translation_languages(tmp_path)
+        assert result == []
+    
+    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
+    def test_works_with_legacy_config_location(self, tmp_path):
+        """Test works with legacy manuscript/ location."""
+        import yaml
+        config = {
+            'llm': {
+                'translations': {
+                    'enabled': True,
+                    'languages': ['hi']
+                }
+            }
+        }
+        config_file = tmp_path / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+        
+        result = get_translation_languages(tmp_path)
+        assert result == ['hi']
 

@@ -30,7 +30,9 @@ from infrastructure.llm.templates import (
     ManuscriptQualityReview,
     ManuscriptMethodologyReview,
     ManuscriptImprovementSuggestions,
+    ManuscriptTranslationAbstract,
     REVIEW_MIN_WORDS,
+    TRANSLATION_LANGUAGES,
 )
 from infrastructure.llm.validation import (
     OutputValidator,
@@ -78,7 +80,9 @@ __all__ = [
     "ManuscriptQualityReview",
     "ManuscriptMethodologyReview",
     "ManuscriptImprovementSuggestions",
+    "ManuscriptTranslationAbstract",
     "REVIEW_MIN_WORDS",
+    "TRANSLATION_LANGUAGES",
     # Validation
     "OutputValidator",
     "detect_repetition",

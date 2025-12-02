@@ -134,6 +134,14 @@ REVIEW_MIN_WORDS = {
     "quality_review": 300,
     "methodology_review": 300,
     "improvement_suggestions": 200,  # Lower threshold for focused actionable output
+    "translation": 400,  # English abstract + translation (~200 words each)
+}
+
+# Supported translation languages with full names for prompts
+TRANSLATION_LANGUAGES = {
+    "zh": "Chinese (Simplified)",
+    "hi": "Hindi",
+    "ru": "Russian",
 }
 
 
@@ -279,6 +287,45 @@ REQUIREMENTS:
 Begin your improvement suggestions now:"""
 
 
+class ManuscriptTranslationAbstract(ResearchTemplate):
+    """Template for generating a technical abstract and translating to target language.
+    
+    Produces a medium-length technical abstract (~200-400 words in English),
+    then translates it to the specified target language.
+    
+    Uses manuscript-first structure with task instructions at end
+    for better LLM attention to the actual content.
+    """
+    template_str = """=== MANUSCRIPT BEGIN ===
+
+${text}
+
+=== MANUSCRIPT END ===
+
+TASK: Write a technical abstract summary of the manuscript, then translate it to ${target_language}.
+
+REQUIREMENTS:
+1. First, write a technical abstract in English (200-400 words)
+2. The abstract MUST reference specific content from the manuscript above
+3. Include:
+   - Research objective and motivation
+   - Methodology overview
+   - Key findings and results
+   - Significance and implications
+
+4. Use these section headers:
+   ## English Abstract
+   ## ${target_language} Translation
+
+5. After the English abstract, provide a complete and accurate translation in ${target_language}
+6. The translation must preserve technical terminology and scientific accuracy
+7. Use formal academic tone in both languages
+8. Do NOT add information not present in the manuscript
+9. Do NOT provide transliteration - use native script for the target language
+
+Begin with the English abstract, then provide the translation:"""
+
+
 # Registry of available templates
 TEMPLATES = {
     # Original templates
@@ -292,6 +339,7 @@ TEMPLATES = {
     "manuscript_quality_review": ManuscriptQualityReview,
     "manuscript_methodology_review": ManuscriptMethodologyReview,
     "manuscript_improvement_suggestions": ManuscriptImprovementSuggestions,
+    "manuscript_translation_abstract": ManuscriptTranslationAbstract,
 }
 
 def get_template(name: str) -> ResearchTemplate:

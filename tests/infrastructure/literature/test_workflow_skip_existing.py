@@ -347,7 +347,8 @@ class TestSkipExistingSummaries:
                     summary_path=summary_path,
                     skipped=True
                 )
-            return summary_result
+            # Actually call the summarizer for new papers
+            return summarizer.summarize_paper(result, pdf_path)
 
         workflow._summarize_single_paper = summarize_single
 

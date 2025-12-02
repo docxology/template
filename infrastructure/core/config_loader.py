@@ -181,3 +181,36 @@ def find_config_file(repo_root: Path | str) -> Optional[Path]:
     
     return None
 
+
+def get_translation_languages(repo_root: Path | str) -> List[str]:
+    """Get list of enabled translation languages from config.
+    
+    Reads the llm.translations section from config.yaml and returns
+    the list of enabled language codes.
+    
+    Args:
+        repo_root: Root directory of the repository
+        
+    Returns:
+        List of language codes (e.g., ['zh', 'hi', 'ru']) if translations
+        are enabled, empty list otherwise
+    """
+    config_path = find_config_file(repo_root)
+    if not config_path:
+        return []
+    
+    config = load_config(config_path)
+    if not config:
+        return []
+    
+    llm_config = config.get('llm', {})
+    translations_config = llm_config.get('translations', {})
+    
+    # Check if translations are enabled
+    if not translations_config.get('enabled', False):
+        return []
+    
+    # Return the list of language codes
+    languages = translations_config.get('languages', [])
+    return languages if isinstance(languages, list) else []
+
