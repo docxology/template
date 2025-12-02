@@ -4,7 +4,7 @@
 
 ### The Primitive: Distinction
 
-The calculus of indications begins with a single primitive: the act of **distinction**. To distinguish is to create a boundary that separates two regions—an inside and an outside. This act is represented by the **mark** or **cross**:
+The calculus of indications \cite{spencerbrown1969} begins with a single primitive: the act of **distinction**. To distinguish is to create a boundary that separates two regions—an inside and an outside. This act is represented by the **mark** or **cross**:
 
 $$\langle\ \rangle$$ {#eq:mark}
 
@@ -103,7 +103,7 @@ Since both metrics are non-negative integers, the algorithm must terminate.
 
 ### The Isomorphism
 
-Boundary logic is isomorphic to Boolean algebra:
+Boundary logic is isomorphic to Boolean algebra \cite{huntington1904,stone1936}:
 
 | Boundary Logic | Boolean Algebra | Propositional Logic |
 |----------------|-----------------|---------------------|
@@ -178,7 +178,7 @@ $$\llbracket ab \rrbracket = \llbracket a \rrbracket \land \llbracket b \rrbrack
 
 ## Implementation
 
-The computational framework implements:
+The computational framework implements principles from formal verification \cite{bertot2004,nipkow2002}:
 
 1. **Form Construction**: `Form` class with void, mark, enclosure, juxtaposition
 2. **Reduction Engine**: `ReductionEngine` with step-by-step traces

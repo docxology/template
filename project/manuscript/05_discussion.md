@@ -2,7 +2,7 @@
 
 ## Set Theory vs. Containment Theory
 
-The comparison between classical Set Theory (ZFC) and Containment Theory reveals fundamental differences in approach, axiomatics, and conceptual structure.
+The comparison between classical Set Theory (ZFC) \cite{kunen1980} and Containment Theory \cite{spencerbrown1969} reveals fundamental differences in approach, axiomatics, and conceptual structure.
 
 ### Axiomatic Economy
 
@@ -121,13 +121,13 @@ Spencer-Brown's system has philosophical implications:
 
 ### Connections to Other Formalisms
 
-**Category Theory**: Forms can be viewed as morphisms; the axioms define natural transformations.
+**Category Theory** \cite{lambek1986,awodey2010}: Forms can be viewed as morphisms; the axioms define natural transformations.
 
 **Type Theory**: The mark/void distinction parallels inhabited/empty types.
 
 **Lambda Calculus**: Enclosure resembles abstraction; juxtaposition resembles application.
 
-**Homotopy Type Theory**: Boundaries as paths; calling as path inversion.
+**Homotopy Type Theory** \cite{hottbook}: Boundaries as paths; calling as path inversion.
 
 ## Applications
 
@@ -146,13 +146,13 @@ Circuit optimization can leverage boundary reduction rules.
 
 ### Cognitive Modeling
 
-The calculus of indications models basic cognitive operations:
+The calculus of indications models basic cognitive operations \cite{varela1991,thompson2007}:
 - **Perception**: Making distinctions
 - **Negation**: Crossing boundaries
 - **Conjunction**: Simultaneous attention
 - **Oscillation**: Self-reflective awareness
 
-Free energy principles in cognitive science relate to maintaining distinction boundaries.
+Free energy principles in cognitive science \cite{friston2010,isomura2022experimental} relate to maintaining distinction boundaries. Recent work on active inference \cite{sennesh2022deriving,watson2020active} demonstrates that cognitive agents minimize surprise by maintaining coherent internal models—a process analogous to form reduction in boundary logic.
 
 ### Formal Verification
 

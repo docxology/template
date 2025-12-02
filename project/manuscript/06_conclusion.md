@@ -74,7 +74,7 @@ Digital logic gains:
 
 ### For Cognitive Science
 
-The calculus provides formal tools for studying:
+The calculus provides formal tools for studying \cite{varela1991,thompson2007,friston2010}:
 - Distinction as primitive cognitive act
 - Negation as boundary crossing
 - Self-reference as oscillation
