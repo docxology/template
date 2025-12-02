@@ -1,0 +1,17 @@
+{
+  "iteration": 0,
+  "parameters": {
+    "max_iterations": 50,
+    "target_value": 7.0
+  },
+  "results": {
+    "iteration_0": {
+      "value": -0.7506147172558728,
+      "error": 7.750614717255873,
+      "step_size": -0.7506147172558728
+    }
+  },
+  "metadata": {},
+  "timestamp": "2025-12-02 12:30:30",
+  "seed": 44
+}

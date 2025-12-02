@@ -1,0 +1,9 @@
+\frametitle{Reproducibility}
+\protect\phantomsection\label{reproducibility}
+All results are reproducible: - Complete source code:
+\texttt{project/src/} - Test suite: \texttt{project/tests/} - Scripts:
+\texttt{python3\ scripts/02\_run\_analysis.py} - Documentation: This
+manuscript and \texttt{AGENTS.md}
+
+The implementation uses only standard Python libraries with no external
+dependencies beyond numpy and matplotlib for visualization.

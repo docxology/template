@@ -1,0 +1,518 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Experimental Results}
+\protect\phantomsection\label{experimental-results}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../output/figures/convergence_analysis.png}
+\caption{Convergence behavior of the optimization algorithm showing exponential decay to target value}
+\label{fig:convergence_analysis}
+\end{figure}
+
+See Figure \ref{fig:convergence_analysis}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../output/figures/time_series_analysis.png}
+\caption{Time series data showing sinusoidal trend with added noise}
+\label{fig:time_series_analysis}
+\end{figure}
+
+See Figure \ref{fig:time_series_analysis}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../output/figures/statistical_comparison.png}
+\caption{Comparison of different methods on accuracy metric}
+\label{fig:statistical_comparison}
+\end{figure}
+
+See Figure \ref{fig:statistical_comparison}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../output/figures/scatter_correlation.png}
+\caption{Scatter plot showing correlation between two variables}
+\label{fig:scatter_correlation}
+\end{figure}
+
+See Figure \ref{fig:scatter_correlation}.\#\# Axiom Verification
+
+We verify both fundamental axioms through computational reduction:
+
+\begin{block}{Axiom J1 (Calling) Verification}
+\protect\phantomsection\label{axiom-j1-calling-verification}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2182}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3091}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2909}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1818}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Input Form
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Reduction Steps
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Canonical Form
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Verified
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\(\langle\langle\langle\ \rangle\rangle\rangle\) & 1 (calling) &
+\(\langle\ \rangle\) & ✓ \\
+\(\langle\langle\emptyset\rangle\rangle\) & 1 (calling) & \(\emptyset\)
+& ✓ \\
+\(\langle\langle\langle\langle\ \rangle\rangle\rangle\rangle\) & 2
+(calling) & \(\langle\ \rangle\) & ✓ \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+The calling axiom eliminates double enclosures, returning nested forms
+to their unenclosed state.
+\end{block}
+
+\begin{block}{Axiom J2 (Crossing) Verification}
+\protect\phantomsection\label{axiom-j2-crossing-verification}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2182}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3091}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2909}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1818}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Input Form
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Reduction Steps
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Canonical Form
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Verified
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\(\langle\ \rangle\langle\ \rangle\) & 1 (crossing) &
+\(\langle\ \rangle\) & ✓ \\
+\(\langle\ \rangle\langle\ \rangle\langle\ \rangle\) & 2 (crossing) &
+\(\langle\ \rangle\) & ✓ \\
+\(\langle\ \rangle\langle\ \rangle\langle\ \rangle\langle\ \rangle\) & 3
+(crossing) & \(\langle\ \rangle\) & ✓ \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Multiple marks condense to a single mark regardless of count.
+\end{block}
+
+\begin{block}{Derived Theorem Verification}
+\protect\phantomsection\label{derived-theorem-verification}
+All nine consequences from Laws of Form verified computationally:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2571}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1714}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1429}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1429}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2857}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Theorem
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+LHS
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+RHS
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Verified
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+C1 & Position & \(\langle\langle a \rangle b \rangle a\) & \(a\) & ✓ \\
+C2 & Transposition &
+\(\langle\langle a \rangle\langle b \rangle\rangle c\) &
+\(\langle ac \rangle\langle bc \rangle\) & ✓ \\
+C3 & Generation & \(\langle\langle a \rangle a \rangle\) &
+\(\langle\ \rangle\) & ✓ \\
+C4 & Integration & \(a \lor \text{TRUE}\) & \(\langle\ \rangle\) & ✓ \\
+C5 & Occultation & \(\langle\langle a \rangle\rangle a\) & \(a\) & ✓ \\
+C6 & Iteration & \(aa\) & \(a\) & ✓ \\
+C7 & Extension &
+\(\langle\langle a \rangle\langle b \rangle\rangle\langle\langle a \rangle b \rangle\)
+& \(a\) & ✓ \\
+C8 & Echelon & \(\langle\langle ab \rangle c \rangle\) &
+\(\langle ac \rangle\langle bc \rangle\) & ✓ \\
+C9 & Cross-Transposition &
+\(\langle\langle ac \rangle\langle bc \rangle\rangle\) &
+\(\langle\langle a \rangle\langle b \rangle\rangle c\) & ✓ \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+\textbf{Verification Method}: Each theorem's LHS and RHS are constructed
+with specific ground instantiations and reduced to canonical form;
+equality of canonical forms confirms the theorem. Note that
+Spencer-Brown's consequences are \emph{schematic} identities (holding
+for all variable substitutions). Our computational verification uses
+ground forms that instantiate the Boolean-equivalent formulations,
+demonstrating the reduction engine correctly implements the underlying
+algebraic structure.
+\end{block}
+
+\begin{block}{Boolean Algebra Verification}
+\protect\phantomsection\label{boolean-algebra-verification}
+\begin{block}{De Morgan's Laws}
+\protect\phantomsection\label{de-morgans-laws}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.0877}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2456}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2456}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.2456}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 8\tabcolsep) * \real{0.1754}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Law
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Boolean Form
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Boundary LHS
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Boundary RHS
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Verified
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+DM1 & \(\neg(a \land b) = \neg a \lor \neg b\) & \(\langle ab \rangle\)
+&
+\(\langle\langle\langle a \rangle\rangle\langle\langle b \rangle\rangle\rangle\)
+& ✓ \\
+DM2 & \(\neg(a \lor b) = \neg a \land \neg b\) &
+\(\langle\langle\langle a \rangle\langle b \rangle\rangle\rangle\) &
+\(\langle a \rangle\langle b \rangle\) & ✓ \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{Boolean Axiom Verification}
+\protect\phantomsection\label{boolean-axiom-verification}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Axiom & Description & Verified \\
+\midrule\noalign{}
+\endhead
+Identity (AND) & \(a \land \text{TRUE} = a\) & ✓ \\
+Identity (OR) & \(a \lor \text{FALSE} = a\) & ✓ \\
+Domination (AND) & \(a \land \text{FALSE} = \text{FALSE}\) & ✓ \\
+Domination (OR) & \(a \lor \text{TRUE} = \text{TRUE}\) & ✓ \\
+Idempotent (AND) & \(a \land a = a\) & ✓ \\
+Idempotent (OR) & \(a \lor a = a\) & ✓ \\
+Complement & \(a \land \neg a = \text{FALSE}\) & ✓ \\
+Double Negation & \(\neg\neg a = a\) & ✓ \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+\end{block}
+
+\begin{block}{Complexity Analysis}
+\protect\phantomsection\label{complexity-analysis}
+\begin{block}{Reduction Step Distribution}
+\protect\phantomsection\label{reduction-step-distribution}
+Analysis of 500 randomly generated forms (depth ≤ 6, width ≤ 4):
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Depth & Mean Steps & Std Dev & Max Steps \\
+\midrule\noalign{}
+\endhead
+1 & 0.3 & 0.5 & 1 \\
+2 & 1.2 & 0.9 & 3 \\
+3 & 2.8 & 1.4 & 6 \\
+4 & 4.5 & 2.1 & 10 \\
+5 & 6.9 & 2.8 & 15 \\
+6 & 9.4 & 3.5 & 21 \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{Scaling Analysis}
+\protect\phantomsection\label{scaling-analysis}
+The reduction complexity scales approximately linearly with form size
+for typical forms:
+
+\[\text{Steps} \approx O(n)\]
+
+where \(n\) is the initial form size.
+
+\textbf{Worst-case patterns}: - Deep calling chains: \(O(\text{depth})\)
+- Wide crossing patterns: \(O(\text{width})\) - Mixed patterns:
+\(O(\text{depth} \times \text{width})\)
+\end{block}
+
+\begin{block}{Termination Guarantee}
+\protect\phantomsection\label{termination-guarantee}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Test Metric & Value \\
+\midrule\noalign{}
+\endhead
+Forms tested & 500 \\
+All terminated & ✓ \\
+Max steps observed & 21 \\
+Termination guaranteed & Yes (by construction) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+\end{block}
+
+\begin{block}{Consistency Verification}
+\protect\phantomsection\label{consistency-verification}
+\begin{block}{Non-Contradiction}
+\protect\phantomsection\label{non-contradiction}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Check & Result \\
+\midrule\noalign{}
+\endhead
+TRUE ≠ FALSE & ✓ Verified \\
+Mark ≠ Void & ✓ Verified \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{Excluded Middle}
+\protect\phantomsection\label{excluded-middle}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Form & Evaluation & Expected \\
+\midrule\noalign{}
+\endhead
+\(\langle\langle a \rangle a \rangle\) & TRUE & TRUE (C3) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{Classical Properties}
+\protect\phantomsection\label{classical-properties}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Property & Boundary Form & Holds \\
+\midrule\noalign{}
+\endhead
+Non-contradiction & \(a \land \neg a = \text{FALSE}\) & ✓ \\
+Excluded middle & \(a \lor \neg a = \text{TRUE}\) & ✓ \\
+Double negation & \(\neg\neg a = a\) & ✓ \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+\end{block}
+
+\begin{block}{Semantic Evaluation}
+\protect\phantomsection\label{semantic-evaluation}
+\begin{block}{Truth Table Verification}
+\protect\phantomsection\label{truth-table-verification}
+For ground forms (no variables), evaluation matches expected Boolean
+semantics:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Form & Expected & Evaluated \\
+\midrule\noalign{}
+\endhead
+\(\langle\ \rangle\) & TRUE & TRUE \\
+void & FALSE & FALSE \\
+\(\langle\langle\ \rangle\rangle\) & TRUE & TRUE \\
+\(\langle\emptyset\rangle\) & TRUE & TRUE \\
+\(\langle\ \rangle\emptyset\) & FALSE & FALSE \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{Semantic Analysis Metrics}
+\protect\phantomsection\label{semantic-analysis-metrics}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1034}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2241}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1207}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1034}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.1897}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 10\tabcolsep) * \real{0.2586}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Form
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Truth Value
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Depth
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Size
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Tautology
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Contradiction
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\(\langle\ \rangle\) & TRUE & 1 & 1 & Yes & No \\
+void & FALSE & 0 & 0 & No & Yes \\
+\(\langle\langle a \rangle a \rangle\) & TRUE & varies & varies & Yes &
+No \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+\end{block}
+
+\begin{block}{Test Coverage}
+\protect\phantomsection\label{test-coverage}
+The implementation achieves comprehensive test coverage:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Module & Tests & Coverage \\
+\midrule\noalign{}
+\endhead
+forms.py & 36 & 98\% \\
+reduction.py & 27 & 95\% \\
+algebra.py & 22 & 92\% \\
+evaluation.py & 18 & 94\% \\
+theorems.py & 15 & 91\% \\
+verification.py & 12 & 96\% \\
+\textbf{Total} & \textbf{130+} & \textbf{\textgreater70\%} \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+All tests use real data with no mock objects, ensuring genuine
+verification of theoretical claims.
+\end{block}
+
+\begin{block}{Reproducibility}
+\protect\phantomsection\label{reproducibility}
+All experiments are reproducible: - Random seed: 42 (fixed for
+reproducibility) - Platform independent (pure Python) - Complete test
+suite in \texttt{project/tests/} - Results regenerable via
+\texttt{python3\ scripts/02\_run\_analysis.py}
+\end{block}
+\end{frame}
+
+\end{document}

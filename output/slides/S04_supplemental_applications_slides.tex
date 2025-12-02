@@ -1,0 +1,582 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Supplemental Applications}\label{supplemental-applications}
+
+\subsection{S4.1 Digital Circuit
+Design}\label{s4.1-digital-circuit-design}
+
+\begin{frame}{NAND-Based Synthesis}
+\protect\phantomsection\label{nand-based-synthesis}
+The NAND gate is functionally complete---all Boolean functions are
+expressible using only NAND. In boundary logic:
+
+\[a \text{ NAND } b = \langle ab \rangle\]
+
+\begin{block}{All Gates from NAND}
+\protect\phantomsection\label{all-gates-from-nand}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3056}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2778}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Gate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Boolean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+NAND Form
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Boundary
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+NOT & \(\neg a\) & \(a\) NAND \(a\) &
+\(\langle aa \rangle = \langle a \rangle\) \\
+AND & \(a \land b\) & NOT(\(a\) NAND \(b\)) &
+\(\langle\langle ab \rangle\rangle = ab\) \\
+OR & \(a \lor b\) & (NOT \(a\)) NAND (NOT \(b\)) &
+\(\langle\langle a \rangle\langle b \rangle\rangle\) \\
+XOR & \(a \oplus b\) & Complex &
+\(\langle\langle\langle a \rangle b \rangle\langle a\langle b \rangle\rangle\rangle\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+\end{frame}
+
+\begin{frame}{Circuit Optimization}
+\protect\phantomsection\label{circuit-optimization}
+Boundary reduction rules translate to circuit transformations:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.4211}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 2\tabcolsep) * \real{0.5789}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Reduction Rule
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Circuit Transformation
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Calling (\(\langle\langle a \rangle\rangle = a\)) & Remove
+double-inverter \\
+Crossing (\(\langle\ \rangle\langle\ \rangle = \langle\ \rangle\)) &
+Merge parallel power lines \\
+Void elimination & Remove disconnected components \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Layout Example}
+\protect\phantomsection\label{layout-example}
+A full adder in boundary notation:
+
+\textbf{Sum}: \(S = a \oplus b \oplus c_{in}\) \textbf{Carry}:
+\(c_{out} = (a \land b) \lor (c_{in} \land (a \oplus b))\)
+
+The boundary forms directly map to circuit layout with nested regions
+representing signal containment.
+\end{frame}
+
+\subsection{S4.2 Cognitive Science
+Applications}\label{s4.2-cognitive-science-applications}
+
+\begin{frame}{Perception as Distinction}
+\protect\phantomsection\label{perception-as-distinction}
+The calculus models fundamental perceptual operations:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Perceptual Process & Boundary Operation \\
+\midrule\noalign{}
+\endhead
+Figure-ground separation & Making a mark \\
+Object recognition & Canonical form identification \\
+Categorization & Reduction to equivalence class \\
+Attention & Enclosure (isolating from context) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Binary Classification}
+\protect\phantomsection\label{binary-classification}
+Any binary classifier implements boundary logic: - Decision boundary =
+mark - Class 1 = inside - Class 0 = outside
+
+Neural network classifiers learn to draw effective marks in feature
+space.
+\end{frame}
+
+\begin{frame}{Self-Reference and Consciousness}
+\protect\phantomsection\label{self-reference-and-consciousness}
+The imaginary value \(j = \langle j \rangle\) models self-referential
+consciousness: - Consciousness observing itself - The observer is inside
+what it observes - Oscillation between subject and object positions
+
+This aligns with theories of consciousness as recursive self-modeling.
+\end{frame}
+
+\subsection{S4.3 Programming Language
+Applications}\label{s4.3-programming-language-applications}
+
+\begin{frame}{Type Systems}
+\protect\phantomsection\label{type-systems}
+Boundary logic maps to type theory:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Boundary & Type Theory \\
+\midrule\noalign{}
+\endhead
+Void & Empty type (⊥) \\
+Mark & Unit type (⊤) \\
+Enclosure & Negation type \\
+Juxtaposition & Product type \\
+De Morgan form & Sum type \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}[fragile]{Pattern Matching}
+\protect\phantomsection\label{pattern-matching}
+Form patterns translate to match expressions:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{match}\NormalTok{ form:}
+    \ControlFlowTok{case}\NormalTok{ Form(is\_marked}\OperatorTok{=}\VariableTok{False}\NormalTok{, contents}\OperatorTok{=}\NormalTok{[]):}
+        \ControlFlowTok{return} \StringTok{"void"}
+    \ControlFlowTok{case}\NormalTok{ Form(is\_marked}\OperatorTok{=}\VariableTok{True}\NormalTok{, contents}\OperatorTok{=}\NormalTok{[]):}
+        \ControlFlowTok{return} \StringTok{"mark"}
+    \ControlFlowTok{case}\NormalTok{ Form(is\_marked}\OperatorTok{=}\VariableTok{True}\NormalTok{, contents}\OperatorTok{=}\NormalTok{[inner]):}
+        \ControlFlowTok{return} \SpecialStringTok{f"enclose(}\SpecialCharTok{\{}\NormalTok{process(inner)}\SpecialCharTok{\}}\SpecialStringTok{)"}
+    \ControlFlowTok{case}\NormalTok{ Form(contents}\OperatorTok{=}\NormalTok{children):}
+        \ControlFlowTok{return} \SpecialStringTok{f"juxtapose(}\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(process(c) }\ControlFlowTok{for}\NormalTok{ c }\KeywordTok{in}\NormalTok{ children)}\SpecialCharTok{\}}\SpecialStringTok{)"}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Expression Languages}
+\protect\phantomsection\label{expression-languages}
+A boundary expression language:
+
+\begin{verbatim}
+<program> ::= <form>
+<form> ::= '.' | '<>' | '<' <form>* '>'
+\end{verbatim}
+
+Where \texttt{.} = void, \texttt{\textless{}\textgreater{}} = mark,
+\texttt{\textless{}...\textgreater{}} = enclosure.
+\end{frame}
+
+\subsection{S4.4 Knowledge
+Representation}\label{s4.4-knowledge-representation}
+
+\begin{frame}{Ontology Design}
+\protect\phantomsection\label{ontology-design}
+Boundary forms represent ontological distinctions:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Ontological Concept & Boundary Representation \\
+\midrule\noalign{}
+\endhead
+Class & Marked region \\
+Instance & Point within region \\
+Subclass & Nested enclosure \\
+Disjoint classes & Separate marks \\
+Complement & Enclosure \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}[fragile]{Semantic Web}
+\protect\phantomsection\label{semantic-web}
+RDF triples map to boundary structures: - Subject: Outermost boundary -
+Predicate: Enclosure operation - Object: Inner content
+
+\begin{verbatim}
+"Dog" "is-a" "Animal"  →  ⟨Animal⟨Dog⟩⟩
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Logic Programming}
+\protect\phantomsection\label{logic-programming}
+Boundary forms as logic programs: - Mark = fact (true assertion) - Void
+= absence (closed world) - Enclosure = negation as failure - Reduction =
+resolution
+\end{frame}
+
+\subsection{S4.5 Mathematical
+Education}\label{s4.5-mathematical-education}
+
+\begin{frame}{Teaching Boolean Logic}
+\protect\phantomsection\label{teaching-boolean-logic}
+Boundary notation provides intuitive visualization:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3529}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2353}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1961}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2157}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Standard Notation
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Difficulty
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Boundary
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Advantage
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\(\neg\neg P\) & Double negative confusion &
+\(\langle\langle P \rangle\rangle\) & Visible cancellation \\
+\(P \land \neg P\) & Abstract contradiction & \(P\langle P \rangle\) &
+Spatial conflict \\
+\(P \lor \neg P\) & Abstract tautology &
+\(\langle\langle P \rangle P\rangle\) & Reduces to mark \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Proof Visualization}
+\protect\phantomsection\label{proof-visualization}
+Students can manipulate diagrams: 1. Draw forms as nested boxes 2. Apply
+reduction rules visually 3. See equivalence by reaching same canonical
+form
+\end{frame}
+
+\begin{frame}{Curricular Integration}
+\protect\phantomsection\label{curricular-integration}
+Suggested progression: 1. \textbf{Elementary}: Distinguish shapes
+(making marks) 2. \textbf{Middle School}: Boolean operations as spatial
+3. \textbf{High School}: Formal reduction and proof 4.
+\textbf{University}: Theoretical foundations
+\end{frame}
+
+\subsection{S4.6 Quantum Computing
+Analogies}\label{s4.6-quantum-computing-analogies}
+
+\begin{frame}{Superposition and Imaginary Values}
+\protect\phantomsection\label{superposition-and-imaginary-values}
+Quantum superposition parallels imaginary Boolean values:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Quantum & Boundary Logic \\
+\midrule\noalign{}
+\endhead
+\(\|0\rangle\) & Void \\
+\(\|1\rangle\) & Mark \\
+\(\alpha\|0\rangle + \beta\|1\rangle\) & Imaginary \(j\) \\
+Measurement & Forcing to canonical form \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Quantum Gates}
+\protect\phantomsection\label{quantum-gates}
+Some quantum gates have boundary analogs:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.1935}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2581}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.5484}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Gate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Matrix
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Boundary Analog
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+NOT (X) & \(\begin{pmatrix}0&1\\1&0\end{pmatrix}\) & Enclosure
+\(\langle\ \rangle\) \\
+Identity (I) & \(\begin{pmatrix}1&0\\0&1\end{pmatrix}\) & Void
+operation \\
+Z & \(\begin{pmatrix}1&0\\0&-1\end{pmatrix}\) & Phase (no classical
+analog) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Entanglement}
+\protect\phantomsection\label{entanglement}
+Multi-qubit entanglement might map to form sharing: - Entangled forms
+share substructure - Measurement of one affects canonical form of both -
+Non-local correlations through reduction
+\end{frame}
+
+\subsection{S4.7 Systems Theory}\label{s4.7-systems-theory}
+
+\begin{frame}{Boundaries and Systems}
+\protect\phantomsection\label{boundaries-and-systems}
+General systems theory uses boundaries extensively:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Systems Concept & Boundary Analog \\
+\midrule\noalign{}
+\endhead
+System boundary & Mark \\
+Open system & Permeable boundary \\
+Closed system & Complete enclosure \\
+System hierarchy & Nested enclosures \\
+Feedback & Self-referential form \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Autopoiesis}
+\protect\phantomsection\label{autopoiesis}
+Maturana and Varela's autopoiesis: - Self-producing systems maintain
+their boundary - The boundary defines the system - Production occurs
+within the boundary
+
+Autopoietic systems = forms that reduce to themselves under
+perturbation.
+\end{frame}
+
+\begin{frame}[fragile]{Cybernetic Loops}
+\protect\phantomsection\label{cybernetic-loops}
+Feedback loops in boundary notation:
+
+\begin{verbatim}
+f = ⟨input ⟨f⟩⟩
+\end{verbatim}
+
+The system's output becomes input through enclosure---recursively
+defined.
+\end{frame}
+
+\subsection{S4.8 Art and Design}\label{s4.8-art-and-design}
+
+\begin{frame}{Generative Art}
+\protect\phantomsection\label{generative-art}
+Form generation produces visual patterns: - Random forms → diverse
+nested structures - Reduction → simplified compositions - Canonical
+forms → fundamental patterns
+\end{frame}
+
+\begin{frame}{Visual Language}
+\protect\phantomsection\label{visual-language}
+Designers can use boundary logic: - Mark = focus element - Enclosure =
+framing - Juxtaposition = composition - Reduction = simplification
+\end{frame}
+
+\begin{frame}{Interactive Installations}
+\protect\phantomsection\label{interactive-installations}
+Physical boundary installations: - Visitors enter/exit regions - Sensors
+detect boundary crossings - System state = current form - Interactions =
+reductions
+\end{frame}
+
+\subsection{S4.9 Future Applications}\label{s4.9-future-applications}
+
+\begin{frame}{Anticipated Domains}
+\protect\phantomsection\label{anticipated-domains}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Blockchain}: Smart contracts as reducible forms
+\item
+  \textbf{IoT}: Sensor networks as boundary systems
+\item
+  \textbf{Robotics}: Spatial reasoning with boundaries
+\item
+  \textbf{Medicine}: Diagnostic categorization
+\item
+  \textbf{Law}: Jurisdictional boundaries
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Research Directions}
+\protect\phantomsection\label{research-directions}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Efficient reduction hardware}: ASICs for boundary logic
+\item
+  \textbf{Distributed forms}: Network-distributed boundary computation
+\item
+  \textbf{Temporal extensions}: Forms evolving over time
+\item
+  \textbf{Probabilistic forms}: Uncertainty in boundaries
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Open Problems}
+\protect\phantomsection\label{open-problems}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Optimal encoding}: Best form representation for specific
+  domains
+\item
+  \textbf{Learning boundaries}: ML to discover effective distinctions
+\item
+  \textbf{Scaling}: Boundary logic for large-scale systems
+\item
+  \textbf{Integration}: Combining with existing formal methods
+\end{enumerate}
+\end{frame}
+
+\end{document}

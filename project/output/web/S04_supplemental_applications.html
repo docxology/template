@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>S04_supplemental_applications</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="supplemental-applications">Supplemental Applications</h1>
+<h2 id="s4.1-digital-circuit-design">S4.1 Digital Circuit Design</h2>
+<h3 id="nand-based-synthesis">NAND-Based Synthesis</h3>
+<p>The NAND gate is functionally complete—all Boolean functions are
+expressible using only NAND. In boundary logic:</p>
+<p><span class="math display">\[a \text{ NAND } b = \langle ab
+\rangle\]</span></p>
+<h4 id="all-gates-from-nand">All Gates from NAND</h4>
+<table>
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 25%" />
+<col style="width: 30%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Boolean</th>
+<th>NAND Form</th>
+<th>Boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NOT</td>
+<td><span class="math inline">\(\neg a\)</span></td>
+<td><span class="math inline">\(a\)</span> NAND <span
+class="math inline">\(a\)</span></td>
+<td><span class="math inline">\(\langle aa \rangle = \langle a
+\rangle\)</span></td>
+</tr>
+<tr>
+<td>AND</td>
+<td><span class="math inline">\(a \land b\)</span></td>
+<td>NOT(<span class="math inline">\(a\)</span> NAND <span
+class="math inline">\(b\)</span>)</td>
+<td><span class="math inline">\(\langle\langle ab \rangle\rangle =
+ab\)</span></td>
+</tr>
+<tr>
+<td>OR</td>
+<td><span class="math inline">\(a \lor b\)</span></td>
+<td>(NOT <span class="math inline">\(a\)</span>) NAND (NOT <span
+class="math inline">\(b\)</span>)</td>
+<td><span class="math inline">\(\langle\langle a \rangle\langle b
+\rangle\rangle\)</span></td>
+</tr>
+<tr>
+<td>XOR</td>
+<td><span class="math inline">\(a \oplus b\)</span></td>
+<td>Complex</td>
+<td><span class="math inline">\(\langle\langle\langle a \rangle b
+\rangle\langle a\langle b \rangle\rangle\rangle\)</span></td>
+</tr>
+</tbody>
+</table>
+<h3 id="circuit-optimization">Circuit Optimization</h3>
+<p>Boundary reduction rules translate to circuit transformations:</p>
+<table>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr>
+<th>Reduction Rule</th>
+<th>Circuit Transformation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Calling (<span class="math inline">\(\langle\langle a \rangle\rangle
+= a\)</span>)</td>
+<td>Remove double-inverter</td>
+</tr>
+<tr>
+<td>Crossing (<span class="math inline">\(\langle\ \rangle\langle\
+\rangle = \langle\ \rangle\)</span>)</td>
+<td>Merge parallel power lines</td>
+</tr>
+<tr>
+<td>Void elimination</td>
+<td>Remove disconnected components</td>
+</tr>
+</tbody>
+</table>
+<h3 id="layout-example">Layout Example</h3>
+<p>A full adder in boundary notation:</p>
+<p><strong>Sum</strong>: <span class="math inline">\(S = a \oplus b
+\oplus c_{in}\)</span> <strong>Carry</strong>: <span
+class="math inline">\(c_{out} = (a \land b) \lor (c_{in} \land (a \oplus
+b))\)</span></p>
+<p>The boundary forms directly map to circuit layout with nested regions
+representing signal containment.</p>
+<h2 id="s4.2-cognitive-science-applications">S4.2 Cognitive Science
+Applications</h2>
+<h3 id="perception-as-distinction">Perception as Distinction</h3>
+<p>The calculus models fundamental perceptual operations:</p>
+<table>
+<thead>
+<tr>
+<th>Perceptual Process</th>
+<th>Boundary Operation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Figure-ground separation</td>
+<td>Making a mark</td>
+</tr>
+<tr>
+<td>Object recognition</td>
+<td>Canonical form identification</td>
+</tr>
+<tr>
+<td>Categorization</td>
+<td>Reduction to equivalence class</td>
+</tr>
+<tr>
+<td>Attention</td>
+<td>Enclosure (isolating from context)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="binary-classification">Binary Classification</h3>
+<p>Any binary classifier implements boundary logic: - Decision boundary
+= mark - Class 1 = inside - Class 0 = outside</p>
+<p>Neural network classifiers learn to draw effective marks in feature
+space.</p>
+<h3 id="self-reference-and-consciousness">Self-Reference and
+Consciousness</h3>
+<p>The imaginary value <span class="math inline">\(j = \langle j
+\rangle\)</span> models self-referential consciousness: - Consciousness
+observing itself - The observer is inside what it observes - Oscillation
+between subject and object positions</p>
+<p>This aligns with theories of consciousness as recursive
+self-modeling.</p>
+<h2 id="s4.3-programming-language-applications">S4.3 Programming
+Language Applications</h2>
+<h3 id="type-systems">Type Systems</h3>
+<p>Boundary logic maps to type theory:</p>
+<table>
+<thead>
+<tr>
+<th>Boundary</th>
+<th>Type Theory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Void</td>
+<td>Empty type (⊥)</td>
+</tr>
+<tr>
+<td>Mark</td>
+<td>Unit type (⊤)</td>
+</tr>
+<tr>
+<td>Enclosure</td>
+<td>Negation type</td>
+</tr>
+<tr>
+<td>Juxtaposition</td>
+<td>Product type</td>
+</tr>
+<tr>
+<td>De Morgan form</td>
+<td>Sum type</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pattern-matching">Pattern Matching</h3>
+<p>Form patterns translate to match expressions:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">match</span> form:</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> Form(is_marked<span class="op">=</span><span class="va">False</span>, contents<span class="op">=</span>[]):</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">&quot;void&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> Form(is_marked<span class="op">=</span><span class="va">True</span>, contents<span class="op">=</span>[]):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">&quot;mark&quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> Form(is_marked<span class="op">=</span><span class="va">True</span>, contents<span class="op">=</span>[inner]):</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f&quot;enclose(</span><span class="sc">{</span>process(inner)<span class="sc">}</span><span class="ss">)&quot;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> Form(contents<span class="op">=</span>children):</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f&quot;juxtapose(</span><span class="sc">{</span><span class="st">&#39;, &#39;</span><span class="sc">.</span>join(process(c) <span class="cf">for</span> c <span class="kw">in</span> children)<span class="sc">}</span><span class="ss">)&quot;</span></span></code></pre></div>
+<h3 id="expression-languages">Expression Languages</h3>
+<p>A boundary expression language:</p>
+<pre><code>&lt;program&gt; ::= &lt;form&gt;
+&lt;form&gt; ::= &#39;.&#39; | &#39;&lt;&gt;&#39; | &#39;&lt;&#39; &lt;form&gt;* &#39;&gt;&#39;</code></pre>
+<p>Where <code>.</code> = void, <code>&lt;&gt;</code> = mark,
+<code>&lt;...&gt;</code> = enclosure.</p>
+<h2 id="s4.4-knowledge-representation">S4.4 Knowledge
+Representation</h2>
+<h3 id="ontology-design">Ontology Design</h3>
+<p>Boundary forms represent ontological distinctions:</p>
+<table>
+<thead>
+<tr>
+<th>Ontological Concept</th>
+<th>Boundary Representation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Class</td>
+<td>Marked region</td>
+</tr>
+<tr>
+<td>Instance</td>
+<td>Point within region</td>
+</tr>
+<tr>
+<td>Subclass</td>
+<td>Nested enclosure</td>
+</tr>
+<tr>
+<td>Disjoint classes</td>
+<td>Separate marks</td>
+</tr>
+<tr>
+<td>Complement</td>
+<td>Enclosure</td>
+</tr>
+</tbody>
+</table>
+<h3 id="semantic-web">Semantic Web</h3>
+<p>RDF triples map to boundary structures: - Subject: Outermost boundary
+- Predicate: Enclosure operation - Object: Inner content</p>
+<pre><code>&quot;Dog&quot; &quot;is-a&quot; &quot;Animal&quot;  →  ⟨Animal⟨Dog⟩⟩</code></pre>
+<h3 id="logic-programming">Logic Programming</h3>
+<p>Boundary forms as logic programs: - Mark = fact (true assertion) -
+Void = absence (closed world) - Enclosure = negation as failure -
+Reduction = resolution</p>
+<h2 id="s4.5-mathematical-education">S4.5 Mathematical Education</h2>
+<h3 id="teaching-boolean-logic">Teaching Boolean Logic</h3>
+<p>Boundary notation provides intuitive visualization:</p>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 23%" />
+<col style="width: 19%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th>Standard Notation</th>
+<th>Difficulty</th>
+<th>Boundary</th>
+<th>Advantage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(\neg\neg P\)</span></td>
+<td>Double negative confusion</td>
+<td><span class="math inline">\(\langle\langle P
+\rangle\rangle\)</span></td>
+<td>Visible cancellation</td>
+</tr>
+<tr>
+<td><span class="math inline">\(P \land \neg P\)</span></td>
+<td>Abstract contradiction</td>
+<td><span class="math inline">\(P\langle P \rangle\)</span></td>
+<td>Spatial conflict</td>
+</tr>
+<tr>
+<td><span class="math inline">\(P \lor \neg P\)</span></td>
+<td>Abstract tautology</td>
+<td><span class="math inline">\(\langle\langle P \rangle
+P\rangle\)</span></td>
+<td>Reduces to mark</td>
+</tr>
+</tbody>
+</table>
+<h3 id="proof-visualization">Proof Visualization</h3>
+<p>Students can manipulate diagrams: 1. Draw forms as nested boxes 2.
+Apply reduction rules visually 3. See equivalence by reaching same
+canonical form</p>
+<h3 id="curricular-integration">Curricular Integration</h3>
+<p>Suggested progression: 1. <strong>Elementary</strong>: Distinguish
+shapes (making marks) 2. <strong>Middle School</strong>: Boolean
+operations as spatial 3. <strong>High School</strong>: Formal reduction
+and proof 4. <strong>University</strong>: Theoretical foundations</p>
+<h2 id="s4.6-quantum-computing-analogies">S4.6 Quantum Computing
+Analogies</h2>
+<h3 id="superposition-and-imaginary-values">Superposition and Imaginary
+Values</h3>
+<p>Quantum superposition parallels imaginary Boolean values:</p>
+<table>
+<thead>
+<tr>
+<th>Quantum</th>
+<th>Boundary Logic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(\|0\rangle\)</span></td>
+<td>Void</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\|1\rangle\)</span></td>
+<td>Mark</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\alpha\|0\rangle +
+\beta\|1\rangle\)</span></td>
+<td>Imaginary <span class="math inline">\(j\)</span></td>
+</tr>
+<tr>
+<td>Measurement</td>
+<td>Forcing to canonical form</td>
+</tr>
+</tbody>
+</table>
+<h3 id="quantum-gates">Quantum Gates</h3>
+<p>Some quantum gates have boundary analogs:</p>
+<table>
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 25%" />
+<col style="width: 54%" />
+</colgroup>
+<thead>
+<tr>
+<th>Gate</th>
+<th>Matrix</th>
+<th>Boundary Analog</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NOT (X)</td>
+<td><span
+class="math inline">\(\begin{pmatrix}0&amp;1\\1&amp;0\end{pmatrix}\)</span></td>
+<td>Enclosure <span class="math inline">\(\langle\ \rangle\)</span></td>
+</tr>
+<tr>
+<td>Identity (I)</td>
+<td><span
+class="math inline">\(\begin{pmatrix}1&amp;0\\0&amp;1\end{pmatrix}\)</span></td>
+<td>Void operation</td>
+</tr>
+<tr>
+<td>Z</td>
+<td><span
+class="math inline">\(\begin{pmatrix}1&amp;0\\0&amp;-1\end{pmatrix}\)</span></td>
+<td>Phase (no classical analog)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="entanglement">Entanglement</h3>
+<p>Multi-qubit entanglement might map to form sharing: - Entangled forms
+share substructure - Measurement of one affects canonical form of both -
+Non-local correlations through reduction</p>
+<h2 id="s4.7-systems-theory">S4.7 Systems Theory</h2>
+<h3 id="boundaries-and-systems">Boundaries and Systems</h3>
+<p>General systems theory uses boundaries extensively:</p>
+<table>
+<thead>
+<tr>
+<th>Systems Concept</th>
+<th>Boundary Analog</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System boundary</td>
+<td>Mark</td>
+</tr>
+<tr>
+<td>Open system</td>
+<td>Permeable boundary</td>
+</tr>
+<tr>
+<td>Closed system</td>
+<td>Complete enclosure</td>
+</tr>
+<tr>
+<td>System hierarchy</td>
+<td>Nested enclosures</td>
+</tr>
+<tr>
+<td>Feedback</td>
+<td>Self-referential form</td>
+</tr>
+</tbody>
+</table>
+<h3 id="autopoiesis">Autopoiesis</h3>
+<p>Maturana and Varela’s autopoiesis: - Self-producing systems maintain
+their boundary - The boundary defines the system - Production occurs
+within the boundary</p>
+<p>Autopoietic systems = forms that reduce to themselves under
+perturbation.</p>
+<h3 id="cybernetic-loops">Cybernetic Loops</h3>
+<p>Feedback loops in boundary notation:</p>
+<pre><code>f = ⟨input ⟨f⟩⟩</code></pre>
+<p>The system’s output becomes input through enclosure—recursively
+defined.</p>
+<h2 id="s4.8-art-and-design">S4.8 Art and Design</h2>
+<h3 id="generative-art">Generative Art</h3>
+<p>Form generation produces visual patterns: - Random forms → diverse
+nested structures - Reduction → simplified compositions - Canonical
+forms → fundamental patterns</p>
+<h3 id="visual-language">Visual Language</h3>
+<p>Designers can use boundary logic: - Mark = focus element - Enclosure
+= framing - Juxtaposition = composition - Reduction = simplification</p>
+<h3 id="interactive-installations">Interactive Installations</h3>
+<p>Physical boundary installations: - Visitors enter/exit regions -
+Sensors detect boundary crossings - System state = current form -
+Interactions = reductions</p>
+<h2 id="s4.9-future-applications">S4.9 Future Applications</h2>
+<h3 id="anticipated-domains">Anticipated Domains</h3>
+<ol type="1">
+<li><strong>Blockchain</strong>: Smart contracts as reducible forms</li>
+<li><strong>IoT</strong>: Sensor networks as boundary systems</li>
+<li><strong>Robotics</strong>: Spatial reasoning with boundaries</li>
+<li><strong>Medicine</strong>: Diagnostic categorization</li>
+<li><strong>Law</strong>: Jurisdictional boundaries</li>
+</ol>
+<h3 id="research-directions">Research Directions</h3>
+<ol type="1">
+<li><strong>Efficient reduction hardware</strong>: ASICs for boundary
+logic</li>
+<li><strong>Distributed forms</strong>: Network-distributed boundary
+computation</li>
+<li><strong>Temporal extensions</strong>: Forms evolving over time</li>
+<li><strong>Probabilistic forms</strong>: Uncertainty in boundaries</li>
+</ol>
+<h3 id="open-problems">Open Problems</h3>
+<ol type="1">
+<li><strong>Optimal encoding</strong>: Best form representation for
+specific domains</li>
+<li><strong>Learning boundaries</strong>: ML to discover effective
+distinctions</li>
+<li><strong>Scaling</strong>: Boundary logic for large-scale
+systems</li>
+<li><strong>Integration</strong>: Combining with existing formal
+methods</li>
+</ol>
+</body>
+</html>

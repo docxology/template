@@ -1,0 +1,690 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Supplemental Analysis: Pragmatist and Neo-Materialist
+Foundations}\label{supplemental-analysis-pragmatist-and-neo-materialist-foundations}
+
+\subsection{S3.1 North American Pragmatism and the Calculus of
+Indications}\label{s3.1-north-american-pragmatism-and-the-calculus-of-indications}
+
+\begin{frame}{The Peircean Heritage}
+\protect\phantomsection\label{the-peircean-heritage}
+Charles Sanders Peirce (1839-1914) developed \textbf{Existential
+Graphs}---a diagrammatic logic that anticipates Spencer-Brown's calculus
+in fundamental ways \cite{peirce1931,kauffman2001}. The connection is
+not merely superficial but structural.
+
+\begin{block}{Peirce's Existential Graphs}
+\protect\phantomsection\label{peirces-existential-graphs}
+Peirce's system employs: - \textbf{Sheet of Assertion}: The blank page
+represents truth (cf.~Spencer-Brown's unmarked space) - \textbf{Cuts}:
+Closed curves that negate their contents (cf.~enclosure) -
+\textbf{Juxtaposition}: Co-presence on the sheet represents conjunction
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3542}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3125}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Peirce's Graphs
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Spencer-Brown
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Interpretation
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Blank sheet & Void & Base state \\
+Cut (○) & Mark \(\langle\ \rangle\) & Negation/distinction \\
+Double cut & \(\langle\langle\ \rangle\rangle\) & Double negation =
+identity \\
+Adjacent graphs & Juxtaposition & Conjunction \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Peirce's \textbf{Alpha graphs} (propositional logic) are essentially
+isomorphic to the calculus of indications.
+\end{block}
+
+\begin{block}{Phaneroscopy and Firstness}
+\protect\phantomsection\label{phaneroscopy-and-firstness}
+Peirce's categories illuminate the boundary:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Firstness}: Quality of feeling, pure possibility---\emph{the
+  void before distinction}
+\item
+  \textbf{Secondness}: Reaction, resistance, brute fact---\emph{the act
+  of distinction}
+\item
+  \textbf{Thirdness}: Mediation, law, representation---\emph{the form
+  after distinction}
+\end{enumerate}
+
+The mark \(\langle\ \rangle\) instantiates the passage from Firstness
+(void) through Secondness (drawing) to Thirdness (form).
+\end{block}
+
+\begin{block}{Semiotics and the Icon}
+\protect\phantomsection\label{semiotics-and-the-icon}
+Spencer-Brown's notation is fundamentally \textbf{iconic} in Peirce's
+sense: - The mark \emph{looks like} what it represents (a boundary) -
+The notation exhibits its meaning rather than merely denoting it -
+Reasoning proceeds by manipulation of the icon itself
+
+\begin{quote}
+``The icon does not stand for its object by resembling it\ldots{} it is
+itself a fragment of that object.'' --- Peirce
+\end{quote}
+\end{block}
+\end{frame}
+
+\begin{frame}{William James: Radical Empiricism}
+\protect\phantomsection\label{william-james-radical-empiricism}
+James's \textbf{radical empiricism} \cite{james1912} insisted that
+relations are as real as the things related. This aligns with boundary
+logic:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+James & Containment Theory \\
+\midrule\noalign{}
+\endhead
+Relations are real & Boundaries are primitive \\
+Conjunctive relations & Juxtaposition \\
+Disjunctive relations & Separation by mark \\
+Pure experience & Void before distinction \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+James's ``stream of consciousness'' fragments through distinction; the
+calculus formalizes this fragmentation.
+
+\begin{block}{The Pragmatic Maxim}
+\protect\phantomsection\label{the-pragmatic-maxim}
+Peirce's pragmatic maxim: ``Consider what effects\ldots{} the object of
+our conception has. Then, our conception of these effects is the whole
+of our conception of the object.''
+
+For the mark \(\langle\ \rangle\): - \textbf{Effect}: Creates
+inside/outside - \textbf{Conception}: The mark \emph{is} distinction
+itself - \textbf{Meaning}: Fully contained in operational consequences
+\end{block}
+\end{frame}
+
+\begin{frame}{John Dewey: Inquiry as Distinction}
+\protect\phantomsection\label{john-dewey-inquiry-as-distinction}
+Dewey's \textbf{instrumentalism} \cite{dewey1938} treats inquiry as the
+transformation of indeterminate situations into determinate
+ones---precisely the function of distinction.
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Dewey's Inquiry & Boundary Operation \\
+\midrule\noalign{}
+\endhead
+Indeterminate situation & Void \\
+Problematic situation & Recognition of need for distinction \\
+Institution of a problem & Drawing the mark \\
+Determination & Canonical form \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Dewey's emphasis on \textbf{continuity} (situations flowing into one
+another) parallels the recursive structure of nested boundaries.
+
+\begin{block}{Experience and Nature}
+\protect\phantomsection\label{experience-and-nature}
+\begin{quote}
+``To exist is to be in a situation\ldots{}'' --- Dewey
+\end{quote}
+
+To be distinguished \emph{is} to exist. The mark creates existence from
+the void. Dewey's naturalism grounds this in biological and cultural
+practice: organisms survive by making effective distinctions.
+\end{block}
+\end{frame}
+
+\subsection{S3.2 Process Philosophy and the
+Mark}\label{s3.2-process-philosophy-and-the-mark}
+
+\begin{frame}{Alfred North Whitehead}
+\protect\phantomsection\label{alfred-north-whitehead}
+Whitehead's \textbf{process philosophy} \cite{whitehead1929} provides
+metaphysical grounding:
+
+\begin{block}{Actual Entities}
+\protect\phantomsection\label{actual-entities}
+Whitehead's \textbf{actual entities} are the final real things: - Each
+actual entity \emph{becomes} through \textbf{prehension} (grasping
+others) - The void corresponds to \textbf{eternal objects} (pure
+potentiality) - The mark corresponds to \textbf{actualization} (becoming
+definite)
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Whitehead & Containment Theory \\
+\midrule\noalign{}
+\endhead
+Creativity & The capacity for distinction \\
+Eternal objects & Void (potentiality) \\
+Actual entities & Marked forms \\
+Prehension & Enclosure (taking in) \\
+Concrescence & Reduction to canonical form \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{The Category of the Ultimate}
+\protect\phantomsection\label{the-category-of-the-ultimate}
+Whitehead's three notions: 1. \textbf{Creativity}: The ultimate
+principle of novelty 2. \textbf{Many}: The disjunctive diversity of the
+universe 3. \textbf{One}: The novel entity synthesizing the many
+
+Distinction (mark-making) \emph{is} creativity instantiated: from the
+many (void, undifferentiated), the one (canonical form) emerges.
+\end{block}
+\end{frame}
+
+\subsection{S3.3 Neo-Materialism and Agential
+Realism}\label{s3.3-neo-materialism-and-agential-realism}
+
+\begin{frame}{Karen Barad: Intra-action}
+\protect\phantomsection\label{karen-barad-intra-action}
+Karen Barad's \textbf{agential realism} \cite{barad2007} reconceives the
+relationship between observer, observed, and observation. The boundary
+is not between pre-existing entities but constitutive of entities.
+
+\begin{block}{Intra-action vs.~Interaction}
+\protect\phantomsection\label{intra-action-vs.-interaction}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2857}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4127}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3016}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Traditional View
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Barad's Agential Realism
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Containment Theory
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Entities interact & Entities intra-act & Forms compose \\
+Boundaries pre-exist & Boundaries enacted & Mark creates boundary \\
+Observer separate & Observer entangled & Self-reference (imaginary
+values) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{Agential Cuts}
+\protect\phantomsection\label{agential-cuts}
+Barad's \textbf{agential cuts} determine what becomes determinate:
+
+\begin{quote}
+``It is through specific agential intra-actions that the boundaries and
+properties of the `components' of phenomena become determinate.'' ---
+Barad, \emph{Meeting the Universe Halfway}
+\end{quote}
+
+The Spencer-Brown mark \emph{is} an agential cut: it doesn't represent a
+pre-existing distinction but enacts one.
+\end{block}
+
+\begin{block}{Diffraction}
+\protect\phantomsection\label{diffraction}
+Barad's \textbf{diffraction} (vs.~reflection) as methodological
+approach: - Reflection presupposes fixed identities mirrored -
+Diffraction attends to patterns of difference
+
+Reduction in boundary logic is diffractive: it doesn't preserve original
+form but produces interference patterns (canonical forms) from
+distinctions.
+\end{block}
+\end{frame}
+
+\begin{frame}{Donna Haraway: Situated Knowledges}
+\protect\phantomsection\label{donna-haraway-situated-knowledges}
+Haraway's \textbf{situated knowledges} \cite{haraway2016} reject the
+``god trick'' of seeing everything from nowhere:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+God Trick & Situated Knowledge & Boundary Logic \\
+\midrule\noalign{}
+\endhead
+View from nowhere & View from somewhere & View from inside/outside \\
+Unmarked observer & Marked observer & Observer as form \\
+Neutral & Positioned & Self-referential \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+The imaginary value \(j = \langle j \rangle\) formalizes the observer
+observing itself---a situated, recursive position.
+\end{frame}
+
+\subsection{S3.4 Deleuze and
+Immanence}\label{s3.4-deleuze-and-immanence}
+
+\begin{frame}{Difference in Itself}
+\protect\phantomsection\label{difference-in-itself}
+Gilles Deleuze's \textbf{philosophy of difference} \cite{deleuze1968}
+resonates with distinction-as-primitive:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4815}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.1667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3519}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Representational Thought
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Deleuze
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Containment Theory
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Identity primary & Difference primary & Distinction primary \\
+Difference = not-same & Difference in itself & Mark creates
+difference \\
+Categories fixed & Categories produced & Forms reducible \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+\begin{block}{The Virtual and the Actual}
+\protect\phantomsection\label{the-virtual-and-the-actual}
+Deleuze's \textbf{virtual/actual} distinction maps onto void/mark:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Deleuze & Spencer-Brown & Character \\
+\midrule\noalign{}
+\endhead
+Virtual & Void & Real but not actual \\
+Actualization & Mark-making & Determination \\
+Actual & Canonical form & Fully determined \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+The void is \emph{virtual}---it has real effects (as identity for
+conjunction) without being actual (marked).
+\end{block}
+\end{frame}
+
+\begin{frame}{Intensive Differences}
+\protect\phantomsection\label{intensive-differences}
+Deleuze's \textbf{intensive quantities} (differences that don't divide
+without changing nature) relate to depth in boundary logic:
+
+\begin{itemize}
+\tightlist
+\item
+  Depth = intensive magnitude
+\item
+  Flattening (reduction) changes nature
+\item
+  \(\langle\langle a \rangle\rangle \neq \langle a \rangle \neq a\)
+  intensively
+\end{itemize}
+\end{frame}
+
+\subsection{S3.5 Brian Massumi and
+Affect}\label{s3.5-brian-massumi-and-affect}
+
+\begin{frame}{Affect and the Virtual}
+\protect\phantomsection\label{affect-and-the-virtual}
+Massumi's \textbf{affect theory} \cite{massumi2002} treats intensity as
+prior to formed content:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Massumi & Containment Theory \\
+\midrule\noalign{}
+\endhead
+Affect (intensity) & Void (potential) \\
+Emotion (qualified) & Form (structured) \\
+Passage & Reduction \\
+Autonomy of affect & Resistance to reduction \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Irreducible forms (already canonical) resist further passage---they are
+``stuck'' affects.
+\end{frame}
+
+\begin{frame}{Ontopower}
+\protect\phantomsection\label{ontopower}
+Massumi's \textbf{ontopower}: power operating at the level of emergence.
+
+The capacity to make distinctions \emph{is} ontopower---the capacity to
+create realities by differentiating the undifferentiated.
+\end{frame}
+
+\subsection{S3.6 New Materialism and Matter's
+Agency}\label{s3.6-new-materialism-and-matters-agency}
+
+\begin{frame}{Vibrant Matter (Jane Bennett)}
+\protect\phantomsection\label{vibrant-matter-jane-bennett}
+Jane Bennett's \textbf{vital materialism} \cite{bennett2010} attributes
+agency to matter itself:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Bennett & Boundary Logic \\
+\midrule\noalign{}
+\endhead
+Actants & Forms as actors \\
+Assemblages & Juxtapositions \\
+Thing-power & Reduction capacity \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Forms are not passive representations but active participants in
+reduction---they \emph{do} things.
+\end{frame}
+
+\begin{frame}{Material Semiotics (ANT)}
+\protect\phantomsection\label{material-semiotics-ant}
+Actor-Network Theory's \textbf{material semiotics}: - Signs and things
+are equally actors - Networks are heterogeneous assemblages -
+Translation transforms identities
+
+The calculus of indications is maximally material-semiotic: the notation
+(material marks) \emph{is} the logic (semiotic structure).
+\end{frame}
+
+\subsection{S3.7 Synthesis: Pragmatist-Materialist
+Containment}\label{s3.7-synthesis-pragmatist-materialist-containment}
+
+\begin{frame}{Core Commitments}
+\protect\phantomsection\label{core-commitments}
+From these traditions, Containment Theory inherits:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Anti-representationalism} (Pragmatism): Forms don't represent;
+  they enact
+\item
+  \textbf{Relational ontology} (Neo-materialism): Boundaries constitute
+  entities
+\item
+  \textbf{Process primacy} (Whitehead): Becoming precedes being
+\item
+  \textbf{Situatedness} (Haraway): Observer within system
+\item
+  \textbf{Difference primacy} (Deleuze): Distinction before identity
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{The Mark as Pragmatic-Materialist Primitive}
+\protect\phantomsection\label{the-mark-as-pragmatic-materialist-primitive}
+The mark \(\langle\ \rangle\) unifies: - \textbf{Pragmatist}:
+Operational definition (effects = meaning) - \textbf{Materialist}:
+Physical inscription (matter makes marks) - \textbf{Processual}:
+Temporal act (distinction happens) - \textbf{Relational}: Creates
+relations (inside/outside)
+\end{frame}
+
+\begin{frame}{Research Program}
+\protect\phantomsection\label{research-program}
+This philosophical grounding suggests:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Experimental Pragmatism}: Test forms by their consequences
+\item
+  \textbf{Material Practice}: Implement forms in physical media
+\item
+  \textbf{Processual Analysis}: Study reduction as temporal unfolding
+\item
+  \textbf{Ecological Thinking}: Forms in environments of other forms
+\end{enumerate}
+\end{frame}
+
+\subsection{S3.8 Key Texts and
+Lineages}\label{s3.8-key-texts-and-lineages}
+
+\begin{frame}{North American Pragmatism}
+\protect\phantomsection\label{north-american-pragmatism}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Author
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Key Work
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Connection
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+C.S. Peirce & \emph{Collected Papers} (1931-58) & Existential graphs,
+icons \\
+William James & \emph{Essays in Radical Empiricism} (1912) & Relations
+as real \\
+John Dewey & \emph{Logic: The Theory of Inquiry} (1938) & Inquiry as
+distinction \\
+George Herbert Mead & \emph{Mind, Self, and Society} (1934) &
+Self-reference \\
+Richard Rorty & \emph{Philosophy and the Mirror of Nature} (1979) &
+Anti-representationalism \\
+Robert Brandom & \emph{Making It Explicit} (1994) & Inferential
+semantics \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Process Philosophy}
+\protect\phantomsection\label{process-philosophy}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Author
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Key Work
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Connection
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+A.N. Whitehead & \emph{Process and Reality} (1929) & Actual entities,
+creativity \\
+Charles Hartshorne & \emph{Creative Synthesis} (1970) &
+Panexperientialism \\
+Isabelle Stengers & \emph{Thinking with Whitehead} (2011) & Speculative
+philosophy \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Neo-Materialism}
+\protect\phantomsection\label{neo-materialism}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Author
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Key Work
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Connection
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Karen Barad & \emph{Meeting the Universe Halfway} (2007) & Agential
+cuts \\
+Donna Haraway & \emph{Staying with the Trouble} (2016) & Situated
+becoming \\
+Jane Bennett & \emph{Vibrant Matter} (2010) & Thing-power \\
+Rosi Braidotti & \emph{The Posthuman} (2013) & Affirmative ethics \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Continental Connections}
+\protect\phantomsection\label{continental-connections}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2667}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3333}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Author
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Key Work
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Connection
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Gilles Deleuze & \emph{Difference and Repetition} (1968) & Difference in
+itself \\
+Brian Massumi & \emph{Parables for the Virtual} (2002) & Affect,
+intensity \\
+Gilbert Simondon & \emph{Individuation} (1958) & Transduction \\
+Bruno Latour & \emph{We Have Never Been Modern} (1991) &
+Actor-networks \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\end{document}

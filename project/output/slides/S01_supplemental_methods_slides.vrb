@@ -1,0 +1,10 @@
+\frametitle{Reproducibility}
+\protect\phantomsection\label{reproducibility}
+Fixed random seed (42) ensures reproducible experiments:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rng }\OperatorTok{=}\NormalTok{ random.Random(}\DecValTok{42}\NormalTok{)}
+\NormalTok{forms }\OperatorTok{=}\NormalTok{ [random\_form(max\_depth}\OperatorTok{=}\DecValTok{4}\NormalTok{, rng}\OperatorTok{=}\NormalTok{rng) }\ControlFlowTok{for}\NormalTok{ \_ }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{500}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}

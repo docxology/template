@@ -1,0 +1,436 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Discussion}\label{discussion}
+
+\begin{frame}{Set Theory vs.~Containment Theory}
+\protect\phantomsection\label{set-theory-vs.-containment-theory}
+The comparison between classical Set Theory (ZFC) \cite{kunen1980} and
+Containment Theory \cite{spencerbrown1969} reveals fundamental
+differences in approach, axiomatics, and conceptual structure.
+
+\begin{block}{Axiomatic Economy}
+\protect\phantomsection\label{axiomatic-economy}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2292}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3750}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3958}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Criterion
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Set Theory (ZFC)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Containment Theory
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\textbf{Number of Axioms} & 9 (including Choice) & 2 \\
+\textbf{Primitive Notion} & Membership (\(\in\)) & Distinction
+(boundary) \\
+\textbf{Undefined Terms} & Set, membership & Mark, void \\
+\textbf{Infinity Required} & Yes (Axiom of Infinity) & No (finite
+calculus) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Set Theory requires: 1. Extensionality 2. Empty Set 3. Pairing 4. Union
+5. Power Set 6. Infinity 7. Separation (schema) 8. Replacement (schema)
+9. Foundation (Regularity) 10. Choice (optional)
+
+Containment Theory requires only: 1. Calling:
+\(\langle\langle a \rangle\rangle = a\) 2. Crossing:
+\(\langle\ \rangle\langle\ \rangle = \langle\ \rangle\)
+\end{block}
+
+\begin{block}{Expressiveness Comparison}
+\protect\phantomsection\label{expressiveness-comparison}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2250}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4750}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Concept
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Set Theory
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Containment Theory
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+TRUE & \(\{x : x = x\}\) (universe) & \(\langle\ \rangle\) \\
+FALSE & \(\emptyset\) (empty set) & void \\
+NOT & Complement \(A^c\) & Enclosure \(\langle a \rangle\) \\
+AND & Intersection \(A \cap B\) & Juxtaposition \(ab\) \\
+OR & Union \(A \cup B\) &
+\(\langle\langle a \rangle\langle b \rangle\rangle\) \\
+Implication & \(A^c \cup B\) & \(\langle a\langle b \rangle\rangle\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Both systems achieve Boolean completeness, but through fundamentally
+different primitives.
+\end{block}
+
+\begin{block}{Self-Reference and Paradoxes}
+\protect\phantomsection\label{self-reference-and-paradoxes}
+\textbf{Russell's Paradox in Set Theory}:
+
+The set \(R = \{x : x \notin x\}\) leads to contradiction: - If
+\(R \in R\), then \(R \notin R\) - If \(R \notin R\), then \(R \in R\)
+
+Set Theory resolves this by restricting comprehension (no unrestricted
+set formation).
+
+\textbf{Self-Reference in Containment Theory}:
+
+The equation \(f = \langle f \rangle\) has no solution among marks and
+voids. Spencer-Brown introduces \textbf{imaginary values}---forms that
+oscillate between states:
+
+\[j = \langle j \rangle\]
+
+This imaginary value \(j\) is neither marked nor void but alternates
+between them over ``time.'' Rather than a paradox, self-reference
+becomes a dynamic oscillation.
+
+\textbf{Comparison}:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+System & Self-Reference Treatment \\
+\midrule\noalign{}
+\endhead
+Set Theory & Paradox → Restriction (Foundation axiom) \\
+Containment Theory & Imaginary value → Dynamic oscillation \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{Geometric Intuition}
+\protect\phantomsection\label{geometric-intuition}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Feature & Set Theory & Containment Theory \\
+\midrule\noalign{}
+\endhead
+\textbf{Visualization} & Venn diagrams (regions) & Nested boundaries \\
+\textbf{Primitive Operation} & Collection & Drawing a line \\
+\textbf{Spatial Metaphor} & Contains (membership) & Inside/Outside \\
+\textbf{Natural Interpretation} & Abstract & Geometric \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Boundary logic's operations map directly to spatial actions: -
+\textbf{Making a mark}: Drawing a boundary - \textbf{Enclosure}:
+Creating an inside - \textbf{Juxtaposition}: Side-by-side placement -
+\textbf{Calling}: Crossing back through a boundary
+\end{block}
+
+\begin{block}{Complexity Implications}
+\protect\phantomsection\label{complexity-implications}
+\textbf{Set-theoretic Boolean operations} require: - Universe definition
+- Complement with respect to universe - Intersection defined via
+membership
+
+\textbf{Boundary logic Boolean operations}: - Mark is TRUE (primitive) -
+Enclosure is NOT (one rule) - Juxtaposition is AND (spatial) -
+Everything else derived
+
+The reduction algorithm in Containment Theory operates in polynomial
+time for ground forms, while SAT solving (Boolean satisfiability) is
+NP-complete. This does not contradict---the boundary calculus solves
+\emph{evaluation}, not \emph{satisfiability}.
+\end{block}
+\end{frame}
+
+\begin{frame}{Theoretical Implications}
+\protect\phantomsection\label{theoretical-implications}
+\begin{block}{Foundations of Mathematics}
+\protect\phantomsection\label{foundations-of-mathematics}
+Containment Theory suggests that mathematical foundations need not be as
+complex as ZFC. For finite, discrete structures: - Boolean algebra -
+Propositional logic - Digital circuits - Finite state machines
+
+The two-axiom system suffices completely.
+\end{block}
+
+\begin{block}{Philosophy of Distinction}
+\protect\phantomsection\label{philosophy-of-distinction}
+Spencer-Brown's system has philosophical implications:
+
+\textbf{Epistemological}: All knowledge begins with
+distinction---separating figure from ground, this from that.
+
+\textbf{Ontological}: The void (undistinguished space) may represent
+pre-phenomenal reality; distinction creates existence.
+
+\textbf{Self-Reference}: The imaginary values suggest that
+self-reference is not paradoxical but generates temporal
+dynamics---consciousness observing itself creates oscillation.
+\end{block}
+
+\begin{block}{Connections to Other Formalisms}
+\protect\phantomsection\label{connections-to-other-formalisms}
+\textbf{Category Theory} \cite{lambek1986,awodey2010}: Forms can be
+viewed as morphisms; the axioms define natural transformations.
+
+\textbf{Type Theory}: The mark/void distinction parallels
+inhabited/empty types.
+
+\textbf{Lambda Calculus}: Enclosure resembles abstraction; juxtaposition
+resembles application.
+
+\textbf{Homotopy Type Theory} \cite{hottbook}: Boundaries as paths;
+calling as path inversion.
+\end{block}
+\end{frame}
+
+\begin{frame}{Applications}
+\protect\phantomsection\label{applications}
+\begin{block}{Digital Circuit Design}
+\protect\phantomsection\label{digital-circuit-design}
+The NAND gate is functionally complete and corresponds directly to
+\(\langle ab \rangle\):
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1111}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1111}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3111}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.4667}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+\(a\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(b\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(a\) NAND \(b\)
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+\(\langle ab \rangle\)
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+T & T & F &
+\(\langle\langle\ \rangle\langle\ \rangle\rangle = \emptyset\) \\
+T & F & T &
+\(\langle\langle\ \rangle\emptyset\rangle = \langle\ \rangle\) \\
+F & T & T &
+\(\langle\emptyset\langle\ \rangle\rangle = \langle\ \rangle\) \\
+F & F & T & \(\langle\emptyset\rangle = \langle\ \rangle\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Circuit optimization can leverage boundary reduction rules.
+\end{block}
+
+\begin{block}{Cognitive Modeling}
+\protect\phantomsection\label{cognitive-modeling}
+The calculus of indications models basic cognitive operations
+\cite{varela1991,thompson2007}: - \textbf{Perception}: Making
+distinctions - \textbf{Negation}: Crossing boundaries -
+\textbf{Conjunction}: Simultaneous attention - \textbf{Oscillation}:
+Self-reflective awareness
+
+Free energy principles in cognitive science
+\cite{friston2010,isomura2022experimental} relate to maintaining
+distinction boundaries. Recent work on active inference
+\cite{sennesh2022deriving,watson2020active} demonstrates that cognitive
+agents minimize surprise by maintaining coherent internal models---a
+process analogous to form reduction in boundary logic.
+\end{block}
+
+\begin{block}{Formal Verification}
+\protect\phantomsection\label{formal-verification}
+Boundary logic offers potential advantages for verification: - Explicit
+reduction traces (proof witnesses) - Polynomial-time evaluation -
+Geometric proof visualization
+\end{block}
+\end{frame}
+
+\begin{frame}{Limitations}
+\protect\phantomsection\label{limitations}
+\begin{block}{What Containment Theory Does Not Replace}
+\protect\phantomsection\label{what-containment-theory-does-not-replace}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Set Theory for infinite structures}: ZFC handles infinite
+  sets, ordinals, cardinals
+\item
+  \textbf{Numerical computation}: Arithmetic requires additional
+  structure
+\item
+  \textbf{Analysis}: Real numbers, limits, continuity need richer
+  foundations
+\end{enumerate}
+\end{block}
+
+\begin{block}{Current Implementation Limitations}
+\protect\phantomsection\label{current-implementation-limitations}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Variable handling}: Current implementation focuses on ground
+  forms
+\item
+  \textbf{Proof automation}: Limited to reduction-based verification
+\item
+  \textbf{Visualization}: Nested boundaries become complex at high depth
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Future Directions}
+\protect\phantomsection\label{future-directions}
+\begin{block}{Extensions}
+\protect\phantomsection\label{extensions}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Imaginary values}: Full computational treatment of
+  self-referential forms
+\item
+  \textbf{Arithmetic}: Boundary representations for natural numbers
+  (Bricken's iconic arithmetic)
+\item
+  \textbf{Higher-order logic}: Extending to predicate calculus
+\end{enumerate}
+\end{block}
+
+\begin{block}{Applications}
+\protect\phantomsection\label{applications-1}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Quantum computing}: Boundary logic for superposition states
+\item
+  \textbf{Neural networks}: Boundary-based activation functions
+\item
+  \textbf{Knowledge representation}: Spatial logic for AI systems
+\end{enumerate}
+\end{block}
+
+\begin{block}{Theoretical Questions}
+\protect\phantomsection\label{theoretical-questions}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Completeness}: Is the consequence system complete for all
+  Boolean identities?
+\item
+  \textbf{Complexity}: Tight bounds on reduction complexity
+\item
+  \textbf{Categorification}: Full categorical treatment of boundary
+  logic
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\end{document}

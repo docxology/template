@@ -3,7 +3,7 @@
   "keywords": [],
   "total_papers": 592,
   "start_time": 1764706272.4024901,
-  "last_update": 1764707315.1966238,
+  "last_update": 1764707506.765056,
   "entries": {
     "sedlak2023equilibrium": {
       "citation_key": "sedlak2023equilibrium",
@@ -96,40 +96,40 @@
     "benedikt2025future": {
       "citation_key": "benedikt2025future",
       "pdf_path": "literature/pdfs/benedikt2025future.pdf",
-      "status": "processing",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 2,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/benedikt2025future_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 119.69329404830933
     },
     "omar2020phase": {
       "citation_key": "omar2020phase",
       "pdf_path": "literature/pdfs/omar2020phase.pdf",
-      "status": "downloaded",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/omar2020phase_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 49.808329343795776
     },
     "huang2021deepal": {
       "citation_key": "huang2021deepal",
       "pdf_path": "literature/pdfs/huang2021deepal.pdf",
-      "status": "downloaded",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/huang2021deepal_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 22.016797304153442
     },
     "ueltzh\u00f6ffer2017deep": {
       "citation_key": "ueltzh\u00f6ffer2017deep",
       "pdf_path": "literature/pdfs/ueltzh\u00f6ffer2017deep.pdf",
-      "status": "downloaded",
+      "status": "processing",
       "download_attempts": 0,
       "summary_attempts": 0,
       "last_error": null,

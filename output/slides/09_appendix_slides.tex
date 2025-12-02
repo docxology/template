@@ -1,0 +1,431 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Appendix}\label{appendix}
+
+\begin{frame}{A. Complete Axiom Derivations}
+\protect\phantomsection\label{a.-complete-axiom-derivations}
+\begin{block}{A.1 Calling Axiom (J1) Proof}
+\protect\phantomsection\label{a.1-calling-axiom-j1-proof}
+\textbf{Statement}: \(\langle\langle a \rangle\rangle = a\)
+
+\textbf{Spatial Interpretation}: Consider a space with form \(a\).
+Enclosing \(a\) creates \(\langle a \rangle\)---we are now ``outside''
+\(a\) (inside the boundary around \(a\)). Enclosing again creates
+\(\langle\langle a \rangle\rangle\)---we are now ``outside'' of being
+``outside'' \(a\), which returns us to \(a\).
+
+\textbf{Algebraic Proof}: Let \(\llbracket \cdot \rrbracket\) denote
+truth value evaluation. -
+\(\llbracket\langle\langle a \rangle\rangle\rrbracket = \neg\llbracket\langle a \rangle\rrbracket\)
+(by enclosure semantics) - \(= \neg\neg\llbracket a \rrbracket\) (by
+enclosure semantics again) - \(= \llbracket a \rrbracket\) (by double
+negation)
+
+Since truth values are preserved and the calculus is sound,
+\(\langle\langle a \rangle\rangle = a\).
+\end{block}
+
+\begin{block}{A.2 Crossing Axiom (J2) Proof}
+\protect\phantomsection\label{a.2-crossing-axiom-j2-proof}
+\textbf{Statement}:
+\(\langle\ \rangle\langle\ \rangle = \langle\ \rangle\)
+
+\textbf{Spatial Interpretation}: Two marks side by side both indicate
+``the marked state.'' Indicating the same state twice does not change
+what is indicated.
+
+\textbf{Algebraic Proof}: -
+\(\llbracket\langle\ \rangle\langle\ \rangle\rrbracket = \llbracket\langle\ \rangle\rrbracket \land \llbracket\langle\ \rangle\rrbracket\)
+(by juxtaposition semantics) - \(= \text{TRUE} \land \text{TRUE}\) (mark
+is TRUE) - \(= \text{TRUE}\) -
+\(= \llbracket\langle\ \rangle\rrbracket\)
+\end{block}
+\end{frame}
+
+\begin{frame}{B. Consequence Derivations}
+\protect\phantomsection\label{b.-consequence-derivations}
+\begin{block}{B.1 C1: Position}
+\protect\phantomsection\label{b.1-c1-position}
+\textbf{Statement}: \(\langle\langle a \rangle b \rangle a = a\)
+
+\textbf{Derivation}: Consider the Boolean interpretation: - LHS =
+\(\neg(\neg a \land b) \land a\) - \(= (a \lor \neg b) \land a\) (De
+Morgan) - \(= a \land (a \lor \neg b)\) (commutative) - \(= a\)
+(absorption)
+\end{block}
+
+\begin{block}{B.2 C3: Generation (Law of Excluded Middle)}
+\protect\phantomsection\label{b.2-c3-generation-law-of-excluded-middle}
+\textbf{Statement}:
+\(\langle\langle a \rangle a \rangle = \langle\ \rangle\)
+
+\textbf{Derivation}: - LHS = \(\langle\langle a \rangle a \rangle\) -
+\(= \neg(\neg a \land a)\) (Boolean interpretation) -
+\(= \neg(\text{FALSE})\) (contradiction) - \(= \text{TRUE}\) -
+\(= \langle\ \rangle\)
+
+This confirms that \(a \lor \neg a = \text{TRUE}\).
+\end{block}
+
+\begin{block}{B.3 C6: Iteration (Idempotence)}
+\protect\phantomsection\label{b.3-c6-iteration-idempotence}
+\textbf{Statement}: \(aa = a\)
+
+\textbf{Derivation}: -
+\(\llbracket aa \rrbracket = \llbracket a \rrbracket \land \llbracket a \rrbracket\)
+(juxtaposition) - \(= \llbracket a \rrbracket\) (idempotence of AND)
+\end{block}
+\end{frame}
+
+\begin{frame}{C. Boolean Algebra Correspondence}
+\protect\phantomsection\label{c.-boolean-algebra-correspondence}
+\begin{block}{C.1 Complete Translation Table}
+\protect\phantomsection\label{c.1-complete-translation-table}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2571}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4286}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3143}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Boolean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Boundary Form
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Reduction
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+TRUE & \(\langle\ \rangle\) & canonical \\
+FALSE & void & canonical \\
+\(\neg a\) & \(\langle a \rangle\) & --- \\
+\(a \land b\) & \(ab\) & --- \\
+\(a \lor b\) & \(\langle\langle a \rangle\langle b \rangle\rangle\) &
+--- \\
+\(a \to b\) & \(\langle a\langle b \rangle\rangle\) & --- \\
+\(a \leftrightarrow b\) &
+\(\langle\langle ab \rangle\langle\langle a \rangle\langle b \rangle\rangle\rangle\)
+& --- \\
+\(a \oplus b\) (XOR) &
+\(\langle\langle\langle a \rangle b \rangle\langle a\langle b \rangle\rangle\rangle\)
+& --- \\
+\(a\) NAND \(b\) & \(\langle ab \rangle\) & --- \\
+\(a\) NOR \(b\) &
+\(\langle\langle\langle a \rangle\langle b \rangle\rangle\rangle\) &
+--- \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{C.2 NAND Completeness}
+\protect\phantomsection\label{c.2-nand-completeness}
+All Boolean operations expressible via NAND (\(\langle ab \rangle\)):
+
+\begin{itemize}
+\tightlist
+\item
+  NOT \(a\) = \(a\) NAND \(a\) =
+  \(\langle aa \rangle = \langle a \rangle\)
+\item
+  \(a\) AND \(b\) = NOT(\(a\) NAND \(b\)) =
+  \(\langle\langle ab \rangle\rangle = ab\)
+\item
+  \(a\) OR \(b\) = (NOT \(a\)) NAND (NOT \(b\)) =
+  \(\langle\langle a \rangle\langle b \rangle\rangle\)
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{D. Reduction Algorithm Details}
+\protect\phantomsection\label{d.-reduction-algorithm-details}
+\begin{block}{D.1 Pattern Matching}
+\protect\phantomsection\label{d.1-pattern-matching}
+\textbf{Calling Pattern}:
+
+\begin{verbatim}
+Match: Form with is_marked=True, contents=[Form with is_marked=True, contents=[a]]
+Result: a
+\end{verbatim}
+
+\textbf{Crossing Pattern}:
+
+\begin{verbatim}
+Match: Form with multiple simple marks in contents
+Result: Single mark with non-mark contents preserved
+\end{verbatim}
+\end{block}
+
+\begin{block}{D.2 Trace Format}
+\protect\phantomsection\label{d.2-trace-format}
+Each reduction step records:
+
+\begin{verbatim}
+ReductionStep:
+  - before: Form (pre-reduction)
+  - after: Form (post-reduction)
+  - rule: ReductionRule (CALLING | CROSSING | VOID_ELIMINATION)
+  - location: str (where rule applied)
+\end{verbatim}
+\end{block}
+
+\begin{block}{D.3 Termination Proof}
+\protect\phantomsection\label{d.3-termination-proof}
+\textbf{Theorem}: The reduction algorithm terminates for all well-formed
+inputs.
+
+\textbf{Proof}: Define measure
+\(\mu(f) = (\text{depth}(f), \text{size}(f))\) with lexicographic
+ordering.
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Calling}: Reduces depth by 2 (removes two enclosures)
+\item
+  \textbf{Crossing}: Reduces size (removes marks)
+\item
+  \textbf{Void Elimination}: Reduces size (removes void)
+\item
+  \textbf{Recursive}: Applies to subforms with strictly smaller measure
+\end{enumerate}
+
+Each rule application strictly decreases \(\mu(f)\). Since
+\(\mu(f) \geq (0, 0)\) and the ordering is well-founded, the algorithm
+terminates. \(\square\)
+\end{block}
+\end{frame}
+
+\begin{frame}{E. Test Coverage Details}
+\protect\phantomsection\label{e.-test-coverage-details}
+\begin{block}{E.1 Test Categories}
+\protect\phantomsection\label{e.1-test-categories}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Category & Tests & Coverage Target \\
+\midrule\noalign{}
+\endhead
+Unit (forms.py) & 36 & 95\%+ \\
+Unit (reduction.py) & 27 & 95\%+ \\
+Unit (algebra.py) & 22 & 90\%+ \\
+Integration & 15 & 90\%+ \\
+Theorem verification & 12 & 100\% \\
+Edge cases & 18 & Comprehensive \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{E.2 Property-Based Testing}
+\protect\phantomsection\label{e.2-property-based-testing}
+Random form generation tests: - Depth: 1-6 (uniform) - Width: 1-4
+(uniform) - Samples: 500 per test run - Seed: 42 (reproducible)
+
+Verified properties: - All forms reduce to canonical - Canonical forms
+are stable (re-reduction yields same) - Equivalent forms have equal
+canonical forms
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{F. Notation Reference}
+\protect\phantomsection\label{f.-notation-reference}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Symbol & Meaning & LaTeX \\
+\midrule\noalign{}
+\endhead
+\(\langle\ \rangle\) & Mark (TRUE) &
+\texttt{\textbackslash{}langle\textbackslash{}\ \textbackslash{}rangle} \\
+\(\emptyset\) & Void (FALSE) & \texttt{\textbackslash{}emptyset} \\
+\(\langle a \rangle\) & Enclosure (NOT) &
+\texttt{\textbackslash{}langle\ a\ \textbackslash{}rangle} \\
+\(ab\) & Juxtaposition (AND) & \texttt{ab} \\
+\(\llbracket f \rrbracket\) & Truth value &
+\texttt{\textbackslash{}llbracket\ f\ \textbackslash{}rrbracket} \\
+\(j\) & Imaginary value & \texttt{j} \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}[fragile]{G. Implementation Reference}
+\protect\phantomsection\label{g.-implementation-reference}
+\begin{block}{G.1 Module Structure}
+\protect\phantomsection\label{g.1-module-structure}
+\begin{verbatim}
+project/src/
+├── forms.py        # Form class and construction
+├── reduction.py    # Reduction engine
+├── algebra.py      # Boolean correspondence
+├── evaluation.py   # Truth value extraction
+├── theorems.py     # Theorem definitions
+├── verification.py # Formal verification
+├── visualization.py # Diagram generation
+└── __init__.py     # Package exports
+\end{verbatim}
+\end{block}
+
+\begin{block}{G.2 Key APIs}
+\protect\phantomsection\label{g.2-key-apis}
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Form construction}
+\NormalTok{make\_void() }\OperatorTok{{-}\textgreater{}}\NormalTok{ Form}
+\NormalTok{make\_mark() }\OperatorTok{{-}\textgreater{}}\NormalTok{ Form}
+\NormalTok{enclose(form: Form) }\OperatorTok{{-}\textgreater{}}\NormalTok{ Form}
+\NormalTok{juxtapose(}\OperatorTok{*}\NormalTok{forms: Form) }\OperatorTok{{-}\textgreater{}}\NormalTok{ Form}
+
+\CommentTok{\# Reduction}
+\NormalTok{reduce\_form(form: Form) }\OperatorTok{{-}\textgreater{}}\NormalTok{ Form}
+\NormalTok{reduce\_with\_trace(form: Form) }\OperatorTok{{-}\textgreater{}}\NormalTok{ Tuple[Form, ReductionTrace]}
+
+\CommentTok{\# Evaluation}
+\NormalTok{evaluate(form: Form) }\OperatorTok{{-}\textgreater{}}\NormalTok{ EvaluationResult}
+\NormalTok{truth\_value(form: Form) }\OperatorTok{{-}\textgreater{}} \BuiltInTok{bool}
+
+\CommentTok{\# Verification}
+\NormalTok{verify\_axioms() }\OperatorTok{{-}\textgreater{}}\NormalTok{ VerificationReport}
+\NormalTok{full\_verification() }\OperatorTok{{-}\textgreater{}}\NormalTok{ VerificationReport}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+\end{frame}
+
+\end{document}

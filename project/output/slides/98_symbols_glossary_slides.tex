@@ -1,0 +1,387 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Symbols and Glossary}\label{symbols-and-glossary}
+
+\begin{frame}{Primary Symbols}
+\protect\phantomsection\label{primary-symbols}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2963}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2222}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4815}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Description
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\(\langle\ \rangle\) & Mark / Cross & The primary distinction;
+represents TRUE \\
+\(\emptyset\) & Void & Empty space; represents FALSE \\
+\(\langle a \rangle\) & Enclosure & Boundary containing form \(a\);
+represents NOT \(a\) \\
+\(ab\) & Juxtaposition & Forms side-by-side; represents \(a\) AND
+\(b\) \\
+\(j\) & Imaginary value & Self-referential form:
+\(j = \langle j \rangle\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Derived Symbols}
+\protect\phantomsection\label{derived-symbols}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2051}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3077}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4872}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Symbol
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Definition
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Boolean Equivalent
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\(\langle\langle a \rangle\langle b \rangle\rangle\) & De Morgan
+disjunction & \(a\) OR \(b\) \\
+\(\langle a\langle b \rangle\rangle\) & Material implication &
+\(a \to b\) \\
+\(\langle ab \rangle\) & Sheffer stroke & \(a\) NAND \(b\) \\
+\(\langle\langle\langle a \rangle\langle b \rangle\rangle\rangle\) &
+Peirce arrow & \(a\) NOR \(b\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Meta-Symbols}
+\protect\phantomsection\label{meta-symbols}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Symbol & Meaning \\
+\midrule\noalign{}
+\endhead
+\(\llbracket f \rrbracket\) & Truth value of form \(f\) \\
+\(\equiv\) & Semantic equivalence \\
+\(=\) & Syntactic equality after reduction \\
+\(\to\) & Reduces to (single step) \\
+\(\to^*\) & Reduces to (multiple steps) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Axiom Labels}
+\protect\phantomsection\label{axiom-labels}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2917}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4583}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Label
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Statement
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+J1 & Calling / Involution & \(\langle\langle a \rangle\rangle = a\) \\
+J2 & Crossing / Condensation &
+\(\langle\ \rangle\langle\ \rangle = \langle\ \rangle\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Consequence Labels (C1-C9)}
+\protect\phantomsection\label{consequence-labels-c1-c9}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2917}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4583}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Label
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Statement
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+C1 & Position & \(\langle\langle a \rangle b \rangle a = a\) \\
+C2 & Transposition &
+\(\langle\langle a \rangle\langle b \rangle\rangle c = \langle ac \rangle\langle bc \rangle\) \\
+C3 & Generation &
+\(\langle\langle a \rangle a \rangle = \langle\ \rangle\) \\
+C4 & Integration & \(a \lor \text{TRUE} = \text{TRUE}\) \\
+C5 & Occultation & \(\langle\langle a \rangle\rangle a = a\) \\
+C6 & Iteration & \(aa = a\) \\
+C7 & Extension &
+\(\langle\langle a \rangle\langle b \rangle\rangle\langle\langle a \rangle b \rangle = a\) \\
+C8 & Echelon &
+\(\langle\langle ab \rangle c \rangle = \langle ac \rangle\langle bc \rangle\) \\
+C9 & Cross-Transposition &
+\(\langle\langle ac \rangle\langle bc \rangle\rangle = \langle\langle a \rangle\langle b \rangle\rangle c\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}{Glossary}
+\protect\phantomsection\label{glossary}
+\begin{block}{Agential Cut}
+\protect\phantomsection\label{agential-cut}
+(Barad) An enacted boundary that constitutes the entities it separates;
+parallels the Spencer-Brown mark as constitutive rather than
+representational.
+\end{block}
+
+\begin{block}{Boundary}
+\protect\phantomsection\label{boundary}
+A line of demarcation creating inside and outside; the fundamental
+operation in the calculus of indications.
+\end{block}
+
+\begin{block}{Calling}
+\protect\phantomsection\label{calling}
+Axiom J1: Double enclosure returns to the original form. Also known as
+involution or double negation elimination.
+\end{block}
+
+\begin{block}{Canonical Form}
+\protect\phantomsection\label{canonical-form}
+The irreducible form of an expression after all reduction rules have
+been applied. Only void and mark are canonical.
+\end{block}
+
+\begin{block}{Condensation}
+\protect\phantomsection\label{condensation}
+See Crossing.
+\end{block}
+
+\begin{block}{Containment Theory}
+\protect\phantomsection\label{containment-theory}
+The approach to mathematical foundations using spatial containment
+(boundaries) rather than set membership.
+\end{block}
+
+\begin{block}{Crossing}
+\protect\phantomsection\label{crossing}
+Axiom J2: Multiple marks in juxtaposition condense to a single mark.
+Also known as condensation.
+\end{block}
+
+\begin{block}{Distinction}
+\protect\phantomsection\label{distinction}
+The fundamental act of separating this from that; the primitive notion
+in the calculus of indications.
+\end{block}
+
+\begin{block}{Enclosure}
+\protect\phantomsection\label{enclosure}
+The operation of placing a boundary around a form; corresponds to
+logical negation.
+\end{block}
+
+\begin{block}{Existential Graphs}
+\protect\phantomsection\label{existential-graphs}
+C.S. Peirce's diagrammatic logic system, a precursor to Spencer-Brown's
+calculus.
+\end{block}
+
+\begin{block}{Form}
+\protect\phantomsection\label{form}
+Any well-formed expression in the calculus of indications, built from
+void, mark, enclosure, and juxtaposition.
+\end{block}
+
+\begin{block}{Icon}
+\protect\phantomsection\label{icon}
+(Peirce) A sign that represents by resembling what it signifies; the
+mark is iconic of distinction.
+\end{block}
+
+\begin{block}{Imaginary Value}
+\protect\phantomsection\label{imaginary-value}
+A self-referential form satisfying \(j = \langle j \rangle\); neither
+marked nor void but oscillating between states.
+\end{block}
+
+\begin{block}{Indication}
+\protect\phantomsection\label{indication}
+The act of pointing to or marking; the fundamental operation in Laws of
+Form.
+\end{block}
+
+\begin{block}{Intra-action}
+\protect\phantomsection\label{intra-action}
+(Barad) Mutual constitution of entities through their interaction;
+parallels how forms co-determine through juxtaposition.
+\end{block}
+
+\begin{block}{Juxtaposition}
+\protect\phantomsection\label{juxtaposition}
+Placing forms side by side; corresponds to logical conjunction (AND).
+\end{block}
+
+\begin{block}{Laws of Form}
+\protect\phantomsection\label{laws-of-form}
+G. Spencer-Brown's 1969 book introducing the calculus of indications.
+\end{block}
+
+\begin{block}{Mark}
+\protect\phantomsection\label{mark}
+The symbol \(\langle\ \rangle\) representing the primary distinction;
+corresponds to TRUE.
+\end{block}
+
+\begin{block}{Pragmatism}
+\protect\phantomsection\label{pragmatism}
+North American philosophical tradition emphasizing consequences,
+practice, and operational meaning; grounds boundary logic's emphasis on
+reduction as meaning.
+\end{block}
+
+\begin{block}{Primary Distinction}
+\protect\phantomsection\label{primary-distinction}
+The fundamental cognitive act of creating a boundary; the primitive of
+the calculus.
+\end{block}
+
+\begin{block}{Reduction}
+\protect\phantomsection\label{reduction}
+The process of applying axioms to simplify a form toward its canonical
+representation.
+\end{block}
+
+\begin{block}{Self-Reference}
+\protect\phantomsection\label{self-reference}
+A form that contains itself as a subform; leads to imaginary values in
+boundary logic.
+\end{block}
+
+\begin{block}{Void}
+\protect\phantomsection\label{void}
+The empty space containing no marks; corresponds to FALSE. Also called
+the unmarked state.
+\end{block}
+
+\begin{block}{ZFC}
+\protect\phantomsection\label{zfc}
+Zermelo-Fraenkel Set Theory with Choice; the standard axiomatic
+foundation for mathematics, contrasted with Containment Theory.
+\end{block}
+\end{frame}
+
+\end{document}

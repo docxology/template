@@ -1,0 +1,178 @@
+{
+  "fig:analysis_comparison": {
+    "figure_id": "figure_000",
+    "filename": "analysis_comparison.png",
+    "caption": "Comparison of different methods on accuracy metric",
+    "label": "fig:analysis_comparison",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "analysis_pipeline.py",
+    "metadata": {}
+  },
+  "fig:example_figure": {
+    "figure_id": "figure_001",
+    "filename": "example_figure.png",
+    "caption": "Example project figure showing data processing with src/ functions",
+    "label": "fig:example_figure",
+    "section": "introduction",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "example_figure.py",
+    "metadata": {}
+  },
+  "fig:convergence_plot": {
+    "figure_id": "figure_002",
+    "filename": "convergence_plot.png",
+    "caption": "Algorithm convergence comparison showing our method vs baseline",
+    "label": "fig:convergence_plot",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:experimental_setup": {
+    "figure_id": "figure_003",
+    "filename": "experimental_setup.png",
+    "caption": "Experimental pipeline showing data flow through processing stages",
+    "label": "fig:experimental_setup",
+    "section": "methodology",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:data_structure": {
+    "figure_id": "figure_004",
+    "filename": "data_structure.png",
+    "caption": "Algorithmic complexity comparison for different operations",
+    "label": "fig:data_structure",
+    "section": "methodology",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:step_size_analysis": {
+    "figure_id": "figure_005",
+    "filename": "step_size_analysis.png",
+    "caption": "Step size sensitivity analysis showing impact on convergence",
+    "label": "fig:step_size_analysis",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:scalability_analysis": {
+    "figure_id": "figure_006",
+    "filename": "scalability_analysis.png",
+    "caption": "Scalability analysis comparing algorithm performance across problem sizes",
+    "label": "fig:scalability_analysis",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:ablation_study": {
+    "figure_id": "figure_007",
+    "filename": "ablation_study.png",
+    "caption": "Ablation study showing contribution of each component",
+    "label": "fig:ablation_study",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:hyperparameter_sensitivity": {
+    "figure_id": "figure_008",
+    "filename": "hyperparameter_sensitivity.png",
+    "caption": "Hyperparameter sensitivity analysis for learning rate and momentum",
+    "label": "fig:hyperparameter_sensitivity",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:image_classification_results": {
+    "figure_id": "figure_009",
+    "filename": "image_classification_results.png",
+    "caption": "Image classification training curves comparing optimization methods",
+    "label": "fig:image_classification_results",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:recommendation_scalability": {
+    "figure_id": "figure_010",
+    "filename": "recommendation_scalability.png",
+    "caption": "Recommendation system scalability with varying users and items",
+    "label": "fig:recommendation_scalability",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:convergence_analysis": {
+    "figure_id": "figure_011",
+    "filename": "convergence_analysis.png",
+    "caption": "Convergence behavior of the optimization algorithm showing exponential decay to target value",
+    "label": "fig:convergence_analysis",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "generate_scientific_figures.py",
+    "metadata": {}
+  },
+  "fig:time_series_analysis": {
+    "figure_id": "figure_012",
+    "filename": "time_series_analysis.png",
+    "caption": "Time series data showing sinusoidal trend with added noise",
+    "label": "fig:time_series_analysis",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "generate_scientific_figures.py",
+    "metadata": {}
+  },
+  "fig:statistical_comparison": {
+    "figure_id": "figure_013",
+    "filename": "statistical_comparison.png",
+    "caption": "Comparison of different methods on accuracy metric",
+    "label": "fig:statistical_comparison",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "generate_scientific_figures.py",
+    "metadata": {}
+  },
+  "fig:scatter_correlation": {
+    "figure_id": "figure_014",
+    "filename": "scatter_correlation.png",
+    "caption": "Scatter plot showing correlation between two variables",
+    "label": "fig:scatter_correlation",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "generate_scientific_figures.py",
+    "metadata": {}
+  },
+  "fig:scientific_simulation_timeseries": {
+    "figure_id": "figure_015",
+    "filename": "scientific_simulation_timeseries.png",
+    "caption": "Time series data generated for scientific simulation analysis",
+    "label": "fig:scientific_simulation_timeseries",
+    "section": "experimental_results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": "scientific_simulation.py",
+    "metadata": {}
+  }
+}

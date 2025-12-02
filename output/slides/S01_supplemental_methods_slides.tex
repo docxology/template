@@ -1,0 +1,456 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Supplemental Methods}\label{supplemental-methods}
+
+\subsection{S1.1 Form Construction
+Implementation}\label{s1.1-form-construction-implementation}
+
+\begin{frame}[fragile]{Data Structure Design}
+\protect\phantomsection\label{data-structure-design}
+The \texttt{Form} class represents boundary expressions with the
+following structure:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{@dataclass}
+\KeywordTok{class}\NormalTok{ Form:}
+\NormalTok{    form\_type: FormType  }\CommentTok{\# VOID, MARK, ENCLOSURE, JUXTAPOSITION}
+\NormalTok{    contents: List[Form] }\OperatorTok{=}\NormalTok{ field(default\_factory}\OperatorTok{=}\BuiltInTok{list}\NormalTok{)}
+\NormalTok{    is\_marked: }\BuiltInTok{bool} \OperatorTok{=} \VariableTok{False}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Design Rationale}: - \texttt{form\_type} enables pattern
+matching for reduction rules - \texttt{contents} stores nested forms
+(children) - \texttt{is\_marked} distinguishes mark from void at the
+base level
+\end{frame}
+
+\begin{frame}[fragile]{Constructor Functions}
+\protect\phantomsection\label{constructor-functions}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Function & Input & Output & Example \\
+\midrule\noalign{}
+\endhead
+\texttt{make\_void()} & None & Empty form & \(\emptyset\) \\
+\texttt{make\_mark()} & None & Single mark & \(\langle\ \rangle\) \\
+\texttt{enclose(f)} & Form & Enclosed form & \(\langle f \rangle\) \\
+\texttt{juxtapose(a,\ b,\ ...)} & Forms & Combined form & \(abc...\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}[fragile]{Form Equality}
+\protect\phantomsection\label{form-equality}
+Two forms are \textbf{structurally equal} if: 1. Same
+\texttt{form\_type} 2. Same \texttt{is\_marked} value 3. Contents are
+pairwise equal (recursive)
+
+Note: Structural equality differs from \textbf{semantic equality}
+(reduction to same canonical form).
+\end{frame}
+
+\subsection{S1.2 Reduction Engine
+Architecture}\label{s1.2-reduction-engine-architecture}
+
+\begin{frame}{Pattern Matching Strategy}
+\protect\phantomsection\label{pattern-matching-strategy}
+The reduction engine uses a priority-based pattern matching approach:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Calling Pattern Detection}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Check if form is marked enclosure
+  \item
+    Check if single child is also marked enclosure
+  \item
+    If so, extract inner content
+  \end{itemize}
+\item
+  \textbf{Crossing Pattern Detection}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Check if form has multiple simple marks in juxtaposition
+  \item
+    Count marks vs non-mark contents
+  \item
+    If \textgreater1 marks, condense
+  \end{itemize}
+\item
+  \textbf{Void Elimination}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Check for void elements in juxtaposition
+  \item
+    Remove voids (identity element for AND)
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Reduction Trace Format}
+\protect\phantomsection\label{reduction-trace-format}
+Each step in the reduction trace records:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{@dataclass}
+\KeywordTok{class}\NormalTok{ ReductionStep:}
+\NormalTok{    before: Form      }\CommentTok{\# Form before this step}
+\NormalTok{    after: Form       }\CommentTok{\# Form after this step}
+\NormalTok{    rule: ReductionRule  }\CommentTok{\# CALLING, CROSSING, or VOID\_ELIMINATION}
+\NormalTok{    location: }\BuiltInTok{str}     \CommentTok{\# Human{-}readable description}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}{Recursive Application}
+\protect\phantomsection\label{recursive-application}
+For compound forms, reduction applies recursively: 1. Reduce all
+children first (bottom-up) 2. Then check if parent can be reduced 3.
+Repeat until stable
+\end{frame}
+
+\subsection{S1.3 Boolean Algebra
+Verification}\label{s1.3-boolean-algebra-verification}
+
+\begin{frame}[fragile]{Translation Protocol}
+\protect\phantomsection\label{translation-protocol}
+To verify Boolean correspondence:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Parse Boolean expression} to AST
+\item
+  \textbf{Translate AST} to boundary form:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{TRUE} → \texttt{make\_mark()}
+  \item
+    \texttt{FALSE} → \texttt{make\_void()}
+  \item
+    \texttt{NOT(a)} → \texttt{enclose(translate(a))}
+  \item
+    \texttt{AND(a,\ b)} →
+    \texttt{juxtapose(translate(a),\ translate(b))}
+  \item
+    \texttt{OR(a,\ b)} →
+    \texttt{enclose(juxtapose(enclose(translate(a)),\ enclose(translate(b))))}
+  \end{itemize}
+\item
+  \textbf{Reduce} both sides
+\item
+  \textbf{Compare} canonical forms
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Truth Table Verification}
+\protect\phantomsection\label{truth-table-verification}
+For operations with 2 variables, exhaustive verification:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+\(a\) & \(b\) & \(a \land b\) & Boundary & Reduced \\
+\midrule\noalign{}
+\endhead
+T & T & T & \(\langle\ \rangle\langle\ \rangle\) &
+\(\langle\ \rangle\) \\
+T & F & F & \(\langle\ \rangle\emptyset\) & \(\emptyset\) \\
+F & T & F & \(\emptyset\langle\ \rangle\) & \(\emptyset\) \\
+F & F & F & \(\emptyset\emptyset\) & \(\emptyset\) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\subsection{S1.4 Theorem Verification
+Protocol}\label{s1.4-theorem-verification-protocol}
+
+\begin{frame}{Consequence Verification}
+\protect\phantomsection\label{consequence-verification}
+Each consequence (C1-C9) verified by:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Construct LHS} using form builders
+\item
+  \textbf{Construct RHS} using form builders
+\item
+  \textbf{Reduce both} to canonical form
+\item
+  \textbf{Assert equality} of canonical forms
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Parametric Testing}
+\protect\phantomsection\label{parametric-testing}
+For consequences with variables: - Substitute all combinations of
+mark/void - Verify equality holds for each substitution - Report any
+counterexamples
+\end{frame}
+
+\begin{frame}[fragile]{Verification Report Structure}
+\protect\phantomsection\label{verification-report-structure}
+\begin{Shaded}
+\begin{Highlighting}[]
+\AttributeTok{@dataclass}
+\KeywordTok{class}\NormalTok{ VerificationResult:}
+\NormalTok{    name: }\BuiltInTok{str}
+\NormalTok{    status: VerificationStatus  }\CommentTok{\# PASSED, FAILED, ERROR}
+\NormalTok{    details: }\BuiltInTok{str}
+\NormalTok{    duration: }\BuiltInTok{float}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\subsection{S1.5 Visualization
+Pipeline}\label{s1.5-visualization-pipeline}
+
+\begin{frame}{Nested Boundary Rendering}
+\protect\phantomsection\label{nested-boundary-rendering}
+Forms visualized as nested rectangles: 1. \textbf{Void}: Empty space (no
+rectangle) 2. \textbf{Mark}: Single rectangle 3. \textbf{Enclosure}:
+Rectangle containing child visualization 4. \textbf{Juxtaposition}:
+Side-by-side rectangles
+\end{frame}
+
+\begin{frame}[fragile]{Layout Algorithm}
+\protect\phantomsection\label{layout-algorithm}
+\begin{verbatim}
+function LAYOUT(form, x, y, width, height):
+    if form.is_void():
+        return EmptyRegion(x, y, width, height)
+    if form.is_mark():
+        return Rectangle(x, y, width, height)
+    if form.is_enclosure():
+        child = LAYOUT(form.contents[0], x+pad, y+pad, width-2*pad, height-2*pad)
+        return Rectangle(x, y, width, height) + child
+    if form.is_juxtaposition():
+        # Divide width among children
+        child_width = width / len(form.contents)
+        return [LAYOUT(c, x + i*child_width, y, child_width, height) 
+                for i, c in enumerate(form.contents)]
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Export Formats}
+\protect\phantomsection\label{export-formats}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{PNG}: Raster image for documentation
+\item
+  \textbf{SVG}: Vector graphics for publication
+\item
+  \textbf{ASCII}: Text representation for terminals
+\item
+  \textbf{LaTeX/TikZ}: Direct embedding in papers
+\end{itemize}
+\end{frame}
+
+\subsection{S1.6 Random Form
+Generation}\label{s1.6-random-form-generation}
+
+\begin{frame}[fragile]{Generation Parameters}
+\protect\phantomsection\label{generation-parameters}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Parameter & Type & Default & Description \\
+\midrule\noalign{}
+\endhead
+\texttt{max\_depth} & int & 4 & Maximum nesting level \\
+\texttt{max\_width} & int & 3 & Maximum children per juxtaposition \\
+\texttt{p\_mark} & float & 0.3 & Probability of generating mark \\
+\texttt{p\_void} & float & 0.2 & Probability of generating void \\
+\texttt{p\_enclose} & float & 0.25 & Probability of enclosure \\
+\texttt{p\_juxtapose} & float & 0.25 & Probability of juxtaposition \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{frame}
+
+\begin{frame}[fragile]{Generation Algorithm}
+\protect\phantomsection\label{generation-algorithm}
+\begin{verbatim}
+function RANDOM_FORM(depth, rng):
+    if depth == 0:
+        return CHOICE([make_void(), make_mark()], rng)
+    
+    p = rng.random()
+    if p < p_void:
+        return make_void()
+    elif p < p_void + p_mark:
+        return make_mark()
+    elif p < p_void + p_mark + p_enclose:
+        return enclose(RANDOM_FORM(depth - 1, rng))
+    else:
+        n = rng.randint(2, max_width)
+        return juxtapose(*[RANDOM_FORM(depth - 1, rng) for _ in range(n)])
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]{Reproducibility}
+\protect\phantomsection\label{reproducibility}
+Fixed random seed (42) ensures reproducible experiments:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rng }\OperatorTok{=}\NormalTok{ random.Random(}\DecValTok{42}\NormalTok{)}
+\NormalTok{forms }\OperatorTok{=}\NormalTok{ [random\_form(max\_depth}\OperatorTok{=}\DecValTok{4}\NormalTok{, rng}\OperatorTok{=}\NormalTok{rng) }\ControlFlowTok{for}\NormalTok{ \_ }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{500}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\end{document}

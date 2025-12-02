@@ -1,0 +1,322 @@
+\begin{thebibliography}{54}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Awodey(2010)]{awodey2010}
+Steve Awodey.
+\newblock \emph{Category Theory}.
+\newblock Oxford University Press, 2nd edition, 2010.
+
+\bibitem[Barad(2007)]{barad2007}
+Karen Barad.
+\newblock \emph{Meeting the Universe Halfway: Quantum Physics and the
+  Entanglement of Matter and Meaning}.
+\newblock Duke University Press, 2007.
+
+\bibitem[Bateson(1972)]{bateson1972}
+Gregory Bateson.
+\newblock \emph{Steps to an Ecology of Mind}.
+\newblock University of Chicago Press, 1972.
+
+\bibitem[Bennett(2010)]{bennett2010}
+Jane Bennett.
+\newblock \emph{Vibrant Matter: A Political Ecology of Things}.
+\newblock Duke University Press, 2010.
+
+\bibitem[Bertot and Cast{\'e}ran(2004)]{bertot2004}
+Yves Bertot and Pierre Cast{\'e}ran.
+\newblock \emph{Interactive Theorem Proving and Program Development: Coq'Art:
+  The Calculus of Inductive Constructions}.
+\newblock Springer, 2004.
+
+\bibitem[Biere et~al.(2009)Biere, Heule, van Maaren, and Walsh]{biere2009}
+Armin Biere, Marijn Heule, Hans van Maaren, and Toby Walsh.
+\newblock \emph{Handbook of Satisfiability}.
+\newblock IOS Press, 2009.
+
+\bibitem[Bouizegarene et~al.(2024)Bouizegarene, Ramstead, Constant, Friston,
+  and Kirmayer]{bouizegarene2024narrative}
+Nabil Bouizegarene, Maxwell Ramstead, Axel Constant, Karl Friston, and
+  Laurence~J. Kirmayer.
+\newblock Narrative as active inference: an integrative account of cognitive
+  and social functions in adaptation.
+\newblock \emph{Frontiers in Psychology}, 15:\penalty0 1345480, 2024.
+\newblock \doi{10.3389/fpsyg.2024.1345480}.
+
+\bibitem[Braidotti(2013)]{braidotti2013}
+Rosi Braidotti.
+\newblock \emph{The Posthuman}.
+\newblock Polity Press, 2013.
+
+\bibitem[Brandom(1994)]{brandom1994}
+Robert Brandom.
+\newblock \emph{Making It Explicit: Reasoning, Representing, and Discursive
+  Commitment}.
+\newblock Harvard University Press, 1994.
+
+\bibitem[Bricken(2019)]{bricken2019}
+William Bricken.
+\newblock Iconic arithmetic volume i: The design of mathematics for human
+  understanding.
+\newblock \emph{Unary Press}, 2019.
+
+\bibitem[Bricken(2021)]{bricken2021}
+William Bricken.
+\newblock \emph{Iconic Arithmetic Volume II: Symbolic and Postsymbolic Formal
+  Foundations}.
+\newblock Unary Press, 2021.
+
+\bibitem[Collis et~al.(2024)Collis, Singh, Kinghorn, and
+  Buckley]{collis2024learning}
+Poppy Collis, Ryan Singh, Paul~F. Kinghorn, and Christopher~L. Buckley.
+\newblock Learning in hybrid active inference models.
+\newblock \emph{arXiv preprint arXiv:2409.01066}, 2024.
+
+\bibitem[De~Micheli(1994)]{micheli1994}
+Giovanni De~Micheli.
+\newblock \emph{Synthesis and Optimization of Digital Circuits}.
+\newblock McGraw-Hill, 1994.
+
+\bibitem[Deleuze(1968)]{deleuze1968}
+Gilles Deleuze.
+\newblock \emph{Difference and Repetition}.
+\newblock Columbia University Press, 1968.
+\newblock English translation 1994.
+
+\bibitem[Dewey(1938)]{dewey1938}
+John Dewey.
+\newblock \emph{Logic: The Theory of Inquiry}.
+\newblock Henry Holt and Company, 1938.
+
+\bibitem[Friston(2010)]{friston2010}
+Karl Friston.
+\newblock The free-energy principle: A unified brain theory?
+\newblock \emph{Nature Reviews Neuroscience}, 11\penalty0 (2):\penalty0
+  127--138, 2010.
+
+\bibitem[Friston et~al.(2021)Friston, Da~Costa, and Parr]{friston2020some}
+Karl Friston, Lancelot Da~Costa, and Thomas Parr.
+\newblock Some interesting observations on the free energy principle.
+\newblock \emph{Entropy}, 23\penalty0 (8):\penalty0 1076, 2021.
+\newblock \doi{10.3390/e23081076}.
+
+\bibitem[Friston et~al.(2024)Friston, Heins, Verbelen, Da~Costa, Salvatori,
+  Markovic, Tschantz, Koudahl, Buckley, and Parr]{friston2024pixels}
+Karl~J. Friston, Conor Heins, Tim Verbelen, Lancelot Da~Costa, Tommaso
+  Salvatori, Dimitrije Markovic, Alexander Tschantz, Magnus~T. Koudahl,
+  Christopher~L. Buckley, and Thomas Parr.
+\newblock From pixels to planning: scale-free active inference.
+\newblock \emph{arXiv preprint arXiv:2407.20292}, 2024.
+
+\bibitem[Gay-Balmaz and Yoshimura(2018)]{gaybalmaz2017free}
+Fran{\c{c}}ois Gay-Balmaz and Hiroaki Yoshimura.
+\newblock A variational formulation of nonequilibrium thermodynamics for
+  discrete open systems with mass and heat transfer.
+\newblock \emph{Entropy}, 20\penalty0 (3):\penalty0 163, 2018.
+
+\bibitem[Haraway(2016)]{haraway2016}
+Donna~J. Haraway.
+\newblock \emph{Staying with the Trouble: Making Kin in the Chthulucene}.
+\newblock Duke University Press, 2016.
+
+\bibitem[Hartshorne(1970)]{hartshorne1970}
+Charles Hartshorne.
+\newblock \emph{Creative Synthesis and Philosophic Method}.
+\newblock Open Court, 1970.
+
+\bibitem[Heins et~al.(2022)Heins, Klein, Demekas, Aguilera, and
+  Buckley]{heins2022spin}
+Conor Heins, Brennan Klein, Daphne Demekas, Miguel Aguilera, and Christopher
+  Buckley.
+\newblock Spin glass systems as collective active inference.
+\newblock \emph{arXiv preprint arXiv:2207.06970}, 2022.
+
+\bibitem[Hinrichs et~al.(2025)Hinrichs, Albarracin, Bolis, Jiang,
+  Christov-Moore, and Schilbach]{hinrichs2025geometric}
+Nicolas Hinrichs, Mahault Albarracin, Dimitris Bolis, Yuyue Jiang, Leonardo
+  Christov-Moore, and Leonhard Schilbach.
+\newblock Geometric hyperscanning of affect under active inference.
+\newblock \emph{arXiv preprint arXiv:2506.08599}, 2025.
+
+\bibitem[Huntington(1904)]{huntington1904}
+Edward~V. Huntington.
+\newblock Sets of independent postulates for the algebra of logic.
+\newblock \emph{Transactions of the American Mathematical Society}, 5\penalty0
+  (3):\penalty0 288--309, 1904.
+
+\bibitem[Isomura et~al.(2023)Isomura, Kotani, Jimbo, and
+  Friston]{isomura2022experimental}
+Takuya Isomura, Kiyoshi Kotani, Yasuhiko Jimbo, and Karl Friston.
+\newblock Experimental validation of the free-energy principle with in vitro
+  neural networks.
+\newblock \emph{Nature Communications}, 14:\penalty0 4547, 2023.
+\newblock \doi{10.1038/s41467-023-40141-z}.
+
+\bibitem[James(1912)]{james1912}
+William James.
+\newblock \emph{Essays in Radical Empiricism}.
+\newblock Longmans, Green and Co., 1912.
+
+\bibitem[Kauffman(2001)]{kauffman2001}
+Louis~H. Kauffman.
+\newblock The mathematics of charles sanders peirce.
+\newblock \emph{Cybernetics \& Human Knowing}, 8\penalty0 (1-2):\penalty0
+  79--110, 2001.
+
+\bibitem[Kauffman(2005)]{kauffman2005}
+Louis~H. Kauffman.
+\newblock Eigenform.
+\newblock In \emph{Kybernetes}, volume~34, pages 129--150. Emerald Group
+  Publishing Limited, 2005.
+
+\bibitem[Kouw(2024)]{kouw2024planning}
+Wouter~M. Kouw.
+\newblock Planning to avoid ambiguous states through gaussian approximations to
+  non-linear sensors in active inference agents.
+\newblock \emph{arXiv preprint arXiv:2409.01974}, 2024.
+
+\bibitem[Kunen(1980)]{kunen1980}
+Kenneth Kunen.
+\newblock \emph{Set Theory: An Introduction to Independence Proofs}.
+\newblock North-Holland, Amsterdam, 1980.
+
+\bibitem[Lambek and Scott(1986)]{lambek1986}
+Joachim Lambek and Philip~J. Scott.
+\newblock \emph{Introduction to Higher Order Categorical Logic}.
+\newblock Cambridge University Press, 1986.
+
+\bibitem[Latour(1991)]{latour1991}
+Bruno Latour.
+\newblock \emph{We Have Never Been Modern}.
+\newblock Harvard University Press, 1991.
+\newblock English translation 1993.
+
+\bibitem[Massumi(2002)]{massumi2002}
+Brian Massumi.
+\newblock \emph{Parables for the Virtual: Movement, Affect, Sensation}.
+\newblock Duke University Press, 2002.
+
+\bibitem[Maturana and Varela(1980)]{maturana1980}
+Humberto~R. Maturana and Francisco~J. Varela.
+\newblock \emph{Autopoiesis and Cognition: The Realization of the Living}.
+\newblock D. Reidel Publishing, 1980.
+
+\bibitem[Mead(1934)]{mead1934}
+George~Herbert Mead.
+\newblock \emph{Mind, Self, and Society}.
+\newblock University of Chicago Press, 1934.
+
+\bibitem[Nipkow et~al.(2002)Nipkow, Paulson, and Wenzel]{nipkow2002}
+Tobias Nipkow, Lawrence~C. Paulson, and Markus Wenzel.
+\newblock \emph{Isabelle/HOL: A Proof Assistant for Higher-Order Logic}.
+\newblock Springer, 2002.
+
+\bibitem[Peirce(1931--1958)]{peirce1931}
+Charles~Sanders Peirce.
+\newblock \emph{Collected Papers of Charles Sanders Peirce}, volume 1--8.
+\newblock Harvard University Press, 1931--1958.
+
+\bibitem[Program(2013)]{hottbook}
+The Univalent~Foundations Program.
+\newblock \emph{Homotopy Type Theory: Univalent Foundations of Mathematics}.
+\newblock Institute for Advanced Study, 2013.
+\newblock URL \url{https://homotopytypetheory.org/book}.
+
+\bibitem[Rorty(1979)]{rorty1979}
+Richard Rorty.
+\newblock \emph{Philosophy and the Mirror of Nature}.
+\newblock Princeton University Press, 1979.
+
+\bibitem[Sennesh et~al.(2022)Sennesh, Theriault, van~de Meent, Barrett, and
+  Quigley]{sennesh2022deriving}
+Eli Sennesh, Jordan Theriault, Jan-Willem van~de Meent, Lisa~Feldman Barrett,
+  and Karen Quigley.
+\newblock Deriving time-averaged active inference from control principles.
+\newblock \emph{arXiv preprint arXiv:2208.10601}, 2022.
+
+\bibitem[Simondon(1958)]{simondon1958}
+Gilbert Simondon.
+\newblock \emph{L'individuation {\`a} la lumi{\`e}re des notions de forme et
+  d'information}.
+\newblock Presses Universitaires de France, 1958.
+\newblock Posthumously published 2005.
+
+\bibitem[Spencer-Brown(1969)]{spencerbrown1969}
+G.~Spencer-Brown.
+\newblock \emph{Laws of Form}.
+\newblock Allen \& Unwin, London, 1969.
+\newblock Reprinted by Cognizer Co., 1994.
+
+\bibitem[Stengers(2011)]{stengers2011}
+Isabelle Stengers.
+\newblock \emph{Thinking with Whitehead: A Free and Wild Creation of Concepts}.
+\newblock Harvard University Press, 2011.
+
+\bibitem[Stone(1936)]{stone1936}
+Marshall~H. Stone.
+\newblock The theory of representation for boolean algebras.
+\newblock \emph{Transactions of the American Mathematical Society}, 40\penalty0
+  (1):\penalty0 37--111, 1936.
+
+\bibitem[Thomas(2022)]{thomas2022knowledge}
+Cailleteau Thomas.
+\newblock Knowledge as fruits of ignorance: A global free energy principle of
+  our way of thinking.
+\newblock \emph{arXiv preprint arXiv:2206.05684}, 2022.
+
+\bibitem[Thompson(2007)]{thompson2007}
+Evan Thompson.
+\newblock \emph{Mind in Life: Biology, Phenomenology, and the Sciences of
+  Mind}.
+\newblock Harvard University Press, 2007.
+
+\bibitem[Valsson and Parrinello(2014)]{valsson2014variational}
+Omar Valsson and Michele Parrinello.
+\newblock Variational approach to enhanced sampling and free energy
+  calculations.
+\newblock \emph{Physical Review Letters}, 113:\penalty0 090601, 2014.
+\newblock \doi{10.1103/PhysRevLett.113.090601}.
+
+\bibitem[Van~de Maele et~al.(2023)Van~de Maele, Dhoedt, Verbelen, and
+  Pezzulo]{maele2023integrating}
+Toon Van~de Maele, Bart Dhoedt, Tim Verbelen, and Giovanni Pezzulo.
+\newblock Integrating cognitive map learning and active inference for planning
+  in ambiguous environments.
+\newblock \emph{arXiv preprint arXiv:2308.08307}, 2023.
+
+\bibitem[van~der Himst and Lanillos(2020)]{himst2020deep}
+Otto van~der Himst and Pablo Lanillos.
+\newblock Deep active inference for partially observable mdps.
+\newblock \emph{arXiv preprint arXiv:2009.03622}, 2020.
+\newblock \doi{10.1007/978-3-030-64919-7_8}.
+
+\bibitem[Varela et~al.(1991)Varela, Thompson, and Rosch]{varela1991}
+Francisco~J. Varela, Evan Thompson, and Eleanor Rosch.
+\newblock \emph{The Embodied Mind: Cognitive Science and Human Experience}.
+\newblock MIT Press, 1991.
+
+\bibitem[von Foerster(1981)]{vonfoerster1981}
+Heinz von Foerster.
+\newblock \emph{Observing Systems}.
+\newblock Intersystems Publications, 1981.
+
+\bibitem[Watson et~al.(2020)Watson, Imohiosen, and Peters]{watson2020active}
+Joe Watson, Abraham Imohiosen, and Jan Peters.
+\newblock Active inference or control as inference? a unifying view.
+\newblock \emph{arXiv preprint arXiv:2010.00262}, 2020.
+
+\bibitem[Whitehead(1929)]{whitehead1929}
+Alfred~North Whitehead.
+\newblock \emph{Process and Reality: An Essay in Cosmology}.
+\newblock Macmillan, 1929.
+
+\bibitem[Wiener(1948)]{wiener1948}
+Norbert Wiener.
+\newblock \emph{Cybernetics: Or Control and Communication in the Animal and the
+  Machine}.
+\newblock MIT Press, 1948.
+
+\end{thebibliography}
