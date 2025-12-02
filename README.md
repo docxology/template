@@ -83,7 +83,7 @@ This is a **GitHub Template Repository** that gives you:
 3. **[Manuscript Numbering](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization
 4. **[Documentation Index](docs/DOCUMENTATION_INDEX.md)** - Complete reference
 
-**Technical resources:** See **[LaTeX Preamble](manuscript/preamble.md)** and **[Copypasta](docs/COPYPASTA.md)**
+**Technical resources:** See **[LaTeX Preamble](project/manuscript/preamble.md)** and **[Copypasta](docs/COPYPASTA.md)**
 
 </td>
 </tr>
@@ -169,8 +169,8 @@ graph TB
 # Generate everything (tests + scripts + PDFs)
 python3 scripts/run_all.py
 
-# Run tests with coverage
-pytest tests/ --cov=src --cov-report=html
+# Run tests with coverage (infrastructure + project)
+python3 scripts/01_run_tests.py
 
 # Open generated manuscript
 open output/pdf/project_combined.pdf
@@ -301,33 +301,31 @@ The project follows a standardized structure with clear separation of concerns:
 
 ```mermaid
 graph TB
-    subgraph "Layer 1: Infrastructure"
-        INFRA[infrastructure/<br/>Generic tools<br/>Build & validation]
+    subgraph L1["Layer 1: Infrastructure"]
+        INFRA[infrastructure/<br/>Generic tools<br/>Build and validation]
         INFRA_SCRIPTS[scripts/<br/>Entry point orchestrators<br/>5-stage pipeline]
     end
     
-    subgraph "Layer 2: Project-Specific"
+    subgraph L2["Layer 2: Project-Specific"]
         SRC[project/src/<br/>Scientific algorithms<br/>100% tested]
         SCRIPTS[project/scripts/<br/>Analysis scripts<br/>Thin orchestrators]
     end
     
-    subgraph "Project Components"
+    subgraph PC["Project Components"]
         TESTS[tests/<br/>Test suite<br/>Comprehensive coverage]
         DOCS[docs/<br/>Documentation<br/>42+ guides]
         MANUSCRIPT[project/manuscript/<br/>Research sections<br/>Generate PDFs]
         OUTPUT[output/<br/>Generated files<br/>PDFs, figures, data]
     end
     
-    subgraph "Thin Orchestrator Pattern"
-        SRC -->|"import & use"| SCRIPTS
-        SRC -->|"import & use"| INFRA_SCRIPTS
-        INFRA -->|"provide utilities"| SCRIPTS
-        SCRIPTS -->|"generate"| OUTPUT
-        INFRA_SCRIPTS -->|"orchestrate pipeline"| TESTS
-        INFRA_SCRIPTS -->|"orchestrate pipeline"| SCRIPTS
-        MANUSCRIPT -->|"reference"| OUTPUT
-        TESTS -->|"validate"| SRC
-    end
+    SRC -->|import and use| SCRIPTS
+    SRC -->|import and use| INFRA_SCRIPTS
+    INFRA -->|provide utilities| SCRIPTS
+    SCRIPTS -->|generate| OUTPUT
+    INFRA_SCRIPTS -->|orchestrate pipeline| TESTS
+    INFRA_SCRIPTS -->|orchestrate pipeline| SCRIPTS
+    MANUSCRIPT -->|reference| OUTPUT
+    TESTS -->|validate| SRC
     
     classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef layer2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
@@ -399,7 +397,7 @@ All source code must meet **test coverage requirements** (70% project, 49% infra
 ### Automated Script Execution
 **[Script guide](scripts/AGENTS.md)** | **[Examples](docs/EXAMPLES_SHOWCASE.md)**
 
-Project-specific scripts in the `scripts/` directory are automatically executed to generate figures and data. These scripts **import and use** the tested methods from `src/`, demonstrating proper integration patterns.
+Project-specific scripts in the `project/scripts/` directory are automatically executed to generate figures and data. These scripts **import and use** the tested methods from `project/src/`, demonstrating proper integration patterns.
 
 ### Markdown to PDF Pipeline
 **[Markdown guide](docs/MARKDOWN_TEMPLATE_GUIDE.md)** | **[PDF validation](docs/PDF_VALIDATION.md)**
@@ -414,7 +412,7 @@ Manuscript sections are converted to individual PDFs with proper figure integrat
 The build system has been comprehensively validated:
 - All 14 PDFs generate successfully
 - No critical errors or warnings
-- Optimized 75-second build time
+- Optimized 58-second build time
 - Complete documentation of system health
 
 ### Generic and Reusable
@@ -443,8 +441,8 @@ brew install --cask mactex
 # Using uv (recommended)
 uv sync
 
-# Or using pip
-pip install -r requirements.txt
+# Or using pip (if uv is not available)
+pip install -e .
 ```
 
 ### 3. Generate Manuscript
@@ -480,7 +478,7 @@ The system supports **two configuration methods**:
 
 #### Method 1: Configuration File (Recommended)
 
-Edit `manuscript/config.yaml` with your paper metadata:
+Edit `project/manuscript/config.yaml` with your paper metadata:
 
 ```yaml
 paper:
@@ -497,7 +495,7 @@ publication:
   doi: "10.5281/zenodo.12345678"  # Optional
 ```
 
-See `manuscript/config.yaml.example` for all available options.
+See `project/manuscript/config.yaml.example` for all available options.
 
 #### Method 2: Environment Variables (Backward Compatible)
 
@@ -519,7 +517,7 @@ python3 scripts/03_render_pdf.py
 
 **Configuration is applied to:**
 - PDF metadata (title, author, creation date)
-- LaTeX document properties - [Preamble details](manuscript/preamble.md)
+- LaTeX document properties - [Preamble details](project/manuscript/preamble.md)
 - Generated file headers
 - Cross-reference systems
 
@@ -561,9 +559,9 @@ if __name__ == "__main__":
 
 ### Manuscript Structure
 
-**[Manuscript guide](manuscript/AGENTS.md)** | **[Numbering system](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)**
+**[Manuscript guide](project/manuscript/AGENTS.md)** | **[Numbering system](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)**
 
-- `preamble.md` - LaTeX preamble and styling - [Details](manuscript/preamble.md)
+- `preamble.md` - LaTeX preamble and styling - [Details](project/manuscript/preamble.md)
 - `01_abstract.md` through `06_conclusion.md` - Main sections
 - `S01_supplemental_methods.md` - Supplemental sections
 - `98_symbols_glossary.md` - Auto-generated API reference
@@ -578,14 +576,16 @@ if __name__ == "__main__":
 The system enforces comprehensive test coverage using TDD principles:
 
 ```bash
-# Run all tests with coverage
-pytest tests/ --cov=src --cov-report=html
+# Run all tests with coverage (infrastructure + project)
+python3 scripts/01_run_tests.py
 
-# Or using uv
-uv run pytest tests/ --cov=src --cov-report=html
+# Or run manually with coverage reports
+pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
+pytest project/tests/ --cov=project/src --cov-report=html
 
 # Generate detailed coverage report with missing lines
-pytest tests/ --cov=src --cov-report=term-missing
+pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing
+pytest project/tests/ --cov=project/src --cov-report=term-missing
 
 # Verify coverage requirements (infrastructure modules)
 pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
@@ -613,8 +613,8 @@ Generated outputs are organized in the `output/` directory:
 ```mermaid
 graph TD
     OUTPUT[output/] --> PDFS[pdf/<br/>Individual + Combined PDFs<br/>14 files generated]
-    OUTPUT --> FIGS[figures/<br/>PNG files from scripts<br/>10 figures]
-    OUTPUT --> DATA[data/<br/>CSV, NPZ files<br/>2 datasets]
+    OUTPUT --> FIGS[figures/<br/>PNG files from scripts<br/>23 figures]
+    OUTPUT --> DATA[data/<br/>CSV, NPZ files<br/>5 datasets]
     OUTPUT --> TEX[tex/<br/>LaTeX source files<br/>For further processing]
     
     classDef dir fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
@@ -639,9 +639,9 @@ graph TD
 
 ```mermaid
 flowchart TD
-    START([Start render_pdf.sh]) --> CLEAN[Clean all outputs]
+    START([Start run_all.py]) --> CLEAN[Clean all outputs]
     CLEAN --> TESTS[Run tests with coverage requirements<br/>99.88% project, 55.89% infra]
-    TESTS --> SCRIPTS[Execute all scripts<br/>2 scripts successful]
+    TESTS --> SCRIPTS[Execute all scripts<br/>Project scripts executed]
     SCRIPTS --> UTILS[Run repo utilities<br/>Glossary + Validation]
     UTILS --> VALIDATE[Validate markdown<br/>All references resolved]
     VALIDATE --> GLOSSARY[Generate glossary<br/>Auto-generated API docs]
@@ -674,9 +674,9 @@ flowchart TD
 **Pipeline Stages:**
 
 1. **Test Validation**: Ensures coverage requirements met - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
-2. **Script Execution**: Runs all Python scripts in `scripts/` (validating src/ integration) - [Script Details](docs/BUILD_SYSTEM.md#stage-2-script-execution-1-2-seconds)
+2. **Script Execution**: Runs all Python scripts in `project/scripts/` (validating project/src/ integration) - [Script Details](docs/BUILD_SYSTEM.md#stage-2-script-execution-1-2-seconds)
 3. **Repository Utilities**: Generates glossary and validates markdown - [Utility Details](docs/BUILD_SYSTEM.md#stage-3-repository-utilities-1-second)
-4. **Markdown Discovery**: Finds manuscript `.md` files in `manuscript/` - [Numbering System](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)
+4. **Markdown Discovery**: Finds manuscript `.md` files in `project/manuscript/` - [Numbering System](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)
 5. **PDF Generation**: Creates individual manuscript section PDFs and combined manuscript PDF - [PDF Analysis](docs/BUILD_SYSTEM.md#stage-4-individual-module-pdfs-32-35-seconds)
 6. **Output Validation**: Validates PDF quality - [PDF Validation](docs/PDF_VALIDATION.md)
 7. **Output Organization**: Places outputs in organized subdirectories
@@ -715,8 +715,6 @@ flowchart TD
 - **[docs/COPYPASTA.md](docs/COPYPASTA.md)** - Shareable content for promoting the template
 - **[project/manuscript/preamble.md](project/manuscript/preamble.md)** - LaTeX preamble and styling configuration
 - **[docs/TEST_IMPROVEMENTS_SUMMARY.md](docs/TEST_IMPROVEMENTS_SUMMARY.md)** - Testing enhancements and standards
-- **[output/AGENTS.md](output/AGENTS.md)** - Generated outputs documentation
-- **[output/README.md](output/README.md)** - Generated outputs quick reference
 
 ### Directory-Specific Documentation
 - **[infrastructure/AGENTS.md](infrastructure/AGENTS.md)** - Infrastructure layer documentation
@@ -842,7 +840,7 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 To adapt this template for your existing project:
 
 1. Copy the `infrastructure/` and `scripts/` directories to your project
-2. Adapt the `src/`, `tests/`, and `scripts/` structure
+2. Adapt the `project/src/`, `project/tests/`, and `project/scripts/` structure
 3. Update manuscript markdown files to match the expected format - [Markdown Guide](docs/MARKDOWN_TEMPLATE_GUIDE.md)
 4. Set appropriate environment variables for your project - [Configuration](AGENTS.md#configuration-system)
 5. Run the entry points to validate the setup - [Scripts Guide](scripts/AGENTS.md)
