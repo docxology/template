@@ -127,15 +127,34 @@ The LLM review automatically adjusts for different model sizes:
 - Small models (3B-8B): Flexible validation, higher temperature (+0.1)
 - Large models (14B+): Standard validation thresholds
 
+**Validation Approach:**
+
+Uses structure-only validation for general-purpose use:
+- Off-topic detection (critical - triggers retry with context reset)
+- Word count requirements (structural)
+- Header detection (flexible - accepts semantic equivalents)
+- Emojis and tables are allowed
+
+**Word Count Thresholds:**
+
+| Review Type | Minimum Words | Template Target | Notes |
+|------------|---------------|-----------------|-------|
+| executive_summary | 250 | 400-600 | Full manuscript overview |
+| quality_review | 300 | 500-700 | Detailed quality assessment |
+| methodology_review | 300 | 500-700 | Methods and structure analysis |
+| improvement_suggestions | 200 | 500-800 | Focused actionable items |
+
+Small models (3B-8B parameters) automatically receive 20% lower thresholds.
+
 **Troubleshooting:**
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| "Response appears off-topic" | Model confused by prompt | Auto-retries with format enforcement |
+| "Response appears off-topic" | Model hallucinating | Auto-retries with context reset + reinforced prompt |
 | "Missing expected structure" | Model used different headers | Validation accepts semantic equivalents |
 | "Missing scoring rubric" | Score not in expected format | Validation accepts X/5, Rating: X, etc. |
-| Reviews use emojis/tables | Model's creative formatting | Templates now explicitly forbid this |
-| LLM stage takes too long | Multiple retries | Reduced max_retries, flexible validation |
+| Response too short | Model stopped early | Retry with increased temperature |
+| Generic book language | Model ignoring manuscript | Off-topic detection triggers retry |
 
 **Environment Variables:**
 | Variable | Default | Description |

@@ -206,43 +206,46 @@ if is_off_topic(response):
 
 ### Format Compliance Validation
 
-Detect common LLM failure modes including emojis, tables, conversational phrases, and hallucinated references:
+The validation system uses **structure-only validation** for general-purpose use. Emojis and tables are allowed to give LLMs formatting flexibility.
 
 ```python
 from scripts import (
-    detect_emojis,
-    detect_tables,
     detect_conversational_phrases,
-    detect_hallucinated_sections,
     check_format_compliance,
+    is_off_topic,
 )
 
-# Individual detection functions
-emojis = detect_emojis(response)           # Returns list of emojis found
-has_tables = detect_tables(response)       # Returns bool
-phrases = detect_conversational_phrases(response)  # Returns list
-refs = detect_hallucinated_sections(response)      # Returns list
+# Check for off-topic content first (most critical)
+if is_off_topic(response):
+    client.reset()  # Reset context
+    # Retry with reinforced prompt
+    
+# Check conversational phrases (warning only)
+phrases = detect_conversational_phrases(response)
 
-# Comprehensive format check
+# Format compliance check (now only conversational phrases)
 is_compliant, issues, details = check_format_compliance(response)
 
+# Issues are logged as warnings, not hard failures
 if not is_compliant:
-    print(f"Format violations: {', '.join(issues)}")
+    logger.warning(f"Format warnings: {', '.join(issues)}")
 ```
 
-**Detection Categories:**
+**Validation Approach:**
 
-| Category | What's Detected | Examples |
-|----------|-----------------|----------|
-| **Emojis** | Unicode symbols, checkmarks | 🚀 ✅ 💡 🔑 ⚙️ |
-| **Tables** | Markdown table syntax | `\| col \| col \|` |
-| **Conversational** | AI assistant phrases | "Based on your document", "I'll help you" |
-| **Hallucinations** | Fictional section refs | "Section 12.8.1", "page 44" |
+| Check | Type | Action on Fail |
+|-------|------|----------------|
+| Off-topic content | Critical | Retry with context reset |
+| Word count below minimum | Structural | Retry |
+| Missing required headers | Structural | Retry |
+| Conversational phrases | Warning | Log only |
+| Emojis | Allowed | No action |
+| Tables | Allowed | No action |
 
-**Model-Specific Behavior:**
-
-- **Small models (3B-8B)**: Format violations become warnings (non-blocking)
-- **Large models (14B+)**: Format violations are stricter (may trigger retry)
+**Allowed Formats:**
+- Emojis (✅ 🔑 📊 etc.) - useful for visual emphasis
+- Markdown tables - useful for structured data
+- Any valid markdown formatting
 
 ## Manuscript Review Patterns
 
@@ -267,27 +270,34 @@ options = GenerationOptions(
 response = client.query(template_prompt, options=options)
 ```
 
-### Format Enforcement on Retry
+### Retry with Reinforced Prompt
 
-When retries are needed, add format enforcement:
+When off-topic content is detected, the retry includes a reinforced prompt:
 
 ```python
-FORMAT_ENFORCEMENT = {
-    "executive_summary": (
-        "IMPORTANT: Your response MUST use these exact markdown headers:\n"
-        "## Overview\n## Key Contributions\n## Methodology Summary\n"
-        "## Principal Results\n## Significance and Impact\n\n"
-    ),
-    "quality_review": (
-        "IMPORTANT: Your response MUST include scoring for each criterion "
-        "using this format: **Score: [1-5]**\n\n"
-    ),
-}
-
-# On retry, prepend format enforcement
-if attempt > 0:
-    current_prompt = FORMAT_ENFORCEMENT[review_type] + original_prompt
+# On retry after off-topic detection
+if had_off_topic:
+    current_prompt = (
+        "IMPORTANT: You must review the ACTUAL manuscript text provided below. "
+        "Do NOT generate hypothetical content, generic book descriptions, or "
+        "unrelated topics. Your review must reference specific content from "
+        "the manuscript.\n\n" + prompt
+    )
+    client.reset()  # Always reset context for off-topic retries
 ```
+
+The prompt templates now use a **manuscript-first structure** with clear boundary markers:
+
+```
+=== MANUSCRIPT BEGIN ===
+{full manuscript text}
+=== MANUSCRIPT END ===
+
+TASK: [specific review task]
+REQUIREMENTS: [structural requirements]
+```
+
+This structure ensures the LLM focuses on the actual manuscript content.
 
 ### Validation for Different Review Types
 
@@ -525,54 +535,103 @@ client.set_system_prompt("You are now a different persona...")
 
 ## Common Failure Modes
 
-### LLM Output Quality Issues
+### Off-Topic Detection
 
-| Issue | Detection | Resolution |
-|-------|-----------|------------|
-| **Emoji usage** | `detect_emojis()` | Templates now include "FORBIDDEN" sections |
-| **Markdown tables** | `detect_tables()` | Templates explicitly forbid tables |
-| **Conversational tone** | `detect_conversational_phrases()` | Template instructions reinforce formal tone |
-| **Hallucinated sections** | `detect_hallucinated_sections()` | Templates say "Reference ONLY sections that exist" |
-| **Off-topic response** | `is_off_topic()` | Reset context and retry with format enforcement |
+The most critical failure mode is when the LLM generates content unrelated to the manuscript. Off-topic patterns include:
+
+| Pattern Type | Examples | Action |
+|--------------|----------|--------|
+| **AI refusal** | "I can't help", "I don't have access" | Retry with context reset |
+| **Generic content** | "This book is", "Chapter 1 deals with" | Retry with reinforced prompt |
+| **External URLs** | http://, https:// links | Retry (indicates hallucination) |
+| **Unrelated code** | CMakeLists.txt, .cpp files | Retry |
+| **Form/registration** | "must be 18 years old", "valid email" | Retry |
+
+### Repetition Detection
+
+LLMs can sometimes get stuck in output loops, repeating the same content. The validation system detects this:
+
+| Unique Ratio | Severity | Action |
+|--------------|----------|--------|
+| > 80% | Normal | Pass validation |
+| 50-80% | Warning | Log warning, continue |
+| < 50% | Error | Fail validation, retry |
+
+```python
+from infrastructure.llm import detect_repetition, deduplicate_sections
+
+# Check for repetition
+has_rep, duplicates, unique_ratio = detect_repetition(response)
+
+if unique_ratio < 0.5:
+    # Severe repetition - retry with different temperature
+    client.reset()
+    response = client.query(prompt, options=GenerationOptions(temperature=0.5))
+
+# Post-process to clean up any remaining repetition
+cleaned = deduplicate_sections(response, max_repetitions=2)
+```
+
+The validation is automatically integrated into `validate_review_quality()`:
+
+```python
+is_valid, issues, details = validate_review_quality(response, "executive_summary")
+
+# Check repetition details
+if details.get("repetition", {}).get("has_repetition"):
+    print(f"Warning: {details['repetition']['unique_ratio']:.0%} unique content")
+```
 
 ### Troubleshooting
 
-**Issue: Response uses emojis despite instructions**
+**Issue: Response is completely off-topic (hallucinated content)**
 ```python
-# Templates now include explicit prohibition
-# FORBIDDEN (DO NOT USE):
-# - NO emojis (no checkmarks, stars, rockets, light bulbs, etc.)
+# Detected by is_off_topic() - checks for:
+# - AI refusal phrases ("I can't help")
+# - Generic book/guide language
+# - External URLs
+# - Unrelated programming content
+
+# Resolution: Context reset + reinforced prompt on retry
+if had_off_topic:
+    client.reset()
+    current_prompt = "IMPORTANT: Review the ACTUAL manuscript..." + prompt
 ```
 
-**Issue: Response contains conversational phrases**
+**Issue: Response too short**
+
+The validation system uses minimum word counts to ensure substantive reviews:
+
+| Review Type | Minimum Words | Template Target | Notes |
+|------------|---------------|-----------------|-------|
+| executive_summary | 250 | 400-600 | Full manuscript overview |
+| quality_review | 300 | 500-700 | Detailed quality assessment |
+| methodology_review | 300 | 500-700 | Methods and structure analysis |
+| improvement_suggestions | 200 | 500-800 | Focused actionable items |
+
+```python
+# Small models (3B-8B) get 20% lower thresholds automatically
+# e.g., improvement_suggestions minimum: 200 → 160 for small models
+```
+
+**Issue: Missing required headers**
+```python
+# Each review type expects specific headers
+# Validation is flexible - accepts variations:
+# "Overview" OR "Summary" OR "Introduction"
+# "Methodology" OR "Methods" OR "Approach"
+
+# Only requires 1+ sections to pass (very flexible)
+```
+
+**Issue: Conversational AI phrases**
 ```python
 # Detected phrases like:
 # "Based on the document you shared"
 # "I'll help you understand"
 # "Let me know if you need more"
 
-# These are logged as format warnings for small models
-# For large models, they may trigger retry
-```
-
-**Issue: Response references non-existent sections**
-```python
-# Hallucinated references detected:
-# - "Section 12.8.1" (deep section that likely doesn't exist)
-# - "page 44" (specific page references)
-# - "Section 14.3" (high section numbers)
-
-# Templates now include:
-# - NO invented section numbers
-# - Reference ONLY content that appears in the manuscript
-```
-
-**Issue: Validation keeps retrying**
-```python
-# Reduced max_retries from 2 to 1
-# Small models get 20% lower word count thresholds
-# Format issues become warnings for small models
-# Validation accepts "good enough" responses
+# These are logged as warnings only - not retry triggers
 ```
 
 ## Best Practices

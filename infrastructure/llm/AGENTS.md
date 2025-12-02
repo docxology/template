@@ -933,6 +933,93 @@ The manuscript presents a research framework for optimization algorithms.
 The research employs gradient-based optimization techniques...
 ```
 
+## Repetition Detection
+
+The validation module includes comprehensive repetition detection to catch when LLMs get stuck in output loops.
+
+### Detection Functions
+
+```python
+from infrastructure.llm import (
+    detect_repetition,
+    calculate_unique_content_ratio,
+    deduplicate_sections,
+)
+
+# Detect repetitive content
+has_repetition, duplicates, unique_ratio = detect_repetition(text)
+# has_repetition: True if significant repetition detected
+# duplicates: List of repeated chunks (first 5)
+# unique_ratio: 0.0 (all repeated) to 1.0 (all unique)
+
+# Calculate unique content ratio
+ratio = calculate_unique_content_ratio(text)
+# Returns 0.0-1.0 indicating uniqueness
+
+# Clean up repetitive output
+cleaned = deduplicate_sections(text, max_repetitions=2)
+# Removes sections repeated more than max_repetitions times
+```
+
+### OutputValidator Methods
+
+```python
+# Validate response doesn't have excessive repetition
+is_valid, details = OutputValidator.validate_no_repetition(
+    response,
+    max_allowed_ratio=0.3  # Max 30% repeated content
+)
+
+# Post-process to clean repetitive content
+cleaned = OutputValidator.clean_repetitive_output(response)
+```
+
+### Integration with Review Validation
+
+The `validate_review_quality()` function automatically checks for repetition:
+
+```python
+is_valid, issues, details = validate_review_quality(response, "executive_summary")
+# details["repetition"] contains:
+# - has_repetition: bool
+# - unique_ratio: float
+# - duplicates_found: int
+```
+
+### Thresholds
+
+| Unique Ratio | Severity | Action |
+|--------------|----------|--------|
+| > 80% | Normal | Pass |
+| 50-80% | Warning | Log warning, continue |
+| < 50% | Error | Fail validation, retry |
+
+### Post-Processing Cleanup
+
+Generated reviews are automatically post-processed to remove repetitive content:
+
+```python
+# Applied after generation in generate_review_with_metrics()
+original_length = len(response)
+response = deduplicate_sections(response, max_repetitions=2)
+if len(response) < original_length * 0.9:
+    logger.info(f"Cleaned repetitive content: {original_length} → {len(response)} chars")
+```
+
+### Common Causes of Repetition
+
+1. **Model getting stuck** - LLM repeats same output in a loop
+2. **Prompt confusion** - Model interprets prompt as requiring repetition
+3. **Context overflow** - Long inputs cause degenerate output
+4. **Low temperature** - Too deterministic, falls into patterns
+
+### Prevention Strategies
+
+1. Use `repeat_penalty` in GenerationOptions (1.1-1.2)
+2. Increase temperature slightly on retries
+3. Clear context before retry with `client.reset()`
+4. Use post-processing deduplication as safety net
+
 ## See Also
 
 - [`README.md`](README.md) - Quick reference guide

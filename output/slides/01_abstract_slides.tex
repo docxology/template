@@ -1,0 +1,130 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Abstract}
+\protect\phantomsection\label{sec:abstract}
+This research presents a novel optimization framework that combines
+theoretical rigor with practical efficiency, developing a comprehensive
+mathematical framework that achieves both theoretical convergence
+guarantees and superior experimental performance across diverse
+optimization problems. Building on foundational work in convex
+optimization \cite{boyd2004, nesterov2018} and recent advances in
+adaptive optimization \cite{kingma2014, duchi2011}, our work makes
+several significant contributions to the field of optimization: a
+unified approach combining regularization, adaptive step sizes, and
+momentum techniques; proven linear convergence with rate
+\(\rho \in (0,1)\) and optimal \(O(n \log n)\) complexity per iteration;
+efficient algorithm implementation validated on real-world problems; and
+comprehensive experimental evaluation across multiple problem domains.
+The core algorithm solves optimization problems of the form
+\(f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)\) using an
+iterative update rule with adaptive step sizes and momentum terms, where
+theoretical analysis establishes convergence guarantees and complexity
+bounds that are validated through extensive experimentation. Our
+experimental evaluation demonstrates empirical convergence constants
+\(C \approx 1.2\) and \(\rho \approx 0.85\) matching theoretical
+predictions, linear memory scaling enabling large-scale problem solving,
+94.3\% success rate across diverse problem instances, and 23.7\% average
+improvement over state-of-the-art baseline methods
+\cite{ruder2016, schmidt2017}. The framework has broad applications
+across machine learning \cite{kingma2014}, signal processing
+\cite{beck2009}, computational biology, and climate modeling
+\cite{polak1997}, with demonstrated efficiency improvements translating
+to significant computational cost savings and enabling larger problem
+sizes in real-world applications. Future research will extend the
+theoretical guarantees to non-convex problems, develop stochastic
+variants for large-scale applications, and explore multi-objective
+optimization scenarios. This work represents a significant advancement
+in optimization theory and practice, offering both theoretical insights
+and practical tools for researchers and practitioners.
+\end{frame}
+
+\end{document}

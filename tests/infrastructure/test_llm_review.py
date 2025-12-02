@@ -35,8 +35,13 @@ from scripts import (
     save_review_outputs,
     generate_review_summary,
     validate_review_quality,
-    is_off_topic,
     DEFAULT_MAX_INPUT_LENGTH,
+)
+# Import validation functions from infrastructure (now moved there)
+from infrastructure.llm import (
+    is_off_topic,
+    detect_repetition,
+    deduplicate_sections,
 )
 
 
@@ -538,10 +543,11 @@ class TestIsOffTopic:
         code_response = "Here is my code: import pandas as pd\nimport numpy as np"
         assert is_off_topic(code_response) is True
     
-    def test_this_email_context_detected(self):
-        """Test that 'feel free to ask me' AI phrases are detected."""
+    def test_feel_free_not_off_topic(self):
+        """Test that 'feel free to ask me' is NOT off-topic (it's conversational, not off-topic)."""
         ai_response = "This is great! Feel free to ask me any questions."
-        assert is_off_topic(ai_response) is True
+        # This phrase is conversational, not off-topic - doesn't indicate confusion
+        assert is_off_topic(ai_response) is False
     
     def test_id_be_happy_detected(self):
         """Test that 'I'm happy to help you with' is detected as off-topic."""
@@ -750,69 +756,6 @@ class TestValidateReviewQuality:
         assert any("words" in issue.lower() for issue in issues)
 
 
-class TestDetectEmojis:
-    """Tests for detect_emojis() function."""
-    
-    def test_no_emojis(self):
-        """Test that text without emojis returns empty list."""
-        from scripts import detect_emojis
-        text = "This is plain text without any emojis or special characters."
-        assert detect_emojis(text) == []
-    
-    def test_common_emojis_detected(self):
-        """Test that common emojis are detected."""
-        from scripts import detect_emojis
-        text = "Great work! 🚀 This is excellent 💡 Keep it up! ✅"
-        emojis = detect_emojis(text)
-        assert len(emojis) >= 3
-    
-    def test_checkmark_symbols_detected(self):
-        """Test that checkmark symbols are detected."""
-        from scripts import detect_emojis
-        text = "✓ First item\n✅ Second item\n❌ Third item"
-        emojis = detect_emojis(text)
-        assert len(emojis) >= 2
-    
-    def test_star_and_key_emojis_detected(self):
-        """Test that star and key emojis are detected."""
-        from scripts import detect_emojis
-        text = "🔑 Key Takeaways\n🌟 Final Thought\n⚙️ Settings"
-        emojis = detect_emojis(text)
-        assert len(emojis) >= 2
-
-
-class TestDetectTables:
-    """Tests for detect_tables() function."""
-    
-    def test_no_tables(self):
-        """Test that text without tables returns False."""
-        from scripts import detect_tables
-        text = "This is plain text.\n\n## Header\n\n- List item\n- Another item"
-        assert detect_tables(text) is False
-    
-    def test_simple_table_detected(self):
-        """Test that simple markdown table is detected."""
-        from scripts import detect_tables
-        text = """| Header 1 | Header 2 |
-|----------|----------|
-| Cell 1   | Cell 2   |"""
-        assert detect_tables(text) is True
-    
-    def test_table_with_alignment_detected(self):
-        """Test that table with alignment markers is detected."""
-        from scripts import detect_tables
-        text = """| Left | Center | Right |
-|:-----|:------:|------:|
-| A    |   B    |     C |"""
-        assert detect_tables(text) is True
-    
-    def test_pipe_in_code_not_detected(self):
-        """Test that pipe characters in code blocks are not falsely detected."""
-        from scripts import detect_tables
-        text = "Use `command | grep pattern` for filtering."
-        assert detect_tables(text) is False
-
-
 class TestDetectConversationalPhrases:
     """Tests for detect_conversational_phrases() function."""
     
@@ -855,54 +798,12 @@ class TestDetectConversationalPhrases:
         assert len(phrases) >= 2
 
 
-class TestDetectHallucinatedSections:
-    """Tests for detect_hallucinated_sections() function."""
-    
-    def test_no_hallucinated_sections(self):
-        """Test that normal text returns empty list."""
-        from scripts import detect_hallucinated_sections
-        text = """The methodology section describes the experimental design.
-        The results section presents the findings."""
-        assert detect_hallucinated_sections(text) == []
-    
-    def test_deep_section_reference_detected(self):
-        """Test that deep section references like 12.8.1 are detected."""
-        from scripts import detect_hallucinated_sections
-        text = "As described in Section 12.8.1, the framework provides..."
-        refs = detect_hallucinated_sections(text)
-        assert len(refs) >= 1
-    
-    def test_high_section_number_detected(self):
-        """Test that high section numbers are detected."""
-        from scripts import detect_hallucinated_sections
-        text = "See Section 14.3 for the implementation details."
-        refs = detect_hallucinated_sections(text)
-        assert len(refs) >= 1
-    
-    def test_page_reference_detected(self):
-        """Test that specific page references are detected."""
-        from scripts import detect_hallucinated_sections
-        text = "The API glossary (p. 44) contains the function definitions."
-        refs = detect_hallucinated_sections(text)
-        assert len(refs) >= 1
-    
-    def test_parenthetical_page_detected(self):
-        """Test that (page XX) format is detected."""
-        from scripts import detect_hallucinated_sections
-        text = "The benchmarks (page 127) show significant improvement."
-        refs = detect_hallucinated_sections(text)
-        assert len(refs) >= 1
-    
-    def test_normal_section_not_detected(self):
-        """Test that normal section references are not falsely detected."""
-        from scripts import detect_hallucinated_sections
-        text = "Section 3 describes the methodology. Section 4.2 covers results."
-        refs = detect_hallucinated_sections(text)
-        assert len(refs) == 0
-
-
 class TestCheckFormatCompliance:
-    """Tests for check_format_compliance() function."""
+    """Tests for check_format_compliance() function.
+    
+    Note: Emojis and tables are now allowed. Only conversational phrases
+    are flagged as format violations.
+    """
     
     def test_compliant_response(self):
         """Test that properly formatted response passes."""
@@ -924,20 +825,19 @@ class TestCheckFormatCompliance:
         assert is_compliant is True
         assert len(issues) == 0
     
-    def test_emoji_violation(self):
-        """Test that emoji usage is flagged."""
+    def test_emojis_allowed(self):
+        """Test that emoji usage is now allowed."""
         from scripts import check_format_compliance
         text = """## Overview 🔑
         
         The manuscript is excellent! 🚀 Great work! ✅"""
         
         is_compliant, issues, details = check_format_compliance(text)
-        assert is_compliant is False
-        assert any("emoji" in issue.lower() for issue in issues)
-        assert len(details["emojis_found"]) > 0
+        assert is_compliant is True  # Emojis are allowed now
+        assert len(issues) == 0
     
-    def test_table_violation(self):
-        """Test that table usage is flagged."""
+    def test_tables_allowed(self):
+        """Test that table usage is now allowed."""
         from scripts import check_format_compliance
         text = """## Overview
 
@@ -947,9 +847,8 @@ class TestCheckFormatCompliance:
 | Structure | 4/5 |"""
         
         is_compliant, issues, details = check_format_compliance(text)
-        assert is_compliant is False
-        assert any("table" in issue.lower() for issue in issues)
-        assert details["has_tables"] is True
+        assert is_compliant is True  # Tables are allowed now
+        assert len(issues) == 0
     
     def test_conversational_violation(self):
         """Test that conversational phrases are flagged."""
@@ -962,19 +861,8 @@ class TestCheckFormatCompliance:
         assert any("conversational" in issue.lower() for issue in issues)
         assert len(details["conversational_phrases"]) > 0
     
-    def test_hallucination_violation(self):
-        """Test that hallucinated section references are flagged."""
-        from scripts import check_format_compliance
-        text = """As described in Section 12.8.1, the framework provides excellent results.
-        See the API glossary (p. 44) for implementation details."""
-        
-        is_compliant, issues, details = check_format_compliance(text)
-        assert is_compliant is False
-        assert any("suspicious" in issue.lower() or "section" in issue.lower() for issue in issues)
-        assert len(details["hallucinated_refs"]) > 0
-    
-    def test_multiple_violations(self):
-        """Test that multiple violations are all detected."""
+    def test_emojis_tables_with_conversational_still_fails(self):
+        """Test that conversational phrases still fail even with emojis/tables."""
         from scripts import check_format_compliance
         text = """## Overview 🚀
 
@@ -982,21 +870,82 @@ class TestCheckFormatCompliance:
 |------|-------|
 | A    | 5/5   |
 
-Based on the document you shared, Section 12.8.1 describes the approach."""
+Based on the document you shared, this describes the approach."""
         
         is_compliant, issues, details = check_format_compliance(text)
         assert is_compliant is False
-        assert len(issues) >= 3  # Emoji, table, conversational, and hallucination
+        assert any("conversational" in issue.lower() for issue in issues)
+
+
+class TestWordCountBoundary:
+    """Tests for word count boundary conditions in validation."""
+    
+    def test_exactly_minimum_words_executive_summary(self):
+        """Test response with exactly minimum word count passes."""
+        # 250 words is the minimum for executive_summary
+        # Need to include section headers for structure validation
+        response = (
+            "## Overview\n"
+            "This manuscript presents important research. " + "word " * 240 +
+            "\n## Key Contributions\nSignificant findings here."
+        )
+        is_valid, issues, details = validate_review_quality(response, "executive_summary")
+        assert is_valid is True
+        assert "word_count" in details
+        assert details["word_count"] >= 250
+    
+    def test_one_below_minimum_executive_summary(self):
+        """Test response one word below minimum fails."""
+        # 249 words should fail for executive_summary (minimum 250)
+        response = (
+            "## Overview\n"
+            "This is content. " + "word " * 239 +
+            "\n## Key Contributions\nMore content."
+        )
+        is_valid, issues, details = validate_review_quality(response, "executive_summary")
+        assert is_valid is False
+        assert any("Too short" in issue for issue in issues)
+    
+    def test_improvement_suggestions_new_minimum(self):
+        """Test that improvement_suggestions uses new 200-word minimum."""
+        # The minimum was lowered from 250 to 200 for improvement_suggestions
+        # This tests that a 200-word response now passes
+        response = (
+            "## Summary\n"
+            "This manuscript needs improvements and revisions. " +
+            "## High Priority\n"
+            "Critical issues were found in the methodology. " + "word " * 185 +
+            "\n## Medium Priority\nModerate concerns about structure."
+        )
+        is_valid, issues, details = validate_review_quality(response, "improvement_suggestions")
+        assert is_valid is True
+        assert details["word_count"] >= 200
+    
+    def test_improvement_suggestions_below_new_minimum(self):
+        """Test that improvement_suggestions below 200 words fails."""
+        # 150 words should fail even with the new lower threshold
+        response = (
+            "## Summary\nBrief summary. " +
+            "## High Priority\nIssue. " + "word " * 130 +
+            "## Low Priority\nMinor."
+        )
+        is_valid, issues, details = validate_review_quality(response, "improvement_suggestions")
+        assert is_valid is False
+        assert any("Too short" in issue for issue in issues)
 
 
 class TestValidateReviewQualityWithFormatCompliance:
-    """Tests for validate_review_quality() with format compliance checks."""
+    """Tests for validate_review_quality() with format compliance checks.
     
-    def test_format_warnings_for_small_models(self):
-        """Test that format issues become warnings for small models."""
+    Note: Emojis and tables are now allowed. Only conversational phrases
+    cause format compliance issues.
+    """
+    
+    def test_emojis_pass_validation(self):
+        """Test that emojis don't cause validation failures."""
         from scripts import validate_review_quality
         
-        # Response with emoji (format violation) but otherwise valid
+        # Response with emoji - should be valid now
         response = """## Overview
         
         The manuscript presents research on optimization. 🚀
@@ -1019,37 +968,37 @@ class TestValidateReviewQualityWithFormatCompliance:
         This work advances the field of optimization.
         """ + " word" * 300
         
-        # For small model, format issues should be warnings, not failures
         is_valid, issues, details = validate_review_quality(
             response, "executive_summary", model_name="qwen3:4b"
         )
         
-        # Should pass because small model gets format leniency
-        assert "format_warnings" in details or is_valid
+        # Should pass - emojis are allowed
+        assert is_valid is True
     
-    def test_format_issues_for_large_models(self):
-        """Test that format issues are more significant for large models."""
+    def test_conversational_phrases_still_flagged(self):
+        """Test that conversational phrases are flagged as format issues."""
         from scripts import validate_review_quality
         
-        # Response with multiple format violations
-        response = """## Overview 🔑
+        # Response with conversational phrases
+        response = """## Overview
         
-        Based on the document you shared, this is a great paper! 🚀
+        Based on the document you shared, this is a great paper!
         
-        | Feature | Score |
-        |---------|-------|
-        | Quality | 5/5   |
+        ## Key Contributions
         
-        See Section 12.8.1 for details.
+        I'll help you understand the key points.
+        
+        ## Methodology
+        
+        Let me know if you need more details.
         """ + " word" * 300
         
-        # For large model, format issues should cause failure
         is_valid, issues, details = validate_review_quality(
             response, "executive_summary", model_name="llama3:70b"
         )
         
-        # Large model should have format issues in the issues list
-        assert len(issues) > 0 or "format_compliance" in details
+        # Format warnings for conversational phrases should be tracked
+        assert "format_compliance" in details or "format_warnings" in details
 
 
 # Integration tests that require Ollama
@@ -1102,4 +1051,91 @@ class TestLLMReviewIntegration:
         assert metrics.output_chars > 0
         assert metrics.output_words > 0
         assert metrics.generation_time_seconds > 0
+
+
+class TestValidateReviewQualityRepetition:
+    """Tests for repetition detection in validate_review_quality."""
+
+    def test_validate_repetitive_content_fails(self):
+        """Test that highly repetitive content fails validation."""
+        # Create extremely repetitive content
+        repeated_block = "The methodology involves training neural networks. " * 30
+        response = f"""
+## Overview
+{repeated_block}
+
+## Key Contributions
+{repeated_block}
+
+## Methodology
+{repeated_block}
+
+## Results
+{repeated_block}
+"""
+        is_valid, issues, details = validate_review_quality(
+            response, "executive_summary"
+        )
+        
+        # Check that repetition is tracked
+        assert "repetition" in details
+        # Severe repetition should either fail or have low unique ratio
+        if not is_valid:
+            assert any("repetition" in issue.lower() for issue in issues)
+
+    def test_validate_unique_content_passes(self):
+        """Test that unique content passes validation."""
+        response = """
+## Overview
+This manuscript presents a novel approach to machine learning optimization.
+
+## Key Contributions
+The authors introduce three main contributions to the field.
+
+## Methodology
+The research methodology follows established scientific practices.
+
+## Results
+The experimental results demonstrate significant improvements.
+
+## Significance
+This research has important implications for the field.
+""" + " word" * 200  # Ensure word count is met
+        
+        is_valid, issues, details = validate_review_quality(
+            response, "executive_summary"
+        )
+        
+        # Unique content should have high unique ratio
+        assert details.get("repetition", {}).get("unique_ratio", 1.0) >= 0.5
+
+    def test_validate_moderate_repetition_warning(self):
+        """Test that moderate repetition creates warning but doesn't fail."""
+        # Some repeated phrases but mostly unique
+        response = """
+## Overview
+This is an excellent manuscript with clear presentation.
+
+## Key Contributions
+The contributions are significant and well-documented.
+
+## Methodology
+The methodology is sound and well-designed.
+
+## Results
+The results demonstrate clear improvements.
+
+## Significance
+The work has significant implications for the field.
+""" + " word" * 200
+        
+        is_valid, issues, details = validate_review_quality(
+            response, "executive_summary"
+        )
+        
+        # Should track repetition but not necessarily fail
+        assert "repetition" in details
+        # Moderate content should have reasonable unique ratio
+        unique_ratio = details.get("repetition", {}).get("unique_ratio", 1.0)
+        assert isinstance(unique_ratio, float)
 

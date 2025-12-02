@@ -43,10 +43,7 @@ save_review_outputs = _llm_review.save_review_outputs
 generate_review_summary = _llm_review.generate_review_summary
 validate_review_quality = _llm_review.validate_review_quality
 is_off_topic = _llm_review.is_off_topic
-detect_emojis = _llm_review.detect_emojis
-detect_tables = _llm_review.detect_tables
 detect_conversational_phrases = _llm_review.detect_conversational_phrases
-detect_hallucinated_sections = _llm_review.detect_hallucinated_sections
 check_format_compliance = _llm_review.check_format_compliance
 main = _llm_review.main
 
@@ -81,10 +78,7 @@ __all__ = [
     "generate_review_summary",
     "validate_review_quality",
     "is_off_topic",
-    "detect_emojis",
-    "detect_tables",
     "detect_conversational_phrases",
-    "detect_hallucinated_sections",
     "check_format_compliance",
     "main",
 ]

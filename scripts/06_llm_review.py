@@ -33,11 +33,14 @@ import json
 import os
 import re
 import sys
+import threading
 import time
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+import requests
 
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -51,10 +54,19 @@ from infrastructure.llm import (
     ensure_ollama_ready,
     select_best_model,
     get_model_info,
+    get_available_models,
     ManuscriptExecutiveSummary,
     ManuscriptQualityReview,
     ManuscriptMethodologyReview,
     ManuscriptImprovementSuggestions,
+    detect_repetition,
+    deduplicate_sections,
+    is_off_topic,
+    has_on_topic_signals,
+    detect_conversational_phrases,
+    check_format_compliance,
+    check_model_loaded,
+    preload_model,
 )
 from infrastructure.llm.templates import REVIEW_MIN_WORDS
 from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError
@@ -93,97 +105,10 @@ Guidelines:
 
 You are reviewing an academic research manuscript. Treat this as a formal peer review."""
 
-# Off-topic detection patterns (indicates LLM confusion)
-# These patterns must appear at START of response or be very specific
-OFF_TOPIC_PATTERNS_START = [
-    # Email/letter formats (must be at start)
-    r"^Re:\s",                        # Email reply format
-    r"^Dear\s",                       # Letter format
-    r"^To:\s",                        # Email header format
-    r"^Subject:\s",                   # Email subject line
-    r"^From:\s",                      # Email from header
-    # Casual greetings at start (inappropriate for formal review)
-    r"^Hi\s",                         # Casual greeting
-    r"^Hello\s",                      # Casual greeting
-    r"^Hey\s",                        # Very casual greeting
-    r"^Hello!",                       # Casual with exclamation
-]
-
-OFF_TOPIC_PATTERNS_ANYWHERE = [
-    # AI assistant phrases that clearly indicate confusion
-    r"Q&A forum",
-    r"I'm happy to help you with",
-    r"I'm not sure if I can help",
-    r"this is a very good question",
-    r"feel free to ask me",
-    r"I don't have access to",
-    r"I cannot access",
-    r"As an AI assistant",
-    r"as a language model",
-    r"I am an AI",
-    r"I'm an AI assistant",
-    # Code blocks that dominate response (more than just examples)
-    r"^```python\n",                  # Code block at very start
-    r"import pandas as pd\nimport",   # Multi-import block
-]
-
-# Conversational AI phrases that indicate poor review quality (not off-topic, but problematic)
-CONVERSATIONAL_PATTERNS = [
-    r"based on the document you shared",
-    r"based on the document you've shared",
-    r"I'll give you a precise",
-    r"I'll provide you",
-    r"Let me know if",
-    r"let me know your",
-    r"I'd be happy to",
-    r"I'll help you",
-    r"if you'd like me to",
-    r"tell me:",
-    r"Need help\?",
-    r"I'm here to",
-    r"just say the word",
-]
-
-# Common emoji patterns found in LLM outputs
-EMOJI_PATTERNS = [
-    r"[\U0001F300-\U0001F9FF]",  # Miscellaneous symbols and pictographs
-    r"[\U0001F600-\U0001F64F]",  # Emoticons
-    r"[\U0001F680-\U0001F6FF]",  # Transport and map symbols
-    r"[\U00002600-\U000027BF]",  # Misc symbols (sun, stars, etc.)
-    r"[✓✅❌⚠️💡🔑🚀⚙️📚📊🎯🌟🛠️😊🔥🟠🟢]",  # Commonly used symbols
-]
-
-# Markdown table patterns (forbidden in review format)
-TABLE_PATTERNS = [
-    r"\|\s*[-:]+\s*\|",           # Table header separator: |---|---|
-    r"^\s*\|[^|]+\|[^|]+\|",      # Table row with 2+ columns: | x | y |
-]
-
-# Hallucinated section reference patterns (references to non-existent sections)
-HALLUCINATED_SECTION_PATTERNS = [
-    r"section\s+1[0-9]\.\d",      # Section 10.x, 11.x, 12.x, etc. (unlikely to exist)
-    r"section\s+\d+\.\d+\.\d+",   # Deep section references like 12.8.1
-    r"p\.\s*\d{2,3}\b",           # Page references like "p. 44" (assumes specific pages)
-    r"\(page\s+\d{2,}\)",         # (page XX) references
-]
-
-# Positive signals that indicate on-topic response (overrides off-topic detection)
-ON_TOPIC_SIGNALS = [
-    r"## overview",
-    r"## key contributions",
-    r"## methodology",
-    r"## strengths",
-    r"## weaknesses",
-    r"## score",
-    r"\*\*score:",
-    r"## high priority",
-    r"## recommendations",
-    r"the manuscript",
-    r"this research",
-    r"the paper",
-    r"the authors",
-    r"the study",
-]
+# NOTE: Off-topic detection, conversational phrases, and on-topic signal patterns
+# are now defined in infrastructure/llm/validation.py and imported above.
+# The validation functions (is_off_topic, check_format_compliance, etc.) are also
+# imported from there to follow the thin orchestrator pattern.
 
 def get_max_input_length() -> int:
     """Get configured maximum input length from environment.
@@ -215,178 +140,6 @@ def get_review_timeout() -> float:
     return DEFAULT_REVIEW_TIMEOUT
 
 
-def has_on_topic_signals(text: str) -> bool:
-    """Check if response contains clear on-topic indicators.
-    
-    Args:
-        text: Response text to check
-        
-    Returns:
-        True if response has clear manuscript review signals
-    """
-    text_lower = text.lower()
-    signals_found = 0
-    for pattern in ON_TOPIC_SIGNALS:
-        if re.search(pattern, text_lower, re.IGNORECASE):
-            signals_found += 1
-    # If we find 2+ on-topic signals, it's clearly on-topic
-    return signals_found >= 2
-
-
-def detect_emojis(text: str) -> List[str]:
-    """Detect emoji usage in response text.
-    
-    Args:
-        text: Response text to check
-        
-    Returns:
-        List of emojis found
-    """
-    emojis_found = []
-    for pattern in EMOJI_PATTERNS:
-        matches = re.findall(pattern, text)
-        emojis_found.extend(matches)
-    return emojis_found
-
-
-def detect_tables(text: str) -> bool:
-    """Detect markdown table usage in response text.
-    
-    Args:
-        text: Response text to check
-        
-    Returns:
-        True if markdown tables are found
-    """
-    for pattern in TABLE_PATTERNS:
-        if re.search(pattern, text, re.MULTILINE):
-            return True
-    return False
-
-
-def detect_conversational_phrases(text: str) -> List[str]:
-    """Detect conversational AI phrases in response text.
-    
-    Args:
-        text: Response text to check
-        
-    Returns:
-        List of conversational phrases found
-    """
-    text_lower = text.lower()
-    phrases_found = []
-    for pattern in CONVERSATIONAL_PATTERNS:
-        if re.search(pattern, text_lower, re.IGNORECASE):
-            # Extract a snippet of the matched text for logging
-            match = re.search(pattern, text_lower, re.IGNORECASE)
-            if match:
-                phrases_found.append(match.group(0)[:50])
-    return phrases_found
-
-
-def detect_hallucinated_sections(text: str) -> List[str]:
-    """Detect hallucinated section references in response text.
-    
-    Looks for references to sections that are unlikely to exist in typical
-    manuscripts (e.g., Section 12.8.1, page 44).
-    
-    Args:
-        text: Response text to check
-        
-    Returns:
-        List of suspicious section references found
-    """
-    text_lower = text.lower()
-    references_found = []
-    for pattern in HALLUCINATED_SECTION_PATTERNS:
-        matches = re.findall(pattern, text_lower, re.IGNORECASE)
-        references_found.extend(matches)
-    return references_found
-
-
-def check_format_compliance(response: str) -> Tuple[bool, List[str], Dict[str, Any]]:
-    """Check response for format compliance issues.
-    
-    Detects:
-    - Emoji usage (violates template instructions)
-    - Markdown tables (violates template instructions)
-    - Conversational AI phrases (unprofessional for review)
-    - Hallucinated section references (indicates confusion)
-    
-    Args:
-        response: The generated review text
-        
-    Returns:
-        Tuple of (is_compliant, list of issues, details dict)
-    """
-    issues = []
-    details: Dict[str, Any] = {
-        "emojis_found": [],
-        "has_tables": False,
-        "conversational_phrases": [],
-        "hallucinated_refs": [],
-    }
-    
-    # Check for emojis
-    emojis = detect_emojis(response)
-    if emojis:
-        details["emojis_found"] = emojis[:10]  # Limit to first 10
-        issues.append(f"Contains {len(emojis)} emoji(s) - violates format requirements")
-    
-    # Check for tables
-    if detect_tables(response):
-        details["has_tables"] = True
-        issues.append("Contains markdown tables - violates format requirements")
-    
-    # Check for conversational phrases
-    phrases = detect_conversational_phrases(response)
-    if phrases:
-        details["conversational_phrases"] = phrases[:5]  # Limit to first 5
-        issues.append(f"Contains conversational AI phrases: {phrases[0][:30]}...")
-    
-    # Check for hallucinated section references
-    hall_refs = detect_hallucinated_sections(response)
-    if hall_refs:
-        details["hallucinated_refs"] = hall_refs[:5]  # Limit to first 5
-        issues.append(f"Contains suspicious section references: {', '.join(hall_refs[:3])}")
-    
-    is_compliant = len(issues) == 0
-    return is_compliant, issues, details
-
-
-def is_off_topic(text: str) -> bool:
-    """Check if response contains off-topic indicators.
-    
-    Uses a two-tier approach:
-    1. Check for start-of-response patterns (strict)
-    2. Check for anywhere patterns (must be strong signals)
-    3. Override if clear on-topic signals are present
-    
-    Args:
-        text: Response text to check
-        
-    Returns:
-        True if response appears off-topic
-    """
-    # First check for on-topic signals - if present, not off-topic
-    if has_on_topic_signals(text):
-        return False
-    
-    text_lower = text.lower().strip()
-    
-    # Check start-of-response patterns
-    for pattern in OFF_TOPIC_PATTERNS_START:
-        if re.search(pattern, text_lower[:100], re.IGNORECASE | re.MULTILINE):
-            return True
-    
-    # Check anywhere patterns (must be strong signals)
-    for pattern in OFF_TOPIC_PATTERNS_ANYWHERE:
-        if re.search(pattern, text_lower, re.IGNORECASE):
-            return True
-    
-    return False
-
-
 def validate_review_quality(
     response: str,
     review_type: str,
@@ -395,14 +148,13 @@ def validate_review_quality(
 ) -> Tuple[bool, List[str], Dict[str, Any]]:
     """Validate that a review response meets quality standards.
     
-    Uses flexible matching that accepts multiple valid formats.
-    Provides detailed validation info for logging.
+    Uses structure-only validation for general-purpose use.
+    Emojis and tables are allowed.
     
     Checks (in order):
-    1. Off-topic content detection
-    2. Format compliance (emojis, tables, conversational phrases, hallucinations)
-    3. Word count requirements
-    4. Structure requirements (type-specific)
+    1. Off-topic content detection (critical - triggers retry)
+    2. Word count requirements (structural)
+    3. Structure requirements (type-specific headers)
     
     Args:
         response: The generated review text
@@ -414,7 +166,7 @@ def validate_review_quality(
         Tuple of (is_valid, list of issues found, validation details dict)
     """
     issues = []
-    details: Dict[str, Any] = {"sections_found": [], "scores_found": [], "format_compliance": {}}
+    details: Dict[str, Any] = {"sections_found": [], "scores_found": [], "format_compliance": {}, "repetition": {}}
     response_lower = response.lower()
     
     # Check for off-topic content FIRST (most critical - triggers immediate retry)
@@ -423,19 +175,31 @@ def validate_review_quality(
         # Return immediately for off-topic - no point checking structure
         return False, issues, details
     
-    # Check format compliance (emojis, tables, conversational phrases, hallucinations)
+    # Check for repetition SECOND (also critical - triggers retry or cleanup)
+    has_repetition, duplicates, unique_ratio = detect_repetition(response)
+    details["repetition"] = {
+        "has_repetition": has_repetition,
+        "unique_ratio": unique_ratio,
+        "duplicates_found": len(duplicates),
+    }
+    
+    # Flag excessive repetition as a hard failure (unique ratio < 50%)
+    if unique_ratio < 0.5:
+        issues.append(f"Excessive repetition detected: {unique_ratio:.0%} unique content")
+        # Return immediately for severe repetition
+        return False, issues, details
+    elif has_repetition:
+        # Moderate repetition is a warning, not a failure
+        details["repetition_warning"] = f"Some repeated content detected ({len(duplicates)} duplicates)"
+        logger.debug(f"Repetition warning: {unique_ratio:.0%} unique content")
+    
+    # Check format compliance (now just conversational phrases - warning only)
     is_format_compliant, format_issues, format_details = check_format_compliance(response)
     details["format_compliance"] = format_details
     
-    # Format issues are warnings, not hard failures (small models often violate these)
-    is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
+    # Format issues are always warnings now, never hard failures
     if not is_format_compliant:
-        if is_small_model:
-            # For small models, log format issues as warnings but don't fail
-            details["format_warnings"] = format_issues
-        else:
-            # For larger models, format issues are more significant
-            issues.extend(format_issues)
+        details["format_warnings"] = format_issues
     
     # Get minimum word count - lower for smaller models
     is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
@@ -619,6 +383,7 @@ class SessionMetrics:
     total_generation_time: float = 0.0
     model_name: str = ""
     max_input_length: int = 0
+    warmup_tokens_per_sec: float = 0.0  # Performance from warmup step
 
 
 def estimate_tokens(text: str) -> int:
@@ -641,35 +406,253 @@ def log_stage(message: str) -> None:
 def check_ollama_availability() -> Tuple[bool, Optional[str]]:
     """Check if Ollama is running and select best model.
     
+    Provides detailed status messages about Ollama server and model availability.
+    
     Returns:
         Tuple of (is_available, model_name)
     """
     log_stage("Checking Ollama availability...")
     
+    # Step 1: Check if Ollama server is responding
+    logger.info("    Pinging Ollama server at localhost:11434...")
+    
     if not is_ollama_running():
-        logger.warning("Ollama server is not running")
-        logger.info("  To start Ollama: ollama serve")
-        logger.info("  To install a model: ollama pull llama3")
+        logger.warning("❌ Ollama server is not running")
+        logger.info("  To start Ollama:")
+        logger.info("    1. Open a terminal: ollama serve")
+        logger.info("    2. Or start Ollama app if installed")
+        logger.info("  To install a model: ollama pull llama3-gradient")
         return False, None
     
     log_success("Ollama server is running", logger)
     
-    # Select best available model
-    model = select_best_model()
-    if not model:
-        logger.warning("No Ollama models available")
-        logger.info("  Install a model with: ollama pull llama3")
+    # Step 2: List available models
+    logger.info("    Discovering available models...")
+    available_models = get_available_models()
+    if not available_models:
+        logger.warning("❌ No Ollama models available")
+        logger.info("  Install a model with: ollama pull llama3-gradient")
+        logger.info("  Recommended models for manuscript review:")
+        logger.info("    - llama3-gradient (4.7GB, 256K context, reliable)")
+        logger.info("    - llama3.1:latest (4.7GB, 128K context)")
         return False, None
     
-    # Get model info for logging
+    # Log available models
+    model_names = [m.get("name", "unknown") for m in available_models]
+    logger.info(f"    Found {len(model_names)} model(s): {', '.join(model_names[:5])}")
+    if len(model_names) > 5:
+        logger.info(f"    ... and {len(model_names) - 5} more")
+    
+    # Step 3: Select best model
+    logger.info("    Selecting best model for manuscript review...")
+    model = select_best_model()
+    if not model:
+        logger.warning("❌ Could not select a suitable model")
+        return False, None
+    
+    # Get detailed model info
     model_info = get_model_info(model)
     if model_info:
-        size_gb = model_info.get("size", 0) / (1024**3)
-        logger.info(f"  Selected model: {model} ({size_gb:.1f} GB)")
+        size_bytes = model_info.get("size", 0)
+        size_gb = size_bytes / (1024**3)
+        
+        # Extract parameter count from model name if available
+        param_info = ""
+        for size_hint in ["3b", "4b", "7b", "8b", "13b", "14b", "34b", "70b"]:
+            if size_hint in model.lower():
+                param_info = f", {size_hint.upper()} params"
+                break
+        
+        logger.info(f"  Selected model: {model} ({size_gb:.1f} GB{param_info})")
+        
+        # Estimate context window from model name
+        context_info = "32K context"
+        if "qwen3" in model.lower() or "gradient" in model.lower():
+            context_info = "128K+ context"
+        elif "llama3.1" in model.lower():
+            context_info = "128K context"
+        logger.info(f"  Context window: ~{context_info}")
     else:
         logger.info(f"  Selected model: {model}")
     
     return True, model
+
+
+
+def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple[bool, float]:
+    """Warmup the model with a tiny prompt to ensure it's loaded.
+    
+    This sends a small request before the main reviews to:
+    1. Load the model into GPU memory (if not already loaded)
+    2. Measure tokens/second performance
+    3. Provide immediate feedback that the model is responsive
+    4. Estimate total review time
+    
+    Uses streaming to provide real-time feedback during potentially slow model loading.
+    
+    Args:
+        client: LLMClient instance
+        text_preview: First ~500 chars of manuscript for context
+        model_name: Model name for logging
+        
+    Returns:
+        Tuple of (success, tokens_per_second)
+    """
+    log_stage("Warming up model...")
+    
+    # Check if model might already be loaded using Ollama's /api/ps
+    logger.info(f"    Checking loaded models via Ollama API...")
+    model_preloaded, loaded_model = check_model_loaded(model_name)
+    
+    need_preload = False
+    if model_preloaded:
+        logger.info(f"    ✓ Model {model_name} is already loaded in GPU memory")
+        logger.info(f"    Warmup should be fast (~1-5 seconds)")
+    elif loaded_model and "cache expired" in str(loaded_model):
+        logger.info(f"    ⚠️ Model cache has expired - needs to reload")
+        need_preload = True
+    elif loaded_model:
+        logger.info(f"    ⚠️ Different model loaded: {loaded_model}")
+        logger.info(f"    Will switch to {model_name}")
+        need_preload = True
+    else:
+        logger.info(f"    ⏳ No model currently loaded in GPU memory")
+        need_preload = True
+    
+    # If model needs loading, preload it with progress indicator
+    if need_preload:
+        logger.info(f"    ⏳ Loading {model_name} into GPU memory...")
+        logger.info(f"    (This may take 30-120 seconds depending on model size)")
+        
+        stop_spinner = threading.Event()
+        preload_start = time.time()
+        
+        def show_preload_progress():
+            """Show elapsed time during model preload."""
+            spinner_chars = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+            idx = 0
+            while not stop_spinner.is_set():
+                elapsed = time.time() - preload_start
+                char = spinner_chars[idx % len(spinner_chars)]
+                sys.stderr.write(f"\r    {char} Loading model... {elapsed:.0f}s elapsed")
+                sys.stderr.flush()
+                idx += 1
+                time.sleep(0.1)
+        
+        # Start spinner
+        progress_thread = threading.Thread(target=show_preload_progress, daemon=True)
+        progress_thread.start()
+        
+        # Preload the model (this is faster than generating text)
+        preload_success = preload_model(model_name)
+        
+        # Stop spinner
+        stop_spinner.set()
+        time.sleep(0.15)
+        sys.stderr.write("\r" + " " * 60 + "\r")
+        sys.stderr.flush()
+        
+        preload_elapsed = time.time() - preload_start
+        
+        if preload_success:
+            logger.info(f"    ✓ Model loaded in {preload_elapsed:.1f}s")
+        else:
+            logger.warning(f"    ⚠️ Preload returned error after {preload_elapsed:.1f}s, continuing anyway...")
+    
+    # Now generate a short test response to measure performance
+    logger.info(f"    Generating test response...")
+    logger.info(f"    (Waiting for model - may take 30-60s if not fully loaded)")
+    
+    prompt = f"In exactly one sentence, what is the main topic of this text?\n\n{text_preview[:500]}"
+    
+    start_time = time.time()
+    response_chunks = []
+    first_token_time = None
+    
+    # Start a spinner for the waiting period
+    stop_spinner = threading.Event()
+    
+    def show_waiting_progress():
+        """Show elapsed time while waiting for first token."""
+        spinner_chars = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+        idx = 0
+        while not stop_spinner.is_set():
+            elapsed = time.time() - start_time
+            char = spinner_chars[idx % len(spinner_chars)]
+            sys.stderr.write(f"\r    {char} Waiting for first token... {elapsed:.0f}s")
+            sys.stderr.flush()
+            idx += 1
+            time.sleep(0.1)
+    
+    progress_thread = threading.Thread(target=show_waiting_progress, daemon=True)
+    progress_thread.start()
+    
+    try:
+        # Use streaming to get real-time feedback
+        for chunk in client.stream_short(prompt):
+            if first_token_time is None:
+                first_token_time = time.time()
+                time_to_first = first_token_time - start_time
+                
+                # Stop spinner and clear line
+                stop_spinner.set()
+                time.sleep(0.15)
+                sys.stderr.write("\r" + " " * 60 + "\r")
+                sys.stderr.flush()
+                
+                logger.info(f"    ✓ First token in {time_to_first:.1f}s - generating response...")
+            
+            response_chunks.append(chunk)
+        
+        elapsed = time.time() - start_time
+        response = "".join(response_chunks)
+        
+        # Calculate performance metrics
+        if first_token_time:
+            generation_time = elapsed - (first_token_time - start_time)
+            output_tokens = len(response.split()) * 1.3  # words × 1.3 ≈ tokens
+            tokens_per_sec = output_tokens / generation_time if generation_time > 0 else 0
+        else:
+            tokens_per_sec = 0
+        
+        log_success(f"Warmup complete ({elapsed:.1f}s)", logger)
+        
+        # Show truncated response for confirmation
+        response_preview = response[:80].replace('\n', ' ')
+        if len(response) > 80:
+            response_preview += "..."
+        logger.info(f"    Response: {response_preview}")
+        logger.info(f"    Performance: ~{tokens_per_sec:.1f} tokens/sec")
+        
+        # Estimate time for full reviews (4 reviews × ~4K tokens each)
+        if tokens_per_sec > 0:
+            estimated_total_tokens = 4 * 4096
+            estimated_minutes = (estimated_total_tokens / tokens_per_sec) / 60
+            logger.info(f"    Estimated review time: ~{estimated_minutes:.1f} minutes")
+        else:
+            logger.info(f"    ⚠️ Could not estimate review time (slow response)")
+        
+        return True, tokens_per_sec
+        
+    except Exception as e:
+        # Stop spinner first
+        stop_spinner.set()
+        time.sleep(0.15)
+        sys.stderr.write("\r" + " " * 60 + "\r")
+        sys.stderr.flush()
+        
+        elapsed = time.time() - start_time
+        logger.error(f"Model warmup failed after {elapsed:.1f}s: {e}")
+        
+        # Provide helpful troubleshooting info
+        if elapsed > 120:
+            logger.error("    ⚠️ Model loading timed out - the model may be too large for available memory")
+            logger.error("    Try: ollama pull llama3-gradient")
+        elif "connection" in str(e).lower():
+            logger.error("    ⚠️ Connection to Ollama lost during warmup")
+            logger.error("    Check: ollama ps")
+        
+        return False, 0.0
 
 
 def extract_manuscript_text(pdf_path: Path) -> Tuple[Optional[str], ManuscriptMetrics]:
@@ -781,6 +764,9 @@ def generate_review_with_metrics(
     best_issues: List[str] = []
     best_details: Dict[str, Any] = {}
     
+    # Track if we had off-topic issues for reinforced prompting
+    had_off_topic = False
+    
     for attempt in range(max_retries + 1):
         try:
             current_prompt = prompt
@@ -794,6 +780,16 @@ def generate_review_with_metrics(
                     temperature=adjusted_temp,
                     max_tokens=max_tokens,
                 )
+                
+                # If previous attempt was off-topic, add reinforced instructions
+                if had_off_topic:
+                    current_prompt = (
+                        "IMPORTANT: You must review the ACTUAL manuscript text provided below. "
+                        "Do NOT generate hypothetical content, generic book descriptions, or "
+                        "unrelated topics. Your review must reference specific content from "
+                        "the manuscript.\n\n" + prompt
+                    )
+                    logger.debug("    Added reinforced prompt for off-topic retry")
             
             # Use query() directly - templates already contain detailed instructions
             response = client.query(current_prompt, options=options)
@@ -802,6 +798,9 @@ def generate_review_with_metrics(
             is_valid, issues, details = validate_review_quality(
                 response, review_type, model_name=model_name
             )
+            
+            # Track if this attempt was off-topic
+            had_off_topic = any("off-topic" in issue.lower() for issue in issues)
             
             # Keep track of best response (by word count)
             if len(response.split()) > len(best_response.split()):
@@ -837,6 +836,12 @@ def generate_review_with_metrics(
                 metrics.output_words = len(error_response.split())
                 return error_response, metrics
     
+    # Post-processing: clean up any remaining repetitive content
+    original_length = len(response)
+    response = deduplicate_sections(response, max_repetitions=2)
+    if len(response) < original_length * 0.9:  # Significant cleanup occurred
+        logger.info(f"    Cleaned repetitive content: {original_length} → {len(response)} chars")
+    
     # Calculate output metrics
     metrics.generation_time_seconds = time.time() - start_time
     metrics.output_chars = len(response)
@@ -851,19 +856,12 @@ def generate_review_with_metrics(
     # Log format compliance summary at INFO level
     if best_details:
         format_info = best_details.get("format_compliance", {})
-        issues_summary = []
-        
-        if format_info.get("emojis_found"):
-            issues_summary.append(f"{len(format_info['emojis_found'])} emoji(s)")
-        if format_info.get("has_tables"):
-            issues_summary.append("tables")
-        if format_info.get("hallucinated_refs"):
-            issues_summary.append(f"{len(format_info['hallucinated_refs'])} suspicious ref(s)")
         if format_info.get("conversational_phrases"):
-            issues_summary.append("conversational phrases")
-        
-        if issues_summary:
-            logger.info(f"    Format notes: {', '.join(issues_summary)}")
+            logger.info(f"    Format notes: conversational phrases detected")
+        # Log repetition warnings if any
+        rep_warning = best_details.get("repetition_warning")
+        if rep_warning:
+            logger.info(f"    Repetition notes: {rep_warning}")
     
     return response, metrics
 
@@ -1031,6 +1029,9 @@ def extract_action_items(reviews: Dict[str, str]) -> str:
 def calculate_format_compliance_summary(reviews: Dict[str, str]) -> str:
     """Calculate format compliance summary across all reviews.
     
+    Simplified version - only checks for conversational phrases.
+    Emojis and tables are allowed.
+    
     Args:
         reviews: Dictionary of review name -> content
         
@@ -1038,49 +1039,21 @@ def calculate_format_compliance_summary(reviews: Dict[str, str]) -> str:
         Markdown formatted format compliance summary
     """
     total_reviews = len(reviews)
-    issues_by_category = {
-        "emojis": 0,
-        "tables": 0,
-        "conversational": 0,
-        "hallucinated_refs": 0,
-    }
+    conversational_count = 0
     
     for name, content in reviews.items():
-        emojis = detect_emojis(content)
-        if emojis:
-            issues_by_category["emojis"] += 1
-        
-        if detect_tables(content):
-            issues_by_category["tables"] += 1
-        
         phrases = detect_conversational_phrases(content)
         if phrases:
-            issues_by_category["conversational"] += 1
-        
-        refs = detect_hallucinated_sections(content)
-        if refs:
-            issues_by_category["hallucinated_refs"] += 1
+            conversational_count += 1
     
-    # Calculate compliance percentage
-    total_checks = total_reviews * 4  # 4 categories per review
-    total_issues = sum(issues_by_category.values())
-    compliance_rate = ((total_checks - total_issues) / total_checks) * 100 if total_checks > 0 else 100
+    # Calculate compliance percentage (only conversational phrases matter now)
+    compliance_rate = ((total_reviews - conversational_count) / total_reviews) * 100 if total_reviews > 0 else 100
     
     # Build summary
     summary_parts = [f"**Format Compliance:** {compliance_rate:.0f}%"]
     
-    issue_notes = []
-    if issues_by_category["emojis"]:
-        issue_notes.append(f"{issues_by_category['emojis']} review(s) with emojis")
-    if issues_by_category["tables"]:
-        issue_notes.append(f"{issues_by_category['tables']} review(s) with tables")
-    if issues_by_category["conversational"]:
-        issue_notes.append(f"{issues_by_category['conversational']} review(s) with conversational phrases")
-    if issues_by_category["hallucinated_refs"]:
-        issue_notes.append(f"{issues_by_category['hallucinated_refs']} review(s) with suspicious references")
-    
-    if issue_notes:
-        summary_parts.append(f"*Notes: {'; '.join(issue_notes)}*")
+    if conversational_count > 0:
+        summary_parts.append(f"*Notes: {conversational_count} review(s) with conversational phrases*")
     else:
         summary_parts.append("*All reviews comply with format requirements*")
     
@@ -1291,10 +1264,7 @@ The following items are extracted from the review for easy tracking:
             format_compliance_per_review[name] = {
                 "compliant": is_compliant,
                 "issues": issues,
-                "emojis_found": len(details.get("emojis_found", [])),
-                "has_tables": details.get("has_tables", False),
                 "conversational_phrases": len(details.get("conversational_phrases", [])),
-                "hallucinated_refs": len(details.get("hallucinated_refs", [])),
             }
         
         # Calculate overall compliance rate
@@ -1446,6 +1416,13 @@ def main() -> int:
         log_success("LLM client initialized", logger)
         logger.info(f"    Timeout: {get_review_timeout():.0f}s per review")
         logger.info(f"    Max tokens: 4096 per review")
+        
+        # Step 3.5: Warmup model before heavy processing
+        warmup_success, tokens_per_sec = warmup_model(client, text[:1000], model_name)
+        if not warmup_success:
+            logger.error("Model warmup failed - cannot proceed with reviews")
+            return 1
+        session_metrics.warmup_tokens_per_sec = tokens_per_sec
         
         # Step 4: Generate reviews with metrics
         reviews = {}

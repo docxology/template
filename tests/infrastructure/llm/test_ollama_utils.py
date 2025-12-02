@@ -14,6 +14,8 @@ from infrastructure.llm.ollama_utils import (
     select_small_fast_model,
     ensure_ollama_ready,
     get_model_info,
+    check_model_loaded,
+    preload_model,
     DEFAULT_MODEL_PREFERENCES,
 )
 
@@ -240,4 +242,77 @@ class TestOllamaUtilsWithoutServer:
             auto_start=False
         )
         assert result is False
+
+
+class TestCheckModelLoaded:
+    """Tests for check_model_loaded function."""
+
+    def test_check_model_loaded_no_server(self):
+        """Test check_model_loaded with no server returns False."""
+        is_loaded, model_name = check_model_loaded(
+            "test-model",
+            base_url="http://localhost:99999"
+        )
+        assert is_loaded is False
+        assert model_name is None
+
+    def test_check_model_loaded_returns_tuple(self):
+        """Test that check_model_loaded returns a tuple."""
+        result = check_model_loaded("llama3-gradient")
+        assert isinstance(result, tuple)
+        assert len(result) == 2
+        assert isinstance(result[0], bool)
+
+    @pytest.mark.requires_ollama
+    def test_check_model_loaded_with_server(self):
+        """Test check_model_loaded with running Ollama server."""
+        if not is_ollama_running():
+            pytest.skip("Ollama server not available")
+        
+        # Get first available model
+        models = get_model_names()
+        if not models:
+            pytest.skip("No models available")
+        
+        model_name = models[0]
+        is_loaded, loaded_name = check_model_loaded(model_name)
+        
+        # Result should be a valid tuple
+        assert isinstance(is_loaded, bool)
+        # loaded_name is either a string or None
+
+
+class TestPreloadModel:
+    """Tests for preload_model function."""
+
+    def test_preload_model_no_server(self):
+        """Test preload_model with no server returns False."""
+        result = preload_model(
+            "test-model",
+            base_url="http://localhost:99999",
+            timeout=1.0
+        )
+        assert result is False
+
+    def test_preload_model_returns_bool(self):
+        """Test that preload_model returns a boolean."""
+        result = preload_model("nonexistent-model", timeout=1.0)
+        assert isinstance(result, bool)
+
+    @pytest.mark.requires_ollama
+    def test_preload_model_with_server(self):
+        """Test preload_model with running Ollama server."""
+        if not is_ollama_running():
+            pytest.skip("Ollama server not available")
+        
+        # Get first available model
+        models = get_model_names()
+        if not models:
+            pytest.skip("No models available")
+        
+        model_name = models[0]
+        result = preload_model(model_name, timeout=60.0)
+        
+        # Should either succeed or fail gracefully
+        assert isinstance(result, bool)
 

@@ -5,12 +5,16 @@ Provides utilities for:
 - Selecting the best model based on preferences
 - Checking Ollama server status
 - Starting Ollama server if needed
+- Checking if a model is loaded in GPU memory
+- Preloading models into GPU memory
 """
 from __future__ import annotations
 
+import json
 import subprocess
 import time
-from typing import Optional, List, Dict, Any
+from datetime import datetime, timezone
+from typing import Optional, List, Dict, Any, Tuple
 import requests
 
 from infrastructure.core.logging_utils import get_logger
@@ -19,15 +23,14 @@ logger = get_logger(__name__)
 
 # Default model preferences in order of preference
 DEFAULT_MODEL_PREFERENCES = [
-    "qwen3:4b",  # Fast with 128K context, excellent instruction following
-    "llama3-gradient:latest",  # Large context (256K tokens), ideal for full manuscripts
+    "llama3-gradient:latest",  # Large context (256K), reliable, no thinking mode issues
     "llama3.1:latest",  # Good balance of speed and quality
-    "gemma2:2b",        # Fast, small, good instruction following
     "llama2:latest",    # Widely available, reliable
+    "gemma2:2b",        # Fast, small, good instruction following
     "gemma3:4b",        # Medium size, good quality
     "mistral:latest",   # Alternative
     "codellama:latest", # Code-focused but can do general tasks
-    "smollm2",          # Very fast but limited instruction following
+    # Note: qwen3 models use "thinking" mode which requires special handling
 ]
 
 
@@ -216,4 +219,124 @@ def get_model_info(model_name: str, base_url: str = "http://localhost:11434") ->
         if model["name"] == model_name or model_name in model["name"]:
             return model
     return None
+
+
+def check_model_loaded(
+    model_name: str,
+    base_url: str = "http://localhost:11434"
+) -> Tuple[bool, Optional[str]]:
+    """Check if a model is currently loaded AND active in Ollama's memory.
+    
+    Uses Ollama's process list endpoint and checks the expires_at field
+    to verify the model is truly loaded and hasn't been evicted from cache.
+    
+    Args:
+        model_name: Name of the model to check
+        base_url: Ollama server URL
+        
+    Returns:
+        Tuple of (is_loaded_and_active, loaded_model_name or None)
+    """
+    try:
+        # Use /api/ps to check what models are currently loaded
+        response = requests.get(f"{base_url}/api/ps", timeout=5.0)
+        if response.status_code != 200:
+            return False, None
+        
+        data = response.json()
+        models = data.get("models", [])
+        
+        if not models:
+            return False, None
+        
+        # Parse current time for expiration check
+        now = datetime.now(timezone.utc)
+        
+        # Check if our target model is loaded AND not expired
+        for model in models:
+            loaded_name = model.get("name", "")
+            expires_at = model.get("expires_at", "")
+            
+            # Check if model matches
+            is_match = model_name in loaded_name or loaded_name.startswith(model_name.split(":")[0])
+            
+            if is_match:
+                # Check if model cache has expired
+                if expires_at:
+                    try:
+                        # Parse ISO format: 2025-12-01T12:26:06.473937-08:00
+                        exp_time = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
+                        if exp_time > now:
+                            # Model is loaded and cache is still valid
+                            return True, loaded_name
+                        else:
+                            # Model listed but cache expired - needs reload
+                            logger.debug(f"Model {loaded_name} cache expired at {expires_at}")
+                            return False, f"{loaded_name} (cache expired)"
+                    except ValueError:
+                        # Can't parse expiration, assume it's valid
+                        return True, loaded_name
+                else:
+                    # No expiration info, assume it's loaded
+                    return True, loaded_name
+        
+        # A different model is loaded - report it
+        if models:
+            other_model = models[0].get("name", "unknown")
+            return False, other_model
+        
+        return False, None
+        
+    except requests.exceptions.RequestException as e:
+        logger.debug(f"Could not check loaded models: {e}")
+        return False, None
+
+
+def preload_model(
+    model_name: str,
+    base_url: str = "http://localhost:11434",
+    timeout: float = 180.0
+) -> bool:
+    """Force-load a model into GPU memory using Ollama's API.
+    
+    Uses a real prompt to force actual model loading - empty prompts don't
+    trigger model loading in Ollama.
+    
+    Args:
+        model_name: Name of the model to preload
+        base_url: Ollama server URL
+        timeout: Maximum time to wait for model loading
+        
+    Returns:
+        True if model was loaded successfully
+    """
+    try:
+        # Use a real prompt - empty prompts don't trigger model loading!
+        # The model only loads when it has actual content to process
+        with requests.post(
+            f"{base_url}/api/generate",
+            json={
+                "model": model_name,
+                "prompt": "Say OK",  # Simple prompt to force loading
+                "options": {"num_predict": 5},  # Generate a few tokens
+                "keep_alive": "10m",  # Keep model in memory for 10 minutes
+            },
+            timeout=timeout,
+            stream=True,
+        ) as response:
+            if response.status_code != 200:
+                return False
+            # Read at least one chunk with actual content
+            for line in response.iter_lines():
+                if line:
+                    try:
+                        data = json.loads(line)
+                        if data.get("response"):
+                            # Got actual generated content - model is loaded
+                            return True
+                    except json.JSONDecodeError:
+                        continue
+            return True  # Got through without error
+    except requests.exceptions.RequestException:
+        return False
 

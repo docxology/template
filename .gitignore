@@ -57,9 +57,7 @@ coverage.xml
 ehthumbs.db
 Thumbs.db
 
-# Output directories (generated - do not commit)
-/output/
-/project/output/
+# Output directories should be included in versioning! Don't ignore output/ or project/output/ . 
 
 # Build outputs should be included in versioning!
 

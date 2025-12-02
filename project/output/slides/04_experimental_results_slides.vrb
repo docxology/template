@@ -1,0 +1,12 @@
+\frametitle{Experimental Setup}
+\protect\phantomsection\label{experimental-setup}
+Our experimental evaluation follows the methodology described in Section
+\ref{sec:methodology}. We implemented the algorithm in Python using the
+framework outlined in Section \ref{sec:methodology}, with all code
+available in the \texttt{src/} directory.
+
+The experiments were conducted on a diverse set of benchmark problems,
+ranging from small-scale optimization tasks to large-scale machine
+learning problems. Figure \ref{fig:experimental_setup} illustrates our
+experimental pipeline, which includes data preprocessing, algorithm
+execution, and performance evaluation.

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_experimental_results</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:experimental_results">Experimental Results</h1>
+<h2 id="experimental-setup">Experimental Setup</h2>
+<p>Our experimental evaluation follows the methodology described in
+Section <span class="math inline">\(\ref{sec:methodology}\)</span>. We
+implemented the algorithm in Python using the framework outlined in
+Section <span class="math inline">\(\ref{sec:methodology}\)</span>, with
+all code available in the <code>src/</code> directory.</p>
+<p>The experiments were conducted on a diverse set of benchmark
+problems, ranging from small-scale optimization tasks to large-scale
+machine learning problems. Figure <span
+class="math inline">\(\ref{fig:experimental_setup}\)</span> illustrates
+our experimental pipeline, which includes data preprocessing, algorithm
+execution, and performance evaluation.</p>
+<h2 id="benchmark-datasets">Benchmark Datasets</h2>
+<p>We evaluated our approach on three main categories of problems:</p>
+<ol type="1">
+<li><strong>Convex Optimization</strong>: Standard test functions from
+the optimization literature</li>
+<li><strong>Non-convex Problems</strong>: Challenging landscapes with
+multiple local minima</li>
+<li><strong>Large-scale Problems</strong>: High-dimensional problems
+with <span class="math inline">\(n \geq 10^6\)</span></li>
+</ol>
+<p>The problem characteristics are summarized in Table <span
+class="math inline">\(\ref{tab:dataset_summary}\)</span>.</p>
+<h2 id="performance-comparison">Performance Comparison</h2>
+<h3 id="convergence-analysis">Convergence Analysis</h3>
+<p>Figure <span
+class="math inline">\(\ref{fig:convergence_plot}\)</span> shows the
+convergence behavior of our algorithm compared to baseline methods . The
+results demonstrate that our approach achieves the theoretical
+convergence rate <span
+class="math inline">\(\eqref{eq:convergence}\)</span> in practice, with
+empirical constants <span class="math inline">\(C \approx 1.2\)</span>
+and <span class="math inline">\(\rho \approx 0.85\)</span>, matching
+predictions from convex optimization theory .</p>
+<p>The adaptive step size rule <span
+class="math inline">\(\eqref{eq:adaptive_step}\)</span> proves crucial
+for stable convergence, as shown in the detailed analysis in Figure
+<span class="math inline">\(\ref{fig:step_size_analysis}\)</span>.</p>
+<h3 id="computational-efficiency">Computational Efficiency</h3>
+<p>Our implementation achieves the theoretical <span
+class="math inline">\(O(n \log n)\)</span> complexity per iteration, as
+demonstrated in Figure <span
+class="math inline">\(\ref{fig:scalability_analysis}\)</span>. The
+memory usage follows the predicted scaling <span
+class="math inline">\(\eqref{eq:memory}\)</span>, making our method
+suitable for problems that don’t fit in main memory.</p>
+<p>Table <span
+class="math inline">\(\ref{tab:performance_comparison}\)</span> provides
+a detailed comparison with state-of-the-art methods across different
+problem sizes.</p>
+<h2 id="ablation-studies">Ablation Studies</h2>
+<h3 id="component-analysis">Component Analysis</h3>
+<p>We conducted extensive ablation studies to understand the
+contribution of each component. Figure <span
+class="math inline">\(\ref{fig:ablation_study}\)</span> shows the impact
+of:</p>
+<ul>
+<li>The regularization term <span class="math inline">\(R(x)\)</span>
+from <span class="math inline">\(\eqref{eq:objective}\)</span></li>
+<li>The momentum term in the update rule <span
+class="math inline">\(\eqref{eq:update}\)</span></li>
+<li>The adaptive step size strategy <span
+class="math inline">\(\eqref{eq:adaptive_step}\)</span></li>
+</ul>
+<h3 id="hyperparameter-sensitivity">Hyperparameter Sensitivity</h3>
+<p>The algorithm performance is robust to hyperparameter choices within
+reasonable ranges. Figure <span
+class="math inline">\(\ref{fig:hyperparameter_sensitivity}\)</span>
+demonstrates that the learning rate <span
+class="math inline">\(\alpha_0\)</span> and momentum coefficient <span
+class="math inline">\(\beta_k\)</span> can vary by <span
+class="math inline">\(\pm 50\%\)</span> without significant performance
+degradation.</p>
+<h2 id="real-world-applications">Real-world Applications</h2>
+<h3 id="case-study-1-image-classification">Case Study 1: Image
+Classification</h3>
+<p>We applied our optimization framework to train deep neural networks
+for image classification. The results, shown in Figure <span
+class="math inline">\(\ref{fig:image_classification_results}\)</span>,
+demonstrate that our method achieves competitive accuracy while
+requiring fewer iterations than standard optimizers.</p>
+<p>The training curves follow the expected convergence pattern <span
+class="math inline">\(\eqref{eq:convergence}\)</span>, with the
+algorithm finding good solutions in approximately 30% fewer epochs.</p>
+<h3 id="case-study-2-recommendation-systems">Case Study 2:
+Recommendation Systems</h3>
+<p>For large-scale recommendation systems, our approach scales
+efficiently to problems with millions of users and items. Figure <span
+class="math inline">\(\ref{fig:recommendation_scalability}\)</span>
+shows the performance scaling, confirming our theoretical analysis.</p>
+<h2 id="statistical-significance">Statistical Significance</h2>
+<p>All reported improvements are statistically significant at the <span
+class="math inline">\(p &lt; 0.01\)</span> level, computed using paired
+t-tests across multiple random initializations. The confidence intervals
+are shown as shaded regions in the performance plots.</p>
+<h2 id="limitations-and-future-work">Limitations and Future Work</h2>
+<p>While our approach shows promising results, several limitations
+remain:</p>
+<ol type="1">
+<li><strong>Problem Structure</strong>: The method assumes certain
+structural properties that may not hold in all domains</li>
+<li><strong>Hyperparameter Tuning</strong>: Some parameters still
+require manual tuning for optimal performance</li>
+<li><strong>Theoretical Guarantees</strong>: Convergence guarantees are
+currently limited to convex problems</li>
+</ol>
+<p>Future work will address these limitations and extend the framework
+to broader problem classes. Extended analysis and additional application
+examples are provided in Sections <span
+class="math inline">\(\ref{sec:supplemental_analysis}\)</span> and <span
+class="math inline">\(\ref{sec:supplemental_applications}\)</span>.</p>
+See Figure <span
+class="math inline">\(\ref{fig:convergence_analysis}\)</span>.
+See Figure <span
+class="math inline">\(\ref{fig:time_series_analysis}\)</span>.
+See Figure <span
+class="math inline">\(\ref{fig:statistical_comparison}\)</span>.
+</body>
+</html>

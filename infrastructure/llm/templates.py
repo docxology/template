@@ -64,11 +64,14 @@ class DataInterpretation(ResearchTemplate):
 # =============================================================================
 
 # Minimum word counts for quality validation
+# Note: improvement_suggestions uses a lower threshold (200) because models often
+# produce focused, actionable output that may be shorter but still high-quality.
+# The retry mechanism catches truly short responses.
 REVIEW_MIN_WORDS = {
     "executive_summary": 250,
     "quality_review": 300,
     "methodology_review": 300,
-    "improvement_suggestions": 250,
+    "improvement_suggestions": 200,  # Lower threshold for focused actionable output
 }
 
 
@@ -77,37 +80,33 @@ class ManuscriptExecutiveSummary(ResearchTemplate):
     
     Produces a structured executive summary with 5 key sections,
     targeting 400-600 words of substantive analysis.
+    
+    Uses manuscript-first structure with task instructions at end
+    for better LLM attention to the actual content.
     """
-    template_str = """STRICT REQUIREMENTS - FAILURE TO FOLLOW WILL RESULT IN REJECTION:
+    template_str = """=== MANUSCRIPT BEGIN ===
 
-FORBIDDEN (DO NOT USE):
-- NO emojis (no checkmarks, stars, rockets, light bulbs, etc.)
-- NO markdown tables (no | column | separators |)
-- NO conversational phrases ("I'll help you", "Let me know", "Based on your document")
-- NO invented section numbers (do not reference "Section 12.8" or similar)
-- NO fabricated statistics or benchmarks not in the manuscript
-- NO external references not cited in the manuscript
+${text}
 
-REQUIRED FORMAT - Use ONLY these exact headers:
+=== MANUSCRIPT END ===
 
-## Overview
-## Key Contributions
-## Methodology Summary
-## Principal Results
-## Significance and Impact
+TASK: Write an executive summary of the manuscript above.
 
-RULES:
-1. Write 400-600 words total in plain academic prose
-2. Use ONLY headers and bullet points for formatting
-3. Reference ONLY content that appears in the manuscript
-4. Quote or paraphrase actual text when possible
-5. Do not invent or hallucinate details
+REQUIREMENTS:
+1. Your summary MUST reference specific content from the manuscript above
+2. Write 400-600 words in academic prose
+3. Use these section headers:
+   ## Overview
+   ## Key Contributions  
+   ## Methodology Summary
+   ## Principal Results
+   ## Significance and Impact
 
----
+4. Quote or paraphrase actual text from the manuscript
+5. Do NOT invent details not present in the manuscript
+6. Do NOT reference external sources not cited in the manuscript
 
-Analyze this manuscript and provide your executive summary:
-
-${text}"""
+Begin your executive summary now:"""
 
 
 class ManuscriptQualityReview(ResearchTemplate):
@@ -115,42 +114,36 @@ class ManuscriptQualityReview(ResearchTemplate):
     
     Produces a detailed quality assessment with scoring rubric,
     targeting 500-700 words of critical analysis.
+    
+    Uses manuscript-first structure with task instructions at end
+    for better LLM attention to the actual content.
     """
-    template_str = """STRICT REQUIREMENTS - FAILURE TO FOLLOW WILL RESULT IN REJECTION:
+    template_str = """=== MANUSCRIPT BEGIN ===
 
-FORBIDDEN (DO NOT USE):
-- NO emojis (no checkmarks, stars, rockets, light bulbs, etc.)
-- NO markdown tables (no | column | separators |)
-- NO conversational phrases ("I'll help you", "Let me know", "Based on your document")
-- NO invented section numbers (do not reference "Section 12.8" or similar)
-- NO fabricated performance claims not in the manuscript
+${text}
 
-REQUIRED FORMAT - Use ONLY these exact headers:
+=== MANUSCRIPT END ===
 
-## Overall Quality Score
-## Clarity Assessment
-## Structure and Organization
-## Technical Accuracy
-## Readability
-## Consistency
-## Specific Issues Found
-## Recommendations
+TASK: Provide a quality review of the manuscript above.
 
-SCORING FORMAT:
-For each assessment section, include: **Score: X/5** (where X is 1-5)
+REQUIREMENTS:
+1. Your review MUST reference specific content from the manuscript above
+2. Write 500-700 words in academic prose
+3. Use these section headers:
+   ## Overall Quality Score
+   ## Clarity Assessment
+   ## Structure and Organization
+   ## Technical Accuracy
+   ## Readability
+   ## Specific Issues Found
+   ## Recommendations
 
-RULES:
-1. Write 500-700 words total in plain academic prose
-2. Reference ONLY content that appears in the manuscript
-3. When citing issues, quote actual text or describe specific locations
-4. Base all scores on evidence from the manuscript
-5. Do not invent or hallucinate details
+4. For each section, include a score: **Score: X/5** (where X is 1-5)
+5. When citing issues, quote actual text or describe specific sections
+6. Base all scores on evidence from the manuscript
+7. Do NOT invent details not present in the manuscript
 
----
-
-Analyze this manuscript and provide your quality review:
-
-${text}"""
+Begin your quality review now:"""
 
 
 class ManuscriptMethodologyReview(ResearchTemplate):
@@ -158,80 +151,70 @@ class ManuscriptMethodologyReview(ResearchTemplate):
     
     Produces a comprehensive methodology assessment with strengths/weaknesses,
     targeting 500-700 words of analytical feedback.
+    
+    Uses manuscript-first structure with task instructions at end
+    for better LLM attention to the actual content.
     """
-    template_str = """STRICT REQUIREMENTS - FAILURE TO FOLLOW WILL RESULT IN REJECTION:
+    template_str = """=== MANUSCRIPT BEGIN ===
 
-FORBIDDEN (DO NOT USE):
-- NO emojis (no checkmarks, stars, rockets, light bulbs, etc.)
-- NO markdown tables (no | column | separators |)
-- NO conversational phrases ("I'll help you", "Let me know", "Based on your document")
-- NO invented section numbers (do not reference "Section 12.8" or similar)
-- NO fabricated benchmarks or performance claims not in the manuscript
+${text}
 
-REQUIRED FORMAT - Use ONLY these exact headers:
+=== MANUSCRIPT END ===
 
-## Methodology Overview
-## Research Design Assessment
-## Strengths
-## Weaknesses
-## Recommendations
+TASK: Provide a methodology review of the manuscript above.
 
-RULES:
-1. Write 500-700 words total in plain academic prose
-2. Use ONLY headers and bullet points for formatting
-3. Reference ONLY methods and results described in the manuscript
-4. Quote or paraphrase actual text when describing methodology
+REQUIREMENTS:
+1. Your review MUST reference specific content from the manuscript above
+2. Write 500-700 words in academic prose
+3. Use these section headers:
+   ## Methodology Overview
+   ## Research Design Assessment
+   ## Strengths
+   ## Weaknesses
+   ## Recommendations
+
+4. Quote or paraphrase actual methodology from the manuscript
 5. Base strengths and weaknesses on manuscript evidence only
-6. Do not invent or hallucinate details
+6. Do NOT invent details not present in the manuscript
+7. Do NOT reference external methodologies not mentioned in the manuscript
 
----
-
-Analyze this manuscript and provide your methodology review:
-
-${text}"""
+Begin your methodology review now:"""
 
 
 class ManuscriptImprovementSuggestions(ResearchTemplate):
     """Template for generating improvement suggestions for a manuscript.
     
     Produces a prioritized list of actionable improvements,
-    targeting 400-600 words of specific recommendations.
+    targeting 500-800 words of specific recommendations with detailed rationale.
+    
+    Uses manuscript-first structure with task instructions at end
+    for better LLM attention to the actual content.
     """
-    template_str = """STRICT REQUIREMENTS - FAILURE TO FOLLOW WILL RESULT IN REJECTION:
+    template_str = """=== MANUSCRIPT BEGIN ===
 
-FORBIDDEN (DO NOT USE):
-- NO emojis (no checkmarks, stars, rockets, light bulbs, etc.)
-- NO markdown tables (no | column | separators |)
-- NO conversational phrases ("I'll help you", "Let me know", "Based on your document")
-- NO invented section numbers (do not reference "Section 12.8" or similar)
-- NO fabricated claims or external recommendations not based on manuscript
+${text}
 
-REQUIRED FORMAT - Use ONLY these exact headers:
+=== MANUSCRIPT END ===
 
-## Summary
-## High Priority Improvements
-## Medium Priority Improvements
-## Low Priority Improvements
-## Overall Recommendation
+TASK: Provide improvement suggestions for the manuscript above.
 
-RULES:
-1. Write 400-600 words total in plain academic prose
-2. Use ONLY headers and numbered/bulleted lists for formatting
-3. Reference ONLY issues that exist in the manuscript
-4. Describe specific locations using section titles from the manuscript
-5. Base all suggestions on actual content found in the document
-6. Do not invent or hallucinate details
+REQUIREMENTS:
+1. Your suggestions MUST reference specific content from the manuscript above
+2. Write 500-800 words with detailed actionable recommendations
+3. Use these section headers:
+   ## Summary
+   ## High Priority Improvements
+   ## Medium Priority Improvements
+   ## Low Priority Improvements
+   ## Overall Recommendation
 
-RECOMMENDATION OPTIONS (choose ONE):
-- Accept with Minor Revisions
-- Accept with Major Revisions
-- Revise and Resubmit
+4. For each improvement, explain WHY it matters and HOW to address it
+5. Reference specific sections by their actual titles from the manuscript
+6. Base all suggestions on actual content found in the manuscript
+7. Do NOT invent issues not present in the manuscript
+8. Choose ONE recommendation: Accept with Minor Revisions, Accept with Major Revisions, or Revise and Resubmit
 
----
-
-Analyze this manuscript and provide your improvement suggestions:
-
-${text}"""
+Begin your improvement suggestions now:"""
 
 
 # Registry of available templates

@@ -31,7 +31,20 @@ from infrastructure.llm.templates import (
     ManuscriptImprovementSuggestions,
     REVIEW_MIN_WORDS,
 )
-from infrastructure.llm.validation import OutputValidator
+from infrastructure.llm.validation import (
+    OutputValidator,
+    detect_repetition,
+    calculate_unique_content_ratio,
+    deduplicate_sections,
+    is_off_topic,
+    has_on_topic_signals,
+    detect_conversational_phrases,
+    check_format_compliance,
+    OFF_TOPIC_PATTERNS_START,
+    OFF_TOPIC_PATTERNS_ANYWHERE,
+    CONVERSATIONAL_PATTERNS,
+    ON_TOPIC_SIGNALS,
+)
 from infrastructure.llm.ollama_utils import (
     is_ollama_running,
     start_ollama_server,
@@ -41,6 +54,8 @@ from infrastructure.llm.ollama_utils import (
     select_small_fast_model,
     ensure_ollama_ready,
     get_model_info,
+    check_model_loaded,
+    preload_model,
 )
 
 __all__ = [
@@ -64,6 +79,18 @@ __all__ = [
     "REVIEW_MIN_WORDS",
     # Validation
     "OutputValidator",
+    "detect_repetition",
+    "calculate_unique_content_ratio",
+    "deduplicate_sections",
+    "is_off_topic",
+    "has_on_topic_signals",
+    "detect_conversational_phrases",
+    "check_format_compliance",
+    # Validation patterns (for testing/extension)
+    "OFF_TOPIC_PATTERNS_START",
+    "OFF_TOPIC_PATTERNS_ANYWHERE",
+    "CONVERSATIONAL_PATTERNS",
+    "ON_TOPIC_SIGNALS",
     # Ollama utilities
     "is_ollama_running",
     "start_ollama_server",
@@ -73,5 +100,7 @@ __all__ = [
     "select_small_fast_model",
     "ensure_ollama_ready",
     "get_model_info",
+    "check_model_loaded",
+    "preload_model",
 ]
 
