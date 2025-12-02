@@ -1,0 +1,93 @@
+{
+  "model": "llama3-gradient:latest",
+  "timestamp": "2025-12-02T10:38:56.534165",
+  "source_pdf": "/Users/4d/Documents/GitHub/template/project/output/pdf/project_combined.pdf",
+  "reviews_generated": [
+    "executive_summary",
+    "quality_review",
+    "methodology_review",
+    "improvement_suggestions"
+  ],
+  "max_input_length": 500000,
+  "manuscript_metrics": {
+    "total_chars": 77255,
+    "total_words": 14544,
+    "total_tokens_est": 19313,
+    "truncated": false,
+    "truncated_chars": 77255
+  },
+  "review_metrics": {
+    "executive_summary": {
+      "input_chars": 77255,
+      "input_words": 14544,
+      "input_tokens_est": 19313,
+      "output_chars": 2049,
+      "output_words": 320,
+      "output_tokens_est": 512,
+      "generation_time_seconds": 59.32
+    },
+    "quality_review": {
+      "input_chars": 77255,
+      "input_words": 14544,
+      "input_tokens_est": 19313,
+      "output_chars": 18897,
+      "output_words": 3220,
+      "output_tokens_est": 4724,
+      "generation_time_seconds": 368.62
+    },
+    "methodology_review": {
+      "input_chars": 77255,
+      "input_words": 14544,
+      "input_tokens_est": 19313,
+      "output_chars": 19360,
+      "output_words": 2915,
+      "output_tokens_est": 4840,
+      "generation_time_seconds": 417.84
+    },
+    "improvement_suggestions": {
+      "input_chars": 77255,
+      "input_words": 14544,
+      "input_tokens_est": 19313,
+      "output_chars": 6285,
+      "output_words": 1097,
+      "output_tokens_est": 1571,
+      "generation_time_seconds": 78.46
+    }
+  },
+  "format_compliance": {
+    "overall_rate": 100.0,
+    "compliant_reviews": 4,
+    "total_reviews": 4,
+    "per_review": {
+      "executive_summary": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "quality_review": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "methodology_review": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "improvement_suggestions": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      }
+    }
+  },
+  "total_generation_time_seconds": 924.25,
+  "config": {
+    "temperature_summary": 0.3,
+    "temperature_review": 0.3,
+    "temperature_suggestions": 0.4,
+    "max_tokens": 4096,
+    "timeout_seconds": 300.0,
+    "system_prompt": "manuscript_review"
+  }
+}

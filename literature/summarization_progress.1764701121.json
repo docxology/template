@@ -3,7 +3,7 @@
   "keywords": [],
   "total_papers": 487,
   "start_time": 1764698581.5675032,
-  "last_update": 1764700521.618402,
+  "last_update": 1764701092.4316108,
   "entries": {
     "nisslbeck2024coupled": {
       "citation_key": "nisslbeck2024coupled",
@@ -239,62 +239,62 @@
     "ijju2023markovian": {
       "citation_key": "ijju2023markovian",
       "pdf_path": "literature/pdfs/ijju2023markovian.pdf",
-      "status": "processing",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/ijju2023markovian_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 165.57569479942322
     },
     "zhu2025activeo3": {
       "citation_key": "zhu2025activeo3",
       "pdf_path": "literature/pdfs/zhu2025activeo3.pdf",
-      "status": "downloaded",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/zhu2025activeo3_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 123.82820677757263
     },
     "wang2015stochastic": {
       "citation_key": "wang2015stochastic",
       "pdf_path": "literature/pdfs/wang2015stochastic.pdf",
-      "status": "downloaded",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/wang2015stochastic_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 29.730828046798706
     },
     "figurnov2016robust": {
       "citation_key": "figurnov2016robust",
       "pdf_path": "literature/pdfs/figurnov2016robust.pdf",
-      "status": "downloaded",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/figurnov2016robust_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 38.70930099487305
     },
     "lueckmann2018likelihoodfree": {
       "citation_key": "lueckmann2018likelihoodfree",
       "pdf_path": "literature/pdfs/lueckmann2018likelihoodfree.pdf",
-      "status": "downloaded",
+      "status": "summarized",
       "download_attempts": 0,
-      "summary_attempts": 0,
+      "summary_attempts": 1,
       "last_error": null,
-      "summary_path": null,
+      "summary_path": "literature/summaries/lueckmann2018likelihoodfree_summary.md",
       "download_time": null,
-      "summary_time": null
+      "summary_time": 212.91001796722412
     },
     "ren2022robot": {
       "citation_key": "ren2022robot",
       "pdf_path": "literature/pdfs/ren2022robot.pdf",
-      "status": "downloaded",
+      "status": "processing",
       "download_attempts": 0,
       "summary_attempts": 0,
       "last_error": null,
