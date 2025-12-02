@@ -540,8 +540,8 @@ def test_process_negative():
    # Standard build - executes all 6 stages (00-05)
    python3 scripts/run_all.py
    
-   # Or use shell script wrapper
-   ./run_all.sh
+   # Or use unified interactive menu
+   ./run.sh
    
    # Run individual stages if needed
    python3 scripts/00_setup_environment.py  # Stage 0: Setup
@@ -715,8 +715,8 @@ def test_process_negative():
    # Standard build - executes all 6 stages
    python3 scripts/run_all.py
    
-   # Or use shell wrapper
-   ./run_all.sh
+   # Or use unified interactive menu
+   ./run.sh
    ```
 
 6. **Commit changes**

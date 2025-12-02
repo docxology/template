@@ -319,7 +319,7 @@ Integration tests marked with `@pytest.mark.requires_ollama`:
 - Auto-skip when Ollama is not running
 - Use extended timeouts for slow models (120s for long queries)
 - Skip gracefully on timeout or model quality issues
-- Skipped during automated pipeline (`run_all.sh`) for speed
+- Skipped during automated pipeline (`./run.sh --pipeline`) for speed
 
 ### Test Fixtures
 

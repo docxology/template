@@ -9,8 +9,8 @@ This thin orchestrator runs the complete test suite for the project:
 
 Stage 01 of the pipeline orchestration.
 
-Note: For separate infrastructure/project test runs, use run_all.sh which
-provides finer-grained control over test execution stages.
+Note: For separate infrastructure/project test runs, use ./run.sh which
+provides an interactive menu with options 1 (infrastructure) and 2 (project).
 """
 from __future__ import annotations
 

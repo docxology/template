@@ -34,7 +34,13 @@ Output Files:
 
 from infrastructure.literature.core import LiteratureSearch, DownloadResult
 from infrastructure.literature.config import LiteratureConfig, BROWSER_USER_AGENTS
-from infrastructure.literature.api import SearchResult, UnpaywallResult, UnpaywallSource
+from infrastructure.literature.api import (
+    SearchResult,
+    UnpaywallResult,
+    UnpaywallSource,
+    ArxivSource,
+    BiorxivSource,
+)
 from infrastructure.literature.pdf_handler import PDFHandler
 from infrastructure.literature.reference_manager import ReferenceManager
 from infrastructure.literature.library_index import LibraryIndex, LibraryEntry
@@ -50,6 +56,8 @@ __all__ = [
     "SearchResult",
     "UnpaywallResult",
     "UnpaywallSource",
+    "ArxivSource",
+    "BiorxivSource",
     "PDFHandler",
     "ReferenceManager",
     "LibraryIndex",

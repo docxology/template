@@ -29,7 +29,7 @@ class LiteratureConfig:
         retry_attempts: Number of retry attempts for failed requests (default: 3).
         retry_delay: Base delay for exponential backoff in seconds (default: 5.0).
         download_dir: Directory for downloaded PDFs (default: literature/pdfs).
-        timeout: Request timeout in seconds (default: 30).
+        timeout: Request timeout in seconds (default: 2).
         bibtex_file: Path to BibTeX file (default: literature/references.bib).
         library_index_file: Path to JSON library index (default: literature/library.json).
         sources: List of enabled sources (default: arxiv, semanticscholar).
@@ -74,7 +74,7 @@ class LiteratureConfig:
     
     # PDF settings
     download_dir: str = "literature/pdfs"
-    timeout: int = 30
+    timeout: float = 2
     
     # Reference settings
     bibtex_file: str = "literature/references.bib"
@@ -132,7 +132,7 @@ class LiteratureConfig:
             retry_attempts=int(os.environ.get("LITERATURE_RETRY_ATTEMPTS", "3")),
             retry_delay=float(os.environ.get("LITERATURE_RETRY_DELAY", "5.0")),
             download_dir=os.environ.get("LITERATURE_DOWNLOAD_DIR", "literature/pdfs"),
-            timeout=int(os.environ.get("LITERATURE_TIMEOUT", "30")),
+            timeout=float(os.environ.get("LITERATURE_TIMEOUT", "2")),
             bibtex_file=os.environ.get("LITERATURE_BIBTEX_FILE", "literature/references.bib"),
             library_index_file=os.environ.get("LITERATURE_LIBRARY_INDEX", "literature/library.json"),
             sources=sources if sources else ["arxiv", "semanticscholar"],

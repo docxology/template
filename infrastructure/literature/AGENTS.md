@@ -166,7 +166,7 @@ config = LiteratureConfig(
     download_dir="literature/pdfs",
     bibtex_file="literature/references.bib",
     library_index_file="literature/library.json",
-    timeout=30,
+    timeout=0.1,
     sources=["arxiv", "semanticscholar"]
 )
 ```
@@ -186,7 +186,7 @@ Load configuration from environment with `LiteratureConfig.from_env()`:
 | `LITERATURE_RETRY_ATTEMPTS` | Retry attempts for failed requests | 3 |
 | `LITERATURE_RETRY_DELAY` | Base delay for exponential backoff | 5.0 |
 | `LITERATURE_DOWNLOAD_DIR` | PDF download directory | literature/pdfs |
-| `LITERATURE_TIMEOUT` | Request timeout (seconds) | 30 |
+| `LITERATURE_TIMEOUT` | Request timeout (seconds) | 0.1 |
 | `LITERATURE_BIBTEX_FILE` | BibTeX file path | literature/references.bib |
 | `LITERATURE_LIBRARY_INDEX` | JSON index file path | literature/library.json |
 | `LITERATURE_SOURCES` | Comma-separated sources | arxiv,semanticscholar |
@@ -221,7 +221,9 @@ Load configuration from environment with `LiteratureConfig.from_env()`:
 The repository includes an interactive script for searching, downloading, and summarizing papers using a local LLM:
 
 ```bash
-python3 literature_search_summarize.py
+./run.sh                           # Select option 6 or 7
+# Or directly:
+python3 scripts/07_literature_search.py --search
 ```
 
 **Features:**

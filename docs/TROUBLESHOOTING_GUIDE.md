@@ -544,8 +544,8 @@ git diff uv.lock
 # Run complete pipeline with all stages
 python3 scripts/run_all.py
 
-# Or use shell wrapper
-./run_all.sh
+# Or use unified interactive menu
+./run.sh
 
 # Check each stage individually
 uv run pytest tests/ --cov=src

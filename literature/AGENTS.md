@@ -123,7 +123,7 @@ AI-generated paper summaries using local LLM integration:
 ```
 
 **Skip Existing Summaries:**
-The summarization workflow automatically detects and skips generation for papers that already have summary files. When running `literature_search_summarize.py`:
+The summarization workflow automatically detects and skips generation for papers that already have summary files. When running `scripts/07_literature_search.py`:
 
 1. **File existence check** - Before generating a summary, the workflow checks if `literature/summaries/{citation_key}_summary.md` already exists
 2. **Automatic skip** - If the file exists, summarization is skipped and the existing file is used
@@ -174,7 +174,10 @@ python3 -m infrastructure.literature.cli search "neural networks" --sources arxi
 
 ```bash
 # Interactive search and summarize with LLM
-python3 literature_search_summarize.py
+./run.sh                           # Select option 6 or 7
+# Or directly:
+python3 scripts/07_literature_search.py --search     # Search for papers
+python3 scripts/07_literature_search.py --summarize  # Generate summaries
 ```
 
 **Workflow:**
@@ -393,4 +396,4 @@ python3 -m infrastructure.literature.cli library rebuild
 - [`infrastructure/literature/README.md`](../infrastructure/literature/README.md) - CLI usage guide
 - [`infrastructure/llm/AGENTS.md`](../infrastructure/llm/AGENTS.md) - LLM summarization details
 - [`manuscript/99_references.md`](../project/manuscript/99_references.md) - Bibliography integration
-- [`literature_search_summarize.py`](../literature_search_summarize.py) - Interactive workflow script
+- [`scripts/07_literature_search.py`](../scripts/07_literature_search.py) - Literature search thin orchestrator

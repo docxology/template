@@ -32,8 +32,8 @@ This repository implements a sophisticated, well-architected test-driven develop
    - Clear patterns and examples
 
 4. **Build Pipeline**: Production Quality
-   - 7-stage orchestration (setup, infra tests, project tests, analysis, render PDF, validate, copy outputs)
-   - 58-second total build time
+   - 6-stage orchestration (stages 00-05: setup, infra tests, project tests, analysis, render PDF, validate, copy outputs) + optional Stage 8 (LLM review)
+   - 84-second total build time (without optional LLM review)
    - Deterministic outputs
    - Comprehensive logging
    - Error recovery

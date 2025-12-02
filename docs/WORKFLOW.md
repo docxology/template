@@ -65,7 +65,7 @@ graph TB
 
 ## How the Pipeline Orchestrator Works with Markdown and Code
 
-The `scripts/run_all.py` orchestrator (or `./run_all.sh`) executes 6 stages sequentially, ensuring complete coherence between all components:
+The `scripts/run_all.py` orchestrator (or `./run.sh --pipeline`) executes 6 stages sequentially, ensuring complete coherence between all components:
 
 ### 1. Code Validation Phase
 - **Runs all generation scripts** - This validates that `src/` code works correctly
@@ -160,8 +160,8 @@ uv run python repo_utilities/validate_markdown.py
 # Run the complete pipeline (all 6 stages)
 python3 scripts/run_all.py
 
-# Or use shell wrapper
-./run_all.sh
+# Or use unified interactive menu
+./run.sh
 ```
 
 The pipeline orchestrator executes 6 stages:

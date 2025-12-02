@@ -166,8 +166,11 @@ graph TB
 ### Option 2: Quick Commands Reference
 
 ```bash
-# Generate everything (tests + scripts + PDFs)
-python3 scripts/run_all.py
+# Interactive menu (recommended)
+./run.sh
+
+# Or run full pipeline directly
+./run.sh --pipeline
 
 # Run tests with coverage (infrastructure + project)
 python3 scripts/01_run_tests.py
@@ -361,7 +364,7 @@ The project follows a **thin orchestrator pattern** where:
 - **`infrastructure/`** and **`project/src/`** contain **ALL** business logic, algorithms, and implementations
 - **`scripts/`** are **lightweight wrappers** that coordinate pipeline stages
 - **`tests/`** ensure **comprehensive coverage** of all functionality
-- **`run_all.py`** orchestrates the entire pipeline
+- **`run.sh`** provides a unified interactive menu for all operations
 
 **Benefits:** [Read more](docs/ARCHITECTURE.md#thin-orchestrator-pattern)
 
@@ -448,8 +451,11 @@ pip install -e .
 ### 3. Generate Manuscript
 
 ```bash
-# Complete pipeline execution (recommended)
-python3 scripts/run_all.py
+# Interactive menu (recommended)
+./run.sh
+
+# Or run full pipeline directly
+./run.sh --pipeline
 
 # Or run stages individually (using generic entry point orchestrators)
 python3 scripts/00_setup_environment.py      # Stage 0: Setup environment
@@ -639,7 +645,7 @@ graph TD
 
 ```mermaid
 flowchart TD
-    START([Start run_all.py]) --> CLEAN[Clean all outputs]
+    START([Start ./run.sh]) --> CLEAN[Clean all outputs]
     CLEAN --> TESTS[Run tests with coverage requirements<br/>99.88% project, 55.89% infra]
     TESTS --> SCRIPTS[Execute all scripts<br/>5 project scripts executed]
     SCRIPTS --> UTILS[Run repo utilities<br/>Glossary + Validation]

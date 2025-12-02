@@ -205,7 +205,7 @@ Figure \ref{fig:convergence_plot} shows...
 
 - Verify bibliography entry exists in `references.bib`
 - Check for typos in citation keys (case-sensitive)
-- Run `run_all.sh` to regenerate from scratch
+- Run `./run.sh` (option 4) to regenerate from scratch
 
 ### Figures not appearing
 

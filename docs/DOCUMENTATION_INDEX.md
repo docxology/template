@@ -79,7 +79,7 @@ Development standards are documented in the `.cursorrules/` directory:
 ## 🧪 **Advanced Modules**
 
 ### **Module Guides**
-- **[`docs/ADVANCED_MODULES_GUIDE.md`](ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all 6 advanced modules
+- **[`docs/ADVANCED_MODULES_GUIDE.md`](ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all 9 advanced modules
 - **[`docs/API_REFERENCE.md`](API_REFERENCE.md)** - Complete API documentation for all src/ modules
 
 ## ⚙️ **Operational Guides**

@@ -262,7 +262,7 @@ Level 10-12: Expert Usage (1-2 months)
 - **[Best Practices](BEST_PRACTICES.md)** - Consolidated best practices
 
 ### Advanced Topics
-- **[Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md)** - Using all 6 advanced modules
+- **[Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md)** - Using all 9 advanced modules
 - **[Dependency Management](DEPENDENCY_MANAGEMENT.md)** - uv package manager guide
 - **[CI/CD Integration](CI_CD_INTEGRATION.md)** - GitHub Actions setup
 - **[Performance Optimization](PERFORMANCE_OPTIMIZATION.md)** - Build time optimization
@@ -305,6 +305,6 @@ Having issues? Here's where to look:
 
 **Ready to start?** Choose your skill level above and dive in!
 
-**System Status**: ✅ All operational | **Build Time**: 58s | **Coverage**: 99.88% (project), 55.89% (infra) | **Tests**: 878 passing
+**System Status**: ✅ All operational | **Build Time**: 84s (without optional LLM review) | **Coverage**: 99.88% (project), 55.89% (infra) | **Tests**: 878 passing
 
 **Need help?** Start with **[Getting Started Guide](GETTING_STARTED.md)** or check the **[FAQ](FAQ.md)**

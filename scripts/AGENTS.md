@@ -186,16 +186,78 @@ When enabled, the system generates a technical abstract (~200-400 words) in Engl
 
 **Generic:** Works for any project with a combined PDF manuscript
 
-### 8. Run All (`run_all.py`)
+### 8. Literature Search (`07_literature_search.py`)
 
-**Purpose:** Execute complete pipeline
+**Purpose:** Search academic literature and generate AI summaries
 
-- Orchestrates all 6 stages sequentially
+- Searches arXiv and Semantic Scholar for papers by keyword
+- Downloads PDFs to `literature/pdfs/`
+- Adds entries to BibTeX library (`literature/references.bib`)
+- Generates AI summaries using local Ollama LLM
+- Supports both search and summarize-only modes
+
+**Usage:**
+```bash
+# Search mode (interactive keyword input)
+python3 scripts/07_literature_search.py --search
+
+# Search with specific keywords
+python3 scripts/07_literature_search.py --search --keywords "machine learning,optimization"
+
+# Search with custom limit per keyword
+python3 scripts/07_literature_search.py --search --limit 50 --keywords "AI"
+
+# Generate summaries for existing PDFs
+python3 scripts/07_literature_search.py --summarize
+
+# Both operations (search then summarize)
+python3 scripts/07_literature_search.py --search --summarize
+```
+
+**Environment Variables:**
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `LITERATURE_DEFAULT_LIMIT` | `25` | Results per source per keyword |
+| `MAX_PARALLEL_SUMMARIES` | `1` | Parallel summarization workers |
+| `LLM_SUMMARIZATION_TIMEOUT` | `600` | Timeout for paper summarization (seconds) |
+
+**Output Files:**
+- `literature/references.bib` - BibTeX entries
+- `literature/library.json` - JSON index of all papers
+- `literature/pdfs/` - Downloaded PDF files
+- `literature/summaries/` - AI-generated summaries (markdown)
+- `literature/summarization_progress.json` - Progress tracking
+
+**Requires:** Ollama server running with at least one model installed.
+
+**Generic:** Works for any project needing literature management
+
+### 9. Run All (`run_all.py`)
+
+**Purpose:** Execute complete pipeline (Python alternative)
+
+- Orchestrates all stages sequentially
 - Stops on first failure
 - Provides summary report
 - Generic pipeline
 
+**Note:** For interactive use, prefer the unified `./run.sh` entry point.
+
 **Generic:** Works for any project
+
+## Unified Entry Point
+
+The recommended entry point is the unified `run.sh` script:
+
+```bash
+./run.sh           # Interactive menu
+./run.sh --option 4   # Run full pipeline non-interactively
+./run.sh --pipeline   # Same as --option 4
+./run.sh --search     # Literature search (option 6)
+./run.sh --summarize  # Generate summaries (option 7)
+```
+
+See [`../RUN_GUIDE.md`](../RUN_GUIDE.md) for complete documentation.
 
 ## Project-Specific Scripts
 
@@ -300,13 +362,20 @@ from scientific.data_generator import generate_synthetic_data
 
 ## Integration with Build Pipeline
 
-Complete pipeline execution:
+Complete pipeline execution (interactive):
+
+```bash
+./run.sh           # Interactive menu
+./run.sh --option 4   # Full pipeline non-interactively
+```
+
+Or via Python:
 
 ```bash
 python3 scripts/run_all.py
 ```
 
-Stages:
+**Pipeline Stages:**
 1. **00_setup_environment.py** - Environment ready?
 2. **01_run_tests.py** - Tests pass?
 3. **02_run_analysis.py** - Executes `project/scripts/*.py`
@@ -314,6 +383,9 @@ Stages:
 5. **04_validate_output.py** - Output valid?
 6. **05_copy_outputs.py** - Final deliverables copied?
 7. **06_llm_review.py** - LLM manuscript review generated? (optional)
+
+**Standalone Operations (via menu or direct):**
+8. **07_literature_search.py** - Literature search & summarization
 
 Each stage is **generic** and works with any project structure.
 
@@ -360,10 +432,13 @@ scripts/
 ├── 04_validate_output.py       # Entry: Validation
 ├── 05_copy_outputs.py          # Entry: Copy deliverables
 ├── 06_llm_review.py            # Entry: LLM manuscript review (optional)
-├── run_all.py                  # Entry: Complete pipeline
+├── 07_literature_search.py     # Entry: Literature search & summarization
+├── run_all.py                  # Entry: Complete pipeline (Python)
 ├── __init__.py                 # Package exports for testing
 ├── AGENTS.md                   # This file
 └── README.md                   # Quick reference
+
+../run.sh                       # Unified entry point (interactive menu)
 
 project/scripts/
 ├── analysis_pipeline.py        # Project-specific analysis

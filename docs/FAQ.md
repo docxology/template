@@ -31,7 +31,7 @@
 ## 📚 **Documentation & PDF Generation**
 
 ### **Q: How does the PDF generation work?**
-**A:** The template uses Pandoc to convert markdown files to LaTeX, then XeLaTeX to generate PDFs. The `scripts/run_all.py` orchestrator (or `./run_all.sh`) executes all 6 pipeline stages, including figure generation, PDF rendering, and cross-referencing.
+**A:** The template uses Pandoc to convert markdown files to LaTeX, then XeLaTeX to generate PDFs. The `./run.sh` unified orchestrator (or `scripts/run_all.py`) executes all 6 pipeline stages, including figure generation, PDF rendering, and cross-referencing.
 
 ### **Q: Can I customize the PDF output format?**
 **A:** Yes! The LaTeX templates and Pandoc configurations can be customized. You can modify styles, add custom formatting, or even generate other formats like HTML or Word documents.
@@ -104,7 +104,7 @@
 ## 🧪 **Advanced Modules**
 
 ### **Q: What are the advanced modules?**
-**A:** The template includes 6 advanced modules: quality_checker (document quality analysis), reproducibility (environment tracking), integrity (output verification), publishing (academic workflows), scientific_dev (scientific computing), and build_verifier (build validation). See [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) for complete documentation.
+**A:** The template includes 9 advanced modules: quality_checker (document quality analysis), reproducibility (environment tracking), integrity (output verification), publishing (academic workflows), scientific_dev (scientific computing), build_verifier (build validation), literature search (academic literature management), LLM integration (local LLM assistance), and rendering system (multi-format output). See [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) for complete documentation.
 
 ### **Q: How do I use the advanced modules?**
 **A:** See the [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) for comprehensive usage examples and integration patterns. Each module includes API documentation and best practices.

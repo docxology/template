@@ -219,7 +219,7 @@ Process of converting markdown sources to professional PDF documents using Pando
 
 **Pipeline**: Markdown → Pandoc → LaTeX → XeLaTeX → PDF
 
-**Time**: ~58 seconds for complete rebuild
+**Time**: ~84 seconds for complete rebuild (without optional LLM review)
 
 **See**: [BUILD_SYSTEM.md](BUILD_SYSTEM.md)
 

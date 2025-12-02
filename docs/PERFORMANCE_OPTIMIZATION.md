@@ -8,7 +8,7 @@ This guide covers performance optimization strategies for the Research Project T
 
 ## Current Performance Baseline
 
-**Build Time:** 58 seconds (878 tests + PDF generation)  
+**Build Time:** 84 seconds (878 tests + PDF generation, without optional LLM review)  
 **Test Suite:** 27 seconds for 878 tests  
 **Coverage:** 81.90% across 1989 statements  
 **Platform:** Ubuntu 22.04, Python 3.11, uv package manager
@@ -27,7 +27,7 @@ This guide covers performance optimization strategies for the Research Project T
 | **PDF Rendering** | 44s | 76% | High (PDF caching, parallel compilation) |
 | **Output Validation** | 1s | 2% | Low (already optimized) |
 | **Copy Outputs** | 0s | 0% | Low (I/O bound) |
-| **Total** | **58s** | **100%** | **~25% improvement possible** |
+| **Total** | **84s** | **100%** | **~25% improvement possible** |
 
 ### Performance Bottlenecks
 
@@ -302,7 +302,7 @@ def run_selective_tests(changed_files):
     # Map source files to test files
     test_mapping = {
         'src/example.py': 'tests/test_example.py',
-        'src/quality_checker.py': 'tests/test_quality_checker.py',
+        'infrastructure/build/quality_checker.py': 'tests/infrastructure/build/test_quality_checker.py',
         # Add more mappings...
     }
 
@@ -779,8 +779,8 @@ jobs:
 | **Parallel PDF compilation** | 44s | 15s | **66% faster** |
 | **Figure caching** | 4s | 1s | **75% faster** |
 | **Parallel test execution** | 9s | 4s | **55% faster** |
-| **Selective builds** | 58s | 25s | **57% faster** |
-| **Combined optimization** | **58s** | **15-20s** | **70-75% faster** |
+| **Selective builds** | 84s | 25s | **70% faster** |
+| **Combined optimization** | **84s** | **15-20s** | **80-82% faster** |
 
 ### Memory Optimization
 
@@ -1036,7 +1036,7 @@ Performance optimization strategies for the Research Project Template:
 4. **Parallel test execution** - 55% reduction in test time
 
 ### **Expected Results:**
-- **70-75% faster builds** (58s → 15-20s)
+- **80-82% faster builds** (84s → 15-20s)
 - **50% reduction in CI/CD costs** through caching
 - **Improved developer experience** with faster feedback
 - **Scalable performance** as project grows

@@ -606,7 +606,7 @@ with open('output/environment.json', 'w') as f:
     json.dump(env_info, f, indent=2)
 ```
 
-**See [src/reproducibility.py](../src/reproducibility.py) for advanced tools.**
+**See [infrastructure/build/reproducibility.py](../infrastructure/build/reproducibility.py) for advanced tools.**
 
 ---
 

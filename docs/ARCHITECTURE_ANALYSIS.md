@@ -1,5 +1,7 @@
 # Two-Layer Architecture - Current State Analysis
 
+> **Note:** This document describes the current architecture state. For the most up-to-date architecture information, see [ARCHITECTURE.md](ARCHITECTURE.md) and [TWO_LAYER_ARCHITECTURE.md](TWO_LAYER_ARCHITECTURE.md).
+
 ## Document Purpose
 
 This document captures the complete analysis of the template's two-layer architecture, identifying how repo-scale infrastructure and project-specific scientific content are currently organized, and how they will be reorganized for maximum clarity.
@@ -10,17 +12,21 @@ This document captures the complete analysis of the template's two-layer archite
 
 These modules provide generic build, validation, and development infrastructure applicable to any research project using this template:
 
-#### In src/
-- `build_verifier.py` - Build process verification and artifact validation
-- `integrity.py` - File integrity checking and cross-reference validation
-- `quality_checker.py` - Document quality metrics and academic standards checking
-- `reproducibility.py` - Build reproducibility tracking and environment capture
-- `publishing.py` - Academic publishing workflow assistance (DOI, citations, metadata)
-- `pdf_validator.py` - PDF rendering quality validation
-- `glossary_gen.py` - Automatic API documentation generation from source code
-- `markdown_integration.py` - Figure insertion and markdown cross-reference management
-- `figure_manager.py` - Automatic figure numbering and LaTeX block generation
-- `image_manager.py` - Image file management and insertion
+#### In infrastructure/
+- `build/build_verifier.py` - Build process verification and artifact validation
+- `validation/integrity.py` - File integrity checking and cross-reference validation
+- `build/quality_checker.py` - Document quality metrics and academic standards checking
+- `build/reproducibility.py` - Build reproducibility tracking and environment capture
+- `publishing/` - Academic publishing workflow assistance (DOI, citations, metadata)
+- `validation/pdf_validator.py` - PDF rendering quality validation
+- `documentation/glossary_gen.py` - Automatic API documentation generation from source code
+- `documentation/markdown_integration.py` - Figure insertion and markdown cross-reference management
+- `documentation/figure_manager.py` - Automatic figure numbering and LaTeX block generation
+- `documentation/image_manager.py` - Image file management and insertion
+- `scientific/scientific_dev.py` - Scientific computing utilities and best practices
+- `literature/` - Academic literature search and reference management
+- `llm/` - Local LLM integration for research assistance
+- `rendering/` - Multi-format output generation (PDF, slides, web, posters)
 
 #### In scripts/
 - `run_all.py` - Master pipeline orchestrator (6 stages)

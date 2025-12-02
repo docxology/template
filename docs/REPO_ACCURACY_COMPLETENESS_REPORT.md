@@ -33,7 +33,7 @@
 | Stage 5: PDF Rendering | ✅ Pass | 44s |
 | Stage 6: Output Validation | ✅ Pass | 1s |
 | Stage 7: Copy Outputs | ✅ Pass | 0s |
-| **Total** | ✅ Pass | **58s** |
+| **Total** | ✅ Pass | **84s** (without optional LLM review) |
 
 ## Generated Outputs
 
@@ -109,7 +109,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 **The repository is fully operational and production-ready.**
 
-All tests pass, documentation is complete, and the build pipeline generates all expected outputs successfully in 58 seconds.
+All tests pass, documentation is complete, and the build pipeline generates all expected outputs successfully in 84 seconds (without optional LLM review).
 
 ---
 

@@ -79,8 +79,8 @@ uv sync
 # Generate everything (runs all 6 pipeline stages)
 python3 scripts/run_all.py
 
-# Or use shell wrapper
-./run_all.sh
+# Or use unified interactive menu
+./run.sh
 
 # Open the result
 open output/project_combined.pdf  # macOS (top-level output/)
@@ -175,8 +175,8 @@ manuscript/
    # Runs all 6 stages including cleanup
    python3 scripts/run_all.py
    
-   # Or use shell wrapper
-   ./run_all.sh
+   # Or use unified interactive menu
+   ./run.sh
    ```
 
 3. **View the result**

@@ -25,7 +25,7 @@ class TestLiteratureConfig:
         config = LiteratureConfig()
         assert config.default_limit == 25  # Increased for better coverage
         assert config.max_results == 100
-        assert config.timeout == 30
+        assert config.timeout == 2
         assert config.arxiv_delay == 3.0
         assert config.semanticscholar_delay == 1.5
         assert config.retry_attempts == 3

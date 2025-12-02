@@ -307,10 +307,13 @@ Configuration is read at runtime by `render_pdf.sh` and applied to:
 ### Complete Pipeline Execution
 
 ```bash
-# 1. Clean previous outputs (using run_all.sh master orchestrator)
-python3 scripts/run_all.py --clean
+# Interactive menu (recommended)
+./run.sh
 
-# 2. Generate everything (tests + scripts + PDFs)
+# Or run full pipeline directly
+./run.sh --pipeline
+
+# Python alternative
 python3 scripts/run_all.py
 ```
 

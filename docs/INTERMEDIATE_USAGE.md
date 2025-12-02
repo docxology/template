@@ -511,7 +511,7 @@ python3 scripts/run_all.py
 5. **Combined PDF** (10s) - Assembles complete document
 6. **Validation** (1s) - Checks for rendering issues
 
-**Total**: ~58 seconds
+**Total**: ~84 seconds (without optional LLM review)
 
 **See [BUILD_SYSTEM.md](BUILD_SYSTEM.md) for detailed breakdown.**
 
@@ -569,8 +569,8 @@ open output/project_combined.pdf
 # 1. Full rebuild with validation (recommended - all 6 stages)
 python3 scripts/run_all.py
 
-# Or use shell wrapper
-./run_all.sh
+# Or use unified interactive menu
+./run.sh
 
 # Alternative: Manual steps
 # # Pipeline automatically handles cleanup

@@ -10,38 +10,56 @@ This document provides comprehensive API reference for all public functions and 
 
 ## Module Organization
 
-### Core Modules
-- `example.py` - Basic mathematical operations
-- `glossary_gen.py` - API documentation generation
-- `pdf_validator.py` - PDF rendering validation
+This API reference covers modules from both the **infrastructure layer** (reusable, generic tools) and the **project layer** (project-specific scientific code).
 
-### Data Processing Modules
-- `data_generator.py` - Synthetic data generation with configurable distributions
-- `data_processing.py` - Data cleaning, preprocessing, normalization, outlier detection
-- `statistics.py` - Descriptive statistics, hypothesis testing, correlation analysis
-- `metrics.py` - Performance metrics, convergence metrics, quality metrics
-- `validation.py` - Result validation, reproducibility verification, anomaly detection
+### Infrastructure Modules (Layer 1 - Generic, Reusable)
 
-### Visualization & Figure Management Modules
-- `visualization.py` - Publication-quality figure generation with consistent styling
-- `plots.py` - Plot type implementations (line, scatter, bar, heatmap, contour)
-- `figure_manager.py` - Automatic figure numbering, caption generation, cross-referencing
-- `image_manager.py` - Automatic image insertion into markdown, caption management
-- `markdown_integration.py` - LaTeX figure block generation, section detection, reference insertion
+These modules are located in `infrastructure/` and provide generic tools applicable to any research project:
 
-### Simulation & Analysis Modules
-- `simulation.py` - Core simulation framework with reproducibility and checkpointing
-- `parameters.py` - Parameter set management, validation, sweeps, serialization
-- `performance.py` - Convergence analysis, scalability metrics, benchmark comparisons
-- `reporting.py` - Automated report generation from simulation results
+#### Documentation & API Generation
+- `infrastructure/documentation/glossary_gen.py` - API documentation generation from source code
 
-### Advanced Modules
-- `quality_checker.py` - Document quality analysis
-- `reproducibility.py` - Environment tracking and reproducibility
-- `integrity.py` - Output integrity verification
-- `publishing.py` - Academic publishing tools
-- `scientific_dev.py` - Scientific computing best practices
-- `build_verifier.py` - Build process validation
+#### Validation & Quality Assurance
+- `infrastructure/validation/pdf_validator.py` - PDF rendering validation
+- `infrastructure/validation/integrity.py` - Output integrity verification
+- `infrastructure/build/quality_checker.py` - Document quality analysis
+
+#### Build & Reproducibility
+- `infrastructure/build/build_verifier.py` - Build process validation
+- `infrastructure/build/reproducibility.py` - Environment tracking and reproducibility
+
+#### Scientific Computing
+- `infrastructure/scientific/scientific_dev.py` - Scientific computing best practices
+
+#### Publishing & Research Tools
+- `infrastructure/publishing/` - Academic publishing workflows (DOI, citations, metadata)
+- `infrastructure/literature/` - Academic literature search and reference management
+- `infrastructure/llm/` - Local LLM integration for research assistance
+- `infrastructure/rendering/` - Multi-format output generation (PDF, slides, web, posters)
+
+### Project Modules (Layer 2 - Project-Specific)
+
+These modules are located in `project/src/` and contain project-specific scientific code:
+
+#### Core Operations
+- `project/src/example.py` - Basic mathematical operations
+
+#### Data Processing
+- `project/src/data_generator.py` - Synthetic data generation with configurable distributions
+- `project/src/data_processing.py` - Data cleaning, preprocessing, normalization, outlier detection
+- `project/src/statistics.py` - Descriptive statistics, hypothesis testing, correlation analysis
+- `project/src/metrics.py` - Performance metrics, convergence metrics, quality metrics
+- `project/src/validation.py` - Result validation, reproducibility verification, anomaly detection
+
+#### Visualization
+- `project/src/visualization.py` - Publication-quality figure generation with consistent styling
+- `project/src/plots.py` - Plot type implementations (line, scatter, bar, heatmap, contour)
+
+#### Simulation & Analysis
+- `project/src/simulation.py` - Core simulation framework with reproducibility and checkpointing
+- `project/src/parameters.py` - Parameter set management, validation, sweeps, serialization
+- `project/src/performance.py` - Convergence analysis, scalability metrics, benchmark comparisons
+- `project/src/reporting.py` - Automated report generation from simulation results
 
 ---
 
@@ -934,7 +952,7 @@ For complete API documentation of all modules, see:
 - **[Visualization Guide](VISUALIZATION_GUIDE.md)** - Visualization and figure management
 - **[Image Management Guide](IMAGE_MANAGEMENT.md)** - Image insertion and cross-referencing
 
-**Key Modules:**
+**Key Project Modules (project/src/):**
 - `data_processing.py` - Data cleaning, normalization, outlier detection
 - `metrics.py` - Performance metrics, convergence metrics, quality metrics
 - `validation.py` - Result validation framework
@@ -943,8 +961,11 @@ For complete API documentation of all modules, see:
 - `performance.py` - Convergence and scalability analysis
 - `reporting.py` - Automated report generation
 - `plots.py` - Plot type implementations
-- `image_manager.py` - Image insertion into markdown
-- `markdown_integration.py` - Markdown integration utilities
+
+**Key Infrastructure Modules (infrastructure/):**
+- `documentation/image_manager.py` - Image insertion into markdown
+- `documentation/markdown_integration.py` - Markdown integration utilities
+- `documentation/figure_manager.py` - Automatic figure numbering and cross-referencing
 
 ---
 

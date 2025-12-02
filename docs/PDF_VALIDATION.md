@@ -12,14 +12,14 @@ The PDF validation system automatically scans generated PDFs for rendering issue
 
 Following the **thin orchestrator pattern**, the implementation consists of:
 
-1. **Business Logic** (`src/pdf_validator.py`): Core validation algorithms
+1. **Business Logic** (`infrastructure/validation/pdf_validator.py`): Core validation algorithms
 2. **Orchestrator** (`repo_utilities/validate_pdf_output.py`): I/O and user interface
 3. **Tests** (`tests/test_pdf_validator.py`): Comprehensive coverage with real data
 4. **Integration** (`scripts/run_all.py`): Automated validation in build pipeline (Stage 4)
 
 ## Components
 
-### src/pdf_validator.py
+### infrastructure/validation/pdf_validator.py
 
 Core validation module containing all business logic:
 
@@ -36,7 +36,7 @@ Core validation module containing all business logic:
 
 Thin orchestrator script that:
 
-- Imports methods from `src/pdf_validator.py`
+- Imports methods from `infrastructure/validation/pdf_validator.py`
 - Handles command-line arguments
 - Formats and prints validation reports
 - Returns appropriate exit codes:
@@ -73,8 +73,8 @@ The validation is automatically integrated into the pipeline (Stage 4):
 # Standard usage (includes validation)
 python3 scripts/run_all.py
 
-# Or use shell wrapper
-./run_all.sh
+# Or use unified interactive menu
+./run.sh
 
 # Run only validation stage (skip other stages)
 python3 scripts/04_validate_output.py
@@ -115,7 +115,7 @@ Conference on Machine Learning, pages 456–467. ICML, 2022...
 
 ### Unit Tests (test_pdf_validator.py)
 
-- ✅ Comprehensive test coverage of `src/pdf_validator.py`
+- ✅ Comprehensive test coverage of `infrastructure/validation/pdf_validator.py`
 - ✅ Tests with real PDFs (no mocks)
 - ✅ Tests edge cases and error handling
 - ✅ Validates against actual project PDF when available
@@ -183,7 +183,7 @@ These are automatically managed by `uv` and defined in `pyproject.toml`.
 Following TDD principles:
 
 1. Write tests first in `tests/test_pdf_validator.py`
-2. Implement business logic in `src/pdf_validator.py`
+2. Implement business logic in `infrastructure/validation/pdf_validator.py`
 3. Create thin orchestrator in `repo_utilities/validate_pdf_output.py`
 4. Integrate into build pipeline
 5. Verify test coverage requirements met

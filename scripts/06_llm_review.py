@@ -26,9 +26,15 @@ Environment Variables:
 - LLM_MAX_INPUT_LENGTH: Maximum characters to send to LLM (default: 500000 = ~125K tokens)
                         Set to 0 for unlimited input size
 - LLM_REVIEW_TIMEOUT: Timeout for each review generation (default: 300s)
+
+CLI Usage:
+- python3 scripts/06_llm_review.py                # Run both reviews and translations
+- python3 scripts/06_llm_review.py --reviews-only # Run only English scientific reviews
+- python3 scripts/06_llm_review.py --translations-only # Run only translations
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import re
@@ -37,10 +43,18 @@ import threading
 import time
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
+from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
+
+
+class ReviewMode(Enum):
+    """Mode for LLM review execution."""
+    ALL = "all"  # Run both reviews and translations
+    REVIEWS_ONLY = "reviews_only"  # Run only English scientific reviews
+    TRANSLATIONS_ONLY = "translations_only"  # Run only translations
 
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -1257,7 +1271,13 @@ def save_review_outputs(
 
 """
             filepath.write_text(header + content)
-            logger.debug(f"  Saved: {filepath.name}")
+            # Log with language name for translations, full path for all files
+            if name.startswith("translation_"):
+                lang_code = name.replace("translation_", "")
+                lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
+                logger.info(f"  Saved translation ({lang_name}): {filepath}")
+            else:
+                logger.info(f"  Saved: {filepath}")
         except Exception as e:
             logger.error(f"Failed to save {name}: {e}")
             success = False
@@ -1391,7 +1411,7 @@ The following items are extracted from the review for easy tracking:
 *End of LLM Manuscript Review*
 """
         combined_path.write_text(combined_content)
-        logger.debug(f"  Saved: {combined_path.name}")
+        logger.info(f"  Saved combined review: {combined_path}")
     except Exception as e:
         logger.error(f"Failed to save combined review: {e}")
         success = False
@@ -1459,7 +1479,7 @@ The following items are extracted from the review for easy tracking:
             }
         }
         metadata_path.write_text(json.dumps(metadata, indent=2))
-        logger.debug(f"  Saved: {metadata_path.name}")
+        logger.info(f"  Saved metadata: {metadata_path}")
     except Exception as e:
         logger.error(f"Failed to save metadata: {e}")
         success = False
@@ -1516,22 +1536,51 @@ def generate_review_summary(
     logger.info(f"\nTotal output: {total_output_chars:,} chars ({total_output_words:,} words)")
     logger.info(f"Total generation time: {session_metrics.total_generation_time:.1f}s")
     
-    # File sizes
+    # File sizes with full paths
     logger.info(f"\nFiles created:")
+    translation_files = []
+    other_files = []
     for filepath in sorted(output_dir.glob("*")):
-        size_kb = filepath.stat().st_size / 1024
-        logger.info(f"  • {filepath.name}: {size_kb:.1f} KB")
+        if filepath.name.startswith("translation_"):
+            translation_files.append(filepath)
+        else:
+            other_files.append(filepath)
+    
+    # Log translation files with language names
+    if translation_files:
+        logger.info(f"\n  Translation files:")
+        for filepath in translation_files:
+            size_kb = filepath.stat().st_size / 1024
+            lang_code = filepath.stem.replace("translation_", "")
+            lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
+            logger.info(f"    • {filepath} ({lang_name}): {size_kb:.1f} KB")
+    
+    # Log other files
+    if other_files:
+        logger.info(f"\n  Other files:")
+        for filepath in other_files:
+            size_kb = filepath.stat().st_size / 1024
+            logger.info(f"    • {filepath}: {size_kb:.1f} KB")
     
     logger.info("")
 
 
-def main() -> int:
+def main(mode: ReviewMode = ReviewMode.ALL) -> int:
     """Execute LLM manuscript review orchestration.
+    
+    Args:
+        mode: Execution mode - ALL (both), REVIEWS_ONLY, or TRANSLATIONS_ONLY
     
     Returns:
         Exit code (0=success, 1=failure, 2=skipped)
     """
-    log_header("STAGE 08: LLM Manuscript Review")
+    # Log appropriate header based on mode
+    if mode == ReviewMode.REVIEWS_ONLY:
+        log_header("STAGE 08: LLM Scientific Review (English)")
+    elif mode == ReviewMode.TRANSLATIONS_ONLY:
+        log_header("STAGE 08: LLM Translations")
+    else:
+        log_header("STAGE 08: LLM Manuscript Review")
     
     repo_root = Path(__file__).parent.parent
     project_output = repo_root / "project" / "output"
@@ -1584,31 +1633,52 @@ def main() -> int:
         reviews = {}
         total_start = time.time()
         
-        response, metrics = generate_executive_summary(client, text, model_name)
-        reviews["executive_summary"] = response
-        session_metrics.reviews["executive_summary"] = metrics
+        # Step 4a: Generate English scientific reviews (if not translations-only)
+        if mode != ReviewMode.TRANSLATIONS_ONLY:
+            logger.info("\n  Generating English scientific reviews...")
+            
+            response, metrics = generate_executive_summary(client, text, model_name)
+            reviews["executive_summary"] = response
+            session_metrics.reviews["executive_summary"] = metrics
+            
+            response, metrics = generate_quality_review(client, text, model_name)
+            reviews["quality_review"] = response
+            session_metrics.reviews["quality_review"] = metrics
+            
+            response, metrics = generate_methodology_review(client, text, model_name)
+            reviews["methodology_review"] = response
+            session_metrics.reviews["methodology_review"] = metrics
+            
+            response, metrics = generate_improvement_suggestions(client, text, model_name)
+            reviews["improvement_suggestions"] = response
+            session_metrics.reviews["improvement_suggestions"] = metrics
         
-        response, metrics = generate_quality_review(client, text, model_name)
-        reviews["quality_review"] = response
-        session_metrics.reviews["quality_review"] = metrics
+        # Step 4b: Generate translations (if not reviews-only)
+        if mode != ReviewMode.REVIEWS_ONLY:
+            translation_languages = get_translation_languages(repo_root)
+            if translation_languages:
+                logger.info(f"\n  Generating translations for {len(translation_languages)} language(s)...")
+                for lang_code in translation_languages:
+                    lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
+                    response, metrics = generate_translation(client, text, lang_code, model_name)
+                    reviews[f"translation_{lang_code}"] = response
+                    session_metrics.reviews[f"translation_{lang_code}"] = metrics
+                    # Log where the translation file will be saved
+                    translation_filepath = output_dir / f"translation_{lang_code}.md"
+                    logger.info(f"    Translation ({lang_name}) will be saved to: {translation_filepath}")
+            elif mode == ReviewMode.TRANSLATIONS_ONLY:
+                logger.warning("\n⚠️  No translation languages configured")
+                logger.info("  Configure translations in project/manuscript/config.yaml:")
+                logger.info("    llm:")
+                logger.info("      translations:")
+                logger.info("        enabled: true")
+                logger.info("        languages: [zh, hi, ru]")
+                return 2  # Skip - nothing to do
         
-        response, metrics = generate_methodology_review(client, text, model_name)
-        reviews["methodology_review"] = response
-        session_metrics.reviews["methodology_review"] = metrics
-        
-        response, metrics = generate_improvement_suggestions(client, text, model_name)
-        reviews["improvement_suggestions"] = response
-        session_metrics.reviews["improvement_suggestions"] = metrics
-        
-        # Step 4b: Generate translations (if configured)
-        translation_languages = get_translation_languages(repo_root)
-        if translation_languages:
-            logger.info(f"\n  Generating translations for {len(translation_languages)} language(s)...")
-            for lang_code in translation_languages:
-                lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
-                response, metrics = generate_translation(client, text, lang_code, model_name)
-                reviews[f"translation_{lang_code}"] = response
-                session_metrics.reviews[f"translation_{lang_code}"] = metrics
+        # Check if any reviews were generated
+        if not reviews:
+            logger.warning("\n⚠️  No reviews or translations were generated")
+            return 2
         
         session_metrics.total_generation_time = time.time() - total_start
         
@@ -1620,7 +1690,13 @@ def main() -> int:
         # Step 6: Generate summary
         generate_review_summary(reviews, output_dir, session_metrics)
         
-        log_success("\n✅ LLM manuscript review complete!", logger)
+        # Log appropriate completion message
+        if mode == ReviewMode.REVIEWS_ONLY:
+            log_success("\n✅ LLM scientific review complete!", logger)
+        elif mode == ReviewMode.TRANSLATIONS_ONLY:
+            log_success("\n✅ LLM translations complete!", logger)
+        else:
+            log_success("\n✅ LLM manuscript review complete!", logger)
         return 0
         
     except Exception as e:
@@ -1628,5 +1704,49 @@ def main() -> int:
         return 1
 
 
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments.
+    
+    Returns:
+        Parsed arguments namespace
+    """
+    parser = argparse.ArgumentParser(
+        description="LLM Manuscript Review - Generate AI-powered reviews and translations",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python3 scripts/06_llm_review.py                    # Run both reviews and translations
+  python3 scripts/06_llm_review.py --reviews-only     # Run only English scientific reviews
+  python3 scripts/06_llm_review.py --translations-only # Run only translations
+
+Requires Ollama to be running with at least one model installed.
+        """
+    )
+    
+    mode_group = parser.add_mutually_exclusive_group()
+    mode_group.add_argument(
+        "--reviews-only",
+        action="store_true",
+        help="Run only English scientific reviews (executive summary, quality, methodology, improvements)"
+    )
+    mode_group.add_argument(
+        "--translations-only",
+        action="store_true",
+        help="Run only translations to configured languages"
+    )
+    
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    exit(main())
+    args = parse_args()
+    
+    # Determine mode from arguments
+    if args.reviews_only:
+        mode = ReviewMode.REVIEWS_ONLY
+    elif args.translations_only:
+        mode = ReviewMode.TRANSLATIONS_ONLY
+    else:
+        mode = ReviewMode.ALL
+    
+    exit(main(mode))

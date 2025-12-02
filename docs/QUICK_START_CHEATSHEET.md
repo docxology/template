@@ -166,7 +166,7 @@ Reference it: \ref{fig:my_figure}
 **Current System Status:**
 - **Tests**: 878/878 passing (558 infra + 320 project)
 - **Coverage**: 99.88% project, 55.89% infra (exceeds requirements)
-- **Build Time**: 58 seconds
+- **Build Time**: 84 seconds (without optional LLM review)
 - **PDFs Generated**: 13 sections
 - **Documentation**: 25+ comprehensive guides
 

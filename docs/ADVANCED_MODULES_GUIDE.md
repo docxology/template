@@ -1,14 +1,14 @@
 # 🔬 Advanced Modules Guide
 
-> **Comprehensive guide** to the 6 advanced infrastructure modules
+> **Comprehensive guide** to the 9 advanced infrastructure modules
 
 **Quick Reference:** [API Reference](API_REFERENCE.md) | [Architecture](ARCHITECTURE.md) | [Infrastructure Docs](../infrastructure/AGENTS.md)
 
-This guide provides detailed usage instructions for the six advanced modules that extend the Research Project Template with professional-grade features for quality assurance, reproducibility, integrity verification, publishing workflows, scientific computing best practices, and build process validation.
+This guide provides detailed usage instructions for the nine advanced modules that extend the Research Project Template with professional-grade features for quality assurance, reproducibility, integrity verification, publishing workflows, scientific computing best practices, build process validation, literature search, LLM integration, and multi-format rendering.
 
 ## Module Overview
 
-The template includes six advanced infrastructure modules that provide enterprise-grade capabilities:
+The template includes nine advanced infrastructure modules that provide enterprise-grade capabilities:
 
 | Module | Purpose | Key Features |
 |--------|---------|--------------|
@@ -18,6 +18,9 @@ The template includes six advanced infrastructure modules that provide enterpris
 | **Publishing** | Academic workflows | DOI validation, citation generation, platform integration |
 | **Scientific Dev** | Research best practices | Numerical stability, performance benchmarking, code quality |
 | **Build Verifier** | Pipeline validation | Build artifact verification, reproducibility testing, comprehensive reporting |
+| **Literature Search** | Academic literature management | Multi-source search, PDF download, BibTeX generation, library management |
+| **LLM Integration** | Local LLM assistance | Ollama integration, research templates, context management, streaming |
+| **Rendering System** | Multi-format output | PDF, slides, web, poster generation from single source |
 
 All modules follow the thin orchestrator pattern with comprehensive test coverage.
 
@@ -239,7 +242,7 @@ python3 -m infrastructure.validation.integrity.cli output/
 
 ## 📚 Publishing Module
 
-**Location**: `infrastructure/publishing/publishing.py`  
+**Location**: `infrastructure/publishing/core.py`  
 **Purpose**: Academic publishing workflow assistance
 
 ### Key Features
@@ -255,7 +258,7 @@ python3 -m infrastructure.validation.integrity.cli output/
 #### DOI Validation and Citation Generation
 
 ```python
-from infrastructure.publishing.publishing import validate_doi, generate_citation_bibtex
+from infrastructure.publishing.core import validate_doi, generate_citation_bibtex
 
 # Validate DOI
 doi = "10.5281/zenodo.12345678"
@@ -290,7 +293,7 @@ print(bibtex)
 #### Metadata Extraction
 
 ```python
-from infrastructure.publishing.publishing import extract_publication_metadata
+from infrastructure.publishing.core import extract_publication_metadata
 
 # Extract metadata from manuscript
 markdown_files = ["manuscript/01_abstract.md", "manuscript/02_introduction.md"]
@@ -455,6 +458,277 @@ python3 -m infrastructure.build.build_verifier.cli output/ --comprehensive
 
 ---
 
+## 📚 Literature Search Module
+
+**Location**: `infrastructure/literature/core.py`  
+**Purpose**: Academic literature search and reference management
+
+### Key Features
+
+- **Multi-Source Search**: Unified search across arXiv, Semantic Scholar, and CrossRef
+- **PDF Download**: Automatic paper retrieval with retry logic and fallback sources
+- **Citation Extraction**: Extract citations from papers and generate BibTeX
+- **BibTeX Management**: Generate and manage bibliography files
+- **Reference Deduplication**: Merge results from multiple sources
+- **Library Management**: Organize research papers with JSON-based indexing
+
+### Usage Examples
+
+#### Basic Literature Search
+
+```python
+from infrastructure.literature import LiteratureSearch
+
+# Initialize searcher
+searcher = LiteratureSearch()
+
+# Search for papers
+papers = searcher.search("machine learning", limit=10)
+
+for paper in papers:
+    print(f"{paper.title} ({paper.year})")
+    print(f"  Authors: {', '.join(paper.authors)}")
+    print(f"  DOI: {paper.doi or 'N/A'}")
+```
+
+#### Download and Manage Papers
+
+```python
+# Download PDF (saved as citation_key.pdf)
+pdf_path = searcher.download_paper(papers[0])
+
+# Add to library (both BibTeX and JSON index)
+citation_key = searcher.add_to_library(papers[0])
+print(f"Added to library with key: {citation_key}")
+
+# Get library statistics
+stats = searcher.get_library_stats()
+print(f"Total papers: {stats['total_entries']}")
+print(f"Total citations: {stats['total_citations']}")
+```
+
+#### Export References
+
+```python
+# Export BibTeX
+searcher.export_bibtex("references.bib")
+
+# Export library as JSON
+searcher.export_library("library.json")
+```
+
+### Command Line Integration
+
+```bash
+# Search for papers
+python3 -m infrastructure.literature.cli search "deep learning" --limit 20
+
+# Search with download
+python3 -m infrastructure.literature.cli search "transformers" --download
+
+# List library
+python3 -m infrastructure.literature.cli library list
+
+# Show statistics
+python3 -m infrastructure.literature.cli library stats
+```
+
+---
+
+## 🤖 LLM Integration Module
+
+**Location**: `infrastructure/llm/core.py`  
+**Purpose**: Local LLM assistance for research workflows
+
+### Key Features
+
+- **Ollama Integration**: Local model support (privacy-first)
+- **Template System**: Pre-built prompts for common research tasks
+- **Context Management**: Multi-turn conversation handling
+- **Streaming Support**: Real-time response generation
+- **Model Fallback**: Automatic fallback to alternative models
+- **Token Counting**: Track usage and costs
+
+### Research Templates
+
+- Abstract summarization
+- Literature review generation
+- Code documentation
+- Data interpretation
+- Section drafting assistance
+- Citation formatting
+- Technical abstract translation (Chinese, Hindi, Russian)
+
+### Usage Examples
+
+#### Basic LLM Query
+
+```python
+from infrastructure.llm import LLMClient
+
+# Initialize client (reads OLLAMA_HOST, OLLAMA_MODEL from environment)
+client = LLMClient()
+
+# Simple query
+response = client.query("What are the key findings in this paper?")
+print(response)
+```
+
+#### Using Research Templates
+
+```python
+# Apply research template
+summary = client.apply_template(
+    "summarize_abstract",
+    text=abstract_text
+)
+
+# Generate literature review section
+review = client.apply_template(
+    "literature_review",
+    topic="machine learning",
+    papers=["paper1", "paper2", "paper3"]
+)
+```
+
+#### Response Modes
+
+```python
+# Short response (< 150 tokens)
+answer = client.query_short("What is quantum entanglement?")
+
+# Long response (> 500 tokens)
+explanation = client.query_long("Explain quantum entanglement in detail")
+
+# Structured JSON response
+schema = {
+    "type": "object",
+    "properties": {
+        "summary": {"type": "string"},
+        "key_points": {"type": "array"}
+    }
+}
+result = client.query_structured("Summarize...", schema=schema)
+```
+
+#### Streaming Responses
+
+```python
+# Stream response in real-time
+for chunk in client.stream_query("Write a research summary"):
+    print(chunk, end="", flush=True)
+```
+
+### Command Line Integration
+
+```bash
+# Check Ollama connection
+python3 -m infrastructure.llm.cli check
+
+# List available models
+python3 -m infrastructure.llm.cli models
+
+# Send query
+python3 -m infrastructure.llm.cli query "What is machine learning?"
+
+# Apply template
+python3 -m infrastructure.llm.cli template summarize_abstract --input "Abstract text..."
+```
+
+---
+
+## 🎨 Rendering System Module
+
+**Location**: `infrastructure/rendering/core.py`  
+**Purpose**: Multi-format output generation from single source
+
+### Key Features
+
+- **PDF Rendering**: Professional LaTeX-based PDFs
+- **Presentation Slides**: Beamer (PDF) and reveal.js (HTML) slides
+- **Web Output**: Interactive HTML with MathJax
+- **Scientific Posters**: Large-format poster generation
+- **Format-Agnostic**: Single source, multiple outputs
+- **Quality Validation**: Automated output checking
+
+### Usage Examples
+
+#### Render All Formats
+
+```python
+from infrastructure.rendering import RenderManager
+from pathlib import Path
+
+manager = RenderManager()
+
+# Render all formats from markdown
+outputs = manager.render_all(Path("manuscript/main.md"))
+
+# Outputs include:
+# - PDF: output/pdf/main.pdf
+# - Slides: output/slides/main_beamer.pdf, output/slides/main_revealjs.html
+# - Web: output/web/main.html
+# - Poster: output/posters/main_poster.pdf
+```
+
+#### Render Specific Format
+
+```python
+# PDF only
+pdf_path = manager.render_pdf(Path("manuscript/main.tex"))
+
+# Beamer slides
+slides_pdf = manager.render_slides(
+    Path("presentation.md"),
+    format="beamer"
+)
+
+# Reveal.js HTML slides
+slides_html = manager.render_slides(
+    Path("presentation.md"),
+    format="revealjs"
+)
+
+# Web version
+html_path = manager.render_web(Path("manuscript/main.md"))
+```
+
+#### Combined PDF with Title Page
+
+```python
+# Render combined PDF with automatic title page generation
+markdown_files = [
+    Path("manuscript/01_abstract.md"),
+    Path("manuscript/02_introduction.md"),
+    # ... more sections
+]
+
+pdf_path = manager.render_combined_pdf(
+    markdown_files,
+    manuscript_dir=Path("manuscript/")
+)
+# Title page automatically generated from manuscript/config.yaml
+```
+
+### Command Line Integration
+
+```bash
+# Render all formats
+python3 -m infrastructure.rendering.cli all manuscript.tex
+
+# Render PDF only
+python3 -m infrastructure.rendering.cli pdf manuscript.tex
+
+# Generate slides
+python3 -m infrastructure.rendering.cli slides presentation.md --format beamer
+python3 -m infrastructure.rendering.cli slides presentation.md --format revealjs
+
+# Generate web version
+python3 -m infrastructure.rendering.cli web manuscript.md
+```
+
+---
+
 ## Integration Patterns
 
 ### Using Multiple Modules Together
@@ -464,7 +738,7 @@ python3 -m infrastructure.build.build_verifier.cli output/ --comprehensive
 from infrastructure.build.quality_checker import analyze_document_quality
 from infrastructure.build.reproducibility import generate_reproducibility_report
 from infrastructure.validation.integrity import verify_output_integrity
-from infrastructure.publishing.publishing import extract_publication_metadata
+from infrastructure.publishing.core import extract_publication_metadata
 
 def comprehensive_validation(output_dir, manuscript_files):
     """Run complete validation suite."""
@@ -616,6 +890,9 @@ def monitor_performance():
 | Publishing | requests, bibtexparser | 86% |
 | Scientific Dev | numpy, time, psutil | 88% |
 | Build Verifier | subprocess, hashlib | 68% |
+| Literature Search | requests, bibtexparser | 91% |
+| LLM Integration | requests, ollama | 91% |
+| Rendering System | pandoc, xelatex | 91% |
 
 All modules are designed to work independently or together, with minimal coupling between components.
 

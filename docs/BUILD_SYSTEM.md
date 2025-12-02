@@ -92,7 +92,7 @@ flowchart TD
 
 ## 📈 Detailed Performance Analysis
 
-### Stage 1: Test Suite (26 seconds)
+### Stage 1: Run Tests - Test Suite Details (26 seconds)
 
 **Breakdown:**
 - Infrastructure Tests: 23 seconds (558 tests)
@@ -104,15 +104,15 @@ flowchart TD
 
 | Module | Statements | Missing | Coverage | Status |
 |--------|------------|---------|----------|--------|
-| `src/example.py` | 21 | 0 | **100%** | ✅ Perfect |
-| `src/glossary_gen.py` | 56 | 0 | **100%** | ✅ Perfect |
-| `src/pdf_validator.py` | 39 | 0 | **100%** | ✅ Perfect |
-| `src/scientific_dev.py` | 300 | 35 | **88%** | ✅ Excellent |
-| `src/quality_checker.py` | 252 | 29 | **88%** | ✅ Excellent |
-| `src/publishing.py` | 305 | 44 | **86%** | ✅ Excellent |
-| `src/integrity.py` | 354 | 67 | **81%** | ✅ Very Good |
-| `src/reproducibility.py` | 264 | 58 | **78%** | ✅ Good |
-| `src/build_verifier.py` | 398 | 127 | **68%** | ✅ Good |
+| `project/src/example.py` | 21 | 0 | **100%** | ✅ Perfect |
+| `infrastructure/documentation/glossary_gen.py` | 56 | 0 | **100%** | ✅ Perfect |
+| `infrastructure/validation/pdf_validator.py` | 39 | 0 | **100%** | ✅ Perfect |
+| `infrastructure/scientific/scientific_dev.py` | 300 | 35 | **88%** | ✅ Excellent |
+| `infrastructure/build/quality_checker.py` | 252 | 29 | **88%** | ✅ Excellent |
+| `infrastructure/publishing/` | 305 | 44 | **86%** | ✅ Excellent |
+| `infrastructure/validation/integrity.py` | 354 | 67 | **81%** | ✅ Very Good |
+| `infrastructure/build/reproducibility.py` | 264 | 58 | **78%** | ✅ Good |
+| `infrastructure/build/build_verifier.py` | 398 | 127 | **68%** | ✅ Good |
 | **TOTAL** | **1989** | **360** | **81.90%** | ✅ **Excellent** |
 
 **Analysis:** All core modules have excellent coverage. The `build_verifier.py` module has lower coverage (68%) but still exceeds the 70% requirement when averaged with other modules.
@@ -123,7 +123,7 @@ flowchart TD
 
 #### Script 1: `example_figure.py`
 - ✅ Demonstrates thin orchestrator pattern
-- ✅ Imports from `src/example.py`
+- ✅ Imports from `project/src/example.py`
 - ✅ Generates: `output/figures/example_figure.png`, `output/data/example_data.npz`, `output/data/example_data.csv`
 
 #### Script 2: `generate_research_figures.py`
@@ -357,8 +357,8 @@ build_combined() {
 # Run complete pipeline (all 6 stages)
 python3 scripts/run_all.py
 
-# Or use shell wrapper
-./run_all.sh
+# Or use unified interactive menu
+./run.sh
 
 # Run individual stages
 python3 scripts/00_setup_environment.py  # Stage 0
@@ -389,8 +389,8 @@ python3 scripts/05_copy_outputs.py       # Stage 5
    # Run all stages
    python3 scripts/run_all.py
    
-   # Or use shell wrapper
-   ./run_all.sh
+   # Or use unified interactive menu
+   ./run.sh
    ```
 
 ### Tests Fail
@@ -446,8 +446,8 @@ To verify everything works on your system:
 # 1. Run complete pipeline (all 6 stages)
 python3 scripts/run_all.py
 
-# Or use shell wrapper
-./run_all.sh
+# Or use unified interactive menu
+./run.sh
 
 # 2. Expected output:
 # - Build completes in ~75-80 seconds
@@ -519,6 +519,6 @@ The build system is **production-ready** and performs excellently:
 ---
 
 **Last Updated:** November 30, 2025  
-**Build Version:** v2.0 (7-stage pipeline)  
+**Build Version:** v2.0 (6-stage pipeline: stages 00-05, with optional Stage 8 for LLM review)  
 **Status:** ✅ **APPROVED FOR PRODUCTION USE**
 
