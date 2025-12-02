@@ -1,4 +1,4 @@
-"""Test package-level imports and API exposure for scientific layer.
+"""Test package-level imports and API exposure for Boundary Logic layer.
 
 This module ensures that package-level imports from project.src are properly
 exposed through the __init__.py file and that package metadata is correct.
@@ -11,48 +11,77 @@ import pytest
 class TestPackageLevelImports:
     """Test package-level API exposure through __init__.py."""
 
-    def test_core_function_imports(self) -> None:
-        """Test that core functions are accessible from package level."""
+    def test_core_form_imports(self) -> None:
+        """Test that core Form functions are accessible from package level."""
         # Import from package level (tests __init__.py)
         from src import (
-            add_numbers,
-            calculate_average,
+            Form,
+            make_void,
+            make_mark,
+            enclose,
+            juxtapose,
         )
         
-        # Verify functions work
-        assert add_numbers(2, 3) == 5
-        assert calculate_average([1, 2, 3]) == 2.0
+        # Verify basic form operations
+        void = make_void()
+        mark = make_mark()
+        assert void.is_void()
+        assert not mark.is_void()
+        
+        # Test form creation
+        enclosed = enclose(mark)
+        assert enclosed is not None
 
-    def test_class_imports(self) -> None:
-        """Test that core classes are accessible from package level."""
+    def test_reduction_imports(self) -> None:
+        """Test that reduction functions are accessible from package level."""
         from src import (
-            SimpleSimulation,
-            SimulationBase,
-            VisualizationEngine,
+            reduce_form,
+            forms_equivalent,
+            canonical_form,
+            make_mark,
+            enclose,
         )
         
-        # Verify classes exist and can be instantiated
-        assert SimpleSimulation is not None
-        assert SimulationBase is not None
+        # Verify reduction works
+        form = enclose(enclose(make_mark()))  # ⟨⟨⟨ ⟩⟩⟩
+        result = reduce_form(form)
+        assert result is not None
+
+    def test_algebra_imports(self) -> None:
+        """Test that Boolean algebra functions are accessible from package level."""
+        from src import (
+            is_tautology,
+            is_contradiction,
+            is_satisfiable,
+            make_mark,
+            make_void,
+        )
+        
+        # Verify algebra operations exist
+        mark = make_mark()
+        void = make_void()
+        
+        # Basic checks
+        assert callable(is_tautology)
+        assert callable(is_contradiction)
+        assert callable(is_satisfiable)
+
+    def test_visualization_imports(self) -> None:
+        """Test that visualization classes are accessible from package level."""
+        from src import (
+            VisualizationEngine,
+            create_multi_panel_figure,
+            visualize_form,
+        )
+        
+        # Verify classes and functions exist
         assert VisualizationEngine is not None
+        assert callable(create_multi_panel_figure)
+        assert callable(visualize_form)
         
         # Verify VisualizationEngine can be created
         engine = VisualizationEngine(output_dir=".")
         assert engine is not None
-
-    def test_statistics_imports(self) -> None:
-        """Test that statistics functions are accessible from package level."""
-        from src import calculate_descriptive_stats
-        
-        import numpy as np
-        
-        # Test statistics function
-        data = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
-        stats = calculate_descriptive_stats(data)
-        
-        assert stats is not None
-        assert hasattr(stats, 'mean')
-        assert stats.mean == 3.0
 
     def test_package_metadata(self) -> None:
         """Test that package metadata is properly defined."""
@@ -62,36 +91,44 @@ class TestPackageLevelImports:
         assert hasattr(pkg, '__version__')
         assert pkg.__version__ == "1.0.0"
         
-        # Test layer designation
-        assert hasattr(pkg, '__layer__')
-        assert pkg.__layer__ == "scientific"
+        # Test author
+        assert hasattr(pkg, '__author__')
+        assert pkg.__author__ == "Project Author"
+        
+        # Test description
+        assert hasattr(pkg, '__description__')
+        assert "Containment Theory" in pkg.__description__
 
     def test_package_all_exports(self) -> None:
-        """Test that __all__ is properly defined and includes expected modules."""
+        """Test that __all__ is properly defined and includes expected exports."""
         import src as pkg
         
         # Verify __all__ exists
         assert hasattr(pkg, '__all__')
         assert isinstance(pkg.__all__, list)
         
-        # Verify expected modules are in __all__
-        expected_modules = [
-            "example",
-            "simulation",
-            "statistics",
-            "data_generator",
-            "data_processing",
-            "metrics",
-            "parameters",
-            "performance",
-            "plots",
-            "reporting",
-            "validation",
-            "visualization",
+        # Verify expected core exports are in __all__
+        expected_exports = [
+            # Forms
+            "Form",
+            "make_void",
+            "make_mark",
+            "enclose",
+            "juxtapose",
+            # Reduction
+            "reduce_form",
+            "forms_equivalent",
+            # Algebra
+            "is_tautology",
+            "is_contradiction",
+            # Visualization
+            "visualize_form",
+            "VisualizationEngine",
+            "create_multi_panel_figure",
         ]
         
-        for module in expected_modules:
-            assert module in pkg.__all__, f"Module '{module}' not in __all__"
+        for export in expected_exports:
+            assert export in pkg.__all__, f"Export '{export}' not in __all__"
 
     def test_package_imports_without_errors(self) -> None:
         """Test that importing package doesn't produce import errors."""
@@ -106,20 +143,51 @@ class TestPackageLevelImports:
         import src as pkg
         
         assert pkg.__doc__ is not None
-        assert "scientific" in pkg.__doc__.lower()
-        assert "layer" in pkg.__doc__.lower()
+        # The docstring describes Containment Theory/Boundary Logic
+        assert "containment" in pkg.__doc__.lower() or "boundary" in pkg.__doc__.lower()
+        assert "form" in pkg.__doc__.lower()
 
-    def test_import_error_fallback(self) -> None:
-        """Test that ImportError fallback doesn't break package loading.
+    def test_expression_parsing_imports(self) -> None:
+        """Test that expression parsing is accessible."""
+        from src import (
+            parse,
+            parse_expression,
+            format_form,
+        )
         
-        This tests that even if individual imports fail, the package
-        still loads gracefully (the except clause in __init__.py).
-        """
-        # This test verifies that the try/except block exists and works
-        # The pass statement ensures graceful failure
-        import src as pkg
+        assert callable(parse)
+        assert callable(parse_expression)
+        assert callable(format_form)
+
+    def test_theorem_imports(self) -> None:
+        """Test that theorem functions are accessible."""
+        from src import (
+            axiom_calling,
+            axiom_crossing,
+            get_all_theorems,
+            verify_all_theorems,
+        )
         
-        # Verify that despite potential import errors, the package works
-        assert hasattr(pkg, '__version__')
-        assert hasattr(pkg, '__all__')
+        # Test axiom functions return theorems
+        j1 = axiom_calling()
+        j2 = axiom_crossing()
+        
+        assert j1 is not None
+        assert j2 is not None
+        assert hasattr(j1, 'name')
+        assert hasattr(j2, 'name')
+
+    def test_verification_imports(self) -> None:
+        """Test that verification functions are accessible."""
+        from src import (
+            verify_axioms,
+            verify_consistency,
+            verify_semantics,
+            full_verification,
+        )
+        
+        assert callable(verify_axioms)
+        assert callable(verify_consistency)
+        assert callable(verify_semantics)
+        assert callable(full_verification)
 

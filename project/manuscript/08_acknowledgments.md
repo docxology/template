@@ -1,43 +1,18 @@
-# Acknowledgments {#sec:acknowledgments}
+# Acknowledgments
 
-We gratefully acknowledge the contributions of many individuals and institutions that made this research possible.
+This work stands on the foundations laid by G. Spencer-Brown, whose *Laws of Form* (1969) opened a new path in mathematical logic. We acknowledge the profound influence of his insight that distinction precedes all else.
 
-## Funding
+We are grateful to Louis H. Kauffman for his extensive work connecting the calculus of indications to knot theory, self-reference, and category theory, and for keeping the Laws of Form tradition alive in contemporary mathematics.
 
-This work was supported by [grant numbers and funding agencies to be specified].
+William Bricken's development of boundary mathematics for computation demonstrated the practical viability of iconic notation and inspired the computational framework presented here.
 
-## Computing Resources
+The philosophical grounding draws extensively from the North American pragmatist tradition—Charles Sanders Peirce, William James, John Dewey—whose emphasis on consequences and operations aligns with the calculus's operational character. We also acknowledge the neo-materialist contributions of Karen Barad, Donna Haraway, and Jane Bennett, whose work on agential cuts and relational ontology illuminates the metaphysical significance of distinction.
 
-Computational resources were provided by [institution/facility name], enabling the large-scale experiments reported in Section \ref{sec:experimental_results}.
+The infrastructure for this research project was developed using the Research Project Template, providing reproducible build processes, automated testing, and integrated literature management.
 
-## Collaborations
-
-We thank our collaborators for valuable discussions and feedback throughout the development of this work:
-
-- Prof. [Name], [Institution] - for insights into the theoretical framework
-- Dr. [Name], [Institution] - for providing benchmark datasets
-- [Research Group], [Institution] - for computational infrastructure support
-
-## Data and Software
-
-This research builds upon open-source software tools and publicly available datasets. We acknowledge:
-
-- Python scientific computing stack (NumPy, SciPy, Matplotlib)
-- LaTeX and Pandoc for document preparation
-- Public datasets used in our evaluation
-
-## Feedback and Review
-
-We are grateful to the anonymous reviewers whose constructive feedback significantly improved this manuscript.
-
-## Institutional Support
-
-This research was conducted with the support of [Institution Name], providing research facilities and academic resources essential to this work.
+Computational verification was performed using Python with NumPy and Matplotlib for visualization. All source code is available in the accompanying repository under the Apache 2.0 license.
 
 ---
 
-*All errors and omissions remain the sole responsibility of the authors.*
-
-
-
-
+*"Draw a distinction."*  
+— G. Spencer-Brown, *Laws of Form* (1969)

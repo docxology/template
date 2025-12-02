@@ -1,58 +1,52 @@
 # Paper Metadata Configuration
-# This file contains all configurable metadata for the manuscript
-# Edit this file to customize your paper's metadata
+# Containment Theory: Boundary Logic as Alternative Foundation to Set Theory
 
 paper:
-  title: "Example Default Project Title"
-  subtitle: "Subtitle Example"  # Optional subtitle
-  version: "1.0"  # Paper version
+  title: "Containment Theory: Boundary Logic as Alternative Foundation to Set Theory"
+  subtitle: "A Computational Investigation of Spencer-Brown's Laws of Form"
+  version: "1.0"
   date: ""  # Auto-generated if empty (uses current date)
 
 # Author information
-# For single author, use one entry
-# For multiple authors, add additional entries
 authors:
   - name: "Project Author"
     orcid: "0000-0000-0000-1234"
     email: "author@example.com"
-    affiliation: "Template Institute"  # Optional: Institution or organization
-    corresponding: true  # Mark corresponding author
+    affiliation: "Research Institute"
+    corresponding: true
 
-# Optional: Additional authors
-# Uncomment and modify as needed:
-#  - name: "Dr. John Doe"
-#    orcid: "0000-0000-0000-5678"
-#    email: "john.doe@university.edu"
-#    affiliation: "Another University"
-#    corresponding: false
-
-# Publication information (optional)
+# Publication information
 publication:
-  doi: "10.5281/zenodo.12345678"  # Digital Object Identifier, e.g., "10.5281/zenodo.12345678"
-  journal: "Example Journal"  # Journal name if published
-  volume: "42"  # Journal volume
-  pages: "123-145"  # Page numbers
-  year: "2025"  # Publication year (auto-generated if empty)
+  doi: ""  # To be assigned
+  journal: ""  # Target journal
+  volume: ""
+  pages: ""
+  year: "2025"
 
 # Keywords for metadata
 keywords:
-  - "research"
-  - "template"
-  - "academic"
+  - "containment theory"
+  - "boundary logic"
+  - "Laws of Form"
+  - "iconic mathematics"
+  - "foundational mathematics"
+  - "Spencer-Brown"
+  - "calculus of indications"
+  - "Boolean algebra"
+  - "self-reference"
 
 # Additional metadata
 metadata:
-  abstract: ""  # Can reference abstract section or leave empty
-  acknowledgments: ""  # Funding info, etc. (can reference acknowledgments section)
-  license: "Apache-2.0"  # License for the work
-  language: "en"  # Paper language code
+  abstract: ""  # References abstract section
+  acknowledgments: ""
+  license: "Apache-2.0"
+  language: "en"
 
 # LLM Review Settings
 llm:
   translations:
-    enabled: true  # Set to false to disable translation generation
+    enabled: true
     languages:
       - zh  # Chinese (Simplified)
       - hi  # Hindi
       - ru  # Russian
-

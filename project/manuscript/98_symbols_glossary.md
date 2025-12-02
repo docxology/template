@@ -1,73 +1,127 @@
-# API Symbols Glossary {#sec:glossary}
+# Symbols and Glossary
 
-This glossary is auto-generated from the public API in `src/` modules.
+## Primary Symbols
 
-<!-- BEGIN: AUTO-API-GLOSSARY -->
-| Module | Name | Kind | Summary |
-|---|---|---|---|
-| `data_generator` | `generate_classification_dataset` | function | Generate classification dataset. |
-| `data_generator` | `generate_correlated_data` | function | Generate correlated multivariate data. |
-| `data_generator` | `generate_synthetic_data` | function | Generate synthetic data with specified distribution. |
-| `data_generator` | `generate_time_series` | function | Generate time series data. |
-| `data_generator` | `inject_noise` | function | Inject noise into data. |
-| `data_generator` | `validate_data` | function | Validate data quality. |
-| `data_processing` | `clean_data` | function | Clean data by removing or filling invalid values. |
-| `data_processing` | `create_validation_pipeline` | function | Create a data validation pipeline. |
-| `data_processing` | `detect_outliers` | function | Detect outliers in data. |
-| `data_processing` | `extract_features` | function | Extract features from data. |
-| `data_processing` | `normalize_data` | function | Normalize data using specified method. |
-| `data_processing` | `remove_outliers` | function | Remove outliers from data. |
-| `data_processing` | `standardize_data` | function | Standardize data to zero mean and unit variance. |
-| `data_processing` | `transform_data` | function | Apply transformation to data. |
-| `example` | `add_numbers` | function | Add two numbers together. |
-| `example` | `calculate_average` | function | Calculate the average of a list of numbers. |
-| `example` | `find_maximum` | function | Find the maximum value in a list of numbers. |
-| `example` | `find_minimum` | function | Find the minimum value in a list of numbers. |
-| `example` | `is_even` | function | Check if a number is even. |
-| `example` | `is_odd` | function | Check if a number is odd. |
-| `example` | `multiply_numbers` | function | Multiply two numbers together. |
-| `metrics` | `CustomMetric` | class | Framework for custom metrics. |
-| `metrics` | `calculate_accuracy` | function | Calculate accuracy for classification. |
-| `metrics` | `calculate_all_metrics` | function | Calculate all applicable metrics. |
-| `metrics` | `calculate_convergence_metrics` | function | Calculate convergence metrics. |
-| `metrics` | `calculate_effect_size` | function | Calculate effect size (Cohen's d). |
-| `metrics` | `calculate_p_value_approximation` | function | Approximate p-value from test statistic. |
-| `metrics` | `calculate_precision_recall_f1` | function | Calculate precision, recall, and F1 score. |
-| `metrics` | `calculate_psnr` | function | Calculate Peak Signal-to-Noise Ratio (PSNR). |
-| `metrics` | `calculate_snr` | function | Calculate Signal-to-Noise Ratio (SNR). |
-| `metrics` | `calculate_ssim` | function | Calculate Structural Similarity Index (SSIM). |
-| `parameters` | `ParameterConstraint` | class | Constraint for parameter validation. |
-| `parameters` | `ParameterSet` | class | A set of parameters with validation. |
-| `parameters` | `ParameterSweep` | class | Configuration for parameter sweeps. |
-| `performance` | `ConvergenceMetrics` | class | Metrics for convergence analysis. |
-| `performance` | `ScalabilityMetrics` | class | Metrics for scalability analysis. |
-| `performance` | `analyze_convergence` | function | Analyze convergence of a sequence. |
-| `performance` | `analyze_scalability` | function | Analyze scalability of an algorithm. |
-| `performance` | `benchmark_comparison` | function | Compare multiple methods on benchmarks. |
-| `performance` | `calculate_efficiency` | function | Calculate efficiency (speedup / resource_ratio). |
-| `performance` | `calculate_speedup` | function | Calculate speedup relative to baseline. |
-| `performance` | `check_statistical_significance` | function | Test statistical significance between two groups. |
-| `plots` | `plot_3d_surface` | function | Create a 3D surface plot. |
-| `plots` | `plot_bar` | function | Create a bar chart. |
-| `plots` | `plot_comparison` | function | Plot comparison of methods. |
-| `plots` | `plot_contour` | function | Create a contour plot. |
-| `plots` | `plot_convergence` | function | Plot convergence curve. |
-| `plots` | `plot_heatmap` | function | Create a heatmap. |
-| `plots` | `plot_line` | function | Create a line plot. |
-| `plots` | `plot_scatter` | function | Create a scatter plot. |
-| `reporting` | `ReportGenerator` | class | Generate reports from simulation and analysis results. |
-| `simulation` | `SimpleSimulation` | class | Simple example simulation for testing. |
-| `simulation` | `SimulationBase` | class | Base class for scientific simulations. |
-| `simulation` | `SimulationState` | class | Represents the state of a simulation run. |
-| `statistics` | `DescriptiveStats` | class | Descriptive statistics for a dataset. |
-| `statistics` | `anova_test` | function | Perform one-way ANOVA test. |
-| `statistics` | `calculate_confidence_interval` | function | Calculate confidence interval for mean. |
-| `statistics` | `calculate_correlation` | function | Calculate correlation between two variables. |
-| `statistics` | `calculate_descriptive_stats` | function | Calculate descriptive statistics. |
-| `statistics` | `fit_distribution` | function | Fit a distribution to data. |
-| `statistics` | `t_test` | function | Perform t-test. |
-| `validation` | `ValidationFramework` | class | Framework for validating simulation and analysis results. |
-| `validation` | `ValidationResult` | class | Result of a validation check. |
-| `visualization` | `VisualizationEngine` | class | Engine for generating publication-quality figures. |
-| `visualization` | `create_multi_panel_figure` | function | Create a multi-panel figure. |
-<!-- END: AUTO-API-GLOSSARY -->
+| Symbol | Name | Description |
+|--------|------|-------------|
+| $\langle\ \rangle$ | Mark / Cross | The primary distinction; represents TRUE |
+| $\emptyset$ | Void | Empty space; represents FALSE |
+| $\langle a \rangle$ | Enclosure | Boundary containing form $a$; represents NOT $a$ |
+| $ab$ | Juxtaposition | Forms side-by-side; represents $a$ AND $b$ |
+| $j$ | Imaginary value | Self-referential form: $j = \langle j \rangle$ |
+
+## Derived Symbols
+
+| Symbol | Definition | Boolean Equivalent |
+|--------|------------|-------------------|
+| $\langle\langle a \rangle\langle b \rangle\rangle$ | De Morgan disjunction | $a$ OR $b$ |
+| $\langle a\langle b \rangle\rangle$ | Material implication | $a \to b$ |
+| $\langle ab \rangle$ | Sheffer stroke | $a$ NAND $b$ |
+| $\langle\langle\langle a \rangle\langle b \rangle\rangle\rangle$ | Peirce arrow | $a$ NOR $b$ |
+
+## Meta-Symbols
+
+| Symbol | Meaning |
+|--------|---------|
+| $\llbracket f \rrbracket$ | Truth value of form $f$ |
+| $\equiv$ | Semantic equivalence |
+| $=$ | Syntactic equality after reduction |
+| $\to$ | Reduces to (single step) |
+| $\to^*$ | Reduces to (multiple steps) |
+
+## Axiom Labels
+
+| Label | Name | Statement |
+|-------|------|-----------|
+| J1 | Calling / Involution | $\langle\langle a \rangle\rangle = a$ |
+| J2 | Crossing / Condensation | $\langle\ \rangle\langle\ \rangle = \langle\ \rangle$ |
+
+## Consequence Labels (C1-C9)
+
+| Label | Name | Statement |
+|-------|------|-----------|
+| C1 | Position | $\langle\langle a \rangle b \rangle a = a$ |
+| C2 | Transposition | $\langle\langle a \rangle\langle b \rangle\rangle c = \langle ac \rangle\langle bc \rangle$ |
+| C3 | Generation | $\langle\langle a \rangle a \rangle = \langle\ \rangle$ |
+| C4 | Integration | $\langle\ \rangle a = \langle\ \rangle$ (in enclosure) |
+| C5 | Occultation | $\langle\langle a \rangle\rangle a = a$ |
+| C6 | Iteration | $aa = a$ |
+| C7 | Extension | $\langle\langle a \rangle\langle b \rangle\rangle\langle\langle a \rangle b \rangle = a$ |
+| C8 | Echelon | $\langle\langle ab \rangle c \rangle = \langle ac \rangle\langle bc \rangle$ |
+| C9 | Cross-Transposition | $\langle\langle ac \rangle\langle bc \rangle\rangle = \langle\langle a \rangle\langle b \rangle\rangle c$ |
+
+---
+
+## Glossary
+
+### Agential Cut
+(Barad) An enacted boundary that constitutes the entities it separates; parallels the Spencer-Brown mark as constitutive rather than representational.
+
+### Boundary
+A line of demarcation creating inside and outside; the fundamental operation in the calculus of indications.
+
+### Calling
+Axiom J1: Double enclosure returns to the original form. Also known as involution or double negation elimination.
+
+### Canonical Form
+The irreducible form of an expression after all reduction rules have been applied. Only void and mark are canonical.
+
+### Condensation
+See Crossing.
+
+### Containment Theory
+The approach to mathematical foundations using spatial containment (boundaries) rather than set membership.
+
+### Crossing
+Axiom J2: Multiple marks in juxtaposition condense to a single mark. Also known as condensation.
+
+### Distinction
+The fundamental act of separating this from that; the primitive notion in the calculus of indications.
+
+### Enclosure
+The operation of placing a boundary around a form; corresponds to logical negation.
+
+### Existential Graphs
+C.S. Peirce's diagrammatic logic system, a precursor to Spencer-Brown's calculus.
+
+### Form
+Any well-formed expression in the calculus of indications, built from void, mark, enclosure, and juxtaposition.
+
+### Icon
+(Peirce) A sign that represents by resembling what it signifies; the mark is iconic of distinction.
+
+### Imaginary Value
+A self-referential form satisfying $j = \langle j \rangle$; neither marked nor void but oscillating between states.
+
+### Indication
+The act of pointing to or marking; the fundamental operation in Laws of Form.
+
+### Intra-action
+(Barad) Mutual constitution of entities through their interaction; parallels how forms co-determine through juxtaposition.
+
+### Juxtaposition
+Placing forms side by side; corresponds to logical conjunction (AND).
+
+### Laws of Form
+G. Spencer-Brown's 1969 book introducing the calculus of indications.
+
+### Mark
+The symbol $\langle\ \rangle$ representing the primary distinction; corresponds to TRUE.
+
+### Pragmatism
+North American philosophical tradition emphasizing consequences, practice, and operational meaning; grounds boundary logic's emphasis on reduction as meaning.
+
+### Primary Distinction
+The fundamental cognitive act of creating a boundary; the primitive of the calculus.
+
+### Reduction
+The process of applying axioms to simplify a form toward its canonical representation.
+
+### Self-Reference
+A form that contains itself as a subform; leads to imaginary values in boundary logic.
+
+### Void
+The empty space containing no marks; corresponds to FALSE. Also called the unmarked state.
+
+### ZFC
+Zermelo-Fraenkel Set Theory with Choice; the standard axiomatic foundation for mathematics, contrasted with Containment Theory.

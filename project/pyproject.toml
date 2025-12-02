@@ -3,10 +3,10 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "research-project"
+name = "containment-theory"
 version = "1.0.0"
-description = "Scientific research project with integrated testing and documentation"
-authors = [{name = "Project Author", email = "author@example.com"}]
+description = "Containment Theory: Boundary Logic as Alternative Foundation to Set Theory"
+authors = [{name = "Active InferAnt Stream #016.1", email = "daniel@activeinference.institute"}]
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.24.0",
@@ -15,6 +15,15 @@ dependencies = [
     "pandas>=2.0.0",
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
+    "networkx>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
 ]
 
 [tool.pytest.ini_options]
@@ -33,3 +42,11 @@ show_missing = true
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
 
+[tool.black]
+line-length = 88
+target-version = ['py310']
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true

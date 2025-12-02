@@ -1,165 +1,210 @@
-# Supplemental Methods {#sec:supplemental_methods}
+# Supplemental Methods
 
-This section provides detailed methodological information that supplements Section \ref{sec:methodology}.
+## S1.1 Form Construction Implementation
 
-## S1.1 Extended Algorithm Variants
+### Data Structure Design
 
-### S1.1.1 Stochastic Variant
+The `Form` class represents boundary expressions with the following structure:
 
-For large-scale problems, we developed a stochastic variant of our algorithm:
+```python
+@dataclass
+class Form:
+    form_type: FormType  # VOID, MARK, ENCLOSURE, JUXTAPOSITION
+    contents: List[Form] = field(default_factory=list)
+    is_marked: bool = False
+```
 
-\begin{equation}\label{eq:stochastic_update}
-x_{k+1} = x_k - \alpha_k \nabla f_{i_k}(x_k) + \beta_k (x_k - x_{k-1})
-\end{equation}
+**Design Rationale**:
+- `form_type` enables pattern matching for reduction rules
+- `contents` stores nested forms (children)
+- `is_marked` distinguishes mark from void at the base level
 
-where $i_k$ is a randomly sampled index from $\{1, \ldots, n\}$ at iteration $k$.
+### Constructor Functions
 
-**Convergence Analysis**: Under appropriate sampling strategies, this variant achieves $O(1/\sqrt{k})$ convergence rate for non-strongly convex problems, following the analysis in \cite{kingma2014, ruder2016}.
+| Function | Input | Output | Example |
+|----------|-------|--------|---------|
+| `make_void()` | None | Empty form | $\emptyset$ |
+| `make_mark()` | None | Single mark | $\langle\ \rangle$ |
+| `enclose(f)` | Form | Enclosed form | $\langle f \rangle$ |
+| `juxtapose(a, b, ...)` | Forms | Combined form | $abc...$ |
 
-### S1.1.2 Mini-Batch Variant
+### Form Equality
 
-To balance between computational efficiency and convergence speed:
+Two forms are **structurally equal** if:
+1. Same `form_type`
+2. Same `is_marked` value
+3. Contents are pairwise equal (recursive)
 
-\begin{equation}\label{eq:minibatch_update}
-x_{k+1} = x_k - \alpha_k \frac{1}{|B_k|} \sum_{i \in B_k} \nabla f_i(x_k) + \beta_k (x_k - x_{k-1})
-\end{equation}
+Note: Structural equality differs from **semantic equality** (reduction to same canonical form).
 
-where $B_k \subset \{1, \ldots, n\}$ is a mini-batch of size $|B_k| = b$.
+## S1.2 Reduction Engine Architecture
 
-## S1.2 Detailed Convergence Analysis
+### Pattern Matching Strategy
 
-### S1.2.1 Strong Convexity Assumptions
+The reduction engine uses a priority-based pattern matching approach:
 
-We assume the objective function $f$ satisfies:
+1. **Calling Pattern Detection**:
+   - Check if form is marked enclosure
+   - Check if single child is also marked enclosure
+   - If so, extract inner content
 
-\begin{equation}\label{eq:strong_convexity_detailed}
-f(y) \geq f(x) + \nabla f(x)^T (y - x) + \frac{\mu}{2} \|y - x\|^2, \quad \forall x, y \in \mathcal{X}
-\end{equation}
+2. **Crossing Pattern Detection**:
+   - Check if form has multiple simple marks in juxtaposition
+   - Count marks vs non-mark contents
+   - If >1 marks, condense
 
-where $\mu > 0$ is the strong convexity parameter.
+3. **Void Elimination**:
+   - Check for void elements in juxtaposition
+   - Remove voids (identity element for AND)
 
-### S1.2.2 Lipschitz Continuity
+### Reduction Trace Format
 
-The gradient is Lipschitz continuous:
+Each step in the reduction trace records:
 
-\begin{equation}\label{eq:lipschitz_detailed}
-\|\nabla f(x) - \nabla f(y)\| \leq L \|x - y\|, \quad \forall x, y \in \mathcal{X}
-\end{equation}
+```python
+@dataclass
+class ReductionStep:
+    before: Form      # Form before this step
+    after: Form       # Form after this step
+    rule: ReductionRule  # CALLING, CROSSING, or VOID_ELIMINATION
+    location: str     # Human-readable description
+```
 
-The condition number $\kappa = L/\mu$ determines the convergence rate: $\rho = \sqrt{1 - 1/\kappa}$, as established in \cite{nesterov2018, boyd2004}.
+### Recursive Application
 
-## S1.3 Additional Theoretical Results
+For compound forms, reduction applies recursively:
+1. Reduce all children first (bottom-up)
+2. Then check if parent can be reduced
+3. Repeat until stable
 
-### S1.3.1 Worst-Case Complexity Bounds
+## S1.3 Boolean Algebra Verification
 
-**Theorem S1**: Under the assumptions of Lipschitz continuity and strong convexity, the algorithm requires at most $O(\kappa \log(1/\epsilon))$ iterations to achieve $\epsilon$-accuracy.
+### Translation Protocol
 
-**Proof**: From the convergence rate \eqref{eq:convergence}, we have:
+To verify Boolean correspondence:
 
-\begin{equation}\label{eq:iterations_bound}
-\|x_k - x^*\| \leq C \rho^k \leq \epsilon \Rightarrow k \geq \frac{\log(C/\epsilon)}{\log(1/\rho)} = O(\kappa \log(1/\epsilon))
-\end{equation}
+1. **Parse Boolean expression** to AST
+2. **Translate AST** to boundary form:
+   - `TRUE` → `make_mark()`
+   - `FALSE` → `make_void()`
+   - `NOT(a)` → `enclose(translate(a))`
+   - `AND(a, b)` → `juxtapose(translate(a), translate(b))`
+   - `OR(a, b)` → `enclose(juxtapose(enclose(translate(a)), enclose(translate(b))))`
 
-since $\log(1/\rho) \approx 1/\kappa$ for small $1/\kappa$. $\square$
+3. **Reduce** both sides
+4. **Compare** canonical forms
 
-### S1.3.2 Expected Convergence for Stochastic Variants
+### Truth Table Verification
 
-For the stochastic variant \eqref{eq:stochastic_update}:
+For operations with 2 variables, exhaustive verification:
 
-\begin{equation}\label{eq:stochastic_convergence}
-\mathbb{E}[\|x_k - x^*\|^2] \leq \frac{C}{k} + \sigma^2
-\end{equation}
+| $a$ | $b$ | $a \land b$ | Boundary | Reduced |
+|-----|-----|-------------|----------|---------|
+| T | T | T | $\langle\ \rangle\langle\ \rangle$ | $\langle\ \rangle$ |
+| T | F | F | $\langle\ \rangle\emptyset$ | $\emptyset$ |
+| F | T | F | $\emptyset\langle\ \rangle$ | $\emptyset$ |
+| F | F | F | $\emptyset\emptyset$ | $\emptyset$ |
 
-where $\sigma^2$ is the variance of the stochastic gradient estimates.
+## S1.4 Theorem Verification Protocol
 
-## S1.4 Implementation Considerations
+### Consequence Verification
 
-### S1.4.1 Numerical Stability
+Each consequence (C1-C9) verified by:
 
-To ensure numerical stability, we implement the following safeguards:
+1. **Construct LHS** using form builders
+2. **Construct RHS** using form builders
+3. **Reduce both** to canonical form
+4. **Assert equality** of canonical forms
 
-1. **Gradient clipping**: $\nabla f(x_k) \leftarrow \min(1, \theta/\|\nabla f(x_k)\|) \nabla f(x_k)$
-2. **Step size bounds**: $\alpha_{\min} \leq \alpha_k \leq \alpha_{\max}$
-3. **Momentum bounds**: $0 \leq \beta_k \leq \beta_{\max} < 1$
+### Parametric Testing
 
-### S1.4.2 Initialization Strategies
+For consequences with variables:
+- Substitute all combinations of mark/void
+- Verify equality holds for each substitution
+- Report any counterexamples
 
-We tested three initialization strategies:
+### Verification Report Structure
 
-1. **Random**: $x_0 \sim \mathcal{N}(0, I)$
-2. **Warm start**: $x_0 = \text{solution from simpler problem}$
-3. **Problem-specific**: $x_0 = \text{domain knowledge-based initialization}$
+```python
+@dataclass
+class VerificationResult:
+    name: str
+    status: VerificationStatus  # PASSED, FAILED, ERROR
+    details: str
+    duration: float
+```
 
-Results show that warm start initialization reduces iterations by approximately 30% for related problem instances.
+## S1.5 Visualization Pipeline
 
-## S1.5 Extended Mathematical Framework
+### Nested Boundary Rendering
 
-### S1.5.1 Generalized Objective Function
+Forms visualized as nested rectangles:
+1. **Void**: Empty space (no rectangle)
+2. **Mark**: Single rectangle
+3. **Enclosure**: Rectangle containing child visualization
+4. **Juxtaposition**: Side-by-side rectangles
 
-The framework extends to more general objectives:
+### Layout Algorithm
 
-\begin{equation}\label{eq:general_objective}
-f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \sum_{j=1}^{m} \lambda_j R_j(x) + \sum_{k=1}^{p} \gamma_k C_k(x)
-\end{equation}
+```
+function LAYOUT(form, x, y, width, height):
+    if form.is_void():
+        return EmptyRegion(x, y, width, height)
+    if form.is_mark():
+        return Rectangle(x, y, width, height)
+    if form.is_enclosure():
+        child = LAYOUT(form.contents[0], x+pad, y+pad, width-2*pad, height-2*pad)
+        return Rectangle(x, y, width, height) + child
+    if form.is_juxtaposition():
+        # Divide width among children
+        child_width = width / len(form.contents)
+        return [LAYOUT(c, x + i*child_width, y, child_width, height) 
+                for i, c in enumerate(form.contents)]
+```
 
-where:
-- $\phi_i(x)$: Data fitting terms
-- $R_j(x)$: Regularization terms (e.g., $\ell_1$, $\ell_2$, elastic net)
-- $C_k(x)$: Constraint terms (penalty or barrier functions)
+### Export Formats
 
-### S1.5.2 Adaptive Weight Selection
+- **PNG**: Raster image for documentation
+- **SVG**: Vector graphics for publication
+- **ASCII**: Text representation for terminals
+- **LaTeX/TikZ**: Direct embedding in papers
 
-Weights $w_i$ can be adapted during optimization:
+## S1.6 Random Form Generation
 
-\begin{equation}\label{eq:adaptive_weights}
-w_i^{(k+1)} = w_i^{(k)} \cdot \exp\left(-\gamma \frac{|\phi_i(x_k)|}{|\phi(x_k)|}\right)
-\end{equation}
+### Generation Parameters
 
-This reweighting scheme gives more emphasis to terms that are harder to optimize.
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `max_depth` | int | 4 | Maximum nesting level |
+| `max_width` | int | 3 | Maximum children per juxtaposition |
+| `p_mark` | float | 0.3 | Probability of generating mark |
+| `p_void` | float | 0.2 | Probability of generating void |
+| `p_enclose` | float | 0.25 | Probability of enclosure |
+| `p_juxtapose` | float | 0.25 | Probability of juxtaposition |
 
-## S1.6 Convergence Diagnostics
+### Generation Algorithm
 
-### S1.6.1 Diagnostic Criteria
+```
+function RANDOM_FORM(depth, rng):
+    if depth == 0:
+        return CHOICE([make_void(), make_mark()], rng)
+    
+    p = rng.random()
+    if p < p_void:
+        return make_void()
+    elif p < p_void + p_mark:
+        return make_mark()
+    elif p < p_void + p_mark + p_enclose:
+        return enclose(RANDOM_FORM(depth - 1, rng))
+    else:
+        n = rng.randint(2, max_width)
+        return juxtapose(*[RANDOM_FORM(depth - 1, rng) for _ in range(n)])
+```
 
-We monitor the following quantities for convergence:
+### Reproducibility
 
-1. **Gradient norm**: $\|\nabla f(x_k)\| < \epsilon_g$
-2. **Step size**: $\|x_{k+1} - x_k\| < \epsilon_x$
-3. **Function improvement**: $|f(x_{k+1}) - f(x_k)| < \epsilon_f$
-4. **Relative improvement**: $|f(x_{k+1}) - f(x_k)|/|f(x_k)| < \epsilon_r$
-
-All four criteria must be satisfied for declared convergence.
-
-### S1.6.2 Failure Detection
-
-Algorithm failure is detected if:
-
-1. Maximum iterations exceeded
-2. Step size becomes too small ($\alpha_k < \alpha_{\min}$)
-3. NaN or Inf values encountered
-4. Objective function increases for consecutive iterations
-
-## S1.7 Parameter Sensitivity
-
-Detailed sensitivity analysis for each parameter:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Parameter} & \textbf{Nominal} & \textbf{Range} & \textbf{Impact on Performance} \\
-\hline
-$\alpha_0$ & 0.01 & [0.001, 0.1] & High (±30\%) \\
-$\beta$ & 0.9 & [0.5, 0.99] & Medium (±15\%) \\
-$\lambda$ & 0.001 & [0, 0.01] & Low (±5\%) \\
-\hline
-\end{tabular}
-\caption{Parameter sensitivity analysis results}
-\label{tab:parameter_sensitivity_detailed}
-\end{table}
-
-The learning rate $\alpha_0$ has the strongest impact on convergence speed, while regularization $\lambda$ primarily affects the final solution quality rather than convergence dynamics.
-
-
-
-
+Fixed random seed (42) ensures reproducible experiments:
+```python
+rng = random.Random(42)
+forms = [random_form(max_depth=4, rng=rng) for _ in range(500)]
+```

@@ -1,107 +1,196 @@
-# Discussion {#sec:discussion}
+# Discussion
+
+## Set Theory vs. Containment Theory
+
+The comparison between classical Set Theory (ZFC) and Containment Theory reveals fundamental differences in approach, axiomatics, and conceptual structure.
+
+### Axiomatic Economy
+
+| Criterion | Set Theory (ZFC) | Containment Theory |
+|-----------|------------------|-------------------|
+| **Number of Axioms** | 9 (including Choice) | 2 |
+| **Primitive Notion** | Membership ($\in$) | Distinction (boundary) |
+| **Undefined Terms** | Set, membership | Mark, void |
+| **Infinity Required** | Yes (Axiom of Infinity) | No (finite calculus) |
+
+Set Theory requires:
+1. Extensionality
+2. Empty Set
+3. Pairing
+4. Union
+5. Power Set
+6. Infinity
+7. Separation (schema)
+8. Replacement (schema)
+9. Foundation (Regularity)
+10. Choice (optional)
+
+Containment Theory requires only:
+1. Calling: $\langle\langle a \rangle\rangle = a$
+2. Crossing: $\langle\ \rangle\langle\ \rangle = \langle\ \rangle$
+
+### Expressiveness Comparison
+
+| Concept | Set Theory | Containment Theory |
+|---------|------------|-------------------|
+| TRUE | $\{x : x = x\}$ (universe) | $\langle\ \rangle$ |
+| FALSE | $\emptyset$ (empty set) | void |
+| NOT | Complement $A^c$ | Enclosure $\langle a \rangle$ |
+| AND | Intersection $A \cap B$ | Juxtaposition $ab$ |
+| OR | Union $A \cup B$ | $\langle\langle a \rangle\langle b \rangle\rangle$ |
+| Implication | $A^c \cup B$ | $\langle a\langle b \rangle\rangle$ |
+
+Both systems achieve Boolean completeness, but through fundamentally different primitives.
+
+### Self-Reference and Paradoxes
+
+**Russell's Paradox in Set Theory**:
+
+The set $R = \{x : x \notin x\}$ leads to contradiction:
+- If $R \in R$, then $R \notin R$
+- If $R \notin R$, then $R \in R$
+
+Set Theory resolves this by restricting comprehension (no unrestricted set formation).
+
+**Self-Reference in Containment Theory**:
+
+The equation $f = \langle f \rangle$ has no solution among marks and voids. Spencer-Brown introduces **imaginary values**—forms that oscillate between states:
+
+$$j = \langle j \rangle$$
+
+This imaginary value $j$ is neither marked nor void but alternates between them over "time." Rather than a paradox, self-reference becomes a dynamic oscillation.
+
+**Comparison**:
+
+| System | Self-Reference Treatment |
+|--------|-------------------------|
+| Set Theory | Paradox → Restriction (Foundation axiom) |
+| Containment Theory | Imaginary value → Dynamic oscillation |
+
+### Geometric Intuition
+
+| Feature | Set Theory | Containment Theory |
+|---------|------------|-------------------|
+| **Visualization** | Venn diagrams (regions) | Nested boundaries |
+| **Primitive Operation** | Collection | Drawing a line |
+| **Spatial Metaphor** | Contains (membership) | Inside/Outside |
+| **Natural Interpretation** | Abstract | Geometric |
+
+Boundary logic's operations map directly to spatial actions:
+- **Making a mark**: Drawing a boundary
+- **Enclosure**: Creating an inside
+- **Juxtaposition**: Side-by-side placement
+- **Calling**: Crossing back through a boundary
+
+### Complexity Implications
+
+**Set-theoretic Boolean operations** require:
+- Universe definition
+- Complement with respect to universe
+- Intersection defined via membership
+
+**Boundary logic Boolean operations**:
+- Mark is TRUE (primitive)
+- Enclosure is NOT (one rule)
+- Juxtaposition is AND (spatial)
+- Everything else derived
+
+The reduction algorithm in Containment Theory operates in polynomial time for ground forms, while SAT solving (Boolean satisfiability) is NP-complete. This does not contradict—the boundary calculus solves *evaluation*, not *satisfiability*.
 
 ## Theoretical Implications
 
-The experimental results presented in Section \ref{sec:experimental_results} have several important theoretical implications. Our analysis reveals that the convergence rate \eqref{eq:convergence} is not only theoretically sound but also practically achievable.
+### Foundations of Mathematics
 
-The experimental setup shown in Figure \ref{fig:experimental_setup} demonstrates our comprehensive validation approach, which includes data preprocessing, algorithm execution, and performance evaluation.
+Containment Theory suggests that mathematical foundations need not be as complex as ZFC. For finite, discrete structures:
+- Boolean algebra
+- Propositional logic
+- Digital circuits
+- Finite state machines
 
-### Convergence Analysis
+The two-axiom system suffices completely.
 
-The empirical convergence constants $C \approx 1.2$ and $\rho \approx 0.85$ from our experiments suggest that the theoretical bound \eqref{eq:convergence} is tight. This is significant because it means our algorithm achieves near-optimal performance in practice.
+### Philosophy of Distinction
 
-The adaptive step size strategy \eqref{eq:adaptive_step} plays a crucial role in this achievement. By dynamically adjusting the learning rate based on gradient history, the algorithm maintains stability while accelerating convergence.
+Spencer-Brown's system has philosophical implications:
 
-### Complexity Analysis
+**Epistemological**: All knowledge begins with distinction—separating figure from ground, this from that.
 
-Our theoretical complexity analysis $O(n \log n)$ per iteration is validated by the scalability results shown in Figure \ref{fig:scalability_analysis}. The empirical data closely follows the theoretical prediction, confirming our analysis.
+**Ontological**: The void (undistinguished space) may represent pre-phenomenal reality; distinction creates existence.
 
-The memory scaling \eqref{eq:memory} is particularly important for large-scale applications. Unlike many competing methods that require $O(n^2)$ memory, our approach scales linearly with problem size.
+**Self-Reference**: The imaginary values suggest that self-reference is not paradoxical but generates temporal dynamics—consciousness observing itself creates oscillation.
 
-## Comparison with Existing Work
+### Connections to Other Formalisms
 
-### State-of-the-Art Methods
+**Category Theory**: Forms can be viewed as morphisms; the axioms define natural transformations.
 
-We compared our approach with several state-of-the-art optimization methods:
+**Type Theory**: The mark/void distinction parallels inhabited/empty types.
 
-1. **Gradient Descent**: Standard first-order method with fixed step size \cite{ruder2016}
-2. **Adam**: Adaptive moment estimation with momentum \cite{kingma2014}
-3. **L-BFGS**: Limited-memory quasi-Newton method \cite{schmidt2017}
-4. **Our Method**: Novel approach combining regularization and adaptive step sizes
+**Lambda Calculus**: Enclosure resembles abstraction; juxtaposition resembles application.
 
-The results, summarized in Table \ref{tab:performance_comparison}, demonstrate that our method achieves superior performance across multiple metrics.
+**Homotopy Type Theory**: Boundaries as paths; calling as path inversion.
 
-### Key Advantages
+## Applications
 
-Our approach offers several key advantages over existing methods:
+### Digital Circuit Design
 
-\begin{equation}\label{eq:advantage_metric}
-\text{Advantage} = \frac{\text{Performance}_{\text{ours}} - \text{Performance}_{\text{baseline}}}{\text{Performance}_{\text{baseline}}} \times 100\%
-\end{equation}
+The NAND gate is functionally complete and corresponds directly to $\langle ab \rangle$:
 
-Using this metric, our method shows an average improvement of 23.7% over the best baseline method.
+| $a$ | $b$ | $a$ NAND $b$ | $\langle ab \rangle$ |
+|-----|-----|--------------|---------------------|
+| T | T | F | $\langle\langle\ \rangle\langle\ \rangle\rangle = \emptyset$ |
+| T | F | T | $\langle\langle\ \rangle\emptyset\rangle = \langle\ \rangle$ |
+| F | T | T | $\langle\emptyset\langle\ \rangle\rangle = \langle\ \rangle$ |
+| F | F | T | $\langle\emptyset\rangle = \langle\ \rangle$ |
 
-## Limitations and Challenges
+Circuit optimization can leverage boundary reduction rules.
 
-### Theoretical Constraints
+### Cognitive Modeling
 
-While our method performs well in practice, several theoretical limitations remain:
+The calculus of indications models basic cognitive operations:
+- **Perception**: Making distinctions
+- **Negation**: Crossing boundaries
+- **Conjunction**: Simultaneous attention
+- **Oscillation**: Self-reflective awareness
 
-1. **Convexity Assumption**: The convergence guarantee \eqref{eq:convergence} requires the objective function to be convex
-2. **Lipschitz Continuity**: We assume the gradient is Lipschitz continuous with constant $L$
-3. **Bounded Domain**: The feasible set $\mathcal{X}$ must be bounded
+Free energy principles in cognitive science relate to maintaining distinction boundaries.
 
-### Practical Challenges
+### Formal Verification
 
-In real-world applications, we encountered several practical challenges:
+Boundary logic offers potential advantages for verification:
+- Explicit reduction traces (proof witnesses)
+- Polynomial-time evaluation
+- Geometric proof visualization
 
-\begin{equation}\label{eq:robustness_metric}
-\text{Robustness} = \frac{\text{Successful runs}}{\text{Total runs}} \times 100\%
-\end{equation}
+## Limitations
 
-Our method achieved a robustness score of 94.3% across diverse problem instances, which is competitive with state-of-the-art methods.
+### What Containment Theory Does Not Replace
 
-## Future Research Directions
+1. **Set Theory for infinite structures**: ZFC handles infinite sets, ordinals, cardinals
+2. **Numerical computation**: Arithmetic requires additional structure
+3. **Analysis**: Real numbers, limits, continuity need richer foundations
 
-### Algorithmic Improvements
+### Current Implementation Limitations
 
-Several promising directions for future research emerged from our analysis:
+1. **Variable handling**: Current implementation focuses on ground forms
+2. **Proof automation**: Limited to reduction-based verification
+3. **Visualization**: Nested boundaries become complex at high depth
 
-1. **Non-convex Extensions**: Extending the theoretical guarantees to non-convex problems
-2. **Stochastic Variants**: Developing stochastic versions for large-scale problems
-3. **Multi-objective Optimization**: Handling multiple conflicting objectives
+## Future Directions
 
-### Theoretical Developments
+### Extensions
 
-The theoretical analysis suggests several areas for future development:
+1. **Imaginary values**: Full computational treatment of self-referential forms
+2. **Arithmetic**: Boundary representations for natural numbers (Bricken's iconic arithmetic)
+3. **Higher-order logic**: Extending to predicate calculus
 
-\begin{equation}\label{eq:complexity_bound}
-T(n) = O\left(n \log n \cdot \log\left(\frac{1}{\epsilon}\right)\right)
-\end{equation}
+### Applications
 
-where $\epsilon$ is the desired accuracy. This bound could potentially be improved through more sophisticated analysis techniques.
+1. **Quantum computing**: Boundary logic for superposition states
+2. **Neural networks**: Boundary-based activation functions
+3. **Knowledge representation**: Spatial logic for AI systems
 
-## Broader Impact
+### Theoretical Questions
 
-### Scientific Applications
-
-Our optimization framework has applications across multiple scientific domains:
-
-1. **Machine Learning**: Training large-scale neural networks \cite{kingma2014, wright2010}
-2. **Signal Processing**: Sparse signal reconstruction \cite{beck2009, parikh2014}
-3. **Computational Biology**: Protein structure prediction
-4. **Climate Modeling**: Parameter estimation in complex systems \cite{polak1997}
-
-### Industry Relevance
-
-The efficiency improvements demonstrated in our experiments have direct implications for industry applications:
-
-- **Reduced Computational Costs**: 30% fewer iterations translate to significant cost savings
-- **Scalability**: Linear memory scaling enables larger problem sizes
-- **Robustness**: High success rates reduce the need for manual intervention
-
-## Conclusion
-
-The experimental validation of our theoretical framework demonstrates that the novel optimization approach achieves both theoretical guarantees and practical performance. The convergence analysis confirms the tightness of our bounds, while the scalability results validate our complexity analysis. Extended theoretical analysis and additional application examples are provided in Sections \ref{sec:supplemental_analysis} and \ref{sec:supplemental_applications}.
-
-Future work will focus on extending the theoretical guarantees to broader problem classes and developing more sophisticated variants for specific application domains. The foundation established here provides a solid basis for these developments.
+1. **Completeness**: Is the consequence system complete for all Boolean identities?
+2. **Complexity**: Tight bounds on reduction complexity
+3. **Categorification**: Full categorical treatment of boundary logic

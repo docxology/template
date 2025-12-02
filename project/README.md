@@ -1,151 +1,124 @@
-# Research Project
+# Containment Theory: Boundary Logic as Alternative Foundation
 
-Complete, self-contained scientific research project with integrated testing, manuscript generation, and visualization.
+This project provides a comprehensive computational framework for **Containment Theory**—an alternative foundation to classical Set Theory based on G. Spencer-Brown's *Laws of Form* (1969). The calculus of indications uses spatial containment (boundaries) rather than set membership as its primitive notion.
 
-## Structure
+## Core Concepts
+
+### The Primary Distinction
+
+The fundamental operation is **making a distinction**—creating a boundary that separates inside from outside. This is represented by the **mark**:
+
+```
+⟨ ⟩  (mark = TRUE)
+```
+
+The absence of a mark is the **void**:
+
+```
+    (void = FALSE)
+```
+
+### Two Axioms
+
+The entire Boolean algebra derives from just two axioms:
+
+1. **Calling (J1)**: `⟨⟨a⟩⟩ = a` — Double enclosure returns to original
+2. **Crossing (J2)**: `⟨ ⟩⟨ ⟩ = ⟨ ⟩` — Multiple marks condense to one
+
+### Boolean Correspondence
+
+| Operation | Boolean | Boundary Form |
+|-----------|---------|---------------|
+| TRUE | 1 | `⟨ ⟩` |
+| FALSE | 0 | void |
+| NOT a | ¬a | `⟨a⟩` |
+| a AND b | a ∧ b | `ab` |
+| a OR b | a ∨ b | `⟨⟨a⟩⟨b⟩⟩` |
+| a NAND b | ¬(a ∧ b) | `⟨ab⟩` |
+
+## Project Structure
 
 ```
 project/
-├── src/                    # Scientific code (models, analysis, utilities)
-├── tests/                  # Test suite (comprehensive coverage)
-├── scripts/                # Analysis scripts (thin orchestrators)
-├── manuscript/             # Research manuscript sections
-├── docs/                   # Project-specific documentation
-└── output/                 # Generated outputs (figures, data, PDFs)
+├── src/                    # Core implementation
+│   ├── forms.py            # Form class and construction
+│   ├── reduction.py        # Reduction engine
+│   ├── algebra.py          # Boolean algebra correspondence
+│   ├── evaluation.py       # Truth value extraction
+│   ├── theorems.py         # Theorem definitions
+│   ├── verification.py     # Formal verification
+│   ├── complexity.py       # Complexity analysis
+│   ├── comparison.py       # Set Theory comparison
+│   ├── visualization.py    # Form visualization
+│   └── diagrams.py         # Publication figures
+├── tests/                  # Comprehensive test suite
+├── scripts/                # Analysis workflows
+├── manuscript/             # Research manuscript
+└── output/                 # Generated artifacts
 ```
 
 ## Quick Start
 
-### Install Dependencies
-```bash
-cd project
-pip install -e .
-# or with uv:
-uv sync
+```python
+from src.forms import make_void, make_mark, enclose, juxtapose
+from src.reduction import reduce_form
+
+# Create forms
+void = make_void()      # FALSE
+mark = make_mark()      # TRUE
+
+# Boolean operations
+not_a = enclose(mark)   # NOT TRUE = FALSE
+a_and_b = juxtapose(mark, mark)  # TRUE AND TRUE
+
+# Reduce to canonical form
+result = reduce_form(a_and_b)
+print(result)  # ⟨⟩ (mark = TRUE)
 ```
 
-### Run Tests
-```bash
-pytest tests/ --cov=src
-```
+## Key Features
 
-### Run Analysis Scripts
-```bash
-python scripts/example_figure.py
-python scripts/analysis_pipeline.py
-```
+- **Complete Boolean Algebra**: All operations derived from two axioms
+- **Polynomial-Time Reduction**: Efficient canonical form computation
+- **Formal Verification**: Computational proof of all theorems
+- **Visualization**: Nested boundary diagrams
+- **70%+ Test Coverage**: Rigorous verification with real data
 
-### Build Manuscript
-```bash
-cd ..
-python3 scripts/03_render_pdf.py
-```
-
-## Features
-
-- **Comprehensive test coverage** - All scientific code tested with real data (99.88%)
-- **Modular design** - Clean separation of concerns
-- **Reproducible** - Deterministic computation with seeded randomness
-- **Documented** - Comprehensive documentation and docstrings
-- **Portable** - Complete project in one folder, copy to use elsewhere
-
-## Project Layout
-
-### src/
-Scientific code implementing algorithms, data processing, analysis, and visualization.
-
-- `example.py` - Basic operations
-- `simulation.py` - Core simulation framework
-- `statistics.py` - Statistical analysis
-- `data_generator.py` - Synthetic data generation
-- ... and more
-
-### tests/
-Test suite with comprehensive coverage of src/ modules (99.88%).
-
-- Real data testing (no mocks)
-- Integration tests
-- Performance validation
-
-### scripts/
-Thin orchestrators that use src/ modules.
-
-- Import from src/
-- Orchestrate workflows
-- Generate outputs
-
-### manuscript/
-Research manuscript in Markdown format.
-
-- Individual sections
-- References and bibliography
-- Configuration files
-
-## Development
-
-### Adding New Features
-
-1. **Implement in src/**
-   - Add module to `src/`
-   - Add comprehensive tests
-   - Ensure coverage requirements met
-
-2. **Use in scripts/**
-   - Import from src/
-   - Orchestrate analysis
-   - Generate figures/tables
-
-3. **Document in manuscript/**
-   - Update manuscript sections
-   - Add figures and results
-   - Update configuration
-
-### Running Quality Checks
+## Running Tests
 
 ```bash
-# Full test suite with coverage
-pytest tests/ --cov=src --cov-report=html
+# Run all project tests
+python3 -m pytest project/tests/ -v
 
-# View coverage report
-open htmlcov/index.html
+# With coverage
+python3 -m pytest project/tests/ --cov=project/src --cov-report=html
 ```
 
-## Deployment
-
-### Standalone Use
-Copy `project/` to any location to use independently:
+## Generating Manuscript
 
 ```bash
-cp -r project/ /path/to/my_research
-cd /path/to/my_research
-pytest tests/ --cov=src
+# Full pipeline
+python3 scripts/run_all.py
+
+# Or use the interactive menu
+./run.sh
 ```
 
-### Integration with Template
-This project is designed to work with the template infrastructure:
+## Philosophical Foundations
 
-```bash
-cd /path/to/template
-python3 scripts/03_render_pdf.py  # Builds manuscript PDFs
-```
+This implementation is grounded in:
+- **North American Pragmatism** (Peirce, James, Dewey)
+- **Process Philosophy** (Whitehead)
+- **Neo-Materialism** (Barad, Haraway, Bennett)
 
-## Dependencies
+See `manuscript/S03_supplemental_analysis.md` for comprehensive philosophical context.
 
-- Python 3.10+
-- NumPy, SciPy, Matplotlib, Pandas
-- pytest, pytest-cov
+## References
 
-See `pyproject.toml` for complete dependencies.
-
-## Documentation
-
-- `AGENTS.md` - Architecture and module documentation
-- `docs/` - Additional project-specific documentation
-- Docstrings in source code
+- Spencer-Brown, G. (1969). *Laws of Form*. Allen & Unwin.
+- Kauffman, L. H. (2001). The Mathematics of Charles Sanders Peirce. *Cybernetics & Human Knowing*.
+- Bricken, W. (2019). *Iconic Arithmetic Volume I*. Unary Press.
 
 ## License
 
-See LICENSE file in template root.
-
-
-
+Apache 2.0 — See LICENSE file for details.

@@ -1,0 +1,5 @@
+Method,Convergence_Rate,Memory_Usage,Success_Rate
+Our Method,0.85,O(n),94.3
+Gradient Descent,0.9,O(n²),85.0
+Adam,0.9,O(n²),85.0
+L-BFGS,0.9,O(n²),85.0

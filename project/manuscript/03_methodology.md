@@ -1,85 +1,189 @@
-# Methodology {#sec:methodology}
+# Methodology
 
-## Mathematical Framework
+## Formal Definition of the Calculus
 
-Our approach is based on a novel optimization framework that combines multiple mathematical techniques, extending classical convex optimization methods \cite{boyd2004, nesterov2018} with modern adaptive strategies \cite{kingma2014, duchi2011}. The core algorithm can be expressed as follows:
+### The Primitive: Distinction
 
-\begin{equation}\label{eq:objective}
-f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
-\end{equation}
+The calculus of indications begins with a single primitive: the act of **distinction**. To distinguish is to create a boundary that separates two regions—an inside and an outside. This act is represented by the **mark** or **cross**:
 
-where $x \in \mathbb{R}^d$ is the optimization variable, $w_i$ are learned weights, $\phi_i$ are basis functions, and $R(x)$ is a regularization term with strength $\lambda$.
+$$\langle\ \rangle$$ {#eq:mark}
 
-The optimization problem we solve is:
+The mark creates a bounded region. Content placed inside the mark is **contained** within the boundary; content outside is in the **void**.
 
-\begin{equation}\label{eq:optimization}
-\min_{x \in \mathcal{X}} f(x) \quad \text{subject to} \quad g_i(x) \leq 0, \quad i = 1, \ldots, m
-\end{equation}
+### Definition 1: Form
 
-where $\mathcal{X}$ is the feasible set and $g_i(x)$ are constraint functions.
+A **form** is defined recursively:
 
-## Algorithm Description
+1. The **void** (empty space) is a form
+2. The **mark** $\langle\ \rangle$ is a form
+3. If $a$ is a form, then $\langle a \rangle$ (enclosure of $a$) is a form
+4. If $a$ and $b$ are forms, then $ab$ (juxtaposition of $a$ and $b$) is a form
 
-Our iterative algorithm updates the solution according to:
+Nothing else is a form.
 
-\begin{equation}\label{eq:update}
-x_{k+1} = x_k - \alpha_k \nabla f(x_k) + \beta_k (x_k - x_{k-1})
-\end{equation}
+### Definition 2: Depth and Size
 
-where $\alpha_k$ is the learning rate and $\beta_k$ is the momentum coefficient. The convergence rate is characterized by:
+For a form $f$:
+- **Depth**: Maximum nesting level of boundaries (void has depth 0, mark has depth 1)
+- **Size**: Total count of marks (boundaries) in the form
 
-\begin{equation}\label{eq:convergence}
-\|x_k - x^*\| \leq C \rho^k
-\end{equation}
+## The Two Axioms
 
-where $x^*$ is the optimal solution, $C > 0$ is a constant, and $\rho \in (0,1)$ is the convergence rate.
+The entire calculus derives from two axioms:
 
-## Implementation Details
+### Axiom J1: Calling (Involution)
 
-The algorithm implementation follows the pseudocode shown in Figure \ref{fig:experimental_setup}. The key insight is that we can decompose the objective function \eqref{eq:objective} into separable components, allowing for efficient parallel computation. This approach builds upon proximal optimization techniques \cite{beck2009, parikh2014} and recent advances in large-scale optimization \cite{schmidt2017, wright2010}.
+$$\langle\langle a \rangle\rangle = a$$ {#eq:calling}
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.9\textwidth]{../output/figures/experimental_setup.png}
-\caption{Experimental pipeline showing the complete workflow}
-\label{fig:experimental_setup}
-\end{figure}
+**Interpretation**: Crossing a boundary twice returns to the original state. This is the spatial analog of double negation: NOT(NOT $a$) = $a$.
 
-For numerical stability, we use the following adaptive step size rule:
+**Proof sketch**: Consider being inside a region bounded by $\langle a \rangle$. The inner boundary places you "outside of $a$" relative to $a$. The outer boundary then places you "inside" relative to being "outside of $a$"—returning you to $a$.
 
-\begin{equation}\label{eq:adaptive_step}
-\alpha_k = \frac{\alpha_0}{\sqrt{1 + \sum_{i=1}^{k} \|\nabla f(x_i)\|^2}}
-\end{equation}
+### Axiom J2: Crossing (Condensation)
 
-This ensures that the algorithm converges even when the gradient varies significantly across iterations.
+$$\langle\ \rangle\langle\ \rangle = \langle\ \rangle$$ {#eq:crossing}
 
-## Performance Analysis
+**Interpretation**: Multiple marks in juxtaposition condense to a single mark. The marked state is idempotent.
 
-The computational complexity of our approach is $O(n \log n)$ per iteration, where $n$ is the problem dimension. This is achieved through the efficient data structures shown in Figure \ref{fig:data_structure}.
+**Proof sketch**: Two boundaries side by side both indicate "the marked state." Indicating the same thing twice does not change what is indicated.
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.9\textwidth]{../output/figures/data_structure.png}
-\caption{Efficient data structures used in our implementation}
-\label{fig:data_structure}
-\end{figure}
+## Reduction Algorithm
 
-The memory requirements scale as:
+### Definition 3: Canonical Form
 
-\begin{equation}\label{eq:memory}
-M(n) = O(n) + O(\log n) \cdot \text{number of iterations}
-\end{equation}
+A form is in **canonical form** if no reduction rule can be applied. The only canonical forms are:
+- The void $\emptyset$
+- The mark $\langle\ \rangle$
 
-This makes our method suitable for large-scale problems where memory is a constraint.
+### Reduction Rules
 
-## Validation Framework
+The reduction engine applies rules in the following priority:
 
-To validate our theoretical results, we use the experimental setup illustrated in Figure \ref{fig:experimental_setup}. The performance metrics are computed using:
+1. **Calling Reduction**: If a form matches $\langle\langle a \rangle\rangle$ where $a$ has exactly one enclosed child, reduce to $a$
 
-\begin{equation}\label{eq:accuracy}
-\text{Accuracy} = \frac{1}{N} \sum_{i=1}^{N} \mathbb{I}[f(x_i) \leq f(x^*) + \epsilon]
-\end{equation}
+2. **Crossing Reduction**: If a form contains multiple simple marks $\langle\ \rangle$ in juxtaposition, condense to single mark
 
-where $\mathbb{I}[\cdot]$ is the indicator function and $\epsilon$ is the tolerance threshold.
+3. **Void Elimination**: Remove void elements from juxtaposition (void is the identity for AND)
 
-The convergence analysis results are summarized in Figure \ref{fig:convergence_plot}, which shows the empirical convergence rates compared to the theoretical bound \eqref{eq:convergence}.
+4. **Recursive Application**: Apply rules to nested subforms
+
+### Algorithm: Reduce to Canonical Form
+
+```
+function REDUCE(form):
+    while REDUCIBLE(form):
+        if CALLING_PATTERN(form):
+            form ← APPLY_CALLING(form)
+        else if CROSSING_PATTERN(form):
+            form ← APPLY_CROSSING(form)
+        else if VOID_PATTERN(form):
+            form ← REMOVE_VOID(form)
+        else:
+            form ← REDUCE_SUBFORMS(form)
+    return form
+```
+
+### Theorem 1: Termination
+
+**Claim**: The reduction algorithm terminates for all well-formed inputs.
+
+**Proof**: Each rule application strictly decreases either:
+- The depth of the form (calling), or
+- The size of the form (crossing, void elimination)
+
+Since both metrics are non-negative integers, the algorithm must terminate.
+
+### Theorem 2: Confluence
+
+**Claim**: All reduction sequences from a given form lead to the same canonical form.
+
+**Proof sketch**: The rules are non-overlapping (each pattern is distinct) and local (applying one rule does not invalidate others). The Church-Rosser property follows.
+
+## Boolean Algebra Correspondence
+
+### The Isomorphism
+
+Boundary logic is isomorphic to Boolean algebra:
+
+| Boundary Logic | Boolean Algebra | Propositional Logic |
+|----------------|-----------------|---------------------|
+| $\langle\ \rangle$ (mark) | TRUE (1) | T |
+| void (empty) | FALSE (0) | F |
+| $\langle a \rangle$ | NOT $a$ | $\neg a$ |
+| $ab$ | $a$ AND $b$ | $a \land b$ |
+| $\langle\langle a \rangle\langle b \rangle\rangle$ | $a$ OR $b$ | $a \lor b$ |
+| $\langle a \langle b \rangle\rangle$ | $a \to b$ | $a \rightarrow b$ |
+
+### Derivation of OR
+
+The De Morgan form for disjunction:
+$$a \lor b = \neg(\neg a \land \neg b) = \langle\langle a \rangle\langle b \rangle\rangle$$ {#eq:or}
+
+### Derivation of NAND
+
+The NAND gate, functionally complete:
+$$a \text{ NAND } b = \neg(a \land b) = \langle ab \rangle$$ {#eq:nand}
+
+## Derived Theorems (Consequences)
+
+Spencer-Brown derives nine consequences (C1-C9) from the axioms. We verify each computationally:
+
+### C1: Position
+$$\langle\langle a \rangle b \rangle a = a$$
+
+### C2: Transposition  
+$$\langle\langle a \rangle\langle b \rangle\rangle c = \langle ac \rangle\langle bc \rangle$$
+
+### C3: Generation (Excluded Middle)
+$$\langle\langle a \rangle a \rangle = \langle\ \rangle$$
+
+This corresponds to $a \lor \neg a = \text{TRUE}$.
+
+### C4: Integration
+$$\langle\ \rangle a = \langle\ \rangle$$ (within enclosure context)
+
+### C5: Occultation
+$$\langle\langle a \rangle\rangle a = a$$
+
+### C6: Iteration (Idempotence)
+$$aa = a$$
+
+### C7: Extension
+$$\langle\langle a \rangle\langle b \rangle\rangle\langle\langle a \rangle b \rangle = a$$
+
+### C8: Echelon
+$$\langle\langle ab \rangle c \rangle = \langle ac \rangle\langle bc \rangle$$
+
+### C9: Cross-Transposition
+$$\langle\langle ac \rangle\langle bc \rangle\rangle = \langle\langle a \rangle\langle b \rangle\rangle c$$
+
+## Evaluation Semantics
+
+### Definition 4: Truth Value
+
+The truth value $\llbracket f \rrbracket$ of a form $f$:
+
+$$\llbracket \text{void} \rrbracket = \text{FALSE}$$
+$$\llbracket \langle\ \rangle \rrbracket = \text{TRUE}$$
+$$\llbracket \langle a \rangle \rrbracket = \neg\llbracket a \rrbracket$$
+$$\llbracket ab \rrbracket = \llbracket a \rrbracket \land \llbracket b \rrbracket$$ {#eq:semantics}
+
+### Theorem 3: Soundness
+
+**Claim**: Equivalent forms evaluate to the same truth value.
+
+**Proof**: The axioms preserve truth value:
+- J1: $\llbracket\langle\langle a \rangle\rangle\rrbracket = \neg\neg\llbracket a \rrbracket = \llbracket a \rrbracket$ ✓
+- J2: $\llbracket\langle\ \rangle\langle\ \rangle\rrbracket = \text{TRUE} \land \text{TRUE} = \text{TRUE} = \llbracket\langle\ \rangle\rrbracket$ ✓
+
+## Implementation
+
+The computational framework implements:
+
+1. **Form Construction**: `Form` class with void, mark, enclosure, juxtaposition
+2. **Reduction Engine**: `ReductionEngine` with step-by-step traces
+3. **Evaluation**: `FormEvaluator` for truth value extraction
+4. **Theorem Verification**: `Theorem` class with automatic proof checking
+5. **Visualization**: Nested boundary diagrams for forms
+
+All implementations achieve test coverage exceeding 70% with real data verification (no mock testing).
