@@ -47,6 +47,8 @@ from infrastructure.literature.library_index import LibraryIndex, LibraryEntry
 from infrastructure.literature.workflow import LiteratureWorkflow, WorkflowResult
 from infrastructure.literature.progress import ProgressTracker, ProgressEntry, SummarizationProgress
 from infrastructure.literature.summarizer import PaperSummarizer, SummaryQualityValidator, SummarizationResult
+from infrastructure.literature.paper_selector import PaperSelector, PaperSelectionConfig
+from infrastructure.literature.llm_operations import LiteratureLLMOperations, LLMOperationResult
 
 __all__ = [
     # Original modules
@@ -72,4 +74,9 @@ __all__ = [
     "PaperSummarizer",
     "SummaryQualityValidator",
     "SummarizationResult",
+    # NEW: Advanced literature operations
+    "PaperSelector",
+    "PaperSelectionConfig",
+    "LiteratureLLMOperations",
+    "LLMOperationResult",
 ]

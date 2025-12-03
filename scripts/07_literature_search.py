@@ -60,6 +60,8 @@ from infrastructure.literature.progress import ProgressTracker
 from infrastructure.literature.summarizer import PaperSummarizer, SummaryQualityValidator
 from infrastructure.literature.api import SearchResult
 from infrastructure.literature.library_index import LibraryEntry
+from infrastructure.literature.paper_selector import PaperSelector
+from infrastructure.literature.llm_operations import LiteratureLLMOperations
 from infrastructure.llm import (
     LLMClient,
     LLMConfig,
@@ -709,6 +711,201 @@ def display_file_locations() -> None:
     print("- literature/summarization_progress.json (progress tracking)")
 
 
+def run_cleanup(workflow: LiteratureWorkflow) -> int:
+    """Clean up library by removing papers without PDFs.
+
+    Args:
+        workflow: Configured LiteratureWorkflow instance.
+
+    Returns:
+        Exit code (0=success, 1=failure).
+    """
+    log_header("CLEANUP LIBRARY (REMOVE PAPERS WITHOUT PDFs)")
+
+    # Get library entries
+    library_entries = workflow.literature_search.library_index.list_entries()
+
+    if not library_entries:
+        logger.warning("Library is empty. Nothing to clean up.")
+        print("\nLibrary is empty. Nothing to clean up.")
+        return 0
+
+    # Find entries without PDFs
+    entries_without_pdf = workflow.literature_search.library_index.get_entries_without_pdf()
+
+    print(f"\nLibrary contains {len(library_entries)} papers")
+    print(f"Papers with PDFs: {len(library_entries) - len(entries_without_pdf)}")
+    print(f"Papers without PDFs: {len(entries_without_pdf)}")
+
+    if not entries_without_pdf:
+        print("\nAll papers in the library have PDFs. Nothing to clean up.")
+        return 0
+
+    # Show details of papers to be removed
+    print(f"\nPapers to be removed ({len(entries_without_pdf)}):")
+    for i, entry in enumerate(entries_without_pdf, 1):
+        year = entry.year or "n/d"
+        authors = entry.authors[0] if entry.authors else "Unknown"
+        if len(entry.authors or []) > 1:
+            authors += " et al."
+        print(f"  {i}. {entry.citation_key} - {authors} ({year}): {entry.title[:60]}...")
+
+    # Ask for confirmation
+    print(f"\nThis will permanently remove {len(entries_without_pdf)} papers from the library.")
+    print("This action cannot be undone.")
+    try:
+        confirmation = input("\nProceed with cleanup? [y/N]: ").strip().lower()
+    except KeyboardInterrupt:
+        print("\n\nCleanup cancelled by user.")
+        return 1
+
+    if confirmation not in ('y', 'yes'):
+        print("Cleanup cancelled.")
+        return 0
+
+    # Perform cleanup
+    log_header("REMOVING PAPERS WITHOUT PDFs")
+    print(f"Removing {len(entries_without_pdf)} papers...")
+
+    removed_count = 0
+    for entry in entries_without_pdf:
+        try:
+            if workflow.literature_search.remove_paper(entry.citation_key):
+                removed_count += 1
+                print(f"  ✓ Removed: {entry.citation_key}")
+            else:
+                logger.warning(f"Failed to remove: {entry.citation_key}")
+        except Exception as e:
+            logger.error(f"Error removing {entry.citation_key}: {e}")
+            continue
+
+    # Show results
+    remaining_count = len(library_entries) - removed_count
+    print(f"\n{'=' * 60}")
+    print("CLEANUP COMPLETED")
+    print("=" * 60)
+    print(f"Papers removed: {removed_count}")
+    print(f"Papers remaining: {remaining_count}")
+    print(f"Success rate: {(removed_count / len(entries_without_pdf)) * 100:.1f}%")
+
+    display_file_locations()
+
+    log_success("Library cleanup complete!")
+    return 0
+
+
+def run_llm_operation(workflow: LiteratureWorkflow, operation: str, paper_config_path: Optional[str] = None) -> int:
+    """Execute advanced LLM operation on selected papers.
+
+    Args:
+        workflow: Configured LiteratureWorkflow instance.
+        operation: Type of operation ("review", "communication", "compare", "gaps", "network").
+        paper_config_path: Path to paper selection config file.
+
+    Returns:
+        Exit code (0=success, 1=failure).
+    """
+    # Map operation names to display names
+    operation_names = {
+        "review": "Literature Review Synthesis",
+        "communication": "Science Communication Narrative",
+        "compare": "Comparative Analysis",
+        "gaps": "Research Gap Identification",
+        "network": "Citation Network Analysis"
+    }
+
+    operation_display = operation_names.get(operation, operation.title())
+    log_header(f"ADVANCED LLM OPERATION: {operation_display.upper()}")
+
+    # Initialize LLM operations
+    llm_operations = LiteratureLLMOperations(workflow.summarizer.llm_client)
+
+    # Load paper selection config
+    config_path = Path(paper_config_path) if paper_config_path else Path("literature/paper_selection.yaml")
+
+    try:
+        selector = PaperSelector.from_config(config_path)
+        logger.info(f"Loaded paper selection config from {config_path}")
+    except FileNotFoundError:
+        logger.warning(f"Paper selection config not found: {config_path}")
+        logger.info("Using all papers in library (create literature/paper_selection.yaml to filter)")
+
+        # Create a selector that selects all papers
+        from infrastructure.literature.paper_selector import PaperSelectionConfig
+        selector = PaperSelector(PaperSelectionConfig())
+
+    # Get library entries and apply selection
+    library_entries = workflow.literature_search.library_index.list_entries()
+
+    if not library_entries:
+        logger.warning("Library is empty. Nothing to analyze.")
+        print("\nLibrary is empty. Add papers first using --search-only.")
+        return 1
+
+    selected_papers = selector.select_papers(library_entries)
+
+    if not selected_papers:
+        logger.warning("No papers match the selection criteria.")
+        print(f"\nNo papers match the selection criteria in {config_path}")
+        print("Check your paper_selection.yaml configuration.")
+        return 1
+
+    # Display selection summary
+    selection_stats = selector.get_selection_summary(selected_papers, len(library_entries))
+    print(f"\nSelected {selection_stats['selected_papers']} papers from {selection_stats['total_papers']} total")
+    print("Papers to analyze:")
+    for i, paper in enumerate(selected_papers, 1):
+        year = paper.year or "n/d"
+        authors = paper.authors[0] if paper.authors else "Unknown"
+        if len(paper.authors or []) > 1:
+            authors += " et al."
+        print(f"  {i}. {paper.citation_key} - {authors} ({year}): {paper.title[:60]}...")
+
+    # Execute the operation
+    log_header(f"EXECUTING {operation_display.upper()}")
+
+    try:
+        start_time = time.time()
+
+        if operation == "review":
+            result = llm_operations.generate_literature_review(selected_papers, focus="general")
+        elif operation == "communication":
+            result = llm_operations.generate_science_communication(selected_papers)
+        elif operation == "compare":
+            result = llm_operations.generate_comparative_analysis(selected_papers, aspect="methods")
+        elif operation == "gaps":
+            result = llm_operations.generate_research_gaps(selected_papers, domain="general")
+        elif operation == "network":
+            result = llm_operations.analyze_citation_network(selected_papers)
+
+        # Save result
+        output_dir = Path("literature/llm_outputs") / f"{operation}_outputs"
+        output_path = llm_operations.save_result(result, output_dir)
+
+        total_time = time.time() - start_time
+
+        # Display results
+        print(f"\n{'=' * 70}")
+        print(f"{operation_display.upper()} COMPLETED")
+        print("=" * 70)
+        print(f"Papers analyzed: {result.papers_used}")
+        print(f"Generation time: {result.generation_time:.1f}s")
+        print(f"Estimated tokens: {result.tokens_estimated}")
+        print(f"Output saved to: {output_path}")
+        print(f"Total operation time: {total_time:.1f}s")
+
+        display_file_locations()
+
+        log_success(f"{operation_display} complete!")
+        return 0
+
+    except Exception as e:
+        logger.error(f"LLM operation failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
+
+
 def main() -> int:
     """Main entry point for literature search and summarization.
     
@@ -729,6 +926,14 @@ Examples:
 
   # Generate summaries for papers with PDFs
   python3 scripts/07_literature_search.py --summarize
+
+  # Clean up library by removing papers without PDFs
+  python3 scripts/07_literature_search.py --cleanup
+
+  # Advanced LLM operations (literature review, science communication, etc.)
+  python3 scripts/07_literature_search.py --llm-operation review
+  python3 scripts/07_literature_search.py --llm-operation communication --paper-config my_papers.yaml
+  python3 scripts/07_literature_search.py --llm-operation compare
 
   # Combined operations (legacy - use separate operations instead)
   python3 scripts/07_literature_search.py --search --limit 50 --keywords "AI"
@@ -756,6 +961,21 @@ Examples:
         help="Generate summaries for papers with PDFs (no search or download)"
     )
     parser.add_argument(
+        "--cleanup",
+        action="store_true",
+        help="Clean up library by removing papers without PDFs"
+    )
+    parser.add_argument(
+        "--llm-operation",
+        choices=["review", "communication", "compare", "gaps", "network"],
+        help="Perform advanced LLM operation on selected papers"
+    )
+    parser.add_argument(
+        "--paper-config",
+        type=str,
+        help="Path to YAML config file for paper selection (default: literature/paper_selection.yaml)"
+    )
+    parser.add_argument(
         "--keywords",
         type=str,
         help="Comma-separated keywords for search (prompts if not provided)"
@@ -770,13 +990,13 @@ Examples:
     args = parser.parse_args()
     
     # Require at least one action
-    if not args.search and not args.search_only and not args.download_only and not args.summarize:
+    if not args.search and not args.search_only and not args.download_only and not args.summarize and not args.cleanup and not args.llm_operation:
         parser.print_help()
-        print("\nError: Must specify one of --search, --search-only, --download-only, or --summarize")
+        print("\nError: Must specify one of --search, --search-only, --download-only, --summarize, --cleanup, or --llm-operation")
         return 1
 
     # Check for conflicting operations
-    operation_count = sum([args.search, args.search_only, args.download_only, args.summarize])
+    operation_count = sum([args.search, args.search_only, args.download_only, args.summarize, args.cleanup, bool(args.llm_operation)])
     if operation_count > 1:
         parser.print_help()
         print("\nError: Can only specify one operation at a time")
@@ -810,6 +1030,10 @@ Examples:
             exit_code = run_search(workflow, keywords=keywords, limit=args.limit)
         elif args.summarize:
             exit_code = run_summarize(workflow)
+        elif args.cleanup:
+            exit_code = run_cleanup(workflow)
+        elif args.llm_operation:
+            exit_code = run_llm_operation(workflow, args.llm_operation, args.paper_config)
 
         return exit_code
         

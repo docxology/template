@@ -13,9 +13,18 @@ literature/
 ├── references.bib        # BibTeX entries for citations
 ├── library.json          # JSON index with full metadata
 ├── failed_downloads.json # Failed downloads for retry (if any)
-└── pdfs/                 # Downloaded PDFs (named by citation key)
-    ├── smith2024machine.pdf
-    └── jones2023deep.pdf
+├── paper_selection.yaml  # NEW: Paper selection configuration
+├── pdfs/                 # Downloaded PDFs (named by citation key)
+│   ├── smith2024machine.pdf
+│   └── jones2023deep.pdf
+├── summaries/            # AI-generated paper summaries
+│   └── smith2024machine_summary.md
+└── llm_outputs/          # NEW: Advanced LLM operation results
+    ├── literature_reviews/
+    ├── science_communication/
+    ├── comparative_analysis/
+    ├── research_gaps/
+    └── citation_networks/
 ```
 
 ## Architecture
@@ -34,10 +43,17 @@ This module follows the **thin orchestrator pattern**:
 LiteratureSearch (core.py)
 ├── ArxivSource (api.py)
 ├── SemanticScholarSource (api.py)
-├── UnpaywallSource (api.py)     # NEW: Open access PDF resolution
+├── UnpaywallSource (api.py)     # Open access PDF resolution
 ├── LibraryIndex (library_index.py)
 ├── PDFHandler (pdf_handler.py)
 └── ReferenceManager (reference_manager.py)
+
+LiteratureWorkflow (workflow.py)     # NEW: Orchestrates multi-paper operations
+├── LiteratureLLMOperations (llm_operations.py)  # NEW: Advanced LLM synthesis
+└── ProgressTracker (progress.py)
+
+PaperSelector (paper_selector.py)    # NEW: Configurable paper filtering
+└── PaperSelectionConfig
 
 LiteratureConfig (config.py)
 └── from_env() - Load from environment variables
@@ -45,14 +61,17 @@ LiteratureConfig (config.py)
 SearchResult (api.py)
 └── Normalized result dataclass
 
-UnpaywallResult (api.py)         # NEW: Unpaywall lookup result
+UnpaywallResult (api.py)
 └── OA status and PDF URL
 
-DownloadResult (core.py)         # NEW: Download tracking
+DownloadResult (core.py)
 └── Success/failure with reason
 
 LibraryEntry (library_index.py)
 └── Paper metadata dataclass
+
+LLMOperationResult (llm_operations.py)  # NEW: LLM operation results
+└── Synthesis output with metadata
 ```
 
 ### Module Files
@@ -63,10 +82,15 @@ LibraryEntry (library_index.py)
 | `core.py` | Main `LiteratureSearch` class + `DownloadResult` |
 | `api.py` | API clients for arXiv, Semantic Scholar, Unpaywall |
 | `config.py` | Configuration dataclass + browser User-Agents |
-| `library_index.py` | JSON library index manager |
+| `library_index.py` | JSON library index manager with cleanup methods |
 | `pdf_handler.py` | PDF downloading with retry logic and fallbacks |
 | `reference_manager.py` | BibTeX generation |
 | `cli.py` | Command-line interface |
+| `paper_selector.py` | **NEW**: Configurable paper selection and filtering |
+| `llm_operations.py` | **NEW**: Advanced LLM operations for multi-paper synthesis |
+| `workflow.py` | Orchestrates multi-paper operations with progress tracking |
+| `progress.py` | Progress tracking for long-running literature tasks |
+| `summarizer.py` | AI-powered paper summarization with quality validation |
 
 ## Usage
 
@@ -146,6 +170,14 @@ python3 -m infrastructure.literature.cli library stats
 
 # Export library to JSON
 python3 -m infrastructure.literature.cli library export --output export.json
+
+# NEW: Clean up library (remove papers without PDFs)
+python3 scripts/07_literature_search.py --cleanup
+
+# NEW: Advanced LLM operations
+python3 scripts/07_literature_search.py --llm-operation review
+python3 scripts/07_literature_search.py --llm-operation communication --paper-config my_selection.yaml
+python3 scripts/07_literature_search.py --llm-operation compare
 ```
 
 ## Configuration
@@ -218,18 +250,30 @@ Load configuration from environment with `LiteratureConfig.from_env()`:
 
 ## Interactive Literature Management Script
 
-The repository includes an interactive script for managing academic literature with three separate operations:
+The repository includes an interactive script for managing academic literature with multiple operations:
 
 ```bash
-# Three separate operations:
+# Basic operations:
 ./run.sh --search                  # Search literature (add to bibliography)
 ./run.sh --download                # Download PDFs (for bibliography entries)
 ./run.sh --summarize               # Generate summaries (for papers with PDFs)
+
+# Maintenance:
+./run.sh --cleanup                 # Remove papers without PDFs from library
+
+# Advanced LLM operations:
+./run.sh --llm-operation review    # Generate literature review synthesis
+./run.sh --llm-operation communication  # Create science communication narrative
+./run.sh --llm-operation compare   # Comparative analysis across papers
+./run.sh --llm-operation gaps      # Identify research gaps
+./run.sh --llm-operation network   # Analyze citation networks
 
 # Or directly:
 python3 scripts/07_literature_search.py --search-only
 python3 scripts/07_literature_search.py --download-only
 python3 scripts/07_literature_search.py --summarize
+python3 scripts/07_literature_search.py --cleanup
+python3 scripts/07_literature_search.py --llm-operation review
 ```
 
 **Operations:**
@@ -251,6 +295,21 @@ python3 scripts/07_literature_search.py --summarize
    - Generates structured summaries using local Ollama LLM
    - **Automatically skips existing summaries** - checks for `{citation_key}_summary.md` files before generating
    - Shows detailed timing and word count statistics
+
+4. **Cleanup (--cleanup)**:
+   - Removes papers from library that don't have PDFs
+   - Shows statistics before cleanup with confirmation
+   - Permanently removes entries from both BibTeX and JSON index
+   - Helps maintain a clean, usable library
+
+5. **LLM Operations (--llm-operation)**:
+   - **Literature Review**: Synthesizes themes across multiple papers
+   - **Science Communication**: Creates accessible narratives for general audiences
+   - **Comparative Analysis**: Compares methods, results, or approaches across papers
+   - **Research Gaps**: Identifies unanswered questions and future research directions
+   - **Citation Networks**: Analyzes relationships and connections between papers
+   - Uses paper selection config (`literature/paper_selection.yaml`) to filter papers
+   - Saves results to `literature/llm_outputs/`
 
 **Skip Existing Summaries:**
 The summarize operation automatically detects and skips summary generation for papers that already have summary files. This check happens:
@@ -373,6 +432,75 @@ class LibraryEntry:
     venue: Optional[str]
     citation_count: Optional[int]
     metadata: Dict[str, Any]
+```
+
+### PaperSelector **NEW**
+
+```python
+class PaperSelector:
+    def __init__(self, config: PaperSelectionConfig):
+        """Initialize with selection criteria."""
+
+    @classmethod
+    def from_config(cls, config_path: Path) -> PaperSelector:
+        """Create selector from YAML config file."""
+
+    def select_papers(self, library_entries: List[LibraryEntry]) -> List[LibraryEntry]:
+        """Filter papers based on configured criteria."""
+```
+
+### LiteratureLLMOperations **NEW**
+
+```python
+class LiteratureLLMOperations:
+    def generate_literature_review(
+        self,
+        papers: List[LibraryEntry],
+        focus: str = "general",
+        max_papers: int = 10
+    ) -> LLMOperationResult:
+        """Generate literature review synthesis."""
+
+    def generate_science_communication(
+        self,
+        papers: List[LibraryEntry],
+        audience: str = "general_public"
+    ) -> LLMOperationResult:
+        """Create accessible science communication narrative."""
+
+    def generate_comparative_analysis(
+        self,
+        papers: List[LibraryEntry],
+        aspect: str = "methods"
+    ) -> LLMOperationResult:
+        """Compare methods/findings across papers."""
+
+    def identify_research_gaps(
+        self,
+        papers: List[LibraryEntry],
+        domain: str = "general"
+    ) -> LLMOperationResult:
+        """Identify research gaps and future directions."""
+
+    def analyze_citation_network(
+        self,
+        papers: List[LibraryEntry]
+    ) -> LLMOperationResult:
+        """Analyze citation relationships between papers."""
+```
+
+### LLMOperationResult **NEW**
+
+```python
+@dataclass
+class LLMOperationResult:
+    operation_type: str           # "literature_review", "science_communication", etc.
+    papers_used: int              # Number of papers analyzed
+    citation_keys: List[str]      # Keys of papers used
+    output_text: str              # Generated content
+    generation_time: float        # Time taken in seconds
+    tokens_estimated: int         # Estimated token count
+    metadata: Dict[str, Any]      # Operation-specific metadata
 ```
 
 ### PDFHandler

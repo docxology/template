@@ -221,17 +221,105 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
         if pdf_url not in candidates:
             candidates.append(pdf_url)
 
+    # Frontiers in Psychology and other Frontiers journals
+    frontiers_patterns = [
+        r'/articles/([^"\']+)/full',
+        r'frontiersin\.org/articles/([^"\']+)',
+    ]
+    for pattern in frontiers_patterns:
+        frontiers_matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for article_id in frontiers_matches:
+            if '/full' in article_id:
+                article_id = article_id.replace('/full', '')
+            pdf_url = f"https://www.frontiersin.org/articles/{article_id}/pdf"
+            if pdf_url not in candidates:
+                candidates.append(pdf_url)
+
+    # Entropy (MDPI)
+    entropy_patterns = [
+        r'entropy[^"]*article/([^"\']+)',
+        r'/entropy/article/([^"\']+)',
+    ]
+    for pattern in entropy_patterns:
+        entropy_matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for article_id in entropy_matches:
+            pdf_url = f"https://www.mdpi.com/1099-4300/{article_id}/pdf"
+            if pdf_url not in candidates:
+                candidates.append(pdf_url)
+
     # Strategy 5: Common academic patterns
     # Look for "Download PDF" links
     download_patterns = [
         r'href=["\']([^"\']*)["\'][^>]*>.*?download.*?pdf',
         r'href=["\']([^"\']*)["\'][^>]*>.*?pdf.*?download',
+        r'href=["\']([^"\']*\.pdf[^"\']*)["\'][^>]*>.*?download',
+        r'href=["\']([^"\']*pdf[^"\']*)["\'][^>]*>.*?download',
     ]
 
     for pattern in download_patterns:
         matches = re.findall(pattern, html_str, re.IGNORECASE)
         for match in matches:
             if match and not match.startswith('javascript:'):
+                full_url = urljoin(base_url, match)
+                if full_url not in candidates:
+                    candidates.append(full_url)
+
+    # Strategy 6: Look for PDF links in common HTML structures
+    # Check for links with "pdf" in URL or text
+    pdf_href_patterns = [
+        r'href=["\']([^"\']*pdf[^"\']*)["\']',
+        r'href=["\']([^"\']*\.pdf[^"\']*)["\']',
+    ]
+
+    for pattern in pdf_href_patterns:
+        matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for match in matches:
+            if match:
+                full_url = urljoin(base_url, match)
+                if full_url not in candidates:
+                    candidates.append(full_url)
+
+    # Strategy 7: Look for JavaScript onclick handlers that might contain PDF URLs
+    js_onclick_patterns = [
+        r'onclick=["\'][^"\']*window\.open\(["\']([^"\']*pdf[^"\']*)["\']',
+        r'onclick=["\'][^"\']*location\.href=["\']([^"\']*pdf[^"\']*)["\']',
+        r'onclick=["\'][^"\']*pdf[^"\']*["\']([^"\']*pdf[^"\']*)["\']',
+    ]
+
+    for pattern in js_onclick_patterns:
+        matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for match in matches:
+            if match:
+                full_url = urljoin(base_url, match)
+                if full_url not in candidates:
+                    candidates.append(full_url)
+
+    # Strategy 8: Look for data attributes that might contain PDF URLs
+    data_attr_patterns = [
+        r'data-pdf-url=["\']([^"\']*)["\']',
+        r'data-download-url=["\']([^"\']*pdf[^"\']*)["\']',
+        r'data-file-url=["\']([^"\']*pdf[^"\']*)["\']',
+    ]
+
+    for pattern in data_attr_patterns:
+        matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for match in matches:
+            if match:
+                full_url = urljoin(base_url, match)
+                if full_url not in candidates:
+                    candidates.append(full_url)
+
+    # Strategy 9: Look for meta tags with PDF URLs (additional patterns)
+    meta_pdf_patterns = [
+        r'<meta[^>]*property=["\']og:pdf["\'][^>]*content=["\']([^"\']*)["\']',
+        r'<meta[^>]*name=["\']citation_pdf_url["\'][^>]*content=["\']([^"\']*)["\']',
+        r'<meta[^>]*pdf.*content=["\']([^"\']*)["\']',
+    ]
+
+    for pattern in meta_pdf_patterns:
+        matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for match in matches:
+            if match:
                 full_url = urljoin(base_url, match)
                 if full_url not in candidates:
                     candidates.append(full_url)
@@ -247,6 +335,62 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
 
     logger.debug(f"Extracted {len(valid_candidates)} PDF URLs from HTML")
     return valid_candidates
+
+
+def _doi_to_pdf_urls(doi: str) -> List[str]:
+    """Convert a DOI to potential PDF download URLs for common publishers.
+
+    Args:
+        doi: The DOI string (with or without doi.org prefix)
+
+    Returns:
+        List of potential PDF URLs for the DOI
+    """
+    # Clean the DOI
+    doi = doi.replace('https://doi.org/', '').replace('http://dx.doi.org/', '').replace('doi:', '')
+
+    candidates = []
+
+    # Elsevier/ScienceDirect
+    if doi.startswith('10.1016/') or doi.startswith('10.1017/'):
+        # Extract PII from DOI for ScienceDirect
+        parts = doi.split('/')
+        if len(parts) >= 2:
+            pii = parts[-1]
+            candidates.append(f"https://www.sciencedirect.com/science/article/pii/{pii}/pdfft?isDTMRedir=true&download=true")
+
+    # Springer
+    if 'springer' in doi.lower() or doi.startswith('10.1007/') or doi.startswith('10.1038/'):
+        candidates.append(f"https://link.springer.com/content/pdf/{doi}.pdf")
+
+    # Wiley
+    if doi.startswith('10.1002/') or doi.startswith('10.1111/') or 'wiley' in doi.lower():
+        candidates.append(f"https://onlinelibrary.wiley.com/doi/pdfdirect/{doi}")
+
+    # PLOS
+    if doi.startswith('10.1371/'):
+        candidates.append(f"https://journals.plos.org/plosone/article/file?id={doi}&type=printable")
+
+    # Frontiers
+    if doi.startswith('10.3389/'):
+        candidates.append(f"https://www.frontiersin.org/articles/{doi}/pdf")
+
+    # MDPI
+    if doi.startswith('10.3390/'):
+        candidates.append(f"https://www.mdpi.com/article/10.3390/{doi.split('/', 1)[1]}/pdf")
+
+    # Nature
+    if doi.startswith('10.1038/'):
+        candidates.append(f"https://www.nature.com/articles/{doi}.pdf")
+
+    # Oxford University Press
+    if doi.startswith('10.1093/'):
+        candidates.append(f"https://academic.oup.com/view-pdf/doi/{doi}")
+
+    # Generic DOI resolver fallback
+    candidates.append(f"https://doi.org/{doi}")
+
+    return candidates
 
 
 def _transform_pdf_url(url: str) -> List[str]:
@@ -323,7 +467,8 @@ def _transform_pdf_url(url: str) -> List[str]:
         candidates.append(url.replace('/full', '/pdf'))
 
     # Handle arXiv patterns (ensure we have the PDF link)
-    arxiv_match = re.search(r'arxiv\.org/abs/(\d+\.\d+|\w+-\w+/\d+)', url)
+    # arXiv IDs can be: YYMM.NNNNN (new format) or category/YYMMNNN (old format)
+    arxiv_match = re.search(r'arxiv\.org/abs/((?:\d{4}\.\d{4,5})|(?:\w+-\w+/\d{7}))(?:v\d+)?', url)
     if arxiv_match:
         arxiv_id = arxiv_match.group(1)
         candidates.append(f"https://arxiv.org/pdf/{arxiv_id}.pdf")
@@ -481,7 +626,7 @@ class PDFHandler:
 
     def download_pdf(
         self,
-        url: str,
+        url: Optional[str],
         filename: Optional[str] = None,
         result: Optional[SearchResult] = None
     ) -> Path:
@@ -530,17 +675,40 @@ class PDFHandler:
             return output_path
 
         # Build list of URLs to try (primary + transformed + Unpaywall fallback)
-        urls_to_try: List[str] = [url]
+        urls_to_try: List[str] = []
         attempted_urls: List[str] = []
         last_error: Optional[Exception] = None
         last_failure_reason: Optional[str] = None
 
-        # Add transformed URLs (multiple candidates for PMC, etc.)
-        transformed_urls = _transform_pdf_url(url)
-        for transformed_url in transformed_urls:
-            if transformed_url not in urls_to_try:
-                logger.debug(f"Adding transformed PDF URL: {transformed_url}")
-                urls_to_try.append(transformed_url)
+        # Handle case where no primary URL is provided
+        if url is None:
+            logger.debug("No primary URL provided, using fallback strategies only")
+        else:
+            # Add transformed URLs (multiple candidates for PMC, etc.)
+            transformed_urls = _transform_pdf_url(url)
+
+            # For URLs that look like abstract pages, prioritize transformed versions
+            if transformed_urls and ('abs' in url.lower() or 'abstract' in url.lower()):
+                # For abstract URLs, try transformed versions first
+                urls_to_try.extend(transformed_urls)
+                if url not in urls_to_try:
+                    urls_to_try.append(url)  # Add original as fallback
+                logger.debug(f"Prioritizing transformed URLs for abstract URL: {url}")
+            else:
+                # For direct PDF URLs or unknown patterns, try original first
+                urls_to_try.append(url)
+                for transformed_url in transformed_urls:
+                    if transformed_url not in urls_to_try:
+                        logger.debug(f"Adding transformed PDF URL: {transformed_url}")
+                        urls_to_try.append(transformed_url)
+
+        # Add DOI-based PDF URLs if DOI is available
+        if result and result.doi:
+            doi_urls = _doi_to_pdf_urls(result.doi)
+            for doi_url in doi_urls:
+                if doi_url not in urls_to_try:
+                    logger.debug(f"Adding DOI-based PDF URL: {doi_url}")
+                    urls_to_try.append(doi_url)
 
         # Add Unpaywall fallback if configured and DOI available
         if self._unpaywall and result and result.doi:
@@ -550,29 +718,36 @@ class PDFHandler:
                 urls_to_try.append(unpaywall_url)
 
         # Try each URL with enhanced retry logic including 403 error recovery
-        for try_url in urls_to_try:
-            download_result = self._download_with_enhanced_retry(try_url, output_path)
-            attempted_urls.extend(download_result[3])  # Add all attempted URLs
+        primary_urls_failed = False
+        if urls_to_try:
+            for try_url in urls_to_try:
+                download_result = self._download_with_enhanced_retry(try_url, output_path)
+                attempted_urls.extend(download_result[3])  # Add all attempted URLs
 
-            if download_result[0]:  # Success
-                # Log file size and location
-                try:
-                    file_size = output_path.stat().st_size
-                    logger.info(f"Downloaded: {filename} ({file_size:,} bytes) -> {output_path}")
-                except Exception as e:
-                    logger.warning(f"Could not get file size for {output_path}: {e}")
+                if download_result[0]:  # Success
+                    # Log file size and location
+                    try:
+                        file_size = output_path.stat().st_size
+                        logger.info(f"Downloaded: {filename} ({file_size:,} bytes) -> {output_path}")
+                    except Exception as e:
+                        logger.warning(f"Could not get file size for {output_path}: {e}")
 
-                # Update library index with path
-                if result and self._library_index:
-                    citation_key = filename.replace('.pdf', '')
-                    self._library_index.update_pdf_path(citation_key, str(output_path))
-                return output_path
-            else:
-                last_error = download_result[1]
-                last_failure_reason = download_result[2]
-                logger.debug(f"Download failed from {try_url}: {last_failure_reason}")
+                    # Update library index with path
+                    if result and self._library_index:
+                        citation_key = filename.replace('.pdf', '')
+                        self._library_index.update_pdf_path(citation_key, str(output_path))
+                    return output_path
+                else:
+                    last_error = download_result[1]
+                    last_failure_reason = download_result[2]
+                    logger.debug(f"Download failed from {try_url}: {last_failure_reason}")
+                    primary_urls_failed = True
+        else:
+            # No primary URLs provided, go directly to fallbacks
+            primary_urls_failed = True
+            logger.debug("No primary URLs provided, attempting fallback strategies")
 
-        # Primary URLs failed - try preprint server fallbacks
+        # Primary URLs failed or none provided - try preprint server fallbacks
         # These are more expensive (require API calls), so only used after URL-based attempts fail
         
         # Fallback 4: arXiv title search
@@ -637,24 +812,32 @@ class PDFHandler:
     
     def _get_arxiv_fallback(self, result: SearchResult) -> Optional[str]:
         """Try to find an arXiv preprint version by title search.
-        
+
         Args:
             result: SearchResult with title to search for.
-            
+
         Returns:
             PDF URL if arXiv preprint found, else None.
         """
         if not result.title:
             return None
-        
+
         try:
             logger.debug(f"Trying arXiv fallback for: {result.title[:50]}...")
             arxiv_match = self._arxiv.search_by_title(result.title)
-            
-            if arxiv_match and arxiv_match.pdf_url:
-                logger.info(f"Found arXiv preprint: {arxiv_match.url}")
-                return arxiv_match.pdf_url
-            
+
+            if arxiv_match:
+                # Use pdf_url if available, otherwise transform the abstract URL
+                if arxiv_match.pdf_url:
+                    logger.info(f"Found arXiv preprint with PDF URL: {arxiv_match.url}")
+                    return arxiv_match.pdf_url
+                else:
+                    # Transform abstract URL to PDF URL
+                    transformed_urls = _transform_pdf_url(arxiv_match.url)
+                    if transformed_urls:
+                        logger.info(f"Found arXiv preprint, transformed to PDF URL: {arxiv_match.url} -> {transformed_urls[0]}")
+                        return transformed_urls[0]
+
             return None
         except Exception as e:
             logger.debug(f"arXiv fallback failed: {e}")
@@ -811,11 +994,78 @@ class PDFHandler:
             if result[0]:
                 return (True, None, None, attempted_urls)
 
+            # Strategy 5: Try academic referers (pretend we're coming from university sites)
+            academic_referers = [
+                "https://scholar.google.com/",
+                "https://www.semanticscholar.org/",
+                "https://www.researchgate.net/",
+                "https://arxiv.org/",
+                "https://www.academia.edu/"
+            ]
+
+            for referer in academic_referers[:2]:  # Try first 2 academic referers
+                logger.debug(f"Trying academic referer: {referer}")
+                result = self._download_single_attempt(
+                    url, output_path, attempt_type="academic_referer",
+                    custom_headers={
+                        "User-Agent": random.choice(BROWSER_USER_AGENTS),
+                        "Accept": "application/pdf,*/*",
+                        "Accept-Language": "en-US,en;q=0.9",
+                        "Referer": referer
+                    }
+                )
+                attempted_urls.append(f"{url} (academic_referer: {referer.split('//')[1].split('/')[0]})")
+
+                if result[0]:
+                    return (True, None, None, attempted_urls)
+
+            # Strategy 6: Try DOI-based direct access (for some publishers)
+            if result and hasattr(result, 'doi') and result.doi:
+                doi = result.doi.replace('https://doi.org/', '').replace('http://dx.doi.org/', '')
+                doi_urls = _doi_to_pdf_urls(result.doi)  # Use the enhanced DOI function
+
+                for doi_url in doi_urls[:3]:  # Try first 3 DOI-based URLs
+                    logger.debug(f"Trying DOI-based URL: {doi_url}")
+                    result = self._download_single_attempt(
+                        doi_url, output_path, attempt_type="doi_direct"
+                    )
+                    attempted_urls.append(f"{doi_url} (doi_direct)")
+
+                    if result[0]:
+                        return (True, None, None, attempted_urls)
+
         # If not 403 or all recovery strategies failed, try standard retries
         else:
-            # Standard retry logic for other error types
-            for attempt in range(1, self.config.download_retry_attempts + 1):
+            # Enhanced retry logic based on failure type
+            max_retries = self.config.download_retry_attempts
+
+            for attempt in range(1, max_retries + 1):
                 delay = self.config.download_retry_delay * (2 ** (attempt - 1))
+
+                # For 403 errors, try different strategies on retry
+                if last_failure_reason == "access_denied":
+                    # Try with different user agent on each retry
+                    user_agents = BROWSER_USER_AGENTS[attempt-1::3]  # Different agents each time
+                    if user_agents:
+                        custom_agent = user_agents[0]
+                        logger.debug(f"Retry {attempt} with different User-Agent, waiting {delay:.1f}s")
+                        time.sleep(delay)
+
+                        result = self._download_single_attempt(
+                            url, output_path,
+                            attempt_type=f"retry_{attempt}_agent",
+                            custom_headers={"User-Agent": custom_agent}
+                        )
+                        attempted_urls.append(f"{url} (retry {attempt}, agent: {custom_agent[:20]}...)")
+
+                        if result[0]:
+                            return (True, None, None, attempted_urls)
+
+                        last_error = result[1]
+                        last_failure_reason = result[2]
+                        continue
+
+                # For other errors, standard retry
                 logger.debug(f"Standard retry attempt {attempt}, waiting {delay:.1f}s")
                 time.sleep(delay)
 

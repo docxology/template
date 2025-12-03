@@ -365,3 +365,56 @@ class LibraryIndex:
             "newest_year": max(years.keys()) if years else None,
         }
 
+    def remove_entry(self, citation_key: str) -> bool:
+        """Remove an entry from the library index.
+
+        Args:
+            citation_key: Citation key of the entry to remove.
+
+        Returns:
+            True if entry was removed, False if not found.
+        """
+        if citation_key in self._entries:
+            del self._entries[citation_key]
+            self._save_index()
+            logger.info(f"Removed entry from library: {citation_key}")
+            return True
+        else:
+            logger.warning(f"Entry not found for removal: {citation_key}")
+            return False
+
+    def get_entries_without_pdf(self) -> List[LibraryEntry]:
+        """Get all entries that do not have a PDF file.
+
+        Returns:
+            List of LibraryEntry objects that are missing PDF files.
+        """
+        entries_without_pdf = []
+        for entry in self._entries.values():
+            if not entry.pdf_path:
+                entries_without_pdf.append(entry)
+            else:
+                # PDF paths in library are stored relative to project root
+                # Always resolve relative to project root
+                pdf_path = Path(entry.pdf_path)
+                if not pdf_path.exists():
+                    entries_without_pdf.append(entry)
+
+        return entries_without_pdf
+
+    def remove_entries_without_pdf(self) -> int:
+        """Remove all entries that do not have PDF files.
+
+        Returns:
+            Number of entries removed.
+        """
+        entries_to_remove = self.get_entries_without_pdf()
+        removed_count = 0
+
+        for entry in entries_to_remove:
+            if self.remove_entry(entry.citation_key):
+                removed_count += 1
+
+        logger.info(f"Removed {removed_count} entries without PDFs from library")
+        return removed_count
+

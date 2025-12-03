@@ -151,8 +151,10 @@ display_menu() {
     echo "  7. Search literature (add to bibliography)"
     echo "  8. Download PDFs (for bibliography entries)"
     echo "  9. Generate summaries (for papers with PDFs)"
+    echo "  10. Cleanup library (remove papers without PDFs)"
+    echo "  11. Advanced LLM operations (literature review, etc.)"
     echo
-    echo "  10. Exit"
+    echo "  12. Exit"
     echo
     echo -e "${BLUE}============================================================${NC}"
     echo -e "  Repository: ${CYAN}$REPO_ROOT${NC}"
@@ -424,6 +426,71 @@ run_literature_summarize() {
     fi
 }
 
+run_literature_cleanup() {
+    log_header "CLEANUP LIBRARY (REMOVE PAPERS WITHOUT PDFs)"
+
+    cd "$REPO_ROOT"
+
+    log_info "Cleaning up library by removing papers without PDFs..."
+
+    if python3 scripts/07_literature_search.py --cleanup; then
+        log_success "Library cleanup complete"
+        return 0
+    else
+        log_error "Library cleanup failed"
+        return 1
+    fi
+}
+
+run_literature_llm_operations() {
+    log_header "ADVANCED LLM OPERATIONS (LITERATURE REVIEW, ETC.)"
+
+    cd "$REPO_ROOT"
+
+    echo
+    echo "Available LLM operations:"
+    echo "  1. Literature review synthesis"
+    echo "  2. Science communication narrative"
+    echo "  3. Comparative analysis"
+    echo "  4. Research gap identification"
+    echo "  5. Citation network analysis"
+    echo
+
+    read -p "Choose operation (1-5): " op_choice
+
+    case $op_choice in
+        1)
+            operation="review"
+            ;;
+        2)
+            operation="communication"
+            ;;
+        3)
+            operation="compare"
+            ;;
+        4)
+            operation="gaps"
+            ;;
+        5)
+            operation="network"
+            ;;
+        *)
+            log_error "Invalid choice: $op_choice"
+            return 1
+            ;;
+    esac
+
+    log_info "Running LLM operation: $operation (requires Ollama)..."
+
+    if python3 scripts/07_literature_search.py --llm-operation "$operation"; then
+        log_success "LLM operation complete"
+        return 0
+    else
+        log_error "LLM operation failed"
+        return 1
+    fi
+}
+
 # ============================================================================
 # Full Pipeline Execution
 # ============================================================================
@@ -656,13 +723,19 @@ handle_menu_choice() {
             run_literature_summarize
             ;;
         10)
+            run_literature_cleanup
+            ;;
+        11)
+            run_literature_llm_operations
+            ;;
+        12)
             echo
             log_info "Exiting. Goodbye!"
             exit 0
             ;;
         *)
             log_error "Invalid option: $choice"
-            log_info "Please enter a number between 1 and 10"
+            log_info "Please enter a number between 1 and 12"
             ;;
     esac
     
@@ -747,7 +820,7 @@ show_help() {
     echo "  $0 --download            # Download PDFs (for bibliography entries)"
     echo "  $0 --summarize           # Generate summaries (for papers with PDFs)"
     echo
-    echo "Note: --option N is also supported for compatibility (1-10)"
+    echo "Note: --option N is also supported for compatibility (1-12)"
     echo
 }
 

@@ -70,6 +70,14 @@ python3 -m infrastructure.literature.cli library stats
 
 # Export library
 python3 -m infrastructure.literature.cli library export --output export.json
+
+# NEW: Clean up library
+python3 scripts/07_literature_search.py --cleanup
+
+# NEW: Advanced LLM operations
+python3 scripts/07_literature_search.py --llm-operation review
+python3 scripts/07_literature_search.py --llm-operation communication
+python3 scripts/07_literature_search.py --llm-operation compare
 ```
 
 ## Configuration

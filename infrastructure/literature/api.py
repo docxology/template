@@ -219,6 +219,11 @@ class ArxivSource(LiteratureSource):
             for link in entry.findall('atom:link', ns):
                 if link.get('title') == 'pdf':
                     pdf_link = link.get('href')
+                    # Clean up arXiv PDF URLs by removing version suffixes
+                    if pdf_link and 'arxiv.org/pdf/' in pdf_link:
+                        import re
+                        # Remove version suffix (e.g., 2311.18356v2 -> 2311.18356)
+                        pdf_link = re.sub(r'(\d{4}\.\d{4,5})v\d+', r'\1', pdf_link)
             
             doi = None
             arxiv_doi = entry.find('arxiv:doi', ns)
