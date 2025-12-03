@@ -211,20 +211,236 @@ def library_entry_to_search_result(entry: LibraryEntry) -> SearchResult:
     )
 
 
+def get_pdf_path_for_entry(entry: LibraryEntry) -> Optional[Path]:
+    """Get the PDF path for a library entry, checking both metadata and filesystem.
+
+    Args:
+        entry: Library entry to check.
+
+    Returns:
+        Path to PDF if it exists, None otherwise.
+    """
+    # Check if PDF path in entry metadata
+    pdf_path = None
+    if entry.pdf_path:
+        pdf_path = Path(entry.pdf_path)
+        if not pdf_path.is_absolute():
+            pdf_path = Path("literature") / pdf_path
+        if not pdf_path.exists():
+            pdf_path = None
+
+    # If no PDF path in entry, check if PDF exists in expected location
+    if not pdf_path:
+        expected_pdf = Path("literature/pdfs") / f"{entry.citation_key}.pdf"
+        if expected_pdf.exists():
+            pdf_path = expected_pdf
+
+    return pdf_path
+
+
+def find_papers_needing_pdf(library_entries: List[LibraryEntry]) -> List[LibraryEntry]:
+    """Find papers that need PDF download.
+
+    Args:
+        library_entries: List of all library entries.
+
+    Returns:
+        List of entries that need PDF download.
+    """
+    papers_needing_pdf = []
+
+    for entry in library_entries:
+        pdf_path = get_pdf_path_for_entry(entry)
+        if not pdf_path or not pdf_path.exists():
+            papers_needing_pdf.append(entry)
+
+    return papers_needing_pdf
+
+
+def find_papers_needing_summary(library_entries: List[LibraryEntry]) -> List[Tuple[LibraryEntry, Path]]:
+    """Find papers that have PDFs but need summaries.
+
+    Args:
+        library_entries: List of all library entries.
+
+    Returns:
+        List of (entry, pdf_path) tuples for papers needing summaries.
+    """
+    papers_needing_summary = []
+
+    for entry in library_entries:
+        pdf_path = get_pdf_path_for_entry(entry)
+
+        # Only consider papers that have PDFs
+        if pdf_path and pdf_path.exists():
+            # Check if summary exists
+            summary_path = Path("literature/summaries") / f"{entry.citation_key}_summary.md"
+            if not summary_path.exists():
+                papers_needing_summary.append((entry, pdf_path))
+
+    return papers_needing_summary
+
+
+def get_library_analysis(library_entries: List[LibraryEntry]) -> Dict[str, int]:
+    """Analyze the current state of the library.
+
+    Args:
+        library_entries: List of all library entries.
+
+    Returns:
+        Dictionary with analysis statistics.
+    """
+    total_papers = len(library_entries)
+    papers_with_pdf = 0
+    papers_with_summary = 0
+    papers_complete = 0  # Have both PDF and summary
+
+    for entry in library_entries:
+        pdf_path = get_pdf_path_for_entry(entry)
+        has_pdf = pdf_path is not None and pdf_path.exists()
+
+        summary_path = Path("literature/summaries") / f"{entry.citation_key}_summary.md"
+        has_summary = summary_path.exists()
+
+        if has_pdf:
+            papers_with_pdf += 1
+        if has_summary:
+            papers_with_summary += 1
+        if has_pdf and has_summary:
+            papers_complete += 1
+
+    return {
+        "total_papers": total_papers,
+        "papers_with_pdf": papers_with_pdf,
+        "papers_with_summary": papers_with_summary,
+        "papers_complete": papers_complete,
+        "papers_needing_pdf": total_papers - papers_with_pdf,
+        "papers_needing_summary": papers_with_pdf - papers_complete,
+    }
+
+
 def find_papers_needing_processing(
     library_entries: List[LibraryEntry]
 ) -> Tuple[List[LibraryEntry], List[Tuple[LibraryEntry, Path]]]:
     """Analyze library and find papers needing processing.
-    
+
     Args:
         library_entries: List of all library entries.
-        
+
     Returns:
         Tuple of (papers_needing_pdf, papers_needing_summary).
     """
+    papers_needing_pdf = find_papers_needing_pdf(library_entries)
+    papers_needing_summary = find_papers_needing_summary(library_entries)
+
+    return papers_needing_pdf, papers_needing_summary
+
+
+def run_search_only(
+    workflow: LiteratureWorkflow,
+    keywords: Optional[List[str]] = None,
+    limit: Optional[int] = None,
+) -> int:
+    """Execute literature search only (add to bibliography).
+
+    Args:
+        workflow: Configured LiteratureWorkflow instance.
+        keywords: Optional keywords list (prompts if not provided).
+        limit: Optional limit per keyword (prompts if not provided).
+
+    Returns:
+        Exit code (0=success, 1=failure).
+    """
+    log_header("LITERATURE SEARCH (ADD TO BIBLIOGRAPHY)")
+
+    print("\nThis will:")
+    print("  1. Search arXiv and Semantic Scholar for papers")
+    print("  2. Add papers to bibliography (no download or summarization)")
+    print()
+
+    # Get limit if not provided
+    if limit is None:
+        limit = get_limit_input()
+
+    # Get keywords if not provided
+    if keywords is None:
+        keywords = get_keywords_input()
+        if not keywords:
+            logger.info("No keywords provided. Exiting.")
+            return 1
+
+    # Execute search only
+    log_header("SEARCHING FOR PAPERS")
+    logger.info(f"Search keywords: {', '.join(keywords)}")
+    logger.info(f"Results per keyword: {limit}")
+
+    try:
+        # Search for papers
+        search_results = workflow._search_papers(keywords, limit)
+        papers_found = len(search_results)
+
+        if not search_results:
+            logger.warning("No papers found for the given keywords")
+            return 1
+
+        # Add all results to library
+        log_header("ADDING TO BIBLIOGRAPHY")
+        added_count = 0
+        already_existed_count = 0
+
+        for result in search_results:
+            try:
+                citation_key = workflow.literature_search.add_to_library(result)
+                added_count += 1
+                logger.info(f"Added: {citation_key}")
+            except Exception as e:
+                already_existed_count += 1
+                logger.debug(f"Already exists: {result.title[:50]}...")
+
+        # Display results
+        print(f"\n{'=' * 60}")
+        print("SEARCH COMPLETED")
+        print("=" * 60)
+        print(f"Keywords searched: {', '.join(keywords)}")
+        print(f"Papers found: {papers_found}")
+        print(f"Papers added to bibliography: {added_count}")
+        if already_existed_count > 0:
+            print(f"Papers already in bibliography: {already_existed_count}")
+        print(f"Success rate: {(added_count / papers_found) * 100:.1f}%")
+
+        display_file_locations()
+
+        log_success("Literature search complete!")
+        return 0
+
+    except Exception as e:
+        logger.error(f"Search failed: {e}")
+        import traceback
+        traceback.print_exc()
+        return 1
+
+
+def run_download_only(workflow: LiteratureWorkflow) -> int:
+    """Download PDFs for existing bibliography entries.
+
+    Args:
+        workflow: Configured LiteratureWorkflow instance.
+
+    Returns:
+        Exit code (0=success, 1=failure).
+    """
+    log_header("DOWNLOAD PDFs (FOR BIBLIOGRAPHY ENTRIES)")
+
+    # Load library entries
+    library_entries = workflow.literature_search.library_index.list_entries()
+
+    if not library_entries:
+        logger.warning("Library is empty. Use --search-only to find and add papers first.")
+        print("\nLibrary is empty. Use --search-only to find and add papers first.")
+        return 0
+
+    # Find entries needing PDFs
     papers_needing_pdf = []
-    papers_needing_summary = []
-    
     for entry in library_entries:
         # Check if PDF exists
         pdf_path = None
@@ -234,23 +450,75 @@ def find_papers_needing_processing(
                 pdf_path = Path("literature") / pdf_path
             if not pdf_path.exists():
                 pdf_path = None
-        
+
         # If no PDF path in entry, check if PDF exists in expected location
         if not pdf_path:
             expected_pdf = Path("literature/pdfs") / f"{entry.citation_key}.pdf"
             if expected_pdf.exists():
                 pdf_path = expected_pdf
-        
-        # Check if summary exists
-        summary_path = Path("literature/summaries") / f"{entry.citation_key}_summary.md"
-        has_summary = summary_path.exists()
-        
+
         if not pdf_path or not pdf_path.exists():
             papers_needing_pdf.append(entry)
-        elif pdf_path.exists() and not has_summary:
-            papers_needing_summary.append((entry, pdf_path))
-    
-    return papers_needing_pdf, papers_needing_summary
+
+    print(f"\nLibrary contains {len(library_entries)} papers")
+    print(f"Papers needing PDF download: {len(papers_needing_pdf)}")
+
+    if not papers_needing_pdf:
+        print("\nAll papers in bibliography already have PDFs. Nothing to download.")
+        return 0
+
+    # Download PDFs
+    log_header("DOWNLOADING PDFs")
+    print(f"Attempting to download {len(papers_needing_pdf)} PDFs...")
+
+    downloaded_count = 0
+    failed_count = 0
+
+    for i, entry in enumerate(papers_needing_pdf, 1):
+        logger.info(f"[{i}/{len(papers_needing_pdf)}] Processing: {entry.title[:60]}...")
+
+        search_result = library_entry_to_search_result(entry)
+        download_result = workflow.literature_search.download_paper_with_result(search_result)
+
+        if download_result.success and download_result.pdf_path:
+            file_size = "?"
+            try:
+                if download_result.pdf_path.exists():
+                    size_bytes = download_result.pdf_path.stat().st_size
+                    file_size = f"{size_bytes:,}B"
+            except Exception:
+                pass
+
+            if download_result.already_existed:
+                logger.info(f"✓ Already exists: {download_result.pdf_path.name} ({file_size})")
+            else:
+                log_success(f"✓ Downloaded: {download_result.pdf_path.name} ({file_size})")
+            downloaded_count += 1
+        else:
+            error_msg = download_result.failure_message or "Unknown error"
+            if len(error_msg) > 200:
+                error_msg = error_msg[:197] + "..."
+            logger.error(f"✗ Failed: {error_msg}")
+            failed_count += 1
+
+    # Display summary
+    print(f"\n{'=' * 60}")
+    print("PDF DOWNLOAD COMPLETED")
+    print("=" * 60)
+    print(f"Papers processed: {len(papers_needing_pdf)}")
+    print(f"PDFs downloaded: {downloaded_count}")
+    if failed_count > 0:
+        print(f"Download failures: {failed_count}")
+    print(f"Success rate: {(downloaded_count / len(papers_needing_pdf)) * 100:.1f}%")
+
+    display_file_locations()
+
+    if downloaded_count > 0:
+        log_success("PDF download complete!")
+    else:
+        logger.warning("No PDFs were downloaded")
+
+    return 0 if downloaded_count > 0 else 1
 
 
 def run_search(
@@ -333,107 +601,78 @@ def run_search(
 
 
 def run_summarize(workflow: LiteratureWorkflow) -> int:
-    """Generate summaries for existing PDFs in library.
-    
+    """Generate summaries for papers with PDFs (no downloading).
+
     Args:
         workflow: Configured LiteratureWorkflow instance.
-        
+
     Returns:
         Exit code (0=success, 1=failure).
     """
-    log_header("Generate Summaries for Downloaded PDFs")
-    
+    log_header("GENERATE SUMMARIES (FOR PAPERS WITH PDFs)")
+
     # Load library entries
     library_entries = workflow.literature_search.library_index.list_entries()
-    
+
     if not library_entries:
-        logger.warning("Library is empty. No papers to summarize.")
-        print("\nLibrary is empty. Use --search to find and download papers first.")
+        logger.warning("Library is empty. Use --search-only to find and add papers first.")
+        print("\nLibrary is empty. Use --search-only to find and add papers first.")
         return 0
-    
-    logger.info(f"Found {len(library_entries)} papers in library")
-    
-    # Find papers needing processing
-    papers_needing_pdf, papers_needing_summary = find_papers_needing_processing(library_entries)
-    
-    print("\nLibrary Analysis:")
-    print(f"  Total papers in library: {len(library_entries)}")
-    print(f"  Papers needing PDF download: {len(papers_needing_pdf)}")
-    print(f"  Papers needing summaries: {len(papers_needing_summary)}")
-    
-    if not papers_needing_pdf and not papers_needing_summary:
-        print("\nAll papers in library have PDFs and summaries. Nothing to do.")
+
+    # Get library analysis
+    analysis = get_library_analysis(library_entries)
+
+    print(f"\nLibrary contains {analysis['total_papers']} papers")
+    print(f"Papers with PDFs: {analysis['papers_with_pdf']}")
+    print(f"Papers with summaries: {analysis['papers_with_summary']}")
+    print(f"Papers needing summaries: {analysis['papers_needing_summary']}")
+
+    if analysis['papers_needing_summary'] == 0:
+        print("\nAll papers with PDFs already have summaries. Nothing to do.")
         return 0
-    
-    # Process papers needing PDFs
-    downloaded_papers = []
-    if papers_needing_pdf:
-        log_header("Downloading Missing PDFs")
-        print(f"Attempting to download {len(papers_needing_pdf)} missing PDFs...")
-        
-        for i, entry in enumerate(papers_needing_pdf, 1):
-            logger.info(f"[{i}/{len(papers_needing_pdf)}] {entry.title[:60]}...")
-            
-            search_result = library_entry_to_search_result(entry)
-            download_result = workflow.literature_search.download_paper_with_result(search_result)
-            
-            if download_result.success and download_result.pdf_path:
-                logger.info(f"Downloaded: {download_result.pdf_path.name}")
-                downloaded_papers.append((search_result, download_result.pdf_path))
-            else:
-                logger.warning(f"Failed to download PDF for: {entry.title[:50]}...")
-    
-    # Combine downloaded papers with papers needing summaries
-    papers_to_summarize = []
-    papers_to_summarize.extend(downloaded_papers)
-    
-    for entry, pdf_path in papers_needing_summary:
-        search_result = library_entry_to_search_result(entry)
-        papers_to_summarize.append((search_result, pdf_path))
-    
-    if not papers_to_summarize:
-        print("\nNo papers need summarization.")
-        return 0
-    
+
+    # Find papers needing summaries
+    papers_needing_summary = find_papers_needing_summary(library_entries)
+
     # Generate summaries
-    log_header("Generating Summaries")
-    logger.info(f"Processing {len(papers_to_summarize)} papers")
-    
+    log_header("GENERATING SUMMARIES")
+    logger.info(f"Processing {len(papers_needing_summary)} papers")
+
     # Initialize progress tracking
     if not workflow.progress_tracker.current_progress:
-        workflow.progress_tracker.start_new_run([], len(papers_to_summarize))
-    
-    for search_result, pdf_path in papers_to_summarize:
+        workflow.progress_tracker.start_new_run([], len(papers_needing_summary))
+
+    for search_result, pdf_path in papers_needing_summary:
         citation_key = pdf_path.stem
         workflow.progress_tracker.add_paper(citation_key, str(pdf_path))
         workflow.progress_tracker.update_entry_status(citation_key, "downloaded")
-    
+
     # Summarize papers
     summarization_results = workflow._summarize_papers_parallel(
-        papers_to_summarize, MAX_PARALLEL_SUMMARIES
+        papers_needing_summary, MAX_PARALLEL_SUMMARIES
     )
-    
+
     # Save progress
     if workflow.progress_tracker:
         workflow.progress_tracker.save_progress()
-    
+
     # Display summary
     successful = sum(1 for r in summarization_results if r.success and not getattr(r, 'skipped', False))
     failed = sum(1 for r in summarization_results if not r.success)
     skipped = sum(1 for r in summarization_results if getattr(r, 'skipped', False))
-    
+
     print(f"\n{'=' * 60}")
     print("SUMMARIZATION COMPLETED")
     print("=" * 60)
-    print(f"Papers processed: {len(papers_to_summarize)}")
-    print(f"PDFs downloaded: {len(downloaded_papers)}")
+    print(f"Papers processed: {len(papers_needing_summary)}")
     print(f"Summaries generated: {successful}")
     if skipped > 0:
         print(f"Summaries skipped (already exist): {skipped}")
     print(f"Summary failures: {failed}")
-    
+    print(f"Success rate: {(successful / len(papers_needing_summary)) * 100:.1f}%")
+
     display_file_locations()
-    
+
     log_success("Summary generation complete!")
     return 0
 
@@ -481,22 +720,40 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python3 scripts/07_literature_search.py --search
-  python3 scripts/07_literature_search.py --search --keywords "machine learning,optimization"
-  python3 scripts/07_literature_search.py --search --limit 50 --keywords "AI"
+  # Search and add to bibliography only
+  python3 scripts/07_literature_search.py --search-only
+  python3 scripts/07_literature_search.py --search-only --keywords "machine learning,optimization"
+
+  # Download PDFs for existing bibliography entries
+  python3 scripts/07_literature_search.py --download-only
+
+  # Generate summaries for papers with PDFs
   python3 scripts/07_literature_search.py --summarize
+
+  # Combined operations (legacy - use separate operations instead)
+  python3 scripts/07_literature_search.py --search --limit 50 --keywords "AI"
   python3 scripts/07_literature_search.py --search --summarize
 """
     )
     parser.add_argument(
         "--search",
         action="store_true",
-        help="Search for papers and download PDFs"
+        help="Search for papers, download PDFs, and generate summaries"
+    )
+    parser.add_argument(
+        "--search-only",
+        action="store_true",
+        help="Search for papers and add to bibliography only (no download or summarize)"
+    )
+    parser.add_argument(
+        "--download-only",
+        action="store_true",
+        help="Download PDFs for existing bibliography entries (no search or summarize)"
     )
     parser.add_argument(
         "--summarize",
         action="store_true",
-        help="Generate summaries for existing PDFs"
+        help="Generate summaries for papers with PDFs (no search or download)"
     )
     parser.add_argument(
         "--keywords",
@@ -513,9 +770,16 @@ Examples:
     args = parser.parse_args()
     
     # Require at least one action
-    if not args.search and not args.summarize:
+    if not args.search and not args.search_only and not args.download_only and not args.summarize:
         parser.print_help()
-        print("\nError: Must specify --search and/or --summarize")
+        print("\nError: Must specify one of --search, --search-only, --download-only, or --summarize")
+        return 1
+
+    # Check for conflicting operations
+    operation_count = sum([args.search, args.search_only, args.download_only, args.summarize])
+    if operation_count > 1:
+        parser.print_help()
+        print("\nError: Can only specify one operation at a time")
         return 1
     
     # Parse keywords if provided
@@ -536,17 +800,17 @@ Examples:
             return 2  # Skip code - Ollama not available
         
         exit_code = 0
-        
-        # Run search if requested
-        if args.search:
+
+        # Run appropriate operation
+        if args.search_only:
+            exit_code = run_search_only(workflow, keywords=keywords, limit=args.limit)
+        elif args.download_only:
+            exit_code = run_download_only(workflow)
+        elif args.search:
             exit_code = run_search(workflow, keywords=keywords, limit=args.limit)
-            if exit_code != 0:
-                return exit_code
-        
-        # Run summarize if requested
-        if args.summarize:
+        elif args.summarize:
             exit_code = run_summarize(workflow)
-        
+
         return exit_code
         
     except KeyboardInterrupt:

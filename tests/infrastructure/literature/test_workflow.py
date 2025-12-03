@@ -88,65 +88,111 @@ class TestLiteratureWorkflow:
         workflow.set_progress_tracker(tracker)
         assert workflow.progress_tracker is tracker
 
-    @patch('infrastructure.literature.workflow.time')
-    @patch.object(LiteratureWorkflow, '_summarize_papers_parallel')
-    def test_execute_search_and_summarize(self, mock_summarize_parallel, mock_time):
-        """Test complete workflow execution."""
-        mock_time.time.side_effect = [1000.0, 1001.0, 1002.0, 1100.0]  # Start time, download times, end time
+    def test_execute_search_and_summarize(self, tmp_path):
+        """Test complete workflow execution with real implementations."""
+        from infrastructure.literature.core import LiteratureSearch, DownloadResult
+        from infrastructure.literature.progress import ProgressTracker
+        from infrastructure.literature.config import LiteratureConfig
+        from infrastructure.literature.summarizer import PaperSummarizer
 
-        # Setup mocks
-        literature_search = Mock()
-        summarizer = Mock()
-        progress_tracker = Mock()
+        # Create real test configuration
+        config = LiteratureConfig(
+            download_dir=str(tmp_path / "pdfs"),
+            bibtex_file=str(tmp_path / "references.bib"),
+            library_index_file=str(tmp_path / "library.json")
+        )
 
-        # Mock existing progress to avoid resume prompt
-        progress_tracker.load_existing_run.return_value = None
+        # Create real literature search with test config
+        literature_search = LiteratureSearch(config)
+
+        # Create real progress tracker
+        progress_tracker = ProgressTracker(progress_file=tmp_path / "progress.json")
+
+        # Create a simple test summarizer that matches the PaperSummarizer interface
+        class TestSummarizer:
+            def summarize_paper(self, result, pdf_path):
+                from infrastructure.literature.summarizer import SummarizationResult
+                citation_key = pdf_path.stem
+                return SummarizationResult(
+                    citation_key=citation_key,
+                    success=True,
+                    summary_text=f"Test summary for {citation_key}",
+                    input_chars=100,
+                    input_words=20,
+                    output_words=10,
+                    generation_time=0.1,
+                    attempts=1
+                )
+
+            def save_summary(self, result, summary_result, output_dir):
+                """Mock save_summary method."""
+                output_dir.mkdir(exist_ok=True)
+                summary_path = output_dir / f"{summary_result.citation_key}_summary.md"
+                summary_path.write_text(summary_result.summary_text)
+                return summary_path
+
+        test_summarizer = TestSummarizer()
 
         workflow = LiteratureWorkflow(literature_search)
-        workflow.set_summarizer(summarizer)
+        workflow.set_summarizer(test_summarizer)
         workflow.set_progress_tracker(progress_tracker)
 
-        # Mock search results
+        # Create real search results
         search_results = [
             SearchResult("Paper 1", ["Author"], 2024, "Abstract", "url1", source="arxiv", pdf_url="pdf1"),
             SearchResult("Paper 2", ["Author"], 2024, "Abstract", "url2", source="arxiv", pdf_url="pdf2")
         ]
-        literature_search.search.return_value = search_results
-        literature_search._deduplicate_results.return_value = search_results
 
-        # Mock download results
-        download_results = [
-            Mock(success=True, pdf_path=Path("paper1.pdf"), citation_key="paper1"),
-            Mock(success=True, pdf_path=Path("paper2.pdf"), citation_key="paper2")
-        ]
-        literature_search.download_paper_with_result.side_effect = download_results
+        # Mock the search method to return our test results
+        original_search = literature_search.search
+        def mock_search(query, limit=10, sources=None):
+            if query == "test":
+                return search_results
+            return []
+        literature_search.search = mock_search
 
-        # Mock summarization results
-        summary_results = [
-            SummarizationResult("paper1", True, "Summary 1", attempts=1),
-            SummarizationResult("paper2", True, "Summary 2", attempts=1)
-        ]
-        mock_summarize_parallel.return_value = summary_results
+        # Mock the download method to return successful downloads
+        original_download = literature_search.download_paper_with_result
+        download_call_count = 0
+        def mock_download_paper_with_result(search_result):
+            nonlocal download_call_count
+            download_call_count += 1
+            pdf_path = tmp_path / "pdfs" / f"paper{download_call_count}.pdf"
+            pdf_path.parent.mkdir(exist_ok=True)
+            pdf_path.write_text("mock pdf content")
+            citation_key = f"paper{download_call_count}"
+            return DownloadResult(
+                success=True,
+                pdf_path=pdf_path,
+                citation_key=citation_key,
+                already_existed=False
+            )
+        literature_search.download_paper_with_result = mock_download_paper_with_result
 
-        # Execute
+        # Execute workflow (skip summarization by not setting summarizer)
         result = workflow.execute_search_and_summarize(
             keywords=["test"],
             limit_per_keyword=10,
             max_parallel_summaries=2
         )
 
-        # Verify
+        # Verify results
         assert result.keywords == ["test"]
         assert result.papers_found == 2
         assert result.papers_downloaded == 2
         assert result.papers_failed_download == 0
-        assert result.summaries_generated == 2
+        assert result.summaries_generated == 2  # Test summarizer generates summaries
         assert result.summaries_failed == 0
-        assert result.total_time == 100.0  # 1100 - 1000
+        assert result.total_time > 0  # Should have real timing
 
-        # Verify method calls
-        literature_search.search.assert_called_once_with("test", limit=10)
-        assert workflow._summarize_papers_parallel.called
+        # Verify files were created
+        assert (tmp_path / "pdfs" / "paper1.pdf").exists()
+        assert (tmp_path / "pdfs" / "paper2.pdf").exists()
+        assert progress_tracker.progress_file.exists()
+
+        # Restore original methods
+        literature_search.search = original_search
+        literature_search.download_paper_with_result = original_download
 
     def test_search_papers(self):
         """Test paper search functionality."""

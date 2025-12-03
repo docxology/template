@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "updated": "2025-12-03T03:40:07.153618",
+  "updated": "2025-12-03T05:20:00.746256",
   "count": 1322,
   "entries": {
     "watson2020active": {
@@ -9179,7 +9179,7 @@
       "doi": "10.1162/neco_a_01574",
       "source": "semanticscholar",
       "url": "https://www.semanticscholar.org/paper/abbef3f050f2381c88fbd4dd8a7818d9ba989b38",
-      "pdf_path": null,
+      "pdf_path": "literature/pdfs/costa2023reward.pdf",
       "added_date": "2025-12-01T20:32:04.104464",
       "abstract": "Abstract Active inference is a probabilistic framework for modeling the behavior of biological and artificial agents, which derives from the principle of minimizing free energy. In recent years, this framework has been applied successfully to a variety of situations where the goal was to maximize reward, often offering comparable and sometimes superior performance to alternative approaches. In this article, we clarify the connection between reward maximization and active inference by demonstrating how and when active inference agents execute actions that are optimal for maximizing reward. Precisely, we show the conditions under which active inference produces the optimal solution to the Bellman equation, a formulation that underlies several approaches to model-based reinforcement learning and control. On partially observed Markov decision processes, the standard active inference scheme can produce Bellman optimal actions for planning horizons of 1 but not beyond. In contrast, a recently developed recursive active inference scheme (sophisticated inference) can produce Bellman optimal actions on any finite temporal horizon. We append the analysis with a discussion of the broader relationship between active inference and reinforcement learning.",
       "venue": "Neural Computation",
@@ -9243,7 +9243,7 @@
       "doi": "10.1098/rstb.2022.0411",
       "source": "semanticscholar",
       "url": "https://www.semanticscholar.org/paper/8ce0437b44f92b14e304c861f1fc1158304a6156",
-      "pdf_path": null,
+      "pdf_path": "literature/pdfs/cruys2023order.pdf",
       "added_date": "2025-12-01T20:32:04.858351",
       "abstract": "How to account for the power that art holds over us? Why do artworks touch us deeply, consoling, transforming or invigorating us in the process? In this paper, we argue that an answer to this question might emerge from a fecund framework in cognitive science known as predictive processing (a.k.a. active inference). We unpack how this approach connects sense-making and aesthetic experiences through the idea of an ‘epistemic arc’, consisting of three parts (curiosity, epistemic action and aha experiences), which we cast as aspects of active inference. We then show how epistemic arcs are built and sustained by artworks to provide us with those satisfying experiences that we tend to call ‘aesthetic’. Next, we defuse two key objections to this approach; namely, that it places undue emphasis on the cognitive component of our aesthetic encounters—at the expense of affective aspects—and on closure and uncertainty minimization (order)—at the expense of openness and lingering uncertainty (change). We show that the approach offers crucial resources to account for the open-ended, free and playful behaviour inherent in aesthetic experiences. The upshot is a promising but deflationary approach, both philosophically informed and psychologically sound, that opens new empirical avenues for understanding our aesthetic encounters. This article is part of the theme issue ‘Art, aesthetics and predictive processing: theoretical and empirical perspectives’.",
       "venue": "Philosophical Transactions of the Royal Society of London. Biological Sciences",
@@ -12354,7 +12354,7 @@
       "doi": "10.1109/COMST.2023.3254481",
       "source": "semanticscholar",
       "url": "https://www.semanticscholar.org/paper/d90efed28eb3670c45adf91a1b8c1cb7e1eb340d",
-      "pdf_path": null,
+      "pdf_path": "literature/pdfs/yang2023survey.pdf",
       "added_date": "2025-12-02T06:10:24.243296",
       "abstract": "Driven by the rapid progress in quantum hardware, recent years have witnessed a furious race for quantum technologies in both academia and industry. Universal quantum computers have supported up to hundreds of qubits, while the scale of quantum annealers has reached three orders of magnitude (i.e., thousands of qubits). Quantum computing power keeps climbing. Race has consequently generated an overwhelming number of research papers and documents. This article provides an entry point for interested readers to learn the key aspects of quantum computing and communications from a computer science perspective. It begins with a pedagogical introduction and then reviews the key milestones and recent advances in quantum computing. In this article, the key elements of a quantum Internet are categorized into four important issues, which are investigated in detail: a) quantum computers, b) quantum networks, c) quantum cryptography, and d) quantum machine learning. Finally, the article identifies and discusses the main barriers, the major research directions, and trends.",
       "venue": "IEEE Communications Surveys and Tutorials",
@@ -15658,7 +15658,7 @@
       "doi": "10.1136/jme-2022-108291",
       "source": "semanticscholar",
       "url": "https://www.semanticscholar.org/paper/e878c284b716b1d490ede63e266a87ccd0dfd6b3",
-      "pdf_path": null,
+      "pdf_path": "literature/pdfs/pratt2023where.pdf",
       "added_date": "2025-12-02T10:47:33.553432",
       "abstract": "The silencing of the epistemologies, theories, principles, values, concepts and experiences of the global South constitutes a particularly egregious epistemic injustice in bioethics. Our shared responsibility to rectify that injustice should be at the top of the ethics agenda. That it is not, or only is in part, is deeply problematic and endangers the credibility of the entire field. As a first step towards reorienting the field, this paper offers a comprehensive account of epistemic justice for global health ethics. We first introduce several different conceptions of justice and decolonisation in relation to knowledge, purposefully drawing on work emanating from the global South as well as the global North. We then apply those conceptions to the global health ethics context to generate a tripartite account of the layers of epistemic justice in the field: who is producing ethics knowledge; what theories and concepts are being applied to produce ethics knowledge; and whose voices are sought, recorded and used to generate ethics knowledge. These layers reflect that the field spans conceptual and empirical research. We conclude by proposing that, going forward, three avenues are key to achieve greater epistemic justice at each layer and to help decolonise global health ethics: namely, understanding the problem, dialogue and structural change.",
       "venue": "Journal of Medical Ethics",

@@ -186,31 +186,29 @@ When enabled, the system generates a technical abstract (~200-400 words) in Engl
 
 **Generic:** Works for any project with a combined PDF manuscript
 
-### 8. Literature Search (`07_literature_search.py`)
+### 8. Literature Operations (`07_literature_search.py`)
 
-**Purpose:** Search academic literature and generate AI summaries
+**Purpose:** Manage academic literature with three separate operations
 
-- Searches arXiv and Semantic Scholar for papers by keyword
-- Downloads PDFs to `literature/pdfs/`
-- Adds entries to BibTeX library (`literature/references.bib`)
-- Generates AI summaries using local Ollama LLM
-- Supports both search and summarize-only modes
+- **Search-only**: Searches arXiv and Semantic Scholar, adds papers to bibliography
+- **Download-only**: Downloads PDFs for existing bibliography entries
+- **Summarize-only**: Generates AI summaries for papers with PDFs
+- Uses local Ollama LLM for summarization
 
 **Usage:**
 ```bash
-# Search mode (interactive keyword input)
-python3 scripts/07_literature_search.py --search
+# Search and add to bibliography only
+python3 scripts/07_literature_search.py --search-only
+python3 scripts/07_literature_search.py --search-only --keywords "machine learning,optimization"
+python3 scripts/07_literature_search.py --search-only --limit 50 --keywords "AI"
 
-# Search with specific keywords
-python3 scripts/07_literature_search.py --search --keywords "machine learning,optimization"
+# Download PDFs for bibliography entries
+python3 scripts/07_literature_search.py --download-only
 
-# Search with custom limit per keyword
-python3 scripts/07_literature_search.py --search --limit 50 --keywords "AI"
-
-# Generate summaries for existing PDFs
+# Generate summaries for papers with PDFs
 python3 scripts/07_literature_search.py --summarize
 
-# Both operations (search then summarize)
+# Legacy combined operations (deprecated)
 python3 scripts/07_literature_search.py --search --summarize
 ```
 
@@ -269,8 +267,9 @@ The **recommended entry point** is the interactive `run.sh` script:
 ./run.sh --translations       # LLM translations only
 
 # Literature Operations (requires Ollama)
-./run.sh --search             # Search literature and download PDFs
-./run.sh --summarize          # Generate summaries for existing PDFs
+./run.sh --search             # Search literature (add to bibliography)
+./run.sh --download           # Download PDFs (for bibliography entries)
+./run.sh --summarize          # Generate summaries (for papers with PDFs)
 ```
 
 **Features:**

@@ -148,10 +148,11 @@ display_menu() {
     echo "  6. LLM translations (multi-language)"
     echo
     echo -e "${BOLD}Literature Operations ${YELLOW}(requires Ollama):${NC}"
-    echo "  7. Search literature and download PDFs"
-    echo "  8. Generate summaries for existing PDFs"
+    echo "  7. Search literature (add to bibliography)"
+    echo "  8. Download PDFs (for bibliography entries)"
+    echo "  9. Generate summaries (for papers with PDFs)"
     echo
-    echo "  9. Exit"
+    echo "  10. Exit"
     echo
     echo -e "${BLUE}============================================================${NC}"
     echo -e "  Repository: ${CYAN}$REPO_ROOT${NC}"
@@ -376,13 +377,13 @@ run_llm_translations() {
 }
 
 run_literature_search() {
-    log_header "LITERATURE SEARCH AND PDF DOWNLOAD"
-    
+    log_header "LITERATURE SEARCH (ADD TO BIBLIOGRAPHY)"
+
     cd "$REPO_ROOT"
-    
-    log_info "Starting literature search (requires Ollama for summarization)..."
-    
-    if python3 scripts/07_literature_search.py --search; then
+
+    log_info "Searching literature and adding papers to bibliography (requires Ollama)..."
+
+    if python3 scripts/07_literature_search.py --search-only; then
         log_success "Literature search complete"
         return 0
     else
@@ -391,13 +392,29 @@ run_literature_search() {
     fi
 }
 
-run_generate_summaries() {
-    log_header "GENERATE SUMMARIES FOR DOWNLOADED PDFs"
-    
+run_literature_download() {
+    log_header "DOWNLOAD PDFs (FOR BIBLIOGRAPHY ENTRIES)"
+
     cd "$REPO_ROOT"
-    
-    log_info "Generating summaries for existing PDFs..."
-    
+
+    log_info "Downloading PDFs for bibliography entries without PDFs (requires Ollama)..."
+
+    if python3 scripts/07_literature_search.py --download-only; then
+        log_success "PDF download complete"
+        return 0
+    else
+        log_error "PDF download failed"
+        return 1
+    fi
+}
+
+run_literature_summarize() {
+    log_header "GENERATE SUMMARIES (FOR PAPERS WITH PDFs)"
+
+    cd "$REPO_ROOT"
+
+    log_info "Generating summaries for papers with PDFs (requires Ollama)..."
+
     if python3 scripts/07_literature_search.py --summarize; then
         log_success "Summary generation complete"
         return 0
@@ -633,16 +650,19 @@ handle_menu_choice() {
             run_literature_search
             ;;
         8)
-            run_generate_summaries
+            run_literature_download
             ;;
         9)
+            run_literature_summarize
+            ;;
+        10)
             echo
             log_info "Exiting. Goodbye!"
             exit 0
             ;;
         *)
             log_error "Invalid option: $choice"
-            log_info "Please enter a number between 1 and 9"
+            log_info "Please enter a number between 1 and 10"
             ;;
     esac
     
@@ -692,8 +712,9 @@ show_help() {
     echo "  --translations      Run LLM translations (multi-language)"
     echo
     echo "Literature Operations (requires Ollama):"
-    echo "  --search            Search literature and download PDFs"
-    echo "  --summarize         Generate summaries for existing PDFs"
+    echo "  --search            Search literature (add to bibliography)"
+    echo "  --download          Download PDFs (for bibliography entries)"
+    echo "  --summarize         Generate summaries (for papers with PDFs)"
     echo
     echo "Menu Options:"
     echo
@@ -708,10 +729,11 @@ show_help() {
     echo "  6  LLM translations (multi-language)"
     echo
     echo "Literature Operations (requires Ollama):"
-    echo "  7  Search literature and download PDFs"
-    echo "  8  Generate summaries for existing PDFs"
+    echo "  7  Search literature (add to bibliography)"
+    echo "  8  Download PDFs (for bibliography entries)"
+    echo "  9  Generate summaries (for papers with PDFs)"
     echo
-    echo "  9  Exit"
+    echo "  10  Exit"
     echo
     echo "Examples:"
     echo "  $0                      # Interactive menu mode"
@@ -721,10 +743,11 @@ show_help() {
     echo "  $0 --render-pdf          # Render PDF manuscript"
     echo "  $0 --reviews             # Run LLM manuscript review"
     echo "  $0 --translations        # Run LLM translations"
-    echo "  $0 --search              # Search literature and download PDFs"
-    echo "  $0 --summarize           # Generate summaries for existing PDFs"
+    echo "  $0 --search              # Search literature (add to bibliography)"
+    echo "  $0 --download            # Download PDFs (for bibliography entries)"
+    echo "  $0 --summarize           # Generate summaries (for papers with PDFs)"
     echo
-    echo "Note: --option N is also supported for compatibility (1-9)"
+    echo "Note: --option N is also supported for compatibility (1-10)"
     echo
 }
 
@@ -777,8 +800,12 @@ main() {
                 run_non_interactive 7
                 exit $?
                 ;;
-            --summarize)
+            --download)
                 run_non_interactive 8
+                exit $?
+                ;;
+            --summarize)
+                run_non_interactive 9
                 exit $?
                 ;;
             *)
@@ -794,7 +821,7 @@ main() {
     while true; do
         display_menu
         
-        echo -n "Select option [1-9]: "
+        echo -n "Select option [1-10]: "
         read -r choice
         
         handle_menu_choice "$choice"

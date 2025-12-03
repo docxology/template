@@ -30,10 +30,11 @@ LLM Operations (requires Ollama):
   6. LLM translations (multi-language)
 
 Literature Operations (requires Ollama):
-  7. Search literature and download PDFs
-  8. Generate summaries for existing PDFs
+  7. Search literature (add to bibliography)
+  8. Download PDFs (for bibliography entries)
+  9. Generate summaries (for papers with PDFs)
 
-  9. Exit
+  10. Exit
 ============================================================
 ```
 
@@ -174,8 +175,9 @@ For CI/CD integration or scripting:
 ./run.sh --translations       # LLM translations
 
 # Literature Operations (requires Ollama)
-./run.sh --search             # Search literature and download PDFs
-./run.sh --summarize          # Generate summaries for existing PDFs
+./run.sh --search             # Search literature (add to bibliography)
+./run.sh --download           # Download PDFs (for bibliography entries)
+./run.sh --summarize          # Generate summaries (for papers with PDFs)
 
 # Show help
 ./run.sh --help
@@ -199,10 +201,11 @@ LLM Operations (requires Ollama):
   6. LLM translations (multi-language)
 
 Literature Operations (requires Ollama):
-  7. Search literature and download PDFs
-  8. Generate summaries for existing PDFs
+  7. Search literature (add to bibliography)
+  8. Download PDFs (for bibliography entries)
+  9. Generate summaries (for papers with PDFs)
 
-  9. Exit
+  10. Exit
 
 ════════════════════════════════════════════════════════════════
   Repository: /Users/4d/Documents/GitHub/template

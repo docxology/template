@@ -62,8 +62,9 @@ Literature Operations (requires Ollama):
 ./run.sh --translations       # LLM translations only
 
 # Literature Operations (requires Ollama)
-./run.sh --search             # Search literature and download PDFs
-./run.sh --summarize          # Generate summaries for existing PDFs
+./run.sh --search             # Search literature (add to bibliography)
+./run.sh --download           # Download PDFs (for bibliography entries)
+./run.sh --summarize          # Generate summaries (for papers with PDFs)
 
 ./run.sh --help               # Show all options
 ```

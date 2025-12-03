@@ -216,28 +216,44 @@ Load configuration from environment with `LiteratureConfig.from_env()`:
 - **Features**: Citation counts, open access PDF links, venue information
 - **Retry Logic**: Automatic retry with exponential backoff on rate limit (429) errors
 
-## Interactive Summarization Script
+## Interactive Literature Management Script
 
-The repository includes an interactive script for searching, downloading, and summarizing papers using a local LLM:
+The repository includes an interactive script for managing academic literature with three separate operations:
 
 ```bash
-./run.sh --search                  # Search literature and download PDFs
-./run.sh --summarize               # Generate summaries for existing PDFs
+# Three separate operations:
+./run.sh --search                  # Search literature (add to bibliography)
+./run.sh --download                # Download PDFs (for bibliography entries)
+./run.sh --summarize               # Generate summaries (for papers with PDFs)
+
 # Or directly:
-python3 scripts/07_literature_search.py --search
+python3 scripts/07_literature_search.py --search-only
+python3 scripts/07_literature_search.py --download-only
+python3 scripts/07_literature_search.py --summarize
 ```
 
-**Features:**
-- Prompts for comma-separated keywords
-- Searches both arXiv and Semantic Scholar (union of results)
-- Downloads PDFs and adds to BibTeX library
-- Generates structured summaries using local Ollama LLM
-- **Automatically skips existing summaries** - checks for `{citation_key}_summary.md` files before generating
-- Shows detailed timing and word count statistics
-- Saves summaries to `literature/summaries/`
+**Operations:**
+
+1. **Search Only (--search-only)**:
+   - Prompts for comma-separated keywords
+   - Searches arXiv and Semantic Scholar (union of results)
+   - Adds papers to BibTeX library and JSON index
+   - No PDF downloading or summarization
+
+2. **Download Only (--download-only)**:
+   - Analyzes existing bibliography entries
+   - Downloads PDFs for entries without PDFs
+   - Shows detailed download statistics and progress
+   - Updates library index with PDF paths
+
+3. **Summarize Only (--summarize)**:
+   - Finds papers with PDFs but no summaries
+   - Generates structured summaries using local Ollama LLM
+   - **Automatically skips existing summaries** - checks for `{citation_key}_summary.md` files before generating
+   - Shows detailed timing and word count statistics
 
 **Skip Existing Summaries:**
-The workflow automatically detects and skips summary generation for papers that already have summary files. This check happens:
+The summarize operation automatically detects and skips summary generation for papers that already have summary files. This check happens:
 1. **File existence check** (primary) - Checks if `literature/summaries/{citation_key}_summary.md` exists
 2. **Progress tracker check** (secondary) - Checks if progress tracker marks paper as "summarized"
 
@@ -411,6 +427,89 @@ except LiteratureSearchError as e:
     print(f"Context: {e.context}")
 ```
 
+### PDF Download Error Categories
+
+The PDF download system categorizes failures for better diagnostics:
+
+| Category | Description | Example |
+|----------|-------------|---------|
+| `access_denied` | HTTP 403 Forbidden | Paywall or geo-blocking |
+| `not_found` | HTTP 404 Not Found | Paper removed or URL changed |
+| `rate_limited` | HTTP 429 Too Many Requests | API rate limit exceeded |
+| `timeout` | Request timeout | Slow network or server issues |
+| `network_error` | Connection/Socket errors | DNS, SSL, or network problems |
+| `server_error` | HTTP 5xx errors | Server-side issues |
+| `html_response` | HTML received instead of PDF | Publisher landing page |
+| `html_no_pdf_link` | HTML page with no PDF links | Malformed or missing content |
+| `content_mismatch` | Content-Type doesn't match content | Server misconfiguration |
+| `invalid_response` | Malformed or unexpected response | API changes or bugs |
+
+## Advanced Features
+
+### HTML-to-PDF URL Extraction
+
+When a URL returns HTML instead of a PDF, the system parses the HTML content to find PDF download links.
+
+**Supported Patterns:**
+- Direct `<a href="*.pdf">` links
+- Meta tags with PDF URLs
+- JavaScript variables containing PDF URLs
+- Publisher-specific patterns (Elsevier, Springer, IEEE, Wiley)
+
+**Fallback Chain:**
+1. Original URL
+2. Transformed URLs (PMC, arXiv, bioRxiv patterns)
+3. HTML parsing (extract PDF links from pages)
+4. Unpaywall lookup
+5. Cross-reference search
+
+### Progress Logging
+
+The system provides progress tracking:
+
+**Download Progress:**
+```
+[1/5] Novel Machine Learning Approach
+[1/5] ✓ Downloaded: smith2024novel.pdf (2.1MB) - 1.2s
+[2/5] ✗ Failed (access_denied): 403 Forbidden - 5.1s
+
+PDF DOWNLOAD SUMMARY
+============================================================
+  Papers processed: 5
+  ✓ Successful: 4 (80.0%)
+    • Existed: 1
+    • Downloaded: 3
+  ✗ Failed: 1
+  Time: 12.5s
+  Average per paper: 2.5s
+  Data downloaded: 8.7MB
+============================================================
+```
+
+**Summarization Progress:**
+```
+✓ smith2024novel (45KB) - 8.2s
+
+SUMMARIZATION SUMMARY
+============================================================
+  Papers processed: 3
+  ✓ Successful: 3 (100.0%)
+  Skipped: 0
+  ✗ Failed: 0
+  Time: 24.7s
+  Average per paper: 8.2s
+  Total summaries: 3
+  Data generated: 135KB
+  Average size: 45KB
+============================================================
+```
+
+**Logging Levels:**
+- **INFO**: Progress updates, completion status, statistics
+- **WARNING**: Recoverable errors
+- **ERROR**: Failures
+- **DEBUG**: Detailed diagnostics
+
 ## Testing
 
 Run tests with:
@@ -431,6 +530,8 @@ pytest tests/infrastructure/literature/ --cov=infrastructure/literature
 | `test_pure_logic.py` | Pure logic tests (no network) |
 | `test_api.py` | API client tests (mocked network) |
 | `test_pdf_handler_comprehensive.py` | PDF handling tests |
+| `test_html_parsing.py` | HTML parsing and PDF URL extraction |
+| `test_logging.py` | Logging functionality |
 | `test_library_index.py` | Library index functionality |
 | `test_core.py` | Core functionality |
 | `test_integration.py` | Integration workflows |

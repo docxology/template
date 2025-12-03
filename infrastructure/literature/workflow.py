@@ -272,34 +272,63 @@ class LiteratureWorkflow:
         """Download PDFs for search results."""
         downloaded = []
         all_results = []
+        start_time = time.time()
+
+        logger.info(f"Starting PDF download for {len(search_results)} papers...")
 
         for i, result in enumerate(search_results, 1):
-            logger.info(f"[{i}/{len(search_results)}] {result.title[:60]}...")
+            paper_start_time = time.time()
+            logger.info(f"[DOWNLOAD {i}/{len(search_results)}] Processing: {result.title[:60]}...")
 
             # Add to library (BibTeX + JSON index)
             try:
                 citation_key = self.literature_search.add_to_library(result)
+                logger.debug(f"Added to library: {citation_key}")
             except Exception as e:
-                logger.error(f"Failed to add to library: {e}")
+                logger.error(f"[DOWNLOAD {i}/{len(search_results)}] Failed to add to library: {e}")
                 continue
 
-            # Download PDF
+            # Download PDF with detailed result tracking
             download_result = self.literature_search.download_paper_with_result(result)
             all_results.append(download_result)
 
+            paper_duration = time.time() - paper_start_time
+
             if download_result.success and download_result.pdf_path:
-                log_success(f"Downloaded: {download_result.pdf_path.name}")
+                # Log file size if available
+                file_size = "?"
+                try:
+                    if download_result.pdf_path.exists():
+                        size_bytes = download_result.pdf_path.stat().st_size
+                        file_size = f"{size_bytes:,}B"
+                except Exception:
+                    pass
+
+                if download_result.already_existed:
+                    logger.info(f"[DOWNLOAD {i}/{len(search_results)}] ✓ Already exists: {download_result.pdf_path.name} ({file_size}) - {paper_duration:.1f}s")
+                else:
+                    log_success(f"[DOWNLOAD {i}/{len(search_results)}] ✓ Downloaded: {download_result.pdf_path.name} ({file_size}) - {paper_duration:.1f}s")
                 downloaded.append((result, download_result.pdf_path))
             elif download_result.failure_reason == "no_pdf_url":
-                logger.warning(f"No PDF URL available for: {result.title[:50]}...")
+                logger.warning(f"[DOWNLOAD {i}/{len(search_results)}] ✗ No PDF URL available: {result.title[:50]}... - {paper_duration:.1f}s")
             else:
                 # Truncate long error messages (especially URLs)
                 error_msg = download_result.failure_message or "Unknown error"
                 if len(error_msg) > 200:
                     error_msg = error_msg[:197] + "..."
-                logger.error(f"Failed to download PDF ({download_result.failure_reason}): {error_msg}")
 
-        # Log download summary
+                # Show attempted URLs count for debugging
+                urls_attempted = len(download_result.attempted_urls) if download_result.attempted_urls else 0
+                logger.error(f"[DOWNLOAD {i}/{len(search_results)}] ✗ Failed ({download_result.failure_reason}): {error_msg} ({urls_attempted} URLs tried) - {paper_duration:.1f}s")
+
+        # Calculate comprehensive download statistics
+        total_duration = time.time() - start_time
+        successful = len([r for r in all_results if r.success])
+        already_existed = len([r for r in all_results if r.success and r.already_existed])
+        newly_downloaded = len([r for r in all_results if r.success and not r.already_existed])
+        failed = len([r for r in all_results if not r.success])
+
+        # Log detailed failure breakdown
         failures = [r for r in all_results if not r.success]
         if failures:
             failure_counts: Dict[str, int] = {}
@@ -307,24 +336,41 @@ class LiteratureWorkflow:
                 reason = r.failure_reason or "unknown"
                 failure_counts[reason] = failure_counts.get(reason, 0) + 1
 
-            logger.info("Download failures by reason:")
+            logger.info("Download failure breakdown:")
             for reason, count in sorted(failure_counts.items(), key=lambda x: -x[1]):
-                logger.info(f"  - {reason}: {count}")
+                logger.info(f"  • {reason}: {count}")
 
-        # Display download summary
-        already_existed = len([r for r in all_results if r.success and r.already_existed])
-        newly_downloaded = len([r for r in all_results if r.success and not r.already_existed])
-        failed = len([r for r in all_results if not r.success])
+        # Calculate performance metrics
+        avg_time_per_paper = total_duration / len(search_results) if search_results else 0
+        success_rate = (successful / len(search_results)) * 100 if search_results else 0
 
+        # Display comprehensive download summary
         logger.info("")
-        logger.info("=" * 50)
-        logger.info("DOWNLOAD SUMMARY")
-        logger.info("=" * 50)
-        logger.info(f"  Already downloaded: {already_existed}")
-        logger.info(f"  Newly downloaded: {newly_downloaded}")
-        logger.info(f"  Failed: {failed}")
-        logger.info("=" * 50)
-        logger.info(f"Successfully downloaded {len(downloaded)} of {len(search_results)} papers")
+        logger.info("=" * 70)
+        logger.info("PDF DOWNLOAD SUMMARY")
+        logger.info("=" * 70)
+        logger.info(f"  Total papers processed: {len(search_results)}")
+        logger.info(f"  ✓ Successfully downloaded: {successful} ({success_rate:.1f}%)")
+        logger.info(f"    • Already existed: {already_existed}")
+        logger.info(f"    • Newly downloaded: {newly_downloaded}")
+        logger.info(f"  ✗ Failed downloads: {failed}")
+        logger.info(f"  ⏱️  Total time: {total_duration:.1f}s")
+        logger.info(f"  📊 Average time per paper: {avg_time_per_paper:.1f}s")
+
+        if downloaded:
+            # Calculate total downloaded size
+            total_size = 0
+            for _, pdf_path in downloaded:
+                try:
+                    if pdf_path.exists():
+                        total_size += pdf_path.stat().st_size
+                except Exception:
+                    pass
+            if total_size > 0:
+                logger.info(f"  💾 Total data downloaded: {total_size:,} bytes")
+
+        logger.info("=" * 70)
+
         return downloaded, all_results
 
     def _summarize_papers_parallel(
@@ -336,17 +382,19 @@ class LiteratureWorkflow:
         if not self.summarizer:
             raise ValueError("Summarizer not configured")
 
-        # Filter out already summarized papers (check both progress tracker and file existence)
+        start_time = time.time()
+        logger.info(f"Summarizing {len(downloaded)} papers")
+
+        # Filter out already summarized papers
         to_process = []
         skipped_results = []
+
         for result, pdf_path in downloaded:
             citation_key = pdf_path.stem
             summary_path = self._get_summary_path(citation_key)
-            
-            # Check if summary file already exists (source of truth)
+
+            # Check if summary file already exists
             if summary_path.exists():
-                logger.debug(f"Summary already exists, skipping: {summary_path.name}")
-                # Create a success result for the existing summary
                 skipped_result = SummarizationResult(
                     citation_key=citation_key,
                     success=True,
@@ -354,7 +402,6 @@ class LiteratureWorkflow:
                     skipped=True
                 )
                 skipped_results.append(skipped_result)
-                # Update progress tracker if available
                 if self.progress_tracker:
                     self.progress_tracker.update_entry_status(
                         citation_key, "summarized",
@@ -363,25 +410,27 @@ class LiteratureWorkflow:
                         summary_time=0.0
                     )
                 continue
-            
-            # Also check progress tracker status
+
+            # Check progress tracker status
             progress_entry = (self.progress_tracker.current_progress.entries.get(citation_key)
                             if self.progress_tracker.current_progress else None)
 
             if not (progress_entry and progress_entry.status == "summarized"):
                 to_process.append((result, pdf_path))
 
-        if skipped_results:
-            logger.info(f"Skipped {len(skipped_results)} existing summaries")
+        # Log processing plan
+        total_papers = len(downloaded)
+        skipped_count = len(skipped_results)
+        to_process_count = len(to_process)
+
+        if skipped_count > 0:
+            logger.info(f"Skipped {skipped_count} already summarized")
 
         if not to_process:
-            if skipped_results:
-                logger.info("All papers already have summaries")
-            else:
-                logger.info("All papers already summarized")
             return skipped_results
 
-        logger.info(f"Processing {len(to_process)} papers with up to {max_workers} parallel workers")
+        processing_mode = "parallel" if max_workers > 1 else "sequential"
+        logger.info(f"Processing {to_process_count} papers ({processing_mode}, {max_workers} workers)")
 
         results = skipped_results.copy()
 
@@ -395,16 +444,26 @@ class LiteratureWorkflow:
 
                 for future in as_completed(future_to_paper):
                     result, pdf_path = future_to_paper[future]
+                    citation_key = pdf_path.stem
+
                     try:
                         summary_result = future.result()
                         results.append(summary_result)
+
                         if summary_result.success:
-                            logger.info(f"Completed: {pdf_path.name}")
+                            file_size = "?"
+                            if summary_result.summary_path and summary_result.summary_path.exists():
+                                try:
+                                    size_bytes = summary_result.summary_path.stat().st_size
+                                    file_size = f"{size_bytes:,}B"
+                                except Exception:
+                                    pass
+                            logger.info(f"✓ {citation_key} ({file_size}) - {summary_result.generation_time:.1f}s")
                         else:
-                            logger.warning(f"Failed: {pdf_path.name} - {summary_result.error}")
+                            logger.warning(f"✗ {citation_key}: {summary_result.error}")
+
                     except Exception as e:
-                        logger.error(f"Unexpected error processing {pdf_path.name}: {e}")
-                        citation_key = pdf_path.stem
+                        logger.error(f"Error processing {citation_key}: {e}")
                         results.append(SummarizationResult(
                             citation_key=citation_key,
                             success=False,
@@ -413,9 +472,62 @@ class LiteratureWorkflow:
         else:
             # Sequential processing
             for result, pdf_path in to_process:
-                logger.info(f"Summarizing: {pdf_path.name}")
+                citation_key = pdf_path.stem
                 summary_result = self._summarize_single_paper(result, pdf_path)
                 results.append(summary_result)
+
+                if summary_result.success:
+                    file_size = "?"
+                    if summary_result.summary_path and summary_result.summary_path.exists():
+                        try:
+                            size_bytes = summary_result.summary_path.stat().st_size
+                            file_size = f"{size_bytes:,}B"
+                        except Exception:
+                            pass
+                    logger.info(f"✓ {citation_key} ({file_size}) - {summary_result.generation_time:.1f}s")
+                else:
+                    logger.warning(f"✗ {citation_key}: {summary_result.error}")
+
+        # Calculate statistics
+        total_duration = time.time() - start_time
+        successful = sum(1 for r in results if r.success and not getattr(r, 'skipped', False))
+        failed = sum(1 for r in results if not r.success)
+        skipped = sum(1 for r in results if getattr(r, 'skipped', False))
+
+        # Calculate metrics
+        avg_time_per_paper = total_duration / to_process_count if to_process_count > 0 else 0
+        success_rate = (successful / to_process_count) * 100 if to_process_count > 0 else 0
+
+        # Calculate total summary sizes
+        total_summary_size = 0
+        summary_count = 0
+        for result in results:
+            if result.success and result.summary_path and result.summary_path.exists():
+                try:
+                    total_summary_size += result.summary_path.stat().st_size
+                    summary_count += 1
+                except Exception:
+                    pass
+
+        # Display summary
+        logger.info("")
+        logger.info("=" * 60)
+        logger.info("SUMMARIZATION SUMMARY")
+        logger.info("=" * 60)
+        logger.info(f"  Papers processed: {to_process_count}")
+        logger.info(f"  ✓ Successful: {successful} ({success_rate:.1f}%)")
+        logger.info(f"  Skipped: {skipped}")
+        logger.info(f"  ✗ Failed: {failed}")
+        logger.info(f"  Time: {total_duration:.1f}s")
+        logger.info(f"  Average per paper: {avg_time_per_paper:.1f}s")
+
+        if summary_count > 0:
+            avg_summary_size = total_summary_size / summary_count
+            logger.info(f"  Total summaries: {summary_count}")
+            logger.info(f"  Data generated: {total_summary_size:,} bytes")
+            logger.info(f"  Average size: {avg_summary_size:,.0f} bytes")
+
+        logger.info("=" * 60)
 
         return results
 

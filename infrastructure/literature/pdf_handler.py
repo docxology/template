@@ -67,6 +67,188 @@ def _is_html_content(content: bytes) -> bool:
     return False
 
 
+def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]:
+    """Extract PDF URLs from HTML content.
+
+    Searches for PDF links in HTML using multiple strategies:
+    - Direct PDF links in <a> tags
+    - Meta tags with PDF URLs
+    - JavaScript variables containing PDF URLs
+    - Publisher-specific patterns (Elsevier, Springer, IEEE, etc.)
+    - Common academic site patterns
+
+    Args:
+        html_content: Raw HTML content as bytes.
+        base_url: Base URL for resolving relative links.
+
+    Returns:
+        List of candidate PDF URLs found in HTML.
+    """
+    import re
+    from urllib.parse import urljoin, urlparse
+
+    candidates: List[str] = []
+
+    try:
+        # Convert to string for easier processing
+        html_str = html_content.decode('utf-8', errors='ignore')
+    except Exception:
+        logger.debug("Failed to decode HTML content")
+        return candidates
+
+    # Convert to lowercase for case-insensitive matching
+    html_lower = html_str.lower()
+
+    # Strategy 1: Find <a> tags with PDF links
+    # Look for href attributes containing .pdf (case-insensitive)
+    pdf_link_patterns = [
+        r'href=["\']([^"\']*\.pdf[^"\']*)["\']',
+        r'href=["\']([^"\']*pdf[^"\']*)["\']',
+    ]
+
+    for pattern in pdf_link_patterns:
+        matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for match in matches:
+            if match:
+                # Resolve relative URLs
+                full_url = urljoin(base_url, match)
+                if full_url not in candidates:
+                    candidates.append(full_url)
+
+    # Strategy 2: Meta tags with PDF URLs
+    meta_patterns = [
+        r'<meta[^>]*content=["\']([^"\']*\.pdf[^"\']*)["\'][^>]*>',
+        r'<meta[^>]*pdf[^>]*content=["\']([^"\']*\.pdf[^"\']*)["\'][^>]*>',
+    ]
+
+    for pattern in meta_patterns:
+        matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for match in matches:
+            if match:
+                full_url = urljoin(base_url, match)
+                if full_url not in candidates:
+                    candidates.append(full_url)
+
+    # Strategy 3: JavaScript variables containing PDF URLs
+    js_patterns = [
+        r'pdfUrl["\']?\s*[:=]\s*["\']([^"\']*\.pdf[^"\']*)["\']',
+        r'downloadUrl["\']?\s*[:=]\s*["\']([^"\']*\.pdf[^"\']*)["\']',
+        r'pdf["\']?\s*[:=]\s*["\']([^"\']*\.pdf[^"\']*)["\']',
+    ]
+
+    for pattern in js_patterns:
+        matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for match in matches:
+            if match:
+                full_url = urljoin(base_url, match)
+                if full_url not in candidates:
+                    candidates.append(full_url)
+
+    # Strategy 4: Publisher-specific patterns
+    # Elsevier/ScienceDirect - multiple patterns
+    elif_patterns = [
+        r'pii["\']?\s*[:=]\s*["\']([A-Z0-9]+)["\']',  # PII in JSON/script
+        r'/science/article/pii/([A-Z0-9]+)',  # URL pattern
+        r'data-pii=["\']([A-Z0-9]+)["\']',  # Data attribute
+        r'article-pii["\']?\s*:\s*["\']([A-Z0-9]+)["\']',  # JSON field
+    ]
+    for pattern in elif_patterns:
+        elif_matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for pii in elif_matches:
+            pdf_url = f"https://www.sciencedirect.com/science/article/pii/{pii}/pdfft?isDTMRedir=true&download=true"
+            if pdf_url not in candidates:
+                candidates.append(pdf_url)
+
+    # Springer - multiple patterns
+    springer_patterns = [
+        r'/chapter/pdf/([^"\']+)',
+        r'/article/([^"\']+)/pdf',
+        r'/content/pdf/([^"\']+)',
+    ]
+    for pattern in springer_patterns:
+        springer_matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for match in springer_matches:
+            pdf_url = f"https://link.springer.com/content/pdf/{match}"
+            if pdf_url not in candidates:
+                candidates.append(pdf_url)
+
+    # IEEE Xplore - multiple patterns
+    ieee_patterns = [
+        r'arnumber["\']?\s*[:=]\s*["\'](\d+)["\']',
+        r'/document/(\d+)/',
+        r'/abstract/document/(\d+)/',
+    ]
+    for pattern in ieee_patterns:
+        ieee_matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for arnumber in ieee_matches:
+            pdf_url = f"https://ieeexplore.ieee.org/stampPDF/getPDF.jsp?arnumber={arnumber}"
+            if pdf_url not in candidates:
+                candidates.append(pdf_url)
+
+    # Wiley Online Library - multiple patterns
+    wiley_patterns = [
+        r'doi["\']?\s*[:=]\s*["\']([^"\']+)["\']',
+        r'/doi/([^"\']+)/pdf',
+        r'/doi/pdf/([^"\']+)',
+    ]
+    for pattern in wiley_patterns:
+        wiley_matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for doi in wiley_matches:
+            # Clean DOI
+            doi_clean = doi.replace('doi:', '').replace('http://dx.doi.org/', '').replace('https://doi.org/', '')
+            pdf_url = f"https://onlinelibrary.wiley.com/doi/pdfdirect/{doi_clean}"
+            if pdf_url not in candidates:
+                candidates.append(pdf_url)
+
+    # Nature/Springer Nature
+    nature_patterns = [
+        r'/articles/([^"\']+)',
+        r'/nature communications/articles/([^"\']+)',
+    ]
+    for pattern in nature_patterns:
+        nature_matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for article_id in nature_matches:
+            if not article_id.endswith('.pdf'):
+                pdf_url = f"https://www.nature.com/articles/{article_id}.pdf"
+                if pdf_url not in candidates:
+                    candidates.append(pdf_url)
+
+    # PLOS ONE
+    plos_pattern = r'/plosone/article\?id=([^"\']+)'
+    plos_matches = re.findall(plos_pattern, html_str, re.IGNORECASE)
+    for article_id in plos_matches:
+        pdf_url = f"https://journals.plos.org/plosone/article/file?id={article_id}&type=printable"
+        if pdf_url not in candidates:
+            candidates.append(pdf_url)
+
+    # Strategy 5: Common academic patterns
+    # Look for "Download PDF" links
+    download_patterns = [
+        r'href=["\']([^"\']*)["\'][^>]*>.*?download.*?pdf',
+        r'href=["\']([^"\']*)["\'][^>]*>.*?pdf.*?download',
+    ]
+
+    for pattern in download_patterns:
+        matches = re.findall(pattern, html_str, re.IGNORECASE)
+        for match in matches:
+            if match and not match.startswith('javascript:'):
+                full_url = urljoin(base_url, match)
+                if full_url not in candidates:
+                    candidates.append(full_url)
+
+    # Filter and validate URLs
+    valid_candidates = []
+    for url in candidates:
+        # Basic validation: must be absolute URL and contain pdf
+        if url.startswith(('http://', 'https://')) and ('pdf' in url.lower() or url.endswith('.pdf')):
+            # Avoid obviously invalid URLs
+            if not any(skip in url.lower() for skip in ['javascript:', 'mailto:', '#']):
+                valid_candidates.append(url)
+
+    logger.debug(f"Extracted {len(valid_candidates)} PDF URLs from HTML")
+    return valid_candidates
+
+
 def _transform_pdf_url(url: str) -> List[str]:
     """Transform URL to multiple candidate PDF URLs for known sources.
 
@@ -80,79 +262,79 @@ def _transform_pdf_url(url: str) -> List[str]:
         List of candidate URLs to try, in priority order.
     """
     import re
-    
+
     candidates: List[str] = []
-    
+
     # Extract PMC ID from various URL patterns
     pmc_id = None
-    
+
     # Pattern 1: www.ncbi.nlm.nih.gov/pmc/articles/PMC123456/
     pmc_match = re.search(r'(?:www\.)?ncbi\.nlm\.nih\.gov/pmc/articles/(PMC\d+)', url)
     if pmc_match:
         pmc_id = pmc_match.group(1)
-    
+
     # Pattern 2: pmc.ncbi.nlm.nih.gov/articles/PMC123456/
     if not pmc_id:
         pmc_match = re.search(r'pmc\.ncbi\.nlm\.nih\.gov/articles/(PMC\d+)', url)
         if pmc_match:
             pmc_id = pmc_match.group(1)
-    
+
     # Pattern 3: europepmc.org/article/PMC/123456 or europepmc.org/articles/PMC123456
     if not pmc_id:
         pmc_match = re.search(r'europepmc\.org/(?:article|articles)/(?:PMC/)?(\d+|PMC\d+)', url)
         if pmc_match:
             pmc_id_raw = pmc_match.group(1)
             pmc_id = pmc_id_raw if pmc_id_raw.startswith('PMC') else f"PMC{pmc_id_raw}"
-    
+
     # Generate PMC URL candidates if we found a PMC ID
     if pmc_id:
         # Direct NCBI PDF endpoints (multiple patterns publishers use)
         candidates.append(f"https://www.ncbi.nlm.nih.gov/pmc/articles/{pmc_id}/pdf/")
         candidates.append(f"https://www.ncbi.nlm.nih.gov/pmc/articles/{pmc_id}/pdf/main.pdf")
-        
+
         # PMC new domain
         candidates.append(f"https://pmc.ncbi.nlm.nih.gov/articles/{pmc_id}/pdf/")
         candidates.append(f"https://pmc.ncbi.nlm.nih.gov/articles/{pmc_id}/pdf/main.pdf")
-        
+
         # Europe PMC (often more accessible)
         candidates.append(f"https://europepmc.org/backend/ptpmcrender.fcgi?accid={pmc_id}&blobtype=pdf")
         candidates.append(f"https://europepmc.org/articles/{pmc_id}?pdf=render")
-        
+
         # FTP-style direct access (older papers)
         pmc_num = pmc_id.replace('PMC', '')
         candidates.append(f"https://ftp.ncbi.nlm.nih.gov/pub/pmc/oa_pdf/{pmc_num}.pdf")
-    
+
     # Handle Elsevier/ScienceDirect patterns
     sd_match = re.search(r'sciencedirect\.com/science/article/pii/([A-Z0-9]+)', url, re.IGNORECASE)
     if sd_match:
         pii = sd_match.group(1)
         # Elsevier open access PDF endpoint (works for some OA papers)
         candidates.append(f"https://www.sciencedirect.com/science/article/pii/{pii}/pdfft?isDTMRedir=true&download=true")
-    
+
     # Handle MDPI patterns (often open access)
     mdpi_match = re.search(r'mdpi\.com/(\d+-\d+)/(\d+)/(\d+)/(\d+)', url)
     if mdpi_match:
         journal, volume, issue, article = mdpi_match.groups()
         candidates.append(f"https://www.mdpi.com/{journal}/{volume}/{issue}/{article}/pdf")
-    
+
     # Handle Frontiers patterns (open access)
     frontiers_match = re.search(r'frontiersin\.org/(?:articles|journals)/.+/full$', url)
     if frontiers_match:
         candidates.append(url.replace('/full', '/pdf'))
-    
+
     # Handle arXiv patterns (ensure we have the PDF link)
     arxiv_match = re.search(r'arxiv\.org/abs/(\d+\.\d+|\w+-\w+/\d+)', url)
     if arxiv_match:
         arxiv_id = arxiv_match.group(1)
         candidates.append(f"https://arxiv.org/pdf/{arxiv_id}.pdf")
         candidates.append(f"https://export.arxiv.org/pdf/{arxiv_id}.pdf")
-    
+
     # Handle bioRxiv/medRxiv patterns
     biorxiv_match = re.search(r'(biorxiv|medrxiv)\.org/content/([\d.]+v?\d*)', url)
     if biorxiv_match:
         server, content_id = biorxiv_match.groups()
         candidates.append(f"https://www.{server}.org/content/{content_id}.full.pdf")
-    
+
     # Remove duplicates while preserving order, and exclude original URL
     seen = set()
     unique_candidates = []
@@ -160,7 +342,7 @@ def _transform_pdf_url(url: str) -> List[str]:
         if c not in seen and c != url:
             seen.add(c)
             unique_candidates.append(c)
-    
+
     return unique_candidates
 
 
@@ -204,11 +386,29 @@ class PDFHandler:
 
     def set_library_index(self, library_index: "LibraryIndex") -> None:
         """Set the library index for coordinated operations.
-        
+
         Args:
             library_index: LibraryIndex instance to use.
         """
         self._library_index = library_index
+
+    def parse_html_for_pdf(self, html_content: bytes, base_url: str) -> List[str]:
+        """Parse HTML content to extract PDF URLs.
+
+        Uses multiple strategies to find PDF links in HTML content:
+        - Direct PDF links in <a> tags
+        - Meta tags with PDF URLs
+        - JavaScript variables containing PDF URLs
+        - Publisher-specific patterns
+
+        Args:
+            html_content: Raw HTML content as bytes.
+            base_url: Base URL for resolving relative links.
+
+        Returns:
+            List of candidate PDF URLs found in HTML.
+        """
+        return _extract_pdf_urls_from_html(html_content, base_url)
 
     def _ensure_download_dir(self) -> None:
         """Ensure download directory exists."""
@@ -235,28 +435,47 @@ class PDFHandler:
     
     def _categorize_error(self, error: Exception, status_code: Optional[int] = None) -> Tuple[str, str]:
         """Categorize an error into failure reason and message.
-        
+
         Args:
             error: The exception that occurred.
             status_code: HTTP status code if available.
-            
+
         Returns:
             Tuple of (failure_reason, failure_message).
         """
         error_str = str(error)
-        
+
+        # Check for specific error messages first
+        if "Received HTML instead of PDF" in error_str:
+            return ("html_response", f"HTML received instead of PDF: {error_str}")
+        elif "no working PDF URLs found in content" in error_str:
+            return ("html_no_pdf_link", f"HTML page contains no PDF links: {error_str}")
+        elif "Content-Type mismatch" in error_str:
+            return ("content_mismatch", f"Content-Type header doesn't match actual content: {error_str}")
+
+        # Check HTTP status codes
         if status_code == 403:
             return ("access_denied", f"403 Forbidden: {error_str}")
         elif status_code == 404:
             return ("not_found", f"404 Not Found: {error_str}")
         elif status_code == 429:
             return ("rate_limited", f"429 Too Many Requests: {error_str}")
+        elif status_code == 502:
+            return ("server_error", f"502 Bad Gateway: {error_str}")
+        elif status_code == 503:
+            return ("server_error", f"503 Service Unavailable: {error_str}")
+        elif status_code and status_code >= 500:
+            return ("server_error", f"Server error {status_code}: {error_str}")
+
+        # Check exception types and messages
         elif "timeout" in error_str.lower() or isinstance(error, requests.exceptions.Timeout):
             return ("timeout", f"Request timed out: {error_str}")
         elif isinstance(error, requests.exceptions.ConnectionError):
             return ("network_error", f"Connection error: {error_str}")
         elif isinstance(error, requests.exceptions.RequestException):
             return ("network_error", f"Request failed: {error_str}")
+        elif "redirect" in error_str.lower() and "loop" in error_str.lower():
+            return ("redirect_loop", f"Redirect loop detected: {error_str}")
         else:
             return ("unknown", error_str)
 
@@ -507,9 +726,26 @@ class PDFHandler:
         last_error = result[1]
         last_failure_reason = result[2]
 
-        # If 403 Forbidden, try enhanced recovery strategies
-        if last_failure_reason == "access_denied":
-            logger.debug(f"403 Forbidden detected, trying enhanced recovery for {url}")
+        # If HTML received or access denied, try fallback strategies
+        if last_failure_reason in ["html_response", "html_no_pdf_link", "access_denied"]:
+            if last_failure_reason == "access_denied":
+                logger.debug(f"403 Forbidden detected, trying enhanced recovery for {url}")
+            else:
+                logger.debug(f"HTML response detected, trying fallback URLs for {url}")
+
+            # Strategy 0: Try transformed URLs (for HTML responses)
+            if last_failure_reason in ["html_response", "html_no_pdf_link"]:
+                transformed_urls = _transform_pdf_url(url)
+                for i, transformed_url in enumerate(transformed_urls[:3]):  # Try up to 3 transformed URLs
+                    logger.debug(f"Trying transformed URL {i+1}: {transformed_url}")
+                    result = self._download_single_attempt(
+                        transformed_url, output_path, attempt_type=f"transformed_{i+1}"
+                    )
+                    attempted_urls.append(transformed_url)
+
+                    if result[0]:
+                        logger.info(f"Success with transformed URL")
+                        return (True, None, None, attempted_urls)
 
             # Strategy 1: Try different User-Agents
             for user_agent in BROWSER_USER_AGENTS[:3]:  # Try first 3 different User-Agents
@@ -521,27 +757,25 @@ class PDFHandler:
                 attempted_urls.append(f"{url} (User-Agent: {user_agent[:20]}...)")
 
                 if result[0]:
-                    logger.info(f"Success with alternative User-Agent")
                     return (True, None, None, attempted_urls)
 
             # Strategy 2: Try with minimal headers (no Accept-Language, etc.)
-            logger.debug(f"Trying with minimal headers...")
+            logger.debug(f"Trying minimal headers")
             result = self._download_single_attempt(
-                url, output_path, attempt_type="minimal_headers",
+                url, output_path, attempt_type="minimal",
                 custom_headers={
                     "User-Agent": random.choice(BROWSER_USER_AGENTS),
                     "Accept": "application/pdf,*/*"
                 }
             )
-            attempted_urls.append(f"{url} (minimal headers)")
+            attempted_urls.append(f"{url} (minimal)")
 
             if result[0]:
-                logger.info(f"Success with minimal headers")
                 return (True, None, None, attempted_urls)
 
             # Strategy 3: Try HEAD request first to check if URL is accessible
             try:
-                logger.debug(f"Trying HEAD request first...")
+                logger.debug(f"Trying HEAD request")
                 head_response = requests.head(
                     url,
                     timeout=self.config.timeout,
@@ -551,21 +785,20 @@ class PDFHandler:
                 if head_response.status_code == 200:
                     # HEAD succeeded, try GET again with same User-Agent
                     result = self._download_single_attempt(
-                        url, output_path, attempt_type="head_success",
+                        url, output_path, attempt_type="head_ok",
                         custom_headers={"User-Agent": head_response.request.headers.get("User-Agent", "")}
                     )
-                    attempted_urls.append(f"{url} (after HEAD success)")
+                    attempted_urls.append(f"{url} (head_ok)")
 
                     if result[0]:
-                        logger.info(f"Success after HEAD request")
                         return (True, None, None, attempted_urls)
             except Exception as e:
-                logger.debug(f"HEAD request failed: {e}")
+                logger.debug(f"HEAD failed: {e}")
 
             # Strategy 4: Try with referer spoofing (pretend we're coming from Google)
-            logger.debug(f"Trying with referer spoofing...")
+            logger.debug(f"Trying referer spoofing")
             result = self._download_single_attempt(
-                url, output_path, attempt_type="referer_spoof",
+                url, output_path, attempt_type="referer",
                 custom_headers={
                     "User-Agent": random.choice(BROWSER_USER_AGENTS),
                     "Accept": "application/pdf,*/*",
@@ -573,10 +806,9 @@ class PDFHandler:
                     "Referer": "https://www.google.com/"
                 }
             )
-            attempted_urls.append(f"{url} (referer spoof)")
+            attempted_urls.append(f"{url} (referer)")
 
             if result[0]:
-                logger.info(f"Success with referer spoofing")
                 return (True, None, None, attempted_urls)
 
         # If not 403 or all recovery strategies failed, try standard retries
@@ -654,16 +886,45 @@ class PDFHandler:
             is_html_by_content = _is_html_content(content_sample)
             is_pdf_by_content = _is_pdf_content(content_sample)
 
-            # If we clearly got HTML instead of PDF, fail immediately
+            # If we got HTML instead of PDF, try to extract PDF URLs from the HTML
             if (is_html_by_header or is_html_by_content) and not is_pdf_by_content:
-                logger.warning(f"Received HTML instead of PDF from {url} ({attempt_type})")
-                logger.debug(f"Content-Type: {content_type}, HTML detected: {is_html_by_content}, PDF detected: {is_pdf_by_content}")
-                return (False, Exception("Received HTML instead of PDF"), "invalid_response")
+                logger.debug(f"HTML response from {url}, extracting PDF URLs")
+
+                # Try to extract PDF URLs from the HTML content
+                html_pdf_urls = self.parse_html_for_pdf(response.content, url)
+
+                if html_pdf_urls:
+                    logger.debug(f"Found {len(html_pdf_urls)} PDF URLs in HTML")
+
+                    # Try each extracted URL (limit to first few to avoid too many attempts)
+                    for i, pdf_url in enumerate(html_pdf_urls[:3]):  # Try up to 3 extracted URLs
+                        logger.debug(f"Trying HTML PDF URL {i+1}: {pdf_url}")
+                        try:
+                            # Recursively try the extracted URL (but avoid infinite recursion)
+                            if pdf_url != url:  # Don't retry the same URL
+                                recursive_result = self._download_single_attempt(
+                                    pdf_url, output_path, attempt_type=f"html_{i+1}"
+                                )
+                                if recursive_result[0]:  # Success
+                                    logger.info(f"Downloaded PDF from HTML URL")
+                                    return recursive_result
+                                else:
+                                    logger.debug(f"HTML URL failed: {recursive_result[2]}")
+                        except Exception as e:
+                            logger.debug(f"HTML URL error: {e}")
+                            continue
+
+                    # If we got here, all extracted URLs failed
+                    logger.warning(f"HTML page contains no working PDF URLs")
+                    return (False, Exception("HTML page contains no working PDF URLs"), "html_no_pdf_link")
+                else:
+                    logger.warning(f"HTML received instead of PDF")
+                    return (False, Exception("HTML received instead of PDF"), "html_response")
 
             # If content-type suggests PDF but content looks like HTML, also fail
             if not is_html_by_header and is_html_by_content and not is_pdf_by_content:
-                logger.warning(f"Content-Type claims PDF but received HTML from {url} ({attempt_type})")
-                return (False, Exception("Content-Type mismatch: HTML received instead of PDF"), "invalid_response")
+                logger.warning(f"Content-Type mismatch: HTML received instead of PDF")
+                return (False, Exception("Content-Type mismatch: HTML received instead of PDF"), "content_mismatch")
 
             # Write the file
             with open(output_path, 'wb') as f:
