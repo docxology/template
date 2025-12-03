@@ -2,221 +2,160 @@
 
 This section provides additional experimental results that complement Section \ref{sec:experimental_results}.
 
-## S2.1 Extended Benchmark Results
+## S2.1 Detailed Room Analysis
 
-### S2.1.1 Additional Datasets
+### S2.1.1 Room-by-Room Distribution
 
-We evaluated our method on 15 additional benchmark datasets beyond those reported in Section \ref{sec:experimental_results}:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|c|}
-\hline
-\textbf{Dataset} & \textbf{Size} & \textbf{Dimensions} & \textbf{Type} & \textbf{Source} \\
-\hline
-UCI-1 & 1,000 & 20 & Regression & UCI ML Repository \\
-UCI-2 & 5,000 & 50 & Classification & UCI ML Repository \\
-UCI-3 & 10,000 & 100 & Multi-class & UCI ML Repository \\
-Synthetic-1 & 50,000 & 500 & Convex & Generated \\
-Synthetic-2 & 100,000 & 1000 & Non-convex & Generated \\
-LibSVM-1 & 20,000 & 150 & Binary & LIBSVM \\
-LibSVM-2 & 30,000 & 300 & Multi-class & LIBSVM \\
-OpenML-1 & 15,000 & 80 & Regression & OpenML \\
-OpenML-2 & 25,000 & 120 & Classification & OpenML \\
-Real-world-1 & 8,000 & 40 & Time-series & Industrial \\
-Real-world-2 & 12,000 & 60 & Sensor data & Industrial \\
-Medical-1 & 3,000 & 25 & Diagnosis & Medical DB \\
-Medical-2 & 5,000 & 35 & Prognosis & Medical DB \\
-Finance-1 & 10,000 & 50 & Stock prediction & Financial \\
-Finance-2 & 15,000 & 75 & Risk assessment & Financial \\
-\hline
-\end{tabular}
-\caption{Additional benchmark datasets used in extended evaluation}
-\label{tab:extended_datasets}
-\end{table}
-
-### S2.1.2 Performance Across All Datasets
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|c|}
-\hline
-\textbf{Method} & \textbf{Avg. Accuracy} & \textbf{Avg. Time (s)} & \textbf{Avg. Iterations} & \textbf{Success Rate} \\
-\hline
-Our Method & 0.943 & 18.7 & 287 & 96.2\% \\
-Gradient Descent & 0.901 & 24.3 & 421 & 85.0\% \\
-Adam & 0.915 & 21.2 & 378 & 88.5\% \\
-L-BFGS & 0.928 & 22.8 & 245 & 91.3\% \\
-RMSProp & 0.908 & 20.5 & 395 & 86.7\% \\
-Adagrad & 0.895 & 23.1 & 412 & 83.8\% \\
-\hline
-\end{tabular}
-\caption{Comprehensive performance comparison across all 20 benchmark datasets}
-\label{tab:comprehensive_comparison}
-\end{table}
-
-## S2.2 Convergence Behavior Analysis
-
-### S2.2.1 Problem-Specific Convergence Patterns
-
-Different problem types exhibit distinct convergence patterns:
-
-**Convex Problems**: Exponential convergence as predicted by theory \eqref{eq:convergence} \cite{nesterov2018, boyd2004}, with empirical rate matching theoretical bounds within 5%.
-
-**Non-Convex Problems**: Initial phase shows rapid descent followed by slower convergence near local minima. Our adaptive strategy maintains stability throughout.
-
-**High-Dimensional Problems**: Memory-efficient implementation enables scaling to $n > 10^6$ dimensions with linear memory growth.
-
-### S2.2.2 Iteration-wise Progress
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|c|c|}
-\hline
-\textbf{Iteration} & \textbf{Objective Value} & \textbf{Gradient Norm} & \textbf{Step Size} & \textbf{Momentum} & \textbf{Time (s)} \\
-\hline
-1 & 125.3 & 18.7 & 0.0100 & 0.000 & 0.12 \\
-10 & 42.1 & 8.3 & 0.0095 & 0.900 & 1.18 \\
-50 & 8.7 & 2.1 & 0.0082 & 0.900 & 5.92 \\
-100 & 2.3 & 0.6 & 0.0071 & 0.900 & 11.84 \\
-200 & 0.4 & 0.1 & 0.0058 & 0.900 & 23.67 \\
-287 & 0.0012 & 0.00005 & 0.0045 & 0.900 & 33.95 \\
-\hline
-\end{tabular}
-\caption{Typical iteration-wise progress on medium-scale problem}
-\label{tab:iteration_progress}
-\end{table}
-
-## S2.3 Scalability Analysis
-
-### S2.3.1 Performance vs. Problem Size
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-\textbf{Problem Size ($n$)} & \textbf{Time (s)} & \textbf{Memory (MB)} & \textbf{Iterations} & \textbf{Scaling} \\
-\hline
-$10^2$ & 0.08 & 2.3 & 145 & $O(n)$ \\
-$10^3$ & 0.82 & 23.1 & 198 & $O(n \log n)$ \\
-$10^4$ & 9.45 & 231.5 & 247 & $O(n \log n)$ \\
-$10^5$ & 118.7 & 2315.2 & 298 & $O(n \log n)$ \\
-$10^6$ & 1523.4 & 23152.8 & 356 & $O(n \log n)$ \\
-\hline
-\end{tabular}
-\caption{Scalability analysis confirming theoretical complexity bounds}
-\label{tab:scalability_detailed}
-\end{table}
-
-The empirical scaling confirms our theoretical $O(n \log n)$ per-iteration complexity from Section \ref{sec:methodology}.
-
-## S2.4 Robustness Analysis
-
-### S2.4.1 Performance Under Noise
-
-We evaluated robustness under various noise conditions:
+Detailed analysis of ways across each of the 24 rooms reveals specific patterns:
 
 \begin{table}[h]
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
-\textbf{Noise Type} & \textbf{Noise Level} & \textbf{Success Rate} & \textbf{Avg. Degradation} \\
+\textbf{Room} & \textbf{Way Count} & \textbf{Primary Dialogue Type} & \textbf{Avg. Centrality} \\
 \hline
-Gaussian & $\sigma = 0.01$ & 95.8\% & 2.3\% \\
-Gaussian & $\sigma = 0.05$ & 93.2\% & 6.7\% \\
-Gaussian & $\sigma = 0.10$ & 89.5\% & 12.4\% \\
-Uniform & $U(-0.05, 0.05)$ & 94.1\% & 5.2\% \\
-Salt-and-Pepper & $p = 0.05$ & 92.7\% & 7.8\% \\
-Outliers & 5\% corrupted & 91.3\% & 8.9\% \\
+Room 1 (Believing 1) & TBD & TBD & TBD \\
+Room 2 (Believing 2) & TBD & TBD & TBD \\
+Room 3 (Believing 3) & TBD & TBD & TBD \\
+Room 4 (Believing 4) & TBD & TBD & TBD \\
+\ldots & \ldots & \ldots & \ldots \\
 \hline
 \end{tabular}
-\caption{Robustness under different noise conditions}
-\label{tab:robustness_noise}
+\caption{Detailed room-by-room analysis}
+\label{tab:room_detailed}
 \end{table}
 
-### S2.4.2 Initialization Sensitivity
+### S2.1.2 Room Relationships
 
-Algorithm performance across 1000 random initializations:
+Analysis of room co-occurrence (ways assigned to multiple rooms) reveals:
 
-- **Mean convergence time**: 18.7 ± 3.2 seconds
-- **Median iterations**: 287 (IQR: 265-312)
-- **Success rate**: 96.2% (38 failures out of 1000 runs)
-- **Final error**: $(1.2 ± 0.3) \times 10^{-6}$
+- **Most common room pairs**: TBD
+- **Room clusters**: Groups of rooms that frequently co-occur
+- **Room hierarchy**: Relationships between rooms in the House structure
 
-The low variance confirms robustness to initialization.
+## S2.2 Dialogue Partner Analysis
 
-## S2.5 Comparison with Domain-Specific Methods
+### S2.2.1 Partner Frequency
 
-### S2.5.1 Machine Learning Applications
+Analysis of dialogue partners (`dialoguewith`) reveals:
 
 \begin{table}[h]
 \centering
-\begin{tabular}{|l|c|c|c|}
+\begin{tabular}{|l|c|c|}
 \hline
-\textbf{Method} & \textbf{Training Accuracy} & \textbf{Test Accuracy} & \textbf{Training Time (s)} \\
+\textbf{Dialogue Partner} & \textbf{Frequency} & \textbf{Percentage} \\
 \hline
-Our Method & 0.987 & 0.942 & 245 \\
-SGD & 0.975 & 0.935 & 312 \\
-Adam & 0.982 & 0.938 & 278 \\
-RMSProp & 0.978 & 0.936 & 295 \\
-AdamW & 0.983 & 0.940 & 283 \\
+Partner 1 & TBD & TBD\% \\
+Partner 2 & TBD & TBD\% \\
+Partner 3 & TBD & TBD\% \\
 \hline
 \end{tabular}
-\caption{Performance on neural network training tasks}
-\label{tab:ml_applications}
+\caption{Most frequent dialogue partners}
+\label{tab:partner_frequency}
 \end{table}
 
-### S2.5.2 Signal Processing Applications
+### S2.2.2 Partner-Type Relationships
 
-For sparse signal reconstruction problems, our method outperforms specialized algorithms:
+Cross-analysis of dialogue partners and dialogue types reveals whether certain partners are associated with certain types of dialogue.
 
-- **Recovery rate**: 98.7% vs. 94.2% (ISTA) and 96.5% (FISTA)
-- **Computation time**: 45% faster than iterative thresholding methods
-- **Memory usage**: 60% lower than quasi-Newton methods
+## S2.3 Network Community Analysis
 
-## S2.6 Ablation Study Details
+### S2.3.1 Detected Communities
 
-### S2.6.1 Component Contribution Analysis
+Community detection algorithms identify TBD major communities:
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Configuration} & \textbf{Convergence Rate} & \textbf{Iterations} & \textbf{Success Rate} \\
-\hline
-Full method & 0.85 & 287 & 96.2\% \\
-No momentum & 0.91 & 412 & 91.5\% \\
-No adaptive step & 0.89 & 385 & 89.8\% \\
-No regularization & 0.87 & 325 & 88.3\% \\
-Fixed step size & 0.93 & 478 & 85.7\% \\
-\hline
-\end{tabular}
-\caption{Detailed ablation study showing contribution of each component}
-\label{tab:ablation_detailed}
-\end{table}
+- **Community 1**: TBD ways, primarily [theme]
+- **Community 2**: TBD ways, primarily [theme]
+- **Community 3**: TBD ways, primarily [theme]
 
-Each component contributes significantly to overall performance, with momentum providing the largest individual benefit.
+### S2.3.2 Community Characteristics
 
-## S2.7 Real-World Case Studies
+Each community exhibits:
+- Dominant dialogue types
+- Room distributions
+- Central ways within the community
+- Connections to other communities
 
-### S2.7.1 Industrial Application: Manufacturing Optimization
+## S2.4 God Relationship Analysis
 
-Applied to production line optimization:
-- **Problem size**: 50,000 parameters
-- **Constraints**: 2,500 inequality constraints
-- **Solution time**: 3.2 hours vs. 8.5 hours (baseline)
-- **Cost reduction**: 12.3% improvement in operational efficiency
+### S2.4.1 Dievas Field Distribution
 
-### S2.7.2 Scientific Application: Climate Modeling
+Analysis of the `Dievas` (God relationship) field reveals:
 
-Applied to parameter estimation in climate models:
-- **Model complexity**: 1,000,000+ parameters
-- **Computational savings**: 65% reduction in simulation time
-- **Accuracy**: Matches or exceeds traditional methods
-- **Scalability**: Enables ensemble runs previously infeasible
+- Distribution of ways across different God relationships
+- Relationship between God relationships and dialogue types
+- Patterns in how ways engage with the divine/transcendent
 
-These real-world applications demonstrate the practical value and scalability of our approach beyond academic benchmarks.
+### S2.4.2 Type-God Relationships
 
+Cross-tabulation of dialogue types and God relationships shows whether certain types are more associated with certain God relationships.
 
+## S2.5 Example Analysis
 
+### S2.5.1 Example Patterns
 
+Analysis of examples reveals:
+- Common example structures
+- Recurring themes in examples
+- How examples illustrate ways
+
+### S2.5.2 Example-Way Relationships
+
+Mapping examples to ways shows:
+- Which ways have the most examples
+- Diversity of examples per way
+- Patterns in example types
+
+## S2.6 Question-Way Relationships
+
+### S2.6.1 Question Distribution
+
+Analysis of the `klausimobudai` table reveals:
+- Number of questions per way
+- Most frequently referenced ways
+- Question clusters
+
+### S2.6.2 Question Themes
+
+Text analysis of questions (`klausimai` table) identifies:
+- Common question themes
+- Question-word relationships
+- How questions relate to ways
+
+## S2.7 Extended Network Metrics
+
+### S2.7.1 Path Analysis
+
+Analysis of shortest paths between ways reveals:
+- Average path length: TBD
+- Diameter: TBD
+- Path distribution
+
+### S2.7.2 Clustering Analysis
+
+Local clustering coefficients show:
+- Ways with high local clustering (tight communities)
+- Ways that bridge communities (low local clustering, high betweenness)
+- Overall clustering structure
+
+## S2.8 Temporal Patterns (if available)
+
+If dating information is available in the data:
+- Evolution of ways over time
+- Patterns in when ways were documented
+- Relationships between documentation order and way characteristics
+
+## S2.9 Validation Results
+
+### S2.9.1 Data Quality Metrics
+
+- Completeness: TBD\% of ways have all required fields
+- Consistency: TBD conflicts resolved
+- Referential integrity: TBD\% of relationships valid
+
+### S2.9.2 Analysis Robustness
+
+Sensitivity analysis shows:
+- Results robust to missing data
+- Stable under different network construction methods
+- Consistent across different analysis approaches

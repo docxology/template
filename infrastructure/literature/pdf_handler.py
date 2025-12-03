@@ -88,6 +88,14 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
     from urllib.parse import urljoin, urlparse
 
     candidates: List[str] = []
+    candidates_set = set()  # Use set for O(1) lookups
+
+    # Limit HTML size to prevent catastrophic backtracking with very large content
+    # Most real-world HTML pages are < 1MB, so limit to first 1MB for performance
+    MAX_HTML_SIZE = 1024 * 1024  # 1MB
+    if len(html_content) > MAX_HTML_SIZE:
+        logger.debug(f"HTML content too large ({len(html_content)} bytes), limiting to {MAX_HTML_SIZE} bytes")
+        html_content = html_content[:MAX_HTML_SIZE]
 
     try:
         # Convert to string for easier processing
@@ -99,50 +107,79 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
     # Convert to lowercase for case-insensitive matching
     html_lower = html_str.lower()
 
+    # Early exit if no PDF-related content found
+    # Check for PDF-related content or publisher identifiers
+    has_pdf_content = (
+        'pdf' in html_lower or
+        '.pdf' in html_lower or
+        'pii' in html_lower or
+        'arnumber' in html_lower or
+        'doi' in html_lower
+    )
+    if not has_pdf_content:
+        return candidates
+
+    # Helper function to add candidate URLs
+    def add_candidate(url: str):
+        """Add URL to candidates if not already present."""
+        full_url = urljoin(base_url, url)
+        if full_url not in candidates_set:
+            candidates_set.add(full_url)
+            candidates.append(full_url)
+
     # Strategy 1: Find <a> tags with PDF links
     # Look for href attributes containing .pdf (case-insensitive)
+    # Use non-greedy quantifiers and limit match scope to prevent backtracking
     pdf_link_patterns = [
-        r'href=["\']([^"\']*\.pdf[^"\']*)["\']',
-        r'href=["\']([^"\']*pdf[^"\']*)["\']',
+        r'href=["\']([^"\']*?\.pdf[^"\']*?)["\']',  # Non-greedy to prevent backtracking
+        r'href=["\']([^"\']*?pdf[^"\']*?)["\']',   # Non-greedy to prevent backtracking
     ]
 
     for pattern in pdf_link_patterns:
-        matches = re.findall(pattern, html_str, re.IGNORECASE)
-        for match in matches:
-            if match:
-                # Resolve relative URLs
-                full_url = urljoin(base_url, match)
-                if full_url not in candidates:
-                    candidates.append(full_url)
+        try:
+            matches = re.findall(pattern, html_str, re.IGNORECASE)
+            for match in matches:
+                if match:
+                    add_candidate(match)
+        except re.error:
+            # Skip pattern if it causes regex errors
+            logger.debug(f"Regex pattern failed: {pattern}")
+            continue
 
     # Strategy 2: Meta tags with PDF URLs
+    # Use non-greedy quantifiers and limit scope to prevent catastrophic backtracking
     meta_patterns = [
-        r'<meta[^>]*content=["\']([^"\']*\.pdf[^"\']*)["\'][^>]*>',
-        r'<meta[^>]*pdf[^>]*content=["\']([^"\']*\.pdf[^"\']*)["\'][^>]*>',
+        r'<meta[^>]*?content=["\']([^"\']*?\.pdf[^"\']*?)["\'][^>]*?>',  # Non-greedy
+        r'<meta[^>]*?pdf[^>]*?content=["\']([^"\']*?\.pdf[^"\']*?)["\'][^>]*?>',  # Non-greedy
     ]
 
     for pattern in meta_patterns:
-        matches = re.findall(pattern, html_str, re.IGNORECASE)
-        for match in matches:
-            if match:
-                full_url = urljoin(base_url, match)
-                if full_url not in candidates:
-                    candidates.append(full_url)
+        try:
+            matches = re.findall(pattern, html_str, re.IGNORECASE)
+            for match in matches:
+                if match:
+                    add_candidate(match)
+        except re.error:
+            logger.debug(f"Regex pattern failed: {pattern}")
+            continue
 
     # Strategy 3: JavaScript variables containing PDF URLs
+    # Use non-greedy quantifiers to prevent backtracking
     js_patterns = [
-        r'pdfUrl["\']?\s*[:=]\s*["\']([^"\']*\.pdf[^"\']*)["\']',
-        r'downloadUrl["\']?\s*[:=]\s*["\']([^"\']*\.pdf[^"\']*)["\']',
-        r'pdf["\']?\s*[:=]\s*["\']([^"\']*\.pdf[^"\']*)["\']',
+        r'pdfUrl["\']?\s*[:=]\s*["\']([^"\']*?\.pdf[^"\']*?)["\']',  # Non-greedy
+        r'downloadUrl["\']?\s*[:=]\s*["\']([^"\']*?\.pdf[^"\']*?)["\']',  # Non-greedy
+        r'pdf["\']?\s*[:=]\s*["\']([^"\']*?\.pdf[^"\']*?)["\']',  # Non-greedy
     ]
 
     for pattern in js_patterns:
-        matches = re.findall(pattern, html_str, re.IGNORECASE)
-        for match in matches:
-            if match:
-                full_url = urljoin(base_url, match)
-                if full_url not in candidates:
-                    candidates.append(full_url)
+        try:
+            matches = re.findall(pattern, html_str, re.IGNORECASE)
+            for match in matches:
+                if match:
+                    add_candidate(match)
+        except re.error:
+            logger.debug(f"Regex pattern failed: {pattern}")
+            continue
 
     # Strategy 4: Publisher-specific patterns
     # Elsevier/ScienceDirect - multiple patterns
@@ -156,7 +193,8 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
         elif_matches = re.findall(pattern, html_str, re.IGNORECASE)
         for pii in elif_matches:
             pdf_url = f"https://www.sciencedirect.com/science/article/pii/{pii}/pdfft?isDTMRedir=true&download=true"
-            if pdf_url not in candidates:
+            if pdf_url not in candidates_set:
+                candidates_set.add(pdf_url)
                 candidates.append(pdf_url)
 
     # Springer - multiple patterns
@@ -169,7 +207,8 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
         springer_matches = re.findall(pattern, html_str, re.IGNORECASE)
         for match in springer_matches:
             pdf_url = f"https://link.springer.com/content/pdf/{match}"
-            if pdf_url not in candidates:
+            if pdf_url not in candidates_set:
+                candidates_set.add(pdf_url)
                 candidates.append(pdf_url)
 
     # IEEE Xplore - multiple patterns
@@ -182,7 +221,8 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
         ieee_matches = re.findall(pattern, html_str, re.IGNORECASE)
         for arnumber in ieee_matches:
             pdf_url = f"https://ieeexplore.ieee.org/stampPDF/getPDF.jsp?arnumber={arnumber}"
-            if pdf_url not in candidates:
+            if pdf_url not in candidates_set:
+                candidates_set.add(pdf_url)
                 candidates.append(pdf_url)
 
     # Wiley Online Library - multiple patterns
@@ -197,7 +237,8 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
             # Clean DOI
             doi_clean = doi.replace('doi:', '').replace('http://dx.doi.org/', '').replace('https://doi.org/', '')
             pdf_url = f"https://onlinelibrary.wiley.com/doi/pdfdirect/{doi_clean}"
-            if pdf_url not in candidates:
+            if pdf_url not in candidates_set:
+                candidates_set.add(pdf_url)
                 candidates.append(pdf_url)
 
     # Nature/Springer Nature
@@ -210,7 +251,8 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
         for article_id in nature_matches:
             if not article_id.endswith('.pdf'):
                 pdf_url = f"https://www.nature.com/articles/{article_id}.pdf"
-                if pdf_url not in candidates:
+                if pdf_url not in candidates_set:
+                    candidates_set.add(pdf_url)
                     candidates.append(pdf_url)
 
     # PLOS ONE
@@ -218,7 +260,8 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
     plos_matches = re.findall(plos_pattern, html_str, re.IGNORECASE)
     for article_id in plos_matches:
         pdf_url = f"https://journals.plos.org/plosone/article/file?id={article_id}&type=printable"
-        if pdf_url not in candidates:
+        if pdf_url not in candidates_set:
+            candidates_set.add(pdf_url)
             candidates.append(pdf_url)
 
     # Frontiers in Psychology and other Frontiers journals
@@ -232,7 +275,8 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
             if '/full' in article_id:
                 article_id = article_id.replace('/full', '')
             pdf_url = f"https://www.frontiersin.org/articles/{article_id}/pdf"
-            if pdf_url not in candidates:
+            if pdf_url not in candidates_set:
+                candidates_set.add(pdf_url)
                 candidates.append(pdf_url)
 
     # Entropy (MDPI)
@@ -244,85 +288,101 @@ def _extract_pdf_urls_from_html(html_content: bytes, base_url: str) -> List[str]
         entropy_matches = re.findall(pattern, html_str, re.IGNORECASE)
         for article_id in entropy_matches:
             pdf_url = f"https://www.mdpi.com/1099-4300/{article_id}/pdf"
-            if pdf_url not in candidates:
+            if pdf_url not in candidates_set:
+                candidates_set.add(pdf_url)
                 candidates.append(pdf_url)
 
     # Strategy 5: Common academic patterns
     # Look for "Download PDF" links
+    # Limit match scope to prevent excessive backtracking
     download_patterns = [
-        r'href=["\']([^"\']*)["\'][^>]*>.*?download.*?pdf',
-        r'href=["\']([^"\']*)["\'][^>]*>.*?pdf.*?download',
-        r'href=["\']([^"\']*\.pdf[^"\']*)["\'][^>]*>.*?download',
-        r'href=["\']([^"\']*pdf[^"\']*)["\'][^>]*>.*?download',
+        r'href=["\']([^"\']*?)["\'][^>]*?>.*?download.*?pdf',  # Non-greedy, limit scope
+        r'href=["\']([^"\']*?)["\'][^>]*?>.*?pdf.*?download',  # Non-greedy, limit scope
+        r'href=["\']([^"\']*?\.pdf[^"\']*?)["\'][^>]*?>.*?download',  # Non-greedy
+        r'href=["\']([^"\']*?pdf[^"\']*?)["\'][^>]*?>.*?download',  # Non-greedy
     ]
 
     for pattern in download_patterns:
-        matches = re.findall(pattern, html_str, re.IGNORECASE)
-        for match in matches:
-            if match and not match.startswith('javascript:'):
-                full_url = urljoin(base_url, match)
-                if full_url not in candidates:
-                    candidates.append(full_url)
+        try:
+            matches = re.findall(pattern, html_str, re.IGNORECASE)
+            for match in matches:
+                if match and not match.startswith('javascript:'):
+                    add_candidate(match)
+        except re.error:
+            logger.debug(f"Regex pattern failed: {pattern}")
+            continue
 
     # Strategy 6: Look for PDF links in common HTML structures
     # Check for links with "pdf" in URL or text
+    # Use non-greedy quantifiers to prevent backtracking
     pdf_href_patterns = [
-        r'href=["\']([^"\']*pdf[^"\']*)["\']',
-        r'href=["\']([^"\']*\.pdf[^"\']*)["\']',
+        r'href=["\']([^"\']*?pdf[^"\']*?)["\']',  # Non-greedy
+        r'href=["\']([^"\']*?\.pdf[^"\']*?)["\']',  # Non-greedy
     ]
 
     for pattern in pdf_href_patterns:
-        matches = re.findall(pattern, html_str, re.IGNORECASE)
-        for match in matches:
-            if match:
-                full_url = urljoin(base_url, match)
-                if full_url not in candidates:
-                    candidates.append(full_url)
+        try:
+            matches = re.findall(pattern, html_str, re.IGNORECASE)
+            for match in matches:
+                if match:
+                    add_candidate(match)
+        except re.error:
+            logger.debug(f"Regex pattern failed: {pattern}")
+            continue
 
     # Strategy 7: Look for JavaScript onclick handlers that might contain PDF URLs
+    # Use non-greedy quantifiers and limit scope
     js_onclick_patterns = [
-        r'onclick=["\'][^"\']*window\.open\(["\']([^"\']*pdf[^"\']*)["\']',
-        r'onclick=["\'][^"\']*location\.href=["\']([^"\']*pdf[^"\']*)["\']',
-        r'onclick=["\'][^"\']*pdf[^"\']*["\']([^"\']*pdf[^"\']*)["\']',
+        r'onclick=["\'][^"\']*?window\.open\(["\']([^"\']*?pdf[^"\']*?)["\']',  # Non-greedy
+        r'onclick=["\'][^"\']*?location\.href=["\']([^"\']*?pdf[^"\']*?)["\']',  # Non-greedy
+        r'onclick=["\'][^"\']*?pdf[^"\']*?["\']([^"\']*?pdf[^"\']*?)["\']',  # Non-greedy
     ]
 
     for pattern in js_onclick_patterns:
-        matches = re.findall(pattern, html_str, re.IGNORECASE)
-        for match in matches:
-            if match:
-                full_url = urljoin(base_url, match)
-                if full_url not in candidates:
-                    candidates.append(full_url)
+        try:
+            matches = re.findall(pattern, html_str, re.IGNORECASE)
+            for match in matches:
+                if match:
+                    add_candidate(match)
+        except re.error:
+            logger.debug(f"Regex pattern failed: {pattern}")
+            continue
 
     # Strategy 8: Look for data attributes that might contain PDF URLs
+    # Use non-greedy quantifiers
     data_attr_patterns = [
-        r'data-pdf-url=["\']([^"\']*)["\']',
-        r'data-download-url=["\']([^"\']*pdf[^"\']*)["\']',
-        r'data-file-url=["\']([^"\']*pdf[^"\']*)["\']',
+        r'data-pdf-url=["\']([^"\']*?)["\']',  # Non-greedy
+        r'data-download-url=["\']([^"\']*?pdf[^"\']*?)["\']',  # Non-greedy
+        r'data-file-url=["\']([^"\']*?pdf[^"\']*?)["\']',  # Non-greedy
     ]
 
     for pattern in data_attr_patterns:
-        matches = re.findall(pattern, html_str, re.IGNORECASE)
-        for match in matches:
-            if match:
-                full_url = urljoin(base_url, match)
-                if full_url not in candidates:
-                    candidates.append(full_url)
+        try:
+            matches = re.findall(pattern, html_str, re.IGNORECASE)
+            for match in matches:
+                if match:
+                    add_candidate(match)
+        except re.error:
+            logger.debug(f"Regex pattern failed: {pattern}")
+            continue
 
     # Strategy 9: Look for meta tags with PDF URLs (additional patterns)
+    # Use non-greedy quantifiers to prevent backtracking
     meta_pdf_patterns = [
-        r'<meta[^>]*property=["\']og:pdf["\'][^>]*content=["\']([^"\']*)["\']',
-        r'<meta[^>]*name=["\']citation_pdf_url["\'][^>]*content=["\']([^"\']*)["\']',
-        r'<meta[^>]*pdf.*content=["\']([^"\']*)["\']',
+        r'<meta[^>]*?property=["\']og:pdf["\'][^>]*?content=["\']([^"\']*?)["\']',  # Non-greedy
+        r'<meta[^>]*?name=["\']citation_pdf_url["\'][^>]*?content=["\']([^"\']*?)["\']',  # Non-greedy
+        r'<meta[^>]*?pdf.*?content=["\']([^"\']*?)["\']',  # Non-greedy
     ]
 
     for pattern in meta_pdf_patterns:
-        matches = re.findall(pattern, html_str, re.IGNORECASE)
-        for match in matches:
-            if match:
-                full_url = urljoin(base_url, match)
-                if full_url not in candidates:
-                    candidates.append(full_url)
+        try:
+            matches = re.findall(pattern, html_str, re.IGNORECASE)
+            for match in matches:
+                if match:
+                    add_candidate(match)
+        except re.error:
+            logger.debug(f"Regex pattern failed: {pattern}")
+            continue
 
     # Filter and validate URLs
     valid_candidates = []

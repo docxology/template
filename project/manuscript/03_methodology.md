@@ -1,85 +1,188 @@
 # Methodology {#sec:methodology}
 
-## Mathematical Framework
+## Database Structure and Conversion
 
-Our approach is based on a novel optimization framework that combines multiple mathematical techniques, extending classical convex optimization methods \cite{boyd2004, nesterov2018} with modern adaptive strategies \cite{kingma2014, duchi2011}. The core algorithm can be expressed as follows:
+### Source Data
 
-\begin{equation}\label{eq:objective}
-f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
+The research draws on a MySQL database dump containing 11 tables documenting Andrius Kulikauskas's Ways of Figuring Things Out framework. The primary data table `20100422ways` contains 212 documented ways with the following key fields:
+
+- `way`: The name/identifier of the way
+- `dialoguewith`: The dialogue partner or conversant
+- `dialoguetype`: The type of dialogue (Absolute, Relative, Embrace God)
+- `dialoguetypetype`: Sub-type classification
+- `mene`: Room assignment in the House of Knowledge (24 rooms)
+- `Dievas`: Relationship to God/the divine
+- `examples`: Examples and descriptions
+- `comments`: Additional comments and notes
+
+### SQLite Conversion
+
+For analysis and portability, the MySQL dump was converted to SQLite format. The conversion process:
+
+1. **Schema Conversion**: MySQL-specific syntax (AUTO_INCREMENT, ENGINE, COLLATE) converted to SQLite-compatible syntax
+2. **Table Renaming**: Tables renamed for clarity (`20100422ways` → `ways`, `menes` → `rooms`, etc.)
+3. **Index Handling**: Index names adjusted to avoid conflicts with table names (SQLite restriction)
+4. **Data Preservation**: All data preserved during conversion with proper encoding handling
+
+The resulting SQLite database (`db/ways.db`) provides a portable, queryable format for analysis.
+
+## House of Knowledge Framework
+
+### 24-Room Structure
+
+The Ways framework organizes knowledge into 24 rooms within the "House of Knowledge." Each room represents a different aspect of how we come to know and understand:
+
+\begin{equation}\label{eq:house_structure}
+\text{House of Knowledge} = \{\text{Room}_1, \text{Room}_2, \ldots, \text{Room}_{24}\}
 \end{equation}
 
-where $x \in \mathbb{R}^d$ is the optimization variable, $w_i$ are learned weights, $\phi_i$ are basis functions, and $R(x)$ is a regularization term with strength $\lambda$.
+The rooms are organized according to three fundamental structures:
 
-The optimization problem we solve is:
+1. **Believing (1-2-3-4)**: Four levels of belief structure
+2. **Caring (1-2-3-4)**: Four levels of care structure  
+3. **Relative Learning**: The cycle of taking a stand, following through, and reflecting
 
-\begin{equation}\label{eq:optimization}
-\min_{x \in \mathcal{X}} f(x) \quad \text{subject to} \quad g_i(x) \leq 0, \quad i = 1, \ldots, m
+### Room Categories
+
+Each way is assigned to one or more rooms via the `mene` field, creating a mapping:
+
+\begin{equation}\label{eq:way_room_mapping}
+\text{Way}_i \mapsto \{\text{Room}_j : \text{Way}_i \text{ belongs to Room}_j\}
 \end{equation}
 
-where $\mathcal{X}$ is the feasible set and $g_i(x)$ are constraint functions.
+This mapping enables analysis of how ways cluster within rooms and how rooms relate to one another.
 
-## Algorithm Description
+## Dialogue Type Classification
 
-Our iterative algorithm updates the solution according to:
+### Three Main Types
 
-\begin{equation}\label{eq:update}
-x_{k+1} = x_k - \alpha_k \nabla f(x_k) + \beta_k (x_k - x_{k-1})
+Ways are classified according to three primary dialogue types:
+
+1. **Absolute**: Ways that reference absolute truth or structure
+2. **Relative**: Ways that engage with relative perspectives
+3. **Embrace God**: Ways that explicitly engage with the divine or transcendent
+
+The distribution of ways across dialogue types provides insight into the balance of different epistemological approaches in the framework.
+
+### Dialogue Type Analysis
+
+For each way $w_i$, we extract:
+
+\begin{equation}\label{eq:dialogue_type}
+\text{Type}(w_i) \in \{\text{Absolute}, \text{Relative}, \text{Embrace God}\}
 \end{equation}
 
-where $\alpha_k$ is the learning rate and $\beta_k$ is the momentum coefficient. The convergence rate is characterized by:
+This classification enables statistical analysis of type distributions and relationships.
 
-\begin{equation}\label{eq:convergence}
-\|x_k - x^*\| \leq C \rho^k
+## Network Analysis Methodology
+
+### Graph Construction
+
+We construct a network graph $G = (V, E)$ where:
+
+- **Vertices $V$**: Each way is a node
+- **Edges $E$**: Connections between ways based on:
+  - Shared dialogue partners (`dialoguewith`)
+  - Shared room assignments (`mene`)
+  - Similar dialogue types
+  - Question relationships (`klausimobudai` table)
+
+### Centrality Metrics
+
+We compute several centrality metrics to identify important ways:
+
+\begin{equation}\label{eq:centrality}
+C(v) = \frac{\text{Number of connections}}{\text{Total possible connections}}
 \end{equation}
 
-where $x^*$ is the optimal solution, $C > 0$ is a constant, and $\rho \in (0,1)$ is the convergence rate.
+This identifies ways that serve as bridges or hubs in the network.
 
-## Implementation Details
+## Statistical Analysis Methods
 
-The algorithm implementation follows the pseudocode shown in Figure \ref{fig:experimental_setup}. The key insight is that we can decompose the objective function \eqref{eq:objective} into separable components, allowing for efficient parallel computation. This approach builds upon proximal optimization techniques \cite{beck2009, parikh2014} and recent advances in large-scale optimization \cite{schmidt2017, wright2010}.
+### Distribution Analysis
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.9\textwidth]{../output/figures/experimental_setup.png}
-\caption{Experimental pipeline showing the complete workflow}
-\label{fig:experimental_setup}
-\end{figure}
+We analyze the distribution of ways across:
 
-For numerical stability, we use the following adaptive step size rule:
+1. **Dialogue Types**: Count and percentage by type
+2. **Rooms**: Distribution across 24 rooms
+3. **Dialogue Partners**: Frequency of conversants
+4. **God Relationships**: Distribution of `Dievas` values
 
-\begin{equation}\label{eq:adaptive_step}
-\alpha_k = \frac{\alpha_0}{\sqrt{1 + \sum_{i=1}^{k} \|\nabla f(x_i)\|^2}}
-\end{equation}
+### Cross-Tabulation
 
-This ensures that the algorithm converges even when the gradient varies significantly across iterations.
+Cross-tabulation analysis examines relationships between:
 
-## Performance Analysis
+- Dialogue type × Room assignment
+- Dialogue type × Dialogue partner
+- Room × God relationship
 
-The computational complexity of our approach is $O(n \log n)$ per iteration, where $n$ is the problem dimension. This is achieved through the efficient data structures shown in Figure \ref{fig:data_structure}.
+This reveals patterns in how different dimensions of the framework relate.
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.9\textwidth]{../output/figures/data_structure.png}
-\caption{Efficient data structures used in our implementation}
-\label{fig:data_structure}
-\end{figure}
+## Text Analysis
 
-The memory requirements scale as:
+### Way Descriptions
 
-\begin{equation}\label{eq:memory}
-M(n) = O(n) + O(\log n) \cdot \text{number of iterations}
-\end{equation}
+For ways with text descriptions in `ways.md`, we perform:
 
-This makes our method suitable for large-scale problems where memory is a constraint.
+1. **Keyword Extraction**: Identify key terms and concepts
+2. **Theme Analysis**: Extract recurring themes
+3. **Example Analysis**: Analyze examples to understand way applications
+4. **Relationship Extraction**: Identify references to other ways or concepts
+
+### Philosophical Structure Analysis
+
+Text analysis also examines:
+
+- How ways relate to the believing/caring/learning structures
+- References to the House of Knowledge framework
+- Connections to broader philosophical concepts
+
+## Data Processing Pipeline
+
+### Extraction
+
+1. **Database Query**: Extract ways data from SQLite database
+2. **Text Parsing**: Parse `ways.md` for additional context
+3. **Relationship Extraction**: Build network from relationship tables
+
+### Transformation
+
+1. **Normalization**: Standardize way names and categories
+2. **Encoding**: Handle Lithuanian/English text encoding
+3. **Cleaning**: Remove duplicates and handle missing data
+
+### Analysis
+
+1. **Statistical Computation**: Calculate distributions and metrics
+2. **Network Construction**: Build graph structures
+3. **Visualization Generation**: Create plots and network diagrams
 
 ## Validation Framework
 
-To validate our theoretical results, we use the experimental setup illustrated in Figure \ref{fig:experimental_setup}. The performance metrics are computed using:
+### Data Quality Checks
 
-\begin{equation}\label{eq:accuracy}
-\text{Accuracy} = \frac{1}{N} \sum_{i=1}^{N} \mathbb{I}[f(x_i) \leq f(x^*) + \epsilon]
-\end{equation}
+1. **Completeness**: Verify all ways have required fields
+2. **Consistency**: Check for conflicting assignments
+3. **Referential Integrity**: Validate room and relationship references
 
-where $\mathbb{I}[\cdot]$ is the indicator function and $\epsilon$ is the tolerance threshold.
+### Analysis Validation
 
-The convergence analysis results are summarized in Figure \ref{fig:convergence_plot}, which shows the empirical convergence rates compared to the theoretical bound \eqref{eq:convergence}.
+1. **Reproducibility**: Ensure analyses are reproducible
+2. **Sensitivity**: Test sensitivity to data variations
+3. **Robustness**: Verify results are robust to missing data
+
+## Implementation
+
+The analysis is implemented using:
+
+- **Python**: Primary analysis language
+- **SQLite**: Database backend
+- **NetworkX**: Network analysis library
+- **Matplotlib/Seaborn**: Visualization libraries
+- **Pandas**: Data manipulation and analysis
+
+All code follows the thin orchestrator pattern, with business logic in `project/src/` modules and orchestration in `project/scripts/`.
+
+## Ethical Considerations
+
+This research documents and analyzes publicly available philosophical work by Andrius Kulikauskas. All data is in the public domain as stated in the source documentation. The analysis respects the original philosophical framework while providing systematic documentation and quantitative insights.

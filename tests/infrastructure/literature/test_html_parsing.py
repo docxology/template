@@ -300,6 +300,8 @@ class TestPDFHandlerHTMLIntegration:
 
     def test_html_parsing_edge_cases(self):
         """Test edge cases in HTML parsing."""
+        import time
+
         # HTML with encoding issues
         bad_encoding_html = b"""
         <html>
@@ -312,9 +314,22 @@ class TestPDFHandlerHTMLIntegration:
         urls = _extract_pdf_urls_from_html(bad_encoding_html, "https://example.com")
         assert "https://example.com/paper.pdf" in urls
 
+<<<<<<< Updated upstream
         # Moderately large HTML content (should still work)
         large_html = b'<html><body><a href="https://example.com/large.pdf">PDF</a></body></html>' * 20
+=======
+        # Large HTML content (test performance with reasonable size)
+        # Use 10 repetitions to keep test very fast but still test large content handling
+        large_html = b'<html><body><a href="https://example.com/large.pdf">PDF</a></body></html>' * 10
+
+        # Add timeout to prevent hanging in CI/future runs
+        start_time = time.time()
+>>>>>>> Stashed changes
         urls = _extract_pdf_urls_from_html(large_html, "https://example.com")
+        duration = time.time() - start_time
+
+        # Ensure it completes quickly (< 0.1 second for 10 repetitions)
+        assert duration < 0.1, f"HTML parsing took {duration:.3f}s, expected < 0.1s"
         assert "https://example.com/large.pdf" in urls
 
     def test_html_parsing_url_validation(self):

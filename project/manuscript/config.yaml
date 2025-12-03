@@ -3,8 +3,8 @@
 # Edit this file to customize your paper's metadata
 
 paper:
-  title: "Example Default Project Title"
-  subtitle: "Subtitle Example"  # Optional subtitle
+  title: "Ways of Figuring Things Out: A Systematic Analysis"
+  subtitle: "Documenting and Analyzing Andrius Kulikauskas's 284 Ways of Knowledge Acquisition"  # Optional subtitle
   version: "1.0"  # Paper version
   date: ""  # Auto-generated if empty (uses current date)
 
@@ -12,10 +12,10 @@ paper:
 # For single author, use one entry
 # For multiple authors, add additional entries
 authors:
-  - name: "Project Author"
-    orcid: "0000-0000-0000-1234"
-    email: "author@example.com"
-    affiliation: "Template Institute"  # Optional: Institution or organization
+  - name: "Andrius Kulikauskas"
+    orcid: ""  # Add ORCID if available
+    email: ""  # Add email if available
+    affiliation: ""  # Add affiliation if available
     corresponding: true  # Mark corresponding author
 
 # Optional: Additional authors
@@ -28,23 +28,28 @@ authors:
 
 # Publication information (optional)
 publication:
-  doi: "10.5281/zenodo.12345678"  # Digital Object Identifier, e.g., "10.5281/zenodo.12345678"
-  journal: "Example Journal"  # Journal name if published
-  volume: "42"  # Journal volume
-  pages: "123-145"  # Page numbers
-  year: "2025"  # Publication year (auto-generated if empty)
+  doi: ""  # Digital Object Identifier, e.g., "10.5281/zenodo.12345678"
+  journal: ""  # Journal name if published
+  volume: ""  # Journal volume
+  pages: ""  # Page numbers
+  year: ""  # Publication year (auto-generated if empty)
 
 # Keywords for metadata
 keywords:
-  - "research"
-  - "template"
-  - "academic"
+  - "epistemology"
+  - "knowledge systems"
+  - "philosophical methodology"
+  - "ways of knowing"
+  - "House of Knowledge"
+  - "learning frameworks"
+  - "dialogue types"
+  - "knowledge acquisition"
 
 # Additional metadata
 metadata:
   abstract: ""  # Can reference abstract section or leave empty
   acknowledgments: ""  # Funding info, etc. (can reference acknowledgments section)
-  license: "Apache-2.0"  # License for the work
+  license: "Public Domain"  # License for the work (data is in public domain per source)
   language: "en"  # Paper language code
 
 # LLM Review Settings
@@ -55,4 +60,3 @@ llm:
       - zh  # Chinese (Simplified)
       - hi  # Hindi
       - ru  # Russian
-

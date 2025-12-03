@@ -1,43 +1,39 @@
 # Acknowledgments {#sec:acknowledgments}
 
-We gratefully acknowledge the contributions of many individuals and institutions that made this research possible.
+We gratefully acknowledge the contributions that made this research possible.
 
-## Funding
+## Primary Source
 
-This work was supported by [grant numbers and funding agencies to be specified].
+This research is based entirely on the philosophical work of **Andrius Kulikauskas**, who developed the "Ways of Figuring Things Out" framework and documented 284 ways of knowledge acquisition. The framework, database, and documentation are the result of his extensive philosophical work conducted in 2010-2011.
 
-## Computing Resources
+## Data Availability
 
-Computational resources were provided by [institution/facility name], enabling the large-scale experiments reported in Section \ref{sec:experimental_results}.
+All data used in this research is in the **Public Domain** as stated in the source documentation. The MySQL database dump and text documentation (`ways.md`) are publicly available and were used with appropriate attribution.
 
-## Collaborations
+## Framework Development
 
-We thank our collaborators for valuable discussions and feedback throughout the development of this work:
+The House of Knowledge framework, the 24-room structure, and the dialogue type classifications are all part of Andrius Kulikauskas's original philosophical work. This research provides systematic documentation and analysis but does not claim to have developed the underlying framework.
 
-- Prof. [Name], [Institution] - for insights into the theoretical framework
-- Dr. [Name], [Institution] - for providing benchmark datasets
-- [Research Group], [Institution] - for computational infrastructure support
+## Technical Infrastructure
 
-## Data and Software
+This research builds upon:
 
-This research builds upon open-source software tools and publicly available datasets. We acknowledge:
+- **Python scientific computing stack** (NumPy, SciPy, Pandas, NetworkX, Matplotlib)
+- **SQLite** database system for data storage and querying
+- **LaTeX and Pandoc** for document preparation
+- **Open-source tools** for data analysis and visualization
 
-- Python scientific computing stack (NumPy, SciPy, Matplotlib)
-- LaTeX and Pandoc for document preparation
-- Public datasets used in our evaluation
+## Research Context
 
-## Feedback and Review
+This work contributes to the systematic documentation and analysis of philosophical frameworks, demonstrating how quantitative methods can complement qualitative understanding. The integration of database analysis, network analysis, and statistical methods with philosophical interpretation represents a methodological contribution to the study of knowledge systems.
 
-We are grateful to the anonymous reviewers whose constructive feedback significantly improved this manuscript.
+## Future Contributions
 
-## Institutional Support
-
-This research was conducted with the support of [Institution Name], providing research facilities and academic resources essential to this work.
+Future researchers building on this work should acknowledge:
+- Andrius Kulikauskas as the originator of the Ways framework
+- The public domain status of the source data
+- The systematic analysis and documentation provided by this research
 
 ---
 
-*All errors and omissions remain the sole responsibility of the authors.*
-
-
-
-
+*All errors and omissions in the analysis and interpretation remain the sole responsibility of the authors. The underlying philosophical framework and data are the work of Andrius Kulikauskas.*

@@ -2,101 +2,91 @@
 
 ## Overview
 
-This is an example project that demonstrates the generic repository structure for tested code, manuscript editing, and PDF rendering. The work presents a novel optimization framework with comprehensive theoretical analysis and experimental validation, building upon foundational optimization theory \cite{boyd2004, nesterov2018} and recent advances in adaptive methods \cite{kingma2014, duchi2011}.
+This research documents and analyzes Andrius Kulikauskas's comprehensive framework of "Ways of Figuring Things Out," a systematic collection of 284 distinct methods for acquiring knowledge, understanding truth, and engaging with learning processes. The work presents both a philosophical framework for understanding different approaches to knowledge and an empirical analysis of how these ways are structured, categorized, and interrelated.
 
-## Project Structure
+## The House of Knowledge Framework
 
-The project follows a standardized structure:
+The Ways framework is organized around a "House of Knowledge" containing 24 rooms, each representing a different aspect of how we come to know and understand. These rooms are structured according to fundamental philosophical principles:
 
-- **`src/`** - Source code with comprehensive test coverage
-- **`tests/`** - Test files ensuring 100% coverage
-- **`scripts/`** - Project-specific scripts for generating figures and data
-- **`manuscript/`** - Markdown source files for the manuscript
-- **`output/`** - Generated outputs (PDFs, figures, data)
-- **`repo_utilities/`** - Generic utility scripts for any project
+- **Believing (1-2-3-4)**: Four levels of believing, from basic belief to fostering spirit among us
+- **Caring (1-2-3-4)**: Four levels of caring, from basic openness to acknowledging what transcends our limits  
+- **Relative Learning**: The cycle of taking a stand, following through, and reflecting
+- **Dialogue Types**: Absolute, Relative, and Embrace God perspectives
 
-## Key Features
+Each way represents a specific method for figuring things out, documented with examples, dialogue partners, and its relationship to the broader framework.
 
-### Test-Driven Development
-All source code must have 100% test coverage before PDF generation proceeds, as enforced by the build system.
+## Research Objectives
 
-### Automated Script Execution
-Project-specific scripts in the `scripts/` directory are automatically executed to generate figures and data, ensuring reproducibility.
+This work aims to:
 
-### Markdown to PDF Pipeline
-Individual markdown modules are converted to PDFs, and a combined document is generated with proper cross-referencing.
+1. **Documentation**: Provide complete documentation of all 284 ways with their characteristics, examples, and relationships
+2. **Categorization**: Systematically categorize ways according to dialogue types, rooms, and philosophical structures
+3. **Analysis**: Conduct empirical analysis of way distributions, patterns, and interrelationships
+4. **Visualization**: Create visual representations of the network of ways and their connections
+5. **Application**: Develop tools and frameworks for applying these ways in educational and research contexts
 
-### Generic and Reusable
-The utility scripts can be used with any project that follows this structure, making it easy to adopt for new research projects.
+## Data Sources
+
+The research draws on two primary data sources:
+
+- **SQL Database**: A comprehensive MySQL database containing 212 ways with complete metadata including dialogue types, examples, room assignments (mene), God relationships (Dievas), and conversant information
+- **Text Documentation**: Detailed markdown documentation (`ways.md`) providing philosophical context, examples, and descriptions for all 284 ways
+
+## Methodology Overview
+
+Our approach combines:
+
+- **Database Analysis**: SQLite conversion and querying of the ways database to extract patterns and relationships
+- **Network Analysis**: Graph-based analysis of how ways connect through dialogue partners and shared characteristics
+- **Statistical Analysis**: Quantitative analysis of distributions across categories, dialogue types, and rooms
+- **Text Analysis**: Analysis of way descriptions and examples to extract themes and patterns
+- **Visualization**: Creation of network graphs, hierarchical visualizations, and statistical plots
+
+## Key Contributions
+
+This research makes several key contributions:
+
+1. **Complete Documentation**: First comprehensive systematic documentation of all 284 ways
+2. **Empirical Analysis**: Quantitative analysis revealing patterns in way distributions and relationships
+3. **Network Mapping**: Visualization of the network structure connecting different ways
+4. **Categorization System**: Systematic organization within the 24-room House of Knowledge framework
+5. **Practical Tools**: Database and analysis tools for researchers and practitioners
 
 ## Manuscript Organization
 
-The manuscript is organized into several key sections:
+The manuscript is organized as follows:
 
-1. **Abstract** (Section \ref{sec:abstract}): Research overview and key contributions
-2. **Introduction** (Section \ref{sec:introduction}): Overview and project structure
-3. **Methodology** (Section \ref{sec:methodology}): Mathematical framework and algorithms
-4. **Experimental Results** (Section \ref{sec:experimental_results}): Performance evaluation and validation
-5. **Discussion** (Section \ref{sec:discussion}): Theoretical implications and comparisons
+1. **Abstract** (Section \ref{sec:abstract}): Overview of the research and key findings
+2. **Introduction** (Section \ref{sec:introduction}): Framework overview and research objectives
+3. **Methodology** (Section \ref{sec:methodology}): Database structure, analysis methods, and House of Knowledge framework
+4. **Experimental Results** (Section \ref{sec:experimental_results}): Statistical analysis of ways, distributions, and patterns
+5. **Discussion** (Section \ref{sec:discussion}): Interpretation of findings and philosophical implications
 6. **Conclusion** (Section \ref{sec:conclusion}): Summary and future directions
-7. **References** (Section \ref{sec:references}): Bibliography and cited works
 
-## Example Figure
+Supplemental sections provide extended methodological details, additional results, and detailed analysis of specific aspects of the framework.
 
-The following figure was generated by the example script:
+## Philosophical Context
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.8\textwidth]{../output/figures/example_figure.png}
-\caption{Example project figure showing a mathematical function}
-\label{fig:example_figure}
-\end{figure}
+The Ways framework emerges from a deep engagement with questions of epistemology, learning, and knowledge. It addresses fundamental questions:
 
-This demonstrates how figures are automatically integrated into the manuscript with proper cross-referencing capabilities. The figure shows a mathematical function that demonstrates the project's capabilities. As shown in Figure \ref{fig:example_figure}, the system generates high-quality visualizations that are automatically integrated into the manuscript.
+- How do we come to know things?
+- What are the different valid approaches to understanding?
+- How do belief, care, and learning interact in knowledge acquisition?
+- What role does dialogue play in figuring things out?
+- How can we systematically organize different approaches to knowledge?
 
-## Data Availability
+The framework provides a comprehensive answer to these questions through its systematic organization of 284 distinct ways, each representing a valid approach to knowledge and understanding.
 
-All generated data is saved alongside figures for reproducibility:
+## Applications
 
-- **Figures**: PNG format in `output/figures/`
-- **Data**: NPZ and CSV formats in `output/data/`
-- **PDFs**: Individual and combined documents in `output/pdf/`
-- **LaTeX**: Source files in `output/tex/`
+This research has applications across multiple domains:
 
-## Usage
+- **Education**: Understanding different learning styles and approaches
+- **Research Methodology**: Systematic approaches to knowledge acquisition
+- **Personal Development**: Tools for understanding one's own ways of figuring things out
+- **Philosophy**: Contributions to epistemology and knowledge systems theory
+- **Interdisciplinary Studies**: Framework for understanding knowledge across domains
 
-To generate the complete manuscript:
+## Structure of This Work
 
-    # Clean previous outputs
-    ./repo_utilities/clean_output.sh
-
-    # Generate everything (tests + scripts + PDFs)
-    ./repo_utilities/render_pdf.sh
-
-The system will automatically:
-1. Run all tests with 100% coverage requirement
-2. Execute project-specific scripts to generate figures and data
-3. Validate markdown references and images
-4. Generate individual and combined PDFs
-5. Export LaTeX source files
-
-## Customization
-
-This template can be customized for any project by:
-
-1. Adding project-specific scripts to `scripts/`
-2. Modifying markdown files in `markdown/`
-3. Setting environment variables for author information
-4. Adjusting LaTeX preamble in `preamble.md`
-5. Adding new sections with proper cross-references
-
-## Cross-Referencing System
-
-The manuscript demonstrates comprehensive cross-referencing:
-
-- **Section References**: Use the ref command with `sec:` prefix for sections
-- **Equation References**: Use the eqref command with `eq:` prefix for equations (see Section \ref{sec:methodology})
-- **Figure References**: Use the ref command with figure labels
-- **Table References**: Use the ref command with `tab:` prefix for tables
-
-All references are automatically numbered and updated when the document is regenerated. For example, the main objective function \eqref{eq:objective} is defined in the methodology section.
+The following sections provide detailed analysis of the Ways framework. Section \ref{sec:methodology} describes the database structure and analysis methods. Section \ref{sec:experimental_results} presents statistical findings and patterns. Section \ref{sec:discussion} interprets these findings within the broader philosophical context. Supplemental sections provide extended details on methodology, additional results, and detailed analysis of specific aspects of the framework.
