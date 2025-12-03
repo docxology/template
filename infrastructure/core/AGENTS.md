@@ -92,6 +92,7 @@ Core module is imported by all other infrastructure modules for:
 
 ## See Also
 
+- [README.md](README.md) - Quick reference guide
 - [`build/`](../build/) - Build & reproducibility
 - [`validation/`](../validation/) - Validation & quality assurance
 

@@ -50,7 +50,7 @@ These modules provide generic build, validation, and development infrastructure 
 
 These modules implement domain-specific functionality for the research project:
 
-#### In src/
+#### In project/src/
 - `example.py` - Basic mathematical operations (template demo)
 - `simulation.py` - Core simulation framework with reproducibility
 - `statistics.py` - Statistical analysis functions
@@ -64,7 +64,7 @@ These modules implement domain-specific functionality for the research project:
 - `validation.py` - Result validation framework
 - `visualization.py` - Visualization engine with styling
 
-#### In scripts/
+#### In project/scripts/
 - `example_figure.py` - Basic figure generation example
 - `generate_research_figures.py` - Complex research figure generation
 - `analysis_pipeline.py` - Statistical analysis workflow

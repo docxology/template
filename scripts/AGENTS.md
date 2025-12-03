@@ -250,11 +250,22 @@ python3 scripts/07_literature_search.py --search --summarize
 The recommended entry point is the unified `run.sh` script:
 
 ```bash
-./run.sh           # Interactive menu
-./run.sh --option 4   # Run full pipeline non-interactively
-./run.sh --pipeline   # Same as --option 4
-./run.sh --search     # Literature search (option 6)
-./run.sh --summarize  # Generate summaries (option 7)
+# Interactive menu (recommended)
+./run.sh
+
+# Core Build Operations
+./run.sh --pipeline          # Run full pipeline
+./run.sh --infra-tests        # Run infrastructure tests
+./run.sh --project-tests      # Run project tests
+./run.sh --render-pdf         # Render PDF manuscript
+
+# LLM Operations (requires Ollama)
+./run.sh --reviews            # LLM manuscript review
+./run.sh --translations       # LLM translations
+
+# Literature Operations (requires Ollama)
+./run.sh --search             # Search literature and download PDFs
+./run.sh --summarize          # Generate summaries for existing PDFs
 ```
 
 See [`../RUN_GUIDE.md`](../RUN_GUIDE.md) for complete documentation.
@@ -365,8 +376,8 @@ from scientific.data_generator import generate_synthetic_data
 Complete pipeline execution (interactive):
 
 ```bash
-./run.sh           # Interactive menu
-./run.sh --option 4   # Full pipeline non-interactively
+./run.sh              # Interactive menu
+./run.sh --pipeline    # Full pipeline non-interactively
 ```
 
 Or via Python:

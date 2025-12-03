@@ -26,25 +26,43 @@ This presents a menu with all available operations:
 ============================================================
   Research Project Template - Main Menu
 ============================================================
+
+Core Build Operations:
   1. Run infrastructure tests
   2. Run project tests
   3. Render PDF manuscript
   4. Run full pipeline (tests + analysis + PDF + validate)
-  5. Run LLM manuscript review
-  6. Literature search and PDF download
-  7. Generate summaries for downloaded PDFs
-  8. Exit
+
+LLM Operations (requires Ollama):
+  5. LLM manuscript review (English)
+  6. LLM translations (multi-language)
+
+Literature Operations (requires Ollama):
+  7. Search literature and download PDFs
+  8. Generate summaries for existing PDFs
+
+  9. Exit
 ============================================================
 ```
 
 ### Non-Interactive Mode
 
 ```bash
-./run.sh --option 4    # Run full pipeline
-./run.sh --pipeline    # Same as --option 4
-./run.sh --search      # Literature search (option 6)
-./run.sh --summarize   # Generate summaries (option 7)
-./run.sh --help        # Show all options
+# Core Build Operations
+./run.sh --pipeline          # Run full pipeline
+./run.sh --infra-tests        # Run infrastructure tests
+./run.sh --project-tests      # Run project tests
+./run.sh --render-pdf         # Render PDF manuscript
+
+# LLM Operations (requires Ollama)
+./run.sh --reviews            # LLM manuscript review
+./run.sh --translations       # LLM translations
+
+# Literature Operations (requires Ollama)
+./run.sh --search             # Search literature and download PDFs
+./run.sh --summarize          # Generate summaries for existing PDFs
+
+./run.sh --help               # Show all options
 ```
 
 ## Pipeline Stages
@@ -161,7 +179,7 @@ These scripts:
 
 ```
 Unified Entry Point (run.sh):
-Menu Option 4 → Full Pipeline:
+Menu Option 4 (--pipeline) → Full Pipeline:
   STAGE 0: Clean Output Directories
     └─ PASS → STAGE 1
   STAGE 1: Setup Environment

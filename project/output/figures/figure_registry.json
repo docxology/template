@@ -1,6 +1,6 @@
 {
   "fig:analysis_comparison": {
-    "figure_id": "figure_016",
+    "figure_id": "figure_000",
     "filename": "analysis_comparison.png",
     "caption": "Comparison of different methods on accuracy metric",
     "label": "fig:analysis_comparison",
@@ -11,7 +11,7 @@
     "metadata": {}
   },
   "fig:example_figure": {
-    "figure_id": "figure_017",
+    "figure_id": "figure_001",
     "filename": "example_figure.png",
     "caption": "Example project figure showing data processing with src/ functions",
     "label": "fig:example_figure",
@@ -22,7 +22,7 @@
     "metadata": {}
   },
   "fig:convergence_plot": {
-    "figure_id": "figure_018",
+    "figure_id": "figure_002",
     "filename": "convergence_plot.png",
     "caption": "Algorithm convergence comparison showing our method vs baseline",
     "label": "fig:convergence_plot",
@@ -33,7 +33,7 @@
     "metadata": {}
   },
   "fig:experimental_setup": {
-    "figure_id": "figure_019",
+    "figure_id": "figure_003",
     "filename": "experimental_setup.png",
     "caption": "Experimental pipeline showing data flow through processing stages",
     "label": "fig:experimental_setup",
@@ -44,7 +44,7 @@
     "metadata": {}
   },
   "fig:data_structure": {
-    "figure_id": "figure_020",
+    "figure_id": "figure_004",
     "filename": "data_structure.png",
     "caption": "Algorithmic complexity comparison for different operations",
     "label": "fig:data_structure",
@@ -55,7 +55,7 @@
     "metadata": {}
   },
   "fig:step_size_analysis": {
-    "figure_id": "figure_021",
+    "figure_id": "figure_005",
     "filename": "step_size_analysis.png",
     "caption": "Step size sensitivity analysis showing impact on convergence",
     "label": "fig:step_size_analysis",
@@ -66,7 +66,7 @@
     "metadata": {}
   },
   "fig:scalability_analysis": {
-    "figure_id": "figure_022",
+    "figure_id": "figure_006",
     "filename": "scalability_analysis.png",
     "caption": "Scalability analysis comparing algorithm performance across problem sizes",
     "label": "fig:scalability_analysis",
@@ -77,7 +77,7 @@
     "metadata": {}
   },
   "fig:ablation_study": {
-    "figure_id": "figure_023",
+    "figure_id": "figure_007",
     "filename": "ablation_study.png",
     "caption": "Ablation study showing contribution of each component",
     "label": "fig:ablation_study",
@@ -88,7 +88,7 @@
     "metadata": {}
   },
   "fig:hyperparameter_sensitivity": {
-    "figure_id": "figure_024",
+    "figure_id": "figure_008",
     "filename": "hyperparameter_sensitivity.png",
     "caption": "Hyperparameter sensitivity analysis for learning rate and momentum",
     "label": "fig:hyperparameter_sensitivity",
@@ -99,7 +99,7 @@
     "metadata": {}
   },
   "fig:image_classification_results": {
-    "figure_id": "figure_025",
+    "figure_id": "figure_009",
     "filename": "image_classification_results.png",
     "caption": "Image classification training curves comparing optimization methods",
     "label": "fig:image_classification_results",
@@ -110,7 +110,7 @@
     "metadata": {}
   },
   "fig:recommendation_scalability": {
-    "figure_id": "figure_026",
+    "figure_id": "figure_010",
     "filename": "recommendation_scalability.png",
     "caption": "Recommendation system scalability with varying users and items",
     "label": "fig:recommendation_scalability",
@@ -121,7 +121,7 @@
     "metadata": {}
   },
   "fig:convergence_analysis": {
-    "figure_id": "figure_027",
+    "figure_id": "figure_011",
     "filename": "convergence_analysis.png",
     "caption": "Convergence behavior of the optimization algorithm showing exponential decay to target value",
     "label": "fig:convergence_analysis",
@@ -132,7 +132,7 @@
     "metadata": {}
   },
   "fig:time_series_analysis": {
-    "figure_id": "figure_028",
+    "figure_id": "figure_012",
     "filename": "time_series_analysis.png",
     "caption": "Time series data showing sinusoidal trend with added noise",
     "label": "fig:time_series_analysis",
@@ -143,7 +143,7 @@
     "metadata": {}
   },
   "fig:statistical_comparison": {
-    "figure_id": "figure_029",
+    "figure_id": "figure_013",
     "filename": "statistical_comparison.png",
     "caption": "Comparison of different methods on accuracy metric",
     "label": "fig:statistical_comparison",
@@ -154,7 +154,7 @@
     "metadata": {}
   },
   "fig:scatter_correlation": {
-    "figure_id": "figure_030",
+    "figure_id": "figure_014",
     "filename": "scatter_correlation.png",
     "caption": "Scatter plot showing correlation between two variables",
     "label": "fig:scatter_correlation",
@@ -165,7 +165,7 @@
     "metadata": {}
   },
   "fig:scientific_simulation_timeseries": {
-    "figure_id": "figure_031",
+    "figure_id": "figure_015",
     "filename": "scientific_simulation_timeseries.png",
     "caption": "Time series data generated for scientific simulation analysis",
     "label": "fig:scientific_simulation_timeseries",

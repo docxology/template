@@ -76,6 +76,7 @@ Validation module is used by:
 
 ## See Also
 
+- [README.md](README.md) - Quick reference guide
 - [`core/`](../core/) - Foundation utilities
 - [`build/`](../build/) - Build & reproducibility tools
 

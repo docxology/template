@@ -221,7 +221,8 @@ Load configuration from environment with `LiteratureConfig.from_env()`:
 The repository includes an interactive script for searching, downloading, and summarizing papers using a local LLM:
 
 ```bash
-./run.sh                           # Select option 6 or 7
+./run.sh --search                  # Search literature and download PDFs
+./run.sh --summarize               # Generate summaries for existing PDFs
 # Or directly:
 python3 scripts/07_literature_search.py --search
 ```

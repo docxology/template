@@ -39,12 +39,12 @@ This document consolidates all build system information: current status, perform
 
 ```mermaid
 flowchart TD
-    START([Start run_all.py]) --> STAGE0[Stage 0: Setup Environment]
-    STAGE0 --> STAGE1[Stage 1: Run Tests]
-    STAGE1 --> STAGE2[Stage 2: Run Analysis]
-    STAGE2 --> STAGE3[Stage 3: Render PDF]
-    STAGE3 --> STAGE4[Stage 4: Validate Output]
-    STAGE4 --> STAGE5[Stage 5: Copy Outputs]
+    START([Start run_all.py]) --> STAGE0[Stage 00: Setup Environment]
+    STAGE0 --> STAGE1[Stage 01: Run Tests]
+    STAGE1 --> STAGE2[Stage 02: Run Analysis]
+    STAGE2 --> STAGE3[Stage 03: Render PDF]
+    STAGE3 --> STAGE4[Stage 04: Validate Output]
+    STAGE4 --> STAGE5[Stage 05: Copy Outputs]
     STAGE5 --> SUCCESS[Build successful]
     
     STAGE0 -->|Fail| FAIL0[Setup failed]
@@ -92,7 +92,9 @@ flowchart TD
 
 ## 📈 Detailed Performance Analysis
 
-### Stage 1: Run Tests - Test Suite Details (26 seconds)
+### Within Stage 01: Run Tests - Test Suite Details (26 seconds)
+
+This section describes the detailed breakdown of what happens within Stage 01 (Run Tests).
 
 **Breakdown:**
 - Infrastructure Tests: 23 seconds (558 tests)
@@ -117,7 +119,7 @@ flowchart TD
 
 **Analysis:** All core modules have excellent coverage. The `build_verifier.py` module has lower coverage (68%) but still exceeds the 70% requirement when averaged with other modules.
 
-### Stage 2: Script Execution (6 seconds)
+### Within Stage 02: Script Execution (6 seconds)
 
 **Result:** ✅ **ALL SCRIPTS SUCCESSFUL**
 
@@ -129,16 +131,16 @@ flowchart TD
 #### Script 2: `generate_research_figures.py`
 - ✅ Generates 9 research figures
 - ✅ Generates 2 data files (CSV)
-- ✅ All scripts properly use `src/` modules
+- ✅ All scripts properly use `project/src/` modules
 
 **All scripts properly follow thin orchestrator pattern.** ✅
 
-### Stage 3: Repository Utilities (< 1 second)
+### Within Stage 02: Repository Utilities (< 1 second)
 
 **Result:** ✅ **COMPLETED**
 
 #### Glossary Generation
-- ✅ Auto-generated from `src/` API
+- ✅ Auto-generated from `project/src/` API
 - ✅ Output: `manuscript/98_symbols_glossary.md`
 - ✅ Up-to-date with current codebase
 
@@ -153,7 +155,7 @@ flowchart TD
 - The manuscript sections themselves use proper `\begin{equation}...\end{equation}` environments
 - These warnings do not affect PDF generation quality
 
-### Stage 4: PDF Rendering (50 seconds)
+### Stage 03: Render PDF - PDF Rendering (50 seconds)
 
 **Breakdown:**
 - Individual section PDFs + slides + HTML: ~45 seconds
@@ -188,7 +190,7 @@ Warning--I didn't find a database entry for "optimization2022"
 - The combined PDF build resolves all citations correctly
 - This is normal LaTeX behavior when compiling sections independently
 
-### Stage 5: Combined Document (10 seconds)
+### Within Stage 03: Combined Document (10 seconds)
 
 **Result:** ✅ **SUCCESSFUL**
 
@@ -203,7 +205,7 @@ Warning--I didn't find a database entry for "optimization2022"
 
 **All citations resolved correctly in the combined document.** ✅
 
-### Stage 6: Alternative Formats (3 seconds)
+### Within Stage 03: Alternative Formats (3 seconds)
 
 **Result:** ✅ **PARTIAL SUCCESS**
 
@@ -219,7 +221,7 @@ Warning--I didn't find a database entry for "optimization2022"
 
 **Impact:** **NONE** - Main outputs work perfectly.
 
-### Stage 7: PDF Validation (< 1 second)
+### Stage 04: Validate Output - PDF Validation (< 1 second)
 
 **Result:** ⚠️ **MINOR ISSUE DETECTED (NON-CRITICAL)**
 
@@ -345,12 +347,12 @@ build_combined() {
 **Pipeline:** 6-stage Python orchestrator system
 
 **Stages:**
-- **Stage 0**: Environment setup & validation (`scripts/00_setup_environment.py`)
-- **Stage 1**: Run tests with coverage (`scripts/01_run_tests.py`)
-- **Stage 2**: Execute analysis scripts (`scripts/02_run_analysis.py`)
-- **Stage 3**: Render PDFs from markdown (`scripts/03_render_pdf.py`)
-- **Stage 4**: Validate outputs (`scripts/04_validate_output.py`)
-- **Stage 5**: Copy final deliverables (`scripts/05_copy_outputs.py`)
+- **Stage 00**: Environment setup & validation (`scripts/00_setup_environment.py`)
+- **Stage 01**: Run tests with coverage (`scripts/01_run_tests.py`)
+- **Stage 02**: Execute analysis scripts (`scripts/02_run_analysis.py`)
+- **Stage 03**: Render PDFs from markdown (`scripts/03_render_pdf.py`)
+- **Stage 04**: Validate outputs (`scripts/04_validate_output.py`)
+- **Stage 05**: Copy final deliverables (`scripts/05_copy_outputs.py`)
 
 **Usage:**
 ```bash
@@ -361,12 +363,12 @@ python3 scripts/run_all.py
 ./run.sh
 
 # Run individual stages
-python3 scripts/00_setup_environment.py  # Stage 0
-python3 scripts/01_run_tests.py          # Stage 1
-python3 scripts/02_run_analysis.py       # Stage 2
-python3 scripts/03_render_pdf.py         # Stage 3
-python3 scripts/04_validate_output.py    # Stage 4
-python3 scripts/05_copy_outputs.py       # Stage 5
+python3 scripts/00_setup_environment.py  # Stage 00
+python3 scripts/01_run_tests.py          # Stage 01
+python3 scripts/02_run_analysis.py       # Stage 02
+python3 scripts/03_render_pdf.py         # Stage 03
+python3 scripts/04_validate_output.py    # Stage 04
+python3 scripts/05_copy_outputs.py       # Stage 05
 ```
 
 **Result:** ✅ Streamlined, maintainable pipeline with clear stage separation
@@ -407,7 +409,7 @@ python3 scripts/05_copy_outputs.py       # Stage 5
 **Problem:** Figure generation fails
 
 **Solutions:**
-1. Check imports: Ensure scripts import from `src/` modules
+1. Check imports: Ensure scripts import from `project/src/` modules
 2. Check file paths: Verify output directories exist
 3. Run scripts individually: `python3 scripts/example_figure.py`
 
@@ -450,7 +452,7 @@ python3 scripts/run_all.py
 ./run.sh
 
 # 2. Expected output:
-# - Build completes in ~75-80 seconds
+# - Build completes in 84 seconds (without optional LLM review)
 # - All tests pass
 # - PDFs generated in project/output/pdf/
 # - Final deliverables copied to output/

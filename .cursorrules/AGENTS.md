@@ -26,19 +26,24 @@ This directory contains comprehensive development standards, coding guidelines, 
 ### 1. Two-Layer Architecture
 
 **Layer 1: Infrastructure** (Generic, reusable)
+- Location: `infrastructure/` (root level)
 - Domain-independent tools
 - Reusable across projects
-- 100% test coverage required
+- 49% minimum test coverage (currently 55.89%)
+- Tests: `tests/infrastructure/`
 
 **Layer 2: Project** (Specific, customizable)
+- Location: `project/src/` (project-specific code)
 - Research-specific code
 - Uses infrastructure utilities
-- 100% test coverage required
+- 70% minimum test coverage (currently 99.88%)
+- Tests: `project/tests/`
+- Scripts: `project/scripts/` (thin orchestrators)
 
 ### 2. Thin Orchestrator Pattern
 
-- **Business logic** → `src/` or `infrastructure/`
-- **Orchestration** → `scripts/` (entry points)
+- **Business logic** → `project/src/` or `infrastructure/`
+- **Orchestration** → `scripts/` (root, generic) or `project/scripts/` (project-specific)
 - **No logic in scripts** - only coordination
 
 ### 3. Quality Standards
@@ -258,12 +263,14 @@ from pathlib import Path
 import requests
 import pytest
 
-# Local infrastructure
+# Local infrastructure (Layer 1)
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.core.exceptions import TemplateError
+from infrastructure.documentation import FigureManager
 
-# Local project
+# Local project (Layer 2)
 from project.src import module
+from project.src.simulation import SimpleSimulation
 ```
 
 ### Configuration Pattern
@@ -307,21 +314,23 @@ except SpecificError as e:
 
 ```
 template/
-├── infrastructure/         # Layer 1: Generic tools
-│   ├── <module>/
-│   │   ├── __init__.py
-│   │   ├── core.py
-│   │   ├── AGENTS.md
-│   │   └── README.md
-│   └── ...
-├── project/               # Layer 2: Research code
-│   ├── src/
-│   ├── tests/
-│   ├── scripts/
-│   └── manuscript/
-├── scripts/               # Generic entry points
-├── tests/                 # Infrastructure tests
-├── infrastructure/        # Reusable infrastructure
+├── infrastructure/         # [LAYER 1] Generic tools (root level)
+│   ├── build/             # Build & reproducibility
+│   ├── core/              # Core utilities
+│   ├── validation/        # Validation tools
+│   ├── documentation/     # Documentation tools
+│   ├── publishing/        # Publishing tools
+│   ├── literature/        # Literature search
+│   ├── llm/               # LLM integration
+│   ├── rendering/         # Multi-format rendering
+│   └── scientific/        # Scientific dev tools
+├── project/               # [LAYER 2] Research code
+│   ├── src/               # Project-specific algorithms
+│   ├── tests/             # Project tests
+│   ├── scripts/           # Project orchestrators
+│   └── manuscript/       # Research content
+├── scripts/               # [LAYER 1] Generic entry points
+├── tests/                 # [LAYER 1] Infrastructure tests
 ├── docs/                  # Documentation
 └── .cursorrules/          # Development standards (THIS DIR)
 ```

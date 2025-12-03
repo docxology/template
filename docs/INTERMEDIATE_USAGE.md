@@ -42,18 +42,18 @@ By the end of this guide, you'll be able to:
 
 ### Understanding the Thin Orchestrator Pattern
 
-**Core Principle**: Scripts orchestrate, `src/` implements.
+**Core Principle**: Scripts orchestrate, `project/src/` implements.
 
 ```
 ┌─────────────────┐
-│  src/           │  ← ALL business logic here
+│  project/src/   │  ← ALL business logic here
 │  example.py     │  ← Mathematical functions
 │  analysis.py    │  ← Algorithms
 └────────┬────────┘
          │ import
          ↓
 ┌─────────────────┐
-│  scripts/       │  ← Thin orchestrators
+│  project/scripts/│  ← Thin orchestrators
 │  my_figure.py   │  ← Visualization only
 └─────────────────┘
          │ generate
@@ -86,7 +86,7 @@ python3 scripts/generate_research_figures.py
 ```
 
 **What they demonstrate**:
-- Importing from `src/` modules
+- Importing from `project/src/` modules
 - Using tested methods for computation
 - Handling only visualization and I/O
 - Printing output paths for build system
@@ -102,17 +102,17 @@ import matplotlib
 matplotlib.use('Agg')  # Headless backend
 import matplotlib.pyplot as plt
 
-# IMPORT from src/ - never implement algorithms here
+# IMPORT from project/src/ - never implement algorithms here
 from example import calculate_average, find_maximum, find_minimum
 
 def main():
     # Sample data
     data = [1.2, 2.3, 1.8, 3.4, 2.1]
     
-    # USE src/ methods for computation - NEVER implement here
-    avg = calculate_average(data)  # From src/example.py
-    max_val = find_maximum(data)   # From src/example.py
-    min_val = find_minimum(data)   # From src/example.py
+    # USE project/src/ methods for computation - NEVER implement here
+    avg = calculate_average(data)  # From project/src/example.py
+    max_val = find_maximum(data)   # From project/src/example.py
+    min_val = find_minimum(data)   # From project/src/example.py
     
     # Script ONLY handles visualization
     fig, ax = plt.subplots(figsize=(8, 6))
@@ -140,7 +140,7 @@ if __name__ == '__main__':
 ```
 
 **Key Points**:
-1. ✅ **Import** from `src/` - line 8
+1. ✅ **Import** from `project/src/` - line 8
 2. ✅ **Use** tested methods - lines 14-16
 3. ✅ **Handle** visualization only - lines 18-28
 4. ✅ **Save** to output directory - lines 30-34
@@ -153,12 +153,12 @@ if __name__ == '__main__':
 - What computations are needed?
 - What type of plot (line, scatter, bar, etc.)?
 
-**Step 2: Ensure business logic exists in `src/`**
+**Step 2: Ensure business logic exists in `project/src/`**
 
-If computation logic doesn't exist, add it to `src/` first:
+If computation logic doesn't exist, add it to `project/src/` first:
 
 ```python
-# src/statistics.py
+# project/src/statistics.py
 def calculate_variance(values):
     """Calculate sample variance."""
     mean = sum(values) / len(values)
@@ -296,7 +296,7 @@ When adding new analysis capabilities:
 
 1. **Design the API** - What functions do you need?
 2. **Write tests first** (TDD) - Define expected behavior
-3. **Implement in `src/`** - Write the business logic
+3. **Implement in `project/src/`** - Write the business logic
 4. **Achieve required coverage** - Test all critical code paths (70% project, 49% infra)
 5. **Use in scripts** - Create thin orchestrators
 
@@ -348,10 +348,10 @@ def test_linear_regression():
     assert abs(intercept - 0.0) < 1e-10
 ```
 
-**Step 3: Implement in `src/`**
+**Step 3: Implement in `project/src/`**
 
 ```python
-# src/correlation.py
+# project/src/correlation.py
 """Correlation and regression analysis functions."""
 
 def calculate_correlation(x: list[float], y: list[float]) -> float:
@@ -429,7 +429,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
-from correlation import calculate_correlation, linear_regression  # From src/
+from correlation import calculate_correlation, linear_regression  # From project/src/
 
 def main():
     # Generate sample data
@@ -437,7 +437,7 @@ def main():
     x = np.linspace(0, 10, 50)
     y = 2 * x + 1 + np.random.normal(0, 1, 50)
     
-    # Use src/ methods for computation
+    # Use project/src/ methods for computation
     corr = calculate_correlation(x.tolist(), y.tolist())
     slope, intercept = linear_regression(x.tolist(), y.tolist())
     
@@ -546,10 +546,10 @@ output/
 **Basic workflow**:
 ```bash
 # 1. Edit source code
-vim src/my_module.py
+vim project/src/my_module.py
 
 # 2. Write tests
-vim tests/test_my_module.py
+vim project/tests/test_my_module.py
 
 # 3. Run tests
 pytest tests/test_my_module.py --cov=src.my_module
@@ -682,7 +682,7 @@ with Pool() as pool:
 
 | Mistake | Problem | Solution |
 |---------|---------|----------|
-| **Implementing logic in scripts** | Not testable, duplicated code | Move to `src/`, test thoroughly |
+| **Implementing logic in scripts** | Not testable, duplicated code | Move to `project/src/`, test thoroughly |
 | **Not testing edge cases** | Fails on real data | Test empty lists, single values, etc. |
 | **Hardcoded paths** | Breaks on other systems | Use `os.path.join()`, relative paths |
 | **Not using seeds** | Non-reproducible results | Set `np.random.seed(42)` |
@@ -690,8 +690,8 @@ with Pool() as pool:
 
 ### Best Practices
 
-1. ✅ **Always import from `src/`** - Never implement algorithms in scripts
-2. ✅ **Test before scripting** - Ensure `src/` code works first
+1. ✅ **Always import from `project/src/`** - Never implement algorithms in scripts
+2. ✅ **Test before scripting** - Ensure `project/src/` code works first
 3. ✅ **Use descriptive names** - `calculate_correlation` not `calc_corr`
 4. ✅ **Add docstrings** - Document parameters and return values
 5. ✅ **Set random seeds** - Make results reproducible
@@ -734,7 +734,7 @@ with Pool() as pool:
 After completing this guide, you should be able to:
 
 - [x] Generate custom figures using thin orchestrator pattern
-- [x] Add new analysis modules to `src/` with tests
+- [x] Add new analysis modules to `project/src/` with tests
 - [x] Achieve required test coverage for new code
 - [x] Save both figures and data files
 - [x] Run automated build pipelines

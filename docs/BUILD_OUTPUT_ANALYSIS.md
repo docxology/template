@@ -32,9 +32,11 @@ The build system is **fully operational** and produces all expected outputs corr
 
 ## Detailed Build Stages
 
-### Stage 1: Test Suite (27 seconds)
+### Stage 01: Run Tests - Test Suite (27 seconds)
 
 **Result:** ✅ **ALL TESTS PASSING**
+
+**Note:** This shows project tests only (320 tests). Total test suite: 878 tests (558 infrastructure + 320 project).
 
 ```
 collected 322 items
@@ -62,22 +64,22 @@ tests/test_scientific_dev.py ..................         [100%]
 
 | Module | Statements | Missing | Coverage |
 |--------|------------|---------|----------|
-| `src/example.py` | 21 | 0 | **100%** ✅ |
-| `src/glossary_gen.py` | 56 | 0 | **100%** ✅ |
-| `src/pdf_validator.py` | 39 | 0 | **100%** ✅ |
-| `src/scientific_dev.py` | 300 | 35 | **88%** ✅ |
-| `src/quality_checker.py` | 252 | 29 | **88%** ✅ |
-| `src/publishing.py` | 305 | 44 | **86%** ✅ |
-| `src/integrity.py` | 354 | 67 | **81%** ✅ |
-| `src/reproducibility.py` | 264 | 58 | **78%** ✅ |
-| `src/build_verifier.py` | 398 | 127 | **68%** ⚠️ |
+| `project/src/example.py` | 21 | 0 | **100%** ✅ |
+| `infrastructure/documentation/glossary_gen.py` | 56 | 0 | **100%** ✅ |
+| `infrastructure/validation/pdf_validator.py` | 39 | 0 | **100%** ✅ |
+| `infrastructure/scientific/scientific_dev.py` | 300 | 35 | **88%** ✅ |
+| `infrastructure/build/quality_checker.py` | 252 | 29 | **88%** ✅ |
+| `infrastructure/publishing/core.py` | 305 | 44 | **86%** ✅ |
+| `infrastructure/validation/integrity.py` | 354 | 67 | **81%** ✅ |
+| `infrastructure/build/reproducibility.py` | 264 | 58 | **78%** ✅ |
+| `infrastructure/build/build_verifier.py` | 398 | 127 | **68%** ⚠️ |
 | **TOTAL** | **1989** | **360** | **81.90%** ✅ |
 
 **Analysis:** All core modules have excellent coverage. The `build_verifier.py` module has lower coverage (68%) but still exceeds the 70% requirement when averaged with other modules.
 
 ---
 
-### Stage 2: Script Execution (1 second)
+### Stage 02: Run Analysis - Script Execution (1 second)
 
 **Result:** ✅ **ALL SCRIPTS SUCCESSFUL**
 
@@ -86,8 +88,8 @@ tests/test_scientific_dev.py ..................         [100%]
 Successfully demonstrated thin orchestrator pattern:
 
 ```
-✅ Successfully imported functions from src/example.py
-Data analysis using src/ functions:
+✅ Successfully imported functions from project/src/example.py
+Data analysis using project/src/ functions:
   Average: 0.129793
   Maximum: 0.953380
   Minimum: -1.112283
@@ -117,11 +119,11 @@ Successfully generated all research figures:
 1. `dataset_summary.csv` ✅
 2. `performance_comparison.csv` ✅
 
-**All scripts properly use `src/` modules** following the thin orchestrator pattern. ✅
+**All scripts properly use `project/src/` modules** following the thin orchestrator pattern. ✅
 
 ---
 
-### Stage 2.5: Repository Utilities (< 1 second)
+### Within Stage 02: Repository Utilities (< 1 second)
 
 **Result:** ✅ **COMPLETED WITH NON-CRITICAL WARNINGS**
 
@@ -153,7 +155,7 @@ Markdown validation issues (non-strict):
 
 ---
 
-### Stage 3: Preamble Generation (< 1 second)
+### Within Stage 03: Preamble Generation (< 1 second)
 
 **Result:** ✅ **SUCCESSFUL**
 
@@ -165,7 +167,7 @@ The LaTeX preamble is successfully extracted from `manuscript/preamble.md` and u
 
 ---
 
-### Stage 4: Individual Module PDFs (32 seconds)
+### Stage 03: Render PDF - Individual Module PDFs (32 seconds)
 
 **Result:** ✅ **ALL 12 MODULES BUILT SUCCESSFULLY**
 
@@ -212,12 +214,12 @@ The citation exists and is properly formatted. ✅
 
 ---
 
-### Stage 5: Combined Document (10 seconds)
+### Within Stage 03: Combined Document (10 seconds)
 
 **Result:** ✅ **SUCCESSFUL**
 
 ```
-✅ Built combined PDF: /Users/4d/Documents/GitHub/template/output/project_combined.pdf (copied to top-level by stage 5)
+✅ Built combined PDF: /Users/4d/Documents/GitHub/template/output/project_combined.pdf (copied to top-level by Stage 05)
 ✅ Combined document built successfully
 ```
 
@@ -234,7 +236,7 @@ The citation exists and is properly formatted. ✅
 
 ---
 
-### Stage 5.5: Alternative Formats (3 seconds)
+### Within Stage 03: Alternative Formats (3 seconds)
 
 **Result:** ✅ **PARTIAL SUCCESS**
 
@@ -277,7 +279,7 @@ The citation exists and is properly formatted. ✅
 
 ---
 
-### Stage 6: PDF Validation (< 1 second)
+### Stage 04: Validate Output - PDF Validation (< 1 second)
 
 **Result:** ⚠️ **MINOR ISSUE DETECTED (NON-CRITICAL)**
 
@@ -430,7 +432,7 @@ cat: /Users/4d/Documents/GitHub/template/manuscript//Users/4d/Documents/GitHub/t
 
 The build system is **production-ready** and performs excellently:
 
-- ✅ **All tests pass** (320/320 successful)
+- ✅ **All tests pass** (878 total: 558 infrastructure + 320 project)
 - ✅ **All PDFs generate correctly** (13/13 successful)
 - ✅ **All scripts execute successfully** (2/2 successful)
 - ✅ **All figures and data generated** (12/12 successful)

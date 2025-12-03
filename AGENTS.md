@@ -34,7 +34,7 @@ This document provides **comprehensive documentation** for the Research Project 
 
 ### Thin Orchestrator Pattern
 
-**CRITICAL**: All business logic resides in `src/` modules. Scripts are **thin orchestrators** that:
+**CRITICAL**: All business logic resides in `project/src/` modules. Scripts are **thin orchestrators** that:
 
 **Root Entry Points (Generic):**
 - Coordinate build pipeline stages
@@ -322,7 +322,7 @@ python3 scripts/run_all.py
 1. **Test Validation** (coverage requirements: 70% project, 49% infra)
 2. **Script Execution** (all Python scripts in `scripts/`)
 3. **Markdown Validation** (images, references, equations)
-4. **Glossary Generation** (API reference from `src/`)
+4. **Glossary Generation** (API reference from `project/src/`)
 5. **Individual PDF Generation** (all manuscript sections)
 6. **Combined PDF Generation** (complete manuscript)
 7. **Additional Formats** (HTML, IDE-friendly PDF)
@@ -404,7 +404,7 @@ python3 -m pytest project/tests/ --cov=project/src --cov-report=html
 ### Test Structure
 
 Tests follow the **thin orchestrator pattern** principles:
-- Import real methods from `src/` or `infrastructure/` modules  
+- Import real methods from `project/src/` or `infrastructure/` modules  
 - Use real data and computation
 - Validate actual behavior (no mocks)
 - Ensure reproducible, deterministic results
@@ -742,7 +742,7 @@ python3 -m pytest project/tests/ --cov=project/src --cov-fail-under=70
 python3 scripts/example_figure.py
 
 # Check import errors
-python3 -c "import src.example; print('Import successful')"
+python3 -c "import project.src.example; print('Import successful')"
 ```
 
 #### PDF Generation Issues
@@ -817,14 +817,14 @@ Key log files for debugging:
    python3 scripts/run_all.py --clean
 
    # Backup source files only
-   tar -czf project_backup.tar.gz src/ tests/ scripts/ manuscript/ docs/
+   tar -czf project_backup.tar.gz project/src/ project/tests/ project/scripts/ project/manuscript/ docs/
    ```
 
 ### Adding New Features
 
-1. **Business Logic** → Add to `src/`
-2. **Tests** → Add to `tests/`
-3. **Scripts** → Add to `scripts/` (use `src/` methods)
+1. **Business Logic** → Add to `project/src/`
+2. **Tests** → Add to `project/tests/`
+3. **Scripts** → Add to `project/scripts/` (use `project/src/` methods)
 4. **Documentation** → Update relevant `.md` files
 5. **Validation** → Ensure coverage requirements met
 

@@ -16,14 +16,22 @@ This presents a menu with options for running tests, rendering PDFs, executing t
 ============================================================
   Research Project Template - Main Menu
 ============================================================
+
+Core Build Operations:
   1. Run infrastructure tests
   2. Run project tests
   3. Render PDF manuscript
   4. Run full pipeline (tests + analysis + PDF + validate)
-  5. Run LLM manuscript review
-  6. Literature search and PDF download
-  7. Generate summaries for downloaded PDFs
-  8. Exit
+
+LLM Operations (requires Ollama):
+  5. LLM manuscript review (English)
+  6. LLM translations (multi-language)
+
+Literature Operations (requires Ollama):
+  7. Search literature and download PDFs
+  8. Generate summaries for existing PDFs
+
+  9. Exit
 ============================================================
 ```
 
@@ -84,7 +92,7 @@ Executes the complete 8-stage build pipeline:
 - Data files: `project/output/data/`
 - LLM reviews: `project/output/llm/` (if Ollama available)
 
-### Option 5: Run LLM Manuscript Review
+### Option 5: LLM Manuscript Review (English)
 
 Generates AI-powered manuscript analysis using local Ollama.
 
@@ -97,7 +105,20 @@ Generates AI-powered manuscript analysis using local Ollama.
 
 **Output**: `output/llm/` directory with review files and metadata
 
-### Option 6: Literature Search and PDF Download
+### Option 6: LLM Translations (multi-language)
+
+Generates technical abstract translations to multiple languages.
+
+- Uses configured languages from `project/manuscript/config.yaml`
+- Generates English technical abstract (~200-400 words)
+- Translates to target languages (Chinese, Hindi, Russian, etc.)
+- Saves translations to `output/llm/`
+
+**Requires**: Running Ollama server and configured languages in config.yaml.
+
+**Output**: `output/llm/translation_*.md` files
+
+### Option 7: Search Literature and Download PDFs
 
 Searches academic databases and downloads papers.
 
@@ -112,7 +133,7 @@ Searches academic databases and downloads papers.
 
 **Output**: `literature/` directory
 
-### Option 7: Generate Summaries for Downloaded PDFs
+### Option 8: Generate Summaries for Existing PDFs
 
 Generates AI summaries for existing PDFs in the library.
 
@@ -139,15 +160,19 @@ chmod +x run.sh
 For CI/CD integration or scripting:
 
 ```bash
-# Run specific option by number
-./run.sh --option 4    # Run full pipeline
-./run.sh --option 1    # Run infrastructure tests
-./run.sh --option 5    # Run LLM review
+# Core Build Operations
+./run.sh --pipeline          # Run full pipeline
+./run.sh --infra-tests        # Run infrastructure tests
+./run.sh --project-tests      # Run project tests
+./run.sh --render-pdf         # Render PDF manuscript
 
-# Convenience shortcuts
-./run.sh --pipeline    # Same as --option 4
-./run.sh --search      # Same as --option 6
-./run.sh --summarize   # Same as --option 7
+# LLM Operations (requires Ollama)
+./run.sh --reviews            # LLM manuscript review
+./run.sh --translations       # LLM translations
+
+# Literature Operations (requires Ollama)
+./run.sh --search             # Search literature and download PDFs
+./run.sh --summarize          # Generate summaries for existing PDFs
 
 # Show help
 ./run.sh --help
@@ -160,21 +185,28 @@ For CI/CD integration or scripting:
   Research Project Template - Main Menu
 ════════════════════════════════════════════════════════════════
 
+Core Build Operations:
   1. Run infrastructure tests
   2. Run project tests
   3. Render PDF manuscript
   4. Run full pipeline (tests + analysis + PDF + validate)
-  5. Run LLM manuscript review
-  6. Literature search and PDF download
-  7. Generate summaries for downloaded PDFs
-  8. Exit
+
+LLM Operations (requires Ollama):
+  5. LLM manuscript review (English)
+  6. LLM translations (multi-language)
+
+Literature Operations (requires Ollama):
+  7. Search literature and download PDFs
+  8. Generate summaries for existing PDFs
+
+  9. Exit
 
 ════════════════════════════════════════════════════════════════
   Repository: /Users/4d/Documents/GitHub/template
   Python: Python 3.11.0
 ════════════════════════════════════════════════════════════════
 
-Select option [1-8]: 4
+Select option [1-9]: 4
 ```
 
 ## Exit Codes

@@ -371,3 +371,9 @@ pytest tests/infrastructure/rendering/test_pdf_renderer_combined.py -v
 - Combined PDF generation (full integration tests)
 - Figure verification and detection
 
+## See Also
+
+- [README.md](README.md) - Quick reference guide
+- [`core/`](../core/) - Foundation utilities
+- [`validation/`](../validation/) - Validation & quality assurance
+

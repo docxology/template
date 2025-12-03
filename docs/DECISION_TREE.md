@@ -9,11 +9,11 @@ START: New code to write?
 │
 ├─ Is it about building/validating/managing documents?
 │  ├─ YES → LAYER 1: INFRASTRUCTURE
-│  │   (Add to src/infrastructure/)
+│  │   (Add to infrastructure/)
 │  │
 │  └─ NO → Does it implement research algorithms/analysis?
-│     ├─ YES → LAYER 2: SCIENTIFIC
-│     │   (Add to src/scientific/)
+│     ├─ YES → LAYER 2: PROJECT
+│     │   (Add to project/src/)
 │     │
 │     └─ NO → Reconsider scope or ask team
 ```
@@ -48,7 +48,7 @@ START: New code to write?
 
 ## Layer 1: Infrastructure Examples
 
-### ✅ Belongs in src/infrastructure/
+### ✅ Belongs in infrastructure/
 
 **Build and Document Management:**
 - PDF generation and LaTeX compilation
@@ -97,7 +97,7 @@ class FigureManager:
 
 **Example: Build Verifier**
 ```python
-# src/infrastructure/build_verifier.py
+# infrastructure/build/build_verifier.py
 
 def verify_build_artifacts(
     output_dir: str,
@@ -122,7 +122,7 @@ def verify_build_artifacts(
 
 ## Layer 2: Scientific Examples
 
-### ✅ Belongs in src/scientific/
+### ✅ Belongs in project/src/
 
 **Algorithms and Computation:**
 - Simulation implementations
@@ -133,7 +133,7 @@ def verify_build_artifacts(
 
 **Example: Simulation**
 ```python
-# src/scientific/simulation.py
+# project/src/simulation.py
 
 class MySimulation(SimulationBase):
     """Specific simulation for our research.
@@ -160,7 +160,7 @@ class MySimulation(SimulationBase):
 
 **Example: Analysis**
 ```python
-# src/scientific/analysis.py
+# project/src/analysis.py
 
 def analyze_convergence(
     results: np.ndarray,
@@ -181,7 +181,7 @@ def analyze_convergence(
 
 **Example: Plotting**
 ```python
-# src/scientific/plots.py
+# project/src/plots.py
 
 def plot_experimental_results(
     data: Dict[str, np.ndarray]
@@ -245,32 +245,32 @@ def plot_experimental_results(
 
 ```
 1. Analyze the feature
-   ├─ Generic part: "convergence analysis" → infrastructure/performance.py
-   ├─ Specific part: "our stopping criterion" → scientific/analysis.py
+   ├─ Generic part: "convergence analysis" → infrastructure/scientific/performance.py
+   ├─ Specific part: "our stopping criterion" → project/src/analysis.py
    └─ Decision: Split into two files
 
 2. Create infrastructure first
-   └─ src/infrastructure/performance.py
+   └─ infrastructure/scientific/performance.py
       ├─ Generic convergence metrics
       ├─ Reusable analysis functions
       └─ 100% tested
 
-3. Use infrastructure in scientific
-   └─ src/scientific/analysis.py
+3. Use infrastructure in project code
+   └─ project/src/analysis.py
       ├─ Import from infrastructure
       ├─ Add domain-specific logic
       └─ 100% tested
 
-4. Use scientific in scripts
-   └─ scripts/analyze_results.py
-      ├─ Import from scientific
+4. Use project code in scripts
+   └─ project/scripts/analyze_results.py
+      ├─ Import from project.src
       ├─ Orchestrate execution
       └─ Generate outputs
 
 5. Document everywhere
-   ├─ src/infrastructure/AGENTS.md
-   ├─ src/scientific/AGENTS.md
-   └─ scripts/AGENTS.md
+   ├─ infrastructure/scientific/AGENTS.md
+   ├─ project/src/AGENTS.md
+   └─ project/scripts/AGENTS.md
 ```
 
 ### Adding a New Data Processing Step
@@ -279,12 +279,12 @@ def plot_experimental_results(
 Question: Where does this belong?
 
 If answer is "for our specific problem":
-└─ Scientific layer (src/scientific/data_processing.py)
+└─ Project layer (project/src/data_processing.py)
    def process_our_specific_data(raw_data):
        pass
 
 If answer is "any research could use this":
-└─ Infrastructure layer (src/infrastructure/data_processing.py)
+└─ Infrastructure layer (infrastructure/scientific/data_processing.py)
    def normalize_data(raw_data):
        pass
 
@@ -304,8 +304,8 @@ If both generic + specific:
 ### ❌ Wrong: Infrastructure Imports Scientific
 
 ```python
-# BAD: src/infrastructure/integrity.py
-from scientific.simulation import MySimulation  # ❌ Don't do this!
+# BAD: infrastructure/validation/integrity.py
+from project.src.simulation import MySimulation  # ❌ Don't do this!
 
 def verify_scientific_output(sim: MySimulation):
     pass
@@ -328,16 +328,16 @@ def custom_algorithm(data):
 
 **Problem:** Violates thin orchestrator pattern
 
-**Fix:** Move to src/scientific/, import in script
+**Fix:** Move to project/src/, import in script
 
 ### ❌ Wrong: Duplicate Code Across Layers
 
 ```python
-# BAD: src/infrastructure/plots.py
+# BAD: infrastructure/plots.py
 def plot_convergence(data):
     pass
 
-# BAD: src/scientific/plots.py
+# BAD: project/src/plots.py
 def plot_convergence(data):  # ❌ Duplicate!
     pass
 ```
@@ -349,14 +349,14 @@ def plot_convergence(data):  # ❌ Duplicate!
 ### ❌ Wrong: Too Much in One Module
 
 ```python
-# BAD: src/scientific/everything.py - 2000+ lines
+# BAD: project/src/everything.py - 2000+ lines
 # Simulation, statistics, plotting, data processing...all mixed
 
 # Better: Separate modules
-# src/scientific/simulation.py
-# src/scientific/statistics.py
-# src/scientific/plots.py
-# src/scientific/data_processing.py
+# project/src/simulation.py
+# project/src/statistics.py
+# project/src/plots.py
+# project/src/data_processing.py
 ```
 
 **Problem:** Hard to test, understand, and maintain
@@ -387,15 +387,15 @@ Only simple orchestrators and shell scripts in repo_utilities/.
 
 ### "Should scientific code be in src/ or scripts/?"
 
-- **src/scientific/** - Business logic, algorithms, computations (tested)
-- **scripts/** - Orchestration and I/O (thin orchestrators, calls src/)
+- **project/src/** - Business logic, algorithms, computations (tested)
+- **project/scripts/** - Orchestration and I/O (thin orchestrators, calls project/src/)
 
 Rule: If it can be tested independently, it goes in src/.
 
 ### "How do I use infrastructure code in scientific code?"
 
 ```python
-# src/scientific/my_analysis.py
+# project/src/my_analysis.py
 from infrastructure.documentation import FigureManager, MarkdownIntegration
 
 def analyze_and_report(data):
@@ -440,8 +440,8 @@ def test_figure_numbering():
     fm.register_figure(filename="a.png", caption="Figure A", label="fig:a")
     assert len(fm.figures) == 1
 
-# Scientific code → tests/scientific/
-# tests/scientific/test_simulation.py
+# Project code → project/tests/
+# project/tests/test_simulation.py
 def test_simulation_step():
     sim = MySimulation()
     sim.step()
@@ -460,12 +460,12 @@ def test_script_execution():
 
 | Aspect | Infrastructure | Scientific |
 |--------|---|---|
-| **Location** | `src/infrastructure/` | `src/scientific/` |
+| **Location** | `infrastructure/` | `project/src/` |
 | **Purpose** | Build & validation tools | Algorithms & analysis |
 | **Reusable** | Across all projects | Project-specific |
 | **Examples** | PDF generation, figure mgmt | Simulation, statistics |
 | **Dependencies** | Other infrastructure | Infrastructure + other scientific |
-| **Testing** | `tests/infrastructure/` | `tests/scientific/` |
+| **Testing** | `tests/infrastructure/` | `project/tests/` |
 | **Scripts** | `repo_utilities/*.py` | `scripts/*.py` |
 
 ---
@@ -474,16 +474,16 @@ def test_script_execution():
 
 **For Infrastructure:**
 ```
-Add to src/infrastructure/
+Add to infrastructure/
 ├─ If it helps build documents
 ├─ If it validates outputs
 ├─ If any project would use it
 └─ If it doesn't know about our research
 ```
 
-**For Scientific:**
+**For Project:**
 ```
-Add to src/scientific/
+Add to project/src/
 ├─ If it implements our algorithms
 ├─ If it analyzes our data
 ├─ If it visualizes our results

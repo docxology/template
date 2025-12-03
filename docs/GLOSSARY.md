@@ -111,7 +111,7 @@ Auto-generated API reference from `src/` code. Updated automatically during buil
 
 **File**: `manuscript/98_symbols_glossary.md`
 
-**Generation**: `python3 repo_utilities/generate_glossary.py`
+**Generation**: `python3 -m infrastructure.documentation.generate_glossary_cli` (or integrated into build pipeline Stage 03)
 
 ### Guard Clause
 Programming pattern that handles error conditions first, reducing nesting. Preferred style in this template.
@@ -154,7 +154,7 @@ Document setup and styling configuration loaded before content. Defines packages
 
 **File**: `manuscript/preamble.md`
 
-**Location**: [`manuscript/preamble.md`](../manuscript/preamble.md)
+**Location**: [`project/manuscript/preamble.md`](../project/manuscript/preamble.md)
 
 ## M
 
@@ -173,7 +173,7 @@ Research document composed of numbered sections in `manuscript/` directory. Conv
 ### Markdown Validation
 Automated checking of markdown files for broken references, missing images, invalid links, and syntax errors.
 
-**Command**: `python3 repo_utilities/validate_markdown.py`
+**Command**: `python3 -m infrastructure.validation.cli markdown project/manuscript/`
 
 **See**: [MARKDOWN_TEMPLATE_GUIDE.md](MARKDOWN_TEMPLATE_GUIDE.md)
 

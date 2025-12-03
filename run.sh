@@ -4,17 +4,24 @@
 # Unified Research Project Pipeline Orchestrator
 #
 # A single entry point for all pipeline operations with interactive menu:
+#
+# Core Build Operations:
 #   1. Run infrastructure tests
 #   2. Run project tests
 #   3. Render PDF manuscript
 #   4. Run full pipeline (tests + analysis + PDF + validate)
-#   5. Run LLM scientific review (English)
-#   6. Run LLM translations
-#   7. Literature search and PDF download
-#   8. Generate summaries for downloaded PDFs
+#
+# LLM Operations (requires Ollama):
+#   5. LLM manuscript review (English)
+#   6. LLM translations (multi-language)
+#
+# Literature Operations (requires Ollama):
+#   7. Search literature and download PDFs
+#   8. Generate summaries for existing PDFs
+#
 #   9. Exit
 #
-# Non-interactive mode: ./run.sh --option N
+# Non-interactive mode: Use dedicated flags (--pipeline, --infra-tests, etc.)
 #
 # Exit codes: 0 = success, 1 = failure, 2 = skipped (for optional stages)
 ################################################################################
@@ -129,14 +136,21 @@ display_menu() {
     echo "  Research Project Template - Main Menu"
     echo "============================================================"
     echo -e "${NC}"
+    echo
+    echo -e "${BOLD}Core Build Operations:${NC}"
     echo "  1. Run infrastructure tests"
     echo "  2. Run project tests"
     echo "  3. Render PDF manuscript"
     echo "  4. Run full pipeline (tests + analysis + PDF + validate)"
-    echo "  5. Run LLM scientific review (English)"
-    echo "  6. Run LLM translations"
-    echo "  7. Literature search and PDF download"
-    echo "  8. Generate summaries for downloaded PDFs"
+    echo
+    echo -e "${BOLD}LLM Operations ${YELLOW}(requires Ollama):${NC}"
+    echo "  5. LLM manuscript review (English)"
+    echo "  6. LLM translations (multi-language)"
+    echo
+    echo -e "${BOLD}Literature Operations ${YELLOW}(requires Ollama):${NC}"
+    echo "  7. Search literature and download PDFs"
+    echo "  8. Generate summaries for existing PDFs"
+    echo
     echo "  9. Exit"
     echo
     echo -e "${BLUE}============================================================${NC}"
@@ -666,31 +680,51 @@ show_help() {
     echo
     echo "Options:"
     echo "  --help, -h          Show this help message"
-    echo "  --option N          Run option N non-interactively (1-9)"
-    echo "  --reviews           Run LLM scientific review only (same as --option 5)"
-    echo "  --translations      Run LLM translations only (same as --option 6)"
-    echo "  --search            Run literature search (same as --option 7)"
-    echo "  --summarize         Generate summaries (same as --option 8)"
-    echo "  --pipeline          Run full pipeline (same as --option 4)"
+    echo
+    echo "Core Build Operations:"
+    echo "  --infra-tests       Run infrastructure tests"
+    echo "  --project-tests     Run project tests"
+    echo "  --render-pdf        Render PDF manuscript"
+    echo "  --pipeline          Run full pipeline (tests + analysis + PDF + validate)"
+    echo
+    echo "LLM Operations (requires Ollama):"
+    echo "  --reviews           Run LLM manuscript review (English)"
+    echo "  --translations      Run LLM translations (multi-language)"
+    echo
+    echo "Literature Operations (requires Ollama):"
+    echo "  --search            Search literature and download PDFs"
+    echo "  --summarize         Generate summaries for existing PDFs"
     echo
     echo "Menu Options:"
+    echo
+    echo "Core Build Operations:"
     echo "  1  Run infrastructure tests"
     echo "  2  Run project tests"
     echo "  3  Render PDF manuscript"
     echo "  4  Run full pipeline (tests + analysis + PDF + validate)"
-    echo "  5  Run LLM scientific review (English)"
-    echo "  6  Run LLM translations"
-    echo "  7  Literature search and PDF download"
-    echo "  8  Generate summaries for downloaded PDFs"
+    echo
+    echo "LLM Operations (requires Ollama):"
+    echo "  5  LLM manuscript review (English)"
+    echo "  6  LLM translations (multi-language)"
+    echo
+    echo "Literature Operations (requires Ollama):"
+    echo "  7  Search literature and download PDFs"
+    echo "  8  Generate summaries for existing PDFs"
+    echo
     echo "  9  Exit"
     echo
     echo "Examples:"
-    echo "  $0                  # Interactive menu mode"
-    echo "  $0 --option 4       # Run full pipeline non-interactively"
-    echo "  $0 --reviews        # Run LLM scientific review"
-    echo "  $0 --translations   # Run LLM translations"
-    echo "  $0 --search         # Run literature search"
-    echo "  $0 --pipeline       # Run full pipeline"
+    echo "  $0                      # Interactive menu mode"
+    echo "  $0 --pipeline           # Run full pipeline"
+    echo "  $0 --infra-tests         # Run infrastructure tests"
+    echo "  $0 --project-tests       # Run project tests"
+    echo "  $0 --render-pdf          # Render PDF manuscript"
+    echo "  $0 --reviews             # Run LLM manuscript review"
+    echo "  $0 --translations        # Run LLM translations"
+    echo "  $0 --search              # Search literature and download PDFs"
+    echo "  $0 --summarize           # Generate summaries for existing PDFs"
+    echo
+    echo "Note: --option N is also supported for compatibility (1-9)"
     echo
 }
 
@@ -715,6 +749,22 @@ main() {
                 run_non_interactive "$2"
                 exit $?
                 ;;
+            --infra-tests|--tests-infra)
+                run_non_interactive 1
+                exit $?
+                ;;
+            --project-tests|--tests-project)
+                run_non_interactive 2
+                exit $?
+                ;;
+            --render-pdf|--pdf)
+                run_non_interactive 3
+                exit $?
+                ;;
+            --pipeline)
+                run_non_interactive 4
+                exit $?
+                ;;
             --reviews)
                 run_non_interactive 5
                 exit $?
@@ -729,10 +779,6 @@ main() {
                 ;;
             --summarize)
                 run_non_interactive 8
-                exit $?
-                ;;
-            --pipeline)
-                run_non_interactive 4
                 exit $?
                 ;;
             *)

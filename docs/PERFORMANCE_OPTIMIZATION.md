@@ -301,7 +301,7 @@ def run_selective_tests(changed_files):
 
     # Map source files to test files
     test_mapping = {
-        'src/example.py': 'tests/test_example.py',
+        'project/src/example.py': 'project/tests/test_example.py',
         'infrastructure/build/quality_checker.py': 'tests/infrastructure/build/test_quality_checker.py',
         # Add more mappings...
     }
@@ -311,9 +311,12 @@ def run_selective_tests(changed_files):
     for changed_file in changed_files:
         if changed_file in test_mapping:
             tests_to_run.add(test_mapping[changed_file])
-        elif changed_file.startswith('src/'):
-            # Run all tests if core module changed
-            tests_to_run.add('tests/')
+        elif changed_file.startswith('project/src/'):
+            # Run all project tests if core module changed
+            tests_to_run.add('project/tests/')
+        elif changed_file.startswith('infrastructure/'):
+            # Run all infrastructure tests if infrastructure module changed
+            tests_to_run.add('tests/infrastructure/')
             break
 
     if tests_to_run:

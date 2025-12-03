@@ -151,7 +151,7 @@ uv run python scripts/example_figure.py
 uv run python scripts/generate_research_figures.py
 
 # Validate markdown integrity
-uv run python repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 ### 3. Integration Phase
@@ -165,12 +165,12 @@ python3 scripts/run_all.py
 ```
 
 The pipeline orchestrator executes 6 stages:
-- **Stage 0**: Environment setup & validation
-- **Stage 1**: Run tests with coverage (validates src/ code works)
-- **Stage 2**: Execute analysis scripts (generates figures and data)
-- **Stage 3**: Render PDFs from markdown (validates references, builds PDFs)
-- **Stage 4**: Validate outputs (checks PDF quality and integrity)
-- **Stage 5**: Copy final deliverables (copies to top-level output/)
+- **Stage 00**: Environment setup & validation
+- **Stage 01**: Run tests with coverage (validates src/ code works)
+- **Stage 02**: Execute analysis scripts (generates figures and data)
+- **Stage 03**: Render PDFs from markdown (validates references, builds PDFs)
+- **Stage 04**: Validate outputs (checks PDF quality and integrity)
+- **Stage 05**: Copy final deliverables (copies to top-level output/)
 
 ## Key Components
 
@@ -244,7 +244,7 @@ uv run python scripts/example_figure.py
 uv run python scripts/generate_research_figures.py
 
 # Validate markdown
-uv run python repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 # Build complete PDF pipeline
 python3 scripts/run_all.py
@@ -310,7 +310,7 @@ All directories under `output/` are disposable and can be safely cleaned.
 
 ```bash
 # Check what's failing
-uv run python repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 # Regenerate specific figures
 uv run python scripts/example_figure.py

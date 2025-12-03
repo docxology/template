@@ -240,7 +240,7 @@ Level 10-12: Expert Usage (1-2 months)
 ### Writing & Formatting
 - **[Markdown Template Guide](MARKDOWN_TEMPLATE_GUIDE.md)** - Complete formatting reference
 - **[Manuscript Numbering](MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization
-- **[LaTeX Preamble](../manuscript/preamble.md)** - Styling configuration
+- **[LaTeX Preamble](../project/manuscript/preamble.md)** - Styling configuration
 
 ### Examples & Help
 - **[Examples](EXAMPLES.md)** - Usage patterns
@@ -262,6 +262,7 @@ Level 10-12: Expert Usage (1-2 months)
 - **[Best Practices](BEST_PRACTICES.md)** - Consolidated best practices
 
 ### Advanced Topics
+- **[Two-Layer Architecture](TWO_LAYER_ARCHITECTURE.md)** - Complete architecture guide
 - **[Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md)** - Using all 9 advanced modules
 - **[Dependency Management](DEPENDENCY_MANAGEMENT.md)** - uv package manager guide
 - **[CI/CD Integration](CI_CD_INTEGRATION.md)** - GitHub Actions setup

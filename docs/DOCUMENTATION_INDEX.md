@@ -163,7 +163,7 @@ docs/
 | Category | Files | Purpose |
 |----------|-------|---------|
 | **Core** | README.md, AGENTS.md, HOW_TO_USE.md | Essential documentation for all users |
-| **Architecture** | ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md, WORKFLOW.md | System design and implementation |
+| **Architecture** | ARCHITECTURE.md, TWO_LAYER_ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md, WORKFLOW.md | System design and implementation |
 | **Usage** | EXAMPLES.md, EXAMPLES_SHOWCASE.md, MARKDOWN_TEMPLATE_GUIDE.md, GETTING_STARTED.md, INTERMEDIATE_USAGE.md, ADVANCED_USAGE.md, EXPERT_USAGE.md | How-to guides and examples by skill level |
 | **Development** | CONTRIBUTING.md, CODE_OF_CONDUCT.md, ROADMAP.md | Contributing and future development |
 | **Reference** | FAQ.md, COPYPASTA.md, DOCUMENTATION_INDEX.md, QUICK_START_CHEATSHEET.md, COMMON_WORKFLOWS.md, GLOSSARY.md | Quick reference and sharing content |
@@ -190,8 +190,9 @@ All documentation files include comprehensive cross-references:
 
 ### **For Developers**
 1. **Understand architecture**: [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) - System design
-2. **Learn the pattern**: [`docs/THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md) - Implementation
-3. **Follow workflow**: [`docs/WORKFLOW.md`](WORKFLOW.md) - Development process
+2. **Learn two-layer structure**: [`docs/TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md) - Complete architecture guide
+3. **Learn the pattern**: [`docs/THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md) - Implementation
+4. **Follow workflow**: [`docs/WORKFLOW.md`](WORKFLOW.md) - Development process
 
 ### **For Contributors**
 1. **Read guidelines**: [`docs/CONTRIBUTING.md`](CONTRIBUTING.md) - How to contribute

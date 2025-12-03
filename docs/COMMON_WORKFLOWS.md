@@ -293,7 +293,7 @@ Table \ref{tab:performance} summarizes...
 
 **Validation**:
 ```bash
-python3 repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 **See Also**: [Markdown Template Guide](MARKDOWN_TEMPLATE_GUIDE.md)
@@ -544,12 +544,12 @@ def test_process_negative():
    ./run.sh
    
    # Run individual stages if needed
-   python3 scripts/00_setup_environment.py  # Stage 0: Setup
-   python3 scripts/01_run_tests.py          # Stage 1: Tests
-   python3 scripts/02_run_analysis.py       # Stage 2: Analysis
-   python3 scripts/03_render_pdf.py         # Stage 3: PDF rendering
-   python3 scripts/04_validate_output.py    # Stage 4: Validation
-   python3 scripts/05_copy_outputs.py       # Stage 5: Copy deliverables
+   python3 scripts/00_setup_environment.py  # Stage 00: Setup
+   python3 scripts/01_run_tests.py          # Stage 01: Tests
+   python3 scripts/02_run_analysis.py       # Stage 02: Analysis
+   python3 scripts/03_render_pdf.py         # Stage 03: PDF rendering
+   python3 scripts/04_validate_output.py    # Stage 04: Validation
+   python3 scripts/05_copy_outputs.py       # Stage 05: Copy deliverables
    ```
 
 2. **Check for errors**
@@ -568,14 +568,14 @@ def test_process_negative():
    ```
 
 **Build Pipeline Stages** (6 stages total):
-1. **Stage 0**: Environment setup & validation (~1s)
-2. **Stage 1**: Run tests with coverage (~27s)
-3. **Stage 2**: Execute analysis scripts (~2s)
-4. **Stage 3**: Render PDFs from markdown (~45s)
-5. **Stage 4**: Validate outputs (~1s)
-6. **Stage 5**: Copy final deliverables (~1s)
+1. **Stage 00**: Environment setup & validation (~1s)
+2. **Stage 01**: Run tests with coverage (~27s)
+3. **Stage 02**: Execute analysis scripts (~2s)
+4. **Stage 03**: Render PDFs from markdown (~45s)
+5. **Stage 04**: Validate outputs (~1s)
+6. **Stage 05**: Copy final deliverables (~1s)
 
-**Total Time**: ~75-80 seconds
+**Total Time**: 84 seconds (without optional LLM review)
 
 **Troubleshooting**:
 - Tests fail → Fix coverage issues

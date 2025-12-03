@@ -4,11 +4,25 @@
 
 This research template implements a clear two-layer architecture separating generic build infrastructure from project-specific scientific content. This document explains the architecture, design rationale, and how to work within this structure.
 
+## Quick Reference: Layer 1 vs Layer 2
+
+| Aspect | **Layer 1: Infrastructure** | **Layer 2: Project** |
+|--------|------------------------------|----------------------|
+| **Location** | `infrastructure/` (root level) | `project/src/` (project-specific) |
+| **Purpose** | Generic, reusable build tools | Domain-specific research code |
+| **Scope** | Works with any project | Specific to this research |
+| **Test Coverage** | 49% minimum (currently 55.89%) | 70% minimum (currently 99.88%) |
+| **Scripts** | `scripts/` (root, generic orchestrators) | `project/scripts/` (project orchestrators) |
+| **Tests** | `tests/infrastructure/` (root level) | `project/tests/` (project-specific) |
+| **Imports** | `from infrastructure.module import` | `from project.src.module import` |
+| **Dependencies** | No project dependencies | Can import from infrastructure |
+| **Examples** | PDF generation, validation, figure management | Algorithms, simulations, analysis |
+
 ## Architecture Layers
 
-### Layer 1: Infrastructure (Generic Build & Validation Tools)
+### [LAYER 1: INFRASTRUCTURE] Generic Build & Validation Tools
 
-**Location:** `src/infrastructure/`, `repo_utilities/`
+**Location:** `infrastructure/` (root level)
 
 **Purpose:** Reusable tools and utilities that apply to any research project using this template. These handle:
 - Build orchestration and PDF generation
@@ -21,17 +35,29 @@ This research template implements a clear two-layer architecture separating gene
 
 **Modules:**
 ```
-src/infrastructure/
-├── build_verifier.py          # Build process verification
-├── integrity.py               # File and cross-reference integrity
-├── quality_checker.py         # Document quality metrics
-├── reproducibility.py         # Build reproducibility tracking
-├── publishing.py              # Academic publishing tools
-├── pdf_validator.py           # PDF rendering quality
-├── glossary_gen.py            # API documentation generation
-├── markdown_integration.py     # Markdown figure integration
-├── figure_manager.py          # Figure numbering and references
-└── image_manager.py           # Image file management
+infrastructure/
+├── build/                     # Build & reproducibility tools
+│   ├── build_verifier.py     # Build process verification
+│   ├── quality_checker.py     # Document quality metrics
+│   └── reproducibility.py     # Build reproducibility tracking
+├── core/                      # Core utilities
+│   ├── exceptions.py         # Exception hierarchy
+│   ├── logging_utils.py      # Unified logging
+│   └── config_loader.py      # Configuration management
+├── validation/                # Validation tools
+│   ├── pdf_validator.py      # PDF rendering quality
+│   ├── markdown_validator.py  # Markdown validation
+│   └── integrity.py          # File and cross-reference integrity
+├── documentation/             # Documentation tools
+│   ├── glossary_gen.py       # API documentation generation
+│   ├── figure_manager.py     # Figure numbering and references
+│   ├── image_manager.py      # Image file management
+│   └── markdown_integration.py # Markdown figure integration
+├── publishing/                # Publishing tools
+├── literature/               # Literature search
+├── llm/                      # LLM integration
+├── rendering/                # Multi-format rendering
+└── scientific/               # Scientific dev tools
 ```
 
 **Key Characteristics:**
@@ -44,8 +70,8 @@ src/infrastructure/
 **Usage Pattern:**
 ```python
 # Infrastructure usage from scripts
-from infrastructure.figure_manager import FigureManager
-from infrastructure.markdown_integration import MarkdownIntegration
+from infrastructure.documentation import FigureManager
+from infrastructure.documentation import MarkdownIntegration
 
 # These manage the document structure, not the science
 fm = FigureManager()
@@ -58,15 +84,15 @@ fm.register_figure(
 
 ---
 
-### Layer 2: Scientific (Project-Specific Algorithms & Analysis)
+### [LAYER 2: PROJECT] Project-Specific Algorithms & Analysis
 
-**Location:** `src/scientific/`, `scripts/`
+**Location:** `project/src/` (project-specific code), `project/scripts/` (project orchestrators)
 
 **Purpose:** Domain-specific code implementing the research project's scientific algorithms, data processing, analysis, and visualization.
 
 **Modules:**
 ```
-src/scientific/
+project/src/
 ├── example.py                 # Basic operations (template example)
 ├── simulation.py              # Scientific simulation framework
 ├── statistics.py              # Statistical analysis
@@ -83,7 +109,7 @@ src/scientific/
 
 **Scripts (thin orchestrators):**
 ```
-scripts/
+project/scripts/
 ├── example_figure.py              # Basic figure generation
 ├── generate_research_figures.py   # Complex figures
 ├── analysis_pipeline.py           # Analysis workflow
@@ -100,10 +126,10 @@ scripts/
 
 **Usage Pattern:**
 ```python
-# Scientific usage from scripts
-from scientific.simulation import SimpleSimulation
-from scientific.statistics import calculate_descriptive_stats
-from infrastructure.figure_manager import FigureManager
+# Project-specific usage from scripts
+from project.src.simulation import SimpleSimulation
+from project.src.statistics import calculate_descriptive_stats
+from infrastructure.documentation import FigureManager
 
 # Science: Run simulation and analysis
 sim = SimpleSimulation()
@@ -138,11 +164,10 @@ fm.register_figure(
 │  └──────────────────┴────────────────────────────────┘ │
 │                                                         │
 │  ┌──────────────────────────────────────────────────┐ │
-│  │  src/infrastructure/                            │ │
-│  │  - build_verifier, integrity, quality_checker   │ │
-│  │  - reproducibility, publishing, pdf_validator   │ │
-│  │  - glossary_gen, markdown_integration           │ │
-│  │  - figure_manager, image_manager                │ │
+│  │  infrastructure/                                │ │
+│  │  - build/, core/, validation/, documentation/   │ │
+│  │  - publishing/, literature/, llm/, rendering/   │ │
+│  │  - scientific/ (dev tools)                       │ │
 │  └──────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────┘
          │                                      │
@@ -154,7 +179,7 @@ fm.register_figure(
 │     (Algorithms, analysis, visualization, data)         │
 │                                                         │
 │  ┌──────────────────────────────────────────────────┐ │
-│  │  src/scientific/                                │ │
+│  │  project/src/                                   │ │
 │  │  - simulation, statistics, data_processing      │ │
 │  │  - metrics, parameters, performance             │ │
 │  │  - plots, reporting, validation, visualization  │ │
@@ -162,7 +187,7 @@ fm.register_figure(
 │  └──────────────────────────────────────────────────┘ │
 │                                                         │
 │  ┌──────────────────────────────────────────────────┐ │
-│  │  scripts/ (thin orchestrators)                  │ │
+│  │  project/scripts/ (thin orchestrators)           │ │
 │  │  - example_figure.py                            │ │
 │  │  - generate_research_figures.py                 │ │
 │  │  - analysis_pipeline.py                         │ │
@@ -186,13 +211,13 @@ fm.register_figure(
 
 **✅ Layer 1 → Layer 1:** Infrastructure modules can import from other infrastructure modules
 ```python
-from infrastructure.figure_manager import FigureManager
-from infrastructure.image_manager import ImageManager
+from infrastructure.documentation import FigureManager
+from infrastructure.documentation import ImageManager
 ```
 
-**✅ Layer 2 → Layer 1:** Scientific code can import infrastructure
+**✅ Layer 2 → Layer 1:** Project code can import infrastructure
 ```python
-from scientific.visualization import plot_results
+from project.src.visualization import plot_results
 from infrastructure.documentation import FigureManager
 
 # Use infrastructure for figure management
@@ -207,17 +232,17 @@ fm.register_figure(
 )
 ```
 
-**✅ Layer 2 → Layer 2:** Scientific modules can import from other scientific modules
+**✅ Layer 2 → Layer 2:** Project modules can import from other project modules
 ```python
-from scientific.simulation import SimpleSimulation
-from scientific.statistics import calculate_descriptive_stats
+from project.src.simulation import SimpleSimulation
+from project.src.statistics import calculate_descriptive_stats
 ```
 
-**❌ Layer 1 → Layer 2:** Infrastructure should NOT import scientific code
+**❌ Layer 1 → Layer 2:** Infrastructure should NOT import project code
 ```python
-# BAD: Build tools shouldn't depend on science
-from infrastructure.build_verifier import verify_build_artifacts
-from scientific.simulation import SimpleSimulation  # ❌ WRONG
+# BAD: Build tools shouldn't depend on project-specific code
+from infrastructure.build.build_verifier import verify_build_artifacts
+from project.src.simulation import SimpleSimulation  # ❌ WRONG
 
 # This breaks the abstraction and makes infrastructure project-specific
 ```
@@ -226,69 +251,93 @@ from scientific.simulation import SimpleSimulation  # ❌ WRONG
 
 ## Code Organization
 
-### src/ Structure
+### [LAYER 1] Infrastructure Structure
 
 ```
-src/
+infrastructure/                # Root level - generic tools
 ├── __init__.py
-├── infrastructure/
-│   ├── __init__.py
-│   ├── AGENTS.md              # Infrastructure documentation
-│   ├── README.md              # Quick reference
+├── AGENTS.md                  # Infrastructure documentation
+├── README.md                  # Quick reference
+├── build/                     # Build & reproducibility
 │   ├── build_verifier.py
-│   ├── integrity.py
 │   ├── quality_checker.py
-│   ├── reproducibility.py
-│   ├── publishing.py
+│   └── reproducibility.py
+├── core/                      # Core utilities
+│   ├── exceptions.py
+│   ├── logging_utils.py
+│   └── config_loader.py
+├── validation/                # Validation tools
 │   ├── pdf_validator.py
+│   ├── markdown_validator.py
+│   └── integrity.py
+├── documentation/             # Documentation tools
 │   ├── glossary_gen.py
-│   ├── markdown_integration.py
 │   ├── figure_manager.py
-│   └── image_manager.py
-└── scientific/
+│   ├── image_manager.py
+│   └── markdown_integration.py
+├── publishing/                # Publishing tools
+├── literature/                # Literature search
+├── llm/                       # LLM integration
+├── rendering/                 # Multi-format rendering
+└── scientific/                # Scientific dev tools
+```
+
+### [LAYER 2] Project Structure
+
+```
+project/                       # Project-specific code
+├── src/                       # Project scientific code
+│   ├── __init__.py
+│   ├── AGENTS.md              # Project documentation
+│   ├── README.md              # Quick reference
+│   ├── example.py
+│   ├── simulation.py
+│   ├── statistics.py
+│   ├── data_generator.py
+│   ├── data_processing.py
+│   ├── metrics.py
+│   ├── parameters.py
+│   ├── performance.py
+│   ├── plots.py
+│   ├── reporting.py
+│   ├── validation.py
+│   └── visualization.py
+├── scripts/                   # Project orchestrators
+│   ├── example_figure.py
+│   ├── generate_research_figures.py
+│   ├── analysis_pipeline.py
+│   ├── scientific_simulation.py
+│   └── generate_scientific_figures.py
+└── tests/                     # Project tests
     ├── __init__.py
-    ├── AGENTS.md              # Scientific documentation
-    ├── README.md              # Quick reference
-    ├── example.py
-    ├── simulation.py
-    ├── statistics.py
-    ├── data_generator.py
-    ├── data_processing.py
-    ├── metrics.py
-    ├── parameters.py
-    ├── performance.py
-    ├── plots.py
-    ├── reporting.py
-    ├── validation.py
-    └── visualization.py
+    ├── test_example.py
+    ├── test_simulation.py
+    ├── test_statistics.py
+    └── ...
 ```
 
-### tests/ Structure
+### Test Structure
 
 ```
-tests/
+tests/                         # Root level - infrastructure tests
 ├── conftest.py                # Test configuration
-├── infrastructure/            # Infrastructure layer tests
+├── infrastructure/            # [LAYER 1] Infrastructure tests
 │   ├── __init__.py
-│   ├── test_build_verifier.py
-│   ├── test_integrity.py
-│   ├── test_quality_checker.py
-│   ├── test_reproducibility.py
-│   ├── test_publishing.py
-│   ├── test_pdf_validator.py
-│   └── ...
-├── scientific/                # Scientific layer tests
-│   ├── __init__.py
-│   ├── test_example.py
-│   ├── test_simulation.py
-│   ├── test_statistics.py
-│   ├── test_data_generator.py
+│   ├── test_build/
+│   ├── test_validation/
+│   ├── test_documentation/
 │   └── ...
 └── integration/               # Cross-layer tests
     ├── __init__.py
     ├── test_integration_pipeline.py
-    ├── test_example_figure.py
-    └── test_generate_research_figures.py
+    └── ...
+
+project/tests/                 # [LAYER 2] Project tests
+├── __init__.py
+├── test_example.py
+├── test_simulation.py
+├── test_statistics.py
+└── ...
 ```
 
 ---
@@ -311,20 +360,20 @@ User runs: python3 scripts/run_all.py
 ┌─────────────────────────────────────────────┐
 │ PHASE 1: LAYER 1 - Test Validation          │
 │ - Run tests/infrastructure/*.py             │
-│ - Run tests/scientific/*.py                 │
+│ - Run project/tests/*.py                    │
 │ - Run tests/integration/*.py                │
-│ - Validate 95%+ coverage                    │
+│ - Validate coverage requirements             │
 │ - Report: [LAYER-1-INFRASTRUCTURE] Running  │
 └─────────────────────────────────────────────┘
     │
     ▼
 ┌─────────────────────────────────────────────┐
-│ PHASE 2: LAYER 2 - Scientific Execution     │
-│ - Run scripts/*.py                          │
+│ PHASE 2: LAYER 2 - Project Execution        │
+│ - Run project/scripts/*.py                   │
 │ - Generate figures                          │
 │ - Process data                              │
 │ - Create outputs                            │
-│ - Report: [LAYER-2-SCIENTIFIC] Running      │
+│ - Report: [LAYER-2-PROJECT] Running         │
 └─────────────────────────────────────────────┘
     │
     ▼
@@ -366,9 +415,9 @@ Success: All PDFs generated, all layers working
 ...tests output...
 [2025-11-21 09:31:58] [INFO] ✅ All tests passed with adequate coverage
 
-━━━ LAYER 2: Scientific Computation ━━━
-[2025-11-21 09:31:58] [INFO] Executing scientific scripts...
-[2025-11-21 09:31:58] [INFO] [LAYER-2-SCIENTIFIC] Starting analysis pipeline...
+━━━ LAYER 2: Project Computation ━━━
+[2025-11-21 09:31:58] [INFO] Executing project scripts...
+[2025-11-21 09:31:58] [INFO] [LAYER-2-PROJECT] Starting analysis pipeline...
 ...script output...
 [2025-11-21 09:32:01] [INFO] ✅ ALL project scripts executed successfully
 
@@ -392,7 +441,7 @@ Success: All PDFs generated, all layers working
 
 ```
 ┌─ Is this specific to our research project?
-│  ├─ YES → Layer 2 (scientific/)
+│  ├─ YES → Layer 2 (project/src/)
 │  └─ NO  ─┐
 │          └─ Is it about building/validating?
 │             ├─ YES → Layer 1 (infrastructure/)
@@ -415,14 +464,14 @@ Success: All PDFs generated, all layers working
 │
 └─ Is your code reusable across projects?
    ├─ YES → Layer 1 (infrastructure/)
-   └─ NO  → Layer 2 (scientific/)
+   └─ NO  → Layer 2 (project/src/)
 ```
 
-### Adding a New Scientific Module
+### Adding a New Project Module
 
 1. **Create the module:**
    ```bash
-   vim src/scientific/new_algorithm.py
+   vim project/src/new_algorithm.py
    ```
 
 2. **Implement with type hints and docstrings:**
@@ -444,28 +493,28 @@ Success: All PDFs generated, all layers working
 
 3. **Write comprehensive tests:**
    ```bash
-   vim tests/scientific/test_new_algorithm.py
+   vim project/tests/test_new_algorithm.py
    ```
 
-4. **Add to scientific/__init__.py:**
+4. **Add to project/src/__init__.py:**
    ```python
    from .new_algorithm import analyze_data
    ```
 
 5. **Use in scripts:**
    ```python
-   from scientific.new_algorithm import analyze_data
+   from project.src.new_algorithm import analyze_data
    ```
 
 6. **Update documentation:**
-   - Add to src/scientific/AGENTS.md
-   - Add to src/scientific/README.md
+   - Add to project/src/AGENTS.md
+   - Add to project/src/README.md
 
 ### Adding a New Infrastructure Module
 
 1. **Create the module:**
    ```bash
-   vim src/infrastructure/new_validator.py
+   vim infrastructure/validation/new_validator.py
    ```
 
 2. **Implement generic, project-independent logic:**
@@ -479,16 +528,16 @@ Success: All PDFs generated, all layers working
 
 3. **Write comprehensive tests:**
    ```bash
-   vim tests/infrastructure/test_new_validator.py
+   vim tests/infrastructure/test_validation/test_new_validator.py
    ```
 
 4. **Document usage:**
-   - Add to src/infrastructure/AGENTS.md
+   - Add to infrastructure/validation/AGENTS.md
    - Include usage examples
 
 5. **Integrate with build pipeline:**
    - Update scripts/run_all.py if needed
-   - Update repo_utilities/ if applicable
+   - Update infrastructure modules if applicable
 
 ---
 
@@ -504,10 +553,10 @@ Success: All PDFs generated, all layers working
 
 **Command:**
 ```bash
-pytest tests/infrastructure/ --cov=src/infrastructure
+pytest tests/infrastructure/ --cov=infrastructure
 ```
 
-### Scientific Tests (tests/scientific/)
+### [LAYER 2] Project Tests (project/tests/)
 
 - Test algorithms correctness
 - Verify statistical computations
@@ -517,7 +566,7 @@ pytest tests/infrastructure/ --cov=src/infrastructure
 
 **Command:**
 ```bash
-pytest tests/scientific/ --cov=src/scientific
+pytest project/tests/ --cov=project/src
 ```
 
 ### Integration Tests (tests/integration/)
@@ -529,17 +578,17 @@ pytest tests/scientific/ --cov=src/scientific
 
 **Command:**
 ```bash
-pytest tests/integration/ --cov=src
+pytest tests/integration/ --cov=project/src --cov=infrastructure
 ```
 
 ### Full Test Suite
 
 ```bash
 # All tests with coverage
-pytest tests/ --cov=src --cov-fail-under=95
+pytest tests/ project/tests/ --cov=infrastructure --cov=project/src --cov-fail-under=70
 
 # Generate coverage report
-pytest tests/ --cov=src --cov-report=html
+pytest tests/ project/tests/ --cov=infrastructure --cov=project/src --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -567,8 +616,8 @@ open htmlcov/index.html
 
 ✅ **Do:**
 - Use infrastructure tools for document management
-- Follow thin orchestrator pattern in scripts
-- Implement algorithms in src/ modules
+- Follow thin orchestrator pattern in project/scripts/
+- Implement algorithms in project/src/ modules
 - Test with real data
 - Document domain-specific concepts
 
@@ -582,11 +631,11 @@ open htmlcov/index.html
 ### Logging Best Practices
 
 ```python
-# In scientific scripts - mark layer transitions
+# In project scripts - mark layer transitions
 import logging
 logger = logging.getLogger(__name__)
 
-logger.info("[LAYER-2-SCIENTIFIC] Starting simulation...")
+logger.info("[LAYER-2-PROJECT] Starting simulation...")
 logger.info("[LAYER-1-INFRASTRUCTURE] Using FigureManager for output...")
 ```
 
@@ -604,24 +653,25 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 
 1. **Create packages:**
    ```bash
-   mkdir -p src/infrastructure src/scientific
+   mkdir -p infrastructure project/src
    ```
 
 2. **Move modules:**
-   - Infrastructure modules → src/infrastructure/
-   - Scientific modules → src/scientific/
+   - Infrastructure modules → infrastructure/
+   - Project modules → project/src/
 
 3. **Update imports:**
-   - `from example import` → `from scientific.example import`
-   - `from build_verifier import` → `from infrastructure.build import`
+   - `from example import` → `from project.src.example import`
+   - `from build_verifier import` → `from infrastructure.build.build_verifier import`
 
 4. **Update tests:**
-   - Organize tests/ with infrastructure/ and scientific/ subdirectories
+   - Infrastructure tests → tests/infrastructure/
+   - Project tests → project/tests/
    - Update conftest.py if needed
 
 5. **Validate:**
    ```bash
-   pytest tests/ --cov=src --cov-fail-under=95
+   pytest tests/ project/tests/ --cov=infrastructure --cov=project/src
    python3 scripts/run_all.py
    ```
 
@@ -631,30 +681,30 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 
 ### Import Errors
 
-**Error:** `ModuleNotFoundError: No module named 'scientific'`
+**Error:** `ModuleNotFoundError: No module named 'project.src'`
 
-**Solution:** Ensure tests/conftest.py includes src/ on path:
+**Solution:** Ensure tests/conftest.py includes project/ on path:
 ```python
 import sys
-sys.path.insert(0, os.path.join(repo_root, "src"))
+sys.path.insert(0, os.path.join(repo_root, "project"))
 ```
 
 ### Layer Violations
 
-**Error:** Infrastructure module imports from scientific
+**Error:** Infrastructure module imports from project
 
 **Solution:** Refactor to remove dependency or move code to appropriate layer
 
 **Check:**
 ```bash
-# Find infrastructure imports of scientific
-grep -r "from scientific import" src/infrastructure/
-grep -r "import scientific" src/infrastructure/
+# Find infrastructure imports of project code
+grep -r "from project.src import" infrastructure/
+grep -r "import project.src" infrastructure/
 ```
 
 ### Mixed Concerns
 
-**Error:** Build logic in scientific module
+**Error:** Build logic in project module
 
 **Solution:** Move to infrastructure layer or extract into separate module
 
@@ -662,21 +712,39 @@ grep -r "import scientific" src/infrastructure/
 
 ## References
 
+### Architecture Documentation
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Complete system architecture overview
 - [ARCHITECTURE_ANALYSIS.md](ARCHITECTURE_ANALYSIS.md) - Current state analysis
 - [DECISION_TREE.md](DECISION_TREE.md) - Code placement flowchart
-- [src/infrastructure/AGENTS.md](../src/infrastructure/AGENTS.md) - Infrastructure docs
-- [src/scientific/AGENTS.md](../src/scientific/AGENTS.md) - Scientific docs
+- [THIN_ORCHESTRATOR_SUMMARY.md](THIN_ORCHESTRATOR_SUMMARY.md) - Thin orchestrator pattern details
+
+### Layer-Specific Documentation
+- [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) - Infrastructure layer documentation
+- [infrastructure/README.md](../infrastructure/README.md) - Infrastructure quick reference
+- [project/src/AGENTS.md](../project/src/AGENTS.md) - Project layer documentation
+- [project/src/README.md](../project/src/README.md) - Project quick reference
+
+### System Documentation
 - [../AGENTS.md](../AGENTS.md) - Complete system documentation
+- [../README.md](../README.md) - Project overview
+- [HOW_TO_USE.md](HOW_TO_USE.md) - Complete usage guide
 
 ---
 
 ## Key Takeaway
 
 **Layers separate concerns:**
-- **Layer 1** handles *how* research is documented and built
-- **Layer 2** focuses on *what* research is conducted
+- **[LAYER 1: INFRASTRUCTURE]** handles *how* research is documented and built
+- **[LAYER 2: PROJECT]** focuses on *what* research is conducted
 
 This separation makes code more modular, reusable, and maintainable.
+
+## Quick Navigation
+
+- **Understanding the architecture**: Start with the [Quick Reference](#quick-reference-layer-1-vs-layer-2) table above
+- **Adding code**: See [Decision Tree](#decision-tree-where-should-code-go) section
+- **Import patterns**: See [Import Guidelines](#import-guidelines) section
+- **Testing**: See [Testing Strategy](#testing-strategy) section
 
 
 

@@ -15,7 +15,7 @@ The template demonstrates a complete academic paper structure with the following
 5. **`manuscript/04_experimental_results.md`** - Results with figure and equation references
 6. **`manuscript/05_discussion.md`** - Discussion with cross-references to previous sections
 7. **`manuscript/06_conclusion.md`** - Conclusion summarizing all contributions
-8. **`manuscript/10_symbols_glossary.md`** - Auto-generated API reference from `src/`
+8. **`manuscript/98_symbols_glossary.md`** - Auto-generated API reference from `project/src/`
 
 ## Cross-Referencing System
 
@@ -134,28 +134,28 @@ Demonstrates various cross-reference patterns:
 
 The template includes two figure generation scripts that demonstrate the **thin orchestrator pattern**:
 
-1. **`example_figure.py`** - Basic example figure using `src/` methods
-2. **`generate_research_figures.py`** - Comprehensive research figures using `src/` methods
+1. **`example_figure.py`** - Basic example figure using `project/src/` methods
+2. **`generate_research_figures.py`** - Comprehensive research figures using `project/src/` methods
 
 ### Thin Orchestrator Pattern
 
 Scripts in the `scripts/` directory are **thin orchestrators** that:
 
-- **Import** mathematical functions from `src/` modules
+- **Import** mathematical functions from `project/src/` modules
 - **Use** tested methods for all computation (never implement algorithms)
 - **Handle** visualization, I/O, and orchestration
 - **Generate** figures and data outputs
-- **Validate** that `src/` integration works correctly
+- **Validate** that `project/src/` integration works correctly
 
 **Example integration:**
 ```python
-# Import src/ methods for computation
-from example import add_numbers, calculate_average
+# Import project/src/ methods for computation
+from project.src.example import add_numbers, calculate_average
 
 def generate_figure():
-    # Use src/ methods for all computation
+    # Use project/src/ methods for all computation
     data = [1, 2, 3, 4, 5]
-    avg = calculate_average(data)  # From src/example.py
+    avg = calculate_average(data)  # From project/src/example.py
     
     # Script handles visualization and output
     fig, ax = plt.subplots()
@@ -186,7 +186,12 @@ Figures are referenced in markdown using relative paths:
 
 ### Manuscript Validation
 
-The `validate_markdown.py` script checks:
+Markdown validation is performed via the infrastructure validation module:
+```bash
+python3 -m infrastructure.validation.cli markdown project/manuscript/
+```
+
+This checks:
 - Image file existence
 - Equation label uniqueness
 - Cross-reference validity
@@ -194,10 +199,15 @@ The `validate_markdown.py` script checks:
 
 ### Glossary Generation
 
-The `generate_glossary.py` script:
-- Scans `src/` for public APIs
+Glossary generation is integrated into the build pipeline (Stage 03) or can be run manually:
+```bash
+python3 -m infrastructure.documentation.generate_glossary_cli
+```
+
+This:
+- Scans `project/src/` for public APIs
 - Generates markdown table
-- Updates `10_symbols_glossary.md` automatically
+- Updates `98_symbols_glossary.md` automatically
 
 ## Build Process
 
@@ -206,7 +216,7 @@ The `generate_glossary.py` script:
 The pipeline orchestrator (`scripts/run_all.py`):
 
 1. **Runs tests** with coverage requirements (70% project, 49% infra)
-2. **Executes scripts** to generate figures and data (validating src/ integration)
+2. **Executes scripts** to generate figures and data (validating project/src/ integration)
 3. **Validates manuscript** for references and images
 4. **Generates glossary** from source code
 5. **Builds individual PDFs** for each manuscript file
@@ -239,8 +249,8 @@ Generated outputs include:
 
 ### Creating Figures
 
-1. **Generate with scripts**: Use scripts in `scripts/` directory
-2. **Use src/ methods**: Import and use tested methods from `src/` modules
+1. **Generate with scripts**: Use scripts in `project/scripts/` directory
+2. **Use project/src/ methods**: Import and use tested methods from `project/src/` modules
 3. **Save to output**: Place in `output/figures/`
 4. **Reference properly**: Use `\ref{fig:name}` in markdown
 5. **Include data**: Save both figures and data files
@@ -263,16 +273,16 @@ Generated outputs include:
 ### Extending Figures
 
 1. **Add new figure generation functions** to existing scripts or create new ones
-2. **Import from src/**: Ensure scripts use `src/` methods for computation
+2. **Import from project/src/**: Ensure scripts use `project/src/` methods for computation
 3. **Update scripts** to generate new figures
 4. **Add figure references** in markdown
 5. **Ensure proper file paths** and naming
 
 ### Adding New Source Code
 
-1. **Create new modules** in `src/` directory
-2. **Add comprehensive tests** in `tests/` directory (coverage requirements apply)
-3. **Update scripts** to import and use new `src/` methods
+1. **Create new modules** in `project/src/` directory
+2. **Add comprehensive tests** in `project/tests/` directory (coverage requirements apply)
+3. **Update scripts** to import and use new `project/src/` methods
 4. **Validate integration** through the build pipeline
 
 ## Troubleshooting
@@ -283,7 +293,7 @@ Generated outputs include:
 2. **Figure not found**: Verify figure file exists in `output/figures/`
 3. **Equation numbering**: Ensure unique labels across all files
 4. **Build failures**: Check markdown validation output
-5. **Script import errors**: Ensure `src/` modules exist and are properly tested
+5. **Script import errors**: Ensure `project/src/` modules exist and are properly tested
 
 ### Validation Errors
 
@@ -299,7 +309,7 @@ The validation system will report:
 2. **Broken references**: Check label spelling and existence
 3. **Validation errors**: Address each reported issue
 4. **Build failures**: Fix all validation issues before rebuilding
-5. **Import errors**: Ensure `src/` modules meet coverage requirements
+5. **Import errors**: Ensure `project/src/` modules meet coverage requirements
 
 ## Architecture Compliance
 
@@ -307,16 +317,16 @@ The validation system will report:
 
 This template enforces the **thin orchestrator pattern** where:
 
-- **`src/`** contains ALL business logic, algorithms, and mathematical implementations
-- **`scripts/`** are lightweight wrappers that import and use `src/` methods
-- **`tests/`** ensures comprehensive coverage of `src/` functionality
+- **`project/src/`** contains ALL business logic, algorithms, and mathematical implementations
+- **`project/scripts/`** are lightweight wrappers that import and use `project/src/` methods
+- **`project/tests/`** ensures comprehensive coverage of `project/src/` functionality
 - **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
 
 ### Script Requirements
 
-Scripts in `scripts/` MUST:
-- Import methods from `@src/` modules
-- Use `src/` methods for all computation
+Scripts in `project/scripts/` MUST:
+- Import methods from `project/src/` modules
+- Use `project/src/` methods for all computation
 - Handle only I/O, visualization, and orchestration
 - Include proper error handling for imports
 - Print output paths for render system
@@ -324,7 +334,7 @@ Scripts in `scripts/` MUST:
 
 Scripts MUST NOT:
 - Implement mathematical algorithms
-- Duplicate business logic from `@src/`
+- Duplicate business logic from `project/src/`
 - Contain complex computations
 - Define new data structures
 
@@ -334,7 +344,7 @@ This template provides a complete framework for academic writing with:
 
 - **Structured organization** of content into logical sections
 - **Comprehensive cross-referencing** system for equations, figures, and sections
-- **Automated figure generation** with proper integration using `src/` methods
+- **Automated figure generation** with proper integration using `project/src/` methods
 - **Validation system** ensuring document integrity
 - **Build pipeline** generating both individual and combined PDFs
 - **LaTeX export** for further customization
@@ -342,4 +352,7 @@ This template provides a complete framework for academic writing with:
 
 The system demonstrates best practices for academic writing while maintaining the flexibility to adapt to different research domains and writing styles, all while enforcing the architectural principles of the generic project template.
 
-For more details on architecture and workflow, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.
+For more details on architecture and workflow, see:
+- **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System design overview
+- **[`TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md)** - Complete two-layer architecture guide
+- **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow

@@ -90,6 +90,7 @@ Publishing module is used by:
 
 ## See Also
 
+- [README.md](README.md) - Quick reference guide
 - [`core/`](../core/) - Foundation utilities
 - [`validation/`](../validation/) - Validation & quality assurance
 

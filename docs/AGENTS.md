@@ -218,6 +218,7 @@ EXAMPLES.md  WORKFLOW.md    Technical Docs
   - FAQ.md (troubleshooting)
 
 - **ARCHITECTURE.md** references:
+  - TWO_LAYER_ARCHITECTURE.md (complete architecture guide)
   - THIN_ORCHESTRATOR_SUMMARY.md (pattern details)
   - WORKFLOW.md (how to work with architecture)
   - ../infrastructure/AGENTS.md (infrastructure implementation details)

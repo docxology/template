@@ -140,10 +140,8 @@ discover_markdown_modules() {
 Glossary generation simplified:
 ```bash
 # Run glossary generation (writes directly to manuscript/98_symbols_glossary.md)
-if ! $runner "$REPO_ROOT/repo_utilities/generate_glossary.py"; then
-  log_error "Glossary generation failed - cannot proceed"
-  exit 1
-fi
+# This is now integrated into the build pipeline (Stage 03) or can be run manually:
+# python3 -m infrastructure.documentation.generate_glossary_cli
 ```
 
 **Effect:** Generates glossary directly in `manuscript/98_symbols_glossary.md` - no intermediate files or copy steps needed.
@@ -153,7 +151,7 @@ fi
 | Old Name | New Name | Reason |
 |----------|----------|--------|
 | `07_references.md` | `99_references.md` | Always last section |
-| `10_symbols_glossary.md` | `98_symbols_glossary.md` | Second to last (before references) |
+| `98_symbols_glossary.md` | `98_symbols_glossary.md` | Second to last (before references) |
 
 ### 3. **Directory Structure Simplification**
 
@@ -184,7 +182,7 @@ fi
 ### 3. **manuscript/98_symbols_glossary.md**
 **Current status:**
 ```markdown
-**Note:** This glossary is auto-generated from src/ by repo_utilities/generate_glossary.py
+**Note:** This glossary is auto-generated from src/ by the infrastructure documentation module (integrated into build pipeline Stage 03 or run manually via `python3 -m infrastructure.documentation.generate_glossary_cli`)
 and written directly to manuscript/98_symbols_glossary.md during the build process.
 ```
 
@@ -268,7 +266,7 @@ The `markdown/` directory was a temporary staging area that is no longer needed:
 
 **Old workflow (deprecated):**
 ```
-generate_glossary.py → markdown/10_symbols_glossary.md
+generate_glossary.py → markdown/98_symbols_glossary.md
                            ↓ (copy)
                        manuscript/98_symbols_glossary.md
                            ↓ (include)

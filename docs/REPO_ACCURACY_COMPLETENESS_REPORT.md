@@ -26,13 +26,13 @@
 
 | Stage | Status | Duration |
 |-------|--------|----------|
-| Stage 1: Setup Environment | ✅ Pass | 0s |
-| Stage 2: Infrastructure Tests | ✅ Pass | 6s |
-| Stage 3: Project Tests | ✅ Pass | 3s |
-| Stage 4: Project Analysis | ✅ Pass | 4s |
-| Stage 5: PDF Rendering | ✅ Pass | 44s |
-| Stage 6: Output Validation | ✅ Pass | 1s |
-| Stage 7: Copy Outputs | ✅ Pass | 0s |
+| Stage 00: Setup Environment | ✅ Pass | 0s |
+| Stage 01: Run Tests (Infrastructure) | ✅ Pass | 6s |
+| Stage 01: Run Tests (Project) | ✅ Pass | 3s |
+| Stage 02: Run Analysis | ✅ Pass | 4s |
+| Stage 03: Render PDF | ✅ Pass | 44s |
+| Stage 04: Validate Output | ✅ Pass | 1s |
+| Stage 05: Copy Outputs | ✅ Pass | 0s |
 | **Total** | ✅ Pass | **84s** (without optional LLM review) |
 
 ## Generated Outputs

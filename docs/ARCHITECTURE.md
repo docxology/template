@@ -2,9 +2,9 @@
 
 > **Comprehensive overview** of the template's design, components, and build pipeline
 
-**Quick Reference:** [How To Use](HOW_TO_USE.md) | [Workflow](WORKFLOW.md) | [Thin Orchestrator Summary](THIN_ORCHESTRATOR_SUMMARY.md)
+**Quick Reference:** [How To Use](HOW_TO_USE.md) | [Two-Layer Architecture](TWO_LAYER_ARCHITECTURE.md) | [Workflow](WORKFLOW.md) | [Thin Orchestrator Summary](THIN_ORCHESTRATOR_SUMMARY.md)
 
-This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline. For related information, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`WORKFLOW.md`](WORKFLOW.md)**, **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
+This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline. For related information, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md)** for the complete two-layer architecture guide, **[`WORKFLOW.md`](WORKFLOW.md)**, **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
 
 ## Development Rules
 
@@ -21,16 +21,18 @@ For specific architectural rules and standards during development, see:
 graph TB
     subgraph "Generic Project Repository"
         subgraph "Core Components"
-            SRC[Source Code<br/>src/]
-            TESTS[Tests<br/>tests/]
-            SCRIPTS[Scripts<br/>scripts/]
+            INFRA[Infrastructure<br/>infrastructure/]
+            PROJECT[Project Code<br/>project/src/]
+            TESTS[Tests<br/>tests/ & project/tests/]
+            SCRIPTS[Scripts<br/>scripts/ & project/scripts/]
             MD[Documentation<br/>docs/]
-            MANUSCRIPT[Manuscript<br/>manuscript/]
+            MANUSCRIPT[Manuscript<br/>project/manuscript/]
         end
         
         subgraph "Thin Orchestrator Pattern"
-            SRC -->|"100% tested<br/>methods"| SCRIPTS
-            SCRIPTS -->|"import & use"| SRC
+            PROJECT -->|"100% tested<br/>methods"| SCRIPTS
+            SCRIPTS -->|"import & use"| PROJECT
+            PROJECT -->|"uses"| INFRA
             SCRIPTS -->|"generate"| OUTPUTS
             MANUSCRIPT -->|"reference"| OUTPUTS
         end
@@ -69,13 +71,41 @@ graph TB
 
 ## Component Interactions
 
-### 1. Source Code (`src/`)
+### 1. [LAYER 1] Infrastructure (`infrastructure/`)
+
+**Location**: `infrastructure/` (root level)
+
+**Purpose**: Generic, reusable build and validation tools that work with any research project.
+
+**Key Modules**:
+- `infrastructure/build/` - Build verification and reproducibility
+- `infrastructure/core/` - Core utilities (exceptions, logging, config)
+- `infrastructure/validation/` - PDF and markdown validation
+- `infrastructure/documentation/` - Figure and documentation management
+- `infrastructure/publishing/` - Academic publishing tools
+- `infrastructure/literature/` - Literature search
+- `infrastructure/llm/` - LLM integration
+- `infrastructure/rendering/` - Multi-format rendering
+- `infrastructure/scientific/` - Scientific dev tools
+
+### 2. [LAYER 2] Project Code (`project/src/`)
 **Purpose**: Implements mathematical functionality and business logic with comprehensive test coverage.
 
 **Key Modules**:
 - `example.py`: Basic mathematical functions (add, multiply, average, etc.)
-- `glossary_gen.py`: API documentation generation utilities
-- Additional modules can be added for specific project needs
+- `simulation.py`: Scientific simulation framework
+- `statistics.py`: Statistical analysis
+- `data_generator.py`: Synthetic data generation
+- `data_processing.py`: Data preprocessing and cleaning
+- `metrics.py`: Performance metrics
+- `parameters.py`: Parameter management
+- `performance.py`: Convergence and scalability analysis
+- `plots.py`: Plot implementations
+- `reporting.py`: Report generation
+- `validation.py`: Result validation
+- `visualization.py`: Visualization engine
+
+**Note**: `glossary_gen.py` is in `infrastructure/documentation/`, not `project/src/`
 
 **Responsibilities**:
 - Provide clean, well-typed APIs for mathematical operations
@@ -102,7 +132,7 @@ graph TB
 **Purpose**: **Thin orchestrators** that import and use `src/` methods to generate figures and data.
 
 **Key Scripts**:
-- `example_figure.py`: Basic integration example using src/ methods
+- `example_figure.py`: Basic integration example using project/src/ methods
 - `generate_research_figures.py`: Advanced integration example
 
 **Thin Orchestrator Pattern**:
@@ -110,13 +140,13 @@ graph TB
 graph LR
     subgraph "Scripts (scripts/)"
         SCRIPT[Script File]
-        IMPORT[Import src/ methods]
-        USE[Use src/ methods]
+        IMPORT[Import project/src/ methods]
+        USE[Use project/src/ methods]
         VISUALIZE[Handle visualization]
         OUTPUT[Save outputs]
     end
     
-    subgraph "Source (src/)"
+    subgraph "Project Source (project/src/)"
         FUNC1[add_numbers]
         FUNC2[calculate_average]
         FUNC3[find_maximum]
@@ -138,8 +168,8 @@ graph LR
 ```
 
 **Workflow**:
-1. Import required functions from `src/` modules
-2. Use src/ methods for all computation (never implement algorithms)
+1. Import required functions from `project/src/` modules
+2. Use project/src/ methods for all computation (never implement algorithms)
 3. Handle visualization, I/O, and orchestration
 4. Generate deterministic outputs with fixed seeds
 5. Save figures to `output/figures/`
@@ -156,7 +186,7 @@ graph LR
 - `manuscript/03_experimental_results.md`: Results with figure references
 - `manuscript/04_discussion.md`: Discussion and cross-references
 - `manuscript/05_conclusion.md`: Summary and conclusions
-- `manuscript/10_symbols_glossary.md`: Auto-generated API reference from `src/`
+- `manuscript/98_symbols_glossary.md`: Auto-generated API reference from `project/src/`
 
 **Content Requirements**:
 - Reference source code using inline code formatting
@@ -171,14 +201,14 @@ graph LR
 
 ```mermaid
 flowchart TD
-    START([Start run_all.py]) --> STAGE0[Stage 0: Setup Environment]
-    STAGE0 --> STAGE1[Stage 1: Run Tests]
-    STAGE1 --> STAGE2[Stage 2: Run Analysis]
-    STAGE2 --> STAGE3[Stage 3: Render PDF]
-    STAGE3 --> STAGE4[Stage 4: Validate Output]
-    STAGE4 --> STAGE5[Stage 5: Copy Outputs]
+    START([Start run_all.py]) --> STAGE0[Stage 00: Setup Environment]
+    STAGE0 --> STAGE1[Stage 01: Run Tests]
+    STAGE1 --> STAGE2[Stage 02: Run Analysis]
+    STAGE2 --> STAGE3[Stage 03: Render PDF]
+    STAGE3 --> STAGE4[Stage 04: Validate Output]
+    STAGE4 --> STAGE5[Stage 05: Copy Outputs]
     STAGE5 --> SUCCESS[Build successful]
-    
+
     STAGE0 -->|Fail| FAIL0[Setup failed]
     STAGE1 -->|Fail| FAIL1[Tests failed]
     STAGE2 -->|Fail| FAIL2[Analysis failed]
@@ -206,7 +236,7 @@ flowchart TD
 
 ### Phase 1: Code Validation
 ```bash
-# Run all generation scripts to validate src/ code works
+# Run all generation scripts to validate project/src/ code works
 uv run python scripts/example_figure.py
 uv run python scripts/generate_research_figures.py
 ```
@@ -216,7 +246,7 @@ uv run python scripts/generate_research_figures.py
 ### Phase 2: Markdown Validation
 ```bash
 # Validate all markdown references and images
-uv run python repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 **Checks**:
@@ -227,11 +257,11 @@ uv run python repo_utilities/validate_markdown.py
 
 ### Phase 3: Documentation Generation
 ```bash
-# Auto-generate glossary from current src/ API
-uv run python repo_utilities/generate_glossary.py
+# Auto-generate glossary from current project/src/ API
+python3 -m infrastructure.documentation.generate_glossary_cli
 ```
 
-**Purpose**: Keeps documentation automatically synchronized with source code changes.
+**Purpose**: Keeps documentation automatically synchronized with source code changes. This is also integrated into the build pipeline (Stage 03).
 
 ### Phase 4: Output Generation
 ```bash
@@ -248,7 +278,7 @@ pandoc [markdown_file] -o [output_tex]
 ## Data Flow and Dependencies
 
 ### Input Dependencies
-1. **Source code** (`src/`) - Mathematical implementations
+1. **Project code** (`project/src/`) - Mathematical implementations
 2. **Markdown files** (`manuscript/`) - Manuscript content
 3. **LaTeX preamble** (`manuscript/preamble.md`) - Formatting
 
@@ -256,7 +286,7 @@ pandoc [markdown_file] -o [output_tex]
 ```mermaid
 graph LR
     subgraph "Input"
-        SRC[src/ modules]
+        PROJECT[project/src/ modules]
         MD[Markdown files]
         MANUSCRIPT[manuscript/ files]
         PREAMBLE[LaTeX preamble]
@@ -297,7 +327,7 @@ graph LR
     class FIGS,DATA,PDFS,TEX output
 ```
 
-1. **Scripts import from src/** → Validate code functionality
+1. **Scripts import from project/src/** → Validate code functionality
 2. **Scripts generate outputs** → Create figures and data
 3. **Markdown references outputs** → Link documentation to results
 4. **Validation ensures coherence** → All references are valid
@@ -374,7 +404,7 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 
 # Generate figures and validate
 uv run python scripts/example_figure.py
-uv run python repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 ### 3. Integration
@@ -397,7 +427,7 @@ python3 scripts/03_render_pdf.py  # PDF generation
 4. **Maintainability**: Clear separation of concerns with unified workflow
 5. **Quality**: Comprehensive test coverage enforced automatically
 6. **Documentation**: Auto-generated API references and validation
-7. **Thin Orchestrator Pattern**: Scripts use tested src/ methods, not duplicate logic
+7. **Thin Orchestrator Pattern**: Scripts use tested project/src/ methods, not duplicate logic
 
 ## Key Principles
 
@@ -406,24 +436,27 @@ python3 scripts/03_render_pdf.py  # PDF generation
 3. **Automated Validation**: All components are automatically checked for coherence
 4. **Reproducible Outputs**: All results are deterministic and verifiable
 5. **Integrated Workflow**: One command (`python3 scripts/run_all.py`) validates the entire system
-6. **Thin Orchestrator Pattern**: Scripts import and use src/ methods, never implement algorithms
+6. **Thin Orchestrator Pattern**: Scripts import and use project/src/ methods, never implement algorithms
 
 ## Thin Orchestrator Pattern
 
 The architecture enforces a **thin orchestrator pattern** where:
 
-- **`src/`** contains ALL business logic, algorithms, and mathematical implementations
-- **`scripts/`** are lightweight wrappers that import and use `src/` methods
-- **`tests/`** ensures comprehensive coverage of `src/` functionality
+- **`project/src/`** contains ALL business logic, algorithms, and mathematical implementations
+- **`project/scripts/`** are lightweight wrappers that import and use `project/src/` methods
+- **`project/tests/`** ensures comprehensive coverage of `project/src/` functionality
 - **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
 
 This ensures:
 - **Maintainability**: Single source of truth for business logic
 - **Testability**: Fully tested core functionality
-- **Reusability**: Scripts can use any `src/` method
+- **Reusability**: Scripts can use any `project/src/` method
 - **Clarity**: Clear separation of concerns
 - **Quality**: Automated validation of the entire system
 
 This architecture ensures that the generic project template maintains the highest standards of code quality, documentation coherence, and maintainability while providing a clear, scalable structure for development and collaboration.
 
-For more details on implementation, see **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.
+For more details on implementation, see:
+- **[`TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md)** - Complete two-layer architecture guide
+- **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern details
+- **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow
