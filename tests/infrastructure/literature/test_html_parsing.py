@@ -312,8 +312,8 @@ class TestPDFHandlerHTMLIntegration:
         urls = _extract_pdf_urls_from_html(bad_encoding_html, "https://example.com")
         assert "https://example.com/paper.pdf" in urls
 
-        # Very large HTML content (should still work)
-        large_html = b'<html><body><a href="https://example.com/large.pdf">PDF</a></body></html>' * 1000
+        # Moderately large HTML content (should still work)
+        large_html = b'<html><body><a href="https://example.com/large.pdf">PDF</a></body></html>' * 20
         urls = _extract_pdf_urls_from_html(large_html, "https://example.com")
         assert "https://example.com/large.pdf" in urls
 

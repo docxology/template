@@ -52,7 +52,7 @@ class TestPDFHandlerCore:
 
         # Simulate successful download by creating the file directly
         citation_key = "test2024paper"
-        pdf_path = handler.config.download_dir / f"{citation_key}.pdf"
+        pdf_path = Path(handler.config.download_dir) / f"{citation_key}.pdf"
         pdf_path.parent.mkdir(parents=True, exist_ok=True)
         pdf_path.write_bytes(mock_pdf_content)
 
@@ -65,7 +65,7 @@ class TestPDFHandlerCore:
         handler = PDFHandler(config)
 
         # Test directory creation
-        test_dir = handler.config.download_dir
+        test_dir = Path(handler.config.download_dir)
         assert test_dir.exists()
         assert test_dir.is_dir()
 
@@ -97,7 +97,7 @@ class TestPDFHandlerCore:
         handler = PDFHandler(config)
 
         # Test accessing non-existent file
-        nonexistent = handler.config.download_dir / "nonexistent.pdf"
+        nonexistent = Path(handler.config.download_dir) / "nonexistent.pdf"
         assert not nonexistent.exists()
 
         # Test creating files in read-only directory would require special setup

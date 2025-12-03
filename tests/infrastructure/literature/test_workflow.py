@@ -169,7 +169,15 @@ class TestLiteratureWorkflow:
             )
         literature_search.download_paper_with_result = mock_download_paper_with_result
 
-        # Execute workflow (skip summarization by not setting summarizer)
+        # Patch _get_summary_path to use tmp_path to avoid conflicts with existing files
+        original_get_summary_path = workflow._get_summary_path
+        def mock_get_summary_path(citation_key):
+            summary_dir = tmp_path / "summaries"
+            summary_dir.mkdir(exist_ok=True)
+            return summary_dir / f"{citation_key}_summary.md"
+        workflow._get_summary_path = mock_get_summary_path
+
+        # Execute workflow
         result = workflow.execute_search_and_summarize(
             keywords=["test"],
             limit_per_keyword=10,
@@ -238,7 +246,7 @@ class TestLiteratureWorkflow:
         assert downloaded[0][1] == Path("paper1.pdf")
 
     @patch.object(LiteratureWorkflow, '_summarize_single_paper')
-    def test_summarize_papers_parallel_single_worker(self, mock_summarize_single):
+    def test_summarize_papers_parallel_single_worker(self, mock_summarize_single, tmp_path):
         """Test parallel summarization with single worker."""
         literature_search = Mock()
         summarizer = Mock()
@@ -247,6 +255,13 @@ class TestLiteratureWorkflow:
         workflow = LiteratureWorkflow(literature_search)
         workflow.set_summarizer(summarizer)
         workflow.set_progress_tracker(progress_tracker)
+
+        # Patch _get_summary_path to use tmp_path to avoid file existence conflicts
+        def mock_get_summary_path(citation_key):
+            summary_dir = tmp_path / "summaries"
+            summary_dir.mkdir(exist_ok=True)
+            return summary_dir / f"{citation_key}_summary.md"
+        workflow._get_summary_path = mock_get_summary_path
 
         # Setup test data
         downloaded = [
@@ -273,7 +288,7 @@ class TestLiteratureWorkflow:
         assert mock_summarize_single.call_count == 2
 
     @patch.object(LiteratureWorkflow, '_summarize_single_paper')
-    def test_summarize_papers_parallel_multiple_workers(self, mock_summarize_single):
+    def test_summarize_papers_parallel_multiple_workers(self, mock_summarize_single, tmp_path):
         """Test parallel summarization with multiple workers."""
         literature_search = Mock()
         summarizer = Mock()
@@ -282,6 +297,13 @@ class TestLiteratureWorkflow:
         workflow = LiteratureWorkflow(literature_search)
         workflow.set_summarizer(summarizer)
         workflow.set_progress_tracker(progress_tracker)
+
+        # Patch _get_summary_path to use tmp_path to avoid file existence conflicts
+        def mock_get_summary_path(citation_key):
+            summary_dir = tmp_path / "summaries"
+            summary_dir.mkdir(exist_ok=True)
+            return summary_dir / f"{citation_key}_summary.md"
+        workflow._get_summary_path = mock_get_summary_path
 
         # Setup test data
         downloaded = [
@@ -302,7 +324,7 @@ class TestLiteratureWorkflow:
         assert len(results) == 1
         assert results[0] == summary_result
 
-    def test_summarize_single_paper(self):
+    def test_summarize_single_paper(self, tmp_path):
         """Test single paper summarization."""
         literature_search = Mock()
         summarizer = Mock()
@@ -311,6 +333,13 @@ class TestLiteratureWorkflow:
         workflow = LiteratureWorkflow(literature_search)
         workflow.set_summarizer(summarizer)
         workflow.set_progress_tracker(progress_tracker)
+
+        # Patch _get_summary_path to use tmp_path to avoid file existence conflicts
+        def mock_get_summary_path(citation_key):
+            summary_dir = tmp_path / "summaries"
+            summary_dir.mkdir(exist_ok=True)
+            return summary_dir / f"{citation_key}_summary.md"
+        workflow._get_summary_path = mock_get_summary_path
 
         result = SearchResult("Paper 1", ["Author"], 2024, "Abstract", "url", source="arxiv")
         pdf_path = Path("paper1.pdf")
