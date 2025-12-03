@@ -59,7 +59,7 @@ class ReviewMode(Enum):
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_success, log_header
+from infrastructure.core.logging_utils import get_logger, log_success, log_header, format_error_with_suggestions
 from infrastructure.core.config_loader import get_translation_languages
 from infrastructure.llm import (
     LLMClient,
@@ -737,7 +737,7 @@ def extract_manuscript_text(pdf_path: Path) -> Tuple[Optional[str], ManuscriptMe
         return text, metrics
         
     except PDFValidationError as e:
-        logger.error(f"Failed to extract PDF text: {e}")
+        logger.error(format_error_with_suggestions(e))
         return None, metrics
 
 

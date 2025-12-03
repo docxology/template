@@ -35,7 +35,11 @@ This document consolidates all build system information: current status, perform
 
 ## 🚀 Build Pipeline Stages
 
-### Complete Pipeline Flow
+The template provides **two pipeline orchestrators** with different scope and stage structures.
+
+### Core Pipeline: Python Orchestrator (`run_all.py`)
+
+**6 stages, no LLM dependencies required:**
 
 ```mermaid
 flowchart TD
@@ -46,55 +50,102 @@ flowchart TD
     STAGE3 --> STAGE4[Stage 04: Validate Output]
     STAGE4 --> STAGE5[Stage 05: Copy Outputs]
     STAGE5 --> SUCCESS[Build successful]
-    
+
     STAGE0 -->|Fail| FAIL0[Setup failed]
     STAGE1 -->|Fail| FAIL1[Tests failed]
     STAGE2 -->|Fail| FAIL2[Analysis failed]
     STAGE3 -->|Fail| FAIL3[PDF build failed]
     STAGE4 -->|Fail| FAIL4[Validation failed]
     STAGE5 -->|Fail| FAIL5[Copy failed]
-    
+
     FAIL0 --> END([Exit with error])
     FAIL1 --> END
     FAIL2 --> END
     FAIL3 --> END
     FAIL4 --> END
     FAIL5 --> END
-    
+
     SUCCESS --> END
-    
+
     classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef failure fill:#ffebee,stroke:#c62828,stroke-width:2px
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    
+
     class SUCCESS success
     class FAIL0,FAIL1,FAIL2,FAIL3,FAIL4,FAIL5 failure
     class STAGE0,STAGE1,STAGE2,STAGE3,STAGE4,STAGE5 process
 ```
 
-### Stage Breakdown
+### Extended Pipeline: Interactive Orchestrator (`./run.sh --pipeline`)
+
+**9 stages, includes optional LLM features:**
+
+```mermaid
+flowchart TD
+    START([Start ./run.sh --pipeline]) --> CLEAN[Stage 0: Clean Output Directories]
+    CLEAN --> SETUP[Stage 1: Setup Environment]
+    SETUP --> INFRA_TESTS[Stage 2: Infrastructure Tests]
+    INFRA_TESTS --> PROJ_TESTS[Stage 3: Project Tests]
+    PROJ_TESTS --> ANALYSIS[Stage 4: Project Analysis]
+    ANALYSIS --> PDF[Stage 5: PDF Rendering]
+    PDF --> VALIDATE[Stage 6: Output Validation]
+    VALIDATE --> COPY[Stage 7: Copy Outputs]
+    COPY --> LLM_REVIEW[Stage 8: LLM Scientific Review]
+    LLM_REVIEW --> LLM_TRANSLATE[Stage 9: LLM Translations]
+    LLM_TRANSLATE --> SUCCESS[Build successful]
+
+    classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef failure fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef optional fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
+
+    class SUCCESS success
+    class LLM_REVIEW,LLM_TRANSLATE optional
+    class CLEAN,SETUP,INFRA_TESTS,PROJ_TESTS,ANALYSIS,PDF,VALIDATE,COPY process
+```
+
+### Stage Breakdown Comparison
+
+#### Core Pipeline (run_all.py) - 84 seconds
 
 | Stage | Time | Percentage | Description |
 |-------|------|------------|-------------|
 | **Setup Environment** | 1s | 1% | Dependency validation |
-| **Infrastructure Tests** | 23s | 27% | 558 tests with coverage |
-| **Project Tests** | 3s | 4% | 320 tests with coverage |
-| **Project Analysis** | 6s | 7% | 5 scripts, figure generation |
-| **PDF Rendering** | 50s | 60% | 14 sections + combined PDF |
-| **Output Validation** | 1s | 1% | PDF and structure validation |
+| **Run Tests** | 26s | 31% | Combined infra + project tests |
+| **Run Analysis** | 6s | 7% | Execute project scripts |
+| **Render PDF** | 50s | 60% | Generate manuscript PDFs |
+| **Validate Output** | 1s | 1% | Quality checks |
 | **Copy Outputs** | 0s | 0% | Final deliverables |
-| **Total** | **84s** | **100%** | Complete pipeline (without optional LLM review) |
-| **LLM Review** | ~20m | *Optional* | Manuscript review (requires Ollama) |
+| **Total** | **84s** | **100%** | Core pipeline complete |
 
-**Note:** The LLM review stage (Stage 8) is optional and adds approximately 20 minutes to the total execution time. The core pipeline completes in 84 seconds without this stage.
+#### Extended Pipeline (run.sh) - ~21 minutes
+
+| Stage | Time | Percentage | Description |
+|-------|------|------------|-------------|
+| **Clean Output Directories** | <1s | <1% | Fresh build state |
+| **Setup Environment** | 1s | <1% | Dependency validation |
+| **Infrastructure Tests** | 23s | 2% | 558 tests with coverage |
+| **Project Tests** | 3s | <1% | 320 tests with coverage |
+| **Project Analysis** | 6s | <1% | Execute project scripts |
+| **PDF Rendering** | 50s | 4% | Generate manuscript PDFs |
+| **Output Validation** | 1s | <1% | Quality checks |
+| **Copy Outputs** | 0s | <1% | Final deliverables |
+| **LLM Scientific Review** | ~20m | 95% | AI manuscript analysis |
+| **LLM Translations** | ~30s | <1% | Multi-language abstracts |
+| **Total** | **~21m** | **100%** | Extended pipeline complete |
+
+**Notes:**
+- Core pipeline (`run_all.py`): Fast, no LLM dependencies, programmatic use
+- Extended pipeline (`./run.sh --pipeline`): Comprehensive, includes AI features
+- LLM stages (8-9) are optional and add ~20.5 minutes to execution time
 
 ---
 
 ## 📈 Detailed Performance Analysis
 
-### Within Stage 01: Run Tests - Test Suite Details (26 seconds)
+### Within Test Execution - Test Suite Details (26 seconds)
 
-This section describes the detailed breakdown of what happens within Stage 01 (Run Tests).
+This section describes the detailed breakdown of what happens during test execution (Stages 2-3 in extended pipeline, Stage 01 in core pipeline).
 
 **Breakdown:**
 - Infrastructure Tests: 23 seconds (558 tests)
@@ -119,7 +170,7 @@ This section describes the detailed breakdown of what happens within Stage 01 (R
 
 **Analysis:** All core modules have excellent coverage. The `build_verifier.py` module has lower coverage (68%) but still exceeds the 70% requirement when averaged with other modules.
 
-### Within Stage 02: Script Execution (6 seconds)
+### Within Project Analysis - Script Execution (6 seconds)
 
 **Result:** ✅ **ALL SCRIPTS SUCCESSFUL**
 

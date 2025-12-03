@@ -2,7 +2,7 @@
 
 > **Comprehensive guide** to the 9 advanced infrastructure modules
 
-**Quick Reference:** [API Reference](API_REFERENCE.md) | [Architecture](ARCHITECTURE.md) | [Infrastructure Docs](../infrastructure/AGENTS.md)
+**Quick Reference:** [API Reference](API_REFERENCE.md) | [Architecture](ARCHITECTURE.md) | [Infrastructure Docs](../infrastructure/AGENTS.md) | [Module Standards](../.cursorrules/infrastructure_modules.md) | [LLM Standards](../.cursorrules/llm_standards.md)
 
 This guide provides detailed usage instructions for the nine advanced modules that extend the Research Project Template with professional-grade features for quality assurance, reproducibility, integrity verification, publishing workflows, scientific computing best practices, build process validation, literature search, LLM integration, and multi-format rendering.
 
@@ -904,7 +904,7 @@ All modules are designed to work independently or together, with minimal couplin
 - **[Infrastructure Guide](../infrastructure/AGENTS.md)** - Infrastructure module architecture
 - **[Build System](BUILD_SYSTEM.md)** - Build pipeline integration
 - **[Scientific Simulation Guide](SCIENTIFIC_SIMULATION_GUIDE.md)** - Scientific computing patterns
-- **[Quality Assurance Guide](QUALITY_ASSURANCE_GUIDE.md)** - Quality validation workflows
+- **[PDF Validation](PDF_VALIDATION.md)** - PDF quality validation workflows
 
 ---
 

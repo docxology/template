@@ -72,5 +72,5 @@ invalid/
 
 # Literature
 literature/pdfs/
-literature/summaries/
 literature/failed_downloads.json
+# We include the summaries in the repository commits for reproducibility purposes

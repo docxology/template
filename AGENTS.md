@@ -23,7 +23,7 @@ This document provides **comprehensive documentation** for the Research Project 
 
 **Layer 1: Infrastructure (Generic - Reusable)**
 - `infrastructure/` - Generic build/validation tools (reusable across projects)
-- `scripts/` - Entry point orchestrators (6-stage pipeline: stages 00-05)
+- `scripts/` - Entry point orchestrators (two pipeline options: 6-stage or 9-stage)
 - `tests/` - Infrastructure and integration tests
 
 **Layer 2: Project (Project-Specific - Customizable)**
@@ -306,41 +306,80 @@ Configuration is read at runtime by `render_pdf.sh` and applied to:
 
 ### Complete Pipeline Execution
 
-```bash
-# Interactive menu (recommended)
-./run.sh
+The template provides **two entry points** for pipeline execution:
 
-# Or run full pipeline directly
+**Interactive Menu (Recommended)**
+```bash
+# Full interactive menu with all options
+./run.sh
+```
+
+**Non-Interactive Pipelines**
+```bash
+# Extended pipeline (9 stages) with optional LLM review
 ./run.sh --pipeline
 
-# Python alternative
+# Core pipeline (6 stages) - Python orchestrator
 python3 scripts/run_all.py
 ```
 
+**Entry Point Comparison**
+- **`./run.sh --pipeline`**: 9 stages (0-8), includes optional LLM review stages
+- **`python3 scripts/run_all.py`**: 6 stages (00-05), core pipeline only
+
 ### Pipeline Stages
 
-1. **Test Validation** (coverage requirements: 70% project, 49% infra)
-2. **Script Execution** (all Python scripts in `scripts/`)
-3. **Markdown Validation** (images, references, equations)
-4. **Glossary Generation** (API reference from `project/src/`)
-5. **Individual PDF Generation** (all manuscript sections)
-6. **Combined PDF Generation** (complete manuscript)
-7. **Additional Formats** (HTML, IDE-friendly PDF)
+**Core Pipeline Stages** (both entry points):
+
+1. **Environment Setup** - Verify system requirements and dependencies
+2. **Test Validation** (coverage: 70% project, 49% infra) - Run test suites
+3. **Project Analysis** - Execute `project/scripts/` analysis workflows
+4. **PDF Rendering** - Generate manuscript PDFs and figures
+5. **Output Validation** - Validate all generated outputs
+6. **Copy Outputs** - Copy final deliverables to root `output/` directory
+
+**Extended Pipeline Stages** (`./run.sh --pipeline` only):
+
+7. **LLM Scientific Review** - AI-powered manuscript analysis (optional)
+8. **LLM Translations** - Multi-language technical abstract generation (optional)
+
+**Stage Numbering:**
+- `run_all.py`: Stages 00-05 (zero-padded, Python convention)
+- `run.sh`: Stages 0-8 (zero-indexed, displayed as [1/9] to [8/9])
 
 ### Manual Execution Options
 
+**Individual Stage Execution:**
 ```bash
-# Run complete test suite (infrastructure + project)
+# Environment setup
+python3 scripts/00_setup_environment.py
+
+# Test execution (combined infra + project)
 python3 scripts/01_run_tests.py
 
-# Run only project scripts
+# Project analysis scripts
 python3 scripts/02_run_analysis.py
 
-# Validate markdown only
+# PDF rendering
+python3 scripts/03_render_pdf.py
+
+# Output validation
+python3 scripts/04_validate_output.py
+
+# Copy outputs
+python3 scripts/05_copy_outputs.py
+
+# LLM manuscript review (optional, requires Ollama)
+python3 scripts/06_llm_review.py
+```
+
+**Validation Tools:**
+```bash
+# Validate markdown files
 python3 -m infrastructure.validation.cli markdown manuscript/
 
-# Generate only PDFs
-python3 scripts/03_render_pdf.py  # (after manual setup)
+# Validate PDF outputs
+python3 -m infrastructure.validation.cli pdf output/pdf/
 ```
 
 ## ✅ Validation Systems

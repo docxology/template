@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Optional, List
 import yaml
 
-from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.logging_utils import get_logger, log_progress_bar
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.latex_utils import compile_latex
@@ -125,17 +125,29 @@ class PDFRenderer:
         Returns:
             True if bibliography processing succeeded, False otherwise
         """
-        if not bib_file.exists():
-            logger.warning(f"Bibliography file not found: {bib_file}")
-            return False
-        
+        # Check if bibliography file exists with fallback logging
+        try:
+            if not bib_file.exists():
+                logger.warning(f"Bibliography file not found: {bib_file}")
+                return False
+        except UnboundLocalError:
+            if not bib_file.exists():
+                print(f"WARNING: Bibliography file not found: {bib_file}")
+                return False
+
         # Determine which bibliography processor to use
         bibtex_cmd = "bibtex"
         aux_file = output_dir / f"{tex_file.stem}.aux"
-        
-        if not aux_file.exists():
-            logger.warning(f"Auxiliary file not found: {aux_file}")
-            return False
+
+        # Check if auxiliary file exists with fallback logging
+        try:
+            if not aux_file.exists():
+                logger.warning(f"Auxiliary file not found: {aux_file}")
+                return False
+        except UnboundLocalError:
+            if not aux_file.exists():
+                print(f"WARNING: Auxiliary file not found: {aux_file}")
+                return False
         
         try:
             # Copy bibliography file to output directory to avoid bibtex paranoid mode issues
@@ -143,32 +155,50 @@ class PDFRenderer:
             local_bib = output_dir / bib_file.name
             import shutil
             shutil.copy2(str(bib_file), str(local_bib))
-            logger.debug(f"Copied bibliography file to: {local_bib}")
-            
+            try:
+                logger.debug(f"Copied bibliography file to: {local_bib}")
+            except UnboundLocalError:
+                print(f"DEBUG: Copied bibliography file to: {local_bib}")
+
             # Run bibtex to generate bibliography
             # Important: bibtex must be invoked with a filename relative to the
             # working directory (not an absolute path), otherwise it will refuse
             # to write auxiliary files in paranoid mode. Since we set cwd to the
             # output directory, pass only the aux filename.
             cmd = [bibtex_cmd, aux_file.name]
-            logger.info(f"Processing bibliography with {bibtex_cmd}...")
-            
+            try:
+                logger.info(f"Processing bibliography with {bibtex_cmd}...")
+            except UnboundLocalError:
+                print(f"INFO: Processing bibliography with {bibtex_cmd}...")
+
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
                 cwd=str(output_dir)
             )
-            
-            if result.returncode != 0:
-                logger.warning(f"Bibliography processing warning: {result.stderr[:200]}")
-                # Don't fail on warnings - bibtex often returns non-zero for minor issues
-            
-            logger.debug(f"✓ Bibliography processed: {bibtex_cmd} {aux_file.stem}")
+
+            try:
+                if result.returncode != 0:
+                    logger.warning(f"Bibliography processing warning: {result.stderr[:200]}")
+                    # Don't fail on warnings - bibtex often returns non-zero for minor issues
+            except UnboundLocalError:
+                if result.returncode != 0:
+                    print(f"WARNING: Bibliography processing warning: {result.stderr[:200]}")
+
+            try:
+                logger.debug(f"✓ Bibliography processed: {bibtex_cmd} {aux_file.stem}")
+            except UnboundLocalError:
+                print(f"DEBUG: ✓ Bibliography processed: {bibtex_cmd} {aux_file.stem}")
             return True
             
         except Exception as e:
-            logger.warning(f"Bibliography processing failed: {e}")
+            # Use a fallback logging approach if logger is not accessible
+            try:
+                logger.warning(f"Bibliography processing failed: {e}")
+            except UnboundLocalError:
+                # Fallback if logger is not accessible in this scope
+                print(f"WARNING: Bibliography processing failed: {e}")
             return False
 
     def render_combined(self, source_files: List[Path], manuscript_dir: Path) -> Path:
@@ -399,12 +429,17 @@ class PDFRenderer:
             # Process bibliography if it exists
             if bib_exists:
                 logger.info(f"  Bibliography processing...")
-                self._process_bibliography(combined_tex, output_dir, bib_file)
+                try:
+                    self._process_bibliography(combined_tex, output_dir, bib_file)
+                except Exception as bib_error:
+                    logger.warning(f"  Bibliography processing failed: {bib_error}")
+                    logger.warning("  Continuing PDF generation without bibliography processing")
+                    # Don't fail the entire PDF generation for bibliography issues
             
             # Additional passes for reference resolution (especially after bibtex)
             max_passes = 4
             for run in range(1, max_passes):
-                logger.info(f"  LaTeX compilation pass {run+1}/{max_passes}...")
+                log_progress_bar(run+1, max_passes, "LaTeX compilation", width=20)
                 result = subprocess.run(cmd, check=False, capture_output=True, text=True, cwd=str(output_dir))
                 
                 # Check for critical errors
@@ -417,7 +452,13 @@ class PDFRenderer:
                         if "!" in result.stdout:
                             raise RenderingError(
                                 f"XeLaTeX compilation failed (run {run+1})",
-                                context={"source": str(combined_tex), "output": str(output_file)}
+                                context={"source": str(combined_tex), "output": str(output_file)},
+                                suggestions=[
+                                    "Check LaTeX log file for detailed error messages",
+                                    "Verify all required packages are installed (check graphicx, biblatex, etc.)",
+                                    "Ensure figure paths are correct relative to output directory",
+                                    "Run with --verbose flag for detailed compilation output"
+                                ]
                             )
                 
                 # Check log file for unresolved references or TOC changes

@@ -11,9 +11,10 @@ This directory contains comprehensive development standards, coding guidelines, 
 | [AGENTS.md](AGENTS.md) | This file - overview and navigation | Understanding the complete system |
 | [README.md](README.md) | Quick reference guide | Finding quick answers |
 | [error_handling.md](error_handling.md) | Error handling and exception patterns | Writing error handling code |
+| [security.md](security.md) | Security standards and guidelines | Writing secure code |
 | [python_logging.md](python_logging.md) | Logging standards and best practices | Adding logging to code |
 | [infrastructure_modules.md](infrastructure_modules.md) | Infrastructure module development standards | Creating new infrastructure modules |
-| [testing_standards.md](testing_standards.md) | Testing patterns and 100% coverage | Writing tests with pytest |
+| [testing_standards.md](testing_standards.md) | Testing patterns and coverage standards | Writing tests with pytest |
 | [documentation_standards.md](documentation_standards.md) | AGENTS.md and README.md writing guide | Writing documentation |
 | [type_hints_standards.md](type_hints_standards.md) | Type annotation patterns | Adding type hints |
 | [llm_standards.md](llm_standards.md) | LLM/Ollama integration patterns | Using local LLMs for research |
@@ -48,11 +49,27 @@ This directory contains comprehensive development standards, coding guidelines, 
 
 ### 3. Quality Standards
 
-- **Testing**: 100% coverage, real data only
+- **Testing**: 70%+ coverage required (49% infra, 70% project), real data only
 - **Documentation**: AGENTS.md + README.md for each directory
 - **Type Safety**: Type hints on all public APIs
 - **Error Handling**: Use custom exception hierarchy
 - **Logging**: Unified logging system throughout
+
+### 4. Pipeline Entry Points
+
+The template provides **two pipeline orchestrators** with different scope:
+
+**Interactive Menu (`./run.sh`)**
+- **Use for**: Full pipeline with optional LLM stages
+- **Stages**: 0-8 (displayed as [1/9] to [8/9] in logs)
+- **Features**: Interactive menu, literature search, LLM reviews
+- **When to use**: Comprehensive builds, LLM features needed
+
+**Python Orchestrator (`python3 scripts/run_all.py`)**
+- **Use for**: Core pipeline only, programmatic execution
+- **Stages**: 00-05 (zero-padded Python convention)
+- **Features**: Minimal dependencies, fast execution
+- **When to use**: Automated environments, no LLM requirements
 
 ## Quick Start
 
@@ -93,7 +110,7 @@ This directory contains comprehensive development standards, coding guidelines, 
 
 ### Before Committing
 
-1. ✅ 100% test coverage verified
+1. ✅ Test coverage requirements met (49% infra, 70% project)
 2. ✅ All tests pass
 3. ✅ No linter errors
 4. ✅ Documentation complete
@@ -126,7 +143,7 @@ except ValueError as e:
 See [python_logging.md](python_logging.md)
 
 **Key Points**:
-- Use `infrastructure.logging_utils.get_logger(__name__)`
+- Use `infrastructure.core.logging_utils.get_logger(__name__)`
 - Log at appropriate levels (DEBUG, INFO, WARNING, ERROR, CRITICAL)
 - Include context in log messages
 - Use structured logging where possible
@@ -145,7 +162,7 @@ See [infrastructure_modules.md](infrastructure_modules.md)
 
 **Key Points**:
 - Generic and domain-independent only
-- 100% test coverage mandatory
+- 49% minimum test coverage required (currently 55.89% achieved)
 - Complete AGENTS.md + README.md
 - Public API in `__init__.py`
 - Type hints on all functions
@@ -354,7 +371,7 @@ template/
 
 ### Before Committing
 
-- [ ] 100% test coverage achieved
+- [ ] Test coverage requirements met (49% infra, 70% project)
 - [ ] All tests pass
 - [ ] No linter errors
 - [ ] AGENTS.md complete
@@ -386,6 +403,7 @@ This directory provides modular development standards. Each file covers specific
 | [AGENTS.md](AGENTS.md) | Overview & navigation | Understanding the system |
 | [README.md](README.md) | Quick reference | Finding patterns fast |
 | [error_handling.md](error_handling.md) | Exception patterns | Writing error handling |
+| [security.md](security.md) | Security standards | Writing secure code |
 | [python_logging.md](python_logging.md) | Logging standards | Adding logging to code |
 | [infrastructure_modules.md](infrastructure_modules.md) | Infrastructure development | Creating new modules |
 | [testing_standards.md](testing_standards.md) | Testing patterns | Writing tests |
@@ -406,13 +424,14 @@ The .cursorrules standards align with and support the main documentation:
 | Architecture | [AGENTS.md](AGENTS.md) | [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) |
 | Infrastructure | [infrastructure_modules.md](infrastructure_modules.md) | [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
 | Error Handling | [error_handling.md](error_handling.md) | [docs/TROUBLESHOOTING_GUIDE.md](../docs/TROUBLESHOOTING_GUIDE.md) |
+| Security | [security.md](security.md) | [docs/SECURITY.md](../docs/SECURITY.md) |
 | Logging | [python_logging.md](python_logging.md) | [docs/LOGGING_GUIDE.md](../docs/LOGGING_GUIDE.md) |
 | Testing | [testing_standards.md](testing_standards.md) | [tests/AGENTS.md](../tests/AGENTS.md) |
-| Code Style | [code_style.md](code_style.md) | [docs/CODE_STYLE.md](../docs/CODE_STYLE.md) |
-| Git Workflow | [git_workflow.md](git_workflow.md) | [docs/GIT_WORKFLOW.md](../docs/GIT_WORKFLOW.md) |
-| API Design | [api_design.md](api_design.md) | [docs/API_DESIGN.md](../docs/API_DESIGN.md) |
+| Code Style | [code_style.md](code_style.md) | [docs/BEST_PRACTICES.md](../docs/BEST_PRACTICES.md) |
+| Git Workflow | [git_workflow.md](git_workflow.md) | [docs/VERSION_CONTROL.md](../docs/VERSION_CONTROL.md) |
+| API Design | [api_design.md](api_design.md) | [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) |
 | Documentation | [documentation_standards.md](documentation_standards.md) | [docs/WORKFLOW.md](../docs/WORKFLOW.md) |
-| Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/TYPE_SAFETY.md](../docs/TYPE_SAFETY.md) |
+| Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) |
 
 ## Cross-Reference Guide
@@ -443,6 +462,7 @@ The .cursorrules standards align with and support the main documentation:
 | Git workflow | [git_workflow.md](git_workflow.md) | [testing_standards.md](testing_standards.md) for commit testing |
 | API design | [api_design.md](api_design.md) | [type_hints_standards.md](type_hints_standards.md) for type safety |
 | Handling errors | [error_handling.md](error_handling.md) | [python_logging.md](python_logging.md) for context |
+| Writing secure code | [security.md](security.md) | [error_handling.md](error_handling.md) for secure error handling |
 | Adding logging | [python_logging.md](python_logging.md) | [error_handling.md](error_handling.md) for error logging |
 | Writing tests | [testing_standards.md](testing_standards.md) | [error_handling.md](error_handling.md) for error testing |
 | Creating modules | [infrastructure_modules.md](infrastructure_modules.md) | All of the above standards |

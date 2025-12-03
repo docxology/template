@@ -174,5 +174,38 @@
     "placement": "h",
     "generated_by": "scientific_simulation.py",
     "metadata": {}
+  },
+  "fig:test": {
+    "figure_id": "figure_083",
+    "filename": "test.png",
+    "caption": "Test",
+    "label": "fig:test",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:fig1": {
+    "figure_id": "figure_084",
+    "filename": "fig1.png",
+    "caption": "Figure 1",
+    "label": "fig:fig1",
+    "section": "Results",
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
+  },
+  "fig:fig2": {
+    "figure_id": "figure_080",
+    "filename": "fig2.png",
+    "caption": "Figure 2",
+    "label": "fig:fig2",
+    "section": null,
+    "width": "0.8\\textwidth",
+    "placement": "h",
+    "generated_by": null,
+    "metadata": {}
   }
 }

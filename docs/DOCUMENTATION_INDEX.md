@@ -9,9 +9,10 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md)** - Complete overview and navigation guide
 - **[`.cursorrules/README.md`](../.cursorrules/README.md)** - Quick reference and patterns
 - **[`.cursorrules/error_handling.md`](../.cursorrules/error_handling.md)** - Exception handling patterns
+- **[`.cursorrules/security.md`](../.cursorrules/security.md)** - Security standards and guidelines
 - **[`.cursorrules/python_logging.md`](../.cursorrules/python_logging.md)** - Logging standards and best practices
 - **[`.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md)** - Infrastructure module development
-- **[`.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md)** - Testing patterns and 100% coverage
+- **[`.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md)** - Testing patterns and coverage standards
 - **[`.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md)** - AGENTS.md and README.md writing guide
 - **[`.cursorrules/type_hints_standards.md`](../.cursorrules/type_hints_standards.md)** - Type annotation patterns
 
@@ -30,7 +31,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/QUICK_START_CHEATSHEET.md`](QUICK_START_CHEATSHEET.md)** - One-page essential commands reference
 - **[`docs/COMMON_WORKFLOWS.md`](COMMON_WORKFLOWS.md)** - Step-by-step workflow recipes
 - **[`docs/GLOSSARY.md`](GLOSSARY.md)** - Comprehensive glossary of terms
-- **[`repo_utilities/README.md`](../repo_utilities/README.md)** - Detailed utility documentation
+- **[`scripts/README.md`](../scripts/README.md)** - Detailed utility documentation
 
 ## 🏗️ **Architecture & Design**
 
@@ -225,6 +226,13 @@ All documentation files include comprehensive cross-references:
 - ✅ **Future development** roadmap
 
 ---
+
+## 📋 Documentation Maintenance Notes
+
+**Last Updated**: December 3, 2025
+- Removed outdated historical review reports (COMPREHENSIVE_DOCUMENTATION_REVIEW_REPORT.md, DOCUMENTATION_REVIEW_REPORT.md, REPO_ACCURACY_COMPLETENESS_REPORT.md)
+- Removed documentation scan prompt (DOCUMENTATION_SCAN_PROMPT.md) as process guide
+- All remaining documentation verified accurate and complete via comprehensive review
 
 **This documentation ecosystem provides everything needed to understand, use, and contribute to the Research Project Template effectively! 🚀**
 

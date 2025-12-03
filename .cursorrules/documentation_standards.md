@@ -537,6 +537,8 @@ Before committing documentation:
 
 - [testing_standards.md](testing_standards.md) - Document tests properly
 - [type_hints_standards.md](type_hints_standards.md) - Type hint documentation
+- [../docs/DOCUMENTATION_INDEX.md](../docs/DOCUMENTATION_INDEX.md) - Complete documentation index
+- [../docs/AGENTS.md](../docs/AGENTS.md) - Main project documentation
 - [../AGENTS.md](../AGENTS.md) - Root documentation
 - [../docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) - System architecture
 

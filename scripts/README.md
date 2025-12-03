@@ -12,9 +12,13 @@ Root-level scripts are **generic orchestrators** that:
 
 Project-specific analysis scripts go in `project/scripts/`, not here.
 
-## Unified Entry Point
+## Entry Points
 
-### Interactive Menu (Recommended)
+The template provides **two pipeline orchestrators** with different scope:
+
+### Primary: Interactive Menu (`./run.sh`)
+
+**Recommended entry point** - Interactive menu with all operations:
 
 ```bash
 ./run.sh
@@ -45,18 +49,17 @@ Literature Operations (requires Ollama):
 ============================================================
 ```
 
-### Non-Interactive Mode
-
+**Non-Interactive Mode:**
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Run full pipeline
-./run.sh --infra-tests        # Run infrastructure tests
-./run.sh --project-tests      # Run project tests
-./run.sh --render-pdf         # Render PDF manuscript
+./run.sh --pipeline          # Extended pipeline (9 stages, includes LLM)
+./run.sh --infra-tests        # Run infrastructure tests only
+./run.sh --project-tests      # Run project tests only
+./run.sh --render-pdf         # Render PDF manuscript only
 
 # LLM Operations (requires Ollama)
-./run.sh --reviews            # LLM manuscript review
-./run.sh --translations       # LLM translations
+./run.sh --reviews            # LLM manuscript review only
+./run.sh --translations       # LLM translations only
 
 # Literature Operations (requires Ollama)
 ./run.sh --search             # Search literature and download PDFs
@@ -65,7 +68,25 @@ Literature Operations (requires Ollama):
 ./run.sh --help               # Show all options
 ```
 
+### Alternative: Python Orchestrator (`run_all.py`)
+
+**Programmatic entry point** - Core pipeline only (6 stages):
+
+```bash
+python3 scripts/run_all.py  # Core pipeline (no LLM stages)
+```
+
+**Features:**
+- 6-stage core pipeline (stages 00-05)
+- No LLM dependencies required
+- Suitable for automated environments
+- Zero-padded stage numbering (Python convention)
+
 ## Pipeline Stages
+
+### Core Pipeline (Stages 00-05)
+
+Both entry points support these core stages:
 
 | Stage | Script | Purpose |
 |-------|--------|---------|
@@ -75,8 +96,20 @@ Literature Operations (requires Ollama):
 | 03 | `03_render_pdf.py` | PDF rendering orchestration |
 | 04 | `04_validate_output.py` | Output validation & reporting |
 | 05 | `05_copy_outputs.py` | Copy final deliverables to output/ |
+
+### Extended Pipeline Stages (`./run.sh` only)
+
+Additional stages available in the interactive orchestrator:
+
+| Stage | Script | Purpose |
+|-------|--------|---------|
 | 06 | `06_llm_review.py` | LLM manuscript review (optional) |
 | 07 | `07_literature_search.py` | Literature search & summarization |
+| 08 | LLM Translations | Multi-language abstract translation (optional) |
+
+**Stage Numbering:**
+- `./run.sh`: Stages 0-8 (displayed as [1/9] to [8/9] in logs)
+- `run_all.py`: Stages 00-05 (zero-padded Python convention)
 
 ## Running Individual Stages
 

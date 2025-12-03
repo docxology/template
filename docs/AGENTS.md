@@ -35,6 +35,7 @@ The `docs/` directory contains comprehensive project documentation organized by 
 
 | File | Purpose | Audience |
 |------|---------|----------|
+| `BUILD_SYSTEM.md` | Build pipeline and execution details | Developers |
 | `THIN_ORCHESTRATOR_SUMMARY.md` | Architecture pattern details | Developers |
 | `PDF_VALIDATION.md` | PDF validation documentation | Developers |
 | `MARKDOWN_TEMPLATE_GUIDE.md` | Markdown authoring guide | Content creators |
@@ -62,9 +63,10 @@ The `.cursorrules/` directory contains modular development rules that complement
 | [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) | Complete overview and navigation guide |
 | [`../.cursorrules/README.md`](../.cursorrules/README.md) | Quick reference and patterns |
 | [`../.cursorrules/error_handling.md`](../.cursorrules/error_handling.md) | Exception handling patterns |
+| [`../.cursorrules/security.md`](../.cursorrules/security.md) | Security standards and guidelines |
 | [`../.cursorrules/python_logging.md`](../.cursorrules/python_logging.md) | Logging standards and best practices |
 | [`../.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md) | Infrastructure module development |
-| [`../.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md) | Testing patterns and 100% coverage |
+| [`../.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md) | Testing patterns and coverage standards |
 | [`../.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md) | AGENTS.md and README.md writing guide |
 | [`../.cursorrules/type_hints_standards.md`](../.cursorrules/type_hints_standards.md) | Type annotation patterns |
 

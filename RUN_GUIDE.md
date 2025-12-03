@@ -10,6 +10,8 @@
 
 This presents a menu with options for running tests, rendering PDFs, executing the full pipeline, LLM manuscript review, and literature search operations.
 
+**Alternative Entry Point**: For a simpler 6-stage core pipeline without LLM features, use `python3 scripts/run_all.py` instead.
+
 ## Menu Options
 
 ```
@@ -71,7 +73,7 @@ Generates professional PDFs from markdown sources.
 
 ### Option 4: Run Full Pipeline
 
-Executes the complete 8-stage build pipeline:
+Executes the complete 9-stage build pipeline:
 
 | Stage | Name | Purpose |
 |-------|------|---------|
@@ -84,6 +86,7 @@ Executes the complete 8-stage build pipeline:
 | 6 | Output Validation | Validate all outputs |
 | 7 | Copy Outputs | Copy deliverables to top-level output/ |
 | 8 | LLM Manuscript Review | Generate AI reviews (optional) |
+| 9 | LLM Translations | Multi-language technical abstract generation (optional) |
 
 **Generated Outputs**:
 - Coverage reports: `htmlcov/`

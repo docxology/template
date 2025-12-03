@@ -181,16 +181,18 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> dict:
 
 def validate_copied_outputs(output_dir: Path) -> bool:
     """Validate all project outputs were copied successfully.
-    
+
     Checks:
-    - Combined PDF exists at root and in pdf/ directory
+    - Combined PDF exists at root (preferred) or in pdf/ directory (fallback)
     - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations, llm)
     - Each directory contains files
     - All files are readable
-    
+
+    Provides clear error messages indicating where to find missing files and potential causes.
+
     Args:
         output_dir: Path to top-level output directory
-        
+
     Returns:
         True if validation successful, False if critical files missing
     """
@@ -199,12 +201,24 @@ def validate_copied_outputs(output_dir: Path) -> bool:
     validation_passed = True
     
     # Check combined PDF at root
-    combined_pdf = output_dir / "project_combined.pdf"
-    if combined_pdf.exists() and combined_pdf.stat().st_size > 0:
-        size_mb = combined_pdf.stat().st_size / (1024 * 1024)
+    combined_pdf_root = output_dir / "project_combined.pdf"
+    combined_pdf_in_pdf_dir = output_dir / "pdf" / "project_combined.pdf"
+
+    # Check root location first (preferred)
+    if combined_pdf_root.exists() and combined_pdf_root.stat().st_size > 0:
+        size_mb = combined_pdf_root.stat().st_size / (1024 * 1024)
         log_success(f"Combined PDF at root valid ({size_mb:.2f} MB)", logger)
+    # Check pdf/ directory as fallback
+    elif combined_pdf_in_pdf_dir.exists() and combined_pdf_in_pdf_dir.stat().st_size > 0:
+        size_mb = combined_pdf_in_pdf_dir.stat().st_size / (1024 * 1024)
+        logger.warning(f"Combined PDF found in pdf/ directory but not at root ({size_mb:.2f} MB)")
+        logger.warning("  Consider copying it to root for easier access")
+        # Don't fail validation if PDF exists in pdf/ directory
     else:
-        logger.error("Combined PDF at root missing or empty")
+        logger.error("Combined PDF missing or empty")
+        logger.error("  Expected location: output/project_combined.pdf")
+        logger.error("  Alternative location: output/pdf/project_combined.pdf")
+        logger.error("  This may indicate PDF generation failed in Stage 3")
         validation_passed = False
     
     # Check all expected subdirectories

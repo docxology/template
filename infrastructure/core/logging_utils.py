@@ -471,4 +471,63 @@ def set_global_log_level(level: int) -> None:
             logger.setLevel(level)
 
 
+def log_progress_bar(current: int, total: int, task: str = "", width: int = 20) -> None:
+    """Display a simple text-based progress bar.
+
+    Args:
+        current: Current progress value
+        total: Total progress value
+        task: Task description to display
+        width: Width of the progress bar in characters
+
+    Example:
+        >>> log_progress_bar(15, 100, "Processing files")
+        ℹ️ [████████░░░░░░░░] Processing files 15/100 (15%)
+    """
+    # Get logger instance (avoiding scoping issues)
+    progress_logger = get_logger(__name__)
+
+    percent = (current * 100) // total if total > 0 else 0
+    filled = (current * width) // total if total > 0 else 0
+    bar = "█" * filled + "░" * (width - filled)
+
+    task_str = f" {task}" if task else ""
+    progress_logger.info(f"  [{bar}] {task_str} {current}/{total} ({percent}%)")
+
+
+def format_error_with_suggestions(error: TemplateError) -> str:
+    """Format error message with context and recovery suggestions.
+
+    Args:
+        error: TemplateError instance with context and suggestions
+
+    Returns:
+        Formatted error message string
+
+    Example:
+        >>> from infrastructure.core.exceptions import TemplateError
+        >>> error = TemplateError("File not found", context={"file": "test.txt"}, suggestions=["Check file path", "Verify permissions"])
+        >>> print(format_error_with_suggestions(error))
+        ❌ File not found
+        <BLANKLINE>
+        📋 Context:
+           • file: test.txt
+        <BLANKLINE>
+        🔧 Recovery Options:
+           1. Check file path
+           2. Verify permissions
+    """
+    lines = [f"❌ {error.message}"]
+
+    if error.context:
+        lines.append("\n📋 Context:")
+        for key, value in error.context.items():
+            lines.append(f"   • {key}: {value}")
+
+    if error.suggestions:
+        lines.append("\n🔧 Recovery Options:")
+        for i, suggestion in enumerate(error.suggestions, 1):
+            lines.append(f"   {i}. {suggestion}")
+
+    return "\n".join(lines)
 

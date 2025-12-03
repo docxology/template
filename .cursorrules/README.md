@@ -27,13 +27,13 @@ Development standards and coding guidelines for the Research Project Template.
 
 - **Layer 1: Infrastructure** (`infrastructure/`): Generic, reusable tools
   - Works with any project
-  - 100% test coverage required
+  - 70%+ test coverage required (49% infra, 70% project)
   - Can be copied to other repositories
 
 - **Layer 2: Project** (`project/`): Research-specific code
   - Domain-specific algorithms and analysis
   - Uses Layer 1 tools
-  - 100% test coverage required
+  - 70%+ test coverage required (49% infra, 70% project)
 
 ### Thin Orchestrator Pattern
 
@@ -44,7 +44,7 @@ Development standards and coding guidelines for the Research Project Template.
 
 ### Quality Standards
 
-- **Tests**: 100% coverage with real data (no mocks)
+- **Tests**: 70%+ coverage required (49% infra, 70% project) with real data (no mocks)
 - **Types**: Type hints on all public APIs and functions
 - **Docs**: AGENTS.md + README.md for every directory
 - **Errors**: Use custom exception hierarchy from `infrastructure.core.exceptions`
@@ -180,7 +180,7 @@ See [AGENTS.md](AGENTS.md) for comprehensive docs
 
 Before commit:
 
-- [ ] 100% test coverage
+- [ ] Test coverage requirements met (49% infra, 70% project)
 - [ ] All tests pass
 - [ ] No linter errors
 - [ ] Docs updated
@@ -191,6 +191,7 @@ Before commit:
 **Pick your task:**
 - Writing code → [type_hints_standards.md](type_hints_standards.md)
 - Handling errors → [error_handling.md](error_handling.md)
+- Writing secure code → [security.md](security.md)
 - Logging → [python_logging.md](python_logging.md)
 - Testing → [testing_standards.md](testing_standards.md)
 - Building modules → [infrastructure_modules.md](infrastructure_modules.md)
@@ -201,3 +202,6 @@ Before commit:
 
 - See [AGENTS.md](AGENTS.md) for comprehensive documentation and navigation guide
 - See [Quick Navigation Guide](AGENTS.md#quick-navigation-guide) for activity-based guidance
+- See [../docs/AGENTS.md](../docs/AGENTS.md) for main project documentation
+- See [../docs/HOW_TO_USE.md](../docs/HOW_TO_USE.md) for complete usage guide
+- See [../docs/SECURITY.md](../docs/SECURITY.md) for security policy

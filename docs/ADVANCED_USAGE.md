@@ -26,6 +26,8 @@ By the end of this guide, you'll be able to:
 - Understanding of software testing concepts
 - Familiarity with pytest framework
 
+**Development Standards:** See [Testing Standards](../.cursorrules/testing_standards.md) and [Type Hints Standards](../.cursorrules/type_hints_standards.md) for TDD and type safety guidelines.
+
 ## 📖 Table of Contents
 
 - [Level 7: Test-Driven Development](#level-7-test-driven-development)

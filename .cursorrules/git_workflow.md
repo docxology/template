@@ -469,3 +469,5 @@ git lfs track "*.pdf"
 - [testing_standards.md](testing_standards.md) - Testing patterns and coverage
 - [infrastructure_modules.md](infrastructure_modules.md) - Module development standards
 - [documentation_standards.md](documentation_standards.md) - Documentation writing guide
+- [../docs/VERSION_CONTROL.md](../docs/VERSION_CONTROL.md) - Version control best practices
+- [../docs/CI_CD_INTEGRATION.md](../docs/CI_CD_INTEGRATION.md) - CI/CD integration guide

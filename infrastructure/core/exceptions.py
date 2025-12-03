@@ -37,23 +37,26 @@ class TemplateError(Exception):
     def __init__(
         self,
         message: str,
-        context: Optional[dict[str, Any]] = None
+        context: Optional[dict[str, Any]] = None,
+        suggestions: Optional[list[str]] = None
     ) -> None:
-        """Initialize template error with message and optional context.
-        
+        """Initialize template error with message, optional context, and recovery suggestions.
+
         Args:
             message: Human-readable error description
             context: Additional information about the error (file paths, line numbers, etc.)
+            suggestions: List of actionable recovery suggestions
         """
         self.message = message
         self.context = context or {}
-        
+        self.suggestions = suggestions or []
+
         # Build full message with context
         full_message = message
         if self.context:
             context_str = ", ".join(f"{k}={v}" for k, v in self.context.items())
             full_message = f"{message} ({context_str})"
-        
+
         super().__init__(full_message)
 
 

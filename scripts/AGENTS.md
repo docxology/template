@@ -234,39 +234,69 @@ python3 scripts/07_literature_search.py --search --summarize
 
 ### 9. Run All (`run_all.py`)
 
-**Purpose:** Execute complete pipeline (Python alternative)
+**Purpose:** Execute core pipeline (Python orchestrator)
 
-- Orchestrates all stages sequentially
+- Orchestrates 6 core stages sequentially (00-05)
 - Stops on first failure
-- Provides summary report
-- Generic pipeline
+- Provides detailed summary report
+- No LLM dependencies required
+- Generic core pipeline (excludes optional LLM stages)
 
-**Note:** For interactive use, prefer the unified `./run.sh` entry point.
+**Note:** For interactive use or LLM features, prefer `./run.sh`. This Python orchestrator provides the minimal core pipeline.
 
 **Generic:** Works for any project
 
-## Unified Entry Point
+## Entry Points
 
-The recommended entry point is the unified `run.sh` script:
+The template provides **two pipeline orchestrators** with different scope and features:
+
+### Primary Entry Point: Interactive Menu (`./run.sh`)
+
+The **recommended entry point** is the interactive `run.sh` script:
 
 ```bash
-# Interactive menu (recommended)
+# Full interactive menu (recommended)
 ./run.sh
 
 # Core Build Operations
-./run.sh --pipeline          # Run full pipeline
-./run.sh --infra-tests        # Run infrastructure tests
-./run.sh --project-tests      # Run project tests
-./run.sh --render-pdf         # Render PDF manuscript
+./run.sh --pipeline          # Extended pipeline (9 stages, includes LLM)
+./run.sh --infra-tests        # Run infrastructure tests only
+./run.sh --project-tests      # Run project tests only
+./run.sh --render-pdf         # Render PDF manuscript only
 
 # LLM Operations (requires Ollama)
-./run.sh --reviews            # LLM manuscript review
-./run.sh --translations       # LLM translations
+./run.sh --reviews            # LLM manuscript review only
+./run.sh --translations       # LLM translations only
 
 # Literature Operations (requires Ollama)
 ./run.sh --search             # Search literature and download PDFs
 ./run.sh --summarize          # Generate summaries for existing PDFs
 ```
+
+**Features:**
+- 9-stage pipeline including optional LLM review stages
+- Interactive menu for easy selection
+- Individual stage execution options
+- Literature search and summarization capabilities
+
+### Alternative Entry Point: Python Orchestrator (`run_all.py`)
+
+For programmatic use, the Python orchestrator provides a 6-stage core pipeline:
+
+```bash
+# Core pipeline only (no LLM stages)
+python3 scripts/run_all.py
+```
+
+**Features:**
+- 6-stage pipeline (core build only)
+- No LLM dependencies required
+- Programmatic execution
+- Suitable for automated environments
+
+**Stage Numbering Differences:**
+- `run.sh`: Stages 0-8 (displayed as [1/9] to [8/9] in logs)
+- `run_all.py`: Stages 00-05 (zero-padded Python convention)
 
 See [`../RUN_GUIDE.md`](../RUN_GUIDE.md) for complete documentation.
 

@@ -19,6 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger, log_success, log_header
+from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering.config import RenderingConfig
 
@@ -234,8 +235,14 @@ def run_render_pipeline() -> int:
             else:
                 logger.warning(f"  No output generated for {source_file.name}")
                 
+        except RenderingError as re:
+            logger.warning(f"  ❌ Rendering error for {source_file.name}: {re.message}")
+            if re.context:
+                logger.debug(f"    Context: {re.context}")
+            failed_files.append(source_file.name)
+            continue
         except Exception as e:
-            logger.warning(f"  ❌ Failed to render {source_file.name}: {e}")
+            logger.warning(f"  ❌ Unexpected error rendering {source_file.name}: {e}")
             failed_files.append(source_file.name)
             continue
     
@@ -247,8 +254,17 @@ def run_render_pipeline() -> int:
             combined_pdf = manager.render_combined_pdf(md_files, manuscript_dir)
             logger.info(f"✅ Generated combined PDF: {combined_pdf.name}")
             
+        except RenderingError as re:
+            logger.warning(f"❌ Rendering error generating combined PDF: {re.message}")
+            if re.context:
+                logger.debug(f"  Context: {re.context}")
+            if re.suggestions:
+                logger.info("  Suggestions:")
+                for suggestion in re.suggestions:
+                    logger.info(f"    • {suggestion}")
+            # Don't fail the entire pipeline for combined PDF generation
         except Exception as e:
-            logger.warning(f"❌ Failed to generate combined PDF: {e}")
+            logger.warning(f"❌ Unexpected error generating combined PDF: {e}")
             # Don't fail the entire pipeline for combined PDF generation
     
     # Report results

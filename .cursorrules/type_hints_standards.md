@@ -6,8 +6,8 @@ All public APIs and module-level code must have complete type hints. This ensure
 
 ## Coverage Requirements
 
-- **100% for public APIs** - All functions exposed in `__init__.py`
-- **100% for module code** - All functions in `core.py`, `cli.py`, etc.
+- **Comprehensive for public APIs** - All functions exposed in `__init__.py`
+- **Thorough for module code** - All functions in `core.py`, `cli.py`, etc.
 - **Required for** - Function parameters, return types, variables
 - **Optional for** - Internal helper functions, temporary variables (use sparingly)
 
@@ -563,6 +563,8 @@ Before committing code:
 - [documentation_standards.md](documentation_standards.md) - Document types in docstrings
 - [testing_standards.md](testing_standards.md) - Test type hints
 - [error_handling.md](error_handling.md) - Exception type hints
+- [../docs/API_REFERENCE.md](../docs/API_REFERENCE.md) - Type examples in API documentation
+- [../docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) - Type system design
 - [Python Type Hints Documentation](https://docs.python.org/3/library/typing.html)
 - [mypy Documentation](https://mypy.readthedocs.io/)
 

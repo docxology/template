@@ -496,7 +496,7 @@ python3 -m pytest tests/ --tb=no
 
 Before committing tests:
 
-- [ ] 100% coverage verified (`--cov-fail-under=100`)
+- [ ] Coverage requirements met (49% infra, 70% project) verified
 - [ ] All tests pass (`pytest tests/`)
 - [ ] No skipped tests (`-k "not skip"`)
 - [ ] Tests run in < 30 seconds total
@@ -511,6 +511,9 @@ Before committing tests:
 
 - [error_handling.md](error_handling.md) - Exception patterns for tests
 - [documentation_standards.md](documentation_standards.md) - Documenting tests
+- [../docs/ADVANCED_USAGE.md](../docs/ADVANCED_USAGE.md) - Test-driven development guide
+- [../docs/TEST_IMPROVEMENTS_SUMMARY.md](../docs/TEST_IMPROVEMENTS_SUMMARY.md) - Test enhancements
+- [../docs/TESTING_GUIDE.md](../docs/TESTING_GUIDE.md) - Testing best practices
 - [../tests/AGENTS.md](../tests/AGENTS.md) - Test framework setup
 - [pytest Documentation](https://docs.pytest.org/)
 

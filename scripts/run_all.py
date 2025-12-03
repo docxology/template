@@ -27,7 +27,7 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_header, log_success, log_timing
+from infrastructure.core.logging_utils import get_logger, log_header, log_success, log_timing, format_error_with_suggestions
 from infrastructure.core.exceptions import PipelineError
 
 # Set up logger for this module
@@ -304,7 +304,7 @@ def main() -> int:
         return exit_code
         
     except PipelineError as e:
-        logger.error(f"Pipeline error: {e}", exc_info=True)
+        logger.error(format_error_with_suggestions(e))
         return 1
     except Exception as e:
         logger.error(f"Unexpected error: {e}", exc_info=True)

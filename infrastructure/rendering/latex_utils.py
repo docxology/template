@@ -73,7 +73,13 @@ def compile_latex(
                         "exit_code": result.returncode,
                         "stderr": result.stderr[:200],
                         "log_tail": log_content[-500:] if len(log_content) > 500 else log_content
-                    }
+                    },
+                    suggestions=[
+                        f"Check log file: {log_file}",
+                        "Verify LaTeX syntax in source file",
+                        "Ensure all required packages are available",
+                        "Check for missing figure files or incorrect paths"
+                    ]
                 )
                 
         pdf_file = output_dir / f"{tex_file.stem}.pdf"

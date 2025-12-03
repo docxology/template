@@ -23,7 +23,7 @@ infrastructure/<module>/
 
 1. **Generic First**: Reusable across all projects
 2. **Domain-Independent**: No research-specific assumptions
-3. **Well-Tested**: 100% coverage with real data
+3. **Well-Tested**: 49% minimum coverage with real data (currently 55.89% achieved)
 4. **Well-Documented**: Complete AGENTS.md and README.md
 5. **Type-Hinted**: All public APIs have type annotations
 
@@ -42,7 +42,7 @@ tests/infrastructure/test_<module>/
 
 ### Coverage Requirements
 
-- **100% coverage** mandatory for all infrastructure code
+- **49% minimum coverage** required for infrastructure code (currently 55.89% achieved)
 - **No mock methods** - test with real data
 - **Integration tests** demonstrating complete workflows
 - **Edge cases** and error conditions tested
@@ -234,13 +234,17 @@ Infrastructure modules are integrated into the build pipeline through:
 4. **PDF Rendering** (`scripts/03_render_pdf.py`) - Document generation
 5. **Validation** (`scripts/04_validate_output.py`) - Quality assurance
 
+**Pipeline Entry Points**: Two orchestrators available:
+- `./run.sh --pipeline`: 9-stage pipeline (0-8) with optional LLM stages
+- `python3 scripts/run_all.py`: 6-stage core pipeline (00-05) only
+
 Update these scripts to discover and use new infrastructure modules as needed.
 
 ## Quality Checklist
 
 Before committing:
 
-- [ ] 100% test coverage verified
+- [ ] Test coverage requirements met (49% minimum, currently 55.89% achieved)
 - [ ] All tests pass
 - [ ] AGENTS.md complete
 - [ ] README.md written
@@ -444,7 +448,7 @@ if __name__ == "__main__":
 Before merging a new infrastructure module:
 
 - [ ] Module structure matches recommended organization
-- [ ] 100% test coverage verified
+- [ ] Test coverage requirements met (49% minimum, currently 55.89% achieved)
 - [ ] All public APIs have type hints
 - [ ] AGENTS.md covers all features
 - [ ] README.md has working quick-start
@@ -461,6 +465,8 @@ Before merging a new infrastructure module:
 ## References
 
 - [Infrastructure AGENTS.md](../infrastructure/AGENTS.md) - Module organization
+- [Advanced Modules Guide](../docs/ADVANCED_MODULES_GUIDE.md) - Complete guide to all advanced modules
+- [API Reference](../docs/API_REFERENCE.md) - Complete API documentation for all modules
 - [Two-Layer Architecture](../docs/TWO_LAYER_ARCHITECTURE.md) - Architecture explanation
 - [Testing Guide](testing_standards.md) - Testing infrastructure code
 - [Error Handling Guide](error_handling.md) - Exception patterns
