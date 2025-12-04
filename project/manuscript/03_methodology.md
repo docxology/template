@@ -4,7 +4,7 @@
 
 ### Source Data
 
-The research draws on a MySQL database dump containing 11 tables documenting Andrius Kulikauskas's Ways of Figuring Things Out framework. The primary data table `ways` contains 210 documented ways with the following key fields:
+The research draws on a MySQL database dump containing 11 tables documenting Andrius Kulikauskas's Ways of Figuring Things Out framework. The primary data table `ways` contains 210 documented ways with the following key fields (see Table \ref{tab:ways_schema}):
 
 - `way`: The name/identifier of the way
 - `dialoguewith`: The dialogue partner or conversant
@@ -15,6 +15,26 @@ The research draws on a MySQL database dump containing 11 tables documenting And
 - `examples`: Examples and descriptions
 - `comments`: Additional comments and notes
 
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Field} & \textbf{Description} \\
+\hline
+\texttt{way} & The name/identifier of the way \\
+\texttt{dialoguewith} & The dialogue partner or conversant \\
+\texttt{dialoguetype} & The type of dialogue (Absolute, Relative, Embrace God) \\
+\texttt{dialoguetypetype} & Sub-type classification \\
+\texttt{mene} & Room assignment in the House of Knowledge (24 rooms) \\
+\texttt{Dievas} & Relationship to God/the divine \\
+\texttt{examples} & Examples and descriptions \\
+\texttt{comments} & Additional comments and notes \\
+\hline
+\end{tabular}
+\caption{Key fields in the \texttt{ways} table schema}
+\label{tab:ways_schema}
+\end{table}
+
 ### SQLite Conversion
 
 For analysis and portability, the MySQL dump was converted to SQLite format. The conversion process:
@@ -24,7 +44,7 @@ For analysis and portability, the MySQL dump was converted to SQLite format. The
 3. **Index Handling**: Index names adjusted to avoid conflicts with table names (SQLite restriction)
 4. **Data Preservation**: All data preserved during conversion with proper encoding handling
 
-The resulting SQLite database (`db/ways.db`) provides a portable, queryable format for analysis.
+The resulting SQLite database (`db/ways.db`) provides a portable, queryable format for analysis. The complete database schema is documented in Section \ref{sec:appendix} (Appendix A).
 
 ### Implementation Modules
 
@@ -91,24 +111,40 @@ This classification enables statistical analysis of type distributions and relat
 
 ### Graph Construction
 
-We construct a network graph $G = (V, E)$ where:
+We construct a weighted network graph $G = (V, E, w)$ where:
 
-- **Vertices $V$**: Each way is a node
+- **Vertices $V$**: Each way $w_i$ is a node $v_i \in V$, with $|V| = 210$
 - **Edges $E$**: Connections between ways based on:
-  - Shared dialogue partners (`dialoguewith`)
-  - Shared room assignments (`mene`)
-  - Similar dialogue types
-  - Question relationships (`klausimobudai` table)
+  - Shared dialogue partners (`dialoguewith`): $e_{ij} \in E$ if $\text{dialoguewith}(w_i) = \text{dialoguewith}(w_j)$
+  - Shared room assignments (`mene`): $e_{ij} \in E$ if $\text{mene}(w_i) = \text{mene}(w_j)$
+  - Similar dialogue types: $e_{ij} \in E$ if $\text{dialoguetype}(w_i) = \text{dialoguetype}(w_j)$
+  - Question relationships (`klausimobudai` table): $e_{ij} \in E$ if $\exists q: (w_i, q) \in Q \land (w_j, q) \in Q$
+- **Edge weights $w$**: $w(e_{ij}) \in \{0.6, 0.8, 1.0\}$ based on relationship type (type, partner, room respectively)
+
+The resulting network contains $|E| = 1,290$ edges connecting the 210 ways.
 
 ### Centrality Metrics
 
 We compute several centrality metrics to identify important ways:
 
-\begin{equation}\label{eq:centrality}
-C(v) = \frac{\text{Number of connections}}{\text{Total possible connections}}
+**Degree Centrality:**
+\begin{equation}\label{eq:degree_centrality}
+C_D(v) = \frac{\deg(v)}{|V| - 1}
 \end{equation}
 
-This identifies ways that serve as bridges or hubs in the network.
+**Betweenness Centrality:**
+\begin{equation}\label{eq:betweenness_centrality}
+C_B(v) = \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigma_{st}}
+\end{equation}
+
+where $\sigma_{st}$ is the number of shortest paths from $s$ to $t$, and $\sigma_{st}(v)$ is the number of those paths passing through $v$.
+
+**Clustering Coefficient:**
+\begin{equation}\label{eq:clustering}
+C_C(v) = \frac{2e_v}{k_v(k_v - 1)}
+\end{equation}
+
+where $e_v$ is the number of edges between neighbors of $v$, and $k_v$ is the degree of $v$.
 
 ## Statistical Analysis Methods
 
@@ -116,20 +152,38 @@ This identifies ways that serve as bridges or hubs in the network.
 
 We analyze the distribution of ways across:
 
-1. **Dialogue Types**: Count and percentage by type
-2. **Rooms**: Distribution across 24 rooms
-3. **Dialogue Partners**: Frequency of conversants
+1. **Dialogue Types**: Count and percentage by type, with 38 distinct types observed
+2. **Rooms**: Distribution across 24 rooms, with B2 containing the most ways (23)
+3. **Dialogue Partners**: Frequency of conversants, with 196 unique partners
 4. **God Relationships**: Distribution of `Dievas` values
+
+### Information-Theoretic Metrics
+
+We compute Shannon entropy to quantify the diversity of distributions:
+
+\begin{equation}\label{eq:entropy}
+H(X) = -\sum_{i=1}^{k} p_i \log_2(p_i)
+\end{equation}
+
+where $p_i$ is the proportion in category $i$ and $k$ is the number of categories.
+
+**Mutual Information** between dialogue types and rooms:
+
+\begin{equation}\label{eq:mutual_info}
+I(X;Y) = \sum_{x,y} p(x,y) \log_2 \frac{p(x,y)}{p(x)p(y)}
+\end{equation}
+
+This quantifies the strength of association between dialogue types and room assignments.
 
 ### Cross-Tabulation
 
 Cross-tabulation analysis examines relationships between:
 
-- Dialogue type × Room assignment
+- Dialogue type × Room assignment (visualized in Figure \ref{fig:type_room_heatmap})
 - Dialogue type × Dialogue partner
 - Room × God relationship
 
-This reveals patterns in how different dimensions of the framework relate.
+This reveals patterns in how different dimensions of the framework relate, with the cross-tabulation matrix showing concentrations of ways at specific type-room intersections.
 
 ## Text Analysis
 
@@ -183,6 +237,54 @@ Text analysis also examines:
 1. **Reproducibility**: Ensure analyses are reproducible
 2. **Sensitivity**: Test sensitivity to data variations
 3. **Robustness**: Verify results are robust to missing data
+
+## SQL Query Examples
+
+Key analyses are performed using SQL queries against the SQLite database. Example queries include:
+
+**Dialogue Type Distribution:**
+```sql
+SELECT dialoguetype, COUNT(*) as count
+FROM ways
+GROUP BY dialoguetype
+ORDER BY count DESC;
+```
+
+**Room-Way Cross-Tabulation:**
+```sql
+SELECT dialoguetype, mene, COUNT(*) as count
+FROM ways
+WHERE mene != '' AND dialoguetype != ''
+GROUP BY dialoguetype, mene
+ORDER BY count DESC;
+```
+
+**Network Edge Construction (Room-based):**
+```sql
+SELECT w1.ID as way1_id, w2.ID as way2_id
+FROM ways w1
+JOIN ways w2 ON w1.mene = w2.mene
+WHERE w1.ID < w2.ID AND w1.mene != '';
+```
+
+**Central Ways Identification:**
+```sql
+SELECT way, COUNT(*) as connection_count
+FROM (
+    SELECT w1.way, w2.ID
+    FROM ways w1
+    JOIN ways w2 ON w1.mene = w2.mene
+    WHERE w1.ID != w2.ID AND w1.mene != ''
+    UNION
+    SELECT w1.way, w2.ID
+    FROM ways w1
+    JOIN ways w2 ON w1.dialoguewith = w2.dialoguewith
+    WHERE w1.ID != w2.ID AND w1.dialoguewith != ''
+)
+GROUP BY way
+ORDER BY connection_count DESC
+LIMIT 10;
+```
 
 ## Implementation
 

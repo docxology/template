@@ -1,0 +1,66 @@
+\frametitle{Acknowledgments}
+\protect\phantomsection\label{sec:acknowledgments}
+We gratefully acknowledge the contributions that made this research
+possible.
+
+\begin{block}{Primary Source}
+\protect\phantomsection\label{primary-source}
+This research is based entirely on the philosophical work of
+\textbf{Andrius Kulikauskas}, who developed the ``Ways of Figuring
+Things Out'' framework and documented 284 ways of knowledge acquisition.
+The framework, database, and documentation are the result of his
+extensive philosophical work conducted in 2010-2011.
+\end{block}
+
+\begin{block}{Data Availability}
+\protect\phantomsection\label{data-availability}
+All data used in this research is in the \textbf{Public Domain} as
+stated in the source documentation. The MySQL database dump and text
+documentation (\texttt{ways.md}) are publicly available and were used
+with appropriate attribution.
+\end{block}
+
+\begin{block}{Framework Development}
+\protect\phantomsection\label{framework-development}
+The House of Knowledge framework, the 24-room structure, and the
+dialogue type classifications are all part of Andrius Kulikauskas's
+original philosophical work. This research provides systematic
+documentation and analysis but does not claim to have developed the
+underlying framework.
+\end{block}
+
+\begin{block}{Technical Infrastructure}
+\protect\phantomsection\label{technical-infrastructure}
+This research builds upon:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python scientific computing stack} (NumPy, SciPy, Pandas,
+  NetworkX, Matplotlib)
+\item
+  \textbf{SQLite} database system for data storage and querying
+\item
+  \textbf{LaTeX and Pandoc} for document preparation
+\item
+  \textbf{Open-source tools} for data analysis and visualization
+\end{itemize}
+\end{block}
+
+\begin{block}{Research Context}
+\protect\phantomsection\label{research-context}
+This work contributes to the systematic documentation and analysis of
+philosophical frameworks, demonstrating how quantitative methods can
+complement qualitative understanding. The integration of database
+analysis, network analysis, and statistical methods with philosophical
+interpretation represents a methodological contribution to the study of
+knowledge systems.
+\end{block}
+
+\begin{block}{Future Contributions}
+\protect\phantomsection\label{future-contributions}
+Future researchers building on this work should acknowledge: - Andrius
+Kulikauskas as the originator of the Ways framework - The public domain
+status of the source data - The systematic analysis and documentation
+provided by this research
+\end{block}

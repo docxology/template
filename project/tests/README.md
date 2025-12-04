@@ -36,18 +36,20 @@ pytest tests/test_example.py -v
 ## Test Categories
 
 ### Unit Tests
-- `test_example.py` - Core utility functions
-- `test_data_generator.py` - Data generation algorithms
-- `test_data_processing.py` - Data preprocessing
-- `test_metrics.py` - Performance metrics
-- `test_statistics.py` - Statistical analysis
-- `test_parameters.py` - Parameter management
-- `test_validation.py` - Result validation
+- `test_database.py` - Database ORM and queries
+- `test_models.py` - Data models (Way, Room, Question)
+- `test_sql_queries.py` - SQL query execution
+- `test_ways_analysis.py` - Ways analysis framework
+- `test_network_analysis.py` - Network analysis algorithms
+- `test_house_of_knowledge.py` - House of Knowledge framework
+- `test_ways_statistics.py` - Statistical analysis functions
+- `test_comprehensive_analysis.py` - Comprehensive analysis script (10 tests)
+- `test_generate_figures.py` - Figure generation script (8 tests)
 
 ### Integration Tests
-- `test_integration_pipeline.py` - Complete analysis workflow
-- `test_example_figure.py` - Figure generation
-- `test_generate_research_figures.py` - Multi-figure pipeline
+- `test_package_imports.py` - Package import validation
+- Database integration tests in `test_database.py`
+- Network analysis integration in `test_network_analysis.py`
 
 ## Testing Philosophy
 
@@ -59,3 +61,5 @@ pytest tests/test_example.py -v
 
 - [`AGENTS.md`](AGENTS.md) - Complete documentation
 - [`../src/README.md`](../src/README.md) - Source code overview
+
+

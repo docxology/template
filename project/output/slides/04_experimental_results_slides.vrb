@@ -1,0 +1,53 @@
+\frametitle{Cross-Tabulation Analysis}
+\protect\phantomsection\label{cross-tabulation-analysis}
+\begin{block}{Dialogue Type × Room}
+\protect\phantomsection\label{dialogue-type-room}
+Cross-tabulation of dialogue types and room assignments reveals patterns
+(visualized in Figure \ref{fig:type_room_heatmap}):
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Type × Room} & \textbf{Count} & \textbf{Notes} \\
+\hline
+goodness × B2 & 15 & Believing framework \\
+goodness × C4 & 17 & Caring framework \\
+other × B2 & 15 & Primary combination \\
+regularity × BB & 11 & Strong association \\
+I × CC & 9 & Identity-focused \\
+life × R & 8 & Life-related ways \\
+mind × 10 & Cognitive approaches \\
+\hline
+\end{tabular}
+\caption{Top cross-tabulations of dialogue types and rooms}
+\label{tab:type_room_crosstab}
+\end{table}
+
+The heatmap visualization (Figure \ref{fig:type_room_heatmap}) reveals
+strong associations between certain dialogue types and specific rooms,
+indicating structural relationships in the framework. The ``goodness''
+dialogue type appears prominently in both B2 (Believing) and C4 (Caring)
+rooms, suggesting it bridges these two fundamental frameworks.
+\end{block}
+
+\begin{block}{Dialogue Partner Analysis}
+\protect\phantomsection\label{dialogue-partner-analysis}
+Analysis of dialogue partners (\texttt{dialoguewith}) reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Most common partners}: life, limits of my mind, circumstances,
+  science, purpose, answer, people's inclinations, possibility,
+  goodness, meaningfulness (all with 2 ways each)
+\item
+  \textbf{Partner diversity}: 116 unique partners
+\item
+  \textbf{Partner-way relationships}: Most partners connect exactly 2
+  ways, indicating pairwise relationships
+\end{itemize}
+
+Some dialogue partners appear frequently across multiple ways,
+suggesting they represent important perspectives or approaches.
+\end{block}

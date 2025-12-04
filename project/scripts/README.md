@@ -22,7 +22,7 @@ The `scripts/` directory contains **thin orchestrators** for ways of knowing dat
 ### `db_setup.py` - Database Initialization
 **Purpose**: Initialize and set up the ways of knowing database
 
-**src/ Usage**: 
+**src/ Usage**:
 - `WaysDatabase` - Database ORM initialization
 - `WaysSQLQueries` - SQL query execution
 
@@ -31,6 +31,69 @@ The `scripts/` directory contains **thin orchestrators** for ways of knowing dat
 - Initializes SQLite database schema
 - Sets up database connection and tables
 - Provides database initialization workflow
+
+### `generate_figures.py` - Figure Generation
+**Purpose**: Generate publication-quality figures for ways analysis
+
+**src/ Usage**:
+- `WaysDatabase` - Database access for ways data
+- `WaysSQLQueries` - SQL queries for statistical data
+- `models.Way` - Way data structures
+- `models.Room` - Room data structures
+
+**Generated Figures** (7 total):
+- `ways_network.png` - Network visualization of ways relationships using NetworkX
+- `room_hierarchy.png` - Hierarchical bar chart of room distributions
+- `type_distribution.png` - Bar chart of dialogue type frequencies
+- `type_room_heatmap.png` - Heatmap of dialogue type × room cross-tabulation
+- `framework_treemap.png` - Hierarchical visualization of framework distribution
+- `partner_wordcloud.png` - Dialogue partner frequency distribution
+- `example_length_violin.png` - Example length distribution by dialogue type
+
+**What it does**:
+- Loads ways and room data directly from database
+- Constructs network graphs and statistical visualizations
+- Saves publication-quality PNG files (300 DPI)
+- Handles edge cases (empty data, missing connections)
+- Provides validation of generated file sizes
+
+### `comprehensive_analysis.py` - Statistical Analysis
+**Purpose**: Generate comprehensive statistical analysis with JSON/CSV exports
+
+**src/ Usage**:
+- `WaysAnalyzer` - Main ways analysis framework
+- `WaysNetworkAnalyzer` - Network analysis with centrality metrics
+- `WaysDatabase` - Database access
+- `WaysSQLQueries` - SQL queries for data extraction
+
+**Generated Outputs**:
+- `comprehensive_stats.json` - Complete statistical summary in JSON format
+- `room_distribution.csv` - Room distribution with percentages
+- `dialogue_type_distribution.csv` - Dialogue type distribution
+- `type_room_crosstab.csv` - Cross-tabulation matrix
+- `network_centrality.csv` - Network centrality metrics
+
+**What it does**:
+- Generates comprehensive statistical summaries
+- Computes information-theoretic metrics (entropy, mutual information)
+- Performs network analysis with centrality calculations
+- Exports data in JSON and CSV formats for manuscript integration
+- Provides text analysis of examples and keywords
+
+### `collect_manuscript_data.py` - Data Inspection Utility
+**Purpose**: Quick utility script for manual data inspection and debugging
+
+**src/ Usage**:
+- `WaysAnalyzer` - Basic characterization
+- `WaysNetworkAnalyzer` - Network metrics
+- `WaysDatabase` - Database access
+- `WaysSQLQueries` - SQL queries
+
+**What it does**:
+- Prints key statistics to console for quick inspection
+- Useful for debugging and manual data verification
+- Provides network metrics, distributions, and cross-tabulations
+- For comprehensive analysis with exports, use `comprehensive_analysis.py` instead
 
 ## Import Pattern
 

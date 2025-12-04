@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>98_symbols_glossary</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="sec:glossary">API Symbols Glossary</h1>
+<p>This glossary is auto-generated from the public API in
+<code>src/</code> modules.</p>
+<!-- BEGIN: AUTO-API-GLOSSARY -->
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Module</th>
+<th>Name</th>
+<th>Kind</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data_generator</code></td>
+<td><code>generate_classification_dataset</code></td>
+<td>function</td>
+<td>Generate classification dataset.</td>
+</tr>
+<tr>
+<td><code>data_generator</code></td>
+<td><code>generate_correlated_data</code></td>
+<td>function</td>
+<td>Generate correlated multivariate data.</td>
+</tr>
+<tr>
+<td><code>data_generator</code></td>
+<td><code>generate_synthetic_data</code></td>
+<td>function</td>
+<td>Generate synthetic data with specified distribution.</td>
+</tr>
+<tr>
+<td><code>data_generator</code></td>
+<td><code>generate_time_series</code></td>
+<td>function</td>
+<td>Generate time series data.</td>
+</tr>
+<tr>
+<td><code>data_generator</code></td>
+<td><code>inject_noise</code></td>
+<td>function</td>
+<td>Inject noise into data.</td>
+</tr>
+<tr>
+<td><code>data_generator</code></td>
+<td><code>validate_data</code></td>
+<td>function</td>
+<td>Validate data quality.</td>
+</tr>
+<tr>
+<td><code>data_processing</code></td>
+<td><code>clean_data</code></td>
+<td>function</td>
+<td>Clean data by removing or filling invalid values.</td>
+</tr>
+<tr>
+<td><code>data_processing</code></td>
+<td><code>create_validation_pipeline</code></td>
+<td>function</td>
+<td>Create a data validation pipeline.</td>
+</tr>
+<tr>
+<td><code>data_processing</code></td>
+<td><code>detect_outliers</code></td>
+<td>function</td>
+<td>Detect outliers in data.</td>
+</tr>
+<tr>
+<td><code>data_processing</code></td>
+<td><code>extract_features</code></td>
+<td>function</td>
+<td>Extract features from data.</td>
+</tr>
+<tr>
+<td><code>data_processing</code></td>
+<td><code>normalize_data</code></td>
+<td>function</td>
+<td>Normalize data using specified method.</td>
+</tr>
+<tr>
+<td><code>data_processing</code></td>
+<td><code>remove_outliers</code></td>
+<td>function</td>
+<td>Remove outliers from data.</td>
+</tr>
+<tr>
+<td><code>data_processing</code></td>
+<td><code>standardize_data</code></td>
+<td>function</td>
+<td>Standardize data to zero mean and unit variance.</td>
+</tr>
+<tr>
+<td><code>data_processing</code></td>
+<td><code>transform_data</code></td>
+<td>function</td>
+<td>Apply transformation to data.</td>
+</tr>
+<tr>
+<td><code>example</code></td>
+<td><code>add_numbers</code></td>
+<td>function</td>
+<td>Add two numbers together.</td>
+</tr>
+<tr>
+<td><code>example</code></td>
+<td><code>calculate_average</code></td>
+<td>function</td>
+<td>Calculate the average of a list of numbers.</td>
+</tr>
+<tr>
+<td><code>example</code></td>
+<td><code>find_maximum</code></td>
+<td>function</td>
+<td>Find the maximum value in a list of numbers.</td>
+</tr>
+<tr>
+<td><code>example</code></td>
+<td><code>find_minimum</code></td>
+<td>function</td>
+<td>Find the minimum value in a list of numbers.</td>
+</tr>
+<tr>
+<td><code>example</code></td>
+<td><code>is_even</code></td>
+<td>function</td>
+<td>Check if a number is even.</td>
+</tr>
+<tr>
+<td><code>example</code></td>
+<td><code>is_odd</code></td>
+<td>function</td>
+<td>Check if a number is odd.</td>
+</tr>
+<tr>
+<td><code>example</code></td>
+<td><code>multiply_numbers</code></td>
+<td>function</td>
+<td>Multiply two numbers together.</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>CustomMetric</code></td>
+<td>class</td>
+<td>Framework for custom metrics.</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>calculate_accuracy</code></td>
+<td>function</td>
+<td>Calculate accuracy for classification.</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>calculate_all_metrics</code></td>
+<td>function</td>
+<td>Calculate all applicable metrics.</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>calculate_convergence_metrics</code></td>
+<td>function</td>
+<td>Calculate convergence metrics.</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>calculate_effect_size</code></td>
+<td>function</td>
+<td>Calculate effect size (Cohen’s d).</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>calculate_p_value_approximation</code></td>
+<td>function</td>
+<td>Approximate p-value from test statistic.</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>calculate_precision_recall_f1</code></td>
+<td>function</td>
+<td>Calculate precision, recall, and F1 score.</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>calculate_psnr</code></td>
+<td>function</td>
+<td>Calculate Peak Signal-to-Noise Ratio (PSNR).</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>calculate_snr</code></td>
+<td>function</td>
+<td>Calculate Signal-to-Noise Ratio (SNR).</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>calculate_ssim</code></td>
+<td>function</td>
+<td>Calculate Structural Similarity Index (SSIM).</td>
+</tr>
+<tr>
+<td><code>parameters</code></td>
+<td><code>ParameterConstraint</code></td>
+<td>class</td>
+<td>Constraint for parameter validation.</td>
+</tr>
+<tr>
+<td><code>parameters</code></td>
+<td><code>ParameterSet</code></td>
+<td>class</td>
+<td>A set of parameters with validation.</td>
+</tr>
+<tr>
+<td><code>parameters</code></td>
+<td><code>ParameterSweep</code></td>
+<td>class</td>
+<td>Configuration for parameter sweeps.</td>
+</tr>
+<tr>
+<td><code>performance</code></td>
+<td><code>ConvergenceMetrics</code></td>
+<td>class</td>
+<td>Metrics for convergence analysis.</td>
+</tr>
+<tr>
+<td><code>performance</code></td>
+<td><code>ScalabilityMetrics</code></td>
+<td>class</td>
+<td>Metrics for scalability analysis.</td>
+</tr>
+<tr>
+<td><code>performance</code></td>
+<td><code>analyze_convergence</code></td>
+<td>function</td>
+<td>Analyze convergence of a sequence.</td>
+</tr>
+<tr>
+<td><code>performance</code></td>
+<td><code>analyze_scalability</code></td>
+<td>function</td>
+<td>Analyze scalability of an algorithm.</td>
+</tr>
+<tr>
+<td><code>performance</code></td>
+<td><code>benchmark_comparison</code></td>
+<td>function</td>
+<td>Compare multiple methods on benchmarks.</td>
+</tr>
+<tr>
+<td><code>performance</code></td>
+<td><code>calculate_efficiency</code></td>
+<td>function</td>
+<td>Calculate efficiency (speedup / resource_ratio).</td>
+</tr>
+<tr>
+<td><code>performance</code></td>
+<td><code>calculate_speedup</code></td>
+<td>function</td>
+<td>Calculate speedup relative to baseline.</td>
+</tr>
+<tr>
+<td><code>performance</code></td>
+<td><code>check_statistical_significance</code></td>
+<td>function</td>
+<td>Test statistical significance between two groups.</td>
+</tr>
+<tr>
+<td><code>plots</code></td>
+<td><code>plot_3d_surface</code></td>
+<td>function</td>
+<td>Create a 3D surface plot.</td>
+</tr>
+<tr>
+<td><code>plots</code></td>
+<td><code>plot_bar</code></td>
+<td>function</td>
+<td>Create a bar chart.</td>
+</tr>
+<tr>
+<td><code>plots</code></td>
+<td><code>plot_comparison</code></td>
+<td>function</td>
+<td>Plot comparison of methods.</td>
+</tr>
+<tr>
+<td><code>plots</code></td>
+<td><code>plot_contour</code></td>
+<td>function</td>
+<td>Create a contour plot.</td>
+</tr>
+<tr>
+<td><code>plots</code></td>
+<td><code>plot_convergence</code></td>
+<td>function</td>
+<td>Plot convergence curve.</td>
+</tr>
+<tr>
+<td><code>plots</code></td>
+<td><code>plot_heatmap</code></td>
+<td>function</td>
+<td>Create a heatmap.</td>
+</tr>
+<tr>
+<td><code>plots</code></td>
+<td><code>plot_line</code></td>
+<td>function</td>
+<td>Create a line plot.</td>
+</tr>
+<tr>
+<td><code>plots</code></td>
+<td><code>plot_scatter</code></td>
+<td>function</td>
+<td>Create a scatter plot.</td>
+</tr>
+<tr>
+<td><code>reporting</code></td>
+<td><code>ReportGenerator</code></td>
+<td>class</td>
+<td>Generate reports from simulation and analysis results.</td>
+</tr>
+<tr>
+<td><code>simulation</code></td>
+<td><code>SimpleSimulation</code></td>
+<td>class</td>
+<td>Simple example simulation for testing.</td>
+</tr>
+<tr>
+<td><code>simulation</code></td>
+<td><code>SimulationBase</code></td>
+<td>class</td>
+<td>Base class for scientific simulations.</td>
+</tr>
+<tr>
+<td><code>simulation</code></td>
+<td><code>SimulationState</code></td>
+<td>class</td>
+<td>Represents the state of a simulation run.</td>
+</tr>
+<tr>
+<td><code>statistics</code></td>
+<td><code>DescriptiveStats</code></td>
+<td>class</td>
+<td>Descriptive statistics for a dataset.</td>
+</tr>
+<tr>
+<td><code>statistics</code></td>
+<td><code>anova_test</code></td>
+<td>function</td>
+<td>Perform one-way ANOVA test.</td>
+</tr>
+<tr>
+<td><code>statistics</code></td>
+<td><code>calculate_confidence_interval</code></td>
+<td>function</td>
+<td>Calculate confidence interval for mean.</td>
+</tr>
+<tr>
+<td><code>statistics</code></td>
+<td><code>calculate_correlation</code></td>
+<td>function</td>
+<td>Calculate correlation between two variables.</td>
+</tr>
+<tr>
+<td><code>statistics</code></td>
+<td><code>calculate_descriptive_stats</code></td>
+<td>function</td>
+<td>Calculate descriptive statistics.</td>
+</tr>
+<tr>
+<td><code>statistics</code></td>
+<td><code>fit_distribution</code></td>
+<td>function</td>
+<td>Fit a distribution to data.</td>
+</tr>
+<tr>
+<td><code>statistics</code></td>
+<td><code>t_test</code></td>
+<td>function</td>
+<td>Perform t-test.</td>
+</tr>
+<tr>
+<td><code>validation</code></td>
+<td><code>ValidationFramework</code></td>
+<td>class</td>
+<td>Framework for validating simulation and analysis results.</td>
+</tr>
+<tr>
+<td><code>validation</code></td>
+<td><code>ValidationResult</code></td>
+<td>class</td>
+<td>Result of a validation check.</td>
+</tr>
+<tr>
+<td><code>visualization</code></td>
+<td><code>VisualizationEngine</code></td>
+<td>class</td>
+<td>Engine for generating publication-quality figures.</td>
+</tr>
+<tr>
+<td><code>visualization</code></td>
+<td><code>create_multi_panel_figure</code></td>
+<td>function</td>
+<td>Create a multi-panel figure.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ways-specific-analysis-modules">Ways-Specific Analysis
+Modules</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr>
+<th>Module</th>
+<th>Name</th>
+<th>Kind</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>database</code></td>
+<td><code>WaysDatabase</code></td>
+<td>class</td>
+<td>SQLAlchemy ORM for ways, rooms, questions database access.</td>
+</tr>
+<tr>
+<td><code>database</code></td>
+<td><code>Way</code></td>
+<td>class</td>
+<td>Data model for individual ways with metadata.</td>
+</tr>
+<tr>
+<td><code>database</code></td>
+<td><code>Room</code></td>
+<td>class</td>
+<td>Data model for House of Knowledge rooms.</td>
+</tr>
+<tr>
+<td><code>database</code></td>
+<td><code>Question</code></td>
+<td>class</td>
+<td>Data model for philosophical questions.</td>
+</tr>
+<tr>
+<td><code>sql_queries</code></td>
+<td><code>WaysSQLQueries</code></td>
+<td>class</td>
+<td>Pre-built SQL queries for ways analysis operations.</td>
+</tr>
+<tr>
+<td><code>ways_analysis</code></td>
+<td><code>WaysAnalyzer</code></td>
+<td>class</td>
+<td>Comprehensive ways characterization and statistical analysis.</td>
+</tr>
+<tr>
+<td><code>ways_analysis</code></td>
+<td><code>WaysCharacterization</code></td>
+<td>class</td>
+<td>Data class for ways analysis results.</td>
+</tr>
+<tr>
+<td><code>network_analysis</code></td>
+<td><code>WaysNetworkAnalyzer</code></td>
+<td>class</td>
+<td>Graph-based network analysis of way relationships.</td>
+</tr>
+<tr>
+<td><code>network_analysis</code></td>
+<td><code>WaysNetwork</code></td>
+<td>class</td>
+<td>Network representation of ways and their connections.</td>
+</tr>
+<tr>
+<td><code>house_of_knowledge</code></td>
+<td><code>HouseOfKnowledgeAnalyzer</code></td>
+<td>class</td>
+<td>Analysis of the 24-room House of Knowledge framework.</td>
+</tr>
+<tr>
+<td><code>house_of_knowledge</code></td>
+<td><code>HouseStructure</code></td>
+<td>class</td>
+<td>Complete structure of the House of Knowledge.</td>
+</tr>
+<tr>
+<td><code>statistics</code></td>
+<td><code>analyze_way_distributions</code></td>
+<td>function</td>
+<td>Statistical analysis of way distributions across categories.</td>
+</tr>
+<tr>
+<td><code>statistics</code></td>
+<td><code>compute_way_correlations</code></td>
+<td>function</td>
+<td>Correlation analysis between way characteristics.</td>
+</tr>
+<tr>
+<td><code>statistics</code></td>
+<td><code>compute_way_diversity_metrics</code></td>
+<td>function</td>
+<td>Diversity metrics for ways across dimensions.</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>compute_way_coverage_metrics</code></td>
+<td>function</td>
+<td>Coverage analysis of ways in framework.</td>
+</tr>
+<tr>
+<td><code>metrics</code></td>
+<td><code>compute_way_interconnectedness</code></td>
+<td>function</td>
+<td>Interconnectedness metrics for ways network.</td>
+</tr>
+</tbody>
+</table>
+<!-- END: AUTO-API-GLOSSARY -->
+</body>
+</html>

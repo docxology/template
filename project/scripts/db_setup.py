@@ -5,15 +5,19 @@ Initializes SQLite database from MySQL dump and validates the conversion.
 """
 
 import sys
-import os
 from pathlib import Path
 
 # Add project src to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
-from database import initialize_database, WaysDatabase
-from models import HouseOfKnowledge, WaysStatistics
+from database import initialize_database
+from models import (
+    HouseOfKnowledge,
+    WaysStatistics,
+    way_from_sqlalchemy,
+    room_from_sqlalchemy,
+)
 
 
 def main():
@@ -30,24 +34,33 @@ def main():
 
     # Test database connectivity and basic queries
     try:
-        # Test basic queries
-        ways = db.get_all_ways()
-        rooms = db.get_all_rooms()
+        # Get SQLAlchemy objects and convert to dataclasses
+        sql_ways = db.get_all_ways()
+        sql_rooms = db.get_all_rooms()
+
+        # Convert SQLAlchemy objects to dataclasses
+        ways = [way_from_sqlalchemy(sql_way) for sql_way in sql_ways]
+        rooms = [room_from_sqlalchemy(sql_room) for sql_room in sql_rooms]
 
         print(f"✓ Found {len(ways)} ways and {len(rooms)} rooms")
 
         # Build House of Knowledge
         house = HouseOfKnowledge(rooms=rooms, ways=ways)
 
+        # Link ways to rooms using dataclass instances
+        # Create a lookup dictionary for rooms by short name
+        room_lookup = {room.santrumpa: room for room in rooms}
+
         # Link ways to rooms
         for way in ways:
-            room = db.get_room_by_short(way.mene)
+            room = room_lookup.get(way.mene)
             if room:
                 way.room = room
 
         # Link ways to rooms (reverse relationship)
         for room in rooms:
-            room.ways = db.get_ways_by_room(room.santrumpa)
+            # Use HouseOfKnowledge method to get ways in this room
+            room.ways = house.get_ways_in_room(room.santrumpa)
 
         # Get statistics
         stats = house.get_statistics()
@@ -81,3 +94,4 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+

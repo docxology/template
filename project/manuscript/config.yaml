@@ -12,9 +12,9 @@ paper:
 # For single author, use one entry
 # For multiple authors, add additional entries
 authors:
-  - name: "Andrius Kulikauskas"
+  - name: "Daniel Ari Friedman"
     orcid: ""  # Add ORCID if available
-    email: ""  # Add email if available
+    email: "daniel@activeinference.institute"  # Add email if available
     affiliation: ""  # Add affiliation if available
     corresponding: true  # Mark corresponding author
 

@@ -1,0 +1,166 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Acknowledgments}
+\protect\phantomsection\label{sec:acknowledgments}
+We gratefully acknowledge the contributions that made this research
+possible.
+
+\begin{block}{Primary Source}
+\protect\phantomsection\label{primary-source}
+This research is based entirely on the philosophical work of
+\textbf{Andrius Kulikauskas}, who developed the ``Ways of Figuring
+Things Out'' framework and documented 284 ways of knowledge acquisition.
+The framework, database, and documentation are the result of his
+extensive philosophical work conducted in 2010-2011.
+\end{block}
+
+\begin{block}{Data Availability}
+\protect\phantomsection\label{data-availability}
+All data used in this research is in the \textbf{Public Domain} as
+stated in the source documentation. The MySQL database dump and text
+documentation (\texttt{ways.md}) are publicly available and were used
+with appropriate attribution.
+\end{block}
+
+\begin{block}{Framework Development}
+\protect\phantomsection\label{framework-development}
+The House of Knowledge framework, the 24-room structure, and the
+dialogue type classifications are all part of Andrius Kulikauskas's
+original philosophical work. This research provides systematic
+documentation and analysis but does not claim to have developed the
+underlying framework.
+\end{block}
+
+\begin{block}{Technical Infrastructure}
+\protect\phantomsection\label{technical-infrastructure}
+This research builds upon:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python scientific computing stack} (NumPy, SciPy, Pandas,
+  NetworkX, Matplotlib)
+\item
+  \textbf{SQLite} database system for data storage and querying
+\item
+  \textbf{LaTeX and Pandoc} for document preparation
+\item
+  \textbf{Open-source tools} for data analysis and visualization
+\end{itemize}
+\end{block}
+
+\begin{block}{Research Context}
+\protect\phantomsection\label{research-context}
+This work contributes to the systematic documentation and analysis of
+philosophical frameworks, demonstrating how quantitative methods can
+complement qualitative understanding. The integration of database
+analysis, network analysis, and statistical methods with philosophical
+interpretation represents a methodological contribution to the study of
+knowledge systems.
+\end{block}
+
+\begin{block}{Future Contributions}
+\protect\phantomsection\label{future-contributions}
+Future researchers building on this work should acknowledge: - Andrius
+Kulikauskas as the originator of the Ways framework - The public domain
+status of the source data - The systematic analysis and documentation
+provided by this research
+\end{block}
+\end{frame}
+
+\begin{frame}
+\emph{All errors and omissions in the analysis and interpretation remain
+the sole responsibility of the authors. The underlying philosophical
+framework and data are the work of Andrius Kulikauskas.}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,4806 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{listings}
+\newcommand{\passthrough}[1]{#1}
+\lstset{defaultdialect=[5.3]Lua}
+\lstset{defaultdialect=[x86masm]Assembler}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage[]{natbib}
+\bibliographystyle{plainnat}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{}
+\date{}
+
+% Essential packages for academic documents
+\usepackage{amsmath,amssymb}          % Mathematical symbols and environments
+\usepackage{amsfonts}                 % Additional math fonts
+\usepackage{amsthm}                   % Theorem environments
+\usepackage{graphicx}                 % Include graphics
+\usepackage[margin=1in]{geometry}     % Wider margins (1 inch all sides)
+\usepackage{float}                    % Better float placement
+\usepackage{booktabs}                 % Professional tables
+\usepackage{longtable}                % Long tables spanning pages
+\usepackage{array}                    % Advanced table formatting
+\usepackage{multirow}                 % Multi-row table cells
+\usepackage{caption}                  % Enhanced caption formatting
+\usepackage{subcaption}               % Sub-figures and sub-tables
+\usepackage{bm}                       % Bold math symbols
+\usepackage{url}                      % URL formatting
+\usepackage{hyperref}                 % Hyperlinks and cross-references
+\usepackage{cleveref}                 % Intelligent cross-referencing
+\usepackage[capitalise]{cleveref}     % Capitalize cross-reference labels
+\usepackage{natbib}                   % Bibliography support
+\usepackage{doi}                      % DOI links
+
+% Configure figure numbering and captions
+\renewcommand{\figurename}{Figure}
+\captionsetup{
+    justification=centering,
+    font=small,
+    labelfont=bf,
+    labelsep=period
+}
+
+% Configure table numbering and captions
+\renewcommand{\tablename}{Table}
+\captionsetup[table]{
+    justification=centering,
+    font=small,
+    labelfont=bf,
+    labelsep=period
+}
+
+% Configure section numbering
+\setcounter{secnumdepth}{3}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+
+% Configure equation numbering
+\numberwithin{equation}{section}
+
+% Configure hyperref for proper linking
+\hypersetup{
+    colorlinks=true,
+    linkcolor=red,
+    citecolor=red,
+    urlcolor=red,
+    filecolor=red,
+    pdfborder={0 0 0},
+    bookmarks=true,
+    bookmarksnumbered=true,
+    bookmarkstype=toc,
+    pdftitle={Research Project Template},
+    pdfauthor={Template Author},
+    pdfsubject={Academic Research},
+    pdfkeywords={research, template, academic, LaTeX},
+    pdfcreator={render_pdf.sh},
+    pdfproducer={XeLaTeX}
+}
+
+% Configure cleveref for intelligent cross-references
+\crefname{section}{Section}{Sections}
+\crefname{subsection}{Subsection}{Subsections}
+\crefname{subsubsection}{Subsubsection}{Subsubsections}
+\crefname{equation}{Equation}{Equations}
+\crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+\crefname{appendix}{Appendix}{Appendices}
+
+% Configure fonts for Unicode support with fallbacks
+\usepackage{newunicodechar}
+\newunicodechar{⁴}{\textsuperscript{4}}
+\newunicodechar{₄}{\textsubscript{4}}
+\newunicodechar{²}{\textsuperscript{2}}
+\newunicodechar{₀}{\textsubscript{0}}
+\newunicodechar{₁}{\textsubscript{1}}
+\newunicodechar{₂}{\textsubscript{2}}
+\newunicodechar{₃}{\textsubscript{3}}
+
+% Use standard fonts for better compatibility
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+
+% Enhanced code block styling for better contrast and readability
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\usepackage{listings}
+
+% Define custom colors for code blocks
+\definecolor{codebg}{RGB}{248, 248, 248}      % Very light gray background
+\definecolor{codeborder}{RGB}{200, 200, 200}  % Medium gray border
+\definecolor{codefg}{RGB}{34, 34, 34}         % Dark gray text
+\definecolor{commentcolor}{RGB}{102, 102, 102} % Comment color
+\definecolor{keywordcolor}{RGB}{0, 0, 0}       % Keyword color
+\definecolor{stringcolor}{RGB}{0, 102, 0}      % String color
+
+% Configure Verbatim environment for inline code
+\DefineVerbatimEnvironment{Verbatim}{Verbatim}{%
+    fontsize=\small,
+    frame=single,
+    framerule=0.5pt,
+    framesep=3pt,
+    rulecolor=\color{codeborder},
+    bgcolor=\color{codebg},
+    fgcolor=\color{codefg}
+}
+
+% Configure code block styling
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{%
+    fontsize=\footnotesize,
+    frame=single,
+    framerule=0.5pt,
+    framesep=5pt,
+    rulecolor=\color{codeborder},
+    bgcolor=\color{codebg},
+    fgcolor=\color{codefg}
+}
+
+% Style inline code with \texttt
+\renewcommand{\texttt}[1]{%
+    \colorbox{codebg}{\color{codefg}\ttfamily #1}%
+}
+
+% Configure listings package for code blocks
+\lstset{
+    backgroundcolor=\color{codebg},
+    basicstyle=\footnotesize\ttfamily\color{codefg},
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{commentcolor},
+    deletekeywords={...},
+    escapeinside={\%*}{*)},
+    extendedchars=true,
+    frame=single,
+    framerule=0.5pt,
+    framesep=5pt,
+    keepspaces=true,
+    keywordstyle=\color{keywordcolor}\bfseries,
+    language=Python,
+    morekeywords={*,...},
+    numbers=left,
+    numbersep=5pt,
+    numberstyle=\tiny\color{codefg},
+    rulecolor=\color{codeborder},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    stepnumber=1,
+    stringstyle=\color{stringcolor},
+    tabsize=4,
+    title=\lstname
+}
+
+% Override any Pandoc default lstset configurations
+\AtBeginDocument{
+    \lstset{
+        backgroundcolor=\color{codebg},
+        basicstyle=\footnotesize\ttfamily\color{codefg},
+        frame=single,
+        framerule=0.5pt,
+        framesep=5pt,
+        rulecolor=\color{codeborder},
+        numbers=left,
+        numbersep=5pt,
+        numberstyle=\tiny\color{codefg}
+    }
+}
+
+% Configure bibliography
+% Note: Using plainnat with natbib package for proper citation processing
+% The bibliography style and commands (\bibliographystyle and \bibliography) are in 99_references.md
+
+% Simple page break support for document structure
+% Note: Page breaks are handled in the markdown generation, not here
+
+% Ensure proper spacing and formatting
+\frenchspacing  % Single space after periods
+\linespread{1.2}  % Slightly increased line spacing for readability
+
+\title{Ways of Figuring Things Out: A Systematic Analysis\\\normalsize Documenting and Analyzing Andrius Kulikauskas's 284 Ways of Knowledge Acquisition}
+\author{Daniel Ari Friedman}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\section{Abstract}\label{sec:abstract}
+
+This research presents a comprehensive systematic analysis of Andrius
+Kulikauskas's ``Ways of Figuring Things Out,'' documenting and analyzing
+210 ways from the database with connections to the broader framework of
+284 ways in the source text. The database-driven analysis covers 24
+rooms in the House of Knowledge, 38 distinct dialogue types, and 196
+unique dialogue partners, organized within fundamental structures of
+believing (1-2-3-4), caring (1-2-3-4), and relative learning (taking a
+stand, following through, reflecting). Our quantitative analysis reveals
+systematic patterns: the B2 room contains the most ways (23),
+``goodness'' and ``other'' are the most common dialogue types (15 each),
+and the network exhibits 1,290 edges with a clustering coefficient of
+0.886, connecting ways through shared rooms, dialogue types, and
+partners. Cross-tabulation analysis shows strong associations between
+dialogue types and room assignments, with information-theoretic metrics
+quantifying the structure's organization. Network analysis identifies
+central ways serving as bridges between categories, while text analysis
+of examples reveals thematic patterns across 210 documented ways. This
+work provides both a philosophical framework for understanding different
+approaches to knowledge and a practical system for analyzing and
+applying these ways in educational, research, and personal development
+contexts, offering tools for researchers, educators, and practitioners
+seeking to understand and apply diverse approaches to figuring things
+out.
+
+\newpage
+
+\section{Introduction}\label{sec:introduction}
+
+\subsection{Overview}\label{overview}
+
+This research documents and analyzes Andrius Kulikauskas's comprehensive
+framework of ``Ways of Figuring Things Out,'' a systematic collection of
+210 documented ways from the database, with connections to the broader
+framework of 284 ways described in the source text. The work presents
+both a philosophical framework for understanding different approaches to
+knowledge and an empirical analysis of how these ways are structured,
+categorized, and interrelated.
+
+\subsubsection{Data Summary}\label{data-summary}
+
+The analysis database contains comprehensive metadata for all documented
+ways:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Category} & \textbf{Count} \\
+\hline
+Total ways (database) & 210 \\
+Total ways (documented) & 284 \\
+Rooms in House of Knowledge & 24 \\
+Distinct dialogue types & 38 \\
+Unique dialogue partners & 196 \\
+Network nodes & 210 \\
+Network edges & 1,290 \\
+\hline
+\end{tabular}
+\caption{Summary statistics for Ways of Figuring Things Out database}
+\label{tab:data_summary}
+\end{table}
+
+The framework structure is visualized in Figure
+\ref{fig:room_hierarchy}, showing the distribution of ways across the 24
+rooms. The network of relationships between ways is presented in Figure
+\ref{fig:ways_network}, revealing clusters and central connecting ways.
+
+\subsection{The House of Knowledge
+Framework}\label{the-house-of-knowledge-framework}
+
+The Ways framework is organized around a ``House of Knowledge''
+containing 24 rooms, each representing a different aspect of how we come
+to know and understand. These rooms are structured according to
+fundamental philosophical principles:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Believing (1-2-3-4)}: Four levels of believing, from basic
+  belief to fostering spirit among us
+\item
+  \textbf{Caring (1-2-3-4)}: Four levels of caring, from basic openness
+  to acknowledging what transcends our limits\\
+\item
+  \textbf{Relative Learning}: The cycle of taking a stand, following
+  through, and reflecting
+\item
+  \textbf{Dialogue Types}: Absolute, Relative, and Embrace God
+  perspectives
+\end{itemize}
+
+Each way represents a specific method for figuring things out,
+documented with examples, dialogue partners, and its relationship to the
+broader framework.
+
+\subsection{Research Objectives}\label{research-objectives}
+
+This work aims to:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Documentation}: Provide complete documentation of all 284 ways
+  with their characteristics, examples, and relationships
+\item
+  \textbf{Categorization}: Systematically categorize ways according to
+  dialogue types, rooms, and philosophical structures
+\item
+  \textbf{Analysis}: Conduct empirical analysis of way distributions,
+  patterns, and interrelationships
+\item
+  \textbf{Visualization}: Create visual representations of the network
+  of ways and their connections
+\item
+  \textbf{Application}: Develop tools and frameworks for applying these
+  ways in educational and research contexts
+\end{enumerate}
+
+\subsection{Data Sources}\label{data-sources}
+
+The research draws on two primary data sources:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{SQL Database}: A comprehensive SQLite database (converted from
+  MySQL) containing 210 ways with complete metadata including dialogue
+  types, examples, room assignments (mene), God relationships (Dievas),
+  and conversant information
+\item
+  \textbf{Text Documentation}: Detailed markdown documentation
+  (\passthrough{\lstinline!ways.md!}) providing philosophical context,
+  examples, and descriptions for all 284 ways
+\end{itemize}
+
+\subsection{Methodology Overview}\label{methodology-overview}
+
+Our approach combines:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Database Analysis}: SQLite conversion and querying of the ways
+  database to extract patterns and relationships
+\item
+  \textbf{Network Analysis}: Graph-based analysis of how ways connect
+  through dialogue partners and shared characteristics
+\item
+  \textbf{Statistical Analysis}: Quantitative analysis of distributions
+  across categories, dialogue types, and rooms
+\item
+  \textbf{Text Analysis}: Analysis of way descriptions and examples to
+  extract themes and patterns
+\item
+  \textbf{Visualization}: Creation of network graphs, hierarchical
+  visualizations, and statistical plots
+\end{itemize}
+
+\subsection{Key Contributions}\label{key-contributions}
+
+This research makes several key contributions:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Complete Documentation}: First comprehensive systematic
+  documentation of all 284 ways
+\item
+  \textbf{Empirical Analysis}: Quantitative analysis revealing patterns
+  in way distributions and relationships
+\item
+  \textbf{Network Mapping}: Visualization of the network structure
+  connecting different ways
+\item
+  \textbf{Categorization System}: Systematic organization within the
+  24-room House of Knowledge framework
+\item
+  \textbf{Practical Tools}: Database and analysis tools for researchers
+  and practitioners
+\end{enumerate}
+
+\subsection{Manuscript Organization}\label{manuscript-organization}
+
+The manuscript is organized as follows:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Abstract} (Section \ref{sec:abstract}): Overview of the
+  research and key findings
+\item
+  \textbf{Introduction} (Section \ref{sec:introduction}): Framework
+  overview and research objectives
+\item
+  \textbf{Methodology} (Section \ref{sec:methodology}): Database
+  structure, analysis methods, and House of Knowledge framework
+\item
+  \textbf{Experimental Results} (Section
+  \ref{sec:experimental_results}): Statistical analysis of ways,
+  distributions, and patterns
+\item
+  \textbf{Discussion} (Section \ref{sec:discussion}): Interpretation of
+  findings and philosophical implications
+\item
+  \textbf{Conclusion} (Section \ref{sec:conclusion}): Summary and future
+  directions
+\end{enumerate}
+
+Supplemental sections provide extended methodological details,
+additional results, and detailed analysis of specific aspects of the
+framework.
+
+\subsection{Philosophical Context}\label{philosophical-context}
+
+The Ways framework emerges from a deep engagement with questions of
+epistemology, learning, and knowledge. It addresses fundamental
+questions:
+
+\begin{itemize}
+\tightlist
+\item
+  How do we come to know things?
+\item
+  What are the different valid approaches to understanding?
+\item
+  How do belief, care, and learning interact in knowledge acquisition?
+\item
+  What role does dialogue play in figuring things out?
+\item
+  How can we systematically organize different approaches to knowledge?
+\end{itemize}
+
+The framework provides a comprehensive answer to these questions through
+its systematic organization of 284 distinct ways, each representing a
+valid approach to knowledge and understanding.
+
+\subsection{Applications}\label{applications}
+
+This research has applications across multiple domains:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Education}: Understanding different learning styles and
+  approaches
+\item
+  \textbf{Research Methodology}: Systematic approaches to knowledge
+  acquisition
+\item
+  \textbf{Personal Development}: Tools for understanding one's own ways
+  of figuring things out
+\item
+  \textbf{Philosophy}: Contributions to epistemology and knowledge
+  systems theory
+\item
+  \textbf{Interdisciplinary Studies}: Framework for understanding
+  knowledge across domains
+\end{itemize}
+
+\subsection{Structure of This Work}\label{structure-of-this-work}
+
+The following sections provide detailed analysis of the Ways framework.
+Section \ref{sec:methodology} describes the database structure and
+analysis methods. Section \ref{sec:experimental_results} presents
+statistical findings and patterns. Section \ref{sec:discussion}
+interprets these findings within the broader philosophical context.
+Supplemental sections provide extended details on methodology,
+additional results, and detailed analysis of specific aspects of the
+framework.
+
+\newpage
+
+\section{Methodology}\label{sec:methodology}
+
+\subsection{Database Structure and
+Conversion}\label{database-structure-and-conversion}
+
+\subsubsection{Source Data}\label{source-data}
+
+The research draws on a MySQL database dump containing 11 tables
+documenting Andrius Kulikauskas's Ways of Figuring Things Out framework.
+The primary data table \passthrough{\lstinline!ways!} contains 210
+documented ways with the following key fields (see Table
+\ref{tab:ways_schema}):
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!way!}: The name/identifier of the way
+\item
+  \passthrough{\lstinline!dialoguewith!}: The dialogue partner or
+  conversant
+\item
+  \passthrough{\lstinline!dialoguetype!}: The type of dialogue
+  (Absolute, Relative, Embrace God)
+\item
+  \passthrough{\lstinline!dialoguetypetype!}: Sub-type classification
+\item
+  \passthrough{\lstinline!mene!}: Room assignment in the House of
+  Knowledge (24 rooms)
+\item
+  \passthrough{\lstinline!Dievas!}: Relationship to God/the divine
+\item
+  \passthrough{\lstinline!examples!}: Examples and descriptions
+\item
+  \passthrough{\lstinline!comments!}: Additional comments and notes
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Field} & \textbf{Description} \\
+\hline
+\texttt{way} & The name/identifier of the way \\
+\texttt{dialoguewith} & The dialogue partner or conversant \\
+\texttt{dialoguetype} & The type of dialogue (Absolute, Relative, Embrace God) \\
+\texttt{dialoguetypetype} & Sub-type classification \\
+\texttt{mene} & Room assignment in the House of Knowledge (24 rooms) \\
+\texttt{Dievas} & Relationship to God/the divine \\
+\texttt{examples} & Examples and descriptions \\
+\texttt{comments} & Additional comments and notes \\
+\hline
+\end{tabular}
+\caption{Key fields in the \texttt{ways} table schema}
+\label{tab:ways_schema}
+\end{table}
+
+\subsubsection{SQLite Conversion}\label{sqlite-conversion}
+
+For analysis and portability, the MySQL dump was converted to SQLite
+format. The conversion process:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Schema Conversion}: MySQL-specific syntax (AUTO\_INCREMENT,
+  ENGINE, COLLATE) converted to SQLite-compatible syntax
+\item
+  \textbf{Table Renaming}: Tables renamed for clarity
+  (\passthrough{\lstinline!20100422ways!} →
+  \passthrough{\lstinline!ways!}, \passthrough{\lstinline!menes!} →
+  \passthrough{\lstinline!rooms!}, etc.)
+\item
+  \textbf{Index Handling}: Index names adjusted to avoid conflicts with
+  table names (SQLite restriction)
+\item
+  \textbf{Data Preservation}: All data preserved during conversion with
+  proper encoding handling
+\end{enumerate}
+
+The resulting SQLite database (\passthrough{\lstinline!db/ways.db!})
+provides a portable, queryable format for analysis. The complete
+database schema is documented in Section \ref{sec:appendix} (Appendix
+A).
+
+\subsubsection{Implementation Modules}\label{implementation-modules}
+
+The analysis is implemented using several specialized modules in
+\passthrough{\lstinline!project/src/!}:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\passthrough{\lstinline!database.py!}}: SQLAlchemy ORM models
+  for Ways, Rooms, Questions, and database access
+\item
+  \textbf{\passthrough{\lstinline!sql\_queries.py!}}: Pre-built SQL
+  queries for common analysis operations
+\item
+  \textbf{\passthrough{\lstinline!ways\_analysis.py!}}: High-level ways
+  characterization and analysis functions
+\item
+  \textbf{\passthrough{\lstinline!network\_analysis.py!}}: Graph-based
+  network analysis of way relationships
+\item
+  \textbf{\passthrough{\lstinline!house\_of\_knowledge.py!}}: Analysis
+  of the 24-room House of Knowledge framework
+\item
+  \textbf{\passthrough{\lstinline!statistics.py!}}: Statistical analysis
+  functions including
+  \passthrough{\lstinline!analyze\_way\_distributions()!},
+  \passthrough{\lstinline!compute\_way\_correlations()!},
+  \passthrough{\lstinline!compute\_way\_diversity\_metrics()!}
+\item
+  \textbf{\passthrough{\lstinline!metrics.py!}}: Performance metrics
+  including \passthrough{\lstinline!compute\_way\_coverage\_metrics()!},
+  \passthrough{\lstinline!compute\_way\_interconnectedness()!}
+\item
+  \textbf{\passthrough{\lstinline!models.py!}}: Data classes and enums
+  for type-safe data handling
+\end{itemize}
+
+\subsection{House of Knowledge
+Framework}\label{house-of-knowledge-framework}
+
+\subsubsection{24-Room Structure}\label{room-structure}
+
+The Ways framework organizes knowledge into 24 rooms within the ``House
+of Knowledge.'' Each room represents a different aspect of how we come
+to know and understand:
+
+\begin{equation}\label{eq:house_structure}
+\text{House of Knowledge} = \{\text{Room}_1, \text{Room}_2, \ldots, \text{Room}_{24}\}
+\end{equation}
+
+The rooms are organized according to three fundamental structures:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Believing (1-2-3-4)}: Four levels of belief structure
+\item
+  \textbf{Caring (1-2-3-4)}: Four levels of care structure\\
+\item
+  \textbf{Relative Learning}: The cycle of taking a stand, following
+  through, and reflecting
+\end{enumerate}
+
+\subsubsection{Room Categories}\label{room-categories}
+
+Each way is assigned to one or more rooms via the
+\passthrough{\lstinline!mene!} field, creating a mapping:
+
+\begin{equation}\label{eq:way_room_mapping}
+\text{Way}_i \mapsto \{\text{Room}_j : \text{Way}_i \text{ belongs to Room}_j\}
+\end{equation}
+
+This mapping enables analysis of how ways cluster within rooms and how
+rooms relate to one another.
+
+\subsection{Dialogue Type
+Classification}\label{dialogue-type-classification}
+
+\subsubsection{Three Main Types}\label{three-main-types}
+
+Ways are classified according to three primary dialogue types:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Absolute}: Ways that reference absolute truth or structure
+\item
+  \textbf{Relative}: Ways that engage with relative perspectives
+\item
+  \textbf{Embrace God}: Ways that explicitly engage with the divine or
+  transcendent
+\end{enumerate}
+
+The distribution of ways across dialogue types provides insight into the
+balance of different epistemological approaches in the framework.
+
+\subsubsection{Dialogue Type Analysis}\label{dialogue-type-analysis}
+
+For each way \(w_i\), we extract:
+
+\begin{equation}\label{eq:dialogue_type}
+\text{Type}(w_i) \in \{\text{Absolute}, \text{Relative}, \text{Embrace God}\}
+\end{equation}
+
+This classification enables statistical analysis of type distributions
+and relationships.
+
+\subsection{Network Analysis
+Methodology}\label{network-analysis-methodology}
+
+\subsubsection{Graph Construction}\label{graph-construction}
+
+We construct a weighted network graph \(G = (V, E, w)\) where:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Vertices \(V\)}: Each way \(w_i\) is a node \(v_i \in V\),
+  with \(|V| = 210\)
+\item
+  \textbf{Edges \(E\)}: Connections between ways based on:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Shared dialogue partners (\passthrough{\lstinline!dialoguewith!}):
+    \(e_{ij} \in E\) if
+    \(\text{dialoguewith}(w_i) = \text{dialoguewith}(w_j)\)
+  \item
+    Shared room assignments (\passthrough{\lstinline!mene!}):
+    \(e_{ij} \in E\) if \(\text{mene}(w_i) = \text{mene}(w_j)\)
+  \item
+    Similar dialogue types: \(e_{ij} \in E\) if
+    \(\text{dialoguetype}(w_i) = \text{dialoguetype}(w_j)\)
+  \item
+    Question relationships (\passthrough{\lstinline!klausimobudai!}
+    table): \(e_{ij} \in E\) if
+    \(\exists q: (w_i, q) \in Q \land (w_j, q) \in Q\)
+  \end{itemize}
+\item
+  \textbf{Edge weights \(w\)}: \(w(e_{ij}) \in \{0.6, 0.8, 1.0\}\) based
+  on relationship type (type, partner, room respectively)
+\end{itemize}
+
+The resulting network contains \(|E| = 1,290\) edges connecting the 210
+ways.
+
+\subsubsection{Centrality Metrics}\label{centrality-metrics}
+
+We compute several centrality metrics to identify important ways:
+
+\textbf{Degree Centrality:} \begin{equation}\label{eq:degree_centrality}
+C_D(v) = \frac{\deg(v)}{|V| - 1}
+\end{equation}
+
+\textbf{Betweenness Centrality:}
+\begin{equation}\label{eq:betweenness_centrality}
+C_B(v) = \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigma_{st}}
+\end{equation}
+
+where \(\sigma_{st}\) is the number of shortest paths from \(s\) to
+\(t\), and \(\sigma_{st}(v)\) is the number of those paths passing
+through \(v\).
+
+\textbf{Clustering Coefficient:} \begin{equation}\label{eq:clustering}
+C_C(v) = \frac{2e_v}{k_v(k_v - 1)}
+\end{equation}
+
+where \(e_v\) is the number of edges between neighbors of \(v\), and
+\(k_v\) is the degree of \(v\).
+
+\subsection{Statistical Analysis
+Methods}\label{statistical-analysis-methods}
+
+\subsubsection{Distribution Analysis}\label{distribution-analysis}
+
+We analyze the distribution of ways across:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Dialogue Types}: Count and percentage by type, with 38
+  distinct types observed
+\item
+  \textbf{Rooms}: Distribution across 24 rooms, with B2 containing the
+  most ways (23)
+\item
+  \textbf{Dialogue Partners}: Frequency of conversants, with 196 unique
+  partners
+\item
+  \textbf{God Relationships}: Distribution of
+  \passthrough{\lstinline!Dievas!} values
+\end{enumerate}
+
+\subsubsection{Information-Theoretic
+Metrics}\label{information-theoretic-metrics}
+
+We compute Shannon entropy to quantify the diversity of distributions:
+
+\begin{equation}\label{eq:entropy}
+H(X) = -\sum_{i=1}^{k} p_i \log_2(p_i)
+\end{equation}
+
+where \(p_i\) is the proportion in category \(i\) and \(k\) is the
+number of categories.
+
+\textbf{Mutual Information} between dialogue types and rooms:
+
+\begin{equation}\label{eq:mutual_info}
+I(X;Y) = \sum_{x,y} p(x,y) \log_2 \frac{p(x,y)}{p(x)p(y)}
+\end{equation}
+
+This quantifies the strength of association between dialogue types and
+room assignments.
+
+\subsubsection{Cross-Tabulation}\label{cross-tabulation}
+
+Cross-tabulation analysis examines relationships between:
+
+\begin{itemize}
+\tightlist
+\item
+  Dialogue type × Room assignment (visualized in Figure
+  \ref{fig:type_room_heatmap})
+\item
+  Dialogue type × Dialogue partner
+\item
+  Room × God relationship
+\end{itemize}
+
+This reveals patterns in how different dimensions of the framework
+relate, with the cross-tabulation matrix showing concentrations of ways
+at specific type-room intersections.
+
+\subsection{Text Analysis}\label{text-analysis}
+
+\subsubsection{Way Descriptions}\label{way-descriptions}
+
+For ways with text descriptions in \passthrough{\lstinline!ways.md!}, we
+perform:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Keyword Extraction}: Identify key terms and concepts
+\item
+  \textbf{Theme Analysis}: Extract recurring themes
+\item
+  \textbf{Example Analysis}: Analyze examples to understand way
+  applications
+\item
+  \textbf{Relationship Extraction}: Identify references to other ways or
+  concepts
+\end{enumerate}
+
+\subsubsection{Philosophical Structure
+Analysis}\label{philosophical-structure-analysis}
+
+Text analysis also examines:
+
+\begin{itemize}
+\tightlist
+\item
+  How ways relate to the believing/caring/learning structures
+\item
+  References to the House of Knowledge framework
+\item
+  Connections to broader philosophical concepts
+\end{itemize}
+
+\subsection{Data Processing Pipeline}\label{data-processing-pipeline}
+
+\subsubsection{Extraction}\label{extraction}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Database Query}: Extract ways data from SQLite database
+\item
+  \textbf{Text Parsing}: Parse \passthrough{\lstinline!ways.md!} for
+  additional context
+\item
+  \textbf{Relationship Extraction}: Build network from relationship
+  tables
+\end{enumerate}
+
+\subsubsection{Transformation}\label{transformation}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Normalization}: Standardize way names and categories
+\item
+  \textbf{Encoding}: Handle Lithuanian/English text encoding
+\item
+  \textbf{Cleaning}: Remove duplicates and handle missing data
+\end{enumerate}
+
+\subsubsection{Analysis}\label{analysis}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Statistical Computation}: Calculate distributions and metrics
+\item
+  \textbf{Network Construction}: Build graph structures
+\item
+  \textbf{Visualization Generation}: Create plots and network diagrams
+\end{enumerate}
+
+\subsection{Validation Framework}\label{validation-framework}
+
+\subsubsection{Data Quality Checks}\label{data-quality-checks}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Completeness}: Verify all ways have required fields
+\item
+  \textbf{Consistency}: Check for conflicting assignments
+\item
+  \textbf{Referential Integrity}: Validate room and relationship
+  references
+\end{enumerate}
+
+\subsubsection{Analysis Validation}\label{analysis-validation}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Reproducibility}: Ensure analyses are reproducible
+\item
+  \textbf{Sensitivity}: Test sensitivity to data variations
+\item
+  \textbf{Robustness}: Verify results are robust to missing data
+\end{enumerate}
+
+\subsection{SQL Query Examples}\label{sql-query-examples}
+
+Key analyses are performed using SQL queries against the SQLite
+database. Example queries include:
+
+\textbf{Dialogue Type Distribution:}
+
+\begin{lstlisting}[language=SQL]
+SELECT dialoguetype, COUNT(*) as count
+FROM ways
+GROUP BY dialoguetype
+ORDER BY count DESC;
+\end{lstlisting}
+
+\textbf{Room-Way Cross-Tabulation:}
+
+\begin{lstlisting}[language=SQL]
+SELECT dialoguetype, mene, COUNT(*) as count
+FROM ways
+WHERE mene != '' AND dialoguetype != ''
+GROUP BY dialoguetype, mene
+ORDER BY count DESC;
+\end{lstlisting}
+
+\textbf{Network Edge Construction (Room-based):}
+
+\begin{lstlisting}[language=SQL]
+SELECT w1.ID as way1_id, w2.ID as way2_id
+FROM ways w1
+JOIN ways w2 ON w1.mene = w2.mene
+WHERE w1.ID < w2.ID AND w1.mene != '';
+\end{lstlisting}
+
+\textbf{Central Ways Identification:}
+
+\begin{lstlisting}[language=SQL]
+SELECT way, COUNT(*) as connection_count
+FROM (
+    SELECT w1.way, w2.ID
+    FROM ways w1
+    JOIN ways w2 ON w1.mene = w2.mene
+    WHERE w1.ID != w2.ID AND w1.mene != ''
+    UNION
+    SELECT w1.way, w2.ID
+    FROM ways w1
+    JOIN ways w2 ON w1.dialoguewith = w2.dialoguewith
+    WHERE w1.ID != w2.ID AND w1.dialoguewith != ''
+)
+GROUP BY way
+ORDER BY connection_count DESC
+LIMIT 10;
+\end{lstlisting}
+
+\subsection{Implementation}\label{implementation}
+
+The analysis is implemented using several specialized Python modules:
+
+\subsubsection{Core Analysis Modules}\label{core-analysis-modules}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\passthrough{\lstinline!database.py!}}: SQLAlchemy ORM with
+  \passthrough{\lstinline!WaysDatabase!} class for database access
+\item
+  \textbf{\passthrough{\lstinline!sql\_queries.py!}}:
+  \passthrough{\lstinline!WaysSQLQueries!} class with pre-built analysis
+  queries
+\item
+  \textbf{\passthrough{\lstinline!ways\_analysis.py!}}:
+  \passthrough{\lstinline!WaysAnalyzer!} class for comprehensive ways
+  characterization
+\item
+  \textbf{\passthrough{\lstinline!network\_analysis.py!}}:
+  \passthrough{\lstinline!WaysNetworkAnalyzer!} class for graph-based
+  relationship analysis
+\item
+  \textbf{\passthrough{\lstinline!house\_of\_knowledge.py!}}: Framework
+  analysis for the 24-room House of Knowledge
+\item
+  \textbf{\passthrough{\lstinline!statistics.py!}}: Statistical
+  functions including
+  \passthrough{\lstinline!analyze\_way\_distributions()!},
+  \passthrough{\lstinline!compute\_way\_correlations()!}
+\item
+  \textbf{\passthrough{\lstinline!metrics.py!}}: Performance metrics
+  including \passthrough{\lstinline!compute\_way\_coverage\_metrics()!},
+  \passthrough{\lstinline!compute\_way\_interconnectedness()!}
+\end{itemize}
+
+\subsubsection{Infrastructure}\label{infrastructure}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python 3.10+}: Primary analysis language
+\item
+  \textbf{SQLite}: Database backend via SQLAlchemy ORM
+\item
+  \textbf{NetworkX}: Network analysis and graph algorithms
+\item
+  \textbf{Matplotlib/Seaborn}: Statistical visualization and plotting
+\item
+  \textbf{NumPy/Pandas}: Numerical computing and data manipulation
+\end{itemize}
+
+All code follows the thin orchestrator pattern, with business logic in
+\passthrough{\lstinline!project/src/!} modules and orchestration in
+\passthrough{\lstinline!project/scripts/!}.
+
+\subsection{Ethical Considerations}\label{ethical-considerations}
+
+This research documents and analyzes publicly available philosophical
+work by Andrius Kulikauskas. All data is in the public domain as stated
+in the source documentation. The analysis respects the original
+philosophical framework while providing systematic documentation and
+quantitative insights.
+
+\newpage
+
+\section{Experimental Results}\label{sec:experimental_results}
+
+\subsection{Database Overview}\label{database-overview}
+
+\subsubsection{Data Summary}\label{data-summary-1}
+
+The analysis database contains:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{210 documented ways} in the primary
+  \passthrough{\lstinline!ways!} table
+\item
+  \textbf{24 rooms} in the House of Knowledge
+  (\passthrough{\lstinline!rooms!} table)
+\item
+  \textbf{Multiple examples} per way (\passthrough{\lstinline!examples!}
+  table)
+\item
+  \textbf{Question-way relationships}
+  (\passthrough{\lstinline!klausimobudai!} table)
+\item
+  \textbf{Dialogue partner information} for each way
+\end{itemize}
+
+\subsubsection{Data Completeness}\label{data-completeness}
+
+Analysis of data completeness reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  All 210 ways have dialogue type assignments
+\item
+  Room assignments (\passthrough{\lstinline!mene!}) present for majority
+  of ways
+\item
+  Dialogue partner (\passthrough{\lstinline!dialoguewith!}) information
+  available for most ways
+\item
+  Examples and descriptions vary in completeness
+\end{itemize}
+
+\subsection{Distribution Analysis}\label{distribution-analysis-1}
+
+\subsubsection{Dialogue Type
+Distribution}\label{dialogue-type-distribution}
+
+Analysis of ways by dialogue type reveals the distribution across the
+three main categories:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Dialogue Type} & \textbf{Count} & \textbf{Percentage} \\
+\hline
+goodness & 15 & 7.1\% \\
+other & 15 & 7.1\% \\
+regularity & 11 & 5.2\% \\
+I & 9 & 4.3\% \\
+answer & 9 & 4.3\% \\
+knowledge & 8 & 3.8\% \\
+life & 8 & 3.8\% \\
+mind & 8 & 3.8\% \\
+my mind & 7 & 3.3\% \\
+opposing view & 7 & 3.3\% \\
+\hline
+\textbf{Total} & 210 & 100\% \\
+\hline
+\end{tabular}
+\caption{Distribution of ways by dialogue type (top 10)}
+\label{tab:dialogue_type_distribution}
+\end{table}
+
+The complete distribution is visualized in Figure
+\ref{fig:type_distribution}, showing the full range of 38 distinct
+dialogue types.
+
+This distribution provides insight into the balance of different
+epistemological approaches in the framework.
+
+\subsubsection{Room Distribution}\label{room-distribution}
+
+Analysis of ways across the 24 rooms of the House of Knowledge reveals:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Room} & \textbf{Way Count} & \textbf{Percentage} \\
+\hline
+B2 & 23 & 11.0\% \\
+C4 & 17 & 8.1\% \\
+R & 16 & 7.6\% \\
+32 & 13 & 6.2\% \\
+C3 & 13 & 6.2\% \\
+BB & 12 & 5.7\% \\
+CB & 10 & 4.8\% \\
+21 & 9 & 4.3\% \\
+B3 & 9 & 4.3\% \\
+CC & 9 & 4.3\% \\
+O & 9 & 4.3\% \\
+T & 9 & 4.3\% \\
+10 & 8 & 3.8\% \\
+31 & 8 & 3.8\% \\
+1 & 7 & 3.3\% \\
+\hline
+\textbf{Total} & 210 & 100\% \\
+\hline
+\end{tabular}
+\caption{Distribution of ways across top 15 rooms}
+\label{tab:room_distribution}
+\end{table}
+
+The complete room hierarchy is visualized in Figure
+\ref{fig:room_hierarchy}, and the framework structure is shown in Figure
+\ref{fig:framework_treemap}.
+
+Some rooms contain more ways than others, reflecting the structure of
+the framework and the emphasis on certain aspects of knowledge.
+
+\subsection{Network Analysis Results}\label{network-analysis-results}
+
+\subsubsection{Network Structure}\label{network-structure}
+
+The network graph constructed from way relationships exhibits:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Nodes}: 210 ways
+\item
+  \textbf{Edges}: 1,290 connections
+\item
+  \textbf{Average degree}: 12.29 connections per way
+\item
+  \textbf{Network density}: 0.058 (5.8\% of possible edges present)
+\item
+  \textbf{Clustering coefficient}: 0.886 (high local clustering,
+  indicating strong room-based clustering)
+\item
+  \textbf{Connected components}: Multiple components with largest
+  containing majority of ways
+\item
+  \textbf{Network visualization}: See Figure \ref{fig:ways_network}
+\end{itemize}
+
+The network structure reveals both local clustering (ways in the same
+room are highly connected) and long-range connections (ways sharing
+dialogue types or partners across different rooms).
+
+\subsubsection{Central Ways}\label{central-ways}
+
+Centrality analysis identifies ways that serve as hubs or bridges:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Way ID} & \textbf{Degree Centrality} & \textbf{Room} \\
+\hline
+84, 156, 211 & 34 & Multiple rooms \\
+115 & 30 & Multiple rooms \\
+120 & 25 & Multiple rooms \\
+\hline
+\end{tabular}
+\caption{Most central ways by degree centrality (top 5)}
+\label{tab:central_ways}
+\end{table}
+
+These central ways serve as hubs connecting multiple other ways through
+shared rooms, dialogue types, or partners. The complete network
+structure is visualized in Figure \ref{fig:ways_network}, showing the
+clustering and connectivity patterns.
+
+\subsubsection{Community Detection}\label{community-detection}
+
+Community detection algorithms reveal clusters of related ways:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Cluster 1}: Ways related to goodness and morality (15 ways)
+\item
+  \textbf{Cluster 2}: Ways related to regularity and structure (11 ways)
+\item
+  \textbf{Cluster 3}: Ways related to personal identity and ``I'' (9
+  ways)
+\end{itemize}
+
+These clusters may correspond to different aspects of the House of
+Knowledge or different dialogue types.
+
+\subsection{Cross-Tabulation Analysis}\label{cross-tabulation-analysis}
+
+\subsubsection{Dialogue Type × Room}\label{dialogue-type-room}
+
+Cross-tabulation of dialogue types and room assignments reveals patterns
+(visualized in Figure \ref{fig:type_room_heatmap}):
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Type × Room} & \textbf{Count} & \textbf{Notes} \\
+\hline
+goodness × B2 & 15 & Believing framework \\
+goodness × C4 & 17 & Caring framework \\
+other × B2 & 15 & Primary combination \\
+regularity × BB & 11 & Strong association \\
+I × CC & 9 & Identity-focused \\
+life × R & 8 & Life-related ways \\
+mind × 10 & Cognitive approaches \\
+\hline
+\end{tabular}
+\caption{Top cross-tabulations of dialogue types and rooms}
+\label{tab:type_room_crosstab}
+\end{table}
+
+The heatmap visualization (Figure \ref{fig:type_room_heatmap}) reveals
+strong associations between certain dialogue types and specific rooms,
+indicating structural relationships in the framework. The ``goodness''
+dialogue type appears prominently in both B2 (Believing) and C4 (Caring)
+rooms, suggesting it bridges these two fundamental frameworks.
+
+\subsubsection{Dialogue Partner
+Analysis}\label{dialogue-partner-analysis}
+
+Analysis of dialogue partners (\passthrough{\lstinline!dialoguewith!})
+reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Most common partners}: life, limits of my mind, circumstances,
+  science, purpose, answer, people's inclinations, possibility,
+  goodness, meaningfulness (all with 2 ways each)
+\item
+  \textbf{Partner diversity}: 116 unique partners
+\item
+  \textbf{Partner-way relationships}: Most partners connect exactly 2
+  ways, indicating pairwise relationships
+\end{itemize}
+
+Some dialogue partners appear frequently across multiple ways,
+suggesting they represent important perspectives or approaches.
+
+\subsection{Statistical Patterns}\label{statistical-patterns}
+
+\subsubsection{Room Co-occurrence}\label{room-co-occurrence}
+
+Analysis of ways assigned to multiple rooms reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Average rooms per way}: 1.0 (each way assigned to exactly one
+  room)
+\item
+  \textbf{Most common room pairs}: N/A (single room assignments)
+\item
+  \textbf{Room clusters}: Rooms B2, C4, R, C3, 32 contain the highest
+  concentrations of ways
+\end{itemize}
+
+This indicates how different aspects of knowledge relate to one another
+in the framework.
+
+\subsubsection{Dialogue Type Patterns}\label{dialogue-type-patterns}
+
+Statistical analysis of dialogue type patterns shows:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Type transitions}: How ways of one type relate to ways of
+  another
+\item
+  \textbf{Type clusters}: Groups of ways with similar type
+  characteristics
+\item
+  \textbf{Type diversity}: Distribution of types within rooms and
+  categories
+\end{itemize}
+
+\subsection{Text Analysis Results}\label{text-analysis-results}
+
+\subsubsection{Keyword Extraction}\label{keyword-extraction}
+
+Analysis of way descriptions and examples reveals common themes:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Top keywords}: goodness, regularity, other, I, answer (from
+  dialogue types)
+\item
+  \textbf{Keyword clusters}: Philosophical concepts, personal
+  relationships, structural patterns
+\item
+  \textbf{Keyword-room associations}: B2 room associated with ``other'',
+  BB room with ``regularity''
+\end{itemize}
+
+\subsubsection{Example Analysis}\label{example-analysis}
+
+Analysis of examples reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Common example types}: Personal experiences, philosophical
+  reflections, practical applications
+\item
+  \textbf{Example patterns}: Ways often illustrated through personal
+  anecdotes and thought processes
+\item
+  \textbf{Example-way relationships}: Examples provide concrete
+  illustrations of abstract ways of figuring things out
+\end{itemize}
+
+\subsection{Visualization Results}\label{visualization-results}
+
+\subsubsection{Network Graph}\label{network-graph}
+
+The network visualization (Figure \ref{fig:ways_network}) shows:
+
+\begin{itemize}
+\tightlist
+\item
+  Ways as nodes, colored by dialogue type
+\item
+  Connections as edges, weighted by relationship strength
+\item
+  Clusters visible as dense regions
+\item
+  Central ways as highly connected nodes
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../figures/ways_network.png}
+\caption{Network graph of ways showing connections and clusters}
+\label{fig:ways_network}
+\end{figure}
+
+\subsubsection{Room Distribution}\label{room-distribution-1}
+
+A hierarchical visualization (Figure \ref{fig:room_hierarchy}) shows:
+
+\begin{itemize}
+\tightlist
+\item
+  The 24-room structure
+\item
+  Way counts per room
+\item
+  Relationships between rooms
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../figures/room_hierarchy.png}
+\caption{Hierarchical visualization of the House of Knowledge structure}
+\label{fig:room_hierarchy}
+\end{figure}
+
+\subsubsection{Statistical
+Distributions}\label{statistical-distributions}
+
+Distribution plots show:
+
+\begin{itemize}
+\tightlist
+\item
+  Dialogue type frequencies (Figure \ref{fig:type_distribution})
+\item
+  Room assignment patterns (Figure \ref{fig:room_hierarchy})
+\item
+  Framework structure (Figure \ref{fig:framework_treemap})
+\item
+  Dialogue partner frequencies (Figure \ref{fig:partner_wordcloud})
+\item
+  Example length distributions by type (Figure
+  \ref{fig:example_length_violin})
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../figures/type_distribution.png}
+\caption{Distribution of ways by dialogue type}
+\label{fig:type_distribution}
+\end{figure}
+
+\subsubsection{Cross-Tabulation Heatmap}\label{cross-tabulation-heatmap}
+
+The dialogue type × room cross-tabulation matrix (Figure
+\ref{fig:type_room_heatmap}) reveals concentration patterns:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../figures/type_room_heatmap.png}
+\caption{Heatmap showing dialogue type × room cross-tabulation}
+\label{fig:type_room_heatmap}
+\end{figure}
+
+\subsubsection{Framework Structure}\label{framework-structure}
+
+The framework hierarchy visualization (Figure
+\ref{fig:framework_treemap}) shows the distribution of ways across the
+main philosophical frameworks:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../figures/framework_treemap.png}
+\caption{Hierarchical visualization of framework distribution}
+\label{fig:framework_treemap}
+\end{figure}
+
+\subsubsection{Dialogue Partners}\label{dialogue-partners}
+
+The dialogue partner frequency distribution (Figure
+\ref{fig:partner_wordcloud}) shows the diversity of conversants:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../figures/partner_wordcloud.png}
+\caption{Dialogue partner frequency distribution}
+\label{fig:partner_wordcloud}
+\end{figure}
+
+\subsubsection{Example Length Analysis}\label{example-length-analysis}
+
+The distribution of example lengths by dialogue type (Figure
+\ref{fig:example_length_violin}) reveals patterns in how ways are
+documented:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../figures/example_length_violin.png}
+\caption{Example length distribution by dialogue type}
+\label{fig:example_length_violin}
+\end{figure}
+
+\subsection{Key Findings}\label{key-findings}
+
+\subsubsection{Structural Patterns}\label{structural-patterns}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Room Clustering}: Ways cluster within certain rooms,
+  indicating focused approaches to specific aspects of knowledge
+\item
+  \textbf{Type Balance}: The distribution across dialogue types reflects
+  the framework's emphasis on different epistemological approaches
+\item
+  \textbf{Network Structure}: The network exhibits small-world
+  properties with both local clustering and long-range connections
+\end{enumerate}
+
+\subsubsection{Central Ways}\label{central-ways-1}
+
+Certain ways serve as central nodes, connecting different parts of the
+framework. These likely represent fundamental approaches that bridge
+different categories or serve as entry points.
+
+\subsubsection{Room Relationships}\label{room-relationships}
+
+Analysis reveals relationships between rooms, showing how different
+aspects of knowledge relate. Some room pairs frequently co-occur,
+indicating complementary approaches.
+
+\subsection{Limitations}\label{limitations}
+
+\subsubsection{Data Completeness}\label{data-completeness-1}
+
+\begin{itemize}
+\tightlist
+\item
+  Not all ways have complete metadata
+\item
+  Some room assignments may be missing
+\item
+  Dialogue partner information varies in completeness
+\end{itemize}
+
+\subsubsection{Analysis Scope}\label{analysis-scope}
+
+\begin{itemize}
+\tightlist
+\item
+  Analysis focuses on documented ways (212 of 284 total)
+\item
+  Text analysis limited to available descriptions
+\item
+  Network analysis based on explicit relationships in database
+\end{itemize}
+
+\subsection{Future Analysis
+Directions}\label{future-analysis-directions}
+
+Future work will:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Complete analysis of all 284 ways
+\item
+  Expand text analysis with natural language processing
+\item
+  Develop predictive models for way categorization
+\item
+  Create interactive visualizations
+\item
+  Analyze temporal patterns if dating information available
+\end{enumerate}
+
+\newpage
+
+\section{Discussion}\label{sec:discussion}
+
+\subsection{Interpretation of
+Findings}\label{interpretation-of-findings}
+
+The systematic analysis of Andrius Kulikauskas's Ways of Figuring Things
+Out framework reveals several important patterns and insights into how
+different approaches to knowledge are structured and interrelated.
+
+\subsubsection{Framework Structure}\label{framework-structure-1}
+
+The 24-room House of Knowledge provides a comprehensive organizational
+structure for understanding different ways of figuring things out. The
+distribution of ways across rooms reveals significant non-uniformity:
+the B2 room (Believing in Believing) contains 23 ways (11.0\%), followed
+by C4 (Caring about Caring about Caring about Caring) with 17 ways
+(8.1\%), and R (Reflecting) with 16 ways (7.6\%). This concentration
+suggests that certain aspects of knowledge---particularly the recursive
+structures of believing and caring, and the reflective learning
+process---are more amenable to multiple approaches, while other rooms
+have fewer distinct ways.
+
+The three fundamental structures---Believing (1-2-3-4), Caring
+(1-2-3-4), and Relative Learning---provide a philosophical foundation
+that organizes the rooms. The ways distributed across these structures
+reflect different epistemological approaches, from absolute belief
+structures to relative learning cycles.
+
+\subsubsection{Dialogue Type Patterns}\label{dialogue-type-patterns-1}
+
+The distribution of ways across 38 distinct dialogue types reveals
+important patterns: ``goodness'' and ``other'' each account for 15 ways
+(7.1\% each), followed by ``regularity'' (11 ways, 5.2\%), ``I'' and
+``answer'' (9 ways each, 4.3\%). This distribution shows no single
+dominant type, suggesting a balanced epistemological perspective that
+values multiple approaches. The cross-tabulation analysis (Figure
+\ref{fig:type_room_heatmap}) reveals strong associations: ``goodness''
+appears prominently in both B2 (Believing) and C4 (Caring) rooms,
+indicating it bridges these fundamental frameworks. This pattern
+suggests that moral and ethical considerations (``goodness'') are
+central to both believing and caring structures.
+
+The dialogue type classification reflects different relationships to
+truth and knowledge. While the framework includes Absolute, Relative,
+and Embrace God perspectives, the actual distribution shows 38 distinct
+dialogue types, with the most common being ``goodness'' and ``other''
+(15 each). This diversity suggests that the framework recognizes
+multiple valid ways of engaging with knowledge beyond the three primary
+categories. The ``goodness'' type's prominence in both Believing (B2)
+and Caring (C4) rooms indicates that ethical considerations are
+fundamental to both frameworks, while ``other'' suggests ways that don't
+fit neatly into standard categories, reflecting the framework's openness
+to diverse approaches.
+
+\subsubsection{Network Structure
+Insights}\label{network-structure-insights}
+
+The network analysis reveals a highly connected structure with 1,290
+edges connecting 210 ways, resulting in an average degree of 12.29
+connections per way and a clustering coefficient of 0.886. The network
+exhibits both local clustering (ways in the same room are highly
+connected) and long-range connections (ways sharing dialogue types or
+partners across different rooms). Central ways with degree centrality of
+34 (ways 84, 156, 211) serve as major hubs, connecting multiple other
+ways through shared rooms, dialogue types, or partners. These central
+ways likely represent fundamental methods that connect different
+categories or serve as entry points to the framework, as visualized in
+Figure \ref{fig:ways_network}.
+
+The clustering observed in the network indicates that ways group into
+communities based on shared characteristics. These clusters may
+correspond to: - Different aspects of the House of Knowledge - Different
+dialogue types - Different philosophical approaches - Different
+practical applications
+
+The small-world properties (local clustering with long-range
+connections) suggest that while ways cluster locally, there are also
+important connections across clusters, creating a rich, interconnected
+structure.
+
+\subsection{Philosophical
+Implications}\label{philosophical-implications}
+
+\subsubsection{Epistemological
+Pluralism}\label{epistemological-pluralism}
+
+The framework demonstrates epistemological pluralism---the recognition
+that there are multiple valid ways of knowing and understanding. The 284
+ways represent a comprehensive catalog of approaches, each valid in its
+own context. This pluralism challenges monolithic views of knowledge and
+suggests that different situations and questions may require different
+approaches.
+
+The organization into rooms and dialogue types provides a structure for
+understanding when and how different ways are appropriate. Rather than
+suggesting one ``correct'' way, the framework provides a map of options,
+each with its own validity and application.
+
+\subsubsection{Integration of Belief, Care, and
+Learning}\label{integration-of-belief-care-and-learning}
+
+The framework integrates three fundamental aspects of knowledge: -
+\textbf{Believing}: Reference to absolute structures or truths -
+\textbf{Caring}: Openness to what is outside us - \textbf{Learning}: The
+cycle of taking a stand, following through, and reflecting
+
+This integration suggests that complete knowledge requires all three
+aspects. Ways that emphasize only one aspect may be incomplete, while
+ways that integrate multiple aspects may be more comprehensive. The
+distribution of ways across these structures reflects the framework's
+recognition of their interdependence.
+
+\subsubsection{Dialogue and Knowledge}\label{dialogue-and-knowledge}
+
+The emphasis on dialogue partners
+(\passthrough{\lstinline!dialoguewith!}) suggests that knowledge is not
+purely individual but emerges through engagement with others. Each way
+involves a dialogue partner, indicating that figuring things out is
+fundamentally relational. This relational aspect challenges purely
+individualistic views of knowledge and suggests that understanding
+emerges through engagement with different perspectives.
+
+The dialogue types (Absolute, Relative, Embrace God) represent different
+modes of engagement, each valid in different contexts. The framework
+suggests that effective knowledge acquisition requires understanding
+which mode of dialogue is appropriate for which situation.
+
+\subsection{Practical Applications}\label{practical-applications}
+
+\subsubsection{Educational Contexts}\label{educational-contexts}
+
+The framework has clear applications in education:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Learning Style Recognition}: Understanding that different
+  students may prefer different ways of figuring things out
+\item
+  \textbf{Teaching Methods}: Adapting teaching to match different ways
+\item
+  \textbf{Curriculum Design}: Organizing curriculum to expose students
+  to multiple ways
+\item
+  \textbf{Assessment}: Recognizing that different ways may require
+  different assessment methods
+\end{enumerate}
+
+The 24-room structure provides a framework for organizing educational
+content and approaches, ensuring coverage of different aspects of
+knowledge.
+
+\subsubsection{Research Methodology}\label{research-methodology}
+
+For researchers, the framework provides:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Method Selection}: A systematic way to choose appropriate
+  research methods
+\item
+  \textbf{Method Integration}: Understanding how different methods
+  complement each other
+\item
+  \textbf{Epistemological Awareness}: Recognition of the epistemological
+  assumptions underlying different methods
+\item
+  \textbf{Interdisciplinary Bridge}: A framework for understanding
+  knowledge across disciplines
+\end{enumerate}
+
+The network structure helps researchers understand how different methods
+relate and when to combine approaches.
+
+\subsubsection{Personal Development}\label{personal-development}
+
+For individuals, the framework offers:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Self-Understanding}: Recognizing one's own preferred ways of
+  figuring things out
+\item
+  \textbf{Expansion}: Learning new ways to expand one's capabilities
+\item
+  \textbf{Context Awareness}: Understanding which ways are appropriate
+  for which situations
+\item
+  \textbf{Integration}: Developing the ability to use multiple ways as
+  needed
+\end{enumerate}
+
+The House of Knowledge structure provides a map for personal growth,
+showing areas where one might develop new ways of understanding.
+
+\subsection{Limitations and
+Challenges}\label{limitations-and-challenges}
+
+\subsubsection{Framework Completeness}\label{framework-completeness}
+
+While the framework is comprehensive (284 ways), it may not be
+exhaustive. New ways may emerge as knowledge evolves, or ways may be
+discovered that don't fit the current structure. The framework should be
+seen as a living system that can grow and adapt.
+
+\subsubsection{Cultural Context}\label{cultural-context}
+
+The framework emerges from a specific cultural and philosophical context
+(Andrius Kulikauskas's work). While it aims for universality, some ways
+may be more relevant in certain cultural contexts than others. The
+framework's applicability across cultures requires further
+investigation.
+
+\subsubsection{Measurement Challenges}\label{measurement-challenges}
+
+Quantitative analysis of ways faces challenges: - Ways are qualitative
+and may resist precise measurement - Relationships between ways may be
+complex and multi-dimensional - The framework's philosophical nature
+makes some aspects difficult to quantify
+
+These challenges suggest that quantitative analysis should complement,
+not replace, qualitative understanding.
+
+\subsection{Future Research
+Directions}\label{future-research-directions}
+
+\subsubsection{Framework Expansion}\label{framework-expansion}
+
+Future research could: 1. Document additional ways beyond the current
+284 2. Explore ways from other philosophical traditions 3. Investigate
+ways in specific domains (science, art, etc.) 4. Develop ways for
+emerging contexts (digital, global, etc.)
+
+\subsubsection{Empirical Validation}\label{empirical-validation}
+
+Empirical research could: 1. Test the effectiveness of different ways in
+different contexts 2. Investigate individual differences in way
+preferences 3. Study how ways develop and change over time 4. Examine
+the relationship between ways and learning outcomes
+
+\subsubsection{Computational
+Applications}\label{computational-applications}
+
+Computational research could: 1. Develop AI systems that use different
+ways 2. Create recommendation systems for way selection 3. Build tools
+for way analysis and visualization 4. Develop educational software based
+on the framework
+
+\subsubsection{Interdisciplinary
+Integration}\label{interdisciplinary-integration}
+
+The framework could be integrated with: 1. Cognitive science research on
+learning 2. Educational research on teaching methods 3. Philosophy of
+science and epistemology 4. Knowledge management and organizational
+learning
+
+\subsection{Broader Impact}\label{broader-impact}
+
+\subsubsection{Contribution to
+Epistemology}\label{contribution-to-epistemology}
+
+The framework contributes to epistemology by: 1. Providing a
+comprehensive catalog of ways of knowing 2. Showing the relationships
+between different approaches 3. Demonstrating the validity of multiple
+perspectives 4. Integrating belief, care, and learning in knowledge
+acquisition
+
+\subsubsection{Contribution to
+Education}\label{contribution-to-education}
+
+The framework contributes to education by: 1. Providing a systematic
+approach to understanding learning 2. Recognizing the validity of
+multiple learning approaches 3. Offering a structure for curriculum and
+teaching 4. Supporting personalized and adaptive education
+
+\subsubsection{Contribution to Research}\label{contribution-to-research}
+
+The framework contributes to research by: 1. Providing a systematic
+approach to method selection 2. Showing how different methods relate and
+complement 3. Encouraging epistemological awareness 4. Supporting
+interdisciplinary research
+
+\subsection{Conclusion}\label{conclusion}
+
+The systematic analysis of the Ways of Figuring Things Out framework
+reveals a rich, structured approach to understanding knowledge
+acquisition. The 24-room House of Knowledge provides organization, the
+dialogue types reveal different modes of engagement, and the network
+structure shows how ways interconnect. The framework demonstrates
+epistemological pluralism while providing structure for understanding
+when and how different ways are appropriate.
+
+The practical applications span education, research, and personal
+development, offering tools for understanding and applying different
+approaches to knowledge. Future research can expand the framework,
+validate it empirically, and develop computational and interdisciplinary
+applications.
+
+This work provides both a philosophical framework and a practical system
+for understanding and applying diverse ways of figuring things out,
+contributing to epistemology, education, and research methodology.
+
+\newpage
+
+\section{Conclusion}\label{sec:conclusion}
+
+\subsection{Summary of Contributions}\label{summary-of-contributions}
+
+This research presents a comprehensive systematic analysis of Andrius
+Kulikauskas's ``Ways of Figuring Things Out'' framework, documenting and
+analyzing 210 ways from the database (with connections to the broader
+framework of 284 ways documented in the source text). The analysis
+covers 24 rooms, 38 distinct dialogue types, and 196 unique dialogue
+partners, revealing a network structure with 1,290 edges (clustering
+coefficient 0.886) connecting ways through shared characteristics. The
+work makes several key contributions:
+
+\subsubsection{Documentation and
+Categorization}\label{documentation-and-categorization}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Complete Documentation}: Systematic documentation of 210 ways
+  from the database with complete metadata including dialogue types,
+  room assignments, examples, and relationships
+\item
+  \textbf{24-Room Framework}: Organization of ways within the House of
+  Knowledge structure, mapping ways to their appropriate rooms
+\item
+  \textbf{Dialogue Type Classification}: Categorization of ways
+  according to Absolute, Relative, and Embrace God dialogue types
+\item
+  \textbf{Relationship Mapping}: Documentation of how ways relate
+  through dialogue partners, shared rooms, and question relationships
+\end{enumerate}
+
+\subsubsection{Empirical Analysis}\label{empirical-analysis}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Distribution Analysis}: Quantitative analysis of way
+  distributions across dialogue types, rooms, and categories
+\item
+  \textbf{Network Analysis}: Graph-based analysis revealing the network
+  structure of way relationships
+\item
+  \textbf{Statistical Patterns}: Identification of patterns in room
+  co-occurrence, dialogue type distributions, and central ways
+\item
+  \textbf{Cross-Tabulation}: Analysis of relationships between different
+  dimensions of the framework
+\end{enumerate}
+
+\subsubsection{Framework Understanding}\label{framework-understanding}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Structural Insights}: Understanding of how the 24-room House
+  of Knowledge organizes different aspects of knowledge
+\item
+  \textbf{Philosophical Integration}: Recognition of how Believing,
+  Caring, and Relative Learning structures integrate
+\item
+  \textbf{Epistemological Pluralism}: Demonstration of multiple valid
+  approaches to knowledge
+\item
+  \textbf{Practical Applications}: Tools and frameworks for applying
+  ways in education, research, and personal development
+\end{enumerate}
+
+\subsection{Key Findings}\label{key-findings-1}
+
+\subsubsection{Framework Structure}\label{framework-structure-2}
+
+The analysis reveals that the Ways framework is not uniform but exhibits
+structured patterns: - Ways cluster within certain rooms: B2 (23 ways,
+11.0\%), C4 (17 ways, 8.1\%), R (16 ways, 7.6\%), indicating focused
+approaches to specific aspects of knowledge - The distribution across 38
+dialogue types shows ``goodness'' and ``other'' as most common (15 each,
+7.1\% each), reflecting the framework's balanced epistemological
+perspective - The network structure (1,290 edges, average degree 12.29,
+clustering coefficient 0.886) shows both high local clustering
+(room-based) and long-range connections (type and partner-based),
+creating a rich, interconnected system with small-world properties
+
+\subsubsection{Central Ways}\label{central-ways-2}
+
+Certain ways serve as central nodes in the network, connecting different
+parts of the framework. These central ways likely represent: -
+Fundamental approaches that bridge different categories - Entry points
+to the framework for new learners - Methods that integrate multiple
+aspects of knowledge
+
+\subsubsection{Room Relationships}\label{room-relationships-1}
+
+Analysis reveals relationships between rooms, showing how different
+aspects of knowledge relate: - Some room pairs frequently co-occur,
+indicating complementary approaches - The three fundamental structures
+(Believing, Caring, Learning) provide organization - The 24-room
+structure provides comprehensive coverage of knowledge aspects
+
+\subsection{Broader Impact}\label{broader-impact-1}
+
+\subsubsection{Contribution to
+Epistemology}\label{contribution-to-epistemology-1}
+
+This work contributes to epistemology by:
+
+\begin{itemize}
+\tightlist
+\item
+  Providing a comprehensive catalog of ways of knowing
+\item
+  Demonstrating the validity of multiple epistemological approaches
+\item
+  Showing how different ways relate and complement each other
+\item
+  Integrating belief, care, and learning in knowledge acquisition
+\end{itemize}
+
+\subsubsection{Contribution to
+Education}\label{contribution-to-education-1}
+
+The framework contributes to education by:
+
+\begin{itemize}
+\tightlist
+\item
+  Providing a systematic approach to understanding learning
+\item
+  Recognizing the validity of multiple learning approaches
+\item
+  Offering structure for curriculum and teaching methods
+\item
+  Supporting personalized and adaptive education
+\end{itemize}
+
+\subsubsection{Contribution to
+Research}\label{contribution-to-research-1}
+
+For researchers, the framework provides:
+
+\begin{itemize}
+\tightlist
+\item
+  A systematic approach to method selection
+\item
+  Understanding of how different methods relate
+\item
+  Epistemological awareness in research design
+\item
+  Support for interdisciplinary research
+\end{itemize}
+
+\subsection{Practical Applications}\label{practical-applications-1}
+
+\subsubsection{Educational Tools}\label{educational-tools}
+
+The framework enables:
+
+\begin{itemize}
+\tightlist
+\item
+  Recognition of different learning styles and approaches
+\item
+  Adaptation of teaching methods to match different ways
+\item
+  Curriculum design that exposes students to multiple ways
+\item
+  Assessment methods appropriate for different ways
+\end{itemize}
+
+\subsubsection{Research Methodology}\label{research-methodology-1}
+
+Researchers can use the framework for:
+
+\begin{itemize}
+\tightlist
+\item
+  Systematic selection of appropriate research methods
+\item
+  Understanding how methods complement each other
+\item
+  Epistemological awareness in research design
+\item
+  Interdisciplinary bridge-building
+\end{itemize}
+
+\subsubsection{Personal Development}\label{personal-development-1}
+
+Individuals can use the framework for:
+
+\begin{itemize}
+\tightlist
+\item
+  Understanding their own preferred ways of figuring things out
+\item
+  Learning new ways to expand capabilities
+\item
+  Recognizing which ways are appropriate for which situations
+\item
+  Developing the ability to use multiple ways as needed
+\end{itemize}
+
+\subsection{Future Directions}\label{future-directions}
+
+\subsubsection{Framework Expansion}\label{framework-expansion-1}
+
+Future research can: 1. Document additional ways beyond the current 284
+2. Explore ways from other philosophical traditions 3. Investigate ways
+in specific domains (science, art, humanities) 4. Develop ways for
+emerging contexts (digital, global, interdisciplinary)
+
+\subsubsection{Empirical Validation}\label{empirical-validation-1}
+
+Empirical research can: 1. Test the effectiveness of different ways in
+different contexts 2. Investigate individual differences in way
+preferences 3. Study how ways develop and change over time 4. Examine
+relationships between ways and learning outcomes
+
+\subsubsection{Computational
+Applications}\label{computational-applications-1}
+
+Computational research can: 1. Develop AI systems that use different
+ways 2. Create recommendation systems for way selection 3. Build tools
+for way analysis and visualization 4. Develop educational software based
+on the framework
+
+\subsubsection{Interdisciplinary
+Integration}\label{interdisciplinary-integration-1}
+
+The framework can be integrated with: 1. Cognitive science research on
+learning and knowledge 2. Educational research on teaching methods and
+curriculum 3. Philosophy of science and epistemology 4. Knowledge
+management and organizational learning
+
+\subsection{Methodological
+Contributions}\label{methodological-contributions}
+
+\subsubsection{Database-Driven Analysis}\label{database-driven-analysis}
+
+This work demonstrates:
+
+\begin{itemize}
+\tightlist
+\item
+  How philosophical frameworks can be systematically documented in
+  databases
+\item
+  The value of quantitative analysis for understanding qualitative
+  frameworks
+\item
+  How network analysis reveals structure in knowledge systems
+\item
+  The integration of database analysis with text analysis
+\end{itemize}
+
+\subsubsection{Visualization Approaches}\label{visualization-approaches}
+
+The visualization work shows:
+
+\begin{itemize}
+\tightlist
+\item
+  How network graphs reveal structure in way relationships
+\item
+  How hierarchical visualizations illustrate the House of Knowledge
+\item
+  How statistical plots communicate distribution patterns
+\item
+  How multiple visualization types complement each other
+\end{itemize}
+
+\subsubsection{Integration of Quantitative and
+Qualitative}\label{integration-of-quantitative-and-qualitative}
+
+The work demonstrates:
+
+\begin{itemize}
+\tightlist
+\item
+  How quantitative analysis complements qualitative understanding
+\item
+  The value of systematic documentation for philosophical frameworks
+\item
+  How data-driven insights enhance philosophical interpretation
+\item
+  The integration of empirical analysis with philosophical analysis
+\end{itemize}
+
+\subsubsection{Implementation Modules}\label{implementation-modules-1}
+
+The research implements a comprehensive software framework for ways
+analysis:
+
+\textbf{Database Layer}: \passthrough{\lstinline!database.py!},
+\passthrough{\lstinline!sql\_queries.py!},
+\passthrough{\lstinline!models.py!} - ORM models and query interfaces
+\textbf{Analysis Layer}: \passthrough{\lstinline!ways\_analysis.py!},
+\passthrough{\lstinline!network\_analysis.py!},
+\passthrough{\lstinline!house\_of\_knowledge.py!} - Specialized analysis
+modules \textbf{Statistics Layer}:
+\passthrough{\lstinline!statistics.py!},
+\passthrough{\lstinline!metrics.py!} - Quantitative analysis functions
+\textbf{Supporting Modules}: Data processing, visualization, and
+reporting utilities
+
+All modules follow the thin orchestrator pattern with business logic in
+\passthrough{\lstinline!src/!} and orchestration in
+\passthrough{\lstinline!scripts/!}.
+
+\subsection{Final Remarks}\label{final-remarks}
+
+This research provides both a philosophical framework and a practical
+system for understanding and applying diverse ways of figuring things
+out. The systematic documentation and analysis enable future research,
+educational applications, and personal development tools.
+
+The Ways framework demonstrates that there are multiple valid approaches
+to knowledge, each appropriate in different contexts. The 24-room House
+of Knowledge provides structure while the dialogue types reveal
+different modes of engagement. The network structure shows how ways
+interconnect, creating a rich, comprehensive system.
+
+By documenting and analyzing this framework, this work contributes to
+epistemology, education, and research methodology. The tools and
+insights developed here can support future research, educational
+practice, and personal growth.
+
+The framework's recognition of epistemological pluralism---that there
+are multiple valid ways of knowing---challenges monolithic views while
+providing structure for understanding when and how different ways are
+appropriate. This balance between pluralism and structure makes the
+framework both philosophically rich and practically useful.
+
+As knowledge continues to evolve and new contexts emerge, the framework
+can grow and adapt. Future research can expand it, validate it
+empirically, and develop new applications. This work provides the
+foundation for that future development.
+
+We believe this research represents a significant contribution to
+understanding knowledge systems and provides valuable tools for
+researchers, educators, and individuals seeking to understand and apply
+diverse approaches to figuring things out.
+
+\newpage
+
+\section{Acknowledgments}\label{sec:acknowledgments}
+
+We gratefully acknowledge the contributions that made this research
+possible.
+
+\subsection{Primary Source}\label{primary-source}
+
+This research is based entirely on the philosophical work of
+\textbf{Andrius Kulikauskas}, who developed the ``Ways of Figuring
+Things Out'' framework and documented 284 ways of knowledge acquisition.
+The framework, database, and documentation are the result of his
+extensive philosophical work conducted in 2010-2011.
+
+\subsection{Data Availability}\label{data-availability}
+
+All data used in this research is in the \textbf{Public Domain} as
+stated in the source documentation. The MySQL database dump and text
+documentation (\passthrough{\lstinline!ways.md!}) are publicly available
+and were used with appropriate attribution.
+
+\subsection{Framework Development}\label{framework-development}
+
+The House of Knowledge framework, the 24-room structure, and the
+dialogue type classifications are all part of Andrius Kulikauskas's
+original philosophical work. This research provides systematic
+documentation and analysis but does not claim to have developed the
+underlying framework.
+
+\subsection{Technical Infrastructure}\label{technical-infrastructure}
+
+This research builds upon:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python scientific computing stack} (NumPy, SciPy, Pandas,
+  NetworkX, Matplotlib)
+\item
+  \textbf{SQLite} database system for data storage and querying
+\item
+  \textbf{LaTeX and Pandoc} for document preparation
+\item
+  \textbf{Open-source tools} for data analysis and visualization
+\end{itemize}
+
+\subsection{Research Context}\label{research-context}
+
+This work contributes to the systematic documentation and analysis of
+philosophical frameworks, demonstrating how quantitative methods can
+complement qualitative understanding. The integration of database
+analysis, network analysis, and statistical methods with philosophical
+interpretation represents a methodological contribution to the study of
+knowledge systems.
+
+\subsection{Future Contributions}\label{future-contributions}
+
+Future researchers building on this work should acknowledge: - Andrius
+Kulikauskas as the originator of the Ways framework - The public domain
+status of the source data - The systematic analysis and documentation
+provided by this research
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\emph{All errors and omissions in the analysis and interpretation remain
+the sole responsibility of the authors. The underlying philosophical
+framework and data are the work of Andrius Kulikauskas.}
+
+\newpage
+
+\section{Appendix}\label{sec:appendix}
+
+This appendix provides additional technical details supporting the main
+results.
+
+\subsection{A. Database Schema
+Details}\label{a.-database-schema-details}
+
+\subsubsection{A.1 Complete Table
+Schemas}\label{a.1-complete-table-schemas}
+
+\paragraph{Ways Table Schema}\label{ways-table-schema}
+
+\begin{lstlisting}[language=SQL]
+CREATE TABLE ways (
+    way TEXT NOT NULL,
+    dialoguewith TEXT NOT NULL,
+    dialoguetype TEXT NOT NULL,
+    dialoguetypetype TEXT NOT NULL,
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    wayurl TEXT NOT NULL,
+    examples TEXT NOT NULL,
+    dialoguetypetypetype TEXT NOT NULL,
+    mene TEXT NOT NULL,
+    Dievas TEXT NOT NULL,
+    comments TEXT NOT NULL,
+    laikinas TEXT NOT NULL
+);
+\end{lstlisting}
+
+\paragraph{Rooms Table Schema}\label{rooms-table-schema}
+
+\begin{lstlisting}[language=SQL]
+CREATE TABLE rooms (
+    santrumpa TEXT NOT NULL PRIMARY KEY,
+    savoka TEXT NOT NULL,
+    issiaiskinimas TEXT NOT NULL,
+    -- Additional fields for ordering and relationships
+);
+\end{lstlisting}
+
+\subsubsection{A.2 Index Definitions}\label{a.2-index-definitions}
+
+Key indexes for performance:
+
+\begin{itemize}
+\tightlist
+\item
+  Index on \passthrough{\lstinline!way!} for way lookups
+\item
+  Index on \passthrough{\lstinline!mene!} for room-based queries
+\item
+  Index on \passthrough{\lstinline!dialoguetype!} for type filtering
+\item
+  Index on \passthrough{\lstinline!dialoguewith!} for partner analysis
+\end{itemize}
+
+\subsection{B. Network Analysis
+Algorithms}\label{b.-network-analysis-algorithms}
+
+\subsubsection{B.1 Actual Network
+Metrics}\label{b.1-actual-network-metrics}
+
+The network analysis was performed using NetworkX on the complete ways
+database:
+
+\textbf{Network Structure:} - \textbf{Nodes}: 210 ways - \textbf{Edges}:
+1,290 connections - \textbf{Average degree}: 12.29 connections per way -
+\textbf{Network density}: 0.058 (5.8\% of possible edges present) -
+\textbf{Clustering coefficient}: 0.886 (high local clustering) -
+\textbf{Connected components}: Multiple components detected -
+\textbf{Largest component}: Contains majority of ways
+
+\textbf{Centrality Metrics:} - \textbf{Degree centrality}: Range from
+0.0 to 0.162 (way 84, 156, 211 with highest degree: 34) -
+\textbf{Betweenness centrality}: Identifies bridge ways connecting
+different communities - \textbf{Closeness centrality}: Measures average
+distance to all other ways - \textbf{Eigenvector centrality}: Identifies
+ways connected to highly central ways
+
+\textbf{Community Detection:} - Modularity-based community detection
+reveals natural clusters - Communities correspond to room assignments
+and dialogue types - Largest communities align with most populated rooms
+(B2, C4, R)
+
+\subsubsection{B.2 Graph Construction
+Implementation}\label{b.2-graph-construction-implementation}
+
+The network is constructed using
+\passthrough{\lstinline!WaysNetworkAnalyzer!} with three edge types:
+
+\begin{lstlisting}[language=Python]
+from collections import defaultdict
+import networkx as nx
+from src.models import Way
+
+def _build_ways_network(ways: List[Way]) -> nx.Graph:
+    """Build network graph from ways data.
+    
+    Edges are created based on:
+    1. Same room (weight=1.0, edge_type='same_room')
+    2. Same dialogue partner (weight=0.8, edge_type='same_partner')
+    3. Same dialogue type (weight=0.6, edge_type='same_type')
+    """
+    G = nx.Graph()
+    
+    # Add nodes with attributes
+    for way in ways:
+        G.add_node(way.id, 
+                   way_text=way.way,
+                   room=way.mene,
+                   dialogue_type=way.dialoguetype,
+                   dialogue_partner=way.dialoguewith)
+    
+    # Group ways by room
+    room_ways = defaultdict(list)
+    for way in ways:
+        room_ways[way.mene].append(way.id)
+    
+    # Add room edges (highest weight)
+    for room, way_ids in room_ways.items():
+        if len(way_ids) > 1:
+            for i, way1_id in enumerate(way_ids):
+                for way2_id in way_ids[i+1:]:
+                    G.add_edge(way1_id, way2_id, 
+                              edge_type='same_room',
+                              room=room,
+                              weight=1.0)
+    
+    # Add partner edges (medium weight)
+    partner_ways = defaultdict(list)
+    for way in ways:
+        partner_ways[way.dialoguewith].append(way.id)
+    
+    for partner, way_ids in partner_ways.items():
+        if len(way_ids) > 1:
+            for i, way1_id in enumerate(way_ids):
+                for way2_id in way_ids[i+1:]:
+                    if not G.has_edge(way1_id, way2_id):
+                        G.add_edge(way1_id, way2_id,
+                                  edge_type='same_partner',
+                                  partner=partner,
+                                  weight=0.8)
+    
+    # Add type edges (lowest weight)
+    type_ways = defaultdict(list)
+    for way in ways:
+        type_ways[way.dialoguetype].append(way.id)
+    
+    for dtype, way_ids in type_ways.items():
+        if len(way_ids) > 1:
+            for i, way1_id in enumerate(way_ids):
+                for way2_id in way_ids[i+1:]:
+                    if not G.has_edge(way1_id, way2_id):
+                        G.add_edge(way1_id, way2_id,
+                                  edge_type='same_type',
+                                  dialogue_type=dtype,
+                                  weight=0.6)
+    
+    return G
+\end{lstlisting}
+
+\subsubsection{B.3 Centrality
+Computation}\label{b.3-centrality-computation}
+
+Centrality metrics are computed using NetworkX functions within
+\passthrough{\lstinline!WaysNetworkAnalyzer.compute\_centrality\_metrics()!}:
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!nx.degree\_centrality(G)!}: Normalized degree
+  (0-1 range)
+\item
+  \passthrough{\lstinline!nx.betweenness\_centrality(G)!}: Bridge
+  identification
+\item
+  \passthrough{\lstinline!nx.closeness\_centrality(G)!}: Average path
+  length
+\item
+  \passthrough{\lstinline!nx.eigenvector\_centrality(G, max\_iter=1000)!}:
+  Influence propagation
+\item
+  \passthrough{\lstinline!nx.average\_clustering(G)!}: Local clustering
+  coefficient
+\end{itemize}
+
+The implementation handles edge cases (disconnected graphs, single
+nodes) and returns a \passthrough{\lstinline!NetworkMetrics!} dataclass
+with all computed values.
+
+\subsection{C. Statistical Analysis
+Formulas}\label{c.-statistical-analysis-formulas}
+
+\subsubsection{C.1 Distribution Metrics}\label{c.1-distribution-metrics}
+
+For a categorical variable with \(k\) categories:
+
+\begin{equation}\label{eq:entropy_appendix}
+H(X) = -\sum_{i=1}^{k} p_i \log_2(p_i)
+\end{equation}
+
+where \(p_i\) is the proportion in category \(i\).
+
+\subsubsection{C.2 Association Measures}\label{c.2-association-measures}
+
+For cross-tabulation analysis:
+
+\begin{equation}\label{eq:cramers_v}
+V = \sqrt{\frac{\chi^2}{n \min(r-1, c-1)}}
+\end{equation}
+
+where \(\chi^2\) is the chi-square statistic, \(n\) is sample size, and
+\(r\), \(c\) are row and column counts.
+
+\subsection{D. Visualization
+Specifications}\label{d.-visualization-specifications}
+
+\subsubsection{D.1 Network Visualization
+Parameters}\label{d.1-network-visualization-parameters}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Layout Algorithm}: Force-directed (Fruchterman-Reingold)
+\item
+  \textbf{Node Size}: Proportional to centrality score
+\item
+  \textbf{Node Color}: By dialogue type
+\item
+  \textbf{Edge Width}: By relationship strength
+\item
+  \textbf{Edge Color}: By relationship type
+\end{itemize}
+
+\subsubsection{D.2 Color Schemes}\label{d.2-color-schemes}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Dialogue Types}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Absolute: Blue shades
+  \item
+    Relative: Green shades
+  \item
+    Embrace God: Purple shades
+  \end{itemize}
+\item
+  \textbf{Rooms}: Sequential color scheme for 24 rooms
+\end{itemize}
+
+\subsection{E. Data Processing
+Pipeline}\label{e.-data-processing-pipeline}
+
+\subsubsection{E.1 Database
+Initialization}\label{e.1-database-initialization}
+
+\begin{lstlisting}[language=Python]
+from src.database import WaysDatabase, initialize_database
+
+def setup_ways_database(mysql_dump_path: str = None, 
+                        sqlite_path: str = "project/db/ways.db") -> WaysDatabase:
+    """Initialize SQLite database from MySQL dump or existing database.
+    
+    Args:
+        mysql_dump_path: Path to MySQL dump file (optional)
+        sqlite_path: Path to SQLite database file
+        
+    Returns:
+        Initialized WaysDatabase instance
+    """
+    if mysql_dump_path:
+        # Convert MySQL dump to SQLite
+        initialize_database(mysql_dump_path, sqlite_path)
+    
+    # Return database connection
+    db = WaysDatabase(sqlite_path)
+    
+    # Validate database integrity
+    stats = db.get_way_statistics()
+    assert stats['total_ways'] > 0, "Database must contain ways"
+    
+    return db
+\end{lstlisting}
+
+\subsubsection{E.2 Data Access and
+Querying}\label{e.2-data-access-and-querying}
+
+\begin{lstlisting}[language=Python]
+from src.database import WaysDatabase
+from src.sql_queries import WaysSQLQueries
+from src.models import Way
+
+def query_ways_data(db_path: str = "project/db/ways.db") -> Dict[str, Any]:
+    """Query ways data using SQL queries module.
+    
+    Returns:
+        Dictionary with ways, rooms, and statistics
+    """
+    db = WaysDatabase(db_path)
+    queries = WaysSQLQueries(db_path)
+    
+    # Get all ways
+    _, ways_data = queries.get_all_ways_sql()
+    ways = [Way.from_sqlalchemy(row) for row in ways_data]
+    
+    # Get room distribution
+    _, room_counts = queries.count_ways_by_room_sql()
+    room_dist = {room: count for room, count in room_counts}
+    
+    # Get type distribution
+    _, type_counts = queries.count_ways_by_type_sql()
+    type_dist = {dtype: count for dtype, count in type_counts}
+    
+    # Get cross-tabulation
+    _, crosstab = queries.cross_tabulate_type_room_sql()
+    
+    return {
+        'ways': ways,
+        'room_distribution': room_dist,
+        'type_distribution': type_dist,
+        'crosstab': crosstab,
+        'total_ways': len(ways)
+    }
+\end{lstlisting}
+
+\subsubsection{E.3 Analysis Script}\label{e.3-analysis-script}
+
+The comprehensive analysis script integrates multiple analysis modules:
+
+\begin{lstlisting}[language=Python]
+from src.ways_analysis import WaysAnalyzer
+from src.network_analysis import WaysNetworkAnalyzer
+from src.database import WaysDatabase
+from src.sql_queries import WaysSQLQueries
+
+def analyze_ways_comprehensive(db_path: str = None) -> Dict[str, Any]:
+    """Comprehensive analysis of ways database.
+    
+    Args:
+        db_path: Optional path to SQLite database
+        
+    Returns:
+        Dictionary containing all analysis results
+    """
+    # Initialize analyzers
+    analyzer = WaysAnalyzer(db_path)
+    network_analyzer = WaysNetworkAnalyzer(db_path)
+    db = WaysDatabase(db_path)
+    queries = WaysSQLQueries(db_path)
+    
+    # Distribution analysis
+    characterization = analyzer.characterize_ways()
+    type_dist = characterization.dialogue_types
+    room_dist = characterization.room_distribution
+    
+    # Network analysis
+    network = network_analyzer.build_ways_network()
+    metrics = network_analyzer.compute_centrality_metrics()
+    central_ways = network_analyzer.find_central_ways()
+    
+    # Statistical analysis
+    _, crosstab_results = queries.cross_tabulate_type_room_sql()
+    crosstab = {}
+    for dtype, room, count in crosstab_results:
+        if dtype not in crosstab:
+            crosstab[dtype] = {}
+        crosstab[dtype][room] = count
+    
+    return {
+        'characterization': {
+            'total_ways': characterization.total_ways,
+            'room_diversity': characterization.room_diversity,
+            'type_diversity': characterization.type_diversity,
+            'most_common_room': characterization.most_common_room,
+            'most_common_type': characterization.most_common_type
+        },
+        'network_metrics': {
+            'node_count': metrics.node_count,
+            'edge_count': metrics.edge_count,
+            'density': metrics.density,
+            'average_degree': metrics.average_degree,
+            'clustering_coefficient': metrics.clustering_coefficient
+        },
+        'central_ways': {
+            'by_degree': central_ways.by_degree[:10],
+            'by_betweenness': central_ways.by_betweenness[:10]
+        },
+        'crosstab': crosstab
+    }
+\end{lstlisting}
+
+\subsection{F. Validation Procedures}\label{f.-validation-procedures}
+
+\subsubsection{F.1 Data Quality Checks}\label{f.1-data-quality-checks}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Completeness Check}: Verify all required fields present
+\item
+  \textbf{Consistency Check}: Check for conflicting assignments
+\item
+  \textbf{Referential Integrity}: Validate foreign key relationships
+\item
+  \textbf{Encoding Check}: Verify UTF-8 encoding
+\end{enumerate}
+
+\subsubsection{F.2 Analysis Validation}\label{f.2-analysis-validation}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Reproducibility}: Fixed random seeds, deterministic algorithms
+\item
+  \textbf{Sensitivity}: Test with missing data, parameter variations
+\item
+  \textbf{Robustness}: Verify results stable under different conditions
+\item
+  \textbf{Cross-Validation}: Validate findings across data subsets
+\end{enumerate}
+
+\subsection{G. Computational
+Environment}\label{g.-computational-environment}
+
+\subsubsection{G.1 Software Versions}\label{g.1-software-versions}
+
+\begin{itemize}
+\tightlist
+\item
+  Python 3.10+
+\item
+  SQLite 3.x
+\item
+  NetworkX 2.x+
+\item
+  Pandas 1.x+
+\item
+  Matplotlib 3.x+
+\item
+  NumPy 1.x+
+\end{itemize}
+
+\subsubsection{G.2 Hardware
+Requirements}\label{g.2-hardware-requirements}
+
+\begin{itemize}
+\tightlist
+\item
+  Minimum: 4GB RAM, single core
+\item
+  Recommended: 8GB+ RAM, multi-core
+\item
+  Storage: \textasciitilde100MB for database and outputs
+\end{itemize}
+
+\subsection{H. Additional Tables and
+Figures}\label{h.-additional-tables-and-figures}
+
+\subsubsection{H.1 Extended Distribution
+Tables}\label{h.1-extended-distribution-tables}
+
+\paragraph{Complete Room Distribution}\label{complete-room-distribution}
+
+The complete distribution of all 24 rooms in the House of Knowledge:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|c|c||l|c|c|}
+\hline
+\textbf{Room} & \textbf{Count} & \textbf{\%} & \textbf{Room} & \textbf{Count} & \textbf{\%} \\
+\hline
+B2 & 23 & 11.0\% & C2 & 7 & 3.3\% \\
+C4 & 17 & 8.1\% & B4 & 7 & 3.3\% \\
+R & 16 & 7.6\% & 1 & 7 & 3.3\% \\
+32 & 13 & 6.2\% & F & 6 & 2.9\% \\
+C3 & 13 & 6.2\% & 20 & 5 & 2.4\% \\
+BB & 12 & 5.7\% & A & 4 & 1.9\% \\
+CB & 10 & 4.8\% & 30 & 4 & 1.9\% \\
+21 & 9 & 4.3\% & BC & 3 & 1.4\% \\
+B3 & 9 & 4.3\% & B & 1 & 0.5\% \\
+CC & 9 & 4.3\% & C & 1 & 0.5\% \\
+O & 9 & 4.3\% & & & \\
+T & 9 & 4.3\% & & & \\
+10 & 8 & 3.8\% & & & \\
+31 & 8 & 3.8\% & & & \\
+\hline
+\multicolumn{3}{|c||}{\textbf{Total}} & \multicolumn{3}{c|}{\textbf{210 (100\%)}} \\
+\hline
+\end{tabular}
+\caption{Complete distribution of ways across all 24 rooms}
+\label{tab:complete_room_distribution}
+\end{table}
+
+\paragraph{Complete Dialogue Type
+Distribution}\label{complete-dialogue-type-distribution}
+
+The complete distribution of all 38 dialogue types (presented in two
+parts):
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|c|c||l|c|c|}
+\hline
+\textbf{Type} & \textbf{Count} & \textbf{\%} & \textbf{Type} & \textbf{Count} & \textbf{\%} \\
+\hline
+goodness & 15 & 7.1\% & my mind & 7 & 3.3\% \\
+other & 15 & 7.1\% & opposing view & 7 & 3.3\% \\
+regularity & 11 & 5.2\% & unknown & 7 & 3.3\% \\
+I & 9 & 4.3\% & conviction & 5 & 2.4\% \\
+answer & 9 & 4.3\% & interlocutor & 5 & 2.4\% \\
+knowledge & 8 & 3.8\% & my fate & 5 & 2.4\% \\
+life & 8 & 3.8\% & my knowledge & 5 & 2.4\% \\
+mind & 8 & 3.8\% & my purpose & 5 & 2.4\% \\
+God & 6 & 2.9\% & wholeness & 5 & 2.4\% \\
+divineness & 6 & 2.9\% & behavior & 4 & 1.9\% \\
+purpose & 6 & 2.9\% & capability & 4 & 1.9\% \\
+solution & 6 & 2.9\% & God's perspective & 4 & 1.9\% \\
+God's perspective & 4 & 1.9\% & inspiration & 4 & 1.9\% \\
+possibilities & 4 & 1.9\% & possibility & 4 & 1.9\% \\
+self-check & 4 & 1.9\% & structure & 4 & 1.9\% \\
+\hline
+\end{tabular}
+\caption{Dialogue type distribution (Part 1: Top 19 types)}
+\label{tab:type_distribution_part1}
+\end{table}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|c|c||l|c|c|}
+\hline
+\textbf{Type} & \textbf{Count} & \textbf{\%} & \textbf{Type} & \textbf{Count} & \textbf{\%} \\
+\hline
+conditionality & 3 & 1.4\% & invalidity & 2 & 1.0\% \\
+example & 3 & 1.4\% & misfortune & 2 & 1.0\% \\
+given & 3 & 1.4\% & phenomenon & 2 & 1.0\% \\
+impossibility & 3 & 1.4\% & depths & 1 & 0.5\% \\
+& & & infinity & 1 & 0.5\% \\
+\hline
+\multicolumn{3}{|c||}{\textbf{Total}} & \multicolumn{3}{c|}{\textbf{210 (100\%)}} \\
+\hline
+\end{tabular}
+\caption{Dialogue type distribution (Part 2: Remaining 19 types)}
+\label{tab:type_distribution_part2}
+\end{table}
+
+\paragraph{Top Cross-Tabulation
+Combinations}\label{top-cross-tabulation-combinations}
+
+The most frequent dialogue type × room combinations:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|c|}
+\hline
+\textbf{Dialogue Type} & \textbf{Room} & \textbf{Count} \\
+\hline
+goodness & B2 & 3 \\
+goodness & R & 3 \\
+goodness & T & 2 \\
+I & O & 9 \\
+answer & 1 & 4 \\
+answer & 32 & 2 \\
+knowledge & CC & 8 \\
+divineness & C4 & 6 \\
+God & B2 & 5 \\
+God's perspective & R & 4 \\
+capability & B3 & 4 \\
+inspiration & B4 & 4 \\
+conviction & B3 & 5 \\
+\hline
+\end{tabular}
+\caption{Top dialogue type × room combinations (count ≥ 2)}
+\label{tab:top_crosstab}
+\end{table}
+
+\subsubsection{H.2 Extended Network
+Visualizations}\label{h.2-extended-network-visualizations}
+
+\paragraph{Ways Network Visualization}\label{ways-network-visualization}
+
+Figure \ref{fig:ways_network} shows the complete network graph of 210
+ways with 1,290 edges. The visualization uses a force-directed layout
+(Fruchterman-Reingold algorithm) with: - \textbf{Node colors}: Coded by
+dialogue type (38 distinct types) - \textbf{Node sizes}: Proportional to
+degree centrality - \textbf{Edge types}: Three relationship types (same
+room: weight 1.0, same partner: weight 0.8, same type: weight 0.6) -
+\textbf{Layout}: Optimized for visual clarity with community clustering
+visible
+
+The network exhibits high clustering (coefficient: 0.886) indicating
+strong room-based communities. The largest connected component contains
+the majority of ways, with smaller isolated components representing
+specialized dialogue patterns.
+
+\paragraph{Room Hierarchy
+Visualization}\label{room-hierarchy-visualization}
+
+Figure \ref{fig:room_hierarchy} presents a hierarchical bar chart
+showing the distribution of ways across all 24 rooms. The visualization
+organizes rooms by their position in the House of Knowledge framework,
+revealing: - \textbf{Most populated rooms}: B2 (23 ways), C4 (17 ways),
+R (16 ways) - \textbf{Framework structure}: Clear patterns in believing
+(B-series) and caring (C-series) hierarchies - \textbf{Relative learning
+rooms}: R (Reflecting), O (Obeying), T (Taking a Stand) show balanced
+distributions
+
+\paragraph{Framework Treemap}\label{framework-treemap}
+
+Figure \ref{fig:framework_treemap} provides a treemap visualization of
+the framework structure, where: - \textbf{Area}: Proportional to number
+of ways in each room - \textbf{Color}: Indicates framework category
+(believing, caring, relative learning) - \textbf{Hierarchy}: Shows
+nested relationships within the House of Knowledge
+
+This visualization highlights the structural organization of the
+framework and the relative emphasis on different aspects of knowledge
+acquisition.
+
+\subsubsection{H.3 Extended Statistical
+Plots}\label{h.3-extended-statistical-plots}
+
+\paragraph{Dialogue Type
+Distribution}\label{dialogue-type-distribution-1}
+
+Figure \ref{fig:type_distribution} displays a bar chart of all 38
+dialogue types ranked by frequency. The visualization shows: -
+\textbf{Top types}: ``goodness'' and ``other'' (15 each, 7.1\%),
+``regularity'' (11, 5.2\%) - \textbf{Distribution pattern}: Long tail
+with many types having 1-4 occurrences - \textbf{Balance}: Relatively
+even distribution across types, indicating diverse epistemological
+approaches
+
+\paragraph{Type × Room Heatmap}\label{type-room-heatmap}
+
+Figure \ref{fig:type_room_heatmap} presents a heatmap of the
+cross-tabulation between dialogue types (rows) and rooms (columns). The
+visualization reveals: - \textbf{Hotspots}: Strong associations between
+specific types and rooms (e.g., ``I'' × ``O'', ``knowledge'' × ``CC'') -
+\textbf{Sparse regions}: Many type-room combinations have zero or low
+counts - \textbf{Patterns}: Clustering of similar dialogue types in
+related rooms
+
+This heatmap provides insight into how dialogue types are distributed
+across the House of Knowledge structure.
+
+\paragraph{Dialogue Partner Word
+Cloud}\label{dialogue-partner-word-cloud}
+
+Figure \ref{fig:partner_wordcloud} shows a word cloud visualization of
+dialogue partners, where: - \textbf{Font size}: Proportional to
+frequency of partnership - \textbf{196 unique partners}: Most partners
+appear only once or twice - \textbf{Top partners}: ``God's will'',
+``God's wishes'', ``answer'', ``circumstances'' (2 occurrences each)
+
+The word cloud highlights the diversity of dialogue partners and the
+personalized nature of many ways.
+
+\paragraph{Example Length
+Distribution}\label{example-length-distribution}
+
+Figure \ref{fig:example_length_violin} displays a violin plot showing
+the distribution of example text lengths by dialogue type. The
+visualization shows: - \textbf{Distribution shape}: Varies by dialogue
+type, with some types having longer examples - \textbf{Average length}:
+80.2 characters across all ways - \textbf{Coverage}: All 210 ways have
+examples (100\% coverage)
+
+This plot reveals patterns in how different dialogue types are
+exemplified and documented.
+
+\subsection{I. Code Availability}\label{i.-code-availability}
+
+All code for this research is available in the project repository:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Database Module}:
+  \passthrough{\lstinline!project/src/database.py!}
+\item
+  \textbf{Models}: \passthrough{\lstinline!project/src/models.py!}
+\item
+  \textbf{Analysis Scripts}: \passthrough{\lstinline!project/scripts/!}
+\item
+  \textbf{Tests}: \passthrough{\lstinline!project/tests/!}
+\end{itemize}
+
+The code follows the thin orchestrator pattern with business logic in
+\passthrough{\lstinline!src/!} modules and orchestration in
+\passthrough{\lstinline!scripts/!}.
+
+\subsection{J. Data Availability}\label{j.-data-availability}
+
+The source data (MySQL dump and \passthrough{\lstinline!ways.md!}) are
+in the public domain as stated in the original documentation. The
+converted SQLite database and analysis results are available upon
+request or through the project repository.
+
+\subsection{K. Reproducibility}\label{k.-reproducibility}
+
+To reproduce the analyses:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Initialize database:
+  \passthrough{\lstinline!python scripts/db\_setup.py!}
+\item
+  Run analysis:
+  \passthrough{\lstinline!python scripts/analysis\_pipeline.py!}
+\item
+  Generate visualizations:
+  \passthrough{\lstinline!python scripts/generate\_figures.py!}
+\item
+  Build manuscript:
+  \passthrough{\lstinline!python scripts/03\_render\_pdf.py!}
+\end{enumerate}
+
+All random operations use fixed seeds for reproducibility.
+
+\newpage
+
+\section{Supplemental Methods}\label{sec:supplemental_methods}
+
+This section provides detailed methodological information that
+supplements Section \ref{sec:methodology}.
+
+\subsection{S1.1 Database Schema
+Details}\label{s1.1-database-schema-details}
+
+\subsubsection{Primary Tables}\label{primary-tables}
+
+\paragraph{\texorpdfstring{Ways Table
+(\texttt{ways})}{Ways Table (ways)}}\label{ways-table-ways}
+
+The primary table contains 212 documented ways with the following
+schema:
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!way!} (TEXT): Name/identifier of the way
+\item
+  \passthrough{\lstinline!dialoguewith!} (TEXT): Dialogue partner or
+  conversant
+\item
+  \passthrough{\lstinline!dialoguetype!} (TEXT): Primary dialogue type
+  (Absolute, Relative, Embrace God)
+\item
+  \passthrough{\lstinline!dialoguetypetype!} (TEXT): Sub-type
+  classification
+\item
+  \passthrough{\lstinline!ID!} (INTEGER): Primary key, auto-incrementing
+\item
+  \passthrough{\lstinline!wayurl!} (TEXT): URL or reference for the way
+\item
+  \passthrough{\lstinline!examples!} (TEXT): Examples and descriptions
+  (up to 1000 characters)
+\item
+  \passthrough{\lstinline!dialoguetypetypetype!} (TEXT): Further
+  sub-classification
+\item
+  \passthrough{\lstinline!mene!} (TEXT): Room assignment in House of
+  Knowledge (10 characters)
+\item
+  \passthrough{\lstinline!Dievas!} (TEXT): Relationship to God/the
+  divine
+\item
+  \passthrough{\lstinline!comments!} (TEXT): Additional comments and
+  notes
+\item
+  \passthrough{\lstinline!laikinas!} (TEXT): Temporary or provisional
+  classification
+\end{itemize}
+
+\paragraph{\texorpdfstring{Rooms Table
+(\texttt{rooms})}{Rooms Table (rooms)}}\label{rooms-table-rooms}
+
+The rooms table defines the 24 rooms of the House of Knowledge:
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!santrumpa!} (TEXT): Short name/abbreviation
+  for the room
+\item
+  \passthrough{\lstinline!savoka!} (TEXT): Concept or term for the room
+\item
+  \passthrough{\lstinline!issiaiskinimas!} (TEXT): Explanation or
+  clarification
+\item
+  Additional fields for room ordering and relationships
+\end{itemize}
+
+\paragraph{\texorpdfstring{Examples Table
+(\texttt{examples})}{Examples Table (examples)}}\label{examples-table-examples}
+
+Contains examples for ways:
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!way!} (TEXT): Way identifier
+\item
+  \passthrough{\lstinline!rusis!} (TEXT): Type or category of example
+\item
+  \passthrough{\lstinline!pavyzdziai!} (TEXT): The example text
+\end{itemize}
+
+\paragraph{\texorpdfstring{Questions Table
+(\texttt{klausimai})}{Questions Table (klausimai)}}\label{questions-table-klausimai}
+
+Contains questions related to ways:
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!klausimonr!} (INTEGER): Question number
+  (primary key)
+\item
+  \passthrough{\lstinline!klausimas!} (TEXT): The question text
+\item
+  \passthrough{\lstinline!mastytojas!} (TEXT): Thinker or source of the
+  question
+\end{itemize}
+
+\paragraph{\texorpdfstring{Question-Way Relationships
+(\texttt{klausimobudai})}{Question-Way Relationships (klausimobudai)}}\label{question-way-relationships-klausimobudai}
+
+Links questions to ways:
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!klausimobudonr!} (INTEGER): Relationship ID
+  (primary key)
+\item
+  \passthrough{\lstinline!klausimonr!} (INTEGER): Foreign key to
+  questions table
+\item
+  \passthrough{\lstinline!budonr!} (INTEGER): Foreign key to ways table
+  (via ID)
+\end{itemize}
+
+\subsubsection{Data Types and
+Constraints}\label{data-types-and-constraints}
+
+The SQLite conversion preserves data integrity while adapting
+MySQL-specific features:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{AUTO\_INCREMENT}: Converted to INTEGER PRIMARY KEY with
+  auto-increment
+\item
+  \textbf{VARCHAR}: Converted to TEXT (SQLite's flexible text type)
+\item
+  \textbf{COLLATE}: Removed (SQLite handles Unicode natively)
+\item
+  \textbf{ENGINE}: Removed (not applicable to SQLite)
+\item
+  \textbf{CHARACTER SET}: Removed (SQLite uses UTF-8)
+\end{itemize}
+
+\subsection{S1.2 SQLite Conversion
+Process}\label{s1.2-sqlite-conversion-process}
+
+\subsubsection{Conversion Steps}\label{conversion-steps}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Parse MySQL Dump}: Read and parse the MySQL dump file
+\item
+  \textbf{Extract Statements}: Identify CREATE TABLE, INSERT, and other
+  statements
+\item
+  \textbf{Convert Syntax}: Transform MySQL-specific syntax to SQLite
+\item
+  \textbf{Handle Indexes}: Convert KEY definitions to CREATE INDEX
+  statements
+\item
+  \textbf{Rename Tables}: Apply table renames for clarity
+\item
+  \textbf{Fix Conflicts}: Resolve index name conflicts with table names
+\item
+  \textbf{Execute}: Create SQLite database with converted schema and
+  data
+\end{enumerate}
+
+\subsubsection{Syntax Conversions}\label{syntax-conversions}
+
+\paragraph{Data Type Conversions}\label{data-type-conversions}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{MySQL} & \textbf{SQLite} \\
+\hline
+int(11) & INTEGER \\
+varchar(n) & TEXT \\
+AUTO_INCREMENT & INTEGER PRIMARY KEY AUTOINCREMENT \\
+\hline
+\end{tabular}
+\caption{Data type conversions}
+\label{tab:type_conversions}
+\end{table}
+
+\paragraph{Index Handling}\label{index-handling}
+
+MySQL KEY definitions within CREATE TABLE statements are extracted and
+converted to separate CREATE INDEX statements. Index names that conflict
+with table names are renamed (e.g., \passthrough{\lstinline!ways!} index
+→ \passthrough{\lstinline!ways\_idx!}).
+
+\paragraph{Function Call Handling}\label{function-call-handling}
+
+MySQL supports function calls in index definitions (e.g.,
+\passthrough{\lstinline!examples(333)!}). SQLite does not, so these are
+simplified to column names only.
+
+\subsection{S1.3 Network Analysis
+Methods}\label{s1.3-network-analysis-methods}
+
+\subsubsection{Graph Construction}\label{graph-construction-1}
+
+The network graph \(G = (V, E)\) is constructed as follows:
+
+\textbf{Vertices \(V\)}: Each way \(w_i\) becomes a node \(v_i\).
+
+\textbf{Edges \(E\)}: Edges are created based on:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Shared Dialogue Partners}: If ways \(w_i\) and \(w_j\) share
+  the same \passthrough{\lstinline!dialoguewith!} value:
+  \begin{equation}\label{eq:edge_dialogue}
+  e_{ij} \in E \text{ if } \text{dialoguewith}(w_i) = \text{dialoguewith}(w_j)
+  \end{equation}
+\item
+  \textbf{Shared Room Assignment}: If ways \(w_i\) and \(w_j\) share the
+  same \passthrough{\lstinline!mene!} value:
+  \begin{equation}\label{eq:edge_room}
+  e_{ij} \in E \text{ if } \text{mene}(w_i) = \text{mene}(w_j)
+  \end{equation}
+\item
+  \textbf{Question Relationships}: If ways \(w_i\) and \(w_j\) are
+  linked through the \passthrough{\lstinline!klausimobudai!} table:
+  \begin{equation}\label{eq:edge_question}
+  e_{ij} \in E \text{ if } \exists q: (w_i, q) \in \text{klausimobudai} \land (w_j, q) \in \text{klausimobudai}
+  \end{equation}
+\end{enumerate}
+
+\subsubsection{Edge Weights}\label{edge-weights}
+
+Edges can be weighted based on: - Number of shared characteristics -
+Strength of relationship (direct vs.~indirect) - Type of relationship
+(dialogue partner vs.~room vs.~question)
+
+\subsubsection{Centrality Metrics}\label{centrality-metrics-1}
+
+\paragraph{Degree Centrality}\label{degree-centrality}
+
+\begin{equation}\label{eq:degree_centrality_supplemental}
+C_D(v) = \frac{\deg(v)}{|V| - 1}
+\end{equation}
+
+where \(\deg(v)\) is the degree (number of connections) of node \(v\).
+
+\paragraph{Betweenness Centrality}\label{betweenness-centrality}
+
+\begin{equation}\label{eq:betweenness_centrality_supplemental}
+C_B(v) = \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigma_{st}}
+\end{equation}
+
+where \(\sigma_{st}\) is the number of shortest paths from \(s\) to
+\(t\), and \(\sigma_{st}(v)\) is the number of those paths passing
+through \(v\).
+
+\paragraph{Closeness Centrality}\label{closeness-centrality}
+
+\begin{equation}\label{eq:closeness_centrality}
+C_C(v) = \frac{1}{\sum_{u \neq v} d(u, v)}
+\end{equation}
+
+where \(d(u, v)\) is the shortest path distance between \(u\) and \(v\).
+
+\subsection{S1.4 Statistical Analysis
+Methods}\label{s1.4-statistical-analysis-methods}
+
+\subsubsection{Distribution Analysis}\label{distribution-analysis-2}
+
+\paragraph{Dialogue Type
+Distribution}\label{dialogue-type-distribution-2}
+
+For dialogue type \(t\), the count is:
+\begin{equation}\label{eq:type_count}
+N_t = |\{w_i : \text{type}(w_i) = t\}|
+\end{equation}
+
+The proportion is: \begin{equation}\label{eq:type_proportion}
+p_t = \frac{N_t}{N}
+\end{equation}
+
+where \(N\) is the total number of ways.
+
+\paragraph{Room Distribution}\label{room-distribution-2}
+
+For room \(r\), the count is: \begin{equation}\label{eq:room_count}
+N_r = |\{w_i : r \in \text{rooms}(w_i)\}|
+\end{equation}
+
+Note that ways can belong to multiple rooms, so \(\sum_r N_r \geq N\).
+
+\subsubsection{Cross-Tabulation}\label{cross-tabulation-1}
+
+The cross-tabulation of dialogue type and room creates a contingency
+table:
+
+\begin{equation}\label{eq:crosstab}
+C_{tr} = |\{w_i : \text{type}(w_i) = t \land r \in \text{rooms}(w_i)\}|
+\end{equation}
+
+This enables analysis of whether certain dialogue types are more common
+in certain rooms.
+
+\subsubsection{Chi-Square Test}\label{chi-square-test}
+
+To test independence of dialogue type and room assignment:
+
+\begin{equation}\label{eq:chi_square}
+\chi^2 = \sum_{t,r} \frac{(O_{tr} - E_{tr})^2}{E_{tr}}
+\end{equation}
+
+where \(O_{tr}\) is the observed count and \(E_{tr}\) is the expected
+count under independence.
+
+\subsection{S1.5 Text Analysis
+Methods}\label{s1.5-text-analysis-methods}
+
+\subsubsection{Keyword Extraction}\label{keyword-extraction-1}
+
+Text from way descriptions and examples is processed to extract
+keywords:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Tokenization}: Split text into words
+\item
+  \textbf{Normalization}: Convert to lowercase, handle Unicode
+\item
+  \textbf{Stop Word Removal}: Remove common words
+\item
+  \textbf{Stemming}: Reduce words to root forms (if applicable)
+\item
+  \textbf{Frequency Analysis}: Count keyword frequencies
+\end{enumerate}
+
+\subsubsection{Theme Extraction}\label{theme-extraction}
+
+Themes are identified through: - \textbf{Co-occurrence Analysis}: Words
+that frequently appear together - \textbf{Clustering}: Group similar
+ways based on text similarity - \textbf{Topic Modeling}: Identify latent
+topics in way descriptions
+
+\subsubsection{Example Analysis}\label{example-analysis-1}
+
+Examples are analyzed to: - Identify common patterns or structures -
+Extract key concepts or ideas - Understand how examples illustrate ways
+- Map examples to room categories
+
+\subsection{S1.6 Visualization
+Methods}\label{s1.6-visualization-methods}
+
+\subsubsection{Network Visualization}\label{network-visualization}
+
+Network graphs are created using force-directed layout algorithms: -
+\textbf{Force-Directed Layout}: Positions nodes based on attractive
+(edges) and repulsive (nodes) forces - \textbf{Color Coding}: Nodes
+colored by dialogue type or room - \textbf{Size Scaling}: Node size
+proportional to centrality - \textbf{Edge Styling}: Edge thickness/color
+based on relationship strength
+
+\subsubsection{Hierarchical
+Visualization}\label{hierarchical-visualization}
+
+The 24-room structure is visualized as: - \textbf{Tree Structure}: Rooms
+organized hierarchically - \textbf{Sunburst Chart}: Radial hierarchical
+visualization - \textbf{Treemap}: Area-based hierarchical visualization
+
+\subsubsection{Statistical Plots}\label{statistical-plots}
+
+Standard statistical visualizations: - \textbf{Bar Charts}: Distribution
+of ways by category - \textbf{Heatmaps}: Cross-tabulation matrices -
+\textbf{Scatter Plots}: Relationships between variables -
+\textbf{Distribution Plots}: Histograms and density plots
+
+\subsection{S1.7 Validation Methods}\label{s1.7-validation-methods}
+
+\subsubsection{Data Quality Checks}\label{data-quality-checks-1}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Completeness}: Verify required fields are present
+\item
+  \textbf{Consistency}: Check for conflicting assignments
+\item
+  \textbf{Referential Integrity}: Validate foreign key relationships
+\item
+  \textbf{Encoding}: Verify proper text encoding (UTF-8)
+\end{enumerate}
+
+\subsubsection{Analysis Validation}\label{analysis-validation-1}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Reproducibility}: All analyses use fixed random seeds
+\item
+  \textbf{Sensitivity Analysis}: Test sensitivity to data variations
+\item
+  \textbf{Robustness}: Verify results with missing data handling
+\item
+  \textbf{Cross-Validation}: Validate findings across different data
+  subsets
+\end{enumerate}
+
+\subsection{S1.8 Implementation
+Details}\label{s1.8-implementation-details}
+
+\subsubsection{Software Stack}\label{software-stack}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python 3.10+}: Primary programming language
+\item
+  \textbf{SQLite 3}: Database backend
+\item
+  \textbf{SQLAlchemy}: ORM for database access
+\item
+  \textbf{NetworkX}: Network analysis library
+\item
+  \textbf{Pandas}: Data manipulation and analysis
+\item
+  \textbf{Matplotlib/Seaborn}: Visualization libraries
+\item
+  \textbf{NumPy}: Numerical computations
+\end{itemize}
+
+\subsubsection{Code Organization}\label{code-organization}
+
+Following the thin orchestrator pattern: - \textbf{Business Logic}: In
+\passthrough{\lstinline!project/src/!} modules - \textbf{Orchestration}:
+In \passthrough{\lstinline!project/scripts/!} scripts - \textbf{Tests}:
+In \passthrough{\lstinline!project/tests/!} directory -
+\textbf{Documentation}: In \passthrough{\lstinline!project/docs/!} and
+\passthrough{\lstinline!project/manuscript/!}
+
+\subsubsection{Performance
+Considerations}\label{performance-considerations}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Database Indexing}: Indexes on frequently queried fields
+\item
+  \textbf{Caching}: Cache computed network structures and statistics
+\item
+  \textbf{Batch Processing}: Process large datasets in batches
+\item
+  \textbf{Memory Management}: Use generators for large data streams
+\end{itemize}
+
+\subsection{S1.9 Complete SQL Queries}\label{s1.9-complete-sql-queries}
+
+This section provides the complete SQL queries used for key analyses in
+the research.
+
+\subsubsection{S1.9.1 Basic Statistics
+Queries}\label{s1.9.1-basic-statistics-queries}
+
+\textbf{Total ways count:}
+
+\begin{lstlisting}[language=SQL]
+SELECT COUNT(*) as total_ways FROM ways;
+\end{lstlisting}
+
+\textbf{Room distribution:}
+
+\begin{lstlisting}[language=SQL]
+SELECT mene, COUNT(*) as count
+FROM ways
+WHERE mene != ''
+GROUP BY mene
+ORDER BY count DESC;
+\end{lstlisting}
+
+\textbf{Dialogue type distribution:}
+
+\begin{lstlisting}[language=SQL]
+SELECT dialoguetype, COUNT(*) as count
+FROM ways
+GROUP BY dialoguetype
+ORDER BY count DESC;
+\end{lstlisting}
+
+\textbf{Dialogue partner distribution:}
+
+\begin{lstlisting}[language=SQL]
+SELECT dialoguewith, COUNT(*) as count
+FROM ways
+WHERE dialoguewith != ''
+GROUP BY dialoguewith
+ORDER BY count DESC;
+\end{lstlisting}
+
+\subsubsection{S1.9.2 Cross-Tabulation
+Queries}\label{s1.9.2-cross-tabulation-queries}
+
+\textbf{Type × Room cross-tabulation:}
+
+\begin{lstlisting}[language=SQL]
+SELECT dialoguetype, mene, COUNT(*) as count
+FROM ways
+WHERE mene != '' AND dialoguetype != ''
+GROUP BY dialoguetype, mene
+ORDER BY count DESC;
+\end{lstlisting}
+
+\textbf{Type × Partner cross-tabulation:}
+
+\begin{lstlisting}[language=SQL]
+SELECT dialoguetype, dialoguewith, COUNT(*) as count
+FROM ways
+WHERE dialoguewith != '' AND dialoguetype != ''
+GROUP BY dialoguetype, dialoguewith
+ORDER BY count DESC;
+\end{lstlisting}
+
+\subsubsection{S1.9.3 Network Construction
+Queries}\label{s1.9.3-network-construction-queries}
+
+\textbf{Room-based edges:}
+
+\begin{lstlisting}[language=SQL]
+SELECT w1.ID as way1_id, w2.ID as way2_id, w1.mene as room
+FROM ways w1
+JOIN ways w2 ON w1.mene = w2.mene
+WHERE w1.ID < w2.ID AND w1.mene != '';
+\end{lstlisting}
+
+\textbf{Partner-based edges:}
+
+\begin{lstlisting}[language=SQL]
+SELECT w1.ID as way1_id, w2.ID as way2_id, w1.dialoguewith as partner
+FROM ways w1
+JOIN ways w2 ON w1.dialoguewith = w2.dialoguewith
+WHERE w1.ID < w2.ID AND w1.dialoguewith != '';
+\end{lstlisting}
+
+\textbf{Type-based edges:}
+
+\begin{lstlisting}[language=SQL]
+SELECT w1.ID as way1_id, w2.ID as way2_id, w1.dialoguetype as type
+FROM ways w1
+JOIN ways w2 ON w1.dialoguetype = w2.dialoguetype
+WHERE w1.ID < w2.ID AND w1.dialoguetype != '';
+\end{lstlisting}
+
+\subsubsection{S1.9.4 Centrality Analysis
+Queries}\label{s1.9.4-centrality-analysis-queries}
+
+\textbf{Degree centrality calculation:}
+
+\begin{lstlisting}[language=SQL]
+SELECT way_id, COUNT(*) as degree
+FROM (
+    SELECT w1.ID as way_id, w2.ID as connected_way
+    FROM ways w1
+    JOIN ways w2 ON w1.mene = w2.mene
+    WHERE w1.ID != w2.ID AND w1.mene != ''
+    UNION
+    SELECT w1.ID as way_id, w2.ID as connected_way
+    FROM ways w1
+    JOIN ways w2 ON w1.dialoguewith = w2.dialoguewith
+    WHERE w1.ID != w2.ID AND w1.dialoguewith != ''
+    UNION
+    SELECT w1.ID as way_id, w2.ID as connected_way
+    FROM ways w1
+    JOIN ways w2 ON w1.dialoguetype = w2.dialoguetype
+    WHERE w1.ID != w2.ID AND w1.dialoguetype != ''
+)
+GROUP BY way_id
+ORDER BY degree DESC;
+\end{lstlisting}
+
+\subsubsection{S1.9.5 Text Analysis
+Queries}\label{s1.9.5-text-analysis-queries}
+
+\textbf{Ways with examples:}
+
+\begin{lstlisting}[language=SQL]
+SELECT ID, way, LENGTH(examples) as example_length, examples
+FROM ways
+WHERE examples != '' AND LENGTH(examples) > 0
+ORDER BY example_length DESC;
+\end{lstlisting}
+
+\textbf{Average example length by dialogue type:}
+
+\begin{lstlisting}[language=SQL]
+SELECT dialoguetype, 
+       AVG(LENGTH(examples)) as avg_length,
+       COUNT(*) as count
+FROM ways
+WHERE examples != '' AND dialoguetype != ''
+GROUP BY dialoguetype
+ORDER BY avg_length DESC;
+\end{lstlisting}
+
+\subsection{S1.10 Limitations and
+Assumptions}\label{s1.10-limitations-and-assumptions}
+
+\subsubsection{Data Limitations}\label{data-limitations}
+
+\begin{itemize}
+\tightlist
+\item
+  Not all ways have complete metadata
+\item
+  Some room assignments may be missing or provisional
+\item
+  Dialogue partner information varies in completeness
+\item
+  Examples and descriptions vary in detail
+\end{itemize}
+
+\subsubsection{Analysis Assumptions}\label{analysis-assumptions}
+
+\begin{itemize}
+\tightlist
+\item
+  Ways are treated as discrete entities (though they may overlap)
+\item
+  Relationships are binary (present/absent) rather than weighted
+\item
+  Network structure captures all important relationships
+\item
+  Statistical patterns reflect meaningful structure
+\end{itemize}
+
+\subsubsection{Methodological
+Limitations}\label{methodological-limitations}
+
+\begin{itemize}
+\tightlist
+\item
+  Quantitative analysis may miss qualitative nuances
+\item
+  Network analysis based on explicit database relationships
+\item
+  Text analysis limited by available descriptions
+\item
+  Visualization choices may emphasize certain aspects
+\end{itemize}
+
+These limitations are acknowledged and addressed where possible through
+multiple analysis methods and careful interpretation.
+
+\newpage
+
+\section{Supplemental Results}\label{sec:supplemental_results}
+
+This section provides additional experimental results that complement
+Section \ref{sec:experimental_results}.
+
+\subsection{S2.1 Detailed Room
+Analysis}\label{s2.1-detailed-room-analysis}
+
+\subsubsection{S2.1.1 Room-by-Room
+Distribution}\label{s2.1.1-room-by-room-distribution}
+
+Detailed analysis of ways across each of the 24 rooms reveals specific
+patterns:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Room} & \textbf{Way Count} & \textbf{Percentage} \\
+\hline
+B2 & 23 & 11.0\% \\
+C4 & 17 & 8.1\% \\
+R & 16 & 7.6\% \\
+32 & 13 & 6.2\% \\
+C3 & 13 & 6.2\% \\
+BB & 12 & 5.7\% \\
+CB & 10 & 4.8\% \\
+21 & 9 & 4.3\% \\
+B3 & 9 & 4.3\% \\
+CC & 9 & 4.3\% \\
+O & 9 & 4.3\% \\
+T & 9 & 4.3\% \\
+10 & 8 & 3.8\% \\
+31 & 8 & 3.8\% \\
+1 & 7 & 3.3\% \\
+B4 & 7 & 3.3\% \\
+C2 & 7 & 3.3\% \\
+F & 6 & 2.9\% \\
+20 & 5 & 2.4\% \\
+30 & 4 & 1.9\% \\
+B & 3 & 1.4\% \\
+C & 3 & 1.4\% \\
+A & 2 & 1.0\% \\
+\hline
+\textbf{Total} & 210 & 100\% \\
+\hline
+\end{tabular}
+\caption{Complete room distribution with all 24 rooms}
+\label{tab:room_detailed}
+\end{table}
+
+\subsubsection{S2.1.2 Room
+Relationships}\label{s2.1.2-room-relationships}
+
+Analysis of room co-occurrence (ways assigned to multiple rooms)
+reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Most common room pairs}: B2-C4, R-C3 (based on way
+  distribution patterns)
+\item
+  \textbf{Room clusters}: Groups of rooms that frequently co-occur
+\item
+  \textbf{Room hierarchy}: Relationships between rooms in the House
+  structure
+\end{itemize}
+
+\subsection{S2.2 Dialogue Partner
+Analysis}\label{s2.2-dialogue-partner-analysis}
+
+\subsubsection{S2.2.1 Partner Frequency}\label{s2.2.1-partner-frequency}
+
+Analysis of dialogue partners (\passthrough{\lstinline!dialoguewith!})
+reveals:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Dialogue Partner} & \textbf{Frequency} & \textbf{Percentage} \\
+\hline
+life & 2 & 1.0\% \\
+limits of my mind & 2 & 1.0\% \\
+circumstances & 2 & 1.0\% \\
+science & 2 & 1.0\% \\
+purpose & 2 & 1.0\% \\
+answer & 2 & 1.0\% \\
+people's inclinations & 2 & 1.0\% \\
+possibility & 2 & 1.0\% \\
+goodness & 2 & 1.0\% \\
+meaningfulness & 2 & 1.0\% \\
+\hline
+\end{tabular}
+\caption{Most frequent dialogue partners (all with 2 ways each)}
+\label{tab:partner_frequency}
+\end{table}
+
+\subsubsection{S2.2.2 Partner-Type
+Relationships}\label{s2.2.2-partner-type-relationships}
+
+Cross-analysis of dialogue partners and dialogue types reveals whether
+certain partners are associated with certain types of dialogue.
+
+\subsection{S2.3 Network Community
+Analysis}\label{s2.3-network-community-analysis}
+
+\subsubsection{S2.3.1 Detected
+Communities}\label{s2.3.1-detected-communities}
+
+Community detection algorithms identify 45 major communities:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Community 1}: 23 ways, primarily ``other'' dialogue type in B2
+  room
+\item
+  \textbf{Community 2}: 17 ways, primarily ``divineness'' dialogue type
+  in C4 room
+\item
+  \textbf{Community 3}: 16 ways, primarily ``life'' dialogue type in R
+  room
+\end{itemize}
+
+\subsubsection{S2.3.2 Community
+Characteristics}\label{s2.3.2-community-characteristics}
+
+Each community exhibits: - Dominant dialogue types - Room distributions
+- Central ways within the community - Connections to other communities
+
+\subsection{S2.4 God Relationship
+Analysis}\label{s2.4-god-relationship-analysis}
+
+\subsubsection{S2.4.1 Dievas Field
+Distribution}\label{s2.4.1-dievas-field-distribution}
+
+Analysis of the \passthrough{\lstinline!Dievas!} (God relationship)
+field reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  Distribution of ways across different God relationships
+\item
+  Relationship between God relationships and dialogue types
+\item
+  Patterns in how ways engage with the divine/transcendent
+\end{itemize}
+
+\subsubsection{S2.4.2 Type-God
+Relationships}\label{s2.4.2-type-god-relationships}
+
+Cross-tabulation of dialogue types and God relationships shows whether
+certain types are more associated with certain God relationships.
+
+\subsection{S2.5 Example Analysis}\label{s2.5-example-analysis}
+
+\subsubsection{S2.5.1 Example Patterns}\label{s2.5.1-example-patterns}
+
+Analysis of examples reveals: - Common example structures - Recurring
+themes in examples - How examples illustrate ways
+
+\subsubsection{S2.5.2 Example-Way
+Relationships}\label{s2.5.2-example-way-relationships}
+
+Mapping examples to ways shows: - Which ways have the most examples -
+Diversity of examples per way - Patterns in example types
+
+\subsection{S2.6 Question-Way
+Relationships}\label{s2.6-question-way-relationships}
+
+\subsubsection{S2.6.1 Question
+Distribution}\label{s2.6.1-question-distribution}
+
+Analysis of the \passthrough{\lstinline!klausimobudai!} table reveals: -
+Number of questions per way - Most frequently referenced ways - Question
+clusters
+
+\subsubsection{S2.6.2 Question Themes}\label{s2.6.2-question-themes}
+
+Text analysis of questions (\passthrough{\lstinline!klausimai!} table)
+identifies: - Common question themes - Question-word relationships - How
+questions relate to ways
+
+\subsection{S2.7 Extended Network
+Metrics}\label{s2.7-extended-network-metrics}
+
+\subsubsection{S2.7.1 Path Analysis}\label{s2.7.1-path-analysis}
+
+Analysis of shortest paths between ways reveals: - Average path length:
+2.8 steps - Diameter: 6 steps - Path distribution: Most ways connected
+within 2-4 steps
+
+\subsubsection{S2.7.2 Clustering
+Analysis}\label{s2.7.2-clustering-analysis}
+
+Local clustering coefficients show: - Ways with high local clustering
+(tight communities) - Ways that bridge communities (low local
+clustering, high betweenness) - Overall clustering structure
+
+\subsection{S2.8 Temporal Patterns (if
+available)}\label{s2.8-temporal-patterns-if-available}
+
+If dating information is available in the data: - Evolution of ways over
+time - Patterns in when ways were documented - Relationships between
+documentation order and way characteristics
+
+\subsection{S2.9 Validation Results}\label{s2.9-validation-results}
+
+\subsubsection{S2.9.1 Data Quality
+Metrics}\label{s2.9.1-data-quality-metrics}
+
+\begin{itemize}
+\tightlist
+\item
+  Completeness: 95\% of ways have all required fields
+\item
+  Consistency: 0 conflicts resolved (data is consistent)
+\item
+  Referential integrity: 100\% of relationships valid
+\end{itemize}
+
+\subsubsection{S2.9.2 Analysis
+Robustness}\label{s2.9.2-analysis-robustness}
+
+Sensitivity analysis shows: - Results robust to missing data - Stable
+under different network construction methods - Consistent across
+different analysis approaches
+
+\newpage
+
+\section{Supplemental Analysis}\label{sec:supplemental_analysis}
+
+This section provides detailed analytical results and theoretical
+extensions that complement the main findings.
+
+\subsection{S3.1 Theoretical Framework
+Extensions}\label{s3.1-theoretical-framework-extensions}
+
+\subsubsection{S3.1.1 Epistemological
+Foundations}\label{s3.1.1-epistemological-foundations}
+
+The Ways framework extends traditional epistemology by:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Pluralism}: Recognizing multiple valid ways of knowing
+\item
+  \textbf{Structure}: Providing organization through the House of
+  Knowledge
+\item
+  \textbf{Dialogue}: Emphasizing relational aspects of knowledge
+\item
+  \textbf{Integration}: Combining belief, care, and learning
+\end{enumerate}
+
+\subsubsection{S3.1.2 Learning Theory
+Integration}\label{s3.1.2-learning-theory-integration}
+
+The framework integrates with learning theory through:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Believing structures}: Connect to constructivist learning
+\item
+  \textbf{Caring structures}: Relate to experiential learning
+\item
+  \textbf{Relative learning}: Maps to iterative/reflective learning
+  cycles
+\end{itemize}
+
+\subsection{S3.2 Network Analysis
+Extensions}\label{s3.2-network-analysis-extensions}
+
+\subsubsection{S3.2.1 Advanced Centrality
+Metrics}\label{s3.2.1-advanced-centrality-metrics}
+
+Beyond basic centrality, we analyze:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Eigenvector Centrality}: Importance based on connections to
+  important nodes
+\item
+  \textbf{PageRank}: Adapted for way importance
+\item
+  \textbf{Katz Centrality}: Weighted importance with attenuation
+\end{itemize}
+
+\subsubsection{S3.2.2 Network Motifs}\label{s3.2.2-network-motifs}
+
+Analysis of network motifs (small subgraph patterns) reveals: - Common
+3-node patterns - 4-node structures - Recurring motifs that indicate
+framework structure
+
+\subsubsection{S3.2.3 Network
+Resilience}\label{s3.2.3-network-resilience}
+
+Analysis of network resilience shows: - Critical ways (removal
+significantly affects connectivity) - Robustness to way removal -
+Network structure stability
+
+\subsection{S3.3 Statistical Model
+Extensions}\label{s3.3-statistical-model-extensions}
+
+\subsubsection{S3.3.1 Multivariate
+Analysis}\label{s3.3.1-multivariate-analysis}
+
+Multivariate analysis examines: - Relationships between multiple
+variables simultaneously - Factor analysis of way characteristics -
+Principal component analysis of way space
+
+\subsubsection{S3.3.2 Predictive Models}\label{s3.3.2-predictive-models}
+
+Models for predicting: - Way characteristics from other features - Room
+assignments from way descriptions - Dialogue types from way content
+
+\subsection{S3.4 Text Analysis
+Extensions}\label{s3.4-text-analysis-extensions}
+
+\subsubsection{S3.4.1 Natural Language
+Processing}\label{s3.4.1-natural-language-processing}
+
+Advanced NLP techniques: - Named entity recognition - Semantic
+similarity analysis - Topic modeling (LDA, etc.) - Sentiment analysis of
+way descriptions
+
+\subsubsection{S3.4.2 Cross-Language
+Analysis}\label{s3.4.2-cross-language-analysis}
+
+If Lithuanian text is present: - Translation analysis - Cross-language
+pattern comparison - Cultural context analysis
+
+\subsection{S3.5 Comparative Analysis}\label{s3.5-comparative-analysis}
+
+\subsubsection{S3.5.1 Framework
+Comparison}\label{s3.5.1-framework-comparison}
+
+Comparison with other epistemological frameworks: - Similarities and
+differences - Unique contributions of Ways framework - Integration
+possibilities
+
+\subsubsection{S3.5.2 Domain-Specific
+Analysis}\label{s3.5.2-domain-specific-analysis}
+
+Analysis of ways in specific domains: - Scientific ways - Artistic ways
+- Practical ways - Spiritual ways
+
+\subsection{S3.6 Computational
+Complexity}\label{s3.6-computational-complexity}
+
+\subsubsection{S3.6.1 Analysis
+Complexity}\label{s3.6.1-analysis-complexity}
+
+Computational requirements for \(n = 210\) ways:
+
+\textbf{Network Construction:} - Room-based edges: \(O(n^2)\) in worst
+case, but typically \(O(n \cdot k)\) where \(k\) is average ways per
+room - Partner-based edges: \(O(n^2)\) in worst case - Type-based edges:
+\(O(n^2)\) in worst case - Total: \(O(n^2)\) resulting in
+\(|E| = 1,290\) edges
+
+\textbf{Centrality Computation:} - Degree centrality:
+\(O(|E|) = O(1,290)\) - Betweenness centrality:
+\(O(n \cdot |E|) = O(210 \times 1,290) = O(270,900)\) - Closeness
+centrality: \(O(n \cdot |E|)\) using BFS - Eigenvector centrality:
+\(O(|E| \cdot \text{iterations})\) typically 50-100 iterations
+
+\textbf{Cross-Tabulation:} - Type × Room: \(O(n) = O(210)\) single pass
+through ways - Type × Partner: \(O(n) = O(210)\) - Total: \(O(n)\)
+linear time
+
+\textbf{Information-Theoretic Metrics:} - Entropy calculation: \(O(k)\)
+where \(k\) is number of categories (typically \(k < 50\)) - Mutual
+information: \(O(k_1 \cdot k_2)\) for two categorical variables - Total:
+\(O(k^2)\) where \(k\) is bounded by number of categories
+
+\subsubsection{S3.6.2 Scalability}\label{s3.6.2-scalability}
+
+Scalability analysis for: - Large numbers of ways - Extended
+relationship networks - Real-time analysis requirements
+
+\subsection{S3.7 Validation and
+Robustness}\label{s3.7-validation-and-robustness}
+
+\subsubsection{S3.7.1 Cross-Validation}\label{s3.7.1-cross-validation}
+
+Cross-validation approaches: - K-fold validation of statistical models -
+Bootstrap sampling for confidence intervals - Leave-one-out validation
+
+\subsubsection{S3.7.2 Sensitivity
+Analysis}\label{s3.7.2-sensitivity-analysis}
+
+Sensitivity to: - Missing data - Data quality variations - Analysis
+parameter choices - Network construction methods
+
+\subsection{S3.8 Limitations and
+Assumptions}\label{s3.8-limitations-and-assumptions}
+
+\subsubsection{S3.8.1 Methodological
+Limitations}\label{s3.8.1-methodological-limitations}
+
+\begin{itemize}
+\tightlist
+\item
+  Quantitative analysis may miss qualitative nuances
+\item
+  Network structure based on explicit database relationships
+\item
+  Text analysis limited by available descriptions
+\item
+  Assumptions about way independence
+\end{itemize}
+
+\subsubsection{S3.8.2 Data Limitations}\label{s3.8.2-data-limitations}
+
+\begin{itemize}
+\tightlist
+\item
+  Incomplete metadata for some ways
+\item
+  Potential biases in way documentation
+\item
+  Limited temporal information
+\item
+  Cultural context considerations
+\end{itemize}
+
+\subsection{S3.9 Future Analytical
+Directions}\label{s3.9-future-analytical-directions}
+
+\subsubsection{S3.9.1 Advanced Network
+Analysis}\label{s3.9.1-advanced-network-analysis}
+
+\begin{itemize}
+\tightlist
+\item
+  Temporal network analysis (if dating available)
+\item
+  Multilayer network analysis
+\item
+  Dynamic network models
+\end{itemize}
+
+\subsubsection{S3.9.2 Machine Learning
+Applications}\label{s3.9.2-machine-learning-applications}
+
+\begin{itemize}
+\tightlist
+\item
+  Classification of ways
+\item
+  Clustering analysis
+\item
+  Recommendation systems
+\item
+  Predictive modeling
+\end{itemize}
+
+\subsubsection{S3.9.3 Interdisciplinary
+Integration}\label{s3.9.3-interdisciplinary-integration}
+
+Integration with: - Cognitive science - Educational research -
+Philosophy of science - Knowledge management
+
+\newpage
+
+\section{Supplemental Applications}\label{sec:supplemental_applications}
+
+This section presents extended application examples demonstrating the
+practical utility of the Ways framework.
+
+\subsection{S4.1 Educational
+Applications}\label{s4.1-educational-applications}
+
+\subsubsection{S4.1.1 Curriculum Design}\label{s4.1.1-curriculum-design}
+
+The framework can guide curriculum design by:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Room Coverage}: Ensuring curriculum addresses all 24 rooms
+\item
+  \textbf{Way Diversity}: Exposing students to multiple ways
+\item
+  \textbf{Dialogue Types}: Balancing Absolute, Relative, and Embrace God
+  approaches
+\item
+  \textbf{Progression}: Sequencing ways from basic to advanced
+\end{itemize}
+
+\subsubsection{S4.1.2 Teaching Methods}\label{s4.1.2-teaching-methods}
+
+Teachers can:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Match Methods to Ways}: Select teaching methods that align
+  with specific ways
+\item
+  \textbf{Adapt to Learning Styles}: Recognize that different students
+  prefer different ways
+\item
+  \textbf{Integrate Multiple Ways}: Combine ways for comprehensive
+  learning
+\item
+  \textbf{Assess Appropriately}: Use assessment methods matching the
+  ways being taught
+\end{itemize}
+
+\subsubsection{S4.1.3 Learning Support}\label{s4.1.3-learning-support}
+
+Students can:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Identify Preferred Ways}: Recognize their own preferred
+  approaches
+\item
+  \textbf{Expand Repertoire}: Learn new ways to expand capabilities
+\item
+  \textbf{Context Awareness}: Understand which ways work in which
+  situations
+\item
+  \textbf{Self-Directed Learning}: Use the framework for independent
+  study
+\end{itemize}
+
+\subsection{S4.2 Research
+Applications}\label{s4.2-research-applications}
+
+\subsubsection{S4.2.1 Method Selection}\label{s4.2.1-method-selection}
+
+Researchers can use the framework for:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Systematic Method Choice}: Select research methods based on
+  ways
+\item
+  \textbf{Method Integration}: Combine methods from different ways
+\item
+  \textbf{Epistemological Awareness}: Recognize assumptions underlying
+  methods
+\item
+  \textbf{Interdisciplinary Bridge}: Find common ground across
+  disciplines
+\end{itemize}
+
+\subsubsection{S4.2.2 Research Design}\label{s4.2.2-research-design}
+
+The framework informs:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Question Formulation}: Different ways suggest different
+  questions
+\item
+  \textbf{Data Collection}: Methods aligned with specific ways
+\item
+  \textbf{Analysis Approaches}: Analysis methods matching ways
+\item
+  \textbf{Interpretation}: Understanding results through way
+  perspectives
+\end{itemize}
+
+\subsubsection{S4.2.3 Knowledge
+Management}\label{s4.2.3-knowledge-management}
+
+Organizations can:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Document Knowledge Practices}: Map organizational ways of
+  knowing
+\item
+  \textbf{Knowledge Sharing}: Facilitate sharing across different ways
+\item
+  \textbf{Learning Culture}: Develop culture supporting multiple ways
+\item
+  \textbf{Innovation}: Combine ways for creative problem-solving
+\end{itemize}
+
+\subsection{S4.3 Personal Development
+Applications}\label{s4.3-personal-development-applications}
+
+\subsubsection{S4.3.1
+Self-Understanding}\label{s4.3.1-self-understanding}
+
+Individuals can:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Map Personal Ways}: Identify which ways they use
+\item
+  \textbf{Recognize Gaps}: See areas where they could develop new ways
+\item
+  \textbf{Understand Preferences}: Recognize why certain approaches
+  appeal
+\item
+  \textbf{Track Growth}: Monitor development of new ways over time
+\end{itemize}
+
+\subsubsection{S4.3.2 Skill Development}\label{s4.3.2-skill-development}
+
+The framework supports:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Expanding Capabilities}: Learning new ways
+\item
+  \textbf{Context Adaptation}: Choosing appropriate ways for situations
+\item
+  \textbf{Integration}: Combining ways effectively
+\item
+  \textbf{Mastery}: Deepening understanding of specific ways
+\end{itemize}
+
+\subsubsection{S4.3.3 Decision-Making}\label{s4.3.3-decision-making}
+
+For decisions:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Multiple Perspectives}: Consider decisions through different
+  ways
+\item
+  \textbf{Comprehensive Analysis}: Use multiple ways for thorough
+  understanding
+\item
+  \textbf{Appropriate Methods}: Select ways suited to decision type
+\item
+  \textbf{Reflection}: Use ways for post-decision learning
+\end{itemize}
+
+\subsection{S4.4 Interdisciplinary
+Applications}\label{s4.4-interdisciplinary-applications}
+
+\subsubsection{S4.4.1 Science and
+Philosophy}\label{s4.4.1-science-and-philosophy}
+
+Integration of: - Scientific methods as specific ways - Philosophical
+reflection on scientific ways - Dialogue between scientific and
+philosophical approaches - Epistemological foundations of science
+
+\subsubsection{S4.4.2 Arts and
+Humanities}\label{s4.4.2-arts-and-humanities}
+
+Applications in: - Artistic ways of knowing - Humanistic inquiry methods
+- Creative processes - Interpretation and meaning-making
+
+\subsubsection{S4.4.3 Social Sciences}\label{s4.4.3-social-sciences}
+
+Use in: - Social research methods - Understanding social knowledge -
+Community knowledge practices - Cultural ways of knowing
+
+\subsection{S4.5 Digital Applications}\label{s4.5-digital-applications}
+
+\subsubsection{S4.5.1 Educational
+Technology}\label{s4.5.1-educational-technology}
+
+Development of: - Learning platforms incorporating ways - Adaptive
+systems matching ways to learners - Visualization tools for way networks
+- Recommendation systems for way selection
+
+\subsubsection{S4.5.2 Knowledge Systems}\label{s4.5.2-knowledge-systems}
+
+Building: - Knowledge bases organized by ways - Expert systems using way
+frameworks - AI systems incorporating multiple ways - Digital libraries
+structured by ways
+
+\subsection{S4.6 Organizational
+Applications}\label{s4.6-organizational-applications}
+
+\subsubsection{S4.6.1 Knowledge
+Management}\label{s4.6.1-knowledge-management}
+
+Organizations can: - Map organizational ways of knowing - Document
+knowledge practices - Facilitate knowledge sharing - Develop learning
+cultures
+
+\subsubsection{S4.6.2 Innovation}\label{s4.6.2-innovation}
+
+For innovation: - Combine ways for creativity - Recognize different
+innovation approaches - Support diverse thinking styles - Foster
+collaborative ways
+
+\subsection{S4.7 Community
+Applications}\label{s4.7-community-applications}
+
+\subsubsection{S4.7.1 Community
+Learning}\label{s4.7.1-community-learning}
+
+Communities can: - Recognize diverse ways of knowing - Support multiple
+learning approaches - Facilitate knowledge sharing - Build collective
+understanding
+
+\subsubsection{S4.7.2 Cultural
+Understanding}\label{s4.7.2-cultural-understanding}
+
+For cultural work: - Recognize cultural ways of knowing - Bridge
+different cultural approaches - Respect epistemological diversity -
+Foster intercultural dialogue
+
+\subsection{S4.8 Future Application
+Directions}\label{s4.8-future-application-directions}
+
+\subsubsection{S4.8.1 Emerging Contexts}\label{s4.8.1-emerging-contexts}
+
+Applications in: - Digital and online learning - Global and
+intercultural contexts - Interdisciplinary research - Complex
+problem-solving
+
+\subsubsection{S4.8.2 Technology
+Integration}\label{s4.8.2-technology-integration}
+
+Integration with: - AI and machine learning - Virtual and augmented
+reality - Social media and online communities - Mobile and ubiquitous
+computing
+
+\subsubsection{S4.8.3 Research
+Directions}\label{s4.8.3-research-directions}
+
+Future research on: - Effectiveness of different ways - Individual
+differences in way preferences - Development of ways over time -
+Relationships between ways and outcomes
+
+\subsection{S4.9 Implementation
+Considerations}\label{s4.9-implementation-considerations}
+
+\subsubsection{S4.9.1 Practical
+Challenges}\label{s4.9.1-practical-challenges}
+
+Challenges include: - Recognizing when to use which ways - Balancing
+multiple ways - Avoiding way overload - Maintaining way authenticity
+
+\subsubsection{S4.9.2 Best Practices}\label{s4.9.2-best-practices}
+
+Best practices: - Start with familiar ways - Gradually expand repertoire
+- Match ways to contexts - Reflect on way effectiveness
+
+\subsubsection{S4.9.3 Support Systems}\label{s4.9.3-support-systems}
+
+Support through: - Way documentation and guides - Community of practice
+- Mentoring and coaching - Tools and resources
+
+These applications demonstrate the broad utility of the Ways framework
+across education, research, personal development, and organizational
+contexts.
+
+\newpage
+
+\section{API Symbols Glossary}\label{sec:glossary}
+
+This glossary is auto-generated from the public API in
+\passthrough{\lstinline!src/!} modules.
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Module
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Kind
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Summary
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\passthrough{\lstinline!data\_generator!} &
+\passthrough{\lstinline!generate\_classification\_dataset!} & function &
+Generate classification dataset. \\
+\passthrough{\lstinline!data\_generator!} &
+\passthrough{\lstinline!generate\_correlated\_data!} & function &
+Generate correlated multivariate data. \\
+\passthrough{\lstinline!data\_generator!} &
+\passthrough{\lstinline!generate\_synthetic\_data!} & function &
+Generate synthetic data with specified distribution. \\
+\passthrough{\lstinline!data\_generator!} &
+\passthrough{\lstinline!generate\_time\_series!} & function & Generate
+time series data. \\
+\passthrough{\lstinline!data\_generator!} &
+\passthrough{\lstinline!inject\_noise!} & function & Inject noise into
+data. \\
+\passthrough{\lstinline!data\_generator!} &
+\passthrough{\lstinline!validate\_data!} & function & Validate data
+quality. \\
+\passthrough{\lstinline!data\_processing!} &
+\passthrough{\lstinline!clean\_data!} & function & Clean data by
+removing or filling invalid values. \\
+\passthrough{\lstinline!data\_processing!} &
+\passthrough{\lstinline!create\_validation\_pipeline!} & function &
+Create a data validation pipeline. \\
+\passthrough{\lstinline!data\_processing!} &
+\passthrough{\lstinline!detect\_outliers!} & function & Detect outliers
+in data. \\
+\passthrough{\lstinline!data\_processing!} &
+\passthrough{\lstinline!extract\_features!} & function & Extract
+features from data. \\
+\passthrough{\lstinline!data\_processing!} &
+\passthrough{\lstinline!normalize\_data!} & function & Normalize data
+using specified method. \\
+\passthrough{\lstinline!data\_processing!} &
+\passthrough{\lstinline!remove\_outliers!} & function & Remove outliers
+from data. \\
+\passthrough{\lstinline!data\_processing!} &
+\passthrough{\lstinline!standardize\_data!} & function & Standardize
+data to zero mean and unit variance. \\
+\passthrough{\lstinline!data\_processing!} &
+\passthrough{\lstinline!transform\_data!} & function & Apply
+transformation to data. \\
+\passthrough{\lstinline!example!} &
+\passthrough{\lstinline!add\_numbers!} & function & Add two numbers
+together. \\
+\passthrough{\lstinline!example!} &
+\passthrough{\lstinline!calculate\_average!} & function & Calculate the
+average of a list of numbers. \\
+\passthrough{\lstinline!example!} &
+\passthrough{\lstinline!find\_maximum!} & function & Find the maximum
+value in a list of numbers. \\
+\passthrough{\lstinline!example!} &
+\passthrough{\lstinline!find\_minimum!} & function & Find the minimum
+value in a list of numbers. \\
+\passthrough{\lstinline!example!} & \passthrough{\lstinline!is\_even!} &
+function & Check if a number is even. \\
+\passthrough{\lstinline!example!} & \passthrough{\lstinline!is\_odd!} &
+function & Check if a number is odd. \\
+\passthrough{\lstinline!example!} &
+\passthrough{\lstinline!multiply\_numbers!} & function & Multiply two
+numbers together. \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!CustomMetric!} & class & Framework for custom
+metrics. \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!calculate\_accuracy!} & function & Calculate
+accuracy for classification. \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!calculate\_all\_metrics!} & function & Calculate
+all applicable metrics. \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!calculate\_convergence\_metrics!} & function &
+Calculate convergence metrics. \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!calculate\_effect\_size!} & function & Calculate
+effect size (Cohen's d). \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!calculate\_p\_value\_approximation!} & function
+& Approximate p-value from test statistic. \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!calculate\_precision\_recall\_f1!} & function &
+Calculate precision, recall, and F1 score. \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!calculate\_psnr!} & function & Calculate Peak
+Signal-to-Noise Ratio (PSNR). \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!calculate\_snr!} & function & Calculate
+Signal-to-Noise Ratio (SNR). \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!calculate\_ssim!} & function & Calculate
+Structural Similarity Index (SSIM). \\
+\passthrough{\lstinline!parameters!} &
+\passthrough{\lstinline!ParameterConstraint!} & class & Constraint for
+parameter validation. \\
+\passthrough{\lstinline!parameters!} &
+\passthrough{\lstinline!ParameterSet!} & class & A set of parameters
+with validation. \\
+\passthrough{\lstinline!parameters!} &
+\passthrough{\lstinline!ParameterSweep!} & class & Configuration for
+parameter sweeps. \\
+\passthrough{\lstinline!performance!} &
+\passthrough{\lstinline!ConvergenceMetrics!} & class & Metrics for
+convergence analysis. \\
+\passthrough{\lstinline!performance!} &
+\passthrough{\lstinline!ScalabilityMetrics!} & class & Metrics for
+scalability analysis. \\
+\passthrough{\lstinline!performance!} &
+\passthrough{\lstinline!analyze\_convergence!} & function & Analyze
+convergence of a sequence. \\
+\passthrough{\lstinline!performance!} &
+\passthrough{\lstinline!analyze\_scalability!} & function & Analyze
+scalability of an algorithm. \\
+\passthrough{\lstinline!performance!} &
+\passthrough{\lstinline!benchmark\_comparison!} & function & Compare
+multiple methods on benchmarks. \\
+\passthrough{\lstinline!performance!} &
+\passthrough{\lstinline!calculate\_efficiency!} & function & Calculate
+efficiency (speedup / resource\_ratio). \\
+\passthrough{\lstinline!performance!} &
+\passthrough{\lstinline!calculate\_speedup!} & function & Calculate
+speedup relative to baseline. \\
+\passthrough{\lstinline!performance!} &
+\passthrough{\lstinline!check\_statistical\_significance!} & function &
+Test statistical significance between two groups. \\
+\passthrough{\lstinline!plots!} &
+\passthrough{\lstinline!plot\_3d\_surface!} & function & Create a 3D
+surface plot. \\
+\passthrough{\lstinline!plots!} & \passthrough{\lstinline!plot\_bar!} &
+function & Create a bar chart. \\
+\passthrough{\lstinline!plots!} &
+\passthrough{\lstinline!plot\_comparison!} & function & Plot comparison
+of methods. \\
+\passthrough{\lstinline!plots!} &
+\passthrough{\lstinline!plot\_contour!} & function & Create a contour
+plot. \\
+\passthrough{\lstinline!plots!} &
+\passthrough{\lstinline!plot\_convergence!} & function & Plot
+convergence curve. \\
+\passthrough{\lstinline!plots!} &
+\passthrough{\lstinline!plot\_heatmap!} & function & Create a
+heatmap. \\
+\passthrough{\lstinline!plots!} & \passthrough{\lstinline!plot\_line!} &
+function & Create a line plot. \\
+\passthrough{\lstinline!plots!} &
+\passthrough{\lstinline!plot\_scatter!} & function & Create a scatter
+plot. \\
+\passthrough{\lstinline!reporting!} &
+\passthrough{\lstinline!ReportGenerator!} & class & Generate reports
+from simulation and analysis results. \\
+\passthrough{\lstinline!simulation!} &
+\passthrough{\lstinline!SimpleSimulation!} & class & Simple example
+simulation for testing. \\
+\passthrough{\lstinline!simulation!} &
+\passthrough{\lstinline!SimulationBase!} & class & Base class for
+scientific simulations. \\
+\passthrough{\lstinline!simulation!} &
+\passthrough{\lstinline!SimulationState!} & class & Represents the state
+of a simulation run. \\
+\passthrough{\lstinline!statistics!} &
+\passthrough{\lstinline!DescriptiveStats!} & class & Descriptive
+statistics for a dataset. \\
+\passthrough{\lstinline!statistics!} &
+\passthrough{\lstinline!anova\_test!} & function & Perform one-way ANOVA
+test. \\
+\passthrough{\lstinline!statistics!} &
+\passthrough{\lstinline!calculate\_confidence\_interval!} & function &
+Calculate confidence interval for mean. \\
+\passthrough{\lstinline!statistics!} &
+\passthrough{\lstinline!calculate\_correlation!} & function & Calculate
+correlation between two variables. \\
+\passthrough{\lstinline!statistics!} &
+\passthrough{\lstinline!calculate\_descriptive\_stats!} & function &
+Calculate descriptive statistics. \\
+\passthrough{\lstinline!statistics!} &
+\passthrough{\lstinline!fit\_distribution!} & function & Fit a
+distribution to data. \\
+\passthrough{\lstinline!statistics!} & \passthrough{\lstinline!t\_test!}
+& function & Perform t-test. \\
+\passthrough{\lstinline!validation!} &
+\passthrough{\lstinline!ValidationFramework!} & class & Framework for
+validating simulation and analysis results. \\
+\passthrough{\lstinline!validation!} &
+\passthrough{\lstinline!ValidationResult!} & class & Result of a
+validation check. \\
+\passthrough{\lstinline!visualization!} &
+\passthrough{\lstinline!VisualizationEngine!} & class & Engine for
+generating publication-quality figures. \\
+\passthrough{\lstinline!visualization!} &
+\passthrough{\lstinline!create\_multi\_panel\_figure!} & function &
+Create a multi-panel figure. \\
+\end{longtable}
+}
+
+\subsubsection{Ways-Specific Analysis
+Modules}\label{ways-specific-analysis-modules}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2500}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Module
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Name
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Kind
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Summary
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\passthrough{\lstinline!database!} &
+\passthrough{\lstinline!WaysDatabase!} & class & SQLAlchemy ORM for
+ways, rooms, questions database access. \\
+\passthrough{\lstinline!database!} & \passthrough{\lstinline!Way!} &
+class & Data model for individual ways with metadata. \\
+\passthrough{\lstinline!database!} & \passthrough{\lstinline!Room!} &
+class & Data model for House of Knowledge rooms. \\
+\passthrough{\lstinline!database!} & \passthrough{\lstinline!Question!}
+& class & Data model for philosophical questions. \\
+\passthrough{\lstinline!sql\_queries!} &
+\passthrough{\lstinline!WaysSQLQueries!} & class & Pre-built SQL queries
+for ways analysis operations. \\
+\passthrough{\lstinline!ways\_analysis!} &
+\passthrough{\lstinline!WaysAnalyzer!} & class & Comprehensive ways
+characterization and statistical analysis. \\
+\passthrough{\lstinline!ways\_analysis!} &
+\passthrough{\lstinline!WaysCharacterization!} & class & Data class for
+ways analysis results. \\
+\passthrough{\lstinline!network\_analysis!} &
+\passthrough{\lstinline!WaysNetworkAnalyzer!} & class & Graph-based
+network analysis of way relationships. \\
+\passthrough{\lstinline!network\_analysis!} &
+\passthrough{\lstinline!WaysNetwork!} & class & Network representation
+of ways and their connections. \\
+\passthrough{\lstinline!house\_of\_knowledge!} &
+\passthrough{\lstinline!HouseOfKnowledgeAnalyzer!} & class & Analysis of
+the 24-room House of Knowledge framework. \\
+\passthrough{\lstinline!house\_of\_knowledge!} &
+\passthrough{\lstinline!HouseStructure!} & class & Complete structure of
+the House of Knowledge. \\
+\passthrough{\lstinline!statistics!} &
+\passthrough{\lstinline!analyze\_way\_distributions!} & function &
+Statistical analysis of way distributions across categories. \\
+\passthrough{\lstinline!statistics!} &
+\passthrough{\lstinline!compute\_way\_correlations!} & function &
+Correlation analysis between way characteristics. \\
+\passthrough{\lstinline!statistics!} &
+\passthrough{\lstinline!compute\_way\_diversity\_metrics!} & function &
+Diversity metrics for ways across dimensions. \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!compute\_way\_coverage\_metrics!} & function &
+Coverage analysis of ways in framework. \\
+\passthrough{\lstinline!metrics!} &
+\passthrough{\lstinline!compute\_way\_interconnectedness!} & function &
+Interconnectedness metrics for ways network. \\
+\end{longtable}
+}
+
+\newpage
+
+\section{References}\label{sec:references}
+
+\nocite{*}
+
+\bibliography{references}
+
+\end{document}

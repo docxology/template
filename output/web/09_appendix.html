@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>09_appendix</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:appendix">Appendix</h1>
+<p>This appendix provides additional technical details supporting the
+main results.</p>
+<h2 id="a.-database-schema-details">A. Database Schema Details</h2>
+<h3 id="a.1-complete-table-schemas">A.1 Complete Table Schemas</h3>
+<h4 id="ways-table-schema">Ways Table Schema</h4>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> ways (</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    way TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    dialoguewith TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    dialoguetype TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    dialoguetypetype TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">ID</span> <span class="dt">INTEGER</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span> AUTOINCREMENT,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    wayurl TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    examples TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    dialoguetypetypetype TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    mene TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    Dievas TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    comments TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    laikinas TEXT <span class="kw">NOT</span> <span class="kw">NULL</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<h4 id="rooms-table-schema">Rooms Table Schema</h4>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CREATE</span> <span class="kw">TABLE</span> rooms (</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    santrumpa TEXT <span class="kw">NOT</span> <span class="kw">NULL</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    savoka TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    issiaiskinimas TEXT <span class="kw">NOT</span> <span class="kw">NULL</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Additional fields for ordering and relationships</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>);</span></code></pre></div>
+<h3 id="a.2-index-definitions">A.2 Index Definitions</h3>
+<p>Key indexes for performance:</p>
+<ul>
+<li>Index on <code>way</code> for way lookups</li>
+<li>Index on <code>mene</code> for room-based queries</li>
+<li>Index on <code>dialoguetype</code> for type filtering</li>
+<li>Index on <code>dialoguewith</code> for partner analysis</li>
+</ul>
+<h2 id="b.-network-analysis-algorithms">B. Network Analysis
+Algorithms</h2>
+<h3 id="b.1-actual-network-metrics">B.1 Actual Network Metrics</h3>
+<p>The network analysis was performed using NetworkX on the complete
+ways database:</p>
+<p><strong>Network Structure:</strong> - <strong>Nodes</strong>: 210
+ways - <strong>Edges</strong>: 1,290 connections - <strong>Average
+degree</strong>: 12.29 connections per way - <strong>Network
+density</strong>: 0.058 (5.8% of possible edges present) -
+<strong>Clustering coefficient</strong>: 0.886 (high local clustering) -
+<strong>Connected components</strong>: Multiple components detected -
+<strong>Largest component</strong>: Contains majority of ways</p>
+<p><strong>Centrality Metrics:</strong> - <strong>Degree
+centrality</strong>: Range from 0.0 to 0.162 (way 84, 156, 211 with
+highest degree: 34) - <strong>Betweenness centrality</strong>:
+Identifies bridge ways connecting different communities -
+<strong>Closeness centrality</strong>: Measures average distance to all
+other ways - <strong>Eigenvector centrality</strong>: Identifies ways
+connected to highly central ways</p>
+<p><strong>Community Detection:</strong> - Modularity-based community
+detection reveals natural clusters - Communities correspond to room
+assignments and dialogue types - Largest communities align with most
+populated rooms (B2, C4, R)</p>
+<h3 id="b.2-graph-construction-implementation">B.2 Graph Construction
+Implementation</h3>
+<p>The network is constructed using <code>WaysNetworkAnalyzer</code>
+with three edge types:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.models <span class="im">import</span> Way</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _build_ways_network(ways: List[Way]) <span class="op">-&gt;</span> nx.Graph:</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Build network graph from ways data.</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Edges are created based on:</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">    1. Same room (weight=1.0, edge_type=&#39;same_room&#39;)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">    2. Same dialogue partner (weight=0.8, edge_type=&#39;same_partner&#39;)</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">    3. Same dialogue type (weight=0.6, edge_type=&#39;same_type&#39;)</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    G <span class="op">=</span> nx.Graph()</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add nodes with attributes</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> way <span class="kw">in</span> ways:</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        G.add_node(way.<span class="bu">id</span>, </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                   way_text<span class="op">=</span>way.way,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                   room<span class="op">=</span>way.mene,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                   dialogue_type<span class="op">=</span>way.dialoguetype,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                   dialogue_partner<span class="op">=</span>way.dialoguewith)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Group ways by room</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    room_ways <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> way <span class="kw">in</span> ways:</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        room_ways[way.mene].append(way.<span class="bu">id</span>)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add room edges (highest weight)</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> room, way_ids <span class="kw">in</span> room_ways.items():</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(way_ids) <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i, way1_id <span class="kw">in</span> <span class="bu">enumerate</span>(way_ids):</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> way2_id <span class="kw">in</span> way_ids[i<span class="op">+</span><span class="dv">1</span>:]:</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                    G.add_edge(way1_id, way2_id, </span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                              edge_type<span class="op">=</span><span class="st">&#39;same_room&#39;</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                              room<span class="op">=</span>room,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>                              weight<span class="op">=</span><span class="fl">1.0</span>)</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add partner edges (medium weight)</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    partner_ways <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> way <span class="kw">in</span> ways:</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>        partner_ways[way.dialoguewith].append(way.<span class="bu">id</span>)</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> partner, way_ids <span class="kw">in</span> partner_ways.items():</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(way_ids) <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i, way1_id <span class="kw">in</span> <span class="bu">enumerate</span>(way_ids):</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> way2_id <span class="kw">in</span> way_ids[i<span class="op">+</span><span class="dv">1</span>:]:</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> <span class="kw">not</span> G.has_edge(way1_id, way2_id):</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>                        G.add_edge(way1_id, way2_id,</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>                                  edge_type<span class="op">=</span><span class="st">&#39;same_partner&#39;</span>,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>                                  partner<span class="op">=</span>partner,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>                                  weight<span class="op">=</span><span class="fl">0.8</span>)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add type edges (lowest weight)</span></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    type_ways <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> way <span class="kw">in</span> ways:</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>        type_ways[way.dialoguetype].append(way.<span class="bu">id</span>)</span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> dtype, way_ids <span class="kw">in</span> type_ways.items():</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(way_ids) <span class="op">&gt;</span> <span class="dv">1</span>:</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i, way1_id <span class="kw">in</span> <span class="bu">enumerate</span>(way_ids):</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> way2_id <span class="kw">in</span> way_ids[i<span class="op">+</span><span class="dv">1</span>:]:</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> <span class="kw">not</span> G.has_edge(way1_id, way2_id):</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>                        G.add_edge(way1_id, way2_id,</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>                                  edge_type<span class="op">=</span><span class="st">&#39;same_type&#39;</span>,</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>                                  dialogue_type<span class="op">=</span>dtype,</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>                                  weight<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G</span></code></pre></div>
+<h3 id="b.3-centrality-computation">B.3 Centrality Computation</h3>
+<p>Centrality metrics are computed using NetworkX functions within
+<code>WaysNetworkAnalyzer.compute_centrality_metrics()</code>:</p>
+<ul>
+<li><code>nx.degree_centrality(G)</code>: Normalized degree (0-1
+range)</li>
+<li><code>nx.betweenness_centrality(G)</code>: Bridge
+identification</li>
+<li><code>nx.closeness_centrality(G)</code>: Average path length</li>
+<li><code>nx.eigenvector_centrality(G, max_iter=1000)</code>: Influence
+propagation</li>
+<li><code>nx.average_clustering(G)</code>: Local clustering
+coefficient</li>
+</ul>
+<p>The implementation handles edge cases (disconnected graphs, single
+nodes) and returns a <code>NetworkMetrics</code> dataclass with all
+computed values.</p>
+<h2 id="c.-statistical-analysis-formulas">C. Statistical Analysis
+Formulas</h2>
+<h3 id="c.1-distribution-metrics">C.1 Distribution Metrics</h3>
+<p>For a categorical variable with <span
+class="math inline">\(k\)</span> categories:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:entropy_appendix}
+H(X) = -\sum_{i=1}^{k} p_i \log_2(p_i)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(p_i\)</span> is the proportion in
+category <span class="math inline">\(i\)</span>.</p>
+<h3 id="c.2-association-measures">C.2 Association Measures</h3>
+<p>For cross-tabulation analysis:</p>
+<p><span class="math display">\[\begin{equation}\label{eq:cramers_v}
+V = \sqrt{\frac{\chi^2}{n \min(r-1, c-1)}}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\chi^2\)</span> is the chi-square
+statistic, <span class="math inline">\(n\)</span> is sample size, and
+<span class="math inline">\(r\)</span>, <span
+class="math inline">\(c\)</span> are row and column counts.</p>
+<h2 id="d.-visualization-specifications">D. Visualization
+Specifications</h2>
+<h3 id="d.1-network-visualization-parameters">D.1 Network Visualization
+Parameters</h3>
+<ul>
+<li><strong>Layout Algorithm</strong>: Force-directed
+(Fruchterman-Reingold)</li>
+<li><strong>Node Size</strong>: Proportional to centrality score</li>
+<li><strong>Node Color</strong>: By dialogue type</li>
+<li><strong>Edge Width</strong>: By relationship strength</li>
+<li><strong>Edge Color</strong>: By relationship type</li>
+</ul>
+<h3 id="d.2-color-schemes">D.2 Color Schemes</h3>
+<ul>
+<li><strong>Dialogue Types</strong>:
+<ul>
+<li>Absolute: Blue shades</li>
+<li>Relative: Green shades</li>
+<li>Embrace God: Purple shades</li>
+</ul></li>
+<li><strong>Rooms</strong>: Sequential color scheme for 24 rooms</li>
+</ul>
+<h2 id="e.-data-processing-pipeline">E. Data Processing Pipeline</h2>
+<h3 id="e.1-database-initialization">E.1 Database Initialization</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.database <span class="im">import</span> WaysDatabase, initialize_database</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> setup_ways_database(mysql_dump_path: <span class="bu">str</span> <span class="op">=</span> <span class="va">None</span>, </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                        sqlite_path: <span class="bu">str</span> <span class="op">=</span> <span class="st">&quot;project/db/ways.db&quot;</span>) <span class="op">-&gt;</span> WaysDatabase:</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Initialize SQLite database from MySQL dump or existing database.</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">        mysql_dump_path: Path to MySQL dump file (optional)</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">        sqlite_path: Path to SQLite database file</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">        </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">        Initialized WaysDatabase instance</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> mysql_dump_path:</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Convert MySQL dump to SQLite</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        initialize_database(mysql_dump_path, sqlite_path)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return database connection</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    db <span class="op">=</span> WaysDatabase(sqlite_path)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Validate database integrity</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    stats <span class="op">=</span> db.get_way_statistics()</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> stats[<span class="st">&#39;total_ways&#39;</span>] <span class="op">&gt;</span> <span class="dv">0</span>, <span class="st">&quot;Database must contain ways&quot;</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> db</span></code></pre></div>
+<h3 id="e.2-data-access-and-querying">E.2 Data Access and Querying</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.database <span class="im">import</span> WaysDatabase</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.sql_queries <span class="im">import</span> WaysSQLQueries</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.models <span class="im">import</span> Way</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> query_ways_data(db_path: <span class="bu">str</span> <span class="op">=</span> <span class="st">&quot;project/db/ways.db&quot;</span>) <span class="op">-&gt;</span> Dict[<span class="bu">str</span>, Any]:</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Query ways data using SQL queries module.</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">        Dictionary with ways, rooms, and statistics</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    db <span class="op">=</span> WaysDatabase(db_path)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    queries <span class="op">=</span> WaysSQLQueries(db_path)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get all ways</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    _, ways_data <span class="op">=</span> queries.get_all_ways_sql()</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    ways <span class="op">=</span> [Way.from_sqlalchemy(row) <span class="cf">for</span> row <span class="kw">in</span> ways_data]</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get room distribution</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    _, room_counts <span class="op">=</span> queries.count_ways_by_room_sql()</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    room_dist <span class="op">=</span> {room: count <span class="cf">for</span> room, count <span class="kw">in</span> room_counts}</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get type distribution</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    _, type_counts <span class="op">=</span> queries.count_ways_by_type_sql()</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    type_dist <span class="op">=</span> {dtype: count <span class="cf">for</span> dtype, count <span class="kw">in</span> type_counts}</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get cross-tabulation</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    _, crosstab <span class="op">=</span> queries.cross_tabulate_type_room_sql()</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;ways&#39;</span>: ways,</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;room_distribution&#39;</span>: room_dist,</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;type_distribution&#39;</span>: type_dist,</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;crosstab&#39;</span>: crosstab,</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;total_ways&#39;</span>: <span class="bu">len</span>(ways)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div>
+<h3 id="e.3-analysis-script">E.3 Analysis Script</h3>
+<p>The comprehensive analysis script integrates multiple analysis
+modules:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.ways_analysis <span class="im">import</span> WaysAnalyzer</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.network_analysis <span class="im">import</span> WaysNetworkAnalyzer</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.database <span class="im">import</span> WaysDatabase</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> src.sql_queries <span class="im">import</span> WaysSQLQueries</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> analyze_ways_comprehensive(db_path: <span class="bu">str</span> <span class="op">=</span> <span class="va">None</span>) <span class="op">-&gt;</span> Dict[<span class="bu">str</span>, Any]:</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Comprehensive analysis of ways database.</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">        db_path: Optional path to SQLite database</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">        </span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">        Dictionary containing all analysis results</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize analyzers</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    analyzer <span class="op">=</span> WaysAnalyzer(db_path)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    network_analyzer <span class="op">=</span> WaysNetworkAnalyzer(db_path)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    db <span class="op">=</span> WaysDatabase(db_path)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    queries <span class="op">=</span> WaysSQLQueries(db_path)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Distribution analysis</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    characterization <span class="op">=</span> analyzer.characterize_ways()</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    type_dist <span class="op">=</span> characterization.dialogue_types</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    room_dist <span class="op">=</span> characterization.room_distribution</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Network analysis</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    network <span class="op">=</span> network_analyzer.build_ways_network()</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    metrics <span class="op">=</span> network_analyzer.compute_centrality_metrics()</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    central_ways <span class="op">=</span> network_analyzer.find_central_ways()</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Statistical analysis</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    _, crosstab_results <span class="op">=</span> queries.cross_tabulate_type_room_sql()</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    crosstab <span class="op">=</span> {}</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> dtype, room, count <span class="kw">in</span> crosstab_results:</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> dtype <span class="kw">not</span> <span class="kw">in</span> crosstab:</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>            crosstab[dtype] <span class="op">=</span> {}</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>        crosstab[dtype][room] <span class="op">=</span> count</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;characterization&#39;</span>: {</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;total_ways&#39;</span>: characterization.total_ways,</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;room_diversity&#39;</span>: characterization.room_diversity,</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;type_diversity&#39;</span>: characterization.type_diversity,</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;most_common_room&#39;</span>: characterization.most_common_room,</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;most_common_type&#39;</span>: characterization.most_common_type</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;network_metrics&#39;</span>: {</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;node_count&#39;</span>: metrics.node_count,</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;edge_count&#39;</span>: metrics.edge_count,</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;density&#39;</span>: metrics.density,</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;average_degree&#39;</span>: metrics.average_degree,</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;clustering_coefficient&#39;</span>: metrics.clustering_coefficient</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;central_ways&#39;</span>: {</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;by_degree&#39;</span>: central_ways.by_degree[:<span class="dv">10</span>],</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;by_betweenness&#39;</span>: central_ways.by_betweenness[:<span class="dv">10</span>]</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>        },</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;crosstab&#39;</span>: crosstab</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div>
+<h2 id="f.-validation-procedures">F. Validation Procedures</h2>
+<h3 id="f.1-data-quality-checks">F.1 Data Quality Checks</h3>
+<ol type="1">
+<li><strong>Completeness Check</strong>: Verify all required fields
+present</li>
+<li><strong>Consistency Check</strong>: Check for conflicting
+assignments</li>
+<li><strong>Referential Integrity</strong>: Validate foreign key
+relationships</li>
+<li><strong>Encoding Check</strong>: Verify UTF-8 encoding</li>
+</ol>
+<h3 id="f.2-analysis-validation">F.2 Analysis Validation</h3>
+<ol type="1">
+<li><strong>Reproducibility</strong>: Fixed random seeds, deterministic
+algorithms</li>
+<li><strong>Sensitivity</strong>: Test with missing data, parameter
+variations</li>
+<li><strong>Robustness</strong>: Verify results stable under different
+conditions</li>
+<li><strong>Cross-Validation</strong>: Validate findings across data
+subsets</li>
+</ol>
+<h2 id="g.-computational-environment">G. Computational Environment</h2>
+<h3 id="g.1-software-versions">G.1 Software Versions</h3>
+<ul>
+<li>Python 3.10+</li>
+<li>SQLite 3.x</li>
+<li>NetworkX 2.x+</li>
+<li>Pandas 1.x+</li>
+<li>Matplotlib 3.x+</li>
+<li>NumPy 1.x+</li>
+</ul>
+<h3 id="g.2-hardware-requirements">G.2 Hardware Requirements</h3>
+<ul>
+<li>Minimum: 4GB RAM, single core</li>
+<li>Recommended: 8GB+ RAM, multi-core</li>
+<li>Storage: ~100MB for database and outputs</li>
+</ul>
+<h2 id="h.-additional-tables-and-figures">H. Additional Tables and
+Figures</h2>
+<h3 id="h.1-extended-distribution-tables">H.1 Extended Distribution
+Tables</h3>
+<h4 id="complete-room-distribution">Complete Room Distribution</h4>
+<p>The complete distribution of all 24 rooms in the House of
+Knowledge:</p>
+<h4 id="complete-dialogue-type-distribution">Complete Dialogue Type
+Distribution</h4>
+<p>The complete distribution of all 38 dialogue types (presented in two
+parts):</p>
+<h4 id="top-cross-tabulation-combinations">Top Cross-Tabulation
+Combinations</h4>
+<p>The most frequent dialogue type × room combinations:</p>
+<h3 id="h.2-extended-network-visualizations">H.2 Extended Network
+Visualizations</h3>
+<h4 id="ways-network-visualization">Ways Network Visualization</h4>
+<p>Figure <span class="math inline">\(\ref{fig:ways_network}\)</span>
+shows the complete network graph of 210 ways with 1,290 edges. The
+visualization uses a force-directed layout (Fruchterman-Reingold
+algorithm) with: - <strong>Node colors</strong>: Coded by dialogue type
+(38 distinct types) - <strong>Node sizes</strong>: Proportional to
+degree centrality - <strong>Edge types</strong>: Three relationship
+types (same room: weight 1.0, same partner: weight 0.8, same type:
+weight 0.6) - <strong>Layout</strong>: Optimized for visual clarity with
+community clustering visible</p>
+<p>The network exhibits high clustering (coefficient: 0.886) indicating
+strong room-based communities. The largest connected component contains
+the majority of ways, with smaller isolated components representing
+specialized dialogue patterns.</p>
+<h4 id="room-hierarchy-visualization">Room Hierarchy Visualization</h4>
+<p>Figure <span class="math inline">\(\ref{fig:room_hierarchy}\)</span>
+presents a hierarchical bar chart showing the distribution of ways
+across all 24 rooms. The visualization organizes rooms by their position
+in the House of Knowledge framework, revealing: - <strong>Most populated
+rooms</strong>: B2 (23 ways), C4 (17 ways), R (16 ways) -
+<strong>Framework structure</strong>: Clear patterns in believing
+(B-series) and caring (C-series) hierarchies - <strong>Relative learning
+rooms</strong>: R (Reflecting), O (Obeying), T (Taking a Stand) show
+balanced distributions</p>
+<h4 id="framework-treemap">Framework Treemap</h4>
+<p>Figure <span
+class="math inline">\(\ref{fig:framework_treemap}\)</span> provides a
+treemap visualization of the framework structure, where: -
+<strong>Area</strong>: Proportional to number of ways in each room -
+<strong>Color</strong>: Indicates framework category (believing, caring,
+relative learning) - <strong>Hierarchy</strong>: Shows nested
+relationships within the House of Knowledge</p>
+<p>This visualization highlights the structural organization of the
+framework and the relative emphasis on different aspects of knowledge
+acquisition.</p>
+<h3 id="h.3-extended-statistical-plots">H.3 Extended Statistical
+Plots</h3>
+<h4 id="dialogue-type-distribution">Dialogue Type Distribution</h4>
+<p>Figure <span
+class="math inline">\(\ref{fig:type_distribution}\)</span> displays a
+bar chart of all 38 dialogue types ranked by frequency. The
+visualization shows: - <strong>Top types</strong>: “goodness” and
+“other” (15 each, 7.1%), “regularity” (11, 5.2%) - <strong>Distribution
+pattern</strong>: Long tail with many types having 1-4 occurrences -
+<strong>Balance</strong>: Relatively even distribution across types,
+indicating diverse epistemological approaches</p>
+<h4 id="type-room-heatmap">Type × Room Heatmap</h4>
+<p>Figure <span
+class="math inline">\(\ref{fig:type_room_heatmap}\)</span> presents a
+heatmap of the cross-tabulation between dialogue types (rows) and rooms
+(columns). The visualization reveals: - <strong>Hotspots</strong>:
+Strong associations between specific types and rooms (e.g., “I” × “O”,
+“knowledge” × “CC”) - <strong>Sparse regions</strong>: Many type-room
+combinations have zero or low counts - <strong>Patterns</strong>:
+Clustering of similar dialogue types in related rooms</p>
+<p>This heatmap provides insight into how dialogue types are distributed
+across the House of Knowledge structure.</p>
+<h4 id="dialogue-partner-word-cloud">Dialogue Partner Word Cloud</h4>
+<p>Figure <span
+class="math inline">\(\ref{fig:partner_wordcloud}\)</span> shows a word
+cloud visualization of dialogue partners, where: - <strong>Font
+size</strong>: Proportional to frequency of partnership - <strong>196
+unique partners</strong>: Most partners appear only once or twice -
+<strong>Top partners</strong>: “God’s will”, “God’s wishes”, “answer”,
+“circumstances” (2 occurrences each)</p>
+<p>The word cloud highlights the diversity of dialogue partners and the
+personalized nature of many ways.</p>
+<h4 id="example-length-distribution">Example Length Distribution</h4>
+<p>Figure <span
+class="math inline">\(\ref{fig:example_length_violin}\)</span> displays
+a violin plot showing the distribution of example text lengths by
+dialogue type. The visualization shows: - <strong>Distribution
+shape</strong>: Varies by dialogue type, with some types having longer
+examples - <strong>Average length</strong>: 80.2 characters across all
+ways - <strong>Coverage</strong>: All 210 ways have examples (100%
+coverage)</p>
+<p>This plot reveals patterns in how different dialogue types are
+exemplified and documented.</p>
+<h2 id="i.-code-availability">I. Code Availability</h2>
+<p>All code for this research is available in the project
+repository:</p>
+<ul>
+<li><strong>Database Module</strong>:
+<code>project/src/database.py</code></li>
+<li><strong>Models</strong>: <code>project/src/models.py</code></li>
+<li><strong>Analysis Scripts</strong>:
+<code>project/scripts/</code></li>
+<li><strong>Tests</strong>: <code>project/tests/</code></li>
+</ul>
+<p>The code follows the thin orchestrator pattern with business logic in
+<code>src/</code> modules and orchestration in
+<code>scripts/</code>.</p>
+<h2 id="j.-data-availability">J. Data Availability</h2>
+<p>The source data (MySQL dump and <code>ways.md</code>) are in the
+public domain as stated in the original documentation. The converted
+SQLite database and analysis results are available upon request or
+through the project repository.</p>
+<h2 id="k.-reproducibility">K. Reproducibility</h2>
+<p>To reproduce the analyses:</p>
+<ol type="1">
+<li>Initialize database: <code>python scripts/db_setup.py</code></li>
+<li>Run analysis: <code>python scripts/analysis_pipeline.py</code></li>
+<li>Generate visualizations:
+<code>python scripts/generate_figures.py</code></li>
+<li>Build manuscript: <code>python scripts/03_render_pdf.py</code></li>
+</ol>
+<p>All random operations use fixed seeds for reproducibility.</p>
+</body>
+</html>

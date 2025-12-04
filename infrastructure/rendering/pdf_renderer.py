@@ -248,7 +248,8 @@ class PDFRenderer:
             "--standalone",
             "--number-sections",
             "--toc",
-            "--natbib"  # Use natbib for bibliography support with BibTeX
+            "--natbib",  # Use natbib for bibliography support with BibTeX
+            "--listings"  # Use listings package for code blocks (configured in preamble.md)
         ]
         
         # Note: We do NOT use --citeproc here because we want to preserve LaTeX \cite{}

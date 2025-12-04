@@ -1,0 +1,336 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Supplemental Analysis}
+\protect\phantomsection\label{sec:supplemental_analysis}
+This section provides detailed analytical results and theoretical
+extensions that complement the main findings.
+
+\begin{block}{S3.1 Theoretical Framework Extensions}
+\protect\phantomsection\label{s3.1-theoretical-framework-extensions}
+\begin{block}{S3.1.1 Epistemological Foundations}
+\protect\phantomsection\label{s3.1.1-epistemological-foundations}
+The Ways framework extends traditional epistemology by:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Pluralism}: Recognizing multiple valid ways of knowing
+\item
+  \textbf{Structure}: Providing organization through the House of
+  Knowledge
+\item
+  \textbf{Dialogue}: Emphasizing relational aspects of knowledge
+\item
+  \textbf{Integration}: Combining belief, care, and learning
+\end{enumerate}
+\end{block}
+
+\begin{block}{S3.1.2 Learning Theory Integration}
+\protect\phantomsection\label{s3.1.2-learning-theory-integration}
+The framework integrates with learning theory through:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Believing structures}: Connect to constructivist learning
+\item
+  \textbf{Caring structures}: Relate to experiential learning
+\item
+  \textbf{Relative learning}: Maps to iterative/reflective learning
+  cycles
+\end{itemize}
+\end{block}
+\end{block}
+
+\begin{block}{S3.2 Network Analysis Extensions}
+\protect\phantomsection\label{s3.2-network-analysis-extensions}
+\begin{block}{S3.2.1 Advanced Centrality Metrics}
+\protect\phantomsection\label{s3.2.1-advanced-centrality-metrics}
+Beyond basic centrality, we analyze:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Eigenvector Centrality}: Importance based on connections to
+  important nodes
+\item
+  \textbf{PageRank}: Adapted for way importance
+\item
+  \textbf{Katz Centrality}: Weighted importance with attenuation
+\end{itemize}
+\end{block}
+
+\begin{block}{S3.2.2 Network Motifs}
+\protect\phantomsection\label{s3.2.2-network-motifs}
+Analysis of network motifs (small subgraph patterns) reveals: - Common
+3-node patterns - 4-node structures - Recurring motifs that indicate
+framework structure
+\end{block}
+
+\begin{block}{S3.2.3 Network Resilience}
+\protect\phantomsection\label{s3.2.3-network-resilience}
+Analysis of network resilience shows: - Critical ways (removal
+significantly affects connectivity) - Robustness to way removal -
+Network structure stability
+\end{block}
+\end{block}
+
+\begin{block}{S3.3 Statistical Model Extensions}
+\protect\phantomsection\label{s3.3-statistical-model-extensions}
+\begin{block}{S3.3.1 Multivariate Analysis}
+\protect\phantomsection\label{s3.3.1-multivariate-analysis}
+Multivariate analysis examines: - Relationships between multiple
+variables simultaneously - Factor analysis of way characteristics -
+Principal component analysis of way space
+\end{block}
+
+\begin{block}{S3.3.2 Predictive Models}
+\protect\phantomsection\label{s3.3.2-predictive-models}
+Models for predicting: - Way characteristics from other features - Room
+assignments from way descriptions - Dialogue types from way content
+\end{block}
+\end{block}
+
+\begin{block}{S3.4 Text Analysis Extensions}
+\protect\phantomsection\label{s3.4-text-analysis-extensions}
+\begin{block}{S3.4.1 Natural Language Processing}
+\protect\phantomsection\label{s3.4.1-natural-language-processing}
+Advanced NLP techniques: - Named entity recognition - Semantic
+similarity analysis - Topic modeling (LDA, etc.) - Sentiment analysis of
+way descriptions
+\end{block}
+
+\begin{block}{S3.4.2 Cross-Language Analysis}
+\protect\phantomsection\label{s3.4.2-cross-language-analysis}
+If Lithuanian text is present: - Translation analysis - Cross-language
+pattern comparison - Cultural context analysis
+\end{block}
+\end{block}
+
+\begin{block}{S3.5 Comparative Analysis}
+\protect\phantomsection\label{s3.5-comparative-analysis}
+\begin{block}{S3.5.1 Framework Comparison}
+\protect\phantomsection\label{s3.5.1-framework-comparison}
+Comparison with other epistemological frameworks: - Similarities and
+differences - Unique contributions of Ways framework - Integration
+possibilities
+\end{block}
+
+\begin{block}{S3.5.2 Domain-Specific Analysis}
+\protect\phantomsection\label{s3.5.2-domain-specific-analysis}
+Analysis of ways in specific domains: - Scientific ways - Artistic ways
+- Practical ways - Spiritual ways
+\end{block}
+\end{block}
+
+\begin{block}{S3.6 Computational Complexity}
+\protect\phantomsection\label{s3.6-computational-complexity}
+\begin{block}{S3.6.1 Analysis Complexity}
+\protect\phantomsection\label{s3.6.1-analysis-complexity}
+Computational requirements for \(n = 210\) ways:
+
+\textbf{Network Construction:} - Room-based edges: \(O(n^2)\) in worst
+case, but typically \(O(n \cdot k)\) where \(k\) is average ways per
+room - Partner-based edges: \(O(n^2)\) in worst case - Type-based edges:
+\(O(n^2)\) in worst case - Total: \(O(n^2)\) resulting in
+\(|E| = 1,290\) edges
+
+\textbf{Centrality Computation:} - Degree centrality:
+\(O(|E|) = O(1,290)\) - Betweenness centrality:
+\(O(n \cdot |E|) = O(210 \times 1,290) = O(270,900)\) - Closeness
+centrality: \(O(n \cdot |E|)\) using BFS - Eigenvector centrality:
+\(O(|E| \cdot \text{iterations})\) typically 50-100 iterations
+
+\textbf{Cross-Tabulation:} - Type × Room: \(O(n) = O(210)\) single pass
+through ways - Type × Partner: \(O(n) = O(210)\) - Total: \(O(n)\)
+linear time
+
+\textbf{Information-Theoretic Metrics:} - Entropy calculation: \(O(k)\)
+where \(k\) is number of categories (typically \(k < 50\)) - Mutual
+information: \(O(k_1 \cdot k_2)\) for two categorical variables - Total:
+\(O(k^2)\) where \(k\) is bounded by number of categories
+\end{block}
+
+\begin{block}{S3.6.2 Scalability}
+\protect\phantomsection\label{s3.6.2-scalability}
+Scalability analysis for: - Large numbers of ways - Extended
+relationship networks - Real-time analysis requirements
+\end{block}
+\end{block}
+
+\begin{block}{S3.7 Validation and Robustness}
+\protect\phantomsection\label{s3.7-validation-and-robustness}
+\begin{block}{S3.7.1 Cross-Validation}
+\protect\phantomsection\label{s3.7.1-cross-validation}
+Cross-validation approaches: - K-fold validation of statistical models -
+Bootstrap sampling for confidence intervals - Leave-one-out validation
+\end{block}
+
+\begin{block}{S3.7.2 Sensitivity Analysis}
+\protect\phantomsection\label{s3.7.2-sensitivity-analysis}
+Sensitivity to: - Missing data - Data quality variations - Analysis
+parameter choices - Network construction methods
+\end{block}
+\end{block}
+
+\begin{block}{S3.8 Limitations and Assumptions}
+\protect\phantomsection\label{s3.8-limitations-and-assumptions}
+\begin{block}{S3.8.1 Methodological Limitations}
+\protect\phantomsection\label{s3.8.1-methodological-limitations}
+\begin{itemize}
+\tightlist
+\item
+  Quantitative analysis may miss qualitative nuances
+\item
+  Network structure based on explicit database relationships
+\item
+  Text analysis limited by available descriptions
+\item
+  Assumptions about way independence
+\end{itemize}
+\end{block}
+
+\begin{block}{S3.8.2 Data Limitations}
+\protect\phantomsection\label{s3.8.2-data-limitations}
+\begin{itemize}
+\tightlist
+\item
+  Incomplete metadata for some ways
+\item
+  Potential biases in way documentation
+\item
+  Limited temporal information
+\item
+  Cultural context considerations
+\end{itemize}
+\end{block}
+\end{block}
+
+\begin{block}{S3.9 Future Analytical Directions}
+\protect\phantomsection\label{s3.9-future-analytical-directions}
+\begin{block}{S3.9.1 Advanced Network Analysis}
+\protect\phantomsection\label{s3.9.1-advanced-network-analysis}
+\begin{itemize}
+\tightlist
+\item
+  Temporal network analysis (if dating available)
+\item
+  Multilayer network analysis
+\item
+  Dynamic network models
+\end{itemize}
+\end{block}
+
+\begin{block}{S3.9.2 Machine Learning Applications}
+\protect\phantomsection\label{s3.9.2-machine-learning-applications}
+\begin{itemize}
+\tightlist
+\item
+  Classification of ways
+\item
+  Clustering analysis
+\item
+  Recommendation systems
+\item
+  Predictive modeling
+\end{itemize}
+\end{block}
+
+\begin{block}{S3.9.3 Interdisciplinary Integration}
+\protect\phantomsection\label{s3.9.3-interdisciplinary-integration}
+Integration with: - Cognitive science - Educational research -
+Philosophy of science - Knowledge management
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

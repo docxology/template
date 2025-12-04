@@ -1,0 +1,688 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Methodology}\label{sec:methodology}
+
+\begin{frame}[fragile]{Database Structure and Conversion}
+\protect\phantomsection\label{database-structure-and-conversion}
+\begin{block}{Source Data}
+\protect\phantomsection\label{source-data}
+The research draws on a MySQL database dump containing 11 tables
+documenting Andrius Kulikauskas's Ways of Figuring Things Out framework.
+The primary data table \texttt{ways} contains 210 documented ways with
+the following key fields (see Table \ref{tab:ways_schema}):
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{way}: The name/identifier of the way
+\item
+  \texttt{dialoguewith}: The dialogue partner or conversant
+\item
+  \texttt{dialoguetype}: The type of dialogue (Absolute, Relative,
+  Embrace God)
+\item
+  \texttt{dialoguetypetype}: Sub-type classification
+\item
+  \texttt{mene}: Room assignment in the House of Knowledge (24 rooms)
+\item
+  \texttt{Dievas}: Relationship to God/the divine
+\item
+  \texttt{examples}: Examples and descriptions
+\item
+  \texttt{comments}: Additional comments and notes
+\end{itemize}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Field} & \textbf{Description} \\
+\hline
+\texttt{way} & The name/identifier of the way \\
+\texttt{dialoguewith} & The dialogue partner or conversant \\
+\texttt{dialoguetype} & The type of dialogue (Absolute, Relative, Embrace God) \\
+\texttt{dialoguetypetype} & Sub-type classification \\
+\texttt{mene} & Room assignment in the House of Knowledge (24 rooms) \\
+\texttt{Dievas} & Relationship to God/the divine \\
+\texttt{examples} & Examples and descriptions \\
+\texttt{comments} & Additional comments and notes \\
+\hline
+\end{tabular}
+\caption{Key fields in the \texttt{ways} table schema}
+\label{tab:ways_schema}
+\end{table}
+\end{block}
+
+\begin{block}{SQLite Conversion}
+\protect\phantomsection\label{sqlite-conversion}
+For analysis and portability, the MySQL dump was converted to SQLite
+format. The conversion process:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Schema Conversion}: MySQL-specific syntax (AUTO\_INCREMENT,
+  ENGINE, COLLATE) converted to SQLite-compatible syntax
+\item
+  \textbf{Table Renaming}: Tables renamed for clarity
+  (\texttt{20100422ways} → \texttt{ways}, \texttt{menes} →
+  \texttt{rooms}, etc.)
+\item
+  \textbf{Index Handling}: Index names adjusted to avoid conflicts with
+  table names (SQLite restriction)
+\item
+  \textbf{Data Preservation}: All data preserved during conversion with
+  proper encoding handling
+\end{enumerate}
+
+The resulting SQLite database (\texttt{db/ways.db}) provides a portable,
+queryable format for analysis. The complete database schema is
+documented in Section \ref{sec:appendix} (Appendix A).
+\end{block}
+
+\begin{block}{Implementation Modules}
+\protect\phantomsection\label{implementation-modules}
+The analysis is implemented using several specialized modules in
+\texttt{project/src/}:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\texttt{database.py}}: SQLAlchemy ORM models for Ways, Rooms,
+  Questions, and database access
+\item
+  \textbf{\texttt{sql\_queries.py}}: Pre-built SQL queries for common
+  analysis operations
+\item
+  \textbf{\texttt{ways\_analysis.py}}: High-level ways characterization
+  and analysis functions
+\item
+  \textbf{\texttt{network\_analysis.py}}: Graph-based network analysis
+  of way relationships
+\item
+  \textbf{\texttt{house\_of\_knowledge.py}}: Analysis of the 24-room
+  House of Knowledge framework
+\item
+  \textbf{\texttt{statistics.py}}: Statistical analysis functions
+  including \texttt{analyze\_way\_distributions()},
+  \texttt{compute\_way\_correlations()},
+  \texttt{compute\_way\_diversity\_metrics()}
+\item
+  \textbf{\texttt{metrics.py}}: Performance metrics including
+  \texttt{compute\_way\_coverage\_metrics()},
+  \texttt{compute\_way\_interconnectedness()}
+\item
+  \textbf{\texttt{models.py}}: Data classes and enums for type-safe data
+  handling
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{House of Knowledge Framework}
+\protect\phantomsection\label{house-of-knowledge-framework}
+\begin{block}{24-Room Structure}
+\protect\phantomsection\label{room-structure}
+The Ways framework organizes knowledge into 24 rooms within the ``House
+of Knowledge.'' Each room represents a different aspect of how we come
+to know and understand:
+
+\begin{equation}\label{eq:house_structure}
+\text{House of Knowledge} = \{\text{Room}_1, \text{Room}_2, \ldots, \text{Room}_{24}\}
+\end{equation}
+
+The rooms are organized according to three fundamental structures:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Believing (1-2-3-4)}: Four levels of belief structure
+\item
+  \textbf{Caring (1-2-3-4)}: Four levels of care structure\\
+\item
+  \textbf{Relative Learning}: The cycle of taking a stand, following
+  through, and reflecting
+\end{enumerate}
+\end{block}
+
+\begin{block}{Room Categories}
+\protect\phantomsection\label{room-categories}
+Each way is assigned to one or more rooms via the \texttt{mene} field,
+creating a mapping:
+
+\begin{equation}\label{eq:way_room_mapping}
+\text{Way}_i \mapsto \{\text{Room}_j : \text{Way}_i \text{ belongs to Room}_j\}
+\end{equation}
+
+This mapping enables analysis of how ways cluster within rooms and how
+rooms relate to one another.
+\end{block}
+\end{frame}
+
+\begin{frame}{Dialogue Type Classification}
+\protect\phantomsection\label{dialogue-type-classification}
+\begin{block}{Three Main Types}
+\protect\phantomsection\label{three-main-types}
+Ways are classified according to three primary dialogue types:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Absolute}: Ways that reference absolute truth or structure
+\item
+  \textbf{Relative}: Ways that engage with relative perspectives
+\item
+  \textbf{Embrace God}: Ways that explicitly engage with the divine or
+  transcendent
+\end{enumerate}
+
+The distribution of ways across dialogue types provides insight into the
+balance of different epistemological approaches in the framework.
+\end{block}
+
+\begin{block}{Dialogue Type Analysis}
+\protect\phantomsection\label{dialogue-type-analysis}
+For each way \(w_i\), we extract:
+
+\begin{equation}\label{eq:dialogue_type}
+\text{Type}(w_i) \in \{\text{Absolute}, \text{Relative}, \text{Embrace God}\}
+\end{equation}
+
+This classification enables statistical analysis of type distributions
+and relationships.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Network Analysis Methodology}
+\protect\phantomsection\label{network-analysis-methodology}
+\begin{block}{Graph Construction}
+\protect\phantomsection\label{graph-construction}
+We construct a weighted network graph \(G = (V, E, w)\) where:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Vertices \(V\)}: Each way \(w_i\) is a node \(v_i \in V\),
+  with \(|V| = 210\)
+\item
+  \textbf{Edges \(E\)}: Connections between ways based on:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Shared dialogue partners (\texttt{dialoguewith}): \(e_{ij} \in E\)
+    if \(\text{dialoguewith}(w_i) = \text{dialoguewith}(w_j)\)
+  \item
+    Shared room assignments (\texttt{mene}): \(e_{ij} \in E\) if
+    \(\text{mene}(w_i) = \text{mene}(w_j)\)
+  \item
+    Similar dialogue types: \(e_{ij} \in E\) if
+    \(\text{dialoguetype}(w_i) = \text{dialoguetype}(w_j)\)
+  \item
+    Question relationships (\texttt{klausimobudai} table):
+    \(e_{ij} \in E\) if
+    \(\exists q: (w_i, q) \in Q \land (w_j, q) \in Q\)
+  \end{itemize}
+\item
+  \textbf{Edge weights \(w\)}: \(w(e_{ij}) \in \{0.6, 0.8, 1.0\}\) based
+  on relationship type (type, partner, room respectively)
+\end{itemize}
+
+The resulting network contains \(|E| = 1,290\) edges connecting the 210
+ways.
+\end{block}
+
+\begin{block}{Centrality Metrics}
+\protect\phantomsection\label{centrality-metrics}
+We compute several centrality metrics to identify important ways:
+
+\textbf{Degree Centrality:} \begin{equation}\label{eq:degree_centrality}
+C_D(v) = \frac{\deg(v)}{|V| - 1}
+\end{equation}
+
+\textbf{Betweenness Centrality:}
+\begin{equation}\label{eq:betweenness_centrality}
+C_B(v) = \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigma_{st}}
+\end{equation}
+
+where \(\sigma_{st}\) is the number of shortest paths from \(s\) to
+\(t\), and \(\sigma_{st}(v)\) is the number of those paths passing
+through \(v\).
+
+\textbf{Clustering Coefficient:} \begin{equation}\label{eq:clustering}
+C_C(v) = \frac{2e_v}{k_v(k_v - 1)}
+\end{equation}
+
+where \(e_v\) is the number of edges between neighbors of \(v\), and
+\(k_v\) is the degree of \(v\).
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Statistical Analysis Methods}
+\protect\phantomsection\label{statistical-analysis-methods}
+\begin{block}{Distribution Analysis}
+\protect\phantomsection\label{distribution-analysis}
+We analyze the distribution of ways across:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Dialogue Types}: Count and percentage by type, with 38
+  distinct types observed
+\item
+  \textbf{Rooms}: Distribution across 24 rooms, with B2 containing the
+  most ways (23)
+\item
+  \textbf{Dialogue Partners}: Frequency of conversants, with 196 unique
+  partners
+\item
+  \textbf{God Relationships}: Distribution of \texttt{Dievas} values
+\end{enumerate}
+\end{block}
+
+\begin{block}{Information-Theoretic Metrics}
+\protect\phantomsection\label{information-theoretic-metrics}
+We compute Shannon entropy to quantify the diversity of distributions:
+
+\begin{equation}\label{eq:entropy}
+H(X) = -\sum_{i=1}^{k} p_i \log_2(p_i)
+\end{equation}
+
+where \(p_i\) is the proportion in category \(i\) and \(k\) is the
+number of categories.
+
+\textbf{Mutual Information} between dialogue types and rooms:
+
+\begin{equation}\label{eq:mutual_info}
+I(X;Y) = \sum_{x,y} p(x,y) \log_2 \frac{p(x,y)}{p(x)p(y)}
+\end{equation}
+
+This quantifies the strength of association between dialogue types and
+room assignments.
+\end{block}
+
+\begin{block}{Cross-Tabulation}
+\protect\phantomsection\label{cross-tabulation}
+Cross-tabulation analysis examines relationships between:
+
+\begin{itemize}
+\tightlist
+\item
+  Dialogue type × Room assignment (visualized in Figure
+  \ref{fig:type_room_heatmap})
+\item
+  Dialogue type × Dialogue partner
+\item
+  Room × God relationship
+\end{itemize}
+
+This reveals patterns in how different dimensions of the framework
+relate, with the cross-tabulation matrix showing concentrations of ways
+at specific type-room intersections.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Text Analysis}
+\protect\phantomsection\label{text-analysis}
+\begin{block}{Way Descriptions}
+\protect\phantomsection\label{way-descriptions}
+For ways with text descriptions in \texttt{ways.md}, we perform:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Keyword Extraction}: Identify key terms and concepts
+\item
+  \textbf{Theme Analysis}: Extract recurring themes
+\item
+  \textbf{Example Analysis}: Analyze examples to understand way
+  applications
+\item
+  \textbf{Relationship Extraction}: Identify references to other ways or
+  concepts
+\end{enumerate}
+\end{block}
+
+\begin{block}{Philosophical Structure Analysis}
+\protect\phantomsection\label{philosophical-structure-analysis}
+Text analysis also examines:
+
+\begin{itemize}
+\tightlist
+\item
+  How ways relate to the believing/caring/learning structures
+\item
+  References to the House of Knowledge framework
+\item
+  Connections to broader philosophical concepts
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Data Processing Pipeline}
+\protect\phantomsection\label{data-processing-pipeline}
+\begin{block}{Extraction}
+\protect\phantomsection\label{extraction}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Database Query}: Extract ways data from SQLite database
+\item
+  \textbf{Text Parsing}: Parse \texttt{ways.md} for additional context
+\item
+  \textbf{Relationship Extraction}: Build network from relationship
+  tables
+\end{enumerate}
+\end{block}
+
+\begin{block}{Transformation}
+\protect\phantomsection\label{transformation}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Normalization}: Standardize way names and categories
+\item
+  \textbf{Encoding}: Handle Lithuanian/English text encoding
+\item
+  \textbf{Cleaning}: Remove duplicates and handle missing data
+\end{enumerate}
+\end{block}
+
+\begin{block}{Analysis}
+\protect\phantomsection\label{analysis}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Statistical Computation}: Calculate distributions and metrics
+\item
+  \textbf{Network Construction}: Build graph structures
+\item
+  \textbf{Visualization Generation}: Create plots and network diagrams
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Validation Framework}
+\protect\phantomsection\label{validation-framework}
+\begin{block}{Data Quality Checks}
+\protect\phantomsection\label{data-quality-checks}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Completeness}: Verify all ways have required fields
+\item
+  \textbf{Consistency}: Check for conflicting assignments
+\item
+  \textbf{Referential Integrity}: Validate room and relationship
+  references
+\end{enumerate}
+\end{block}
+
+\begin{block}{Analysis Validation}
+\protect\phantomsection\label{analysis-validation}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Reproducibility}: Ensure analyses are reproducible
+\item
+  \textbf{Sensitivity}: Test sensitivity to data variations
+\item
+  \textbf{Robustness}: Verify results are robust to missing data
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{SQL Query Examples}
+\protect\phantomsection\label{sql-query-examples}
+Key analyses are performed using SQL queries against the SQLite
+database. Example queries include:
+
+\textbf{Dialogue Type Distribution:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT}\NormalTok{ dialoguetype, }\FunctionTok{COUNT}\NormalTok{(}\OperatorTok{*}\NormalTok{) }\KeywordTok{as} \FunctionTok{count}
+\KeywordTok{FROM}\NormalTok{ ways}
+\KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ dialoguetype}
+\KeywordTok{ORDER} \KeywordTok{BY} \FunctionTok{count} \KeywordTok{DESC}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Room-Way Cross-Tabulation:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT}\NormalTok{ dialoguetype, mene, }\FunctionTok{COUNT}\NormalTok{(}\OperatorTok{*}\NormalTok{) }\KeywordTok{as} \FunctionTok{count}
+\KeywordTok{FROM}\NormalTok{ ways}
+\KeywordTok{WHERE}\NormalTok{ mene }\OperatorTok{!=} \StringTok{\textquotesingle{}\textquotesingle{}} \KeywordTok{AND}\NormalTok{ dialoguetype }\OperatorTok{!=} \StringTok{\textquotesingle{}\textquotesingle{}}
+\KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ dialoguetype, mene}
+\KeywordTok{ORDER} \KeywordTok{BY} \FunctionTok{count} \KeywordTok{DESC}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Network Edge Construction (Room-based):}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT}\NormalTok{ w1.}\KeywordTok{ID} \KeywordTok{as}\NormalTok{ way1\_id, w2.}\KeywordTok{ID} \KeywordTok{as}\NormalTok{ way2\_id}
+\KeywordTok{FROM}\NormalTok{ ways w1}
+\KeywordTok{JOIN}\NormalTok{ ways w2 }\KeywordTok{ON}\NormalTok{ w1.mene }\OperatorTok{=}\NormalTok{ w2.mene}
+\KeywordTok{WHERE}\NormalTok{ w1.}\KeywordTok{ID} \OperatorTok{\textless{}}\NormalTok{ w2.}\KeywordTok{ID} \KeywordTok{AND}\NormalTok{ w1.mene }\OperatorTok{!=} \StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Central Ways Identification:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{SELECT}\NormalTok{ way, }\FunctionTok{COUNT}\NormalTok{(}\OperatorTok{*}\NormalTok{) }\KeywordTok{as}\NormalTok{ connection\_count}
+\KeywordTok{FROM}\NormalTok{ (}
+    \KeywordTok{SELECT}\NormalTok{ w1.way, w2.}\KeywordTok{ID}
+    \KeywordTok{FROM}\NormalTok{ ways w1}
+    \KeywordTok{JOIN}\NormalTok{ ways w2 }\KeywordTok{ON}\NormalTok{ w1.mene }\OperatorTok{=}\NormalTok{ w2.mene}
+    \KeywordTok{WHERE}\NormalTok{ w1.}\KeywordTok{ID} \OperatorTok{!=}\NormalTok{ w2.}\KeywordTok{ID} \KeywordTok{AND}\NormalTok{ w1.mene }\OperatorTok{!=} \StringTok{\textquotesingle{}\textquotesingle{}}
+    \KeywordTok{UNION}
+    \KeywordTok{SELECT}\NormalTok{ w1.way, w2.}\KeywordTok{ID}
+    \KeywordTok{FROM}\NormalTok{ ways w1}
+    \KeywordTok{JOIN}\NormalTok{ ways w2 }\KeywordTok{ON}\NormalTok{ w1.dialoguewith }\OperatorTok{=}\NormalTok{ w2.dialoguewith}
+    \KeywordTok{WHERE}\NormalTok{ w1.}\KeywordTok{ID} \OperatorTok{!=}\NormalTok{ w2.}\KeywordTok{ID} \KeywordTok{AND}\NormalTok{ w1.dialoguewith }\OperatorTok{!=} \StringTok{\textquotesingle{}\textquotesingle{}}
+\NormalTok{)}
+\KeywordTok{GROUP} \KeywordTok{BY}\NormalTok{ way}
+\KeywordTok{ORDER} \KeywordTok{BY}\NormalTok{ connection\_count }\KeywordTok{DESC}
+\KeywordTok{LIMIT} \DecValTok{10}\NormalTok{;}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
+
+\begin{frame}[fragile]{Implementation}
+\protect\phantomsection\label{implementation}
+The analysis is implemented using several specialized Python modules:
+
+\begin{block}{Core Analysis Modules}
+\protect\phantomsection\label{core-analysis-modules}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\texttt{database.py}}: SQLAlchemy ORM with
+  \texttt{WaysDatabase} class for database access
+\item
+  \textbf{\texttt{sql\_queries.py}}: \texttt{WaysSQLQueries} class with
+  pre-built analysis queries
+\item
+  \textbf{\texttt{ways\_analysis.py}}: \texttt{WaysAnalyzer} class for
+  comprehensive ways characterization
+\item
+  \textbf{\texttt{network\_analysis.py}}: \texttt{WaysNetworkAnalyzer}
+  class for graph-based relationship analysis
+\item
+  \textbf{\texttt{house\_of\_knowledge.py}}: Framework analysis for the
+  24-room House of Knowledge
+\item
+  \textbf{\texttt{statistics.py}}: Statistical functions including
+  \texttt{analyze\_way\_distributions()},
+  \texttt{compute\_way\_correlations()}
+\item
+  \textbf{\texttt{metrics.py}}: Performance metrics including
+  \texttt{compute\_way\_coverage\_metrics()},
+  \texttt{compute\_way\_interconnectedness()}
+\end{itemize}
+\end{block}
+
+\begin{block}{Infrastructure}
+\protect\phantomsection\label{infrastructure}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python 3.10+}: Primary analysis language
+\item
+  \textbf{SQLite}: Database backend via SQLAlchemy ORM
+\item
+  \textbf{NetworkX}: Network analysis and graph algorithms
+\item
+  \textbf{Matplotlib/Seaborn}: Statistical visualization and plotting
+\item
+  \textbf{NumPy/Pandas}: Numerical computing and data manipulation
+\end{itemize}
+
+All code follows the thin orchestrator pattern, with business logic in
+\texttt{project/src/} modules and orchestration in
+\texttt{project/scripts/}.
+\end{block}
+\end{frame}
+
+\begin{frame}{Ethical Considerations}
+\protect\phantomsection\label{ethical-considerations}
+This research documents and analyzes publicly available philosophical
+work by Andrius Kulikauskas. All data is in the public domain as stated
+in the source documentation. The analysis respects the original
+philosophical framework while providing systematic documentation and
+quantitative insights.
+\end{frame}
+
+\end{document}

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>04_experimental_results</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:experimental_results">Experimental Results</h1>
+<h2 id="database-overview">Database Overview</h2>
+<h3 id="data-summary">Data Summary</h3>
+<p>The analysis database contains:</p>
+<ul>
+<li><strong>210 documented ways</strong> in the primary
+<code>ways</code> table</li>
+<li><strong>24 rooms</strong> in the House of Knowledge
+(<code>rooms</code> table)</li>
+<li><strong>Multiple examples</strong> per way (<code>examples</code>
+table)</li>
+<li><strong>Question-way relationships</strong>
+(<code>klausimobudai</code> table)</li>
+<li><strong>Dialogue partner information</strong> for each way</li>
+</ul>
+<h3 id="data-completeness">Data Completeness</h3>
+<p>Analysis of data completeness reveals:</p>
+<ul>
+<li>All 210 ways have dialogue type assignments</li>
+<li>Room assignments (<code>mene</code>) present for majority of
+ways</li>
+<li>Dialogue partner (<code>dialoguewith</code>) information available
+for most ways</li>
+<li>Examples and descriptions vary in completeness</li>
+</ul>
+<h2 id="distribution-analysis">Distribution Analysis</h2>
+<h3 id="dialogue-type-distribution">Dialogue Type Distribution</h3>
+<p>Analysis of ways by dialogue type reveals the distribution across the
+three main categories:</p>
+<p>The complete distribution is visualized in Figure <span
+class="math inline">\(\ref{fig:type_distribution}\)</span>, showing the
+full range of 38 distinct dialogue types.</p>
+<p>This distribution provides insight into the balance of different
+epistemological approaches in the framework.</p>
+<h3 id="room-distribution">Room Distribution</h3>
+<p>Analysis of ways across the 24 rooms of the House of Knowledge
+reveals:</p>
+<p>The complete room hierarchy is visualized in Figure <span
+class="math inline">\(\ref{fig:room_hierarchy}\)</span>, and the
+framework structure is shown in Figure <span
+class="math inline">\(\ref{fig:framework_treemap}\)</span>.</p>
+<p>Some rooms contain more ways than others, reflecting the structure of
+the framework and the emphasis on certain aspects of knowledge.</p>
+<h2 id="network-analysis-results">Network Analysis Results</h2>
+<h3 id="network-structure">Network Structure</h3>
+<p>The network graph constructed from way relationships exhibits:</p>
+<ul>
+<li><strong>Nodes</strong>: 210 ways</li>
+<li><strong>Edges</strong>: 1,290 connections</li>
+<li><strong>Average degree</strong>: 12.29 connections per way</li>
+<li><strong>Network density</strong>: 0.058 (5.8% of possible edges
+present)</li>
+<li><strong>Clustering coefficient</strong>: 0.886 (high local
+clustering, indicating strong room-based clustering)</li>
+<li><strong>Connected components</strong>: Multiple components with
+largest containing majority of ways</li>
+<li><strong>Network visualization</strong>: See Figure <span
+class="math inline">\(\ref{fig:ways_network}\)</span></li>
+</ul>
+<p>The network structure reveals both local clustering (ways in the same
+room are highly connected) and long-range connections (ways sharing
+dialogue types or partners across different rooms).</p>
+<h3 id="central-ways">Central Ways</h3>
+<p>Centrality analysis identifies ways that serve as hubs or
+bridges:</p>
+<p>These central ways serve as hubs connecting multiple other ways
+through shared rooms, dialogue types, or partners. The complete network
+structure is visualized in Figure <span
+class="math inline">\(\ref{fig:ways_network}\)</span>, showing the
+clustering and connectivity patterns.</p>
+<h3 id="community-detection">Community Detection</h3>
+<p>Community detection algorithms reveal clusters of related ways:</p>
+<ul>
+<li><strong>Cluster 1</strong>: Ways related to goodness and morality
+(15 ways)</li>
+<li><strong>Cluster 2</strong>: Ways related to regularity and structure
+(11 ways)</li>
+<li><strong>Cluster 3</strong>: Ways related to personal identity and
+“I” (9 ways)</li>
+</ul>
+<p>These clusters may correspond to different aspects of the House of
+Knowledge or different dialogue types.</p>
+<h2 id="cross-tabulation-analysis">Cross-Tabulation Analysis</h2>
+<h3 id="dialogue-type-room">Dialogue Type × Room</h3>
+<p>Cross-tabulation of dialogue types and room assignments reveals
+patterns (visualized in Figure <span
+class="math inline">\(\ref{fig:type_room_heatmap}\)</span>):</p>
+<p>The heatmap visualization (Figure <span
+class="math inline">\(\ref{fig:type_room_heatmap}\)</span>) reveals
+strong associations between certain dialogue types and specific rooms,
+indicating structural relationships in the framework. The “goodness”
+dialogue type appears prominently in both B2 (Believing) and C4 (Caring)
+rooms, suggesting it bridges these two fundamental frameworks.</p>
+<h3 id="dialogue-partner-analysis">Dialogue Partner Analysis</h3>
+<p>Analysis of dialogue partners (<code>dialoguewith</code>)
+reveals:</p>
+<ul>
+<li><strong>Most common partners</strong>: life, limits of my mind,
+circumstances, science, purpose, answer, people’s inclinations,
+possibility, goodness, meaningfulness (all with 2 ways each)</li>
+<li><strong>Partner diversity</strong>: 116 unique partners</li>
+<li><strong>Partner-way relationships</strong>: Most partners connect
+exactly 2 ways, indicating pairwise relationships</li>
+</ul>
+<p>Some dialogue partners appear frequently across multiple ways,
+suggesting they represent important perspectives or approaches.</p>
+<h2 id="statistical-patterns">Statistical Patterns</h2>
+<h3 id="room-co-occurrence">Room Co-occurrence</h3>
+<p>Analysis of ways assigned to multiple rooms reveals:</p>
+<ul>
+<li><strong>Average rooms per way</strong>: 1.0 (each way assigned to
+exactly one room)</li>
+<li><strong>Most common room pairs</strong>: N/A (single room
+assignments)</li>
+<li><strong>Room clusters</strong>: Rooms B2, C4, R, C3, 32 contain the
+highest concentrations of ways</li>
+</ul>
+<p>This indicates how different aspects of knowledge relate to one
+another in the framework.</p>
+<h3 id="dialogue-type-patterns">Dialogue Type Patterns</h3>
+<p>Statistical analysis of dialogue type patterns shows:</p>
+<ul>
+<li><strong>Type transitions</strong>: How ways of one type relate to
+ways of another</li>
+<li><strong>Type clusters</strong>: Groups of ways with similar type
+characteristics</li>
+<li><strong>Type diversity</strong>: Distribution of types within rooms
+and categories</li>
+</ul>
+<h2 id="text-analysis-results">Text Analysis Results</h2>
+<h3 id="keyword-extraction">Keyword Extraction</h3>
+<p>Analysis of way descriptions and examples reveals common themes:</p>
+<ul>
+<li><strong>Top keywords</strong>: goodness, regularity, other, I,
+answer (from dialogue types)</li>
+<li><strong>Keyword clusters</strong>: Philosophical concepts, personal
+relationships, structural patterns</li>
+<li><strong>Keyword-room associations</strong>: B2 room associated with
+“other”, BB room with “regularity”</li>
+</ul>
+<h3 id="example-analysis">Example Analysis</h3>
+<p>Analysis of examples reveals:</p>
+<ul>
+<li><strong>Common example types</strong>: Personal experiences,
+philosophical reflections, practical applications</li>
+<li><strong>Example patterns</strong>: Ways often illustrated through
+personal anecdotes and thought processes</li>
+<li><strong>Example-way relationships</strong>: Examples provide
+concrete illustrations of abstract ways of figuring things out</li>
+</ul>
+<h2 id="visualization-results">Visualization Results</h2>
+<h3 id="network-graph">Network Graph</h3>
+<p>The network visualization (Figure <span
+class="math inline">\(\ref{fig:ways_network}\)</span>) shows:</p>
+<ul>
+<li>Ways as nodes, colored by dialogue type</li>
+<li>Connections as edges, weighted by relationship strength</li>
+<li>Clusters visible as dense regions</li>
+<li>Central ways as highly connected nodes</li>
+</ul>
+<h3 id="room-distribution-1">Room Distribution</h3>
+<p>A hierarchical visualization (Figure <span
+class="math inline">\(\ref{fig:room_hierarchy}\)</span>) shows:</p>
+<ul>
+<li>The 24-room structure</li>
+<li>Way counts per room</li>
+<li>Relationships between rooms</li>
+</ul>
+<h3 id="statistical-distributions">Statistical Distributions</h3>
+<p>Distribution plots show:</p>
+<ul>
+<li>Dialogue type frequencies (Figure <span
+class="math inline">\(\ref{fig:type_distribution}\)</span>)</li>
+<li>Room assignment patterns (Figure <span
+class="math inline">\(\ref{fig:room_hierarchy}\)</span>)</li>
+<li>Framework structure (Figure <span
+class="math inline">\(\ref{fig:framework_treemap}\)</span>)</li>
+<li>Dialogue partner frequencies (Figure <span
+class="math inline">\(\ref{fig:partner_wordcloud}\)</span>)</li>
+<li>Example length distributions by type (Figure <span
+class="math inline">\(\ref{fig:example_length_violin}\)</span>)</li>
+</ul>
+<h3 id="cross-tabulation-heatmap">Cross-Tabulation Heatmap</h3>
+<p>The dialogue type × room cross-tabulation matrix (Figure <span
+class="math inline">\(\ref{fig:type_room_heatmap}\)</span>) reveals
+concentration patterns:</p>
+<h3 id="framework-structure">Framework Structure</h3>
+<p>The framework hierarchy visualization (Figure <span
+class="math inline">\(\ref{fig:framework_treemap}\)</span>) shows the
+distribution of ways across the main philosophical frameworks:</p>
+<h3 id="dialogue-partners">Dialogue Partners</h3>
+<p>The dialogue partner frequency distribution (Figure <span
+class="math inline">\(\ref{fig:partner_wordcloud}\)</span>) shows the
+diversity of conversants:</p>
+<h3 id="example-length-analysis">Example Length Analysis</h3>
+<p>The distribution of example lengths by dialogue type (Figure <span
+class="math inline">\(\ref{fig:example_length_violin}\)</span>) reveals
+patterns in how ways are documented:</p>
+<h2 id="key-findings">Key Findings</h2>
+<h3 id="structural-patterns">Structural Patterns</h3>
+<ol type="1">
+<li><strong>Room Clustering</strong>: Ways cluster within certain rooms,
+indicating focused approaches to specific aspects of knowledge</li>
+<li><strong>Type Balance</strong>: The distribution across dialogue
+types reflects the framework’s emphasis on different epistemological
+approaches</li>
+<li><strong>Network Structure</strong>: The network exhibits small-world
+properties with both local clustering and long-range connections</li>
+</ol>
+<h3 id="central-ways-1">Central Ways</h3>
+<p>Certain ways serve as central nodes, connecting different parts of
+the framework. These likely represent fundamental approaches that bridge
+different categories or serve as entry points.</p>
+<h3 id="room-relationships">Room Relationships</h3>
+<p>Analysis reveals relationships between rooms, showing how different
+aspects of knowledge relate. Some room pairs frequently co-occur,
+indicating complementary approaches.</p>
+<h2 id="limitations">Limitations</h2>
+<h3 id="data-completeness-1">Data Completeness</h3>
+<ul>
+<li>Not all ways have complete metadata</li>
+<li>Some room assignments may be missing</li>
+<li>Dialogue partner information varies in completeness</li>
+</ul>
+<h3 id="analysis-scope">Analysis Scope</h3>
+<ul>
+<li>Analysis focuses on documented ways (212 of 284 total)</li>
+<li>Text analysis limited to available descriptions</li>
+<li>Network analysis based on explicit relationships in database</li>
+</ul>
+<h2 id="future-analysis-directions">Future Analysis Directions</h2>
+<p>Future work will:</p>
+<ol type="1">
+<li>Complete analysis of all 284 ways</li>
+<li>Expand text analysis with natural language processing</li>
+<li>Develop predictive models for way categorization</li>
+<li>Create interactive visualizations</li>
+<li>Analyze temporal patterns if dating information available</li>
+</ol>
+</body>
+</html>

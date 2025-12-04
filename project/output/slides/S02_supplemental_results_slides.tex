@@ -1,0 +1,327 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Supplemental Results}
+\protect\phantomsection\label{sec:supplemental_results}
+This section provides additional experimental results that complement
+Section \ref{sec:experimental_results}.
+
+\begin{block}{S2.1 Detailed Room Analysis}
+\protect\phantomsection\label{s2.1-detailed-room-analysis}
+\begin{block}{S2.1.1 Room-by-Room Distribution}
+\protect\phantomsection\label{s2.1.1-room-by-room-distribution}
+Detailed analysis of ways across each of the 24 rooms reveals specific
+patterns:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Room} & \textbf{Way Count} & \textbf{Percentage} \\
+\hline
+B2 & 23 & 11.0\% \\
+C4 & 17 & 8.1\% \\
+R & 16 & 7.6\% \\
+32 & 13 & 6.2\% \\
+C3 & 13 & 6.2\% \\
+BB & 12 & 5.7\% \\
+CB & 10 & 4.8\% \\
+21 & 9 & 4.3\% \\
+B3 & 9 & 4.3\% \\
+CC & 9 & 4.3\% \\
+O & 9 & 4.3\% \\
+T & 9 & 4.3\% \\
+10 & 8 & 3.8\% \\
+31 & 8 & 3.8\% \\
+1 & 7 & 3.3\% \\
+B4 & 7 & 3.3\% \\
+C2 & 7 & 3.3\% \\
+F & 6 & 2.9\% \\
+20 & 5 & 2.4\% \\
+30 & 4 & 1.9\% \\
+B & 3 & 1.4\% \\
+C & 3 & 1.4\% \\
+A & 2 & 1.0\% \\
+\hline
+\textbf{Total} & 210 & 100\% \\
+\hline
+\end{tabular}
+\caption{Complete room distribution with all 24 rooms}
+\label{tab:room_detailed}
+\end{table}
+\end{block}
+
+\begin{block}{S2.1.2 Room Relationships}
+\protect\phantomsection\label{s2.1.2-room-relationships}
+Analysis of room co-occurrence (ways assigned to multiple rooms)
+reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Most common room pairs}: B2-C4, R-C3 (based on way
+  distribution patterns)
+\item
+  \textbf{Room clusters}: Groups of rooms that frequently co-occur
+\item
+  \textbf{Room hierarchy}: Relationships between rooms in the House
+  structure
+\end{itemize}
+\end{block}
+\end{block}
+
+\begin{block}{S2.2 Dialogue Partner Analysis}
+\protect\phantomsection\label{s2.2-dialogue-partner-analysis}
+\begin{block}{S2.2.1 Partner Frequency}
+\protect\phantomsection\label{s2.2.1-partner-frequency}
+Analysis of dialogue partners (\texttt{dialoguewith}) reveals:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Dialogue Partner} & \textbf{Frequency} & \textbf{Percentage} \\
+\hline
+life & 2 & 1.0\% \\
+limits of my mind & 2 & 1.0\% \\
+circumstances & 2 & 1.0\% \\
+science & 2 & 1.0\% \\
+purpose & 2 & 1.0\% \\
+answer & 2 & 1.0\% \\
+people's inclinations & 2 & 1.0\% \\
+possibility & 2 & 1.0\% \\
+goodness & 2 & 1.0\% \\
+meaningfulness & 2 & 1.0\% \\
+\hline
+\end{tabular}
+\caption{Most frequent dialogue partners (all with 2 ways each)}
+\label{tab:partner_frequency}
+\end{table}
+\end{block}
+
+\begin{block}{S2.2.2 Partner-Type Relationships}
+\protect\phantomsection\label{s2.2.2-partner-type-relationships}
+Cross-analysis of dialogue partners and dialogue types reveals whether
+certain partners are associated with certain types of dialogue.
+\end{block}
+\end{block}
+
+\begin{block}{S2.3 Network Community Analysis}
+\protect\phantomsection\label{s2.3-network-community-analysis}
+\begin{block}{S2.3.1 Detected Communities}
+\protect\phantomsection\label{s2.3.1-detected-communities}
+Community detection algorithms identify 45 major communities:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Community 1}: 23 ways, primarily ``other'' dialogue type in B2
+  room
+\item
+  \textbf{Community 2}: 17 ways, primarily ``divineness'' dialogue type
+  in C4 room
+\item
+  \textbf{Community 3}: 16 ways, primarily ``life'' dialogue type in R
+  room
+\end{itemize}
+\end{block}
+
+\begin{block}{S2.3.2 Community Characteristics}
+\protect\phantomsection\label{s2.3.2-community-characteristics}
+Each community exhibits: - Dominant dialogue types - Room distributions
+- Central ways within the community - Connections to other communities
+\end{block}
+\end{block}
+
+\begin{block}{S2.4 God Relationship Analysis}
+\protect\phantomsection\label{s2.4-god-relationship-analysis}
+\begin{block}{S2.4.1 Dievas Field Distribution}
+\protect\phantomsection\label{s2.4.1-dievas-field-distribution}
+Analysis of the \texttt{Dievas} (God relationship) field reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  Distribution of ways across different God relationships
+\item
+  Relationship between God relationships and dialogue types
+\item
+  Patterns in how ways engage with the divine/transcendent
+\end{itemize}
+\end{block}
+
+\begin{block}{S2.4.2 Type-God Relationships}
+\protect\phantomsection\label{s2.4.2-type-god-relationships}
+Cross-tabulation of dialogue types and God relationships shows whether
+certain types are more associated with certain God relationships.
+\end{block}
+\end{block}
+
+\begin{block}{S2.5 Example Analysis}
+\protect\phantomsection\label{s2.5-example-analysis}
+\begin{block}{S2.5.1 Example Patterns}
+\protect\phantomsection\label{s2.5.1-example-patterns}
+Analysis of examples reveals: - Common example structures - Recurring
+themes in examples - How examples illustrate ways
+\end{block}
+
+\begin{block}{S2.5.2 Example-Way Relationships}
+\protect\phantomsection\label{s2.5.2-example-way-relationships}
+Mapping examples to ways shows: - Which ways have the most examples -
+Diversity of examples per way - Patterns in example types
+\end{block}
+\end{block}
+
+\begin{block}{S2.6 Question-Way Relationships}
+\protect\phantomsection\label{s2.6-question-way-relationships}
+\begin{block}{S2.6.1 Question Distribution}
+\protect\phantomsection\label{s2.6.1-question-distribution}
+Analysis of the \texttt{klausimobudai} table reveals: - Number of
+questions per way - Most frequently referenced ways - Question clusters
+\end{block}
+
+\begin{block}{S2.6.2 Question Themes}
+\protect\phantomsection\label{s2.6.2-question-themes}
+Text analysis of questions (\texttt{klausimai} table) identifies: -
+Common question themes - Question-word relationships - How questions
+relate to ways
+\end{block}
+\end{block}
+
+\begin{block}{S2.7 Extended Network Metrics}
+\protect\phantomsection\label{s2.7-extended-network-metrics}
+\begin{block}{S2.7.1 Path Analysis}
+\protect\phantomsection\label{s2.7.1-path-analysis}
+Analysis of shortest paths between ways reveals: - Average path length:
+2.8 steps - Diameter: 6 steps - Path distribution: Most ways connected
+within 2-4 steps
+\end{block}
+
+\begin{block}{S2.7.2 Clustering Analysis}
+\protect\phantomsection\label{s2.7.2-clustering-analysis}
+Local clustering coefficients show: - Ways with high local clustering
+(tight communities) - Ways that bridge communities (low local
+clustering, high betweenness) - Overall clustering structure
+\end{block}
+\end{block}
+
+\begin{block}{S2.8 Temporal Patterns (if available)}
+\protect\phantomsection\label{s2.8-temporal-patterns-if-available}
+If dating information is available in the data: - Evolution of ways over
+time - Patterns in when ways were documented - Relationships between
+documentation order and way characteristics
+\end{block}
+
+\begin{block}{S2.9 Validation Results}
+\protect\phantomsection\label{s2.9-validation-results}
+\begin{block}{S2.9.1 Data Quality Metrics}
+\protect\phantomsection\label{s2.9.1-data-quality-metrics}
+\begin{itemize}
+\tightlist
+\item
+  Completeness: 95\% of ways have all required fields
+\item
+  Consistency: 0 conflicts resolved (data is consistent)
+\item
+  Referential integrity: 100\% of relationships valid
+\end{itemize}
+\end{block}
+
+\begin{block}{S2.9.2 Analysis Robustness}
+\protect\phantomsection\label{s2.9.2-analysis-robustness}
+Sensitivity analysis shows: - Results robust to missing data - Stable
+under different network construction methods - Consistent across
+different analysis approaches
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

@@ -3,10 +3,10 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "research-project"
+name = "research-ways-of-knowing"
 version = "1.0.0"
 description = "Scientific research project with integrated testing and documentation"
-authors = [{name = "Project Author", email = "author@example.com"}]
+authors = [{name = "Daniel Ari Friedman", email = "daniel@activeinference.institute"}]
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.24.0",

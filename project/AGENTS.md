@@ -21,12 +21,12 @@ Pure Python implementations of ways of knowing analysis algorithms:
 
 ```
 src/
-├── database.py             # Ways database ORM and initialization
-├── sql_queries.py          # SQL queries for ways data
+├── database.py             # Ways database ORM and initialization (210 ways, 24 rooms)
+├── sql_queries.py          # SQL queries for ways data (38 dialogue types, 196 partners)
 ├── models.py               # Ways data models (Way, Room, Question, Example)
-├── ways_analysis.py        # Main ways analysis framework
-├── house_of_knowledge.py   # House of Knowledge analysis
-├── network_analysis.py     # Network analysis for ways relationships
+├── ways_analysis.py        # Main ways analysis framework (WaysAnalyzer class)
+├── house_of_knowledge.py   # House of Knowledge analysis (24-room framework)
+├── network_analysis.py     # Network analysis for ways relationships (1,290 edges, clustering 0.886)
 ├── statistics.py           # Ways-specific statistical analysis
 └── metrics.py              # Ways coverage and balance metrics
 ```
@@ -59,7 +59,9 @@ Thin orchestrators that use ways analysis modules:
 
 ```
 scripts/
-└── db_setup.py             # Database initialization and setup
+├── db_setup.py             # Database initialization and setup
+├── generate_figures.py     # Generates 7 publication-quality visualizations
+└── comprehensive_analysis.py # Complete statistical analysis with exports
 ```
 
 **Pattern:**
@@ -201,17 +203,42 @@ This:
 
 ### Core Ways Analysis
 
-- **ways_analysis.py** - Main ways analysis framework and characterization
-- **database.py** - Ways database ORM and initialization
-- **sql_queries.py** - SQL queries for ways data access
+- **ways_analysis.py** - Main ways analysis framework (`WaysAnalyzer` class) with:
+  - `characterize_ways()` - Complete characterization of 210 ways
+  - `analyze_dialogue_types()` - Dialogue type analysis with cross-tabulations
+  - `analyze_room_distribution()` - Room analysis across 24 rooms
+  - `compute_cross_tabulations()` - Type × Room, Type × Partner matrices
+- **database.py** - Ways database ORM (`WaysDatabase` class) with SQLite backend
+- **sql_queries.py** - SQL queries (`WaysSQLQueries` class) for 210 ways, 24 rooms, 38 types
 - **models.py** - Data models for Way, Room, Question, Example entities
 
 ### Specialized Analysis
 
-- **house_of_knowledge.py** - House of Knowledge structure analysis
-- **network_analysis.py** - Network relationships between ways
-- **statistics.py** - Ways-specific statistical analysis and distributions
-- **metrics.py** - Ways coverage, completeness, and balance metrics
+- **house_of_knowledge.py** - House of Knowledge structure analysis (24-room framework)
+- **network_analysis.py** - Network relationships between ways (1,290 edges, 210 nodes, clustering 0.886)
+- **statistics.py** - Ways-specific statistical analysis:
+  - `analyze_way_distributions()` - Distribution analysis across categories
+  - `compute_way_correlations()` - Correlation analysis between characteristics
+  - `compute_way_diversity_metrics()` - Diversity metrics for ways
+- **metrics.py** - Ways coverage, completeness, and balance metrics:
+  - `compute_way_coverage_metrics()` - Coverage analysis of ways in framework
+  - `compute_way_interconnectedness()` - Interconnectedness metrics for network
+
+### Analysis Scripts
+
+- **comprehensive_analysis.py** - Complete statistical analysis:
+  - Information-theoretic metrics (entropy, mutual information)
+  - Network centrality calculations (degree, betweenness)
+  - Text analysis of examples (keyword extraction)
+  - JSON/CSV exports for manuscript integration
+- **generate_figures.py** - Visualization generation:
+  - Network graph (ways_network.png)
+  - Room hierarchy (room_hierarchy.png)
+  - Type distribution (type_distribution.png)
+  - Type × Room heatmap (type_room_heatmap.png)
+  - Framework treemap (framework_treemap.png)
+  - Partner word cloud (partner_wordcloud.png)
+  - Example length violin plots (example_length_violin.png)
 
 ## Testing
 

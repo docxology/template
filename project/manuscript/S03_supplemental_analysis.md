@@ -99,10 +99,29 @@ Analysis of ways in specific domains:
 
 ### S3.6.1 Analysis Complexity
 
-Computational requirements:
-- Network construction: $O(n^2)$ for $n$ ways
-- Centrality computation: $O(n^3)$ for some metrics
-- Community detection: Varies by algorithm
+Computational requirements for $n = 210$ ways:
+
+**Network Construction:**
+- Room-based edges: $O(n^2)$ in worst case, but typically $O(n \cdot k)$ where $k$ is average ways per room
+- Partner-based edges: $O(n^2)$ in worst case
+- Type-based edges: $O(n^2)$ in worst case
+- Total: $O(n^2)$ resulting in $|E| = 1,290$ edges
+
+**Centrality Computation:**
+- Degree centrality: $O(|E|) = O(1,290)$
+- Betweenness centrality: $O(n \cdot |E|) = O(210 \times 1,290) = O(270,900)$
+- Closeness centrality: $O(n \cdot |E|)$ using BFS
+- Eigenvector centrality: $O(|E| \cdot \text{iterations})$ typically 50-100 iterations
+
+**Cross-Tabulation:**
+- Type × Room: $O(n) = O(210)$ single pass through ways
+- Type × Partner: $O(n) = O(210)$
+- Total: $O(n)$ linear time
+
+**Information-Theoretic Metrics:**
+- Entropy calculation: $O(k)$ where $k$ is number of categories (typically $k < 50$)
+- Mutual information: $O(k_1 \cdot k_2)$ for two categorical variables
+- Total: $O(k^2)$ where $k$ is bounded by number of categories
 
 ### S3.6.2 Scalability
 

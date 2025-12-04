@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_introduction</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:introduction">Introduction</h1>
+<h2 id="overview">Overview</h2>
+<p>This research documents and analyzes Andrius Kulikauskas’s
+comprehensive framework of “Ways of Figuring Things Out,” a systematic
+collection of 210 documented ways from the database, with connections to
+the broader framework of 284 ways described in the source text. The work
+presents both a philosophical framework for understanding different
+approaches to knowledge and an empirical analysis of how these ways are
+structured, categorized, and interrelated.</p>
+<h3 id="data-summary">Data Summary</h3>
+<p>The analysis database contains comprehensive metadata for all
+documented ways:</p>
+<p>The framework structure is visualized in Figure <span
+class="math inline">\(\ref{fig:room_hierarchy}\)</span>, showing the
+distribution of ways across the 24 rooms. The network of relationships
+between ways is presented in Figure <span
+class="math inline">\(\ref{fig:ways_network}\)</span>, revealing
+clusters and central connecting ways.</p>
+<h2 id="the-house-of-knowledge-framework">The House of Knowledge
+Framework</h2>
+<p>The Ways framework is organized around a “House of Knowledge”
+containing 24 rooms, each representing a different aspect of how we come
+to know and understand. These rooms are structured according to
+fundamental philosophical principles:</p>
+<ul>
+<li><strong>Believing (1-2-3-4)</strong>: Four levels of believing, from
+basic belief to fostering spirit among us</li>
+<li><strong>Caring (1-2-3-4)</strong>: Four levels of caring, from basic
+openness to acknowledging what transcends our limits<br />
+</li>
+<li><strong>Relative Learning</strong>: The cycle of taking a stand,
+following through, and reflecting</li>
+<li><strong>Dialogue Types</strong>: Absolute, Relative, and Embrace God
+perspectives</li>
+</ul>
+<p>Each way represents a specific method for figuring things out,
+documented with examples, dialogue partners, and its relationship to the
+broader framework.</p>
+<h2 id="research-objectives">Research Objectives</h2>
+<p>This work aims to:</p>
+<ol type="1">
+<li><strong>Documentation</strong>: Provide complete documentation of
+all 284 ways with their characteristics, examples, and
+relationships</li>
+<li><strong>Categorization</strong>: Systematically categorize ways
+according to dialogue types, rooms, and philosophical structures</li>
+<li><strong>Analysis</strong>: Conduct empirical analysis of way
+distributions, patterns, and interrelationships</li>
+<li><strong>Visualization</strong>: Create visual representations of the
+network of ways and their connections</li>
+<li><strong>Application</strong>: Develop tools and frameworks for
+applying these ways in educational and research contexts</li>
+</ol>
+<h2 id="data-sources">Data Sources</h2>
+<p>The research draws on two primary data sources:</p>
+<ul>
+<li><strong>SQL Database</strong>: A comprehensive SQLite database
+(converted from MySQL) containing 210 ways with complete metadata
+including dialogue types, examples, room assignments (mene), God
+relationships (Dievas), and conversant information</li>
+<li><strong>Text Documentation</strong>: Detailed markdown documentation
+(<code>ways.md</code>) providing philosophical context, examples, and
+descriptions for all 284 ways</li>
+</ul>
+<h2 id="methodology-overview">Methodology Overview</h2>
+<p>Our approach combines:</p>
+<ul>
+<li><strong>Database Analysis</strong>: SQLite conversion and querying
+of the ways database to extract patterns and relationships</li>
+<li><strong>Network Analysis</strong>: Graph-based analysis of how ways
+connect through dialogue partners and shared characteristics</li>
+<li><strong>Statistical Analysis</strong>: Quantitative analysis of
+distributions across categories, dialogue types, and rooms</li>
+<li><strong>Text Analysis</strong>: Analysis of way descriptions and
+examples to extract themes and patterns</li>
+<li><strong>Visualization</strong>: Creation of network graphs,
+hierarchical visualizations, and statistical plots</li>
+</ul>
+<h2 id="key-contributions">Key Contributions</h2>
+<p>This research makes several key contributions:</p>
+<ol type="1">
+<li><strong>Complete Documentation</strong>: First comprehensive
+systematic documentation of all 284 ways</li>
+<li><strong>Empirical Analysis</strong>: Quantitative analysis revealing
+patterns in way distributions and relationships</li>
+<li><strong>Network Mapping</strong>: Visualization of the network
+structure connecting different ways</li>
+<li><strong>Categorization System</strong>: Systematic organization
+within the 24-room House of Knowledge framework</li>
+<li><strong>Practical Tools</strong>: Database and analysis tools for
+researchers and practitioners</li>
+</ol>
+<h2 id="manuscript-organization">Manuscript Organization</h2>
+<p>The manuscript is organized as follows:</p>
+<ol type="1">
+<li><strong>Abstract</strong> (Section <span
+class="math inline">\(\ref{sec:abstract}\)</span>): Overview of the
+research and key findings</li>
+<li><strong>Introduction</strong> (Section <span
+class="math inline">\(\ref{sec:introduction}\)</span>): Framework
+overview and research objectives</li>
+<li><strong>Methodology</strong> (Section <span
+class="math inline">\(\ref{sec:methodology}\)</span>): Database
+structure, analysis methods, and House of Knowledge framework</li>
+<li><strong>Experimental Results</strong> (Section <span
+class="math inline">\(\ref{sec:experimental_results}\)</span>):
+Statistical analysis of ways, distributions, and patterns</li>
+<li><strong>Discussion</strong> (Section <span
+class="math inline">\(\ref{sec:discussion}\)</span>): Interpretation of
+findings and philosophical implications</li>
+<li><strong>Conclusion</strong> (Section <span
+class="math inline">\(\ref{sec:conclusion}\)</span>): Summary and future
+directions</li>
+</ol>
+<p>Supplemental sections provide extended methodological details,
+additional results, and detailed analysis of specific aspects of the
+framework.</p>
+<h2 id="philosophical-context">Philosophical Context</h2>
+<p>The Ways framework emerges from a deep engagement with questions of
+epistemology, learning, and knowledge. It addresses fundamental
+questions:</p>
+<ul>
+<li>How do we come to know things?</li>
+<li>What are the different valid approaches to understanding?</li>
+<li>How do belief, care, and learning interact in knowledge
+acquisition?</li>
+<li>What role does dialogue play in figuring things out?</li>
+<li>How can we systematically organize different approaches to
+knowledge?</li>
+</ul>
+<p>The framework provides a comprehensive answer to these questions
+through its systematic organization of 284 distinct ways, each
+representing a valid approach to knowledge and understanding.</p>
+<h2 id="applications">Applications</h2>
+<p>This research has applications across multiple domains:</p>
+<ul>
+<li><strong>Education</strong>: Understanding different learning styles
+and approaches</li>
+<li><strong>Research Methodology</strong>: Systematic approaches to
+knowledge acquisition</li>
+<li><strong>Personal Development</strong>: Tools for understanding one’s
+own ways of figuring things out</li>
+<li><strong>Philosophy</strong>: Contributions to epistemology and
+knowledge systems theory</li>
+<li><strong>Interdisciplinary Studies</strong>: Framework for
+understanding knowledge across domains</li>
+</ul>
+<h2 id="structure-of-this-work">Structure of This Work</h2>
+<p>The following sections provide detailed analysis of the Ways
+framework. Section <span
+class="math inline">\(\ref{sec:methodology}\)</span> describes the
+database structure and analysis methods. Section <span
+class="math inline">\(\ref{sec:experimental_results}\)</span> presents
+statistical findings and patterns. Section <span
+class="math inline">\(\ref{sec:discussion}\)</span> interprets these
+findings within the broader philosophical context. Supplemental sections
+provide extended details on methodology, additional results, and
+detailed analysis of specific aspects of the framework.</p>
+</body>
+</html>

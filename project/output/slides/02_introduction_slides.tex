@@ -1,0 +1,346 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Introduction}\label{sec:introduction}
+
+\begin{frame}{Overview}
+\protect\phantomsection\label{overview}
+This research documents and analyzes Andrius Kulikauskas's comprehensive
+framework of ``Ways of Figuring Things Out,'' a systematic collection of
+210 documented ways from the database, with connections to the broader
+framework of 284 ways described in the source text. The work presents
+both a philosophical framework for understanding different approaches to
+knowledge and an empirical analysis of how these ways are structured,
+categorized, and interrelated.
+
+\begin{block}{Data Summary}
+\protect\phantomsection\label{data-summary}
+The analysis database contains comprehensive metadata for all documented
+ways:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Category} & \textbf{Count} \\
+\hline
+Total ways (database) & 210 \\
+Total ways (documented) & 284 \\
+Rooms in House of Knowledge & 24 \\
+Distinct dialogue types & 38 \\
+Unique dialogue partners & 196 \\
+Network nodes & 210 \\
+Network edges & 1,290 \\
+\hline
+\end{tabular}
+\caption{Summary statistics for Ways of Figuring Things Out database}
+\label{tab:data_summary}
+\end{table}
+
+The framework structure is visualized in Figure
+\ref{fig:room_hierarchy}, showing the distribution of ways across the 24
+rooms. The network of relationships between ways is presented in Figure
+\ref{fig:ways_network}, revealing clusters and central connecting ways.
+\end{block}
+\end{frame}
+
+\begin{frame}{The House of Knowledge Framework}
+\protect\phantomsection\label{the-house-of-knowledge-framework}
+The Ways framework is organized around a ``House of Knowledge''
+containing 24 rooms, each representing a different aspect of how we come
+to know and understand. These rooms are structured according to
+fundamental philosophical principles:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Believing (1-2-3-4)}: Four levels of believing, from basic
+  belief to fostering spirit among us
+\item
+  \textbf{Caring (1-2-3-4)}: Four levels of caring, from basic openness
+  to acknowledging what transcends our limits\\
+\item
+  \textbf{Relative Learning}: The cycle of taking a stand, following
+  through, and reflecting
+\item
+  \textbf{Dialogue Types}: Absolute, Relative, and Embrace God
+  perspectives
+\end{itemize}
+
+Each way represents a specific method for figuring things out,
+documented with examples, dialogue partners, and its relationship to the
+broader framework.
+\end{frame}
+
+\begin{frame}{Research Objectives}
+\protect\phantomsection\label{research-objectives}
+This work aims to:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Documentation}: Provide complete documentation of all 284 ways
+  with their characteristics, examples, and relationships
+\item
+  \textbf{Categorization}: Systematically categorize ways according to
+  dialogue types, rooms, and philosophical structures
+\item
+  \textbf{Analysis}: Conduct empirical analysis of way distributions,
+  patterns, and interrelationships
+\item
+  \textbf{Visualization}: Create visual representations of the network
+  of ways and their connections
+\item
+  \textbf{Application}: Develop tools and frameworks for applying these
+  ways in educational and research contexts
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Data Sources}
+\protect\phantomsection\label{data-sources}
+The research draws on two primary data sources:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{SQL Database}: A comprehensive SQLite database (converted from
+  MySQL) containing 210 ways with complete metadata including dialogue
+  types, examples, room assignments (mene), God relationships (Dievas),
+  and conversant information
+\item
+  \textbf{Text Documentation}: Detailed markdown documentation
+  (\texttt{ways.md}) providing philosophical context, examples, and
+  descriptions for all 284 ways
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Methodology Overview}
+\protect\phantomsection\label{methodology-overview}
+Our approach combines:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Database Analysis}: SQLite conversion and querying of the ways
+  database to extract patterns and relationships
+\item
+  \textbf{Network Analysis}: Graph-based analysis of how ways connect
+  through dialogue partners and shared characteristics
+\item
+  \textbf{Statistical Analysis}: Quantitative analysis of distributions
+  across categories, dialogue types, and rooms
+\item
+  \textbf{Text Analysis}: Analysis of way descriptions and examples to
+  extract themes and patterns
+\item
+  \textbf{Visualization}: Creation of network graphs, hierarchical
+  visualizations, and statistical plots
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Key Contributions}
+\protect\phantomsection\label{key-contributions}
+This research makes several key contributions:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Complete Documentation}: First comprehensive systematic
+  documentation of all 284 ways
+\item
+  \textbf{Empirical Analysis}: Quantitative analysis revealing patterns
+  in way distributions and relationships
+\item
+  \textbf{Network Mapping}: Visualization of the network structure
+  connecting different ways
+\item
+  \textbf{Categorization System}: Systematic organization within the
+  24-room House of Knowledge framework
+\item
+  \textbf{Practical Tools}: Database and analysis tools for researchers
+  and practitioners
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Manuscript Organization}
+\protect\phantomsection\label{manuscript-organization}
+The manuscript is organized as follows:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Abstract} (Section \ref{sec:abstract}): Overview of the
+  research and key findings
+\item
+  \textbf{Introduction} (Section \ref{sec:introduction}): Framework
+  overview and research objectives
+\item
+  \textbf{Methodology} (Section \ref{sec:methodology}): Database
+  structure, analysis methods, and House of Knowledge framework
+\item
+  \textbf{Experimental Results} (Section
+  \ref{sec:experimental_results}): Statistical analysis of ways,
+  distributions, and patterns
+\item
+  \textbf{Discussion} (Section \ref{sec:discussion}): Interpretation of
+  findings and philosophical implications
+\item
+  \textbf{Conclusion} (Section \ref{sec:conclusion}): Summary and future
+  directions
+\end{enumerate}
+
+Supplemental sections provide extended methodological details,
+additional results, and detailed analysis of specific aspects of the
+framework.
+\end{frame}
+
+\begin{frame}{Philosophical Context}
+\protect\phantomsection\label{philosophical-context}
+The Ways framework emerges from a deep engagement with questions of
+epistemology, learning, and knowledge. It addresses fundamental
+questions:
+
+\begin{itemize}
+\tightlist
+\item
+  How do we come to know things?
+\item
+  What are the different valid approaches to understanding?
+\item
+  How do belief, care, and learning interact in knowledge acquisition?
+\item
+  What role does dialogue play in figuring things out?
+\item
+  How can we systematically organize different approaches to knowledge?
+\end{itemize}
+
+The framework provides a comprehensive answer to these questions through
+its systematic organization of 284 distinct ways, each representing a
+valid approach to knowledge and understanding.
+\end{frame}
+
+\begin{frame}{Applications}
+\protect\phantomsection\label{applications}
+This research has applications across multiple domains:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Education}: Understanding different learning styles and
+  approaches
+\item
+  \textbf{Research Methodology}: Systematic approaches to knowledge
+  acquisition
+\item
+  \textbf{Personal Development}: Tools for understanding one's own ways
+  of figuring things out
+\item
+  \textbf{Philosophy}: Contributions to epistemology and knowledge
+  systems theory
+\item
+  \textbf{Interdisciplinary Studies}: Framework for understanding
+  knowledge across domains
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Structure of This Work}
+\protect\phantomsection\label{structure-of-this-work}
+The following sections provide detailed analysis of the Ways framework.
+Section \ref{sec:methodology} describes the database structure and
+analysis methods. Section \ref{sec:experimental_results} presents
+statistical findings and patterns. Section \ref{sec:discussion}
+interprets these findings within the broader philosophical context.
+Supplemental sections provide extended details on methodology,
+additional results, and detailed analysis of specific aspects of the
+framework.
+\end{frame}
+
+\end{document}

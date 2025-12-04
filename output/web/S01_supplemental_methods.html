@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>S01_supplemental_methods</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:supplemental_methods">Supplemental Methods</h1>
+<p>This section provides detailed methodological information that
+supplements Section <span
+class="math inline">\(\ref{sec:methodology}\)</span>.</p>
+<h2 id="s1.1-database-schema-details">S1.1 Database Schema Details</h2>
+<h3 id="primary-tables">Primary Tables</h3>
+<h4 id="ways-table-ways">Ways Table (<code>ways</code>)</h4>
+<p>The primary table contains 212 documented ways with the following
+schema:</p>
+<ul>
+<li><code>way</code> (TEXT): Name/identifier of the way</li>
+<li><code>dialoguewith</code> (TEXT): Dialogue partner or
+conversant</li>
+<li><code>dialoguetype</code> (TEXT): Primary dialogue type (Absolute,
+Relative, Embrace God)</li>
+<li><code>dialoguetypetype</code> (TEXT): Sub-type classification</li>
+<li><code>ID</code> (INTEGER): Primary key, auto-incrementing</li>
+<li><code>wayurl</code> (TEXT): URL or reference for the way</li>
+<li><code>examples</code> (TEXT): Examples and descriptions (up to 1000
+characters)</li>
+<li><code>dialoguetypetypetype</code> (TEXT): Further
+sub-classification</li>
+<li><code>mene</code> (TEXT): Room assignment in House of Knowledge (10
+characters)</li>
+<li><code>Dievas</code> (TEXT): Relationship to God/the divine</li>
+<li><code>comments</code> (TEXT): Additional comments and notes</li>
+<li><code>laikinas</code> (TEXT): Temporary or provisional
+classification</li>
+</ul>
+<h4 id="rooms-table-rooms">Rooms Table (<code>rooms</code>)</h4>
+<p>The rooms table defines the 24 rooms of the House of Knowledge:</p>
+<ul>
+<li><code>santrumpa</code> (TEXT): Short name/abbreviation for the
+room</li>
+<li><code>savoka</code> (TEXT): Concept or term for the room</li>
+<li><code>issiaiskinimas</code> (TEXT): Explanation or
+clarification</li>
+<li>Additional fields for room ordering and relationships</li>
+</ul>
+<h4 id="examples-table-examples">Examples Table
+(<code>examples</code>)</h4>
+<p>Contains examples for ways:</p>
+<ul>
+<li><code>way</code> (TEXT): Way identifier</li>
+<li><code>rusis</code> (TEXT): Type or category of example</li>
+<li><code>pavyzdziai</code> (TEXT): The example text</li>
+</ul>
+<h4 id="questions-table-klausimai">Questions Table
+(<code>klausimai</code>)</h4>
+<p>Contains questions related to ways:</p>
+<ul>
+<li><code>klausimonr</code> (INTEGER): Question number (primary
+key)</li>
+<li><code>klausimas</code> (TEXT): The question text</li>
+<li><code>mastytojas</code> (TEXT): Thinker or source of the
+question</li>
+</ul>
+<h4 id="question-way-relationships-klausimobudai">Question-Way
+Relationships (<code>klausimobudai</code>)</h4>
+<p>Links questions to ways:</p>
+<ul>
+<li><code>klausimobudonr</code> (INTEGER): Relationship ID (primary
+key)</li>
+<li><code>klausimonr</code> (INTEGER): Foreign key to questions
+table</li>
+<li><code>budonr</code> (INTEGER): Foreign key to ways table (via
+ID)</li>
+</ul>
+<h3 id="data-types-and-constraints">Data Types and Constraints</h3>
+<p>The SQLite conversion preserves data integrity while adapting
+MySQL-specific features:</p>
+<ul>
+<li><strong>AUTO_INCREMENT</strong>: Converted to INTEGER PRIMARY KEY
+with auto-increment</li>
+<li><strong>VARCHAR</strong>: Converted to TEXT (SQLite’s flexible text
+type)</li>
+<li><strong>COLLATE</strong>: Removed (SQLite handles Unicode
+natively)</li>
+<li><strong>ENGINE</strong>: Removed (not applicable to SQLite)</li>
+<li><strong>CHARACTER SET</strong>: Removed (SQLite uses UTF-8)</li>
+</ul>
+<h2 id="s1.2-sqlite-conversion-process">S1.2 SQLite Conversion
+Process</h2>
+<h3 id="conversion-steps">Conversion Steps</h3>
+<ol type="1">
+<li><strong>Parse MySQL Dump</strong>: Read and parse the MySQL dump
+file</li>
+<li><strong>Extract Statements</strong>: Identify CREATE TABLE, INSERT,
+and other statements</li>
+<li><strong>Convert Syntax</strong>: Transform MySQL-specific syntax to
+SQLite</li>
+<li><strong>Handle Indexes</strong>: Convert KEY definitions to CREATE
+INDEX statements</li>
+<li><strong>Rename Tables</strong>: Apply table renames for clarity</li>
+<li><strong>Fix Conflicts</strong>: Resolve index name conflicts with
+table names</li>
+<li><strong>Execute</strong>: Create SQLite database with converted
+schema and data</li>
+</ol>
+<h3 id="syntax-conversions">Syntax Conversions</h3>
+<h4 id="data-type-conversions">Data Type Conversions</h4>
+
+<h4 id="index-handling">Index Handling</h4>
+<p>MySQL KEY definitions within CREATE TABLE statements are extracted
+and converted to separate CREATE INDEX statements. Index names that
+conflict with table names are renamed (e.g., <code>ways</code> index →
+<code>ways_idx</code>).</p>
+<h4 id="function-call-handling">Function Call Handling</h4>
+<p>MySQL supports function calls in index definitions (e.g.,
+<code>examples(333)</code>). SQLite does not, so these are simplified to
+column names only.</p>
+<h2 id="s1.3-network-analysis-methods">S1.3 Network Analysis
+Methods</h2>
+<h3 id="graph-construction">Graph Construction</h3>
+<p>The network graph <span class="math inline">\(G = (V, E)\)</span> is
+constructed as follows:</p>
+<p><strong>Vertices <span class="math inline">\(V\)</span></strong>:
+Each way <span class="math inline">\(w_i\)</span> becomes a node <span
+class="math inline">\(v_i\)</span>.</p>
+<p><strong>Edges <span class="math inline">\(E\)</span></strong>: Edges
+are created based on:</p>
+<ol type="1">
+<li><p><strong>Shared Dialogue Partners</strong>: If ways <span
+class="math inline">\(w_i\)</span> and <span
+class="math inline">\(w_j\)</span> share the same
+<code>dialoguewith</code> value: <span
+class="math display">\[\begin{equation}\label{eq:edge_dialogue}
+e_{ij} \in E \text{ if } \text{dialoguewith}(w_i) =
+\text{dialoguewith}(w_j)
+\end{equation}\]</span></p></li>
+<li><p><strong>Shared Room Assignment</strong>: If ways <span
+class="math inline">\(w_i\)</span> and <span
+class="math inline">\(w_j\)</span> share the same <code>mene</code>
+value: <span class="math display">\[\begin{equation}\label{eq:edge_room}
+e_{ij} \in E \text{ if } \text{mene}(w_i) = \text{mene}(w_j)
+\end{equation}\]</span></p></li>
+<li><p><strong>Question Relationships</strong>: If ways <span
+class="math inline">\(w_i\)</span> and <span
+class="math inline">\(w_j\)</span> are linked through the
+<code>klausimobudai</code> table: <span
+class="math display">\[\begin{equation}\label{eq:edge_question}
+e_{ij} \in E \text{ if } \exists q: (w_i, q) \in \text{klausimobudai}
+\land (w_j, q) \in \text{klausimobudai}
+\end{equation}\]</span></p></li>
+</ol>
+<h3 id="edge-weights">Edge Weights</h3>
+<p>Edges can be weighted based on: - Number of shared characteristics -
+Strength of relationship (direct vs. indirect) - Type of relationship
+(dialogue partner vs. room vs. question)</p>
+<h3 id="centrality-metrics">Centrality Metrics</h3>
+<h4 id="degree-centrality">Degree Centrality</h4>
+<p><span
+class="math display">\[\begin{equation}\label{eq:degree_centrality_supplemental}
+C_D(v) = \frac{\deg(v)}{|V| - 1}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\deg(v)\)</span> is the degree
+(number of connections) of node <span
+class="math inline">\(v\)</span>.</p>
+<h4 id="betweenness-centrality">Betweenness Centrality</h4>
+<p><span
+class="math display">\[\begin{equation}\label{eq:betweenness_centrality_supplemental}
+C_B(v) = \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigma_{st}}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\sigma_{st}\)</span> is the number
+of shortest paths from <span class="math inline">\(s\)</span> to <span
+class="math inline">\(t\)</span>, and <span
+class="math inline">\(\sigma_{st}(v)\)</span> is the number of those
+paths passing through <span class="math inline">\(v\)</span>.</p>
+<h4 id="closeness-centrality">Closeness Centrality</h4>
+<p><span
+class="math display">\[\begin{equation}\label{eq:closeness_centrality}
+C_C(v) = \frac{1}{\sum_{u \neq v} d(u, v)}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(d(u, v)\)</span> is the shortest
+path distance between <span class="math inline">\(u\)</span> and <span
+class="math inline">\(v\)</span>.</p>
+<h2 id="s1.4-statistical-analysis-methods">S1.4 Statistical Analysis
+Methods</h2>
+<h3 id="distribution-analysis">Distribution Analysis</h3>
+<h4 id="dialogue-type-distribution">Dialogue Type Distribution</h4>
+<p>For dialogue type <span class="math inline">\(t\)</span>, the count
+is: <span class="math display">\[\begin{equation}\label{eq:type_count}
+N_t = |\{w_i : \text{type}(w_i) = t\}|
+\end{equation}\]</span></p>
+<p>The proportion is: <span
+class="math display">\[\begin{equation}\label{eq:type_proportion}
+p_t = \frac{N_t}{N}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(N\)</span> is the total number of
+ways.</p>
+<h4 id="room-distribution">Room Distribution</h4>
+<p>For room <span class="math inline">\(r\)</span>, the count is: <span
+class="math display">\[\begin{equation}\label{eq:room_count}
+N_r = |\{w_i : r \in \text{rooms}(w_i)\}|
+\end{equation}\]</span></p>
+<p>Note that ways can belong to multiple rooms, so <span
+class="math inline">\(\sum_r N_r \geq N\)</span>.</p>
+<h3 id="cross-tabulation">Cross-Tabulation</h3>
+<p>The cross-tabulation of dialogue type and room creates a contingency
+table:</p>
+<p><span class="math display">\[\begin{equation}\label{eq:crosstab}
+C_{tr} = |\{w_i : \text{type}(w_i) = t \land r \in \text{rooms}(w_i)\}|
+\end{equation}\]</span></p>
+<p>This enables analysis of whether certain dialogue types are more
+common in certain rooms.</p>
+<h3 id="chi-square-test">Chi-Square Test</h3>
+<p>To test independence of dialogue type and room assignment:</p>
+<p><span class="math display">\[\begin{equation}\label{eq:chi_square}
+\chi^2 = \sum_{t,r} \frac{(O_{tr} - E_{tr})^2}{E_{tr}}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(O_{tr}\)</span> is the observed
+count and <span class="math inline">\(E_{tr}\)</span> is the expected
+count under independence.</p>
+<h2 id="s1.5-text-analysis-methods">S1.5 Text Analysis Methods</h2>
+<h3 id="keyword-extraction">Keyword Extraction</h3>
+<p>Text from way descriptions and examples is processed to extract
+keywords:</p>
+<ol type="1">
+<li><strong>Tokenization</strong>: Split text into words</li>
+<li><strong>Normalization</strong>: Convert to lowercase, handle
+Unicode</li>
+<li><strong>Stop Word Removal</strong>: Remove common words</li>
+<li><strong>Stemming</strong>: Reduce words to root forms (if
+applicable)</li>
+<li><strong>Frequency Analysis</strong>: Count keyword frequencies</li>
+</ol>
+<h3 id="theme-extraction">Theme Extraction</h3>
+<p>Themes are identified through: - <strong>Co-occurrence
+Analysis</strong>: Words that frequently appear together -
+<strong>Clustering</strong>: Group similar ways based on text similarity
+- <strong>Topic Modeling</strong>: Identify latent topics in way
+descriptions</p>
+<h3 id="example-analysis">Example Analysis</h3>
+<p>Examples are analyzed to: - Identify common patterns or structures -
+Extract key concepts or ideas - Understand how examples illustrate ways
+- Map examples to room categories</p>
+<h2 id="s1.6-visualization-methods">S1.6 Visualization Methods</h2>
+<h3 id="network-visualization">Network Visualization</h3>
+<p>Network graphs are created using force-directed layout algorithms: -
+<strong>Force-Directed Layout</strong>: Positions nodes based on
+attractive (edges) and repulsive (nodes) forces - <strong>Color
+Coding</strong>: Nodes colored by dialogue type or room - <strong>Size
+Scaling</strong>: Node size proportional to centrality - <strong>Edge
+Styling</strong>: Edge thickness/color based on relationship
+strength</p>
+<h3 id="hierarchical-visualization">Hierarchical Visualization</h3>
+<p>The 24-room structure is visualized as: - <strong>Tree
+Structure</strong>: Rooms organized hierarchically - <strong>Sunburst
+Chart</strong>: Radial hierarchical visualization -
+<strong>Treemap</strong>: Area-based hierarchical visualization</p>
+<h3 id="statistical-plots">Statistical Plots</h3>
+<p>Standard statistical visualizations: - <strong>Bar Charts</strong>:
+Distribution of ways by category - <strong>Heatmaps</strong>:
+Cross-tabulation matrices - <strong>Scatter Plots</strong>:
+Relationships between variables - <strong>Distribution Plots</strong>:
+Histograms and density plots</p>
+<h2 id="s1.7-validation-methods">S1.7 Validation Methods</h2>
+<h3 id="data-quality-checks">Data Quality Checks</h3>
+<ol type="1">
+<li><strong>Completeness</strong>: Verify required fields are
+present</li>
+<li><strong>Consistency</strong>: Check for conflicting assignments</li>
+<li><strong>Referential Integrity</strong>: Validate foreign key
+relationships</li>
+<li><strong>Encoding</strong>: Verify proper text encoding (UTF-8)</li>
+</ol>
+<h3 id="analysis-validation">Analysis Validation</h3>
+<ol type="1">
+<li><strong>Reproducibility</strong>: All analyses use fixed random
+seeds</li>
+<li><strong>Sensitivity Analysis</strong>: Test sensitivity to data
+variations</li>
+<li><strong>Robustness</strong>: Verify results with missing data
+handling</li>
+<li><strong>Cross-Validation</strong>: Validate findings across
+different data subsets</li>
+</ol>
+<h2 id="s1.8-implementation-details">S1.8 Implementation Details</h2>
+<h3 id="software-stack">Software Stack</h3>
+<ul>
+<li><strong>Python 3.10+</strong>: Primary programming language</li>
+<li><strong>SQLite 3</strong>: Database backend</li>
+<li><strong>SQLAlchemy</strong>: ORM for database access</li>
+<li><strong>NetworkX</strong>: Network analysis library</li>
+<li><strong>Pandas</strong>: Data manipulation and analysis</li>
+<li><strong>Matplotlib/Seaborn</strong>: Visualization libraries</li>
+<li><strong>NumPy</strong>: Numerical computations</li>
+</ul>
+<h3 id="code-organization">Code Organization</h3>
+<p>Following the thin orchestrator pattern: - <strong>Business
+Logic</strong>: In <code>project/src/</code> modules -
+<strong>Orchestration</strong>: In <code>project/scripts/</code> scripts
+- <strong>Tests</strong>: In <code>project/tests/</code> directory -
+<strong>Documentation</strong>: In <code>project/docs/</code> and
+<code>project/manuscript/</code></p>
+<h3 id="performance-considerations">Performance Considerations</h3>
+<ul>
+<li><strong>Database Indexing</strong>: Indexes on frequently queried
+fields</li>
+<li><strong>Caching</strong>: Cache computed network structures and
+statistics</li>
+<li><strong>Batch Processing</strong>: Process large datasets in
+batches</li>
+<li><strong>Memory Management</strong>: Use generators for large data
+streams</li>
+</ul>
+<h2 id="s1.9-complete-sql-queries">S1.9 Complete SQL Queries</h2>
+<p>This section provides the complete SQL queries used for key analyses
+in the research.</p>
+<h3 id="s1.9.1-basic-statistics-queries">S1.9.1 Basic Statistics
+Queries</h3>
+<p><strong>Total ways count:</strong></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">as</span> total_ways <span class="kw">FROM</span> ways;</span></code></pre></div>
+<p><strong>Room distribution:</strong></p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> mene, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">as</span> <span class="fu">count</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ways</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> mene <span class="op">!=</span> <span class="st">&#39;&#39;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> mene</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="fu">count</span> <span class="kw">DESC</span>;</span></code></pre></div>
+<p><strong>Dialogue type distribution:</strong></p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> dialoguetype, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">as</span> <span class="fu">count</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ways</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> dialoguetype</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="fu">count</span> <span class="kw">DESC</span>;</span></code></pre></div>
+<p><strong>Dialogue partner distribution:</strong></p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> dialoguewith, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">as</span> <span class="fu">count</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ways</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> dialoguewith <span class="op">!=</span> <span class="st">&#39;&#39;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> dialoguewith</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="fu">count</span> <span class="kw">DESC</span>;</span></code></pre></div>
+<h3 id="s1.9.2-cross-tabulation-queries">S1.9.2 Cross-Tabulation
+Queries</h3>
+<p><strong>Type × Room cross-tabulation:</strong></p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> dialoguetype, mene, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">as</span> <span class="fu">count</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ways</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> mene <span class="op">!=</span> <span class="st">&#39;&#39;</span> <span class="kw">AND</span> dialoguetype <span class="op">!=</span> <span class="st">&#39;&#39;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> dialoguetype, mene</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="fu">count</span> <span class="kw">DESC</span>;</span></code></pre></div>
+<p><strong>Type × Partner cross-tabulation:</strong></p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> dialoguetype, dialoguewith, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">as</span> <span class="fu">count</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ways</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> dialoguewith <span class="op">!=</span> <span class="st">&#39;&#39;</span> <span class="kw">AND</span> dialoguetype <span class="op">!=</span> <span class="st">&#39;&#39;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> dialoguetype, dialoguewith</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="fu">count</span> <span class="kw">DESC</span>;</span></code></pre></div>
+<h3 id="s1.9.3-network-construction-queries">S1.9.3 Network Construction
+Queries</h3>
+<p><strong>Room-based edges:</strong></p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> w1.<span class="kw">ID</span> <span class="kw">as</span> way1_id, w2.<span class="kw">ID</span> <span class="kw">as</span> way2_id, w1.mene <span class="kw">as</span> room</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ways w1</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> ways w2 <span class="kw">ON</span> w1.mene <span class="op">=</span> w2.mene</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> w1.<span class="kw">ID</span> <span class="op">&lt;</span> w2.<span class="kw">ID</span> <span class="kw">AND</span> w1.mene <span class="op">!=</span> <span class="st">&#39;&#39;</span>;</span></code></pre></div>
+<p><strong>Partner-based edges:</strong></p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> w1.<span class="kw">ID</span> <span class="kw">as</span> way1_id, w2.<span class="kw">ID</span> <span class="kw">as</span> way2_id, w1.dialoguewith <span class="kw">as</span> partner</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ways w1</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> ways w2 <span class="kw">ON</span> w1.dialoguewith <span class="op">=</span> w2.dialoguewith</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> w1.<span class="kw">ID</span> <span class="op">&lt;</span> w2.<span class="kw">ID</span> <span class="kw">AND</span> w1.dialoguewith <span class="op">!=</span> <span class="st">&#39;&#39;</span>;</span></code></pre></div>
+<p><strong>Type-based edges:</strong></p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> w1.<span class="kw">ID</span> <span class="kw">as</span> way1_id, w2.<span class="kw">ID</span> <span class="kw">as</span> way2_id, w1.dialoguetype <span class="kw">as</span> <span class="kw">type</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ways w1</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">JOIN</span> ways w2 <span class="kw">ON</span> w1.dialoguetype <span class="op">=</span> w2.dialoguetype</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> w1.<span class="kw">ID</span> <span class="op">&lt;</span> w2.<span class="kw">ID</span> <span class="kw">AND</span> w1.dialoguetype <span class="op">!=</span> <span class="st">&#39;&#39;</span>;</span></code></pre></div>
+<h3 id="s1.9.4-centrality-analysis-queries">S1.9.4 Centrality Analysis
+Queries</h3>
+<p><strong>Degree centrality calculation:</strong></p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> way_id, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">as</span> <span class="kw">degree</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> (</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> w1.<span class="kw">ID</span> <span class="kw">as</span> way_id, w2.<span class="kw">ID</span> <span class="kw">as</span> connected_way</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> ways w1</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">JOIN</span> ways w2 <span class="kw">ON</span> w1.mene <span class="op">=</span> w2.mene</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> w1.<span class="kw">ID</span> <span class="op">!=</span> w2.<span class="kw">ID</span> <span class="kw">AND</span> w1.mene <span class="op">!=</span> <span class="st">&#39;&#39;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UNION</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> w1.<span class="kw">ID</span> <span class="kw">as</span> way_id, w2.<span class="kw">ID</span> <span class="kw">as</span> connected_way</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> ways w1</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">JOIN</span> ways w2 <span class="kw">ON</span> w1.dialoguewith <span class="op">=</span> w2.dialoguewith</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> w1.<span class="kw">ID</span> <span class="op">!=</span> w2.<span class="kw">ID</span> <span class="kw">AND</span> w1.dialoguewith <span class="op">!=</span> <span class="st">&#39;&#39;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">UNION</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">SELECT</span> w1.<span class="kw">ID</span> <span class="kw">as</span> way_id, w2.<span class="kw">ID</span> <span class="kw">as</span> connected_way</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">FROM</span> ways w1</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">JOIN</span> ways w2 <span class="kw">ON</span> w1.dialoguetype <span class="op">=</span> w2.dialoguetype</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">WHERE</span> w1.<span class="kw">ID</span> <span class="op">!=</span> w2.<span class="kw">ID</span> <span class="kw">AND</span> w1.dialoguetype <span class="op">!=</span> <span class="st">&#39;&#39;</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> way_id</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="kw">degree</span> <span class="kw">DESC</span>;</span></code></pre></div>
+<h3 id="s1.9.5-text-analysis-queries">S1.9.5 Text Analysis Queries</h3>
+<p><strong>Ways with examples:</strong></p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">ID</span>, way, <span class="fu">LENGTH</span>(examples) <span class="kw">as</span> example_length, examples</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ways</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> examples <span class="op">!=</span> <span class="st">&#39;&#39;</span> <span class="kw">AND</span> <span class="fu">LENGTH</span>(examples) <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> example_length <span class="kw">DESC</span>;</span></code></pre></div>
+<p><strong>Average example length by dialogue type:</strong></p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> dialoguetype, </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">AVG</span>(<span class="fu">LENGTH</span>(examples)) <span class="kw">as</span> avg_length,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>       <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">as</span> <span class="fu">count</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ways</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> examples <span class="op">!=</span> <span class="st">&#39;&#39;</span> <span class="kw">AND</span> dialoguetype <span class="op">!=</span> <span class="st">&#39;&#39;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> dialoguetype</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> avg_length <span class="kw">DESC</span>;</span></code></pre></div>
+<h2 id="s1.10-limitations-and-assumptions">S1.10 Limitations and
+Assumptions</h2>
+<h3 id="data-limitations">Data Limitations</h3>
+<ul>
+<li>Not all ways have complete metadata</li>
+<li>Some room assignments may be missing or provisional</li>
+<li>Dialogue partner information varies in completeness</li>
+<li>Examples and descriptions vary in detail</li>
+</ul>
+<h3 id="analysis-assumptions">Analysis Assumptions</h3>
+<ul>
+<li>Ways are treated as discrete entities (though they may overlap)</li>
+<li>Relationships are binary (present/absent) rather than weighted</li>
+<li>Network structure captures all important relationships</li>
+<li>Statistical patterns reflect meaningful structure</li>
+</ul>
+<h3 id="methodological-limitations">Methodological Limitations</h3>
+<ul>
+<li>Quantitative analysis may miss qualitative nuances</li>
+<li>Network analysis based on explicit database relationships</li>
+<li>Text analysis limited by available descriptions</li>
+<li>Visualization choices may emphasize certain aspects</li>
+</ul>
+<p>These limitations are acknowledged and addressed where possible
+through multiple analysis methods and careful interpretation.</p>
+</body>
+</html>

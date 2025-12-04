@@ -1,0 +1,880 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}[fragile]{Appendix}
+\protect\phantomsection\label{sec:appendix}
+This appendix provides additional technical details supporting the main
+results.
+
+\begin{block}{A. Database Schema Details}
+\protect\phantomsection\label{a.-database-schema-details}
+\begin{block}{A.1 Complete Table Schemas}
+\protect\phantomsection\label{a.1-complete-table-schemas}
+\begin{block}{Ways Table Schema}
+\protect\phantomsection\label{ways-table-schema}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{CREATE} \KeywordTok{TABLE}\NormalTok{ ways (}
+\NormalTok{    way TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{    dialoguewith TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{    dialoguetype TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{    dialoguetypetype TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+    \KeywordTok{ID} \DataTypeTok{INTEGER} \KeywordTok{PRIMARY} \KeywordTok{KEY}\NormalTok{ AUTOINCREMENT,}
+\NormalTok{    wayurl TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{    examples TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{    dialoguetypetypetype TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{    mene TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{    Dievas TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{    comments TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{    laikinas TEXT }\KeywordTok{NOT} \KeywordTok{NULL}
+\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{Rooms Table Schema}
+\protect\phantomsection\label{rooms-table-schema}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{CREATE} \KeywordTok{TABLE}\NormalTok{ rooms (}
+\NormalTok{    santrumpa TEXT }\KeywordTok{NOT} \KeywordTok{NULL} \KeywordTok{PRIMARY} \KeywordTok{KEY}\NormalTok{,}
+\NormalTok{    savoka TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+\NormalTok{    issiaiskinimas TEXT }\KeywordTok{NOT} \KeywordTok{NULL}\NormalTok{,}
+    \CommentTok{{-}{-} Additional fields for ordering and relationships}
+\NormalTok{);}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+\end{block}
+
+\begin{block}{A.2 Index Definitions}
+\protect\phantomsection\label{a.2-index-definitions}
+Key indexes for performance:
+
+\begin{itemize}
+\tightlist
+\item
+  Index on \texttt{way} for way lookups
+\item
+  Index on \texttt{mene} for room-based queries
+\item
+  Index on \texttt{dialoguetype} for type filtering
+\item
+  Index on \texttt{dialoguewith} for partner analysis
+\end{itemize}
+\end{block}
+\end{block}
+
+\begin{block}{B. Network Analysis Algorithms}
+\protect\phantomsection\label{b.-network-analysis-algorithms}
+\begin{block}{B.1 Actual Network Metrics}
+\protect\phantomsection\label{b.1-actual-network-metrics}
+The network analysis was performed using NetworkX on the complete ways
+database:
+
+\textbf{Network Structure:} - \textbf{Nodes}: 210 ways - \textbf{Edges}:
+1,290 connections - \textbf{Average degree}: 12.29 connections per way -
+\textbf{Network density}: 0.058 (5.8\% of possible edges present) -
+\textbf{Clustering coefficient}: 0.886 (high local clustering) -
+\textbf{Connected components}: Multiple components detected -
+\textbf{Largest component}: Contains majority of ways
+
+\textbf{Centrality Metrics:} - \textbf{Degree centrality}: Range from
+0.0 to 0.162 (way 84, 156, 211 with highest degree: 34) -
+\textbf{Betweenness centrality}: Identifies bridge ways connecting
+different communities - \textbf{Closeness centrality}: Measures average
+distance to all other ways - \textbf{Eigenvector centrality}: Identifies
+ways connected to highly central ways
+
+\textbf{Community Detection:} - Modularity-based community detection
+reveals natural clusters - Communities correspond to room assignments
+and dialogue types - Largest communities align with most populated rooms
+(B2, C4, R)
+\end{block}
+
+\begin{block}{B.2 Graph Construction Implementation}
+\protect\phantomsection\label{b.2-graph-construction-implementation}
+The network is constructed using \texttt{WaysNetworkAnalyzer} with three
+edge types:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ collections }\ImportTok{import}\NormalTok{ defaultdict}
+\ImportTok{import}\NormalTok{ networkx }\ImportTok{as}\NormalTok{ nx}
+\ImportTok{from}\NormalTok{ src.models }\ImportTok{import}\NormalTok{ Way}
+
+\KeywordTok{def}\NormalTok{ \_build\_ways\_network(ways: List[Way]) }\OperatorTok{{-}\textgreater{}}\NormalTok{ nx.Graph:}
+    \CommentTok{"""Build network graph from ways data.}
+\CommentTok{    }
+\CommentTok{    Edges are created based on:}
+\CommentTok{    1. Same room (weight=1.0, edge\_type=\textquotesingle{}same\_room\textquotesingle{})}
+\CommentTok{    2. Same dialogue partner (weight=0.8, edge\_type=\textquotesingle{}same\_partner\textquotesingle{})}
+\CommentTok{    3. Same dialogue type (weight=0.6, edge\_type=\textquotesingle{}same\_type\textquotesingle{})}
+\CommentTok{    """}
+\NormalTok{    G }\OperatorTok{=}\NormalTok{ nx.Graph()}
+    
+    \CommentTok{\# Add nodes with attributes}
+    \ControlFlowTok{for}\NormalTok{ way }\KeywordTok{in}\NormalTok{ ways:}
+\NormalTok{        G.add\_node(way.}\BuiltInTok{id}\NormalTok{, }
+\NormalTok{                   way\_text}\OperatorTok{=}\NormalTok{way.way,}
+\NormalTok{                   room}\OperatorTok{=}\NormalTok{way.mene,}
+\NormalTok{                   dialogue\_type}\OperatorTok{=}\NormalTok{way.dialoguetype,}
+\NormalTok{                   dialogue\_partner}\OperatorTok{=}\NormalTok{way.dialoguewith)}
+    
+    \CommentTok{\# Group ways by room}
+\NormalTok{    room\_ways }\OperatorTok{=}\NormalTok{ defaultdict(}\BuiltInTok{list}\NormalTok{)}
+    \ControlFlowTok{for}\NormalTok{ way }\KeywordTok{in}\NormalTok{ ways:}
+\NormalTok{        room\_ways[way.mene].append(way.}\BuiltInTok{id}\NormalTok{)}
+    
+    \CommentTok{\# Add room edges (highest weight)}
+    \ControlFlowTok{for}\NormalTok{ room, way\_ids }\KeywordTok{in}\NormalTok{ room\_ways.items():}
+        \ControlFlowTok{if} \BuiltInTok{len}\NormalTok{(way\_ids) }\OperatorTok{\textgreater{}} \DecValTok{1}\NormalTok{:}
+            \ControlFlowTok{for}\NormalTok{ i, way1\_id }\KeywordTok{in} \BuiltInTok{enumerate}\NormalTok{(way\_ids):}
+                \ControlFlowTok{for}\NormalTok{ way2\_id }\KeywordTok{in}\NormalTok{ way\_ids[i}\OperatorTok{+}\DecValTok{1}\NormalTok{:]:}
+\NormalTok{                    G.add\_edge(way1\_id, way2\_id, }
+\NormalTok{                              edge\_type}\OperatorTok{=}\StringTok{\textquotesingle{}same\_room\textquotesingle{}}\NormalTok{,}
+\NormalTok{                              room}\OperatorTok{=}\NormalTok{room,}
+\NormalTok{                              weight}\OperatorTok{=}\FloatTok{1.0}\NormalTok{)}
+    
+    \CommentTok{\# Add partner edges (medium weight)}
+\NormalTok{    partner\_ways }\OperatorTok{=}\NormalTok{ defaultdict(}\BuiltInTok{list}\NormalTok{)}
+    \ControlFlowTok{for}\NormalTok{ way }\KeywordTok{in}\NormalTok{ ways:}
+\NormalTok{        partner\_ways[way.dialoguewith].append(way.}\BuiltInTok{id}\NormalTok{)}
+    
+    \ControlFlowTok{for}\NormalTok{ partner, way\_ids }\KeywordTok{in}\NormalTok{ partner\_ways.items():}
+        \ControlFlowTok{if} \BuiltInTok{len}\NormalTok{(way\_ids) }\OperatorTok{\textgreater{}} \DecValTok{1}\NormalTok{:}
+            \ControlFlowTok{for}\NormalTok{ i, way1\_id }\KeywordTok{in} \BuiltInTok{enumerate}\NormalTok{(way\_ids):}
+                \ControlFlowTok{for}\NormalTok{ way2\_id }\KeywordTok{in}\NormalTok{ way\_ids[i}\OperatorTok{+}\DecValTok{1}\NormalTok{:]:}
+                    \ControlFlowTok{if} \KeywordTok{not}\NormalTok{ G.has\_edge(way1\_id, way2\_id):}
+\NormalTok{                        G.add\_edge(way1\_id, way2\_id,}
+\NormalTok{                                  edge\_type}\OperatorTok{=}\StringTok{\textquotesingle{}same\_partner\textquotesingle{}}\NormalTok{,}
+\NormalTok{                                  partner}\OperatorTok{=}\NormalTok{partner,}
+\NormalTok{                                  weight}\OperatorTok{=}\FloatTok{0.8}\NormalTok{)}
+    
+    \CommentTok{\# Add type edges (lowest weight)}
+\NormalTok{    type\_ways }\OperatorTok{=}\NormalTok{ defaultdict(}\BuiltInTok{list}\NormalTok{)}
+    \ControlFlowTok{for}\NormalTok{ way }\KeywordTok{in}\NormalTok{ ways:}
+\NormalTok{        type\_ways[way.dialoguetype].append(way.}\BuiltInTok{id}\NormalTok{)}
+    
+    \ControlFlowTok{for}\NormalTok{ dtype, way\_ids }\KeywordTok{in}\NormalTok{ type\_ways.items():}
+        \ControlFlowTok{if} \BuiltInTok{len}\NormalTok{(way\_ids) }\OperatorTok{\textgreater{}} \DecValTok{1}\NormalTok{:}
+            \ControlFlowTok{for}\NormalTok{ i, way1\_id }\KeywordTok{in} \BuiltInTok{enumerate}\NormalTok{(way\_ids):}
+                \ControlFlowTok{for}\NormalTok{ way2\_id }\KeywordTok{in}\NormalTok{ way\_ids[i}\OperatorTok{+}\DecValTok{1}\NormalTok{:]:}
+                    \ControlFlowTok{if} \KeywordTok{not}\NormalTok{ G.has\_edge(way1\_id, way2\_id):}
+\NormalTok{                        G.add\_edge(way1\_id, way2\_id,}
+\NormalTok{                                  edge\_type}\OperatorTok{=}\StringTok{\textquotesingle{}same\_type\textquotesingle{}}\NormalTok{,}
+\NormalTok{                                  dialogue\_type}\OperatorTok{=}\NormalTok{dtype,}
+\NormalTok{                                  weight}\OperatorTok{=}\FloatTok{0.6}\NormalTok{)}
+    
+    \ControlFlowTok{return}\NormalTok{ G}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{B.3 Centrality Computation}
+\protect\phantomsection\label{b.3-centrality-computation}
+Centrality metrics are computed using NetworkX functions within
+\texttt{WaysNetworkAnalyzer.compute\_centrality\_metrics()}:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{nx.degree\_centrality(G)}: Normalized degree (0-1 range)
+\item
+  \texttt{nx.betweenness\_centrality(G)}: Bridge identification
+\item
+  \texttt{nx.closeness\_centrality(G)}: Average path length
+\item
+  \texttt{nx.eigenvector\_centrality(G,\ max\_iter=1000)}: Influence
+  propagation
+\item
+  \texttt{nx.average\_clustering(G)}: Local clustering coefficient
+\end{itemize}
+
+The implementation handles edge cases (disconnected graphs, single
+nodes) and returns a \texttt{NetworkMetrics} dataclass with all computed
+values.
+\end{block}
+\end{block}
+
+\begin{block}{C. Statistical Analysis Formulas}
+\protect\phantomsection\label{c.-statistical-analysis-formulas}
+\begin{block}{C.1 Distribution Metrics}
+\protect\phantomsection\label{c.1-distribution-metrics}
+For a categorical variable with \(k\) categories:
+
+\begin{equation}\label{eq:entropy_appendix}
+H(X) = -\sum_{i=1}^{k} p_i \log_2(p_i)
+\end{equation}
+
+where \(p_i\) is the proportion in category \(i\).
+\end{block}
+
+\begin{block}{C.2 Association Measures}
+\protect\phantomsection\label{c.2-association-measures}
+For cross-tabulation analysis:
+
+\begin{equation}\label{eq:cramers_v}
+V = \sqrt{\frac{\chi^2}{n \min(r-1, c-1)}}
+\end{equation}
+
+where \(\chi^2\) is the chi-square statistic, \(n\) is sample size, and
+\(r\), \(c\) are row and column counts.
+\end{block}
+\end{block}
+
+\begin{block}{D. Visualization Specifications}
+\protect\phantomsection\label{d.-visualization-specifications}
+\begin{block}{D.1 Network Visualization Parameters}
+\protect\phantomsection\label{d.1-network-visualization-parameters}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Layout Algorithm}: Force-directed (Fruchterman-Reingold)
+\item
+  \textbf{Node Size}: Proportional to centrality score
+\item
+  \textbf{Node Color}: By dialogue type
+\item
+  \textbf{Edge Width}: By relationship strength
+\item
+  \textbf{Edge Color}: By relationship type
+\end{itemize}
+\end{block}
+
+\begin{block}{D.2 Color Schemes}
+\protect\phantomsection\label{d.2-color-schemes}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Dialogue Types}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Absolute: Blue shades
+  \item
+    Relative: Green shades
+  \item
+    Embrace God: Purple shades
+  \end{itemize}
+\item
+  \textbf{Rooms}: Sequential color scheme for 24 rooms
+\end{itemize}
+\end{block}
+\end{block}
+
+\begin{block}{E. Data Processing Pipeline}
+\protect\phantomsection\label{e.-data-processing-pipeline}
+\begin{block}{E.1 Database Initialization}
+\protect\phantomsection\label{e.1-database-initialization}
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ src.database }\ImportTok{import}\NormalTok{ WaysDatabase, initialize\_database}
+
+\KeywordTok{def}\NormalTok{ setup\_ways\_database(mysql\_dump\_path: }\BuiltInTok{str} \OperatorTok{=} \VariableTok{None}\NormalTok{, }
+\NormalTok{                        sqlite\_path: }\BuiltInTok{str} \OperatorTok{=} \StringTok{"project/db/ways.db"}\NormalTok{) }\OperatorTok{{-}\textgreater{}}\NormalTok{ WaysDatabase:}
+    \CommentTok{"""Initialize SQLite database from MySQL dump or existing database.}
+\CommentTok{    }
+\CommentTok{    Args:}
+\CommentTok{        mysql\_dump\_path: Path to MySQL dump file (optional)}
+\CommentTok{        sqlite\_path: Path to SQLite database file}
+\CommentTok{        }
+\CommentTok{    Returns:}
+\CommentTok{        Initialized WaysDatabase instance}
+\CommentTok{    """}
+    \ControlFlowTok{if}\NormalTok{ mysql\_dump\_path:}
+        \CommentTok{\# Convert MySQL dump to SQLite}
+\NormalTok{        initialize\_database(mysql\_dump\_path, sqlite\_path)}
+    
+    \CommentTok{\# Return database connection}
+\NormalTok{    db }\OperatorTok{=}\NormalTok{ WaysDatabase(sqlite\_path)}
+    
+    \CommentTok{\# Validate database integrity}
+\NormalTok{    stats }\OperatorTok{=}\NormalTok{ db.get\_way\_statistics()}
+    \ControlFlowTok{assert}\NormalTok{ stats[}\StringTok{\textquotesingle{}total\_ways\textquotesingle{}}\NormalTok{] }\OperatorTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\StringTok{"Database must contain ways"}
+    
+    \ControlFlowTok{return}\NormalTok{ db}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{E.2 Data Access and Querying}
+\protect\phantomsection\label{e.2-data-access-and-querying}
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ src.database }\ImportTok{import}\NormalTok{ WaysDatabase}
+\ImportTok{from}\NormalTok{ src.sql\_queries }\ImportTok{import}\NormalTok{ WaysSQLQueries}
+\ImportTok{from}\NormalTok{ src.models }\ImportTok{import}\NormalTok{ Way}
+
+\KeywordTok{def}\NormalTok{ query\_ways\_data(db\_path: }\BuiltInTok{str} \OperatorTok{=} \StringTok{"project/db/ways.db"}\NormalTok{) }\OperatorTok{{-}\textgreater{}}\NormalTok{ Dict[}\BuiltInTok{str}\NormalTok{, Any]:}
+    \CommentTok{"""Query ways data using SQL queries module.}
+\CommentTok{    }
+\CommentTok{    Returns:}
+\CommentTok{        Dictionary with ways, rooms, and statistics}
+\CommentTok{    """}
+\NormalTok{    db }\OperatorTok{=}\NormalTok{ WaysDatabase(db\_path)}
+\NormalTok{    queries }\OperatorTok{=}\NormalTok{ WaysSQLQueries(db\_path)}
+    
+    \CommentTok{\# Get all ways}
+\NormalTok{    \_, ways\_data }\OperatorTok{=}\NormalTok{ queries.get\_all\_ways\_sql()}
+\NormalTok{    ways }\OperatorTok{=}\NormalTok{ [Way.from\_sqlalchemy(row) }\ControlFlowTok{for}\NormalTok{ row }\KeywordTok{in}\NormalTok{ ways\_data]}
+    
+    \CommentTok{\# Get room distribution}
+\NormalTok{    \_, room\_counts }\OperatorTok{=}\NormalTok{ queries.count\_ways\_by\_room\_sql()}
+\NormalTok{    room\_dist }\OperatorTok{=}\NormalTok{ \{room: count }\ControlFlowTok{for}\NormalTok{ room, count }\KeywordTok{in}\NormalTok{ room\_counts\}}
+    
+    \CommentTok{\# Get type distribution}
+\NormalTok{    \_, type\_counts }\OperatorTok{=}\NormalTok{ queries.count\_ways\_by\_type\_sql()}
+\NormalTok{    type\_dist }\OperatorTok{=}\NormalTok{ \{dtype: count }\ControlFlowTok{for}\NormalTok{ dtype, count }\KeywordTok{in}\NormalTok{ type\_counts\}}
+    
+    \CommentTok{\# Get cross{-}tabulation}
+\NormalTok{    \_, crosstab }\OperatorTok{=}\NormalTok{ queries.cross\_tabulate\_type\_room\_sql()}
+    
+    \ControlFlowTok{return}\NormalTok{ \{}
+        \StringTok{\textquotesingle{}ways\textquotesingle{}}\NormalTok{: ways,}
+        \StringTok{\textquotesingle{}room\_distribution\textquotesingle{}}\NormalTok{: room\_dist,}
+        \StringTok{\textquotesingle{}type\_distribution\textquotesingle{}}\NormalTok{: type\_dist,}
+        \StringTok{\textquotesingle{}crosstab\textquotesingle{}}\NormalTok{: crosstab,}
+        \StringTok{\textquotesingle{}total\_ways\textquotesingle{}}\NormalTok{: }\BuiltInTok{len}\NormalTok{(ways)}
+\NormalTok{    \}}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{E.3 Analysis Script}
+\protect\phantomsection\label{e.3-analysis-script}
+The comprehensive analysis script integrates multiple analysis modules:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{from}\NormalTok{ src.ways\_analysis }\ImportTok{import}\NormalTok{ WaysAnalyzer}
+\ImportTok{from}\NormalTok{ src.network\_analysis }\ImportTok{import}\NormalTok{ WaysNetworkAnalyzer}
+\ImportTok{from}\NormalTok{ src.database }\ImportTok{import}\NormalTok{ WaysDatabase}
+\ImportTok{from}\NormalTok{ src.sql\_queries }\ImportTok{import}\NormalTok{ WaysSQLQueries}
+
+\KeywordTok{def}\NormalTok{ analyze\_ways\_comprehensive(db\_path: }\BuiltInTok{str} \OperatorTok{=} \VariableTok{None}\NormalTok{) }\OperatorTok{{-}\textgreater{}}\NormalTok{ Dict[}\BuiltInTok{str}\NormalTok{, Any]:}
+    \CommentTok{"""Comprehensive analysis of ways database.}
+\CommentTok{    }
+\CommentTok{    Args:}
+\CommentTok{        db\_path: Optional path to SQLite database}
+\CommentTok{        }
+\CommentTok{    Returns:}
+\CommentTok{        Dictionary containing all analysis results}
+\CommentTok{    """}
+    \CommentTok{\# Initialize analyzers}
+\NormalTok{    analyzer }\OperatorTok{=}\NormalTok{ WaysAnalyzer(db\_path)}
+\NormalTok{    network\_analyzer }\OperatorTok{=}\NormalTok{ WaysNetworkAnalyzer(db\_path)}
+\NormalTok{    db }\OperatorTok{=}\NormalTok{ WaysDatabase(db\_path)}
+\NormalTok{    queries }\OperatorTok{=}\NormalTok{ WaysSQLQueries(db\_path)}
+    
+    \CommentTok{\# Distribution analysis}
+\NormalTok{    characterization }\OperatorTok{=}\NormalTok{ analyzer.characterize\_ways()}
+\NormalTok{    type\_dist }\OperatorTok{=}\NormalTok{ characterization.dialogue\_types}
+\NormalTok{    room\_dist }\OperatorTok{=}\NormalTok{ characterization.room\_distribution}
+    
+    \CommentTok{\# Network analysis}
+\NormalTok{    network }\OperatorTok{=}\NormalTok{ network\_analyzer.build\_ways\_network()}
+\NormalTok{    metrics }\OperatorTok{=}\NormalTok{ network\_analyzer.compute\_centrality\_metrics()}
+\NormalTok{    central\_ways }\OperatorTok{=}\NormalTok{ network\_analyzer.find\_central\_ways()}
+    
+    \CommentTok{\# Statistical analysis}
+\NormalTok{    \_, crosstab\_results }\OperatorTok{=}\NormalTok{ queries.cross\_tabulate\_type\_room\_sql()}
+\NormalTok{    crosstab }\OperatorTok{=}\NormalTok{ \{\}}
+    \ControlFlowTok{for}\NormalTok{ dtype, room, count }\KeywordTok{in}\NormalTok{ crosstab\_results:}
+        \ControlFlowTok{if}\NormalTok{ dtype }\KeywordTok{not} \KeywordTok{in}\NormalTok{ crosstab:}
+\NormalTok{            crosstab[dtype] }\OperatorTok{=}\NormalTok{ \{\}}
+\NormalTok{        crosstab[dtype][room] }\OperatorTok{=}\NormalTok{ count}
+    
+    \ControlFlowTok{return}\NormalTok{ \{}
+        \StringTok{\textquotesingle{}characterization\textquotesingle{}}\NormalTok{: \{}
+            \StringTok{\textquotesingle{}total\_ways\textquotesingle{}}\NormalTok{: characterization.total\_ways,}
+            \StringTok{\textquotesingle{}room\_diversity\textquotesingle{}}\NormalTok{: characterization.room\_diversity,}
+            \StringTok{\textquotesingle{}type\_diversity\textquotesingle{}}\NormalTok{: characterization.type\_diversity,}
+            \StringTok{\textquotesingle{}most\_common\_room\textquotesingle{}}\NormalTok{: characterization.most\_common\_room,}
+            \StringTok{\textquotesingle{}most\_common\_type\textquotesingle{}}\NormalTok{: characterization.most\_common\_type}
+\NormalTok{        \},}
+        \StringTok{\textquotesingle{}network\_metrics\textquotesingle{}}\NormalTok{: \{}
+            \StringTok{\textquotesingle{}node\_count\textquotesingle{}}\NormalTok{: metrics.node\_count,}
+            \StringTok{\textquotesingle{}edge\_count\textquotesingle{}}\NormalTok{: metrics.edge\_count,}
+            \StringTok{\textquotesingle{}density\textquotesingle{}}\NormalTok{: metrics.density,}
+            \StringTok{\textquotesingle{}average\_degree\textquotesingle{}}\NormalTok{: metrics.average\_degree,}
+            \StringTok{\textquotesingle{}clustering\_coefficient\textquotesingle{}}\NormalTok{: metrics.clustering\_coefficient}
+\NormalTok{        \},}
+        \StringTok{\textquotesingle{}central\_ways\textquotesingle{}}\NormalTok{: \{}
+            \StringTok{\textquotesingle{}by\_degree\textquotesingle{}}\NormalTok{: central\_ways.by\_degree[:}\DecValTok{10}\NormalTok{],}
+            \StringTok{\textquotesingle{}by\_betweenness\textquotesingle{}}\NormalTok{: central\_ways.by\_betweenness[:}\DecValTok{10}\NormalTok{]}
+\NormalTok{        \},}
+        \StringTok{\textquotesingle{}crosstab\textquotesingle{}}\NormalTok{: crosstab}
+\NormalTok{    \}}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+\end{block}
+
+\begin{block}{F. Validation Procedures}
+\protect\phantomsection\label{f.-validation-procedures}
+\begin{block}{F.1 Data Quality Checks}
+\protect\phantomsection\label{f.1-data-quality-checks}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Completeness Check}: Verify all required fields present
+\item
+  \textbf{Consistency Check}: Check for conflicting assignments
+\item
+  \textbf{Referential Integrity}: Validate foreign key relationships
+\item
+  \textbf{Encoding Check}: Verify UTF-8 encoding
+\end{enumerate}
+\end{block}
+
+\begin{block}{F.2 Analysis Validation}
+\protect\phantomsection\label{f.2-analysis-validation}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Reproducibility}: Fixed random seeds, deterministic algorithms
+\item
+  \textbf{Sensitivity}: Test with missing data, parameter variations
+\item
+  \textbf{Robustness}: Verify results stable under different conditions
+\item
+  \textbf{Cross-Validation}: Validate findings across data subsets
+\end{enumerate}
+\end{block}
+\end{block}
+
+\begin{block}{G. Computational Environment}
+\protect\phantomsection\label{g.-computational-environment}
+\begin{block}{G.1 Software Versions}
+\protect\phantomsection\label{g.1-software-versions}
+\begin{itemize}
+\tightlist
+\item
+  Python 3.10+
+\item
+  SQLite 3.x
+\item
+  NetworkX 2.x+
+\item
+  Pandas 1.x+
+\item
+  Matplotlib 3.x+
+\item
+  NumPy 1.x+
+\end{itemize}
+\end{block}
+
+\begin{block}{G.2 Hardware Requirements}
+\protect\phantomsection\label{g.2-hardware-requirements}
+\begin{itemize}
+\tightlist
+\item
+  Minimum: 4GB RAM, single core
+\item
+  Recommended: 8GB+ RAM, multi-core
+\item
+  Storage: \textasciitilde100MB for database and outputs
+\end{itemize}
+\end{block}
+\end{block}
+
+\begin{block}{H. Additional Tables and Figures}
+\protect\phantomsection\label{h.-additional-tables-and-figures}
+\begin{block}{H.1 Extended Distribution Tables}
+\protect\phantomsection\label{h.1-extended-distribution-tables}
+\begin{block}{Complete Room Distribution}
+\protect\phantomsection\label{complete-room-distribution}
+The complete distribution of all 24 rooms in the House of Knowledge:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|c|c||l|c|c|}
+\hline
+\textbf{Room} & \textbf{Count} & \textbf{\%} & \textbf{Room} & \textbf{Count} & \textbf{\%} \\
+\hline
+B2 & 23 & 11.0\% & C2 & 7 & 3.3\% \\
+C4 & 17 & 8.1\% & B4 & 7 & 3.3\% \\
+R & 16 & 7.6\% & 1 & 7 & 3.3\% \\
+32 & 13 & 6.2\% & F & 6 & 2.9\% \\
+C3 & 13 & 6.2\% & 20 & 5 & 2.4\% \\
+BB & 12 & 5.7\% & A & 4 & 1.9\% \\
+CB & 10 & 4.8\% & 30 & 4 & 1.9\% \\
+21 & 9 & 4.3\% & BC & 3 & 1.4\% \\
+B3 & 9 & 4.3\% & B & 1 & 0.5\% \\
+CC & 9 & 4.3\% & C & 1 & 0.5\% \\
+O & 9 & 4.3\% & & & \\
+T & 9 & 4.3\% & & & \\
+10 & 8 & 3.8\% & & & \\
+31 & 8 & 3.8\% & & & \\
+\hline
+\multicolumn{3}{|c||}{\textbf{Total}} & \multicolumn{3}{c|}{\textbf{210 (100\%)}} \\
+\hline
+\end{tabular}
+\caption{Complete distribution of ways across all 24 rooms}
+\label{tab:complete_room_distribution}
+\end{table}
+\end{block}
+
+\begin{block}{Complete Dialogue Type Distribution}
+\protect\phantomsection\label{complete-dialogue-type-distribution}
+The complete distribution of all 38 dialogue types (presented in two
+parts):
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|c|c||l|c|c|}
+\hline
+\textbf{Type} & \textbf{Count} & \textbf{\%} & \textbf{Type} & \textbf{Count} & \textbf{\%} \\
+\hline
+goodness & 15 & 7.1\% & my mind & 7 & 3.3\% \\
+other & 15 & 7.1\% & opposing view & 7 & 3.3\% \\
+regularity & 11 & 5.2\% & unknown & 7 & 3.3\% \\
+I & 9 & 4.3\% & conviction & 5 & 2.4\% \\
+answer & 9 & 4.3\% & interlocutor & 5 & 2.4\% \\
+knowledge & 8 & 3.8\% & my fate & 5 & 2.4\% \\
+life & 8 & 3.8\% & my knowledge & 5 & 2.4\% \\
+mind & 8 & 3.8\% & my purpose & 5 & 2.4\% \\
+God & 6 & 2.9\% & wholeness & 5 & 2.4\% \\
+divineness & 6 & 2.9\% & behavior & 4 & 1.9\% \\
+purpose & 6 & 2.9\% & capability & 4 & 1.9\% \\
+solution & 6 & 2.9\% & God's perspective & 4 & 1.9\% \\
+God's perspective & 4 & 1.9\% & inspiration & 4 & 1.9\% \\
+possibilities & 4 & 1.9\% & possibility & 4 & 1.9\% \\
+self-check & 4 & 1.9\% & structure & 4 & 1.9\% \\
+\hline
+\end{tabular}
+\caption{Dialogue type distribution (Part 1: Top 19 types)}
+\label{tab:type_distribution_part1}
+\end{table}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|c|c||l|c|c|}
+\hline
+\textbf{Type} & \textbf{Count} & \textbf{\%} & \textbf{Type} & \textbf{Count} & \textbf{\%} \\
+\hline
+conditionality & 3 & 1.4\% & invalidity & 2 & 1.0\% \\
+example & 3 & 1.4\% & misfortune & 2 & 1.0\% \\
+given & 3 & 1.4\% & phenomenon & 2 & 1.0\% \\
+impossibility & 3 & 1.4\% & depths & 1 & 0.5\% \\
+& & & infinity & 1 & 0.5\% \\
+\hline
+\multicolumn{3}{|c||}{\textbf{Total}} & \multicolumn{3}{c|}{\textbf{210 (100\%)}} \\
+\hline
+\end{tabular}
+\caption{Dialogue type distribution (Part 2: Remaining 19 types)}
+\label{tab:type_distribution_part2}
+\end{table}
+\end{block}
+
+\begin{block}{Top Cross-Tabulation Combinations}
+\protect\phantomsection\label{top-cross-tabulation-combinations}
+The most frequent dialogue type × room combinations:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|c|}
+\hline
+\textbf{Dialogue Type} & \textbf{Room} & \textbf{Count} \\
+\hline
+goodness & B2 & 3 \\
+goodness & R & 3 \\
+goodness & T & 2 \\
+I & O & 9 \\
+answer & 1 & 4 \\
+answer & 32 & 2 \\
+knowledge & CC & 8 \\
+divineness & C4 & 6 \\
+God & B2 & 5 \\
+God's perspective & R & 4 \\
+capability & B3 & 4 \\
+inspiration & B4 & 4 \\
+conviction & B3 & 5 \\
+\hline
+\end{tabular}
+\caption{Top dialogue type × room combinations (count ≥ 2)}
+\label{tab:top_crosstab}
+\end{table}
+\end{block}
+\end{block}
+
+\begin{block}{H.2 Extended Network Visualizations}
+\protect\phantomsection\label{h.2-extended-network-visualizations}
+\begin{block}{Ways Network Visualization}
+\protect\phantomsection\label{ways-network-visualization}
+Figure \ref{fig:ways_network} shows the complete network graph of 210
+ways with 1,290 edges. The visualization uses a force-directed layout
+(Fruchterman-Reingold algorithm) with: - \textbf{Node colors}: Coded by
+dialogue type (38 distinct types) - \textbf{Node sizes}: Proportional to
+degree centrality - \textbf{Edge types}: Three relationship types (same
+room: weight 1.0, same partner: weight 0.8, same type: weight 0.6) -
+\textbf{Layout}: Optimized for visual clarity with community clustering
+visible
+
+The network exhibits high clustering (coefficient: 0.886) indicating
+strong room-based communities. The largest connected component contains
+the majority of ways, with smaller isolated components representing
+specialized dialogue patterns.
+\end{block}
+
+\begin{block}{Room Hierarchy Visualization}
+\protect\phantomsection\label{room-hierarchy-visualization}
+Figure \ref{fig:room_hierarchy} presents a hierarchical bar chart
+showing the distribution of ways across all 24 rooms. The visualization
+organizes rooms by their position in the House of Knowledge framework,
+revealing: - \textbf{Most populated rooms}: B2 (23 ways), C4 (17 ways),
+R (16 ways) - \textbf{Framework structure}: Clear patterns in believing
+(B-series) and caring (C-series) hierarchies - \textbf{Relative learning
+rooms}: R (Reflecting), O (Obeying), T (Taking a Stand) show balanced
+distributions
+\end{block}
+
+\begin{block}{Framework Treemap}
+\protect\phantomsection\label{framework-treemap}
+Figure \ref{fig:framework_treemap} provides a treemap visualization of
+the framework structure, where: - \textbf{Area}: Proportional to number
+of ways in each room - \textbf{Color}: Indicates framework category
+(believing, caring, relative learning) - \textbf{Hierarchy}: Shows
+nested relationships within the House of Knowledge
+
+This visualization highlights the structural organization of the
+framework and the relative emphasis on different aspects of knowledge
+acquisition.
+\end{block}
+\end{block}
+
+\begin{block}{H.3 Extended Statistical Plots}
+\protect\phantomsection\label{h.3-extended-statistical-plots}
+\begin{block}{Dialogue Type Distribution}
+\protect\phantomsection\label{dialogue-type-distribution}
+Figure \ref{fig:type_distribution} displays a bar chart of all 38
+dialogue types ranked by frequency. The visualization shows: -
+\textbf{Top types}: ``goodness'' and ``other'' (15 each, 7.1\%),
+``regularity'' (11, 5.2\%) - \textbf{Distribution pattern}: Long tail
+with many types having 1-4 occurrences - \textbf{Balance}: Relatively
+even distribution across types, indicating diverse epistemological
+approaches
+\end{block}
+
+\begin{block}{Type × Room Heatmap}
+\protect\phantomsection\label{type-room-heatmap}
+Figure \ref{fig:type_room_heatmap} presents a heatmap of the
+cross-tabulation between dialogue types (rows) and rooms (columns). The
+visualization reveals: - \textbf{Hotspots}: Strong associations between
+specific types and rooms (e.g., ``I'' × ``O'', ``knowledge'' × ``CC'') -
+\textbf{Sparse regions}: Many type-room combinations have zero or low
+counts - \textbf{Patterns}: Clustering of similar dialogue types in
+related rooms
+
+This heatmap provides insight into how dialogue types are distributed
+across the House of Knowledge structure.
+\end{block}
+
+\begin{block}{Dialogue Partner Word Cloud}
+\protect\phantomsection\label{dialogue-partner-word-cloud}
+Figure \ref{fig:partner_wordcloud} shows a word cloud visualization of
+dialogue partners, where: - \textbf{Font size}: Proportional to
+frequency of partnership - \textbf{196 unique partners}: Most partners
+appear only once or twice - \textbf{Top partners}: ``God's will'',
+``God's wishes'', ``answer'', ``circumstances'' (2 occurrences each)
+
+The word cloud highlights the diversity of dialogue partners and the
+personalized nature of many ways.
+\end{block}
+
+\begin{block}{Example Length Distribution}
+\protect\phantomsection\label{example-length-distribution}
+Figure \ref{fig:example_length_violin} displays a violin plot showing
+the distribution of example text lengths by dialogue type. The
+visualization shows: - \textbf{Distribution shape}: Varies by dialogue
+type, with some types having longer examples - \textbf{Average length}:
+80.2 characters across all ways - \textbf{Coverage}: All 210 ways have
+examples (100\% coverage)
+
+This plot reveals patterns in how different dialogue types are
+exemplified and documented.
+\end{block}
+\end{block}
+\end{block}
+
+\begin{block}{I. Code Availability}
+\protect\phantomsection\label{i.-code-availability}
+All code for this research is available in the project repository:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Database Module}: \texttt{project/src/database.py}
+\item
+  \textbf{Models}: \texttt{project/src/models.py}
+\item
+  \textbf{Analysis Scripts}: \texttt{project/scripts/}
+\item
+  \textbf{Tests}: \texttt{project/tests/}
+\end{itemize}
+
+The code follows the thin orchestrator pattern with business logic in
+\texttt{src/} modules and orchestration in \texttt{scripts/}.
+\end{block}
+
+\begin{block}{J. Data Availability}
+\protect\phantomsection\label{j.-data-availability}
+The source data (MySQL dump and \texttt{ways.md}) are in the public
+domain as stated in the original documentation. The converted SQLite
+database and analysis results are available upon request or through the
+project repository.
+\end{block}
+
+\begin{block}{K. Reproducibility}
+\protect\phantomsection\label{k.-reproducibility}
+To reproduce the analyses:
+
+\begin{enumerate}
+\tightlist
+\item
+  Initialize database: \texttt{python\ scripts/db\_setup.py}
+\item
+  Run analysis: \texttt{python\ scripts/analysis\_pipeline.py}
+\item
+  Generate visualizations: \texttt{python\ scripts/generate\_figures.py}
+\item
+  Build manuscript: \texttt{python\ scripts/03\_render\_pdf.py}
+\end{enumerate}
+
+All random operations use fixed seeds for reproducibility.
+\end{block}
+\end{frame}
+
+\end{document}

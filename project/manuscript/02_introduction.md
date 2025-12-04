@@ -4,6 +4,31 @@
 
 This research documents and analyzes Andrius Kulikauskas's comprehensive framework of "Ways of Figuring Things Out," a systematic collection of 210 documented ways from the database, with connections to the broader framework of 284 ways described in the source text. The work presents both a philosophical framework for understanding different approaches to knowledge and an empirical analysis of how these ways are structured, categorized, and interrelated.
 
+### Data Summary
+
+The analysis database contains comprehensive metadata for all documented ways:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Category} & \textbf{Count} \\
+\hline
+Total ways (database) & 210 \\
+Total ways (documented) & 284 \\
+Rooms in House of Knowledge & 24 \\
+Distinct dialogue types & 38 \\
+Unique dialogue partners & 196 \\
+Network nodes & 210 \\
+Network edges & 1,290 \\
+\hline
+\end{tabular}
+\caption{Summary statistics for Ways of Figuring Things Out database}
+\label{tab:data_summary}
+\end{table}
+
+The framework structure is visualized in Figure \ref{fig:room_hierarchy}, showing the distribution of ways across the 24 rooms. The network of relationships between ways is presented in Figure \ref{fig:ways_network}, revealing clusters and central connecting ways.
+
 ## The House of Knowledge Framework
 
 The Ways framework is organized around a "House of Knowledge" containing 24 rooms, each representing a different aspect of how we come to know and understand. These rooms are structured according to fundamental philosophical principles:
@@ -29,7 +54,7 @@ This work aims to:
 
 The research draws on two primary data sources:
 
-- **SQL Database**: A comprehensive MySQL database containing 212 ways with complete metadata including dialogue types, examples, room assignments (mene), God relationships (Dievas), and conversant information
+- **SQL Database**: A comprehensive SQLite database (converted from MySQL) containing 210 ways with complete metadata including dialogue types, examples, room assignments (mene), God relationships (Dievas), and conversant information
 - **Text Documentation**: Detailed markdown documentation (`ways.md`) providing philosophical context, examples, and descriptions for all 284 ways
 
 ## Methodology Overview

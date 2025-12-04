@@ -39,3 +39,5 @@ class TestCLIExecution:
         assert hasattr(cli, 'search_command')
         # Note: library_command might not exist in current implementation
         # assert hasattr(cli, 'library_command')
+
+

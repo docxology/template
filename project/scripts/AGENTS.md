@@ -57,6 +57,60 @@ The `scripts/` directory contains thin orchestrators for ways of knowing databas
 
 **Key Pattern**: Shows how to initialize the ways database using `src/database.py` methods.
 
+### generate_figures.py
+**Purpose**: Generate 7 publication-quality figures for ways analysis manuscript
+
+**src/ Methods Used**:
+- `WaysDatabase` - Database access for ways data
+- `WaysSQLQueries` - SQL queries for statistical data
+- `models.Way` - Way data structures
+- `models.Room` - Room data structures
+
+**What It Generates** (all 300 DPI PNG):
+- `output/figures/ways_network.png` - Network visualization using NetworkX
+- `output/figures/room_hierarchy.png` - Hierarchical bar chart of room distributions
+- `output/figures/type_distribution.png` - Bar chart of dialogue type frequencies
+- `output/figures/type_room_heatmap.png` - Heatmap of dialogue type × room cross-tabulation
+- `output/figures/framework_treemap.png` - Framework hierarchy visualization
+- `output/figures/partner_wordcloud.png` - Dialogue partner frequency distribution
+- `output/figures/example_length_violin.png` - Example length distribution by dialogue type
+
+**Key Pattern**: Direct data access with matplotlib/seaborn visualization, avoiding analyzer class dependencies for simpler integration.
+
+### comprehensive_analysis.py
+**Purpose**: Generate comprehensive statistical analysis with JSON/CSV exports for manuscript integration
+
+**src/ Methods Used**:
+- `WaysAnalyzer` - Main ways analysis framework
+- `WaysNetworkAnalyzer` - Network analysis with centrality metrics
+- `WaysDatabase` - Database access
+- `WaysSQLQueries` - SQL queries for data extraction
+
+**What It Generates**:
+- `output/analysis/comprehensive_stats.json` - Complete statistical summary
+- `output/analysis/room_distribution.csv` - Room distribution with percentages
+- `output/analysis/dialogue_type_distribution.csv` - Type distribution
+- `output/analysis/type_room_crosstab.csv` - Cross-tabulation matrix
+- `output/analysis/network_centrality.csv` - Network centrality metrics
+
+**Key Pattern**: Uses sophisticated network analysis from `WaysNetworkAnalyzer` for comprehensive metrics including centrality, clustering, and community detection.
+
+### collect_manuscript_data.py
+**Purpose**: Utility script for quick data inspection and debugging
+
+**src/ Methods Used**:
+- `WaysAnalyzer` - Basic characterization
+- `WaysNetworkAnalyzer` - Network metrics
+- `WaysDatabase` - Database access
+- `WaysSQLQueries` - SQL queries
+
+**What It Does**:
+- Prints key statistics to console for quick inspection
+- Useful for debugging and manual data verification
+- For comprehensive analysis with exports, use `comprehensive_analysis.py` instead
+
+**Key Pattern**: Simple console output for quick data inspection, uses same import pattern as other scripts.
+
 ## Script Structure
 
 ### Standard Template

@@ -1,0 +1,333 @@
+\contentsline {section}{\numberline {1}Abstract}{8}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{9}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Overview}{9}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Data Summary}{9}{subsubsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.2}The House of Knowledge Framework}{9}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Research Objectives}{9}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Data Sources}{10}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Methodology Overview}{10}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Key Contributions}{10}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}Manuscript Organization}{10}{subsection.2.7}%
+\contentsline {subsection}{\numberline {2.8}Philosophical Context}{11}{subsection.2.8}%
+\contentsline {subsection}{\numberline {2.9}Applications}{11}{subsection.2.9}%
+\contentsline {subsection}{\numberline {2.10}Structure of This Work}{11}{subsection.2.10}%
+\contentsline {section}{\numberline {3}Methodology}{12}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Database Structure and Conversion}{12}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Source Data}{12}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}SQLite Conversion}{12}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Implementation Modules}{12}{subsubsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.2}House of Knowledge Framework}{13}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}24-Room Structure}{13}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Room Categories}{13}{subsubsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.3}Dialogue Type Classification}{13}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Three Main Types}{13}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Dialogue Type Analysis}{14}{subsubsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.4}Network Analysis Methodology}{14}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Graph Construction}{14}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.2}Centrality Metrics}{14}{subsubsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.5}Statistical Analysis Methods}{14}{subsection.3.5}%
+\contentsline {subsubsection}{\numberline {3.5.1}Distribution Analysis}{14}{subsubsection.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.5.2}Information-Theoretic Metrics}{15}{subsubsection.3.5.2}%
+\contentsline {subsubsection}{\numberline {3.5.3}Cross-Tabulation}{15}{subsubsection.3.5.3}%
+\contentsline {subsection}{\numberline {3.6}Text Analysis}{15}{subsection.3.6}%
+\contentsline {subsubsection}{\numberline {3.6.1}Way Descriptions}{15}{subsubsection.3.6.1}%
+\contentsline {subsubsection}{\numberline {3.6.2}Philosophical Structure Analysis}{15}{subsubsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.7}Data Processing Pipeline}{16}{subsection.3.7}%
+\contentsline {subsubsection}{\numberline {3.7.1}Extraction}{16}{subsubsection.3.7.1}%
+\contentsline {subsubsection}{\numberline {3.7.2}Transformation}{16}{subsubsection.3.7.2}%
+\contentsline {subsubsection}{\numberline {3.7.3}Analysis}{16}{subsubsection.3.7.3}%
+\contentsline {subsection}{\numberline {3.8}Validation Framework}{16}{subsection.3.8}%
+\contentsline {subsubsection}{\numberline {3.8.1}Data Quality Checks}{16}{subsubsection.3.8.1}%
+\contentsline {subsubsection}{\numberline {3.8.2}Analysis Validation}{16}{subsubsection.3.8.2}%
+\contentsline {subsection}{\numberline {3.9}SQL Query Examples}{16}{subsection.3.9}%
+\contentsline {subsection}{\numberline {3.10}Implementation}{17}{subsection.3.10}%
+\contentsline {subsubsection}{\numberline {3.10.1}Core Analysis Modules}{17}{subsubsection.3.10.1}%
+\contentsline {subsubsection}{\numberline {3.10.2}Infrastructure}{17}{subsubsection.3.10.2}%
+\contentsline {subsection}{\numberline {3.11}Ethical Considerations}{18}{subsection.3.11}%
+\contentsline {section}{\numberline {4}Experimental Results}{19}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Database Overview}{19}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Data Summary}{19}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Data Completeness}{19}{subsubsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.2}Distribution Analysis}{19}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Dialogue Type Distribution}{19}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Room Distribution}{19}{subsubsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.3}Network Analysis Results}{20}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Network Structure}{20}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Central Ways}{20}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.3}Community Detection}{21}{subsubsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.4}Cross-Tabulation Analysis}{21}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}Dialogue Type × Room}{21}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}Dialogue Partner Analysis}{21}{subsubsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.5}Statistical Patterns}{22}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Room Co-occurrence}{22}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}Dialogue Type Patterns}{22}{subsubsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.6}Text Analysis Results}{22}{subsection.4.6}%
+\contentsline {subsubsection}{\numberline {4.6.1}Keyword Extraction}{22}{subsubsection.4.6.1}%
+\contentsline {subsubsection}{\numberline {4.6.2}Example Analysis}{22}{subsubsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.7}Visualization Results}{22}{subsection.4.7}%
+\contentsline {subsubsection}{\numberline {4.7.1}Network Graph}{22}{subsubsection.4.7.1}%
+\contentsline {subsubsection}{\numberline {4.7.2}Room Distribution}{22}{subsubsection.4.7.2}%
+\contentsline {subsubsection}{\numberline {4.7.3}Statistical Distributions}{23}{subsubsection.4.7.3}%
+\contentsline {subsubsection}{\numberline {4.7.4}Cross-Tabulation Heatmap}{23}{subsubsection.4.7.4}%
+\contentsline {subsubsection}{\numberline {4.7.5}Framework Structure}{24}{subsubsection.4.7.5}%
+\contentsline {subsubsection}{\numberline {4.7.6}Dialogue Partners}{24}{subsubsection.4.7.6}%
+\contentsline {subsubsection}{\numberline {4.7.7}Example Length Analysis}{24}{subsubsection.4.7.7}%
+\contentsline {subsection}{\numberline {4.8}Key Findings}{24}{subsection.4.8}%
+\contentsline {subsubsection}{\numberline {4.8.1}Structural Patterns}{24}{subsubsection.4.8.1}%
+\contentsline {subsubsection}{\numberline {4.8.2}Central Ways}{25}{subsubsection.4.8.2}%
+\contentsline {subsubsection}{\numberline {4.8.3}Room Relationships}{25}{subsubsection.4.8.3}%
+\contentsline {subsection}{\numberline {4.9}Limitations}{25}{subsection.4.9}%
+\contentsline {subsubsection}{\numberline {4.9.1}Data Completeness}{25}{subsubsection.4.9.1}%
+\contentsline {subsubsection}{\numberline {4.9.2}Analysis Scope}{25}{subsubsection.4.9.2}%
+\contentsline {subsection}{\numberline {4.10}Future Analysis Directions}{26}{subsection.4.10}%
+\contentsline {section}{\numberline {5}Discussion}{27}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Interpretation of Findings}{27}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Framework Structure}{27}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Dialogue Type Patterns}{27}{subsubsection.5.1.2}%
+\contentsline {subsubsection}{\numberline {5.1.3}Network Structure Insights}{28}{subsubsection.5.1.3}%
+\contentsline {subsection}{\numberline {5.2}Philosophical Implications}{29}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Epistemological Pluralism}{29}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Integration of Belief, Care, and Learning}{29}{subsubsection.5.2.2}%
+\contentsline {subsubsection}{\numberline {5.2.3}Dialogue and Knowledge}{30}{subsubsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.3}Practical Applications}{30}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Educational Contexts}{30}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Research Methodology}{30}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Personal Development}{30}{subsubsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.4}Limitations and Challenges}{31}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}Framework Completeness}{31}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2}Cultural Context}{31}{subsubsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {5.4.3}Measurement Challenges}{31}{subsubsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.5}Future Research Directions}{31}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}Framework Expansion}{31}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}Empirical Validation}{31}{subsubsection.5.5.2}%
+\contentsline {subsubsection}{\numberline {5.5.3}Computational Applications}{31}{subsubsection.5.5.3}%
+\contentsline {subsubsection}{\numberline {5.5.4}Interdisciplinary Integration}{31}{subsubsection.5.5.4}%
+\contentsline {subsection}{\numberline {5.6}Broader Impact}{32}{subsection.5.6}%
+\contentsline {subsubsection}{\numberline {5.6.1}Contribution to Epistemology}{32}{subsubsection.5.6.1}%
+\contentsline {subsubsection}{\numberline {5.6.2}Contribution to Education}{32}{subsubsection.5.6.2}%
+\contentsline {subsubsection}{\numberline {5.6.3}Contribution to Research}{32}{subsubsection.5.6.3}%
+\contentsline {subsection}{\numberline {5.7}Conclusion}{32}{subsection.5.7}%
+\contentsline {section}{\numberline {6}Conclusion}{33}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Summary of Contributions}{33}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Documentation and Categorization}{33}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}Empirical Analysis}{33}{subsubsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.3}Framework Understanding}{33}{subsubsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.2}Key Findings}{33}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Framework Structure}{33}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Central Ways}{34}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}Room Relationships}{34}{subsubsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.3}Broader Impact}{34}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}Contribution to Epistemology}{34}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}Contribution to Education}{34}{subsubsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.3}Contribution to Research}{34}{subsubsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.4}Practical Applications}{34}{subsection.6.4}%
+\contentsline {subsubsection}{\numberline {6.4.1}Educational Tools}{34}{subsubsection.6.4.1}%
+\contentsline {subsubsection}{\numberline {6.4.2}Research Methodology}{35}{subsubsection.6.4.2}%
+\contentsline {subsubsection}{\numberline {6.4.3}Personal Development}{35}{subsubsection.6.4.3}%
+\contentsline {subsection}{\numberline {6.5}Future Directions}{35}{subsection.6.5}%
+\contentsline {subsubsection}{\numberline {6.5.1}Framework Expansion}{35}{subsubsection.6.5.1}%
+\contentsline {subsubsection}{\numberline {6.5.2}Empirical Validation}{35}{subsubsection.6.5.2}%
+\contentsline {subsubsection}{\numberline {6.5.3}Computational Applications}{35}{subsubsection.6.5.3}%
+\contentsline {subsubsection}{\numberline {6.5.4}Interdisciplinary Integration}{35}{subsubsection.6.5.4}%
+\contentsline {subsection}{\numberline {6.6}Methodological Contributions}{36}{subsection.6.6}%
+\contentsline {subsubsection}{\numberline {6.6.1}Database-Driven Analysis}{36}{subsubsection.6.6.1}%
+\contentsline {subsubsection}{\numberline {6.6.2}Visualization Approaches}{36}{subsubsection.6.6.2}%
+\contentsline {subsubsection}{\numberline {6.6.3}Integration of Quantitative and Qualitative}{36}{subsubsection.6.6.3}%
+\contentsline {subsubsection}{\numberline {6.6.4}Implementation Modules}{36}{subsubsection.6.6.4}%
+\contentsline {subsection}{\numberline {6.7}Final Remarks}{36}{subsection.6.7}%
+\contentsline {section}{\numberline {7}Acknowledgments}{38}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Primary Source}{38}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Data Availability}{38}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Framework Development}{38}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Technical Infrastructure}{38}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Research Context}{38}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}Future Contributions}{38}{subsection.7.6}%
+\contentsline {section}{\numberline {8}Appendix}{39}{section.8}%
+\contentsline {subsection}{\numberline {8.1}A. Database Schema Details}{39}{subsection.8.1}%
+\contentsline {subsubsection}{\numberline {8.1.1}A.1 Complete Table Schemas}{39}{subsubsection.8.1.1}%
+\contentsline {paragraph}{Ways Table Schema}{39}{lstlisting.-5}%
+\contentsline {paragraph}{Rooms Table Schema}{39}{lstlisting.-6}%
+\contentsline {subsubsection}{\numberline {8.1.2}A.2 Index Definitions}{39}{subsubsection.8.1.2}%
+\contentsline {subsection}{\numberline {8.2}B. Network Analysis Algorithms}{39}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}B.1 Actual Network Metrics}{39}{subsubsection.8.2.1}%
+\contentsline {subsubsection}{\numberline {8.2.2}B.2 Graph Construction Implementation}{40}{subsubsection.8.2.2}%
+\contentsline {subsubsection}{\numberline {8.2.3}B.3 Centrality Computation}{41}{subsubsection.8.2.3}%
+\contentsline {subsection}{\numberline {8.3}C. Statistical Analysis Formulas}{41}{subsection.8.3}%
+\contentsline {subsubsection}{\numberline {8.3.1}C.1 Distribution Metrics}{41}{subsubsection.8.3.1}%
+\contentsline {subsubsection}{\numberline {8.3.2}C.2 Association Measures}{42}{subsubsection.8.3.2}%
+\contentsline {subsection}{\numberline {8.4}D. Visualization Specifications}{42}{subsection.8.4}%
+\contentsline {subsubsection}{\numberline {8.4.1}D.1 Network Visualization Parameters}{42}{subsubsection.8.4.1}%
+\contentsline {subsubsection}{\numberline {8.4.2}D.2 Color Schemes}{42}{subsubsection.8.4.2}%
+\contentsline {subsection}{\numberline {8.5}E. Data Processing Pipeline}{42}{subsection.8.5}%
+\contentsline {subsubsection}{\numberline {8.5.1}E.1 Database Initialization}{42}{subsubsection.8.5.1}%
+\contentsline {subsubsection}{\numberline {8.5.2}E.2 Data Access and Querying}{43}{subsubsection.8.5.2}%
+\contentsline {subsubsection}{\numberline {8.5.3}E.3 Analysis Script}{43}{subsubsection.8.5.3}%
+\contentsline {subsection}{\numberline {8.6}F. Validation Procedures}{45}{subsection.8.6}%
+\contentsline {subsubsection}{\numberline {8.6.1}F.1 Data Quality Checks}{45}{subsubsection.8.6.1}%
+\contentsline {subsubsection}{\numberline {8.6.2}F.2 Analysis Validation}{45}{subsubsection.8.6.2}%
+\contentsline {subsection}{\numberline {8.7}G. Computational Environment}{45}{subsection.8.7}%
+\contentsline {subsubsection}{\numberline {8.7.1}G.1 Software Versions}{45}{subsubsection.8.7.1}%
+\contentsline {subsubsection}{\numberline {8.7.2}G.2 Hardware Requirements}{45}{subsubsection.8.7.2}%
+\contentsline {subsection}{\numberline {8.8}H. Additional Tables and Figures}{45}{subsection.8.8}%
+\contentsline {subsubsection}{\numberline {8.8.1}H.1 Extended Distribution Tables}{45}{subsubsection.8.8.1}%
+\contentsline {paragraph}{Complete Room Distribution}{45}{section*.17}%
+\contentsline {paragraph}{Complete Dialogue Type Distribution}{45}{section*.19}%
+\contentsline {paragraph}{Top Cross-Tabulation Combinations}{45}{section*.22}%
+\contentsline {subsubsection}{\numberline {8.8.2}H.2 Extended Network Visualizations}{45}{subsubsection.8.8.2}%
+\contentsline {paragraph}{Ways Network Visualization}{45}{section*.24}%
+\contentsline {paragraph}{Room Hierarchy Visualization}{46}{section*.25}%
+\contentsline {paragraph}{Framework Treemap}{46}{section*.26}%
+\contentsline {subsubsection}{\numberline {8.8.3}H.3 Extended Statistical Plots}{46}{subsubsection.8.8.3}%
+\contentsline {paragraph}{Dialogue Type Distribution}{46}{section*.27}%
+\contentsline {paragraph}{Type × Room Heatmap}{46}{section*.28}%
+\contentsline {paragraph}{Dialogue Partner Word Cloud}{47}{section*.29}%
+\contentsline {paragraph}{Example Length Distribution}{47}{section*.30}%
+\contentsline {subsection}{\numberline {8.9}I. Code Availability}{48}{subsection.8.9}%
+\contentsline {subsection}{\numberline {8.10}J. Data Availability}{48}{subsection.8.10}%
+\contentsline {subsection}{\numberline {8.11}K. Reproducibility}{48}{subsection.8.11}%
+\contentsline {section}{\numberline {9}Supplemental Methods}{49}{section.9}%
+\contentsline {subsection}{\numberline {9.1}S1.1 Database Schema Details}{49}{subsection.9.1}%
+\contentsline {subsubsection}{\numberline {9.1.1}Primary Tables}{49}{subsubsection.9.1.1}%
+\contentsline {paragraph}{Ways Table (\colorbox {codebg}{\color {codefg}\ttfamily ways})}{49}{section*.31}%
+\contentsline {paragraph}{Rooms Table (\colorbox {codebg}{\color {codefg}\ttfamily rooms})}{49}{section*.32}%
+\contentsline {paragraph}{Examples Table (\colorbox {codebg}{\color {codefg}\ttfamily examples})}{49}{section*.33}%
+\contentsline {paragraph}{Questions Table (\colorbox {codebg}{\color {codefg}\ttfamily klausimai})}{49}{section*.34}%
+\contentsline {paragraph}{Question-Way Relationships (\colorbox {codebg}{\color {codefg}\ttfamily klausimobudai})}{49}{section*.35}%
+\contentsline {subsubsection}{\numberline {9.1.2}Data Types and Constraints}{50}{subsubsection.9.1.2}%
+\contentsline {subsection}{\numberline {9.2}S1.2 SQLite Conversion Process}{50}{subsection.9.2}%
+\contentsline {subsubsection}{\numberline {9.2.1}Conversion Steps}{50}{subsubsection.9.2.1}%
+\contentsline {subsubsection}{\numberline {9.2.2}Syntax Conversions}{50}{subsubsection.9.2.2}%
+\contentsline {paragraph}{Data Type Conversions}{50}{table.caption.37}%
+\contentsline {paragraph}{Index Handling}{50}{section*.38}%
+\contentsline {paragraph}{Function Call Handling}{50}{section*.39}%
+\contentsline {subsection}{\numberline {9.3}S1.3 Network Analysis Methods}{50}{subsection.9.3}%
+\contentsline {subsubsection}{\numberline {9.3.1}Graph Construction}{50}{subsubsection.9.3.1}%
+\contentsline {subsubsection}{\numberline {9.3.2}Edge Weights}{51}{subsubsection.9.3.2}%
+\contentsline {subsubsection}{\numberline {9.3.3}Centrality Metrics}{51}{subsubsection.9.3.3}%
+\contentsline {paragraph}{Degree Centrality}{51}{section*.40}%
+\contentsline {paragraph}{Betweenness Centrality}{51}{section*.41}%
+\contentsline {paragraph}{Closeness Centrality}{51}{section*.42}%
+\contentsline {subsection}{\numberline {9.4}S1.4 Statistical Analysis Methods}{51}{subsection.9.4}%
+\contentsline {subsubsection}{\numberline {9.4.1}Distribution Analysis}{51}{subsubsection.9.4.1}%
+\contentsline {paragraph}{Dialogue Type Distribution}{51}{section*.43}%
+\contentsline {paragraph}{Room Distribution}{52}{section*.44}%
+\contentsline {subsubsection}{\numberline {9.4.2}Cross-Tabulation}{52}{subsubsection.9.4.2}%
+\contentsline {subsubsection}{\numberline {9.4.3}Chi-Square Test}{52}{subsubsection.9.4.3}%
+\contentsline {subsection}{\numberline {9.5}S1.5 Text Analysis Methods}{52}{subsection.9.5}%
+\contentsline {subsubsection}{\numberline {9.5.1}Keyword Extraction}{52}{subsubsection.9.5.1}%
+\contentsline {subsubsection}{\numberline {9.5.2}Theme Extraction}{52}{subsubsection.9.5.2}%
+\contentsline {subsubsection}{\numberline {9.5.3}Example Analysis}{52}{subsubsection.9.5.3}%
+\contentsline {subsection}{\numberline {9.6}S1.6 Visualization Methods}{53}{subsection.9.6}%
+\contentsline {subsubsection}{\numberline {9.6.1}Network Visualization}{53}{subsubsection.9.6.1}%
+\contentsline {subsubsection}{\numberline {9.6.2}Hierarchical Visualization}{53}{subsubsection.9.6.2}%
+\contentsline {subsubsection}{\numberline {9.6.3}Statistical Plots}{53}{subsubsection.9.6.3}%
+\contentsline {subsection}{\numberline {9.7}S1.7 Validation Methods}{53}{subsection.9.7}%
+\contentsline {subsubsection}{\numberline {9.7.1}Data Quality Checks}{53}{subsubsection.9.7.1}%
+\contentsline {subsubsection}{\numberline {9.7.2}Analysis Validation}{53}{subsubsection.9.7.2}%
+\contentsline {subsection}{\numberline {9.8}S1.8 Implementation Details}{53}{subsection.9.8}%
+\contentsline {subsubsection}{\numberline {9.8.1}Software Stack}{53}{subsubsection.9.8.1}%
+\contentsline {subsubsection}{\numberline {9.8.2}Code Organization}{54}{subsubsection.9.8.2}%
+\contentsline {subsubsection}{\numberline {9.8.3}Performance Considerations}{54}{subsubsection.9.8.3}%
+\contentsline {subsection}{\numberline {9.9}S1.9 Complete SQL Queries}{54}{subsection.9.9}%
+\contentsline {subsubsection}{\numberline {9.9.1}S1.9.1 Basic Statistics Queries}{54}{subsubsection.9.9.1}%
+\contentsline {subsubsection}{\numberline {9.9.2}S1.9.2 Cross-Tabulation Queries}{55}{subsubsection.9.9.2}%
+\contentsline {subsubsection}{\numberline {9.9.3}S1.9.3 Network Construction Queries}{55}{subsubsection.9.9.3}%
+\contentsline {subsubsection}{\numberline {9.9.4}S1.9.4 Centrality Analysis Queries}{56}{subsubsection.9.9.4}%
+\contentsline {subsubsection}{\numberline {9.9.5}S1.9.5 Text Analysis Queries}{56}{subsubsection.9.9.5}%
+\contentsline {subsection}{\numberline {9.10}S1.10 Limitations and Assumptions}{56}{subsection.9.10}%
+\contentsline {subsubsection}{\numberline {9.10.1}Data Limitations}{56}{subsubsection.9.10.1}%
+\contentsline {subsubsection}{\numberline {9.10.2}Analysis Assumptions}{57}{subsubsection.9.10.2}%
+\contentsline {subsubsection}{\numberline {9.10.3}Methodological Limitations}{57}{subsubsection.9.10.3}%
+\contentsline {section}{\numberline {10}Supplemental Results}{58}{section.10}%
+\contentsline {subsection}{\numberline {10.1}S2.1 Detailed Room Analysis}{58}{subsection.10.1}%
+\contentsline {subsubsection}{\numberline {10.1.1}S2.1.1 Room-by-Room Distribution}{58}{subsubsection.10.1.1}%
+\contentsline {subsubsection}{\numberline {10.1.2}S2.1.2 Room Relationships}{58}{subsubsection.10.1.2}%
+\contentsline {subsection}{\numberline {10.2}S2.2 Dialogue Partner Analysis}{59}{subsection.10.2}%
+\contentsline {subsubsection}{\numberline {10.2.1}S2.2.1 Partner Frequency}{59}{subsubsection.10.2.1}%
+\contentsline {subsubsection}{\numberline {10.2.2}S2.2.2 Partner-Type Relationships}{59}{subsubsection.10.2.2}%
+\contentsline {subsection}{\numberline {10.3}S2.3 Network Community Analysis}{59}{subsection.10.3}%
+\contentsline {subsubsection}{\numberline {10.3.1}S2.3.1 Detected Communities}{59}{subsubsection.10.3.1}%
+\contentsline {subsubsection}{\numberline {10.3.2}S2.3.2 Community Characteristics}{59}{subsubsection.10.3.2}%
+\contentsline {subsection}{\numberline {10.4}S2.4 God Relationship Analysis}{59}{subsection.10.4}%
+\contentsline {subsubsection}{\numberline {10.4.1}S2.4.1 Dievas Field Distribution}{59}{subsubsection.10.4.1}%
+\contentsline {subsubsection}{\numberline {10.4.2}S2.4.2 Type-God Relationships}{60}{subsubsection.10.4.2}%
+\contentsline {subsection}{\numberline {10.5}S2.5 Example Analysis}{60}{subsection.10.5}%
+\contentsline {subsubsection}{\numberline {10.5.1}S2.5.1 Example Patterns}{60}{subsubsection.10.5.1}%
+\contentsline {subsubsection}{\numberline {10.5.2}S2.5.2 Example-Way Relationships}{60}{subsubsection.10.5.2}%
+\contentsline {subsection}{\numberline {10.6}S2.6 Question-Way Relationships}{60}{subsection.10.6}%
+\contentsline {subsubsection}{\numberline {10.6.1}S2.6.1 Question Distribution}{60}{subsubsection.10.6.1}%
+\contentsline {subsubsection}{\numberline {10.6.2}S2.6.2 Question Themes}{60}{subsubsection.10.6.2}%
+\contentsline {subsection}{\numberline {10.7}S2.7 Extended Network Metrics}{60}{subsection.10.7}%
+\contentsline {subsubsection}{\numberline {10.7.1}S2.7.1 Path Analysis}{60}{subsubsection.10.7.1}%
+\contentsline {subsubsection}{\numberline {10.7.2}S2.7.2 Clustering Analysis}{60}{subsubsection.10.7.2}%
+\contentsline {subsection}{\numberline {10.8}S2.8 Temporal Patterns (if available)}{60}{subsection.10.8}%
+\contentsline {subsection}{\numberline {10.9}S2.9 Validation Results}{60}{subsection.10.9}%
+\contentsline {subsubsection}{\numberline {10.9.1}S2.9.1 Data Quality Metrics}{60}{subsubsection.10.9.1}%
+\contentsline {subsubsection}{\numberline {10.9.2}S2.9.2 Analysis Robustness}{61}{subsubsection.10.9.2}%
+\contentsline {section}{\numberline {11}Supplemental Analysis}{62}{section.11}%
+\contentsline {subsection}{\numberline {11.1}S3.1 Theoretical Framework Extensions}{62}{subsection.11.1}%
+\contentsline {subsubsection}{\numberline {11.1.1}S3.1.1 Epistemological Foundations}{62}{subsubsection.11.1.1}%
+\contentsline {subsubsection}{\numberline {11.1.2}S3.1.2 Learning Theory Integration}{62}{subsubsection.11.1.2}%
+\contentsline {subsection}{\numberline {11.2}S3.2 Network Analysis Extensions}{62}{subsection.11.2}%
+\contentsline {subsubsection}{\numberline {11.2.1}S3.2.1 Advanced Centrality Metrics}{62}{subsubsection.11.2.1}%
+\contentsline {subsubsection}{\numberline {11.2.2}S3.2.2 Network Motifs}{62}{subsubsection.11.2.2}%
+\contentsline {subsubsection}{\numberline {11.2.3}S3.2.3 Network Resilience}{62}{subsubsection.11.2.3}%
+\contentsline {subsection}{\numberline {11.3}S3.3 Statistical Model Extensions}{62}{subsection.11.3}%
+\contentsline {subsubsection}{\numberline {11.3.1}S3.3.1 Multivariate Analysis}{62}{subsubsection.11.3.1}%
+\contentsline {subsubsection}{\numberline {11.3.2}S3.3.2 Predictive Models}{63}{subsubsection.11.3.2}%
+\contentsline {subsection}{\numberline {11.4}S3.4 Text Analysis Extensions}{63}{subsection.11.4}%
+\contentsline {subsubsection}{\numberline {11.4.1}S3.4.1 Natural Language Processing}{63}{subsubsection.11.4.1}%
+\contentsline {subsubsection}{\numberline {11.4.2}S3.4.2 Cross-Language Analysis}{63}{subsubsection.11.4.2}%
+\contentsline {subsection}{\numberline {11.5}S3.5 Comparative Analysis}{63}{subsection.11.5}%
+\contentsline {subsubsection}{\numberline {11.5.1}S3.5.1 Framework Comparison}{63}{subsubsection.11.5.1}%
+\contentsline {subsubsection}{\numberline {11.5.2}S3.5.2 Domain-Specific Analysis}{63}{subsubsection.11.5.2}%
+\contentsline {subsection}{\numberline {11.6}S3.6 Computational Complexity}{63}{subsection.11.6}%
+\contentsline {subsubsection}{\numberline {11.6.1}S3.6.1 Analysis Complexity}{63}{subsubsection.11.6.1}%
+\contentsline {subsubsection}{\numberline {11.6.2}S3.6.2 Scalability}{63}{subsubsection.11.6.2}%
+\contentsline {subsection}{\numberline {11.7}S3.7 Validation and Robustness}{64}{subsection.11.7}%
+\contentsline {subsubsection}{\numberline {11.7.1}S3.7.1 Cross-Validation}{64}{subsubsection.11.7.1}%
+\contentsline {subsubsection}{\numberline {11.7.2}S3.7.2 Sensitivity Analysis}{64}{subsubsection.11.7.2}%
+\contentsline {subsection}{\numberline {11.8}S3.8 Limitations and Assumptions}{64}{subsection.11.8}%
+\contentsline {subsubsection}{\numberline {11.8.1}S3.8.1 Methodological Limitations}{64}{subsubsection.11.8.1}%
+\contentsline {subsubsection}{\numberline {11.8.2}S3.8.2 Data Limitations}{64}{subsubsection.11.8.2}%
+\contentsline {subsection}{\numberline {11.9}S3.9 Future Analytical Directions}{64}{subsection.11.9}%
+\contentsline {subsubsection}{\numberline {11.9.1}S3.9.1 Advanced Network Analysis}{64}{subsubsection.11.9.1}%
+\contentsline {subsubsection}{\numberline {11.9.2}S3.9.2 Machine Learning Applications}{64}{subsubsection.11.9.2}%
+\contentsline {subsubsection}{\numberline {11.9.3}S3.9.3 Interdisciplinary Integration}{64}{subsubsection.11.9.3}%
+\contentsline {section}{\numberline {12}Supplemental Applications}{65}{section.12}%
+\contentsline {subsection}{\numberline {12.1}S4.1 Educational Applications}{65}{subsection.12.1}%
+\contentsline {subsubsection}{\numberline {12.1.1}S4.1.1 Curriculum Design}{65}{subsubsection.12.1.1}%
+\contentsline {subsubsection}{\numberline {12.1.2}S4.1.2 Teaching Methods}{65}{subsubsection.12.1.2}%
+\contentsline {subsubsection}{\numberline {12.1.3}S4.1.3 Learning Support}{65}{subsubsection.12.1.3}%
+\contentsline {subsection}{\numberline {12.2}S4.2 Research Applications}{65}{subsection.12.2}%
+\contentsline {subsubsection}{\numberline {12.2.1}S4.2.1 Method Selection}{65}{subsubsection.12.2.1}%
+\contentsline {subsubsection}{\numberline {12.2.2}S4.2.2 Research Design}{65}{subsubsection.12.2.2}%
+\contentsline {subsubsection}{\numberline {12.2.3}S4.2.3 Knowledge Management}{66}{subsubsection.12.2.3}%
+\contentsline {subsection}{\numberline {12.3}S4.3 Personal Development Applications}{66}{subsection.12.3}%
+\contentsline {subsubsection}{\numberline {12.3.1}S4.3.1 Self-Understanding}{66}{subsubsection.12.3.1}%
+\contentsline {subsubsection}{\numberline {12.3.2}S4.3.2 Skill Development}{66}{subsubsection.12.3.2}%
+\contentsline {subsubsection}{\numberline {12.3.3}S4.3.3 Decision-Making}{66}{subsubsection.12.3.3}%
+\contentsline {subsection}{\numberline {12.4}S4.4 Interdisciplinary Applications}{66}{subsection.12.4}%
+\contentsline {subsubsection}{\numberline {12.4.1}S4.4.1 Science and Philosophy}{66}{subsubsection.12.4.1}%
+\contentsline {subsubsection}{\numberline {12.4.2}S4.4.2 Arts and Humanities}{66}{subsubsection.12.4.2}%
+\contentsline {subsubsection}{\numberline {12.4.3}S4.4.3 Social Sciences}{67}{subsubsection.12.4.3}%
+\contentsline {subsection}{\numberline {12.5}S4.5 Digital Applications}{67}{subsection.12.5}%
+\contentsline {subsubsection}{\numberline {12.5.1}S4.5.1 Educational Technology}{67}{subsubsection.12.5.1}%
+\contentsline {subsubsection}{\numberline {12.5.2}S4.5.2 Knowledge Systems}{67}{subsubsection.12.5.2}%
+\contentsline {subsection}{\numberline {12.6}S4.6 Organizational Applications}{67}{subsection.12.6}%
+\contentsline {subsubsection}{\numberline {12.6.1}S4.6.1 Knowledge Management}{67}{subsubsection.12.6.1}%
+\contentsline {subsubsection}{\numberline {12.6.2}S4.6.2 Innovation}{67}{subsubsection.12.6.2}%
+\contentsline {subsection}{\numberline {12.7}S4.7 Community Applications}{67}{subsection.12.7}%
+\contentsline {subsubsection}{\numberline {12.7.1}S4.7.1 Community Learning}{67}{subsubsection.12.7.1}%
+\contentsline {subsubsection}{\numberline {12.7.2}S4.7.2 Cultural Understanding}{67}{subsubsection.12.7.2}%
+\contentsline {subsection}{\numberline {12.8}S4.8 Future Application Directions}{67}{subsection.12.8}%
+\contentsline {subsubsection}{\numberline {12.8.1}S4.8.1 Emerging Contexts}{67}{subsubsection.12.8.1}%
+\contentsline {subsubsection}{\numberline {12.8.2}S4.8.2 Technology Integration}{67}{subsubsection.12.8.2}%
+\contentsline {subsubsection}{\numberline {12.8.3}S4.8.3 Research Directions}{68}{subsubsection.12.8.3}%
+\contentsline {subsection}{\numberline {12.9}S4.9 Implementation Considerations}{68}{subsection.12.9}%
+\contentsline {subsubsection}{\numberline {12.9.1}S4.9.1 Practical Challenges}{68}{subsubsection.12.9.1}%
+\contentsline {subsubsection}{\numberline {12.9.2}S4.9.2 Best Practices}{68}{subsubsection.12.9.2}%
+\contentsline {subsubsection}{\numberline {12.9.3}S4.9.3 Support Systems}{68}{subsubsection.12.9.3}%
+\contentsline {section}{\numberline {13}API Symbols Glossary}{69}{section.13}%
+\contentsline {subsubsection}{\numberline {13.0.1}Ways-Specific Analysis Modules}{72}{subsubsection.13.0.1}%
+\contentsline {section}{\numberline {14}References}{74}{section.14}%

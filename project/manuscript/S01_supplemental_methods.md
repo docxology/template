@@ -141,7 +141,7 @@ Edges can be weighted based on:
 
 #### Degree Centrality
 
-\begin{equation}\label{eq:degree_centrality}
+\begin{equation}\label{eq:degree_centrality_supplemental}
 C_D(v) = \frac{\deg(v)}{|V| - 1}
 \end{equation}
 
@@ -149,7 +149,7 @@ where $\deg(v)$ is the degree (number of connections) of node $v$.
 
 #### Betweenness Centrality
 
-\begin{equation}\label{eq:betweenness_centrality}
+\begin{equation}\label{eq:betweenness_centrality_supplemental}
 C_B(v) = \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigma_{st}}
 \end{equation}
 
@@ -305,7 +305,136 @@ Following the thin orchestrator pattern:
 - **Batch Processing**: Process large datasets in batches
 - **Memory Management**: Use generators for large data streams
 
-## S1.9 Limitations and Assumptions
+## S1.9 Complete SQL Queries
+
+This section provides the complete SQL queries used for key analyses in the research.
+
+### S1.9.1 Basic Statistics Queries
+
+**Total ways count:**
+```sql
+SELECT COUNT(*) as total_ways FROM ways;
+```
+
+**Room distribution:**
+```sql
+SELECT mene, COUNT(*) as count
+FROM ways
+WHERE mene != ''
+GROUP BY mene
+ORDER BY count DESC;
+```
+
+**Dialogue type distribution:**
+```sql
+SELECT dialoguetype, COUNT(*) as count
+FROM ways
+GROUP BY dialoguetype
+ORDER BY count DESC;
+```
+
+**Dialogue partner distribution:**
+```sql
+SELECT dialoguewith, COUNT(*) as count
+FROM ways
+WHERE dialoguewith != ''
+GROUP BY dialoguewith
+ORDER BY count DESC;
+```
+
+### S1.9.2 Cross-Tabulation Queries
+
+**Type × Room cross-tabulation:**
+```sql
+SELECT dialoguetype, mene, COUNT(*) as count
+FROM ways
+WHERE mene != '' AND dialoguetype != ''
+GROUP BY dialoguetype, mene
+ORDER BY count DESC;
+```
+
+**Type × Partner cross-tabulation:**
+```sql
+SELECT dialoguetype, dialoguewith, COUNT(*) as count
+FROM ways
+WHERE dialoguewith != '' AND dialoguetype != ''
+GROUP BY dialoguetype, dialoguewith
+ORDER BY count DESC;
+```
+
+### S1.9.3 Network Construction Queries
+
+**Room-based edges:**
+```sql
+SELECT w1.ID as way1_id, w2.ID as way2_id, w1.mene as room
+FROM ways w1
+JOIN ways w2 ON w1.mene = w2.mene
+WHERE w1.ID < w2.ID AND w1.mene != '';
+```
+
+**Partner-based edges:**
+```sql
+SELECT w1.ID as way1_id, w2.ID as way2_id, w1.dialoguewith as partner
+FROM ways w1
+JOIN ways w2 ON w1.dialoguewith = w2.dialoguewith
+WHERE w1.ID < w2.ID AND w1.dialoguewith != '';
+```
+
+**Type-based edges:**
+```sql
+SELECT w1.ID as way1_id, w2.ID as way2_id, w1.dialoguetype as type
+FROM ways w1
+JOIN ways w2 ON w1.dialoguetype = w2.dialoguetype
+WHERE w1.ID < w2.ID AND w1.dialoguetype != '';
+```
+
+### S1.9.4 Centrality Analysis Queries
+
+**Degree centrality calculation:**
+```sql
+SELECT way_id, COUNT(*) as degree
+FROM (
+    SELECT w1.ID as way_id, w2.ID as connected_way
+    FROM ways w1
+    JOIN ways w2 ON w1.mene = w2.mene
+    WHERE w1.ID != w2.ID AND w1.mene != ''
+    UNION
+    SELECT w1.ID as way_id, w2.ID as connected_way
+    FROM ways w1
+    JOIN ways w2 ON w1.dialoguewith = w2.dialoguewith
+    WHERE w1.ID != w2.ID AND w1.dialoguewith != ''
+    UNION
+    SELECT w1.ID as way_id, w2.ID as connected_way
+    FROM ways w1
+    JOIN ways w2 ON w1.dialoguetype = w2.dialoguetype
+    WHERE w1.ID != w2.ID AND w1.dialoguetype != ''
+)
+GROUP BY way_id
+ORDER BY degree DESC;
+```
+
+### S1.9.5 Text Analysis Queries
+
+**Ways with examples:**
+```sql
+SELECT ID, way, LENGTH(examples) as example_length, examples
+FROM ways
+WHERE examples != '' AND LENGTH(examples) > 0
+ORDER BY example_length DESC;
+```
+
+**Average example length by dialogue type:**
+```sql
+SELECT dialoguetype, 
+       AVG(LENGTH(examples)) as avg_length,
+       COUNT(*) as count
+FROM ways
+WHERE examples != '' AND dialoguetype != ''
+GROUP BY dialoguetype
+ORDER BY avg_length DESC;
+```
+
+## S1.10 Limitations and Assumptions
 
 ### Data Limitations
 

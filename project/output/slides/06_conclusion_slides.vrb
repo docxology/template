@@ -1,0 +1,71 @@
+\frametitle{Methodological Contributions}
+\protect\phantomsection\label{methodological-contributions}
+\begin{block}{Database-Driven Analysis}
+\protect\phantomsection\label{database-driven-analysis}
+This work demonstrates:
+
+\begin{itemize}
+\tightlist
+\item
+  How philosophical frameworks can be systematically documented in
+  databases
+\item
+  The value of quantitative analysis for understanding qualitative
+  frameworks
+\item
+  How network analysis reveals structure in knowledge systems
+\item
+  The integration of database analysis with text analysis
+\end{itemize}
+\end{block}
+
+\begin{block}{Visualization Approaches}
+\protect\phantomsection\label{visualization-approaches}
+The visualization work shows:
+
+\begin{itemize}
+\tightlist
+\item
+  How network graphs reveal structure in way relationships
+\item
+  How hierarchical visualizations illustrate the House of Knowledge
+\item
+  How statistical plots communicate distribution patterns
+\item
+  How multiple visualization types complement each other
+\end{itemize}
+\end{block}
+
+\begin{block}{Integration of Quantitative and Qualitative}
+\protect\phantomsection\label{integration-of-quantitative-and-qualitative}
+The work demonstrates:
+
+\begin{itemize}
+\tightlist
+\item
+  How quantitative analysis complements qualitative understanding
+\item
+  The value of systematic documentation for philosophical frameworks
+\item
+  How data-driven insights enhance philosophical interpretation
+\item
+  The integration of empirical analysis with philosophical analysis
+\end{itemize}
+\end{block}
+
+\begin{block}{Implementation Modules}
+\protect\phantomsection\label{implementation-modules}
+The research implements a comprehensive software framework for ways
+analysis:
+
+\textbf{Database Layer}: \texttt{database.py}, \texttt{sql\_queries.py},
+\texttt{models.py} - ORM models and query interfaces \textbf{Analysis
+Layer}: \texttt{ways\_analysis.py}, \texttt{network\_analysis.py},
+\texttt{house\_of\_knowledge.py} - Specialized analysis modules
+\textbf{Statistics Layer}: \texttt{statistics.py}, \texttt{metrics.py} -
+Quantitative analysis functions \textbf{Supporting Modules}: Data
+processing, visualization, and reporting utilities
+
+All modules follow the thin orchestrator pattern with business logic in
+\texttt{src/} and orchestration in \texttt{scripts/}.
+\end{block}

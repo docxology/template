@@ -44,12 +44,24 @@ python3 scripts/03_render_pdf.py
 ## Features
 
 - **Ways of knowing analysis** - Comprehensive analysis of Andrius Kulikauskas's philosophical framework
-- **Database-driven** - SQLAlchemy ORM with SQLite backend for ways data
+- **Database-driven** - SQLAlchemy ORM with SQLite backend for 210 ways with complete metadata
+- **Statistical analysis** - Complete statistical summaries, cross-tabulations, and information-theoretic metrics
+- **Network analysis** - Graph-based analysis with 1,290 edges (clustering coefficient 0.886) connecting 210 ways across 24 rooms
+- **Visualization suite** - 7 publication-quality figures including network graphs, heatmaps, and distributions
 - **Comprehensive test coverage** - All ways analysis code tested with real database data (70% minimum)
 - **Modular design** - Clean separation between database, analysis, and presentation layers
 - **Reproducible** - Deterministic analysis with version-controlled database schema
 - **Documented** - Comprehensive documentation and docstrings for ways analysis
 - **Portable** - Complete ways research project in one folder, copy to use elsewhere
+
+## Data Summary
+
+The analysis database contains:
+- **210 ways** with complete metadata
+- **24 rooms** in the House of Knowledge framework
+- **38 distinct dialogue types** (most common: "goodness" and "other" with 15 each)
+- **196 unique dialogue partners**
+- **1,290 network edges** (clustering coefficient 0.886) connecting ways through shared characteristics
 
 ## Project Layout
 
@@ -75,9 +87,16 @@ Test suite with comprehensive coverage of ways analysis modules (70% minimum).
 ### scripts/
 Thin orchestrators for ways database setup and analysis.
 
-- Import from src/
-- Initialize ways database
-- Orchestrate ways analysis workflows
+- `db_setup.py` - Database initialization and setup
+- `generate_figures.py` - Generates 7 publication-quality visualizations:
+  - Network graph of ways relationships
+  - Room hierarchy visualization
+  - Dialogue type distribution
+  - Type × Room heatmap
+  - Framework treemap
+  - Dialogue partner word cloud
+  - Example length violin plots
+- `comprehensive_analysis.py` - Complete statistical analysis with JSON/CSV exports
 
 ### manuscript/
 Ways of knowing research manuscript in Markdown format.

@@ -6,24 +6,19 @@ The systematic analysis of Andrius Kulikauskas's Ways of Figuring Things Out fra
 
 ### Framework Structure
 
-The 24-room House of Knowledge provides a comprehensive organizational structure for understanding different ways of figuring things out. The distribution of ways across rooms reveals that the framework is not uniform—some rooms contain more ways than others, reflecting the emphasis on certain aspects of knowledge acquisition. This non-uniformity suggests that some aspects of knowledge (represented by certain rooms) are more amenable to multiple approaches, while others may have fewer distinct ways.
+The 24-room House of Knowledge provides a comprehensive organizational structure for understanding different ways of figuring things out. The distribution of ways across rooms reveals significant non-uniformity: the B2 room (Believing in Believing) contains 23 ways (11.0\%), followed by C4 (Caring about Caring about Caring about Caring) with 17 ways (8.1\%), and R (Reflecting) with 16 ways (7.6\%). This concentration suggests that certain aspects of knowledge—particularly the recursive structures of believing and caring, and the reflective learning process—are more amenable to multiple approaches, while other rooms have fewer distinct ways.
 
 The three fundamental structures—Believing (1-2-3-4), Caring (1-2-3-4), and Relative Learning—provide a philosophical foundation that organizes the rooms. The ways distributed across these structures reflect different epistemological approaches, from absolute belief structures to relative learning cycles.
 
 ### Dialogue Type Patterns
 
-The distribution of ways across dialogue types (Absolute, Relative, Embrace God) reveals important patterns in the framework. The balance (or imbalance) of types provides insight into Kulikauskas's epistemological perspective. If certain types dominate, this suggests an emphasis on particular approaches to knowledge. The cross-tabulation with rooms reveals whether certain types are more common in certain rooms, indicating structural relationships.
+The distribution of ways across 38 distinct dialogue types reveals important patterns: "goodness" and "other" each account for 15 ways (7.1\% each), followed by "regularity" (11 ways, 5.2\%), "I" and "answer" (9 ways each, 4.3\%). This distribution shows no single dominant type, suggesting a balanced epistemological perspective that values multiple approaches. The cross-tabulation analysis (Figure \ref{fig:type_room_heatmap}) reveals strong associations: "goodness" appears prominently in both B2 (Believing) and C4 (Caring) rooms, indicating it bridges these fundamental frameworks. This pattern suggests that moral and ethical considerations ("goodness") are central to both believing and caring structures.
 
-The dialogue type classification also reflects different relationships to truth and knowledge:
-- **Absolute** ways reference absolute structures or truths
-- **Relative** ways engage with relative perspectives and contexts
-- **Embrace God** ways explicitly engage with the transcendent or divine
-
-The distribution across these types reflects a comprehensive approach that acknowledges multiple valid ways of engaging with knowledge.
+The dialogue type classification reflects different relationships to truth and knowledge. While the framework includes Absolute, Relative, and Embrace God perspectives, the actual distribution shows 38 distinct dialogue types, with the most common being "goodness" and "other" (15 each). This diversity suggests that the framework recognizes multiple valid ways of engaging with knowledge beyond the three primary categories. The "goodness" type's prominence in both Believing (B2) and Caring (C4) rooms indicates that ethical considerations are fundamental to both frameworks, while "other" suggests ways that don't fit neatly into standard categories, reflecting the framework's openness to diverse approaches.
 
 ### Network Structure Insights
 
-The network analysis reveals that ways are not isolated but form a connected structure. The presence of central ways—highly connected nodes—suggests that certain approaches serve as bridges or entry points to the framework. These central ways likely represent fundamental methods that connect different categories or serve as foundations for other ways.
+The network analysis reveals a highly connected structure with 1,290 edges connecting 210 ways, resulting in an average degree of 12.29 connections per way and a clustering coefficient of 0.886. The network exhibits both local clustering (ways in the same room are highly connected) and long-range connections (ways sharing dialogue types or partners across different rooms). Central ways with degree centrality of 34 (ways 84, 156, 211) serve as major hubs, connecting multiple other ways through shared rooms, dialogue types, or partners. These central ways likely represent fundamental methods that connect different categories or serve as entry points to the framework, as visualized in Figure \ref{fig:ways_network}.
 
 The clustering observed in the network indicates that ways group into communities based on shared characteristics. These clusters may correspond to:
 - Different aspects of the House of Knowledge

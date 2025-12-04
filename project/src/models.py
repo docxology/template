@@ -382,3 +382,5 @@ def example_from_sqlalchemy(sql_example) -> Example:
         rusis=sql_example.rusis,
         pavyzdziai=sql_example.pavyzdziai
     )
+
+

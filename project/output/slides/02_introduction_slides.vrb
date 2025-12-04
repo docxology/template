@@ -1,0 +1,16 @@
+\frametitle{Data Sources}
+\protect\phantomsection\label{data-sources}
+The research draws on two primary data sources:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{SQL Database}: A comprehensive SQLite database (converted from
+  MySQL) containing 210 ways with complete metadata including dialogue
+  types, examples, room assignments (mene), God relationships (Dievas),
+  and conversant information
+\item
+  \textbf{Text Documentation}: Detailed markdown documentation
+  (\texttt{ways.md}) providing philosophical context, examples, and
+  descriptions for all 284 ways
+\end{itemize}

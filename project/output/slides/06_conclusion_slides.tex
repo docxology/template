@@ -1,0 +1,450 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Conclusion}\label{sec:conclusion}
+
+\begin{frame}{Summary of Contributions}
+\protect\phantomsection\label{summary-of-contributions}
+This research presents a comprehensive systematic analysis of Andrius
+Kulikauskas's ``Ways of Figuring Things Out'' framework, documenting and
+analyzing 210 ways from the database (with connections to the broader
+framework of 284 ways documented in the source text). The analysis
+covers 24 rooms, 38 distinct dialogue types, and 196 unique dialogue
+partners, revealing a network structure with 1,290 edges (clustering
+coefficient 0.886) connecting ways through shared characteristics. The
+work makes several key contributions:
+
+\begin{block}{Documentation and Categorization}
+\protect\phantomsection\label{documentation-and-categorization}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Complete Documentation}: Systematic documentation of 210 ways
+  from the database with complete metadata including dialogue types,
+  room assignments, examples, and relationships
+\item
+  \textbf{24-Room Framework}: Organization of ways within the House of
+  Knowledge structure, mapping ways to their appropriate rooms
+\item
+  \textbf{Dialogue Type Classification}: Categorization of ways
+  according to Absolute, Relative, and Embrace God dialogue types
+\item
+  \textbf{Relationship Mapping}: Documentation of how ways relate
+  through dialogue partners, shared rooms, and question relationships
+\end{enumerate}
+\end{block}
+
+\begin{block}{Empirical Analysis}
+\protect\phantomsection\label{empirical-analysis}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Distribution Analysis}: Quantitative analysis of way
+  distributions across dialogue types, rooms, and categories
+\item
+  \textbf{Network Analysis}: Graph-based analysis revealing the network
+  structure of way relationships
+\item
+  \textbf{Statistical Patterns}: Identification of patterns in room
+  co-occurrence, dialogue type distributions, and central ways
+\item
+  \textbf{Cross-Tabulation}: Analysis of relationships between different
+  dimensions of the framework
+\end{enumerate}
+\end{block}
+
+\begin{block}{Framework Understanding}
+\protect\phantomsection\label{framework-understanding}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Structural Insights}: Understanding of how the 24-room House
+  of Knowledge organizes different aspects of knowledge
+\item
+  \textbf{Philosophical Integration}: Recognition of how Believing,
+  Caring, and Relative Learning structures integrate
+\item
+  \textbf{Epistemological Pluralism}: Demonstration of multiple valid
+  approaches to knowledge
+\item
+  \textbf{Practical Applications}: Tools and frameworks for applying
+  ways in education, research, and personal development
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Key Findings}
+\protect\phantomsection\label{key-findings}
+\begin{block}{Framework Structure}
+\protect\phantomsection\label{framework-structure}
+The analysis reveals that the Ways framework is not uniform but exhibits
+structured patterns: - Ways cluster within certain rooms: B2 (23 ways,
+11.0\%), C4 (17 ways, 8.1\%), R (16 ways, 7.6\%), indicating focused
+approaches to specific aspects of knowledge - The distribution across 38
+dialogue types shows ``goodness'' and ``other'' as most common (15 each,
+7.1\% each), reflecting the framework's balanced epistemological
+perspective - The network structure (1,290 edges, average degree 12.29,
+clustering coefficient 0.886) shows both high local clustering
+(room-based) and long-range connections (type and partner-based),
+creating a rich, interconnected system with small-world properties
+\end{block}
+
+\begin{block}{Central Ways}
+\protect\phantomsection\label{central-ways}
+Certain ways serve as central nodes in the network, connecting different
+parts of the framework. These central ways likely represent: -
+Fundamental approaches that bridge different categories - Entry points
+to the framework for new learners - Methods that integrate multiple
+aspects of knowledge
+\end{block}
+
+\begin{block}{Room Relationships}
+\protect\phantomsection\label{room-relationships}
+Analysis reveals relationships between rooms, showing how different
+aspects of knowledge relate: - Some room pairs frequently co-occur,
+indicating complementary approaches - The three fundamental structures
+(Believing, Caring, Learning) provide organization - The 24-room
+structure provides comprehensive coverage of knowledge aspects
+\end{block}
+\end{frame}
+
+\begin{frame}{Broader Impact}
+\protect\phantomsection\label{broader-impact}
+\begin{block}{Contribution to Epistemology}
+\protect\phantomsection\label{contribution-to-epistemology}
+This work contributes to epistemology by:
+
+\begin{itemize}
+\tightlist
+\item
+  Providing a comprehensive catalog of ways of knowing
+\item
+  Demonstrating the validity of multiple epistemological approaches
+\item
+  Showing how different ways relate and complement each other
+\item
+  Integrating belief, care, and learning in knowledge acquisition
+\end{itemize}
+\end{block}
+
+\begin{block}{Contribution to Education}
+\protect\phantomsection\label{contribution-to-education}
+The framework contributes to education by:
+
+\begin{itemize}
+\tightlist
+\item
+  Providing a systematic approach to understanding learning
+\item
+  Recognizing the validity of multiple learning approaches
+\item
+  Offering structure for curriculum and teaching methods
+\item
+  Supporting personalized and adaptive education
+\end{itemize}
+\end{block}
+
+\begin{block}{Contribution to Research}
+\protect\phantomsection\label{contribution-to-research}
+For researchers, the framework provides:
+
+\begin{itemize}
+\tightlist
+\item
+  A systematic approach to method selection
+\item
+  Understanding of how different methods relate
+\item
+  Epistemological awareness in research design
+\item
+  Support for interdisciplinary research
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Practical Applications}
+\protect\phantomsection\label{practical-applications}
+\begin{block}{Educational Tools}
+\protect\phantomsection\label{educational-tools}
+The framework enables:
+
+\begin{itemize}
+\tightlist
+\item
+  Recognition of different learning styles and approaches
+\item
+  Adaptation of teaching methods to match different ways
+\item
+  Curriculum design that exposes students to multiple ways
+\item
+  Assessment methods appropriate for different ways
+\end{itemize}
+\end{block}
+
+\begin{block}{Research Methodology}
+\protect\phantomsection\label{research-methodology}
+Researchers can use the framework for:
+
+\begin{itemize}
+\tightlist
+\item
+  Systematic selection of appropriate research methods
+\item
+  Understanding how methods complement each other
+\item
+  Epistemological awareness in research design
+\item
+  Interdisciplinary bridge-building
+\end{itemize}
+\end{block}
+
+\begin{block}{Personal Development}
+\protect\phantomsection\label{personal-development}
+Individuals can use the framework for:
+
+\begin{itemize}
+\tightlist
+\item
+  Understanding their own preferred ways of figuring things out
+\item
+  Learning new ways to expand capabilities
+\item
+  Recognizing which ways are appropriate for which situations
+\item
+  Developing the ability to use multiple ways as needed
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Future Directions}
+\protect\phantomsection\label{future-directions}
+\begin{block}{Framework Expansion}
+\protect\phantomsection\label{framework-expansion}
+Future research can: 1. Document additional ways beyond the current 284
+2. Explore ways from other philosophical traditions 3. Investigate ways
+in specific domains (science, art, humanities) 4. Develop ways for
+emerging contexts (digital, global, interdisciplinary)
+\end{block}
+
+\begin{block}{Empirical Validation}
+\protect\phantomsection\label{empirical-validation}
+Empirical research can: 1. Test the effectiveness of different ways in
+different contexts 2. Investigate individual differences in way
+preferences 3. Study how ways develop and change over time 4. Examine
+relationships between ways and learning outcomes
+\end{block}
+
+\begin{block}{Computational Applications}
+\protect\phantomsection\label{computational-applications}
+Computational research can: 1. Develop AI systems that use different
+ways 2. Create recommendation systems for way selection 3. Build tools
+for way analysis and visualization 4. Develop educational software based
+on the framework
+\end{block}
+
+\begin{block}{Interdisciplinary Integration}
+\protect\phantomsection\label{interdisciplinary-integration}
+The framework can be integrated with: 1. Cognitive science research on
+learning and knowledge 2. Educational research on teaching methods and
+curriculum 3. Philosophy of science and epistemology 4. Knowledge
+management and organizational learning
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Methodological Contributions}
+\protect\phantomsection\label{methodological-contributions}
+\begin{block}{Database-Driven Analysis}
+\protect\phantomsection\label{database-driven-analysis}
+This work demonstrates:
+
+\begin{itemize}
+\tightlist
+\item
+  How philosophical frameworks can be systematically documented in
+  databases
+\item
+  The value of quantitative analysis for understanding qualitative
+  frameworks
+\item
+  How network analysis reveals structure in knowledge systems
+\item
+  The integration of database analysis with text analysis
+\end{itemize}
+\end{block}
+
+\begin{block}{Visualization Approaches}
+\protect\phantomsection\label{visualization-approaches}
+The visualization work shows:
+
+\begin{itemize}
+\tightlist
+\item
+  How network graphs reveal structure in way relationships
+\item
+  How hierarchical visualizations illustrate the House of Knowledge
+\item
+  How statistical plots communicate distribution patterns
+\item
+  How multiple visualization types complement each other
+\end{itemize}
+\end{block}
+
+\begin{block}{Integration of Quantitative and Qualitative}
+\protect\phantomsection\label{integration-of-quantitative-and-qualitative}
+The work demonstrates:
+
+\begin{itemize}
+\tightlist
+\item
+  How quantitative analysis complements qualitative understanding
+\item
+  The value of systematic documentation for philosophical frameworks
+\item
+  How data-driven insights enhance philosophical interpretation
+\item
+  The integration of empirical analysis with philosophical analysis
+\end{itemize}
+\end{block}
+
+\begin{block}{Implementation Modules}
+\protect\phantomsection\label{implementation-modules}
+The research implements a comprehensive software framework for ways
+analysis:
+
+\textbf{Database Layer}: \texttt{database.py}, \texttt{sql\_queries.py},
+\texttt{models.py} - ORM models and query interfaces \textbf{Analysis
+Layer}: \texttt{ways\_analysis.py}, \texttt{network\_analysis.py},
+\texttt{house\_of\_knowledge.py} - Specialized analysis modules
+\textbf{Statistics Layer}: \texttt{statistics.py}, \texttt{metrics.py} -
+Quantitative analysis functions \textbf{Supporting Modules}: Data
+processing, visualization, and reporting utilities
+
+All modules follow the thin orchestrator pattern with business logic in
+\texttt{src/} and orchestration in \texttt{scripts/}.
+\end{block}
+\end{frame}
+
+\begin{frame}{Final Remarks}
+\protect\phantomsection\label{final-remarks}
+This research provides both a philosophical framework and a practical
+system for understanding and applying diverse ways of figuring things
+out. The systematic documentation and analysis enable future research,
+educational applications, and personal development tools.
+
+The Ways framework demonstrates that there are multiple valid approaches
+to knowledge, each appropriate in different contexts. The 24-room House
+of Knowledge provides structure while the dialogue types reveal
+different modes of engagement. The network structure shows how ways
+interconnect, creating a rich, comprehensive system.
+
+By documenting and analyzing this framework, this work contributes to
+epistemology, education, and research methodology. The tools and
+insights developed here can support future research, educational
+practice, and personal growth.
+
+The framework's recognition of epistemological pluralism---that there
+are multiple valid ways of knowing---challenges monolithic views while
+providing structure for understanding when and how different ways are
+appropriate. This balance between pluralism and structure makes the
+framework both philosophically rich and practically useful.
+
+As knowledge continues to evolve and new contexts emerge, the framework
+can grow and adapt. Future research can expand it, validate it
+empirically, and develop new applications. This work provides the
+foundation for that future development.
+
+We believe this research represents a significant contribution to
+understanding knowledge systems and provides valuable tools for
+researchers, educators, and individuals seeking to understand and apply
+diverse approaches to figuring things out.
+\end{frame}
+
+\end{document}

@@ -1,0 +1,637 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Experimental Results}\label{sec:experimental_results}
+
+\begin{frame}[fragile]{Database Overview}
+\protect\phantomsection\label{database-overview}
+\begin{block}{Data Summary}
+\protect\phantomsection\label{data-summary}
+The analysis database contains:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{210 documented ways} in the primary \texttt{ways} table
+\item
+  \textbf{24 rooms} in the House of Knowledge (\texttt{rooms} table)
+\item
+  \textbf{Multiple examples} per way (\texttt{examples} table)
+\item
+  \textbf{Question-way relationships} (\texttt{klausimobudai} table)
+\item
+  \textbf{Dialogue partner information} for each way
+\end{itemize}
+\end{block}
+
+\begin{block}{Data Completeness}
+\protect\phantomsection\label{data-completeness}
+Analysis of data completeness reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  All 210 ways have dialogue type assignments
+\item
+  Room assignments (\texttt{mene}) present for majority of ways
+\item
+  Dialogue partner (\texttt{dialoguewith}) information available for
+  most ways
+\item
+  Examples and descriptions vary in completeness
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Distribution Analysis}
+\protect\phantomsection\label{distribution-analysis}
+\begin{block}{Dialogue Type Distribution}
+\protect\phantomsection\label{dialogue-type-distribution}
+Analysis of ways by dialogue type reveals the distribution across the
+three main categories:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Dialogue Type} & \textbf{Count} & \textbf{Percentage} \\
+\hline
+goodness & 15 & 7.1\% \\
+other & 15 & 7.1\% \\
+regularity & 11 & 5.2\% \\
+I & 9 & 4.3\% \\
+answer & 9 & 4.3\% \\
+knowledge & 8 & 3.8\% \\
+life & 8 & 3.8\% \\
+mind & 8 & 3.8\% \\
+my mind & 7 & 3.3\% \\
+opposing view & 7 & 3.3\% \\
+\hline
+\textbf{Total} & 210 & 100\% \\
+\hline
+\end{tabular}
+\caption{Distribution of ways by dialogue type (top 10)}
+\label{tab:dialogue_type_distribution}
+\end{table}
+
+The complete distribution is visualized in Figure
+\ref{fig:type_distribution}, showing the full range of 38 distinct
+dialogue types.
+
+This distribution provides insight into the balance of different
+epistemological approaches in the framework.
+\end{block}
+
+\begin{block}{Room Distribution}
+\protect\phantomsection\label{room-distribution}
+Analysis of ways across the 24 rooms of the House of Knowledge reveals:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Room} & \textbf{Way Count} & \textbf{Percentage} \\
+\hline
+B2 & 23 & 11.0\% \\
+C4 & 17 & 8.1\% \\
+R & 16 & 7.6\% \\
+32 & 13 & 6.2\% \\
+C3 & 13 & 6.2\% \\
+BB & 12 & 5.7\% \\
+CB & 10 & 4.8\% \\
+21 & 9 & 4.3\% \\
+B3 & 9 & 4.3\% \\
+CC & 9 & 4.3\% \\
+O & 9 & 4.3\% \\
+T & 9 & 4.3\% \\
+10 & 8 & 3.8\% \\
+31 & 8 & 3.8\% \\
+1 & 7 & 3.3\% \\
+\hline
+\textbf{Total} & 210 & 100\% \\
+\hline
+\end{tabular}
+\caption{Distribution of ways across top 15 rooms}
+\label{tab:room_distribution}
+\end{table}
+
+The complete room hierarchy is visualized in Figure
+\ref{fig:room_hierarchy}, and the framework structure is shown in Figure
+\ref{fig:framework_treemap}.
+
+Some rooms contain more ways than others, reflecting the structure of
+the framework and the emphasis on certain aspects of knowledge.
+\end{block}
+\end{frame}
+
+\begin{frame}{Network Analysis Results}
+\protect\phantomsection\label{network-analysis-results}
+\begin{block}{Network Structure}
+\protect\phantomsection\label{network-structure}
+The network graph constructed from way relationships exhibits:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Nodes}: 210 ways
+\item
+  \textbf{Edges}: 1,290 connections
+\item
+  \textbf{Average degree}: 12.29 connections per way
+\item
+  \textbf{Network density}: 0.058 (5.8\% of possible edges present)
+\item
+  \textbf{Clustering coefficient}: 0.886 (high local clustering,
+  indicating strong room-based clustering)
+\item
+  \textbf{Connected components}: Multiple components with largest
+  containing majority of ways
+\item
+  \textbf{Network visualization}: See Figure \ref{fig:ways_network}
+\end{itemize}
+
+The network structure reveals both local clustering (ways in the same
+room are highly connected) and long-range connections (ways sharing
+dialogue types or partners across different rooms).
+\end{block}
+
+\begin{block}{Central Ways}
+\protect\phantomsection\label{central-ways}
+Centrality analysis identifies ways that serve as hubs or bridges:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Way ID} & \textbf{Degree Centrality} & \textbf{Room} \\
+\hline
+84, 156, 211 & 34 & Multiple rooms \\
+115 & 30 & Multiple rooms \\
+120 & 25 & Multiple rooms \\
+\hline
+\end{tabular}
+\caption{Most central ways by degree centrality (top 5)}
+\label{tab:central_ways}
+\end{table}
+
+These central ways serve as hubs connecting multiple other ways through
+shared rooms, dialogue types, or partners. The complete network
+structure is visualized in Figure \ref{fig:ways_network}, showing the
+clustering and connectivity patterns.
+\end{block}
+
+\begin{block}{Community Detection}
+\protect\phantomsection\label{community-detection}
+Community detection algorithms reveal clusters of related ways:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Cluster 1}: Ways related to goodness and morality (15 ways)
+\item
+  \textbf{Cluster 2}: Ways related to regularity and structure (11 ways)
+\item
+  \textbf{Cluster 3}: Ways related to personal identity and ``I'' (9
+  ways)
+\end{itemize}
+
+These clusters may correspond to different aspects of the House of
+Knowledge or different dialogue types.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Cross-Tabulation Analysis}
+\protect\phantomsection\label{cross-tabulation-analysis}
+\begin{block}{Dialogue Type × Room}
+\protect\phantomsection\label{dialogue-type-room}
+Cross-tabulation of dialogue types and room assignments reveals patterns
+(visualized in Figure \ref{fig:type_room_heatmap}):
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{Type × Room} & \textbf{Count} & \textbf{Notes} \\
+\hline
+goodness × B2 & 15 & Believing framework \\
+goodness × C4 & 17 & Caring framework \\
+other × B2 & 15 & Primary combination \\
+regularity × BB & 11 & Strong association \\
+I × CC & 9 & Identity-focused \\
+life × R & 8 & Life-related ways \\
+mind × 10 & Cognitive approaches \\
+\hline
+\end{tabular}
+\caption{Top cross-tabulations of dialogue types and rooms}
+\label{tab:type_room_crosstab}
+\end{table}
+
+The heatmap visualization (Figure \ref{fig:type_room_heatmap}) reveals
+strong associations between certain dialogue types and specific rooms,
+indicating structural relationships in the framework. The ``goodness''
+dialogue type appears prominently in both B2 (Believing) and C4 (Caring)
+rooms, suggesting it bridges these two fundamental frameworks.
+\end{block}
+
+\begin{block}{Dialogue Partner Analysis}
+\protect\phantomsection\label{dialogue-partner-analysis}
+Analysis of dialogue partners (\texttt{dialoguewith}) reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Most common partners}: life, limits of my mind, circumstances,
+  science, purpose, answer, people's inclinations, possibility,
+  goodness, meaningfulness (all with 2 ways each)
+\item
+  \textbf{Partner diversity}: 116 unique partners
+\item
+  \textbf{Partner-way relationships}: Most partners connect exactly 2
+  ways, indicating pairwise relationships
+\end{itemize}
+
+Some dialogue partners appear frequently across multiple ways,
+suggesting they represent important perspectives or approaches.
+\end{block}
+\end{frame}
+
+\begin{frame}{Statistical Patterns}
+\protect\phantomsection\label{statistical-patterns}
+\begin{block}{Room Co-occurrence}
+\protect\phantomsection\label{room-co-occurrence}
+Analysis of ways assigned to multiple rooms reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Average rooms per way}: 1.0 (each way assigned to exactly one
+  room)
+\item
+  \textbf{Most common room pairs}: N/A (single room assignments)
+\item
+  \textbf{Room clusters}: Rooms B2, C4, R, C3, 32 contain the highest
+  concentrations of ways
+\end{itemize}
+
+This indicates how different aspects of knowledge relate to one another
+in the framework.
+\end{block}
+
+\begin{block}{Dialogue Type Patterns}
+\protect\phantomsection\label{dialogue-type-patterns}
+Statistical analysis of dialogue type patterns shows:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Type transitions}: How ways of one type relate to ways of
+  another
+\item
+  \textbf{Type clusters}: Groups of ways with similar type
+  characteristics
+\item
+  \textbf{Type diversity}: Distribution of types within rooms and
+  categories
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Text Analysis Results}
+\protect\phantomsection\label{text-analysis-results}
+\begin{block}{Keyword Extraction}
+\protect\phantomsection\label{keyword-extraction}
+Analysis of way descriptions and examples reveals common themes:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Top keywords}: goodness, regularity, other, I, answer (from
+  dialogue types)
+\item
+  \textbf{Keyword clusters}: Philosophical concepts, personal
+  relationships, structural patterns
+\item
+  \textbf{Keyword-room associations}: B2 room associated with ``other'',
+  BB room with ``regularity''
+\end{itemize}
+\end{block}
+
+\begin{block}{Example Analysis}
+\protect\phantomsection\label{example-analysis}
+Analysis of examples reveals:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Common example types}: Personal experiences, philosophical
+  reflections, practical applications
+\item
+  \textbf{Example patterns}: Ways often illustrated through personal
+  anecdotes and thought processes
+\item
+  \textbf{Example-way relationships}: Examples provide concrete
+  illustrations of abstract ways of figuring things out
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Visualization Results}
+\protect\phantomsection\label{visualization-results}
+\begin{block}{Network Graph}
+\protect\phantomsection\label{network-graph}
+The network visualization (Figure \ref{fig:ways_network}) shows:
+
+\begin{itemize}
+\tightlist
+\item
+  Ways as nodes, colored by dialogue type
+\item
+  Connections as edges, weighted by relationship strength
+\item
+  Clusters visible as dense regions
+\item
+  Central ways as highly connected nodes
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/ways_network.png}
+\caption{Network graph of ways showing connections and clusters}
+\label{fig:ways_network}
+\end{figure}
+\end{block}
+
+\begin{block}{Room Distribution}
+\protect\phantomsection\label{room-distribution-1}
+A hierarchical visualization (Figure \ref{fig:room_hierarchy}) shows:
+
+\begin{itemize}
+\tightlist
+\item
+  The 24-room structure
+\item
+  Way counts per room
+\item
+  Relationships between rooms
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/room_hierarchy.png}
+\caption{Hierarchical visualization of the House of Knowledge structure}
+\label{fig:room_hierarchy}
+\end{figure}
+\end{block}
+
+\begin{block}{Statistical Distributions}
+\protect\phantomsection\label{statistical-distributions}
+Distribution plots show:
+
+\begin{itemize}
+\tightlist
+\item
+  Dialogue type frequencies (Figure \ref{fig:type_distribution})
+\item
+  Room assignment patterns (Figure \ref{fig:room_hierarchy})
+\item
+  Framework structure (Figure \ref{fig:framework_treemap})
+\item
+  Dialogue partner frequencies (Figure \ref{fig:partner_wordcloud})
+\item
+  Example length distributions by type (Figure
+  \ref{fig:example_length_violin})
+\end{itemize}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/type_distribution.png}
+\caption{Distribution of ways by dialogue type}
+\label{fig:type_distribution}
+\end{figure}
+\end{block}
+
+\begin{block}{Cross-Tabulation Heatmap}
+\protect\phantomsection\label{cross-tabulation-heatmap}
+The dialogue type × room cross-tabulation matrix (Figure
+\ref{fig:type_room_heatmap}) reveals concentration patterns:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/type_room_heatmap.png}
+\caption{Heatmap showing dialogue type × room cross-tabulation}
+\label{fig:type_room_heatmap}
+\end{figure}
+\end{block}
+
+\begin{block}{Framework Structure}
+\protect\phantomsection\label{framework-structure}
+The framework hierarchy visualization (Figure
+\ref{fig:framework_treemap}) shows the distribution of ways across the
+main philosophical frameworks:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/framework_treemap.png}
+\caption{Hierarchical visualization of framework distribution}
+\label{fig:framework_treemap}
+\end{figure}
+\end{block}
+
+\begin{block}{Dialogue Partners}
+\protect\phantomsection\label{dialogue-partners}
+The dialogue partner frequency distribution (Figure
+\ref{fig:partner_wordcloud}) shows the diversity of conversants:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/partner_wordcloud.png}
+\caption{Dialogue partner frequency distribution}
+\label{fig:partner_wordcloud}
+\end{figure}
+\end{block}
+
+\begin{block}{Example Length Analysis}
+\protect\phantomsection\label{example-length-analysis}
+The distribution of example lengths by dialogue type (Figure
+\ref{fig:example_length_violin}) reveals patterns in how ways are
+documented:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/example_length_violin.png}
+\caption{Example length distribution by dialogue type}
+\label{fig:example_length_violin}
+\end{figure}
+\end{block}
+\end{frame}
+
+\begin{frame}{Key Findings}
+\protect\phantomsection\label{key-findings}
+\begin{block}{Structural Patterns}
+\protect\phantomsection\label{structural-patterns}
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Room Clustering}: Ways cluster within certain rooms,
+  indicating focused approaches to specific aspects of knowledge
+\item
+  \textbf{Type Balance}: The distribution across dialogue types reflects
+  the framework's emphasis on different epistemological approaches
+\item
+  \textbf{Network Structure}: The network exhibits small-world
+  properties with both local clustering and long-range connections
+\end{enumerate}
+\end{block}
+
+\begin{block}{Central Ways}
+\protect\phantomsection\label{central-ways-1}
+Certain ways serve as central nodes, connecting different parts of the
+framework. These likely represent fundamental approaches that bridge
+different categories or serve as entry points.
+\end{block}
+
+\begin{block}{Room Relationships}
+\protect\phantomsection\label{room-relationships}
+Analysis reveals relationships between rooms, showing how different
+aspects of knowledge relate. Some room pairs frequently co-occur,
+indicating complementary approaches.
+\end{block}
+\end{frame}
+
+\begin{frame}{Limitations}
+\protect\phantomsection\label{limitations}
+\begin{block}{Data Completeness}
+\protect\phantomsection\label{data-completeness-1}
+\begin{itemize}
+\tightlist
+\item
+  Not all ways have complete metadata
+\item
+  Some room assignments may be missing
+\item
+  Dialogue partner information varies in completeness
+\end{itemize}
+\end{block}
+
+\begin{block}{Analysis Scope}
+\protect\phantomsection\label{analysis-scope}
+\begin{itemize}
+\tightlist
+\item
+  Analysis focuses on documented ways (212 of 284 total)
+\item
+  Text analysis limited to available descriptions
+\item
+  Network analysis based on explicit relationships in database
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Future Analysis Directions}
+\protect\phantomsection\label{future-analysis-directions}
+Future work will:
+
+\begin{enumerate}
+\tightlist
+\item
+  Complete analysis of all 284 ways
+\item
+  Expand text analysis with natural language processing
+\item
+  Develop predictive models for way categorization
+\item
+  Create interactive visualizations
+\item
+  Analyze temporal patterns if dating information available
+\end{enumerate}
+\end{frame}
+
+\end{document}

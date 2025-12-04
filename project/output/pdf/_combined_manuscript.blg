@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: _combined_manuscript.aux
+The style file: plainnat.bst
+Database file #1: references.bib
+Warning--can't use both author and editor fields in peirce1992
+You've used 21 entries,
+            2773 wiz_defined-function locations,
+            706 strings with 7132 characters,
+and the built_in function-call counts, 6532 in all, are:
+= -- 523
+> -- 232
+< -- 24
++ -- 90
+- -- 69
+* -- 377
+:= -- 1066
+add.period$ -- 65
+call.type$ -- 21
+change.case$ -- 68
+chr.to.int$ -- 21
+cite$ -- 43
+duplicate$ -- 410
+empty$ -- 681
+format.name$ -- 94
+if$ -- 1365
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 37
+newline$ -- 115
+num.names$ -- 84
+pop$ -- 227
+preamble$ -- 1
+purify$ -- 65
+quote$ -- 0
+skip$ -- 265
+stack$ -- 0
+substring$ -- 67
+swap$ -- 25
+text.length$ -- 3
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 141
+warning$ -- 1
+while$ -- 65
+width$ -- 0
+write$ -- 285
+(There was 1 warning)

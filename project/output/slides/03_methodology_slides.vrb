@@ -1,0 +1,54 @@
+\frametitle{Implementation}
+\protect\phantomsection\label{implementation}
+The analysis is implemented using several specialized Python modules:
+
+\begin{block}{Core Analysis Modules}
+\protect\phantomsection\label{core-analysis-modules}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\texttt{database.py}}: SQLAlchemy ORM with
+  \texttt{WaysDatabase} class for database access
+\item
+  \textbf{\texttt{sql\_queries.py}}: \texttt{WaysSQLQueries} class with
+  pre-built analysis queries
+\item
+  \textbf{\texttt{ways\_analysis.py}}: \texttt{WaysAnalyzer} class for
+  comprehensive ways characterization
+\item
+  \textbf{\texttt{network\_analysis.py}}: \texttt{WaysNetworkAnalyzer}
+  class for graph-based relationship analysis
+\item
+  \textbf{\texttt{house\_of\_knowledge.py}}: Framework analysis for the
+  24-room House of Knowledge
+\item
+  \textbf{\texttt{statistics.py}}: Statistical functions including
+  \texttt{analyze\_way\_distributions()},
+  \texttt{compute\_way\_correlations()}
+\item
+  \textbf{\texttt{metrics.py}}: Performance metrics including
+  \texttt{compute\_way\_coverage\_metrics()},
+  \texttt{compute\_way\_interconnectedness()}
+\end{itemize}
+\end{block}
+
+\begin{block}{Infrastructure}
+\protect\phantomsection\label{infrastructure}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python 3.10+}: Primary analysis language
+\item
+  \textbf{SQLite}: Database backend via SQLAlchemy ORM
+\item
+  \textbf{NetworkX}: Network analysis and graph algorithms
+\item
+  \textbf{Matplotlib/Seaborn}: Statistical visualization and plotting
+\item
+  \textbf{NumPy/Pandas}: Numerical computing and data manipulation
+\end{itemize}
+
+All code follows the thin orchestrator pattern, with business logic in
+\texttt{project/src/} modules and orchestration in
+\texttt{project/scripts/}.
+\end{block}

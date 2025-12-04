@@ -12,16 +12,36 @@ Detailed analysis of ways across each of the 24 rooms reveals specific patterns:
 \centering
 \begin{tabular}{|l|c|c|}
 \hline
-\textbf{Room} & \textbf{Way Count} & \textbf{Primary Dialogue Type} \\
+\textbf{Room} & \textbf{Way Count} & \textbf{Percentage} \\
 \hline
-B2 & 23 & other \\
-C4 & 17 & divineness \\
-R & 16 & life \\
-C3 & 13 & my mind \\
-32 & 13 & knowledge \\
+B2 & 23 & 11.0\% \\
+C4 & 17 & 8.1\% \\
+R & 16 & 7.6\% \\
+32 & 13 & 6.2\% \\
+C3 & 13 & 6.2\% \\
+BB & 12 & 5.7\% \\
+CB & 10 & 4.8\% \\
+21 & 9 & 4.3\% \\
+B3 & 9 & 4.3\% \\
+CC & 9 & 4.3\% \\
+O & 9 & 4.3\% \\
+T & 9 & 4.3\% \\
+10 & 8 & 3.8\% \\
+31 & 8 & 3.8\% \\
+1 & 7 & 3.3\% \\
+B4 & 7 & 3.3\% \\
+C2 & 7 & 3.3\% \\
+F & 6 & 2.9\% \\
+20 & 5 & 2.4\% \\
+30 & 4 & 1.9\% \\
+B & 3 & 1.4\% \\
+C & 3 & 1.4\% \\
+A & 2 & 1.0\% \\
+\hline
+\textbf{Total} & 210 & 100\% \\
 \hline
 \end{tabular}
-\caption{Top rooms by way count}
+\caption{Complete room distribution with all 24 rooms}
 \label{tab:room_detailed}
 \end{table}
 

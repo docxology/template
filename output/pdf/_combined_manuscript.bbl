@@ -1,0 +1,122 @@
+\begin{thebibliography}{21}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Barab{\'a}si(2002)]{barabasi2002}
+Albert-L{\'a}szl{\'o} Barab{\'a}si.
+\newblock \emph{Linked: The New Science of Networks}.
+\newblock Perseus Books, Cambridge, MA, 2002.
+
+\bibitem[Dewey(1916)]{dewey1916}
+John Dewey.
+\newblock \emph{Democracy and Education}.
+\newblock Macmillan, New York, NY, 1916.
+
+\bibitem[Dewey(1938)]{dewey1938}
+John Dewey.
+\newblock \emph{Logic: The Theory of Inquiry}.
+\newblock Henry Holt and Company, New York, NY, 1938.
+
+\bibitem[Gardner(1983)]{gardner1983}
+Howard Gardner.
+\newblock \emph{Frames of Mind: The Theory of Multiple Intelligences}.
+\newblock Basic Books, New York, NY, 1983.
+
+\bibitem[Habermas(1984)]{habermas1984}
+J{\"u}rgen Habermas.
+\newblock \emph{The Theory of Communicative Action}, volume~1.
+\newblock Beacon Press, Boston, MA, 1984.
+
+\bibitem[Knowles(1984)]{knowles1984}
+Malcolm~S. Knowles.
+\newblock \emph{The Adult Learner: The Definitive Classic in Adult Education
+  and Human Resource Development}.
+\newblock Gulf Publishing, Houston, TX, 1984.
+
+\bibitem[Kolb(1984)]{kolb1984}
+David~A. Kolb.
+\newblock \emph{Experiential Learning: Experience as the Source of Learning and
+  Development}.
+\newblock Prentice Hall, Englewood Cliffs, NJ, 1984.
+
+\bibitem[Kuhn(1962)]{kuhn1962}
+Thomas~S. Kuhn.
+\newblock \emph{The Structure of Scientific Revolutions}.
+\newblock University of Chicago Press, Chicago, IL, 1962.
+
+\bibitem[Kulikauskas(2010--2011)]{kulikauskas2010ways}
+Andrius Kulikauskas.
+\newblock Ways of figuring things out, 2010--2011.
+\newblock Data collected and organized by Andrius Kulikauskas. This collection
+  of data is all in the Public Domain.
+
+\bibitem[Lakoff and Johnson(1980)]{lakoff1980}
+George Lakoff and Mark Johnson.
+\newblock \emph{Metaphors We Live By}.
+\newblock University of Chicago Press, Chicago, IL, 1980.
+
+\bibitem[Newman(2001)]{newman2001}
+Mark E.~J. Newman.
+\newblock The structure of scientific collaboration networks.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 98\penalty0
+  (2):\penalty0 404--409, 2001.
+\newblock \doi{10.1073/pnas.98.2.404}.
+
+\bibitem[Nonaka and Takeuchi(1995)]{nonaka1995}
+Ikujiro Nonaka and Hirotaka Takeuchi.
+\newblock \emph{The Knowledge-Creating Company: How Japanese Companies Create
+  the Dynamics of Innovation}.
+\newblock Oxford University Press, New York, NY, 1995.
+
+\bibitem[{Pandoc Development Team}(2024)]{pandoc2024}
+{Pandoc Development Team}.
+\newblock Pandoc: A universal document converter, 2024.
+\newblock URL \url{https://pandoc.org/}.
+\newblock Accessed: 2024.
+
+\bibitem[Peirce(1992)]{peirce1992}
+Charles~Sanders Peirce.
+\newblock \emph{The Essential Peirce: Selected Philosophical Writings},
+  volume~1.
+\newblock Indiana University Press, Bloomington, IN, 1992.
+
+\bibitem[Piaget(1970)]{piaget1970}
+Jean Piaget.
+\newblock \emph{The Science of Education and the Psychology of the Child}.
+\newblock Orion Press, New York, NY, 1970.
+
+\bibitem[Polanyi(1966)]{polanyi1966}
+Michael Polanyi.
+\newblock \emph{The Tacit Dimension}.
+\newblock University of Chicago Press, Chicago, IL, 1966.
+
+\bibitem[Putnam(1975)]{putnam1975}
+Hilary Putnam.
+\newblock \emph{Mind, Language and Reality}, volume~2.
+\newblock Cambridge University Press, Cambridge, UK, 1975.
+
+\bibitem[Quine(1960)]{quine1960}
+Willard Van~Orman Quine.
+\newblock \emph{Word and Object}.
+\newblock MIT Press, Cambridge, MA, 1960.
+
+\bibitem[Rorty(1979)]{rorty1979}
+Richard Rorty.
+\newblock \emph{Philosophy and the Mirror of Nature}.
+\newblock Princeton University Press, Princeton, NJ, 1979.
+
+\bibitem[Vygotsky(1978)]{vygotsky1978}
+Lev~S. Vygotsky.
+\newblock \emph{Mind in Society: The Development of Higher Psychological
+  Processes}.
+\newblock Harvard University Press, Cambridge, MA, 1978.
+
+\bibitem[Watts(2003)]{watts2003}
+Duncan~J. Watts.
+\newblock \emph{Six Degrees: The Science of a Connected Age}.
+\newblock W. W. Norton \& Company, New York, NY, 2003.
+
+\end{thebibliography}
