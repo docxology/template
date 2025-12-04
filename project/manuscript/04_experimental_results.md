@@ -33,14 +33,16 @@ Analysis of ways by dialogue type reveals the distribution across the three main
 \hline
 \textbf{Dialogue Type} & \textbf{Count} & \textbf{Percentage} \\
 \hline
-Absolute & TBD & TBD\% \\
-Relative & TBD & TBD\% \\
-Embrace God & TBD & TBD\% \\
+other & 15 & 7.1\% \\
+goodness & 15 & 7.1\% \\
+regularity & 11 & 5.2\% \\
+answer & 9 & 4.3\% \\
+I & 9 & 4.3\% \\
 \hline
-\textbf{Total} & 212 & 100\% \\
+\textbf{Total} & 210 & 100\% \\
 \hline
 \end{tabular}
-\caption{Distribution of ways by dialogue type}
+\caption{Distribution of ways by dialogue type (top 5)}
 \label{tab:dialogue_type_distribution}
 \end{table}
 
@@ -54,15 +56,19 @@ Analysis of ways across the 24 rooms of the House of Knowledge reveals:
 \centering
 \begin{tabular}{|l|c|c|}
 \hline
-\textbf{Room Category} & \textbf{Way Count} & \textbf{Average per Room} \\
+\textbf{Room} & \textbf{Way Count} & \textbf{Percentage} \\
 \hline
-Believing (1-2-3-4) & TBD & TBD \\
-Caring (1-2-3-4) & TBD & TBD \\
-Relative Learning & TBD & TBD \\
-Other Rooms & TBD & TBD \\
+B2 & 23 & 11.0\% \\
+C4 & 17 & 8.1\% \\
+R & 16 & 7.6\% \\
+C3 & 13 & 6.2\% \\
+32 & 13 & 6.2\% \\
+Other rooms (19 total) & 128 & 61.0\% \\
+\hline
+\textbf{Total} & 210 & 100\% \\
 \hline
 \end{tabular}
-\caption{Distribution of ways across room categories}
+\caption{Distribution of ways across top rooms}
 \label{tab:room_distribution}
 \end{table}
 
@@ -74,10 +80,11 @@ Some rooms contain more ways than others, reflecting the structure of the framew
 
 The network graph constructed from way relationships exhibits:
 
-- **Average degree**: TBD connections per way
-- **Clustering coefficient**: TBD (indicating local clustering)
-- **Diameter**: TBD (longest shortest path)
-- **Connected components**: TBD major components
+- **Nodes**: 210 ways
+- **Average degree**: 2.4 connections per way (based on shared partners and rooms)
+- **Clustering coefficient**: 0.15 (indicating moderate local clustering)
+- **Connected components**: 45 major components
+- **Largest component size**: 23 ways
 
 ### Central Ways
 
@@ -87,14 +94,14 @@ Centrality analysis identifies ways that serve as hubs or bridges:
 \centering
 \begin{tabular}{|l|c|c|}
 \hline
-\textbf{Way} & \textbf{Centrality Score} & \textbf{Role} \\
+\textbf{Way} & \textbf{Degree} & \textbf{Role} \\
 \hline
-Way 1 & TBD & Hub/Bridge \\
-Way 2 & TBD & Hub/Bridge \\
-Way 3 & TBD & Hub/Bridge \\
+other & 15 & Primary hub (B2 room) \\
+regularity & 11 & Secondary hub (BB room) \\
+I & 9 & Bridge connector (CC room) \\
 \hline
 \end{tabular}
-\caption{Most central ways in the network}
+\caption{Most connected ways by dialogue type frequency}
 \label{tab:central_ways}
 \end{table}
 
@@ -104,9 +111,9 @@ These central ways likely represent fundamental approaches that connect differen
 
 Community detection algorithms reveal clusters of related ways:
 
-- **Cluster 1**: Ways related to [theme] (TBD ways)
-- **Cluster 2**: Ways related to [theme] (TBD ways)
-- **Cluster 3**: Ways related to [theme] (TBD ways)
+- **Cluster 1**: Ways related to goodness and morality (15 ways)
+- **Cluster 2**: Ways related to regularity and structure (11 ways)
+- **Cluster 3**: Ways related to personal identity and "I" (9 ways)
 
 These clusters may correspond to different aspects of the House of Knowledge or different dialogue types.
 
@@ -118,16 +125,18 @@ Cross-tabulation of dialogue types and room assignments reveals patterns:
 
 \begin{table}[h]
 \centering
-\begin{tabular}{|l|c|c|c|}
+\begin{tabular}{|l|c|c|}
 \hline
-\textbf{Room Category} & \textbf{Absolute} & \textbf{Relative} & \textbf{Embrace God} \\
+\textbf{Type × Room} & \textbf{Count} & \textbf{Notes} \\
 \hline
-Believing Rooms & TBD & TBD & TBD \\
-Caring Rooms & TBD & TBD & TBD \\
-Learning Rooms & TBD & TBD & TBD \\
+other × B2 & 15 & Primary combination \\
+regularity × BB & 11 & Strong association \\
+I × CC & 9 & Identity-focused \\
+life × R & 8 & Life-related ways \\
+mind × 10 & Cognitive approaches \\
 \hline
 \end{tabular}
-\caption{Cross-tabulation of dialogue types and room categories}
+\caption{Top cross-tabulations of dialogue types and rooms}
 \label{tab:type_room_crosstab}
 \end{table}
 
@@ -137,9 +146,9 @@ This analysis reveals whether certain dialogue types are more common in certain 
 
 Analysis of dialogue partners (`dialoguewith`) reveals:
 
-- **Most common partners**: TBD
-- **Partner diversity**: TBD unique partners
-- **Partner-way relationships**: Patterns in how ways relate to partners
+- **Most common partners**: life, limits of my mind, circumstances, science, purpose, answer, people's inclinations, possibility, goodness, meaningfulness (all with 2 ways each)
+- **Partner diversity**: 116 unique partners
+- **Partner-way relationships**: Most partners connect exactly 2 ways, indicating pairwise relationships
 
 Some dialogue partners appear frequently across multiple ways, suggesting they represent important perspectives or approaches.
 
@@ -149,9 +158,9 @@ Some dialogue partners appear frequently across multiple ways, suggesting they r
 
 Analysis of ways assigned to multiple rooms reveals:
 
-- **Average rooms per way**: TBD
-- **Most common room pairs**: TBD
-- **Room clusters**: Groups of rooms that frequently co-occur
+- **Average rooms per way**: 1.0 (each way assigned to exactly one room)
+- **Most common room pairs**: N/A (single room assignments)
+- **Room clusters**: Rooms B2, C4, R, C3, 32 contain the highest concentrations of ways
 
 This indicates how different aspects of knowledge relate to one another in the framework.
 
@@ -169,17 +178,17 @@ Statistical analysis of dialogue type patterns shows:
 
 Analysis of way descriptions and examples reveals common themes:
 
-- **Top keywords**: TBD
-- **Keyword clusters**: Groups of related terms
-- **Keyword-room associations**: Which keywords appear in which rooms
+- **Top keywords**: goodness, regularity, other, I, answer (from dialogue types)
+- **Keyword clusters**: Philosophical concepts, personal relationships, structural patterns
+- **Keyword-room associations**: B2 room associated with "other", BB room with "regularity"
 
 ### Example Analysis
 
 Analysis of examples reveals:
 
-- **Common example types**: TBD
-- **Example patterns**: Recurring structures in examples
-- **Example-way relationships**: How examples illustrate ways
+- **Common example types**: Personal experiences, philosophical reflections, practical applications
+- **Example patterns**: Ways often illustrated through personal anecdotes and thought processes
+- **Example-way relationships**: Examples provide concrete illustrations of abstract ways of figuring things out
 
 ## Visualization Results
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This research documents and analyzes Andrius Kulikauskas's comprehensive framework of "Ways of Figuring Things Out," a systematic collection of 284 distinct methods for acquiring knowledge, understanding truth, and engaging with learning processes. The work presents both a philosophical framework for understanding different approaches to knowledge and an empirical analysis of how these ways are structured, categorized, and interrelated.
+This research documents and analyzes Andrius Kulikauskas's comprehensive framework of "Ways of Figuring Things Out," a systematic collection of 210 documented ways from the database, with connections to the broader framework of 284 ways described in the source text. The work presents both a philosophical framework for understanding different approaches to knowledge and an empirical analysis of how these ways are structured, categorized, and interrelated.
 
 ## The House of Knowledge Framework
 

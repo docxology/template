@@ -4,7 +4,7 @@
 
 ### Source Data
 
-The research draws on a MySQL database dump containing 11 tables documenting Andrius Kulikauskas's Ways of Figuring Things Out framework. The primary data table `20100422ways` contains 212 documented ways with the following key fields:
+The research draws on a MySQL database dump containing 11 tables documenting Andrius Kulikauskas's Ways of Figuring Things Out framework. The primary data table `ways` contains 210 documented ways with the following key fields:
 
 - `way`: The name/identifier of the way
 - `dialoguewith`: The dialogue partner or conversant
@@ -25,6 +25,19 @@ For analysis and portability, the MySQL dump was converted to SQLite format. The
 4. **Data Preservation**: All data preserved during conversion with proper encoding handling
 
 The resulting SQLite database (`db/ways.db`) provides a portable, queryable format for analysis.
+
+### Implementation Modules
+
+The analysis is implemented using several specialized modules in `project/src/`:
+
+- **`database.py`**: SQLAlchemy ORM models for Ways, Rooms, Questions, and database access
+- **`sql_queries.py`**: Pre-built SQL queries for common analysis operations
+- **`ways_analysis.py`**: High-level ways characterization and analysis functions
+- **`network_analysis.py`**: Graph-based network analysis of way relationships
+- **`house_of_knowledge.py`**: Analysis of the 24-room House of Knowledge framework
+- **`statistics.py`**: Statistical analysis functions including `analyze_way_distributions()`, `compute_way_correlations()`, `compute_way_diversity_metrics()`
+- **`metrics.py`**: Performance metrics including `compute_way_coverage_metrics()`, `compute_way_interconnectedness()`
+- **`models.py`**: Data classes and enums for type-safe data handling
 
 ## House of Knowledge Framework
 
@@ -173,13 +186,23 @@ Text analysis also examines:
 
 ## Implementation
 
-The analysis is implemented using:
+The analysis is implemented using several specialized Python modules:
 
-- **Python**: Primary analysis language
-- **SQLite**: Database backend
-- **NetworkX**: Network analysis library
-- **Matplotlib/Seaborn**: Visualization libraries
-- **Pandas**: Data manipulation and analysis
+### Core Analysis Modules
+- **`database.py`**: SQLAlchemy ORM with `WaysDatabase` class for database access
+- **`sql_queries.py`**: `WaysSQLQueries` class with pre-built analysis queries
+- **`ways_analysis.py`**: `WaysAnalyzer` class for comprehensive ways characterization
+- **`network_analysis.py`**: `WaysNetworkAnalyzer` class for graph-based relationship analysis
+- **`house_of_knowledge.py`**: Framework analysis for the 24-room House of Knowledge
+- **`statistics.py`**: Statistical functions including `analyze_way_distributions()`, `compute_way_correlations()`
+- **`metrics.py`**: Performance metrics including `compute_way_coverage_metrics()`, `compute_way_interconnectedness()`
+
+### Infrastructure
+- **Python 3.10+**: Primary analysis language
+- **SQLite**: Database backend via SQLAlchemy ORM
+- **NetworkX**: Network analysis and graph algorithms
+- **Matplotlib/Seaborn**: Statistical visualization and plotting
+- **NumPy/Pandas**: Numerical computing and data manipulation
 
 All code follows the thin orchestrator pattern, with business logic in `project/src/` modules and orchestration in `project/scripts/`.
 

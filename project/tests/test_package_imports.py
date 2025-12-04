@@ -1,4 +1,4 @@
-"""Test package-level imports and API exposure for scientific layer.
+"""Test package-level imports and API exposure for ways of knowing analysis layer.
 
 This module ensures that package-level imports from project.src are properly
 exposed through the __init__.py file and that package metadata is correct.
@@ -11,48 +11,39 @@ import pytest
 class TestPackageLevelImports:
     """Test package-level API exposure through __init__.py."""
 
-    def test_core_function_imports(self) -> None:
-        """Test that core functions are accessible from package level."""
-        # Import from package level (tests __init__.py)
-        from src import (
-            add_numbers,
-            calculate_average,
-        )
+    def test_ways_database_import(self) -> None:
+        """Test that WaysDatabase is accessible from package level."""
+        from src import WaysDatabase
         
-        # Verify functions work
-        assert add_numbers(2, 3) == 5
-        assert calculate_average([1, 2, 3]) == 2.0
+        # Verify class exists
+        assert WaysDatabase is not None
 
-    def test_class_imports(self) -> None:
-        """Test that core classes are accessible from package level."""
+    def test_ways_analysis_imports(self) -> None:
+        """Test that ways analysis classes are accessible from package level."""
         from src import (
-            SimpleSimulation,
-            SimulationBase,
-            VisualizationEngine,
+            WaysAnalyzer,
+            WaysCharacterization,
         )
         
-        # Verify classes exist and can be instantiated
-        assert SimpleSimulation is not None
-        assert SimulationBase is not None
-        assert VisualizationEngine is not None
-        
-        # Verify VisualizationEngine can be created
-        engine = VisualizationEngine(output_dir=".")
-        assert engine is not None
+        # Verify classes exist
+        assert WaysAnalyzer is not None
+        assert WaysCharacterization is not None
 
     def test_statistics_imports(self) -> None:
-        """Test that statistics functions are accessible from package level."""
-        from src import calculate_descriptive_stats
+        """Test that ways statistics functions are accessible from package level."""
+        from src import analyze_way_distributions
         
-        import numpy as np
+        # Verify function exists
+        assert analyze_way_distributions is not None
+        assert callable(analyze_way_distributions)
+
+    def test_metrics_imports(self) -> None:
+        """Test that ways metrics functions are accessible from package level."""
+        from src import compute_way_coverage_metrics
         
-        # Test statistics function
-        data = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
-        stats = calculate_descriptive_stats(data)
-        
-        assert stats is not None
-        assert hasattr(stats, 'mean')
-        assert stats.mean == 3.0
+        # Verify function exists
+        assert compute_way_coverage_metrics is not None
+        assert callable(compute_way_coverage_metrics)
 
     def test_package_metadata(self) -> None:
         """Test that package metadata is properly defined."""
@@ -67,27 +58,23 @@ class TestPackageLevelImports:
         assert pkg.__layer__ == "scientific"
 
     def test_package_all_exports(self) -> None:
-        """Test that __all__ is properly defined and includes expected modules."""
+        """Test that __all__ is properly defined and includes expected ways modules."""
         import src as pkg
         
         # Verify __all__ exists
         assert hasattr(pkg, '__all__')
         assert isinstance(pkg.__all__, list)
         
-        # Verify expected modules are in __all__
+        # Verify expected ways modules are in __all__
         expected_modules = [
-            "example",
-            "simulation",
-            "statistics",
-            "data_generator",
-            "data_processing",
+            "database",
+            "sql_queries",
+            "models",
+            "ways_analysis",
+            "house_of_knowledge",
+            "network_analysis",
+            "ways_statistics",
             "metrics",
-            "parameters",
-            "performance",
-            "plots",
-            "reporting",
-            "validation",
-            "visualization",
         ]
         
         for module in expected_modules:
@@ -106,8 +93,7 @@ class TestPackageLevelImports:
         import src as pkg
         
         assert pkg.__doc__ is not None
-        assert "scientific" in pkg.__doc__.lower()
-        assert "layer" in pkg.__doc__.lower()
+        assert "ways" in pkg.__doc__.lower() or "knowing" in pkg.__doc__.lower()
 
     def test_import_error_fallback(self) -> None:
         """Test that ImportError fallback doesn't break package loading.

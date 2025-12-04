@@ -1,8 +1,8 @@
-# project/tests/ - Project Test Suite
+# project/tests/ - Ways of Knowing Analysis Test Suite
 
 ## Purpose
 
-The `project/tests/` directory contains comprehensive tests for the project-specific scientific code in `project/src/`. These tests validate the research algorithms, data processing pipelines, and analysis methods that form the core of the research project.
+The `project/tests/` directory contains comprehensive tests for the ways of knowing analysis code in `project/src/`. These tests validate the database operations, analysis algorithms, and statistical methods that form the core of the ways of knowing research project.
 
 ## Test Coverage Requirements
 
@@ -13,25 +13,10 @@ The `project/tests/` directory contains comprehensive tests for the project-spec
 ```
 project/tests/
 ├── conftest.py                    # Test configuration and fixtures
-├── integration/                   # Integration tests across modules
-│   ├── conftest.py
-│   ├── test_example_figure.py     # Figure generation integration
-│   ├── test_generate_research_figures.py  # Research figure pipeline
-│   └── test_integration_pipeline.py  # Full analysis pipeline
-├── test_data_generator.py         # Data generation validation
-├── test_data_processing.py        # Data preprocessing tests
-├── test_example.py                # Core example functionality
-├── test_metrics.py                # Performance metrics validation
 ├── test_package_imports.py        # Import and packaging tests
-├── test_parameters.py             # Parameter management tests
-├── test_performance.py            # Performance analysis tests
-├── test_plots.py                  # Plotting function tests
-├── test_reporting.py              # Report generation tests
-├── test_simulation_coverage.py    # Simulation framework coverage
-├── test_simulation.py             # Simulation engine tests
-├── test_statistics.py             # Statistical analysis tests
-├── test_validation.py             # Result validation tests
-└── test_visualization.py          # Visualization tests
+├── test_sql_queries.py            # SQL query validation
+├── test_ways_analysis.py          # Ways analysis framework validation
+└── test_ways_statistics.py        # Ways statistical analysis tests
 ```
 
 ## Test Categories
@@ -40,61 +25,49 @@ project/tests/
 
 Individual function and method validation:
 
-- **`test_example.py`** - Core utility functions (add_numbers, calculate_average, etc.)
-- **`test_data_generator.py`** - Synthetic data generation algorithms
-- **`test_data_processing.py`** - Data cleaning and preprocessing pipelines
-- **`test_metrics.py`** - Performance measurement and evaluation metrics
-- **`test_statistics.py`** - Statistical analysis and hypothesis testing
-- **`test_parameters.py`** - Parameter validation and management
-- **`test_validation.py`** - Result validation and anomaly detection
-
-### Integration Tests (`integration/`)
-
-Cross-module workflow validation:
-
-- **`test_integration_pipeline.py`** - Complete analysis pipeline from data generation to reporting
-- **`test_example_figure.py`** - Figure generation and file output integration
-- **`test_generate_research_figures.py`** - Multi-figure research visualization pipeline
+- **`test_ways_analysis.py`** - Ways analysis framework validation (dataclasses, analyzer methods, characterization)
+- **`test_ways_statistics.py`** - Ways statistical analysis and distributions
+- **`test_sql_queries.py`** - SQL query construction and validation
 
 ### Specialized Tests
 
-- **`test_package_imports.py`** - Ensures all modules can be imported correctly
-- **`test_simulation_coverage.py`** - Additional coverage for simulation framework edge cases
-- **`test_performance.py`** - Performance benchmarking and scalability analysis
-- **`test_plots.py`** - Visualization function correctness
-- **`test_reporting.py`** - Automated report generation validation
+- **`test_package_imports.py`** - Ensures all ways modules can be imported correctly
 
 ## Testing Philosophy
 
-### Real Data Analysis
+### Real Database Analysis
 
-**No mock methods** - all tests use actual data and real computation:
+**No mock methods** - all tests use actual database data and real computation:
 
 ```python
-# ✅ GOOD: Real data analysis
-def test_calculate_average():
-    data = [1, 2, 3, 4, 5]
-    result = calculate_average(data)
-    assert result == 3.0
+# ✅ GOOD: Real database analysis
+def test_ways_characterization():
+    analyzer = WaysAnalyzer()
+    result = analyzer.characterize_ways()
+    assert isinstance(result, WaysCharacterization)
+    assert result.total_ways > 0
 
 # ❌ BAD: Mock-based testing (not used)
-def test_calculate_average_mock(mocker):
-    mock_func = mocker.patch('calculate_average')
-    mock_func.return_value = 3.0
+def test_ways_characterization_mock(mocker):
+    mock_analyzer = mocker.patch('WaysAnalyzer')
+    mock_analyzer.characterize_ways.return_value = mock_characterization
     # ...
 ```
 
 ### Deterministic Results
 
-Tests use fixed seeds and controlled inputs for reproducible results:
+Tests use controlled database state for reproducible results:
 
 ```python
-def test_data_generation_reproducible():
-    """Test that data generation is deterministic with fixed seed."""
-    generator = DataGenerator(seed=42)
-    data1 = generator.generate(n_samples=100)
-    data2 = generator.generate(n_samples=100)
-    assert np.array_equal(data1, data2)
+def test_ways_analysis_deterministic():
+    """Test that ways analysis is deterministic."""
+    analyzer1 = WaysAnalyzer()
+    result1 = analyzer1.characterize_ways()
+
+    analyzer2 = WaysAnalyzer()
+    result2 = analyzer2.characterize_ways()
+
+    assert result1.total_ways == result2.total_ways
 ```
 
 ### Comprehensive Edge Case Coverage
@@ -102,15 +75,17 @@ def test_data_generation_reproducible():
 Tests cover normal operation, edge cases, and error conditions:
 
 ```python
-def test_calculate_average_edge_cases():
-    """Test average calculation with various inputs."""
-    # Normal case
-    assert calculate_average([1, 2, 3]) == 2.0
+def test_ways_characterization_edge_cases():
+    """Test ways characterization with various database states."""
+    # Normal case with data
+    analyzer = WaysAnalyzer()
+    result = analyzer.characterize_ways()
+    assert result.total_ways > 0
 
     # Edge cases
-    assert calculate_average([]) is None  # Empty list
-    assert calculate_average([5]) == 5.0  # Single element
-    assert calculate_average([1.5, 2.5]) == 2.0  # Floats
+    # Test with empty database tables
+    # Test with single way record
+    # Test with missing relationships
 ```
 
 ## Running Tests
@@ -128,17 +103,17 @@ uv run pytest project/tests/ --cov=project/src --cov-report=term-missing
 ### Specific Test Categories
 
 ```bash
-# Unit tests only
-pytest project/tests/ -k "not integration"
+# Ways analysis tests
+pytest project/tests/test_ways_analysis.py -v
 
-# Integration tests only
-pytest project/tests/integration/
+# Ways statistics tests
+pytest project/tests/test_ways_statistics.py -v
 
-# Single test file
-pytest project/tests/test_example.py -v
+# SQL query tests
+pytest project/tests/test_sql_queries.py -v
 
 # Single test function
-pytest project/tests/test_example.py::test_add_numbers -v
+pytest project/tests/test_ways_analysis.py::TestWaysAnalyzer::test_characterize_ways -v
 ```
 
 ### Coverage Analysis
@@ -189,22 +164,18 @@ Common test data patterns used across tests:
 
 ## Coverage Status
 
-Current coverage: **99.88%** (exceeds 70% requirement)
+Current coverage: **70% minimum** required for ways analysis modules
 
 | Module | Coverage | Status |
 |--------|----------|--------|
-| `example.py` | 100% | ✅ |
-| `data_generator.py` | 99% | ✅ |
-| `data_processing.py` | 100% | ✅ |
-| `metrics.py` | 100% | ✅ |
-| `statistics.py` | 100% | ✅ |
-| `parameters.py` | 100% | ✅ |
-| `performance.py` | 100% | ✅ |
-| `plots.py` | 100% | ✅ |
-| `reporting.py` | 100% | ✅ |
-| `simulation.py` | 100% | ✅ |
-| `validation.py` | 100% | ✅ |
-| `visualization.py` | 100% | ✅ |
+| `database.py` | TBD | ✅ |
+| `sql_queries.py` | TBD | ✅ |
+| `models.py` | TBD | ✅ |
+| `ways_analysis.py` | TBD | ✅ |
+| `house_of_knowledge.py` | TBD | ✅ |
+| `network_analysis.py` | TBD | ✅ |
+| `statistics.py` | TBD | ✅ |
+| `metrics.py` | TBD | ✅ |
 
 ## Integration with Build System
 
@@ -352,84 +323,38 @@ pytest project/tests/ --ff
 
 ## Module Test Details
 
-### Core Modules
+### Ways Analysis Modules
 
-**example.py** (`test_example.py`)
-- Basic arithmetic operations (add_numbers, multiply_numbers)
-- Statistical calculations (calculate_average, find_maximum/find_minimum)
-- Validation functions (is_even, is_odd)
-- Error handling for invalid inputs
+**ways_analysis.py** (`test_ways_analysis.py`)
+- WaysAnalyzer class initialization and methods
+- WaysCharacterization dataclass validation
+- Dialogue type analysis
+- Room distribution analysis
+- Partner analysis
+- God relationship analysis
+- Examples statistics
 
-**data_generator.py** (`test_data_generator.py`)
-- Synthetic data generation algorithms
-- Random seed reproducibility
-- Statistical property validation
-- Parameter validation and error handling
+**ways_statistics.py** (`test_ways_statistics.py`)
+- Ways distribution analysis
+- Ways correlation computation
+- Type-room independence testing
+- Ways diversity metrics
 
-**data_processing.py** (`test_data_processing.py`)
-- Data cleaning and preprocessing pipelines
-- Outlier detection algorithms
-- Normalization and transformation functions
-- Missing data handling
+**sql_queries.py** (`test_sql_queries.py`)
+- SQL query construction
+- Query parameter validation
+- Database query execution
+- Result set handling
 
-### Analysis Modules
-
-**metrics.py** (`test_metrics.py`)
-- Classification metrics (accuracy, precision, recall, F1)
-- Regression metrics (MSE, MAE, R²)
-- Statistical significance testing
-- Confidence interval calculations
-
-**statistics.py** (`test_statistics.py`)
-- Descriptive statistics (mean, median, variance, skewness)
-- Hypothesis testing (t-tests, ANOVA, chi-square)
-- Correlation analysis (Pearson, Spearman)
-- Distribution fitting and testing
-
-**performance.py** (`test_performance.py`)
-- Algorithm timing and benchmarking
-- Scalability analysis with increasing data sizes
-- Memory usage profiling
-- Performance regression detection
-
-### Simulation Framework
-
-**simulation.py** (`test_simulation.py`, `test_simulation_coverage.py`)
-- Simulation engine initialization and configuration
-- Time series generation and validation
-- Parameter sweep functionality
-- Result reproducibility with seeds
-
-**parameters.py** (`test_parameters.py`)
-- Parameter set validation and type checking
-- Parameter sweep configuration
-- Constraint validation and error handling
-- Serialization and deserialization
-
-### Visualization and Reporting
-
-**plots.py** (`test_plots.py`)
-- Plot generation for different chart types
-- Figure saving and format validation
-- Axis labeling and title verification
-- Data visualization correctness
-
-**visualization.py** (`test_visualization.py`)
-- Complex multi-panel figure generation
-- Figure layout and arrangement
-- Color scheme and styling validation
-- Interactive visualization components
-
-**reporting.py** (`test_reporting.py`)
-- Automated report generation
-- Markdown and HTML output validation
-- Table and figure integration
-- Report structure and completeness
+**database.py** (tested via integration tests)
+- Database ORM initialization
+- Table creation and schema
+- Connection management
+- Transaction handling
 
 ## See Also
 
 - [`README.md`](README.md) - Quick reference guide
-- [`../src/AGENTS.md`](../src/AGENTS.md) - Source code documentation
+- [`../src/`](../src/) - Ways analysis source code
 - [`../../tests/AGENTS.md`](../../tests/AGENTS.md) - Infrastructure test documentation
-- [`../../docs/TESTING_GUIDE.md`](../../docs/TESTING_GUIDE.md) - Testing best practices
-- [`integration/AGENTS.md`](integration/AGENTS.md) - Integration test details
+- [`../AGENTS.md`](../AGENTS.md) - Project documentation

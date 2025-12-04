@@ -1,45 +1,37 @@
-"""Scientific layer - Project-specific algorithms and analysis.
+"""Ways of knowing analysis layer - Domain-specific algorithms and analysis.
 
-This package contains domain-specific functionality for the research project,
-including simulations, statistical analysis, data processing, visualization,
-and other scientific computations.
+This package contains ways of knowing specific functionality for the research project,
+including database operations, analysis algorithms, statistical computations,
+and ways-specific metrics.
 
 Modules:
-    example: Basic mathematical operations (template example)
-    simulation: Core simulation framework with reproducibility
-    statistics: Statistical analysis functions
-    data_generator: Synthetic data generation
-    data_processing: Data preprocessing and cleaning
-    metrics: Performance and quality metrics
-    parameters: Parameter set management and validation
-    performance: Convergence and scalability analysis
-    plots: Publication-quality plot implementations
-    reporting: Automated report generation
-    validation: Result validation framework
-    visualization: Visualization engine with styling
+    database: SQLAlchemy ORM for ways database operations
+    sql_queries: Raw SQL queries for ways data access
+    models: Data models for Way, Room, Question, Example entities
+    ways_analysis: Main ways analysis framework and characterization
+    house_of_knowledge: House of Knowledge structure analysis
+    network_analysis: Network relationships between ways
+    ways_statistics: Ways-specific statistical analysis and distributions
+    metrics: Ways coverage, completeness, and balance metrics
 """
 
 __version__ = "1.0.0"
 __layer__ = "scientific"
 
 # Import core classes for convenient access
-from .example import add_numbers, calculate_average
-from .simulation import SimpleSimulation, SimulationBase
-from .visualization import VisualizationEngine
-from .statistics import calculate_descriptive_stats
+from .database import WaysDatabase
+from .ways_analysis import WaysAnalyzer, WaysCharacterization
+from .ways_statistics import analyze_way_distributions
+from .metrics import compute_way_coverage_metrics
 
 __all__ = [
-    "example",
-    "simulation",
-    "statistics",
-    "data_generator",
-    "data_processing",
+    "database",
+    "sql_queries",
+    "models",
+    "ways_analysis",
+    "house_of_knowledge",
+    "network_analysis",
+    "ways_statistics",
     "metrics",
-    "parameters",
-    "performance",
-    "plots",
-    "reporting",
-    "validation",
-    "visualization",
 ]
 

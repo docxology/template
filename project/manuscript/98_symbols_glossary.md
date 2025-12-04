@@ -70,4 +70,25 @@ This glossary is auto-generated from the public API in `src/` modules.
 | `validation` | `ValidationResult` | class | Result of a validation check. |
 | `visualization` | `VisualizationEngine` | class | Engine for generating publication-quality figures. |
 | `visualization` | `create_multi_panel_figure` | function | Create a multi-panel figure. |
+
+### Ways-Specific Analysis Modules
+
+| Module | Name | Kind | Summary |
+|---|---|---|---|
+| `database` | `WaysDatabase` | class | SQLAlchemy ORM for ways, rooms, questions database access. |
+| `database` | `Way` | class | Data model for individual ways with metadata. |
+| `database` | `Room` | class | Data model for House of Knowledge rooms. |
+| `database` | `Question` | class | Data model for philosophical questions. |
+| `sql_queries` | `WaysSQLQueries` | class | Pre-built SQL queries for ways analysis operations. |
+| `ways_analysis` | `WaysAnalyzer` | class | Comprehensive ways characterization and statistical analysis. |
+| `ways_analysis` | `WaysCharacterization` | class | Data class for ways analysis results. |
+| `network_analysis` | `WaysNetworkAnalyzer` | class | Graph-based network analysis of way relationships. |
+| `network_analysis` | `WaysNetwork` | class | Network representation of ways and their connections. |
+| `house_of_knowledge` | `HouseOfKnowledgeAnalyzer` | class | Analysis of the 24-room House of Knowledge framework. |
+| `house_of_knowledge` | `HouseStructure` | class | Complete structure of the House of Knowledge. |
+| `statistics` | `analyze_way_distributions` | function | Statistical analysis of way distributions across categories. |
+| `statistics` | `compute_way_correlations` | function | Correlation analysis between way characteristics. |
+| `statistics` | `compute_way_diversity_metrics` | function | Diversity metrics for ways across dimensions. |
+| `metrics` | `compute_way_coverage_metrics` | function | Coverage analysis of ways in framework. |
+| `metrics` | `compute_way_interconnectedness` | function | Interconnectedness metrics for ways network. |
 <!-- END: AUTO-API-GLOSSARY -->

@@ -9,7 +9,12 @@ dialogue patterns in the House of Knowledge.
 from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass, field
 from collections import Counter, defaultdict
-import statistics
+# Safe mean calculation to avoid import conflicts with local statistics module
+def _safe_mean(values):
+    """Calculate mean of values, implementing it directly to avoid import conflicts."""
+    if not values:
+        return 0.0
+    return sum(values) / len(values)
 from pathlib import Path
 
 from .database import WaysDatabase
@@ -104,12 +109,12 @@ class WaysAnalyzer:
     def characterize_ways(self) -> WaysCharacterization:
         """Complete characterization of all ways."""
         # Get basic statistics
-        stats = self.db.get_way_statistics()
+        way_stats = self.db.get_way_statistics()
 
         characterization = WaysCharacterization(
-            total_ways=stats['total_ways'],
-            dialogue_types=stats['dialogue_types'],
-            room_distribution=stats['room_distribution']
+            total_ways=way_stats['total_ways'],
+            dialogue_types=way_stats['dialogue_types'],
+            room_distribution=way_stats['room_distribution']
         )
 
         # Get partner distribution
@@ -125,7 +130,7 @@ class WaysAnalyzer:
         characterization.ways_with_examples = len(examples_results)
         if examples_results:
             lengths = [row[2] for row in examples_results]
-            characterization.avg_examples_length = statistics.mean(lengths)
+            characterization.avg_examples_length = _safe_mean(lengths)
 
         # Find most common categories
         if characterization.room_distribution:
@@ -184,7 +189,7 @@ class WaysAnalyzer:
             if ways_in_type:
                 analysis.type_characteristics[dtype] = {
                     'count': len(ways_in_type),
-                    'avg_examples_length': statistics.mean(w['examples_length'] for w in ways_in_type),
+                    'avg_examples_length': _safe_mean([w['examples_length'] for w in ways_in_type]),
                     'room_diversity': len(set(w['room'] for w in ways_in_type)),
                     'rooms': list(set(w['room'] for w in ways_in_type))
                 }
@@ -298,7 +303,7 @@ class WaysAnalyzer:
 
         if examples_results:
             lengths = [row[2] for row in examples_results]
-            analysis.avg_length = statistics.mean(lengths)
+            analysis.avg_length = _safe_mean(lengths)
 
             # Length distribution
             for length in lengths:
@@ -459,7 +464,7 @@ class WaysAnalyzer:
                         patterns['abstract_concepts'] += 1
 
             if lengths:
-                patterns['avg_length'] = statistics.mean(lengths)
+                patterns['avg_length'] = _safe_mean(lengths)
 
                 for length in lengths:
                     if length < 100:
@@ -505,10 +510,10 @@ class WaysAnalyzer:
                 metrics['total_text_length'] += len(way_text)
 
         if way_lengths:
-            metrics['avg_way_length'] = statistics.mean(way_lengths)
+            metrics['avg_way_length'] = _safe_mean(way_lengths)
 
         if example_lengths:
-            metrics['avg_examples_length'] = statistics.mean(example_lengths)
+            metrics['avg_examples_length'] = _safe_mean(example_lengths)
 
         # Find longest/shortest ways
         if ways:

@@ -1,15 +1,15 @@
-# Research Project
+# Ways of Knowing Analysis Research Project
 
-Complete, self-contained scientific research project with integrated testing, manuscript generation, and visualization.
+Complete, self-contained research project focused on analyzing ways of knowing using Andrius Kulikauskas's philosophical framework, with integrated testing, manuscript generation, and visualization.
 
 ## Structure
 
 ```
 project/
-├── src/                    # Scientific code (models, analysis, utilities)
-├── tests/                  # Test suite (comprehensive coverage)
-├── scripts/                # Analysis scripts (thin orchestrators)
-├── manuscript/             # Research manuscript sections
+├── src/                    # Ways analysis code (database, models, analysis)
+├── tests/                  # Test suite (ways analysis coverage)
+├── scripts/                # Analysis scripts (database setup)
+├── manuscript/             # Ways of knowing research manuscript
 ├── docs/                   # Project-specific documentation
 └── output/                 # Generated outputs (figures, data, PDFs)
 ```
@@ -26,13 +26,13 @@ uv sync
 
 ### Run Tests
 ```bash
-pytest tests/ --cov=src
+pytest tests/ --cov=src --cov-fail-under=70
 ```
 
-### Run Analysis Scripts
+### Setup Database and Run Analysis
 ```bash
-python scripts/example_figure.py
-python scripts/analysis_pipeline.py
+python scripts/db_setup.py  # Initialize ways database
+# Analysis will be run automatically during manuscript build
 ```
 
 ### Build Manuscript
@@ -43,68 +43,73 @@ python3 scripts/03_render_pdf.py
 
 ## Features
 
-- **Comprehensive test coverage** - All scientific code tested with real data (99.88%)
-- **Modular design** - Clean separation of concerns
-- **Reproducible** - Deterministic computation with seeded randomness
-- **Documented** - Comprehensive documentation and docstrings
-- **Portable** - Complete project in one folder, copy to use elsewhere
+- **Ways of knowing analysis** - Comprehensive analysis of Andrius Kulikauskas's philosophical framework
+- **Database-driven** - SQLAlchemy ORM with SQLite backend for ways data
+- **Comprehensive test coverage** - All ways analysis code tested with real database data (70% minimum)
+- **Modular design** - Clean separation between database, analysis, and presentation layers
+- **Reproducible** - Deterministic analysis with version-controlled database schema
+- **Documented** - Comprehensive documentation and docstrings for ways analysis
+- **Portable** - Complete ways research project in one folder, copy to use elsewhere
 
 ## Project Layout
 
 ### src/
-Scientific code implementing algorithms, data processing, analysis, and visualization.
+Ways of knowing analysis code implementing database models, analysis algorithms, and utilities.
 
-- `example.py` - Basic operations
-- `simulation.py` - Core simulation framework
-- `statistics.py` - Statistical analysis
-- `data_generator.py` - Synthetic data generation
-- ... and more
+- `database.py` - SQLAlchemy ORM for ways database
+- `sql_queries.py` - Raw SQL queries for ways data
+- `models.py` - Data models (Way, Room, Question, Example)
+- `ways_analysis.py` - Main ways analysis framework
+- `house_of_knowledge.py` - House of Knowledge analysis
+- `network_analysis.py` - Network relationships between ways
+- `statistics.py` - Ways-specific statistical analysis
+- `metrics.py` - Ways coverage and balance metrics
 
 ### tests/
-Test suite with comprehensive coverage of src/ modules (99.88%).
+Test suite with comprehensive coverage of ways analysis modules (70% minimum).
 
-- Real data testing (no mocks)
-- Integration tests
-- Performance validation
+- Real database testing (no mocks)
+- Integration tests for ways workflows
+- Database query validation
 
 ### scripts/
-Thin orchestrators that use src/ modules.
+Thin orchestrators for ways database setup and analysis.
 
 - Import from src/
-- Orchestrate workflows
-- Generate outputs
+- Initialize ways database
+- Orchestrate ways analysis workflows
 
 ### manuscript/
-Research manuscript in Markdown format.
+Ways of knowing research manuscript in Markdown format.
 
-- Individual sections
+- Individual sections on ways analysis
 - References and bibliography
-- Configuration files
+- Configuration files for ways research
 
 ## Development
 
-### Adding New Features
+### Adding New Ways Analysis Features
 
 1. **Implement in src/**
-   - Add module to `src/`
-   - Add comprehensive tests
-   - Ensure coverage requirements met
+   - Add ways analysis module to `src/`
+   - Add comprehensive tests with real database data
+   - Ensure 70% coverage requirements met for ways modules
 
-2. **Use in scripts/**
-   - Import from src/
-   - Orchestrate analysis
-   - Generate figures/tables
+2. **Use in analysis workflows**
+   - Import from ways analysis modules
+   - Orchestrate ways data analysis
+   - Generate ways analysis figures/tables
 
-3. **Document in manuscript/**
-   - Update manuscript sections
-   - Add figures and results
-   - Update configuration
+3. **Document in manuscript**
+   - Update ways research manuscript sections
+   - Add ways analysis figures and results
+   - Update ways research configuration
 
 ### Running Quality Checks
 
 ```bash
-# Full test suite with coverage
-pytest tests/ --cov=src --cov-report=html
+# Full ways analysis test suite with coverage
+pytest tests/ --cov=src --cov-fail-under=70 --cov-report=html
 
 # View coverage report
 open htmlcov/index.html
@@ -113,25 +118,27 @@ open htmlcov/index.html
 ## Deployment
 
 ### Standalone Use
-Copy `project/` to any location to use independently:
+Copy `project/` to any location to use independently for ways research:
 
 ```bash
-cp -r project/ /path/to/my_research
-cd /path/to/my_research
-pytest tests/ --cov=src
+cp -r project/ /path/to/my_ways_research
+cd /path/to/my_ways_research
+pytest tests/ --cov=src --cov-fail-under=70
+python scripts/db_setup.py  # Initialize ways database
 ```
 
 ### Integration with Template
-This project is designed to work with the template infrastructure:
+This ways research project is designed to work with the template infrastructure:
 
 ```bash
 cd /path/to/template
-python3 scripts/03_render_pdf.py  # Builds manuscript PDFs
+python3 scripts/03_render_pdf.py  # Builds ways manuscript PDFs
 ```
 
 ## Dependencies
 
 - Python 3.10+
+- SQLAlchemy (database ORM)
 - NumPy, SciPy, Matplotlib, Pandas
 - pytest, pytest-cov
 

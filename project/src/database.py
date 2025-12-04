@@ -58,7 +58,7 @@ class Way(Base):
 
 class Room(Base):
     """A room in the House of Knowledge."""
-    __tablename__ = 'rooms'
+    __tablename__ = 'menes'
 
     numeris: Mapped[int] = mapped_column(Integer, primary_key=True)
     santrumpa: Mapped[str] = mapped_column(String(50), unique=True)
@@ -331,8 +331,18 @@ class WaysDatabase:
         stmt = re.sub(r'COLLATE\s+[\w_]+', '', stmt)
         stmt = re.sub(r'CHARACTER\s+SET\s+[\w_]+', '', stmt)
 
-        # Convert data types
+        # Convert data types (avoid replacing INT in INSERT INTO)
+        stmt = re.sub(r'\bINT\b', 'INTEGER', stmt)
         stmt = stmt.replace('int(11)', 'INTEGER')
+        stmt = stmt.replace('VARCHAR(255)', 'TEXT')
+        stmt = stmt.replace('VARCHAR(500)', 'TEXT')
+        stmt = stmt.replace('VARCHAR(100)', 'TEXT')
+        stmt = stmt.replace('VARCHAR(50)', 'TEXT')
+        stmt = stmt.replace('VARCHAR(250)', 'TEXT')
+        stmt = stmt.replace('VARCHAR(10)', 'TEXT')
+        stmt = stmt.replace('VARCHAR(1000)', 'TEXT')
+        stmt = stmt.replace('VARCHAR(5000)', 'TEXT')
+        # Also handle lowercase versions
         stmt = stmt.replace('varchar(255)', 'TEXT')
         stmt = stmt.replace('varchar(500)', 'TEXT')
         stmt = stmt.replace('varchar(100)', 'TEXT')
@@ -351,7 +361,8 @@ class WaysDatabase:
         # Handle CREATE TABLE with KEY statements
         if stmt.startswith('CREATE TABLE') and 'KEY' in stmt:
             # Extract KEY definitions (KEY statements after PRIMARY KEY)
-            key_pattern = r',\s*KEY\s+`([^`]+)`\s*\(([^)]+)\)'
+            # Handle both quoted and unquoted key names
+            key_pattern = r',\s*KEY\s+`?([^`\s]+)`?\s*\(([^)]+)\)'
             keys = re.findall(key_pattern, stmt)
 
             # Remove KEY definitions from CREATE TABLE
@@ -416,6 +427,9 @@ class WaysDatabase:
         
         # Handle INSERT statements - ensure proper quoting and fix quotes
         elif stmt.startswith('INSERT INTO'):
+            # Convert MySQL-style escaped quotes (\') to SQLite-style ('')
+            stmt = stmt.replace("\\'", "''")
+
             # Add backticks around column names if they're not already quoted
             # Pattern: INSERT INTO table (col1, col2, ...) VALUES
             insert_match = re.match(r'INSERT INTO\s+(\w+)\s*\(([^)]+)\)\s*VALUES', stmt)
@@ -426,8 +440,6 @@ class WaysDatabase:
                 columns_quoted = ', '.join(f'`{col.strip()}`' for col in columns_part.split(','))
                 stmt = stmt.replace(f'({columns_part})', f'({columns_quoted})')
 
-            # Convert MySQL-style escaped quotes (\') to SQLite-style ('')
-            stmt = stmt.replace("\\'", "''")
             statements.append(stmt)
 
         else:

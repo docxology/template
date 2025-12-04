@@ -309,7 +309,7 @@ class HouseOfKnowledgeAnalyzer:
 
     def get_framework_statistics(self) -> Dict[str, Any]:
         """Get comprehensive framework statistics."""
-        stats = {}
+        framework_stats = {}
 
         # Analyze all frameworks
         frameworks = {
@@ -319,7 +319,7 @@ class HouseOfKnowledgeAnalyzer:
         }
 
         for name, analysis in frameworks.items():
-            stats[name] = {
+            framework_stats[name] = {
                 'total_ways': analysis['total_ways'],
                 'room_coverage': analysis['structural_integrity']['room_coverage'],
                 'type_diversity': analysis['structural_integrity']['type_diversity'],
@@ -328,7 +328,7 @@ class HouseOfKnowledgeAnalyzer:
             }
 
         # Overall House statistics
-        stats['house_overall'] = {
+        framework_stats['house_overall'] = {
             'total_rooms': len(self.house.rooms),
             'total_ways': len(self.house.ways),
             'frameworks_analyzed': len(frameworks),
@@ -337,39 +337,39 @@ class HouseOfKnowledgeAnalyzer:
                                 if any(w.mene == r for w in self.house.ways)]) / len(self.house.room_hierarchy)
         }
 
-        return stats
+        return framework_stats
 
     def get_house_statistics(self) -> HouseStatistics:
         """Get comprehensive House statistics."""
-        stats = HouseStatistics(
+        house_stats = HouseStatistics(
             total_rooms=len(self.house.rooms),
             total_ways=len(self.house.ways)
         )
 
         # Ways per room
         for room in self.house.room_hierarchy:
-            stats.ways_per_room[room] = len([w for w in self.house.ways if w.mene == room])
+            house_stats.ways_per_room[room] = len([w for w in self.house.ways if w.mene == room])
 
         # Room coverage
-        occupied_rooms = sum(1 for count in stats.ways_per_room.values() if count > 0)
-        stats.room_coverage = occupied_rooms / stats.total_rooms if stats.total_rooms > 0 else 0
+        occupied_rooms = sum(1 for count in house_stats.ways_per_room.values() if count > 0)
+        house_stats.room_coverage = occupied_rooms / house_stats.total_rooms if house_stats.total_rooms > 0 else 0
 
         # Framework balance
         framework_stats = self.get_framework_statistics()
-        stats.framework_balance = {
+        house_stats.framework_balance = {
             name: analysis['balance_score']
             for name, analysis in framework_stats.items()
             if name != 'house_overall'
         }
 
         # Structural integrity
-        stats.structural_integrity = {
-            'all_rooms_have_ways': all(count > 0 for count in stats.ways_per_room.values()),
-            'balanced_distribution': self._assess_distribution_balance(stats.ways_per_room),
+        house_stats.structural_integrity = {
+            'all_rooms_have_ways': all(count > 0 for count in house_stats.ways_per_room.values()),
+            'balanced_distribution': self._assess_distribution_balance(house_stats.ways_per_room),
             'framework_integrity': self._assess_framework_integrity(framework_stats)
         }
 
-        return stats
+        return house_stats
 
     def _assess_distribution_balance(self, ways_per_room: Dict[str, int]) -> Dict[str, Any]:
         """Assess how balanced the way distribution is across rooms."""
@@ -377,10 +377,10 @@ class HouseOfKnowledgeAnalyzer:
         if not counts:
             return {'balanced': False, 'variance': 0, 'assessment': 'no_data'}
 
-        mean_count = statistics.mean(counts)
+        mean_count = sum(counts) / len(counts) if counts else 0
         if len(counts) > 1:
-            variance = statistics.variance(counts)
-            std_dev = statistics.stdev(counts)
+            variance = sum((x - mean_count) ** 2 for x in counts) / (len(counts) - 1)
+            std_dev = variance ** 0.5
         else:
             variance = 0
             std_dev = 0
@@ -406,19 +406,19 @@ class HouseOfKnowledgeAnalyzer:
         """Assess the integrity of philosophical frameworks."""
         integrity = {}
 
-        for framework_name, stats in framework_stats.items():
+        for framework_name, framework_data in framework_stats.items():
             if framework_name == 'house_overall':
                 continue
 
             integrity[framework_name] = {
-                'has_ways': stats['total_ways'] > 0,
-                'room_coverage': stats['room_coverage'],
-                'balance_score': stats['balance_score'],
-                'type_diversity': stats['type_diversity'],
+                'has_ways': framework_data['total_ways'] > 0,
+                'room_coverage': framework_data['room_coverage'],
+                'balance_score': framework_data['balance_score'],
+                'type_diversity': framework_data['type_diversity'],
                 'overall_integrity': (
-                    stats['room_coverage'] * 0.4 +
-                    min(stats['balance_score'], 1.0) * 0.4 +
-                    min(stats['type_diversity'] / 10, 1.0) * 0.2
+                    framework_data['room_coverage'] * 0.4 +
+                    min(framework_data['balance_score'], 1.0) * 0.4 +
+                    min(framework_data['type_diversity'] / 10, 1.0) * 0.2
                 )
             }
 

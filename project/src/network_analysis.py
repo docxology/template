@@ -9,7 +9,7 @@ analysis for understanding connections in the House of Knowledge.
 from typing import Dict, List, Any, Optional, Tuple, Set
 from dataclasses import dataclass, field
 from collections import defaultdict, Counter
-import statistics
+from statistics import mean, stdev
 import networkx as nx
 from pathlib import Path
 
@@ -315,8 +315,8 @@ class WaysNetworkAnalyzer:
             effective_sizes[node] = len(neighbors) - constraint
 
         return {
-            'avg_constraint': statistics.mean(constraints.values()) if constraints else 0,
-            'avg_effective_size': statistics.mean(effective_sizes.values()) if effective_sizes else 0,
+            'avg_constraint': mean(constraints.values()) if constraints else 0,
+            'avg_effective_size': mean(effective_sizes.values()) if effective_sizes else 0,
             'high_constraint_nodes': [n for n, c in constraints.items() if c > 1.0]
         }
 
@@ -347,12 +347,12 @@ class WaysNetworkAnalyzer:
 
         # Identify hubs (high degree centrality)
         if central.by_degree:
-            degree_threshold = statistics.mean([d for _, d in central.by_degree]) + statistics.stdev([d for _, d in central.by_degree]) if len(central.by_degree) > 1 else central.by_degree[0][1]
+            degree_threshold = mean([d for _, d in central.by_degree]) + stdev([d for _, d in central.by_degree]) if len(central.by_degree) > 1 else central.by_degree[0][1]
             central.hubs = [way_id for way_id, degree in central.by_degree if degree > degree_threshold]
 
         # Identify bridges (high betweenness centrality)
         if central.by_betweenness:
-            between_threshold = statistics.mean([b for _, b in central.by_betweenness]) + statistics.stdev([b for _, b in central.by_betweenness]) if len(central.by_betweenness) > 1 else central.by_betweenness[0][1]
+            between_threshold = mean([b for _, b in central.by_betweenness]) + stdev([b for _, b in central.by_betweenness]) if len(central.by_betweenness) > 1 else central.by_betweenness[0][1]
             central.bridges = [way_id for way_id, between in central.by_betweenness if between > between_threshold]
 
         return central
