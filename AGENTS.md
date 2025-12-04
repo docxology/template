@@ -520,7 +520,7 @@ output/
 
 ## 🧪 **Advanced Modules**
 
-The template includes advanced modules for comprehensive scientific package development:
+The template includes 10 advanced modules for comprehensive scientific package development:
 
 ### 📊 **Quality Analysis** (`infrastructure/quality_checker.py`)
 **Advanced document quality analysis and metrics**
@@ -745,10 +745,10 @@ All advanced modules follow the **thin orchestrator pattern**:
 - ✅ **Publishing**: Comprehensive tests (14 tests)
 - ✅ **Scientific Dev**: Comprehensive tests (12 tests)
 - ✅ **Build Verifier**: Comprehensive tests (10 tests)
-- ✅ **Literature Search**: 91% coverage (8 tests) **NEW**
-- ✅ **LLM Integration**: 91% coverage (11 tests) **NEW**
-- ✅ **Rendering System**: 91% coverage (10 tests) **NEW**
-- ✅ **Publishing API**: Integrated with existing suite **NEW**
+- ✅ **Literature Search**: 91% coverage (8 tests)
+- ✅ **LLM Integration**: 91% coverage (11 tests)
+- ✅ **Rendering System**: 91% coverage (10 tests)
+- ✅ **Reporting**: 0% coverage (new module, tests pending) **NEW**
 
 ### Accessing Outputs
 

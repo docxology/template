@@ -104,7 +104,7 @@
 ## 🧪 **Advanced Modules**
 
 ### **Q: What are the advanced modules?**
-**A:** The template includes 9 advanced modules: quality_checker (document quality analysis), reproducibility (environment tracking), integrity (output verification), publishing (academic workflows), scientific_dev (scientific computing), build_verifier (build validation), literature search (academic literature management), LLM integration (local LLM assistance), and rendering system (multi-format output). See [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) for complete documentation.
+**A:** The template includes 10 advanced modules: quality_checker (document quality analysis), reproducibility (environment tracking), integrity (output verification), publishing (academic workflows), scientific_dev (scientific computing), build_verifier (build validation), literature search (academic literature management), LLM integration (local LLM assistance), rendering system (multi-format output), and reporting (pipeline reporting and error aggregation). See [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) for complete documentation.
 
 ### **Q: How do I use the advanced modules?**
 **A:** See the [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) for comprehensive usage examples and integration patterns. Each module includes API documentation and best practices.

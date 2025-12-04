@@ -7,16 +7,37 @@
 ## Quick Start
 
 ```bash
-# Run all tests with coverage
+# Run all tests with coverage (quiet mode by default)
+python3 scripts/01_run_tests.py
+
+# Run tests with verbose output (shows all test names)
+python3 scripts/01_run_tests.py --verbose
+
+# Run specific test suite
+pytest tests/infrastructure/ -v
+
+# Run with coverage report
 pytest tests/ --cov=src --cov-report=html
-
-# Run specific test
-pytest tests/test_example.py -v
-
-# Run with new logging/exceptions
-pytest tests/infrastructure/test_logging_utils.py -v
-pytest tests/infrastructure/test_exceptions.py -v
 ```
+
+## Test Reporting
+
+The test orchestrator (`scripts/01_run_tests.py`) generates structured reports:
+
+- **JSON Report**: `project/output/reports/test_results.json`
+  - Test counts (passed/failed/skipped)
+  - Coverage metrics per module
+  - Execution time per test file
+  - Failure details with stack traces
+
+- **Markdown Report**: `project/output/reports/test_results.md`
+  - Human-readable summary
+  - Test statistics
+  - Coverage summary
+
+- **HTML Coverage**: `htmlcov/index.html`
+  - Interactive coverage report
+  - Line-by-line coverage details
 
 ## Test Structure
 

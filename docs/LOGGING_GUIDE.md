@@ -18,7 +18,7 @@ Both systems share:
 - Environment-based configuration
 - Emoji support (when appropriate)
 
-##Quick Start
+## Quick Start
 
 ### Python Scripts
 
@@ -70,22 +70,43 @@ logger.error("Error that occurred")
 log_success("Operation completed successfully", logger)
 ```
 
+### Structured Logging (JSON Format)
+
+For machine-readable logs, enable structured logging:
+
+```bash
+# Enable JSON logging
+export STRUCTURED_LOGGING=true
+python3 scripts/run_all.py
+```
+
+This outputs logs in JSON format for programmatic parsing:
+```json
+{"timestamp": "2025-12-04T14:01:30", "level": "INFO", "logger": "scripts.run_all", "message": "Starting pipeline"}
+```
+
 ### Context Managers
 
 Use context managers for automatic operation tracking:
 
 ```python
-from logging_utils import log_operation, log_timing
+from logging_utils import log_operation, log_timing, log_operation_silent, log_with_spinner
 
 # Log operation start and completion
+# Completion message suppressed for operations < 0.1s
 with log_operation("Processing data", logger):
     process_data()
-    # Automatically logs start, completion, and duration
+    # Automatically logs start, completion (if duration >= 0.1s), and duration
 
-# Time operations
-with log_timing("Expensive calculation", logger):
-    result = expensive_calculation()
-    # Logs execution time
+# Silent operation (no completion message)
+with log_operation_silent("Quick check", logger):
+    quick_check()
+    # Only logs start, no completion message
+
+# Operation with spinner (for long-running operations)
+with log_with_spinner("Loading model...", logger):
+    load_model()
+    # Shows animated spinner during operation
 ```
 
 ### Function Decorators
@@ -327,6 +348,9 @@ def process_file(file_path: Path) -> dict:
 ### Progress Reporting
 
 ```python
+from logging_utils import log_progress, log_progress_bar, StreamingProgress, Spinner
+
+# Simple progress
 def process_files(files: list[Path]) -> None:
     """Process multiple files with progress reporting."""
     logger.info(f"Processing {len(files)} files")
@@ -336,6 +360,19 @@ def process_files(files: list[Path]) -> None:
         process_file(file_path)
     
     log_success(f"Processed all {len(files)} files", logger)
+
+# Progress bar with ETA
+log_progress_bar(15, 100, "Processing files", show_eta=True, elapsed_time=30.0)
+
+# Streaming progress (for real-time updates)
+progress = StreamingProgress(total=1000, message="Generating tokens")
+for chunk in stream:
+    progress.update(len(chunk))
+progress.finish("Generation complete")
+
+# Spinner for long-running operations
+with log_with_spinner("Loading model...", logger):
+    load_model()
 ```
 
 ## Troubleshooting

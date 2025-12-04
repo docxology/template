@@ -197,15 +197,32 @@ class TestContextManagers:
     
     def test_log_operation_success(self, capsys):
         """Test log_operation context manager on success."""
+        import time
+        
         logger = get_logger("test_operation_success")
         
+        # Add small delay to ensure completion message is logged
+        # (completion messages are suppressed for operations < 0.1s)
         with log_operation("Test operation", logger):
-            pass  # Successful operation
+            time.sleep(0.15)  # Ensure duration > min_duration_to_log (0.1s)
         
         # Check captured output
         captured = capsys.readouterr()
         assert "Starting: Test operation" in captured.out
         assert "Completed: Test operation" in captured.out
+    
+    def test_log_operation_suppresses_quick_operations(self, capsys):
+        """Test that log_operation suppresses completion for quick operations."""
+        logger = get_logger("test_operation_quick")
+        
+        # Quick operation (< 0.1s) should not log completion
+        with log_operation("Quick operation", logger):
+            pass  # Instant operation
+        
+        # Check captured output
+        captured = capsys.readouterr()
+        assert "Starting: Quick operation" in captured.out
+        assert "Completed: Quick operation" not in captured.out
     
     def test_log_operation_failure(self, capsys):
         """Test log_operation context manager on failure."""

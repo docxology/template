@@ -59,7 +59,10 @@ class ReviewMode(Enum):
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_progress, format_error_with_suggestions, format_duration
+from infrastructure.core.logging_utils import (
+    get_logger, log_success, log_header, log_progress, format_error_with_suggestions,
+    format_duration, log_with_spinner, StreamingProgress, Spinner
+)
 from infrastructure.core.config_loader import get_translation_languages
 from infrastructure.llm import (
     LLMClient,
@@ -560,40 +563,18 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple
         logger.info(f"    ⏳ Loading {model_name} into GPU memory...")
         logger.info(f"    (This may take 30-120 seconds depending on model size)")
         
-        stop_spinner = threading.Event()
-        preload_start = time.time()
-        
-        def show_preload_progress():
-            """Show elapsed time during model preload."""
-            spinner_chars = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
-            idx = 0
-            while not stop_spinner.is_set():
-                elapsed = time.time() - preload_start
-                char = spinner_chars[idx % len(spinner_chars)]
-                sys.stderr.write(f"\r    {char} Loading model... {elapsed:.0f}s elapsed")
-                sys.stderr.flush()
-                idx += 1
-                time.sleep(0.1)
-        
-        # Start spinner
-        progress_thread = threading.Thread(target=show_preload_progress, daemon=True)
-        progress_thread.start()
-        
-        # Preload the model (this is faster than generating text)
-        preload_success = preload_model(model_name)
-        
-        # Stop spinner
-        stop_spinner.set()
-        time.sleep(0.15)
-        sys.stderr.write("\r" + " " * 60 + "\r")
-        sys.stderr.flush()
-        
-        preload_elapsed = time.time() - preload_start
+        # Use improved spinner utility
+        with log_with_spinner(
+            f"Loading {model_name} into GPU memory...",
+            logger,
+            final_message=None  # We'll log success separately
+        ):
+            preload_success = preload_model(model_name)
         
         if preload_success:
-            logger.info(f"    ✓ Model loaded in {preload_elapsed:.1f}s")
+            logger.info(f"    ✓ Model loaded successfully")
         else:
-            logger.warning(f"    ⚠️ Preload returned error after {preload_elapsed:.1f}s, continuing anyway...")
+            logger.warning(f"    ⚠️ Preload returned error, continuing anyway...")
     
     # Now generate a short test response to measure performance
     logger.info(f"    Generating test response...")
@@ -605,23 +586,9 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple
     response_chunks = []
     first_token_time = None
     
-    # Start a spinner for the waiting period
-    stop_spinner = threading.Event()
-    
-    def show_waiting_progress():
-        """Show elapsed time while waiting for first token."""
-        spinner_chars = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
-        idx = 0
-        while not stop_spinner.is_set():
-            elapsed = time.time() - start_time
-            char = spinner_chars[idx % len(spinner_chars)]
-            sys.stderr.write(f"\r    {char} Waiting for first token... {elapsed:.0f}s")
-            sys.stderr.flush()
-            idx += 1
-            time.sleep(0.1)
-    
-    progress_thread = threading.Thread(target=show_waiting_progress, daemon=True)
-    progress_thread.start()
+    # Use improved spinner for waiting period
+    spinner = Spinner("Waiting for first token...", delay=0.1)
+    spinner.start()
     
     try:
         # Use streaming to get real-time feedback
@@ -630,11 +597,8 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple
                 first_token_time = time.time()
                 time_to_first = first_token_time - start_time
                 
-                # Stop spinner and clear line
-                stop_spinner.set()
-                time.sleep(0.15)
-                sys.stderr.write("\r" + " " * 60 + "\r")
-                sys.stderr.flush()
+                # Stop spinner
+                spinner.stop()
                 
                 logger.info(f"    ✓ First token in {time_to_first:.1f}s - generating response...")
             
@@ -672,10 +636,7 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple
         
     except Exception as e:
         # Stop spinner first
-        stop_spinner.set()
-        time.sleep(0.15)
-        sys.stderr.write("\r" + " " * 60 + "\r")
-        sys.stderr.flush()
+        spinner.stop()
         
         elapsed = time.time() - start_time
         logger.error(f"Model warmup failed after {elapsed:.1f}s: {e}")
@@ -836,8 +797,15 @@ def generate_review_with_metrics(
             # Estimate total tokens needed (rough estimate: ~4 chars per token)
             estimated_total_tokens = max_tokens
             
-            # Use streaming for better progress visibility
+            # Use streaming for better progress visibility with improved progress indicator
             try:
+                # Create streaming progress tracker
+                progress = StreamingProgress(
+                    total=estimated_total_tokens,
+                    message=f"Generating {review_name}",
+                    update_interval=0.5
+                )
+                
                 for chunk in client.stream_query(current_prompt, options=options):
                     if first_token_time is None:
                         first_token_time = time.time()
@@ -846,34 +814,14 @@ def generate_review_with_metrics(
                     
                     response_chunks.append(chunk)
                     tokens_generated += len(chunk.split())  # Rough token estimate
-                    
-                    # Update progress every ~50 tokens or every 2 seconds
-                    if tokens_generated % 50 == 0 or (time.time() - start_gen_time) % 2 < 0.1:
-                        elapsed = time.time() - start_gen_time
-                        tokens_per_sec = tokens_generated / elapsed if elapsed > 0 else 0
-                        progress_pct = min((tokens_generated / estimated_total_tokens) * 100, 99)
-                        eta_seconds = (estimated_total_tokens - tokens_generated) / tokens_per_sec if tokens_per_sec > 0 else None
-                        
-                        status = f"    Generating... {tokens_generated:,} tokens (~{progress_pct:.0f}%)"
-                        if tokens_per_sec > 0:
-                            status += f" @ {tokens_per_sec:.1f} tokens/sec"
-                        if eta_seconds is not None and eta_seconds > 0:
-                            status += f" | ETA: {format_duration(eta_seconds)}"
-                        
-                        # Use carriage return for in-place update
-                        sys.stderr.write(f"\r{status}")
-                        sys.stderr.flush()
+                    progress.set(tokens_generated)
                 
-                # Clear progress line
-                sys.stderr.write("\r" + " " * 80 + "\r")
-                sys.stderr.flush()
-                
-                response = "".join(response_chunks)
-                
-                # Log final generation stats
+                # Finish progress display
                 total_time = time.time() - start_gen_time
                 final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
-                logger.info(f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s ({final_tokens_per_sec:.1f} tokens/sec)")
+                progress.finish(f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s ({final_tokens_per_sec:.1f} tokens/sec)")
+                
+                response = "".join(response_chunks)
                 
             except Exception as stream_error:
                 # Fallback to non-streaming if streaming fails

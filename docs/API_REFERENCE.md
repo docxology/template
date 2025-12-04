@@ -36,6 +36,7 @@ These modules are located in `infrastructure/` and provide generic tools applica
 - `infrastructure/literature/` - Academic literature search and reference management
 - `infrastructure/llm/` - Local LLM integration for research assistance
 - `infrastructure/rendering/` - Multi-format output generation (PDF, slides, web, posters)
+- `infrastructure/reporting/` - Pipeline reporting and error aggregation
 
 ### Project Modules (Layer 2 - Project-Specific)
 

@@ -25,6 +25,7 @@ This is a **GitHub Template Repository** that gives you:
 - ✅ **Integrity verification** and validation
 - ✅ **Publishing tools** for academic dissemination
 - ✅ **Scientific development** best practices
+- ✅ **Comprehensive reporting** with error aggregation and performance metrics
 
 ## 🗺️ Choose Your Path
 
@@ -573,7 +574,7 @@ if __name__ == "__main__":
 - `98_symbols_glossary.md` - Auto-generated API reference
 - `99_references.md` - Bibliography
 
-**Recent improvement**: Simplified structure with `markdown/` directory eliminated - ~~[Details](docs/MARKDOWN_DIRECTORY_ELIMINATION.md)~~ (archived)
+**Recent improvement**: Simplified structure with `markdown/` directory eliminated (see [Manuscript Numbering System](docs/MANUSCRIPT_NUMBERING_SYSTEM.md) for details)
 
 ## 📊 Testing
 

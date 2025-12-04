@@ -11,9 +11,11 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 from __future__ import annotations
 
+import json
 import logging
 import os
 import sys
+import threading
 import time
 from contextlib import contextmanager
 from datetime import datetime
@@ -75,10 +77,46 @@ EMOJIS = {
 # Check if emojis should be used (NO_EMOJI env var or not a TTY)
 USE_EMOJIS = not os.getenv('NO_EMOJI') and sys.stdout.isatty()
 
+# Check if structured logging (JSON) should be used
+USE_STRUCTURED_LOGGING = os.getenv('STRUCTURED_LOGGING', 'false').lower() == 'true'
+
 
 # =============================================================================
 # CUSTOM FORMATTER
 # =============================================================================
+
+class JSONFormatter(logging.Formatter):
+    """JSON formatter for structured logging.
+    
+    Outputs log records as JSON for machine parsing.
+    """
+    
+    def format(self, record: logging.LogRecord) -> str:
+        """Format log record as JSON.
+        
+        Args:
+            record: Log record to format
+            
+        Returns:
+            JSON formatted log message
+        """
+        log_data = {
+            'timestamp': datetime.fromtimestamp(record.created).isoformat(),
+            'level': record.levelname,
+            'logger': record.name,
+            'message': record.getMessage(),
+        }
+        
+        # Add exception info if present
+        if record.exc_info:
+            log_data['exception'] = self.formatException(record.exc_info)
+        
+        # Add extra fields if present
+        if hasattr(record, 'extra_fields'):
+            log_data.update(record.extra_fields)
+        
+        return json.dumps(log_data)
+
 
 class TemplateFormatter(logging.Formatter):
     """Custom formatter matching bash logging.sh format.
@@ -153,7 +191,10 @@ def setup_logger(
     
     # Console handler
     console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setFormatter(TemplateFormatter())
+    if USE_STRUCTURED_LOGGING:
+        console_handler.setFormatter(JSONFormatter())
+    else:
+        console_handler.setFormatter(TemplateFormatter())
     logger.addHandler(console_handler)
     
     # File handler (optional)
@@ -203,7 +244,8 @@ def get_logger(name: str) -> logging.Logger:
 def log_operation(
     operation: str,
     logger: Optional[logging.Logger] = None,
-    level: int = logging.INFO
+    level: int = logging.INFO,
+    min_duration_to_log: float = 0.1
 ) -> Iterator[None]:
     """Context manager for logging operation start and completion.
     
@@ -211,6 +253,7 @@ def log_operation(
         operation: Description of the operation
         logger: Logger instance (creates one if None)
         level: Log level for messages
+        min_duration_to_log: Minimum duration (seconds) to log completion message
         
     Yields:
         None
@@ -230,7 +273,47 @@ def log_operation(
     try:
         yield
         duration = time.time() - start_time
-        logger.log(level, f"Completed: {operation} ({duration:.1f}s)")
+        # Only log completion if duration exceeds threshold
+        if duration >= min_duration_to_log:
+            logger.log(level, f"Completed: {operation} ({duration:.1f}s)")
+    except Exception as e:
+        duration = time.time() - start_time
+        logger.error(f"Failed: {operation} after {duration:.1f}s - {e}")
+        raise
+
+
+@contextmanager
+def log_operation_silent(
+    operation: str,
+    logger: Optional[logging.Logger] = None,
+    level: int = logging.DEBUG
+) -> Iterator[None]:
+    """Context manager for logging operation start only (no completion message).
+    
+    Useful for operations that complete very quickly or don't need completion logging.
+    
+    Args:
+        operation: Description of the operation
+        logger: Logger instance (creates one if None)
+        level: Log level for messages
+        
+    Yields:
+        None
+        
+    Example:
+        >>> with log_operation_silent("Quick check", logger):
+        ...     quick_check()
+        ℹ️ [2025-11-21 12:00:00] [DEBUG] Starting: Quick check
+    """
+    if logger is None:
+        logger = get_logger(__name__)
+    
+    logger.log(level, f"Starting: {operation}")
+    start_time = time.time()
+    
+    try:
+        yield
+        # No completion message logged
     except Exception as e:
         duration = time.time() - start_time
         logger.error(f"Failed: {operation} after {duration:.1f}s - {e}")
@@ -722,4 +805,270 @@ def log_resource_usage(
     except Exception as e:
         # Any other error - log at debug level
         logger.debug(f"Failed to get resource usage: {e}")
+
+
+# =============================================================================
+# SPINNER UTILITIES
+# =============================================================================
+
+class Spinner:
+    """Animated spinner for long-running operations.
+    
+    Provides visual feedback during operations that don't have discrete progress.
+    """
+    
+    SPINNER_CHARS = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+    
+    def __init__(
+        self,
+        message: str = "Processing...",
+        stream: Any = None,
+        delay: float = 0.1
+    ):
+        """Initialize spinner.
+        
+        Args:
+            message: Message to display with spinner
+            stream: Output stream (defaults to stderr)
+            delay: Delay between spinner updates in seconds
+        """
+        self.message = message
+        self.stream = stream or sys.stderr
+        self.delay = delay
+        self.stop_event = threading.Event()
+        self.thread: Optional[threading.Thread] = None
+        self.idx = 0
+    
+    def start(self) -> None:
+        """Start the spinner animation."""
+        if not self.stream.isatty():
+            # Not a TTY - just print message once
+            self.stream.write(f"{self.message}\n")
+            self.stream.flush()
+            return
+        
+        self.stop_event.clear()
+        self.thread = threading.Thread(target=self._spin, daemon=True)
+        self.thread.start()
+    
+    def stop(self, final_message: Optional[str] = None) -> None:
+        """Stop the spinner animation.
+        
+        Args:
+            final_message: Optional message to display when stopping
+        """
+        if self.thread is None:
+            return
+        
+        self.stop_event.set()
+        if self.thread.is_alive():
+            self.thread.join(timeout=1.0)
+        
+        # Clear spinner line
+        if self.stream.isatty():
+            self.stream.write("\r" + " " * 80 + "\r")
+            self.stream.flush()
+        
+        if final_message:
+            self.stream.write(f"{final_message}\n")
+            self.stream.flush()
+    
+    def _spin(self) -> None:
+        """Internal spinner animation loop."""
+        while not self.stop_event.is_set():
+            char = self.SPINNER_CHARS[self.idx % len(self.SPINNER_CHARS)]
+            self.stream.write(f"\r{char} {self.message}")
+            self.stream.flush()
+            self.idx += 1
+            self.stop_event.wait(self.delay)
+    
+    def __enter__(self) -> 'Spinner':
+        """Context manager entry."""
+        self.start()
+        return self
+    
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        """Context manager exit."""
+        self.stop()
+
+
+@contextmanager
+def log_with_spinner(
+    message: str,
+    logger: Optional[logging.Logger] = None,
+    final_message: Optional[str] = None
+) -> Iterator[None]:
+    """Context manager for operations with spinner indicator.
+    
+    Args:
+        message: Message to display with spinner
+        logger: Logger instance (optional, for final message)
+        final_message: Message to display when done (uses logger if provided)
+        
+    Yields:
+        None
+        
+    Example:
+        >>> with log_with_spinner("Loading model...", logger):
+        ...     load_model()
+        ⠋ Loading model...
+        ✅ Model loaded
+    """
+    spinner = Spinner(message)
+    spinner.start()
+    
+    try:
+        yield
+        if final_message:
+            spinner.stop(final_message)
+        elif logger:
+            spinner.stop()
+            log_success(message.replace("...", " complete"), logger)
+        else:
+            spinner.stop()
+    except Exception as e:
+        spinner.stop()
+        if logger:
+            logger.error(f"{message} failed: {e}")
+        raise
+
+
+# =============================================================================
+# STREAMING PROGRESS UTILITIES
+# =============================================================================
+
+class StreamingProgress:
+    """Real-time progress indicator for streaming operations.
+    
+    Updates progress in-place using carriage returns.
+    """
+    
+    def __init__(
+        self,
+        total: int,
+        message: str = "Progress",
+        stream: Any = None,
+        update_interval: float = 0.5
+    ):
+        """Initialize streaming progress.
+        
+        Args:
+            total: Total number of items
+            message: Progress message
+            stream: Output stream (defaults to stderr)
+            update_interval: Minimum time between updates (seconds)
+        """
+        self.total = total
+        self.message = message
+        self.stream = stream or sys.stderr
+        self.update_interval = update_interval
+        self.current = 0
+        self.last_update = 0.0
+        self.start_time = time.time()
+    
+    def update(self, increment: int = 1, custom_message: Optional[str] = None) -> None:
+        """Update progress.
+        
+        Args:
+            increment: Number of items completed
+            custom_message: Optional custom message to display
+        """
+        self.current = min(self.current + increment, self.total)
+        now = time.time()
+        
+        # Throttle updates
+        if now - self.last_update < self.update_interval:
+            return
+        
+        self.last_update = now
+        self._display(custom_message)
+    
+    def set(self, value: int, custom_message: Optional[str] = None) -> None:
+        """Set progress to specific value.
+        
+        Args:
+            value: Current progress value
+            custom_message: Optional custom message to display
+        """
+        self.current = min(value, self.total)
+        self._display(custom_message)
+    
+    def _display(self, custom_message: Optional[str] = None) -> None:
+        """Display current progress."""
+        if not self.stream.isatty():
+            return
+        
+        percent = (self.current * 100) // self.total if self.total > 0 else 0
+        elapsed = time.time() - self.start_time
+        
+        # Calculate ETA
+        eta_str = ""
+        if self.current > 0 and elapsed > 0:
+            rate = self.current / elapsed
+            remaining = (self.total - self.current) / rate if rate > 0 else 0
+            eta_str = f" | ETA: {format_duration(remaining)}"
+        
+        message = custom_message or self.message
+        status = f"\r{message}: {self.current}/{self.total} ({percent}%){eta_str}"
+        
+        # Pad to clear previous line
+        status = status.ljust(80)
+        self.stream.write(status)
+        self.stream.flush()
+    
+    def finish(self, final_message: Optional[str] = None) -> None:
+        """Finish progress display.
+        
+        Args:
+            final_message: Optional final message to display
+        """
+        if self.stream.isatty():
+            self.stream.write("\r" + " " * 80 + "\r")
+            self.stream.flush()
+        
+        if final_message:
+            self.stream.write(f"{final_message}\n")
+            self.stream.flush()
+        elif self.stream.isatty():
+            # Show completion
+            elapsed = time.time() - self.start_time
+            self.stream.write(f"✅ {self.message}: {self.current}/{self.total} complete ({elapsed:.1f}s)\n")
+            self.stream.flush()
+
+
+def log_progress_streaming(
+    current: int,
+    total: int,
+    message: str = "Progress",
+    logger: Optional[logging.Logger] = None,
+    show_eta: bool = True
+) -> None:
+    """Log streaming progress with real-time updates.
+    
+    Args:
+        current: Current progress value
+        total: Total progress value
+        message: Progress message
+        logger: Logger instance (optional)
+        show_eta: Whether to show estimated time remaining
+    """
+    if not sys.stderr.isatty():
+        # Not a TTY - use regular progress logging
+        log_progress(current, total, message, logger)
+        return
+    
+    percent = (current * 100) // total if total > 0 else 0
+    status = f"\r{message}: {current}/{total} ({percent}%)"
+    
+    if show_eta and current > 0:
+        # Simple ETA calculation would require tracking start time
+        # For now, just show percentage
+        pass
+    
+    sys.stderr.write(status.ljust(80))
+    sys.stderr.flush()
+    
+    if current >= total:
+        sys.stderr.write("\n")
+        sys.stderr.flush()
 

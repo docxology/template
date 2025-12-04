@@ -56,6 +56,7 @@ tests/infrastructure/test_<module>/
 from infrastructure.literature import LiteratureSearch
 from infrastructure.llm import LLMClient
 from infrastructure.rendering import RenderManager
+from infrastructure.reporting import generate_pipeline_report, get_error_aggregator
 
 # Bad: Relative imports outside package
 from ..literature import LiteratureSearch  # DON'T
@@ -119,6 +120,14 @@ logger.info(f"Processing {count} items")
 - **Metadata-rich**: Complete metadata for all outputs
 - **Compliance**: Check platform-specific requirements
 - **Automation**: Minimize manual intervention
+
+### Reporting Module
+
+- **Multi-format**: Generate reports in JSON, HTML, and Markdown
+- **Actionable**: Include specific recommendations and fixes
+- **Integrated**: Automatically integrated into pipeline stages
+- **Error aggregation**: Categorize and prioritize errors
+- **Performance tracking**: Monitor resource usage and bottlenecks
 
 ## Configuration Management
 

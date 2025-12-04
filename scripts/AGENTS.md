@@ -36,13 +36,25 @@ Root scripts are **thin orchestrators** that:
 
 ### 2. Run Tests (`01_run_tests.py`)
 
-**Purpose:** Execute complete test suite
+**Purpose:** Execute complete test suite with enhanced reporting
 
 - Runs infrastructure tests (`tests/infrastructure/`) with 49% coverage threshold
 - Runs project tests (`project/tests/`) with 70% coverage threshold
+- Supports quiet mode (`--quiet` or `-q`) - suppresses individual test names (default)
+- Supports verbose mode (`--verbose` or `-v`) - shows all test names
 - Generates HTML coverage reports for both suites
-- Reports individual and combined results
+- Generates structured test reports (JSON, Markdown) to `project/output/reports/test_results.{json,md}`
+- Reports individual and combined results with detailed metrics
 - Generic orchestrator - does not implement tests
+
+**Usage:**
+```bash
+# Quiet mode (default) - shows only summary
+python3 scripts/01_run_tests.py
+
+# Verbose mode - shows all test names
+python3 scripts/01_run_tests.py --verbose
+```
 
 **Generic:** Works for any project using pytest
 
@@ -70,11 +82,14 @@ Root scripts are **thin orchestrators** that:
 
 ### 5. Validate Output (`04_validate_output.py`)
 
-**Purpose:** Validate build quality
+**Purpose:** Validate build quality with enhanced reporting
 
 - Checks generated PDFs for issues
 - Validates markdown references
 - Checks figure integrity
+- Generates enhanced validation reports (JSON, Markdown) with actionable recommendations
+- Reports include priority levels, issue categorization, and specific fixes
+- Reports saved to `project/output/reports/validation_report.{json,md}`
 - Generic validation
 
 **Generic:** Works for any project output
@@ -99,6 +114,10 @@ Root scripts are **thin orchestrators** that:
 - Extracts full text from combined PDF manuscript
 - Generates executive summary, quality review, methodology review, and improvement suggestions
 - Generates translations (if configured) - technical abstract in multiple languages
+- Uses improved progress indicators:
+  - Spinner during model loading
+  - Streaming progress bar for review generation
+  - Real-time token generation display with ETA
 - Saves all reviews with detailed metrics to `output/llm/`
 - Tracks input/output sizes, token estimates, and generation times
 
@@ -232,13 +251,22 @@ python3 scripts/07_literature_search.py --search --summarize
 
 ### 9. Run All (`run_all.py`)
 
-**Purpose:** Execute core pipeline (Python orchestrator)
+**Purpose:** Execute core pipeline (Python orchestrator) with comprehensive reporting
 
 - Orchestrates 6 core stages sequentially (00-05)
 - Stops on first failure
-- Provides detailed summary report
+- Provides detailed summary report with performance metrics
+- Generates consolidated pipeline report (JSON, HTML, Markdown) to `project/output/reports/`
+- Includes test results, validation results, performance metrics, error summaries
+- Tracks resource usage per stage (memory, CPU, disk I/O)
+- Identifies performance bottlenecks automatically
 - No LLM dependencies required
 - Generic core pipeline (excludes optional LLM stages)
+
+**Generated Reports:**
+- `pipeline_report.{json,html,md}` - Complete pipeline execution summary
+- Includes stage durations, status, test results, validation results
+- HTML version provides visual dashboard
 
 **Note:** For interactive use or LLM features, prefer `./run.sh`. This Python orchestrator provides the minimal core pipeline.
 

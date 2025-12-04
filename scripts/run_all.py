@@ -37,6 +37,12 @@ from infrastructure.core.logging_utils import (
 )
 from infrastructure.core.exceptions import PipelineError
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
+from infrastructure.core.performance import PerformanceMonitor, get_system_resources
+from infrastructure.reporting import (
+    generate_pipeline_report,
+    save_pipeline_report,
+    generate_error_summary,
+)
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -298,11 +304,107 @@ def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0, resume:
     total_duration = time.time() - start_time + clean_duration
     return_summary(stage_results, total_duration)
     
+    # Generate consolidated pipeline report
+    try:
+        repo_root = Path(__file__).parent.parent
+        output_dir = repo_root / "project" / "output" / "reports"
+        
+        # Load test results if available
+        test_results = None
+        test_report_path = output_dir / "test_results.json"
+        if test_report_path.exists():
+            import json
+            with open(test_report_path) as f:
+                test_results = json.load(f)
+        
+        # Collect performance metrics
+        performance_metrics = {
+            'total_duration': total_duration,
+            'average_stage_duration': sum(r['duration'] for r in stage_results) / len(stage_results) if stage_results else 0,
+            'system_resources': get_system_resources(),
+        }
+        
+        # Collect errors if any
+        errors = []
+        for result in stage_results:
+            if result['exit_code'] != 0:
+                errors.append({
+                    'type': 'stage_failure',
+                    'stage': result['name'],
+                    'message': f"Stage {result['name']} failed with exit code {result['exit_code']}",
+                    'exit_code': result['exit_code'],
+                })
+        
+        error_summary = None
+        if errors:
+            error_summary = generate_error_summary(errors, output_dir)
+        
+        # Collect output statistics
+        output_statistics = collect_output_statistics(repo_root)
+        
+        # Generate pipeline report
+        report = generate_pipeline_report(
+            stage_results=stage_results,
+            total_duration=total_duration,
+            repo_root=repo_root,
+            test_results=test_results,
+            performance_metrics=performance_metrics,
+            error_summary=error_summary,
+            output_statistics=output_statistics,
+        )
+        
+        # Save report in multiple formats
+        saved_files = save_pipeline_report(report, output_dir, formats=['json', 'html', 'markdown'])
+        logger.info(f"\nPipeline report saved: {', '.join(str(p) for p in saved_files.values())}")
+        
+    except Exception as e:
+        logger.warning(f"Failed to generate pipeline report: {e}")
+        # Don't fail pipeline if report generation fails
+    
     # Return appropriate exit code
     if all(r['exit_code'] == 0 for r in stage_results):
         return 0
     else:
         return 1
+
+
+def collect_output_statistics(repo_root: Path) -> dict:
+    """Collect output file statistics.
+    
+    Args:
+        repo_root: Repository root path
+        
+    Returns:
+        Dictionary with output statistics
+    """
+    output_dir = repo_root / "project" / "output"
+    stats = {
+        'pdf_files': 0,
+        'figures': 0,
+        'data_files': 0,
+        'total_size_mb': 0.0,
+    }
+    
+    if output_dir.exists():
+        pdf_dir = output_dir / "pdf"
+        if pdf_dir.exists():
+            pdf_files = list(pdf_dir.glob("*.pdf"))
+            stats['pdf_files'] = len(pdf_files)
+            stats['total_size_mb'] += sum(f.stat().st_size for f in pdf_files) / (1024 * 1024)
+        
+        figures_dir = output_dir / "figures"
+        if figures_dir.exists():
+            figure_files = list(figures_dir.glob("*.png")) + list(figures_dir.glob("*.pdf"))
+            stats['figures'] = len(figure_files)
+            stats['total_size_mb'] += sum(f.stat().st_size for f in figure_files) / (1024 * 1024)
+        
+        data_dir = output_dir / "data"
+        if data_dir.exists():
+            data_files = list(data_dir.glob("*"))
+            stats['data_files'] = len([f for f in data_files if f.is_file()])
+            stats['total_size_mb'] += sum(f.stat().st_size for f in data_files if f.is_file()) / (1024 * 1024)
+    
+    return stats
 
 
 def return_summary(results: list[dict], total_duration: float) -> None:

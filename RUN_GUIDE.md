@@ -95,6 +95,11 @@ Executes the complete 9-stage build pipeline:
 - Figures: `project/output/figures/`
 - Data files: `project/output/data/`
 - LLM reviews: `project/output/llm/` (if Ollama available)
+- Pipeline reports: `project/output/reports/` (JSON, HTML, Markdown)
+  - `pipeline_report.{json,html,md}` - Consolidated pipeline execution report
+  - `test_results.{json,md}` - Structured test results with coverage
+  - `validation_report.{json,md}` - Enhanced validation with recommendations
+  - `error_summary.{json,md}` - Error aggregation with actionable fixes
 
 ### Option 5: LLM Manuscript Review (English)
 

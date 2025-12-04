@@ -1,14 +1,14 @@
 # 🔬 Advanced Modules Guide
 
-> **Comprehensive guide** to the 9 advanced infrastructure modules
+> **Comprehensive guide** to the 10 advanced infrastructure modules
 
 **Quick Reference:** [API Reference](API_REFERENCE.md) | [Architecture](ARCHITECTURE.md) | [Infrastructure Docs](../infrastructure/AGENTS.md) | [Module Standards](../.cursorrules/infrastructure_modules.md) | [LLM Standards](../.cursorrules/llm_standards.md)
 
-This guide provides detailed usage instructions for the nine advanced modules that extend the Research Project Template with professional-grade features for quality assurance, reproducibility, integrity verification, publishing workflows, scientific computing best practices, build process validation, literature search, LLM integration, and multi-format rendering.
+This guide provides detailed usage instructions for the ten advanced modules that extend the Research Project Template with professional-grade features for quality assurance, reproducibility, integrity verification, publishing workflows, scientific computing best practices, build process validation, literature search, LLM integration, multi-format rendering, and comprehensive reporting.
 
 ## Module Overview
 
-The template includes nine advanced infrastructure modules that provide enterprise-grade capabilities:
+The template includes ten advanced infrastructure modules that provide enterprise-grade capabilities:
 
 | Module | Purpose | Key Features |
 |--------|---------|--------------|
@@ -21,6 +21,7 @@ The template includes nine advanced infrastructure modules that provide enterpri
 | **Literature Search** | Academic literature management | Multi-source search, PDF download, BibTeX generation, library management |
 | **LLM Integration** | Local LLM assistance | Ollama integration, research templates, context management, streaming |
 | **Rendering System** | Multi-format output | PDF, slides, web, poster generation from single source |
+| **Reporting** | Pipeline reporting | Consolidated reports, error aggregation, performance metrics |
 
 All modules follow the thin orchestrator pattern with comprehensive test coverage.
 
@@ -782,6 +783,119 @@ python3 -m infrastructure.publishing.cli validate-metadata manuscript/
 
 ---
 
+## 📊 Reporting Module
+
+**Location**: `infrastructure/reporting/`  
+**Purpose**: Pipeline reporting and error aggregation
+
+### Key Features
+
+- **Consolidated Pipeline Reports**: Multi-format reports (JSON, HTML, Markdown) with complete pipeline execution summary
+- **Test Results Reporting**: Structured test reports with coverage metrics, execution times, and failure details
+- **Enhanced Validation Reports**: Actionable recommendations with priority levels and issue categorization
+- **Performance Metrics**: Bottleneck analysis, resource tracking, and performance warnings
+- **Error Aggregation**: Categorized errors with actionable fixes and documentation links
+- **HTML Templates**: Visual reports with status indicators, summary cards, and responsive design
+
+### Usage Examples
+
+#### Generate Pipeline Report
+
+```python
+from infrastructure.reporting import generate_pipeline_report, save_pipeline_report
+from pathlib import Path
+
+# Collect stage results
+stage_results = [
+    {'name': 'setup', 'exit_code': 0, 'duration': 2.5},
+    {'name': 'tests', 'exit_code': 0, 'duration': 45.2},
+    {'name': 'analysis', 'exit_code': 0, 'duration': 12.8},
+]
+
+# Generate report
+report = generate_pipeline_report(
+    stage_results=stage_results,
+    total_duration=60.5,
+    repo_root=Path("."),
+    test_results={'summary': {'total_tests': 878, 'total_passed': 878}},
+    validation_results={'checks': {'pdf_validation': True}},
+    performance_metrics={'total_duration': 60.5},
+)
+
+# Save in multiple formats
+saved_files = save_pipeline_report(report, Path("output/reports"))
+# Returns: {'json': Path(...), 'html': Path(...), 'markdown': Path(...)}
+```
+
+#### Aggregate Errors
+
+```python
+from infrastructure.reporting import get_error_aggregator
+
+aggregator = get_error_aggregator()
+
+# Add errors during pipeline execution
+aggregator.add_error(
+    error_type='test_failure',
+    message='Test test_example failed with assertion error',
+    stage='tests',
+    file='tests/test_example.py',
+    line=42,
+    severity='error',
+    suggestions=[
+        'Review test output for details',
+        'Check test data and fixtures',
+        'Verify recent code changes',
+    ],
+)
+
+# Generate summary
+summary = aggregator.get_summary()
+aggregator.save_report(Path("output/reports"))
+```
+
+#### Generate Validation Report
+
+```python
+from infrastructure.reporting import generate_validation_report
+
+validation_results = {
+    'checks': {
+        'pdf_validation': True,
+        'markdown_validation': True,
+        'output_structure': False,
+    },
+    'recommendations': [
+        {
+            'priority': 'high',
+            'issue': 'Missing output directories',
+            'action': 'Ensure all analysis scripts completed successfully',
+            'file': 'project/output/',
+        },
+    ],
+}
+
+saved_files = generate_validation_report(validation_results, Path("output/reports"))
+```
+
+### Integration
+
+The reporting module is automatically integrated into:
+- `scripts/run_all.py` - Generates consolidated pipeline report at end
+- `scripts/01_run_tests.py` - Generates structured test reports
+- `scripts/04_validate_output.py` - Generates enhanced validation reports
+
+Reports are saved to `project/output/reports/` by default.
+
+### Report Formats
+
+All reports are generated in multiple formats:
+- **JSON**: Machine-readable format for programmatic access
+- **HTML**: Visual format with styling for browser viewing
+- **Markdown**: Human-readable format for documentation
+
+---
+
 ## Best Practices
 
 ### 1. **Integrate Early**
@@ -893,6 +1007,7 @@ def monitor_performance():
 | Literature Search | requests, bibtexparser | 91% |
 | LLM Integration | requests, ollama | 91% |
 | Rendering System | pandoc, xelatex | 91% |
+| Reporting | json, pathlib | 0% (new module, tests pending) |
 
 All modules are designed to work independently or together, with minimal coupling between components.
 

@@ -199,11 +199,16 @@ def get_system_resources() -> dict[str, Any]:
         memory = psutil.virtual_memory()
         disk = psutil.disk_usage('/')
         
+        # Get process-specific resources
+        process = psutil.Process(os.getpid())
+        process_memory = process.memory_info()
+        
         return {
             'cpu_percent': cpu_percent,
             'memory_total_gb': memory.total / 1024 / 1024 / 1024,
             'memory_available_gb': memory.available / 1024 / 1024 / 1024,
             'memory_percent': memory.percent,
+            'process_memory_mb': process_memory.rss / 1024 / 1024,
             'disk_total_gb': disk.total / 1024 / 1024 / 1024,
             'disk_free_gb': disk.free / 1024 / 1024 / 1024,
             'disk_percent': (disk.used / disk.total) * 100,
@@ -214,5 +219,150 @@ def get_system_resources() -> dict[str, Any]:
     except Exception as e:
         logger.warning(f"Failed to get system resources: {e}")
         return {}
+
+
+class StagePerformanceTracker:
+    """Track performance metrics for pipeline stages."""
+    
+    def __init__(self):
+        """Initialize stage performance tracker."""
+        self.stages: list[dict[str, Any]] = []
+        self.start_time: Optional[float] = None
+    
+    def start_stage(self, stage_name: str) -> None:
+        """Start tracking a stage.
+        
+        Args:
+            stage_name: Name of the stage
+        """
+        self.start_time = time.time()
+        try:
+            import psutil
+            process = psutil.Process(os.getpid())
+            self.start_memory = process.memory_info().rss / 1024 / 1024  # MB
+            self.start_io = process.io_counters()
+        except (ImportError, AttributeError):
+            self.start_memory = 0.0
+            self.start_io = None
+    
+    def end_stage(self, stage_name: str, exit_code: int) -> dict[str, Any]:
+        """End tracking a stage and return metrics.
+        
+        Args:
+            stage_name: Name of the stage
+            exit_code: Exit code from the stage
+            
+        Returns:
+            Dictionary with stage performance metrics
+        """
+        if self.start_time is None:
+            return {}
+        
+        duration = time.time() - self.start_time
+        
+        metrics = {
+            'stage_name': stage_name,
+            'duration': duration,
+            'exit_code': exit_code,
+            'memory_mb': 0.0,
+            'peak_memory_mb': 0.0,
+            'cpu_percent': 0.0,
+            'io_read_mb': 0.0,
+            'io_write_mb': 0.0,
+        }
+        
+        try:
+            import psutil
+            process = psutil.Process(os.getpid())
+            current_memory = process.memory_info().rss / 1024 / 1024  # MB
+            metrics['memory_mb'] = current_memory
+            metrics['peak_memory_mb'] = current_memory  # Simplified - could track peak during stage
+            metrics['cpu_percent'] = process.cpu_percent(interval=0.1)
+            
+            if self.start_io:
+                current_io = process.io_counters()
+                metrics['io_read_mb'] = (current_io.read_bytes - self.start_io.read_bytes) / 1024 / 1024
+                metrics['io_write_mb'] = (current_io.write_bytes - self.start_io.write_bytes) / 1024 / 1024
+        except (ImportError, AttributeError):
+            pass
+        
+        self.stages.append(metrics)
+        self.start_time = None
+        
+        return metrics
+    
+    def get_performance_warnings(self) -> list[dict[str, Any]]:
+        """Get performance warnings for stages.
+        
+        Returns:
+            List of warning dictionaries
+        """
+        warnings = []
+        
+        if not self.stages:
+            return warnings
+        
+        # Calculate average duration
+        durations = [s['duration'] for s in self.stages]
+        avg_duration = sum(durations) / len(durations) if durations else 0
+        
+        # Check for unusually slow stages (> 2x average)
+        for stage in self.stages:
+            if stage['duration'] > avg_duration * 2 and avg_duration > 0:
+                warnings.append({
+                    'type': 'slow_stage',
+                    'stage': stage['stage_name'],
+                    'duration': stage['duration'],
+                    'average': avg_duration,
+                    'message': f"Stage {stage['stage_name']} took {format_duration(stage['duration'])} (2x average)",
+                    'suggestion': 'Consider optimizing this stage or running it in parallel',
+                })
+        
+        # Check for high memory usage (> 1GB)
+        for stage in self.stages:
+            if stage.get('peak_memory_mb', 0) > 1024:
+                warnings.append({
+                    'type': 'high_memory',
+                    'stage': stage['stage_name'],
+                    'memory_mb': stage['peak_memory_mb'],
+                    'message': f"Stage {stage['stage_name']} used {stage['peak_memory_mb']:.0f} MB memory",
+                    'suggestion': 'Consider memory optimization or increasing available memory',
+                })
+        
+        # Check for high CPU usage (> 90%)
+        for stage in self.stages:
+            if stage.get('cpu_percent', 0) > 90:
+                warnings.append({
+                    'type': 'high_cpu',
+                    'stage': stage['stage_name'],
+                    'cpu_percent': stage['cpu_percent'],
+                    'message': f"Stage {stage['stage_name']} used {stage['cpu_percent']:.1f}% CPU",
+                    'suggestion': 'Consider parallelization or CPU optimization',
+                })
+        
+        return warnings
+    
+    def get_summary(self) -> dict[str, Any]:
+        """Get performance summary.
+        
+        Returns:
+            Dictionary with performance summary
+        """
+        if not self.stages:
+            return {}
+        
+        durations = [s['duration'] for s in self.stages]
+        total_duration = sum(durations)
+        
+        return {
+            'total_stages': len(self.stages),
+            'total_duration': total_duration,
+            'average_duration': total_duration / len(self.stages) if self.stages else 0,
+            'slowest_stage': max(self.stages, key=lambda s: s['duration']) if self.stages else None,
+            'fastest_stage': min(self.stages, key=lambda s: s['duration']) if self.stages else None,
+            'total_memory_mb': sum(s.get('memory_mb', 0) for s in self.stages),
+            'peak_memory_mb': max((s.get('peak_memory_mb', 0) for s in self.stages), default=0),
+            'warnings': self.get_performance_warnings(),
+        }
 
 

@@ -15,6 +15,10 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md)** - Testing patterns and coverage standards
 - **[`.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md)** - AGENTS.md and README.md writing guide
 - **[`.cursorrules/type_hints_standards.md`](../.cursorrules/type_hints_standards.md)** - Type annotation patterns
+- **[`.cursorrules/llm_standards.md`](../.cursorrules/llm_standards.md)** - LLM/Ollama integration patterns
+- **[`.cursorrules/code_style.md`](../.cursorrules/code_style.md)** - Code formatting and style standards
+- **[`.cursorrules/git_workflow.md`](../.cursorrules/git_workflow.md)** - Git workflow and commit standards
+- **[`.cursorrules/api_design.md`](../.cursorrules/api_design.md)** - API design and interface standards
 
 **Note**: Use `.cursorrules/` files as quick reference during development. Corresponding `docs/` files provide comprehensive guides.
 
@@ -37,6 +41,7 @@ Development standards are documented in the `.cursorrules/` directory:
 
 ### **System Architecture**
 - **[`docs/ARCHITECTURE.md`](ARCHITECTURE.md)** - Complete system design overview
+- **[`docs/TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md)** - Complete two-layer architecture guide
 - **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
 - **[`docs/WORKFLOW.md`](WORKFLOW.md)** - Development workflow and build pipeline
 
@@ -80,7 +85,7 @@ Development standards are documented in the `.cursorrules/` directory:
 ## 🧪 **Advanced Modules**
 
 ### **Module Guides**
-- **[`docs/ADVANCED_MODULES_GUIDE.md`](ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all 9 advanced modules
+- **[`docs/ADVANCED_MODULES_GUIDE.md`](ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all 10 advanced modules
 - **[`docs/API_REFERENCE.md`](API_REFERENCE.md)** - Complete API documentation for all src/ modules
 
 ## ⚙️ **Operational Guides**
@@ -96,12 +101,20 @@ Development standards are documented in the `.cursorrules/` directory:
 ### **Troubleshooting & Support**
 - **[`docs/TROUBLESHOOTING_GUIDE.md`](TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting guide
 - **[`docs/FAQ.md`](FAQ.md)** - Frequently asked questions and common issues
+- **[`docs/LLM_REVIEW_TROUBLESHOOTING.md`](LLM_REVIEW_TROUBLESHOOTING.md)** - LLM-specific troubleshooting
+- **[`docs/CHECKPOINT_RESUME.md`](CHECKPOINT_RESUME.md)** - Checkpoint and resume system
+- **[`docs/ERROR_HANDLING_GUIDE.md`](ERROR_HANDLING_GUIDE.md)** - Error handling patterns
+- **[`docs/LOGGING_GUIDE.md`](LOGGING_GUIDE.md)** - Logging system guide
+- **[`docs/TESTING_GUIDE.md`](TESTING_GUIDE.md)** - Testing framework guide
+- **[`docs/CONFIGURATION.md`](CONFIGURATION.md)** - Configuration system guide
 
 ## 📚 **Reference Materials**
 
 ### **Best Practices & Guidelines**
 - **[`docs/BEST_PRACTICES.md`](BEST_PRACTICES.md)** - Consolidated best practices compilation
 - **[`docs/VERSION_CONTROL.md`](VERSION_CONTROL.md)** - Git workflows and version control best practices
+- **[`docs/COVERAGE_GAPS.md`](COVERAGE_GAPS.md)** - Test coverage analysis and gaps
+- **[`docs/DECISION_TREE.md`](DECISION_TREE.md)** - Decision tree for code placement
 
 ### **Project Management**
 - **[`docs/MULTI_PROJECT_MANAGEMENT.md`](MULTI_PROJECT_MANAGEMENT.md)** - Managing multiple projects using the template
@@ -153,7 +166,9 @@ docs/
 ├── TEMPLATE_DESCRIPTION.md             # Template overview
 ├── TEST_IMPROVEMENTS_SUMMARY.md        # Test suite documentation
 ├── THIN_ORCHESTRATOR_SUMMARY.md        # Pattern implementation
+├── TITLE_PAGE_AND_FIGURES_IMPLEMENTATION.md  # Title page and figures
 ├── TROUBLESHOOTING_GUIDE.md            # Comprehensive troubleshooting
+├── TWO_LAYER_ARCHITECTURE.md          # Two-layer architecture guide
 ├── VERSION_CONTROL.md                  # Git workflows and best practices
 ├── VISUALIZATION_GUIDE.md              # Visualization system guide
 └── WORKFLOW.md                         # Development workflow

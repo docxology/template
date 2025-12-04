@@ -11,6 +11,7 @@ Stage 5 of the pipeline orchestration.
 """
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_substep
+from infrastructure.reporting import generate_validation_report as generate_validation_report_structured
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -198,40 +200,103 @@ def validate_figure_registry() -> tuple[bool, list[str]]:
     return len(issues) == 0, issues
 
 
-def generate_validation_report() -> None:
-    """Generate a validation report."""
+def generate_validation_report(
+    check_results: list[tuple[str, bool]],
+    figure_issues: list[str],
+    output_statistics: dict
+) -> dict:
+    """Generate enhanced validation report with structured output.
+    
+    Args:
+        check_results: List of (check_name, result) tuples
+        figure_issues: List of figure validation issues
+        output_statistics: Output file statistics
+        
+    Returns:
+        Validation results dictionary
+    """
     log_substep("Generating validation report...", logger)
     
     repo_root = Path(__file__).parent.parent
-    output_dir = repo_root / "project" / "output"
+    output_dir = repo_root / "project" / "output" / "reports"
     
-    report_lines = [
-        "Validation Report",
-        "=================",
-        "",
-        f"Generated at: {output_dir.absolute()}",
-        "",
-    ]
+    # Build validation results dictionary
+    validation_results = {
+        'timestamp': None,  # Will be set by reporting module
+        'checks': {name: result for name, result in check_results},
+        'figure_issues': figure_issues,
+        'output_statistics': output_statistics,
+        'summary': {
+            'total_checks': len(check_results),
+            'passed': sum(1 for _, result in check_results if result),
+            'failed': sum(1 for _, result in check_results if not result),
+            'figure_issues_count': len(figure_issues),
+            'all_passed': all(result for _, result in check_results) and len(figure_issues) == 0,
+        },
+        'recommendations': [],
+    }
     
-    # Collect output statistics
-    for subdir in ["pdf", "figures", "data"]:
-        subdir_path = output_dir / subdir
-        if subdir_path.exists():
-            files = list(subdir_path.glob("*"))
-            total_size = sum(f.stat().st_size for f in files if f.is_file())
-            size_mb = total_size / (1024 * 1024)
-            
-            report_lines.append(f"{subdir.upper()}: {len(files)} file(s), {size_mb:.2f} MB")
+    # Generate actionable recommendations
+    recommendations = []
+    for check_name, result in check_results:
+        if not result:
+            if check_name == "PDF validation":
+                recommendations.append({
+                    'priority': 'high',
+                    'issue': 'PDF validation failed',
+                    'action': 'Check PDF generation logs and LaTeX compilation errors',
+                    'file': 'output/pdf/*_compile.log',
+                })
+            elif check_name == "Markdown validation":
+                recommendations.append({
+                    'priority': 'medium',
+                    'issue': 'Markdown validation issues found',
+                    'action': 'Review markdown validation output for formatting issues',
+                    'file': 'project/manuscript/',
+                })
+            elif check_name == "Output structure":
+                recommendations.append({
+                    'priority': 'high',
+                    'issue': 'Missing output directories',
+                    'action': 'Ensure all analysis scripts completed successfully',
+                    'file': 'project/output/',
+                })
     
-    report_lines.extend([
-        "",
-        "Validation Complete",
-        "",
-    ])
+    if figure_issues:
+        recommendations.append({
+            'priority': 'medium',
+            'issue': f'{len(figure_issues)} figure reference issue(s)',
+            'action': 'Register missing figures or remove unused references',
+            'file': 'project/output/figures/figure_registry.json',
+        })
     
-    # Log report
-    report_text = "\n".join(report_lines)
-    logger.info(f"\n{report_text}")
+    validation_results['recommendations'] = recommendations
+    
+    # Generate structured reports using reporting module
+    try:
+        saved_files = generate_validation_report_structured(validation_results, output_dir)
+        logger.info(f"Validation reports saved: {', '.join(str(p) for p in saved_files.values())}")
+    except Exception as e:
+        logger.warning(f"Failed to generate structured validation report: {e}")
+        # Fallback to simple text report
+        report_lines = [
+            "Validation Report",
+            "=================",
+            "",
+            f"Generated at: {output_dir.absolute()}",
+            "",
+        ]
+        
+        for subdir in ["pdf", "figures", "data"]:
+            if subdir in output_statistics:
+                stats = output_statistics[subdir]
+                report_lines.append(f"{subdir.upper()}: {stats.get('files', 0)} file(s), {stats.get('size_mb', 0):.2f} MB")
+        
+        report_lines.extend(["", "Validation Complete", ""])
+        report_text = "\n".join(report_lines)
+        logger.info(f"\n{report_text}")
+    
+    return validation_results
 
 
 def main() -> int:
@@ -262,9 +327,27 @@ def main() -> int:
     except Exception as e:
         logger.error(f"Error during figure registry validation: {e}", exc_info=True)
         results.append(("Figure registry", False))
+        figure_issues = []
     
-    # Generate report
-    generate_validation_report()
+    # Collect output statistics
+    repo_root = Path(__file__).parent.parent
+    output_dir = repo_root / "project" / "output"
+    output_statistics = {}
+    
+    for subdir in ["pdf", "figures", "data"]:
+        subdir_path = output_dir / subdir
+        if subdir_path.exists():
+            files = list(subdir_path.glob("*"))
+            file_list = [f for f in files if f.is_file()]
+            total_size = sum(f.stat().st_size for f in file_list)
+            size_mb = total_size / (1024 * 1024)
+            output_statistics[subdir] = {
+                'files': len(file_list),
+                'size_mb': size_mb,
+            }
+    
+    # Generate enhanced validation report
+    validation_results = generate_validation_report(results, figure_issues, output_statistics)
     
     # Summary
     logger.info("\n" + "="*60)

@@ -15,6 +15,7 @@ Modular build, validation, and development tools organized by functionality.
 | **llm** | LLM integration | `LLMClient` | ✅ |
 | **rendering** | Multi-format output | `RenderManager` | ✅ |
 | **publishing** | Publishing tools | `PublishingManager` | ✅ |
+| **reporting** | Pipeline reporting | `PipelineReporter`, `ErrorAggregator` | N/A |
 
 ## Quick Start
 
@@ -61,6 +62,12 @@ pdf = renderer.render_pdf(Path("manuscript.tex"))
 # Publishing
 from infrastructure.publishing import extract_publication_metadata
 metadata = extract_publication_metadata([Path("manuscript.md")])
+
+# Reporting
+from infrastructure.reporting import generate_pipeline_report, get_error_aggregator
+report = generate_pipeline_report(stage_results, total_duration, repo_root)
+aggregator = get_error_aggregator()
+aggregator.add_error("test_failure", "Test failed", stage="tests")
 ```
 
 ### CLI Usage
@@ -86,6 +93,9 @@ python3 -m infrastructure.rendering.cli all manuscript.tex
 # Publishing
 python3 -m infrastructure.publishing.cli extract-metadata manuscript/
 python3 -m infrastructure.publishing.cli publish-zenodo output/ --token $ZENODO_TOKEN
+
+# Reporting (integrated into pipeline - reports auto-generated)
+# Reports saved to: project/output/reports/
 ```
 
 ## Core Module
@@ -279,6 +289,32 @@ web = renderer.render_web(Path("manuscript.md"))
 html = renderer.render_html(Path("manuscript.md"))
 ```
 
+## Reporting Module
+
+**Pipeline reporting and error aggregation.**
+
+```python
+from infrastructure.reporting import (
+    generate_pipeline_report,
+    save_pipeline_report,
+    get_error_aggregator,
+    generate_validation_report
+)
+
+# Generate pipeline report
+report = generate_pipeline_report(
+    stage_results=[...],
+    total_duration=60.5,
+    repo_root=Path("."),
+)
+saved_files = save_pipeline_report(report, Path("output/reports"))
+
+# Aggregate errors
+aggregator = get_error_aggregator()
+aggregator.add_error("test_failure", "Test failed", stage="tests")
+aggregator.save_report(Path("output/reports"))
+```
+
 ## Publishing Module
 
 **Publish to academic platforms and generate citations.**
@@ -375,6 +411,7 @@ All modules have comprehensive test coverage:
 - llm: 91%+
 - rendering: 91%+
 - publishing: 100%
+- reporting: 0% (new module, tests pending)
 
 ## Common Workflows
 
@@ -443,6 +480,7 @@ For detailed information about each module:
 - [`llm/`](llm/) - See [llm/AGENTS.md](llm/AGENTS.md)
 - [`rendering/`](rendering/) - See [rendering/AGENTS.md](rendering/AGENTS.md)
 - [`publishing/`](publishing/) - See [publishing/AGENTS.md](publishing/AGENTS.md)
+- [`reporting/`](reporting/) - See [reporting/AGENTS.md](reporting/AGENTS.md)
 
 ## Troubleshooting
 
