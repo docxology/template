@@ -356,3 +356,6 @@ For more details on architecture and workflow, see:
 - **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System design overview
 - **[`TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md)** - Complete two-layer architecture guide
 - **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow
+
+For comprehensive manuscript formatting standards, see:
+- **[`.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md)** - Complete manuscript formatting and style guide (equations, figures, tables, citations, lists, cross-references)

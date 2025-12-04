@@ -325,8 +325,9 @@ PROJECT_NAME="$1"
 git clone template-repo "$PROJECT_NAME"
 cd "$PROJECT_NAME"
 
-# Customize
-./repo_utilities/rename_project.sh
+# Customize (edit config.yaml or set environment variables)
+cp project/manuscript/config.yaml.example project/manuscript/config.yaml
+vim project/manuscript/config.yaml
 
 # Initialize
 uv sync

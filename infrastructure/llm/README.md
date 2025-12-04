@@ -110,6 +110,7 @@ export OLLAMA_MODEL="qwen3:4b"
 # Generation defaults
 export LLM_TEMPERATURE="0.7"
 export LLM_MAX_TOKENS="2048"
+export LLM_LONG_MAX_TOKENS="4096"  # For long responses (review templates)
 export LLM_CONTEXT_WINDOW="4096"
 export LLM_TIMEOUT="300"
 export LLM_NUM_CTX="4096"
@@ -357,6 +358,88 @@ sample_schema
 | `ollama_utils.py` | 83% | Model discovery |
 | `cli.py` | 60% | Command-line interface |
 | **Total** | **88%** | All critical paths covered |
+
+## Prompt Fragment System
+
+The LLM module includes a **prompt fragment system** that allows prompts to be managed as JSON/YAML files instead of hardcoded Python strings. This enables:
+
+- **Version Control**: Prompts can be versioned independently of code
+- **A/B Testing**: Easy to test different prompt variations
+- **Maintainability**: Non-developers can modify prompts without touching Python
+- **Reusability**: Fragments can be shared across templates
+
+### Prompt Directory Structure
+
+```
+infrastructure/llm/prompts/
+├── fragments/              # Reusable prompt fragments
+│   ├── system_prompts.json
+│   ├── format_requirements.json
+│   ├── content_requirements.json
+│   ├── validation_hints.json
+│   └── section_structures.json
+├── templates/              # Template definitions
+│   ├── manuscript_reviews.json
+│   └── paper_summarization.json
+└── compositions/          # Composition rules
+    └── retry_prompts.json
+```
+
+### Using the Prompt System
+
+```python
+from infrastructure.llm.prompts import PromptFragmentLoader, PromptComposer
+
+# Load fragments
+loader = PromptFragmentLoader()
+system_prompt = loader.get_system_prompt("manuscript_review")
+fragment = loader.load_fragment("format_requirements.json#key")
+
+# Compose prompts
+composer = PromptComposer()
+prompt = composer.compose_template(
+    "manuscript_reviews.json#manuscript_executive_summary",
+    text=manuscript_text,
+    max_tokens=4096
+)
+
+# Add retry-specific modifications
+retry_prompt = composer.add_retry_prompt(prompt, retry_type="off_topic")
+```
+
+### Fragment References
+
+Fragments can be referenced using the `file.json#key` syntax:
+
+- `"system_prompts.json#manuscript_review"` - Load specific key from file
+- `"section_structures.json#executive_summary"` - Load nested structure
+- `"format_requirements.json"` - Load entire file
+
+### Template Composition
+
+Templates are composed from fragments with variable substitution:
+
+```json
+{
+  "manuscript_executive_summary": {
+    "version": "1.0",
+    "base_template": "=== MANUSCRIPT BEGIN ===\n\n${text}\n\n...",
+    "fragments": {
+      "format_requirements": "format_requirements.json",
+      "section_structure": "section_structures.json#executive_summary"
+    },
+    "variables": {
+      "word_count_range": [400, 600]
+    }
+  }
+}
+```
+
+The composer automatically:
+- Loads referenced fragments
+- Substitutes variables
+- Builds constraint sections (format, content, validation)
+- Handles token budget allocation
 
 ## See Also
 

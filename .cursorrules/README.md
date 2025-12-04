@@ -20,6 +20,7 @@ Development standards and coding guidelines for the Research Project Template.
 - **git_workflow.md** - Git workflow and commit standards
 - **security.md** - Security standards and guidelines
 - **api_design.md** - API design and interface standards
+- **manuscript_style.md** - Manuscript formatting and style standards
 
 ## Key Principles
 
@@ -176,6 +177,45 @@ def test_feature_error_condition():
 See [AGENTS.md](AGENTS.md) for comprehensive docs
 ```
 
+### Manuscript Formatting
+
+```markdown
+# Equations
+\begin{equation}
+\label{eq:objective}
+f(x) = \sum_{i=1}^{n} w_i \phi_i(x)
+\end{equation}
+Using \eqref{eq:objective}...
+
+# Figures
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../output/figures/figure.png}
+\caption{Descriptive caption.}
+\label{fig:figure_name}
+\end{figure}
+See Figure \ref{fig:figure_name}...
+
+# Tables
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Column 1} & \textbf{Column 2} \\
+\hline
+Data 1 & Data 2 \\
+\hline
+\end{tabular}
+\caption{Table description.}
+\label{tab:table_name}
+\end{table}
+Table \ref{tab:table_name} shows...
+
+# Citations
+According to \cite{author2023}, the method...
+Multiple sources \cite{key1,key2,key3} show...
+```
+
 ## Checklist
 
 Before commit:
@@ -196,6 +236,7 @@ Before commit:
 - Testing → [testing_standards.md](testing_standards.md)
 - Building modules → [infrastructure_modules.md](infrastructure_modules.md)
 - Writing docs → [documentation_standards.md](documentation_standards.md)
+- Writing manuscripts → [manuscript_style.md](manuscript_style.md)
 - Using LLM/Ollama → [llm_standards.md](llm_standards.md)
 
 ## More Info

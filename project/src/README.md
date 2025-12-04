@@ -117,7 +117,7 @@ pytest tests/ --cov=src
 ## See Also
 
 - [`AGENTS.md`](AGENTS.md) - Complete documentation
-- [`../infrastructure/README.md`](../infrastructure/README.md) - Infrastructure layer
+- [`../../infrastructure/README.md`](../../infrastructure/README.md) - Infrastructure layer
 - [`../../docs/TWO_LAYER_ARCHITECTURE.md`](../../docs/TWO_LAYER_ARCHITECTURE.md) - Architecture guide
 - [`../../docs/DECISION_TREE.md`](../../docs/DECISION_TREE.md) - Code placement guide
 - [`../../scripts/README.md`](../../scripts/README.md) - Script orchestration

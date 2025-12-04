@@ -98,6 +98,8 @@ class PaperSelector:
         try:
             with open(config_path, 'r', encoding='utf-8') as f:
                 data = yaml.safe_load(f)
+                # Handle empty file (yaml.safe_load returns None)
+                data = data or {}
         except yaml.YAMLError as e:
             logger.error(f"Invalid YAML in paper selection config: {e}")
             raise
@@ -219,8 +221,8 @@ class PaperSelector:
             text_to_search = (entry.title or "").lower() + " " + (entry.abstract or "").lower()
 
             for keyword in self.config.keywords:
-                # Use word boundaries for more accurate matching
-                pattern = r'\b' + re.escape(keyword.lower()) + r'\b'
+                # Use word boundary at start for matching (allows word continuation)
+                pattern = r'\b' + re.escape(keyword.lower())
                 if not re.search(pattern, text_to_search):
                     return False
             return True

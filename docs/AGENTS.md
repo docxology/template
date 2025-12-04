@@ -39,6 +39,7 @@ The `docs/` directory contains comprehensive project documentation organized by 
 | `THIN_ORCHESTRATOR_SUMMARY.md` | Architecture pattern details | Developers |
 | `PDF_VALIDATION.md` | PDF validation documentation | Developers |
 | `MARKDOWN_TEMPLATE_GUIDE.md` | Markdown authoring guide | Content creators |
+| `MANUSCRIPT_NUMBERING_SYSTEM.md` | Manuscript section numbering system | Content creators |
 
 ### Reference & Navigation
 
@@ -69,6 +70,7 @@ The `.cursorrules/` directory contains modular development rules that complement
 | [`../.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md) | Testing patterns and coverage standards |
 | [`../.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md) | AGENTS.md and README.md writing guide |
 | [`../.cursorrules/type_hints_standards.md`](../.cursorrules/type_hints_standards.md) | Type annotation patterns |
+| [`../.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md) | Manuscript formatting and style standards |
 
 **Quick Access**: Use `.cursorrules/` files for rule reference during development; consult `docs/` files for comprehensive guides.
 

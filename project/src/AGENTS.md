@@ -437,7 +437,7 @@ pytest tests/ --cov=src --cov-report=html
 
 ## See Also
 
-- [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure layer
+- [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure layer
 - [`../../docs/TWO_LAYER_ARCHITECTURE.md`](../../docs/TWO_LAYER_ARCHITECTURE.md) - Architecture overview
 - [`../../docs/DECISION_TREE.md`](../../docs/DECISION_TREE.md) - Code placement guide
 - [`../../AGENTS.md`](../../AGENTS.md) - Complete system documentation

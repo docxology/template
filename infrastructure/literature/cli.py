@@ -4,6 +4,7 @@ Thin orchestrator wrapping infrastructure.literature module functionality.
 """
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -50,7 +51,8 @@ def search_command(args):
 
 def library_list_command(args):
     """Handle library list command."""
-    config = LiteratureConfig()
+    # Use from_env() to respect environment variables for testing
+    config = LiteratureConfig.from_env() if any(os.environ.get(k) for k in ['LITERATURE_LIBRARY_INDEX', 'LITERATURE_BIBTEX_FILE', 'LITERATURE_DOWNLOAD_DIR']) else LiteratureConfig()
     manager = LiteratureSearch(config)
 
     entries = manager.get_library_entries()
@@ -70,7 +72,8 @@ def library_list_command(args):
             author_str += " et al."
 
         print(f"[{pdf_status}] {entry['citation_key']}")
-        print(f"    {entry['title'][:70]}{'...' if len(entry['title']) > 70 else ''}")
+        title = entry.get('title', 'No title')
+        print(f"    {title[:70]}{'...' if len(title) > 70 else ''}")
         print(f"    {author_str} ({year})")
         if entry.get("doi"):
             print(f"    DOI: {entry['doi']}")
@@ -94,15 +97,16 @@ def library_export_command(args):
 
 def library_stats_command(args):
     """Handle library stats command."""
-    config = LiteratureConfig()
+    # Use from_env() to respect environment variables for testing
+    config = LiteratureConfig.from_env() if any(os.environ.get(k) for k in ['LITERATURE_LIBRARY_INDEX', 'LITERATURE_BIBTEX_FILE', 'LITERATURE_DOWNLOAD_DIR']) else LiteratureConfig()
     manager = LiteratureSearch(config)
 
     stats = manager.get_library_stats()
 
     print("Library Statistics")
     print("=" * 40)
-    print(f"Total entries: {stats['total_entries']}")
-    print(f"Downloaded PDFs: {stats['downloaded_pdfs']}")
+    print(f"Total entries: {stats.get('total_entries', 0)}")
+    print(f"Downloaded PDFs: {stats.get('downloaded_pdfs', 0)}")
 
     if stats.get("oldest_year") and stats.get("newest_year"):
         print(f"Year range: {stats['oldest_year']} - {stats['newest_year']}")

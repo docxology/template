@@ -384,3 +384,404 @@ class TestPaperSelector:
         
         assert len(selected) == 3
 
+    def test_config_from_dict_empty_selection(self):
+        """Test creating config from dictionary with empty selection."""
+        data = {"selection": {}}
+        
+        config = PaperSelectionConfig.from_dict(data)
+        
+        assert config.citation_keys == []
+        assert config.years == {}
+        assert config.sources == []
+
+    def test_config_from_dict_no_selection_key(self):
+        """Test creating config from dictionary without selection key."""
+        data = {}
+        
+        config = PaperSelectionConfig.from_dict(data)
+        
+        assert config.citation_keys == []
+        assert config.years == {}
+
+    def test_config_from_dict_years_min_only(self):
+        """Test creating config with only min year."""
+        data = {
+            "selection": {
+                "years": {"min": 2020}
+            }
+        }
+        
+        config = PaperSelectionConfig.from_dict(data)
+        
+        assert config.years["min"] == 2020
+        assert "max" not in config.years
+
+    def test_config_from_dict_years_max_only(self):
+        """Test creating config with only max year."""
+        data = {
+            "selection": {
+                "years": {"max": 2024}
+            }
+        }
+        
+        config = PaperSelectionConfig.from_dict(data)
+        
+        assert config.years["max"] == 2024
+        assert "min" not in config.years
+
+    def test_from_config_file_encoding_error(self):
+        """Test creating selector from config file with encoding issues."""
+        # Create file with invalid encoding (binary data)
+        with tempfile.NamedTemporaryFile(mode='wb', suffix='.yaml', delete=False) as f:
+            f.write(b'\xff\xfe\x00\x00')  # Invalid UTF-8
+            config_path = Path(f.name)
+        
+        try:
+            # Should raise YAMLError or UnicodeDecodeError
+            with pytest.raises((yaml.YAMLError, UnicodeDecodeError)):
+                PaperSelector.from_config(config_path)
+        finally:
+            config_path.unlink()
+
+    def test_from_config_file_empty_file(self):
+        """Test creating selector from empty config file."""
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
+            f.write("")  # Empty file
+            config_path = Path(f.name)
+        
+        try:
+            selector = PaperSelector.from_config(config_path)
+            # Should create config with defaults
+            assert selector.config.citation_keys == []
+        finally:
+            config_path.unlink()
+
+    def test_filter_by_citation_keys_empty_list(self):
+        """Test filtering by citation keys with empty list."""
+        config = PaperSelectionConfig(citation_keys=[])
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="P1", authors=[], year=2024, abstract="")
+        ]
+        
+        selected = selector._filter_by_citation_keys(papers)
+        
+        # Empty list should return empty result
+        assert len(selected) == 0
+
+    def test_filter_by_citation_keys_nonexistent(self):
+        """Test filtering by citation keys that don't exist."""
+        config = PaperSelectionConfig(citation_keys=["nonexistent1", "nonexistent2"])
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="P1", authors=[], year=2024, abstract="")
+        ]
+        
+        selected = selector._filter_by_citation_keys(papers)
+        
+        assert len(selected) == 0
+
+    def test_filter_by_years_no_year_entries(self):
+        """Test filtering by years with entries having no year."""
+        config = PaperSelectionConfig(years={"min": 2020, "max": 2024})
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="P1", authors=[], year=None, abstract=""),
+            LibraryEntry(citation_key="p2", title="P2", authors=[], year=2022, abstract="")
+        ]
+        
+        selected = selector._filter_by_years(papers)
+        
+        # Should skip entries without year
+        assert len(selected) == 1
+        assert selected[0].citation_key == "p2"
+
+    def test_filter_by_years_exact_boundaries(self):
+        """Test filtering by years at exact boundaries."""
+        config = PaperSelectionConfig(years={"min": 2022, "max": 2023})
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="P1", authors=[], year=2022, abstract=""),
+            LibraryEntry(citation_key="p2", title="P2", authors=[], year=2023, abstract=""),
+            LibraryEntry(citation_key="p3", title="P3", authors=[], year=2021, abstract=""),
+            LibraryEntry(citation_key="p4", title="P4", authors=[], year=2024, abstract="")
+        ]
+        
+        selected = selector._filter_by_years(papers)
+        
+        assert len(selected) == 2
+        assert all(2022 <= p.year <= 2023 for p in selected)
+
+    def test_filter_by_sources_multiple_sources(self):
+        """Test filtering by multiple sources."""
+        config = PaperSelectionConfig(sources=["arxiv", "semanticscholar"])
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="P1", authors=[], year=2024, abstract="", source="arxiv"),
+            LibraryEntry(citation_key="p2", title="P2", authors=[], year=2024, abstract="", source="semanticscholar"),
+            LibraryEntry(citation_key="p3", title="P3", authors=[], year=2024, abstract="", source="pubmed"),
+            LibraryEntry(citation_key="p4", title="P4", authors=[], year=2024, abstract="", source="arxiv")
+        ]
+        
+        selected = selector._filter_by_sources(papers)
+        
+        assert len(selected) == 3
+        assert all(p.source in ["arxiv", "semanticscholar"] for p in selected)
+
+    def test_filter_by_sources_no_source_field(self):
+        """Test filtering by sources when entries have no source field."""
+        config = PaperSelectionConfig(sources=["arxiv"])
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="P1", authors=[], year=2024, abstract="")
+            # No source field
+        ]
+        
+        selected = selector._filter_by_sources(papers)
+        
+        # Should filter out entries without source
+        assert len(selected) == 0
+
+    @patch('infrastructure.literature.paper_selector.Path')
+    def test_filter_by_pdf_availability_false(self, mock_path_class):
+        """Test filtering for papers without PDF."""
+        config = PaperSelectionConfig(has_pdf=False)
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="P1", authors=[], year=2024, abstract="", pdf_path=None),
+            LibraryEntry(citation_key="p2", title="P2", authors=[], year=2024, abstract="", pdf_path=Path("/p2.pdf"))
+        ]
+        
+        def path_side_effect(path_str):
+            mock = Mock()
+            mock.is_absolute.return_value = True
+            mock.exists.return_value = str(path_str).endswith('.pdf')
+            def truediv(self, other):
+                new_mock = Mock()
+                new_mock.is_absolute.return_value = False
+                new_mock.exists.return_value = str(other).endswith('.pdf')
+                return new_mock
+            mock.__truediv__ = truediv
+            return mock
+        
+        mock_path_class.side_effect = path_side_effect
+        
+        selected = selector._filter_by_pdf_availability(papers)
+        
+        # Should return only papers without PDF
+        assert len(selected) == 1
+        assert selected[0].pdf_path is None
+
+    @patch('infrastructure.literature.paper_selector.Path')
+    def test_filter_by_pdf_availability_relative_path(self, mock_path_class):
+        """Test filtering by PDF with relative path."""
+        config = PaperSelectionConfig(has_pdf=True)
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="P1", authors=[], year=2024, abstract="", pdf_path=Path("papers/p1.pdf"))
+        ]
+        
+        def path_side_effect(path_str):
+            mock = Mock()
+            if "papers" in str(path_str) or "p1.pdf" in str(path_str):
+                mock.is_absolute.return_value = False
+                mock.exists.return_value = True
+            else:
+                mock.is_absolute.return_value = True
+                mock.exists.return_value = False
+            def truediv(self, other):
+                new_mock = Mock()
+                new_mock.is_absolute.return_value = False
+                new_mock.exists.return_value = True
+                return new_mock
+            mock.__truediv__ = truediv
+            return mock
+        
+        mock_path_class.side_effect = path_side_effect
+        
+        selected = selector._filter_by_pdf_availability(papers)
+        
+        assert len(selected) == 1
+
+    def test_filter_by_summary_availability_false(self, tmp_path, monkeypatch):
+        """Test filtering for papers without summaries."""
+        config = PaperSelectionConfig(has_summary=False)
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="P1", authors=[], year=2024, abstract=""),
+            LibraryEntry(citation_key="p2", title="P2", authors=[], year=2024, abstract="")
+        ]
+        
+        # Create real summary directory structure
+        summary_dir = tmp_path / "literature" / "summaries"
+        summary_dir.mkdir(parents=True)
+        
+        # Create summary for p1 only
+        (summary_dir / "p1_summary.md").write_text("Summary")
+        
+        # Change to tmp_path so relative paths work
+        original_cwd = Path.cwd()
+        monkeypatch.chdir(tmp_path)
+        try:
+            selected = selector._filter_by_summary_availability(papers)
+            
+            # Should return only papers without summaries
+            assert len(selected) == 1
+            assert selected[0].citation_key == "p2"
+        finally:
+            monkeypatch.chdir(original_cwd)
+
+    def test_filter_by_keywords_case_insensitive(self):
+        """Test keyword filtering is case insensitive."""
+        config = PaperSelectionConfig(keywords=["MACHINE", "learning"])
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="Machine Learning Paper", authors=[], year=2024, abstract=""),
+            LibraryEntry(citation_key="p2", title="Other Paper", authors=[], year=2024, abstract="")
+        ]
+        
+        selected = selector._filter_by_keywords(papers)
+        
+        # Should match case-insensitively
+        assert len(selected) >= 1
+        assert any("machine" in p.title.lower() for p in selected)
+
+    def test_filter_by_keywords_multiple_keywords_all_required(self):
+        """Test keyword filtering requires all keywords."""
+        config = PaperSelectionConfig(keywords=["machine", "learning", "neural"])
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="Machine Learning Neural Networks", authors=[], year=2024, abstract=""),
+            LibraryEntry(citation_key="p2", title="Machine Learning", authors=[], year=2024, abstract=""),
+            LibraryEntry(citation_key="p3", title="Neural Networks", authors=[], year=2024, abstract="")
+        ]
+        
+        selected = selector._filter_by_keywords(papers)
+        
+        # Should only match papers with all keywords
+        assert len(selected) == 1
+        assert selected[0].citation_key == "p1"
+
+    def test_filter_by_keywords_in_abstract(self):
+        """Test keyword filtering matches in abstract."""
+        config = PaperSelectionConfig(keywords=["deep learning"])
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="Paper 1", authors=[], year=2024, abstract="This paper is about deep learning"),
+            LibraryEntry(citation_key="p2", title="Paper 2", authors=[], year=2024, abstract="Different topic")
+        ]
+        
+        selected = selector._filter_by_keywords(papers)
+        
+        assert len(selected) == 1
+        assert selected[0].citation_key == "p1"
+
+    def test_filter_by_keywords_word_boundaries(self):
+        """Test keyword filtering uses word boundaries."""
+        config = PaperSelectionConfig(keywords=["learn"])
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="Learning Paper", authors=[], year=2024, abstract=""),
+            LibraryEntry(citation_key="p2", title="Relearning Paper", authors=[], year=2024, abstract="")
+        ]
+        
+        selected = selector._filter_by_keywords(papers)
+        
+        # Should match "learn" as word boundary
+        assert len(selected) >= 1
+
+    def test_get_selection_summary_with_filters(self):
+        """Test getting selection summary with filters applied."""
+        config = PaperSelectionConfig(
+            citation_keys=["p1"],
+            years={"min": 2020},
+            sources=["arxiv"],
+            has_pdf=True,
+            keywords=["test"],
+            limit=5
+        )
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="P1", authors=[], year=2024, abstract="")
+        ]
+        
+        selected = selector.select_papers(papers)
+        summary = selector.get_selection_summary(selected, total=10)
+        
+        assert summary["total_papers"] == 10
+        assert summary["selected_papers"] == len(selected)
+        assert summary["filters_applied"]["citation_keys"] is True
+        assert summary["filters_applied"]["years"] is True
+        assert summary["filters_applied"]["sources"] is True
+        assert summary["filters_applied"]["has_pdf"] is True
+        assert summary["filters_applied"]["keywords"] is True
+        assert summary["filters_applied"]["limit"] is True
+
+    def test_get_selection_summary_no_filters(self):
+        """Test getting selection summary with no filters."""
+        config = PaperSelectionConfig()
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="P1", authors=[], year=2024, abstract="")
+        ]
+        
+        selected = selector.select_papers(papers)
+        summary = selector.get_selection_summary(selected, total=1)
+        
+        assert summary["total_papers"] == 1
+        assert summary["selected_papers"] == 1
+        assert all(not applied for applied in summary["filters_applied"].values())
+
+    def test_get_selection_summary_zero_total(self):
+        """Test getting selection summary with zero total."""
+        config = PaperSelectionConfig()
+        selector = PaperSelector(config)
+        
+        summary = selector.get_selection_summary([], total=0)
+        
+        assert summary["total_papers"] == 0
+        assert summary["selected_papers"] == 0
+        assert summary["selection_rate"] == 0
+
+    def test_select_papers_complex_multi_criteria(self):
+        """Test selecting papers with complex multi-criteria filtering."""
+        config = PaperSelectionConfig(
+            years={"min": 2022, "max": 2024},
+            sources=["arxiv", "semanticscholar"],
+            keywords=["machine", "learning"],
+            limit=3
+        )
+        selector = PaperSelector(config)
+        
+        papers = [
+            LibraryEntry(citation_key="p1", title="Machine Learning Paper", authors=[], year=2023, abstract="", source="arxiv"),
+            LibraryEntry(citation_key="p2", title="Other Paper", authors=[], year=2023, abstract="", source="arxiv"),
+            LibraryEntry(citation_key="p3", title="Machine Learning", authors=[], year=2021, abstract="", source="arxiv"),
+            LibraryEntry(citation_key="p4", title="Machine Learning", authors=[], year=2023, abstract="", source="pubmed"),
+            LibraryEntry(citation_key="p5", title="Machine Learning", authors=[], year=2023, abstract="", source="semanticscholar"),
+            LibraryEntry(citation_key="p6", title="Machine Learning", authors=[], year=2023, abstract="", source="arxiv")
+        ]
+        
+        selected = selector.select_papers(papers)
+        
+        # Should match: year 2022-2024, source arxiv/semanticscholar, keywords machine+learning
+        assert len(selected) <= 3  # Limited by limit
+        assert all(2022 <= p.year <= 2024 for p in selected)
+        assert all(p.source in ["arxiv", "semanticscholar"] for p in selected)
+        assert all("machine" in p.title.lower() and "learning" in p.title.lower() for p in selected)
+

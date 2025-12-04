@@ -84,6 +84,7 @@ class LLMConfig:
         OLLAMA_MODEL: Default model (default: qwen3:4b)
         LLM_TEMPERATURE: Temperature (default: 0.7)
         LLM_MAX_TOKENS: Max tokens (default: 2048)
+        LLM_LONG_MAX_TOKENS: Max tokens for long responses (default: 4096)
         LLM_CONTEXT_WINDOW: Context window (default: 4096)
         LLM_TIMEOUT: Request timeout in seconds (default: 300)
         LLM_NUM_CTX: Ollama num_ctx parameter (optional)
@@ -141,6 +142,7 @@ class LLMConfig:
             OLLAMA_MODEL: Default model name
             LLM_TEMPERATURE: Generation temperature
             LLM_MAX_TOKENS: Maximum tokens per response
+            LLM_LONG_MAX_TOKENS: Maximum tokens for long responses (default: 4096)
             LLM_CONTEXT_WINDOW: Context window size
             LLM_TIMEOUT: Request timeout
             LLM_NUM_CTX: Ollama num_ctx parameter
@@ -187,6 +189,7 @@ class LLMConfig:
             num_ctx=_get_optional_int("LLM_NUM_CTX"),
             seed=_get_optional_int("LLM_SEED"),
             system_prompt=os.environ.get("LLM_SYSTEM_PROMPT", cls.system_prompt),
+            long_max_tokens=_get_int("LLM_LONG_MAX_TOKENS", 4096),
         )
 
     def with_overrides(self, **kwargs: Any) -> 'LLMConfig':

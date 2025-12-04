@@ -132,6 +132,7 @@ The module reads configuration from environment variables:
 | `OLLAMA_MODEL` | `qwen3:4b` | Default model name (128K context, fast) |
 | `LLM_TEMPERATURE` | `0.7` | Generation temperature |
 | `LLM_MAX_TOKENS` | `2048` | Maximum tokens per response |
+| `LLM_LONG_MAX_TOKENS` | `4096` | Maximum tokens for long responses (used by review templates) |
 | `LLM_CONTEXT_WINDOW` | `131072` | Context window size (128K default) |
 | `LLM_TIMEOUT` | `300` | Request timeout (seconds) |
 | `LLM_NUM_CTX` | `None` | Ollama num_ctx parameter |

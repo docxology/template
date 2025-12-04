@@ -21,6 +21,7 @@ This directory contains comprehensive development standards, coding guidelines, 
 | [code_style.md](code_style.md) | Code formatting and style standards | Writing consistent, readable code |
 | [git_workflow.md](git_workflow.md) | Git workflow and commit standards | Managing version control |
 | [api_design.md](api_design.md) | API design and interface standards | Creating clean, consistent APIs |
+| [manuscript_style.md](manuscript_style.md) | Manuscript formatting and style standards | Writing research manuscripts |
 
 ## Key Principles
 
@@ -80,6 +81,7 @@ The template provides **two pipeline orchestrators** with different scope:
    - **Writing code**: [error_handling.md](error_handling.md), [python_logging.md](python_logging.md), [type_hints_standards.md](type_hints_standards.md)
    - **Creating modules**: [infrastructure_modules.md](infrastructure_modules.md), [testing_standards.md](testing_standards.md)
    - **Writing docs**: [documentation_standards.md](documentation_standards.md)
+   - **Writing manuscripts**: [manuscript_style.md](manuscript_style.md)
    - **Writing tests**: [testing_standards.md](testing_standards.md)
 3. **Follow the standards** - Apply the patterns and examples from the guide
 4. **Cross-reference** - See "See Also" sections for related guides
@@ -186,6 +188,33 @@ infrastructure/<module>/
 - [infrastructure_modules.md](infrastructure_modules.md) - Development standards
 - [error_handling.md](error_handling.md) - Exception patterns
 - [python_logging.md](python_logging.md) - Logging standards
+
+### Manuscript Writing
+
+See [manuscript_style.md](manuscript_style.md)
+
+**Key Points**:
+- Use equation environment for display math (not `$$`)
+- Always label figures, tables, and equations
+- Use descriptive labels (e.g., `fig:convergence_plot`, `eq:objective`)
+- Reference using `\ref{}` for sections/figures/tables, `\eqref{}` for equations
+- Place citations before punctuation
+- Use relative paths for figures: `../output/figures/`
+
+**Example**:
+```markdown
+\begin{equation}
+\label{eq:objective}
+f(x) = \sum_{i=1}^{n} w_i \phi_i(x)
+\end{equation}
+
+As shown in \eqref{eq:objective}, the objective function...
+```
+
+**Related Documentation:**
+- [manuscript_style.md](manuscript_style.md) - Complete manuscript formatting guide
+- [../project/manuscript/AGENTS.md](../project/manuscript/AGENTS.md) - Manuscript documentation
+- [../docs/MARKDOWN_TEMPLATE_GUIDE.md](../docs/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown guide
 
 ## Testing Standards
 
@@ -413,6 +442,7 @@ This directory provides modular development standards. Each file covers specific
 | [git_workflow.md](git_workflow.md) | Git workflow standards | Managing version control |
 | [api_design.md](api_design.md) | API design standards | Creating clean APIs |
 | [llm_standards.md](llm_standards.md) | LLM/Ollama patterns | Using local LLMs |
+| [manuscript_style.md](manuscript_style.md) | Manuscript formatting standards | Writing research manuscripts |
 
 ## Integration with Main Documentation
 
@@ -433,6 +463,7 @@ The .cursorrules standards align with and support the main documentation:
 | Documentation | [documentation_standards.md](documentation_standards.md) | [docs/WORKFLOW.md](../docs/WORKFLOW.md) |
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) |
+| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [project/manuscript/AGENTS.md](../project/manuscript/AGENTS.md) |
 
 ## Cross-Reference Guide
 
@@ -467,6 +498,7 @@ The .cursorrules standards align with and support the main documentation:
 | Writing tests | [testing_standards.md](testing_standards.md) | [error_handling.md](error_handling.md) for error testing |
 | Creating modules | [infrastructure_modules.md](infrastructure_modules.md) | All of the above standards |
 | Writing docs | [documentation_standards.md](documentation_standards.md) | Specific guide for your doc type |
+| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [project/manuscript/AGENTS.md](../project/manuscript/AGENTS.md) for manuscript structure |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
 | Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
 
@@ -488,6 +520,7 @@ The .cursorrules standards align with and support the main documentation:
 - [infrastructure_modules.md](infrastructure_modules.md) - Module development guide
 - [documentation_standards.md](documentation_standards.md) - Documentation writing guide
 - [llm_standards.md](llm_standards.md) - LLM/Ollama integration guide
+- [manuscript_style.md](manuscript_style.md) - Manuscript formatting and style guide
 
 **System Overview (400+ lines)**
 - [AGENTS.md](AGENTS.md) - This file - complete system overview
@@ -517,7 +550,7 @@ When creating a new .cursorrules file:
 
 ---
 
-**Version**: 2.3.0
-**Last Updated**: 2025-12-02
-**Status**: All 12 guideline files complete and cross-referenced
+**Version**: 2.4.0
+**Last Updated**: 2025-12-03
+**Status**: All 13 guideline files complete and cross-referenced
 **Maintainer**: Template Team

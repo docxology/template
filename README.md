@@ -3,7 +3,7 @@
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/BUILD_SYSTEM.md)
 [![Test Coverage](https://img.shields.io/badge/coverage-99.88%25%20project%20|%2055.89%25%20infra-brightgreen)](docs/BUILD_SYSTEM.md)
 [![Tests](https://img.shields.io/badge/tests-878%2F878%20passing%20(100%25)-brightgreen)](docs/BUILD_SYSTEM.md)
-[![Documentation](https://img.shields.io/badge/docs-42%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
+[![Documentation](https://img.shields.io/badge/docs-50%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
 
 > **Template Repository** - Click "Use this template" to create a new research project with this structure
@@ -19,7 +19,7 @@ This is a **GitHub Template Repository** that gives you:
 - ✅ **Automated PDF generation** from markdown sources
 - ✅ **Thin orchestrator pattern** for maintainable code
 - ✅ **Ready-to-use utilities** for any research project
-- ✅ **Professional documentation** structure (42+ comprehensive guides)
+- ✅ **Professional documentation** structure (50+ comprehensive guides)
 - ✅ **Advanced quality analysis** and document metrics
 - ✅ **Reproducibility tools** for scientific workflows
 - ✅ **Integrity verification** and validation
@@ -39,9 +39,12 @@ This is a **GitHub Template Repository** that gives you:
 **Just getting started?**
 
 1. **[Quick Start Guide](#quick-start)** - Get running in 5 minutes
-2. **[How To Use Guide](docs/HOW_TO_USE.md)** - Complete usage from basic to advanced
-3. **[Examples Showcase](docs/EXAMPLES_SHOWCASE.md)** - Real-world applications
-4. **[FAQ](docs/FAQ.md)** - Common questions answered
+2. **[Getting Started Guide](docs/GETTING_STARTED.md)** - Complete beginner's guide (Levels 1-3)
+3. **[Quick Start Cheatsheet](docs/QUICK_START_CHEATSHEET.md)** - One-page command reference
+4. **[Common Workflows](docs/COMMON_WORKFLOWS.md)** - Step-by-step recipes for common tasks
+5. **[How To Use Guide](docs/HOW_TO_USE.md)** - Complete usage from basic to advanced
+6. **[Examples Showcase](docs/EXAMPLES_SHOWCASE.md)** - Real-world applications
+7. **[FAQ](docs/FAQ.md)** - Common questions answered
 
 **Learn by example:** See **[Template Description](docs/TEMPLATE_DESCRIPTION.md)** and **[Examples](docs/EXAMPLES.md)**
 
@@ -55,6 +58,7 @@ This is a **GitHub Template Repository** that gives you:
 2. **[Thin Orchestrator Pattern](docs/THIN_ORCHESTRATOR_SUMMARY.md)** - Core architecture
 3. **[Development Workflow](docs/WORKFLOW.md)** - Complete development process
 4. **[Markdown Guide](docs/MARKDOWN_TEMPLATE_GUIDE.md)** - Writing and formatting
+5. **[Manuscript Style Guide](.cursorrules/manuscript_style.md)** - Formatting standards and best practices
 
 **Advanced topics:** Check **[Build System](docs/BUILD_SYSTEM.md)** and **[PDF Validation](docs/PDF_VALIDATION.md)**
 
@@ -162,7 +166,7 @@ graph TB
 3. **Install dependencies**: `uv sync`
 4. **Generate your first document**: `python3 scripts/03_render_pdf.py`
 
-**📖 Need help?** See **[How To Use Guide](docs/HOW_TO_USE.md)** for comprehensive guidance from basic usage to advanced workflows.
+**📖 Need help?** See **[Getting Started Guide](docs/GETTING_STARTED.md)** for beginners, **[Quick Start Cheatsheet](docs/QUICK_START_CHEATSHEET.md)** for quick reference, or **[How To Use Guide](docs/HOW_TO_USE.md)** for comprehensive guidance from basic usage to advanced workflows.
 
 ### Option 2: Quick Commands Reference
 
@@ -194,7 +198,7 @@ graph LR
     end
     
     subgraph Documentation["📚 Documentation"]
-        DOCS[42+ documentation files<br/>Comprehensive coverage]
+        DOCS[50+ documentation files<br/>Comprehensive coverage]
         CROSS[Complete cross-referencing<br/>All links validated]
         EXAMPLES[Real-world examples<br/>Multiple use cases]
     end
@@ -219,7 +223,7 @@ graph LR
 - **Build Time**: 84 seconds (optimal, without optional LLM review) - [Performance Analysis](docs/BUILD_SYSTEM.md#stage-breakdown)
 - **Tests Passing**: 878 tests (558 infrastructure + 320 project) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 - **PDFs Generated**: 14 (all sections) - [Output Summary](docs/BUILD_SYSTEM.md#generated-files)
-- **Documentation**: 42+ comprehensive files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
+- **Documentation**: 50+ comprehensive files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 
 ## 🎓 Learning Paths
 
@@ -350,7 +354,7 @@ graph TB
 - **`project/src/`** - **Project-specific scientific code** with comprehensive test coverage - [Project Details](project/src/AGENTS.md)
 - **`project/scripts/`** - **Project-specific analysis scripts** that use project/src/ methods
 - **`project/tests/`** - Project test suite
-- **`docs/`** - Package-level documentation (42+ guides) - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
+- **`docs/`** - Package-level documentation (50+ guides) - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 - **`project/manuscript/`** - Research manuscript sections (generate PDFs) - [Manuscript Guide](project/manuscript/AGENTS.md)
 - **`output/`** - Generated outputs (PDFs, figures, data) - **All files disposable**
 
@@ -698,6 +702,9 @@ flowchart TD
 - **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** - Complete documentation index
 
 ### Getting Started
+- **[docs/GETTING_STARTED.md](docs/GETTING_STARTED.md)** - Complete beginner's guide (Levels 1-3)
+- **[docs/QUICK_START_CHEATSHEET.md](docs/QUICK_START_CHEATSHEET.md)** - One-page command reference
+- **[docs/COMMON_WORKFLOWS.md](docs/COMMON_WORKFLOWS.md)** - Step-by-step recipes for common tasks
 - **[docs/TEMPLATE_DESCRIPTION.md](docs/TEMPLATE_DESCRIPTION.md)** - Template overview and features
 - **[docs/EXAMPLES.md](docs/EXAMPLES.md)** - Usage examples and customization patterns
 - **[docs/EXAMPLES_SHOWCASE.md](docs/EXAMPLES_SHOWCASE.md)** - Real-world usage examples across domains
@@ -710,6 +717,7 @@ flowchart TD
 ### Development & Architecture
 - **[docs/THIN_ORCHESTRATOR_SUMMARY.md](docs/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
 - **[docs/MARKDOWN_TEMPLATE_GUIDE.md](docs/MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown writing and cross-referencing guide
+- **[.cursorrules/manuscript_style.md](.cursorrules/manuscript_style.md)** - Manuscript formatting standards and best practices
 - **[docs/MANUSCRIPT_NUMBERING_SYSTEM.md](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization system
 
 ### Community & Contribution
@@ -876,6 +884,9 @@ The thin orchestrator pattern provides:
 
 ### New Users
 - [Quick Start Guide](#quick-start)
+- [Getting Started Guide](docs/GETTING_STARTED.md) - Beginner's guide
+- [Quick Start Cheatsheet](docs/QUICK_START_CHEATSHEET.md) - Command reference
+- [Common Workflows](docs/COMMON_WORKFLOWS.md) - Step-by-step recipes
 - [How To Use (Complete)](docs/HOW_TO_USE.md)
 - [Examples Showcase](docs/EXAMPLES_SHOWCASE.md)
 - [FAQ](docs/FAQ.md)
@@ -884,6 +895,7 @@ The thin orchestrator pattern provides:
 - [Architecture Overview](docs/ARCHITECTURE.md)
 - [Thin Orchestrator Pattern](docs/THIN_ORCHESTRATOR_SUMMARY.md)
 - [Development Workflow](docs/WORKFLOW.md)
+- [Manuscript Style Guide](.cursorrules/manuscript_style.md)
 - [Build System](docs/BUILD_SYSTEM.md)
 
 ### Contributors

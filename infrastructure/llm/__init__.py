@@ -43,6 +43,9 @@ from infrastructure.llm.validation import (
     has_on_topic_signals,
     detect_conversational_phrases,
     check_format_compliance,
+    validate_section_completeness,
+    extract_structured_sections,
+    validate_response_structure,
     OFF_TOPIC_PATTERNS_START,
     OFF_TOPIC_PATTERNS_ANYWHERE,
     CONVERSATIONAL_PATTERNS,
@@ -60,6 +63,14 @@ from infrastructure.llm.ollama_utils import (
     check_model_loaded,
     preload_model,
 )
+
+# Optional prompt system imports
+try:
+    from infrastructure.llm.prompts import PromptFragmentLoader, PromptComposer
+except ImportError:
+    # Prompt system not available - set to None for optional usage
+    PromptFragmentLoader = None  # type: ignore
+    PromptComposer = None  # type: ignore
 
 __all__ = [
     # Core client
@@ -97,6 +108,10 @@ __all__ = [
     "OFF_TOPIC_PATTERNS_ANYWHERE",
     "CONVERSATIONAL_PATTERNS",
     "ON_TOPIC_SIGNALS",
+    # Enhanced validation functions
+    "validate_section_completeness",
+    "extract_structured_sections",
+    "validate_response_structure",
     # Ollama utilities
     "is_ollama_running",
     "start_ollama_server",
@@ -108,5 +123,8 @@ __all__ = [
     "get_model_info",
     "check_model_loaded",
     "preload_model",
+    # Prompt system (optional)
+    "PromptFragmentLoader",
+    "PromptComposer",
 ]
 

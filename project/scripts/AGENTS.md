@@ -431,7 +431,7 @@ output/
 - [`README.md`](README.md) - Scripts overview and quick start
 - [`../src/AGENTS.md`](../src/AGENTS.md) - Available src/ modules
 - [`../tests/AGENTS.md`](../tests/AGENTS.md) - Testing scripts
-- [`../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
+- [`../../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
 
 

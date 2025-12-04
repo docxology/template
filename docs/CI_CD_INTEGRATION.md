@@ -156,7 +156,7 @@ jobs:
     
     - name: Validate PDFs
       run: |
-        uv run python repo_utilities/validate_pdf_output.py
+        python3 scripts/04_validate_output.py
     
     - name: Upload PDF artifacts
       uses: actions/upload-artifact@v3
@@ -192,7 +192,7 @@ jobs:
     
     - name: Validate PDF quality
       run: |
-        uv run python repo_utilities/validate_pdf_output.py
+        python3 scripts/04_validate_output.py
 ```
 
 ## Automated Testing
@@ -311,7 +311,7 @@ jobs:
 ```yaml
 - name: Validate PDFs
   run: |
-    uv run python repo_utilities/validate_pdf_output.py
+    python3 scripts/04_validate_output.py
     
     # Check for errors
     if [ $? -ne 0 ]; then

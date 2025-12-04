@@ -432,4 +432,4 @@ pytest project/tests/ --ff
 - [`../src/AGENTS.md`](../src/AGENTS.md) - Source code documentation
 - [`../../tests/AGENTS.md`](../../tests/AGENTS.md) - Infrastructure test documentation
 - [`../../docs/TESTING_GUIDE.md`](../../docs/TESTING_GUIDE.md) - Testing best practices
-- [`integration/AGENTS.md`](integration/AGENTS.md) - Integration test details
+- [`../../tests/integration/AGENTS.md`](../../tests/integration/AGENTS.md) - Integration test details

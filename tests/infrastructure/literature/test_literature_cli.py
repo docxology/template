@@ -4,6 +4,8 @@ Tests the CLI interface for literature search operations using real execution
 and function-level testing.
 """
 
+import argparse
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -438,3 +440,470 @@ class TestMainFunction:
                     cli.main()
                     mock_exit.assert_called_once_with(1)
                     assert "Error: Test error" in mock_stderr.getvalue()
+
+
+class TestSearchCommandEdgeCases:
+    """Test search_command edge cases and error handling."""
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_search_command_search_failure(self, mock_config, mock_search_class):
+        """Test search_command when search raises exception."""
+        mock_manager = Mock()
+        mock_manager.search.side_effect = Exception("Search API error")
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        args.query = "test query"
+        args.sources = None
+        args.limit = 10
+        args.download = False
+        
+        # Should propagate exception
+        with pytest.raises(Exception, match="Search API error"):
+            cli.search_command(args)
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_search_command_empty_query(self, mock_config, mock_search_class):
+        """Test search_command with empty query."""
+        mock_manager = Mock()
+        mock_manager.search.return_value = []
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        args.query = ""
+        args.sources = None
+        args.limit = 10
+        args.download = False
+        
+        with patch('builtins.print') as mock_print:
+            cli.search_command(args)
+            mock_print.assert_any_call("Searching for: ...")
+            mock_print.assert_any_call("No results found.")
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_search_command_invalid_limit(self, mock_config, mock_search_class):
+        """Test search_command with invalid limit (negative or zero)."""
+        mock_manager = Mock()
+        mock_manager.search.return_value = []
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        args.query = "test"
+        args.sources = None
+        args.limit = -1  # Invalid limit
+        args.download = False
+        
+        # Should still work (limit validation happens in manager)
+        cli.search_command(args)
+        mock_manager.search.assert_called_once()
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_search_command_download_failure(self, mock_config, mock_search_class):
+        """Test search_command when download fails."""
+        mock_paper = Mock()
+        mock_paper.title = "Test Paper"
+        mock_paper.authors = ["Author"]
+        mock_paper.year = 2024
+        mock_paper.doi = None
+        mock_paper.citation_count = None
+        mock_paper.pdf_url = "http://example.com/paper.pdf"
+        
+        mock_manager = Mock()
+        mock_manager.search.return_value = [mock_paper]
+        mock_manager.add_to_library.return_value = "test2024author"
+        mock_manager.download_paper.return_value = None  # Download fails
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        args.query = "test"
+        args.sources = None
+        args.limit = 10
+        args.download = True
+        
+        with patch('builtins.print') as mock_print:
+            cli.search_command(args)
+            # Should not print "Downloaded:" if download returns None
+            download_calls = [str(call) for call in mock_print.call_args_list if "Downloaded:" in str(call)]
+            assert len(download_calls) == 0
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_search_command_add_to_library_failure(self, mock_config, mock_search_class):
+        """Test search_command when add_to_library raises exception."""
+        mock_paper = Mock()
+        mock_paper.title = "Test Paper"
+        mock_paper.authors = ["Author"]
+        mock_paper.year = 2024
+        
+        mock_manager = Mock()
+        mock_manager.search.return_value = [mock_paper]
+        mock_manager.add_to_library.side_effect = Exception("Library error")
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        args.query = "test"
+        args.sources = None
+        args.limit = 10
+        args.download = False
+        
+        # Should propagate exception
+        with pytest.raises(Exception, match="Library error"):
+            cli.search_command(args)
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_search_command_sources_empty_string(self, mock_config, mock_search_class):
+        """Test search_command with empty sources string."""
+        mock_manager = Mock()
+        mock_manager.search.return_value = []
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        args.query = "test"
+        args.sources = ""  # Empty string
+        args.limit = 10
+        args.download = False
+        
+        cli.search_command(args)
+        # Empty string should split to [''], which should be handled
+        mock_manager.search.assert_called_once()
+
+
+class TestLibraryListCommandEdgeCases:
+    """Test library_list_command edge cases."""
+
+    def test_library_list_malformed_entry_missing_title(self, tmp_path, monkeypatch):
+        """Test library list with malformed entry missing title."""
+        import os
+        
+        # Set environment variables to use tmp_path
+        library_index_file = str(tmp_path / "library.json")
+        bibtex_file = str(tmp_path / "refs.bib")
+        download_dir = str(tmp_path / "pdfs")
+        
+        monkeypatch.setenv("LITERATURE_LIBRARY_INDEX", library_index_file)
+        monkeypatch.setenv("LITERATURE_BIBTEX_FILE", bibtex_file)
+        monkeypatch.setenv("LITERATURE_DOWNLOAD_DIR", download_dir)
+        
+        # Create real library index JSON file with malformed entry (missing title)
+        index_path = Path(library_index_file)
+        index_path.parent.mkdir(parents=True, exist_ok=True)
+        library_data = {
+            "version": "1.0",
+            "entries": {
+                "test2024author": {
+                    "citation_key": "test2024author",
+                    # Missing title field
+                    "authors": ["Author"],
+                    "year": 2024,
+                    "doi": None,
+                    "source": "unknown",
+                    "url": "",
+                    "pdf_path": None,
+                    "added_date": "",
+                    "abstract": "",
+                    "venue": None,
+                    "citation_count": None,
+                    "metadata": {}
+                }
+            }
+        }
+        with open(index_path, 'w', encoding='utf-8') as f:
+            json.dump(library_data, f)
+        
+        # Create real args object
+        args = argparse.Namespace()
+        
+        # Should handle missing title gracefully
+        from io import StringIO
+        import sys
+        old_stdout = sys.stdout
+        sys.stdout = captured_output = StringIO()
+        try:
+            cli.library_list_command(args)
+            output = captured_output.getvalue()
+            # Should still print something
+            assert len(output) > 0
+            # Should not raise KeyError
+            assert "test2024author" in output or "No title" in output
+        finally:
+            sys.stdout = old_stdout
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_list_entry_long_title(self, mock_config, mock_search_class):
+        """Test library list with very long title (truncation)."""
+        long_title = "A" * 100  # Very long title
+        mock_manager = Mock()
+        mock_manager.get_library_entries.return_value = [
+            {
+                "citation_key": "test2024author",
+                "title": long_title,
+                "authors": ["Author"],
+                "year": 2024
+            }
+        ]
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        
+        with patch('builtins.print') as mock_print:
+            cli.library_list_command(args)
+            # Should truncate title to 70 chars
+            calls = [str(call) for call in mock_print.call_args_list]
+            title_call = [c for c in calls if "A" * 70 in c]
+            assert len(title_call) > 0
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_list_entry_no_authors(self, mock_config, mock_search_class):
+        """Test library list with entry having no authors."""
+        mock_manager = Mock()
+        mock_manager.get_library_entries.return_value = [
+            {
+                "citation_key": "test2024author",
+                "title": "Test Paper",
+                "authors": [],  # Empty authors
+                "year": 2024
+            }
+        ]
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        
+        with patch('builtins.print') as mock_print:
+            cli.library_list_command(args)
+            # Should show "Unknown" for no authors
+            calls = [str(call) for call in mock_print.call_args_list]
+            assert any("Unknown" in str(call) for call in calls)
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_list_entry_no_year(self, mock_config, mock_search_class):
+        """Test library list with entry having no year."""
+        mock_manager = Mock()
+        mock_manager.get_library_entries.return_value = [
+            {
+                "citation_key": "test2024author",
+                "title": "Test Paper",
+                "authors": ["Author"]
+                # Missing year
+            }
+        ]
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        
+        with patch('builtins.print') as mock_print:
+            cli.library_list_command(args)
+            # Should show "n/d" for no year
+            calls = [str(call) for call in mock_print.call_args_list]
+            assert any("n/d" in str(call) for call in calls)
+
+
+class TestLibraryExportCommandEdgeCases:
+    """Test library_export_command edge cases."""
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_export_invalid_format(self, mock_config, mock_search_class):
+        """Test library export with invalid format (should be caught by argparse)."""
+        # Note: argparse should prevent invalid formats, but test error handling
+        mock_manager = Mock()
+        mock_manager.export_library.side_effect = ValueError("Invalid format: xml")
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        args.output = None
+        args.format = "json"  # Valid format, but test ValueError handling
+        
+        with patch('sys.stderr', new=StringIO()) as mock_stderr:
+            with patch('sys.exit') as mock_exit:
+                # Force ValueError by mocking export_library
+                mock_manager.export_library.side_effect = ValueError("Invalid format")
+                cli.library_export_command(args)
+                mock_exit.assert_called_once_with(1)
+                assert "Error:" in mock_stderr.getvalue()
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_export_file_io_error(self, mock_config, mock_search_class):
+        """Test library export with file I/O error."""
+        mock_manager = Mock()
+        mock_manager.export_library.side_effect = IOError("Permission denied")
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        args.output = "/invalid/path.json"
+        args.format = "json"
+        
+        # IOError should propagate (not caught as ValueError)
+        with pytest.raises(IOError, match="Permission denied"):
+            cli.library_export_command(args)
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_export_path_conversion(self, mock_config, mock_search_class):
+        """Test library export with Path conversion."""
+        mock_manager = Mock()
+        mock_manager.export_library.return_value = Path("/path/to/output.json")
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        args.output = "/custom/path.json"
+        args.format = "json"
+        
+        with patch('builtins.print') as mock_print:
+            cli.library_export_command(args)
+            # Should convert string to Path
+            call_args = mock_manager.export_library.call_args
+            assert isinstance(call_args[0][0], Path)
+
+
+class TestLibraryStatsCommandEdgeCases:
+    """Test library_stats_command edge cases."""
+
+    def test_library_stats_empty_stats(self, tmp_path, monkeypatch):
+        """Test library stats with empty stats dictionary."""
+        import os
+        
+        # Set environment variables to use tmp_path
+        library_index_file = str(tmp_path / "library.json")
+        bibtex_file = str(tmp_path / "refs.bib")
+        download_dir = str(tmp_path / "pdfs")
+        
+        monkeypatch.setenv("LITERATURE_LIBRARY_INDEX", library_index_file)
+        monkeypatch.setenv("LITERATURE_BIBTEX_FILE", bibtex_file)
+        monkeypatch.setenv("LITERATURE_DOWNLOAD_DIR", download_dir)
+        
+        # Create empty library index JSON file
+        index_path = Path(library_index_file)
+        index_path.parent.mkdir(parents=True, exist_ok=True)
+        library_data = {
+            "version": "1.0",
+            "entries": {}
+        }
+        with open(index_path, 'w', encoding='utf-8') as f:
+            json.dump(library_data, f)
+        
+        # Create real args object
+        args = argparse.Namespace()
+        
+        # Should handle missing keys gracefully
+        from io import StringIO
+        import sys
+        old_stdout = sys.stdout
+        sys.stdout = captured_output = StringIO()
+        try:
+            cli.library_stats_command(args)
+            output = captured_output.getvalue()
+            # Should print header
+            assert "Library Statistics" in output
+            assert "=" * 40 in output
+            # Should handle missing keys gracefully (should show 0 for total_entries)
+            assert "Total entries: 0" in output
+        finally:
+            sys.stdout = old_stdout
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_stats_only_oldest_year(self, mock_config, mock_search_class):
+        """Test library stats with only oldest_year (no newest_year)."""
+        mock_manager = Mock()
+        mock_manager.get_library_stats.return_value = {
+            "total_entries": 10,
+            "downloaded_pdfs": 5,
+            "oldest_year": 2020
+            # Missing newest_year
+        }
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        
+        with patch('builtins.print') as mock_print:
+            cli.library_stats_command(args)
+            # Should not print year range if newest_year missing
+            calls = [str(call) for call in mock_print.call_args_list]
+            assert not any("Year range:" in str(call) for call in calls)
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_stats_only_newest_year(self, mock_config, mock_search_class):
+        """Test library stats with only newest_year (no oldest_year)."""
+        mock_manager = Mock()
+        mock_manager.get_library_stats.return_value = {
+            "total_entries": 10,
+            "downloaded_pdfs": 5,
+            "newest_year": 2024
+            # Missing oldest_year
+        }
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        
+        with patch('builtins.print') as mock_print:
+            cli.library_stats_command(args)
+            # Should not print year range if oldest_year missing
+            calls = [str(call) for call in mock_print.call_args_list]
+            assert not any("Year range:" in str(call) for call in calls)
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_stats_many_years(self, mock_config, mock_search_class):
+        """Test library stats with more than 10 years (should limit to 10)."""
+        years = {str(year): 1 for year in range(2010, 2025)}  # 15 years
+        mock_manager = Mock()
+        mock_manager.get_library_stats.return_value = {
+            "total_entries": 15,
+            "downloaded_pdfs": 5,
+            "years": years
+        }
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        
+        with patch('builtins.print') as mock_print:
+            cli.library_stats_command(args)
+            # Should only show first 10 years
+            calls = [str(call) for call in mock_print.call_args_list]
+            year_calls = [c for c in calls if any(year in c for year in years.keys())]
+            # Should have at most 10 year entries
+            assert len(year_calls) <= 10
+
+
+class TestArgumentParsingEdgeCases:
+    """Test argument parsing edge cases."""
+
+    def test_main_invalid_command(self):
+        """Test main with invalid command."""
+        result = subprocess.run(
+            [sys.executable, "-m", "infrastructure.literature.cli", "invalid_command"],
+            capture_output=True,
+            text=True
+        )
+        # argparse uses exit code 2 for invalid choices
+        assert result.returncode == 2
+        assert "error:" in result.stderr.lower() or "invalid choice" in result.stderr.lower()
+
+    def test_main_library_no_subcommand(self):
+        """Test main with library command but no subcommand."""
+        with patch('sys.argv', ['cli.py', 'library']):
+            with patch('sys.exit') as mock_exit:
+                with patch('argparse.ArgumentParser.print_help') as mock_help:
+                    cli.main()
+                    mock_exit.assert_called_once_with(1)
+
+    def test_main_search_no_query(self):
+        """Test main with search command but no query."""
+        result = subprocess.run(
+            [sys.executable, "-m", "infrastructure.literature.cli", "search"],
+            capture_output=True,
+            text=True
+        )
+        # argparse uses exit code 2 for missing required arguments
+        assert result.returncode == 2
+        assert "error:" in result.stderr.lower() or "required" in result.stderr.lower()

@@ -125,6 +125,8 @@ python3 scripts/01_run_tests.py --verbose
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `LLM_MAX_INPUT_LENGTH` | `500000` | Maximum characters to send to LLM. Set to `0` for unlimited. |
+| `LLM_LONG_MAX_TOKENS` | `4096` | Maximum tokens per review response. Configured via `LLMConfig.long_max_tokens`. Priority: env var > config default. |
+| `LLM_REVIEW_TIMEOUT` | `300` | Timeout for each review generation (seconds). |
 
 **Output Files:**
 - `executive_summary.md` - Key findings and contributions

@@ -1,10 +1,197 @@
 """Prompt templates for research tasks."""
 from __future__ import annotations
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from string import Template
 
 from infrastructure.core.exceptions import LLMTemplateError
+from infrastructure.core.logging_utils import get_logger
+
+logger = get_logger(__name__)
+
+# Try to import new prompt system (optional for backward compatibility)
+try:
+    from infrastructure.llm.prompts.composer import PromptComposer
+    PROMPT_COMPOSER_AVAILABLE = True
+except ImportError:
+    PROMPT_COMPOSER_AVAILABLE = False
+    logger.debug("Prompt composer not available, using legacy template system")
+
+
+# =============================================================================
+# Modular Prompt Constraint System
+# =============================================================================
+
+def format_requirements(
+    required_headers: List[str],
+    markdown_format: bool = True,
+    section_requirements: Optional[Dict[str, str]] = None
+) -> str:
+    """Generate format requirements section for prompts.
+    
+    Args:
+        required_headers: List of required markdown section headers (e.g., ["## Overview", "## Results"])
+        markdown_format: Whether to use markdown formatting
+        section_requirements: Optional dict mapping section names to specific requirements
+        
+    Returns:
+        Formatted requirements string
+    """
+    lines = ["FORMAT REQUIREMENTS:"]
+    
+    if markdown_format:
+        lines.append("1. Use markdown formatting with proper headers")
+        lines.append("2. Include these exact section headers (in order):")
+        for header in required_headers:
+            lines.append(f"   {header}")
+    
+    if section_requirements:
+        lines.append("3. Section-specific requirements:")
+        for section, req in section_requirements.items():
+            lines.append(f"   - {section}: {req}")
+    
+    return "\n".join(lines)
+
+
+def token_budget_awareness(
+    total_tokens: Optional[int] = None,
+    section_budgets: Optional[Dict[str, int]] = None,
+    word_targets: Optional[Dict[str, tuple]] = None
+) -> str:
+    """Generate token budget awareness hints for prompts.
+    
+    Args:
+        total_tokens: Total token budget available
+        section_budgets: Optional dict mapping section names to approximate token budgets
+        word_targets: Optional dict mapping section names to (min, max) word counts
+        
+    Returns:
+        Formatted token budget awareness string
+    """
+    lines = ["TOKEN BUDGET AWARENESS:"]
+    
+    if total_tokens:
+        lines.append(f"1. Total response budget: approximately {total_tokens} tokens")
+        lines.append("   (Plan your response to stay within this limit)")
+    
+    if section_budgets:
+        lines.append("2. Approximate token budgets per section:")
+        for section, budget in section_budgets.items():
+            lines.append(f"   - {section}: ~{budget} tokens")
+    
+    if word_targets:
+        lines.append("3. Word count targets per section:")
+        for section, (min_words, max_words) in word_targets.items():
+            lines.append(f"   - {section}: {min_words}-{max_words} words")
+    
+    return "\n".join(lines)
+
+
+def content_requirements(
+    no_hallucination: bool = True,
+    cite_sources: bool = True,
+    evidence_based: bool = True,
+    no_meta_commentary: bool = True
+) -> str:
+    """Generate content quality requirements section.
+    
+    Args:
+        no_hallucination: Require no invented details
+        cite_sources: Require citation of sources
+        evidence_based: Require evidence-based claims
+        no_meta_commentary: Prohibit meta-commentary about being AI
+        
+    Returns:
+        Formatted content requirements string
+    """
+    lines = ["CONTENT QUALITY REQUIREMENTS:"]
+    
+    if no_hallucination:
+        lines.append("1. NO HALLUCINATION: Only discuss information explicitly present in the provided content")
+        lines.append("   - Do NOT add external knowledge, assumptions, or invented details")
+        lines.append("   - Do NOT reference sources not mentioned in the provided content")
+    
+    if cite_sources:
+        lines.append("2. CITE SOURCES: Reference specific sections, passages, or elements from the content")
+        lines.append("   - Quote or paraphrase actual text when making observations")
+        lines.append("   - Use specific section titles or page references when available")
+    
+    if evidence_based:
+        lines.append("3. EVIDENCE-BASED: Base all claims on evidence from the provided content")
+        lines.append("   - Support observations with specific examples")
+        lines.append("   - Explain reasoning with reference to actual content")
+    
+    if no_meta_commentary:
+        lines.append("4. NO META-COMMENTARY: Do not mention being an AI, assistant, or that this is generated content")
+        lines.append("   - Write as if you are a human expert reviewer")
+        lines.append("   - Use professional, academic tone throughout")
+    
+    return "\n".join(lines)
+
+
+def section_structure(
+    sections: List[str],
+    section_descriptions: Optional[Dict[str, str]] = None,
+    required_order: bool = True
+) -> str:
+    """Generate section structure requirements.
+    
+    Args:
+        sections: List of required section names/headers
+        section_descriptions: Optional dict mapping section names to descriptions
+        required_order: Whether sections must appear in the specified order
+        
+    Returns:
+        Formatted section structure string
+    """
+    lines = ["SECTION STRUCTURE:"]
+    
+    if required_order:
+        lines.append("1. Sections must appear in this exact order:")
+    else:
+        lines.append("1. Include all of these sections:")
+    
+    for i, section in enumerate(sections, 1):
+        if section_descriptions and section in section_descriptions:
+            lines.append(f"   {i}. {section}: {section_descriptions[section]}")
+        else:
+            lines.append(f"   {i}. {section}")
+    
+    return "\n".join(lines)
+
+
+def validation_hints(
+    word_count_range: Optional[tuple] = None,
+    required_elements: Optional[List[str]] = None,
+    format_checks: Optional[List[str]] = None
+) -> str:
+    """Generate validation hints that inform the model what will be checked.
+    
+    Args:
+        word_count_range: Optional (min, max) word count tuple
+        required_elements: Optional list of required elements (e.g., ["scores", "headers"])
+        format_checks: Optional list of format checks that will be performed
+        
+    Returns:
+        Formatted validation hints string
+    """
+    lines = ["VALIDATION HINTS (what will be checked):"]
+    
+    if word_count_range:
+        min_words, max_words = word_count_range
+        lines.append(f"1. Word count: Must be between {min_words} and {max_words} words")
+    
+    if required_elements:
+        lines.append("2. Required elements:")
+        for element in required_elements:
+            lines.append(f"   - {element}")
+    
+    if format_checks:
+        lines.append("3. Format compliance checks:")
+        for check in format_checks:
+            lines.append(f"   - {check}")
+    
+    return "\n".join(lines)
 
 
 class ResearchTemplate:
@@ -162,21 +349,118 @@ ${text}
 
 TASK: Write an executive summary of the manuscript above.
 
-REQUIREMENTS:
-1. Your summary MUST reference specific content from the manuscript above
-2. Write 400-600 words in academic prose
-3. Use these section headers:
-   ## Overview
-   ## Key Contributions  
-   ## Methodology Summary
-   ## Principal Results
-   ## Significance and Impact
+${format_requirements}
 
-4. Quote or paraphrase actual text from the manuscript
-5. Do NOT invent details not present in the manuscript
-6. Do NOT reference external sources not cited in the manuscript
+${section_structure}
+
+${token_budget_awareness}
+
+${content_requirements}
+
+${validation_hints}
 
 Begin your executive summary now:"""
+    
+    def render(self, text: Optional[str] = None, max_tokens: Optional[int] = None, **kwargs: Any) -> str:
+        """Render template with enhanced constraints.
+        
+        Args:
+            text: Manuscript text (required)
+            max_tokens: Optional token budget for response
+            **kwargs: Additional template variables (text can be passed here too)
+        """
+        # Extract from kwargs if not provided as positional arg (for backward compatibility)
+        if text is None:
+            text = kwargs.pop('text', None)
+        
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)
+        if text is None:
+            raise LLMTemplateError(
+                "Missing template variable: text",
+                context={"required": "text"}
+            )
+        
+        # Try to use new prompt composer if available
+        if PROMPT_COMPOSER_AVAILABLE:
+            try:
+                composer = PromptComposer()
+                return composer.compose_template(
+                    "manuscript_reviews.json#manuscript_executive_summary",
+                    text=text,
+                    max_tokens=max_tokens,
+                    **kwargs
+                )
+            except Exception as e:
+                logger.debug(f"Failed to use prompt composer, falling back to legacy: {e}")
+        
+        # Fallback to legacy implementation
+        # Define required sections
+        required_headers = [
+            "## Overview",
+            "## Key Contributions",
+            "## Methodology Summary",
+            "## Principal Results",
+            "## Significance and Impact"
+        ]
+        
+        section_descriptions = {
+            "## Overview": "Brief introduction to the research topic and objectives (80-120 words)",
+            "## Key Contributions": "Main advances and novel contributions (100-150 words)",
+            "## Methodology Summary": "Approach and methods used (80-120 words)",
+            "## Principal Results": "Key findings and outcomes (100-150 words)",
+            "## Significance and Impact": "Importance and implications (80-120 words)"
+        }
+        
+        # Calculate token budgets if max_tokens provided
+        section_budgets = None
+        if max_tokens:
+            # Allocate ~20% per section (5 sections)
+            tokens_per_section = max_tokens // 5
+            section_budgets = {
+                "Overview": tokens_per_section,
+                "Key Contributions": tokens_per_section,
+                "Methodology Summary": tokens_per_section,
+                "Principal Results": tokens_per_section,
+                "Significance and Impact": tokens_per_section
+            }
+        
+        # Build constraint sections
+        format_req = format_requirements(required_headers, markdown_format=True)
+        section_struct = section_structure(required_headers, section_descriptions, required_order=True)
+        token_budget = token_budget_awareness(
+            total_tokens=max_tokens,
+            section_budgets=section_budgets,
+            word_targets={
+                "Overview": (80, 120),
+                "Key Contributions": (100, 150),
+                "Methodology Summary": (80, 120),
+                "Principal Results": (100, 150),
+                "Significance and Impact": (80, 120)
+            }
+        )
+        content_req = content_requirements(
+            no_hallucination=True,
+            cite_sources=True,
+            evidence_based=True,
+            no_meta_commentary=True
+        )
+        validation = validation_hints(
+            word_count_range=(400, 600),
+            required_elements=["all 5 section headers", "specific manuscript references"],
+            format_checks=["word count", "section presence", "content relevance"]
+        )
+        
+        # Render base template
+        base_template = Template(self.template_str)
+        return base_template.substitute(
+            text=text,
+            format_requirements=format_req,
+            section_structure=section_struct,
+            token_budget_awareness=token_budget,
+            content_requirements=content_req,
+            validation_hints=validation,
+            **kwargs
+        )
 
 
 class ManuscriptQualityReview(ResearchTemplate):
@@ -196,24 +480,97 @@ ${text}
 
 TASK: Provide a quality review of the manuscript above.
 
-REQUIREMENTS:
-1. Your review MUST reference specific content from the manuscript above
-2. Write 500-700 words in academic prose
-3. Use these section headers:
-   ## Overall Quality Score
-   ## Clarity Assessment
-   ## Structure and Organization
-   ## Technical Accuracy
-   ## Readability
-   ## Specific Issues Found
-   ## Recommendations
+${format_requirements}
 
-4. For each section, include a score: **Score: X/5** (where X is 1-5)
-5. When citing issues, quote actual text or describe specific sections
-6. Base all scores on evidence from the manuscript
-7. Do NOT invent details not present in the manuscript
+${section_structure}
+
+${token_budget_awareness}
+
+${content_requirements}
+
+${validation_hints}
 
 Begin your quality review now:"""
+    
+    def render(self, text: Optional[str] = None, max_tokens: Optional[int] = None, **kwargs: Any) -> str:
+        """Render template with enhanced constraints.
+        
+        Args:
+            text: Manuscript text (required)
+            max_tokens: Optional token budget for response
+            **kwargs: Additional template variables (text can be passed here too)
+        """
+        # Extract from kwargs if not provided as positional arg (for backward compatibility)
+        if text is None:
+            text = kwargs.pop('text', None)
+        
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)
+        if text is None:
+            raise LLMTemplateError(
+                "Missing template variable: text",
+                context={"required": "text"}
+            )
+        
+        required_headers = [
+            "## Overall Quality Score",
+            "## Clarity Assessment",
+            "## Structure and Organization",
+            "## Technical Accuracy",
+            "## Readability",
+            "## Specific Issues Found",
+            "## Recommendations"
+        ]
+        
+        section_descriptions = {
+            "## Overall Quality Score": "Provide overall score (1-5) with brief justification (50-80 words)",
+            "## Clarity Assessment": "Evaluate writing clarity with score and specific examples (80-120 words)",
+            "## Structure and Organization": "Assess organization with score and structural observations (80-120 words)",
+            "## Technical Accuracy": "Review technical correctness with score and evidence (80-120 words)",
+            "## Readability": "Evaluate readability with score and specific issues (60-100 words)",
+            "## Specific Issues Found": "List concrete issues with manuscript references (100-150 words)",
+            "## Recommendations": "Provide actionable recommendations (80-120 words)"
+        }
+        
+        section_requirements = {
+            "Overall Quality Score": "Must include: **Score: X/5** format where X is 1-5",
+            "All scoring sections": "Each section with 'Assessment' or 'Accuracy' must include **Score: X/5**",
+            "Specific Issues Found": "Must quote or reference specific manuscript sections",
+            "Recommendations": "Must be actionable and specific to manuscript content"
+        }
+        
+        section_budgets = None
+        if max_tokens:
+            tokens_per_section = max_tokens // 7
+            section_budgets = {section.replace("## ", ""): tokens_per_section for section in required_headers}
+        
+        format_req = format_requirements(required_headers, markdown_format=True, section_requirements=section_requirements)
+        section_struct = section_structure(required_headers, section_descriptions, required_order=True)
+        token_budget = token_budget_awareness(
+            total_tokens=max_tokens,
+            section_budgets=section_budgets
+        )
+        content_req = content_requirements(
+            no_hallucination=True,
+            cite_sources=True,
+            evidence_based=True,
+            no_meta_commentary=True
+        )
+        validation = validation_hints(
+            word_count_range=(500, 700),
+            required_elements=["all 7 section headers", "scores in **Score: X/5** format", "specific manuscript references"],
+            format_checks=["word count", "section presence", "score format", "content relevance"]
+        )
+        
+        base_template = Template(self.template_str)
+        return base_template.substitute(
+            text=text,
+            format_requirements=format_req,
+            section_structure=section_struct,
+            token_budget_awareness=token_budget,
+            content_requirements=content_req,
+            validation_hints=validation,
+            **kwargs
+        )
 
 
 class ManuscriptMethodologyReview(ResearchTemplate):
@@ -233,22 +590,86 @@ ${text}
 
 TASK: Provide a methodology review of the manuscript above.
 
-REQUIREMENTS:
-1. Your review MUST reference specific content from the manuscript above
-2. Write 500-700 words in academic prose
-3. Use these section headers:
-   ## Methodology Overview
-   ## Research Design Assessment
-   ## Strengths
-   ## Weaknesses
-   ## Recommendations
+${format_requirements}
 
-4. Quote or paraphrase actual methodology from the manuscript
-5. Base strengths and weaknesses on manuscript evidence only
-6. Do NOT invent details not present in the manuscript
-7. Do NOT reference external methodologies not mentioned in the manuscript
+${section_structure}
+
+${token_budget_awareness}
+
+${content_requirements}
+
+${validation_hints}
 
 Begin your methodology review now:"""
+    
+    def render(self, text: Optional[str] = None, max_tokens: Optional[int] = None, **kwargs: Any) -> str:
+        """Render template with enhanced constraints.
+        
+        Args:
+            text: Manuscript text (required)
+            max_tokens: Optional token budget for response
+            **kwargs: Additional template variables (text can be passed here too)
+        """
+        # Extract from kwargs if not provided as positional arg (for backward compatibility)
+        if text is None:
+            text = kwargs.pop('text', None)
+        
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)
+        if text is None:
+            raise LLMTemplateError(
+                "Missing template variable: text",
+                context={"required": "text"}
+            )
+        
+        required_headers = [
+            "## Methodology Overview",
+            "## Research Design Assessment",
+            "## Strengths",
+            "## Weaknesses",
+            "## Recommendations"
+        ]
+        
+        section_descriptions = {
+            "## Methodology Overview": "Summarize the methodology used in the manuscript (100-150 words)",
+            "## Research Design Assessment": "Evaluate the research design and approach (120-180 words)",
+            "## Strengths": "Identify methodological strengths with evidence (100-150 words)",
+            "## Weaknesses": "Identify methodological weaknesses with evidence (100-150 words)",
+            "## Recommendations": "Provide specific improvement recommendations (80-120 words)"
+        }
+        
+        section_budgets = None
+        if max_tokens:
+            tokens_per_section = max_tokens // 5
+            section_budgets = {section.replace("## ", ""): tokens_per_section for section in required_headers}
+        
+        format_req = format_requirements(required_headers, markdown_format=True)
+        section_struct = section_structure(required_headers, section_descriptions, required_order=True)
+        token_budget = token_budget_awareness(
+            total_tokens=max_tokens,
+            section_budgets=section_budgets
+        )
+        content_req = content_requirements(
+            no_hallucination=True,
+            cite_sources=True,
+            evidence_based=True,
+            no_meta_commentary=True
+        )
+        validation = validation_hints(
+            word_count_range=(500, 700),
+            required_elements=["all 5 section headers", "methodology references", "strengths and weaknesses"],
+            format_checks=["word count", "section presence", "content relevance"]
+        )
+        
+        base_template = Template(self.template_str)
+        return base_template.substitute(
+            text=text,
+            format_requirements=format_req,
+            section_structure=section_struct,
+            token_budget_awareness=token_budget,
+            content_requirements=content_req,
+            validation_hints=validation,
+            **kwargs
+        )
 
 
 class ManuscriptImprovementSuggestions(ResearchTemplate):
@@ -268,23 +689,98 @@ ${text}
 
 TASK: Provide improvement suggestions for the manuscript above.
 
-REQUIREMENTS:
-1. Your suggestions MUST reference specific content from the manuscript above
-2. Write 500-800 words with detailed actionable recommendations
-3. Use these section headers:
-   ## Summary
-   ## High Priority Improvements
-   ## Medium Priority Improvements
-   ## Low Priority Improvements
-   ## Overall Recommendation
+${format_requirements}
 
-4. For each improvement, explain WHY it matters and HOW to address it
-5. Reference specific sections by their actual titles from the manuscript
-6. Base all suggestions on actual content found in the manuscript
-7. Do NOT invent issues not present in the manuscript
-8. Choose ONE recommendation: Accept with Minor Revisions, Accept with Major Revisions, or Revise and Resubmit
+${section_structure}
+
+${token_budget_awareness}
+
+${content_requirements}
+
+${validation_hints}
 
 Begin your improvement suggestions now:"""
+    
+    def render(self, text: Optional[str] = None, max_tokens: Optional[int] = None, **kwargs: Any) -> str:
+        """Render template with enhanced constraints.
+        
+        Args:
+            text: Manuscript text (required)
+            max_tokens: Optional token budget for response
+            **kwargs: Additional template variables (text can be passed here too)
+        """
+        # Extract from kwargs if not provided as positional arg (for backward compatibility)
+        if text is None:
+            text = kwargs.pop('text', None)
+        
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)
+        if text is None:
+            raise LLMTemplateError(
+                "Missing template variable: text",
+                context={"required": "text"}
+            )
+        
+        required_headers = [
+            "## Summary",
+            "## High Priority Improvements",
+            "## Medium Priority Improvements",
+            "## Low Priority Improvements",
+            "## Overall Recommendation"
+        ]
+        
+        section_descriptions = {
+            "## Summary": "Brief overview of key improvement areas (80-120 words)",
+            "## High Priority Improvements": "Critical issues requiring immediate attention (150-200 words)",
+            "## Medium Priority Improvements": "Important but not critical improvements (120-180 words)",
+            "## Low Priority Improvements": "Minor enhancements and suggestions (100-150 words)",
+            "## Overall Recommendation": "Final recommendation: Accept with Minor Revisions, Accept with Major Revisions, or Revise and Resubmit (80-120 words)"
+        }
+        
+        section_requirements = {
+            "All improvement sections": "Each improvement must include: WHAT (the issue), WHY (why it matters), HOW (how to address it)",
+            "Overall Recommendation": "Must choose exactly ONE: 'Accept with Minor Revisions', 'Accept with Major Revisions', or 'Revise and Resubmit'"
+        }
+        
+        section_budgets = None
+        if max_tokens:
+            # Allocate more tokens to high priority section
+            tokens_per_section = max_tokens // 5
+            section_budgets = {
+                "Summary": tokens_per_section,
+                "High Priority Improvements": int(tokens_per_section * 1.3),
+                "Medium Priority Improvements": int(tokens_per_section * 1.1),
+                "Low Priority Improvements": tokens_per_section,
+                "Overall Recommendation": tokens_per_section
+            }
+        
+        format_req = format_requirements(required_headers, markdown_format=True, section_requirements=section_requirements)
+        section_struct = section_structure(required_headers, section_descriptions, required_order=True)
+        token_budget = token_budget_awareness(
+            total_tokens=max_tokens,
+            section_budgets=section_budgets
+        )
+        content_req = content_requirements(
+            no_hallucination=True,
+            cite_sources=True,
+            evidence_based=True,
+            no_meta_commentary=True
+        )
+        validation = validation_hints(
+            word_count_range=(500, 800),
+            required_elements=["all 5 section headers", "WHAT/WHY/HOW for each improvement", "overall recommendation choice"],
+            format_checks=["word count", "section presence", "actionability", "content relevance"]
+        )
+        
+        base_template = Template(self.template_str)
+        return base_template.substitute(
+            text=text,
+            format_requirements=format_req,
+            section_structure=section_struct,
+            token_budget_awareness=token_budget,
+            content_requirements=content_req,
+            validation_hints=validation,
+            **kwargs
+        )
 
 
 class ManuscriptTranslationAbstract(ResearchTemplate):
@@ -304,26 +800,100 @@ ${text}
 
 TASK: Write a technical abstract summary of the manuscript, then translate it to ${target_language}.
 
-REQUIREMENTS:
-1. First, write a technical abstract in English (200-400 words)
-2. The abstract MUST reference specific content from the manuscript above
-3. Include:
-   - Research objective and motivation
-   - Methodology overview
-   - Key findings and results
-   - Significance and implications
+${format_requirements}
 
-4. Use these section headers:
-   ## English Abstract
-   ## ${target_language} Translation
+${section_structure}
 
-5. After the English abstract, provide a complete and accurate translation in ${target_language}
-6. The translation must preserve technical terminology and scientific accuracy
-7. Use formal academic tone in both languages
-8. Do NOT add information not present in the manuscript
-9. Do NOT provide transliteration - use native script for the target language
+${token_budget_awareness}
+
+${content_requirements}
+
+${validation_hints}
 
 Begin with the English abstract, then provide the translation:"""
+    
+    def render(self, text: Optional[str] = None, target_language: Optional[str] = None, max_tokens: Optional[int] = None, **kwargs: Any) -> str:
+        """Render template with enhanced constraints.
+        
+        Args:
+            text: Manuscript text (required)
+            target_language: Target language name (required)
+            max_tokens: Optional token budget for response
+            **kwargs: Additional template variables (text and target_language can be passed here too)
+        """
+        # Extract from kwargs if not provided as positional args (for backward compatibility)
+        if text is None:
+            text = kwargs.pop('text', None)
+        if target_language is None:
+            target_language = kwargs.pop('target_language', None)
+        
+        # Check required arguments and raise LLMTemplateError if missing (matches base class behavior)
+        if text is None:
+            raise LLMTemplateError(
+                "Missing template variable: text",
+                context={"required": "text"}
+            )
+        if target_language is None:
+            raise LLMTemplateError(
+                "Missing template variable: target_language",
+                context={"required": "target_language"}
+            )
+        required_headers = [
+            "## English Abstract",
+            f"## {target_language} Translation"
+        ]
+        
+        section_descriptions = {
+            "## English Abstract": "Technical abstract in English (200-400 words) covering: research objective, methodology, key findings, significance",
+            f"## {target_language} Translation": f"Complete and accurate translation in {target_language}, preserving technical terminology and scientific accuracy"
+        }
+        
+        section_requirements = {
+            "English Abstract": "Must include: research objective and motivation, methodology overview, key findings and results, significance and implications",
+            f"{target_language} Translation": "Must be complete translation (not summary), preserve technical terms, use native script (not transliteration), maintain formal academic tone"
+        }
+        
+        section_budgets = None
+        if max_tokens:
+            # Split roughly 50/50 between English and translation
+            section_budgets = {
+                "English Abstract": max_tokens // 2,
+                f"{target_language} Translation": max_tokens // 2
+            }
+        
+        format_req = format_requirements(required_headers, markdown_format=True, section_requirements=section_requirements)
+        section_struct = section_structure(required_headers, section_descriptions, required_order=True)
+        token_budget = token_budget_awareness(
+            total_tokens=max_tokens,
+            section_budgets=section_budgets,
+            word_targets={
+                "English Abstract": (200, 400),
+                f"{target_language} Translation": (200, 400)  # Approximate word count
+            }
+        )
+        content_req = content_requirements(
+            no_hallucination=True,
+            cite_sources=True,
+            evidence_based=True,
+            no_meta_commentary=True
+        )
+        validation = validation_hints(
+            word_count_range=(400, 800),  # Total: ~200-400 English + ~200-400 translation
+            required_elements=["English abstract section", f"{target_language} translation section", "technical terminology preservation"],
+            format_checks=["word count", "section presence", "translation completeness", "content relevance"]
+        )
+        
+        base_template = Template(self.template_str)
+        return base_template.substitute(
+            text=text,
+            target_language=target_language,
+            format_requirements=format_req,
+            section_structure=section_struct,
+            token_budget_awareness=token_budget,
+            content_requirements=content_req,
+            validation_hints=validation,
+            **kwargs
+        )
 
 
 # Literature Analysis Templates

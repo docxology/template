@@ -272,7 +272,7 @@ if __name__ == "__main__":
 ## Integration with Build System
 
 ### Automatic Execution
-The `render_pdf.sh` script automatically:
+The build pipeline (`python3 scripts/run_all.py` or `./run.sh`) automatically:
 1. Runs all tests in `@tests/` (ensuring 100% coverage)
 2. Executes all scripts in `@scripts/` (validating src/ integration)
 3. Generates figures and data outputs
@@ -291,7 +291,7 @@ The `scripts/` directory demonstrates the **thin orchestrator pattern** where:
 - **`@src/`** contains all business logic, algorithms, and mathematical implementations
 - **`@scripts/`** contains lightweight wrappers that use `@src/` methods
 - **`@tests/`** ensures 100% coverage of `@src/` functionality
-- **`render_pdf.sh`** orchestrates the entire pipeline
+- **Build pipeline** (`python3 scripts/run_all.py` or `./run.sh`) orchestrates the entire pipeline
 
 This architecture ensures:
 - **Maintainability**: Single source of truth for business logic
@@ -299,3 +299,9 @@ This architecture ensures:
 - **Reusability**: Scripts can use any `@src/` method
 - **Clarity**: Clear separation of concerns
 - **Quality**: Automated validation of the entire system
+
+## See Also
+
+- [`AGENTS.md`](AGENTS.md) - Detailed documentation
+- [`../../scripts/README.md`](../../scripts/README.md) - Root-level scripts guide
+- [`../../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details

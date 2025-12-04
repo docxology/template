@@ -356,3 +356,239 @@ class TestRetryableOperation:
         assert attempts == [1, 2]
         assert op.succeeded is True
 
+    def test_retry_with_backoff_custom_exception_types(self):
+        """Test retry with custom exception types."""
+        attempt_count = [0]
+        
+        @retry_with_backoff(
+            max_attempts=3,
+            initial_delay=0.01,
+            exceptions=(KeyError, IndexError)
+        )
+        def function_with_custom_exceptions():
+            attempt_count[0] += 1
+            if attempt_count[0] < 2:
+                raise KeyError("Custom error")
+            return "success"
+        
+        result = function_with_custom_exceptions()
+        
+        assert result == "success"
+        assert attempt_count[0] == 2
+
+    def test_retry_with_backoff_jitter_calculation(self):
+        """Test that jitter adds randomness to delays."""
+        delays_with_jitter = []
+        delays_without_jitter = []
+        
+        def record_delay_with_jitter(attempt, exception):
+            delays_with_jitter.append(time.time())
+        
+        def record_delay_without_jitter(attempt, exception):
+            delays_without_jitter.append(time.time())
+        
+        attempt_count = [0]
+        
+        @retry_with_backoff(
+            max_attempts=3,
+            initial_delay=0.1,
+            jitter=True,
+            on_retry=record_delay_with_jitter
+        )
+        def function_with_jitter():
+            attempt_count[0] += 1
+            if attempt_count[0] < 2:
+                raise ValueError("Retry")
+            return "success"
+        
+        attempt_count[0] = 0
+        
+        @retry_with_backoff(
+            max_attempts=3,
+            initial_delay=0.1,
+            jitter=False,
+            on_retry=record_delay_without_jitter
+        )
+        def function_without_jitter():
+            attempt_count[0] += 1
+            if attempt_count[0] < 2:
+                raise ValueError("Retry")
+            return "success"
+        
+        function_with_jitter()
+        attempt_count[0] = 0
+        function_without_jitter()
+        
+        # Both should have recorded delays
+        assert len(delays_with_jitter) > 0
+        assert len(delays_without_jitter) > 0
+
+    def test_retry_with_backoff_exponential_progression(self):
+        """Test exponential backoff progression."""
+        delays = []
+        attempt_count = [0]
+        
+        @retry_with_backoff(
+            max_attempts=4,
+            initial_delay=0.1,
+            exponential_base=2.0,
+            max_delay=10.0  # High max to see progression
+        )
+        def function_with_exponential():
+            attempt_count[0] += 1
+            if attempt_count[0] < 4:
+                delays.append(time.time())
+                raise ValueError("Retry")
+            return "success"
+        
+        start = time.time()
+        result = function_with_exponential()
+        total_time = time.time() - start
+        
+        assert result == "success"
+        # Should have exponential delays: 0.1, 0.2, 0.4
+        assert total_time >= 0.7  # Sum of delays
+
+    def test_retry_with_backoff_on_retry_callback(self):
+        """Test on_retry callback functionality."""
+        callback_calls = []
+        
+        def on_retry_callback(attempt, exception):
+            callback_calls.append((attempt, str(exception)))
+        
+        attempt_count = [0]
+        
+        @retry_with_backoff(
+            max_attempts=3,
+            initial_delay=0.01,
+            on_retry=on_retry_callback
+        )
+        def function_with_callback():
+            attempt_count[0] += 1
+            if attempt_count[0] < 2:
+                raise ValueError("Retry needed")
+            return "success"
+        
+        result = function_with_callback()
+        
+        assert result == "success"
+        assert len(callback_calls) == 1
+        assert callback_calls[0][0] == 1
+        assert "Retry needed" in callback_calls[0][1]
+
+    def test_retry_on_transient_failure_oserror(self):
+        """Test retry on OSError (transient)."""
+        attempt_count = [0]
+        
+        @retry_on_transient_failure(max_attempts=3, initial_delay=0.01)
+        def function_with_oserror():
+            attempt_count[0] += 1
+            if attempt_count[0] < 2:
+                raise OSError("Resource temporarily unavailable")
+            return "success"
+        
+        result = function_with_oserror()
+        
+        assert result == "success"
+        assert attempt_count[0] == 2
+
+    def test_retry_on_transient_failure_retry_count_limit(self):
+        """Test that retry count is limited."""
+        attempt_count = [0]
+        
+        @retry_on_transient_failure(max_attempts=2, initial_delay=0.01)
+        def function_always_fails():
+            attempt_count[0] += 1
+            raise IOError("Always fails")
+        
+        with pytest.raises(IOError, match="Always fails"):
+            function_always_fails()
+        
+        # Should have tried max_attempts times
+        assert attempt_count[0] == 2
+
+    def test_retryable_operation_succeed_with_result(self):
+        """Test succeed() method with result value."""
+        with RetryableOperation(max_attempts=3) as op:
+            try:
+                for attempt in op:
+                    op.succeed("test_result")
+            except StopIteration:
+                pass
+        
+        assert op.succeeded is True
+        assert op.result == "test_result"
+
+    def test_retryable_operation_succeed_without_result(self):
+        """Test succeed() method without result value."""
+        with RetryableOperation(max_attempts=3) as op:
+            try:
+                for attempt in op:
+                    op.succeed()  # No result
+            except StopIteration:
+                pass
+        
+        assert op.succeeded is True
+        assert op.result is None
+
+    def test_retryable_operation_retry_method(self):
+        """Test retry() method functionality."""
+        attempt_count = [0]
+        
+        with RetryableOperation(max_attempts=3, initial_delay=0.01) as op:
+            try:
+                for attempt in op:
+                    attempt_count[0] = attempt
+                    if attempt < 2:
+                        op.retry(ValueError(f"Attempt {attempt} failed"))
+                    else:
+                        op.succeed("success")
+            except StopIteration:
+                pass
+        
+        assert op.succeeded is True
+        assert attempt_count[0] == 2
+
+    def test_retryable_operation_multiple_retries(self):
+        """Test multiple retry attempts."""
+        attempts = []
+        
+        with RetryableOperation(max_attempts=5, initial_delay=0.01) as op:
+            try:
+                for attempt in op:
+                    attempts.append(attempt)
+                    if attempt < 4:
+                        op.retry(ValueError("Retry"))
+                    else:
+                        op.succeed("success")
+            except StopIteration:
+                pass
+        
+        assert len(attempts) == 4
+        assert attempts == [1, 2, 3, 4]
+        assert op.succeeded is True
+
+    def test_retryable_operation_failure_after_max_attempts(self):
+        """Test failure after max attempts."""
+        attempts = []
+        
+        with pytest.raises(ValueError, match="Final failure"):
+            with RetryableOperation(max_attempts=3, initial_delay=0.01) as op:
+                for attempt in op:
+                    attempts.append(attempt)
+                    op.retry(ValueError("Final failure"))
+        
+        assert len(attempts) == 3
+        assert attempts == [1, 2, 3]
+
+    def test_retryable_operation_iterator_protocol(self):
+        """Test iterator protocol usage."""
+        with RetryableOperation(max_attempts=3) as op:
+            # Should be iterable
+            assert hasattr(op, '__iter__')
+            assert hasattr(op, '__next__')
+            
+            # Should work with next()
+            iterator = iter(op)
+            assert next(iterator) == 1
+

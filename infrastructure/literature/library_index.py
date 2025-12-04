@@ -57,8 +57,19 @@ class LibraryEntry:
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> LibraryEntry:
-        """Create entry from dictionary."""
-        return cls(**data)
+        """Create entry from dictionary.
+        
+        Handles missing fields gracefully by providing defaults for required fields.
+        """
+        # Provide defaults for required fields if missing
+        defaults = {
+            "title": data.get("title", "No title"),
+            "citation_key": data.get("citation_key", "unknown"),
+            "authors": data.get("authors", [])
+        }
+        # Merge defaults with provided data (data takes precedence)
+        merged_data = {**defaults, **data}
+        return cls(**merged_data)
 
 
 class LibraryIndex:

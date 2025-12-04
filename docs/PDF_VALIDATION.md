@@ -13,9 +13,10 @@ The PDF validation system automatically scans generated PDFs for rendering issue
 Following the **thin orchestrator pattern**, the implementation consists of:
 
 1. **Business Logic** (`infrastructure/validation/pdf_validator.py`): Core validation algorithms
-2. **Orchestrator** (`repo_utilities/validate_pdf_output.py`): I/O and user interface
-3. **Tests** (`tests/test_pdf_validator.py`): Comprehensive coverage with real data
-4. **Integration** (`scripts/run_all.py`): Automated validation in build pipeline (Stage 4)
+2. **CLI Interface** (`infrastructure/validation/cli.py`): Command-line interface
+3. **Orchestrator** (`scripts/04_validate_output.py`): Pipeline integration
+4. **Tests** (`tests/infrastructure/test_validation/`): Comprehensive coverage with real data
+5. **Integration** (`scripts/run_all.py`): Automated validation in build pipeline (Stage 04)
 
 ## Components
 
@@ -32,9 +33,9 @@ Core validation module containing all business logic:
 - `extract_first_n_words(text, n)`: Extract first N words for structure verification
 - `validate_pdf_rendering(pdf_path, n_words)`: Complete validation report
 
-### repo_utilities/validate_pdf_output.py
+### infrastructure/validation/cli.py
 
-Thin orchestrator script that:
+Command-line interface that:
 
 - Imports methods from `infrastructure/validation/pdf_validator.py`
 - Handles command-line arguments
@@ -49,20 +50,17 @@ Thin orchestrator script that:
 #### Standalone Validation
 
 ```bash
-# Validate default combined PDF
-uv run python repo_utilities/validate_pdf_output.py
+# Validate default combined PDF (via pipeline orchestrator)
+python3 scripts/04_validate_output.py
 
-# Validate specific PDF
-uv run python repo_utilities/validate_pdf_output.py output/pdf/01_abstract.pdf
+# Validate specific PDF using CLI
+python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 
-# Show more words (default: 200)
-uv run python repo_utilities/validate_pdf_output.py --words 500
+# Validate with verbose output
+python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf --verbose
 
-# Verbose output
-uv run python repo_utilities/validate_pdf_output.py --verbose
-
-# Help
-uv run python repo_utilities/validate_pdf_output.py --help
+# Validate markdown files
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 ```
 
 #### Automated Validation
@@ -182,10 +180,10 @@ These are automatically managed by `uv` and defined in `pyproject.toml`.
 
 Following TDD principles:
 
-1. Write tests first in `tests/test_pdf_validator.py`
+1. Write tests first in `tests/infrastructure/test_validation/`
 2. Implement business logic in `infrastructure/validation/pdf_validator.py`
-3. Create thin orchestrator in `repo_utilities/validate_pdf_output.py`
-4. Integrate into build pipeline
+3. Create CLI interface in `infrastructure/validation/cli.py`
+4. Integrate into build pipeline via `scripts/04_validate_output.py`
 5. Verify test coverage requirements met
 
 ## Future Enhancements
@@ -205,11 +203,11 @@ Potential improvements:
 
 ### "Module pdf_validator not found"
 
-Ensure you're running from the repository root and using `uv run`:
+Ensure you're running from the repository root:
 
 ```bash
 cd /path/to/template
-uv run python repo_utilities/validate_pdf_output.py
+python3 -m infrastructure.validation.cli pdf output/pdf/project_combined.pdf
 ```
 
 ### "PDF file not found"

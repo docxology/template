@@ -22,6 +22,13 @@ from infrastructure.llm.templates import get_template
 
 logger = get_logger(__name__)
 
+# Try to import prompt system for system prompt loading
+try:
+    from infrastructure.llm.prompts.loader import get_default_loader
+    PROMPT_LOADER_AVAILABLE = True
+except ImportError:
+    PROMPT_LOADER_AVAILABLE = False
+
 
 class ResponseMode(str, Enum):
     """Response generation modes for different use cases."""
@@ -69,7 +76,25 @@ class LLMClient:
         self.context = ConversationContext(max_tokens=self.config.context_window)
         self._system_prompt_injected = False
         
+        # Store the default system prompt to detect if user explicitly set it
+        default_system_prompt = (
+            "You are an expert research assistant. "
+            "Provide clear, accurate, and scientifically rigorous responses. "
+            "Cite sources when possible."
+        )
+        
+        # Try to load system prompt from prompt system if available
+        # Only load default if system_prompt is the default value (not explicitly set to empty/None)
+        if PROMPT_LOADER_AVAILABLE and self.config.system_prompt == default_system_prompt:
+            try:
+                loader = get_default_loader()
+                # Try to get manuscript review system prompt
+                self.config.system_prompt = loader.get_system_prompt("manuscript_review")
+            except Exception as e:
+                logger.debug(f"Could not load system prompt from prompt system: {e}")
+        
         # Inject system prompt if configured
+        # Only inject if system_prompt is truthy (not empty string or None)
         if self.config.auto_inject_system_prompt and self.config.system_prompt:
             self._inject_system_prompt()
 

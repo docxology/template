@@ -586,7 +586,10 @@ uv run pytest tests/ --cache-clear
 **Diagnostic:**
 ```bash
 # Validate PDFs
-uv run python repo_utilities/validate_pdf_output.py
+python3 scripts/04_validate_output.py
+
+# Or use CLI directly
+python3 -m infrastructure.validation.cli pdf output/project_combined.pdf
 
 # Check PDF content (top-level output after stage 5)
 pdftotext output/project_combined.pdf - | head -50
@@ -687,7 +690,7 @@ ls -la output/pdf/
 **Diagnostic:**
 ```bash
 # Validate PDFs
-uv run python repo_utilities/validate_pdf_output.py
+python3 scripts/04_validate_output.py
 
 # Check references
 grep -r "\\\\ref{" manuscript/ | grep -v "#"

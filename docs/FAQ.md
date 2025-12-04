@@ -56,7 +56,7 @@
 ## 🔧 **Customization & Extension**
 
 ### **Q: How do I rename the project?**
-**A:** Use the `rename_project.sh` script in `repo_utilities/` to automatically update all references to the project name throughout the codebase.
+**A:** Customize your project by editing `project/manuscript/config.yaml` or setting environment variables (`AUTHOR_NAME`, `PROJECT_TITLE`, etc.). See [Configuration Guide](CONFIGURATION.md) for details.
 
 ### **Q: Can I add new output formats?**
 **A:** Absolutely! The template is designed to be extensible. You can add new output formats by creating new scripts and updating the build pipeline.

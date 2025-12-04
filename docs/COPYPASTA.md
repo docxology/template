@@ -57,10 +57,15 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 pytest tests/ --cov=src --cov-report=term-missing
 ```
 
-### **🏷️ Renaming the Project**
+### **🏷️ Customizing the Project**
 ```bash
-# Edit configuration in the script first, then run:
-./repo_utilities/rename_project.sh
+# Option 1: Edit config.yaml (recommended)
+cp project/manuscript/config.yaml.example project/manuscript/config.yaml
+vim project/manuscript/config.yaml
+
+# Option 2: Use environment variables
+export AUTHOR_NAME="Your Name"
+export PROJECT_TITLE="Your Project Title"
 ```
 
 ### **⚡ Quick Setup Commands**

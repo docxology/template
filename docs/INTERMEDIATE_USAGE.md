@@ -575,7 +575,7 @@ python3 scripts/run_all.py
 # Alternative: Manual steps
 # # Pipeline automatically handles cleanup
 # python3 scripts/run_all.py
-# python3 repo_utilities/validate_pdf_output.py
+# python3 scripts/04_validate_output.py
 ```
 
 ### Creating Custom Build Scripts

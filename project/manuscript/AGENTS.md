@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The `manuscript/` directory contains research manuscript sections in markdown format. These files are processed by `render_pdf.sh` to generate individual section PDFs and a combined manuscript document.
+The `manuscript/` directory contains research manuscript sections in markdown format. These files are processed by `scripts/03_render_pdf.py` to generate individual section PDFs and a combined manuscript document.
 
 ## File Structure
 
@@ -461,7 +461,7 @@ export AUTHOR_EMAIL="jane.smith@university.edu"
 export PROJECT_TITLE="Advanced Research Framework"
 export DOI="10.5281/zenodo.12345678"  # Optional
 
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
 ```
 
 **Priority order**:
@@ -523,6 +523,8 @@ python3 -m infrastructure.validation.cli pdf project/output/pdf/01_abstract.pdf
 - Rendering issues
 
 ## Best Practices
+
+For comprehensive formatting standards, see [`.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md).
 
 ### Markdown Writing
 - Use descriptive cross-reference labels
@@ -615,6 +617,7 @@ ls -1 project/manuscript/*.md | grep -E '^[0-9]|^S[0-9]'
 
 - [`preamble.md`](preamble.md) - LaTeX configuration
 - [`references.bib`](references.bib) - Bibliography
-- [`../docs/MARKDOWN_TEMPLATE_GUIDE.md`](../docs/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown guide
+- [`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md) - Complete manuscript formatting and style guide
+- [`../../docs/MARKDOWN_TEMPLATE_GUIDE.md`](../../docs/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown guide
 - [`../scripts/README.md`](../scripts/README.md) - Entry point orchestrators
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation

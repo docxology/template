@@ -226,7 +226,7 @@ Process of converting markdown sources to professional PDF documents using Pando
 ### PDF Validation
 Automated checking of generated PDFs for rendering issues, unresolved references, and structural problems.
 
-**Command**: `python3 repo_utilities/validate_pdf_output.py`
+**Command**: `python3 scripts/04_validate_output.py` or `python3 -m infrastructure.validation.cli pdf <path>`
 
 **Checks**: Unresolved references (??), missing citations, warnings, errors
 
@@ -414,7 +414,7 @@ Automated checking of various aspects: tests, markdown, PDFs, coverage, etc.
 **Types**:
 - Test validation (pytest)
 - Markdown validation (validate_markdown.py)
-- PDF validation (validate_pdf_output.py)
+- PDF validation (scripts/04_validate_output.py)
 - Coverage validation (pyproject.toml `[tool.coverage.*]`)
 
 **See**: [Build Pipeline](#build-pipeline)

@@ -4,11 +4,11 @@
 
 **Quick Reference:** [Examples Showcase](EXAMPLES_SHOWCASE.md) | [Architecture](ARCHITECTURE.md) | [How To Use](HOW_TO_USE.md)
 
-This file shows examples of how to use `rename_project.sh` to transform the generic template into specific projects. For related information, see **[`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)**, **[`README.md`](README.md)**, and **[`ARCHITECTURE.md`](ARCHITECTURE.md)**.
+This file shows examples of how to customize the template into specific research projects using configuration files and environment variables. For related information, see **[`EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)**, **[`CONFIGURATION.md`](CONFIGURATION.md)**, **[`README.md`](README.md)**, and **[`ARCHITECTURE.md`](ARCHITECTURE.md)**.
 
 ## Example 1: Machine Learning Research Project
 
-**Configuration in `rename_project.sh`:**
+**Configuration in `manuscript/config.yaml` (or environment variables):**
 ```bash
 # Project Identity
 PROJECT_NAME="deep-learning-optimization"
@@ -34,7 +34,7 @@ LICENSE="MIT"
 
 ## Example 2: Data Science Package
 
-**Configuration in `rename_project.sh`:**
+**Configuration in `manuscript/config.yaml` (or environment variables):**
 ```bash
 # Project Identity
 PROJECT_NAME="pandas-extension-toolkit"
@@ -54,7 +54,7 @@ LICENSE="Apache-2.0"
 
 ## Example 3: Academic Paper
 
-**Configuration in `rename_project.sh`:**
+**Configuration in `manuscript/config.yaml` (or environment variables):**
 ```bash
 # Project Identity
 PROJECT_NAME="quantum-computing-survey"
@@ -117,7 +117,7 @@ graph TB
 ## Usage Workflow
 
 ### 1. Edit Configuration
-Edit the configuration section at the top of `repo_utilities/rename_project.sh`:
+Edit `project/manuscript/config.yaml` or set environment variables:
 
 ```bash
 # Project Identity
@@ -136,23 +136,27 @@ PYTHON_VERSION=">=3.9"
 LICENSE="MIT"
 ```
 
-### 2. Run the Script
-Execute the script from the project root:
+### 2. Configure Your Project
+
+**Option A: Use config.yaml (Recommended)**
 ```bash
-./repo_utilities/rename_project.sh
+# Copy the example config
+cp project/manuscript/config.yaml.example project/manuscript/config.yaml
+
+# Edit with your information
+vim project/manuscript/config.yaml
 ```
 
-### 3. Review Changes
-The script will show what was updated:
+**Option B: Use Environment Variables**
 ```bash
-✅ Updated pyproject.toml
-✅ Updated README.md
-✅ Updated .cursorrules
-✅ Updated pipeline configuration
-✅ Updated markdown files
+export AUTHOR_NAME="Your Name"
+export AUTHOR_ORCID="0000-0000-0000-0000"
+export AUTHOR_EMAIL="your.email@example.com"
+export PROJECT_TITLE="Your Project Title"
+export DOI="10.5281/zenodo.12345678"  # Optional
 ```
 
-### 4. Test the Build Process
+### 3. Test the Build Process
 Validate that everything works:
 ```bash
 # Pipeline automatically handles cleanup
@@ -167,7 +171,7 @@ Edit additional files as needed:
 
 ## Generated Files
 
-After running `rename_project.sh`, you'll get:
+After configuring your project, you'll have:
 
 ### Configuration Files
 - **`.project_config`** - Project configuration (sourceable in scripts)

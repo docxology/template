@@ -26,6 +26,9 @@ Environment Variables:
 - LLM_MAX_INPUT_LENGTH: Maximum characters to send to LLM (default: 500000 = ~125K tokens)
                         Set to 0 for unlimited input size
 - LLM_REVIEW_TIMEOUT: Timeout for each review generation (default: 300s)
+- LLM_LONG_MAX_TOKENS: Maximum tokens per review response (default: 4096)
+                       Configured via LLMConfig.long_max_tokens, can be overridden with env var
+                       Priority: LLM_LONG_MAX_TOKENS env var > config default (4096)
 
 CLI Usage:
 - python3 scripts/06_llm_review.py                # Run both reviews and translations
@@ -88,6 +91,14 @@ from infrastructure.llm import (
     preload_model,
 )
 from infrastructure.llm.templates import REVIEW_MIN_WORDS, TRANSLATION_LANGUAGES
+
+# Try to import new prompt system
+try:
+    from infrastructure.llm.prompts.loader import get_default_loader
+    from infrastructure.llm.prompts.composer import PromptComposer
+    PROMPT_SYSTEM_AVAILABLE = True
+except ImportError:
+    PROMPT_SYSTEM_AVAILABLE = False
 from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError
 
 # Set up logger for this module
@@ -105,7 +116,23 @@ DEFAULT_REVIEW_TIMEOUT = 300.0
 # Manuscript Review System Prompt
 # =============================================================================
 
-MANUSCRIPT_REVIEW_SYSTEM_PROMPT = """You are an expert academic manuscript reviewer with extensive experience in peer review for top-tier journals. Your role is to provide thorough, constructive, and professional reviews of research manuscripts.
+def get_manuscript_review_system_prompt() -> str:
+    """Get manuscript review system prompt from infrastructure.
+    
+    Tries to load from new prompt system, falls back to hardcoded prompt.
+    
+    Returns:
+        System prompt string
+    """
+    if PROMPT_SYSTEM_AVAILABLE:
+        try:
+            loader = get_default_loader()
+            return loader.get_system_prompt("manuscript_review")
+        except Exception as e:
+            logger.debug(f"Could not load system prompt from prompt system: {e}")
+    
+    # Fallback to hardcoded prompt
+    return """You are an expert academic manuscript reviewer with extensive experience in peer review for top-tier journals. Your role is to provide thorough, constructive, and professional reviews of research manuscripts.
 
 Key responsibilities:
 1. Analyze the manuscript content carefully and completely
@@ -157,6 +184,24 @@ def get_review_timeout() -> float:
         except ValueError:
             logger.warning(f"Invalid LLM_REVIEW_TIMEOUT value: {env_value}, using default")
     return DEFAULT_REVIEW_TIMEOUT
+
+
+def get_review_max_tokens() -> Tuple[int, str]:
+    """Get configured maximum tokens for review generation with source logging.
+    
+    Returns:
+        Tuple of (max_tokens value, configuration source description)
+    """
+    config = LLMConfig.from_env()
+    max_tokens = config.long_max_tokens
+    
+    # Determine configuration source
+    if os.environ.get("LLM_LONG_MAX_TOKENS"):
+        source = f"environment variable LLM_LONG_MAX_TOKENS={max_tokens}"
+    else:
+        source = f"config default long_max_tokens={max_tokens}"
+    
+    return max_tokens, source
 
 
 def validate_review_quality(
@@ -384,9 +429,13 @@ def create_review_client(model_name: str) -> LLMClient:
     config = LLMConfig.from_env()
     config.default_model = model_name
     config.timeout = get_review_timeout()
-    config.system_prompt = MANUSCRIPT_REVIEW_SYSTEM_PROMPT
+    config.system_prompt = get_manuscript_review_system_prompt()
     config.auto_inject_system_prompt = True
-    config.long_max_tokens = 4096  # Increase for comprehensive reviews
+    # long_max_tokens is now read from environment or config default
+    
+    # Log configuration source
+    max_tokens, source = get_review_max_tokens()
+    logger.debug(f"Review max_tokens configuration: {source}")
     
     return LLMClient(config)
 
@@ -624,9 +673,10 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple
         logger.info(f"    Response: {response_preview}")
         logger.info(f"    Performance: ~{tokens_per_sec:.1f} tokens/sec")
         
-        # Estimate time for full reviews (4 reviews × ~4K tokens each)
+        # Estimate time for full reviews (4 reviews × configured max tokens each)
         if tokens_per_sec > 0:
-            estimated_total_tokens = 4 * 4096
+            max_tokens, _ = get_review_max_tokens()
+            estimated_total_tokens = 4 * max_tokens
             estimated_minutes = (estimated_total_tokens / tokens_per_sec) / 60
             logger.info(f"    Estimated review time: ~{estimated_minutes:.1f} minutes")
         else:
@@ -710,7 +760,7 @@ def generate_review_with_metrics(
     template_class: type,
     model_name: str = "",
     temperature: float = 0.3,
-    max_tokens: int = 4096,
+    max_tokens: Optional[int] = None,
     max_retries: int = 1,
 ) -> Tuple[str, ReviewMetrics]:
     """Generate a review with detailed metrics and quality validation.
@@ -726,13 +776,17 @@ def generate_review_with_metrics(
         template_class: Template class to use for the prompt
         model_name: Model name for model-specific adjustments
         temperature: Generation temperature
-        max_tokens: Maximum tokens for response
+        max_tokens: Maximum tokens for response (uses client config if None)
         max_retries: Number of retry attempts for low-quality responses (reduced default)
         
     Returns:
         Tuple of (response content, metrics)
     """
     log_stage(f"Generating {review_name}...")
+    
+    # Use configured max_tokens if not provided
+    if max_tokens is None:
+        max_tokens, _ = get_review_max_tokens()
     
     metrics = ReviewMetrics(
         input_chars=len(text),
@@ -743,9 +797,9 @@ def generate_review_with_metrics(
     # Reset context to prevent pollution from previous reviews
     client.reset()
     
-    # Render the template with manuscript text
+    # Render the template with manuscript text and token budget
     template = template_class()
-    prompt = template.render(text=text)
+    prompt = template.render(text=text, max_tokens=max_tokens)
     
     # Adjust temperature for smaller models (they need slightly more randomness)
     is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
@@ -780,12 +834,28 @@ def generate_review_with_metrics(
                 
                 # If previous attempt was off-topic, add reinforced instructions
                 if had_off_topic:
-                    current_prompt = (
-                        "IMPORTANT: You must review the ACTUAL manuscript text provided below. "
-                        "Do NOT generate hypothetical content, generic book descriptions, or "
-                        "unrelated topics. Your review must reference specific content from "
-                        "the manuscript.\n\n" + prompt
-                    )
+                    if PROMPT_SYSTEM_AVAILABLE:
+                        try:
+                            composer = PromptComposer()
+                            retry_prompt = composer.add_retry_prompt(prompt, retry_type="off_topic")
+                            current_prompt = retry_prompt
+                        except Exception as e:
+                            logger.debug(f"Could not use prompt composer for retry: {e}")
+                            # Fallback to hardcoded
+                            current_prompt = (
+                                "IMPORTANT: You must review the ACTUAL manuscript text provided below. "
+                                "Do NOT generate hypothetical content, generic book descriptions, or "
+                                "unrelated topics. Your review must reference specific content from "
+                                "the manuscript.\n\n" + prompt
+                            )
+                    else:
+                        # Fallback to hardcoded
+                        current_prompt = (
+                            "IMPORTANT: You must review the ACTUAL manuscript text provided below. "
+                            "Do NOT generate hypothetical content, generic book descriptions, or "
+                            "unrelated topics. Your review must reference specific content from "
+                            "the manuscript.\n\n" + prompt
+                        )
                     logger.debug("    Added reinforced prompt for off-topic retry")
             
             # Use streaming query for progress tracking
@@ -945,7 +1015,7 @@ def generate_executive_summary(
         template_class=ManuscriptExecutiveSummary,
         model_name=model_name,
         temperature=0.3,
-        max_tokens=4096,
+        max_tokens=None,  # Uses configured value from client
     )
 
 
@@ -970,7 +1040,7 @@ def generate_quality_review(
         template_class=ManuscriptQualityReview,
         model_name=model_name,
         temperature=0.3,
-        max_tokens=4096,
+        max_tokens=None,  # Uses configured value from client
     )
 
 
@@ -995,7 +1065,7 @@ def generate_methodology_review(
         template_class=ManuscriptMethodologyReview,
         model_name=model_name,
         temperature=0.3,
-        max_tokens=4096,
+        max_tokens=None,  # Uses configured value from client
     )
 
 
@@ -1020,7 +1090,7 @@ def generate_improvement_suggestions(
         template_class=ManuscriptImprovementSuggestions,
         model_name=model_name,
         temperature=0.4,
-        max_tokens=4096,
+        max_tokens=None,  # Uses configured value from client
     )
 
 
@@ -1058,9 +1128,12 @@ def generate_translation(
     # Reset context to prevent pollution from previous reviews
     client.reset()
     
-    # Render the template with manuscript text and target language
+    # Use configured max_tokens
+    max_tokens, _ = get_review_max_tokens()
+    
+    # Render the template with manuscript text, target language, and token budget
     template = ManuscriptTranslationAbstract()
-    prompt = template.render(text=text, target_language=target_language)
+    prompt = template.render(text=text, target_language=target_language, max_tokens=max_tokens)
     
     # Adjust temperature for smaller models
     is_small_model = any(s in model_name.lower() for s in ["3b", "4b", "7b", "8b"])
@@ -1068,7 +1141,7 @@ def generate_translation(
     
     options = GenerationOptions(
         temperature=temperature,
-        max_tokens=4096,
+        max_tokens=max_tokens,
     )
     
     start_time = time.time()
@@ -1472,7 +1545,8 @@ The following items are extracted from the review for easy tracking:
                 "temperature_summary": 0.3,
                 "temperature_review": 0.3,
                 "temperature_suggestions": 0.4,
-                "max_tokens": 4096,
+                "max_tokens": get_review_max_tokens()[0],
+                "max_tokens_source": get_review_max_tokens()[1],
                 "timeout_seconds": get_review_timeout(),
                 "system_prompt": "manuscript_review",
             }
@@ -1698,7 +1772,8 @@ def main(mode: ReviewMode = ReviewMode.ALL) -> int:
         
         log_success("LLM client initialized", logger)
         logger.info(f"    Timeout: {get_review_timeout():.0f}s per review")
-        logger.info(f"    Max tokens: 4096 per review")
+        max_tokens, source = get_review_max_tokens()
+        logger.info(f"    Max tokens: {max_tokens} per review (configured from: {source})")
         
         # Step 3.5: Warmup model before heavy processing
         warmup_success, tokens_per_sec = warmup_model(client, text[:1000], model_name)

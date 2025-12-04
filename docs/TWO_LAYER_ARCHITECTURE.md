@@ -160,7 +160,7 @@ fm.register_figure(
 │  │ run_all.py       │ scripts/*.py                   │ │
 │  │ (6-stage)        │ - 00_setup_environment.py   │ │
 │  │                  │ - 01_run_tests.py            │ │
-│  │                  │ - validate_pdf_output.py      │ │
+│  │                  │ - 04_validate_output.py      │ │
 │  └──────────────────┴────────────────────────────────┘ │
 │                                                         │
 │  ┌──────────────────────────────────────────────────┐ │

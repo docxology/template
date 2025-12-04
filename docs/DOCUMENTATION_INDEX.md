@@ -19,6 +19,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`.cursorrules/code_style.md`](../.cursorrules/code_style.md)** - Code formatting and style standards
 - **[`.cursorrules/git_workflow.md`](../.cursorrules/git_workflow.md)** - Git workflow and commit standards
 - **[`.cursorrules/api_design.md`](../.cursorrules/api_design.md)** - API design and interface standards
+- **[`.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md)** - Manuscript formatting and style standards
 
 **Note**: Use `.cursorrules/` files as quick reference during development. Corresponding `docs/` files provide comprehensive guides.
 

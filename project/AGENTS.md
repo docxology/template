@@ -186,7 +186,12 @@ See [Figure @fig:results] for detailed results.
 
 From template root:
 ```bash
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
+```
+
+Or use the full pipeline:
+```bash
+python3 scripts/run_all.py
 ```
 
 This:
@@ -337,7 +342,12 @@ To build the manuscript with template infrastructure:
 
 ```bash
 cd /path/to/template
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
+```
+
+Or use the full pipeline:
+```bash
+python3 scripts/run_all.py
 ```
 
 This uses the template's build system while your project code remains in `project/`.
@@ -353,7 +363,7 @@ This uses the template's build system while your project code remains in `projec
 
 - Root AGENTS.md - Template architecture
 - Root README.md - Template overview
-- repo_utilities/ - Build scripts
+- scripts/ - Build pipeline orchestrators
 - infrastructure/ - Generic validation tools
 
 

@@ -12,20 +12,19 @@ vim manuscript/S01_supplemental_methods.md
 
 ### Build PDFs
 ```bash
-# Recommended: Enhanced from-scratch build (includes cleanup and validation)
-./generate_pdf_from_scratch.sh
+# Recommended: Full pipeline (tests + analysis + PDF + validation)
+python3 scripts/run_all.py
 
-# With options
-./generate_pdf_from_scratch.sh --verbose --log-file build.log
+# Or use interactive menu
+./run.sh
 
-# Alternative: Manual steps
-./repo_utilities/clean_output.sh
-./repo_utilities/render_pdf.sh
+# Render PDF only (after tests and analysis)
+python3 scripts/03_render_pdf.py
 
 # View output
 open output/pdf/project_combined.pdf
-# Or use the open script
-./repo_utilities/open_manuscript.sh
+# Or
+open project/output/pdf/project_combined.pdf
 ```
 
 ## Structure
@@ -125,7 +124,7 @@ See `config.yaml.example` for all available options.
 export AUTHOR_NAME="Dr. Jane Smith"
 export PROJECT_TITLE="My Research"
 export AUTHOR_EMAIL="jane@example.edu"
-./repo_utilities/render_pdf.sh
+python3 scripts/03_render_pdf.py
 ```
 
 **Priority**: Environment variables override config file values.
@@ -134,10 +133,10 @@ export AUTHOR_EMAIL="jane@example.edu"
 
 ```bash
 # Check markdown
-python3 repo_utilities/validate_markdown.py
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 # Check PDF
-python3 repo_utilities/validate_pdf_output.py
+python3 -m infrastructure.validation.cli pdf project/output/pdf/
 ```
 
 ## Section Ordering
@@ -205,7 +204,8 @@ Figure \ref{fig:convergence_plot} shows...
 
 - Verify bibliography entry exists in `references.bib`
 - Check for typos in citation keys (case-sensitive)
-- Run `./run.sh` (option 4) to regenerate from scratch
+- Run `python3 scripts/run_all.py` to regenerate from scratch
+- Or use `./run.sh` and select option 4 (full pipeline)
 
 ### Figures not appearing
 
@@ -216,5 +216,6 @@ Figure \ref{fig:convergence_plot} shows...
 ## See Also
 
 - [`AGENTS.md`](AGENTS.md) - Detailed documentation
+- [`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md) - Complete manuscript formatting and style guide
 - [`preamble.md`](preamble.md) - LaTeX configuration
-- [`../docs/MARKDOWN_TEMPLATE_GUIDE.md`](../docs/MARKDOWN_TEMPLATE_GUIDE.md) - Full guide
+- [`../../docs/MARKDOWN_TEMPLATE_GUIDE.md`](../../docs/MARKDOWN_TEMPLATE_GUIDE.md) - Full guide
