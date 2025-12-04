@@ -53,6 +53,7 @@ Literature Operations (requires Ollama):
 ```bash
 # Core Build Operations
 ./run.sh --pipeline          # Extended pipeline (9 stages, includes LLM)
+./run.sh --pipeline --resume # Resume from last checkpoint
 ./run.sh --infra-tests        # Run infrastructure tests only
 ./run.sh --project-tests      # Run project tests only
 ./run.sh --render-pdf         # Render PDF manuscript only
@@ -82,6 +83,7 @@ python3 scripts/run_all.py  # Core pipeline (no LLM stages)
 - No LLM dependencies required
 - Suitable for automated environments
 - Zero-padded stage numbering (Python convention)
+- Checkpoint/resume support: `python3 scripts/run_all.py --resume`
 
 ## Pipeline Stages
 
@@ -191,6 +193,50 @@ python3 scripts/07_literature_search.py --summarize
 # Both operations
 python3 scripts/07_literature_search.py --search --summarize
 ```
+
+## Checkpoint and Resume
+
+The pipeline supports automatic checkpointing and resume capability:
+
+### Automatic Checkpointing
+
+- Checkpoints are saved after each successful stage
+- Location: `project/output/.checkpoints/pipeline_checkpoint.json`
+- Automatically cleared on successful pipeline completion
+
+### Resuming from Checkpoint
+
+```bash
+# Resume from last checkpoint (Python orchestrator)
+python3 scripts/run_all.py --resume
+
+# Resume from last checkpoint (Shell orchestrator)
+./run.sh --pipeline --resume
+```
+
+### Checkpoint Validation
+
+The system validates checkpoints before resuming:
+- File existence and format validation
+- Stage count consistency checks
+- Integrity verification (all completed stages have exit code 0)
+
+If validation fails, the pipeline starts fresh with a warning.
+
+### Manual Checkpoint Management
+
+```bash
+# Check if checkpoint exists
+python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); print('Exists:', cm.checkpoint_exists())"
+
+# View checkpoint contents
+cat project/output/.checkpoints/pipeline_checkpoint.json | python3 -m json.tool
+
+# Clear checkpoint manually
+rm -f project/output/.checkpoints/pipeline_checkpoint.json
+```
+
+See [`docs/CHECKPOINT_RESUME.md`](../docs/CHECKPOINT_RESUME.md) for complete documentation.
 
 ## Project-Specific Scripts
 

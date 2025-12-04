@@ -32,3 +32,4 @@ Integration tests validate that multiple components work together correctly, inc
 
 - [`AGENTS.md`](AGENTS.md) - Complete documentation
 - [`../../tests/README.md`](../../tests/README.md) - Test suite overview
+

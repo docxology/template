@@ -409,3 +409,4 @@ When integration tests fail:
 - [`../../tests/AGENTS.md`](../../tests/AGENTS.md) - Complete test suite documentation
 - [`../../docs/TESTING_GUIDE.md`](../../docs/TESTING_GUIDE.md) - Testing best practices
 - [`../../scripts/AGENTS.md`](../../scripts/AGENTS.md) - Build pipeline documentation
+

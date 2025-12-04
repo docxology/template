@@ -434,9 +434,14 @@ python3 -m pytest project/tests/ --cov=project/src --cov-report=html
 
 **Coverage Requirements**:
 - 70% minimum for project/src/ (currently achieving 99.88%)
-- 49% minimum for infrastructure/ (currently achieving 55.89%)
+- 49% minimum for infrastructure/ (currently achieving 70.09%)
 - All tests must pass before PDF generation
 - No mock methods (real data analysis only)
+
+**Coverage Gap Analysis**:
+- See [`docs/COVERAGE_GAPS.md`](docs/COVERAGE_GAPS.md) for detailed analysis
+- Low-coverage modules identified and improvement plans documented
+- New test files created for checkpoint, progress, retry, CLI, LLM operations, and paper selector
 
 ## 🧪 Testing Framework
 
@@ -763,6 +768,13 @@ python3 -m infrastructure.validation.cli pdf output/pdf/
 
 ## 🔧 Troubleshooting
 
+### Quick Reference
+
+- **General Troubleshooting**: [`docs/TROUBLESHOOTING_GUIDE.md`](docs/TROUBLESHOOTING_GUIDE.md)
+- **LLM Review Issues**: [`docs/LLM_REVIEW_TROUBLESHOOTING.md`](docs/LLM_REVIEW_TROUBLESHOOTING.md)
+- **Checkpoint/Resume**: [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md)
+- **Performance Issues**: [`docs/PERFORMANCE_OPTIMIZATION.md`](docs/PERFORMANCE_OPTIMIZATION.md)
+
 ### Common Issues
 
 #### Tests Failing
@@ -872,6 +884,32 @@ Key log files for debugging:
 - **Parallel Testing**: Use `pytest-xdist` for faster test runs
 - **Caching**: Enable pytest caching for repeated runs
 - **Incremental Builds**: Only rebuild changed components
+- **Performance Monitoring**: Automatic bottleneck detection in pipeline summary
+- **Resource Tracking**: Memory and CPU usage reporting (when enabled)
+
+See [`docs/PERFORMANCE_OPTIMIZATION.md`](docs/PERFORMANCE_OPTIMIZATION.md) for comprehensive optimization guide.
+
+### Checkpoint and Resume
+
+The pipeline includes automatic checkpointing for resume capability:
+
+```bash
+# Resume from last checkpoint
+python3 scripts/run_all.py --resume
+./run.sh --pipeline --resume
+
+# Start fresh (clears checkpoint on success)
+python3 scripts/run_all.py
+./run.sh --pipeline
+```
+
+**Features**:
+- Automatic checkpoint after each successful stage
+- Checkpoint validation before resume
+- Graceful handling of corrupted checkpoints
+- Preserves pipeline start time and stage durations
+
+See [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md) for complete documentation.
 
 ## 📚 References
 

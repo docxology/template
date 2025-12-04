@@ -68,6 +68,15 @@ markers = [
 asyncio_mode = "strict"
 asyncio_default_fixture_loop_scope = "function"
 
+# Filter specific warnings that may still appear despite --disable-warnings
+# These warnings come from pytest plugins and need explicit filtering
+filterwarnings = [
+    "ignore::DeprecationWarning:pytest_asyncio",
+    "ignore::PendingDeprecationWarning:pytest_asyncio",
+    "ignore::UserWarning",
+    "ignore::FutureWarning",
+]
+
 [tool.coverage.run]
 # Coverage configuration (consolidated from .coveragerc)
 branch = true

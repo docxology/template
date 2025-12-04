@@ -407,10 +407,18 @@ def test_scan_for_issues_detects_real_errors():
 
 def test_validate_pdf_rendering_with_real_combined_pdf():
     """Test validation works with actual project PDF if it exists."""
-    pdf_path = Path("/Users/4d/Documents/GitHub/template/output/pdf/project_combined.pdf")
+    # Use relative path from test file location
+    test_file_dir = Path(__file__).parent
+    repo_root = test_file_dir.parent.parent.parent
+    pdf_path = repo_root / "output" / "pdf" / "project_combined.pdf"
     
+    # Also check project/output/pdf/ as alternative location
     if not pdf_path.exists():
-        pytest.skip("Project PDF not found")
+        alt_pdf_path = repo_root / "project" / "output" / "pdf" / "project_combined.pdf"
+        if alt_pdf_path.exists():
+            pdf_path = alt_pdf_path
+        else:
+            pytest.skip("Project PDF not found in output/pdf/ or project/output/pdf/")
     
     report = validate_pdf_rendering(pdf_path, n_words=200)
     

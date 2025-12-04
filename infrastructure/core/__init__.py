@@ -43,6 +43,32 @@ from .logging_utils import (
     log_stage,
     log_substep,
     set_global_log_level,
+    format_duration,
+    calculate_eta,
+    log_stage_with_eta,
+    log_progress_bar,
+    format_error_with_suggestions,
+)
+from .progress import (
+    ProgressBar,
+    SubStageProgress,
+)
+from .retry import (
+    retry_with_backoff,
+    retry_on_transient_failure,
+    RetryableOperation,
+)
+from .checkpoint import (
+    CheckpointManager,
+    PipelineCheckpoint,
+    StageResult,
+)
+from .performance import (
+    PerformanceMonitor,
+    PerformanceMetrics,
+    ResourceUsage,
+    monitor_performance,
+    get_system_resources,
 )
 from .config_loader import (
     load_config,
@@ -86,6 +112,28 @@ __all__ = [
     "log_stage",
     "log_substep",
     "set_global_log_level",
+    "format_duration",
+    "calculate_eta",
+    "log_stage_with_eta",
+    "log_progress_bar",
+    "format_error_with_suggestions",
+    # Progress
+    "ProgressBar",
+    "SubStageProgress",
+    # Retry
+    "retry_with_backoff",
+    "retry_on_transient_failure",
+    "RetryableOperation",
+    # Checkpoint
+    "CheckpointManager",
+    "PipelineCheckpoint",
+    "StageResult",
+    # Performance
+    "PerformanceMonitor",
+    "PerformanceMetrics",
+    "ResourceUsage",
+    "monitor_performance",
+    "get_system_resources",
     # Configuration
     "load_config",
     "get_config_as_dict",

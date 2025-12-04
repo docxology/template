@@ -175,76 +175,59 @@ class TestValidationCLI:
     def test_cli_module_exists(self):
         """Test CLI module is importable."""
         assert cli is not None
+        assert hasattr(cli, 'main')
+        assert hasattr(cli, 'validate_pdf_command')
+        assert hasattr(cli, 'validate_markdown_command')
+        assert hasattr(cli, 'verify_integrity_command')
 
     def test_validate_command_available(self):
         """Test validate command is available."""
-        try:
-            from infrastructure.validation import cli
-            assert cli is not None
-        except ImportError:
-            pytest.skip("CLI module imports not available")
+        assert cli is not None
+        assert callable(cli.validate_pdf_command)
+        assert callable(cli.validate_markdown_command)
+        assert callable(cli.verify_integrity_command)
 
     def test_markdown_validation_option(self):
         """Test markdown validation option."""
-        try:
-            from infrastructure.validation import cli
-            assert cli is not None
-        except ImportError:
-            pytest.skip("CLI module imports not available")
+        assert hasattr(cli, 'validate_markdown_command')
+        assert callable(cli.validate_markdown_command)
 
     def test_pdf_validation_option(self):
         """Test PDF validation option."""
-        try:
-            from infrastructure.validation import cli
-            assert cli is not None
-        except ImportError:
-            pytest.skip("CLI module imports not available")
+        assert hasattr(cli, 'validate_pdf_command')
+        assert callable(cli.validate_pdf_command)
 
     def test_links_validation_option(self):
         """Test links validation option."""
-        try:
-            from infrastructure.validation import cli
-            assert cli is not None
-        except ImportError:
-            pytest.skip("CLI module imports not available")
+        # Links validation is part of markdown validation
+        assert hasattr(cli, 'validate_markdown_command')
+        assert callable(cli.validate_markdown_command)
 
     def test_integrity_check_option(self):
         """Test integrity check option."""
-        try:
-            from infrastructure.validation import cli
-            assert cli is not None
-        except ImportError:
-            pytest.skip("CLI module imports not available")
+        assert hasattr(cli, 'verify_integrity_command')
+        assert callable(cli.verify_integrity_command)
 
     def test_cli_help_output(self):
         """Test CLI help output."""
-        try:
-            from infrastructure.validation import cli
-            assert cli is not None
-        except ImportError:
-            pytest.skip("CLI module imports not available")
+        assert hasattr(cli, 'main')
+        assert callable(cli.main)
 
     def test_cli_error_handling(self):
         """Test CLI error handling."""
-        try:
-            from infrastructure.validation import cli
-            assert cli is not None
-        except ImportError:
-            pytest.skip("CLI module imports not available")
+        # Error handling is tested in TestValidatePdfCommand, TestValidateMarkdownCommand, etc.
+        assert cli is not None
+        assert hasattr(cli, 'validate_pdf_command')
 
     def test_cli_report_generation(self):
         """Test CLI report generation."""
-        try:
-            from infrastructure.validation import cli
-            assert cli is not None
-        except ImportError:
-            pytest.skip("CLI module imports not available")
+        # Report generation is tested in the command tests
+        assert cli is not None
+        assert hasattr(cli, 'validate_pdf_command')
 
     def test_strict_mode_option(self):
         """Test strict mode option."""
-        try:
-            from infrastructure.validation import cli
-            assert cli is not None
-        except ImportError:
-            pytest.skip("CLI module imports not available")
+        # Strict mode is tested in validate_markdown_command tests
+        assert hasattr(cli, 'validate_markdown_command')
+        assert callable(cli.validate_markdown_command)
 

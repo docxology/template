@@ -33,7 +33,7 @@ from infrastructure.core.exceptions import (
     DependencyError,
     MissingDependencyError,
     VersionMismatchError,
-    TestError,
+    TestError as TemplateTestError,  # Renamed to avoid pytest collection conflict
     InsufficientCoverageError,
     IntegrationError,
     raise_with_context,
@@ -69,7 +69,7 @@ class TestBaseTemplateError:
             BuildError,
             FileOperationError,
             DependencyError,
-            TestError,
+            TemplateTestError,
             IntegrationError,
         ]
         
@@ -240,7 +240,7 @@ class TestTestErrors:
     
     def test_test_error(self):
         """Test TestError."""
-        error = TestError("Test failed")
+        error = TemplateTestError("Test failed")
         assert isinstance(error, TemplateError)
     
     def test_insufficient_coverage_error(self):
@@ -249,7 +249,7 @@ class TestTestErrors:
             "Coverage below threshold",
             context={"actual": 85.5, "required": 100.0, "missing_lines": [10, 15, 20]}
         )
-        assert isinstance(error, TestError)
+        assert isinstance(error, TemplateTestError)
         assert error.context["actual"] == 85.5
         assert error.context["required"] == 100.0
         assert len(error.context["missing_lines"]) == 3
@@ -333,7 +333,7 @@ class TestExceptionCatching:
             BuildError("Build error"),
             FileOperationError("File error"),
             DependencyError("Dependency error"),
-            TestError("Test error"),
+            TemplateTestError("Test error"),
             IntegrationError("Integration error"),
         ]
         

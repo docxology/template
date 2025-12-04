@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """Complete pipeline orchestrator - runs all stages in sequence.
 
-This master orchestrator coordinates the entire build pipeline:
+This master orchestrator coordinates the core build pipeline (6 stages):
 1. STAGE 00: Environment Setup - Prepare the environment
 2. STAGE 01: Run Tests - Execute test suite with coverage
 3. STAGE 02: Run Analysis - Execute analysis and figure generation
 4. STAGE 03: Render PDF - Generate PDFs from markdown
 5. STAGE 04: Validate Output - Validate all generated outputs
 6. STAGE 05: Copy Outputs - Copy final deliverables to root output/
+
+Note: This is the CORE pipeline (6 stages) for manuscript building. 
+For the full pipeline with optional LLM review and translations (9 stages), use run.sh --pipeline.
 
 One-line execution for complete end-to-end build.
 
@@ -23,12 +26,17 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from typing import Optional
 
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_header, log_success, log_timing, format_error_with_suggestions
+from infrastructure.core.logging_utils import (
+    get_logger, log_header, log_success, log_timing, format_error_with_suggestions,
+    log_stage_with_eta, format_duration, calculate_eta, log_resource_usage
+)
 from infrastructure.core.exceptions import PipelineError
+from infrastructure.core.checkpoint import CheckpointManager, StageResult
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -121,13 +129,19 @@ def discover_orchestrators() -> list[Path]:
     return available
 
 
-def run_stage(stage_script: Path, stage_num: int, total_stages: int) -> int:
+def run_stage(
+    stage_script: Path, 
+    stage_num: int, 
+    total_stages: int,
+    pipeline_start: Optional[float] = None
+) -> int:
     """Execute a single pipeline stage.
     
     Args:
         stage_script: Path to the stage script
         stage_num: Current stage number (1-based)
         total_stages: Total number of stages
+        pipeline_start: Pipeline start time for ETA calculation
         
     Returns:
         Exit code from the stage script (0=success, non-zero=failure)
@@ -140,8 +154,12 @@ def run_stage(stage_script: Path, stage_num: int, total_stages: int) -> int:
     stage_name = stage_script.stem.replace("_", " ").title()
     repo_root = Path(__file__).parent.parent
     
-    logger.info(f"\n[{stage_num}/{total_stages}] {stage_name}")
-    logger.info("-" * 70)
+    # Use ETA-enabled stage logging if pipeline start time provided
+    if pipeline_start is not None:
+        log_stage_with_eta(stage_num, total_stages, stage_name, pipeline_start, logger)
+    else:
+        logger.info(f"\n[{stage_num}/{total_stages}] {stage_name}")
+        logger.info("-" * 70)
     
     cmd = [sys.executable, str(stage_script)]
     
@@ -159,12 +177,13 @@ def run_stage(stage_script: Path, stage_num: int, total_stages: int) -> int:
         return 1
 
 
-def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0) -> int:
+def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0, resume: bool = False) -> int:
     """Execute all pipeline stages in sequence.
     
     Args:
         orchestrators: List of orchestrator script paths to execute
         clean_duration: Duration of the clean stage (if already run)
+        resume: Whether to resume from checkpoint if available
         
     Returns:
         Exit code (0=all stages succeeded, 1=at least one stage failed)
@@ -175,29 +194,82 @@ def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0) -> int:
     if not orchestrators:
         raise PipelineError("No orchestrators found", context={"scripts_dir": "scripts/"})
     
-    log_header("COMPLETE PIPELINE ORCHESTRATION", logger)
+    log_header("CORE PIPELINE ORCHESTRATION (6 stages)", logger)
     
     total_stages = len(orchestrators) + 1  # +1 for clean stage
     logger.info(f"\nFound {total_stages} stage(s) to execute (including clean):")
     logger.info("  0. Clean Output Directories")
     for i, script in enumerate(orchestrators, 1):
         logger.info(f"  {i}. {script.name}")
+    logger.info("\nNote: This is the core pipeline. For full pipeline with LLM stages, use run.sh --pipeline")
     
-    # Track execution - include clean stage
-    stage_results = [
-        {
+    # Initialize checkpoint manager
+    checkpoint_manager = CheckpointManager()
+    
+    # Try to resume from checkpoint if requested
+    start_stage = 0
+    start_time = time.time()
+    stage_results: list[dict] = []
+    
+    if resume:
+        # Validate checkpoint before resuming
+        is_valid, error_msg = checkpoint_manager.validate_checkpoint()
+        if not is_valid:
+            logger.error(f"Cannot resume from checkpoint: {error_msg}")
+            logger.info("  Starting fresh pipeline instead")
+            logger.info("  To clear checkpoint: rm -f project/output/.checkpoints/pipeline_checkpoint.json")
+            resume = False
+        
+        if resume:
+            checkpoint = checkpoint_manager.load_checkpoint()
+            if checkpoint:
+                logger.info(f"Resuming from checkpoint: stage {checkpoint.last_stage_completed}/{checkpoint.total_stages}")
+                logger.info(f"  Pipeline started: {time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(checkpoint.pipeline_start_time))}")
+                start_stage = checkpoint.last_stage_completed + 1
+                start_time = checkpoint.pipeline_start_time
+                # Convert StageResult objects back to dicts for compatibility
+                stage_results = [
+                    {
+                        'name': sr.name,
+                        'exit_code': sr.exit_code,
+                        'duration': sr.duration,
+                    }
+                    for sr in checkpoint.stage_results
+                ]
+            else:
+                logger.warning("Checkpoint file exists but could not be loaded")
+                logger.info("  Starting fresh pipeline instead")
+                resume = False
+    
+    # If not resuming, start fresh
+    if not stage_results:
+        stage_results = [{
             'name': 'clean_output_directories',
             'exit_code': 0,
             'duration': clean_duration,
-        }
-    ]
-    start_time = time.time()
+        }]
     
-    # Execute each stage
-    for i, stage_script in enumerate(orchestrators, 1):
+    # Execute each stage starting from resume point
+    for i, stage_script in enumerate(orchestrators, start_stage):
+        if i == 0:
+            continue  # Skip clean stage if resuming (already done)
+        
         stage_start = time.time()
-        exit_code = run_stage(stage_script, i, len(orchestrators))
+        # Log resource usage at stage start
+        log_resource_usage(f"Stage {i} start", logger)
+        exit_code = run_stage(stage_script, i, len(orchestrators), start_time)
         stage_duration = time.time() - stage_start
+        # Log resource usage at stage end
+        log_resource_usage(f"Stage {i} end", logger)
+        
+        # Create StageResult for checkpoint
+        stage_result = StageResult(
+            name=stage_script.stem,
+            exit_code=exit_code,
+            duration=stage_duration,
+            timestamp=time.strftime("%Y-%m-%d %H:%M:%S"),
+            completed=(exit_code == 0)
+        )
         
         stage_results.append({
             'name': stage_script.stem,
@@ -205,11 +277,22 @@ def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0) -> int:
             'duration': stage_duration,
         })
         
-        if exit_code != 0:
+        # Save checkpoint after each successful stage
+        if exit_code == 0:
+            checkpoint_manager.save_checkpoint(
+                pipeline_start_time=start_time,
+                last_stage_completed=i,
+                stage_results=[StageResult(**sr) for sr in stage_results],
+                total_stages=len(orchestrators)
+            )
+            log_success(f"Stage {i} completed ({stage_duration:.1f}s)", logger)
+        else:
             logger.error(f"Stage {i} failed - stopping pipeline")
             break
-        else:
-            log_success(f"Stage {i} completed ({stage_duration:.1f}s)", logger)
+    
+    # Clear checkpoint on successful completion
+    if all(r['exit_code'] == 0 for r in stage_results):
+        checkpoint_manager.clear_checkpoint()
     
     # Generate summary
     total_duration = time.time() - start_time + clean_duration
@@ -223,7 +306,7 @@ def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0) -> int:
 
 
 def return_summary(results: list[dict], total_duration: float) -> None:
-    """Generate and print pipeline summary.
+    """Generate and print pipeline summary with performance metrics.
     
     Args:
         results: List of stage results with name, exit_code, duration
@@ -234,18 +317,57 @@ def return_summary(results: list[dict], total_duration: float) -> None:
     logger.info(f"\nStages Executed: {len(results)}")
     logger.info(f"Total Time: {total_duration:.1f}s\n")
     
+    # Calculate performance metrics
+    durations = [r['duration'] for r in results if r['exit_code'] == 0]
+    total_stage_time = sum(durations)
+    avg_time = total_stage_time / len(durations) if durations else 0
+    
+    # Find slowest and fastest stages
+    slowest_idx = 0
+    slowest_duration = 0
+    fastest_idx = 0
+    fastest_duration = float('inf')
+    
+    for i, result in enumerate(results):
+        if result['exit_code'] == 0:
+            duration = result['duration']
+            if duration > slowest_duration:
+                slowest_duration = duration
+                slowest_idx = i
+            if duration < fastest_duration and i > 0:  # Skip clean stage
+                fastest_duration = duration
+                fastest_idx = i
+    
+    # Display stage results with percentages
     for i, result in enumerate(results):
         stage_name = result['name'].replace('_', ' ').title()
         exit_code = result['exit_code']
         duration = result['duration']
+        percentage = (duration / total_duration * 100) if total_duration > 0 else 0
         
         if exit_code == 0:
             status = "✅ PASS"
         else:
             status = "❌ FAIL"
         
+        # Highlight bottleneck
+        bottleneck_marker = ""
+        if i == slowest_idx and slowest_duration > 10:
+            bottleneck_marker = " ⚠ bottleneck"
+        
         # Stage 0 is clean, others are 1-indexed
-        logger.info(f"{status}: Stage {i:02d} - {stage_name} ({duration:.1f}s)")
+        logger.info(f"{status}: Stage {i:02d} - {stage_name} ({duration:.1f}s, {percentage:.1f}%){bottleneck_marker}")
+    
+    # Performance metrics
+    logger.info(f"\nPerformance Metrics:")
+    logger.info(f"  Average Stage Time: {avg_time:.1f}s")
+    if slowest_duration > 0:
+        slowest_name = results[slowest_idx]['name'].replace('_', ' ').title()
+        slowest_pct = (slowest_duration / total_duration * 100) if total_duration > 0 else 0
+        logger.info(f"  Slowest Stage: Stage {slowest_idx:02d} - {slowest_name} ({slowest_duration:.1f}s, {slowest_pct:.1f}%)")
+    if fastest_duration < float('inf') and fastest_idx > 0:
+        fastest_name = results[fastest_idx]['name'].replace('_', ' ').title()
+        logger.info(f"  Fastest Stage: Stage {fastest_idx:02d} - {fastest_name} ({fastest_duration:.1f}s)")
     
     # Final summary
     passed = sum(1 for r in results if r['exit_code'] == 0)
@@ -262,6 +384,8 @@ def return_summary(results: list[dict], total_duration: float) -> None:
 def main() -> int:
     """Execute complete pipeline orchestration.
     
+    Supports --resume flag to resume from checkpoint.
+    
     Returns:
         Exit code (0=success, 1=failure)
         
@@ -269,6 +393,16 @@ def main() -> int:
         >>> exit_code = main()
         >>> sys.exit(exit_code)
     """
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Run complete pipeline orchestration")
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="Resume pipeline from last checkpoint (if available)"
+    )
+    args = parser.parse_args()
+    
     logger.info("""
 ╔══════════════════════════════════════════════════════════════════════╗
 ║                   PROJECT BUILD PIPELINE                             ║
@@ -285,11 +419,15 @@ def main() -> int:
         
         total_stages = len(orchestrators) + 1  # +1 for clean stage
         
-        # Stage 0: Clean output directories for fresh start
-        clean_duration = clean_output_directories(total_stages)
+        # Stage 0: Clean output directories (skip if resuming)
+        clean_duration = 0.0
+        if not args.resume:
+            clean_duration = clean_output_directories(total_stages)
+        else:
+            logger.info("Resuming from checkpoint - skipping clean stage")
         
-        # Run pipeline with clean duration
-        exit_code = run_pipeline(orchestrators, clean_duration)
+        # Run pipeline with clean duration and resume flag
+        exit_code = run_pipeline(orchestrators, clean_duration, resume=args.resume)
         
         # Final exit
         if exit_code == 0:

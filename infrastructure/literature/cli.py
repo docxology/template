@@ -171,18 +171,24 @@ def main():
 
     args = parser.parse_args()
 
+    # Check for missing command or missing function handler - consolidate to single exit
+    needs_help = False
+    help_parser = parser
+    
     if not args.command:
-        parser.print_help()
+        needs_help = True
+    elif args.command == "library" and not hasattr(args, "func"):
+        needs_help = True
+        help_parser = library_parser
+    elif not hasattr(args, "func"):
+        needs_help = True
+    
+    if needs_help:
+        help_parser.print_help()
         sys.exit(1)
+        return  # Prevent execution if sys.exit is mocked in tests
 
-    if args.command == "library" and not hasattr(args, "func"):
-        library_parser.print_help()
-        sys.exit(1)
-
-    if not hasattr(args, "func"):
-        parser.print_help()
-        sys.exit(1)
-
+    # At this point, we know args.func exists, so safe to call
     try:
         args.func(args)
     except Exception as e:

@@ -435,3 +435,4 @@ class LiteratureLLMOperations:
         logger.info(f"Saved {result.operation_type} result to {output_path}")
         log_success(f"Saved: {filename}")
         return output_path
+

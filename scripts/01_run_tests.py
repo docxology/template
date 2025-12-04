@@ -43,8 +43,8 @@ def run_infrastructure_tests(repo_root: Path) -> int:
     log_substep("(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)")
     
     # Build pytest command for infrastructure tests
-    # Include -W to show all warnings and --tb=short for concise tracebacks
     # Skip requires_ollama tests - they are slow and require external Ollama service
+    # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
     cmd = [
         sys.executable,
         "-m",
@@ -59,7 +59,6 @@ def run_infrastructure_tests(repo_root: Path) -> int:
         "--cov-fail-under=49",
         "-v",
         "--tb=short",
-        "-W", "default",  # Show all warnings
     ]
     
     try:
@@ -116,7 +115,7 @@ def run_project_tests(repo_root: Path) -> int:
     log_substep("Running project tests (70% coverage threshold)...")
     
     # Build pytest command for project tests
-    # Include -W to show all warnings and --tb=short for concise tracebacks
+    # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
     cmd = [
         sys.executable,
         "-m",
@@ -129,7 +128,6 @@ def run_project_tests(repo_root: Path) -> int:
         "--cov-fail-under=70",
         "-v",
         "--tb=short",
-        "-W", "default",  # Show all warnings
     ]
     
     try:

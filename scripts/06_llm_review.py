@@ -59,7 +59,7 @@ class ReviewMode(Enum):
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_success, log_header, format_error_with_suggestions
+from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_progress, format_error_with_suggestions, format_duration
 from infrastructure.core.config_loader import get_translation_languages
 from infrastructure.llm import (
     LLMClient,
@@ -827,8 +827,58 @@ def generate_review_with_metrics(
                     )
                     logger.debug("    Added reinforced prompt for off-topic retry")
             
-            # Use query() directly - templates already contain detailed instructions
-            response = client.query(current_prompt, options=options)
+            # Use streaming query for progress tracking
+            response_chunks = []
+            tokens_generated = 0
+            first_token_time = None
+            start_gen_time = time.time()
+            
+            # Estimate total tokens needed (rough estimate: ~4 chars per token)
+            estimated_total_tokens = max_tokens
+            
+            # Use streaming for better progress visibility
+            try:
+                for chunk in client.stream_query(current_prompt, options=options):
+                    if first_token_time is None:
+                        first_token_time = time.time()
+                        time_to_first = first_token_time - start_gen_time
+                        logger.info(f"    ✓ First token in {time_to_first:.1f}s - generating...")
+                    
+                    response_chunks.append(chunk)
+                    tokens_generated += len(chunk.split())  # Rough token estimate
+                    
+                    # Update progress every ~50 tokens or every 2 seconds
+                    if tokens_generated % 50 == 0 or (time.time() - start_gen_time) % 2 < 0.1:
+                        elapsed = time.time() - start_gen_time
+                        tokens_per_sec = tokens_generated / elapsed if elapsed > 0 else 0
+                        progress_pct = min((tokens_generated / estimated_total_tokens) * 100, 99)
+                        eta_seconds = (estimated_total_tokens - tokens_generated) / tokens_per_sec if tokens_per_sec > 0 else None
+                        
+                        status = f"    Generating... {tokens_generated:,} tokens (~{progress_pct:.0f}%)"
+                        if tokens_per_sec > 0:
+                            status += f" @ {tokens_per_sec:.1f} tokens/sec"
+                        if eta_seconds is not None and eta_seconds > 0:
+                            status += f" | ETA: {format_duration(eta_seconds)}"
+                        
+                        # Use carriage return for in-place update
+                        sys.stderr.write(f"\r{status}")
+                        sys.stderr.flush()
+                
+                # Clear progress line
+                sys.stderr.write("\r" + " " * 80 + "\r")
+                sys.stderr.flush()
+                
+                response = "".join(response_chunks)
+                
+                # Log final generation stats
+                total_time = time.time() - start_gen_time
+                final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
+                logger.info(f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s ({final_tokens_per_sec:.1f} tokens/sec)")
+                
+            except Exception as stream_error:
+                # Fallback to non-streaming if streaming fails
+                logger.warning(f"    Streaming failed, using non-streaming: {stream_error}")
+                response = client.query(current_prompt, options=options)
             
             # Validate response quality with model-specific thresholds
             is_valid, issues, details = validate_review_quality(
@@ -1271,13 +1321,14 @@ def save_review_outputs(
 
 """
             filepath.write_text(header + content)
-            # Log with language name for translations, full path for all files
+            # Log with full absolute path and word count
+            full_path = filepath.resolve()
             if name.startswith("translation_"):
                 lang_code = name.replace("translation_", "")
                 lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
-                logger.info(f"  Saved translation ({lang_name}): {filepath}")
+                logger.info(f"  Saved translation ({lang_name}): {full_path} ({metrics.output_words:,} words)")
             else:
-                logger.info(f"  Saved: {filepath}")
+                logger.info(f"  Saved: {full_path} ({metrics.output_words:,} words)")
         except Exception as e:
             logger.error(f"Failed to save {name}: {e}")
             success = False
@@ -1490,6 +1541,69 @@ The following items are extracted from the review for easy tracking:
     return success
 
 
+def save_single_review(
+    review_name: str,
+    content: str,
+    output_dir: Path,
+    model_name: str,
+    metrics: ReviewMetrics,
+) -> Path:
+    """Save a single review immediately after generation.
+    
+    This function saves a review file as soon as it's generated, rather than
+    waiting for all reviews to complete. This provides incremental progress
+    and allows partial results to be available even if the process is interrupted.
+    
+    Args:
+        review_name: Name of the review (e.g., 'executive_summary', 'translation_zh')
+        content: Review content text
+        output_dir: Output directory path
+        model_name: Name of LLM model used
+        metrics: Review generation metrics
+        
+    Returns:
+        Path to saved file
+    """
+    # Create output directory if needed
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Generate filepath
+    filepath = output_dir / f"{review_name}.md"
+    
+    # Create header with metadata
+    timestamp = datetime.now().isoformat()
+    date_str = timestamp[:10]
+    header = f"""# {review_name.replace('_', ' ').title()}
+
+*Generated by LLM ({model_name}) on {date_str}*
+*Output: {metrics.output_chars:,} chars ({metrics.output_words:,} words) in {metrics.generation_time_seconds:.1f}s*
+
+---
+
+"""
+    
+    # Write file
+    try:
+        filepath.write_text(header + content)
+        
+        # Log with full absolute path and word count
+        full_path = filepath.resolve()
+        
+        # Special handling for translations
+        if review_name.startswith("translation_"):
+            lang_code = review_name.replace("translation_", "")
+            lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
+            logger.info(f"✅ Saved: {full_path} ({metrics.output_words:,} words) - Translation ({lang_name})")
+        else:
+            logger.info(f"✅ Saved: {full_path} ({metrics.output_words:,} words)")
+        
+        return filepath
+        
+    except Exception as e:
+        logger.error(f"Failed to save {review_name}: {e}")
+        raise
+
+
 def generate_review_summary(
     reviews: Dict[str, str],
     output_dir: Path,
@@ -1546,21 +1660,37 @@ def generate_review_summary(
         else:
             other_files.append(filepath)
     
-    # Log translation files with language names
+    # Log translation files with language names, full paths, and word counts
     if translation_files:
         logger.info(f"\n  Translation files:")
         for filepath in translation_files:
+            full_path = filepath.resolve()
             size_kb = filepath.stat().st_size / 1024
             lang_code = filepath.stem.replace("translation_", "")
             lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
-            logger.info(f"    • {filepath} ({lang_name}): {size_kb:.1f} KB")
+            # Get word count from metrics if available
+            review_name = filepath.stem
+            metrics = session_metrics.reviews.get(review_name, ReviewMetrics())
+            word_count = metrics.output_words if metrics.output_words > 0 else "N/A"
+            if word_count != "N/A":
+                logger.info(f"    • {full_path} ({lang_name}): {size_kb:.1f} KB, {word_count:,} words")
+            else:
+                logger.info(f"    • {full_path} ({lang_name}): {size_kb:.1f} KB")
     
-    # Log other files
+    # Log other files with full paths and word counts
     if other_files:
         logger.info(f"\n  Other files:")
         for filepath in other_files:
+            full_path = filepath.resolve()
             size_kb = filepath.stat().st_size / 1024
-            logger.info(f"    • {filepath}: {size_kb:.1f} KB")
+            # Get word count from metrics if available
+            review_name = filepath.stem
+            metrics = session_metrics.reviews.get(review_name, ReviewMetrics())
+            word_count = metrics.output_words if metrics.output_words > 0 else "N/A"
+            if word_count != "N/A":
+                logger.info(f"    • {full_path}: {size_kb:.1f} KB, {word_count:,} words")
+            else:
+                logger.info(f"    • {full_path}: {size_kb:.1f} KB")
     
     logger.info("")
 
@@ -1576,11 +1706,11 @@ def main(mode: ReviewMode = ReviewMode.ALL) -> int:
     """
     # Log appropriate header based on mode
     if mode == ReviewMode.REVIEWS_ONLY:
-        log_header("STAGE 08: LLM Scientific Review (English)")
+        log_header("Stage 8/9: LLM Scientific Review (English)")
     elif mode == ReviewMode.TRANSLATIONS_ONLY:
-        log_header("STAGE 08: LLM Translations")
+        log_header("Stage 9/9: LLM Translations")
     else:
-        log_header("STAGE 08: LLM Manuscript Review")
+        log_header("Stage 8/9: LLM Manuscript Review")
     
     repo_root = Path(__file__).parent.parent
     project_output = repo_root / "project" / "output"
@@ -1636,36 +1766,37 @@ def main(mode: ReviewMode = ReviewMode.ALL) -> int:
         # Step 4a: Generate English scientific reviews (if not translations-only)
         if mode != ReviewMode.TRANSLATIONS_ONLY:
             logger.info("\n  Generating English scientific reviews...")
+            review_types = ["executive_summary", "quality_review", "methodology_review", "improvement_suggestions"]
             
-            response, metrics = generate_executive_summary(client, text, model_name)
-            reviews["executive_summary"] = response
-            session_metrics.reviews["executive_summary"] = metrics
-            
-            response, metrics = generate_quality_review(client, text, model_name)
-            reviews["quality_review"] = response
-            session_metrics.reviews["quality_review"] = metrics
-            
-            response, metrics = generate_methodology_review(client, text, model_name)
-            reviews["methodology_review"] = response
-            session_metrics.reviews["methodology_review"] = metrics
-            
-            response, metrics = generate_improvement_suggestions(client, text, model_name)
-            reviews["improvement_suggestions"] = response
-            session_metrics.reviews["improvement_suggestions"] = metrics
+            for i, review_type in enumerate(review_types, 1):
+                log_progress(i, len(review_types), f"Review: {review_type.replace('_', ' ').title()}", logger)
+                
+                if review_type == "executive_summary":
+                    response, metrics = generate_executive_summary(client, text, model_name)
+                elif review_type == "quality_review":
+                    response, metrics = generate_quality_review(client, text, model_name)
+                elif review_type == "methodology_review":
+                    response, metrics = generate_methodology_review(client, text, model_name)
+                else:  # improvement_suggestions
+                    response, metrics = generate_improvement_suggestions(client, text, model_name)
+                
+                reviews[review_type] = response
+                session_metrics.reviews[review_type] = metrics
+                save_single_review(review_type, response, output_dir, model_name, metrics)
         
         # Step 4b: Generate translations (if not reviews-only)
         if mode != ReviewMode.REVIEWS_ONLY:
             translation_languages = get_translation_languages(repo_root)
             if translation_languages:
                 logger.info(f"\n  Generating translations for {len(translation_languages)} language(s)...")
-                for lang_code in translation_languages:
+                for i, lang_code in enumerate(translation_languages, 1):
                     lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
+                    log_progress(i, len(translation_languages), f"Translation: {lang_name}", logger)
                     response, metrics = generate_translation(client, text, lang_code, model_name)
-                    reviews[f"translation_{lang_code}"] = response
-                    session_metrics.reviews[f"translation_{lang_code}"] = metrics
-                    # Log where the translation file will be saved
-                    translation_filepath = output_dir / f"translation_{lang_code}.md"
-                    logger.info(f"    Translation ({lang_name}) will be saved to: {translation_filepath}")
+                    review_name = f"translation_{lang_code}"
+                    reviews[review_name] = response
+                    session_metrics.reviews[review_name] = metrics
+                    save_single_review(review_name, response, output_dir, model_name, metrics)
             elif mode == ReviewMode.TRANSLATIONS_ONLY:
                 logger.warning("\n⚠️  No translation languages configured")
                 logger.info("  Configure translations in project/manuscript/config.yaml:")

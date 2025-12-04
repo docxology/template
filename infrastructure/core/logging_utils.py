@@ -20,6 +20,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Optional, TypeVar, Iterator
 
+# Import TemplateError for error formatting (imported at function level to avoid circular import)
+
 # Type variable for generic context manager
 T = TypeVar('T')
 
@@ -471,7 +473,14 @@ def set_global_log_level(level: int) -> None:
             logger.setLevel(level)
 
 
-def log_progress_bar(current: int, total: int, task: str = "", width: int = 20) -> None:
+def log_progress_bar(
+    current: int, 
+    total: int, 
+    task: str = "", 
+    width: int = 20,
+    show_eta: bool = False,
+    elapsed_time: Optional[float] = None
+) -> None:
     """Display a simple text-based progress bar.
 
     Args:
@@ -479,10 +488,14 @@ def log_progress_bar(current: int, total: int, task: str = "", width: int = 20) 
         total: Total progress value
         task: Task description to display
         width: Width of the progress bar in characters
+        show_eta: Whether to show estimated time remaining
+        elapsed_time: Elapsed time in seconds (for ETA calculation)
 
     Example:
         >>> log_progress_bar(15, 100, "Processing files")
         ℹ️ [████████░░░░░░░░] Processing files 15/100 (15%)
+        >>> log_progress_bar(15, 100, "Processing files", show_eta=True, elapsed_time=30.0)
+        ℹ️ [████████░░░░░░░░] Processing files 15/100 (15%) ETA: 2m 10s
     """
     # Get logger instance (avoiding scoping issues)
     progress_logger = get_logger(__name__)
@@ -492,10 +505,18 @@ def log_progress_bar(current: int, total: int, task: str = "", width: int = 20) 
     bar = "█" * filled + "░" * (width - filled)
 
     task_str = f" {task}" if task else ""
-    progress_logger.info(f"  [{bar}] {task_str} {current}/{total} ({percent}%)")
+    status = f"  [{bar}]{task_str} {current}/{total} ({percent}%)"
+    
+    # Add ETA if requested
+    if show_eta and elapsed_time is not None and current > 0:
+        eta_seconds = calculate_eta(elapsed_time, current, total)
+        if eta_seconds is not None:
+            status += f" ETA: {format_duration(eta_seconds)}"
+    
+    progress_logger.info(status)
 
 
-def format_error_with_suggestions(error: TemplateError) -> str:
+def format_error_with_suggestions(error: Any) -> str:
     """Format error message with context and recovery suggestions.
 
     Args:
@@ -517,6 +538,12 @@ def format_error_with_suggestions(error: TemplateError) -> str:
            1. Check file path
            2. Verify permissions
     """
+    # Import here to avoid circular import
+    from infrastructure.core.exceptions import TemplateError
+    
+    if not isinstance(error, TemplateError):
+        return str(error)
+    
     lines = [f"❌ {error.message}"]
 
     if error.context:
@@ -530,4 +557,169 @@ def format_error_with_suggestions(error: TemplateError) -> str:
             lines.append(f"   {i}. {suggestion}")
 
     return "\n".join(lines)
+
+
+def format_duration(seconds: float) -> str:
+    """Format duration in seconds to human-readable string.
+    
+    Args:
+        seconds: Duration in seconds
+        
+    Returns:
+        Formatted duration string (e.g., "1m 23s", "45s")
+        
+    Example:
+        >>> format_duration(83)
+        '1m 23s'
+        >>> format_duration(45)
+        '45s'
+    """
+    if seconds < 60:
+        return f"{int(seconds)}s"
+    
+    minutes = int(seconds // 60)
+    secs = int(seconds % 60)
+    
+    if minutes < 60:
+        return f"{minutes}m {secs}s"
+    
+    hours = minutes // 60
+    mins = minutes % 60
+    
+    if hours < 24:
+        return f"{hours}h {mins}m"
+    
+    days = hours // 24
+    hrs = hours % 24
+    return f"{days}d {hrs}h"
+
+
+def calculate_eta(
+    elapsed_time: float,
+    completed_items: int,
+    total_items: int
+) -> Optional[float]:
+    """Calculate estimated time remaining based on current progress.
+    
+    Args:
+        elapsed_time: Time elapsed so far in seconds
+        completed_items: Number of items completed
+        total_items: Total number of items
+        
+    Returns:
+        Estimated time remaining in seconds, or None if cannot calculate
+        
+    Example:
+        >>> calculate_eta(30.0, 3, 10)
+        70.0  # 30s for 3 items = 10s/item, 7 remaining = 70s
+    """
+    if completed_items <= 0 or total_items <= 0:
+        return None
+    
+    if completed_items >= total_items:
+        return 0.0
+    
+    avg_time_per_item = elapsed_time / completed_items
+    remaining_items = total_items - completed_items
+    return avg_time_per_item * remaining_items
+
+
+def log_stage_with_eta(
+    stage_num: int,
+    total_stages: int,
+    stage_name: str,
+    pipeline_start: Optional[float] = None,
+    logger: Optional[logging.Logger] = None
+) -> None:
+    """Log a pipeline stage header with ETA calculation.
+    
+    Provides standardized stage header formatting with ETA calculation
+    similar to the bash script's log_stage function.
+    
+    Args:
+        stage_num: Current stage number (1-based)
+        total_stages: Total number of stages
+        stage_name: Name of the stage
+        pipeline_start: Pipeline start time (for ETA calculation)
+        logger: Logger instance (creates one if None)
+        
+    Example:
+        >>> import time
+        >>> start = time.time()
+        >>> time.sleep(5)
+        >>> log_stage_with_eta(3, 7, "PDF Rendering", start)
+        ℹ️ [2025-11-21 12:00:00] [INFO]
+        ℹ️ [2025-11-21 12:00:00] [INFO] [3/7] PDF Rendering (42% complete)
+        ℹ️ [2025-11-21 12:00:00] [INFO]   Elapsed: 5s | ETA: 6s
+        ℹ️ [2025-11-21 12:00:00] [INFO] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    """
+    if logger is None:
+        logger = get_logger(__name__)
+    
+    percentage = (stage_num * 100) // total_stages if total_stages > 0 else 0
+    separator = "━" * 46
+    
+    logger.info("")
+    logger.info(f"[{stage_num}/{total_stages}] {stage_name} ({percentage}% complete)")
+    
+    # Calculate and display ETA if pipeline start time provided
+    if pipeline_start is not None and stage_num > 0:
+        elapsed = time.time() - pipeline_start
+        if elapsed > 0:
+            eta_seconds = calculate_eta(elapsed, stage_num, total_stages)
+            if eta_seconds is not None:
+                elapsed_str = format_duration(elapsed)
+                eta_str = format_duration(eta_seconds)
+                logger.info(f"  Elapsed: {elapsed_str} | ETA: {eta_str}")
+    
+    logger.info(separator)
+
+
+def log_resource_usage(
+    stage_name: str = "",
+    logger: Optional[logging.Logger] = None
+) -> None:
+    """Log current resource usage (if psutil available).
+    
+    Provides memory and CPU usage information when psutil is installed.
+    Falls back gracefully if psutil is not available.
+    
+    Args:
+        stage_name: Name of the stage (for context)
+        logger: Logger instance (creates one if None)
+        
+    Example:
+        >>> log_resource_usage("PDF Rendering")
+        ℹ️ [2025-11-21 12:00:00] [INFO]   Resource usage: Memory: 512 MB, CPU: 15.2%
+    """
+    if logger is None:
+        logger = get_logger(__name__)
+    
+    try:
+        import psutil
+        process = psutil.Process()
+        
+        # Get memory usage
+        memory_info = process.memory_info()
+        memory_mb = memory_info.rss / (1024 * 1024)
+        
+        # Get CPU usage (average over 0.1s)
+        cpu_percent = process.cpu_percent(interval=0.1)
+        
+        # Format resource info
+        resource_info = f"Memory: {memory_mb:.0f} MB"
+        if cpu_percent > 0:
+            resource_info += f", CPU: {cpu_percent:.1f}%"
+        
+        if stage_name:
+            logger.info(f"  Resource usage ({stage_name}): {resource_info}")
+        else:
+            logger.info(f"  Resource usage: {resource_info}")
+            
+    except ImportError:
+        # psutil not available - skip resource reporting
+        pass
+    except Exception as e:
+        # Any other error - log at debug level
+        logger.debug(f"Failed to get resource usage: {e}")
 

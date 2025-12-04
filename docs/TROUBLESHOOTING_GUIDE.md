@@ -2,7 +2,12 @@
 
 > **Systematic approach** to resolving issues and errors
 
-**Quick Reference:** [FAQ](FAQ.md) | [Common Workflows](COMMON_WORKFLOWS.md) | [Build System](BUILD_SYSTEM.md)
+**Quick Reference:** [FAQ](FAQ.md) | [Common Workflows](COMMON_WORKFLOWS.md) | [Build System](BUILD_SYSTEM.md) | [Configuration](CONFIGURATION.md)
+
+**Specialized Guides:**
+- [LLM Review Troubleshooting](LLM_REVIEW_TROUBLESHOOTING.md) - LLM-specific issues
+- [Checkpoint and Resume](CHECKPOINT_RESUME.md) - Checkpoint system troubleshooting
+- [Performance Optimization](PERFORMANCE_OPTIMIZATION.md) - Performance issues and optimization
 
 This guide provides a systematic approach to troubleshooting common issues in the Research Project Template. Follow these steps to diagnose and resolve problems effectively.
 
@@ -734,6 +739,93 @@ uv run pytest tests/ --cache-clear && uv run pytest tests/
 2. **Clear caches** - Remove temporary files
 3. **Increase memory** - System configuration
 4. **Optimize code** - Reduce memory usage
+
+## New Features Troubleshooting
+
+### Checkpoint System
+
+#### Pipeline Won't Resume from Checkpoint
+
+**Symptoms:**
+- Pipeline starts from beginning even with `PIPELINE_RESUME=1`
+- Checkpoint file exists but is ignored
+
+**Diagnosis:**
+```bash
+# Check if checkpoint exists
+ls -la project/output/.checkpoints/pipeline_checkpoint.json
+
+# View checkpoint contents
+cat project/output/.checkpoints/pipeline_checkpoint.json | python3 -m json.tool
+```
+
+**Solutions:**
+1. Verify checkpoint file is valid JSON
+2. Check checkpoint directory permissions
+3. Ensure `PIPELINE_RESUME=1` is set
+4. Clear invalid checkpoint: `rm project/output/.checkpoints/pipeline_checkpoint.json`
+
+#### Checkpoint Corrupted
+
+**Symptoms:**
+- Error loading checkpoint
+- Pipeline fails to start
+
+**Solutions:**
+```bash
+# Clear corrupted checkpoint
+rm -f project/output/.checkpoints/pipeline_checkpoint.json
+
+# Restart pipeline
+python3 scripts/run_all.py
+```
+
+### Retry Logic
+
+#### Operations Still Failing After Retries
+
+**Symptoms:**
+- Transient failures not being retried
+- Operations fail immediately
+
+**Diagnosis:**
+- Check if operation uses `@retry_with_backoff` decorator
+- Verify exception types match retry configuration
+- Review logs for retry attempts
+
+**Solutions:**
+1. Ensure operation is decorated with retry decorator
+2. Check exception types match retry configuration
+3. Increase `max_attempts` if needed
+4. Verify transient vs permanent failures
+
+### Progress Reporting
+
+#### ETA Not Showing
+
+**Symptoms:**
+- No ETA displayed in pipeline output
+- Progress bars not updating
+
+**Solutions:**
+1. Ensure pipeline start time is passed to stage functions
+2. Check terminal supports progress output
+3. Verify `LOG_LEVEL` allows INFO messages
+4. Check for buffering issues (use `-u` flag with Python)
+
+### Performance Monitoring
+
+#### Resource Tracking Not Working
+
+**Symptoms:**
+- No performance metrics in logs
+- Memory/CPU usage not reported
+
+**Solutions:**
+1. Install `psutil`: `uv add psutil`
+2. Enable monitoring: `export ENABLE_PERFORMANCE_MONITORING=1`
+3. Check log level allows DEBUG messages
+4. Verify system supports resource tracking
 
 ## Recovery Procedures
 

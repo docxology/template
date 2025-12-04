@@ -597,3 +597,4 @@ pytest tests/infrastructure/ --durations=10
 - [`../../project/tests/AGENTS.md`](../../project/tests/AGENTS.md) - Project test documentation
 - [`../../docs/TESTING_GUIDE.md`](../../docs/TESTING_GUIDE.md) - Testing best practices
 - [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure module overview
+

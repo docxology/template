@@ -1,1060 +1,327 @@
-# ⚡ Performance Optimization Guide
+# Performance Optimization Guide
 
-> **Build time optimization** and caching strategies for the Research Project Template
+This guide provides strategies for optimizing pipeline performance and identifying bottlenecks.
 
-**Quick Reference:** [Build System](BUILD_SYSTEM.md) | [CI/CD Integration](CI_CD_INTEGRATION.md) | [Troubleshooting](TROUBLESHOOTING_GUIDE.md)
+## Performance Metrics
 
-This guide covers performance optimization strategies for the Research Project Template, focusing on build time reduction, caching, and efficient resource utilization.
+The pipeline tracks performance metrics for each stage:
 
-## Current Performance Baseline
+- **Stage Duration**: Time taken for each stage
+- **Total Duration**: Complete pipeline execution time
+- **Bottleneck Identification**: Automatic detection of slowest stages
+- **ETA Calculations**: Estimated time remaining during execution
 
-**Build Time:** 84 seconds (878 tests + PDF generation, without optional LLM review)  
-**Test Suite:** 27 seconds for 878 tests  
-**Coverage:** 81.90% across 1989 statements  
-**Platform:** Ubuntu 22.04, Python 3.11, uv package manager
+## Viewing Performance Metrics
 
----
+### Pipeline Summary
 
-## 🔍 Performance Analysis
+After pipeline completion, a summary is displayed:
 
-### Build Pipeline Breakdown
+```
+Performance Metrics:
+  Total Execution Time: 2m 15s
+  Average Stage Time: 22.5s
+  Slowest Stage: Stage 5 - PDF Rendering (45s, 33%)
+  Fastest Stage: Stage 2 - Project Tests (5s)
+```
 
-| Stage | Time | Percentage | Optimization Potential |
-|-------|------|------------|----------------------|
-| **Infrastructure Tests** | 6s | 10% | Medium (parallelization) |
-| **Project Tests** | 3s | 5% | Medium (parallelization) |
-| **Project Analysis** | 4s | 7% | High (caching, selective execution) |
-| **PDF Rendering** | 44s | 76% | High (PDF caching, parallel compilation) |
-| **Output Validation** | 1s | 2% | Low (already optimized) |
-| **Copy Outputs** | 0s | 0% | Low (I/O bound) |
-| **Total** | **84s** | **100%** | **~25% improvement possible** |
+### Stage-Level Metrics
 
-### Performance Bottlenecks
+Each stage reports:
+- Execution time
+- Percentage of total time
+- Bottleneck warnings (if >10s and >20% of total)
 
-1. **PDF Compilation (76% of build time)**
-   - XeLaTeX multiple passes
-   - Bibliography processing
-   - Font loading and rendering
+## Identifying Bottlenecks
 
-2. **Figure Generation (7% of build time)**
-   - Data processing
-   - Plot rendering
-   - Image file I/O
+### Automatic Detection
 
-3. **Test Execution (15% of build time)**
-   - 878 tests across multiple modules
-   - Coverage measurement overhead
+The pipeline automatically identifies bottlenecks:
+- Stages taking >10 seconds
+- Stages consuming >20% of total time
+- Marked with ⚠ bottleneck indicator
 
----
-
-## 🚀 Optimization Strategies
-
-### 1. PDF Compilation Optimization
-
-#### Parallel PDF Generation
-
-**Current:** Sequential compilation of 14 PDFs  
-**Target:** Parallel compilation with dependency management
+### Manual Analysis
 
 ```bash
-#!/bin/bash
-# parallel_pdf_build.sh
+# Run pipeline with timing
+time ./run.sh --pipeline
 
-# Function to compile individual PDF
-compile_pdf() {
-    local md_file="$1"
-    local pdf_file="$2"
-    echo "Compiling $md_file → $pdf_file"
-    pandoc "$md_file" -o "$pdf_file" --pdf-engine=xelatex
-}
-
-# Export function for parallel execution
-export -f compile_pdf
-
-# Parallel compilation (max 4 concurrent processes)
-cat << 'EOF' | parallel -j 4 compile_pdf {} output/pdf/{/.}.pdf
-manuscript/01_abstract.md
-manuscript/02_introduction.md
-manuscript/03_methodology.md
-manuscript/04_experimental_results.md
-EOF
+# Check individual stage times
+python3 scripts/00_setup_environment.py
+time python3 scripts/01_run_tests.py
+time python3 scripts/02_run_analysis.py
 ```
 
-#### PDF Caching Strategy
+## Optimization Strategies
 
-```python
-# pdf_cache.py - Intelligent PDF caching
-import hashlib
-import os
-from pathlib import Path
+### 1. Test Execution
 
-class PDFCache:
-    def __init__(self, cache_dir="output/pdf_cache"):
-        self.cache_dir = Path(cache_dir)
-        self.cache_dir.mkdir(exist_ok=True)
+**Bottleneck**: Test execution can be slow with large test suites
 
-    def get_cache_key(self, md_file, dependencies):
-        """Generate cache key based on file content and dependencies."""
-        content_hash = hashlib.sha256()
-        with open(md_file, 'rb') as f:
-            content_hash.update(f.read())
-
-        for dep in dependencies:
-            if os.path.exists(dep):
-                with open(dep, 'rb') as f:
-                    content_hash.update(f.read())
-
-        return content_hash.hexdigest()
-
-    def is_cached(self, md_file, dependencies):
-        """Check if PDF is cached and valid."""
-        cache_key = self.get_cache_key(md_file, dependencies)
-        cache_file = self.cache_dir / f"{cache_key}.pdf"
-        return cache_file.exists()
-
-    def get_cached_pdf(self, md_file, dependencies):
-        """Get cached PDF if valid."""
-        if self.is_cached(md_file, dependencies):
-            cache_key = self.get_cache_key(md_file, dependencies)
-            return self.cache_dir / f"{cache_key}.pdf"
-        return None
-
-    def cache_pdf(self, pdf_file, md_file, dependencies):
-        """Cache a generated PDF."""
-        cache_key = self.get_cache_key(md_file, dependencies)
-        cache_file = self.cache_dir / f"{cache_key}.pdf"
-        import shutil
-        shutil.copy2(pdf_file, cache_file)
-        return cache_file
-```
-
-#### Incremental PDF Builds
-
-```python
-# incremental_build.py
-from pdf_cache import PDFCache
-from pathlib import Path
-
-def incremental_pdf_build():
-    """Build only PDFs that have changed."""
-    cache = PDFCache()
-
-    manuscript_dir = Path("manuscript")
-    output_dir = Path("output/pdf")
-    output_dir.mkdir(exist_ok=True)
-
-    for md_file in manuscript_dir.glob("*.md"):
-        pdf_file = output_dir / f"{md_file.stem}.pdf"
-
-        # Check dependencies (figures, data files)
-        dependencies = list(Path("output/figures").glob("*.png"))
-        dependencies.extend(Path("output/data").glob("*.csv"))
-
-        # Skip if cached and up-to-date
-        cached_pdf = cache.get_cached_pdf(md_file, dependencies)
-        if cached_pdf and pdf_file.exists():
-            print(f"Using cached PDF: {md_file.name}")
-            continue
-
-        # Build PDF
-        print(f"Building PDF: {md_file.name}")
-        build_single_pdf(md_file, pdf_file)
-
-        # Cache result
-        cache.cache_pdf(pdf_file, md_file, dependencies)
-```
-
-### 2. Figure Generation Optimization
-
-#### Selective Figure Regeneration
-
-```python
-# selective_figure_build.py
-import os
-from pathlib import Path
-import hashlib
-
-def needs_regeneration(script_file, output_files):
-    """Check if figure script needs to run."""
-    if not all(os.path.exists(f) for f in output_files):
-        return True
-
-    # Check if script has changed
-    script_mtime = os.path.getmtime(script_file)
-    oldest_output = min(os.path.getmtime(f) for f in output_files)
-    if script_mtime > oldest_output:
-        return True
-
-    # Check if dependencies have changed
-    for dep in get_script_dependencies(script_file):
-        if os.path.getmtime(dep) > oldest_output:
-            return True
-
-    return False
-
-def get_script_dependencies(script_file):
-    """Extract data file dependencies from script."""
-    dependencies = []
-    with open(script_file, 'r') as f:
-        content = f.read()
-
-    # Look for data loading patterns
-    import re
-    data_patterns = [
-        r'pd\.read_csv\(["\']([^"\']+)["\']',
-        r'np\.load\(["\']([^"\']+)["\']',
-        r'open\(["\']([^"\']+)["\']',
-    ]
-
-    for pattern in data_patterns:
-        matches = re.findall(pattern, content)
-        dependencies.extend(matches)
-
-    return dependencies
-
-# Usage in build script
-if needs_regeneration('scripts/example_figure.py',
-                     ['output/figures/example.png', 'output/data/example.csv']):
-    print("Regenerating example figure...")
-    run_script('scripts/example_figure.py')
-else:
-    print("Example figure is up-to-date")
-```
-
-#### Figure Caching by Content Hash
-
-```python
-# figure_cache.py
-import hashlib
-from pathlib import Path
-
-class FigureCache:
-    def __init__(self, cache_dir="output/figure_cache"):
-        self.cache_dir = Path(cache_dir)
-        self.cache_dir.mkdir(exist_ok=True)
-
-    def get_content_hash(self, script_file):
-        """Generate hash of script and its data dependencies."""
-        content_hash = hashlib.sha256()
-
-        # Hash script content
-        with open(script_file, 'rb') as f:
-            content_hash.update(f.read())
-
-        # Hash data dependencies
-        for data_file in get_data_dependencies(script_file):
-            if Path(data_file).exists():
-                with open(data_file, 'rb') as f:
-                    content_hash.update(f.read())
-
-        return content_hash.hexdigest()
-
-    def is_uptodate(self, script_file, output_files):
-        """Check if figure outputs are up-to-date."""
-        if not all(Path(f).exists() for f in output_files):
-            return False
-
-        cache_file = self.cache_dir / f"{Path(script_file).stem}_hash.txt"
-        if not cache_file.exists():
-            return False
-
-        with open(cache_file, 'r') as f:
-            cached_hash = f.read().strip()
-
-        current_hash = self.get_content_hash(script_file)
-        return cached_hash == current_hash
-
-    def update_cache(self, script_file):
-        """Update cache with current content hash."""
-        current_hash = self.get_content_hash(script_file)
-        cache_file = self.cache_dir / f"{Path(script_file).stem}_hash.txt"
-
-        with open(cache_file, 'w') as f:
-            f.write(current_hash)
-```
-
-### 3. Test Execution Optimization
-
-#### Parallel Test Execution
+**Optimizations**:
+- Use pytest-xdist for parallel test execution
+- Skip slow tests during development
+- Use pytest caching for faster repeated runs
 
 ```bash
-# Parallel test execution with pytest-xdist
-pip install pytest-xdist
+# Parallel test execution
+pytest tests/ -n auto
 
-# Run tests in parallel
-pytest tests/ -n auto --cov=src --cov-report=xml
-
-# Or specify number of workers
-pytest tests/ -n 4 --cov=src --cov-report=xml
+# Skip slow tests
+pytest tests/ -m "not slow"
 ```
 
-#### Selective Test Execution
+### 2. PDF Rendering
 
-```python
-# selective_test_runner.py
-import subprocess
-import os
-from pathlib import Path
+**Bottleneck**: LaTeX compilation is CPU-intensive
 
-def run_selective_tests(changed_files):
-    """Run only tests related to changed files."""
-
-    # Map source files to test files
-    test_mapping = {
-        'project/src/example.py': 'project/tests/test_example.py',
-        'infrastructure/build/quality_checker.py': 'tests/infrastructure/build/test_quality_checker.py',
-        # Add more mappings...
-    }
-
-    tests_to_run = set()
-
-    for changed_file in changed_files:
-        if changed_file in test_mapping:
-            tests_to_run.add(test_mapping[changed_file])
-        elif changed_file.startswith('project/src/'):
-            # Run all project tests if core module changed
-            tests_to_run.add('project/tests/')
-        elif changed_file.startswith('infrastructure/'):
-            # Run all infrastructure tests if infrastructure module changed
-            tests_to_run.add('tests/infrastructure/')
-            break
-
-    if tests_to_run:
-        for test_path in tests_to_run:
-            print(f"Running tests: {test_path}")
-            result = subprocess.run([
-                'pytest', test_path,
-                '--cov=src', '--cov-report=term-missing'
-            ], capture_output=True, text=True)
-
-            if result.returncode != 0:
-                print(f"Test failures in {test_path}")
-                print(result.stdout)
-                print(result.stderr)
-                return False
-
-    return True
-```
-
-#### Test Caching
-
-```python
-# test_cache.py
-import pickle
-from pathlib import Path
-
-class TestCache:
-    def __init__(self, cache_dir=".pytest_cache"):
-        self.cache_dir = Path(cache_dir)
-        self.cache_dir.mkdir(exist_ok=True)
-
-    def get_test_hash(self, test_file):
-        """Get hash of test file and dependencies."""
-        import hashlib
-        content_hash = hashlib.sha256()
-
-        with open(test_file, 'rb') as f:
-            content_hash.update(f.read())
-
-        # Include source files in hash
-        src_files = list(Path("src").glob("*.py"))
-        for src_file in src_files:
-            with open(src_file, 'rb') as f:
-                content_hash.update(f.read())
-
-        return content_hash.hexdigest()
-
-    def should_skip_tests(self, test_file):
-        """Check if tests can be skipped based on cache."""
-        cache_file = self.cache_dir / f"{Path(test_file).stem}_results.pkl"
-
-        if not cache_file.exists():
-            return False
-
-        # Load cached results
-        with open(cache_file, 'rb') as f:
-            cached_data = pickle.load(f)
-
-        current_hash = self.get_test_hash(test_file)
-
-        if cached_data['hash'] != current_hash:
-            return False
-
-        if cached_data['passed']:
-            print(f"Skipping {test_file} (cached results)")
-            return True
-
-        return False
-
-    def cache_test_results(self, test_file, passed):
-        """Cache test execution results."""
-        cache_file = self.cache_dir / f"{Path(test_file).stem}_results.pkl"
-        current_hash = self.get_test_hash(test_file)
-
-        cache_data = {
-            'hash': current_hash,
-            'passed': passed,
-            'timestamp': datetime.now().isoformat()
-        }
-
-        with open(cache_file, 'wb') as f:
-            pickle.dump(cache_data, f)
-```
-
----
-
-## 🧰 Caching Strategies
-
-### 1. Dependency Caching
-
-#### UV Dependency Cache
-
-```yaml
-# .github/workflows/ci.yml
-- name: Cache uv dependencies
-  uses: actions/cache@v3
-  with:
-    path: ~/.cache/uv
-    key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
-    restore-keys: |
-      ${{ runner.os }}-uv-
-```
-
-#### Python Package Cache
-
-```yaml
-- name: Cache pip dependencies
-  uses: actions/cache@v3
-  with:
-    path: ~/.cache/pip
-    key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-    restore-keys: |
-      ${{ runner.os }}-pip-
-```
-
-### 2. Build Artifact Caching
-
-#### PDF Artifact Cache
-
-```yaml
-- name: Cache PDF artifacts
-  uses: actions/cache@v3
-  with:
-    path: output/pdf/
-    key: ${{ runner.os }}-pdfs-${{ github.sha }}
-    restore-keys: |
-      ${{ runner.os }}-pdfs-
-```
-
-#### Figure Cache
-
-```yaml
-- name: Cache figures
-  uses: actions/cache@v3
-  with:
-    path: output/figures/
-    key: ${{ runner.os }}-figures-${{ hashFiles('output/data/**') }}
-    restore-keys: |
-      ${{ runner.os }}-figures-
-```
-
-### 3. Test Result Caching
-
-#### Coverage Cache
-
-```yaml
-- name: Cache coverage data
-  uses: actions/cache@v3
-  with:
-    path: .coverage
-    key: ${{ runner.os }}-coverage-${{ github.sha }}
-    restore-keys: |
-      ${{ runner.os }}-coverage-
-```
-
----
-
-## 📊 Performance Monitoring
-
-### Build Time Tracking
-
-```python
-# build_timer.py
-import time
-from contextlib import contextmanager
-from pathlib import Path
-
-class BuildTimer:
-    def __init__(self, log_file="output/build_times.log"):
-        self.log_file = Path(log_file)
-        self.start_times = {}
-        self.stage_times = {}
-
-    @contextmanager
-    def time_stage(self, stage_name):
-        """Time a build stage."""
-        start_time = time.time()
-        self.start_times[stage_name] = start_time
-
-        try:
-            yield
-        finally:
-            end_time = time.time()
-            duration = end_time - start_time
-            self.stage_times[stage_name] = duration
-            print(f"Stage '{stage_name}': {duration:.2f}s")
-
-    def save_report(self):
-        """Save build timing report."""
-        total_time = sum(self.stage_times.values())
-
-        with open(self.log_file, 'w') as f:
-            f.write("Build Performance Report\n")
-            f.write("=" * 50 + "\n\n")
-            f.write(f"Total Build Time: {total_time:.2f}s\n\n")
-            f.write("Stage Breakdown:\n")
-
-            for stage, duration in self.stage_times.items():
-                percentage = (duration / total_time) * 100
-                f.write("25")
-
-            f.write("\nRecommendations:\n")
-            for stage, duration in sorted(self.stage_times.items(),
-                                        key=lambda x: x[1], reverse=True):
-                if duration > 5.0:  # Flag stages taking > 5 seconds
-                    f.write(f"- Optimize {stage} ({duration:.2f}s)\n")
-
-# Usage in build script
-timer = BuildTimer()
-
-with timer.time_stage("Tests"):
-    run_tests()
-
-with timer.time_stage("PDF Generation"):
-    generate_pdfs()
-
-with timer.time_stage("Validation"):
-    validate_outputs()
-
-timer.save_report()
-```
-
-### Performance Dashboard
-
-```python
-# performance_dashboard.py
-import json
-import matplotlib.pyplot as plt
-from pathlib import Path
-
-class PerformanceDashboard:
-    def __init__(self, data_dir="output/performance"):
-        self.data_dir = Path(data_dir)
-        self.data_dir.mkdir(exist_ok=True)
-
-    def load_build_data(self):
-        """Load historical build performance data."""
-        data_file = self.data_dir / "build_history.json"
-        if data_file.exists():
-            with open(data_file, 'r') as f:
-                return json.load(f)
-        return []
-
-    def save_build_data(self, build_data):
-        """Save build performance data."""
-        data = self.load_build_data()
-        data.append(build_data)
-
-        # Keep last 50 builds
-        data = data[-50:]
-
-        data_file = self.data_dir / "build_history.json"
-        with open(data_file, 'w') as f:
-            json.dump(data, f, indent=2)
-
-    def generate_report(self):
-        """Generate performance trend report."""
-        data = self.load_build_data()
-        if not data:
-            return "No performance data available"
-
-        # Extract metrics
-        dates = [d['date'] for d in data]
-        total_times = [d['total_time'] for d in data]
-        test_times = [d.get('test_time', 0) for d in data]
-        pdf_times = [d.get('pdf_time', 0) for d in data]
-
-        # Generate plot
-        plt.figure(figsize=(12, 6))
-        plt.plot(dates, total_times, 'b-', label='Total Time', linewidth=2)
-        plt.plot(dates, test_times, 'g--', label='Test Time', alpha=0.7)
-        plt.plot(dates, pdf_times, 'r--', label='PDF Time', alpha=0.7)
-
-        plt.xlabel('Build Date')
-        plt.ylabel('Time (seconds)')
-        plt.title('Build Performance Trends')
-        plt.legend()
-        plt.grid(True, alpha=0.3)
-        plt.xticks(rotation=45)
-
-        plot_file = self.data_dir / "performance_trend.png"
-        plt.savefig(plot_file, dpi=150, bbox_inches='tight')
-        plt.close()
-
-        return f"Performance report generated: {plot_file}"
-```
-
----
-
-## 🔧 Implementation Examples
-
-### Optimized Build Script
+**Optimizations**:
+- Use incremental compilation (only rebuild changed sections)
+- Cache LaTeX intermediate files
+- Use faster LaTeX engines (xelatex vs pdflatex)
 
 ```bash
-#!/bin/bash
-# optimized_build.sh - High-performance build script
+# Check LaTeX compilation time
+time xelatex document.tex
 
-set -euo pipefail
-
-# Configuration
-MAX_PARALLEL=4
-CACHE_DIR="output/cache"
-LOG_FILE="output/build.log"
-
-# Logging function
-log() {
-    echo "[$(date +%T)] $*" | tee -a "$LOG_FILE"
-}
-
-# Cache checking function
-is_cached() {
-    local cache_key="$1"
-    local output_file="$2"
-
-    if [[ -f "$CACHE_DIR/$cache_key" ]] && [[ -f "$output_file" ]]; then
-        cached_mtime=$(stat -c %Y "$CACHE_DIR/$cache_key" 2>/dev/null || stat -f %m "$CACHE_DIR/$cache_key")
-        output_mtime=$(stat -c %Y "$output_file" 2>/dev/null || stat -f %m "$output_file")
-
-        if [[ $cached_mtime -gt $output_mtime ]]; then
-            return 0  # Cached
-        fi
-    fi
-    return 1  # Not cached
-}
-
-# Main build function
-main() {
-    log "Starting optimized build"
-
-    # Create cache directory
-    mkdir -p "$CACHE_DIR"
-
-    # Stage 1: Tests (run if needed)
-    if ! is_cached "tests_complete" "output/test_results.xml"; then
-        log "Running tests..."
-        python -m pytest tests/ -n "$MAX_PARALLEL" --cov=src --cov-report=xml -q
-        touch "$CACHE_DIR/tests_complete"
-        log "Tests completed"
-    else
-        log "Tests up-to-date (cached)"
-    fi
-
-    # Stage 2: Scripts (parallel execution)
-    log "Running analysis scripts..."
-    scripts=(
-        "scripts/example_figure.py"
-        "scripts/generate_research_figures.py"
-    )
-
-    # Run scripts in parallel
-    printf '%s\n' "${scripts[@]}" | xargs -n 1 -P "$MAX_PARALLEL" python
-
-    # Stage 3: PDFs (optimized compilation)
-    log "Generating PDFs..."
-    python scripts/03_render_pdf.py
-
-    # Stage 4: Validation
-    log "Running validation..."
-    python scripts/04_validate_output.py
-
-    log "Build completed successfully"
-}
-
-# Run main function
-main "$@"
+# Use incremental builds (if supported)
 ```
 
-### CI/CD Performance Optimization
+### 3. Analysis Scripts
 
-```yaml
-# .github/workflows/optimized-ci.yml
-name: Optimized CI
+**Bottleneck**: Data processing and figure generation
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Cache uv
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/uv
-        key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
-
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-
-    - name: Install uv
-      uses: astral-sh/setup-uv@v3
-
-    - name: Install dependencies
-      run: uv sync
-
-    - name: Cache test results
-      uses: actions/cache@v3
-      with:
-        path: .pytest_cache
-        key: ${{ runner.os }}-pytest-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-pytest-
-
-    - name: Run tests (parallel)
-      run: |
-        uv run pytest tests/ -n auto --cov=src --cov-report=xml \
-          --cache-dir .pytest_cache
-
-    - name: Upload coverage
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
-
-  build:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Cache build artifacts
-      uses: actions/cache@v3
-      with:
-        path: |
-          output/figures/
-          output/data/
-        key: ${{ runner.os }}-artifacts-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-artifacts-
-
-    - name: Setup environment
-      run: |
-        uv sync
-        sudo apt-get update
-        sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended
-
-    - name: Selective build
-      run: |
-        # Only rebuild changed components
-        ./scripts/optimized_build.sh
-
-    - name: Upload PDFs
-      uses: actions/upload-artifact@v3
-      with:
-        name: pdfs
-        path: output/pdf/
-```
-
----
-
-## 📈 Expected Performance Improvements
-
-### Optimization Results
-
-| Optimization | Current Time | Target Time | Improvement |
-|---------------|-------------|-------------|-------------|
-| **Parallel PDF compilation** | 44s | 15s | **66% faster** |
-| **Figure caching** | 4s | 1s | **75% faster** |
-| **Parallel test execution** | 9s | 4s | **55% faster** |
-| **Selective builds** | 84s | 25s | **70% faster** |
-| **Combined optimization** | **84s** | **15-20s** | **80-82% faster** |
-
-### Memory Optimization
+**Optimizations**:
+- Parallelize independent analysis scripts
+- Cache intermediate results
+- Optimize data processing algorithms
 
 ```python
-# memory_optimization.py
-import gc
-import psutil
-import os
+# Example: Parallel script execution
+from concurrent.futures import ProcessPoolExecutor
 
-class MemoryOptimizer:
-    def __init__(self):
-        self.process = psutil.Process(os.getpid())
-
-    def get_memory_usage(self):
-        """Get current memory usage in MB."""
-        return self.process.memory_info().rss / 1024 / 1024
-
-    def optimize_memory(self):
-        """Apply memory optimization strategies."""
-        # Force garbage collection
-        gc.collect()
-
-        # Clear matplotlib cache if using matplotlib
-        try:
-            import matplotlib.pyplot as plt
-            plt.close('all')
-        except ImportError:
-            pass
-
-        # Clear numpy memory cache
-        try:
-            import numpy as np
-            # Force cleanup of numpy arrays
-            pass
-        except ImportError:
-            pass
-
-    def monitor_function(self, func, *args, **kwargs):
-        """Monitor memory usage of a function."""
-        start_mem = self.get_memory_usage()
-
-        result = func(*args, **kwargs)
-
-        end_mem = self.get_memory_usage()
-        memory_delta = end_mem - start_mem
-
-        print(f"Memory usage: {start_mem:.1f}MB → {end_mem:.1f}MB "
-              f"(Δ{memory_delta:+.1f}MB)")
-
-        return result
+with ProcessPoolExecutor() as executor:
+    results = executor.map(run_script, scripts)
 ```
 
----
+### 4. LLM Review
 
-## 🎯 Best Practices
+**Bottleneck**: LLM generation is slow (minutes per review)
 
-### 1. **Measure Before Optimizing**
-Always profile before making changes:
+**Optimizations**:
+- Use faster models for initial reviews
+- Stream responses for progress visibility
+- Cache review results
+- Skip optional reviews during development
 
 ```bash
-# Profile build performance
-python -m cProfile -s time scripts/run_all.py
+# Skip LLM reviews during development
+./run.sh --pipeline  # LLM stages are optional
 
-# Profile memory usage
-python -m memory_profiler scripts/example_figure.py
+# Use faster model
+export LLM_MODEL="llama3:8b"  # Smaller, faster model
 ```
 
-### 2. **Implement Incrementally**
-Apply optimizations one at a time:
+## Resource Monitoring
+
+### Memory Usage
+
+Monitor memory consumption:
 
 ```bash
-# Test optimization impact
-time python scripts/run_all.py  # Baseline
+# Check memory usage during pipeline
+/usr/bin/time -v python3 scripts/run_all.py
 
-# Apply optimization 1
-time python scripts/optimized_build.sh  # Measure improvement
-
-# Apply optimization 2
-# ...
+# Monitor continuously
+watch -n 1 'ps aux | grep python'
 ```
 
-### 3. **Monitor Performance Trends**
+### CPU Usage
+
+Monitor CPU utilization:
+
+```bash
+# Check CPU usage
+top -p $(pgrep -f "python3 scripts")
+
+# Profile CPU-intensive operations
+python3 -m cProfile -o profile.stats scripts/03_render_pdf.py
+```
+
+### Disk I/O
+
+Monitor file operations:
+
+```bash
+# Check disk I/O
+iostat -x 1
+
+# Monitor specific directory
+watch -n 1 'du -sh project/output/*'
+```
+
+## Performance Benchmarks
+
+### Baseline Performance
+
+Typical pipeline execution times:
+
+- **Setup**: 1-2 seconds
+- **Infrastructure Tests**: 30-60 seconds
+- **Project Tests**: 2-5 seconds
+- **Analysis**: 5-15 seconds
+- **PDF Rendering**: 30-90 seconds
+- **Validation**: 1-3 seconds
+- **Copy Outputs**: 1-2 seconds
+- **LLM Review**: 5-15 minutes (optional)
+
+**Total (without LLM)**: ~2-3 minutes
+**Total (with LLM)**: ~7-18 minutes
+
+### Optimization Targets
+
+- **Test Execution**: Reduce by 30-50% with parallel execution
+- **PDF Rendering**: Reduce by 20-30% with incremental builds
+- **Analysis**: Reduce by 40-60% with parallelization
+
+## Profiling
+
+### Python Profiling
+
+```bash
+# Profile entire pipeline
+python3 -m cProfile -o pipeline.prof scripts/run_all.py
+
+# Analyze profile
+python3 -m pstats pipeline.prof
+```
+
+### Stage-Specific Profiling
+
+```bash
+# Profile specific stage
+python3 -m cProfile -o stage.prof scripts/03_render_pdf.py
+```
+
+### Memory Profiling
+
+```bash
+# Memory profiler
+python3 -m memory_profiler scripts/run_all.py
+```
+
+## Caching Strategies
+
+### Test Results Caching
+
+```bash
+# Enable pytest cache
+pytest tests/ --cache-clear  # Clear cache
+pytest tests/  # Uses cache for faster runs
+```
+
+### Build Artifact Caching
+
+- LaTeX intermediate files (`.aux`, `.bbl`) are cached
+- Figure generation results cached in `project/output/figures/`
+- Re-run only if source files changed
+
+### LLM Response Caching
+
+- Review results saved to `project/output/llm/`
+- Re-use previous reviews if manuscript unchanged
+- Clear cache: `rm -rf project/output/llm/*`
+
+## Parallel Execution
+
+### Independent Stages
+
+Some stages can run in parallel:
+
+- **Tests**: Infrastructure and project tests (if independent)
+- **Analysis Scripts**: Multiple scripts can run concurrently
+- **PDF Sections**: Individual section PDFs can render in parallel
+
+### Implementation
 
 ```python
-# performance_monitor.py
-from datetime import datetime
-import json
+# Example: Parallel stage execution
+from concurrent.futures import ThreadPoolExecutor
 
-def log_build_performance(stage_times, total_time):
-    """Log build performance for trend analysis."""
-
-    data = {
-        'timestamp': datetime.now().isoformat(),
-        'total_time': total_time,
-        'stages': stage_times,
-        'git_commit': get_git_commit(),
-        'platform': get_platform_info()
-    }
-
-    # Append to performance log
-    with open('output/performance_log.jsonl', 'a') as f:
-        f.write(json.dumps(data) + '\n')
+stages = [stage1, stage2, stage3]  # Independent stages
+with ThreadPoolExecutor(max_workers=3) as executor:
+    results = executor.map(run_stage, stages)
 ```
 
-### 4. **Automate Performance Testing**
+**Note**: Parallel execution requires careful dependency management.
+
+## Performance Monitoring
+
+### Continuous Monitoring
 
 ```bash
-#!/bin/bash
-# performance_test.sh
-
-echo "Running performance regression test..."
-
-# Run build and capture time
-start_time=$(date +%s)
-python scripts/run_all.py > build_output.log 2>&1
-end_time=$(date +%s)
-
-build_time=$((end_time - start_time))
-
-# Check against baseline
-baseline_time=60  # Expected max time in seconds
-if [ $build_time -gt $baseline_time ]; then
-    echo "⚠️ Performance regression detected!"
-    echo "Build time: ${build_time}s (baseline: ${baseline_time}s)"
-    exit 1
-else
-    echo "✅ Build performance within limits: ${build_time}s"
-fi
+# Monitor pipeline execution
+watch -n 1 'ps aux | grep -E "(python|pytest|xelatex)"'
 ```
 
----
+### Log Analysis
 
-## 🚨 Troubleshooting Performance Issues
+```bash
+# Analyze pipeline logs for timing
+grep "Completed in" project/output/*.log | awk '{print $NF}'
+```
 
-### Slow PDF Compilation
+## Best Practices
 
-**Symptoms:** PDF generation takes >30 seconds
+### Development Workflow
 
-**Solutions:**
-1. Check LaTeX installation: `xelatex --version`
-2. Update fonts: `sudo apt-get install texlive-fonts-recommended`
-3. Use faster engine: Switch to `pdflatex` for simple documents
-4. Enable PDF caching
+1. **Fast Iteration**: Skip slow stages during development
+2. **Selective Execution**: Run only changed stages
+3. **Caching**: Enable all caching mechanisms
+4. **Parallel Tests**: Use pytest-xdist for test execution
+
+### Production Workflow
+
+1. **Full Pipeline**: Run complete pipeline for final builds
+2. **Performance Baseline**: Establish performance benchmarks
+3. **Monitoring**: Track performance over time
+4. **Optimization**: Address bottlenecks systematically
+
+## Troubleshooting Performance Issues
 
 ### Slow Test Execution
 
-**Symptoms:** Tests take >20 seconds
+**Symptoms**: Tests take >60 seconds
 
-**Solutions:**
-1. Run in parallel: `pytest -n auto`
-2. Skip slow tests in CI: Use `@pytest.mark.slow` marker
-3. Cache test results: Use pytest-cache
-4. Profile slow tests: `pytest --durations=10`
+**Solutions**:
+- Enable parallel execution: `pytest -n auto`
+- Skip slow tests: `pytest -m "not slow"`
+- Optimize test data generation
+- Use test fixtures for expensive setup
 
-### Memory Issues
+### Slow PDF Rendering
 
-**Symptoms:** Out of memory errors
+**Symptoms**: PDF rendering takes >90 seconds
 
-**Solutions:**
-1. Process files in chunks
-2. Clear caches regularly: `gc.collect()`
-3. Use memory-efficient data structures
-4. Monitor memory usage: `psutil`
+**Solutions**:
+- Check LaTeX installation and version
+- Use incremental compilation
+- Optimize figure sizes
+- Reduce number of figures
 
-### Disk I/O Bottlenecks
+### High Memory Usage
 
-**Symptoms:** High disk usage during builds
+**Symptoms**: Pipeline runs out of memory
 
-**Solutions:**
-1. Use SSD storage for builds
-2. Enable file system caching
-3. Reduce temporary file creation
-4. Use RAM disk for temp files: `tmpfs`
+**Solutions**:
+- Process data in chunks
+- Clear large objects after use
+- Use generators instead of lists
+- Increase system memory
 
----
+## See Also
 
-## 📊 Performance Metrics
-
-### Key Performance Indicators (KPIs)
-
-1. **Build Time**: Total time for complete pipeline
-2. **Test Execution Time**: Time to run full test suite
-3. **PDF Generation Time**: Time to compile all PDFs
-4. **Memory Usage**: Peak memory consumption
-5. **Cache Hit Rate**: Percentage of cached operations
-6. **Parallelization Efficiency**: Speedup from parallel execution
-
-### Monitoring Dashboard
-
-```python
-# performance_kpis.py
-import time
-import psutil
-from pathlib import Path
-
-class PerformanceKPIs:
-    def __init__(self):
-        self.start_time = time.time()
-        self.peak_memory = 0
-        self.operations = []
-
-    def log_operation(self, name, duration, success=True):
-        """Log operation performance."""
-        self.operations.append({
-            'name': name,
-            'duration': duration,
-            'success': success,
-            'timestamp': time.time()
-        })
-
-    def update_memory(self):
-        """Update peak memory tracking."""
-        process = psutil.Process()
-        current_mem = process.memory_info().rss / 1024 / 1024  # MB
-        self.peak_memory = max(self.peak_memory, current_mem)
-
-    def generate_report(self):
-        """Generate comprehensive performance report."""
-        total_time = time.time() - self.start_time
-
-        report = {
-            'total_time': total_time,
-            'peak_memory_mb': self.peak_memory,
-            'operations': self.operations,
-            'success_rate': sum(1 for op in self.operations if op['success']) / len(self.operations),
-            'slowest_operation': max(self.operations, key=lambda x: x['duration'])['name']
-        }
-
-        return report
-
-# Usage
-kpis = PerformanceKPIs()
-
-# During build process
-with time_block("PDF Generation"):
-    kpis.log_operation("PDF Generation", duration)
-    kpis.update_memory()
-
-# Generate final report
-report = kpis.generate_report()
-```
-
----
-
-## 🎯 Summary
-
-Performance optimization strategies for the Research Project Template:
-
-### **Primary Optimizations:**
-1. **Parallel PDF compilation** - 66% reduction in PDF generation time
-2. **Intelligent caching** - Skip unchanged components
-3. **Selective builds** - Only rebuild what changed
-4. **Parallel test execution** - 55% reduction in test time
-
-### **Expected Results:**
-- **80-82% faster builds** (84s → 15-20s)
-- **50% reduction in CI/CD costs** through caching
-- **Improved developer experience** with faster feedback
-- **Scalable performance** as project grows
-
-### **Implementation Approach:**
-1. **Measure current performance** - Establish baseline
-2. **Apply optimizations incrementally** - One change at a time
-3. **Monitor impact** - Track improvements and regressions
-4. **Automate monitoring** - Continuous performance tracking
-
-For more information, see:
-- **[Build System](BUILD_SYSTEM.md)** - Current performance baseline
-- **[CI/CD Integration](CI_CD_INTEGRATION.md)** - CI/CD performance optimization
-- **[Troubleshooting Guide](TROUBLESHOOTING_GUIDE.md)** - Performance issue diagnosis
-
----
-
-**Performance optimization is an ongoing process. Regular monitoring and incremental improvements ensure the build system remains fast and efficient as the project grows.**
+- [`scripts/run_all.py`](../scripts/run_all.py) - Performance tracking implementation
+- [`infrastructure/core/performance.py`](../infrastructure/core/performance.py) - Performance utilities
+- [`TROUBLESHOOTING_GUIDE.md`](TROUBLESHOOTING_GUIDE.md) - Performance troubleshooting

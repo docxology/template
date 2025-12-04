@@ -73,13 +73,50 @@ log_header() {
 }
 
 log_stage() {
+    # Display stage header with progress percentage and ETA.
+    # Args:
+    #   $1: Stage number (1-indexed)
+    #   $2: Stage name
+    #   $3: Total number of stages
+    #   $4: Pipeline start time (optional, for ETA calculation)
     local stage_num="$1"
     local stage_name="$2"
     local total_stages="$3"
+    local pipeline_start="${4:-}"
     
     echo
-    echo -e "${YELLOW}[${stage_num}/${total_stages}] ${stage_name}${NC}"
+    local percentage=$((stage_num * 100 / total_stages))
+    echo -e "${YELLOW}[${stage_num}/${total_stages}] ${stage_name} (${percentage}% complete)${NC}"
+    
+    # Calculate ETA if pipeline start time provided
+    if [[ -n "$pipeline_start" ]]; then
+        local current_time=$(date +%s)
+        local elapsed=$((current_time - pipeline_start))
+        if [[ $elapsed -gt 0 ]] && [[ $stage_num -gt 0 ]]; then
+            local avg_time_per_stage=$((elapsed / stage_num))
+            local remaining_stages=$((total_stages - stage_num))
+            local eta=$((avg_time_per_stage * remaining_stages))
+            echo -e "${CYAN}  Elapsed: $(format_duration "$elapsed") | ETA: $(format_duration "$eta")${NC}"
+        fi
+    fi
+    
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+}
+
+log_stage_start() {
+    # Log stage start with consistent formatting.
+    local stage_num="$1"
+    local stage_name="$2"
+    local total_stages="$3"
+    echo -e "${BLUE}▶ Starting Stage ${stage_num}/${total_stages}: ${stage_name}${NC}"
+}
+
+log_stage_end() {
+    # Log stage completion with consistent formatting.
+    local stage_num="$1"
+    local stage_name="$2"
+    local duration="$3"
+    echo -e "${GREEN}✓ Completed Stage ${stage_num}: ${stage_name} (${duration})${NC}"
 }
 
 log_success() {
@@ -168,6 +205,10 @@ display_menu() {
 # ============================================================================
 
 clean_output_directories() {
+    # Clean and recreate output directories for fresh pipeline run.
+    # Removes all files from project/output/ and root output/ directories,
+    # then recreates the standard directory structure.
+    # This ensures no stale files from previous runs interfere with current execution.
     echo
     echo -e "${YELLOW}[0/9] Clean Output Directories${NC}"
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -201,6 +242,48 @@ clean_output_directories() {
 }
 
 # ============================================================================
+# Common Test Execution Functions
+# ============================================================================
+
+run_pytest_infrastructure() {
+    # Execute infrastructure tests with coverage requirements.
+    # Runs pytest on tests/infrastructure/ with 49% coverage threshold.
+    # Skips requires_ollama tests by default.
+    # Returns: 0 on success, 1 on failure
+    cd "$REPO_ROOT"
+    
+    log_info "Running infrastructure module tests..."
+    log_info "(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)"
+    
+    python3 -m pytest tests/infrastructure/ tests/test_coverage_completion.py \
+        --ignore=tests/integration/test_module_interoperability.py \
+        -m "not requires_ollama" \
+        --cov=infrastructure \
+        --cov-report=term-missing \
+        --cov-report=html \
+        --cov-fail-under=49 \
+        -v --tb=short
+}
+
+run_pytest_project() {
+    # Execute project tests with coverage requirements.
+    # Runs pytest on project/tests/ with 70% coverage threshold.
+    # Skips integration tests by default.
+    # Returns: 0 on success, 1 on failure
+    cd "$REPO_ROOT"
+    
+    log_info "Running project tests..."
+    
+    python3 -m pytest project/tests/ \
+        --ignore=project/tests/integration \
+        --cov=project/src \
+        --cov-report=term-missing \
+        --cov-report=html \
+        --cov-fail-under=70 \
+        -v --tb=short
+}
+
+# ============================================================================
 # Individual Stage Functions
 # ============================================================================
 
@@ -220,20 +303,7 @@ run_setup_environment() {
 run_infrastructure_tests() {
     log_header "INFRASTRUCTURE TESTS"
     
-    cd "$REPO_ROOT"
-    
-    log_info "Running infrastructure module tests..."
-    log_info "(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)"
-    
-    if python3 -m pytest tests/infrastructure/ tests/test_coverage_completion.py \
-        --ignore=tests/integration/test_module_interoperability.py \
-        -m "not requires_ollama" \
-        --cov=infrastructure \
-        --cov-report=term-missing \
-        --cov-report=html \
-        --cov-fail-under=49 \
-        -v --tb=short; then
-        
+    if run_pytest_infrastructure; then
         log_success "Infrastructure tests passed"
         return 0
     else
@@ -245,18 +315,7 @@ run_infrastructure_tests() {
 run_project_tests() {
     log_header "PROJECT TESTS"
     
-    cd "$REPO_ROOT"
-    
-    log_info "Running project tests..."
-    
-    if python3 -m pytest project/tests/ \
-        --ignore=project/tests/integration \
-        --cov=project/src \
-        --cov-report=term-missing \
-        --cov-report=html \
-        --cov-fail-under=70 \
-        -v --tb=short; then
-        
+    if run_pytest_project; then
         log_success "Project tests passed"
         return 0
     else
@@ -266,6 +325,9 @@ run_project_tests() {
 }
 
 run_analysis() {
+    # Execute project analysis scripts from project/scripts/.
+    # Discovers and runs all Python scripts in project/scripts/ directory.
+    # Returns: 0 on success, 1 on failure
     log_stage 4 "Project Analysis" 9
     
     cd "$REPO_ROOT"
@@ -496,6 +558,7 @@ run_literature_llm_operations() {
 # ============================================================================
 
 run_full_pipeline() {
+    local resume_flag="${1:-}"
     log_header "COMPLETE RESEARCH PROJECT PIPELINE"
     
     local pipeline_start=$(date +%s)
@@ -504,17 +567,48 @@ run_full_pipeline() {
     log_info "Python: $(python3 --version)"
     echo
     
+    # Check for checkpoint if resuming
+    if [[ "$resume_flag" == "--resume" ]]; then
+        log_info "Checking for checkpoint..."
+        if python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); valid, msg = cm.validate_checkpoint(); exit(0 if valid else 1)" 2>/dev/null; then
+            log_success "Checkpoint found - resuming pipeline"
+        else
+            log_warning "No valid checkpoint found - starting fresh pipeline"
+            resume_flag=""
+        fi
+    fi
+    
     # Reset stage tracking
     STAGE_RESULTS=()
     STAGE_DURATIONS=()
     
-    # Stage 0: Clean output directories
-    clean_output_directories
+    # Stage 0: Clean output directories (skip if resuming)
+    if [[ "$resume_flag" != "--resume" ]]; then
+        clean_output_directories
+    else
+        log_info "Skipping clean stage (resuming from checkpoint)"
+    fi
+    
+    # For resume, use Python script with --resume flag
+    if [[ "$resume_flag" == "--resume" ]]; then
+        cd "$REPO_ROOT"
+        if python3 scripts/run_all.py --resume; then
+            log_success "Pipeline resumed and completed"
+            return 0
+        else
+            log_error "Pipeline resume failed"
+            return 1
+        fi
+    fi
     
     # Stage 1: Setup Environment
     local stage_start=$(date +%s)
     if ! run_setup_environment; then
         log_error "Pipeline failed at Stage 1 (Setup Environment)"
+        log_info "  Troubleshooting:"
+        log_info "    - Check Python version: python3 --version (requires >=3.10)"
+        log_info "    - Verify dependencies: pip list | grep -E '(numpy|matplotlib|pytest)'"
+        log_info "    - Check script: python3 scripts/00_setup_environment.py"
         return 1
     fi
     local stage_end=$(date +%s)
@@ -523,18 +617,13 @@ run_full_pipeline() {
     
     # Stage 2: Infrastructure Tests
     stage_start=$(date +%s)
-    log_stage 2 "Infrastructure Tests" 9
-    cd "$REPO_ROOT"
-    log_info "Running infrastructure module tests..."
-    if ! python3 -m pytest tests/infrastructure/ tests/test_coverage_completion.py \
-        --ignore=tests/integration/test_module_interoperability.py \
-        -m "not requires_ollama" \
-        --cov=infrastructure \
-        --cov-report=term-missing \
-        --cov-report=html \
-        --cov-fail-under=49 \
-        -v --tb=short; then
+    log_stage 2 "Infrastructure Tests" 9 "$pipeline_start"
+    if ! run_pytest_infrastructure; then
         log_error "Pipeline failed at Stage 2 (Infrastructure Tests)"
+        log_info "  Troubleshooting:"
+        log_info "    - Run tests manually: python3 -m pytest tests/infrastructure/ -v"
+        log_info "    - Check coverage: python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=term"
+        log_info "    - View HTML report: open htmlcov/index.html"
         return 1
     fi
     log_success "Infrastructure tests passed"
@@ -544,17 +633,13 @@ run_full_pipeline() {
     
     # Stage 3: Project Tests
     stage_start=$(date +%s)
-    log_stage 3 "Project Tests" 9
-    cd "$REPO_ROOT"
-    log_info "Running project tests..."
-    if ! python3 -m pytest project/tests/ \
-        --ignore=project/tests/integration \
-        --cov=project/src \
-        --cov-report=term-missing \
-        --cov-report=html \
-        --cov-fail-under=70 \
-        -v --tb=short; then
+    log_stage 3 "Project Tests" 9 "$pipeline_start"
+    if ! run_pytest_project; then
         log_error "Pipeline failed at Stage 3 (Project Tests)"
+        log_info "  Troubleshooting:"
+        log_info "    - Run tests manually: python3 -m pytest project/tests/ -v"
+        log_info "    - Check specific test: python3 -m pytest project/tests/test_example.py -v"
+        log_info "    - View coverage: python3 -m pytest project/tests/ --cov=project/src --cov-report=term"
         return 1
     fi
     log_success "Project tests passed"
@@ -566,6 +651,11 @@ run_full_pipeline() {
     stage_start=$(date +%s)
     if ! run_analysis; then
         log_error "Pipeline failed at Stage 4 (Project Analysis)"
+        log_info "  Troubleshooting:"
+        log_info "    - Check analysis scripts: ls project/scripts/*.py"
+        log_info "    - Run script manually: python3 project/scripts/analysis_pipeline.py"
+        log_info "    - Verify outputs: ls project/output/figures/ project/output/data/"
+        log_info "    - Check logs for specific script errors above"
         return 1
     fi
     stage_end=$(date +%s)
@@ -574,10 +664,16 @@ run_full_pipeline() {
     
     # Stage 5: PDF Rendering
     stage_start=$(date +%s)
-    log_stage 5 "PDF Rendering" 9
+    log_stage 5 "PDF Rendering" 9 "$pipeline_start"
     cd "$REPO_ROOT"
     if ! python3 scripts/03_render_pdf.py; then
         log_error "Pipeline failed at Stage 5 (PDF Rendering)"
+        log_info "  Troubleshooting:"
+        log_info "    - Check LaTeX installation: which xelatex"
+        log_info "    - Verify manuscript files: ls project/manuscript/*.md"
+        log_info "    - Check figure paths: ls project/output/figures/"
+        log_info "    - View compilation logs: ls project/output/pdf/*.log"
+        log_info "    - Run manually: python3 scripts/03_render_pdf.py"
         return 1
     fi
     log_success "PDF rendering complete"
@@ -589,6 +685,10 @@ run_full_pipeline() {
     stage_start=$(date +%s)
     if ! run_validation; then
         log_error "Pipeline failed at Stage 6 (Output Validation)"
+        log_info "  Troubleshooting:"
+        log_info "    - Validate PDFs: python3 -m infrastructure.validation.cli pdf project/output/pdf/"
+        log_info "    - Validate markdown: python3 -m infrastructure.validation.cli markdown project/manuscript/"
+        log_info "    - Check validation report: cat project/output/validation_report.md"
         return 1
     fi
     stage_end=$(date +%s)
@@ -599,49 +699,68 @@ run_full_pipeline() {
     stage_start=$(date +%s)
     if ! run_copy_outputs; then
         log_error "Pipeline failed at Stage 7 (Copy Outputs)"
+        log_info "  Troubleshooting:"
+        log_info "    - Check source directory: ls project/output/"
+        log_info "    - Check destination: ls output/"
+        log_info "    - Verify permissions: ls -la project/output/"
+        log_info "    - Run manually: python3 scripts/05_copy_outputs.py"
         return 1
     fi
     stage_end=$(date +%s)
     STAGE_RESULTS[6]=0
     STAGE_DURATIONS[6]=$(get_elapsed_time "$stage_start" "$stage_end")
     
-    # Stage 8: LLM Scientific Review (optional)
+    # Stage 8: LLM Scientific Review (optional - graceful degradation)
     stage_start=$(date +%s)
-    log_stage 8 "LLM Scientific Review" 9
+    log_stage 8 "LLM Scientific Review" 9 "$pipeline_start"
     cd "$REPO_ROOT"
     log_info "Running LLM scientific review (requires Ollama)..."
+    log_info "Note: This stage is optional - pipeline will continue even if it fails"
     local exit_code
     python3 scripts/06_llm_review.py --reviews-only
     exit_code=$?
     if [[ $exit_code -eq 0 ]]; then
         log_success "LLM scientific review complete"
+        STAGE_RESULTS[7]=0
     elif [[ $exit_code -eq 2 ]]; then
         log_warning "LLM scientific review skipped (Ollama not available)"
+        log_info "  To enable: start Ollama with 'ollama serve' and install a model"
+        log_info "  Recommended: ollama pull llama3-gradient"
+        STAGE_RESULTS[7]=2  # Mark as skipped
     else
-        log_error "Pipeline failed at Stage 8 (LLM Scientific Review)"
-        return 1
+        log_warning "LLM scientific review failed (exit code: $exit_code)"
+        log_info "  This is an optional stage - pipeline will continue"
+        log_info "  Check Ollama status: ollama ps"
+        log_info "  Check logs: project/output/llm/"
+        STAGE_RESULTS[7]=1  # Mark as failed but don't stop pipeline
     fi
     stage_end=$(date +%s)
-    STAGE_RESULTS[7]=0
     STAGE_DURATIONS[7]=$(get_elapsed_time "$stage_start" "$stage_end")
     
-    # Stage 9: LLM Translations (optional)
+    # Stage 9: LLM Translations (optional - graceful degradation)
     stage_start=$(date +%s)
-    log_stage 9 "LLM Translations" 9
+    log_stage 9 "LLM Translations" 9 "$pipeline_start"
     cd "$REPO_ROOT"
     log_info "Running LLM translations (requires Ollama)..."
+    log_info "Note: This stage is optional - pipeline will continue even if it fails"
     python3 scripts/06_llm_review.py --translations-only
     exit_code=$?
     if [[ $exit_code -eq 0 ]]; then
         log_success "LLM translations complete"
+        STAGE_RESULTS[8]=0
     elif [[ $exit_code -eq 2 ]]; then
         log_warning "LLM translations skipped (Ollama not available or no languages configured)"
+        log_info "  To enable: configure translations in project/manuscript/config.yaml"
+        log_info "  Example: llm.translations.enabled: true, languages: [zh, hi, ru]"
+        STAGE_RESULTS[8]=2  # Mark as skipped
     else
-        log_error "Pipeline failed at Stage 9 (LLM Translations)"
-        return 1
+        log_warning "LLM translations failed (exit code: $exit_code)"
+        log_info "  This is an optional stage - pipeline will continue"
+        log_info "  Check Ollama status: ollama ps"
+        log_info "  Check configuration: project/manuscript/config.yaml"
+        STAGE_RESULTS[8]=1  # Mark as failed but don't stop pipeline
     fi
     stage_end=$(date +%s)
-    STAGE_RESULTS[8]=0
     STAGE_DURATIONS[8]=$(get_elapsed_time "$stage_start" "$stage_end")
     
     # Success - print summary
@@ -664,14 +783,65 @@ print_pipeline_summary() {
     echo
     
     echo "Stage Results:"
+    local total_stage_time=0
+    local slowest_stage_idx=0
+    local slowest_duration=0
+    local fastest_stage_idx=0
+    local fastest_duration=999999
+    
     for ((i=0; i<num_stages; i++)); do
         local stage_name="${STAGE_NAMES[$i]}"
-        local duration=$(format_duration "${STAGE_DURATIONS[$i]}")
-        echo -e "  ${GREEN}✓${NC} Stage $((i+1)): ${stage_name} (${duration})"
+        local duration="${STAGE_DURATIONS[$i]}"
+        local duration_formatted=$(format_duration "$duration")
+        local percentage=0
+        if [[ $total_duration -gt 0 ]]; then
+            percentage=$((duration * 100 / total_duration))
+        fi
+        
+        total_stage_time=$((total_stage_time + duration))
+        
+        # Track slowest stage
+        if [[ $duration -gt $slowest_duration ]]; then
+            slowest_duration=$duration
+            slowest_stage_idx=$i
+        fi
+        
+        # Track fastest stage (skip stage 0 which is usually very fast)
+        if [[ $i -gt 0 ]] && [[ $duration -lt $fastest_duration ]]; then
+            fastest_duration=$duration
+            fastest_stage_idx=$i
+        fi
+        
+        # Highlight slowest stage
+        if [[ $i -eq $slowest_stage_idx ]] && [[ $slowest_duration -gt 10 ]]; then
+            echo -e "  ${GREEN}✓${NC} Stage $((i+1)): ${stage_name} (${duration_formatted}) ${YELLOW}${percentage}%${NC} ${YELLOW}⚠ bottleneck${NC}"
+        else
+            echo -e "  ${GREEN}✓${NC} Stage $((i+1)): ${stage_name} (${duration_formatted}) ${percentage}%"
+        fi
     done
     
     echo
-    echo "Total Execution Time: $(format_duration "$total_duration")"
+    echo "Performance Metrics:"
+    echo "  Total Execution Time: $(format_duration "$total_duration")"
+    
+    if [[ $num_stages -gt 0 ]]; then
+        local avg_time=$((total_stage_time / num_stages))
+        echo "  Average Stage Time: $(format_duration "$avg_time")"
+    fi
+    
+    if [[ $slowest_duration -gt 0 ]]; then
+        local slowest_name="${STAGE_NAMES[$slowest_stage_idx]}"
+        local slowest_formatted=$(format_duration "$slowest_duration")
+        local slowest_pct=$((slowest_duration * 100 / total_duration))
+        echo "  Slowest Stage: Stage $((slowest_stage_idx + 1)) - ${slowest_name} (${slowest_formatted}, ${slowest_pct}%)"
+    fi
+    
+    if [[ $fastest_duration -lt 999999 ]] && [[ $fastest_stage_idx -gt 0 ]]; then
+        local fastest_name="${STAGE_NAMES[$fastest_stage_idx]}"
+        local fastest_formatted=$(format_duration "$fastest_duration")
+        echo "  Fastest Stage: Stage $((fastest_stage_idx + 1)) - ${fastest_name} (${fastest_formatted})"
+    fi
+    
     echo
     echo "Generated Outputs:"
     echo "  • Coverage reports: htmlcov/"
@@ -779,6 +949,7 @@ show_help() {
     echo "  --project-tests     Run project tests"
     echo "  --render-pdf        Render PDF manuscript"
     echo "  --pipeline          Run full pipeline (tests + analysis + PDF + validate)"
+    echo "  --resume            Resume pipeline from last checkpoint (use with --pipeline)"
     echo
     echo "LLM Operations (requires Ollama):"
     echo "  --reviews           Run LLM manuscript review (English)"
@@ -788,6 +959,7 @@ show_help() {
     echo "  --search            Search literature (add to bibliography)"
     echo "  --download          Download PDFs (for bibliography entries)"
     echo "  --summarize         Generate summaries (for papers with PDFs)"
+    echo "  --cleanup           Cleanup library (remove papers without PDFs)"
     echo
     echo "Menu Options:"
     echo
@@ -805,8 +977,9 @@ show_help() {
     echo "  7  Search literature (add to bibliography)"
     echo "  8  Download PDFs (for bibliography entries)"
     echo "  9  Generate summaries (for papers with PDFs)"
-    echo
-    echo "  10  Exit"
+    echo "  10 Cleanup library (remove papers without PDFs)"
+    echo "  11 Advanced LLM operations (literature review, etc.)"
+    echo "  12 Exit"
     echo
     echo "Examples:"
     echo "  $0                      # Interactive menu mode"
@@ -819,6 +992,7 @@ show_help() {
     echo "  $0 --search              # Search literature (add to bibliography)"
     echo "  $0 --download            # Download PDFs (for bibliography entries)"
     echo "  $0 --summarize           # Generate summaries (for papers with PDFs)"
+    echo "  $0 --cleanup             # Cleanup library (remove papers without PDFs)"
     echo
     echo "Note: --option N is also supported for compatibility (1-12)"
     echo
@@ -858,8 +1032,22 @@ main() {
                 exit $?
                 ;;
             --pipeline)
-                run_non_interactive 4
-                exit $?
+                # Check if next argument is --resume
+                if [[ "${2:-}" == "--resume" ]]; then
+                    shift  # Remove --pipeline
+                    shift  # Remove --resume
+                    run_full_pipeline "--resume"
+                    exit $?
+                else
+                    run_non_interactive 4
+                    exit $?
+                fi
+                ;;
+            --resume)
+                # Resume flag must be used with --pipeline
+                log_error "--resume must be used with --pipeline"
+                log_info "Usage: $0 --pipeline --resume"
+                exit 1
                 ;;
             --reviews)
                 run_non_interactive 5
@@ -881,6 +1069,14 @@ main() {
                 run_non_interactive 9
                 exit $?
                 ;;
+            --cleanup)
+                run_non_interactive 10
+                exit $?
+                ;;
+            --llm-operation)
+                run_non_interactive 11
+                exit $?
+                ;;
             *)
                 log_error "Unknown option: $1"
                 show_help
@@ -894,13 +1090,13 @@ main() {
     while true; do
         display_menu
         
-        echo -n "Select option [1-10]: "
+        echo -n "Select option [1-12]: "
         read -r choice
         
         handle_menu_choice "$choice"
         
         # Return to menu after operation (except for exit)
-        if [[ "$choice" != "9" ]]; then
+        if [[ "$choice" != "12" ]]; then
             press_enter_to_continue
         fi
     done

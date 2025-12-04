@@ -28,7 +28,8 @@ from pathlib import Path
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from infrastructure.core.logging_utils import get_logger, log_operation, log_success, format_error_with_suggestions
+from infrastructure.core.logging_utils import get_logger, log_operation, log_success, log_progress, format_error_with_suggestions
+from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.exceptions import ScriptExecutionError, PipelineError
 
 # Set up logger for this module
@@ -99,6 +100,11 @@ def run_analysis_script(script_path: Path, repo_root: Path) -> int:
         
         if result.returncode != 0:
             logger.error(f"Script failed: {script_path.name} (exit code: {result.returncode})")
+            logger.info(f"  Troubleshooting:")
+            logger.info(f"    - Run script manually: python3 {script_path}")
+            logger.info(f"    - Check script syntax: python3 -m py_compile {script_path}")
+            logger.info(f"    - Verify dependencies: Check imports in {script_path.name}")
+            logger.info(f"    - Review script logs above for specific error details")
         
         return result.returncode
     except Exception as e:
@@ -127,11 +133,14 @@ def run_analysis_pipeline(scripts: list[Path]) -> int:
     
     successful_scripts = []
     failed_scripts = []
+    
+    # Use sub-stage progress tracking
+    progress = SubStageProgress(total=len(scripts), stage_name="Analysis Pipeline")
+    
     for i, script in enumerate(scripts, 1):
-        logger.info(f"\n  [{i}/{len(scripts)}] Analysis script")
-        logger.info(f"  Running: {script.name}")
-
+        progress.start_substage(i, script.name)
         exit_code = run_analysis_script(script, repo_root)
+        progress.complete_substage()
 
         if exit_code == 0:
             successful_scripts.append(script.name)
@@ -144,9 +153,14 @@ def run_analysis_pipeline(scripts: list[Path]) -> int:
         log_success(f"Analysis scripts completed: {len(successful_scripts)}/{len(scripts)} ({script_list})", logger)
 
     if failed_scripts:
-        logger.error(f"\n❌ {len(failed_scripts)} script(s) failed:")
+        logger.error(f"\n{len(failed_scripts)} script(s) failed:")
         for script_name in failed_scripts:
             logger.error(f"  Failed: {script_name}")
+        logger.info(f"\n  Troubleshooting:")
+        logger.info(f"    - Review error messages above for each failed script")
+        logger.info(f"    - Run scripts individually to isolate issues")
+        logger.info(f"    - Check script dependencies and imports")
+        logger.info(f"    - Verify input data files exist if required")
         return 1
 
     return 0
@@ -207,11 +221,11 @@ def main() -> int:
             outputs_valid = verify_outputs()
             
             if outputs_valid:
-                logger.info("\n✅ Analysis complete - ready for PDF rendering")
+                log_success("Analysis complete - ready for PDF rendering", logger)
             else:
-                logger.warning("\n⚠️  Analysis complete but output verification failed")
+                logger.warning("\nAnalysis complete but output verification failed")
         else:
-            logger.error("\n❌ Analysis failed - fix issues and try again")
+            logger.error("\nAnalysis failed - fix issues and try again")
         
         return exit_code
         

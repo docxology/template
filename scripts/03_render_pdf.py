@@ -19,6 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger, log_success, log_header
+from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.exceptions import RenderingError
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering.config import RenderingConfig
@@ -54,7 +55,7 @@ def verify_figures_exist(project_root: Path, manuscript_dir: Path) -> dict:
     result["found_figures"] = [f.name for f in figures]
     
     if figures:
-        logger.info(f"✅ Found {len(figures)} figure(s) in {figures_dir.name}/")
+        log_success(f"Found {len(figures)} figure(s) in {figures_dir.name}/", logger)
     else:
         logger.warning(f"⚠️  Figures directory exists but is empty: {figures_dir}")
     
@@ -208,7 +209,7 @@ def run_render_pipeline() -> int:
         )
         figures_dir = project_root / "output" / "figures"
         manager = RenderManager(config, manuscript_dir=manuscript_dir, figures_dir=figures_dir)
-        logger.info("✅ Initialized RenderManager from infrastructure.rendering")
+        log_success("Initialized RenderManager from infrastructure.rendering", logger)
     except Exception as e:
         logger.error(f"Failed to initialize RenderManager: {e}")
         return 1
@@ -217,34 +218,37 @@ def run_render_pipeline() -> int:
     md_files = [f for f in source_files if f.suffix == '.md']
     other_files = [f for f in source_files if f.suffix != '.md']
     
-    # Render individual files
+    # Render individual files with progress tracking
     rendered_count = 0
     failed_files = []
     
-    for source_file in source_files:
-        try:
-            logger.info(f"\nRendering: {source_file.name}")
+    if source_files:
+        progress = SubStageProgress(total=len(source_files), stage_name="Rendering Files")
+        
+        for i, source_file in enumerate(source_files, 1):
+            progress.start_substage(i, source_file.name)
             
-            # Use RenderManager to render in appropriate format
-            outputs = manager.render_all(source_file)
-            
-            if outputs:
-                for output_path in outputs:
-                    logger.info(f"  ✅ Generated: {output_path.name}")
-                rendered_count += 1
-            else:
-                logger.warning(f"  No output generated for {source_file.name}")
+            try:
+                # Use RenderManager to render in appropriate format
+                outputs = manager.render_all(source_file)
                 
-        except RenderingError as re:
-            logger.warning(f"  ❌ Rendering error for {source_file.name}: {re.message}")
-            if re.context:
-                logger.debug(f"    Context: {re.context}")
-            failed_files.append(source_file.name)
-            continue
-        except Exception as e:
-            logger.warning(f"  ❌ Unexpected error rendering {source_file.name}: {e}")
-            failed_files.append(source_file.name)
-            continue
+                if outputs:
+                    for output_path in outputs:
+                        log_success(f"Generated: {output_path.name}", logger)
+                    rendered_count += 1
+                else:
+                    logger.warning(f"  No output generated for {source_file.name}")
+                    
+            except RenderingError as re:
+                logger.warning(f"  ❌ Rendering error for {source_file.name}: {re.message}")
+                if re.context:
+                    logger.debug(f"    Context: {re.context}")
+                failed_files.append(source_file.name)
+            except Exception as e:
+                logger.warning(f"  ❌ Unexpected error rendering {source_file.name}: {e}")
+                failed_files.append(source_file.name)
+            
+            progress.complete_substage()
     
     # Generate combined PDF from all markdown files
     if md_files:
