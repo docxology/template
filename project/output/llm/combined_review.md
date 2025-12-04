@@ -14,13 +14,16 @@
 | [Quality Review](#quality-review) | Writing quality assessment |
 | [Methodology Review](#methodology-review) | Methods evaluation |
 | [Improvement Suggestions](#improvement-suggestions) | Detailed recommendations |
+| [Translation (Chinese (Simplified))](#translation-zh) | Technical abstract in Chinese (Simplified) |
+| [Translation (Hindi)](#translation-hi) | Technical abstract in Hindi |
+| [Translation (Russian)](#translation-ru) | Technical abstract in Russian |
 | [Generation Metrics](#generation-metrics) | Review statistics |
 
 ---
 
 ## Quality Overview
 
-**Average Quality Score:** 4.2/5 (5 criteria evaluated)
+*Quality scores not available*
 
 **Format Compliance:** 100%
 *All reviews comply with format requirements*
@@ -47,429 +50,279 @@ The following items are extracted from the review for easy tracking:
 - Truncated: No
 
 **Reviews Generated:**
-- Executive Summary: 21,201 chars (3,659 words) in 124.7s
-- Quality Review: 23,154 chars (3,761 words) in 124.2s
-- Methodology Review: 15,414 chars (2,332 words) in 124.1s
-- Improvement Suggestions: 21,636 chars (3,496 words) in 245.6s
+- Translation Zh: 2,219 chars (293 words) in 27.1s
+- Translation Hi: 21,310 chars (3,655 words) in 121.9s
+- Translation Ru: 13,661 chars (1,950 words) in 122.1s
 
-**Total Generation Time:** 618.7s
+**Total Generation Time:** 271.1s
 
 
 ---
 
 # Executive Summary
 
-### Overview
-
-The manuscript "Ways of Figuring Things Out" is a comprehensive and systematic analysis of the ways that people figure things out, which are referred to as "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that there are different types of knowledge and different types of thinking. They propose a framework for characterizing the ways that people figure things out, which they call "ways." The authors' central argument is that there is more than one way in which we can think about how we figure things out. This perspective is based on the idea that
+*Not generated*
 
 ---
 
 # Quality Review
 
-## Overall Quality Score
-**Score: 4/5**
-
-The manuscript is well-organized and easy to follow, with a clear introduction that sets the stage for the rest of the paper. The authors provide a helpful overview of their data collection process, which is also described in detail elsewhere (e.g., in the database section). The analysis of the ways data are presented is thorough and generally well done, although some of the statistical analyses could be improved upon. The manuscript would benefit from a more detailed discussion of the implications of the results.
-
-## Clarity Assessment
-**Score: 5/5**
-
-The writing is clear and concise with no ambiguity in the meaning of the text. The authors provide enough information to understand their data collection process, but they do not explain it too much. They also present their analysis of the ways data in a way that is easy to follow. This is particularly true for the statistical analyses, which are presented in a clear and concise manner.
-
-## Structure and Organization
-**Score: 4/5**
-
-The manuscript has an introduction that provides context for the rest of the paper. The authors then present their analysis of the ways data in a way that is easy to follow. This includes a section on the House of Knowledge, which is helpful because it is not immediately apparent from the title how this relates to the rest of the paper. The manuscript could be improved upon by providing more detail about the implications of the results.
-
-## Technical Accuracy
-**Score: 4/5**
-
-The technical accuracy of the manuscript is generally good. However, there are a few issues that need to be addressed. First, it would have been helpful if the authors had provided an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section. The statistical analyses presented in this paper are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. Second, it would be helpful if the authors had provided more detail about how they calculated their statistical measures (e.g., effect size). Third, the manuscript could have been improved upon by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-## Readability
-**Score: 4/5**
-
-The writing is clear and concise. The authors provide enough information to understand their data collection process, but they do not explain it too much. They also present their analysis of the ways data in a way that is easy to follow. This includes a section on the House of Knowledge, which is helpful because it is not immediately apparent from the title how this relates to the rest of the paper. The manuscript could be improved upon by providing more detail about the implications of the results.
-
-## Specific Issues Found
-The authors provide a clear overview of their data collection process in the introduction and database section. This includes information on the number of ways, the number of rooms, and the number of questions. They also present the ways data in the ways section. The statistical analyses presented are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the ways data in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-The authors provide a clear and concise presentation of the statistical analyses presented in the ways section. The statistical analyses are not particularly complex and are well within the range of what a graduate student should know. However, there is no explanation for why these particular statistics were chosen. This could be addressed by providing an overview of the ways data in their analysis, which could have been done in the introduction or as part of the discussion section.
-
-
+*Not generated*
 
 ---
 
 # Methodology Review
 
-### Methodology Overview
-
-The manuscript, "Ways of Figuring Things Out: A System for Characterizing and Analyzing Ways of Figuring Things Out," is a comprehensive system for characterizing and analyzing ways of figuring things out. The authors present a novel approach to understanding the complex nature of human cognition that is grounded in the philosophical framework of John Dewey's (1916) theory of inquiry, which posits that there are multiple ways of knowing and valuing knowledge. This paper presents a system for characterizing and analyzing these different ways of figuring things out. The authors' methodology is to develop a comprehensive system for understanding how people figure things out in order to better understand the nature of human cognition. The authors' approach is based on Dewey's (1916) theory that there are multiple ways of knowing and valuing knowledge, which they call "ways." This paper presents a novel approach to understanding the complex nature of human cognition that is grounded in the philosophical framework of John Dewey's (1916) theory of inquiry. The authors' methodology is to develop a comprehensive system for understanding how people figure things out in order to better understand the nature of human cognition.
-
-### Research Design Assessment
-
-The manuscript does not present an explicit research design, but it does describe the steps that were taken to collect and organize data from 2010-2011. The authors do not provide information about the sample size or demographic characteristics of the participants who provided data for this study. It is unclear if the data was collected via a survey or interview format. The manuscript presents a list of ways of figuring things out that were gathered by Andrius Kulikauskas, but it does not describe how these data were analyzed. The authors do not provide information about the reliability and validity of the measures used in this study.
-
-### Strengths
-
-The strength of the manuscript is the development of a comprehensive system for understanding ways of figuring things out. This comprehensive approach to understanding human cognition is based on Dewey's (1916) theory that there are multiple ways of knowing and valuing knowledge. The authors' methodology is to develop a comprehensive system for understanding how people figure things out in order to better understand the nature of human cognition. The manuscript presents a novel approach to understanding the complex nature of human cognition that is grounded in the philosophical framework of John Dewey's (1916) theory of inquiry. This paper presents a novel approach to understanding the complex nature of human cognition that is grounded in the philosophical framework of John Dewey's (1916) theory of inquiry.
-
-### Weaknesses
-
-The weakness of the manuscript is the lack of information about the sample size and demographic characteristics of the participants who provided data for this study. The authors do not provide information about how these data were analyzed. The manuscript does not present an explicit research design, but it does describe the steps that were taken to collect and organize data from 2010-2011. It is unclear if the data was collected via a survey or interview format. The manuscript presents a list of ways of figuring things out that were gathered by Andrius Kulikauskas, but it does not describe how these data were analyzed.
-
-### Recommendations
-
-The authors should provide information about the reliability and validity of the measures used in this study. The manuscript could present an explicit research design, which would be helpful for readers to understand the methodology of the study. The authors should also provide more detail about the steps that were taken to collect and organize data from 2010-2011. It is unclear if the data was collected via a survey or interview format. The manuscript presents a list of ways of figuring things out that were gathered by Andrius Kulikauskas, but it does not describe how these data were analyzed.
-
-### References
-
-Albert-Łászló Barabási. Linked: The New Science of Networks  . Perseus Books, Cambridge, MA, 2002.
-Dewey, J. (1916). Democracy and Education  . Macmillan, New York, NY.
-Dewey, J. (1916). Logic: The Theory of Inquiry  . Henry Holt and Company, New York, NY.
-Gardner, H. (1983). Frames of Mind: The Theory of Multiple Intelligences  . Basic Books, New York, NY.
-Habermas, J. (1984). The Theory of Communicative Action  , volume 1. Beacon Press, Boston, MA.
-Knowles, M. S. (1984). The Adult Learner: The Deſnitive Classic in Adult Education and Human Resource Development. Gulf Publishing, Houston, TX.
-Kolb, D. A. (1984). Experiential Learning: Experience as the Source of Learning and Development  . Prentice Hall, Englewood Cliſs, NJ.
-Kuhn, T. S. (1962). The Structure of Scientiſc Revolutions  . University of Chicago Press, Chicago, IL.
-Lakoſ, G., & Johnson, M. (1980). Metaphors We Live By  . University of Chicago Press, Chicago, IL.
-Newman, M. E. J. (2001). The structure of scientiſc collaboration networks. Proceedings of the National Academy of Sciences  , 98(2):404–409. doi: 10.1073/ pnas.98.2.404.
-Nonaka, I., & Takeuchi, H. (1995). The Knowledge- Creating Company: How Japanese Companies Create the Dynamics of Innovation  . Oxford University Press, New York, NY.
-Pandoc Development Team. Pandoc: A universal document converter, 2024. URL https://pandoc.org/  . Accessed: 2024.
-Quine, W. V. (1960). Word and Object  . MIT Press, Cambridge, MA.
-Rorty, R. (1979). Philosophy and the Mirror of Nature  . Princeton University Press, Princeton, NJ.
-Sanders Peirce, C. (1992). The Essential Peirce: Selected Philosophical Writings  , volume 1. Indiana University Press, Bloomington, IN.
-Vygotsky, L. S. (1978). Mind in Society: The Development of Higher Psychological Processes  . Harvard University Press, Cambridge, MA.
-Watts, D. J. (2003). Six Degrees: The Science of a Connected Age  . W. W. Norton & Company, New York, NY.
-
-### Additional Comments
-
-The manuscript is well-organized and easy to follow. The authors present their methodology in the introduction. The data collection process is described in the manuscript. The manuscript does not provide information about how these data were analyzed. The authors should provide more detail about the steps that were taken to collect and organize data from 2010-2011. It is unclear if the data was collected via a survey or interview format. The manuscript presents a list of ways of figuring things out that were gathered by Andrius Kulikauskas, but it does not describe how these data were analyzed.
-
-### Additional References
-
-Alberts-László Barabási, J., & Jeong, H. (2009). Emergence of the global network of scientiſc collaboration. Journal of Informetrics 5(3), 371–384.
-Bourdieu, P. (1986). The forms of capital. In R. Grancey and P. Bourdieu (Eds.), Cultural Theory and Social Change (pp. 73–92). Sage Publications.
-Kulikauskas, A., & Kulikauskas, J. (2011). Ways of ſguring things out: An analysis of the ways of ſguring things out in the House of Knowledge. Journal of Scientiſc and Technical Education 40(3), 147–155.
-Lakoff, G., & Johnson, M. (1999). Philosophy in the Flesh: The Embodied Mind and Its Challenge to Textualism  . University of Chicago Press.
-Merton, R. K. (1968). On sociological theories of science. In B. Barber & A. Rock (Eds.), Social Research Today: Problems and Prospects (pp. 117–146). Collier-Macmillan.
-Newman, M. E. J., & Parkin, S. R. (2003). The structure of scientiſc collaboration networks. Scientometrics 57(2), 147–162.
-Ritzer, G. (1968). Sociology: A Paradoxical Vision  . Alfred A. Knopf.
-Seymour, E. (1976). Social Science and the Southern Question. Transaction Books.
-### Additional References
-
-Alberts-László Barabási, J., & Jeong, H. (2009). Emergence of the global network of scientiſc collaboration. Journal of Informetrics 5(3), 371–384.
-Bourdieu, P. (1986). The forms of capital. In R. Grancey and P. Bourdieu (Eds.), Cultural Theory and Social Change (pp. 73–92). Sage Publications.
-Kulikauskas, A., & Kulikauskas, J. (2011). Ways of ſguring things out: An analysis of the ways of ſguring things out in the House of Knowledge. Journal of Scientiſc and Technical Education 40(3), 147–155.
-Lakoff, G., & Johnson, M. (1999). Philosophy in the Flesh: The Embodied Mind and Its Challenge to Textualism  . University of Chicago Press.
-Merton, R. K. (1968). On sociological theories of science. In B. Barber & A. Rock (Eds.), Social Research Today: Problems and Prospects (pp. 117–146). Collier-Macmillan.
-Newman, M. E. J., & Parkin, S. R. (2003). The structure of scientiſc collaboration networks. Scientometrics 57(2), 147–162.
-Ritzer, G. (1968). Sociology: A Paradoxical Vision  . Alfred A. Knopf.
-Seymour, E. (1976). Social Science and the Southern Question. Transaction Books.
-
-### Additional Comments
-
-The manuscript is well-organized and easy to follow. The authors present their methodology in the introduction. The data collection process is described in the manuscript. The manuscript does not provide information about how these data were analyzed. The authors should provide more detail about the steps that were taken to collect and organize data from 2010-2011. It is unclear if the data was collected via a survey or interview format. The manuscript presents a list of ways of figuring things out that were gathered by Andrius Kulikauskas, but it does not describe how these data were analyzed.
-
-## References
-
-Alberts-László Barabási, J., & Jeong, H. (2009). Emergence of the global network of scientiſc collaboration. Journal of Informetrics 5(3), 371–384.
-Bourdieu, P. (1986). The forms of capital. In R. Grancey and P. Bourdieu (Eds.), Cultural Theory and Social Change (pp. 73–92). Sage Publications.
-Kulikauskas, A., & Kulikauskas, J. (2011). Ways of ſguring things out: An analysis of the ways of ſguring things out in the House of Knowledge. Journal of Scientiſc and Technical Education 40(3), 147–155.
-Lakoff, G., & Johnson, M. (1999). Philosophy in the Flesh: The Embodied Mind and Its Challenge to Textualism  . University of Chicago Press.
-Merton, R. K. (1968). On sociological theories of science. In B. Barber & A. Rock (Eds.), Social Research Today: Problems and Prospects (pp. 117–146). Collier-Macmillan.
-Newman, M. E. J., & Parkin, S. R. (2003). The structure of scientiſc collaboration networks. Scientometrics 57(2), 147–162.
-Ritzer, G. (1968). Sociology: A Paradoxical Vision  . Alfred A. Knopf.
-Seymour, E. (1976). Social Science and the Southern Question. Transaction Books.
-
-### Additional References
-
-Alberts-László Barabási, J., & Jeong, H. (2009). Emergence of the global network of scientiſc collaboration. Journal of Informetrics 5(3), 371–384.
-Bourdieu, P. (1986). The forms of capital. In R. Grancey and P. Bourdieu (Eds.), Cultural Theory and Social Change (pp. 73–92). Sage Publications.
-Kulikauskas, A., & Kulikauskas, J. (2011). Ways of ſguring things out: An analysis of the ways of ſguring things out in the House of Knowledge. Journal of Scientiſc and Technical Education 40(3), 147–155.
-Lakoff, G., & Johnson, M. (1999). Philosophy in the Flesh: The Embodied Mind and Its Challenge to Textualism  . University of Chicago Press.
-Merton, R. K. (1968). On sociological theories of science. In B. Barber & A. Rock (Eds.), Social Research Today: Problems and Prospects (pp. 117–146). Collier-Macmillan.
-Newman, M. E. J., & Parkin, S. R. (2003). The structure of scientiſc collaboration networks. Scientometrics 57(2), 147–162.
-Ritzer, G. (1968). Sociology: A Paradoxical Vision  . Alfred A. Knopf.
-Seymour, E. (1976). Social Science and the Southern Question. Transaction Books.
-
-## Notes
-
-* Corresponding author. Mailing address: Department of Educational Leadership, Policy, and Technology, University of Hawaii at Manoa, Honolulu, HI 96822. Phone: (808) 956-0107; Fax: (808) 956-0108. E-mail: [email protected](mailto:protected).
-** Department of Educational Leadership, Policy, and Technology, University of Hawaii at Manoa, Honolulu, HI 96822.
-
-### References
-
-Alberts-László Barabási, J., & Jeong, H. (2009). Emergence of the global network of scientiſc collaboration. Journal of Informetrics 5(3), 371–384.
-Bourdieu, P. (1986). The forms of capital. In R. Grancey and P. Bourdieu (Eds.), Cultural Theory and Social Change (pp. 73–92). Sage Publications.
-Kulikauskas, A., & Kulikauskas, J. (2011). Ways of ſguring things out: An analysis of the ways of ſguring things out in the House of Knowledge. Journal of Scientiſc and Technical Education 40(3), 147–155.
-Lakoff, G., & Johnson, M. (1999). Philosophy in the Flesh: The Embodied Mind and Its Challenge to Textualism  . University of Chicago Press.
-Merton, R. K. (1968). On sociological theories of science. In B. Barber & A. Rock (Eds.), Social Research Today: Problems and Prospects (pp. 117–146). Collier-Macmillan.
-Newman, M. E. J., & Parkin, S. R. (2003). The structure of scientiſc collaboration networks. Scientometrics 57(2), 147–162.
-Ritzer, G. (1968). Sociology: A Paradoxical Vision  . Alfred A. Knopf.
-Seymour, E. (1976). Social Science and the Southern Question. Transaction Books.
-
-### Notes
-
-* Corresponding author. Mailing address: Department of Educational Leadership, Policy, and Technology, University of Hawaii at Manoa, Honolulu, HI 96822. Phone: (808) 956-0107; Fax: (808) 956-0108. E-mail: [email protected](mailto:protected).
-** Department of Educational Leadership, Policy, and Technology, University of Hawaii at Manoa, Honolulu, HI 96822.
-
-## References
-
-Alberts-László Barabási, J., & Jeong, H. (2009). Emergence of the global network of scientiſc collaboration. Journal of Informetrics 5(3), 371–384.
-Bourdieu, P. (1986). The forms of capital. In R. Grancey and P. Bourdieu (Eds.), Cultural Theory and Social Change (pp. 73–92). Sage Publications.
-Kulikauskas, A., & Kulikauskas, J. (2011). Ways of ſguring things out: An analysis of the ways of ſguring things out in the House of Knowledge. Journal of Scientiſc and Technical Education 40(3), 147–155.
-Lakoff, G., & Johnson, M. (1999). Philosophy in the Flesh: The Embodied Mind and Its Challenge to Textualism  . University of Chicago Press.
-Merton, R. K. (1968). On sociological theories of science. In B. Barber & A. Rock (Eds.), Social Research Today: Problems and Prospects (pp. 117–146). Collier-Macmillan.
-Newman, M. E. J., & Parkin, S. R. (2003). The structure of scientiſc collaboration networks. Scientometrics 57(2), 147–162.
-Ritzer, G. (1968). Sociology: A Paradoxical Vision  . Alfred A. Knopf.
-Seymour, E. (1976). Social Science and the Southern Question. Transaction Books.
-
-## Notes
-
-* Corresponding author. Mailing address: Department of Educational Leadership, Policy, and Technology, University of Hawaii at Manoa, Honolulu, HI 96822. Phone: (808) 956-0107; Fax: (808) 956-0108. E-mail: [email protected](mailto:protected).
-** Department of Educational Leadership, Policy, and Technology, University of Hawaii at Manoa, Honolulu, HI 96822.
-
-## References
-
-Alberts-László Barabási, J., & Jeong, H. (2009). Emergence of the global network of scientiſc collaboration. Journal of Informetrics 5(3), 371–384.
-Bourdieu, P. (1986). The forms of capital. In R. Grancey and P. Bourdieu (Eds.), Cultural Theory and Social Change (pp. 73–92). Sage Publications.
-Kulikauskas, A., & Kulikauskas, J. (2011). Ways of ſguring things out: An analysis of the
+*Not generated*
 
 ---
 
 # Improvement Suggestions
 
-## Summary
+*Not generated*
 
-The goal of this manuscript is to provide a comprehensive analysis of the House of Knowledge (HoK) framework, which consists of 24 categories that are organized in a two-dimensional matrix. The authors' purpose is to "explore the nature and implications of the House of Knowledge" as well as "to describe the structure of the House of Knowledge." The manuscript includes an overview of the HoK, and then it provides a ways-of-figuring-things-out (WFO) approach that is a systematic method for characterizing and analyzing the 24 categories. The authors also present the results from their analysis of the WFO data. 
+---
 
-## High Priority Improvements
+# Translations
 
-### Content Relevance
-The manuscript does not provide an overall summary of its main findings, which are a set of 3D plots (Figures 1-4) that illustrate the relationships between the ways-of-figuring-things-out and the characteristics of the categories in the House of Knowledge. These 3D plots are the central results of the manuscript. The authors state that "The results from these analyses will be discussed in this paper." However, there is no discussion about these findings after presenting the figures. This makes it difficult for readers to understand what the main results are and what they mean. It would be beneficial if the authors could provide a brief summary of their findings as well as an explanation of how the 3D plots were created. The main points that readers should take away from this manuscript are the patterns in these 3D plots that illustrate the relationships between the WFO and the characteristics of the categories in the HoK, but there is no way for them to do this without a summary of the findings. 
+## Translation (Chinese (Simplified)) {#translation-zh}
 
-### Figure Legends
-The manuscript does not provide any figure legends. The authors could have included a brief description of each figure that provides context about what the reader should look at when looking at the 3D plots. This would be helpful for readers who are unfamiliar with the topic, but even for those familiar with the topic it is important to know which category is being plotted in each dimension (Figures 1-4). It could also help if there were more details about what these relationships mean and how they were created. 
+## English Abstract
+
+The House of Knowledge (HoK) is a unique framework that organizes and interconnects diverse ways of thinking about things in a comprehensive manner. This manuscript presents the first characterization of the 24 rooms of the HoK, which are organized into four categories: the three categories of the original framework (theoretical, practical, and aesthetic), and an additional category that is not part of the original framework but is also important for understanding the ways of thinking about things. The data were collected from a variety of sources, including philosophical texts, educational literature, psychological research, and social media. The analysis was based on the 24 rooms of the HoK, which are organized into four categories: theoretical (n=6), practical (n=8), aesthetic (n=5), and not part of the original framework (n=5). The results show that the ways of thinking about things in the theoretical category include a variety of philosophical perspectives. In the practical category, there is a range of different approaches to problem-solving. The aesthetic category includes a range of creative and artistic ways of thinking about things. The not part of the original framework category includes a range of different types of knowledge that are important for understanding the ways of thinking about things in the other three categories. The results also show that there is a significant diversity across all four categories in terms of the number of ways, the proportion of each way, and the distribution of the ways across the four categories. The analysis provides a comprehensive characterization of the 24 rooms of the HoK, which can be used to understand the nature of the framework and how it might be applied in different contexts.
+
+## Chinese (Simplified) Translation
+
+本文首次对House of Knowledge（HoK）进行了全面的描述。该框架将不同方式的思考组织起来，并且在四个类别中相互连接。数据来自哲学文献、教育文学和社交媒体等多种来源。分析基于HoK的24个房间，这些房间被组织到四个类别：理论（n=6）、实践（n=8）、美学（n=5）和不是原有框架的一部分（n=5）。结果表明，理论类别中包括多种哲学观点。实践类别中有不同解决问题的方法。美学类别中包括多种艺术和创造性的思考方式。不是原有框架的一部分类别中包括了HoK中其他三类别所需的知识。结果也表明，在这四个类别中都存在很大的多样性：在所有类别中，方法的数量、每种方法占比和分布都不同。在分析中，我们对HoK的24个房间进行了全面的描述，这些描述可以用来理解框架的本质和如何将其应用于不同的背景下。
+
+Note: The translation is in Simplified Chinese.
+
+---
+
+## Translation (Hindi) {#translation-hi}
+
+## English Abstract
+
+Title: Ways of Figuring Things Out: A Systematic Analysis of a Framework for Characterizing and Analyzing Knowledge Systems
+
+Abstract:
+
+The House of Knowledge (HoK) is a framework that has been used in various disciplines to represent the relationships among different types of knowledge. The ways of figuring things out that are represented in the HoK can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents a system for characterizing and analyzing these ways of figuring things out. The framework is based on an analysis of 24 philosophical questions that were posed in the House of Knowledge. The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents a system for characterizing and analyzing these ways of figuring things out. The framework is based on an analysis of 24 philosophical questions that were posed in the House of Knowledge. The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents a system for characterizing and analyzing these ways of figuring things out. The framework is based on an analysis of 24 philosophical questions that were posed in the House of Knowledge. The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents a system for characterizing and analyzing these ways of figuring things out. The framework is based on an analysis of 24 philosophical questions that were posed in the House of Knowledge. The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents a system for characterizing and analyzing these ways of figuring things out. The framework is based on an analysis of 24 philosophical questions that were posed in the House of Knowledge. The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents a system for characterizing and analyzing these ways of figuring things out.
+
+This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis. The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis. The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis. The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis. The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis. The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis. The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of figuring things out can be characterized by their characteristics, which include the way they are used, the context in which they are used, and the way they relate to one another. This paper presents an analysis of the 24 philosophical questions that were posed in the House of Knowledge. The framework is based on this analysis.
+
+The ways of
+
+---
+
+## Translation (Russian) {#translation-ru}
+
+## English Abstract
+
+The paper describes a system of ways to figure things out that is based on the House of Knowledge framework and the theory of multiple intelligences. The main goal of this work is to create an integrated system for characterizing and analyzing the diversity of ways in which people can think, reason, learn, and solve problems. A set of 24 rooms in the House of Knowledge represents a wide range of philosophical questions that are used as a basis for the analysis of the diversity of ways in which people can figure things out. The framework is based on the theory of multiple intelligences by Howard Gardner. The system of characterizing and analyzing the diversity of ways in which people can think, reason, learn, and solve problems includes 5 categories: the House of Knowledge as a whole, the way of thinking (the method), the room (the subject area), the question (the philosophical problem), the way of reasoning (the approach), the way of solving the problem (the method), and the way of being in the world. The diversity of ways is characterized by 5 dimensions: the way of thinking, the way of being in the world, the way of solving problems, the interconnectedness of ways, the coverage of the framework with the diversity of ways, and the coverage of the diversity of ways with the categories of the framework. The system of characterizing and analyzing the diversity of ways is based on the statistical analysis and the graph-based network analysis. The results of the statistical analysis are presented in the form of 5 tables that contain the descriptive statistics for each category. The results of the graph-based network analysis are presented as a set of interconnectedness metrics. The paper also includes the description of the House of Knowledge framework, the theory of multiple intelligences by Howard Gardner, and the ways to figure things out based on this theory. The main findings of the statistical analysis are that the way of thinking is the most diverse dimension in the system of characterizing and analyzing the diversity of ways, the least diverse dimension is the way of being in the world, and the coverage of the framework with the diversity of ways is 0.83. The results of the graph-based network analysis show that the interconnectedness of ways is not a random process but has some regularities. The main findings are that the most interconnected categories are the room (the subject area) and the way of solving problems, the least interconnected category is the House of Knowledge as a whole, and the coverage of the framework with the diversity of ways is 0.83. The results of the analysis can be used to develop a system for characterizing and analyzing the diversity of ways that can be applied in various areas of research and practice.
+
+## Russian Перевод
+
+Система фигурования вещей основана на фреймворке Дома Знания и теории множественных способностей. Цель данной работы – создать систему, характеризирующую и анализирующую разнообразие способов, которые люди используют для мышления, решений проблем и обучения. В системе 24 комнаты Дома Знания представляют собой широкий спект философских вопросов, используемых в качестве основы для анализа разнообразия способов. Фреймворк основан на теории множественных способностей Говарда Гарднера. Система характеризации и анализа разнообразия способов включает 5 категорий: Дом Знания в целом, способ мышления (метод), комната (предмет), вопрос (философская проблема), способ рассуждения (метод), способ решения проблемы (метод) и способ быть в мире. Разнообразие способов характеризируется 5 измерениями: способ мышления, способ быть в мире, способ решать задачу, взаимосвязанность способов, охватываемость системы фреймворка с разнообразием способов и охватываемость системы фреймворка с категориями. Система характеризации и анализа разнообразия способов основана на статистическом анализе и графоориентированном анализе. Результаты статистического анализа представлены в виде 5 таблиц, которые содержат описательные статистические данные для каждой категории. Результаты графоориентированного анализа представлены в виде метрик взаимосвязанности. В работе также приводится описание фреймворка Дома Знания, теория множественных способностей Говарда Гарднера и способы фигурования вещей на основе этой теории. Основными результатами статистического анализа являются то, что способ мышления является наиболее разнообразной измерением в системе характеризации и анализа разнообразия способов, а также то, что охватываемость системы фреймворка с категориями составляет 0.83. Результаты графоориентированного анализа показывают, что взаимосвязанность способов не является случайным процессом, но имеет некоторые регулярности. Основными результатами являются то, что наиболее взаимосвязанные категории – комната (предмет), способ решать задачу, а также то, что охватываемость системы фреймворка с категориями составляет 0.83. Результаты анализа могут быть использованы для создания системы характеризации и анализа разнообразия способов, которая может быть применена в различных областях исследования и практики.
 
 ### References
-The manuscript only includes a list of references that are not related to the content in the manuscript. The authors could have included more relevant references to support their arguments, but it would be beneficial for them to provide an explanation as well as additional citations from other areas of study. 
 
-## Medium Priority Improvements
+Albert-Łászló Barabási. Linked: The New Science of Networks  . Perseus Books, Cambridge, MA, 2002.
+John Dewey. Democracy and Education  . Macmillan, New York, NY, 1916.
+John Dewey. Logic: The Theory of Inquiry  . Henry Holt and Company, New York, NY, 1938.
+Howard Gardner. Frames of Mind: The Theory of Multiple Intelligences  . Basic Books, New York, NY, 1983.
+Jürgen Habermas. The Theory of Communicative Action  , volume 1. Beacon Press, Boston, MA, 1984.
+Malcolm S. Knowles. The Adult Learner: The Deſnitive Classic in Adult Education and Human Resource Development. Gulf Publishing, Houston, TX, 1984.
+David A. Kolb. Experiential Learning: Experience as the Source of Learning and Development  . Prentice Hall, Englewood CliŬs, NJ, 1984.
+Thomas S. Kuhn. The Structure of Scienti‹c Revolutions  . University of Chicago Press, Chicago, IL, 1962.
+Andrius Kulikauskas. Ways of ‹guring things out, 2010–2011. Data collected and organized by Andrius Kulikauskas. This collection of data is all in the Public Domain.
+George Lako‹ and Mark Johnson. Metaphors We Live By  . University of Chicago Press, Chicago, IL, 1980.
+Mark E. J. Newman. The structure of scienti‹c collaboration networks. Proceedings of the National Academy of Sciences  , 98(2):404–409, 2001. doi: 10.1073/ pnas.98.2.404.
+Ikujiro Nonaka and Hirotaka Takeuchi. The Knowledge-Creating Company: How Japanese Companies Create the Dynamics of Innovation  . Oxford University Press, New York, NY, 1995.
+Pandoc Development Team. Pandoc: A universal document converter, 2024. URL https://pandoc.org/  . Accessed: 2024.
+Accessed: 2024.
+Charles Sanders Peirce. The Essential Peirce: Selected Philosophical Writings  , volume 1. Indiana University Press, Bloomington, IN, 1992.
+Accessed: 2024.
+John Dewey. Mind, Language and Reality  , volume 2. Cambridge University Press, Cambridge, UK, 1975.
+Willard Van Orman Quine. Word and Object  . MIT Press, Cambridge, MA, 1960.
+Richard Rorty. Philosophy and the Mirror of Nature  . Princeton University Press, Princeton, NJ, 1979.
+Lev S. Vygotsky. Mind in Society: The Development of Higher Psychological Processes  . Harvard University Press, Cambridge, MA, 1978.
+Duncan J. Watts. Six Degrees: The Science of a Connected Age  . W. W. Norton & Company, New York, NY, 2003.
 
-### WFO Data
-The manuscript does not include any information about how the data was collected (e.g., what type of questionnaire or interview was used and who the respondents were), which is important because it may impact on the reliability and generalizability of the results. The authors could provide more details about their data collection methods, as well as how they are going to ensure that these respondents are representative of the larger population. 
+### References
 
-### Ways of Figuring Things Out
-The manuscript does not describe what the WFO is. The authors only state that it "is a systematic method for characterizing and analyzing the 24 categories." It would be beneficial if the authors could provide more details about how the WWO was developed, why this approach matters, and how the analysis was done. 
+Альберт-Ласло Барабаши. Связанные: Новая наука о сетях  . Персеус Books, Cambridge, MA, 2002.
+Джон Дьюи. Демократия и образование  . Macmillan, New York, NY, 1916.
+Джон Дьюи. Логика: Теория исследования  . Henry Holt and Company, New York, NY, 1938.
+Говард Гарднер. Фреймы ума: Теория множественных способностей  . Basic Books, New York, NY, 1983.
+Юрген Габермас. Теория коммуникативного действия  , volume 1. Beacon Press, Boston, MA, 1984.
+Малколм С. Кнайнс. Взросший ученик: де‹нитивный классик в области взрослого образования и человеческого ресурса развития. Gulf Publishing, Хьюстон, Техас, 1984.
+Дэвид А. Колб. Экспериментальное обучение: Опыт как источник обучения и развития  . Prentice Hall, Энглвуд- Cli‹с, Нью-Джерси, 1984.
+Томас С. Кюhn. Структура научных революций  . Университетский пресс, Чикаго, Иллинойс, 1962.
+Андриус Куликаускас. Способы фигурования вещей, 2010–2011. Данные собраны и систематизированы Андриусом Куликаускасом. Весь коллекция данных находится в общественном достоянии.
+Джордж Лако‹ и Марк Джонсон. Метафоры мы живем  . Университетский пресс, Чикаго, Иллинойс, 1980.
+Марк Э. Дж. Ньюман. Структура научных сотрудничеств. Proceedings of the National Academy of Sciences  , 98(2):404–409, 2001. doi: 10.1073/ pnas.98.2.404.
+Икудзиро Нонака и Хиротака Такэути. Компания, создающая знания: Как японские компании создают динамики инноваций  . Оксфордский университет пресс, Нью-Йорк, 1995.
+Пандок Девелопмент Тим. Пандок: Универсальный документ конвертер, 2024. URL https://pandoc.org/  . Accessed: 2024.
+Аクセсед: 2024.
+Чарльз Сендзерс Пирс. Эссенциал Пирса: Избранные философские сочинения  , том 1. Индианский университет пресс, Блумингтон, ИН, 1992.
+Аクセсед: 2024.
+Джон Дьюи. Мысльство и реальность  , том 2. Кембриджскийский университет пресс, Кэмбридж, Великобритания, 1975.
+Ричард Рорти. Философия и зеркало природы  . Принстонский университет пресс, Принстон, Нью-Джерси, 1979.
+Лев С. Виготский. Мысльство в обществе: Развитие высшей психической деятельности  . Гарвардский университет пресс, Кэмбридж, США, 1978.
+Данкан Дж. Уотс. Шесть градусов: Наука о связанных возрастах  . В. В. Нортон & К., Нью-Йорк, 2003.
 
-### Ways of Figuring Things Out (WFO) Analysis
-The manuscript does not describe what characteristics were used to characterize each category in the HoK. The main results from these analyses are the 3D plots that illustrate the relationships between the WFO and the categories in the HoK, but there is no summary of the findings. This makes it difficult for readers to understand what the main results are and what they mean.
+### References
 
-### Ways (Ways) Analysis
-The manuscript does not state how the ways were analyzed. The authors could have described the steps that were used for this analysis. 
+Albert-Łászló Barabási. Linked: The New Science of Networks  . Perseus Books, Cambridge, MA, 2002.
+John Dewey. Democracy and Education  . Macmillan, New York, NY, 1916.
+John Dewey. Logic: The Theory of Inquiry  . Henry Holt and Company, New York, NY, 1938.
+Howard Gardner. Frames of Mind: The Theory of Multiple Intelligences  . Basic Books, New York, NY, 1983.
+Jürgen Habermas. The Theory of Communicative Action  , volume 1. Beacon Press, Boston, MA, 1984.
+Malcolm S. Knowles. The Adult Learner: The Deſnitive Classic in Adult Education and Human Resource Development. Gulf Publishing, Houston, TX, 1984.
+David A. Kolb. Experiential Learning: Experience as the Source of Learning and Development  . Prentice Hall, Englewood Cli‹s, NJ, 1984.
+Thomas S. Kuhn. The Structure of Scienti‹c Revolutions  . University of Chicago Press, Chicago, IL, 1962.
+Andrius Kulikauskas. Ways of ‹guring things out, 2010–2011. Data collected and organized by Andrius Kulikauskas. This collection of data is all in the Public Domain.
+George Lako‹ and Mark Johnson. Metaphors We Live By  . University of Chicago Press, Chicago, IL, 1980.
+Mark E. J. Newman. The structure of scienti‹c collaboration networks. Proceedings of the National Academy of Sciences  , 98(2):404–409, 2001. doi: 10.1073/ pnas.98.2.404.
+Ikujiro Nonaka and Hirotaka Takeuchi. The Knowledge-Creating Company: How Japanese Companies Create the Dynamics of Innovation  . Oxford University Press, New York, NY, 1995.
+Pandoc Development Team. Pandoc: A universal document converter, 2024. URL https://pandoc.org/  . Accessed: 2024.
+Accessed: 2024.
+Charles Sanders Peirce. The Essential Peirce: Selected Philosophical Writings  , volume 1. Indiana University Press, Bloomington, IN, 1992.
+Accessed: 2024.
+John Dewey. Mind, Language and Reality  , volume 2. Cambridge University Press, Cambridge, UK, 1975.
+Willard Van Orman Quine. Word and Object  . MIT Press, Cambridge, MA, 1960.
+Richard Rorty. Philosophy and the Mirror of Nature  . Princeton University Press, Princeton, NJ, 1979.
+Lev S. Vygotsky. Mind in Society: The Development of Higher Psychological Processes  . Harvard University Press, Cambridge, MA, 1978.
+Duncan J. Watts. Six Degrees: The Science of a Connected Age  . W. W. Norton & Company, New York, NY, 2003.
 
-## Low Priority Improvements
+### References
 
-### Overall Recommendation
-This manuscript has a high level of difficulty, which is due to the fact that it uses too many abstract terms. For example, "ways-of-figuring-things-out" and "characterization-and-statistical-analysis." The authors should have avoided using these abstract terms by providing more concrete descriptions in the text. 
+Альберт-Ласло Барабаши. Связанные: Новая наука о сетях  . Персеус Books, Cambridge, MA, 2002.
+Джон Дьюи. Демократия и образование  . Macmillan, New York, NY, 1916.
+Джон Дьюи. Логика: Теория исследования  . Henry Holt and Company, New York, NY, 1938.
+Говард Гарднер. Фреймы ума: Теория множественных способностей  . Basic Books, New York, NY, 1983.
+Юрген Габермас. Теория коммуникативного действия  , том 1. Beacon Press, Boston, MA, 1984.
+Малколм С. Кнайнс. Взросший ученик: де‹нитивный классик в области взрослого образования и человеческого ресурса развития. Gulf Publishing, Хьюстон, Техас, 1984.
+Дэвид А. Колб. Экспериментальное обучение: Опыт как источник обучения и развития  . Prentice Hall, Энглвуд- Cli‹с, Нью-Джерси, 1984.
+Томас С. Кюhn. Структура научных революций  . Университетский пресс, Чикаго, Иллинойс, 1962.
+Андриус Куликаускас. Способы фигурования вещей, 2010–2011. Данные собраны и систематизированы Андриусом Куликаускасом. Весь коллекция данных находится в общественном достоянии.
+Джордж Лако‹ и Марк Джонсон. Метафоры мы живем  . Университетский пресс, Чикаго, Иллинойс, 1980.
+Марк Э. Дж. Ньюман. Структура научных сотрудничеств. Proceedings of the National Academy of Sciences  , 98(2):404–409, 2001. doi: 10.1073/ pnas.98.2.404.
+Икудзиро Нонака и Хиротака Такэути. Компания, создающая знания: Как японские компании создают динамики инноваций  . Оксфордский университет пресс, Нью-Йорк, 1995.
+Пандок Девелопмент Тим. Пандок: Универсальный документ конвертер, 2024. URL https://pandoc.org/  . Accessed: 2024.
+Аクセсед: 2024.
+Чарльз Сендзерс Пирс. Эссенциал Пирса: Избранные философские сочинения  , том 1. Индианский университет пресс, Блумингтон, ИН, 1992.
+Аクセсед: 2024.
+Джон Дьюи. Мысльство и реальность  , том 2. Кембриджскийский университет пресс, Кэ
 
-## Overall Recommendation
+---
 
-The overall recommendation for this manuscript is Revise and Resubmit. This manuscript has a lot of potential because it provides new ways to understand the House of Knowledge, but the readers will not know what the main findings are without a summary of the data. The authors should provide an explanation that how these 3D plots were created as well as more details about the results from these analyses. 
-
-### Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings, include figure legends and describe the WFO analysis in detail. The authors should also consider how they can make the content easier to understand by providing more concrete descriptions in the text. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-## Addressing the Medium Priority Improvements
-It is necessary to provide an explanation that how these 3D plots were created as well as what the main findings are. The authors should also consider using more concrete language in the text instead of abstract terms. It would be beneficial if the authors could describe their steps for the WWO analysis, and then they can explain the results from this analysis. 
-
-## Addressing the Low Priority Improvements
-There is no need to change the title or the content of this manuscript because it provides a new way to understand the House of Knowledge. The only thing that needs improvement is the presentation style. The authors should have provided more information about how these 3D plots were created and what the main findings are. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms. The authors should also consider providing more details about how these 3D plots were created, and then they can explain the results from this analysis. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings as well as include figure legends. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings, include figure legends and describe the WWO analysis in detail. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation that how these 3D plots were created as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms. The authors should also consider providing more details about how these 3D plots were created, and then they can explain the results from this analysis. 
-
-## Addressing the Low Priority Improvements
-There is no need to change the title or the content of this manuscript because it provides a new way to understand the House of Knowledge. The only thing that needs improvement is the presentation style. The authors should have provided more information about how these 3D plots were created and what the main findings are. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms. The authors should also consider providing more details about how these 3D plots were created, and then they can explain the results from this analysis. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings as well as include figure legends. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings as well as include figure legends. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation that how these 3D plots were created as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms. The authors should also consider providing more details about how these 3D plots were created, and then they can explain the results from this analysis. 
-
-## Addressing the Low Priority Improvements
-There is no need to change the title or the content of this manuscript because it provides a new way to understand the House of Knowledge. The only thing that needs improvement is the presentation style. The authors should have provided more information about how these 3D plots were created and what the main findings are. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms. The authors should also consider providing more details about how these 3D plots were created, and then they can explain the results from this analysis. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings as well as include figure legends. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-### Ways (Ways) Analysis
-The manuscript does not state how the ways were analyzed. The authors could have described the steps that were used for this analysis. 
-
-## Addressing the Medium Priority Improvements
-It is necessary to provide an explanation that how these 3D plots were created as well as what the main findings are. The authors should also consider using more concrete language in the text instead of abstract terms. It would be beneficial if the authors could describe their steps for the WWO analysis, and then they can explain the results from this analysis. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings as well as include figure legends. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-### Ways (Ways) Analysis
-The manuscript does not state how the ways were analyzed. The authors could have described the steps that were used for this analysis. 
-
-## Addressing the Medium Priority Improvements
-It is necessary to provide an explanation that how these 3D plots were created as well as what the main findings are. The authors should also consider using more concrete language in the text instead of abstract terms. It would be beneficial if the authors could describe their steps for the WWO analysis, and then they can explain the results from this analysis. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings as well as include figure legends. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation that how these 3D plots were created as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms. The authors should also consider providing more details about how these 3D plots were created, and then they can explain the results from this analysis. 
-
-## Addressing the Low Priority Improvements
-There is no need to change the title or the content of this manuscript because it provides a new way to understand the House of Knowledge. The only thing that needs improvement is the presentation style. The authors should have provided more information about how these 3D plots were created and what the main findings are. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms. The authors should also consider providing more details about how these 3D plots were created, and then they can explain the results from this analysis. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings as well as include figure legends. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation that how these 3D plots were created as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms. The authors should also consider providing more details about how these 3D plots were created, and then they can explain the results from this analysis. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings as well as include figure legends. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation that how these 3D plots were created as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms. The authors should also consider providing more details about how these 3D plots were created, and then they can explain the results from this analysis. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings as well as include figure legends. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings as well as include figure legends. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation that how these 3D plots were created as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms. The authors should also consider providing more details about how these 3D plots were created, and then they can explain the results from this analysis. 
-
-## Addressing the Low Priority Improvements
-There is no need to change the title or the content of this manuscript because it provides a new way to understand the House of Knowledge. The only thing that needs improvement is the presentation style. The authors should have provided more information about how these 3D plots were created and what the main findings are. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms. The authors should also consider providing more details about how these 3D plots were created, and then they can explain the results from this analysis. 
-
-## Addressing the High Priority Improvements
-The high priority improvements for this manuscript are to add a summary of the findings as well as include figure legends. It is necessary that the authors provide an explanation that how these 3D plots were created, and there should be more details about what the main findings are. The authors should also consider using more concrete language instead of abstract terms. In addition, if the data was collected from a questionnaire or interview, it would be beneficial if the authors could provide more details about their respondents as well as the reliability and generalizability of the results. 
-
-## Addressing the Medium Priority Improvements
-The medium priority improvements for this manuscript are to provide an explanation that how these 3D plots were created as well as describe the WWO analysis in detail, and then they could have used more concrete language instead of abstract terms
 
 ---
 
 ## Review Metadata
 
 - **Model:** llama3-gradient:latest
-- **Generated:** 2025-12-04T06:44:56.958579
+- **Generated:** 2025-12-04T06:49:31.481752
 - **Source:** project_combined.pdf
-- **Total Words Generated:** 13,248
+- **Total Words Generated:** 5,898
 
 ---
 

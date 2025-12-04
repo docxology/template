@@ -1,12 +1,11 @@
 {
   "model": "llama3-gradient:latest",
-  "timestamp": "2025-12-04T06:44:56.958579",
+  "timestamp": "2025-12-04T06:49:31.481752",
   "source_pdf": "/Users/4d/Documents/GitHub/template/project/output/pdf/project_combined.pdf",
   "reviews_generated": [
-    "executive_summary",
-    "quality_review",
-    "methodology_review",
-    "improvement_suggestions"
+    "translation_zh",
+    "translation_hi",
+    "translation_ru"
   ],
   "max_input_length": 500000,
   "manuscript_metrics": {
@@ -17,71 +16,57 @@
     "truncated_chars": 135098
   },
   "review_metrics": {
-    "executive_summary": {
+    "translation_zh": {
       "input_chars": 135098,
       "input_words": 27245,
       "input_tokens_est": 33774,
-      "output_chars": 21201,
-      "output_words": 3659,
-      "output_tokens_est": 5300,
-      "generation_time_seconds": 124.72
+      "output_chars": 2219,
+      "output_words": 293,
+      "output_tokens_est": 554,
+      "generation_time_seconds": 27.08
     },
-    "quality_review": {
+    "translation_hi": {
       "input_chars": 135098,
       "input_words": 27245,
       "input_tokens_est": 33774,
-      "output_chars": 23154,
-      "output_words": 3761,
-      "output_tokens_est": 5788,
-      "generation_time_seconds": 124.17
+      "output_chars": 21310,
+      "output_words": 3655,
+      "output_tokens_est": 5327,
+      "generation_time_seconds": 121.87
     },
-    "methodology_review": {
+    "translation_ru": {
       "input_chars": 135098,
       "input_words": 27245,
       "input_tokens_est": 33774,
-      "output_chars": 15414,
-      "output_words": 2332,
-      "output_tokens_est": 3853,
-      "generation_time_seconds": 124.13
-    },
-    "improvement_suggestions": {
-      "input_chars": 135098,
-      "input_words": 27245,
-      "input_tokens_est": 33774,
-      "output_chars": 21636,
-      "output_words": 3496,
-      "output_tokens_est": 5409,
-      "generation_time_seconds": 245.63
+      "output_chars": 13661,
+      "output_words": 1950,
+      "output_tokens_est": 3415,
+      "generation_time_seconds": 122.12
     }
   },
   "format_compliance": {
     "overall_rate": 100.0,
-    "compliant_reviews": 4,
-    "total_reviews": 4,
+    "compliant_reviews": 3,
+    "total_reviews": 3,
     "per_review": {
-      "executive_summary": {
+      "translation_zh": {
         "compliant": true,
         "issues": [],
         "conversational_phrases": 0
       },
-      "quality_review": {
+      "translation_hi": {
         "compliant": true,
         "issues": [],
         "conversational_phrases": 0
       },
-      "methodology_review": {
-        "compliant": true,
-        "issues": [],
-        "conversational_phrases": 0
-      },
-      "improvement_suggestions": {
+      "translation_ru": {
         "compliant": true,
         "issues": [],
         "conversational_phrases": 0
       }
     }
   },
-  "total_generation_time_seconds": 618.65,
+  "total_generation_time_seconds": 271.07,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,
