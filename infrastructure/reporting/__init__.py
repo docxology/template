@@ -16,11 +16,20 @@ from infrastructure.reporting.pipeline_reporter import (
     generate_error_summary,
     save_pipeline_report,
 )
+from infrastructure.reporting.test_reporter import (
+    parse_pytest_output,
+    generate_test_report as generate_test_report_from_results,
+    save_test_report,
+)
 from infrastructure.reporting.error_aggregator import (
     ErrorAggregator,
     ErrorEntry,
     get_error_aggregator,
     reset_error_aggregator,
+)
+from infrastructure.reporting.output_reporter import (
+    generate_output_summary,
+    collect_output_statistics,
 )
 
 __all__ = [
@@ -30,9 +39,14 @@ __all__ = [
     'generate_performance_report',
     'generate_error_summary',
     'save_pipeline_report',
+    'parse_pytest_output',
+    'generate_test_report_from_results',
+    'save_test_report',
     'ErrorAggregator',
     'ErrorEntry',
     'get_error_aggregator',
     'reset_error_aggregator',
+    'generate_output_summary',
+    'collect_output_statistics',
 ]
 

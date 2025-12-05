@@ -14,12 +14,9 @@ provides an interactive menu with options 1 (infrastructure) and 2 (project).
 """
 from __future__ import annotations
 
-import json
 import os
-import re
 import subprocess
 import sys
-from datetime import datetime
 from pathlib import Path
 
 # Add root to path for infrastructure imports
@@ -27,6 +24,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import (
     get_logger, log_success, log_header, log_substep
+)
+from infrastructure.reporting.test_reporter import (
+    parse_pytest_output,
+    generate_test_report,
+    save_test_report as save_test_report_to_files,
 )
 
 # Set up logger for this module
@@ -92,7 +94,7 @@ def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, 
         )
         
         # Parse test results from output
-        test_results = parse_test_output(result.stdout, result.stderr, result.returncode)
+        test_results = parse_pytest_output(result.stdout, result.stderr, result.returncode)
         
         # Print output (filtered in quiet mode)
         if result.stdout:
@@ -178,7 +180,7 @@ def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
         )
         
         # Parse test results from output
-        test_results = parse_test_output(result.stdout, result.stderr, result.returncode)
+        test_results = parse_pytest_output(result.stdout, result.stderr, result.returncode)
         
         # Print output (filtered in quiet mode)
         if result.stdout:
@@ -209,128 +211,6 @@ def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
         return 1, {}
 
 
-def parse_test_output(stdout: str, stderr: str, exit_code: int) -> dict:
-    """Parse test output to extract metrics.
-    
-    Args:
-        stdout: Standard output from pytest
-        stderr: Standard error from pytest
-        exit_code: Exit code from pytest
-        
-    Returns:
-        Dictionary with test metrics
-    """
-    results = {
-        'passed': 0,
-        'failed': 0,
-        'skipped': 0,
-        'total': 0,
-        'warnings': 0,
-        'exit_code': exit_code,
-    }
-    
-    # Parse summary line (e.g., "1747 passed, 2 skipped, 41 deselected in 37.59s")
-    summary_pattern = r'(\d+)\s+passed|(\d+)\s+failed|(\d+)\s+skipped|(\d+)\s+deselected'
-    for match in re.finditer(summary_pattern, stdout):
-        if match.group(1):  # passed
-            results['passed'] = int(match.group(1))
-        elif match.group(2):  # failed
-            results['failed'] = int(match.group(2))
-        elif match.group(3):  # skipped
-            results['skipped'] = int(match.group(3))
-    
-    results['total'] = results['passed'] + results['failed'] + results['skipped']
-    
-    # Count warnings
-    results['warnings'] = stdout.count(' warning') + stderr.count(' warning')
-    
-    # Parse coverage if present
-    coverage_match = re.search(r'(\d+\.\d+)%', stdout)
-    if coverage_match:
-        results['coverage_percent'] = float(coverage_match.group(1))
-    
-    return results
-
-
-def generate_test_report(
-    infra_results: dict,
-    project_results: dict,
-    repo_root: Path
-) -> dict:
-    """Generate structured test report.
-    
-    Args:
-        infra_results: Infrastructure test results
-        project_results: Project test results
-        repo_root: Repository root path
-        
-    Returns:
-        Complete test report dictionary
-    """
-    report = {
-        'timestamp': datetime.now().isoformat(),
-        'infrastructure': infra_results,
-        'project': project_results,
-        'summary': {
-            'total_passed': infra_results.get('passed', 0) + project_results.get('passed', 0),
-            'total_failed': infra_results.get('failed', 0) + project_results.get('failed', 0),
-            'total_skipped': infra_results.get('skipped', 0) + project_results.get('skipped', 0),
-            'total_tests': infra_results.get('total', 0) + project_results.get('total', 0),
-            'all_passed': (infra_results.get('exit_code', 1) == 0 and 
-                          project_results.get('exit_code', 1) == 0),
-        }
-    }
-    
-    # Add coverage summary
-    if 'coverage_percent' in infra_results:
-        report['summary']['infrastructure_coverage'] = infra_results['coverage_percent']
-    if 'coverage_percent' in project_results:
-        report['summary']['project_coverage'] = project_results['coverage_percent']
-    
-    return report
-
-
-def save_test_report(report: dict, repo_root: Path) -> None:
-    """Save test report to JSON and generate summary.
-    
-    Args:
-        report: Test report dictionary
-        repo_root: Repository root path
-    """
-    output_dir = repo_root / "project" / "output" / "reports"
-    output_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Save JSON report
-    json_path = output_dir / "test_results.json"
-    with open(json_path, 'w') as f:
-        json.dump(report, f, indent=2)
-    
-    logger.info(f"Test report saved: {json_path}")
-    
-    # Generate markdown summary
-    md_path = output_dir / "test_results.md"
-    with open(md_path, 'w') as f:
-        f.write("# Test Results Summary\n\n")
-        f.write(f"Generated: {report['timestamp']}\n\n")
-        f.write("## Infrastructure Tests\n\n")
-        f.write(f"- Passed: {report['infrastructure'].get('passed', 0)}\n")
-        f.write(f"- Failed: {report['infrastructure'].get('failed', 0)}\n")
-        f.write(f"- Skipped: {report['infrastructure'].get('skipped', 0)}\n")
-        if 'coverage_percent' in report['infrastructure']:
-            f.write(f"- Coverage: {report['infrastructure']['coverage_percent']:.2f}%\n")
-        f.write("\n## Project Tests\n\n")
-        f.write(f"- Passed: {report['project'].get('passed', 0)}\n")
-        f.write(f"- Failed: {report['project'].get('failed', 0)}\n")
-        f.write(f"- Skipped: {report['project'].get('skipped', 0)}\n")
-        if 'coverage_percent' in report['project']:
-            f.write(f"- Coverage: {report['project']['coverage_percent']:.2f}%\n")
-        f.write("\n## Summary\n\n")
-        f.write(f"- Total Passed: {report['summary']['total_passed']}\n")
-        f.write(f"- Total Failed: {report['summary']['total_failed']}\n")
-        f.write(f"- Total Tests: {report['summary']['total_tests']}\n")
-        f.write(f"- Status: {'✅ PASSED' if report['summary']['all_passed'] else '❌ FAILED'}\n")
-    
-    logger.info(f"Test summary saved: {md_path}")
 
 
 def report_results(
@@ -420,7 +300,8 @@ def main() -> int:
     
     # Generate and save test report
     report = generate_test_report(infra_results, project_results, repo_root)
-    save_test_report(report, repo_root)
+    output_dir = repo_root / "project" / "output" / "reports"
+    save_test_report_to_files(report, output_dir)
     
     # Report combined results
     report_results(infra_exit, project_exit, infra_results, project_results)

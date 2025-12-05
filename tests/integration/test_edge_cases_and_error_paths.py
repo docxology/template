@@ -42,3 +42,4 @@ class TestEdgeCasesAndErrorPaths:
         consistency = integrity.verify_data_consistency([bad_json])
         assert consistency['data_integrity'] == False
 
+

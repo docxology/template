@@ -74,3 +74,4 @@ class ScanResults:
     improvements_made: List[Dict] = field(default_factory=list)
     statistics: Dict = field(default_factory=dict)
 
+

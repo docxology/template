@@ -265,3 +265,4 @@ class PDFFallbackStrategies:
             logger.debug(f"bioRxiv/medRxiv fallback failed: {e}")
             return None
 
+

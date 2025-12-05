@@ -183,7 +183,48 @@ set_global_log_level(logging.DEBUG)
 
 ## Advanced Features
 
-### Log Files
+### Pipeline Terminal Output Logging
+
+The pipeline automatically captures all terminal output to log files:
+
+**Location**: `project/output/logs/` (during execution) → `output/logs/` (after copy stage)
+
+**Naming**: `pipeline_YYYYMMDD_HHMMSS.log` (e.g., `pipeline_20251205_074830.log`)
+
+**Content**: Complete terminal output including:
+- All bash script output (ANSI colors stripped in file, preserved in terminal)
+- All Python script output
+- Error messages and stack traces
+- Progress indicators and ETAs
+- Stage completion status
+
+**Usage**:
+```bash
+# Run pipeline - log file is automatically created
+./run.sh --pipeline
+
+# Log file location is displayed in pipeline summary
+# Example: output/logs/pipeline_20251205_074830.log
+```
+
+**Viewing Logs**:
+```bash
+# View latest log file
+ls -t output/logs/*.log | head -1 | xargs cat
+
+# Search for errors in logs
+grep -i error output/logs/pipeline_*.log
+
+# View logs from specific stage
+grep "Stage 5" output/logs/pipeline_*.log
+```
+
+**Log File Management**:
+- Old log files are automatically archived to `output/logs/archive/` before cleanup
+- Log files are preserved during pipeline cleanup (not deleted)
+- Log files are copied to root `output/logs/` during the copy outputs stage
+
+### Log Files (Python Scripts)
 
 Write logs to file in addition to console:
 

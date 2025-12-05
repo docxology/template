@@ -9,6 +9,15 @@ This module provides tools for generating research outputs:
 
 from infrastructure.rendering.core import RenderManager
 from infrastructure.rendering.config import RenderingConfig
+from infrastructure.rendering.manuscript_discovery import (
+    discover_manuscript_files,
+    verify_figures_exist,
+)
 
-__all__ = ["RenderManager", "RenderingConfig"]
+__all__ = [
+    "RenderManager",
+    "RenderingConfig",
+    "discover_manuscript_files",
+    "verify_figures_exist",
+]
 

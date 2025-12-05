@@ -5,21 +5,27 @@
 #
 # A single entry point for all pipeline operations with interactive menu:
 #
-# Core Build Operations:
-#   1. Run infrastructure tests
-#   2. Run project tests
-#   3. Render PDF manuscript
-#   4. Run full pipeline (tests + analysis + PDF + validate)
+# Core Pipeline Scripts (aligned with script numbering):
+#   0. Setup Environment (00_setup_environment.py)
+#   1. Run Tests (01_run_tests.py - infrastructure + project)
+#   2. Run Analysis (02_run_analysis.py)
+#   3. Render PDF (03_render_pdf.py)
+#   4. Validate Output (04_validate_output.py)
+#   5. Copy Outputs (05_copy_outputs.py)
+#   6. LLM Review (requires Ollama) (06_llm_review.py)
+#   7. Literature Search (07_literature_search.py)
 #
-# LLM Operations (requires Ollama):
-#   5. LLM manuscript review (English)
-#   6. LLM translations (multi-language)
+# Orchestration:
+#   8. Run Full Pipeline (10 stages: 0-9, via run.sh)
 #
-# Literature Operations (requires Ollama):
-#   7. Search literature and download PDFs
-#   8. Generate summaries for existing PDFs
+# Literature Sub-Operations (via 07_literature_search.py):
+#   9. Search only (network only)
+#   10. Download only (network only)
+#   11. Summarize (requires Ollama)
+#   12. Cleanup (local files only)
+#   13. Advanced LLM operations (requires Ollama)
 #
-#   9. Exit
+#   14. Exit
 #
 # Non-interactive mode: Use dedicated flags (--pipeline, --infra-tests, etc.)
 #
@@ -46,16 +52,18 @@ export PROJECT_ROOT="$REPO_ROOT"
 export PYTHONPATH="${REPO_ROOT}:${REPO_ROOT}/infrastructure:${REPO_ROOT}/project/src:${PYTHONPATH:-}"
 
 # Stage tracking for full pipeline
+# Note: Stage 0 (Clean Output Directories) is not in this array as it's a pre-pipeline step.
+# This array tracks stages 1-9, which are displayed as [1/9] to [9/9] in progress logs.
 declare -a STAGE_NAMES=(
-    "Setup Environment"
-    "Infrastructure Tests"
-    "Project Tests"
-    "Project Analysis"
-    "PDF Rendering"
-    "Output Validation"
-    "Copy Outputs"
-    "LLM Scientific Review"
-    "LLM Translations"
+    "Setup Environment"        # Stage 1
+    "Infrastructure Tests"     # Stage 2
+    "Project Tests"            # Stage 3
+    "Project Analysis"         # Stage 4
+    "PDF Rendering"            # Stage 5
+    "Output Validation"        # Stage 6
+    "Copy Outputs"            # Stage 7
+    "LLM Scientific Review"   # Stage 8 (optional)
+    "LLM Translations"        # Stage 9 (optional)
 )
 
 declare -a STAGE_RESULTS=()
@@ -139,6 +147,70 @@ log_warning() {
     echo -e "${YELLOW}⚠${NC} ${message}"
 }
 
+# Function to log to both terminal and log file
+log_to_file() {
+    local message="$1"
+    local log_file="${PIPELINE_LOG_FILE:-}"
+    
+    # Always log to terminal
+    echo "$message"
+    
+    # Also log to file if log file is set (strip ANSI codes)
+    if [[ -n "$log_file" ]]; then
+        echo "$message" | sed 's/\x1b\[[0-9;]*m//g' >> "$log_file" 2>/dev/null || true
+    fi
+}
+
+# Wrapper functions to log bash output to file
+log_header_to_file() {
+    local message="$1"
+    local log_file="${PIPELINE_LOG_FILE:-}"
+    log_header "$message"
+    if [[ -n "$log_file" ]]; then
+        {
+            echo "============================================================"
+            echo "  $message"
+            echo "============================================================"
+        } >> "$log_file" 2>/dev/null || true
+    fi
+}
+
+log_info_to_file() {
+    local message="$1"
+    local log_file="${PIPELINE_LOG_FILE:-}"
+    log_info "$message"
+    if [[ -n "$log_file" ]]; then
+        echo "  $message" >> "$log_file" 2>/dev/null || true
+    fi
+}
+
+log_success_to_file() {
+    local message="$1"
+    local log_file="${PIPELINE_LOG_FILE:-}"
+    log_success "$message"
+    if [[ -n "$log_file" ]]; then
+        echo "✓ $message" >> "$log_file" 2>/dev/null || true
+    fi
+}
+
+log_error_to_file() {
+    local message="$1"
+    local log_file="${PIPELINE_LOG_FILE:-}"
+    log_error "$message"
+    if [[ -n "$log_file" ]]; then
+        echo "✗ $message" >> "$log_file" 2>/dev/null || true
+    fi
+}
+
+log_warning_to_file() {
+    local message="$1"
+    local log_file="${PIPELINE_LOG_FILE:-}"
+    log_warning "$message"
+    if [[ -n "$log_file" ]]; then
+        echo "⚠ $message" >> "$log_file" 2>/dev/null || true
+    fi
+}
+
 get_elapsed_time() {
     local start_time="$1"
     local end_time="$2"
@@ -174,24 +246,27 @@ display_menu() {
     echo "============================================================"
     echo -e "${NC}"
     echo
-    echo -e "${BOLD}Core Build Operations:${NC}"
-    echo "  1. Run infrastructure tests"
-    echo "  2. Run project tests"
-    echo "  3. Render PDF manuscript"
-    echo "  4. Run full pipeline (tests + analysis + PDF + validate)"
+    echo -e "${BOLD}Core Pipeline Scripts (aligned with script numbering):${NC}"
+    echo "  0. Setup Environment (00_setup_environment.py)"
+    echo "  1. Run Tests (01_run_tests.py - infrastructure + project)"
+    echo "  2. Run Analysis (02_run_analysis.py)"
+    echo "  3. Render PDF (03_render_pdf.py)"
+    echo "  4. Validate Output (04_validate_output.py)"
+    echo "  5. Copy Outputs (05_copy_outputs.py)"
+    echo -e "  6. LLM Review ${YELLOW}(requires Ollama)${NC} (06_llm_review.py)"
+    echo "  7. Literature Search (07_literature_search.py)"
     echo
-    echo -e "${BOLD}LLM Operations ${YELLOW}(requires Ollama):${NC}"
-    echo "  5. LLM manuscript review (English)"
-    echo "  6. LLM translations (multi-language)"
+    echo -e "${BOLD}Orchestration:${NC}"
+    echo "  8. Run Full Pipeline (10 stages: 0-9, via run.sh)"
     echo
-    echo -e "${BOLD}Literature Operations ${YELLOW}(requires Ollama):${NC}"
-    echo "  7. Search literature (add to bibliography)"
-    echo "  8. Download PDFs (for bibliography entries)"
-    echo "  9. Generate summaries (for papers with PDFs)"
-    echo "  10. Cleanup library (remove papers without PDFs)"
-    echo "  11. Advanced LLM operations (literature review, etc.)"
+    echo -e "${BOLD}Literature Sub-Operations (via 07_literature_search.py):${NC}"
+    echo -e "  9. Search only ${CYAN}(network only)${NC}"
+    echo -e "  10. Download only ${CYAN}(network only)${NC}"
+    echo -e "  11. Summarize ${YELLOW}(requires Ollama)${NC}"
+    echo -e "  12. Cleanup ${CYAN}(local files only)${NC}"
+    echo -e "  13. Advanced LLM operations ${YELLOW}(requires Ollama)${NC}"
     echo
-    echo "  12. Exit"
+    echo "  14. Exit"
     echo
     echo -e "${BLUE}============================================================${NC}"
     echo -e "  Repository: ${CYAN}$REPO_ROOT${NC}"
@@ -209,6 +284,7 @@ clean_output_directories() {
     # Removes all files from project/output/ and root output/ directories,
     # then recreates the standard directory structure.
     # This ensures no stale files from previous runs interfere with current execution.
+    # Log files are preserved in logs/archive/ directory.
     echo
     echo -e "${YELLOW}[0/9] Clean Output Directories${NC}"
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -216,14 +292,35 @@ clean_output_directories() {
     local project_output="$REPO_ROOT/project/output"
     local root_output="$REPO_ROOT/output"
     
+    # Archive old log files before cleanup
+    if [[ -d "$project_output/logs" ]]; then
+        local archive_dir="$project_output/logs/archive"
+        mkdir -p "$archive_dir"
+        for log_file in "$project_output/logs"/*.log; do
+            if [[ -f "$log_file" ]]; then
+                mv "$log_file" "$archive_dir/" 2>/dev/null || true
+            fi
+        done
+    fi
+    
+    if [[ -d "$root_output/logs" ]]; then
+        local archive_dir="$root_output/logs/archive"
+        mkdir -p "$archive_dir"
+        for log_file in "$root_output/logs"/*.log; do
+            if [[ -f "$log_file" ]]; then
+                mv "$log_file" "$archive_dir/" 2>/dev/null || true
+            fi
+        done
+    fi
+    
     # Clean project/output/
     if [[ -d "$project_output" ]]; then
         log_info "Cleaning project/output/..."
         rm -rf "$project_output"/*
-        mkdir -p "$project_output"/{pdf,figures,data,reports,simulations,slides,web,llm}
+        mkdir -p "$project_output"/{pdf,figures,data,reports,simulations,slides,web,llm,logs}
         log_success "Cleaned project/output/ (recreated subdirectories)"
     else
-        mkdir -p "$project_output"/{pdf,figures,data,reports,simulations,slides,web,llm}
+        mkdir -p "$project_output"/{pdf,figures,data,reports,simulations,slides,web,llm,logs}
         log_info "Created project/output/ directory structure"
     fi
     
@@ -231,10 +328,10 @@ clean_output_directories() {
     if [[ -d "$root_output" ]]; then
         log_info "Cleaning output/..."
         rm -rf "$root_output"/*
-        mkdir -p "$root_output"/{pdf,figures,data,reports,simulations,slides,web,llm}
+        mkdir -p "$root_output"/{pdf,figures,data,reports,simulations,slides,web,llm,logs}
         log_success "Cleaned output/ (recreated subdirectories)"
     else
-        mkdir -p "$root_output"/{pdf,figures,data,reports,simulations,slides,web,llm}
+        mkdir -p "$root_output"/{pdf,figures,data,reports,simulations,slides,web,llm,logs}
         log_info "Created output/ directory structure"
     fi
     
@@ -288,7 +385,8 @@ run_pytest_project() {
 # ============================================================================
 
 run_setup_environment() {
-    log_stage 1 "Setup Environment" 9
+    # Standalone environment setup (menu option 0)
+    log_header "SETUP ENVIRONMENT (00_setup_environment.py)"
     
     cd "$REPO_ROOT"
     if python3 scripts/00_setup_environment.py; then
@@ -296,6 +394,20 @@ run_setup_environment() {
         return 0
     else
         log_error "Environment setup failed"
+        return 1
+    fi
+}
+
+run_all_tests() {
+    # Run both infrastructure and project tests via 01_run_tests.py
+    log_header "RUN TESTS (01_run_tests.py)"
+    
+    cd "$REPO_ROOT"
+    if python3 scripts/01_run_tests.py; then
+        log_success "All tests passed"
+        return 0
+    else
+        log_error "Tests failed"
         return 1
     fi
 }
@@ -341,8 +453,23 @@ run_analysis() {
     fi
 }
 
+run_analysis_standalone() {
+    # Standalone analysis execution (menu option 2)
+    log_header "RUN ANALYSIS (02_run_analysis.py)"
+    
+    cd "$REPO_ROOT"
+    
+    if python3 scripts/02_run_analysis.py; then
+        log_success "Analysis complete"
+        return 0
+    else
+        log_error "Analysis failed"
+        return 1
+    fi
+}
+
 run_pdf_rendering() {
-    log_header "PDF RENDERING"
+    log_header "PDF RENDERING (03_render_pdf.py)"
     
     cd "$REPO_ROOT"
     
@@ -376,8 +503,38 @@ run_validation() {
     fi
 }
 
+run_validation_standalone() {
+    # Standalone validation execution (menu option 4)
+    log_header "VALIDATE OUTPUT (04_validate_output.py)"
+    
+    cd "$REPO_ROOT"
+    
+    if python3 scripts/04_validate_output.py; then
+        log_success "Validation complete"
+        return 0
+    else
+        log_error "Validation failed"
+        return 1
+    fi
+}
+
 run_copy_outputs() {
     log_stage 7 "Copy Outputs" 9
+    
+    cd "$REPO_ROOT"
+    
+    if python3 scripts/05_copy_outputs.py; then
+        log_success "Output copying complete"
+        return 0
+    else
+        log_error "Output copying failed"
+        return 1
+    fi
+}
+
+run_copy_outputs_standalone() {
+    # Standalone copy outputs execution (menu option 5)
+    log_header "COPY OUTPUTS (05_copy_outputs.py)"
     
     cd "$REPO_ROOT"
     
@@ -440,12 +597,58 @@ run_llm_translations() {
     fi
 }
 
+run_llm_review() {
+    # Run both reviews and translations (menu option 6)
+    log_header "LLM REVIEW (06_llm_review.py)"
+    
+    cd "$REPO_ROOT"
+    
+    log_info "Running LLM review (requires Ollama)..."
+    log_info "This will run both reviews and translations"
+    
+    local exit_code
+    python3 scripts/06_llm_review.py
+    exit_code=$?
+    
+    if [[ $exit_code -eq 0 ]]; then
+        log_success "LLM review complete"
+        return 0
+    elif [[ $exit_code -eq 2 ]]; then
+        log_warning "LLM review skipped (Ollama not available)"
+        log_info "To enable: start Ollama with 'ollama serve' and install a model"
+        return 0  # Not a failure, just skipped
+    else
+        log_error "LLM review failed"
+        return 1
+    fi
+}
+
+run_literature_search_all() {
+    # Run all literature operations interactively (menu option 7)
+    log_header "LITERATURE SEARCH (07_literature_search.py)"
+    
+    cd "$REPO_ROOT"
+    
+    log_info "Running literature search (all operations)..."
+    log_info "This will search, download, and optionally summarize papers"
+    
+    if python3 scripts/07_literature_search.py --search --summarize; then
+        log_success "Literature search complete"
+        return 0
+    else
+        log_error "Literature search failed"
+        return 1
+    fi
+}
+
 run_literature_search() {
+    # Network-only operation: Searches arXiv and Semantic Scholar APIs
+    # Does NOT require Ollama
     log_header "LITERATURE SEARCH (ADD TO BIBLIOGRAPHY)"
 
     cd "$REPO_ROOT"
 
-    log_info "Searching literature and adding papers to bibliography (requires Ollama)..."
+    log_info "Searching literature and adding papers to bibliography (network only)..."
 
     if python3 scripts/07_literature_search.py --search-only; then
         log_success "Literature search complete"
@@ -457,11 +660,13 @@ run_literature_search() {
 }
 
 run_literature_download() {
+    # Network-only operation: Downloads PDFs via HTTP
+    # Does NOT require Ollama
     log_header "DOWNLOAD PDFs (FOR BIBLIOGRAPHY ENTRIES)"
 
     cd "$REPO_ROOT"
 
-    log_info "Downloading PDFs for bibliography entries without PDFs (requires Ollama)..."
+    log_info "Downloading PDFs for bibliography entries without PDFs (network only)..."
 
     if python3 scripts/07_literature_search.py --download-only; then
         log_success "PDF download complete"
@@ -489,11 +694,13 @@ run_literature_summarize() {
 }
 
 run_literature_cleanup() {
+    # Local files-only operation: Removes files from filesystem
+    # Does NOT require Ollama or network
     log_header "CLEANUP LIBRARY (REMOVE PAPERS WITHOUT PDFs)"
 
     cd "$REPO_ROOT"
 
-    log_info "Cleaning up library by removing papers without PDFs..."
+    log_info "Cleaning up library by removing papers without PDFs (local files only)..."
 
     if python3 scripts/07_literature_search.py --cleanup; then
         log_success "Library cleanup complete"
@@ -559,21 +766,91 @@ run_literature_llm_operations() {
 
 run_full_pipeline() {
     local resume_flag="${1:-}"
-    log_header "COMPLETE RESEARCH PROJECT PIPELINE"
     
-    local pipeline_start=$(date +%s)
+    # Initialize log file capture
+    # Write to project/output/logs during execution, will be copied to output/logs in copy stage
+    local log_dir="$REPO_ROOT/project/output/logs"
+    mkdir -p "$log_dir"
+    local timestamp=$(date +%Y%m%d_%H%M%S)
+    local log_file="$log_dir/pipeline_${timestamp}.log"
+    export PIPELINE_LOG_FILE="$log_file"
     
-    log_info "Repository: $REPO_ROOT"
-    log_info "Python: $(python3 --version)"
+    # Function to strip ANSI color codes for log file
+    strip_ansi_codes() {
+        sed -u 's/\x1b\[[0-9;]*m//g'
+    }
+    
+    # Set up signal handlers for graceful interruption
+    local current_stage=0
+    local pipeline_start=0
+    
+    handle_pipeline_interrupt() {
+        local log_file_path="${PIPELINE_LOG_FILE:-$log_file}"
+        echo ""
+        echo -e "${YELLOW}⚠${NC} Pipeline interrupted (Ctrl+C detected)"
+        echo -e "${YELLOW}⚠${NC} Saving checkpoint..."
+        
+        # Log to file
+        {
+            echo ""
+            echo "============================================================"
+            echo "⚠ Pipeline interrupted (Ctrl+C detected) at stage $current_stage"
+            echo "  Time: $(date)"
+            echo "============================================================"
+        } >> "$log_file_path" 2>/dev/null || true
+        
+        # Save checkpoint if possible
+        if [[ -n "$pipeline_start" ]] && [[ "$pipeline_start" -gt 0 ]]; then
+            if python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); cm.save_checkpoint(pipeline_start_time=$pipeline_start, last_stage_completed=$current_stage, stage_results=[], total_stages=9)" 2>/dev/null; then
+                log_success "Checkpoint saved"
+                echo "✓ Checkpoint saved" >> "$log_file_path" 2>/dev/null || true
+            fi
+        fi
+        
+        echo -e "${CYAN}To resume: ./run.sh --pipeline --resume${NC}"
+        echo -e "${CYAN}Log file: $log_file_path${NC}"
+        
+        # Log resume instructions to file
+        {
+            echo "To resume: ./run.sh --pipeline --resume"
+            echo "Log file: $log_file_path"
+            echo "============================================================"
+        } >> "$log_file_path" 2>/dev/null || true
+        
+        exit 130  # Exit code 130 for SIGINT
+    }
+    
+    trap 'handle_pipeline_interrupt' INT TERM
+    
+    log_header_to_file "COMPLETE RESEARCH PROJECT PIPELINE"
+    
+    pipeline_start=$(date +%s)
+    
+    log_info_to_file "Repository: $REPO_ROOT"
+    log_info_to_file "Python: $(python3 --version)"
+    log_info_to_file "Log file: $log_file"
     echo
+    
+    # Log initial header to file (without colors)
+    {
+        echo "============================================================"
+        echo "  COMPLETE RESEARCH PROJECT PIPELINE"
+        echo "============================================================"
+        echo ""
+        echo "Repository: $REPO_ROOT"
+        echo "Python: $(python3 --version)"
+        echo "Log file: $log_file"
+        echo "Pipeline started: $(date)"
+        echo ""
+    } >> "$log_file"
     
     # Check for checkpoint if resuming
     if [[ "$resume_flag" == "--resume" ]]; then
-        log_info "Checking for checkpoint..."
+        log_info_to_file "Checking for checkpoint..."
         if python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); valid, msg = cm.validate_checkpoint(); exit(0 if valid else 1)" 2>/dev/null; then
-            log_success "Checkpoint found - resuming pipeline"
+            log_success_to_file "Checkpoint found - resuming pipeline"
         else
-            log_warning "No valid checkpoint found - starting fresh pipeline"
+            log_warning_to_file "No valid checkpoint found - starting fresh pipeline"
             resume_flag=""
         fi
     fi
@@ -584,9 +861,9 @@ run_full_pipeline() {
     
     # Stage 0: Clean output directories (skip if resuming)
     if [[ "$resume_flag" != "--resume" ]]; then
-        clean_output_directories
+        clean_output_directories 2>&1 | tee -a "$log_file" || true
     else
-        log_info "Skipping clean stage (resuming from checkpoint)"
+        log_info_to_file "Skipping clean stage (resuming from checkpoint)"
     fi
     
     # For resume, use Python script with --resume flag
@@ -602,8 +879,11 @@ run_full_pipeline() {
     fi
     
     # Stage 1: Setup Environment
+    current_stage=1
     local stage_start=$(date +%s)
-    if ! run_setup_environment; then
+    run_setup_environment 2>&1 | tee -a "$log_file"
+    local exit_code=${PIPESTATUS[0]}
+    if [[ $exit_code -ne 0 ]]; then
         log_error "Pipeline failed at Stage 1 (Setup Environment)"
         log_info "  Troubleshooting:"
         log_info "    - Check Python version: python3 --version (requires >=3.10)"
@@ -616,40 +896,57 @@ run_full_pipeline() {
     STAGE_DURATIONS[0]=$(get_elapsed_time "$stage_start" "$stage_end")
     
     # Stage 2: Infrastructure Tests
+    current_stage=2
     stage_start=$(date +%s)
     log_stage 2 "Infrastructure Tests" 9 "$pipeline_start"
-    if ! run_pytest_infrastructure; then
-        log_error "Pipeline failed at Stage 2 (Infrastructure Tests)"
-        log_info "  Troubleshooting:"
-        log_info "    - Run tests manually: python3 -m pytest tests/infrastructure/ -v"
-        log_info "    - Check coverage: python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=term"
-        log_info "    - View HTML report: open htmlcov/index.html"
+    {
+        echo ""
+        echo "[2/9] Infrastructure Tests (22% complete)"
+    } >> "$log_file" 2>/dev/null || true
+    run_pytest_infrastructure 2>&1 | tee -a "$log_file"
+    local exit_code=${PIPESTATUS[0]}
+    if [[ $exit_code -ne 0 ]]; then
+        log_error_to_file "Pipeline failed at Stage 2 (Infrastructure Tests)"
+        log_info_to_file "  Troubleshooting:"
+        log_info_to_file "    - Run tests manually: python3 -m pytest tests/infrastructure/ -v"
+        log_info_to_file "    - Check coverage: python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=term"
+        log_info_to_file "    - View HTML report: open htmlcov/index.html"
         return 1
     fi
-    log_success "Infrastructure tests passed"
+    log_success_to_file "Infrastructure tests passed"
     stage_end=$(date +%s)
     STAGE_RESULTS[1]=0
     STAGE_DURATIONS[1]=$(get_elapsed_time "$stage_start" "$stage_end")
     
     # Stage 3: Project Tests
+    current_stage=3
     stage_start=$(date +%s)
     log_stage 3 "Project Tests" 9 "$pipeline_start"
-    if ! run_pytest_project; then
-        log_error "Pipeline failed at Stage 3 (Project Tests)"
-        log_info "  Troubleshooting:"
-        log_info "    - Run tests manually: python3 -m pytest project/tests/ -v"
-        log_info "    - Check specific test: python3 -m pytest project/tests/test_example.py -v"
-        log_info "    - View coverage: python3 -m pytest project/tests/ --cov=project/src --cov-report=term"
+    {
+        echo ""
+        echo "[3/9] Project Tests (33% complete)"
+    } >> "$log_file" 2>/dev/null || true
+    run_pytest_project 2>&1 | tee -a "$log_file"
+    local exit_code=${PIPESTATUS[0]}
+    if [[ $exit_code -ne 0 ]]; then
+        log_error_to_file "Pipeline failed at Stage 3 (Project Tests)"
+        log_info_to_file "  Troubleshooting:"
+        log_info_to_file "    - Run tests manually: python3 -m pytest project/tests/ -v"
+        log_info_to_file "    - Check specific test: python3 -m pytest project/tests/test_example.py -v"
+        log_info_to_file "    - View coverage: python3 -m pytest project/tests/ --cov=project/src --cov-report=term"
         return 1
     fi
-    log_success "Project tests passed"
+    log_success_to_file "Project tests passed"
     stage_end=$(date +%s)
     STAGE_RESULTS[2]=0
     STAGE_DURATIONS[2]=$(get_elapsed_time "$stage_start" "$stage_end")
     
     # Stage 4: Analysis
+    current_stage=4
     stage_start=$(date +%s)
-    if ! run_analysis; then
+    run_analysis 2>&1 | tee -a "$log_file"
+    local exit_code=${PIPESTATUS[0]}
+    if [[ $exit_code -ne 0 ]]; then
         log_error "Pipeline failed at Stage 4 (Project Analysis)"
         log_info "  Troubleshooting:"
         log_info "    - Check analysis scripts: ls project/scripts/*.py"
@@ -663,10 +960,13 @@ run_full_pipeline() {
     STAGE_DURATIONS[3]=$(get_elapsed_time "$stage_start" "$stage_end")
     
     # Stage 5: PDF Rendering
+    current_stage=5
     stage_start=$(date +%s)
     log_stage 5 "PDF Rendering" 9 "$pipeline_start"
     cd "$REPO_ROOT"
-    if ! python3 scripts/03_render_pdf.py; then
+    python3 scripts/03_render_pdf.py 2>&1 | tee -a "$log_file"
+    local exit_code=${PIPESTATUS[0]}
+    if [[ $exit_code -ne 0 ]]; then
         log_error "Pipeline failed at Stage 5 (PDF Rendering)"
         log_info "  Troubleshooting:"
         log_info "    - Check LaTeX installation: which xelatex"
@@ -682,8 +982,11 @@ run_full_pipeline() {
     STAGE_DURATIONS[4]=$(get_elapsed_time "$stage_start" "$stage_end")
     
     # Stage 6: Validation
+    current_stage=6
     stage_start=$(date +%s)
-    if ! run_validation; then
+    run_validation 2>&1 | tee -a "$log_file"
+    local exit_code=${PIPESTATUS[0]}
+    if [[ $exit_code -ne 0 ]]; then
         log_error "Pipeline failed at Stage 6 (Output Validation)"
         log_info "  Troubleshooting:"
         log_info "    - Validate PDFs: python3 -m infrastructure.validation.cli pdf project/output/pdf/"
@@ -696,8 +999,11 @@ run_full_pipeline() {
     STAGE_DURATIONS[5]=$(get_elapsed_time "$stage_start" "$stage_end")
     
     # Stage 7: Copy Outputs
+    current_stage=7
     stage_start=$(date +%s)
-    if ! run_copy_outputs; then
+    run_copy_outputs 2>&1 | tee -a "$log_file"
+    local exit_code=${PIPESTATUS[0]}
+    if [[ $exit_code -ne 0 ]]; then
         log_error "Pipeline failed at Stage 7 (Copy Outputs)"
         log_info "  Troubleshooting:"
         log_info "    - Check source directory: ls project/output/"
@@ -711,14 +1017,15 @@ run_full_pipeline() {
     STAGE_DURATIONS[6]=$(get_elapsed_time "$stage_start" "$stage_end")
     
     # Stage 8: LLM Scientific Review (optional - graceful degradation)
+    current_stage=8
     stage_start=$(date +%s)
     log_stage 8 "LLM Scientific Review" 9 "$pipeline_start"
     cd "$REPO_ROOT"
     log_info "Running LLM scientific review (requires Ollama)..."
     log_info "Note: This stage is optional - pipeline will continue even if it fails"
     local exit_code
-    python3 scripts/06_llm_review.py --reviews-only
-    exit_code=$?
+    python3 scripts/06_llm_review.py --reviews-only 2>&1 | tee -a "$log_file" || true
+    exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -eq 0 ]]; then
         log_success "LLM scientific review complete"
         STAGE_RESULTS[7]=0
@@ -738,13 +1045,14 @@ run_full_pipeline() {
     STAGE_DURATIONS[7]=$(get_elapsed_time "$stage_start" "$stage_end")
     
     # Stage 9: LLM Translations (optional - graceful degradation)
+    current_stage=9
     stage_start=$(date +%s)
     log_stage 9 "LLM Translations" 9 "$pipeline_start"
     cd "$REPO_ROOT"
     log_info "Running LLM translations (requires Ollama)..."
     log_info "Note: This stage is optional - pipeline will continue even if it fails"
-    python3 scripts/06_llm_review.py --translations-only
-    exit_code=$?
+    python3 scripts/06_llm_review.py --translations-only 2>&1 | tee -a "$log_file" || true
+    exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -eq 0 ]]; then
         log_success "LLM translations complete"
         STAGE_RESULTS[8]=0
@@ -767,19 +1075,40 @@ run_full_pipeline() {
     local pipeline_end=$(date +%s)
     local total_duration=$(get_elapsed_time "$pipeline_start" "$pipeline_end")
     
-    print_pipeline_summary "$total_duration"
+    print_pipeline_summary "$total_duration" "$log_file"
+    
+    # Log completion to file
+    {
+        echo ""
+        echo "============================================================"
+        echo "Pipeline completed: $(date)"
+        echo "Total duration: $(format_duration "$total_duration")"
+        echo "Log file: $log_file"
+        echo "  (Will be copied to output/logs/ during copy stage)"
+        echo "============================================================"
+    } >> "$log_file"
+    
+    # Clear trap
+    trap - INT TERM
     
     return 0
 }
 
 print_pipeline_summary() {
     local total_duration="$1"
+    local log_file="${2:-}"
     local num_stages="${#STAGE_NAMES[@]}"
     
     echo
     log_header "PIPELINE SUMMARY"
     
     log_success "All stages completed successfully!"
+    if [[ -n "$log_file" ]]; then
+        # Show both current location and final location after copy
+        local log_file_final="${log_file/project\/output/output}"
+        log_info "Full pipeline log: $log_file"
+        log_info "  (Will be available at: $log_file_final after copy stage)"
+    fi
     echo
     
     echo "Stage Results:"
@@ -849,6 +1178,9 @@ print_pipeline_summary() {
     echo "  • Figures: project/output/figures/"
     echo "  • Data files: project/output/data/"
     echo "  • LLM reviews: project/output/llm/ (if Ollama available)"
+    if [[ -n "$log_file" ]]; then
+        echo "  • Pipeline log: $log_file"
+    fi
     echo
     log_success "Pipeline complete - ready for deployment"
     echo
@@ -865,47 +1197,56 @@ handle_menu_choice() {
     start_time=$(date +%s)
     
     case "$choice" in
+        0)
+            run_setup_environment
+            ;;
         1)
-            run_infrastructure_tests
+            run_all_tests
             ;;
         2)
-            run_project_tests
+            run_analysis_standalone
             ;;
         3)
             run_pdf_rendering
             ;;
         4)
-            run_full_pipeline
+            run_validation_standalone
             ;;
         5)
-            run_llm_scientific_review
+            run_copy_outputs_standalone
             ;;
         6)
-            run_llm_translations
+            run_llm_review
             ;;
         7)
-            run_literature_search
+            run_literature_search_all
             ;;
         8)
-            run_literature_download
+            run_full_pipeline
             ;;
         9)
-            run_literature_summarize
+            run_literature_search
             ;;
         10)
-            run_literature_cleanup
+            run_literature_download
             ;;
         11)
-            run_literature_llm_operations
+            run_literature_summarize
             ;;
         12)
+            run_literature_cleanup
+            ;;
+        13)
+            run_literature_llm_operations
+            ;;
+        14)
             echo
             log_info "Exiting. Goodbye!"
             exit 0
             ;;
         *)
             log_error "Invalid option: $choice"
-            log_info "Please enter a number between 1 and 12"
+            log_info "Please enter a number between 0 and 14"
             ;;
     esac
     
@@ -955,31 +1296,34 @@ show_help() {
     echo "  --reviews           Run LLM manuscript review (English)"
     echo "  --translations      Run LLM translations (multi-language)"
     echo
-    echo "Literature Operations (requires Ollama):"
-    echo "  --search            Search literature (add to bibliography)"
-    echo "  --download          Download PDFs (for bibliography entries)"
-    echo "  --summarize         Generate summaries (for papers with PDFs)"
-    echo "  --cleanup           Cleanup library (remove papers without PDFs)"
+    echo "Literature Operations:"
+    echo "  --search            Search literature (network only, add to bibliography)"
+    echo "  --download          Download PDFs (network only, for bibliography entries)"
+    echo "  --summarize         Generate summaries (requires Ollama, for papers with PDFs)"
+    echo "  --cleanup           Cleanup library (local files only, remove papers without PDFs)"
     echo
     echo "Menu Options:"
     echo
-    echo "Core Build Operations:"
-    echo "  1  Run infrastructure tests"
-    echo "  2  Run project tests"
-    echo "  3  Render PDF manuscript"
-    echo "  4  Run full pipeline (tests + analysis + PDF + validate)"
+    echo "Core Pipeline Scripts (aligned with script numbering):"
+    echo "  0  Setup Environment (00_setup_environment.py)"
+    echo "  1  Run Tests (01_run_tests.py - infrastructure + project)"
+    echo "  2  Run Analysis (02_run_analysis.py)"
+    echo "  3  Render PDF (03_render_pdf.py)"
+    echo "  4  Validate Output (04_validate_output.py)"
+    echo "  5  Copy Outputs (05_copy_outputs.py)"
+    echo "  6  LLM Review (requires Ollama) (06_llm_review.py)"
+    echo "  7  Literature Search (07_literature_search.py)"
     echo
-    echo "LLM Operations (requires Ollama):"
-    echo "  5  LLM manuscript review (English)"
-    echo "  6  LLM translations (multi-language)"
+    echo "Orchestration:"
+    echo "  8  Run Full Pipeline (10 stages: 0-9, via run.sh)"
     echo
-    echo "Literature Operations (requires Ollama):"
-    echo "  7  Search literature (add to bibliography)"
-    echo "  8  Download PDFs (for bibliography entries)"
-    echo "  9  Generate summaries (for papers with PDFs)"
-    echo "  10 Cleanup library (remove papers without PDFs)"
-    echo "  11 Advanced LLM operations (literature review, etc.)"
-    echo "  12 Exit"
+    echo "Literature Sub-Operations (via 07_literature_search.py):"
+    echo "  9  Search only (network only)"
+    echo "  10 Download only (network only)"
+    echo "  11 Summarize (requires Ollama)"
+    echo "  12 Cleanup (local files only)"
+    echo "  13 Advanced LLM operations (requires Ollama)"
+    echo "  14 Exit"
     echo
     echo "Examples:"
     echo "  $0                      # Interactive menu mode"
@@ -994,7 +1338,7 @@ show_help() {
     echo "  $0 --summarize           # Generate summaries (for papers with PDFs)"
     echo "  $0 --cleanup             # Cleanup library (remove papers without PDFs)"
     echo
-    echo "Note: --option N is also supported for compatibility (1-12)"
+    echo "Note: --option N is also supported for compatibility (0-14)"
     echo
 }
 
@@ -1020,11 +1364,11 @@ main() {
                 exit $?
                 ;;
             --infra-tests|--tests-infra)
-                run_non_interactive 1
+                run_infrastructure_tests
                 exit $?
                 ;;
             --project-tests|--tests-project)
-                run_non_interactive 2
+                run_project_tests
                 exit $?
                 ;;
             --render-pdf|--pdf)
@@ -1039,7 +1383,7 @@ main() {
                     run_full_pipeline "--resume"
                     exit $?
                 else
-                    run_non_interactive 4
+                    run_non_interactive 8
                     exit $?
                 fi
                 ;;
@@ -1050,31 +1394,31 @@ main() {
                 exit 1
                 ;;
             --reviews)
-                run_non_interactive 5
+                run_llm_scientific_review
                 exit $?
                 ;;
             --translations)
-                run_non_interactive 6
+                run_llm_translations
                 exit $?
                 ;;
             --search)
-                run_non_interactive 7
-                exit $?
-                ;;
-            --download)
-                run_non_interactive 8
-                exit $?
-                ;;
-            --summarize)
                 run_non_interactive 9
                 exit $?
                 ;;
-            --cleanup)
+            --download)
                 run_non_interactive 10
                 exit $?
                 ;;
-            --llm-operation)
+            --summarize)
                 run_non_interactive 11
+                exit $?
+                ;;
+            --cleanup)
+                run_non_interactive 12
+                exit $?
+                ;;
+            --llm-operation)
+                run_non_interactive 13
                 exit $?
                 ;;
             *)
@@ -1090,7 +1434,7 @@ main() {
     while true; do
         display_menu
         
-        echo -n "Select option [1-12]: "
+        echo -n "Select option [0-14]: "
         read -r choice
         
         handle_menu_choice "$choice"

@@ -19,62 +19,152 @@ This presents a menu with options for running tests, rendering PDFs, executing t
   Research Project Template - Main Menu
 ============================================================
 
-Core Build Operations:
-  1. Run infrastructure tests
-  2. Run project tests
-  3. Render PDF manuscript
-  4. Run full pipeline (tests + analysis + PDF + validate)
+Core Pipeline Scripts (aligned with script numbering):
+  0. Setup Environment (00_setup_environment.py)
+  1. Run Tests (01_run_tests.py - infrastructure + project)
+  2. Run Analysis (02_run_analysis.py)
+  3. Render PDF (03_render_pdf.py)
+  4. Validate Output (04_validate_output.py)
+  5. Copy Outputs (05_copy_outputs.py)
+  6. LLM Review (requires Ollama) (06_llm_review.py)
+  7. Literature Search (07_literature_search.py)
 
-LLM Operations (requires Ollama):
-  5. LLM manuscript review (English)
-  6. LLM translations (multi-language)
+Orchestration:
+  8. Run Full Pipeline (10 stages: 0-9, via run.sh)
 
-Literature Operations (requires Ollama):
-  7. Search literature (add to bibliography)
-  8. Download PDFs (for bibliography entries)
-  9. Generate summaries (for papers with PDFs)
+Literature Sub-Operations (via 07_literature_search.py):
+  9. Search only (network only)
+  10. Download only (network only)
+  11. Summarize (requires Ollama)
+  12. Cleanup (local files only)
+  13. Advanced LLM operations (requires Ollama)
 
-  10. Exit
+  14. Exit
 ============================================================
 ```
 
-### Option 1: Run Infrastructure Tests
+### Option 0: Setup Environment
 
-Tests the generic infrastructure modules with coverage validation.
+Verifies the environment is ready for the pipeline.
 
-- Runs all infrastructure module tests from `tests/infrastructure/`
-- Validates coverage meets 49%+ threshold
-- Covers: core, build, documentation, literature, llm, publishing, rendering, scientific, validation
-- Generates HTML coverage report
+- Checks Python version (requires >=3.10)
+- Verifies dependencies are installed
+- Confirms build tools (pandoc, xelatex) are available
+- Validates directory structure
+- Sets up environment variables
 
-**Coverage Report**: `htmlcov/index.html`
+**Generic**: Works for any project
 
-### Option 2: Run Project Tests
+### Option 1: Run Tests
 
-Tests project-specific scientific code with coverage validation.
+Executes the complete test suite with coverage validation.
 
-- Runs project-specific tests from `project/tests/`
-- Ignores integration tests (non-critical)
-- Validates coverage meets 70%+ threshold for `project/src/`
-- Generates HTML coverage report
+- Runs infrastructure tests (`tests/infrastructure/`) with 49%+ coverage threshold
+- Runs project tests (`project/tests/`) with 70%+ coverage threshold
+- Supports quiet mode (default) - shows only summary
+- Supports verbose mode (`--verbose`) - shows all test names
+- Generates HTML coverage reports for both suites
+- Generates structured test reports (JSON, Markdown) to `project/output/reports/test_results.{json,md}`
 
-**Coverage Report**: `htmlcov/index.html`
+**Coverage Reports**: `htmlcov/index.html`
 
-### Option 3: Render PDF Manuscript
+**Generic**: Works for any project using pytest
 
-Generates professional PDFs from markdown sources.
+### Option 2: Run Analysis
 
-- Runs project analysis scripts first
-- Processes markdown in `project/manuscript/`
+Executes project analysis scripts with enhanced progress tracking.
+
+- Discovers scripts in `project/scripts/`
+- Executes each script in order with progress tracking
+- Uses EMA-based ETA for accurate time estimates
+- Logs resource usage at start and end of stage
+- Validates output generation
+- Collects outputs to `project/output/`
+
+**Generic**: Works for any project with analysis scripts
+
+### Option 3: Render PDF
+
+Generates manuscript PDFs with progress tracking.
+
+- Processes `project/manuscript/` markdown files
+- Uses progress tracking for multi-file rendering operations
 - Converts to LaTeX via pandoc
 - Compiles to PDF via xelatex
-- Generates individual section PDFs and combined manuscript
+- Logs resource usage during rendering
+- Also runs analysis scripts first (option 2)
 
 **Output**: `project/output/pdf/`
 
-### Option 4: Run Full Pipeline
+**Generic**: Works for any markdown manuscript
 
-Executes the complete 9-stage build pipeline:
+### Option 4: Validate Output
+
+Validates build quality with enhanced reporting.
+
+- Checks generated PDFs for issues
+- Validates markdown references
+- Checks figure integrity
+- Generates enhanced validation reports (JSON, Markdown) with actionable recommendations
+- Reports include priority levels, issue categorization, and specific fixes
+- Reports saved to `project/output/reports/validation_report.{json,md}`
+
+**Generic**: Works for any project output
+
+### Option 5: Copy Outputs
+
+Copies final deliverables to top-level output directory.
+
+- Cleans top-level `output/` directory
+- Copies combined PDF manuscript
+- Copies all presentation slides (PDF format)
+- Copies all web outputs (HTML format)
+- Validates all files copied successfully
+
+**Generic**: Works for any project with rendered outputs
+
+### Option 6: LLM Review
+
+Generates AI-powered manuscript reviews using local Ollama LLM.
+
+- Checks Ollama availability and selects best model
+- Extracts full text from combined PDF manuscript
+- Generates executive summary, quality review, methodology review, and improvement suggestions
+- Generates translations (if configured) - technical abstract in multiple languages
+- Uses improved progress indicators (spinner, streaming progress)
+- Saves all reviews with detailed metrics to `project/output/llm/` (copied to `output/llm/` during copy stage)
+
+**Requires**: Running Ollama server with at least one model installed. Skips gracefully if unavailable.
+
+**Output Files**:
+- `executive_summary.md` - Key findings and contributions
+- `quality_review.md` - Writing clarity and style assessment
+- `methodology_review.md` - Structure and methods evaluation
+- `improvement_suggestions.md` - Actionable recommendations
+- `translation_*.md` - Technical abstract translations (if configured)
+- `combined_review.md` - All reviews with generation metrics
+- `review_metadata.json` - Model, config, and detailed metrics
+
+**Generic**: Works for any project with a combined PDF manuscript
+
+### Option 7: Literature Search
+
+Manages academic literature with combined operations.
+
+- Searches arXiv and Semantic Scholar APIs
+- Downloads PDFs for found papers
+- Adds papers to bibliography (`literature/references.bib`)
+- Generates AI summaries for downloaded papers (requires Ollama)
+
+**Requires**: Network access. Summarization requires Ollama.
+
+**Output**: `literature/` directory
+
+**Generic**: Works for any project needing literature management
+
+### Option 8: Run Full Pipeline
+
+Executes the complete 10-stage build pipeline (stages 0-9):
 
 | Stage | Name | Purpose |
 |-------|------|---------|
@@ -86,8 +176,10 @@ Executes the complete 9-stage build pipeline:
 | 5 | PDF Rendering | Generate manuscript PDFs |
 | 6 | Output Validation | Validate all outputs |
 | 7 | Copy Outputs | Copy deliverables to top-level output/ |
-| 8 | LLM Manuscript Review | Generate AI reviews (optional) |
+| 8 | LLM Scientific Review | Generate AI reviews (optional) |
 | 9 | LLM Translations | Multi-language technical abstract generation (optional) |
+
+**Note**: Stage 0 (Clean) is a pre-pipeline cleanup step. The main pipeline stages (1-9) are tracked in the progress display, which shows [1/9] to [9/9] in logs.
 
 **Generated Outputs**:
 - Coverage reports: `htmlcov/`
@@ -101,56 +193,73 @@ Executes the complete 9-stage build pipeline:
   - `validation_report.{json,md}` - Enhanced validation with recommendations
   - `error_summary.{json,md}` - Error aggregation with actionable fixes
 
-### Option 5: LLM Manuscript Review (English)
+**Checkpoint/Resume**: Supports `--resume` flag to resume from last checkpoint
 
-Generates AI-powered manuscript analysis using local Ollama.
+### Option 9: Search Only
 
-- Checks Ollama availability and selects best model
-- Extracts full text from combined manuscript PDF
-- Generates executive summary, quality review, methodology review, and improvement suggestions
-- Saves all reviews to `output/llm/` with detailed metrics
+Searches for papers and adds to bibliography (network only, no Ollama required).
 
-**Requires**: Running Ollama server with at least one model installed.
+- Searches arXiv and Semantic Scholar APIs
+- Adds papers to bibliography (`literature/references.bib`)
+- Updates library index (`literature/library.json`)
+- Does NOT download PDFs or generate summaries
 
-**Output**: `output/llm/` directory with review files and metadata
+**Requires**: Network access only
 
-### Option 6: LLM Translations (multi-language)
+**Output**: `literature/references.bib`, `literature/library.json`
 
-Generates technical abstract translations to multiple languages.
+### Option 10: Download Only
 
-- Uses configured languages from `project/manuscript/config.yaml`
-- Generates English technical abstract (~200-400 words)
-- Translates to target languages (Chinese, Hindi, Russian, etc.)
-- Saves translations to `output/llm/`
+Downloads PDFs for existing bibliography entries (network only, no Ollama required).
 
-**Requires**: Running Ollama server and configured languages in config.yaml.
+- Downloads PDFs for papers in bibliography without PDFs
+- Saves PDFs to `literature/pdfs/`
+- Updates library index
+- Does NOT search for new papers or generate summaries
 
-**Output**: `output/llm/translation_*.md` files
+**Requires**: Network access only
 
-### Option 7: Search Literature and Download PDFs
+**Output**: `literature/pdfs/`
 
-Searches academic databases and downloads papers.
+### Option 11: Summarize
 
-- Searches arXiv and Semantic Scholar for papers
-- Downloads PDFs to `literature/pdfs/`
-- Adds entries to BibTeX library (`literature/references.bib`)
-- Generates AI summaries for downloaded papers
-
-**Prompts for**:
-- Keywords (comma-separated)
-- Number of papers per keyword
-
-**Output**: `literature/` directory
-
-### Option 8: Generate Summaries for Existing PDFs
-
-Generates AI summaries for existing PDFs in the library.
+Generates AI summaries for papers with PDFs (requires Ollama).
 
 - Analyzes all papers in `literature/library.json`
-- Downloads missing PDFs if possible
-- Generates summaries for papers without summaries
+- Generates summaries for papers with PDFs but without summaries
+- Saves summaries to `literature/summaries/`
+- Does NOT search for new papers or download PDFs
+
+**Requires**: Ollama server running with at least one model installed
 
 **Output**: `literature/summaries/`
+
+### Option 12: Cleanup
+
+Removes papers without PDFs from library (local files only, no Ollama required).
+
+- Removes entries from `literature/library.json` that don't have PDFs
+- Updates `literature/references.bib` accordingly
+- Does NOT require network or Ollama
+
+**Requires**: Local file access only
+
+**Output**: Updated `literature/library.json` and `literature/references.bib`
+
+### Option 13: Advanced LLM Operations
+
+Performs advanced LLM operations on selected papers (requires Ollama).
+
+Available operations:
+- Literature review synthesis
+- Science communication narrative
+- Comparative analysis
+- Research gap identification
+- Citation network analysis
+
+**Requires**: Ollama server running with at least one model installed
+
+**Output**: Generated analysis files in `literature/`
 
 ## Usage
 
@@ -170,19 +279,21 @@ For CI/CD integration or scripting:
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Run full pipeline
-./run.sh --infra-tests        # Run infrastructure tests
-./run.sh --project-tests      # Run project tests
-./run.sh --render-pdf         # Render PDF manuscript
+./run.sh --pipeline          # Run full pipeline (10 stages: 0-9, includes LLM)
+./run.sh --pipeline --resume # Resume from last checkpoint
+./run.sh --infra-tests        # Run infrastructure tests only
+./run.sh --project-tests      # Run project tests only
+./run.sh --render-pdf         # Render PDF manuscript only
 
 # LLM Operations (requires Ollama)
-./run.sh --reviews            # LLM manuscript review
-./run.sh --translations       # LLM translations
+./run.sh --reviews            # LLM manuscript review only (English)
+./run.sh --translations       # LLM translations only
 
-# Literature Operations (requires Ollama)
-./run.sh --search             # Search literature (add to bibliography)
-./run.sh --download           # Download PDFs (for bibliography entries)
-./run.sh --summarize          # Generate summaries (for papers with PDFs)
+# Literature Operations:
+./run.sh --search             # Search literature (network only, add to bibliography)
+./run.sh --download           # Download PDFs (network only, for bibliography entries)
+./run.sh --summarize          # Generate summaries (requires Ollama, for papers with PDFs)
+./run.sh --cleanup            # Cleanup library (local files only, remove papers without PDFs)
 
 # Show help
 ./run.sh --help
@@ -195,29 +306,33 @@ For CI/CD integration or scripting:
   Research Project Template - Main Menu
 ════════════════════════════════════════════════════════════════
 
-Core Build Operations:
-  1. Run infrastructure tests
-  2. Run project tests
-  3. Render PDF manuscript
-  4. Run full pipeline (tests + analysis + PDF + validate)
+Core Pipeline Scripts (aligned with script numbering):
+  0. Setup Environment (00_setup_environment.py)
+  1. Run Tests (01_run_tests.py - infrastructure + project)
+  2. Run Analysis (02_run_analysis.py)
+  3. Render PDF (03_render_pdf.py)
+  4. Validate Output (04_validate_output.py)
+  5. Copy Outputs (05_copy_outputs.py)
+  6. LLM Review (requires Ollama) (06_llm_review.py)
+  7. Literature Search (07_literature_search.py)
 
-LLM Operations (requires Ollama):
-  5. LLM manuscript review (English)
-  6. LLM translations (multi-language)
+Orchestration:
+  8. Run Full Pipeline (10 stages: 0-9, via run.sh)
 
-Literature Operations (requires Ollama):
-  7. Search literature (add to bibliography)
-  8. Download PDFs (for bibliography entries)
-  9. Generate summaries (for papers with PDFs)
+Literature Sub-Operations (via 07_literature_search.py):
+  9. Search only (network only)
+  10. Download only (network only)
+  11. Summarize (requires Ollama)
+  12. Cleanup (local files only)
+  13. Advanced LLM operations (requires Ollama)
 
-  10. Exit
-
+  14. Exit
 ════════════════════════════════════════════════════════════════
   Repository: /Users/4d/Documents/GitHub/template
   Python: Python 3.11.0
 ════════════════════════════════════════════════════════════════
 
-Select option [1-9]: 4
+Select option [0-14]: 8
 ```
 
 ## Exit Codes
@@ -252,6 +367,7 @@ export LOG_LEVEL=0  # Enable debug logging
 |----------|---------|-------------|
 | `LLM_MAX_INPUT_LENGTH` | `500000` | Max chars to send to LLM. Set to `0` for unlimited. |
 | `LLM_REVIEW_TIMEOUT` | `300` | Timeout per review in seconds |
+| `LLM_LONG_MAX_TOKENS` | `4096` | Maximum tokens per review response |
 
 ## Error Handling
 
@@ -277,13 +393,18 @@ Individual stages can also be run directly via Python:
 ```bash
 python3 scripts/00_setup_environment.py  # Setup environment
 python3 scripts/01_run_tests.py          # Run tests only
+python3 scripts/01_run_tests.py --verbose  # Run tests with verbose output
 python3 scripts/02_run_analysis.py       # Run project scripts
 python3 scripts/03_render_pdf.py         # Render PDFs only
 python3 scripts/04_validate_output.py    # Validate outputs only
 python3 scripts/05_copy_outputs.py       # Copy final deliverables
 python3 scripts/06_llm_review.py         # LLM manuscript review
-python3 scripts/07_literature_search.py --search     # Literature search
-python3 scripts/07_literature_search.py --summarize  # Generate summaries
+python3 scripts/06_llm_review.py --reviews-only     # Reviews only
+python3 scripts/06_llm_review.py --translations-only # Translations only
+python3 scripts/07_literature_search.py --search-only     # Search only
+python3 scripts/07_literature_search.py --download-only   # Download only
+python3 scripts/07_literature_search.py --summarize        # Summarize
+python3 scripts/07_literature_search.py --cleanup           # Cleanup library
 ```
 
 ## Troubleshooting
@@ -328,7 +449,9 @@ ollama pull llama3-gradient
 
 ### Literature search fails
 
-Ensure Ollama is running (required for summarization). If you only want to download papers without summaries, the feature requires Ollama for AI-powered analysis.
+- **Search/Download operations**: Require network access only (no Ollama)
+- **Summarization**: Requires Ollama server running
+- **Cleanup**: Requires local file access only (no network or Ollama)
 
 ## See Also
 
@@ -337,4 +460,3 @@ Ensure Ollama is running (required for summarization). If you only want to downl
 - [`AGENTS.md`](AGENTS.md) - Complete system documentation
 - [`docs/WORKFLOW.md`](docs/WORKFLOW.md) - Development workflow
 - [`docs/BUILD_SYSTEM.md`](docs/BUILD_SYSTEM.md) - Detailed build system reference
-

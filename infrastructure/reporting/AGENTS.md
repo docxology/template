@@ -296,3 +296,4 @@ pytest tests/infrastructure/reporting/ --cov=infrastructure.reporting
 - [`../AGENTS.md`](../AGENTS.md) - Complete infrastructure documentation
 - [`../../docs/ADVANCED_MODULES_GUIDE.md`](../../docs/ADVANCED_MODULES_GUIDE.md) - Advanced modules guide
 
+

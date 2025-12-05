@@ -31,43 +31,13 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from infrastructure.core.logging_utils import get_logger, log_operation, log_success, log_progress, format_error_with_suggestions
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.exceptions import ScriptExecutionError, PipelineError
+from infrastructure.core.script_discovery import (
+    discover_analysis_scripts,
+    verify_analysis_outputs,
+)
 
 # Set up logger for this module
 logger = get_logger(__name__)
-
-
-def discover_analysis_scripts() -> list[Path]:
-    """Discover all analysis scripts in project/ to execute.
-    
-    Returns:
-        List of Python script paths from project/scripts/ directory
-        
-    Example:
-        >>> scripts = discover_analysis_scripts()
-        >>> all(s.suffix == '.py' for s in scripts)
-        True
-    """
-    logger.info("[STAGE-02] Discovering analysis scripts in project/...")
-    
-    repo_root = Path(__file__).parent.parent
-    project_scripts_dir = repo_root / "project" / "scripts"
-    
-    if not project_scripts_dir.exists():
-        raise PipelineError(
-            "Project scripts directory not found",
-            context={"expected_path": str(project_scripts_dir)}
-        )
-    
-    # Find all Python scripts in project/scripts/ except README files
-    scripts = sorted([
-        f for f in project_scripts_dir.glob('*.py')
-        if f.is_file() and not f.name.startswith('_')
-    ])
-    
-    for script in scripts:
-        log_success(f"Found: {script.name}", logger)
-    
-    return scripts
 
 
 def run_analysis_script(script_path: Path, repo_root: Path) -> int:
@@ -174,33 +144,6 @@ def run_analysis_pipeline(scripts: list[Path]) -> int:
     return 0
 
 
-def verify_outputs() -> bool:
-    """Verify that analysis generated expected outputs.
-    
-    Returns:
-        True if outputs are valid, False otherwise
-    """
-    logger.info("[STAGE-02] Verifying analysis outputs...")
-    
-    repo_root = Path(__file__).parent.parent
-    output_dirs = [
-        repo_root / "project" / "output" / "figures",
-        repo_root / "project" / "output" / "data",
-    ]
-    
-    all_valid = True
-    for output_dir in output_dirs:
-        if output_dir.exists():
-            files = list(output_dir.glob("*"))
-            if files:
-                log_success(f"Output directory has {len(files)} file(s): {output_dir.name}", logger)
-            else:
-                logger.info(f"  ℹ️  Output directory is empty: {output_dir.name}")
-        else:
-            # Output directories may not exist yet, not an error
-            logger.info(f"  ℹ️  Output directory not yet created: {output_dir.name}")
-    
-    return all_valid
 
 
 def main() -> int:
@@ -218,8 +161,10 @@ def main() -> int:
     log_resource_usage("Analysis stage start", logger)
     
     try:
+        repo_root = Path(__file__).parent.parent
+        
         # Discover scripts
-        scripts = discover_analysis_scripts()
+        scripts = discover_analysis_scripts(repo_root)
         
         if not scripts:
             logger.info("  No analysis scripts found - skipping stage")
@@ -230,7 +175,7 @@ def main() -> int:
         
         if exit_code == 0:
             # Verify outputs
-            outputs_valid = verify_outputs()
+            outputs_valid = verify_analysis_outputs(repo_root)
             
             if outputs_valid:
                 log_success("Analysis complete - ready for PDF rendering", logger)

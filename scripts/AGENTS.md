@@ -132,7 +132,7 @@ python3 scripts/01_run_tests.py --verbose
   - Spinner during model loading
   - Streaming progress bar for review generation
   - Real-time token generation display with ETA
-- Saves all reviews with detailed metrics to `output/llm/`
+- Saves all reviews with detailed metrics to `project/output/llm/` (copied to `output/llm/` during copy stage)
 - Tracks input/output sizes, token estimates, and generation times
 
 **Environment Variables:**
@@ -223,12 +223,13 @@ When enabled, the system generates a technical abstract (~200-400 words) in Engl
 
 ### 8. Literature Operations (`07_literature_search.py`)
 
-**Purpose:** Manage academic literature with three separate operations
+**Purpose:** Manage academic literature with separate operations
 
-- **Search-only**: Searches arXiv and Semantic Scholar, adds papers to bibliography
-- **Download-only**: Downloads PDFs for existing bibliography entries
-- **Summarize-only**: Generates AI summaries for papers with PDFs
-- Uses local Ollama LLM for summarization
+- **Search-only**: Searches arXiv and Semantic Scholar APIs, adds papers to bibliography (network only, no Ollama required)
+- **Download-only**: Downloads PDFs for existing bibliography entries via HTTP (network only, no Ollama required)
+- **Summarize-only**: Generates AI summaries for papers with PDFs (requires Ollama)
+- **Cleanup**: Removes papers without PDFs from library (local files only, no Ollama required)
+- **LLM Operations**: Advanced LLM operations like literature review synthesis (requires Ollama)
 
 **Usage:**
 ```bash
@@ -261,7 +262,9 @@ python3 scripts/07_literature_search.py --search --summarize
 - `literature/summaries/` - AI-generated summaries (markdown)
 - `literature/summarization_progress.json` - Progress tracking
 
-**Requires:** Ollama server running with at least one model installed.
+**Dependencies:**
+- **Search/Download/Cleanup**: Network access only (no Ollama required)
+- **Summarize/LLM Operations**: Requires Ollama server running with at least one model installed
 
 **Generic:** Works for any project needing literature management
 
@@ -288,6 +291,29 @@ python3 scripts/07_literature_search.py --search --summarize
 
 **Generic:** Works for any project
 
+## Menu-to-Script Mapping
+
+The interactive menu (`./run.sh`) maps to Python scripts as follows. Menu numbering aligns with script numbering (0-7 for scripts, 8 for full pipeline, 9+ for sub-ops):
+
+| Menu Option | Script | Arguments | Requires Ollama | Description |
+|-------------|--------|-----------|----------------|-------------|
+| 0 | `00_setup_environment.py` | - | No | Setup Environment |
+| 1 | `01_run_tests.py` | - | No | Run Tests (infrastructure + project) |
+| 2 | `02_run_analysis.py` | - | No | Run Analysis |
+| 3 | `03_render_pdf.py` | - | No | Render PDF (also runs `02_run_analysis.py`) |
+| 4 | `04_validate_output.py` | - | No | Validate Output |
+| 5 | `05_copy_outputs.py` | - | No | Copy Outputs |
+| 6 | `06_llm_review.py` | - | Yes | LLM Review (reviews and translations) |
+| 7 | `07_literature_search.py` | `--search --summarize` | No* | Literature Search (all operations, *summarize requires Ollama) |
+| 8 | `run.sh --pipeline` | - | No* | Run Full Pipeline (10 stages: 0-9, *stages 8-9 require Ollama) |
+| 9 | `07_literature_search.py` | `--search-only` | No | Search only (network only) |
+| 10 | `07_literature_search.py` | `--download-only` | No | Download only (network only) |
+| 11 | `07_literature_search.py` | `--summarize` | Yes | Summarize (requires Ollama) |
+| 12 | `07_literature_search.py` | `--cleanup` | No | Cleanup (local files only) |
+| 13 | `07_literature_search.py` | `--llm-operation` | Yes | Advanced LLM operations (requires Ollama) |
+
+This mapping is also available programmatically via `scripts.MENU_SCRIPT_MAPPING`.
+
 ## Entry Points
 
 The template provides **two pipeline orchestrators** with different scope and features:
@@ -301,7 +327,7 @@ The **recommended entry point** is the interactive `run.sh` script:
 ./run.sh
 
 # Core Build Operations
-./run.sh --pipeline          # Extended pipeline (9 stages, includes LLM)
+./run.sh --pipeline          # Extended pipeline (10 stages: 0-9, includes LLM)
 ./run.sh --infra-tests        # Run infrastructure tests only
 ./run.sh --project-tests      # Run project tests only
 ./run.sh --render-pdf         # Render PDF manuscript only
@@ -310,14 +336,15 @@ The **recommended entry point** is the interactive `run.sh` script:
 ./run.sh --reviews            # LLM manuscript review only
 ./run.sh --translations       # LLM translations only
 
-# Literature Operations (requires Ollama)
-./run.sh --search             # Search literature (add to bibliography)
-./run.sh --download           # Download PDFs (for bibliography entries)
-./run.sh --summarize          # Generate summaries (for papers with PDFs)
+# Literature Operations:
+./run.sh --search             # Search literature (network only, add to bibliography)
+./run.sh --download           # Download PDFs (network only, for bibliography entries)
+./run.sh --summarize          # Generate summaries (requires Ollama, for papers with PDFs)
+./run.sh --cleanup            # Cleanup library (local files only, remove papers without PDFs)
 ```
 
 **Features:**
-- 9-stage pipeline including optional LLM review stages
+- 10-stage pipeline (stages 0-9) including optional LLM review stages (8-9)
 - Interactive menu for easy selection
 - Individual stage execution options
 - Literature search and summarization capabilities
@@ -338,8 +365,8 @@ python3 scripts/run_all.py
 - Suitable for automated environments
 
 **Stage Numbering Differences:**
-- `run.sh`: Stages 0-8 (displayed as [1/9] to [8/9] in logs)
-- `run_all.py`: Stages 00-05 (zero-padded Python convention)
+- `run.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked), stages 1-9 are displayed as [1/9] to [9/9] in logs
+- `run_all.py`: Stages 00-05 (zero-padded Python convention, 6 core stages)
 
 See [`../RUN_GUIDE.md`](../RUN_GUIDE.md) for complete documentation.
 
@@ -389,26 +416,30 @@ Root entry points use **thin orchestrator pattern**:
 ```python
 # scripts/03_render_pdf.py - Generic orchestrator
 from infrastructure.rendering import RenderManager
+from infrastructure.rendering.manuscript_discovery import (
+    discover_manuscript_files,
+    verify_figures_exist,
+)
 
 def run_render_pipeline() -> int:
     """Orchestrate PDF rendering stage."""
-    # Use infrastructure modules
+    # Use infrastructure modules for business logic
+    manuscript_dir = Path("project/manuscript")
+    source_files = discover_manuscript_files(manuscript_dir)  # From infrastructure
+    
+    # Use infrastructure modules for rendering
     renderer = RenderManager()
+    pdf = renderer.render_combined_pdf(source_files, manuscript_dir)
     
-    # Discover manuscript files and render
-    pdf = renderer.render_pdf(Path("manuscript.tex"))
-    
-    # Validate output
-    report = validate_pdf_rendering(pdf)
-    
-    return 0 if not report['summary']['has_issues'] else 1
+    return 0
 ```
 
 **Key Points:**
-- Uses `infrastructure.<module>` imports
-- Delegates computation to modules
-- Coordinates pipeline stages
+- Uses `infrastructure.<module>` imports for ALL business logic
+- Delegates ALL computation to infrastructure modules
+- Coordinates pipeline stages only
 - Works with ANY project
+- NO business logic implemented in orchestrator
 
 ### ✅ CORRECT Pattern (Project Scripts)
 

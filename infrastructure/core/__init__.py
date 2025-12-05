@@ -77,6 +77,25 @@ from .config_loader import (
     find_config_file,
     get_translation_languages,
 )
+from .environment import (
+    check_python_version,
+    check_dependencies,
+    install_missing_packages,
+    check_build_tools,
+    setup_directories,
+    verify_source_structure,
+    set_environment_variables,
+)
+from .script_discovery import (
+    discover_analysis_scripts,
+    discover_orchestrators,
+    verify_analysis_outputs,
+)
+from .file_operations import (
+    clean_output_directory,
+    clean_output_directories,
+    copy_final_deliverables,
+)
 
 __all__ = [
     # Exceptions
@@ -140,5 +159,21 @@ __all__ = [
     "get_config_as_env_vars",
     "find_config_file",
     "get_translation_languages",
+    # Environment
+    "check_python_version",
+    "check_dependencies",
+    "install_missing_packages",
+    "check_build_tools",
+    "setup_directories",
+    "verify_source_structure",
+    "set_environment_variables",
+    # Script Discovery
+    "discover_analysis_scripts",
+    "discover_orchestrators",
+    "verify_analysis_outputs",
+    # File Operations
+    "clean_output_directory",
+    "clean_output_directories",
+    "copy_final_deliverables",
 ]
 

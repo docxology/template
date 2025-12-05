@@ -40,3 +40,4 @@ class TestCLIExecution:
         # Note: library_command might not exist in current implementation
         # assert hasattr(cli, 'library_command')
 
+

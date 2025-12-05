@@ -23,7 +23,7 @@ This document provides **comprehensive documentation** for the Research Project 
 
 **Layer 1: Infrastructure (Generic - Reusable)**
 - `infrastructure/` - Generic build/validation tools (reusable across projects)
-- `scripts/` - Entry point orchestrators (two pipeline options: 6-stage or 9-stage)
+- `scripts/` - Entry point orchestrators (two pipeline options: 6-stage core or 10-stage extended)
 - `tests/` - Infrastructure and integration tests
 
 **Layer 2: Project (Project-Specific - Customizable)**
@@ -295,7 +295,7 @@ python3 scripts/03_render_pdf.py
 
 ### Runtime Configuration
 
-Configuration is read at runtime by `render_pdf.sh` and applied to:
+Configuration is read at runtime by `scripts/03_render_pdf.py` and applied to:
 - PDF metadata (title, author, date)
 - LaTeX document properties
 - Generated file headers
@@ -316,7 +316,7 @@ The template provides **two entry points** for pipeline execution:
 
 **Non-Interactive Pipelines**
 ```bash
-# Extended pipeline (9 stages) with optional LLM review
+# Extended pipeline (10 stages: 0-9) with optional LLM review
 ./run.sh --pipeline
 
 # Core pipeline (6 stages) - Python orchestrator
@@ -324,7 +324,7 @@ python3 scripts/run_all.py
 ```
 
 **Entry Point Comparison**
-- **`./run.sh --pipeline`**: 9 stages (0-8), includes optional LLM review stages
+- **`./run.sh --pipeline`**: 10 stages (0-9), includes optional LLM review stages. Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs.
 - **`python3 scripts/run_all.py`**: 6 stages (00-05), core pipeline only
 
 ### Pipeline Stages
@@ -344,8 +344,8 @@ python3 scripts/run_all.py
 8. **LLM Translations** - Multi-language technical abstract generation (optional)
 
 **Stage Numbering:**
-- `run_all.py`: Stages 00-05 (zero-padded, Python convention)
-- `run.sh`: Stages 0-8 (zero-indexed, displayed as [1/9] to [8/9])
+- `run_all.py`: Stages 00-05 (zero-padded, Python convention) - 6 core stages
+- `run.sh`: Stages 0-9 (10 total stages). Stage 0 is cleanup (not in STAGE_NAMES array), stages 1-9 are tracked and displayed as [1/9] to [9/9] in logs
 
 ### Manual Execution Options
 

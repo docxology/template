@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger, log_success, log_header, log_substep
 from infrastructure.reporting import generate_validation_report as generate_validation_report_structured
+from infrastructure.validation.figure_validator import validate_figure_registry
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -134,70 +135,6 @@ def verify_outputs_exist() -> bool:
     return all_exist
 
 
-def validate_figure_registry() -> tuple[bool, list[str]]:
-    """Validate figure registry against manuscript references.
-    
-    Returns:
-        Tuple of (success, list of issues found)
-    """
-    import json
-    import re
-    
-    log_substep("Validating figure registry...", logger)
-    
-    repo_root = Path(__file__).parent.parent
-    registry_path = repo_root / "project" / "output" / "figures" / "figure_registry.json"
-    manuscript_dir = repo_root / "project" / "manuscript"
-    
-    issues = []
-    
-    # Load registry
-    registered_figures = set()
-    if registry_path.exists():
-        try:
-            with open(registry_path) as f:
-                registry = json.load(f)
-                registered_figures = set(registry.keys())
-                log_success(f"Figure registry loaded: {len(registered_figures)} figure(s)", logger)
-        except Exception as e:
-            issues.append(f"Failed to load figure registry: {e}")
-            return False, issues
-    else:
-        logger.warning("Figure registry not found")
-        return True, []  # Not an error if registry doesn't exist
-    
-    # Find figure references in markdown (only in numbered section files, not AGENTS.md/README.md)
-    referenced_figures = set()
-    figure_ref_pattern = re.compile(r'\\(?:ref|label)\{(fig:[^}]+)\}')
-    
-    if manuscript_dir.exists():
-        for md_file in manuscript_dir.glob("*.md"):
-            # Skip documentation files (AGENTS.md, README.md)
-            if md_file.name in ["AGENTS.md", "README.md"]:
-                continue
-            
-            try:
-                content = md_file.read_text()
-                refs = figure_ref_pattern.findall(content)
-                referenced_figures.update(refs)
-            except Exception as e:
-                logger.warning(f"Could not read {md_file.name}: {e}")
-    
-    # Find unregistered references
-    unregistered = referenced_figures - registered_figures
-    if unregistered:
-        for ref in sorted(unregistered):
-            issues.append(f"Unregistered figure reference: {ref}")
-    
-    # Summary
-    if issues:
-        logger.warning(f"  Found {len(issues)} figure issue(s)")
-        for issue in issues:
-            logger.warning(f"    • {issue}")
-    else:
-        log_success(f"All {len(referenced_figures)} figure references verified", logger)
-    
-    return len(issues) == 0, issues
 
 
 def generate_validation_report(
@@ -322,7 +259,10 @@ def main() -> int:
     
     # Validate figure registry separately (returns tuple)
     try:
-        fig_result, figure_issues = validate_figure_registry()
+        repo_root = Path(__file__).parent.parent
+        registry_path = repo_root / "project" / "output" / "figures" / "figure_registry.json"
+        manuscript_dir = repo_root / "project" / "manuscript"
+        fig_result, figure_issues = validate_figure_registry(registry_path, manuscript_dir)
         results.append(("Figure registry", fig_result))
     except Exception as e:
         logger.error(f"Error during figure registry validation: {e}", exc_info=True)

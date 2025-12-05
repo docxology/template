@@ -266,3 +266,4 @@ class TestPromptComposer:
         assert "100-200" in result
         assert "Element1" in result
 
+

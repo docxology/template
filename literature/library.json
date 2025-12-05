@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "updated": "2025-12-04T15:33:05.862860",
-  "count": 1383,
+  "updated": "2025-12-05T08:43:47.841574",
+  "count": 1299,
   "entries": {
     "watson2020active": {
       "citation_key": "watson2020active",
@@ -368,26 +368,6 @@
         "pdf_url": "https://arxiv.org/pdf/2510.17450v1"
       }
     },
-    "he2024large": {
-      "citation_key": "he2024large",
-      "title": "Large Language Models (LLMs) Inference Offloading and Resource Allocation in Cloud-Edge Computing: An Active Inference Approach",
-      "authors": [
-        "Ying He",
-        "Jingcheng Fang",
-        "F. Yu",
-        "V. Leung"
-      ],
-      "year": 2024,
-      "doi": "10.1109/TMC.2024.3415661",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/4b82d9fbaf5427ff3799de777ffbe3efbf98b81d",
-      "pdf_path": null,
-      "added_date": "2025-12-01T07:04:56.030682",
-      "abstract": "With the increasing popularity and demands for large language model applications on mobile devices, it is difficult for resource-limited mobile terminals to run large-model inference tasks efficiently. Traditional deep reinforcement learning (DRL) based approaches have been used to offload large language models (LLMs) inference tasks to servers. However, existing DRL solutions suffer from data inefficiency, insensitivity to latency requirements, and non-adaptability to task load variations, which will degrade the performance of LLMs. In this paper, we propose a novel approach based on active inference for LLMs inference task offloading and resource allocation in cloud-edge computing. Extensive simulation results show that our proposed method has superior performance over mainstream DRLs, improves in data utilization efficiency, and is more adaptable to changing task load scenarios.",
-      "venue": "IEEE Transactions on Mobile Computing",
-      "citation_count": 50,
-      "metadata": {}
-    },
     "friston2024from": {
       "citation_key": "friston2024from",
       "title": "From pixels to planning: scale-free active inference",
@@ -435,30 +415,6 @@
       "citation_count": 19,
       "metadata": {
         "pdf_url": "https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1345480/pdf"
-      }
-    },
-    "albarracin2024feeling": {
-      "citation_key": "albarracin2024feeling",
-      "title": "Feeling our place in the world: an active inference account of self-esteem",
-      "authors": [
-        "Mahault Albarracin",
-        "Gabriel Bouchard-Joly",
-        "Z. Sheikhbahaee",
-        "Mark Miller",
-        "R. J. Pitliya",
-        "Pierre Poirier"
-      ],
-      "year": 2024,
-      "doi": "10.1093/nc/niae007",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/61d1429db543660df4c2682efed81e4a399800c1",
-      "pdf_path": null,
-      "added_date": "2025-12-01T07:04:58.143928",
-      "abstract": "Abstract Self-esteem, the evaluation of one’s own worth or value, is a critical aspect of psychological well-being and mental health. In this paper, we propose an active inference account of self-esteem, casting it as a sociometer or an inferential capacity to interpret one’s standing within a social group. This approach allows us to explore the interaction between an individual’s self-perception and the expectations of their social environment.When there is a mismatch between these perceptions and expectations, the individual needs to adjust their actions or update their self-perception to better align with their current experiences. We also consider this hypothesis in relation with recent research on affective inference, suggesting that self-esteem enables the individual to track and respond to this discrepancy through affective states such as anxiety or positive affect. By acting as an inferential sociometer, self-esteem allows individuals to navigate and adapt to their social environment, ultimately impacting their psychological well-being and mental health.",
-      "venue": "Neuroscience of Consciousness",
-      "citation_count": 15,
-      "metadata": {
-        "pdf_url": "https://academic.oup.com/nc/article-pdf/2024/1/niae007/57135828/niae007.pdf"
       }
     },
     "hoeffelen2021deep": {
@@ -1892,27 +1848,6 @@
       "citation_count": null,
       "metadata": {
         "pdf_url": "https://arxiv.org/pdf/1711.00695v1"
-      }
-    },
-    "werner2023towards": {
-      "citation_key": "werner2023towards",
-      "title": "Towards Comparable Active Learning",
-      "authors": [
-        "Thorben Werner",
-        "Johannes Burchert",
-        "Lars Schmidt-Thieme"
-      ],
-      "year": 2023,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/2311.18356v2",
-      "pdf_path": null,
-      "added_date": "2025-12-01T07:07:47.494838",
-      "abstract": "Active Learning has received significant attention in the field of machine learning for its potential in selecting the most informative samples for labeling, thereby reducing data annotation costs. However, we show that the reported lifts in recent literature generalize poorly to other domains leading to an inconclusive landscape in Active Learning research. Furthermore, we highlight overlooked problems for reproducing AL experiments that can lead to unfair comparisons and increased variance in the results. This paper addresses these issues by providing an Active Learning framework for a fair comparison of algorithms across different tasks and domains, as well as a fast and performant oracle algorithm for evaluation. To the best of our knowledge, we propose the first AL benchmark that tests algorithms in 3 major domains: Tabular, Image, and Text. We report empirical results for 6 widely used algorithms on 7 real-world and 2 synthetic datasets and aggregate them into a domain-specific ranking of AL algorithms.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/2311.18356v2"
       }
     },
     "albarracin2022mapping": {
@@ -5185,28 +5120,6 @@
       "citation_count": null,
       "metadata": {
         "pdf_url": "https://arxiv.org/pdf/1410.5920v1"
-      }
-    },
-    "delavari2024towards": {
-      "citation_key": "delavari2024towards",
-      "title": "Towards Human-Like Driving: Active Inference in Autonomous Vehicle Control",
-      "authors": [
-        "Elahe Delavari",
-        "John Moore",
-        "Junho Hong",
-        "Jaerock Kwon"
-      ],
-      "year": 2024,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/2407.07684v2",
-      "pdf_path": null,
-      "added_date": "2025-12-01T07:08:02.138734",
-      "abstract": "This paper presents a novel approach to Autonomous Vehicle (AV) control through the application of active inference, a theory derived from neuroscience that conceptualizes the brain as a predictive machine. Traditional autonomous driving systems rely heavily on Modular Pipelines, Imitation Learning, or Reinforcement Learning, each with inherent limitations in adaptability, generalization, and computational efficiency. Active inference addresses these challenges by minimizing prediction error (termed \"surprise\") through a dynamic model that balances perception and action. Our method integrates active inference with deep learning to manage lateral control in AVs, enabling them to perform lane following maneuvers within a simulated urban environment. We demonstrate that our model, despite its simplicity, effectively learns and generalizes from limited data without extensive retraining, significantly reducing computational demands. The proposed approach not only enhances the adaptability and performance of AVs in dynamic scenarios but also aligns closely with human-like driving behavior, leveraging a generative model to predict and adapt to environmental changes. Results from extensive experiments in the CARLA simulator show promising outcomes, outperforming traditional methods in terms of adaptability and efficiency, thereby advancing the potential of active inference in real-world autonomous driving applications.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/2407.07684v2"
       }
     },
     "champion2021branching3": {
@@ -9021,46 +8934,6 @@
         "pdf_url": "https://arxiv.org/pdf/1402.4106v2"
       }
     },
-    "pezzulo2024active": {
-      "citation_key": "pezzulo2024active",
-      "title": "Active inference as a theory of sentient behavior",
-      "authors": [
-        "Giovanni Pezzulo",
-        "Thomas Parr",
-        "Karl J. Friston"
-      ],
-      "year": 2024,
-      "doi": "10.1016/j.biopsycho.2023.108741",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/0d598b16582e344ee621f469787af85b467c78a8",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:00.302194",
-      "abstract": "",
-      "venue": "Biological Psychology",
-      "citation_count": 50,
-      "metadata": {
-        "pdf_url": "https://doi.org/10.1016/j.biopsycho.2023.108741"
-      }
-    },
-    "barrett2017theory": {
-      "citation_key": "barrett2017theory",
-      "title": "The theory of constructed emotion: an active inference account of interoception and categorization",
-      "authors": [
-        "L. F. Barrett"
-      ],
-      "year": 2017,
-      "doi": "10.1093/scan/nsx060",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/b705c2afd6d7cc9218fdf985a70b3967e1165540",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:01.379139",
-      "abstract": "The science of emotion has been using folk psychology categories derived from philosophy to search for the brain basis of emotion. The last two decades of neuroscience research have brought us to the brink of a paradigm shift in understanding the workings of the brain, however, setting the stage to revolutionize our understanding of what emotions are and how they work. In this article, we begin with the structure and function of the brain, and from there deduce what the biological basis of emotions might be. The answer is a brain-based, computational account called the theory of constructed emotion.",
-      "venue": "Social Cognitive and Affective Neuroscience",
-      "citation_count": 1361,
-      "metadata": {
-        "pdf_url": "https://academic.oup.com/scan/article-pdf/12/11/1833/27103406/nsx060.pdf"
-      }
-    },
     "friston2017active": {
       "citation_key": "friston2017active",
       "title": "Active Inference: A Process Theory",
@@ -9083,64 +8956,6 @@
       "metadata": {
         "pdf_url": "https://openaccess.city.ac.uk/id/eprint/16683/1/NECO_a_00912.pdf"
       }
-    },
-    "albarracin2024shared": {
-      "citation_key": "albarracin2024shared",
-      "title": "Shared Protentions in Multi-Agent Active Inference",
-      "authors": [
-        "Mahault Albarracin",
-        "R. J. Pitliya",
-        "T. S. C. Smithe",
-        "D. Friedman",
-        "K. Friston",
-        "M. Ramstead"
-      ],
-      "year": 2024,
-      "doi": "10.3390/e26040303",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/7b2aca8cb0f297c53c539ece9c36fe9a06554f4d",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:03.484179",
-      "abstract": "In this paper, we unite concepts from Husserlian phenomenology, the active inference framework in theoretical biology, and category theory in mathematics to develop a comprehensive framework for understanding social action premised on shared goals. We begin with an overview of Husserlian phenomenology, focusing on aspects of inner time-consciousness, namely, retention, primal impression, and protention. We then review active inference as a formal approach to modeling agent behavior based on variational (approximate Bayesian) inference. Expanding upon Husserl’s model of time consciousness, we consider collective goal-directed behavior, emphasizing shared protentions among agents and their connection to the shared generative models of active inference. This integrated framework aims to formalize shared goals in terms of shared protentions, and thereby shed light on the emergence of group intentionality. Building on this foundation, we incorporate mathematical tools from category theory, in particular, sheaf and topos theory, to furnish a mathematical image of individual and group interactions within a stochastic environment. Specifically, we employ morphisms between polynomial representations of individual agent models, allowing predictions not only of their own behaviors but also those of other agents and environmental responses. Sheaf and topos theory facilitates the construction of coherent agent worldviews and provides a way of representing consensus or shared understanding. We explore the emergence of shared protentions, bridging the phenomenology of temporal structure, multi-agent active inference systems, and category theory. Shared protentions are highlighted as pivotal for coordination and achieving common objectives. We conclude by acknowledging the intricacies stemming from stochastic systems and uncertainties in realizing shared goals.",
-      "venue": "Entropy",
-      "citation_count": 9,
-      "metadata": {
-        "pdf_url": "https://www.mdpi.com/1099-4300/26/4/303/pdf?version=1711712497"
-      }
-    },
-    "jacques2023active": {
-      "citation_key": "jacques2023active",
-      "title": "Active Inference: The Free Energy Principle in Mind, Brain, and Behaviour by Thomas Parr, Giovanni Pezzulo, and Karl J. Friston (review)",
-      "authors": [
-        "David Jacques"
-      ],
-      "year": 2023,
-      "doi": null,
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/dded71d2681fb42c1d149286b636b066ab6a0910",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:03.670920",
-      "abstract": "",
-      "venue": "",
-      "citation_count": 123,
-      "metadata": {}
-    },
-    "jacques2023active2": {
-      "citation_key": "jacques2023active2",
-      "title": "Active Inference: The Free Energy Principle in Mind, Brain, and Behaviour",
-      "authors": [
-        "David Jacques"
-      ],
-      "year": 2023,
-      "doi": "10.3368/lj.42.2.175",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/e5de43f98bfd367690e3787f130dadc02beb80dc",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:03.685883",
-      "abstract": "",
-      "venue": "Landscape Journal",
-      "citation_count": 74,
-      "metadata": {}
     },
     "pezzulo2023generating": {
       "citation_key": "pezzulo2023generating",
@@ -9212,25 +9027,6 @@
         "pdf_url": "https://journals.sagepub.com/doi/pdf/10.1177/17456916231188000"
       }
     },
-    "hodson2023empirical": {
-      "citation_key": "hodson2023empirical",
-      "title": "The empirical status of predictive coding and active inference",
-      "authors": [
-        "Rowan Hodson",
-        "M. Mehta",
-        "Ryan Smith"
-      ],
-      "year": 2023,
-      "doi": "10.1016/j.neubiorev.2023.105473",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/ad407c66679cc67ffa10917fcb64c76be79eb084",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:04.842757",
-      "abstract": "",
-      "venue": "Neuroscience and Biobehavioral Reviews",
-      "citation_count": 33,
-      "metadata": {}
-    },
     "cruys2023order": {
       "citation_key": "cruys2023order",
       "title": "Order and change in art: towards an active inference account of aesthetic experience",
@@ -9250,92 +9046,6 @@
       "citation_count": 20,
       "metadata": {
         "pdf_url": "https://doi.org/10.1098/rstb.2022.0411"
-      }
-    },
-    "parr2023cognitive": {
-      "citation_key": "parr2023cognitive",
-      "title": "Cognitive effort and active inference",
-      "authors": [
-        "Thomas Parr",
-        "E. Holmes",
-        "K. Friston",
-        "G. Pezzulo"
-      ],
-      "year": 2023,
-      "doi": "10.1016/j.neuropsychologia.2023.108562",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/dc02375b9e4f4f92f40f21cc4449fef0d9a78e47",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:05.367496",
-      "abstract": "",
-      "venue": "Neuropsychologia",
-      "citation_count": 29,
-      "metadata": {
-        "pdf_url": "https://doi.org/10.1016/j.neuropsychologia.2023.108562"
-      }
-    },
-    "fang2023large": {
-      "citation_key": "fang2023large",
-      "title": "Large Language Models (LLMs) Inference Offloading and Resource Allocation in Cloud-Edge Networks: An Active Inference Approach",
-      "authors": [
-        "Jingcheng Fang",
-        "Ying He",
-        "F. Yu",
-        "Jianqiang Li",
-        "Victor C.M. Leung"
-      ],
-      "year": 2023,
-      "doi": "10.1109/VTC2023-Fall60731.2023.10333824",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/c803b2236136fe7c59ea3619bc7520d331568d32",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:06.544062",
-      "abstract": "As the research and applications of large language model (LLM) become increasingly sophisticated, it is difficult for resource-limited mobile terminals to run large-model inference tasks efficiently. Traditional deep reinforcement learning (DRL) based approaches have been used to offload LLM inference tasks to servers. However, existing solutions suffer from data inefficiency, insensitivity to latency requirements, and non-adaptability to task load variations. In this paper, we propose an active inference with rewardless guidance algorithm using expected future free energy for offloading decisions and allocating resources for the LLM inference task offloading and resource allocation problem of cloud-edge networks systems. Experimental results show that our proposed method has superior performance over mainstream DRLs, improves in data utilization efficiency, and is more adaptable to changing task load scenarios.",
-      "venue": "IEEE Vehicular Technology Conference",
-      "citation_count": 19,
-      "metadata": {}
-    },
-    "limongi2023active": {
-      "citation_key": "limongi2023active",
-      "title": "Active Inference, Epistemic Value, and Uncertainty in Conceptual Disorganization in First-Episode Schizophrenia.",
-      "authors": [
-        "R. Limongi",
-        "Angelica M Silva",
-        "M. Mackinley",
-        "S. Ford",
-        "L. Palaniyappan"
-      ],
-      "year": 2023,
-      "doi": "10.1093/schbul/sbac125",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/91dbdca2ca3421402f99b0cbe3ee5a5c52451003",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:06.553357",
-      "abstract": "BACKGROUND AND HYPOTHESIS\nActive inference has become an influential concept in psychopathology. We apply active inference to investigate conceptual disorganization in first-episode schizophrenia. We conceptualize speech production as a decision-making process affected by the latent \"conceptual organization\"-as a special case of uncertainty about the causes of sensory information. Uncertainty is both minimized via speech production-in which function words index conceptual organization in terms of analytic thinking-and tracked by a domain-general salience network. We hypothesize that analytic thinking depends on conceptual organization. Therefore, conceptual disorganization in schizophrenia would be both indexed by low conceptual organization and reflected in the effective connectivity within the salience network.\n\n\nSTUDY DESIGN\nWith 1-minute speech samples from a picture description task and resting state fMRI from 30 patients and 30 healthy subjects, we employed dynamic causal and probabilistic graphical models to investigate if the effective connectivity of the salience network underwrites conceptual organization.\n\n\nSTUDY RESULTS\nLow analytic thinking scores index low conceptual organization which affects diagnostic status. The influence of the anterior insula on the anterior cingulate cortex and the self-inhibition within the anterior cingulate cortex are elevated given low conceptual organization (ie, conceptual disorganization).\n\n\nCONCLUSIONS\nConceptual organization, a construct that explains formal thought disorder, can be modeled in an active inference framework and studied in relation to putative neural substrates of disrupted language in schizophrenia. This provides a critical advance to move away from rating-scale scores to deeper constructs in the pursuit of the pathophysiology of formal thought disorder.",
-      "venue": "Schizophrenia bulletin",
-      "citation_count": 19,
-      "metadata": {
-        "pdf_url": "https://academic.oup.com/schizophreniabulletin/article-pdf/49/Supplement_2/S115/49592286/sbac125.pdf"
-      }
-    },
-    "waugh2023resilience": {
-      "citation_key": "waugh2023resilience",
-      "title": "Resilience as the Ability to Maintain Well-Being: An Allostatic Active Inference Model",
-      "authors": [
-        "Christian E. Waugh",
-        "Anthony W. Sali"
-      ],
-      "year": 2023,
-      "doi": "10.3390/jintelligence11080158",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/75b897b1af5b266cd6b1a1146e5205aa7bf0ae90",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:06.681415",
-      "abstract": "Resilience is often characterized as the outcome of well-being maintenance despite threats to that well-being. We suggest that resilience can also be characterized as an emotional-intelligence-related ability to obtain this outcome. We formulate an allostatic active inference model that outlines the primary tools of this resilience ability as monitoring well-being, maintaining stable well-being beliefs while updating situational beliefs and flexibly prioritizing actions that are expected to lead to well-being maintenance or gathering the information needed to discern what those actions could be. This model helps to explain the role of positive emotions in resilience as well as how people high in resilience ability use regulatory flexibility in the service of maintaining well-being and provides a starting point for assessing resilience as an ability.",
-      "venue": "Journal of Intelligence",
-      "citation_count": 19,
-      "metadata": {
-        "pdf_url": "https://www.mdpi.com/2079-3200/11/8/158/pdf?version=1691466558"
       }
     },
     "sedlak2023equilibrium": {
@@ -9383,26 +9093,6 @@
       "citation_count": 15,
       "metadata": {
         "pdf_url": "https://discovery.ucl.ac.uk/10171837/1/Control_flow_in_active_inference_systems_Part_I_Classical_and_quantum_formulations_of_active_inference.pdf"
-      }
-    },
-    "bogotá2023timeconsciousness": {
-      "citation_key": "bogotá2023timeconsciousness",
-      "title": "Time-consciousness in computational phenomenology: a temporal analysis of active inference",
-      "authors": [
-        "Juan Diego Bogotá",
-        "Z. Djebbara"
-      ],
-      "year": 2023,
-      "doi": "10.1093/nc/niad004",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/b649509581d72c0d29a1ff08de9d0e025a86d446",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:13.404464",
-      "abstract": "Abstract Time plays a significant role in science and everyday life. Despite being experienced as a continuous flow, computational models of consciousness are typically restricted to a sequential temporal structure. This difference poses a serious challenge for computational phenomenology—a novel field combining phenomenology and computational modelling. By analysing the temporal structure of the active inference framework, we show that an integrated continuity of time can be achieved by merging Husserlian temporality with a sequential order of time. We also show that a Markov blanket of the present moment integrates past and future moments of both subjective temporality and objective time in an asynchronous manner. By applying the integrated continuity, it is clear that active inference makes use of both subjective temporality and objective time in an integrated fashion. We conclude that active inference, on a temporal note, qualifies as a computational model for phenomenological investigations.",
-      "venue": "Neuroscience of Consciousness",
-      "citation_count": 16,
-      "metadata": {
-        "pdf_url": "https://academic.oup.com/nc/article-pdf/2023/1/niad004/49553349/niad004.pdf"
       }
     },
     "sparavigna2012distortional": {
@@ -9734,23 +9424,6 @@
       "citation_count": 6370,
       "metadata": {}
     },
-    "friston2009freeenergy": {
-      "citation_key": "friston2009freeenergy",
-      "title": "The free-energy principle: a rough guide to the brain?",
-      "authors": [
-        "Karl J. Friston"
-      ],
-      "year": 2009,
-      "doi": "10.1016/j.tics.2009.04.005",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/a878886efacc6a5d742bf98bfc25c0734ce502b1",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:25.731491",
-      "abstract": "",
-      "venue": "Trends in Cognitive Sciences",
-      "citation_count": 1682,
-      "metadata": {}
-    },
     "friston2019free": {
       "citation_key": "friston2019free",
       "title": "A free energy principle for a particular physics",
@@ -9786,24 +9459,6 @@
       "metadata": {
         "pdf_url": "https://link.springer.com/content/pdf/10.1007/s11098-024-02182-y.pdf"
       }
-    },
-    "zhang2024overview": {
-      "citation_key": "zhang2024overview",
-      "title": "An Overview of the Free Energy Principle and Related Research",
-      "authors": [
-        "Zhengquan Zhang",
-        "Feng Xu"
-      ],
-      "year": 2024,
-      "doi": "10.1162/neco_a_01642",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/0d0ec3a44ed0c66b96c3da7cbc3a34568ae6ae0f",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:48.900048",
-      "abstract": "Abstract The free energy principle and its corollary, the active inference framework, serve as theoretical foundations in the domain of neuroscience, explaining the genesis of intelligent behavior. This principle states that the processes of perception, learning, and decision making—within an agent—are all driven by the objective of “minimizing free energy,” evincing the following behaviors: learning and employing a generative model of the environment to interpret observations, thereby achieving perception, and selecting actions to maintain a stable preferred state and minimize the uncertainty about the environment, thereby achieving decision making. This fundamental principle can be used to explain how the brain processes perceptual information, learns about the environment, and selects actions. Two pivotal tenets are that the agent employs a generative model for perception and planning and that interaction with the world (and other agents) enhances the performance of the generative model and augments perception. With the evolution of control theory and deep learning tools, agents based on the FEP have been instantiated in various ways across different domains, guiding the design of a multitude of generative models and decision-making algorithms. This letter first introduces the basic concepts of the FEP, followed by its historical development and connections with other theories of intelligence, and then delves into the specific application of the FEP to perception and decision making, encompassing both low-dimensional simple situations and high-dimensional complex situations. It compares the FEP with model-based reinforcement learning to show that the FEP provides a better objective function. We illustrate this using numerical studies of Dreamer3 by adding expected information gain into the standard objective function. In a complementary fashion, existing reinforcement learning, and deep learning algorithms can also help implement the FEP-based agents. Finally, we discuss the various capabilities that agents need to possess in complex environments and state that the FEP can aid agents in acquiring these capabilities.",
-      "venue": "Neural Computation",
-      "citation_count": 5,
-      "metadata": {}
     },
     "friston2022free": {
       "citation_key": "friston2022free",
@@ -9874,27 +9529,6 @@
         "pdf_url": "https://philosophymindscience.org/index.php/phimisci/article/download/9187/8975"
       }
     },
-    "wirkuttis2023turntaking": {
-      "citation_key": "wirkuttis2023turntaking",
-      "title": "Turn-Taking Mechanisms in Imitative Interaction: Robotic Social Interaction Based on the Free Energy Principle",
-      "authors": [
-        "Nadine Wirkuttis",
-        "Wataru Ohata",
-        "J. Tani"
-      ],
-      "year": 2023,
-      "doi": "10.3390/e25020263",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/72cfd94737ca87a635b5b5a40beaa25cc97c805c",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:52.621870",
-      "abstract": "This study explains how the leader-follower relationship and turn-taking could develop in a dyadic imitative interaction by conducting robotic simulation experiments based on the free energy principle. Our prior study showed that introducing a parameter during the model training phase can determine leader and follower roles for subsequent imitative interactions. The parameter is defined as w, the so-called meta-prior, and is a weighting factor used to regulate the complexity term versus the accuracy term when minimizing the free energy. This can be read as sensory attenuation, in which the robot’s prior beliefs about action are less sensitive to sensory evidence. The current extended study examines the possibility that the leader-follower relationship shifts depending on changes in w during the interaction phase. We identified a phase space structure with three distinct types of behavioral coordination using comprehensive simulation experiments with sweeps of w of both robots during the interaction. Ignoring behavior in which the robots follow their own intention was observed in the region in which both ws were set to large values. One robot leading, followed by the other robot was observed when one w was set larger and the other was set smaller. Spontaneous, random turn-taking between the leader and the follower was observed when both ws were set at smaller or intermediate values. Finally, we examined a case of slowly oscillating w in anti-phase between the two agents during the interaction. The simulation experiment resulted in turn-taking in which the leader-follower relationship switched during determined sequences, accompanied by periodic shifts of ws. An analysis using transfer entropy found that the direction of information flow between the two agents also shifted along with turn-taking. Herein, we discuss qualitative differences between random/spontaneous turn-taking and agreed-upon sequential turn-taking by reviewing both synthetic and empirical studies.",
-      "venue": "Entropy",
-      "citation_count": 12,
-      "metadata": {
-        "pdf_url": "https://www.mdpi.com/1099-4300/25/2/263/pdf?version=1675240667"
-      }
-    },
     "isomura2022experimental": {
       "citation_key": "isomura2022experimental",
       "title": "Experimental validation of the free-energy principle with in vitro neural networks",
@@ -9937,63 +9571,6 @@
         "pdf_url": "https://europepmc.org/articles/pmc2666703?pdf=render"
       }
     },
-    "carl2023models": {
-      "citation_key": "carl2023models",
-      "title": "Models of the Translation Process and the Free Energy Principle",
-      "authors": [
-        "M. Carl"
-      ],
-      "year": 2023,
-      "doi": "10.3390/e25060928",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/f700a47ad70f9dfe0a614b54b648f43ed2cbd28d",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:58.736461",
-      "abstract": "Translation process research (TPR) has generated a large number of models that aim at explaining human translation processes. In this paper, I suggest an extension of the monitor model to incorporate aspects of relevance theory (RT) and to adopt the free energy principle (FEP) as a generative model to elucidate translational behaviour. The FEP—and its corollary, active inference—provide a general, mathematical framework to explain how organisms resist entropic erosion so as to remain within their phenotypic bounds. It posits that organisms reduce the gap between their expectations and observations by minimising a quantity called free energy. I map these concepts on the translation process and exemplify them with behavioural data. The analysis is based on the notion of translation units (TUs) which exhibit observable traces of the translator’s epistemic and pragmatic engagement with their translation environment, (i.e., the text) that can be measured in terms of translation effort and effects. Sequences of TUs cluster into translation states (steady state, orientation, and hesitation). Drawing on active inference, sequences of translation states combine into translation policies that reduce expected free energy. I show how the notion of free energy is compatible with the concept of relevance, as developed in RT, and how essential concepts of the monitor model and RT can be formalised as deep temporal generative models that can be interpreted under a representationalist view, but also support a non-representationalist account.",
-      "venue": "Entropy",
-      "citation_count": 7,
-      "metadata": {
-        "pdf_url": "https://www.mdpi.com/1099-4300/25/6/928/pdf?version=1686812233"
-      }
-    },
-    "sasaki2023quantification": {
-      "citation_key": "sasaki2023quantification",
-      "title": "Quantification of “novelty” based on free-energy principle and its application for “aesthetic liking” for industrial products",
-      "authors": [
-        "Hiromasa Sasaki",
-        "Takeo Kato",
-        "Hideyoshi Yanagisawa"
-      ],
-      "year": 2023,
-      "doi": "10.1007/s00163-023-00422-6",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/017503359d8501389232c85436ecf00d4c3358bb",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:58.961087",
-      "abstract": "",
-      "venue": "Research in Engineering Design",
-      "citation_count": 6,
-      "metadata": {}
-    },
-    "miyagi2023fetal": {
-      "citation_key": "miyagi2023fetal",
-      "title": "Fetal brain activity and the free energy principle",
-      "authors": [
-        "Yasunari Miyagi",
-        "T. Hata",
-        "T. Miyake"
-      ],
-      "year": 2023,
-      "doi": "10.1515/jpm-2023-0092",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/ad4c8aad105b685734abb75e4782b82b12edbdd3",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:32:58.976988",
-      "abstract": "Abstract Objectives To study whether the free energy principle can explain fetal brain activity and the existence of fetal consciousness via a chaotic dimension derived using artificial intelligence. Methods In this observational study, we used a four-dimensional ultrasound technique obtained to collect images of fetal faces from pregnancies at 27–37 weeks of gestation, between February and December 2021. We developed an artificial intelligence classifier that recognizes fetal facial expressions, which are thought to relate to fetal brain activity. We then applied the classifier to video files of facial images to generate each expression category’s probabilities. We calculated the chaotic dimensions from the probability lists, and we created and investigated the free energy principle’s mathematical model that was assumed to be linked to the chaotic dimension. We used a Mann–Whitney test, linear regression test, and one-way analysis of variance for statistical analysis. Results The chaotic dimension revealed that the fetus had dense and sparse states of brain activity, which fluctuated at a statistically significant level. The chaotic dimension and free energy were larger in the sparse state than in the dense state. Conclusions The fluctuating free energy suggests consciousness seemed to exist in the fetus after 27 weeks.",
-      "venue": "Journal of Perinatal Medicine",
-      "citation_count": 5,
-      "metadata": {}
-    },
     "piekarski2023incorporating": {
       "citation_key": "piekarski2023incorporating",
       "title": "Incorporating (variational) free energy models into mechanisms: the case of predictive processing under the free energy principle",
@@ -10034,66 +9611,6 @@
       "metadata": {
         "pdf_url": "https://www.mdpi.com/1099-4300/24/2/301/pdf?version=1645434071"
       }
-    },
-    "andrews2021math": {
-      "citation_key": "andrews2021math",
-      "title": "The math is not the territory: navigating the free energy principle",
-      "authors": [
-        "Melody Andrews"
-      ],
-      "year": 2021,
-      "doi": "10.1007/s10539-021-09807-0",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/a8f6638dc7e621de192e62a1cdaa4f7f24055940",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:33:01.759511",
-      "abstract": "",
-      "venue": "Biology & Philosophy",
-      "citation_count": 79,
-      "metadata": {}
-    },
-    "gu2015using": {
-      "citation_key": "gu2015using",
-      "title": "Using Free Energy Principle For Blind Image Quality Assessment",
-      "authors": [
-        "Ke Gu",
-        "Guangtao Zhai",
-        "Xiaokang Yang",
-        "Wenjun Zhang"
-      ],
-      "year": 2015,
-      "doi": "10.1109/TMM.2014.2373812",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/c7c27c520cca5d874460d46639f8e8d7cc39ecd5",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:33:01.773147",
-      "abstract": "",
-      "venue": "IEEE transactions on multimedia",
-      "citation_count": 573,
-      "metadata": {}
-    },
-    "song2023human": {
-      "citation_key": "song2023human",
-      "title": "Human ear inspired solar thermochemical reactor for steam methane reforming with the consideration of minimum Gibbs free energy principle",
-      "authors": [
-        "Jintao Song",
-        "Ziming Cheng",
-        "Yaping Fan",
-        "Fuqiang Wang",
-        "Xuhan Shi",
-        "Jie Xu",
-        "Hongliang Yi"
-      ],
-      "year": 2023,
-      "doi": "10.1016/j.est.2023.108172",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/46f9641c6aef4297ecefe08c734d0f88850ff89b",
-      "pdf_path": null,
-      "added_date": "2025-12-01T20:33:01.784468",
-      "abstract": "",
-      "venue": "Journal of Energy Storage",
-      "citation_count": 19,
-      "metadata": {}
     },
     "mcgovern2022learned": {
       "citation_key": "mcgovern2022learned",
@@ -10367,27 +9884,6 @@
         "pdf_url": "https://direct.mit.edu/neco/article-pdf/33/2/447/1896836/neco_a_01354.pdf"
       }
     },
-    "koudahl2021epistemics": {
-      "citation_key": "koudahl2021epistemics",
-      "title": "On Epistemics in Expected Free Energy for Linear Gaussian State Space Models",
-      "authors": [
-        "Magnus T. Koudahl",
-        "Wouter M. Kouw",
-        "B. Vries"
-      ],
-      "year": 2021,
-      "doi": "10.3390/e23121565",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/47fbc3ba2eeed3b5f02587b90708f912235067d3",
-      "pdf_path": null,
-      "added_date": "2025-12-02T04:41:31.573319",
-      "abstract": "Active Inference (AIF) is a framework that can be used both to describe information processing in naturally intelligent systems, such as the human brain, and to design synthetic intelligent systems (agents). In this paper we show that Expected Free Energy (EFE) minimisation, a core feature of the framework, does not lead to purposeful explorative behaviour in linear Gaussian dynamical systems. We provide a simple proof that, due to the specific construction used for the EFE, the terms responsible for the exploratory (epistemic) drive become constant in the case of linear Gaussian systems. This renders AIF equivalent to KL control. From a theoretical point of view this is an interesting result since it is generally assumed that EFE minimisation will always introduce an exploratory drive in AIF agents. While the full EFE objective does not lead to exploration in linear Gaussian dynamical systems, the principles of its construction can still be used to design objectives that include an epistemic drive. We provide an in-depth analysis of the mechanics behind the epistemic drive of AIF agents and show how to design objectives for linear Gaussian dynamical systems that do include an epistemic drive. Concretely, we show that focusing solely on epistemics and dispensing with goal-directed terms leads to a form of maximum entropy exploration that is heavily dependent on the type of control signals driving the system. Additive controls do not permit such exploration. From a practical point of view this is an important result since linear Gaussian dynamical systems with additive controls are an extensively used model class, encompassing for instance Linear Quadratic Gaussian controllers. On the other hand, linear Gaussian dynamical systems driven by multiplicative controls such as switching transition matrices do permit an exploratory drive.",
-      "venue": "Entropy",
-      "citation_count": 9,
-      "metadata": {
-        "pdf_url": "https://www.mdpi.com/1099-4300/23/12/1565/pdf?version=1637898305"
-      }
-    },
     "tschantz2020derivation": {
       "citation_key": "tschantz2020derivation",
       "title": "Derivation of expected free energy.",
@@ -10427,31 +9923,6 @@
       "metadata": {
         "pdf_url": "https://www.frontiersin.org/articles/10.3389/fpsyg.2018.01264/pdf"
       }
-    },
-    "lin2024regulating": {
-      "citation_key": "lin2024regulating",
-      "title": "Regulating the Gibbs Free Energy to Design Aqueous Battery‐Compatible Robust Host",
-      "authors": [
-        "Jing Lin",
-        "Yanyi Wang",
-        "Minfeng Chen",
-        "Jinlin Lu",
-        "Hongwei Mi",
-        "Jizhang Chen",
-        "Chuanxin He",
-        "Dingtao Ma",
-        "Peixin Zhang"
-      ],
-      "year": 2024,
-      "doi": "10.1002/aenm.202401275",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/4fd7dfc58fe455abc9213440f7f1fc8007dbeb8b",
-      "pdf_path": null,
-      "added_date": "2025-12-02T04:41:42.385323",
-      "abstract": "Low‐cost, high‐voltage‐platform, and high‐capacity MnO2 is the most promising cathode candidate for developing high‐energy‐density aqueous zinc‐ion batteries. However, the Buckets effect of runaway phase transition and irreversible dissolution restricts the electrochemical performance of MnO2. To address this issue, this report presents a bottom‐up targeted assembly concept driven by Gibbs free energy for the design of a robust Ni‐MnO2‐xFx host via Ni2+ pre‐intercalation coupled with fluorine doping. The Gibbs free energy of the host is regulated by the coordination of interlayer reinforcement and interfacial defect repair, which prevents the “layer‐to‐spinel” transition and inhibits dissolution during long‐term cycling. As expected, this cathode provides superior H+/Zn2+ storage performance across a wide temperature range. A capacity of 180.4 mAh g−1 is retained after 1000 cycles at 2 A g−1, a high specific capacity of 293.9 mAh g−1 is retained after 250 cycles at 50 °C and 2 A g−1, and a capacity of 144.5 mAh g−1 is retained after 3000 cycles at 0 °C and 0.5 A g−1. This work provides new insights into the design of stable aqueous battery‐compatible hosts for aqueous zinc‐ion batteries as well as other battery chemistries.",
-      "venue": "Advanced Energy Materials",
-      "citation_count": 37,
-      "metadata": {}
     },
     "pattisapu2024free": {
       "citation_key": "pattisapu2024free",
@@ -10494,45 +9965,6 @@
       "citation_count": 41,
       "metadata": {
         "pdf_url": "https://chemrxiv.org/engage/api-gateway/chemrxiv/assets/orp/resource/item/62c8ab40e1aaae368320cb17/original/active-learning-guided-drug-design-lead-optimization-based-on-relative-binding-free-energy-modeling.pdf"
-      }
-    },
-    "scheid2008expected": {
-      "citation_key": "scheid2008expected",
-      "title": "On the Expected Free Energy of RNA Molecules",
-      "authors": [
-        "Anika Scheid",
-        "M. Nebel"
-      ],
-      "year": 2008,
-      "doi": null,
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/1a4b884ea0db879afa63973c253ab140444169a9",
-      "pdf_path": null,
-      "added_date": "2025-12-02T04:41:44.607894",
-      "abstract": "",
-      "venue": "",
-      "citation_count": 0,
-      "metadata": {}
-    },
-    "elfwing2016from": {
-      "citation_key": "elfwing2016from",
-      "title": "From free energy to expected energy: Improving energy-based value function approximation in reinforcement learning",
-      "authors": [
-        "Stefan Elfwing",
-        "E. Uchibe",
-        "K. Doya"
-      ],
-      "year": 2016,
-      "doi": "10.1016/j.neunet.2016.07.013",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/db8ef16d8eff463836787f96ff093cabbb30f17c",
-      "pdf_path": null,
-      "added_date": "2025-12-02T04:41:44.626643",
-      "abstract": "",
-      "venue": "Neural Networks",
-      "citation_count": 17,
-      "metadata": {
-        "pdf_url": "https://doi.org/10.1016/j.neunet.2016.07.013"
       }
     },
     "maele2021active": {
@@ -10659,46 +10091,6 @@
       "metadata": {
         "pdf_url": "https://link.aps.org/accepted/10.1103/PhysRevB.99.195134"
       }
-    },
-    "baskin2019ion": {
-      "citation_key": "baskin2019ion",
-      "title": "\"Ion Solvation Spectra\": Free Energy Analysis of Solvation Structures of Multivalent Cations in Aprotic Solvents.",
-      "authors": [
-        "Artem Baskin",
-        "D. Prendergast"
-      ],
-      "year": 2019,
-      "doi": "10.1021/acs.jpclett.9b01569",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/3c832bf11d28c8a9e3c5abb5108e896ffabaa345",
-      "pdf_path": null,
-      "added_date": "2025-12-02T04:42:13.315502",
-      "abstract": "Using advanced molecular dynamics free energy sampling techniques - both classical and ab initio - we analyze the solvation structures of multivalent cations in aprotic solvents. In contrast to previous studies of mono- and bivalent ions in organic solvents, mainly performed using hybrid cluster-continuum quantum chemistry calculations that rely on the assumption of uniqueness of ion solvation free energies, here we find that monoatomic bivalent cations may have multiple well-defined minima, as previously reported only for water, or plateaus of free energy with respect to the ion-solvent coordination. These observations are generalized in the concept of the ``ion solvation spectrum`` to highlight the rich phenomenology related to ion solvation as opposed to the normally expected free energy profiles with a single coordination minimum. Specifically, we show that a single chemical species may exhibit a multiplicity of distinctly different electrochemical properties. Using one- and two-dimensional projections of the free energy landscape, we analyze the stability of ion solvation structures and reveal minimum free energy pathways for ion (de-)solvation with low-dimensional approximations to associated kinetic barriers. Unexpectedly, we show that in some cases the process of opening the first ion solvation shell, by removing a solvent molecule, may actually drive the ion into a free-energy basin with a higher coordination number. Our study highlights some deficiencies of conventional methodologies for studying ion solvation as a path to determine redox potentials and provides experimentally testable predictions.",
-      "venue": "Journal of Physical Chemistry Letters",
-      "citation_count": 29,
-      "metadata": {}
-    },
-    "guo2023design": {
-      "citation_key": "guo2023design",
-      "title": "Design strategies of high-performance lead-free electroceramics for energy storage applications",
-      "authors": [
-        "Biao Guo",
-        "Fei Jin",
-        "Li Li",
-        "Zizhao Pan",
-        "Xin-Wei Xu",
-        "Hong Wang"
-      ],
-      "year": 2023,
-      "doi": "10.1007/s12598-023-02452-4",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/dd32c908d5cb7a01c5f32c279713b04d2f52d466",
-      "pdf_path": null,
-      "added_date": "2025-12-02T04:42:13.323999",
-      "abstract": "",
-      "venue": "Rare Metals",
-      "citation_count": 42,
-      "metadata": {}
     },
     "fan2018tap": {
       "citation_key": "fan2018tap",
@@ -12185,25 +11577,6 @@
         "pdf_url": "https://arxiv.org/pdf/2404.17570"
       }
     },
-    "coccia2024evolution": {
-      "citation_key": "coccia2024evolution",
-      "title": "Evolution of Quantum Computing: Theoretical and Innovation Management Implications for Emerging Quantum Industry",
-      "authors": [
-        "M. Coccia",
-        "S. Roshani",
-        "M. Mosleh"
-      ],
-      "year": 2024,
-      "doi": "10.1109/TEM.2022.3175633",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/867170876dff8379701023591883ad9609653210",
-      "pdf_path": null,
-      "added_date": "2025-12-02T06:10:20.974160",
-      "abstract": "Quantum computing is a vital research field in science and technology. One of the fundamental questions hardly known is how quantum computing research is developing to support scientific advances and the evolution of path-breaking technologies for economic, industrial, and social change. This study confronts the question here by applying methods of computational scientometrics for publication analyses to explain the structure and evolution of quantum computing research and technologies over a 30-year period. Results reveal that the evolution of quantum computing from 1990 to 2020 has a considerable average increase of connectivity in the network (growth of degree centrality measure), a moderate increase of the average influence of nodes on the flow between nodes (little growth of betweenness centrality measure), and a little reduction of the easiest access of each node to all other nodes (closeness centrality measure). This evolutionary dynamics is due to the increase in size and complexity of the network in quantum computing research over time. This study also suggests that the network of quantum computing has a transition from hardware to software research that supports accelerated evolution of technological pathways in quantum image processing, quantum machine learning, and quantum sensors. Theoretical implications of this study show the morphological evolution of the network in quantum computing from a symmetric to an asymmetric shape driven by new inter-related research fields and emerging technological trajectories. Findings here suggest best practices of innovation management based on R&D investments in new technological directions of quantum computing having a high potential for growth and impact in science and markets.",
-      "venue": "IEEE transactions on engineering management",
-      "citation_count": 62,
-      "metadata": {}
-    },
     "rouze2024efficient": {
       "citation_key": "rouze2024efficient",
       "title": "Efficient Thermalization and Universal Quantum Computing with Quantum Gibbs Samplers",
@@ -13046,26 +12419,6 @@
       "citation_count": 4,
       "metadata": {}
     },
-    "sutter2023variational": {
-      "citation_key": "sutter2023variational",
-      "title": "Variational free energy based macroscopical modeling of ferroelectroelasticity",
-      "authors": [
-        "F. Sutter",
-        "M. Kamlah"
-      ],
-      "year": 2023,
-      "doi": "10.1016/j.jmps.2023.105341",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/33060bb74166497b39e041fc5997c3a0d4dae640",
-      "pdf_path": null,
-      "added_date": "2025-12-02T07:59:59.277048",
-      "abstract": "",
-      "venue": "Journal of the mechanics and physics of solids",
-      "citation_count": 1,
-      "metadata": {
-        "pdf_url": "https://doi.org/10.1016/j.jmps.2023.105341"
-      }
-    },
     "li2025deep": {
       "citation_key": "li2025deep",
       "title": "Deep Variational Free Energy Calculation of Hydrogen Hugoniot",
@@ -13295,66 +12648,6 @@
         "pdf_url": "https://figshare.com/articles/journal_contribution/Refining_Collective_Coordinates_and_Improving_Free_Energy_Representation_in_Variational_Enhanced_Sampling/6260792/1/files/11442353.pdf"
       }
     },
-    "chen2023free": {
-      "citation_key": "chen2023free",
-      "title": "On the free energy of vector spin glasses with nonconvex interactions",
-      "authors": [
-        "Hong-Bin Chen",
-        "J. Mourrat"
-      ],
-      "year": 2023,
-      "doi": "10.2140/pmp.2025.6.1",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/1ae8d8e4f21f092fd4624387e1c1a35187f9d4e5",
-      "pdf_path": null,
-      "added_date": "2025-12-02T08:00:51.450732",
-      "abstract": "The limit free energy of spin-glass models with convex interactions can be represented as a variational problem involving an explicit functional. Models with non-convex interactions are much less well-understood, and simple variational formulas involving the same functional are known to be invalid in general. We show here that a slightly weaker property of the limit free energy does extend to non-convex models. Indeed, under the assumption that the limit free energy exists, we show that this limit can always be represented as a critical value of the said functional. Up to a small perturbation of the parameters defining the model, we also show that any subsequential limit of the law of the overlap matrix is a critical point of this functional. We believe that these results capture the fundamental conclusions of the non-rigorous replica method.",
-      "venue": "Probability and Mathematical Physics",
-      "citation_count": 24,
-      "metadata": {}
-    },
-    "hartmann2017variational": {
-      "citation_key": "hartmann2017variational",
-      "title": "Variational Characterization of Free Energy: Theory and Algorithms",
-      "authors": [
-        "C. Hartmann",
-        "Lorenz Richter",
-        "C. Schütte",
-        "Wei Zhang"
-      ],
-      "year": 2017,
-      "doi": "10.3390/e19110626",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/7c3dfeefc47c334e61b98a6d87dcf2a7ff547521",
-      "pdf_path": null,
-      "added_date": "2025-12-02T08:00:51.462487",
-      "abstract": "The article surveys and extends variational formulations of the thermodynamic free energy and discusses their information-theoretic content from the perspective of mathematical statistics. We revisit the well-known Jarzynski equality for nonequilibrium free energy sampling within the framework of importance sampling and Girsanov change-of-measure transformations. The implications of the different variational formulations for designing efficient stochastic optimization and nonequilibrium simulation algorithms for computing free energies are discussed and illustrated.",
-      "venue": "Entropy",
-      "citation_count": 55,
-      "metadata": {
-        "pdf_url": "https://www.mdpi.com/1099-4300/19/11/626/pdf?version=1511188324"
-      }
-    },
-    "cyron2017mechanobiological": {
-      "citation_key": "cyron2017mechanobiological",
-      "title": "Mechanobiological free energy: a variational approach to tensional homeostasis in tissue equivalents",
-      "authors": [
-        "C. Cyron",
-        "R. Aydin"
-      ],
-      "year": 2017,
-      "doi": "10.1002/zamm.201600126",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/3901e7e3e6597893e8eef61d031b15c7a3bb4842",
-      "pdf_path": null,
-      "added_date": "2025-12-02T08:00:53.026544",
-      "abstract": "",
-      "venue": "",
-      "citation_count": 20,
-      "metadata": {
-        "pdf_url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1002/zamm.201600126"
-      }
-    },
     "gaybalmaz2017free": {
       "citation_key": "gaybalmaz2017free",
       "title": "A free energy Lagrangian variational formulation of the Navier–Stokes–Fourier system",
@@ -13415,41 +12708,6 @@
       "metadata": {
         "pdf_url": "https://link.springer.com/content/pdf/10.1007/s10994-008-5099-x.pdf"
       }
-    },
-    "mackay2001local": {
-      "citation_key": "mackay2001local",
-      "title": "Local Minima, Symmetry-breaking, and Model Pruning in Variational Free Energy Minimization",
-      "authors": [
-        "D. Mackay"
-      ],
-      "year": 2001,
-      "doi": null,
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/f009659777096291db6db7508a9d47f8795a285b",
-      "pdf_path": null,
-      "added_date": "2025-12-02T08:01:02.560217",
-      "abstract": "",
-      "venue": "",
-      "citation_count": 48,
-      "metadata": {}
-    },
-    "lin2005variational": {
-      "citation_key": "lin2005variational",
-      "title": "A variational free energy minimization interpretation of multiuser detection in CDMA",
-      "authors": [
-        "D. Lin",
-        "Teng Joon Lim"
-      ],
-      "year": 2005,
-      "doi": "10.1109/GLOCOM.2005.1577915",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/b32c2b2a92b57332246ea63eab55ece5e3453bf2",
-      "pdf_path": null,
-      "added_date": "2025-12-02T08:01:02.572894",
-      "abstract": "",
-      "venue": "GLOBECOM '05. IEEE Global Telecommunications Conference, 2005.",
-      "citation_count": 15,
-      "metadata": {}
     },
     "silva2022solving": {
       "citation_key": "silva2022solving",
@@ -14111,26 +13369,6 @@
       "citation_count": null,
       "metadata": {
         "pdf_url": "https://arxiv.org/pdf/2201.05932v1"
-      }
-    },
-    "pan2018free": {
-      "citation_key": "pan2018free",
-      "title": "Free energy of bipartite Sherrington-Kirkpatrick model",
-      "authors": [
-        "Liming Pan",
-        "Simone Franchini"
-      ],
-      "year": 2018,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/1808.02542v5",
-      "pdf_path": null,
-      "added_date": "2025-12-02T09:16:36.529778",
-      "abstract": "In this paper we study the bipartite version of Sherrington-Kirkpatrick model. We prove that the free energy density is given by an analogue of the Parisi formula, that contains both the usual overlap and an additional new type of overlap. Following Panchenko, we prove the upper bound of the formula by Guerra's replica symmetry breaking interpolation, then the matching lower bound by Ghirlanda-Guerra identities and the Aizenman-Sims-Starr scheme. Based on this result we study the stability of the replica symmetric solution. A new phase exhibiting partial replica symmetry breaking is observed, where the broken phase is realized in the larger group only.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/1808.02542v5"
       }
     },
     "attia2013hausdorff": {
@@ -15167,27 +14405,6 @@
         "pdf_url": "https://arxiv.org/pdf/2208.12265v1"
       }
     },
-    "m2024early": {
-      "citation_key": "m2024early",
-      "title": "Early Epilepsy Diagnosis using Epistemic Neural Networks with Electric Eel Foraging Optimization and Secure EEG Data Sharing via Blockchain",
-      "authors": [
-        "M. M",
-        "Baba Fakruddin Ali B H",
-        "Hariharan R",
-        "Sukanya Ledalla",
-        "S. Kadam"
-      ],
-      "year": 2024,
-      "doi": "10.1109/ICACRS62842.2024.10841765",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/bdaebad34d875e76047e8afa8ded12cf395cab87",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:46:11.942210",
-      "abstract": "Epilepsy is still quite common, affecting over 50 million individuals worldwide, despite the tremendous advances in contemporary therapy. Early detection and treatment can greatly lower the chance of long-term harm and raise living standards for those with epilepsy. Electroencephalography (EEG), a non-invasive method that tracks electrical activity in the brain, is frequently used to diagnose this neurological disorder. Yet, using EEG data for diagnosis and study raises a number of issues with patient privacy and security protocols for such private digital data. An early epilepsy diagnostic system and a decentralized, secure environment for exchanging EEG data based on a block chain-based system with DL integration are presented in this work. The proposed method makes it possible to maintain patients’ personal data confidentiality and, at the same time, increase the efficiency of early epilepsy diagnosis. The most frequently used preprocessing technique in the strategy is Multiple Discrete Orthonormal S-Transforms (MDOSTs), and for feature extraction, Memory Efficient Vision Transformer-based Feature Extraction is employed. In classification, we use an Epistemic Neural Network (ENN) to achieve high precision and reliable prediction through the Electric Eel Foraging Optimization (EEFO) algorithm. The storage and dissemination of the data are both proactively secured through blockchain; through smart contracts, patients completely govern their data. The analysis of the Temple University Hospital EEG Corpus (TUH EEG) dataset proves that this method is diagnosed more than the traditional one, while the protection level of this data is also high. By achieving above 99% performance on all evaluation measures, such as F1-score, accuracy, recall, specificity, and precision, the suggested method demonstrates its remarkable efficacy in both secure EEG data sharing and early epilepsy detection. The method's higher performance over conventional approaches can be attributed to its strong deep learning models and block chain integration.",
-      "venue": "2024 3rd International Conference on Automation, Computing and Renewable Systems (ICACRS)",
-      "citation_count": 0,
-      "metadata": {}
-    },
     "trimble2021epistemic": {
       "citation_key": "trimble2021epistemic",
       "title": "Epistemic Foraging and the Creative Process: Crawling Over Creation",
@@ -15203,63 +14420,6 @@
       "abstract": "",
       "venue": "Technology, Innovation and Creativity in Digital Society",
       "citation_count": 0,
-      "metadata": {}
-    },
-    "koponen2017modelling": {
-      "citation_key": "koponen2017modelling",
-      "title": "Modelling conceptual change as foraging for explanations on an epistemic landscape",
-      "authors": [
-        "I. Koponen",
-        "Tommi Kokkonen"
-      ],
-      "year": 2017,
-      "doi": null,
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/3ed4b0581b414920ee4ef179fb57d0bbc3ab5ada",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:46:11.972124",
-      "abstract": "",
-      "venue": "Annual Meeting of the Cognitive Science Society",
-      "citation_count": 0,
-      "metadata": {}
-    },
-    "németh2025hippocampus": {
-      "citation_key": "németh2025hippocampus",
-      "title": "The hippocampus as an epistemic forager: When curiosity and reward jointly steer exploration and hippocampal replay",
-      "authors": [
-        "E. Németh",
-        "Augustin Chartouny",
-        "Krisztina Jedlovszky",
-        "Ismael T. Freire",
-        "M. Khamassi"
-      ],
-      "year": 2025,
-      "doi": "10.1101/2025.10.31.685837",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/b163f6306d7894ac8cae3c5160dd2040042197b5",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:46:11.984879",
-      "abstract": "",
-      "venue": "bioRxiv",
-      "citation_count": 0,
-      "metadata": {}
-    },
-    "gerjets2010topical": {
-      "citation_key": "gerjets2010topical",
-      "title": "Topical Relevance and Information Quality in Cognitive Models of Web Search Behavior: Introducing Epistemic Scent into Information Foraging Theory - eScholarship",
-      "authors": [
-        "Peter Gerjets",
-        "Yvonne Kammerer"
-      ],
-      "year": 2010,
-      "doi": null,
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/e69ced4876ef9bfbcc6b76b3be1f691f725425d0",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:46:12.000827",
-      "abstract": "",
-      "venue": "",
-      "citation_count": 5,
       "metadata": {}
     },
     "mirza2016scene": {
@@ -15283,23 +14443,6 @@
       "metadata": {
         "pdf_url": "https://www.frontiersin.org/articles/10.3389/fncom.2016.00056/pdf"
       }
-    },
-    "schulkin2016foraging": {
-      "citation_key": "schulkin2016foraging",
-      "title": "Foraging for Coherence in Neuroscience: A Pragmatist Orientation",
-      "authors": [
-        "J. Schulkin"
-      ],
-      "year": 2016,
-      "doi": "10.1163/18758185-01301001",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/61bf2705ac60e77b345eef456543a244d25cd114",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:46:15.202957",
-      "abstract": "",
-      "venue": "",
-      "citation_count": 4,
-      "metadata": {}
     },
     "bhakta2018epistemic": {
       "citation_key": "bhakta2018epistemic",
@@ -15426,75 +14569,6 @@
         "pdf_url": "https://www.nature.com/articles/s41598-019-50138-8.pdf"
       }
     },
-    "babac2006verification": {
-      "citation_key": "babac2006verification",
-      "title": "Verification of Intelligent Agents with ACTL for Epistemic Reasoning",
-      "authors": [
-        "Marina Bagić Babac",
-        "M. Kunstic"
-      ],
-      "year": 2006,
-      "doi": "10.1109/CIMCA.2006.229",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/b35f979cfe5c02ec90ed1e283142c0e614743f0c",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:47:00.415656",
-      "abstract": "",
-      "venue": "International Conference on Computational Intelligence for Modelling, Control and Automation",
-      "citation_count": 4,
-      "metadata": {}
-    },
-    "friston2022graphical": {
-      "citation_key": "friston2022graphical",
-      "title": "The graphical brain and deep inference",
-      "authors": [
-        "K. Friston"
-      ],
-      "year": 2022,
-      "doi": null,
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/f40bc0fa12ab85f86bc4d69712196e1aae6f3563",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:47:00.434388",
-      "abstract": "",
-      "venue": "Conference of the Association for Machine Translation in the Americas",
-      "citation_count": 0,
-      "metadata": {}
-    },
-    "chandrasekharan2004epistemic": {
-      "citation_key": "chandrasekharan2004epistemic",
-      "title": "Epistemic Structure : How Agents Change the World for Cognitive Congeniality",
-      "authors": [
-        "S. Chandrasekharan"
-      ],
-      "year": 2004,
-      "doi": null,
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/510a01f5c9f534f8bc7fc1ac920982f424f8f46d",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:47:00.455407",
-      "abstract": "",
-      "venue": "",
-      "citation_count": 2,
-      "metadata": {}
-    },
-    "vijay2021settled": {
-      "citation_key": "vijay2021settled",
-      "title": "Settled knowledge practices, truncated imaginations",
-      "authors": [
-        "Devi Vijay"
-      ],
-      "year": 2021,
-      "doi": "10.1177/13505084211057261",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/09387ee344e842de3915502ffd7efbaa1b2cfea2",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:47:00.470703",
-      "abstract": "Martin Parker recently auto-critiqued his book Against Management. Parker reflected on the book’s circulation, responded to some criticisms, and proposed a manifesto for a School of Organizing that must emphasize alternative organizational forms. I highlight the Eurocentric frame that permeates the book and the auto-critique. This Eurocentrism manifests as settled geographies, histories, and epistemic practices. Such knowledge practices truncate the possibilities of radically imagining alternatives to the contemporary crises of capitalism. I borrow Anna Lowenhaupt Tsing’s metaphor of foraging to briefly consider how subterranean struggles and solidaristic transgressions offer possibilities for alternative world-making.",
-      "venue": "Organization",
-      "citation_count": 8,
-      "metadata": {}
-    },
     "smedt2011role": {
       "citation_key": "smedt2011role",
       "title": "The role of material culture in human time representation: Calendrical systems as extensions of mental time travel",
@@ -15513,93 +14587,6 @@
       "citation_count": 31,
       "metadata": {
         "pdf_url": "https://biblio.ugent.be/publication/1181813/file/6750293.pdf"
-      }
-    },
-    "doonan2015techniques": {
-      "citation_key": "doonan2015techniques",
-      "title": "Techniques of Making Public: The Sensorium Through Eating and Walking",
-      "authors": [
-        "Natalie Doonan"
-      ],
-      "year": 2015,
-      "doi": "10.3138/tric.36.1.52",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/8eb95176c36aa846f45fb2a9340918017dec70cc",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:47:04.663384",
-      "abstract": "",
-      "venue": "",
-      "citation_count": 4,
-      "metadata": {}
-    },
-    "koponen2019agentbasedmodel": {
-      "citation_key": "koponen2019agentbasedmodel",
-      "title": "Agent-Based-Model of Students’ Sociocognitive Learning Process in Acquiring Tiered Knowledge",
-      "authors": [
-        "I. Koponen"
-      ],
-      "year": 2019,
-      "doi": "10.1007/978-3-030-29862-3_7",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/70e827a316d8dc899ca371da98a1477eb518dbfa",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:47:04.677220",
-      "abstract": "",
-      "venue": "Communications in Computer and Information Science",
-      "citation_count": 0,
-      "metadata": {}
-    },
-    "buchel2010connections": {
-      "citation_key": "buchel2010connections",
-      "title": "Connections 2010 Abstract",
-      "authors": [
-        "Olha Buchel"
-      ],
-      "year": 2010,
-      "doi": null,
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/632028b1937d95e88ff231ef5f109c2e51575b4e",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:47:04.691511",
-      "abstract": "",
-      "venue": "",
-      "citation_count": 0,
-      "metadata": {}
-    },
-    "broncano2008epistemological": {
-      "citation_key": "broncano2008epistemological",
-      "title": "The epistemological authority of testimony 1",
-      "authors": [
-        "Fernando Broncano"
-      ],
-      "year": 2008,
-      "doi": null,
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/b1141f8c0f4ca777ee953cdf8afda797a117eae9",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:47:04.705185",
-      "abstract": "",
-      "venue": "",
-      "citation_count": 0,
-      "metadata": {}
-    },
-    "shevchenko2024epistemic": {
-      "citation_key": "shevchenko2024epistemic",
-      "title": "On epistemic dependence",
-      "authors": [
-        "A. A. Shevchenko"
-      ],
-      "year": 2024,
-      "doi": "10.25205/2541-7517-2024-22-1-16-26",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/de434b4e21b077d05083cf42763b5a415779c800",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:47:04.718470",
-      "abstract": "The article considers the thesis of epistemic dependence, which problematizes the current ideas about the nature of knowledge, its historical and methodological premises. It shows both undesirable consequences of its uncritical acceptance (such as a possible gap between knowledge and understanding) and the possibility of its interpretation in a more general social context, as a conflict of epistemic interests. It also highlights the need to consider this phenomenon in the analysis of collective knowledge and collective rationality.",
-      "venue": "Siberian Journal of Philosophy",
-      "citation_count": 122,
-      "metadata": {
-        "pdf_url": "https://doi.org/10.25205/2541-7517-2024-22-1-16-26"
       }
     },
     "liotti2023unpacking": {
@@ -15629,23 +14616,6 @@
       "metadata": {
         "pdf_url": "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0280328&type=printable"
       }
-    },
-    "alvarado2023ai": {
-      "citation_key": "alvarado2023ai",
-      "title": "AI as an Epistemic Technology",
-      "authors": [
-        "Ramón Alvarado"
-      ],
-      "year": 2023,
-      "doi": "10.1007/s11948-023-00451-3",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/255f17f7a2689612d3839c5f57a35675bafd5ae0",
-      "pdf_path": null,
-      "added_date": "2025-12-02T10:47:33.538012",
-      "abstract": "",
-      "venue": "Science and Engineering Ethics",
-      "citation_count": 55,
-      "metadata": {}
     },
     "pratt2023where": {
       "citation_key": "pratt2023where",
@@ -18894,30 +17864,6 @@
       "citation_count": null,
       "metadata": {
         "pdf_url": "https://arxiv.org/pdf/2202.10593v1"
-      }
-    },
-    "zhou2023partially": {
-      "citation_key": "zhou2023partially",
-      "title": "A Partially Observable Deep Multi-Agent Active Inference Framework for Resource Allocation in 6G and Beyond Wireless Communications Networks",
-      "authors": [
-        "Fuhui Zhou",
-        "Rui Ding",
-        "Qihui Wu",
-        "Derrick Wing Kwan Ng",
-        "Kai-Kit Wong",
-        "Naofal Al-Dhahir"
-      ],
-      "year": 2023,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/2308.11402v2",
-      "pdf_path": null,
-      "added_date": "2025-12-03T03:29:44.753656",
-      "abstract": "Resource allocation is of crucial importance in wireless communications. However, it is extremely challenging to design efficient resource allocation schemes for future wireless communication networks since the formulated resource allocation problems are generally non-convex and consist of various coupled variables. Moreover, the dynamic changes of practical wireless communication environment and user service requirements thirst for efficient real-time resource allocation. To tackle these issues, a novel partially observable deep multi-agent active inference (PODMAI) framework is proposed for realizing intelligent resource allocation. A belief based learning method is exploited for updating the policy by minimizing the variational free energy. A decentralized training with a decentralized execution multi-agent strategy is designed to overcome the limitations of the partially observable state information. Exploited the proposed framework, an intelligent spectrum allocation and trajectory optimization scheme is developed for a spectrum sharing unmanned aerial vehicle (UAV) network with dynamic transmission rate requirements as an example. Simulation results demonstrate that our proposed framework can significantly improve the sum transmission rate of the secondary network compared to various benchmark schemes. Moreover, the convergence speed of the proposed PODMAI is significantly improved compared with the conventional reinforcement learning framework. Overall, our proposed framework can enrich the intelligent resource allocation frameworks and pave the way for realizing real-time resource allocation.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/2308.11402v2"
       }
     },
     "probst2022evaluating": {
@@ -26609,29 +25555,6 @@
         "pdf_url": "https://arxiv.org/pdf/1907.11196v1"
       }
     },
-    "bai2017novel": {
-      "citation_key": "bai2017novel",
-      "title": "A novel energy-based phase field model for ferrodroplet deformation and breakup in a uniform magnetic field",
-      "authors": [
-        "Feng Bai",
-        "Rui Li",
-        "Xiaofeng Yang",
-        "Xiaoming He",
-        "Cheng Wang"
-      ],
-      "year": 2017,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/1704.00645v2",
-      "pdf_path": null,
-      "added_date": "2025-12-03T03:38:03.888764",
-      "abstract": "In this paper, we propose a novel, thermodynamically consistent phase field model to simulate the deformation and breakup of a ferrodroplet that is immersed in a viscous medium and subject to an applied uniform magnetic field. Instead of using the magnetic body force in the traditional Rosensweig model, the key idea of this model is to propose a new magnetic energy that enables direct effects of the magnetic field on the interface evolution. The model can thereby be derived from the variational principle via minimizing the free energy of the total system. This energy based modeling idea can be easily extended to include more external fields in a convenient and consistent way for more complicated applications involving multiple external fields. We validate the model by performing a series of numerical simulations, including the comparison with analytic solutions, the investigation of the effect of different types of magnetic fields, the dynamical behaviors of the ferrodroplet breakup under the strong magnetic field, magnetic/velocity/pressure field distributions, the magnetic energy density, and the inertial phenomenon, etc.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/1704.00645v2"
-      }
-    },
     "marini2007metadynamic": {
       "citation_key": "marini2007metadynamic",
       "title": "Metadynamic sampling of the free energy landscapes of proteins coupled with a Monte Carlo algorithm",
@@ -28427,25 +27350,6 @@
         "pdf_url": "https://arxiv.org/pdf/1212.5506v1"
       }
     },
-    "luu2023from": {
-      "citation_key": "luu2023from",
-      "title": "From active affordance to active inference: vertical integration of cognition in the cerebral cortex through dual subcortical control systems.",
-      "authors": [
-        "P. Luu",
-        "Don M. Tucker",
-        "Karl Friston"
-      ],
-      "year": 2023,
-      "doi": "10.1093/cercor/bhad458",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/af474e8d21fc2221df10cd47baaafdb7ae765f8e",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:24.471176",
-      "abstract": "In previous papers, we proposed that the dorsal attention system's top-down control is regulated by the dorsal division of the limbic system, providing a feedforward or impulsive form of control generating expectancies during active inference. In contrast, we proposed that the ventral attention system is regulated by the ventral limbic division, regulating feedback constraints and error-correction for active inference within the neocortical hierarchy. Here, we propose that these forms of cognitive control reflect vertical integration of subcortical arousal control systems that evolved for specific forms of behavior control. The feedforward impetus to action is regulated by phasic arousal, mediated by lemnothalamic projections from the reticular activating system of the lower brainstem, and then elaborated by the hippocampus and dorsal limbic division. In contrast, feedback constraint-based on environmental requirements-is regulated by the tonic activation furnished by collothalamic projections from the midbrain arousal control centers, and then sustained and elaborated by the amygdala, basal ganglia, and ventral limbic division. In an evolutionary-developmental analysis, understanding these differing forms of active affordance-for arousal and motor control within the subcortical vertebrate neuraxis-may help explain the evolution of active inference regulating the cognition of expectancy and error-correction within the mammalian 6-layered neocortex.",
-      "venue": "Cerebral Cortex",
-      "citation_count": 11,
-      "metadata": {}
-    },
     "parr2023generative": {
       "citation_key": "parr2023generative",
       "title": "Generative models for sequential dynamics in active inference",
@@ -28465,28 +27369,6 @@
       "citation_count": 10,
       "metadata": {
         "pdf_url": "https://link.springer.com/content/pdf/10.1007/s11571-023-09963-x.pdf"
-      }
-    },
-    "sladky2023active": {
-      "citation_key": "sladky2023active",
-      "title": "An active inference perspective for the amygdala complex",
-      "authors": [
-        "R. Sladky",
-        "Dominic Kargl",
-        "W. Haubensak",
-        "Claus Lamm"
-      ],
-      "year": 2023,
-      "doi": "10.1016/j.tics.2023.11.004",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/cf0fd4bc39bc725f04e561e7cbc572a2f1c54758",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:24.519306",
-      "abstract": "",
-      "venue": "Trends in Cognitive Sciences",
-      "citation_count": 21,
-      "metadata": {
-        "pdf_url": "https://www.cell.com/article/S1364661323002838/pdf"
       }
     },
     "smith2021stepbystep": {
@@ -28528,29 +27410,6 @@
       "citation_count": 14,
       "metadata": {
         "pdf_url": "https://discovery.ucl.ac.uk/10183167/1/Friston_Manuscript.pdf"
-      }
-    },
-    "costa2022how": {
-      "citation_key": "costa2022how",
-      "title": "How Active Inference Could Help Revolutionise Robotics",
-      "authors": [
-        "Lancelot Da Costa",
-        "Pablo Lanillos",
-        "Noor Sajid",
-        "K. Friston",
-        "Shujhat Khan"
-      ],
-      "year": 2022,
-      "doi": "10.3390/e24030361",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/d21379c471254b9b8422734a84a41c39fafc4d24",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:24.583871",
-      "abstract": "Recent advances in neuroscience have characterised brain function using mathematical formalisms and first principles that may be usefully applied elsewhere. In this paper, we explain how active inference—a well-known description of sentient behaviour from neuroscience—can be exploited in robotics. In short, active inference leverages the processes thought to underwrite human behaviour to build effective autonomous systems. These systems show state-of-the-art performance in several robotics settings; we highlight these and explain how this framework may be used to advance robotics.",
-      "venue": "Entropy",
-      "citation_count": 44,
-      "metadata": {
-        "pdf_url": "https://www.mdpi.com/1099-4300/24/3/361/pdf?version=1646646016"
       }
     },
     "esteves2022osteopathic": {
@@ -28597,28 +27456,6 @@
         "pdf_url": "https://www.frontiersin.org/articles/10.3389/fpsyg.2022.783694/pdf"
       }
     },
-    "friston2015active": {
-      "citation_key": "friston2015active",
-      "title": "Active inference and epistemic value",
-      "authors": [
-        "Karl J. Friston",
-        "Francesco Rigoli",
-        "D. Ognibene",
-        "C. Mathys",
-        "Thomas H. B. FitzGerald",
-        "G. Pezzulo"
-      ],
-      "year": 2015,
-      "doi": "10.1080/17588928.2015.1020053",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/57620e357ee348cd5ffa8eafa480e002a2aba06a",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:24.648064",
-      "abstract": "We offer a formal treatment of choice behavior based on the premise that agents minimize the expected free energy of future outcomes. Crucially, the negative free energy or quality of a policy can be decomposed into extrinsic and epistemic (or intrinsic) value. Minimizing expected free energy is therefore equivalent to maximizing extrinsic value or expected utility (defined in terms of prior preferences or goals), while maximizing information gain or intrinsic value (or reducing uncertainty about the causes of valuable outcomes). The resulting scheme resolves the exploration-exploitation dilemma: Epistemic value is maximized until there is no further information gain, after which exploitation is assured through maximization of extrinsic value. This is formally consistent with the Infomax principle, generalizing formulations of active vision based upon salience (Bayesian surprise) and optimal decisions based on expected utility and risk-sensitive (Kullback-Leibler) control. Furthermore, as with previous active inference formulations of discrete (Markovian) problems, ad hoc softmax parameters become the expected (Bayes-optimal) precision of beliefs about, or confidence in, policies. This article focuses on the basic theory, illustrating the ideas with simulations. A key aspect of these simulations is the similarity between precision updates and dopaminergic discharges observed in conditioning paradigms.",
-      "venue": "Cognitive neuroscience",
-      "citation_count": 646,
-      "metadata": {}
-    },
     "harris2022active": {
       "citation_key": "harris2022active",
       "title": "An Active Inference Account of Skilled Anticipation in Sport: Using Computational Models to Formalise Theory and Generate New Hypotheses",
@@ -28643,51 +27480,6 @@
         "pdf_url": "https://link.springer.com/content/pdf/10.1007/s40279-022-01689-w.pdf"
       }
     },
-    "albarracin2022epistemic": {
-      "citation_key": "albarracin2022epistemic",
-      "title": "Epistemic Communities under Active Inference",
-      "authors": [
-        "Mahault Albarracin",
-        "Daphne Demekas",
-        "M. Ramstead",
-        "Conor Heins"
-      ],
-      "year": 2022,
-      "doi": "10.3390/e24040476",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/50d6dd361e7f125385ffd6ea1e2963984b0be714",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:24.688601",
-      "abstract": "The spread of ideas is a fundamental concern of today’s news ecology. Understanding the dynamics of the spread of information and its co-option by interested parties is of critical importance. Research on this topic has shown that individuals tend to cluster in echo-chambers and are driven by confirmation bias. In this paper, we leverage the active inference framework to provide an in silico model of confirmation bias and its effect on echo-chamber formation. We build a model based on active inference, where agents tend to sample information in order to justify their own view of reality, which eventually leads to them to have a high degree of certainty about their own beliefs. We show that, once agents have reached a certain level of certainty about their beliefs, it becomes very difficult to get them to change their views. This system of self-confirming beliefs is upheld and reinforced by the evolving relationship between an agent’s beliefs and observations, which over time will continue to provide evidence for their ingrained ideas about the world. The epistemic communities that are consolidated by these shared beliefs, in turn, tend to produce perceptions of reality that reinforce those shared beliefs. We provide an active inference account of this community formation mechanism. We postulate that agents are driven by the epistemic value that they obtain from sampling or observing the behaviours of other agents. Inspired by digital social networks like Twitter, we build a generative model in which agents generate observable social claims or posts (e.g., ‘tweets’) while reading the socially observable claims of other agents that lend support to one of two mutually exclusive abstract topics. Agents can choose which other agent they pay attention to at each timestep, and crucially who they attend to and what they choose to read influences their beliefs about the world. Agents also assess their local network’s perspective, influencing which kinds of posts they expect to see other agents making. The model was built and simulated using the freely available Python package pymdp. The proposed active inference model can reproduce the formation of echo-chambers over social networks, and gives us insight into the cognitive processes that lead to this phenomenon.",
-      "venue": "Entropy",
-      "citation_count": 32,
-      "metadata": {
-        "pdf_url": "https://www.mdpi.com/1099-4300/24/4/476/pdf?version=1648561259"
-      }
-    },
-    "ma2021blind": {
-      "citation_key": "ma2021blind",
-      "title": "Blind Image Quality Assessment With Active Inference",
-      "authors": [
-        "Jupo Ma",
-        "Jinjian Wu",
-        "Leida Li",
-        "W. Dong",
-        "Xuemei Xie",
-        "Guangming Shi",
-        "Weisi Lin"
-      ],
-      "year": 2021,
-      "doi": "10.1109/TIP.2021.3064195",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/bf7b8c206b34f62a94920a13d2e43b2ba4077429",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:24.709198",
-      "abstract": "Blind image quality assessment (BIQA) is a useful but challenging task. It is a promising idea to design BIQA methods by mimicking the working mechanism of human visual system (HVS). The internal generative mechanism (IGM) indicates that the HVS actively infers the primary content (i.e., meaningful information) of an image for better understanding. Inspired by that, this paper presents a novel BIQA metric by mimicking the active inference process of IGM. Firstly, an active inference module based on the generative adversarial network (GAN) is established to predict the primary content, in which the semantic similarity and the structural dissimilarity (i.e., semantic consistency and structural completeness) are both considered during the optimization. Then, the image quality is measured on the basis of its primary content. Generally, the image quality is highly related to three aspects, i.e., the scene information (content-dependency), the distortion type (distortion-dependency), and the content degradation (degradation-dependency). According to the correlation between the distorted image and its primary content, the three aspects are analyzed and calculated respectively with a multi-stream convolutional neural network (CNN) based quality evaluator. As a result, with the help of the primary content obtained from the active inference and the comprehensive quality degradation measurement from the multi-stream CNN, our method achieves competitive performance on five popular IQA databases. Especially in cross-database evaluations, our method achieves significant improvements.",
-      "venue": "IEEE Transactions on Image Processing",
-      "citation_count": 93,
-      "metadata": {}
-    },
     "mcparlin2022therapeutic2": {
       "citation_key": "mcparlin2022therapeutic2",
       "title": "Therapeutic Alliance as Active Inference: The Role of Therapeutic Touch and Biobehavioural Synchrony in Musculoskeletal Care",
@@ -28709,51 +27501,6 @@
       "citation_count": 28,
       "metadata": {
         "pdf_url": "https://www.frontiersin.org/articles/10.3389/fnbeh.2022.897247/pdf"
-      }
-    },
-    "sandvedsmith2021towards": {
-      "citation_key": "sandvedsmith2021towards",
-      "title": "Towards a computational phenomenology of mental action: modelling meta-awareness and attentional control with deep parametric active inference",
-      "authors": [
-        "L. Sandved-Smith",
-        "C. Hesp",
-        "J. Mattout",
-        "K. Friston",
-        "A. Lutz",
-        "M. Ramstead"
-      ],
-      "year": 2021,
-      "doi": "10.1093/nc/niab018",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/f1e6cf99f7bfb0a027374c1d740e939ee8b6475e",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:24.751401",
-      "abstract": "Abstract Meta-awareness refers to the capacity to explicitly notice the current content of consciousness and has been identified as a key component for the successful control of cognitive states, such as the deliberate direction of attention. This paper proposes a formal model of meta-awareness and attentional control using hierarchical active inference. To do so, we cast mental action as policy selection over higher-level cognitive states and add a further hierarchical level to model meta-awareness states that modulate the expected confidence (precision) in the mapping between observations and hidden cognitive states. We simulate the example of mind-wandering and its regulation during a task involving sustained selective attention on a perceptual object. This provides a computational case study for an inferential architecture that is apt to enable the emergence of these central components of human phenomenology, namely, the ability to access and control cognitive states. We propose that this approach can be generalized to other cognitive states, and hence, this paper provides the first steps towards the development of a computational phenomenology of mental action and more broadly of our ability to monitor and control our own cognitive states. Future steps of this work will focus on fitting the model with qualitative, behavioural, and neural data.",
-      "venue": "Neuroscience of Consciousness",
-      "citation_count": 80,
-      "metadata": {
-        "pdf_url": "https://academic.oup.com/nc/article-pdf/2021/1/niab018/40395774/niab018.pdf"
-      }
-    },
-    "parr2022active": {
-      "citation_key": "parr2022active",
-      "title": "Active Inference",
-      "authors": [
-        "Thomas Parr",
-        "G. Pezzulo",
-        "K. Friston"
-      ],
-      "year": 2022,
-      "doi": "10.7551/mitpress/12441.001.0001",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/805389f301376ae0e7083241ed78f4c14b7b4e0f",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:24.771956",
-      "abstract": "",
-      "venue": "",
-      "citation_count": 71,
-      "metadata": {
-        "pdf_url": "https://direct.mit.edu/books/oa-monograph/5299/bookpreview-pdf/2004451"
       }
     },
     "priorelli2022flexible": {
@@ -28937,29 +27684,6 @@
         "pdf_url": "https://www.frontiersin.org/articles/10.3389/fpsyg.2022.855074/pdf"
       }
     },
-    "ciaunica2022i": {
-      "citation_key": "ciaunica2022i",
-      "title": "I overthink—Therefore I am not: An active inference account of altered sense of self and agency in depersonalisation disorder",
-      "authors": [
-        "Anna Ciaunica",
-        "Anil Seth",
-        "Jakub Limanowski",
-        "C. Hesp",
-        "K. Friston"
-      ],
-      "year": 2022,
-      "doi": "10.1016/j.concog.2022.103320",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/1230443fff612ef7ee4fa18a6e142b60eac8058c",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:24.975466",
-      "abstract": "",
-      "venue": "Consciousness and Cognition",
-      "citation_count": 47,
-      "metadata": {
-        "pdf_url": "https://doi.org/10.1016/j.concog.2022.103320"
-      }
-    },
     "tschantz2021simulating": {
       "citation_key": "tschantz2021simulating",
       "title": "Simulating homeostatic, allostatic and goal-directed forms of interoceptive control using active inference",
@@ -28984,50 +27708,6 @@
         "pdf_url": "https://sussex.figshare.com/articles/journal_contribution/Simulating_homeostatic_allostatic_and_goal-directed_forms_of_interoceptive_control_using_active_inference/23488679/1/files/41197256.pdf"
       }
     },
-    "arnaldo2022stress": {
-      "citation_key": "arnaldo2022stress",
-      "title": "Stress and its sequelae: An active inference account of the etiological pathway from allostatic overload to depression",
-      "authors": [
-        "Irene Arnaldo",
-        "Andrew W. Corcoran",
-        "K. Friston",
-        "M. Ramstead"
-      ],
-      "year": 2022,
-      "doi": "10.1016/j.neubiorev.2022.104590",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/f12b2968c56b417bbdfb3bed0c13cf4c662c83b0",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:25.019047",
-      "abstract": "",
-      "venue": "Neuroscience and Biobehavioral Reviews",
-      "citation_count": 40,
-      "metadata": {
-        "pdf_url": "https://doi.org/10.1016/j.neubiorev.2022.104590"
-      }
-    },
-    "wei2022modeling": {
-      "citation_key": "wei2022modeling",
-      "title": "Modeling Driver Responses to Automation Failures With Active Inference",
-      "authors": [
-        "Ran Wei",
-        "Anthony D. McDonald",
-        "Alfredo García",
-        "Hananeh Alambeigi"
-      ],
-      "year": 2022,
-      "doi": "10.1109/TITS.2022.3155381",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/c2b07e1c31afef205691002f0856e7a3a34c7950",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:25.044791",
-      "abstract": "Automated vehicle (AV) technologies promise to improve traffic safety and reduce driver workload in the near future. However, most current implementations have limited capabilities and require transition of control between the vehicle and the human driver during automation failures. For this reason, models of driver behavior have been widely studied to assist the design and development of AV technologies. Recent works have shown that driver behavior models grounded in human cognitive information processing achieve better generalization than prior methods. In this work, we applied active inference, a framework of human perception, cognition, and behavior based on the predictive processing theory, to model driver emergency braking responses to automation failures. We estimated the model parameters from experimental data and examined the model parameters using a factor analysis. We verified the model’s braking response prediction capability in counterfactual scenarios. Our results show that the model effectively captured braking reaction times and provided insight on the correspondence between the variations in driver parameters and behavior.",
-      "venue": "IEEE transactions on intelligent transportation systems (Print)",
-      "citation_count": 12,
-      "metadata": {
-        "pdf_url": "https://doi.org/10.1109/tits.2022.3155381"
-      }
-    },
     "sajid2022active": {
       "citation_key": "sajid2022active",
       "title": "Active inference, preference learning and adaptive behaviour",
@@ -29048,48 +27728,6 @@
       "metadata": {
         "pdf_url": "https://iopscience.iop.org/article/10.1088/1757-899X/1261/1/012020/pdf"
       }
-    },
-    "krupnik2022therapeutic": {
-      "citation_key": "krupnik2022therapeutic",
-      "title": "The Therapeutic Alliance as Active Inference: The Role of Trust and Self-Efficacy",
-      "authors": [
-        "V. Krupnik"
-      ],
-      "year": 2022,
-      "doi": "10.1007/s10879-022-09576-1",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/7571ee4270a12e5a2fa698cdec9edb668aedc911",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:25.085859",
-      "abstract": "",
-      "venue": "Journal of Contemporary Psychotherapy",
-      "citation_count": 9,
-      "metadata": {
-        "pdf_url": "https://psyarxiv.com/z375t/"
-      }
-    },
-    "wei2022world": {
-      "citation_key": "wei2022world",
-      "title": "World Model Learning from Demonstrations with Active Inference: Application to Driving Behavior",
-      "authors": [
-        "Ran Wei",
-        "Alfredo Garcia",
-        "Anthony D. McDonald",
-        "G. Markkula",
-        "J. Engström",
-        "Isaac Supeene",
-        "Matthew O'Kelly"
-      ],
-      "year": 2022,
-      "doi": "10.1007/978-3-031-28719-0_9",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/e5c181d1517055f9fbae41c3517cf85a42aca677",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:25.105794",
-      "abstract": "",
-      "venue": "International Workshop on Affective Interactions",
-      "citation_count": 11,
-      "metadata": {}
     },
     "berg2022oversampled": {
       "citation_key": "berg2022oversampled",
@@ -29132,28 +27770,6 @@
       "citation_count": 8,
       "metadata": {
         "pdf_url": "https://www.nature.com/articles/s41598-022-21766-4.pdf"
-      }
-    },
-    "parr2021computational": {
-      "citation_key": "parr2021computational",
-      "title": "The computational neurology of movement under active inference",
-      "authors": [
-        "Thomas Parr",
-        "Jakub Limanowski",
-        "V. Rawji",
-        "Karl J. Friston"
-      ],
-      "year": 2021,
-      "doi": "10.1093/brain/awab085",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/a727b0d6fe97696da72be28725f47a2d3cdd09cd",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:25.168963",
-      "abstract": "Abstract We propose a computational neurology of movement based on the convergence of theoretical neurobiology and clinical neurology. A significant development in the former is the idea that we can frame brain function as a process of (active) inference, in which the nervous system makes predictions about its sensory data. These predictions depend upon an implicit predictive (generative) model used by the brain. This means neural dynamics can be framed as generating actions to ensure sensations are consistent with these predictions—and adjusting predictions when they are not. We illustrate the significance of this formulation for clinical neurology by simulating a clinical examination of the motor system using an upper limb coordination task. Specifically, we show how tendon reflexes emerge naturally under the right kind of generative model. Through simulated perturbations, pertaining to prior probabilities of this model’s variables, we illustrate the emergence of hyperreflexia and pendular reflexes, reminiscent of neurological lesions in the corticospinal tract and cerebellum. We then turn to the computational lesions causing hypokinesia and deficits of coordination. This in silico lesion-deficit analysis provides an opportunity to revisit classic neurological dichotomies (e.g. pyramidal versus extrapyramidal systems) from the perspective of modern approaches to theoretical neurobiology—and our understanding of the neurocomputational architecture of movement control based on first principles.",
-      "venue": "Brain : a journal of neurology",
-      "citation_count": 51,
-      "metadata": {
-        "pdf_url": "https://academic.oup.com/brain/article-pdf/144/6/1799/40311657/awab085.pdf"
       }
     },
     "paulus2019active": {
@@ -29222,93 +27838,6 @@
         "pdf_url": "https://discovery.ucl.ac.uk/10116546/1/neco_a_01341.pdf"
       }
     },
-    "proietti2021active": {
-      "citation_key": "proietti2021active",
-      "title": "An active inference model of hierarchical action understanding, learning and imitation.",
-      "authors": [
-        "Riccardo Proietti",
-        "G. Pezzulo",
-        "A. Tessari"
-      ],
-      "year": 2021,
-      "doi": "10.31234/osf.io/ms95f",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/df0bcd76bf0342cfa1cfe7b0c319bdc90f9a84d5",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:25.258617",
-      "abstract": "We advance a novel active inference model of the cognitive processing that underlies the acquisition of a hierarchical action repertoire and its use for observation, understanding and imitation. We illustrate the model in four simulations of a tennis learner who observes a teacher performing tennis shots, forms hierarchical representations of the observed actions, and imitates them. Our simulations show that the agent's oculomotor activity implements an active information sampling strategy that permits inferring the kinematic aspects of the observed movement, which lie at the lowest level of the action hierarchy. In turn, this low-level kinematic inference supports higher-level inferences about deeper aspects of the observed actions: proximal goals and intentions. Finally, the inferred action representations can steer imitative responses, but interfere with the execution of different actions. Our simulations show that hierarchical active inference provides a unified account of action observation, understanding, learning and imitation and helps explain the neurobiological underpinnings of visuomotor cognition, including the multiple routes for action understanding in the dorsal and ventral streams and mirror mechanisms.",
-      "venue": "Physics of Life Reviews",
-      "citation_count": 36,
-      "metadata": {
-        "pdf_url": "https://cris.unibo.it/bitstream/11585/929414/7/An%20active%20inference%20mode_pdfEditorialeOA.pdf"
-      }
-    },
-    "whyte2020predictive": {
-      "citation_key": "whyte2020predictive",
-      "title": "The predictive global neuronal workspace: A formal active inference model of visual consciousness",
-      "authors": [
-        "Christopher J. Whyte",
-        "Ryan Smith"
-      ],
-      "year": 2020,
-      "doi": "10.1101/2020.02.11.944611",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/a2d5241a09db970020f863c29a4be90891ca64a5",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:25.280850",
-      "abstract": "The global neuronal workspace (GNW) model has inspired over two decades of hypothesis driven research on the neural basis consciousness. However, recent studies have reported findings that are at odds with empirical predictions of the model. Further, the macro-anatomical focus of current GNW research has limited the specificity of predictions afforded by the model. In this paper we present a neurocomputational model – based on Active Inference – that captures central architectural elements of the GNW and is able to address these limitations. The resulting ‘predictive global workspace’ casts neuronal dynamics as approximating Bayesian inference, allowing precise, testable predictions at both the behavioural and neural levels of description. We report simulations demonstrating the model’s ability to reproduce: 1) the electrophysiological and behaviour results observed in previous studies of inattentional blindness; and 2) the previously introduced four-way taxonomy predicted by the GNW, which describes the relationship between consciousness, attention, and sensory signal strength. We then illustrate how our model can reconcile/explain (apparently) conflicting findings, extend the GNW taxonomy to include the influence of prior expectations, and inspire novel paradigms to test associated behavioural and neural predictions.",
-      "venue": "Progress in neurobiology",
-      "citation_count": 67,
-      "metadata": {
-        "pdf_url": "https://www.biorxiv.org/content/biorxiv/early/2020/09/13/2020.02.11.944611.full.pdf"
-      }
-    },
-    "ramstead2019tale": {
-      "citation_key": "ramstead2019tale",
-      "title": "A tale of two densities: active inference is enactive inference",
-      "authors": [
-        "M. Ramstead",
-        "Michael D. Kirchhoff",
-        "Karl J. Friston"
-      ],
-      "year": 2019,
-      "doi": "10.1177/1059712319862774",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/f4914b57854eb9cbabcb5456b3fbaf76590e857b",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:25.301494",
-      "abstract": "The aim of this article is to clarify how best to interpret some of the central constructs that underwrite the free-energy principle (FEP) – and its corollary, active inference – in theoretical neuroscience and biology: namely, the role that generative models and variational densities play in this theory. We argue that these constructs have been systematically misrepresented in the literature, because of the conflation between the FEP and active inference, on the one hand, and distinct (albeit closely related) Bayesian formulations, centred on the brain – variously known as predictive processing, predictive coding or the prediction error minimisation framework. More specifically, we examine two contrasting interpretations of these models: a structural representationalist interpretation and an enactive interpretation. We argue that the structural representationalist interpretation of generative and recognition models does not do justice to the role that these constructs play in active inference under the FEP. We propose an enactive interpretation of active inference – what might be called enactive inference. In active inference under the FEP, the generative and recognition models are best cast as realising inference and control – the self-organising, belief-guided selection of action policies – and do not have the properties ascribed by structural representationalists.",
-      "venue": "Adaptive Behavior",
-      "citation_count": 169,
-      "metadata": {
-        "pdf_url": "https://journals.sagepub.com/doi/pdf/10.1177/1059712319862774"
-      }
-    },
-    "constant2020extended": {
-      "citation_key": "constant2020extended",
-      "title": "Extended active inference: Constructing predictive cognition beyond skulls",
-      "authors": [
-        "Axel Constant",
-        "Axel Constant",
-        "Axel Constant",
-        "A. Clark",
-        "A. Clark",
-        "Michael D. Kirchhoff",
-        "Karl J. Friston"
-      ],
-      "year": 2020,
-      "doi": "10.1111/mila.12330",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/d045edec5fdf0dc5ff58d05c9800ba237cba1043",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:25.327815",
-      "abstract": "Cognitive niche construction is the process whereby organisms create and maintain cause–effect models of their niche as guides for fitness influencing behavior. Extended mind theory claims that cognitive processes extend beyond the brain to include predictable states of the world. Active inference and predictive processing in cognitive science assume that organisms embody predictive (i.e., generative) models of the world optimized by standard cognitive functions (e.g., perception, action, learning). This paper presents an active inference formulation that views cognitive niche construction as a cognitive function aimed at optimizing organisms' generative models. We call that process of optimization extended active inference.",
-      "venue": "Mind & Language",
-      "citation_count": 68,
-      "metadata": {
-        "pdf_url": "https://onlinelibrary.wiley.com/doi/pdfdirect/10.1111/mila.12330"
-      }
-    },
     "pezzulo2021evolution": {
       "citation_key": "pezzulo2021evolution",
       "title": "The evolution of brain architectures for predictive coding and active inference",
@@ -29372,29 +27901,6 @@
       "citation_count": 105,
       "metadata": {
         "pdf_url": "https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1007805&type=printable"
-      }
-    },
-    "sajid2020degeneracy": {
-      "citation_key": "sajid2020degeneracy",
-      "title": "Degeneracy and Redundancy in Active Inference",
-      "authors": [
-        "Noor Sajid",
-        "Thomas Parr",
-        "T. Hope",
-        "C. Price",
-        "Karl J. Friston"
-      ],
-      "year": 2020,
-      "doi": "10.1093/cercor/bhaa148",
-      "source": "semanticscholar",
-      "url": "https://www.semanticscholar.org/paper/83c622597338163dd4798b56c10d190e29b33e18",
-      "pdf_path": null,
-      "added_date": "2025-12-03T08:15:25.448065",
-      "abstract": "Abstract The notions of degeneracy and redundancy are important constructs in many areas, ranging from genomics through to network science. Degeneracy finds a powerful role in neuroscience, explaining key aspects of distributed processing and structure–function relationships in the brain. For example, degeneracy accounts for the superadditive effect of lesions on functional deficits in terms of a “many-to-one” structure–function mapping. In this paper, we offer a principled account of degeneracy and redundancy, when function is operationalized in terms of active inference, namely, a formulation of perception and action as belief updating under generative models of the world. In brief, “degeneracy” is quantified by the “entropy” of posterior beliefs about the causes of sensations, while “redundancy” is the “complexity” cost incurred by forming those beliefs. From this perspective, degeneracy and redundancy are complementary: Active inference tries to minimize redundancy while maintaining degeneracy. This formulation is substantiated using statistical and mathematical notions of degenerate mappings and statistical efficiency. We then illustrate changes in degeneracy and redundancy during the learning of a word repetition task. Finally, we characterize the effects of lesions—to intrinsic and extrinsic connections—using in silico disconnections. These numerical analyses highlight the fundamental difference between degeneracy and redundancy—and how they score distinct imperatives for perceptual inference and structure learning that are relevant to synthetic and biological intelligence.",
-      "venue": "Cerebral Cortex",
-      "citation_count": 43,
-      "metadata": {
-        "pdf_url": "https://doi.org/10.1093/cercor/bhaa148"
       }
     },
     "constant2019regimes": {
@@ -29543,222 +28049,6 @@
       "citation_count": 106,
       "metadata": {
         "pdf_url": "https://www.frontiersin.org/articles/10.3389/fpsyg.2019.02844/pdf"
-      }
-    },
-    "hou2022conditions": {
-      "citation_key": "hou2022conditions",
-      "title": "Conditions for none to be whipped by `Rank and Yank' under the majority rule",
-      "authors": [
-        "Fujun Hou"
-      ],
-      "year": 2022,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/2208.05093v1",
-      "pdf_path": null,
-      "added_date": "2025-12-04T15:33:04.971293",
-      "abstract": "`Rank and Yank' is practiced in many organizations. This paper is concerned with the condtions for none to be whipped by `Rank and Yank' when the evaluation data under each criterion are assumed to be ordinal rankings and the majority rule is used. Two sufficient conditions are set forth of which the first one formulates the alternatives indifference definition in terms of the election matrix, while the second one specifies a certain balance in the probabilities of alternatives being ranked at positions. In a sense, `none to be whipped' means that the organization is of stability. Thus the second sufficient condition indicates an intrinsic relation of balance and organization stability. In addition, directions for future research are put forward.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/2208.05093"
-      }
-    },
-    "noone2017visual": {
-      "citation_key": "noone2017visual",
-      "title": "Visual and Textual Programming Languages: A Systematic Review of the Literature",
-      "authors": [
-        "Mark Noone",
-        "Aidan Mooney"
-      ],
-      "year": 2017,
-      "doi": "10.1007/s40692-018-0101-5",
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/1710.01547v2",
-      "pdf_path": null,
-      "added_date": "2025-12-04T15:33:05.072622",
-      "abstract": "It is well documented, and has been the topic of much research, that Computer Science courses tend to have higher than average drop out rates at third level. This is a problem that needs to be addressed with urgency but also caution. The required number of Computer Science graduates is growing every year but the number of graduates is not meeting this demand and one way that this problem can be alleviated is to encourage students at an early age towards studying Computer Science courses.   This paper presents a systematic literature review on the role of visual and textual programming languages when learning to program, particularly as a first programming language. The approach is systematic, in that a structured search of electronic resources has been conducted, and the results are presented and quantitatively analysed. This study will give insight into whether or not the current approaches to teaching young learners programming are viable, and examines what we can do to increase the interest and retention of these students as they progress through their education.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/1710.01547"
-      }
-    },
-    "noone2017first": {
-      "citation_key": "noone2017first",
-      "title": "First Programming Language: Visual or Textual?",
-      "authors": [
-        "Mark Noone",
-        "Aidan Mooney"
-      ],
-      "year": 2017,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/1710.11557v2",
-      "pdf_path": null,
-      "added_date": "2025-12-04T15:33:05.174113",
-      "abstract": "In modern day society, the ability to code is a highly desirable skill. So much so that the current supply from third level institutes across the world does not meet the high demands of industry. One of the major issues is the low progression rates from first to second year in third level Computer Science courses with introductory programming courses proving to be a high contributing factor. This is something that needs to be addressed. One such way to address the issue is to get children involved and engaged with computing at young ages.   This paper describes a study undertaken that is the first step in a body of work that aims to garner the interest of potential Computer Science students at an early age. The study involves a comparison of two short courses; one based in Java and one based in Snap. The goal is to determine whether either of these languages is a better first programming language for students than the other, or if both are viable. These languages were chosen to allow for a comparison between a Visual Programming Language and a Textual Programming Language.   Feedback in the form of a survey will be used to gather the opinions of the students. This will provide data on issues such as which language was easier to learn and which language was preferred amongst others. Based on the outcomes of this study, a full-scale curriculum will be developed in the coming year. The outcomes of this study will help to establish which is the best programming language to suit the learning needs of students.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/1710.11557"
-      }
-    },
-    "zhou2022none": {
-      "citation_key": "zhou2022none",
-      "title": "None Class Ranking Loss for Document-Level Relation Extraction",
-      "authors": [
-        "Yang Zhou",
-        "Wee Sun Lee"
-      ],
-      "year": 2022,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/2205.00476v2",
-      "pdf_path": null,
-      "added_date": "2025-12-04T15:33:05.273030",
-      "abstract": "Document-level relation extraction (RE) aims at extracting relations among entities expressed across multiple sentences, which can be viewed as a multi-label classification problem. In a typical document, most entity pairs do not express any pre-defined relation and are labeled as \"none\" or \"no relation\". For good document-level RE performance, it is crucial to distinguish such none class instances (entity pairs) from those of pre-defined classes (relations). However, most existing methods only estimate the probability of pre-defined relations independently without considering the probability of \"no relation\". This ignores the context of entity pairs and the label correlations between the none class and pre-defined classes, leading to sub-optimal predictions. To address this problem, we propose a new multi-label loss that encourages large margins of label confidence scores between each pre-defined class and the none class, which enables captured label correlations and context-dependent thresholding for label prediction. To gain further robustness against positive-negative imbalance and mislabeled data that could appear in real-world RE datasets, we propose a margin regularization and a margin shifting technique. Experimental results demonstrate that our method significantly outperforms existing multi-label losses for document-level RE and works well in other multi-label tasks such as emotion classification when none class instances are available for training.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/2205.00476"
-      }
-    },
-    "boyer20253manifolds": {
-      "citation_key": "boyer20253manifolds",
-      "title": "On 3-manifolds admitting co-orientable taut foliations, but none with vanishing Euler class",
-      "authors": [
-        "Steven Boyer",
-        "Cameron McA. Gordon",
-        "Ying Hu",
-        "Duncan McCoy"
-      ],
-      "year": 2025,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/2509.20135v2",
-      "pdf_path": null,
-      "added_date": "2025-12-04T15:33:05.373601",
-      "abstract": "In this article, we construct infinitely many (small Seifert fibred, hyperbolic and toroidal) rational homology $3$-spheres that admit co-orientable taut foliations, but none with vanishing Euler class. In the context of the $L$-space conjecture, these examples provide rational homology $3$-spheres that admit co-orientable taut foliations (and hence are not $L$-spaces) and have left-orderable fundamental groups, yet none of the left orders arise directly from the universal circle actions associated to co-orientable taut foliations.   The hyperbolic and non-Seifert toroidal examples are obtained from Dehn surgeries on knots in the $3$-sphere and use Heegaard Floer homology to obstruct the existence of a co-orientable foliation with vanishing Euler class. For the Seifert fibred case, we establish necessary and sufficient conditions for the Euler class of the normal bundle of the Seifert fibration to vanish. Moreover, when the base orbifold is hyperbolic, we also provide a second proof of this condition from the viewpoint of discrete faithful representations of Fuchsian groups.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/2509.20135"
-      }
-    },
-    "li2022deep2": {
-      "citation_key": "li2022deep2",
-      "title": "Deep Reinforcement Learning for Online Routing of Unmanned Aerial Vehicles with Wireless Power Transfer",
-      "authors": [
-        "Kaiwen Li",
-        "Tao Zhang",
-        "Rui Wang",
-        "Ling Wang"
-      ],
-      "year": 2022,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/2204.11477v1",
-      "pdf_path": null,
-      "added_date": "2025-12-04T15:33:05.469032",
-      "abstract": "The unmanned aerial vehicle (UAV) plays an vital role in various applications such as delivery, military mission, disaster rescue, communication, etc., due to its flexibility and versatility. This paper proposes a deep reinforcement learning method to solve the UAV online routing problem with wireless power transfer, which can charge the UAV remotely without wires, thus extending the capability of the battery-limited UAV. Our study considers the power consumption of the UAV and the wireless charging process. Unlike the previous works, we solve the problem by a designed deep neural network. The model is trained using a deep reinforcement learning method offline, and is used to optimize the UAV routing problem online. On small and large scale instances, the proposed model runs from four times to 500 times faster than Google OR-tools, the state-of-the-art combinatorial optimization solver, with identical solution quality. It also outperforms different types of heuristic and local search methods in terms of both run-time and optimality. In addition, once the model is trained, it can scale to new generated problem instances with arbitrary topology that are not seen during training. The proposed method is practically applicable when the problem scale is large and the response time is crucial.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/2204.11477"
-      }
-    },
-    "tam2025none": {
-      "citation_key": "tam2025none",
-      "title": "None of the Above, Less of the Right: Parallel Patterns between Humans and LLMs on Multi-Choice Questions Answering",
-      "authors": [
-        "Zhi Rui Tam",
-        "Cheng-Kuang Wu",
-        "Chieh-Yen Lin",
-        "Yun-Nung Chen"
-      ],
-      "year": 2025,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/2503.01550v1",
-      "pdf_path": null,
-      "added_date": "2025-12-04T15:33:05.564277",
-      "abstract": "Multiple-choice exam questions with \"None of the above\" (NA) options have been extensively studied in educational testing, in which existing research suggests that they better assess true knowledge. However, their impact on Large Language Models (LLMs) evaluation remains underexplored. Through systematic experiments with 28 LLMs on the MMLU benchmark, we examine how NA options affect model performance and confidence calibration. Our analysis reveals that NA options, when used as the correct answer, lead to a consistent 30-50\\% performance drop across models regardless of scale--suggesting that LLMs lack the meta-cognitive ability to systematically evaluate and reject all given options when none are correct. This degradation shows strong domain dependence, with minimal impact on mathematical reasoning (14.6\\% drop) but severe effects on tasks requiring uncertainty handling like business ethics (48.1\\% drop). Our results highlight important implications for benchmark design and raise questions about LLMs' ability to handle uncertainty in real-world applications.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/2503.01550"
-      }
-    },
-    "liu2022deep": {
-      "citation_key": "liu2022deep",
-      "title": "Deep Reinforcement Learning for Orienteering Problems Based on Decomposition",
-      "authors": [
-        "Wei Liu",
-        "Tao Zhang",
-        "Rui Wang",
-        "Kaiwen Li",
-        "Wenhua Li",
-        "Kang Yang"
-      ],
-      "year": 2022,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/2204.11575v2",
-      "pdf_path": null,
-      "added_date": "2025-12-04T15:33:05.660684",
-      "abstract": "This paper presents a new method for solving an orienteering problem (OP) by breaking it down into two parts: a knapsack problem (KP) and a traveling salesman problem (TSP). A KP solver is responsible for picking nodes, while a TSP solver is responsible for designing the proper path and assisting the KP solver in judging constraint violations. To address constraints, we propose a dual-population coevolutionary algorithm (DPCA) as the KP solver, which simultaneously maintains both feasible and infeasible populations. A dynamic pointer network (DYPN) is introduced as the TSP solver, which takes city locations as inputs and immediately outputs a permutation of nodes. The model, which is trained by reinforcement learning, can capture both the structural and dynamic patterns of the given problem. The model can generalize to other instances with different scales and distributions. Experimental results show that the proposed algorithm can outperform conventional approaches in terms of training, inference, and generalization ability.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/2204.11575"
-      }
-    },
-    "wang2023learning": {
-      "citation_key": "wang2023learning",
-      "title": "Learning to Branch in Combinatorial Optimization with Graph Pointer Networks",
-      "authors": [
-        "Rui Wang",
-        "Zhiming Zhou",
-        "Tao Zhang",
-        "Ling Wang",
-        "Xin Xu",
-        "Xiangke Liao",
-        "Kaiwen Li"
-      ],
-      "year": 2023,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/2307.01434v1",
-      "pdf_path": null,
-      "added_date": "2025-12-04T15:33:05.761234",
-      "abstract": "Branch-and-bound is a typical way to solve combinatorial optimization problems. This paper proposes a graph pointer network model for learning the variable selection policy in the branch-and-bound. We extract the graph features, global features and historical features to represent the solver state. The proposed model, which combines the graph neural network and the pointer mechanism, can effectively map from the solver state to the branching variable decisions. The model is trained to imitate the classic strong branching expert rule by a designed top-k Kullback-Leibler divergence loss function. Experiments on a series of benchmark problems demonstrate that the proposed approach significantly outperforms the widely used expert-designed branching rules. Our approach also outperforms the state-of-the-art machine-learning-based branch-and-bound methods in terms of solving speed and search tree size on all the test instances. In addition, the model can generalize to unseen instances and scale to larger instances.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/2307.01434"
-      }
-    },
-    "marconato2024all": {
-      "citation_key": "marconato2024all",
-      "title": "All or None: Identifiable Linear Properties of Next-token Predictors in Language Modeling",
-      "authors": [
-        "Emanuele Marconato",
-        "Sébastien Lachapelle",
-        "Sebastian Weichwald",
-        "Luigi Gresele"
-      ],
-      "year": 2024,
-      "doi": null,
-      "source": "arxiv",
-      "url": "http://arxiv.org/abs/2410.23501v2",
-      "pdf_path": null,
-      "added_date": "2025-12-04T15:33:05.862800",
-      "abstract": "We analyze identifiability as a possible explanation for the ubiquity of linear properties across language models, such as the vector difference between the representations of \"easy\" and \"easiest\" being parallel to that between \"lucky\" and \"luckiest\". For this, we ask whether finding a linear property in one model implies that any model that induces the same distribution has that property, too. To answer that, we first prove an identifiability result to characterize distribution-equivalent next-token predictors, lifting a diversity requirement of previous results. Second, based on a refinement of relational linearity [Paccanaro and Hinton, 2001; Hernandez et al., 2024], we show how many notions of linearity are amenable to our analysis. Finally, we show that under suitable conditions, these linear properties either hold in all or none distribution-equivalent next-token predictors.",
-      "venue": "arXiv",
-      "citation_count": null,
-      "metadata": {
-        "pdf_url": "https://arxiv.org/pdf/2410.23501"
       }
     }
   }

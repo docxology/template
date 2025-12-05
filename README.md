@@ -171,11 +171,14 @@ graph TB
 ### Option 2: Quick Commands Reference
 
 ```bash
-# Interactive menu (recommended)
+# Interactive menu (recommended) - 10-stage extended pipeline
 ./run.sh
 
-# Or run full pipeline directly
+# Or run full 10-stage pipeline directly (includes optional LLM review)
 ./run.sh --pipeline
+
+# Alternative: Core 6-stage pipeline (no LLM dependencies)
+python3 scripts/run_all.py
 
 # Run tests with coverage (infrastructure + project)
 python3 scripts/01_run_tests.py
@@ -311,7 +314,7 @@ The project follows a standardized structure with clear separation of concerns:
 graph TB
     subgraph L1["Layer 1: Infrastructure"]
         INFRA[infrastructure/<br/>Generic tools<br/>Build and validation]
-        INFRA_SCRIPTS[scripts/<br/>Entry point orchestrators<br/>5-stage pipeline]
+        INFRA_SCRIPTS[scripts/<br/>Entry point orchestrators<br/>6-stage core or 10-stage extended]
     end
     
     subgraph L2["Layer 2: Project-Specific"]
@@ -456,20 +459,28 @@ pip install -e .
 ### 3. Generate Manuscript
 
 ```bash
-# Interactive menu (recommended)
+# Interactive menu (recommended) - 10-stage extended pipeline with LLM review
 ./run.sh
 
-# Or run full pipeline directly
+# Or run full 10-stage pipeline directly (stages 0-9, includes optional LLM)
 ./run.sh --pipeline
 
+# Alternative: Core 6-stage pipeline (stages 00-05, no LLM dependencies)
+python3 scripts/run_all.py
+
 # Or run stages individually (using generic entry point orchestrators)
-python3 scripts/00_setup_environment.py      # Stage 0: Setup environment
-python3 scripts/01_run_tests.py              # Stage 1: Run tests
-python3 scripts/02_run_analysis.py           # Stage 2: Execute project/scripts/
-python3 scripts/03_render_pdf.py             # Stage 3: Render PDFs
-python3 scripts/04_validate_output.py        # Stage 4: Validate output
-python3 scripts/05_copy_outputs.py           # Stage 5: Copy final deliverables
+python3 scripts/00_setup_environment.py      # Setup environment
+python3 scripts/01_run_tests.py              # Run tests (infrastructure + project)
+python3 scripts/02_run_analysis.py           # Execute project/scripts/
+python3 scripts/03_render_pdf.py             # Render PDFs
+python3 scripts/04_validate_output.py        # Validate output
+python3 scripts/05_copy_outputs.py           # Copy final deliverables
 ```
+
+**Pipeline Entry Points:**
+- **`./run.sh --pipeline`**: 10 stages (0-9) - Extended pipeline with optional LLM review and translations
+- **`python3 scripts/run_all.py`**: 6 stages (00-05) - Core pipeline only, no LLM dependencies
+- **`./run.sh`**: Interactive menu with all options (individual stages, LLM operations, literature search)
 
 **See [How To Use Guide](docs/HOW_TO_USE.md) for comprehensive setup instructions at all skill levels.**
 
@@ -646,51 +657,69 @@ graph TD
 
 ## 🔍 How It Works
 
-**[Complete workflow](docs/WORKFLOW.md)** | **[Architecture](docs/ARCHITECTURE.md)** | **[Build System](docs/BUILD_SYSTEM.md)**
+**[Complete workflow](docs/WORKFLOW.md)** | **[Architecture](docs/ARCHITECTURE.md)** | **[Build System](docs/BUILD_SYSTEM.md)** | **[Run Guide](RUN_GUIDE.md)**
+
+The template provides **two pipeline entry points**:
+
+### Entry Point 1: Extended Pipeline (`./run.sh --pipeline`)
+
+**10-stage pipeline** (stages 0-9) with optional LLM review:
 
 ```mermaid
 flowchart TD
-    START([Start ./run.sh]) --> CLEAN[Clean all outputs]
-    CLEAN --> TESTS[Run tests with coverage requirements<br/>99.88% project, 55.89% infra]
-    TESTS --> SCRIPTS[Execute all scripts<br/>5 project scripts executed]
-    SCRIPTS --> UTILS[Run repo utilities<br/>Glossary + Validation]
-    UTILS --> VALIDATE[Validate markdown<br/>All references resolved]
-    VALIDATE --> GLOSSARY[Generate glossary<br/>Auto-generated API docs]
-    GLOSSARY --> BUILD_IND[Build individual PDFs<br/>14 sections]
-    BUILD_IND --> BUILD_COMB[Build combined PDF<br/>Complete manuscript]
-    BUILD_COMB --> VALIDATE_PDF[Validate PDF output<br/>Quality checks]
-    VALIDATE_PDF --> SUCCESS[✅ Build Complete<br/>84 seconds<br/>(without LLM)]
+    START([./run.sh --pipeline]) --> STAGE0[Stage 0: Clean Output Directories]
+    STAGE0 --> STAGE1[Stage 1: Setup Environment]
+    STAGE1 --> STAGE2[Stage 2: Infrastructure Tests<br/>49%+ coverage required]
+    STAGE2 --> STAGE3[Stage 3: Project Tests<br/>70%+ coverage required]
+    STAGE3 --> STAGE4[Stage 4: Project Analysis<br/>Execute project/scripts/]
+    STAGE4 --> STAGE5[Stage 5: PDF Rendering<br/>Generate manuscript PDFs]
+    STAGE5 --> STAGE6[Stage 6: Output Validation<br/>Quality checks]
+    STAGE6 --> STAGE7[Stage 7: Copy Outputs<br/>Final deliverables]
+    STAGE7 --> STAGE8[Stage 8: LLM Scientific Review<br/>Optional, requires Ollama]
+    STAGE8 --> STAGE9[Stage 9: LLM Translations<br/>Optional, requires Ollama]
+    STAGE9 --> SUCCESS[✅ Build Complete<br/>~84s core + LLM time]
     
-    TESTS -->|Fail| FAIL1[❌ Tests failed<br/>Fix coverage issues]
-    SCRIPTS -->|Fail| FAIL2[❌ Scripts failed<br/>Check imports]
-    VALIDATE -->|Fail| FAIL3[❌ Validation failed<br/>Fix references]
-    BUILD_IND -->|Fail| FAIL4[❌ PDF build failed<br/>Check LaTeX]
+    STAGE2 -->|Fail| FAIL[❌ Pipeline Failed]
+    STAGE3 -->|Fail| FAIL
+    STAGE4 -->|Fail| FAIL
+    STAGE5 -->|Fail| FAIL
+    STAGE6 -->|Fail| FAIL
+    STAGE7 -->|Fail| FAIL
+    STAGE8 -->|Skip| STAGE9[Graceful degradation]
+    STAGE9 -->|Skip| SUCCESS[Optional stages skipped]
     
-    FAIL1 --> END([Exit with error])
-    FAIL2 --> END
-    FAIL3 --> END
-    FAIL4 --> END
-    
+    FAIL --> END([Exit with error])
     SUCCESS --> END
     
     classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef failure fill:#ffebee,stroke:#c62828,stroke-width:2px
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef optional fill:#fff3e0,stroke:#e65100,stroke-width:2px
     
     class SUCCESS success
-    class FAIL1,FAIL2,FAIL3,FAIL4 failure
-    class CLEAN,TESTS,SCRIPTS,UTILS,VALIDATE,GLOSSARY,BUILD_IND,BUILD_COMB,VALIDATE_PDF process
+    class FAIL failure
+    class STAGE0,STAGE1,STAGE2,STAGE3,STAGE4,STAGE5,STAGE6,STAGE7 process
+    class STAGE8,STAGE9 optional
 ```
 
-**Pipeline Stages:**
+### Entry Point 2: Core Pipeline (`python3 scripts/run_all.py`)
 
-1. **Test Validation**: Ensures coverage requirements met - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
-2. **Script Execution**: Runs all Python scripts in `project/scripts/` (validating project/src/ integration) - [Script Details](docs/BUILD_SYSTEM.md#stage-2-script-execution-1-2-seconds)
-3. **Repository Utilities**: Generates glossary and validates markdown - [Utility Details](docs/BUILD_SYSTEM.md#stage-3-repository-utilities-1-second)
-4. **Markdown Discovery**: Finds manuscript `.md` files in `project/manuscript/` - [Numbering System](docs/MANUSCRIPT_NUMBERING_SYSTEM.md)
-5. **PDF Generation**: Creates individual manuscript section PDFs and combined manuscript PDF - [PDF Analysis](docs/BUILD_SYSTEM.md#stage-4-individual-module-pdfs-32-35-seconds)
-6. **Output Validation**: Validates PDF quality - [PDF Validation](docs/PDF_VALIDATION.md)
-7. **Output Organization**: Places outputs in organized subdirectories
+**6-stage core pipeline** (stages 00-05) without LLM dependencies:
+
+| Stage | Script | Purpose |
+|-------|--------|---------|
+| 00 | `00_setup_environment.py` | Environment setup & validation |
+| 01 | `01_run_tests.py` | Run complete test suite (infrastructure + project) |
+| 02 | `02_run_analysis.py` | Discover & run `project/scripts/` |
+| 03 | `03_render_pdf.py` | PDF rendering orchestration |
+| 04 | `04_validate_output.py` | Output validation & reporting |
+| 05 | `05_copy_outputs.py` | Copy final deliverables to `output/` |
+
+**Stage Numbering:**
+- `./run.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
+- `run_all.py`: Stages 00-05 (zero-padded Python convention, 6 core stages)
+
+**See [RUN_GUIDE.md](RUN_GUIDE.md) for complete pipeline documentation.**
 
 ## 📚 Complete Documentation Index
 

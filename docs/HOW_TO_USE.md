@@ -50,6 +50,7 @@ That's it! You now have a complete research project structure.
 - ✅ **Cross-referencing system** for equations and figures
 - ✅ **Automated testing** framework (1934 tests passing: 1884 infrastructure + 351 project)
 - ✅ **Build pipeline** that validates everything (58-second builds)
+- ✅ **Terminal output logging** - all pipeline output saved to timestamped log files
 - ✅ **25+ comprehensive guides** for all skill levels
 
 ## 📖 Guides by Skill Level

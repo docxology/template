@@ -193,3 +193,4 @@ def render_table(headers: list[str], rows: list[list[str]]) -> str:
     html += "    </tbody>\n</table>"
     return html
 
+

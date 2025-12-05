@@ -150,3 +150,4 @@ def validate_response_structure(
     is_valid = len(issues) == 0
     return is_valid, issues, details
 
+

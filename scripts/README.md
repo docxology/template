@@ -24,35 +24,41 @@ The template provides **two pipeline orchestrators** with different scope:
 ./run.sh
 ```
 
-This presents a menu with all available operations:
+This presents a menu with all available operations (menu numbering aligns with script numbering):
 
 ```
 ============================================================
   Research Project Template - Main Menu
 ============================================================
 
-Core Build Operations:
-  1. Run infrastructure tests
-  2. Run project tests
-  3. Render PDF manuscript
-  4. Run full pipeline (tests + analysis + PDF + validate)
+Core Pipeline Scripts (aligned with script numbering):
+  0. Setup Environment (00_setup_environment.py)
+  1. Run Tests (01_run_tests.py - infrastructure + project)
+  2. Run Analysis (02_run_analysis.py)
+  3. Render PDF (03_render_pdf.py)
+  4. Validate Output (04_validate_output.py)
+  5. Copy Outputs (05_copy_outputs.py)
+  6. LLM Review (requires Ollama) (06_llm_review.py)
+  7. Literature Search (07_literature_search.py)
 
-LLM Operations (requires Ollama):
-  5. LLM manuscript review (English)
-  6. LLM translations (multi-language)
+Orchestration:
+  8. Run Full Pipeline (10 stages: 0-9, via run.sh)
 
-Literature Operations (requires Ollama):
-  7. Search literature and download PDFs
-  8. Generate summaries for existing PDFs
+Literature Sub-Operations (via 07_literature_search.py):
+  9. Search only (network only)
+  10. Download only (network only)
+  11. Summarize (requires Ollama)
+  12. Cleanup (local files only)
+  13. Advanced LLM operations (requires Ollama)
 
-  9. Exit
+  14. Exit
 ============================================================
 ```
 
 **Non-Interactive Mode:**
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Extended pipeline (9 stages, includes LLM)
+./run.sh --pipeline          # Extended pipeline (10 stages: 0-9, includes LLM)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 ./run.sh --infra-tests        # Run infrastructure tests only
 ./run.sh --project-tests      # Run project tests only
@@ -62,10 +68,11 @@ Literature Operations (requires Ollama):
 ./run.sh --reviews            # LLM manuscript review only
 ./run.sh --translations       # LLM translations only
 
-# Literature Operations (requires Ollama)
-./run.sh --search             # Search literature (add to bibliography)
-./run.sh --download           # Download PDFs (for bibliography entries)
-./run.sh --summarize          # Generate summaries (for papers with PDFs)
+# Literature Operations:
+./run.sh --search             # Search literature (network only, add to bibliography)
+./run.sh --download           # Download PDFs (network only, for bibliography entries)
+./run.sh --summarize          # Generate summaries (requires Ollama, for papers with PDFs)
+./run.sh --cleanup            # Cleanup library (local files only, remove papers without PDFs)
 
 ./run.sh --help               # Show all options
 ```
@@ -102,17 +109,18 @@ Both entry points support these core stages:
 
 ### Extended Pipeline Stages (`./run.sh` only)
 
-Additional stages available in the interactive orchestrator:
+Additional stages available in the interactive orchestrator (stages 8-9):
 
 | Stage | Script | Purpose |
 |-------|--------|---------|
-| 06 | `06_llm_review.py` | LLM manuscript review (optional) |
-| 07 | `07_literature_search.py` | Literature search & summarization |
-| 08 | LLM Translations | Multi-language abstract translation (optional) |
+| 8 | `06_llm_review.py --reviews-only` | LLM Scientific Review (optional) |
+| 9 | `06_llm_review.py --translations-only` | LLM Translations (optional) |
+
+**Note**: Literature operations (menu options 7, 9-13) are standalone operations, not part of the main pipeline stages.
 
 **Stage Numbering:**
-- `./run.sh`: Stages 0-8 (displayed as [1/9] to [8/9] in logs)
-- `run_all.py`: Stages 00-05 (zero-padded Python convention)
+- `./run.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
+- `run_all.py`: Stages 00-05 (zero-padded Python convention, 6 core stages)
 
 ## Running Individual Stages
 
@@ -161,6 +169,8 @@ The pipeline automatically generates comprehensive reports in `project/output/re
 - Confirms build tools (pandoc, xelatex)
 - Validates directory structure
 
+**Note**: In `run.sh` pipeline, this is Stage 1 (Stage 0 is Clean Output Directories).
+
 ### Stage 01: Run Tests
 - Executes infrastructure tests (`tests/infrastructure/`) with 49%+ coverage threshold
 - Executes project tests (`project/tests/`) with 70%+ coverage threshold
@@ -169,17 +179,23 @@ The pipeline automatically generates comprehensive reports in `project/output/re
 - Generates structured test reports (JSON, Markdown) to `project/output/reports/`
 - Generic - does not implement tests
 
+**Note**: In `run.sh` pipeline, this is Stage 2 (after Setup Environment).
+
 ### Stage 02: Run Analysis
 - **Discovers** `project/scripts/`
 - **Executes** each script in order
 - Generic orchestrator (not analysis)
 - Works with ANY project
 
+**Note**: In `run.sh` pipeline, this is Stage 4 (after Tests).
+
 ### Stage 03: Render PDF
 - Processes `project/manuscript/` markdown
 - Converts to LaTeX via pandoc
 - Compiles to PDF via xelatex
 - Generic - does not implement rendering
+
+**Note**: In `run.sh` pipeline, this is Stage 5 (after Analysis).
 
 ### Stage 04: Validate Output
 - Checks generated PDFs for issues
@@ -189,6 +205,8 @@ The pipeline automatically generates comprehensive reports in `project/output/re
 - Reports saved to `project/output/reports/validation_report.{json,md}`
 - Generic validation
 
+**Note**: In `run.sh` pipeline, this is Stage 6 (after PDF Rendering).
+
 ### Stage 05: Copy Outputs
 - Cleans top-level `output/` directory
 - Copies combined PDF manuscript
@@ -196,33 +214,44 @@ The pipeline automatically generates comprehensive reports in `project/output/re
 - Copies all web outputs (HTML)
 - Validates all files copied
 
+**Note**: In `run.sh` pipeline, this is Stage 7 (after Validation).
+
 ### Stage 06: LLM Manuscript Review (Optional)
 - Checks Ollama availability
 - Extracts full text from combined PDF
 - Generates four types of reviews with detailed metrics
 - Uses improved progress indicators (spinner, streaming progress) for better feedback
-- Saves reviews to `output/llm/` with generation stats
+- Saves reviews to `project/output/llm/` with generation stats (copied to `output/llm/` during copy stage)
 - **Requires**: Running Ollama server with at least one model
 
-### Stage 07: Literature Search
-- Searches arXiv and Semantic Scholar
-- Downloads PDFs to `literature/pdfs/`
-- Generates AI summaries for papers
-- **Requires**: Running Ollama server for summarization
+**Note**: In `run.sh` pipeline, this is Stage 8 (LLM Scientific Review).
+
+### Stage 07: Literature Operations (Standalone, not in main pipeline)
+- **Search**: Searches arXiv and Semantic Scholar APIs, adds to bibliography (network only, no Ollama required)
+- **Download**: Downloads PDFs for existing bibliography entries (network only, no Ollama required)
+- **Summarize**: Generates AI summaries for papers with PDFs (requires Ollama)
+- **Cleanup**: Removes papers without PDFs from library (local files only, no Ollama required)
+- **LLM Operations**: Advanced LLM operations like literature review synthesis (requires Ollama)
+
+**Note**: These are standalone operations (menu options 7, 9-13), not part of the main 10-stage pipeline.
 
 **Usage**:
 ```bash
-# Search mode (interactive keyword input)
-python3 scripts/07_literature_search.py --search
+# Search only (network only, no Ollama required)
+python3 scripts/07_literature_search.py --search-only
+python3 scripts/07_literature_search.py --search-only --keywords "machine learning,optimization"
 
-# Search with specific keywords
-python3 scripts/07_literature_search.py --search --keywords "machine learning,optimization"
+# Download PDFs only (network only, no Ollama required)
+python3 scripts/07_literature_search.py --download-only
 
-# Generate summaries for existing PDFs
+# Generate summaries (requires Ollama)
 python3 scripts/07_literature_search.py --summarize
 
-# Both operations
-python3 scripts/07_literature_search.py --search --summarize
+# Cleanup library (local files only, no Ollama required)
+python3 scripts/07_literature_search.py --cleanup
+
+# Advanced LLM operations (requires Ollama)
+python3 scripts/07_literature_search.py --llm-operation review
 ```
 
 ## Checkpoint and Resume
@@ -290,7 +319,7 @@ These scripts:
 
 ```
 Unified Entry Point (run.sh):
-Menu Option 4 (--pipeline) → Full Pipeline:
+Menu Option 8 (--pipeline) → Full Pipeline (10 stages: 0-9):
   STAGE 0: Clean Output Directories
     └─ PASS → STAGE 1
   STAGE 1: Setup Environment
@@ -307,7 +336,9 @@ Menu Option 4 (--pipeline) → Full Pipeline:
     └─ PASS → STAGE 7
   STAGE 7: Copy Outputs
     └─ PASS → STAGE 8
-  STAGE 8: LLM Review (Optional)
+  STAGE 8: LLM Scientific Review (Optional)
+    └─ PASS/SKIP → STAGE 9
+  STAGE 9: LLM Translations (Optional)
     └─ PASS/SKIP → COMPLETE
 ```
 

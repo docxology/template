@@ -28,6 +28,11 @@ from .integrity import (
     verify_output_integrity,
     generate_integrity_report,
 )
+from .figure_validator import validate_figure_registry
+from .output_validator import (
+    validate_copied_outputs,
+    validate_output_structure,
+)
 
 __all__ = [
     "validate_pdf_rendering",
@@ -44,5 +49,8 @@ __all__ = [
     "verify_academic_standards",
     "verify_output_integrity",
     "generate_integrity_report",
+    "validate_figure_registry",
+    "validate_copied_outputs",
+    "validate_output_structure",
 ]
 

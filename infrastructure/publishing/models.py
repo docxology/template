@@ -32,3 +32,4 @@ class CitationStyle:
     format_string: str
     example: str
 
+

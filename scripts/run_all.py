@@ -10,7 +10,7 @@ This master orchestrator coordinates the core build pipeline (6 stages):
 6. STAGE 05: Copy Outputs - Copy final deliverables to root output/
 
 Note: This is the CORE pipeline (6 stages) for manuscript building. 
-For the full pipeline with optional LLM review and translations (9 stages), use run.sh --pipeline.
+For the full pipeline with optional LLM review and translations (10 stages: 0-9), use run.sh --pipeline.
 
 One-line execution for complete end-to-end build.
 
@@ -21,7 +21,6 @@ Architecture:
 """
 from __future__ import annotations
 
-import shutil
 import subprocess
 import sys
 import time
@@ -38,17 +37,20 @@ from infrastructure.core.logging_utils import (
 from infrastructure.core.exceptions import PipelineError
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
 from infrastructure.core.performance import PerformanceMonitor, get_system_resources
+from infrastructure.core.script_discovery import discover_orchestrators
+from infrastructure.core.file_operations import clean_output_directories
 from infrastructure.reporting import (
     generate_pipeline_report,
     save_pipeline_report,
     generate_error_summary,
+    collect_output_statistics,
 )
 
 # Set up logger for this module
 logger = get_logger(__name__)
 
 
-def clean_output_directories(total_stages: int) -> float:
+def clean_output_directories_stage(total_stages: int) -> float:
     """Clean output directories for a fresh pipeline start.
     
     Removes all contents from both project/output/ and output/ directories,
@@ -66,73 +68,12 @@ def clean_output_directories(total_stages: int) -> float:
     start_time = time.time()
     repo_root = Path(__file__).parent.parent
     
-    output_dirs = [
-        repo_root / "project" / "output",
-        repo_root / "output",
-    ]
-    
-    subdirs = ["pdf", "figures", "data", "reports", "simulations", "slides", "web"]
-    
     logger.info(f"\n[0/{total_stages}] Clean Output Directories")
     logger.info("-" * 70)
     
-    for output_dir in output_dirs:
-        relative_path = output_dir.relative_to(repo_root)
-        
-        if output_dir.exists():
-            logger.info(f"  Cleaning {relative_path}/...")
-            # Remove all contents
-            for item in output_dir.iterdir():
-                if item.is_dir():
-                    shutil.rmtree(item)
-                else:
-                    item.unlink()
-        else:
-            logger.info(f"  Creating {relative_path}/...")
-        
-        # Recreate subdirectory structure
-        for subdir in subdirs:
-            (output_dir / subdir).mkdir(parents=True, exist_ok=True)
-        
-        log_success(f"Cleaned {relative_path}/ (recreated subdirectories)", logger)
+    clean_output_directories(repo_root)
     
-    log_success("Output directories cleaned - fresh start", logger)
     return time.time() - start_time
-
-
-def discover_orchestrators() -> list[Path]:
-    """Discover orchestrator scripts in order.
-    
-    Returns:
-        List of available orchestrator script paths in execution order
-        
-    Raises:
-        PipelineError: If no orchestrators are found
-        
-    Example:
-        >>> orchestrators = discover_orchestrators()
-        >>> len(orchestrators)
-        6
-    """
-    repo_root = Path(__file__).parent.parent
-    scripts_dir = repo_root / "scripts"
-    
-    orchestrators = [
-        scripts_dir / "00_setup_environment.py",
-        scripts_dir / "01_run_tests.py",
-        scripts_dir / "02_run_analysis.py",
-        scripts_dir / "03_render_pdf.py",
-        scripts_dir / "04_validate_output.py",
-        scripts_dir / "05_copy_outputs.py",
-    ]
-    
-    available = [s for s in orchestrators if s.exists()]
-    
-    if len(available) < len(orchestrators):
-        missing = [s.name for s in orchestrators if s not in available]
-        logger.warning(f"Some orchestrators not found: {', '.join(missing)}")
-    
-    return available
 
 
 def run_stage(
@@ -382,43 +323,6 @@ def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0, resume:
         return 1
 
 
-def collect_output_statistics(repo_root: Path) -> dict:
-    """Collect output file statistics.
-    
-    Args:
-        repo_root: Repository root path
-        
-    Returns:
-        Dictionary with output statistics
-    """
-    output_dir = repo_root / "project" / "output"
-    stats = {
-        'pdf_files': 0,
-        'figures': 0,
-        'data_files': 0,
-        'total_size_mb': 0.0,
-    }
-    
-    if output_dir.exists():
-        pdf_dir = output_dir / "pdf"
-        if pdf_dir.exists():
-            pdf_files = list(pdf_dir.glob("*.pdf"))
-            stats['pdf_files'] = len(pdf_files)
-            stats['total_size_mb'] += sum(f.stat().st_size for f in pdf_files) / (1024 * 1024)
-        
-        figures_dir = output_dir / "figures"
-        if figures_dir.exists():
-            figure_files = list(figures_dir.glob("*.png")) + list(figures_dir.glob("*.pdf"))
-            stats['figures'] = len(figure_files)
-            stats['total_size_mb'] += sum(f.stat().st_size for f in figure_files) / (1024 * 1024)
-        
-        data_dir = output_dir / "data"
-        if data_dir.exists():
-            data_files = list(data_dir.glob("*"))
-            stats['data_files'] = len([f for f in data_files if f.is_file()])
-            stats['total_size_mb'] += sum(f.stat().st_size for f in data_files if f.is_file()) / (1024 * 1024)
-    
-    return stats
 
 
 def return_summary(results: list[dict], total_duration: float) -> None:
@@ -538,7 +442,7 @@ def main() -> int:
         # Stage 0: Clean output directories (skip if resuming)
         clean_duration = 0.0
         if not args.resume:
-            clean_duration = clean_output_directories(total_stages)
+            clean_duration = clean_output_directories_stage(total_stages)
         else:
             logger.info("Resuming from checkpoint - skipping clean stage")
         

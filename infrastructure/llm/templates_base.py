@@ -22,3 +22,4 @@ class ResearchTemplate:
                 context={"required": str(e)}
             )
 
+
