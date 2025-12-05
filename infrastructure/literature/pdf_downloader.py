@@ -1,0 +1,493 @@
+"""PDF download logic with retry mechanisms and error handling."""
+from __future__ import annotations
+
+import os
+import random
+import time
+from pathlib import Path
+from typing import Callable, Dict, List, Optional, Tuple
+
+import requests
+
+from infrastructure.core.exceptions import FileOperationError, LiteratureSearchError
+from infrastructure.core.logging_utils import get_logger
+from infrastructure.literature.config import LiteratureConfig, BROWSER_USER_AGENTS
+from infrastructure.literature.api import SearchResult
+from infrastructure.literature.pdf_fallbacks import transform_pdf_url, doi_to_pdf_urls, PDFFallbackStrategies
+
+logger = get_logger(__name__)
+
+
+def is_pdf_content(content: bytes) -> bool:
+    """Check if content is a PDF by examining magic bytes.
+
+    Args:
+        content: Raw response content bytes.
+
+    Returns:
+        True if content starts with PDF magic bytes.
+    """
+    return content.startswith(b'%PDF')
+
+
+def is_html_content(content: bytes) -> bool:
+    """Check if content appears to be HTML by examining the beginning.
+
+    Args:
+        content: Raw response content bytes.
+
+    Returns:
+        True if content appears to be HTML.
+    """
+    if not content:
+        return False
+
+    # Convert to string for easier checking (first 1KB should be enough)
+    content_str = content[:1024].decode('utf-8', errors='ignore').lower().strip()
+
+    # Check for common HTML indicators
+    html_indicators = [
+        '<!doctype html',
+        '<html',
+        '<head',
+        '<body',
+        '<div',
+        '<script',
+        '<meta',
+        'text/html',
+        '<title>',
+        '<?xml',
+    ]
+
+    for indicator in html_indicators:
+        if indicator in content_str:
+            return True
+
+    return False
+
+
+class PDFDownloader:
+    """Handles PDF downloading with retry logic and error recovery."""
+    
+    def __init__(self, config: LiteratureConfig):
+        """Initialize PDF downloader.
+        
+        Args:
+            config: Literature configuration.
+        """
+        self.config = config
+        self._ensure_download_dir()
+    
+    def _ensure_download_dir(self) -> None:
+        """Ensure download directory exists."""
+        try:
+            os.makedirs(self.config.download_dir, exist_ok=True)
+        except OSError as e:
+            raise FileOperationError(
+                f"Failed to create download directory: {e}",
+                context={"path": self.config.download_dir}
+            )
+    
+    def _get_user_agent(self) -> str:
+        """Get User-Agent string for requests.
+        
+        Returns a browser-like User-Agent if configured, otherwise
+        the default API User-Agent.
+        
+        Returns:
+            User-Agent string.
+        """
+        if self.config.use_browser_user_agent and BROWSER_USER_AGENTS:
+            return random.choice(BROWSER_USER_AGENTS)
+        return self.config.user_agent
+    
+    def categorize_error(self, error: Exception, status_code: Optional[int] = None) -> Tuple[str, str]:
+        """Categorize an error into failure reason and message.
+
+        Args:
+            error: The exception that occurred.
+            status_code: HTTP status code if available.
+
+        Returns:
+            Tuple of (failure_reason, failure_message).
+        """
+        error_str = str(error)
+
+        # Check for specific error messages first
+        if "Received HTML instead of PDF" in error_str:
+            return ("html_response", f"HTML received instead of PDF: {error_str}")
+        elif "no working PDF URLs found in content" in error_str:
+            return ("html_no_pdf_link", f"HTML page contains no PDF links: {error_str}")
+        elif "Content-Type mismatch" in error_str:
+            return ("content_mismatch", f"Content-Type header doesn't match actual content: {error_str}")
+
+        # Check HTTP status codes
+        if status_code == 403:
+            return ("access_denied", f"403 Forbidden: {error_str}")
+        elif status_code == 404:
+            return ("not_found", f"404 Not Found: {error_str}")
+        elif status_code == 429:
+            return ("rate_limited", f"429 Too Many Requests: {error_str}")
+        elif status_code == 502:
+            return ("server_error", f"502 Bad Gateway: {error_str}")
+        elif status_code == 503:
+            return ("server_error", f"503 Service Unavailable: {error_str}")
+        elif status_code and status_code >= 500:
+            return ("server_error", f"Server error {status_code}: {error_str}")
+
+        # Check exception types and messages
+        elif "timeout" in error_str.lower() or isinstance(error, requests.exceptions.Timeout):
+            return ("timeout", f"Request timed out: {error_str}")
+        elif isinstance(error, requests.exceptions.ConnectionError):
+            return ("network_error", f"Connection error: {error_str}")
+        elif isinstance(error, requests.exceptions.RequestException):
+            return ("network_error", f"Request failed: {error_str}")
+        elif "redirect" in error_str.lower() and "loop" in error_str.lower():
+            return ("redirect_loop", f"Redirect loop detected: {error_str}")
+        else:
+            return ("unknown", error_str)
+    
+    def download_with_enhanced_retry(
+        self,
+        url: str,
+        output_path: Path,
+        parse_html_callback: Optional[Callable[[bytes, str], List[str]]] = None
+    ) -> Tuple[bool, Optional[Exception], Optional[str], List[str]]:
+        """Attempt to download from URL with enhanced retry logic and 403 error recovery.
+
+        Includes multiple fallback strategies for 403 Forbidden errors:
+        - Different User-Agents
+        - Minimal headers
+        - HEAD request first
+        - Referer header spoofing
+        - Academic referer spoofing
+
+        Args:
+            url: URL to download from.
+            output_path: Where to save the file.
+            parse_html_callback: Optional callback to parse HTML for PDF URLs.
+
+        Returns:
+            Tuple of (success, error, failure_reason, attempted_urls).
+        """
+        last_error: Optional[Exception] = None
+        last_failure_reason: Optional[str] = None
+        attempted_urls: List[str] = []
+
+        # Try standard download first
+        result = self._download_single_attempt(url, output_path, attempt_type="standard", parse_html_callback=parse_html_callback)
+        attempted_urls.append(url)
+
+        if result[0]:  # Success
+            return (True, None, None, attempted_urls)
+
+        last_error = result[1]
+        last_failure_reason = result[2]
+
+        # If HTML received or access denied, try fallback strategies
+        if last_failure_reason in ["html_response", "html_no_pdf_link", "access_denied"]:
+            if last_failure_reason == "access_denied":
+                logger.debug(f"403 Forbidden detected, trying enhanced recovery for {url}")
+            else:
+                logger.debug(f"HTML response detected, trying fallback URLs for {url}")
+
+            # Strategy 0: Try transformed URLs (for HTML responses)
+            if last_failure_reason in ["html_response", "html_no_pdf_link"]:
+                transformed_urls = transform_pdf_url(url)
+                for i, transformed_url in enumerate(transformed_urls[:3]):  # Try up to 3 transformed URLs
+                    logger.debug(f"Trying transformed URL {i+1}: {transformed_url}")
+                    result = self._download_single_attempt(
+                        transformed_url, output_path, attempt_type=f"transformed_{i+1}", parse_html_callback=parse_html_callback
+                    )
+                    attempted_urls.append(transformed_url)
+
+                    if result[0]:
+                        logger.info(f"Success with transformed URL")
+                        return (True, None, None, attempted_urls)
+
+            # Strategy 1: Try different User-Agents
+            for user_agent in BROWSER_USER_AGENTS[:3]:  # Try first 3 different User-Agents
+                logger.debug(f"Trying with User-Agent: {user_agent[:50]}...")
+                result = self._download_single_attempt(
+                    url, output_path, attempt_type="user_agent",
+                    custom_headers={"User-Agent": user_agent},
+                    parse_html_callback=parse_html_callback
+                )
+                attempted_urls.append(f"{url} (User-Agent: {user_agent[:20]}...)")
+
+                if result[0]:
+                    return (True, None, None, attempted_urls)
+
+            # Strategy 2: Try with minimal headers (no Accept-Language, etc.)
+            logger.debug(f"Trying minimal headers")
+            result = self._download_single_attempt(
+                url, output_path, attempt_type="minimal",
+                custom_headers={
+                    "User-Agent": random.choice(BROWSER_USER_AGENTS),
+                    "Accept": "application/pdf,*/*"
+                },
+                parse_html_callback=parse_html_callback
+            )
+            attempted_urls.append(f"{url} (minimal)")
+
+            if result[0]:
+                return (True, None, None, attempted_urls)
+
+            # Strategy 3: Try HEAD request first to check if URL is accessible
+            try:
+                logger.debug(f"Trying HEAD request")
+                head_response = requests.head(
+                    url,
+                    timeout=self.config.timeout,
+                    headers={"User-Agent": random.choice(BROWSER_USER_AGENTS)},
+                    allow_redirects=True
+                )
+                if head_response.status_code == 200:
+                    # HEAD succeeded, try GET again with same User-Agent
+                    result = self._download_single_attempt(
+                        url, output_path, attempt_type="head_ok",
+                        custom_headers={"User-Agent": head_response.request.headers.get("User-Agent", "")},
+                        parse_html_callback=parse_html_callback
+                    )
+                    attempted_urls.append(f"{url} (head_ok)")
+
+                    if result[0]:
+                        return (True, None, None, attempted_urls)
+            except Exception as e:
+                logger.debug(f"HEAD failed: {e}")
+
+            # Strategy 4: Try with referer spoofing (pretend we're coming from Google)
+            logger.debug(f"Trying referer spoofing")
+            result = self._download_single_attempt(
+                url, output_path, attempt_type="referer",
+                custom_headers={
+                    "User-Agent": random.choice(BROWSER_USER_AGENTS),
+                    "Accept": "application/pdf,*/*",
+                    "Accept-Language": "en-US,en;q=0.9",
+                    "Referer": "https://www.google.com/"
+                },
+                parse_html_callback=parse_html_callback
+            )
+            attempted_urls.append(f"{url} (referer)")
+
+            if result[0]:
+                return (True, None, None, attempted_urls)
+
+            # Strategy 5: Try academic referers (pretend we're coming from university sites)
+            academic_referers = [
+                "https://scholar.google.com/",
+                "https://www.semanticscholar.org/",
+                "https://www.researchgate.net/",
+                "https://arxiv.org/",
+                "https://www.academia.edu/"
+            ]
+
+            for referer in academic_referers[:2]:  # Try first 2 academic referers
+                logger.debug(f"Trying academic referer: {referer}")
+                result = self._download_single_attempt(
+                    url, output_path, attempt_type="academic_referer",
+                    custom_headers={
+                        "User-Agent": random.choice(BROWSER_USER_AGENTS),
+                        "Accept": "application/pdf,*/*",
+                        "Accept-Language": "en-US,en;q=0.9",
+                        "Referer": referer
+                    },
+                    parse_html_callback=parse_html_callback
+                )
+                attempted_urls.append(f"{url} (academic_referer: {referer.split('//')[1].split('/')[0]})")
+
+                if result[0]:
+                    return (True, None, None, attempted_urls)
+
+        # If not 403 or all recovery strategies failed, try standard retries
+        else:
+            # Enhanced retry logic based on failure type
+            max_retries = self.config.download_retry_attempts
+
+            for attempt in range(1, max_retries + 1):
+                delay = self.config.download_retry_delay * (2 ** (attempt - 1))
+
+                # For 403 errors, try different strategies on retry
+                if last_failure_reason == "access_denied":
+                    # Try with different user agent on each retry
+                    user_agents = BROWSER_USER_AGENTS[attempt-1::3]  # Different agents each time
+                    if user_agents:
+                        custom_agent = user_agents[0]
+                        logger.debug(f"Retry {attempt} with different User-Agent, waiting {delay:.1f}s")
+                        time.sleep(delay)
+
+                        result = self._download_single_attempt(
+                            url, output_path,
+                            attempt_type=f"retry_{attempt}_agent",
+                            custom_headers={"User-Agent": custom_agent},
+                            parse_html_callback=parse_html_callback
+                        )
+                        attempted_urls.append(f"{url} (retry {attempt}, agent: {custom_agent[:20]}...)")
+
+                        if result[0]:
+                            return (True, None, None, attempted_urls)
+
+                        last_error = result[1]
+                        last_failure_reason = result[2]
+                        continue
+
+                # For other errors, standard retry
+                logger.debug(f"Standard retry attempt {attempt}, waiting {delay:.1f}s")
+                time.sleep(delay)
+
+                result = self._download_single_attempt(url, output_path, attempt_type=f"retry_{attempt}", parse_html_callback=parse_html_callback)
+                attempted_urls.append(f"{url} (retry {attempt})")
+
+                if result[0]:
+                    return (True, None, None, attempted_urls)
+
+                last_error = result[1]
+                last_failure_reason = result[2]
+
+        return (False, last_error, last_failure_reason, attempted_urls)
+
+    def _download_single_attempt(
+        self,
+        url: str,
+        output_path: Path,
+        attempt_type: str = "standard",
+        custom_headers: Optional[Dict[str, str]] = None,
+        parse_html_callback: Optional[Callable[[bytes, str], List[str]]] = None
+    ) -> Tuple[bool, Optional[Exception], Optional[str]]:
+        """Single download attempt with specific configuration.
+
+        Args:
+            url: URL to download from.
+            output_path: Where to save the file.
+            attempt_type: Description of this attempt type for logging.
+            custom_headers: Custom headers to use instead of defaults.
+            parse_html_callback: Optional callback to parse HTML for PDF URLs.
+
+        Returns:
+            Tuple of (success, error, failure_reason).
+        """
+        try:
+            logger.debug(f"Download attempt ({attempt_type}) from {url}")
+
+            # Use custom headers if provided, otherwise default
+            headers = custom_headers or {
+                "User-Agent": self._get_user_agent(),
+                "Accept": "application/pdf,*/*",
+                "Accept-Language": "en-US,en;q=0.9",
+            }
+
+            response = requests.get(
+                url,
+                stream=True,
+                timeout=self.config.timeout,
+                headers=headers,
+                allow_redirects=True
+            )
+
+            # Check for errors
+            if response.status_code >= 400:
+                failure_reason, _ = self.categorize_error(
+                    Exception(f"HTTP {response.status_code}"),
+                    response.status_code
+                )
+                return (False, Exception(f"HTTP {response.status_code}"), failure_reason)
+
+            # Verify we got a PDF (or at least something substantial)
+            content_type = response.headers.get("Content-Type", "")
+            content_length = response.headers.get("Content-Length")
+
+            # Read first chunk to check for PDF magic bytes and HTML content
+            content_sample = response.content[:2048] if hasattr(response, 'content') else b''
+
+            # Enhanced validation: check both content-type header and actual content
+            is_html_by_header = "text/html" in content_type.lower()
+            is_html_by_content = is_html_content(content_sample)
+            is_pdf_by_content = is_pdf_content(content_sample)
+
+            # If we got HTML instead of PDF, try to extract PDF URLs from the HTML
+            if (is_html_by_header or is_html_by_content) and not is_pdf_by_content:
+                logger.debug(f"HTML response from {url}, extracting PDF URLs")
+
+                # Try to extract PDF URLs from the HTML content if callback provided
+                if parse_html_callback:
+                    html_pdf_urls = parse_html_callback(response.content, url)
+
+                    if html_pdf_urls:
+                        logger.debug(f"Found {len(html_pdf_urls)} PDF URLs in HTML")
+
+                        # Try each extracted URL (limit to first few to avoid too many attempts)
+                        for i, pdf_url in enumerate(html_pdf_urls[:3]):  # Try up to 3 extracted URLs
+                            logger.debug(f"Trying HTML PDF URL {i+1}: {pdf_url}")
+                            try:
+                                # Recursively try the extracted URL (but avoid infinite recursion)
+                                if pdf_url != url:  # Don't retry the same URL
+                                    recursive_result = self._download_single_attempt(
+                                        pdf_url, output_path, attempt_type=f"html_{i+1}", parse_html_callback=parse_html_callback
+                                    )
+                                    if recursive_result[0]:  # Success
+                                        logger.info(f"Downloaded PDF from HTML URL")
+                                        return recursive_result
+                                    else:
+                                        logger.debug(f"HTML URL failed: {recursive_result[2]}")
+                            except Exception as e:
+                                logger.debug(f"HTML URL error: {e}")
+                                continue
+
+                        # If we got here, all extracted URLs failed
+                        logger.warning(f"HTML page contains no working PDF URLs")
+                        return (False, Exception("HTML page contains no working PDF URLs"), "html_no_pdf_link")
+                    else:
+                        logger.warning(f"HTML received instead of PDF")
+                        return (False, Exception("HTML received instead of PDF"), "html_response")
+                else:
+                    logger.warning(f"HTML received instead of PDF (no HTML parser available)")
+                    return (False, Exception("HTML received instead of PDF"), "html_response")
+
+            # If content-type suggests PDF but content looks like HTML, also fail
+            if not is_html_by_header and is_html_by_content and not is_pdf_by_content:
+                logger.warning(f"Content-Type mismatch: HTML received instead of PDF")
+                return (False, Exception("Content-Type mismatch: HTML received instead of PDF"), "content_mismatch")
+
+            # Write the file
+            with open(output_path, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
+
+            # Verify file was written and has content
+            if not output_path.exists() or output_path.stat().st_size == 0:
+                logger.warning(f"Downloaded file is empty: {output_path}")
+                if output_path.exists():
+                    output_path.unlink()
+                return (False, Exception("Downloaded file is empty"), "empty_file")
+
+            # Verify the file actually contains a PDF (check magic bytes)
+            try:
+                with open(output_path, 'rb') as f:
+                    file_header = f.read(4)
+                if not is_pdf_content(file_header):
+                    logger.warning(f"Downloaded file is not a PDF (missing %PDF magic bytes): {output_path}")
+                    output_path.unlink()
+                    return (False, Exception("File is not a valid PDF"), "invalid_response")
+            except Exception as e:
+                logger.warning(f"Failed to validate downloaded file: {e}")
+                if output_path.exists():
+                    output_path.unlink()
+                return (False, e, "validation_error")
+
+            return (True, None, None)
+
+        except requests.exceptions.HTTPError as e:
+            failure_reason, _ = self.categorize_error(e, e.response.status_code if e.response else None)
+            return (False, e, failure_reason)
+        except requests.exceptions.Timeout as e:
+            return (False, e, "timeout")
+        except requests.exceptions.RequestException as e:
+            failure_reason, _ = self.categorize_error(e)
+            return (False, e, failure_reason)
+        except OSError as e:
+            error = FileOperationError(
+                f"Failed to write PDF file: {e}",
+                context={"path": str(output_path)}
+            )
+            return (False, error, "file_error")
+

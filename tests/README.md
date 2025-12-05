@@ -1,28 +1,35 @@
 # tests/ - Test Suite
 
-Comprehensive test suite ensuring 100% coverage of all `src/` modules.
+Comprehensive test suite ensuring coverage requirements for both infrastructure and project modules (49% infrastructure minimum, 70% project minimum).
 
 ## Quick Start
 
 ### Run All Tests
 ```bash
-# With coverage report
-pytest tests/ --cov=src --cov-report=html
+# With coverage report (both infrastructure and project)
+pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
 
 # Using uv
-uv run pytest tests/ --cov=src --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
 
-# Require 100% coverage
-pytest tests/ --cov=src --cov-fail-under=100
+# Verify coverage requirements
+pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
+pytest project/tests/ --cov=project/src --cov-fail-under=70
 ```
 
 ### Run Specific Tests
 ```bash
-# Single test file
-pytest tests/test_example.py -v
+# Infrastructure tests
+pytest tests/infrastructure/core/test_config_loader.py -v
+
+# Project tests
+pytest project/tests/test_example.py -v
+
+# Integration tests
+pytest tests/integration/test_module_interoperability.py -v
 
 # By pattern
-pytest tests/ -k "test_add" -v
+pytest tests/ -k "test_config" -v
 
 # Stop on first failure
 pytest tests/ -x
@@ -51,10 +58,11 @@ tests/
 │   ├── rendering/                       # Rendering pipeline tests
 │   ├── scientific/                      # Scientific tools tests
 │   └── validation/                      # Validation tests
-├── integration/                         # Integration tests
-├── test_coverage_completion.py          # Additional coverage tests
-├── test_figure_equation_citation.py     # Fig/Eq/Citation tests
-└── test_repo_utilities.py               # Repository utilities tests
+└── integration/                         # Integration tests
+    ├── test_edge_cases_and_error_paths.py # Edge cases and error handling
+    ├── test_figure_equation_citation.py # Fig/Eq/Citation tests
+    ├── test_module_interoperability.py  # Cross-module integration
+    └── test_output_copying.py           # Output file handling
 ```
 
 ## Test Categories
@@ -116,14 +124,18 @@ tests/
 - `test_repo_scanner.py` - Repository accuracy/completeness
 - `test_cli.py` - CLI wrapper for validation
 
-### Integration Tests
-- `test_module_interoperability.py` - Cross-module integration (239 lines)
-- `test_integration/` - Integration test suite
-
-### Specialized Tests
+### Integration Tests (`tests/integration/`)
+- `test_module_interoperability.py` - Cross-module integration validation
 - `test_figure_equation_citation.py` - Figure/equation/citation handling
-- `test_coverage_completion.py` - Additional coverage for edge cases
-- `test_repo_utilities.py` - Repository utilities (1318 lines)
+- `test_output_copying.py` - Output file handling and copying
+- `test_edge_cases_and_error_paths.py` - Edge cases and error handling
+
+### Project Tests (`project/tests/`)
+- Unit tests for `project/src/` modules (see `project/tests/AGENTS.md`)
+- Integration tests in `project/tests/integration/`
+  - `test_integration_pipeline.py` - Full analysis pipeline
+  - `test_example_figure.py` - Figure generation integration
+  - `test_generate_research_figures.py` - Research figure pipeline
 
 ## Debugging
 
@@ -141,9 +153,11 @@ pytest tests/ --lf
 ## Writing Tests
 
 ```python
-"""Tests for src/module.py"""
+"""Tests for infrastructure/module.py or project/src/module.py"""
 import pytest
-from module import function
+from infrastructure.module import function
+# or
+from project.src.module import function
 
 def test_basic_usage():
     """Test basic functionality."""
@@ -186,19 +200,12 @@ The test suite includes comprehensive validation for:
 
 ## Test Coverage Statistics
 
-Current coverage by module:
-- `example.py`: 100% ✅
-- `glossary_gen.py`: 100% ✅
-- `pdf_validator.py`: 100% ✅
-- `build_verifier.py`: 66% (improving)
-- `integrity.py`: 79% (improving)
-- `quality_checker.py`: 87% (improving)
-- `publishing.py`: 81% (improving)
-- `reproducibility.py`: 74% (improving)
-- `scientific_dev.py`: 86% (improving)
+### Overall Coverage
+- **Project** (`project/src/`): **99.88%** (Target: 70%+) ✅
+- **Infrastructure** (`infrastructure/`): **70.09%** (Target: 49%+) ✅
 
-**Project**: 99.88% (Target: 70%+)
-**Infrastructure**: 55.89% (Target: 49%+)
+### Coverage Details
+Both test suites exceed their minimum requirements. For detailed coverage analysis of infrastructure modules, see [`docs/COVERAGE_GAPS.md`](../docs/COVERAGE_GAPS.md).
 
 ## See Also
 

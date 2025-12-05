@@ -263,10 +263,24 @@ def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0, resume:
         stage_start = time.time()
         # Log resource usage at stage start
         log_resource_usage(f"Stage {i} start", logger)
+        
         exit_code = run_stage(stage_script, i, len(orchestrators), start_time)
+        
         stage_duration = time.time() - stage_start
         # Log resource usage at stage end
         log_resource_usage(f"Stage {i} end", logger)
+        
+        # Collect resource usage metrics
+        try:
+            from infrastructure.core.performance import get_system_resources
+            resources = get_system_resources()
+            if resources:
+                logger.debug(
+                    f"Stage {i} resources: Memory: {resources.get('process_memory_mb', 0):.0f}MB, "
+                    f"CPU: {resources.get('cpu_percent', 0):.1f}%"
+                )
+        except Exception:
+            pass  # Resource monitoring optional
         
         # Create StageResult for checkpoint
         stage_result = StageResult(

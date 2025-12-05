@@ -352,6 +352,10 @@ def main() -> int:
     """Execute PDF rendering orchestration."""
     log_header("STAGE 03: Render PDF", logger)
     
+    # Log resource usage at start
+    from infrastructure.core.logging_utils import log_resource_usage
+    log_resource_usage("PDF rendering stage start", logger)
+    
     try:
         # Run rendering pipeline
         exit_code = run_render_pipeline()
@@ -367,10 +371,14 @@ def main() -> int:
         else:
             logger.error("PDF rendering failed - check logs for details")
         
+        # Log resource usage at end
+        log_resource_usage("PDF rendering stage end", logger)
+        
         return exit_code
         
     except Exception as e:
         logger.error(f"Render pipeline error: {e}", exc_info=True)
+        log_resource_usage("PDF rendering stage end (error)", logger)
         return 1
 
 

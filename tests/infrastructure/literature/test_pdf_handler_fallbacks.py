@@ -14,10 +14,8 @@ from infrastructure.literature.api import (
     _normalize_title,
     _title_similarity,
 )
-from infrastructure.literature.pdf_handler import (
-    PDFHandler,
-    _transform_pdf_url,
-)
+from infrastructure.literature.pdf_fallbacks import transform_pdf_url
+from infrastructure.literature.pdf_handler import PDFHandler
 
 
 class TestTitleNormalization:
@@ -83,7 +81,7 @@ class TestTransformPdfUrl:
     def test_pmc_ncbi_pattern(self):
         """Test PMC NCBI URL transformation."""
         url = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC123456/"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         # Should generate multiple candidates
         assert len(candidates) > 0
@@ -97,7 +95,7 @@ class TestTransformPdfUrl:
     def test_pmc_new_domain(self):
         """Test PMC new domain URL transformation."""
         url = "https://pmc.ncbi.nlm.nih.gov/articles/PMC789012/"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         assert len(candidates) > 0
         assert any("PMC789012" in c for c in candidates)
@@ -105,7 +103,7 @@ class TestTransformPdfUrl:
     def test_europepmc_pattern(self):
         """Test Europe PMC URL transformation."""
         url = "https://europepmc.org/article/PMC/123456"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         assert len(candidates) > 0
         # Should extract PMC ID and generate alternatives
@@ -114,7 +112,7 @@ class TestTransformPdfUrl:
     def test_arxiv_abs_pattern(self):
         """Test arXiv abstract URL to PDF transformation."""
         url = "https://arxiv.org/abs/2401.12345"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         # Should include PDF URL
         assert any("arxiv.org/pdf/2401.12345" in c for c in candidates)
@@ -122,7 +120,7 @@ class TestTransformPdfUrl:
     def test_biorxiv_pattern(self):
         """Test bioRxiv URL transformation."""
         url = "https://www.biorxiv.org/content/10.1101/2020.01.01.123456"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         # Should include full.pdf endpoint
         assert any(".full.pdf" in c for c in candidates)
@@ -130,14 +128,14 @@ class TestTransformPdfUrl:
     def test_medrxiv_pattern(self):
         """Test medRxiv URL transformation."""
         url = "https://www.medrxiv.org/content/10.1101/2020.05.05.654321"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         assert any(".full.pdf" in c for c in candidates)
 
     def test_mdpi_pattern(self):
         """Test MDPI URL transformation."""
         url = "https://www.mdpi.com/2073-4409/10/5/1234"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         # Should include PDF endpoint
         assert any("/pdf" in c for c in candidates)
@@ -145,7 +143,7 @@ class TestTransformPdfUrl:
     def test_no_transformation_needed(self):
         """Test URL that doesn't match any pattern."""
         url = "https://example.com/some/random/path"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         # Should return empty list (original URL not included)
         assert candidates == []
@@ -153,7 +151,7 @@ class TestTransformPdfUrl:
     def test_excludes_original_url(self):
         """Test that original URL is excluded from candidates."""
         url = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC123456/"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         # Original URL should not be in candidates
         assert url not in candidates
@@ -260,13 +258,13 @@ class TestPDFHandlerFallbackIntegration:
         handler = PDFHandler(config)
         
         # Should have fallback sources initialized
-        assert handler._arxiv is not None
-        assert handler._biorxiv is not None
-        assert isinstance(handler._arxiv, ArxivSource)
-        assert isinstance(handler._biorxiv, BiorxivSource)
+        assert handler._fallbacks._arxiv is not None
+        assert handler._fallbacks._biorxiv is not None
+        assert isinstance(handler._fallbacks._arxiv, ArxivSource)
+        assert isinstance(handler._fallbacks._biorxiv, BiorxivSource)
 
     def test_get_arxiv_fallback_no_title(self, tmp_path):
-        """Test _get_arxiv_fallback returns None when no title."""
+        """Test get_arxiv_fallback returns None when no title."""
         config = LiteratureConfig(
             download_dir=str(tmp_path / "pdfs"),
             bibtex_file=str(tmp_path / "refs.bib")
@@ -281,12 +279,12 @@ class TestPDFHandlerFallbackIntegration:
             url="https://example.com"
         )
         
-        pdf_url = handler._get_arxiv_fallback(result)
+        pdf_url = handler._fallbacks.get_arxiv_fallback(result)
         
         assert pdf_url is None
 
     def test_get_biorxiv_fallback_no_doi(self, tmp_path):
-        """Test _get_biorxiv_fallback returns None when no DOI."""
+        """Test get_biorxiv_fallback returns None when no DOI."""
         config = LiteratureConfig(
             download_dir=str(tmp_path / "pdfs"),
             bibtex_file=str(tmp_path / "refs.bib")
@@ -302,7 +300,7 @@ class TestPDFHandlerFallbackIntegration:
             doi=None
         )
         
-        pdf_url = handler._get_biorxiv_fallback(result)
+        pdf_url = handler._fallbacks.get_biorxiv_fallback(result)
         
         assert pdf_url is None
 
@@ -347,7 +345,7 @@ class TestTransformPdfUrlMultiplePatterns:
     def test_pmc_with_trailing_content(self):
         """Test PMC URL with trailing content."""
         url = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC123456/pdf/nihms-1234.pdf"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         # Should still extract PMC ID correctly
         assert any("PMC123456" in c for c in candidates)
@@ -355,7 +353,7 @@ class TestTransformPdfUrlMultiplePatterns:
     def test_arxiv_old_format(self):
         """Test arXiv old format IDs."""
         url = "https://arxiv.org/abs/hep-th/9901001"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         # Should handle old format
         assert any("hep-th/9901001" in c for c in candidates)
@@ -363,7 +361,7 @@ class TestTransformPdfUrlMultiplePatterns:
     def test_frontiers_pattern(self):
         """Test Frontiers URL transformation."""
         url = "https://www.frontiersin.org/articles/10.3389/fpsyg.2024.1234567/full"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         # Should include PDF endpoint
         assert any("/pdf" in c for c in candidates)
@@ -371,7 +369,7 @@ class TestTransformPdfUrlMultiplePatterns:
     def test_sciencedirect_pattern(self):
         """Test ScienceDirect URL transformation."""
         url = "https://www.sciencedirect.com/science/article/pii/S1234567890123456"
-        candidates = _transform_pdf_url(url)
+        candidates = transform_pdf_url(url)
         
         # Should include PDF download endpoint
         assert any("pdfft" in c for c in candidates)

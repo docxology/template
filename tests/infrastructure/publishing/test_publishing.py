@@ -359,8 +359,12 @@ class TestComplexityScoring:
         metadata = publishing.PublicationMetadata(
             title="A Very Long and Complex Title for Testing Publication Complexity Analysis",
             authors=["Dr. Jane Smith", "Dr. John Doe", "Dr. Alice Johnson", "Dr. Bob Wilson"],
-            abstract="This is a very long and detailed abstract that includes comprehensive information about the research methodology, experimental setup, data analysis techniques, statistical methods, computational algorithms, performance evaluation metrics, and detailed conclusions drawn from extensive experimental validation across multiple datasets and evaluation scenarios.",
-            keywords=["optimization", "machine learning", "algorithms", "research", "analysis", "computation", "statistics", "validation"]
+            abstract="This is a very long and detailed abstract that includes comprehensive information about the research methodology, experimental setup, data analysis techniques, statistical methods, computational algorithms, performance evaluation metrics, and detailed conclusions drawn from extensive experimental validation across multiple datasets and evaluation scenarios. The research presents novel approaches to solving complex optimization problems through advanced machine learning techniques, incorporating deep neural networks, reinforcement learning algorithms, and ensemble methods. Our experimental framework encompasses extensive hyperparameter tuning, cross-validation procedures, and rigorous statistical significance testing to ensure robust and reproducible results.",
+            keywords=["optimization", "machine learning", "algorithms", "research", "analysis", "computation", "statistics", "validation"],
+            doi="10.5281/zenodo.12345678",
+            journal="Journal of Machine Learning Research",
+            publisher="ML Research Press",
+            publication_date="2024-10-22"
         )
 
         score = publishing.calculate_complexity_score(metadata)

@@ -347,6 +347,10 @@ def process_file(file_path: Path) -> dict:
 
 ### Progress Reporting
 
+The template provides multiple progress tracking utilities for different use cases:
+
+#### Simple Progress Tracking
+
 ```python
 from logging_utils import log_progress, log_progress_bar, StreamingProgress, Spinner
 
@@ -374,6 +378,96 @@ progress.finish("Generation complete")
 with log_with_spinner("Loading model...", logger):
     load_model()
 ```
+
+#### Advanced Progress Tracking with ETA
+
+The template includes enhanced progress tracking with exponential moving average (EMA) for more accurate ETA estimates:
+
+```python
+from infrastructure.core.progress import SubStageProgress, ProgressBar, LLMProgressTracker
+
+# Sub-stage progress with EMA-based ETA
+progress = SubStageProgress(
+    total=10,
+    stage_name="Rendering PDFs",
+    use_ema=True  # Use EMA for smoother ETA estimates
+)
+
+for i, file in enumerate(files, 1):
+    progress.start_substage(i, file.name)
+    render_file(file)
+    progress.complete_substage()
+    
+    # Log progress with ETA every few items
+    if i % 3 == 0:
+        progress.log_progress()
+
+# Get ETA with confidence intervals
+realistic, optimistic, pessimistic = progress.get_eta_with_confidence()
+logger.info(f"ETA: {format_duration(realistic)} (range: {format_duration(optimistic)} - {format_duration(pessimistic)})")
+
+# Progress bar with EMA
+bar = ProgressBar(
+    total=100,
+    task="Processing items",
+    use_ema=True  # Smoother ETA estimates
+)
+for i in range(100):
+    bar.update(i + 1)
+bar.finish()
+
+# LLM-specific progress tracking (token-based)
+tracker = LLMProgressTracker(
+    total_tokens=1000,  # Optional: None for unknown total
+    task="Generating review",
+    show_throughput=True  # Show tokens/sec
+)
+
+for chunk in llm_stream:
+    tokens = estimate_tokens(chunk)
+    tracker.update_tokens(tokens)
+tracker.finish()
+```
+
+#### ETA Calculation Methods
+
+The template provides three ETA calculation methods:
+
+```python
+from infrastructure.core.logging_utils import (
+    calculate_eta,           # Simple linear ETA
+    calculate_eta_ema,        # Exponential moving average
+    calculate_eta_with_confidence  # With confidence intervals
+)
+
+# Simple linear (fast, but can be inaccurate with variable durations)
+eta = calculate_eta(elapsed=30.0, completed=3, total=10)
+
+# EMA (smoother, adapts to changing performance)
+eta = calculate_eta_ema(
+    elapsed=30.0,
+    completed=3,
+    total=10,
+    previous_eta=70.0,  # Previous estimate
+    alpha=0.3  # Smoothing factor (0-1, higher = more responsive)
+)
+
+# With confidence intervals (optimistic/pessimistic)
+realistic, optimistic, pessimistic = calculate_eta_with_confidence(
+    elapsed=30.0,
+    completed=3,
+    total=10,
+    item_durations=[8.0, 12.0, 10.0]  # Optional: actual durations for accuracy
+)
+```
+
+#### Progress Display Best Practices
+
+1. **Use SubStageProgress for multi-step operations** - Provides better ETA tracking
+2. **Enable EMA for variable-duration operations** - More accurate estimates
+3. **Log progress periodically** - Don't log on every iteration for fast operations
+4. **Use LLMProgressTracker for token generation** - Specialized for LLM operations
+5. **Show throughput when relevant** - tokens/sec, items/sec, etc.
 
 ## Troubleshooting
 

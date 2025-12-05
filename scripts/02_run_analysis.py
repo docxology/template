@@ -134,13 +134,21 @@ def run_analysis_pipeline(scripts: list[Path]) -> int:
     successful_scripts = []
     failed_scripts = []
     
-    # Use sub-stage progress tracking
-    progress = SubStageProgress(total=len(scripts), stage_name="Analysis Pipeline")
+    # Use sub-stage progress tracking with EMA for better ETA
+    progress = SubStageProgress(
+        total=len(scripts),
+        stage_name="Analysis Pipeline",
+        use_ema=True
+    )
     
     for i, script in enumerate(scripts, 1):
         progress.start_substage(i, script.name)
         exit_code = run_analysis_script(script, repo_root)
         progress.complete_substage()
+        
+        # Log progress with ETA every few scripts
+        if i % 2 == 0 or i == len(scripts):
+            progress.log_progress()
 
         if exit_code == 0:
             successful_scripts.append(script.name)
@@ -205,6 +213,10 @@ def main() -> int:
     logger.info("STAGE 02: Run Analysis")
     logger.info("="*60)
     
+    # Log resource usage at start
+    from infrastructure.core.logging_utils import log_resource_usage
+    log_resource_usage("Analysis stage start", logger)
+    
     try:
         # Discover scripts
         scripts = discover_analysis_scripts()
@@ -227,13 +239,18 @@ def main() -> int:
         else:
             logger.error("\nAnalysis failed - fix issues and try again")
         
+        # Log resource usage at end
+        log_resource_usage("Analysis stage end", logger)
+        
         return exit_code
         
     except (ScriptExecutionError, PipelineError) as e:
         logger.error(format_error_with_suggestions(e))
+        log_resource_usage("Analysis stage end (error)", logger)
         return 1
     except Exception as e:
         logger.error(f"Unexpected error: {e}", exc_info=True)
+        log_resource_usage("Analysis stage end (error)", logger)
         return 1
 
 

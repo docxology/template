@@ -60,23 +60,37 @@ python3 scripts/01_run_tests.py --verbose
 
 ### 3. Run Analysis (`02_run_analysis.py`)
 
-**Purpose:** Execute project analysis scripts
+**Purpose:** Execute project analysis scripts with enhanced progress tracking
 
 - Discovers scripts in `project/scripts/`
-- Executes each script in order
+- Executes each script in order with progress tracking
+- Uses `SubStageProgress` with EMA-based ETA for accurate time estimates
+- Logs resource usage at start and end of stage
 - Validates output generation
 - Collects outputs to `project/output/`
+
+**Progress Features:**
+- Real-time progress updates with ETA
+- Resource monitoring (memory, CPU)
+- Per-script duration tracking
 
 **Generic:** Works for any project with analysis scripts
 
 ### 4. Render PDF (`03_render_pdf.py`)
 
-**Purpose:** Generate manuscript PDFs
+**Purpose:** Generate manuscript PDFs with progress tracking
 
 - Processes `project/manuscript/` markdown files
+- Uses `SubStageProgress` for multi-file rendering operations
 - Converts to LaTeX via pandoc
 - Compiles to PDF via xelatex
+- Logs resource usage during rendering
 - Generic orchestrator
+
+**Progress Features:**
+- Progress bar for multiple file rendering
+- Per-file completion tracking
+- Resource usage monitoring
 
 **Generic:** Works for any markdown manuscript
 
@@ -428,6 +442,60 @@ from scientific.data_generator import generate_synthetic_data
 # ❌ Root scripts should NOT contain analysis
 # ❌ Duplicates project/scripts/ logic
 # ❌ Not generic across projects
+```
+
+## Progress Tracking and Resource Monitoring
+
+### Enhanced Progress Tracking
+
+All scripts now include comprehensive progress tracking with improved accuracy:
+
+**Features:**
+- **EMA-based ETA** - Exponential moving average for smoother time estimates
+- **Confidence intervals** - Optimistic/pessimistic ETA ranges
+- **Sub-stage progress** - Track progress within multi-step operations
+- **LLM token tracking** - Real-time token generation progress with throughput
+- **Resource monitoring** - Memory and CPU usage at stage boundaries
+
+**Usage in Scripts:**
+```python
+from infrastructure.core.progress import SubStageProgress, LLMProgressTracker
+from infrastructure.core.logging_utils import log_resource_usage
+
+# Track sub-stages with EMA
+progress = SubStageProgress(total=10, stage_name="Processing", use_ema=True)
+for i, item in enumerate(items, 1):
+    progress.start_substage(i, item.name)
+    process(item)
+    progress.complete_substage()
+
+# Resource monitoring
+log_resource_usage("Stage start", logger)
+# ... stage execution ...
+log_resource_usage("Stage end", logger)
+```
+
+### Error Messages with Recovery Actions
+
+Error messages now include automatic recovery commands:
+
+**Features:**
+- **Context-aware suggestions** - Based on error type
+- **Automatic command generation** - OS-specific installation commands
+- **File path resolution** - Specific file and line number context
+- **Quick-fix commands** - Copy-paste ready solutions
+
+**Example:**
+```python
+from infrastructure.core.exceptions import FileNotFoundError
+
+raise FileNotFoundError(
+    "Manuscript file not found",
+    context={"file": "manuscript.md", "searched_in": "/path/to/project"}
+)
+# Automatically generates:
+# - Suggestions for fixing the issue
+# - Commands like: ls -la manuscript.md, find . -name 'manuscript.md'
 ```
 
 ## Integration with Build Pipeline

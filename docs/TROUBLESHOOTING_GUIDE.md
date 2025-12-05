@@ -66,6 +66,55 @@ uv pip list
 3. **Test after each fix** - Verify resolution
 4. **Document solution** - Note what worked
 
+## Progress Display Issues
+
+### Progress Bar Not Updating
+
+**Symptoms:**
+- Progress bar appears but doesn't move
+- ETA shows incorrect values
+- Progress stuck at 0%
+
+**Diagnosis:**
+```bash
+# Check if running in TTY
+test -t 1 && echo "TTY" || echo "Not TTY"
+
+# Check for output redirection
+# Progress bars work best in interactive terminals
+```
+
+**Solutions:**
+1. Progress bars require TTY - don't redirect stdout/stderr
+2. Use `log_progress()` instead of progress bars in non-TTY environments
+3. Check update interval - may be throttled for performance
+4. Verify progress.update() is being called
+
+### ETA Estimates Inaccurate
+
+**Symptoms:**
+- ETA shows unrealistic times
+- ETA doesn't update smoothly
+- ETA jumps around
+
+**Solutions:**
+1. Enable EMA for smoother estimates: `use_ema=True`
+2. Provide item durations for better accuracy: `item_durations=[...]`
+3. Wait for a few items before trusting ETA
+4. Use confidence intervals: `get_eta_with_confidence()`
+
+### LLM Progress Not Showing
+
+**Symptoms:**
+- No token generation progress during LLM operations
+- Can't see throughput metrics
+
+**Solutions:**
+1. Ensure using `LLMProgressTracker` for token-based operations
+2. Check that streaming is enabled in LLM client
+3. Verify progress tracker is updated with each chunk
+4. Check terminal supports carriage return updates
+
 ## Common Error Messages
 
 ### Build System Errors

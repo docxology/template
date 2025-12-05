@@ -4,7 +4,8 @@ Tests the _extract_pdf_urls_from_html function and related HTML parsing capabili
 """
 
 import pytest
-from infrastructure.literature.pdf_handler import _extract_pdf_urls_from_html, PDFHandler
+from infrastructure.literature.pdf_extractor import extract_pdf_urls_from_html
+from infrastructure.literature.pdf_handler import PDFHandler
 from infrastructure.literature.config import LiteratureConfig
 
 
@@ -23,7 +24,7 @@ class TestExtractPDFUrlsFromHTML:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(html, "https://example.com")
+        urls = extract_pdf_urls_from_html(html, "https://example.com")
         expected = [
             "https://example.com/paper.pdf",
             "https://example.com/paper2.pdf"
@@ -42,7 +43,7 @@ class TestExtractPDFUrlsFromHTML:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(html, "https://example.com")
+        urls = extract_pdf_urls_from_html(html, "https://example.com")
         expected = [
             "https://example.com/paper.PDF",
             "https://example.com/paper.Pdf"
@@ -62,7 +63,7 @@ class TestExtractPDFUrlsFromHTML:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(html, "https://example.com")
+        urls = extract_pdf_urls_from_html(html, "https://example.com")
         assert "https://example.com/meta.pdf" in urls
         assert "https://example.com/paper.pdf" in urls
 
@@ -78,7 +79,7 @@ class TestExtractPDFUrlsFromHTML:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(html, "https://example.com")
+        urls = extract_pdf_urls_from_html(html, "https://example.com")
         expected = [
             "https://example.com/js_var.pdf",
             "https://example.com/const.pdf",
@@ -99,7 +100,7 @@ class TestExtractPDFUrlsFromHTML:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(html_elsevier, "https://www.sciencedirect.com")
+        urls = extract_pdf_urls_from_html(html_elsevier, "https://www.sciencedirect.com")
         assert "https://www.sciencedirect.com/science/article/pii/S1234567890123456/pdfft?isDTMRedir=true&download=true" in urls
 
         # Springer pattern
@@ -111,8 +112,9 @@ class TestExtractPDFUrlsFromHTML:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(html_springer, "https://link.springer.com")
-        assert "https://link.springer.com/content/pdf/10.1007/978-3-030-12345-6_1" in urls
+        urls = extract_pdf_urls_from_html(html_springer, "https://link.springer.com")
+        # The HTML contains /chapter/pdf/, which gets resolved to the full URL
+        assert "https://link.springer.com/chapter/pdf/10.1007/978-3-030-12345-6_1" in urls
 
         # IEEE pattern
         html_ieee = b"""
@@ -123,7 +125,7 @@ class TestExtractPDFUrlsFromHTML:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(html_ieee, "https://ieeexplore.ieee.org")
+        urls = extract_pdf_urls_from_html(html_ieee, "https://ieeexplore.ieee.org")
         assert "https://ieeexplore.ieee.org/stampPDF/getPDF.jsp?arnumber=1234567" in urls
 
     def test_extract_pdf_urls_relative_urls(self):
@@ -139,7 +141,7 @@ class TestExtractPDFUrlsFromHTML:
         """
 
         base_url = "https://example.com/path/page.html"
-        urls = _extract_pdf_urls_from_html(html, base_url)
+        urls = extract_pdf_urls_from_html(html, base_url)
 
         expected = [
             "https://example.com/downloads/paper.pdf",
@@ -164,16 +166,16 @@ class TestExtractPDFUrlsFromHTML:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(html, "https://example.com")
+        urls = extract_pdf_urls_from_html(html, "https://example.com")
         assert "https://example.com/paper.pdf" in urls
         assert len(urls) == 1  # Only the PDF should be included
 
     def test_extract_pdf_urls_empty_html(self):
         """Test handling of empty or invalid HTML."""
-        urls = _extract_pdf_urls_from_html(b"", "https://example.com")
+        urls = extract_pdf_urls_from_html(b"", "https://example.com")
         assert urls == []
 
-        urls = _extract_pdf_urls_from_html(b"<html></html>", "https://example.com")
+        urls = extract_pdf_urls_from_html(b"<html></html>", "https://example.com")
         assert urls == []
 
     def test_extract_pdf_urls_malformed_html(self):
@@ -186,7 +188,7 @@ class TestExtractPDFUrlsFromHTML:
         </body>
         """
 
-        urls = _extract_pdf_urls_from_html(malformed_html, "https://example.com")
+        urls = extract_pdf_urls_from_html(malformed_html, "https://example.com")
         assert "https://example.com/paper.pdf" in urls
         assert "https://example.com/broken.pdf" in urls
 
@@ -202,7 +204,7 @@ class TestExtractPDFUrlsFromHTML:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(html, "https://example.com")
+        urls = extract_pdf_urls_from_html(html, "https://example.com")
         assert urls.count("https://example.com/paper.pdf") == 1  # Deduplicated
         assert "https://example.com/other.pdf" in urls
         assert len(urls) == 2
@@ -235,7 +237,7 @@ class TestExtractPDFUrlsFromHTML:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(complex_html, "https://example.com")
+        urls = extract_pdf_urls_from_html(complex_html, "https://example.com")
 
         expected_urls = [
             "https://example.com/citation.pdf",
@@ -286,7 +288,7 @@ class TestPDFHandlerHTMLIntegration:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(ieee_html, "https://ieeexplore.ieee.org")
+        urls = extract_pdf_urls_from_html(ieee_html, "https://ieeexplore.ieee.org")
         expected = [
             "https://ieeexplore.ieee.org/stampPDF/getPDF.jsp?arnumber=9876543",  # From pattern
             "/stampPDF/getPDF.jsp?arnumber=9876543"  # From href
@@ -309,12 +311,12 @@ class TestPDFHandlerHTMLIntegration:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(bad_encoding_html, "https://example.com")
+        urls = extract_pdf_urls_from_html(bad_encoding_html, "https://example.com")
         assert "https://example.com/paper.pdf" in urls
 
         # Moderately large HTML content (should still work)
         large_html = b'<html><body><a href="https://example.com/large.pdf">PDF</a></body></html>' * 20
-        urls = _extract_pdf_urls_from_html(large_html, "https://example.com")
+        urls = extract_pdf_urls_from_html(large_html, "https://example.com")
         assert "https://example.com/large.pdf" in urls
 
     def test_html_parsing_url_validation(self):
@@ -330,7 +332,7 @@ class TestPDFHandlerHTMLIntegration:
         </html>
         """
 
-        urls = _extract_pdf_urls_from_html(html, "https://example.com")
+        urls = extract_pdf_urls_from_html(html, "https://example.com")
 
         assert "https://valid.example.com/paper.pdf" in urls
         assert "https://relative.example.com/paper.pdf" in urls
@@ -362,7 +364,7 @@ class TestHTMLParsingIntegration:
         html = f"<html><body>{''.join(html_parts)}</body></html>".encode()
 
         start_time = time.time()
-        urls = _extract_pdf_urls_from_html(html, "https://example.com")
+        urls = extract_pdf_urls_from_html(html, "https://example.com")
         end_time = time.time()
 
         # Should extract all 100 URLs

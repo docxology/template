@@ -33,8 +33,9 @@ pytest tests/infrastructure/validation/ -v
 ## Coverage Requirements
 
 - **49% minimum** for infrastructure modules
-- Currently achieving **55.89%** coverage
+- Currently achieving **70.09%** coverage (exceeds requirement)
 - Network-dependent tests can be skipped
+- See [`../../docs/COVERAGE_GAPS.md`](../../docs/COVERAGE_GAPS.md) for detailed analysis
 
 ## Test Categories
 

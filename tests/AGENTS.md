@@ -8,7 +8,7 @@ The `tests/` directory ensures **comprehensive test coverage** for all modules (
 
 ### Test-Driven Development (TDD)
 1. Write tests first
-2. Implement functionality in `src/`
+2. Implement functionality in `project/src/` (project-specific) or `infrastructure/` (reusable)
 3. Run tests until they pass
 4. Refactor with confidence
 
@@ -88,119 +88,152 @@ tests/
 │       ├── test_doc_scanner.py
 │       ├── test_repo_scanner.py
 │       └── test_cli.py
-├── integration/             # Integration tests
-│   └── test_module_interoperability.py
-├── test_coverage_completion.py  # Additional coverage tests
-├── test_figure_equation_citation.py  # Figure/equation/citation tests
-└── test_repo_utilities.py   # Repository utilities tests
+└── integration/             # Integration tests
+    ├── test_module_interoperability.py
+    ├── test_figure_equation_citation.py
+    ├── test_output_copying.py
+    └── test_edge_cases_and_error_paths.py
 ```
 
 ## conftest.py
 
 Configures test environment:
 ```python
+"""Pytest configuration for template infrastructure tests."""
 import os
 import sys
 
-# Force headless backend for matplotlib
+# Force headless backend for matplotlib in tests
 os.environ.setdefault("MPLBACKEND", "Agg")
 
-# Add src/ to path for imports
-ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+# Add paths for imports
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+# Add ROOT to path so we can import infrastructure as a package
+# Ensure ROOT is FIRST in path to avoid shadowing by tests/infrastructure
+if ROOT in sys.path:
+    sys.path.remove(ROOT)
+sys.path.insert(0, ROOT)
+
+# Remove tests/ directory from path if present to prevent shadowing
+TESTS_DIR = os.path.join(ROOT, "tests")
+if TESTS_DIR in sys.path:
+    sys.path.remove(TESTS_DIR)
+
+# Add src/ to path for scientific modules (if it exists)
 SRC = os.path.join(ROOT, "src")
-if SRC not in sys.path:
+if os.path.exists(SRC) and SRC not in sys.path:
     sys.path.insert(0, SRC)
+
+# Add project/src/ to path for project modules
+PROJECT_SRC = os.path.join(ROOT, "project", "src")
+if os.path.exists(PROJECT_SRC) and PROJECT_SRC not in sys.path:
+    sys.path.insert(0, PROJECT_SRC)
 ```
 
 This allows tests to import directly:
 ```python
-from example import add_numbers  # Works immediately
+from infrastructure.core.config_loader import load_config  # Infrastructure imports
+from project.src.example import add_numbers  # Project imports
 ```
 
 ## Test Categories
 
-### Unit Tests
-Test individual functions in `src/` modules:
-- `test_example.py` - 121 lines, tests basic operations
-- `test_glossary_gen.py` - 189 lines, tests API extraction
-- `test_pdf_validator.py` - 328 lines, tests PDF validation
-- `test_build_verifier.py` - 400 lines, tests build verification
-- `test_integrity.py` - 496 lines, tests integrity checking
-- `test_quality_checker.py` - 463 lines, tests quality analysis
-- `test_reproducibility.py` - 427 lines, tests reproducibility
-- `test_publishing.py` - 427 lines, tests publishing tools
-- `test_scientific_dev.py` - 339 lines, tests scientific dev
+### Infrastructure Module Tests
+Test individual infrastructure modules in `tests/infrastructure/`:
+- **Build Module** (`tests/infrastructure/build/`)
+  - `test_build_verifier.py` - Build verification and validation
+  - `test_quality_checker.py` - Document quality analysis
+  - `test_reproducibility.py` - Build reproducibility tracking
+  
+- **Core Module** (`tests/infrastructure/core/`)
+  - `test_config_loader.py` - Configuration file handling
+  - `test_exceptions.py` - Custom exception handling
+  - `test_logging_utils.py` - Logging utilities
+  - `test_checkpoint.py` - Checkpoint/resume functionality
+  - `test_progress.py` - Progress tracking
+  - `test_retry.py` - Retry mechanisms
+
+- **Documentation Module** (`tests/infrastructure/documentation/`)
+  - `test_figure_manager.py` - Figure management and registration
+  - `test_image_manager.py` - Image handling in markdown
+  - `test_glossary_gen.py` - API documentation generation
+  - `test_markdown_integration.py` - Markdown processing integration
+
+- **Validation Module** (`tests/infrastructure/validation/`)
+  - `test_markdown_validator.py` - Markdown validation
+  - `test_pdf_validator.py` - PDF validation
+  - `test_integrity.py` - Integrity verification
+  - `test_repo_scanner.py` - Repository scanning and validation
+
+### Project Module Tests
+Test project-specific code in `project/tests/`:
+- Unit tests for `project/src/` modules (see `project/tests/AGENTS.md`)
+- Integration tests in `project/tests/integration/`
+  - `test_integration_pipeline.py` - Full analysis pipeline
+  - `test_example_figure.py` - Figure generation integration
+  - `test_generate_research_figures.py` - Research figure pipeline
 
 ### Integration Tests
-Test component interactions:
-- `test_integration_pipeline.py` - 821 lines
-  - End-to-end pipeline validation
-  - Script execution integration
-  - Build system validation
-  - Output verification
-
-### Script Integration Tests
-Verify scripts properly use `src/` modules:
-- `test_example_figure.py` - 452 lines
-  - Tests example_figure.py integration
-  - Validates import patterns
-  - Checks output generation
-  
-- `test_generate_research_figures.py` - 588 lines
-  - Tests generate_research_figures.py integration
-  - Validates complex figure generation
-  - Checks data processing
-
-### Repository Utilities Tests
-Validate build utilities:
-- `test_repo_utilities.py` - 1318 lines
-  - Tests generate_glossary.py (100+ tests)
-  - Tests validate_markdown.py (comprehensive)
-  - Tests validate_pdf_output.py (full coverage)
+Test cross-module interactions in `tests/integration/`:
+- `test_edge_cases_and_error_paths.py` - Edge cases and error handling
+- `test_figure_equation_citation.py` - Figure/equation/citation handling
+- `test_module_interoperability.py` - Cross-module integration validation (no mocks policy)
+- `test_output_copying.py` - Output file handling and copying
 
 ## Running Tests
 
 ### All Tests with Coverage
 ```bash
-# Using pytest directly
-pytest tests/ --cov=src --cov-report=term-missing --cov-report=html
+# Using pytest directly (both infrastructure and project)
+pytest tests/ --cov=infrastructure --cov=project/src --cov-report=term-missing --cov-report=html
 
 # Using uv
-uv run pytest tests/ --cov=src --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
 
 # Verify coverage requirements
-pytest tests/ --cov=src --cov-fail-under=70
+pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
+pytest project/tests/ --cov=project/src --cov-fail-under=70
 ```
 
 ### Specific Tests
 ```bash
-# Single test file
-pytest tests/test_example.py -v
+# Infrastructure tests
+pytest tests/infrastructure/core/test_config_loader.py -v
 
-# Single test function
-pytest tests/test_example.py::test_add_numbers -v
+# Project tests
+pytest project/tests/test_example.py -v
+
+# Integration tests
+pytest tests/integration/test_module_interoperability.py -v
 
 # By pattern
-pytest tests/ -k "test_add" -v
+pytest tests/ -k "test_config" -v
 ```
 
 ### Coverage Reports
 ```bash
 # Terminal report with missing lines
-pytest tests/ --cov=src --cov-report=term-missing
+pytest tests/ --cov=infrastructure --cov=project/src --cov-report=term-missing
 
 # HTML report (opens in browser)
-pytest tests/ --cov=src --cov-report=html
+pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
 open htmlcov/index.html
+
+# Separate reports
+pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
+pytest project/tests/ --cov=project/src --cov-report=html
 ```
 
 ## Writing Tests
 
 ### Test Structure
 ```python
-"""Tests for src/module_name.py"""
+"""Tests for infrastructure/module_name.py or project/src/module_name.py"""
 import pytest
-from module_name import function_to_test
+from infrastructure.module_name import function_to_test
+# or
+from project.src.module_name import function_to_test
 
 class TestFunctionName:
     """Test suite for function_to_test."""
@@ -249,17 +282,16 @@ def test_double(input, expected):
 
 ## Test Coverage Details
 
-### Current Coverage: 100%
-All `src/` modules have complete test coverage:
-- example.py: 100%
-- glossary_gen.py: 100%
-- pdf_validator.py: 100%
-- build_verifier.py: 100%
-- integrity.py: 100%
-- quality_checker.py: 100%
-- reproducibility.py: 100%
-- publishing.py: 100%
-- scientific_dev.py: 100%
+### Current Coverage Status
+
+**Project Modules** (`project/src/`): **99.88%** (Target: 70%+)
+- All project-specific modules exceed the 70% minimum requirement
+- Comprehensive test coverage ensures research code reliability
+
+**Infrastructure Modules** (`infrastructure/`): **70.09%** (Target: 49%+)
+- Exceeds the 49% minimum requirement
+- Core modules have higher coverage
+- Some CLI and advanced features have lower coverage (see `docs/COVERAGE_GAPS.md`)
 
 ### Coverage Configuration
 `pyproject.toml` enforces coverage rules via `[tool.coverage.*]` sections:
@@ -328,17 +360,24 @@ def test_something():
 ## Integration with Build System
 
 ### Automatic Execution
-`render_pdf.sh` automatically:
-1. **Runs all tests** with coverage requirements (70% project, 49% infra)
-2. **Fails build** if tests don't pass
-3. **Generates coverage report** (htmlcov/)
-4. **Validates integration** between components
+`scripts/01_run_tests.py` (orchestrated by `scripts/run_all.py`) automatically:
+1. **Runs infrastructure tests** with 49% coverage requirement
+2. **Runs project tests** with 70% coverage requirement
+3. **Fails build** if tests don't pass or coverage requirements not met
+4. **Generates coverage reports** (htmlcov/)
+5. **Validates integration** between components
 
 ### Pre-commit Checks
 Before committing code:
 ```bash
-# Run tests
-pytest tests/ --cov=src --cov-fail-under=100
+# Run all tests with coverage
+pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
+
+# Verify infrastructure coverage (49% minimum)
+pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
+
+# Verify project coverage (70% minimum)
+pytest project/tests/ --cov=project/src --cov-fail-under=70
 
 # Check coverage report
 open htmlcov/index.html
@@ -347,18 +386,21 @@ open htmlcov/index.html
 ## Adding New Tests
 
 ### Checklist
-1. Create test file matching src/ module name
-2. Import functions to test from src/
-3. Write comprehensive test cases
-4. Ensure coverage requirements met for new module
-5. Run full test suite to verify
-6. Update this documentation if needed
+1. Determine if code is project-specific (`project/src/`) or infrastructure (`infrastructure/`)
+2. Create test file in appropriate location (`project/tests/` or `tests/infrastructure/`)
+3. Import functions to test from correct module path
+4. Write comprehensive test cases using real data (no mocks)
+5. Ensure coverage requirements met (70% project, 49% infrastructure)
+6. Run full test suite to verify
+7. Update this documentation if needed
 
 ### Template
 ```python
-"""Tests for src/new_module.py"""
+"""Tests for infrastructure/new_module.py or project/src/new_module.py"""
 import pytest
-from new_module import new_function
+from infrastructure.new_module import new_function
+# or
+from project.src.new_module import new_function
 
 
 class TestNewFunction:

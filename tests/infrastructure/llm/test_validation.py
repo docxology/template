@@ -4,16 +4,15 @@ import json
 from infrastructure.llm.validation import (
     OutputValidator,
     detect_repetition,
-    calculate_unique_content_ratio,
     deduplicate_sections,
-    _calculate_similarity,
-    _jaccard_similarity,
-    _tfidf_cosine_similarity,
-    _sequence_similarity,
     is_off_topic,
     has_on_topic_signals,
     detect_conversational_phrases,
     check_format_compliance,
+)
+from infrastructure.llm.validation_repetition import (
+    calculate_unique_content_ratio,
+    _calculate_similarity,
 )
 from infrastructure.core.exceptions import ValidationError
 

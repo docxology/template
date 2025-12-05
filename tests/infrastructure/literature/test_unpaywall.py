@@ -270,8 +270,8 @@ class TestUnpaywallIntegration:
         )
         handler = PDFHandler(config)
         
-        assert handler._unpaywall is not None
-        assert isinstance(handler._unpaywall, UnpaywallSource)
+        assert handler._fallbacks._unpaywall is not None
+        assert isinstance(handler._fallbacks._unpaywall, UnpaywallSource)
 
     def test_pdf_handler_no_unpaywall_when_disabled(self):
         """Test PDFHandler doesn't create UnpaywallSource when disabled."""
@@ -283,7 +283,7 @@ class TestUnpaywallIntegration:
         )
         handler = PDFHandler(config)
         
-        assert handler._unpaywall is None
+        assert handler._fallbacks._unpaywall is None
 
     def test_pdf_handler_no_unpaywall_without_email(self):
         """Test PDFHandler doesn't create UnpaywallSource without email."""
@@ -295,5 +295,5 @@ class TestUnpaywallIntegration:
         )
         handler = PDFHandler(config)
         
-        assert handler._unpaywall is None
+        assert handler._fallbacks._unpaywall is None
 

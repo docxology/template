@@ -14,28 +14,52 @@ The `tests/infrastructure/` directory contains comprehensive tests for the reusa
 tests/infrastructure/
 ├── conftest.py                      # Shared test configuration
 ├── build/                          # Build system tests
+│   ├── test_build_additional.py    # Additional build tests
+│   ├── test_build_complete.py      # Comprehensive build tests
+│   ├── test_build_verifier_complete_coverage.py # Complete build verifier coverage
+│   ├── test_build_verifier_coverage.py # Build verifier coverage
 │   ├── test_build_verifier.py      # Build verification (400 lines)
+│   ├── test_quality_checker_complete_coverage.py # Complete quality checker coverage
+│   ├── test_quality_checker_coverage.py # Quality checker coverage
 │   ├── test_quality_checker.py     # Quality analysis (463 lines)
-│   ├── test_reproducibility.py     # Reproducibility tracking (427 lines)
+│   ├── test_reproducibility_complete_coverage.py # Complete reproducibility coverage
+│   ├── test_reproducibility_coverage.py # Reproducibility coverage
+│   └── test_reproducibility.py     # Reproducibility tracking (427 lines)
 ├── core/                           # Core utilities tests
+│   ├── test_checkpoint.py          # Checkpoint/resume functionality
+│   ├── test_config_cli_coverage.py # Config CLI coverage
 │   ├── test_config_loader.py       # Configuration loading
 │   ├── test_exceptions.py          # Exception handling
 │   ├── test_logging_utils.py       # Logging system
+│   ├── test_progress.py            # Progress tracking
+│   └── test_retry.py               # Retry mechanisms
 ├── documentation/                  # Documentation tools tests
 │   ├── test_figure_manager.py      # Figure management (registry, numbering)
-│   ├── test_image_manager.py       # Image handling in markdown
+│   ├── test_generate_glossary_cli.py # Glossary generation CLI
 │   ├── test_glossary_gen.py        # API documentation generation (189 lines)
-│   ├── test_markdown_integration.py # Markdown processing integration
+│   ├── test_image_manager.py       # Image handling in markdown
+│   └── test_markdown_integration.py # Markdown processing integration
 ├── literature/                     # Literature search tests
+│   ├── test_api.py                 # API client implementations
 │   ├── test_config.py              # Literature configuration
 │   ├── test_core.py                # Core literature functionality
-│   ├── test_api.py                 # API client implementations
-│   ├── test_cli.py                 # CLI interface
+│   ├── test_html_parsing.py        # HTML parsing utilities
 │   ├── test_integration.py         # Full workflow integration
 │   ├── test_library_index.py       # JSON library management
+│   ├── test_literature_cli.py       # CLI interface (comprehensive)
+│   ├── test_literature_cli_simple.py # CLI interface (simple)
+│   ├── test_llm_operations.py      # LLM integration for literature
+│   ├── test_logging.py             # Literature logging tests
+│   ├── test_paper_selector.py     # Paper selection utilities
 │   ├── test_pdf_handler_comprehensive.py # PDF downloading (robust)
+│   ├── test_pdf_handler_fallbacks.py # PDF download fallback strategies
+│   ├── test_pdf_handler_simple.py # PDF downloading (simple)
+│   ├── test_progress.py            # Progress tracking for literature
 │   ├── test_pure_logic.py          # Pure logic tests (no network)
-│   └── test_unpaywall.py           # Unpaywall integration
+│   ├── test_summarizer.py          # Paper summarization
+│   ├── test_unpaywall.py           # Unpaywall integration
+│   ├── test_workflow.py            # Literature workflow tests
+│   └── test_workflow_skip_existing.py # Workflow with skip existing
 ├── llm/                            # LLM integration tests
 │   ├── conftest.py                 # LLM test configuration
 │   ├── AGENTS.md                   # LLM test documentation
@@ -46,7 +70,10 @@ tests/infrastructure/
 │   ├── test_llm_core_additional.py # Additional core tests
 │   ├── test_llm_core_coverage.py   # Coverage-focused tests
 │   ├── test_llm_core_full.py       # Comprehensive core tests
+│   ├── test_llm_review.py          # LLM manuscript review tests
 │   ├── test_ollama_utils.py        # Ollama client utilities
+│   ├── test_prompts_composer.py    # Prompt composition utilities
+│   ├── test_prompts_loader.py      # Prompt loading and management
 │   ├── test_templates.py           # Research prompt templates
 │   └── test_validation.py          # Input validation
 ├── publishing/                     # Publishing tools tests
@@ -57,7 +84,9 @@ tests/infrastructure/
 │   ├── test_publishing_api_full.py # Full API tests
 │   ├── test_publishing_cli_full.py # Full CLI tests
 │   ├── test_publishing_cli.py      # CLI functionality
+│   ├── test_publishing_edge_cases.py # Edge case handling
 │   └── test_publishing.py          # Publishing metadata (427 lines)
+├── test_cli/                        # Reserved for future CLI tests
 ├── rendering/                      # Rendering pipeline tests
 │   ├── conftest.py                 # Rendering test configuration
 │   ├── test_cli.py                 # CLI interface
@@ -78,6 +107,7 @@ tests/infrastructure/
 │   ├── test_slides_renderer_coverage.py # Slides coverage
 │   └── test_web_renderer_coverage.py # Web rendering coverage
 ├── scientific/                     # Scientific tools tests
+│   ├── test_scientific_dev_edge_cases.py # Edge case handling
 │   └── test_scientific_dev.py      # Scientific development utilities
 ├── validation/                     # Validation system tests
 │   ├── test_check_links.py         # Link validation
@@ -106,7 +136,6 @@ tests/infrastructure/
 │   ├── test_validate_pdf_cli_coverage.py # Coverage PDF CLI
 │   ├── test_validate_pdf_cli_full.py # Full PDF CLI
 │   └── test_validation_cli.py      # General validation CLI
-└── test_llm_review.py              # LLM manuscript review tests
 ```
 
 ## Test Organization by Module
@@ -115,6 +144,12 @@ tests/infrastructure/
 
 **Purpose:** Test fundamental utilities used by all other modules
 
+- **`test_checkpoint.py`** - Checkpoint/resume functionality
+  - Checkpoint creation and validation
+  - Resume from checkpoint
+  - Checkpoint state management
+
+- **`test_config_cli_coverage.py`** - Configuration CLI coverage tests
 - **`test_config_loader.py`** - YAML/JSON configuration loading
   - Environment variable integration
   - Author metadata formatting
@@ -130,20 +165,38 @@ tests/infrastructure/
   - Context managers for operation tracking
   - TTY-aware color output
 
+- **`test_progress.py`** - Progress tracking
+  - Progress bar functionality
+  - Progress state management
+  - Progress reporting
+
+- **`test_retry.py`** - Retry mechanisms
+  - Retry logic with backoff
+  - Retry condition handling
+  - Retry state tracking
+
 ### Build System (`build/`)
 
 **Purpose:** Validate build verification and quality assurance
 
+- **`test_build_additional.py`** - Additional build verification tests
+- **`test_build_complete.py`** - Comprehensive build system tests
+- **`test_build_verifier_complete_coverage.py`** - Complete coverage for build verifier
+- **`test_build_verifier_coverage.py`** - Build verifier coverage tests
 - **`test_build_verifier.py`** (400 lines) - Build process validation
   - Artifact verification and integrity
   - Build reproducibility testing
   - Environment consistency checking
 
+- **`test_quality_checker_complete_coverage.py`** - Complete coverage for quality checker
+- **`test_quality_checker_coverage.py`** - Quality checker coverage tests
 - **`test_quality_checker.py`** (463 lines) - Document quality analysis
   - Readability metrics (Flesch score, Fog index)
   - Academic writing standards compliance
   - Quality scoring and reporting
 
+- **`test_reproducibility_complete_coverage.py`** - Complete coverage for reproducibility
+- **`test_reproducibility_coverage.py`** - Reproducibility coverage tests
 - **`test_reproducibility.py`** (427 lines) - Environment tracking
   - Build manifest generation
   - Dependency snapshot capture
@@ -162,6 +215,7 @@ tests/infrastructure/
   - Image insertion and path resolution
   - Format validation and conversion
 
+- **`test_generate_glossary_cli.py`** - Glossary generation CLI tests
 - **`test_glossary_gen.py`** (189 lines) - API documentation generation
   - AST-based function/class extraction
   - Markdown table generation
@@ -175,6 +229,10 @@ tests/infrastructure/
 
 **Purpose:** Test academic literature discovery and management
 
+- **`test_api.py`** - External API client validation
+  - arXiv, Semantic Scholar, Unpaywall clients
+  - Rate limiting and error handling
+
 - **`test_config.py`** - Configuration management
   - Environment variable loading
   - Source configuration validation
@@ -183,13 +241,9 @@ tests/infrastructure/
   - Search coordination across sources
   - Result normalization and deduplication
 
-- **`test_api.py`** - External API client validation
-  - arXiv, Semantic Scholar, Unpaywall clients
-  - Rate limiting and error handling
-
-- **`test_cli.py`** - Command-line interface
-  - CLI argument parsing and validation
-  - Output formatting and error reporting
+- **`test_html_parsing.py`** - HTML parsing utilities
+  - HTML content extraction
+  - Metadata parsing from HTML
 
 - **`test_integration.py`** - Full workflow integration
   - Search → Download → Library → Citation workflow
@@ -198,17 +252,62 @@ tests/infrastructure/
   - Entry addition and retrieval
   - Metadata validation and updating
 
+- **`test_literature_cli.py`** - Command-line interface (comprehensive)
+  - CLI argument parsing and validation
+  - Output formatting and error reporting
+  - Full CLI workflow testing
+
+- **`test_literature_cli_simple.py`** - Command-line interface (simple)
+  - Basic CLI functionality
+  - Help output validation
+
+- **`test_llm_operations.py`** - LLM integration for literature
+  - Paper summarization with LLM
+  - LLM-assisted search refinement
+
+- **`test_logging.py`** - Literature logging tests
+  - Logging configuration
+  - Log message validation
+
+- **`test_paper_selector.py`** - Paper selection utilities
+  - Paper ranking and selection
+  - Selection criteria validation
+
 - **`test_pdf_handler_comprehensive.py`** - Robust PDF downloading
   - Multiple download strategies
   - Retry logic and fallback mechanisms
+
+- **`test_pdf_handler_fallbacks.py`** - PDF download fallback strategies
+  - Alternative download sources
+  - Fallback mechanism testing
+
+- **`test_pdf_handler_simple.py`** - PDF downloading (simple)
+  - Basic PDF download functionality
+  - Simple error handling
+
+- **`test_progress.py`** - Progress tracking for literature
+  - Progress bar functionality
+  - Progress state management
 
 - **`test_pure_logic.py`** - Logic-only tests (no network)
   - Configuration parsing, result processing
   - Citation key generation and validation
 
+- **`test_summarizer.py`** - Paper summarization
+  - Summary generation
+  - Summary quality validation
+
 - **`test_unpaywall.py`** - Open access PDF resolution
   - Unpaywall API integration
   - Legal PDF source discovery
+
+- **`test_workflow.py`** - Literature workflow tests
+  - Complete workflow validation
+  - Workflow state management
+
+- **`test_workflow_skip_existing.py`** - Workflow with skip existing
+  - Skip existing files functionality
+  - Incremental workflow processing
 
 ### LLM Integration (`llm/`)
 
@@ -237,18 +336,26 @@ tests/infrastructure/
 - **`test_cli.py`** - Command-line interface
   - CLI argument parsing for LLM operations
 
+- **`test_llm_review.py`** - LLM manuscript review tests
+  - Review metrics and session tracking
+  - Manuscript review generation
+  - Quality validation
+
 - **`test_ollama_utils.py`** - Ollama client utilities
   - Model management and switching
   - Connection handling and error recovery
 
+- **`test_prompts_composer.py`** - Prompt composition utilities
+  - Multi-part prompt assembly
+  - Template variable substitution
+
+- **`test_prompts_loader.py`** - Prompt loading and management
+  - Template file loading
+  - Prompt caching and validation
+
 ### Publishing Tools (`publishing/`)
 
 **Purpose:** Test academic publishing workflows
-
-- **`test_publishing.py`** (427 lines) - Publishing metadata handling
-  - Citation generation (BibTeX, APA, MLA)
-  - DOI validation and formatting
-  - Author and affiliation management
 
 - **`test_api.py`** - Platform API client validation
   - Zenodo, arXiv, GitHub API integrations
@@ -256,6 +363,17 @@ tests/infrastructure/
 
 - **`test_cli.py`** - Publishing CLI interface
   - Command-line publishing workflows
+
+- **`test_publish_cli.py`** - Publishing CLI tests
+- **`test_publishing_api_coverage.py`** - API coverage tests
+- **`test_publishing_api_full.py`** - Full API tests
+- **`test_publishing_cli_full.py`** - Full CLI tests
+- **`test_publishing_cli.py`** - CLI functionality
+- **`test_publishing_edge_cases.py`** - Edge case handling
+- **`test_publishing.py`** (427 lines) - Publishing metadata handling
+  - Citation generation (BibTeX, APA, MLA)
+  - DOI validation and formatting
+  - Author and affiliation management
 
 ### Rendering Pipeline (`rendering/`)
 
@@ -287,6 +405,7 @@ tests/infrastructure/
 
 **Purpose:** Test scientific computing utilities
 
+- **`test_scientific_dev_edge_cases.py`** - Edge case handling
 - **`test_scientific_dev.py`** - Scientific development tools
   - Numerical stability checking
   - Performance benchmarking
@@ -296,32 +415,62 @@ tests/infrastructure/
 
 **Purpose:** Test quality assurance and validation tools
 
-- **`test_pdf_validator.py`** (328 lines) - PDF validation
-  - Text extraction and analysis
-  - Unresolved reference detection
-  - Document structure validation
+- **`test_check_links.py`** - Link validation
+  - Internal and external link checking
+  - Reference resolution validation
+
+- **`test_check_links_comprehensive.py`** - Comprehensive link tests
+- **`test_check_links_edge_cases.py`** - Edge case link tests
+- **`test_check_links_full.py`** - Full link validation
+
+- **`test_cli.py`** - Validation CLI interface
+  - Command-line validation tools
+
+- **`test_doc_scanner.py`** - Document scanning and analysis
+  - Repository-wide document validation
+  - Quality and completeness checking
+
+- **`test_doc_scanner_coverage.py`** - Coverage-focused scanning
+- **`test_doc_scanner_full.py`** - Full document scanning
+- **`test_doc_scanner_phases.py`** - Scanning phases
 
 - **`test_integrity.py`** (496 lines) - Integrity verification
   - File hash validation
   - Cross-reference checking
   - Data consistency validation
 
+- **`test_integrity_edge_cases.py`** - Edge case integrity tests
+
 - **`test_markdown_validator.py`** - Markdown validation
   - Image reference verification
   - Cross-reference validation
   - Mathematical notation checking
 
-- **`test_doc_scanner.py`** - Document scanning and analysis
-  - Repository-wide document validation
-  - Quality and completeness checking
+- **`test_pdf_validator.py`** (328 lines) - PDF validation
+  - Text extraction and analysis
+  - Unresolved reference detection
+  - Document structure validation
 
-- **`test_repo_scanner*.py`** - Repository analysis
+- **`test_repo_scanner.py`** - Repository scanning
   - File structure validation
   - Documentation completeness checking
 
-- **`test_check_links*.py`** - Link validation
-  - Internal and external link checking
-  - Reference resolution validation
+- **`test_repo_scanner_additional.py`** - Additional repo scanning
+- **`test_repo_scanner_comprehensive.py`** - Comprehensive repo scanning
+- **`test_repo_scanner_coverage.py`** - Coverage repo scanning
+- **`test_repo_scanner_full.py`** - Full repo scanning
+
+- **`test_validate_markdown_cli.py`** - Markdown CLI
+- **`test_validate_markdown_cli_comprehensive.py`** - Comprehensive CLI
+- **`test_validate_markdown_cli_full.py`** - Full CLI tests
+- **`test_validate_md_cli_coverage.py`** - Coverage CLI tests
+
+- **`test_validate_pdf_cli.py`** - PDF CLI
+- **`test_validate_pdf_cli_comprehensive.py`** - Comprehensive PDF CLI
+- **`test_validate_pdf_cli_coverage.py`** - Coverage PDF CLI
+- **`test_validate_pdf_cli_full.py`** - Full PDF CLI
+
+- **`test_validation_cli.py`** - General validation CLI
 
 ## Testing Approach
 
@@ -378,7 +527,7 @@ def test_api_rate_limit_handling():
 
 ## Coverage Status
 
-Current coverage: **55.89%** (exceeds 49% requirement)
+Current coverage: **70.09%** (exceeds 49% requirement)
 
 | Module | Coverage | Status |
 |--------|----------|--------|

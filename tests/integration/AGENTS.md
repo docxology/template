@@ -4,6 +4,8 @@
 
 The `tests/integration/` directory contains integration tests that validate the interaction between multiple modules and components. These tests ensure that the complete system works together correctly, from data generation through analysis to output generation.
 
+**Testing Philosophy:** Integration tests follow the "no mocks" policy - all tests use real implementations. Network-dependent tests are marked with `@pytest.mark.requires_ollama` (or similar) and skip gracefully when services are unavailable.
+
 ## Test Coverage
 
 Integration tests complement unit tests by validating:
@@ -18,6 +20,8 @@ Integration tests complement unit tests by validating:
 ```
 tests/integration/
 ├── conftest.py                    # Integration test configuration
+├── test_edge_cases_and_error_paths.py # Edge cases and error handling
+├── test_figure_equation_citation.py # Figure/equation/citation handling
 ├── test_module_interoperability.py # Cross-module interaction validation
 └── test_output_copying.py        # Output file handling and copying
 ```
@@ -33,6 +37,7 @@ tests/integration/
 - Logging integration between components
 - Exception handling across module boundaries
 - Shared utility function compatibility
+- Module interoperability without mocks (uses real implementations or skips when services unavailable)
 
 **Example Test:**
 ```python
@@ -189,10 +194,19 @@ def temp_project_dir():
         yield project_dir
 
 @pytest.fixture
-def mock_external_services():
-    """Mock external services for integration testing."""
-    # Mock API responses, file downloads, etc.
-    pass
+def temp_project_dir():
+    """Create temporary project directory structure."""
+    with tempfile.TemporaryDirectory() as tmp:
+        project_dir = Path(tmp) / "project"
+        project_dir.mkdir()
+
+        # Create standard subdirectories
+        (project_dir / "src").mkdir()
+        (project_dir / "tests").mkdir()
+        (project_dir / "manuscript").mkdir()
+        (project_dir / "output").mkdir()
+
+        yield project_dir
 ```
 
 ## Integration Test Development

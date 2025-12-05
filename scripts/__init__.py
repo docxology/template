@@ -15,7 +15,31 @@ import importlib.util
 import sys
 from pathlib import Path
 
-# Load 06_llm_review.py dynamically since the name starts with a digit
+# Import from infrastructure modules (where functions were moved during refactoring)
+from infrastructure.llm.review_generator import (
+    DEFAULT_MAX_INPUT_LENGTH,
+    get_max_input_length,
+    check_ollama_availability,
+    extract_manuscript_text,
+    generate_executive_summary,
+    generate_quality_review,
+    generate_methodology_review,
+    generate_improvement_suggestions,
+    validate_review_quality,
+)
+from infrastructure.core.logging_utils import log_stage
+from infrastructure.llm.review_metrics import (
+    ReviewMetrics,
+    ManuscriptMetrics,
+    estimate_tokens,
+)
+from infrastructure.llm.review_io import (
+    SessionMetrics,
+    save_review_outputs,
+    generate_review_summary,
+)
+
+# Load 06_llm_review.py dynamically for main() function and ReviewMode enum
 # Register it in sys.modules first so dataclasses can find it
 _script_path = Path(__file__).parent / "06_llm_review.py"
 _module_name = "scripts.llm_review"
@@ -24,28 +48,16 @@ _llm_review = importlib.util.module_from_spec(_spec)
 sys.modules[_module_name] = _llm_review
 _spec.loader.exec_module(_llm_review)
 
-# Export from the loaded module
-DEFAULT_MAX_INPUT_LENGTH = _llm_review.DEFAULT_MAX_INPUT_LENGTH
-ReviewMetrics = _llm_review.ReviewMetrics
-ManuscriptMetrics = _llm_review.ManuscriptMetrics
-SessionMetrics = _llm_review.SessionMetrics
-estimate_tokens = _llm_review.estimate_tokens
-get_max_input_length = _llm_review.get_max_input_length
-log_stage = _llm_review.log_stage
-check_ollama_availability = _llm_review.check_ollama_availability
-extract_manuscript_text = _llm_review.extract_manuscript_text
-generate_review_with_metrics = _llm_review.generate_review_with_metrics
-generate_executive_summary = _llm_review.generate_executive_summary
-generate_quality_review = _llm_review.generate_quality_review
-generate_methodology_review = _llm_review.generate_methodology_review
-generate_improvement_suggestions = _llm_review.generate_improvement_suggestions
-save_review_outputs = _llm_review.save_review_outputs
-generate_review_summary = _llm_review.generate_review_summary
-validate_review_quality = _llm_review.validate_review_quality
-is_off_topic = _llm_review.is_off_topic
-detect_conversational_phrases = _llm_review.detect_conversational_phrases
-check_format_compliance = _llm_review.check_format_compliance
+# Export main function and ReviewMode from the script
 main = _llm_review.main
+ReviewMode = _llm_review.ReviewMode
+
+# Re-export validation functions for backward compatibility
+from infrastructure.llm.validation_format import (
+    is_off_topic,
+    detect_conversational_phrases,
+    check_format_compliance,
+)
 
 # Re-export infrastructure utilities for tests
 try:
@@ -66,19 +78,19 @@ __all__ = [
     "SessionMetrics",
     "estimate_tokens",
     "get_max_input_length",
-    "log_stage",
     "check_ollama_availability",
     "extract_manuscript_text",
-    "generate_review_with_metrics",
     "generate_executive_summary",
     "generate_quality_review",
     "generate_methodology_review",
     "generate_improvement_suggestions",
+    "validate_review_quality",
     "save_review_outputs",
     "generate_review_summary",
-    "validate_review_quality",
+    "log_stage",
     "is_off_topic",
     "detect_conversational_phrases",
     "check_format_compliance",
     "main",
+    "ReviewMode",
 ]

@@ -439,7 +439,7 @@ class PDFRenderer:
             # Additional passes for reference resolution (especially after bibtex)
             max_passes = 4
             for run in range(1, max_passes):
-                log_progress_bar(run+1, max_passes, "LaTeX compilation", width=20)
+                log_progress_bar(run+1, max_passes, "LaTeX compilation", bar_width=20)
                 result = subprocess.run(cmd, check=False, capture_output=True, text=True, cwd=str(output_dir))
                 
                 # Check for critical errors

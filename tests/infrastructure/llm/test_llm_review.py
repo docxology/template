@@ -22,8 +22,8 @@ from typing import Dict
 
 import pytest
 
-# Add scripts to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
+# Add scripts to path (one more parent level since we're in tests/infrastructure/llm/)
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / "scripts"))
 
 # Import functions and classes from the review script
 from scripts import (

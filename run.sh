@@ -255,7 +255,7 @@ run_pytest_infrastructure() {
     log_info "Running infrastructure module tests..."
     log_info "(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)"
     
-    python3 -m pytest tests/infrastructure/ tests/test_coverage_completion.py \
+    python3 -m pytest tests/infrastructure/ \
         --ignore=tests/integration/test_module_interoperability.py \
         -m "not requires_ollama" \
         --cov=infrastructure \

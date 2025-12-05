@@ -34,22 +34,28 @@ from infrastructure.llm.templates import (
     REVIEW_MIN_WORDS,
     TRANSLATION_LANGUAGES,
 )
-from infrastructure.llm.validation import (
-    OutputValidator,
-    detect_repetition,
+from infrastructure.llm.validation_repetition import (
     calculate_unique_content_ratio,
+    detect_repetition,
     deduplicate_sections,
+)
+from infrastructure.llm.validation_format import (
     is_off_topic,
     has_on_topic_signals,
     detect_conversational_phrases,
     check_format_compliance,
-    validate_section_completeness,
-    extract_structured_sections,
-    validate_response_structure,
     OFF_TOPIC_PATTERNS_START,
     OFF_TOPIC_PATTERNS_ANYWHERE,
     CONVERSATIONAL_PATTERNS,
     ON_TOPIC_SIGNALS,
+)
+from infrastructure.llm.validation_structure import (
+    validate_section_completeness,
+    extract_structured_sections,
+    validate_response_structure,
+)
+from infrastructure.llm.validation import (
+    OutputValidator,
 )
 from infrastructure.llm.ollama_utils import (
     is_ollama_running,
@@ -71,6 +77,39 @@ except ImportError:
     # Prompt system not available - set to None for optional usage
     PromptFragmentLoader = None  # type: ignore
     PromptComposer = None  # type: ignore
+
+# Review generation modules
+from infrastructure.llm.review_metrics import (
+    ReviewMetrics,
+    ManuscriptMetrics,
+    SessionMetrics,
+    estimate_tokens,
+)
+from infrastructure.llm.review_generator import (
+    get_manuscript_review_system_prompt,
+    get_max_input_length,
+    get_review_timeout,
+    get_review_max_tokens,
+    validate_review_quality,
+    create_review_client,
+    check_ollama_availability,
+    warmup_model,
+    extract_manuscript_text,
+    generate_review_with_metrics,
+    generate_executive_summary,
+    generate_quality_review,
+    generate_methodology_review,
+    generate_improvement_suggestions,
+    generate_translation,
+)
+from infrastructure.llm.review_io import (
+    extract_action_items,
+    calculate_format_compliance_summary,
+    calculate_quality_summary,
+    save_review_outputs,
+    save_single_review,
+    generate_review_summary,
+)
 
 __all__ = [
     # Core client
@@ -126,5 +165,33 @@ __all__ = [
     # Prompt system (optional)
     "PromptFragmentLoader",
     "PromptComposer",
+    # Review metrics
+    "ReviewMetrics",
+    "ManuscriptMetrics",
+    "SessionMetrics",
+    "estimate_tokens",
+    # Review generation
+    "get_manuscript_review_system_prompt",
+    "get_max_input_length",
+    "get_review_timeout",
+    "get_review_max_tokens",
+    "validate_review_quality",
+    "create_review_client",
+    "check_ollama_availability",
+    "warmup_model",
+    "extract_manuscript_text",
+    "generate_review_with_metrics",
+    "generate_executive_summary",
+    "generate_quality_review",
+    "generate_methodology_review",
+    "generate_improvement_suggestions",
+    "generate_translation",
+    # Review I/O
+    "extract_action_items",
+    "calculate_format_compliance_summary",
+    "calculate_quality_summary",
+    "save_review_outputs",
+    "save_single_review",
+    "generate_review_summary",
 ]
 

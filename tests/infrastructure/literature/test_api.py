@@ -85,36 +85,3 @@ class TestSemanticScholarSource:
         results = source._parse_response(json_data)
         assert results == []
 
-    @pytest.mark.integration
-    def test_search_network_call(self, mock_config):
-        """Integration test for actual Semantic Scholar API call.
-        
-        This test makes real network calls and may fail due to:
-        - Rate limiting (APIRateLimitError)
-        - Network timeouts (LiteratureSearchError with timeout)
-        - Network connectivity issues (LiteratureSearchError)
-        
-        All of these are expected in CI/test environments and the test
-        gracefully skips rather than failing.
-        """
-        from infrastructure.core.exceptions import LiteratureSearchError
-        
-        source = SemanticScholarSource(mock_config)
-        try:
-            # This makes real network calls - may fail due to rate limiting or timeouts
-            results = source.search("machine learning", limit=1)
-            # Just check that it returns a list (may be empty if rate limited)
-            assert isinstance(results, list)
-        except APIRateLimitError:
-            # Rate limiting is expected in CI/test environments - this is OK
-            pytest.skip("Semantic Scholar rate limited - expected in test environment")
-        except LiteratureSearchError as e:
-            # Network timeouts or other network errors are expected in test environments
-            # Check if it's a timeout or network issue
-            error_msg = str(e).lower()
-            if "timeout" in error_msg or "connection" in error_msg or "network" in error_msg:
-                pytest.skip(f"Semantic Scholar network issue (timeout/connection) - expected in test environment: {e}")
-            else:
-                # Re-raise if it's an unexpected error type
-                raise
-

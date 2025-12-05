@@ -26,7 +26,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import (
-    get_logger, log_success, log_header, log_substep, log_with_spinner
+    get_logger, log_success, log_header, log_substep
 )
 
 # Set up logger for this module
@@ -54,7 +54,7 @@ def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, 
         "-m",
         "pytest",
         str(repo_root / "tests" / "infrastructure"),
-        str(repo_root / "tests" / "test_coverage_completion.py"),
+        # test_coverage_completion.py removed - coverage completion is now handled by test runners
         "--ignore=" + str(repo_root / "tests" / "integration" / "test_module_interoperability.py"),
         "-m", "not requires_ollama",
         "--cov=infrastructure",
@@ -406,6 +406,10 @@ def main() -> int:
     
     log_header("STAGE 01: Run Tests", logger)
     
+    # Log resource usage at start
+    from infrastructure.core.logging_utils import log_resource_usage
+    log_resource_usage("Test stage start", logger)
+    
     repo_root = Path(__file__).parent.parent
     
     # Run infrastructure tests first
@@ -420,6 +424,9 @@ def main() -> int:
     
     # Report combined results
     report_results(infra_exit, project_exit, infra_results, project_results)
+    
+    # Log resource usage at end
+    log_resource_usage("Test stage end", logger)
     
     # Return failure if any test suite failed
     if infra_exit != 0 or project_exit != 0:
