@@ -708,7 +708,7 @@ pdf_path = manager.render_combined_pdf(
     markdown_files,
     manuscript_dir=Path("manuscript/")
 )
-# Title page automatically generated from manuscript/config.yaml
+# Title page automatically generated from project/manuscript/config.yaml
 ```
 
 ### Command Line Integration
@@ -817,7 +817,7 @@ report = generate_pipeline_report(
     stage_results=stage_results,
     total_duration=60.5,
     repo_root=Path("."),
-    test_results={'summary': {'total_tests': 878, 'total_passed': 878}},
+    test_results={'summary': {'total_tests': 1934, 'total_passed': 1934}},
     validation_results={'checks': {'pdf_validation': True}},
     performance_metrics={'total_duration': 60.5},
 )

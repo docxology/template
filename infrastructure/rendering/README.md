@@ -27,7 +27,7 @@ manager.render_combined_pdf(
 
 ### Configure Title Page
 
-Edit `manuscript/config.yaml`:
+Edit `project/manuscript/config.yaml`:
 
 ```yaml
 paper:

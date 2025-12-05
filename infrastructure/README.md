@@ -368,7 +368,7 @@ export OLLAMA_HOST="http://localhost:11434"
 
 ### YAML Configuration
 
-Create `manuscript/config.yaml`:
+Create `project/manuscript/config.yaml`:
 
 ```yaml
 paper:
@@ -500,7 +500,7 @@ from infrastructure.figure_manager import FigureManager
 
 ### Configuration Not Loading
 
-1. Check `manuscript/config.yaml` exists and is valid YAML
+1. Check `project/manuscript/config.yaml` exists and is valid YAML
 2. Verify permissions to read file
 3. Fall back to environment variables if needed
 

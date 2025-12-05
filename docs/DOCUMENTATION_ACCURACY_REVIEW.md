@@ -28,7 +28,7 @@ vim project/manuscript/config.yaml
 
 **Verification:**
 - ✅ Actual file exists at: `project/manuscript/config.yaml`
-- ❌ Documentation references: `manuscript/config.yaml`
+- ❌ Documentation references: `project/manuscript/config.yaml`
 
 ### Issue 2: Pipeline Stage Numbering Inconsistency
 
@@ -135,9 +135,9 @@ vim project/manuscript/config.yaml
 ### Test Counts
 
 **Standard Values:**
-- Total: 878 tests
-- Infrastructure: 558 tests
-- Project: 320 tests
+- Total: 1934 tests
+- Infrastructure: 1884 tests
+- Project: 351 tests
 
 **Status:** ✅ Need to verify all files use consistent counts
 

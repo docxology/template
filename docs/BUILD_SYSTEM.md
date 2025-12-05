@@ -18,8 +18,8 @@ This document consolidates all build system information: current status, perform
 
 | Metric | Result | Status |
 |--------|--------|--------|
-| **Infrastructure Tests** | 558 passed | ✅ Perfect |
-| **Project Tests** | 320 passed | ✅ Perfect |
+| **Infrastructure Tests** | 1884 passed | ✅ Perfect |
+| **Project Tests** | 351 passed | ✅ Perfect |
 | **Infrastructure Coverage** | 55.89% | ✅ Exceeds 49% requirement |
 | **Project Coverage** | 99.88% | ✅ Exceeds 70% requirement |
 | **Scripts Executed** | 5/5 | ✅ All successful |
@@ -124,8 +124,8 @@ flowchart TD
 |-------|------|------------|-------------|
 | **Clean Output Directories** | <1s | <1% | Fresh build state |
 | **Setup Environment** | 1s | <1% | Dependency validation |
-| **Infrastructure Tests** | 23s | 2% | 558 tests with coverage |
-| **Project Tests** | 3s | <1% | 320 tests with coverage |
+| **Infrastructure Tests** | 23s | 2% | 1884 tests with coverage |
+| **Project Tests** | 3s | <1% | 351 tests with coverage |
 | **Project Analysis** | 6s | <1% | Execute project scripts |
 | **PDF Rendering** | 50s | 4% | Generate manuscript PDFs |
 | **Output Validation** | 1s | <1% | Quality checks |
@@ -148,8 +148,8 @@ flowchart TD
 This section describes the detailed breakdown of what happens during test execution (Stages 2-3 in extended pipeline, Stage 01 in core pipeline).
 
 **Breakdown:**
-- Infrastructure Tests: 23 seconds (558 tests)
-- Project Tests: 3 seconds (320 tests)
+- Infrastructure Tests: 23 seconds (1884 tests)
+- Project Tests: 3 seconds (351 tests)
 
 **Result:** ✅ **ALL TESTS PASSING**
 
@@ -559,7 +559,7 @@ open output/project_combined.pdf
 
 The build system is **production-ready** and performs excellently:
 
-- ✅ **All tests pass** (878 total: 558 infrastructure + 320 project)
+- ✅ **All tests pass** (1934 total: 1884 infrastructure + 351 project)
 - ✅ **All PDFs generate correctly** (15 total: 14 sections + 1 combined)
 - ✅ **All scripts execute successfully** (5/5 successful)
 - ✅ **All figures and data generated** (28 total: 23 figures + 5 data files)

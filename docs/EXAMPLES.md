@@ -8,7 +8,7 @@ This file shows examples of how to customize the template into specific research
 
 ## Example 1: Machine Learning Research Project
 
-**Configuration in `manuscript/config.yaml` (or environment variables):**
+**Configuration in `project/manuscript/config.yaml` (or environment variables):**
 ```bash
 # Project Identity
 PROJECT_NAME="deep-learning-optimization"
@@ -34,7 +34,7 @@ LICENSE="MIT"
 
 ## Example 2: Data Science Package
 
-**Configuration in `manuscript/config.yaml` (or environment variables):**
+**Configuration in `project/manuscript/config.yaml` (or environment variables):**
 ```bash
 # Project Identity
 PROJECT_NAME="pandas-extension-toolkit"
@@ -54,7 +54,7 @@ LICENSE="Apache-2.0"
 
 ## Example 3: Academic Paper
 
-**Configuration in `manuscript/config.yaml` (or environment variables):**
+**Configuration in `project/manuscript/config.yaml` (or environment variables):**
 ```bash
 # Project Identity
 PROJECT_NAME="quantum-computing-survey"

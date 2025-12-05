@@ -352,7 +352,7 @@ Percentage of code executed during test runs. This template requires 70% minimum
 ### Test Suite
 Collection of all test files in `tests/` directory. Ensures all functionality works correctly.
 
-**Status**: 878 tests passing (558 infra + 320 project, 100%)
+**Status**: 1934 tests passing (1884 infra + 351 project, 100%)
 
 **Run**: `pytest tests/`
 

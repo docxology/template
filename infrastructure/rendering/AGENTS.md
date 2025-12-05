@@ -75,11 +75,11 @@ Configuration is managed via `RenderingConfig` or environment variables.
 
 ## Title Page Generation
 
-The combined PDF rendering automatically generates a professional title page from `manuscript/config.yaml`.
+The combined PDF rendering automatically generates a professional title page from `project/manuscript/config.yaml`.
 
 ### Configuration
 
-Edit `manuscript/config.yaml` to customize the title page:
+Edit `project/manuscript/config.yaml` to customize the title page:
 
 ```yaml
 paper:

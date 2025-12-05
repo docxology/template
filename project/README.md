@@ -31,8 +31,8 @@ pytest tests/ --cov=src
 
 ### Run Analysis Scripts
 ```bash
-python scripts/example_figure.py
-python scripts/analysis_pipeline.py
+python3 scripts/example_figure.py
+python3 scripts/analysis_pipeline.py
 ```
 
 ### Build Manuscript

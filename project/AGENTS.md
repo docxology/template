@@ -331,7 +331,7 @@ Copy this folder to use independently:
 cp -r /path/to/template/project /path/to/my_research
 cd /path/to/my_research
 pytest tests/ --cov=src
-python scripts/analysis_pipeline.py
+python3 scripts/analysis_pipeline.py
 ```
 
 The project works completely independently - no template infrastructure needed.

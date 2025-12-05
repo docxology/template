@@ -66,7 +66,7 @@ with log_timing("Algorithm execution", logger):
 ```python
 from infrastructure.core import load_config, get_config_as_dict
 
-config = load_config(Path("manuscript/config.yaml"))
+config = load_config(Path("project/manuscript/config.yaml"))
 env_dict = get_config_as_dict(Path("."))
 ```
 

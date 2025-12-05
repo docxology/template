@@ -197,10 +197,10 @@ template/                           # Generic Template
 
 ### Configuration File (Recommended)
 
-The system supports configuration through a YAML file in `manuscript/config.yaml`, providing a centralized, version-controllable way to manage all paper metadata.
+The system supports configuration through a YAML file in `project/manuscript/config.yaml`, providing a centralized, version-controllable way to manage all paper metadata.
 
-**Location**: `manuscript/config.yaml`  
-**Template**: `manuscript/config.yaml.example`
+**Location**: `project/manuscript/config.yaml`  
+**Template**: `project/manuscript/config.yaml.example`
 
 **Example configuration**:
 ```yaml
@@ -262,15 +262,15 @@ For backward compatibility, environment variables still work and take precedence
 
 **Priority order**:
 1. Environment variables (highest priority - override config file)
-2. Config file (`manuscript/config.yaml`)
+2. Config file (`project/manuscript/config.yaml`)
 3. Default values (lowest priority)
 
 ### Configuration Examples
 
 #### Using Configuration File (Recommended)
 ```bash
-# Edit manuscript/config.yaml with your information
-vim manuscript/config.yaml
+# Edit project/manuscript/config.yaml with your information
+vim project/manuscript/config.yaml
 
 # Build with config file values
 python3 scripts/03_render_pdf.py
@@ -951,7 +951,7 @@ See [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md) for complete docume
 ## ✅ System Status: FULLY OPERATIONAL (v2.0)
 
 **All systems confirmed functional:**
-- ✅ Test suite (878 tests passing: 558 infrastructure + 320 project)
+- ✅ Test suite (1934 tests passing: 1884 infrastructure + 351 project)
 - ✅ Package API testing (test_package_imports.py validates __init__.py)
 - ✅ Script execution (thin orchestrator pattern fully compliant)
 - ✅ Markdown validation (all references resolved, no warnings)

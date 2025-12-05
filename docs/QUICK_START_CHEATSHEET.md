@@ -164,7 +164,7 @@ Reference it: \ref{fig:my_figure}
 ## 📊 Key Metrics
 
 **Current System Status:**
-- **Tests**: 878/878 passing (558 infra + 320 project)
+- **Tests**: 1934/1934 passing (1884 infra + 351 project)
 - **Coverage**: 99.88% project, 55.89% infra (exceeds requirements)
 - **Build Time**: 84 seconds (without optional LLM review)
 - **PDFs Generated**: 13 sections

@@ -392,7 +392,7 @@ export NO_COLOR=1
 
 ### Configuration File
 
-For persistent configuration, use `manuscript/config.yaml`:
+For persistent configuration, use `project/manuscript/config.yaml`:
 
 ```yaml
 paper:
@@ -522,7 +522,7 @@ Migration from old flat structure:
 ### Configuration Issues
 
 If configuration isn't loading:
-1. Check `manuscript/config.yaml` exists
+1. Check `project/manuscript/config.yaml` exists
 2. Verify YAML is well-formed
 3. Fall back to environment variables as needed
 

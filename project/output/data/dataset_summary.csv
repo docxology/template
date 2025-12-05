@@ -1,6 +1,6 @@
 Dataset,Size,Type,Features,Avg_Value,Max_Value,Min_Value
-Small Convex,100,Convex,10,-0.020,2.462,-2.074
-Medium Convex,1000,Convex,50,-0.033,3.368,-3.495
-Large Convex,10000,Convex,100,0.011,3.557,-3.536
-Small Non-convex,100,Non-convex,10,0.130,3.233,-2.525
-Medium Non-convex,1000,Non-convex,50,0.018,2.875,-3.176
+Small Convex,100,Convex,10,0.009,1.875,-2.942
+Medium Convex,1000,Convex,50,-0.014,3.119,-3.296
+Large Convex,10000,Convex,100,-0.003,3.712,-4.151
+Small Non-convex,100,Non-convex,10,-0.074,2.087,-2.380
+Medium Non-convex,1000,Non-convex,50,-0.067,2.854,-3.333

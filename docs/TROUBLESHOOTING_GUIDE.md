@@ -917,7 +917,7 @@ uv sync
 uv run pytest tests/
 
 # Regenerate only figures
-python scripts/example_figure.py
+python3 scripts/example_figure.py
 
 # Rebuild PDFs (run stage 3 only)
 python3 scripts/03_render_pdf.py

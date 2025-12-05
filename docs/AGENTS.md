@@ -70,6 +70,10 @@ The `.cursorrules/` directory contains modular development rules that complement
 | [`../.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md) | Testing patterns and coverage standards |
 | [`../.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md) | AGENTS.md and README.md writing guide |
 | [`../.cursorrules/type_hints_standards.md`](../.cursorrules/type_hints_standards.md) | Type annotation patterns |
+| [`../.cursorrules/llm_standards.md`](../.cursorrules/llm_standards.md) | LLM/Ollama integration patterns |
+| [`../.cursorrules/code_style.md`](../.cursorrules/code_style.md) | Code formatting and style standards |
+| [`../.cursorrules/git_workflow.md`](../.cursorrules/git_workflow.md) | Git workflow and commit standards |
+| [`../.cursorrules/api_design.md`](../.cursorrules/api_design.md) | API design and interface standards |
 | [`../.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md) | Manuscript formatting and style standards |
 
 **Quick Access**: Use `.cursorrules/` files for rule reference during development; consult `docs/` files for comprehensive guides.

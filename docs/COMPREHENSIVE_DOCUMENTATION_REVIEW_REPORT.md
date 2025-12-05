@@ -27,12 +27,12 @@ A comprehensive review of all documentation files was conducted to ensure accura
 **Location**: `AGENTS.md` lines 200, 202, 265, 272-273
 
 **Problem:**
-- References `manuscript/config.yaml` instead of `project/manuscript/config.yaml`
+- References `project/manuscript/config.yaml` instead of `project/manuscript/config.yaml`
 - Affects user ability to find and edit configuration file
 
 **Current (Incorrect):**
 ```markdown
-**Location**: `manuscript/config.yaml`  
+**Location**: `project/manuscript/config.yaml`  
 **Template**: `manuscript/config.yaml.example`
 ```
 
@@ -55,19 +55,19 @@ A comprehensive review of all documentation files was conducted to ensure accura
 **Location**: Multiple files
 
 **Problem:**
-- Mixed usage of `manuscript/config.yaml` vs `project/manuscript/config.yaml`
+- Mixed usage of `project/manuscript/config.yaml` vs `project/manuscript/config.yaml`
 - Some files correctly use `project/manuscript/config.yaml`
-- Some files use `manuscript/config.yaml` (incorrect from root)
+- Some files use `project/manuscript/config.yaml` (incorrect from root)
 - Some files may use relative paths correctly (from within project/)
 
 **Files with Incorrect Paths (from root context):**
-- `AGENTS.md` - Uses `manuscript/config.yaml` (should be `project/manuscript/config.yaml`)
+- `AGENTS.md` - Uses `project/manuscript/config.yaml` (should be `project/manuscript/config.yaml`)
 - `docs/CONFIGURATION.md` - Mixed usage (line 14 vs lines 54-55)
-- `infrastructure/AGENTS.md` - Uses `manuscript/config.yaml`
-- `infrastructure/core/AGENTS.md` - Uses `manuscript/config.yaml`
-- `infrastructure/rendering/AGENTS.md` - Uses `manuscript/config.yaml`
-- `infrastructure/rendering/README.md` - Uses `manuscript/config.yaml`
-- `infrastructure/README.md` - Uses `manuscript/config.yaml`
+- `infrastructure/AGENTS.md` - Uses `project/manuscript/config.yaml`
+- `infrastructure/core/AGENTS.md` - Uses `project/manuscript/config.yaml`
+- `infrastructure/rendering/AGENTS.md` - Uses `project/manuscript/config.yaml`
+- `infrastructure/rendering/README.md` - Uses `project/manuscript/config.yaml`
+- `infrastructure/README.md` - Uses `project/manuscript/config.yaml`
 
 **Files with Correct Paths:**
 - `README.md` - Uses `project/manuscript/config.yaml`
@@ -77,7 +77,7 @@ A comprehensive review of all documentation files was conducted to ensure accura
 
 **Recommendation:**
 - Standardize on `project/manuscript/config.yaml` for all root-level documentation
-- Allow relative paths (`manuscript/config.yaml`) only in files within `project/` directory
+- Allow relative paths (`project/manuscript/config.yaml`) only in files within `project/` directory
 - Update all root-level documentation to use full path
 
 ### Issue 3: Pipeline Stage Numbering Confusion
@@ -126,7 +126,7 @@ Executes the complete 9-stage build pipeline:
 - Layer terminology is mostly consistent (Layer 1/2 vs Infrastructure/Project)
 - Pipeline terminology is consistent (stages, entry points)
 - Coverage terminology is consistent (49% infra, 70% project)
-- Test count terminology is consistent (878 tests)
+- Test count terminology is consistent (1934 tests)
 
 **Recommendation:**
 - Continue monitoring for consistency
@@ -140,7 +140,7 @@ Executes the complete 9-stage build pipeline:
 **Standard Values:**
 - Infrastructure: 49% minimum (currently 55.89%)
 - Project: 70% minimum (currently 99.88%)
-- Total tests: 878 (558 infrastructure + 320 project)
+- Total tests: 1934 (1884 infrastructure + 351 project)
 
 **Files to Verify:**
 - 42 files found with coverage references

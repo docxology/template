@@ -11,7 +11,7 @@ This guide documents all configuration options available in the Research Project
 The template supports three configuration methods (in priority order):
 
 1. **Environment Variables** (highest priority - override all)
-2. **Configuration File** (`manuscript/config.yaml`)
+2. **Configuration File** (`project/manuscript/config.yaml`)
 3. **Default Values** (lowest priority)
 
 ## Core Configuration
