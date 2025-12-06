@@ -54,13 +54,13 @@ integrity_report = verify_output_integrity(Path("output/"))
 
 ```bash
 # Validate PDF files
-python3 -m infrastructure.validation validate-pdf output/pdf/manuscript.pdf
+python3 -m infrastructure.validation.cli pdf output/pdf/manuscript.pdf
 
 # Validate markdown
-python3 -m infrastructure.validation validate-markdown manuscript/
+python3 -m infrastructure.validation.cli markdown manuscript/
 
 # Full integrity check
-python3 -m infrastructure.validation verify-integrity output/
+python3 -m infrastructure.validation.cli integrity output/
 ```
 
 ## Testing

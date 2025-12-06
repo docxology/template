@@ -36,6 +36,13 @@ with log_operation("Processing", logger):
 - **exceptions** - Exception hierarchy and context preservation
 - **logging_utils** - Unified Python logging system
 - **config_loader** - Configuration file and environment loading
+- **progress** - Progress tracking utilities
+- **checkpoint** - Pipeline checkpoint management
+- **retry** - Retry logic with backoff
+- **performance** - Performance monitoring
+- **environment** - Environment setup and validation
+- **script_discovery** - Script discovery and execution
+- **file_operations** - File management utilities
 
 ## Key Classes & Functions
 
@@ -68,6 +75,47 @@ with log_operation("Processing", logger):
 - `get_config_as_dict()` - Get config as key-value dict
 - `get_config_as_env_vars()` - Get config as env vars
 - `find_config_file()` - Find config in standard locations
+- `get_translation_languages()` - Get translation languages from config
+
+### Progress Tracking
+- `ProgressBar` - Visual progress indicators
+- `SubStageProgress` - Nested progress tracking
+
+### Checkpoint Management
+- `CheckpointManager` - Save/restore pipeline state
+- `PipelineCheckpoint` - Checkpoint data structures
+- `StageResult` - Individual stage result
+
+### Retry Logic
+- `retry_with_backoff()` - Exponential backoff retries
+- `retry_on_transient_failure()` - Retry on transient errors
+- `RetryableOperation` - Retryable operation wrapper
+
+### Performance Monitoring
+- `PerformanceMonitor` - Resource usage tracking
+- `PerformanceMetrics` - Performance metrics dataclass
+- `ResourceUsage` - Resource usage dataclass
+- `monitor_performance()` - Context manager for performance monitoring
+- `get_system_resources()` - System resource queries
+
+### Environment Setup
+- `check_python_version()` - Verify Python version
+- `check_dependencies()` - Check required dependencies
+- `install_missing_packages()` - Install missing packages
+- `check_build_tools()` - Verify build tools availability
+- `setup_directories()` - Create required directories
+- `verify_source_structure()` - Validate project structure
+- `set_environment_variables()` - Set environment variables
+
+### Script Discovery
+- `discover_analysis_scripts()` - Find project analysis scripts
+- `discover_orchestrators()` - Find orchestrator scripts
+- `verify_analysis_outputs()` - Verify script outputs
+
+### File Operations
+- `clean_output_directory()` - Clean output directory
+- `clean_output_directories()` - Clean multiple output directories
+- `copy_final_deliverables()` - Copy final outputs
 
 ## Environment Variables
 

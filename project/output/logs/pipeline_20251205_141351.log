@@ -1,50 +1,50 @@
 [0;34m════════════════════════════════════════════════════════════════[0m
 [0;34m  SETUP ENVIRONMENT (00_setup_environment.py)[0m
 [0;34m════════════════════════════════════════════════════════════════[0m
-[2025-12-05 08:57:21] [INFO] 
-[2025-12-05 08:57:21] [INFO] ==================================================
-[2025-12-05 08:57:21] [INFO] STAGE 00: Environment Setup
-[2025-12-05 08:57:21] [INFO] ==================================================
-[2025-12-05 08:57:21] [INFO] Checking Python version...
-[2025-12-05 08:57:21] [INFO] Python 3.13.10 available
-[2025-12-05 08:57:21] [INFO] Checking dependencies...
-[2025-12-05 08:57:21] [INFO] Package 'numpy' available
-[2025-12-05 08:57:21] [INFO] Package 'matplotlib' available
-[2025-12-05 08:57:21] [INFO] Package 'pytest' available
-[2025-12-05 08:57:21] [INFO] Package 'scipy' available
-[2025-12-05 08:57:21] [INFO] Package 'requests' available
-[2025-12-05 08:57:21] [INFO] Checking build tools...
-[2025-12-05 08:57:21] [INFO] 'pandoc' available (Document conversion)
-[2025-12-05 08:57:21] [INFO] 'xelatex' available (LaTeX compilation)
-[2025-12-05 08:57:21] [INFO] Setting up directory structure...
-[2025-12-05 08:57:21] [INFO] Directory ready: output
-[2025-12-05 08:57:21] [INFO] Directory ready: output/figures
-[2025-12-05 08:57:21] [INFO] Directory ready: output/data
-[2025-12-05 08:57:21] [INFO] Directory ready: output/tex
-[2025-12-05 08:57:21] [INFO] Directory ready: output/pdf
-[2025-12-05 08:57:21] [INFO] Directory ready: output/logs
-[2025-12-05 08:57:21] [INFO] Directory ready: project/output
-[2025-12-05 08:57:21] [INFO] Directory ready: project/output/logs
-[2025-12-05 08:57:21] [INFO] Verifying source code structure...
-[2025-12-05 08:57:21] [INFO] Directory found: infrastructure
-[2025-12-05 08:57:21] [INFO] Directory found: project
-[2025-12-05 08:57:21] [INFO] Directory found: scripts (optional)
-[2025-12-05 08:57:21] [INFO] Directory found: tests (optional)
-[2025-12-05 08:57:21] [INFO] Setting environment variables...
-[2025-12-05 08:57:21] [INFO] MPLBACKEND=Agg
-[2025-12-05 08:57:21] [INFO] PYTHONIOENCODING=utf-8
-[2025-12-05 08:57:21] [INFO] PROJECT_ROOT=/Users/4d/Documents/GitHub/template
-[2025-12-05 08:57:21] [INFO] 
-[2025-12-05 08:57:21] [INFO] ==================================================
-[2025-12-05 08:57:21] [INFO] Setup Summary
-[2025-12-05 08:57:21] [INFO] ==================================================
-[2025-12-05 08:57:21] [INFO] ✅ PASS: Python version
-[2025-12-05 08:57:21] [INFO] ✅ PASS: Dependencies
-[2025-12-05 08:57:21] [INFO] ✅ PASS: Build tools
-[2025-12-05 08:57:21] [INFO] ✅ PASS: Directory structure
-[2025-12-05 08:57:21] [INFO] ✅ PASS: Source structure
-[2025-12-05 08:57:21] [INFO] ✅ PASS: Environment variables
-[2025-12-05 08:57:21] [INFO] 
+[2025-12-05 14:13:52] [INFO] 
+[2025-12-05 14:13:52] [INFO] ==================================================
+[2025-12-05 14:13:52] [INFO] STAGE 00: Environment Setup
+[2025-12-05 14:13:52] [INFO] ==================================================
+[2025-12-05 14:13:52] [INFO] Checking Python version...
+[2025-12-05 14:13:52] [INFO] Python 3.13.10 available
+[2025-12-05 14:13:52] [INFO] Checking dependencies...
+[2025-12-05 14:13:52] [INFO] Package 'numpy' available
+[2025-12-05 14:13:52] [INFO] Package 'matplotlib' available
+[2025-12-05 14:13:52] [INFO] Package 'pytest' available
+[2025-12-05 14:13:52] [INFO] Package 'scipy' available
+[2025-12-05 14:13:52] [INFO] Package 'requests' available
+[2025-12-05 14:13:52] [INFO] Checking build tools...
+[2025-12-05 14:13:52] [INFO] 'pandoc' available (Document conversion)
+[2025-12-05 14:13:52] [INFO] 'xelatex' available (LaTeX compilation)
+[2025-12-05 14:13:52] [INFO] Setting up directory structure...
+[2025-12-05 14:13:52] [INFO] Directory ready: output
+[2025-12-05 14:13:52] [INFO] Directory ready: output/figures
+[2025-12-05 14:13:52] [INFO] Directory ready: output/data
+[2025-12-05 14:13:52] [INFO] Directory ready: output/tex
+[2025-12-05 14:13:52] [INFO] Directory ready: output/pdf
+[2025-12-05 14:13:52] [INFO] Directory ready: output/logs
+[2025-12-05 14:13:52] [INFO] Directory ready: project/output
+[2025-12-05 14:13:52] [INFO] Directory ready: project/output/logs
+[2025-12-05 14:13:52] [INFO] Verifying source code structure...
+[2025-12-05 14:13:52] [INFO] Directory found: infrastructure
+[2025-12-05 14:13:52] [INFO] Directory found: project
+[2025-12-05 14:13:52] [INFO] Directory found: scripts (optional)
+[2025-12-05 14:13:52] [INFO] Directory found: tests (optional)
+[2025-12-05 14:13:52] [INFO] Setting environment variables...
+[2025-12-05 14:13:52] [INFO] MPLBACKEND=Agg
+[2025-12-05 14:13:52] [INFO] PYTHONIOENCODING=utf-8
+[2025-12-05 14:13:52] [INFO] PROJECT_ROOT=/Users/4d/Documents/GitHub/template
+[2025-12-05 14:13:52] [INFO] 
+[2025-12-05 14:13:52] [INFO] ==================================================
+[2025-12-05 14:13:52] [INFO] Setup Summary
+[2025-12-05 14:13:52] [INFO] ==================================================
+[2025-12-05 14:13:52] [INFO] ✅ PASS: Python version
+[2025-12-05 14:13:52] [INFO] ✅ PASS: Dependencies
+[2025-12-05 14:13:52] [INFO] ✅ PASS: Build tools
+[2025-12-05 14:13:52] [INFO] ✅ PASS: Directory structure
+[2025-12-05 14:13:52] [INFO] ✅ PASS: Source structure
+[2025-12-05 14:13:52] [INFO] ✅ PASS: Environment variables
+[2025-12-05 14:13:52] [INFO] 
 ✅ Environment setup complete - ready to proceed
 [0;32m✓[0m Environment setup complete
 
@@ -1912,7 +1912,7 @@ ______________ coverage: platform darwin, python 3.13.10-final-0 _______________
 
 Name                                                    Stmts   Miss Branch BrPart   Cover   Missing
 ----------------------------------------------------------------------------------------------------
-infrastructure/__init__.py                                 11      2      0      0  81.82%   53-55
+infrastructure/__init__.py                                 12      2      0      0  83.33%   59-61
 infrastructure/build/__init__.py                            4      0      0      0 100.00%
 infrastructure/build/build_artifacts.py                    63     54     36      0   9.09%   23-33, 46-90, 102-136
 infrastructure/build/build_integrity.py                    77     64     28      0  12.38%   24-60, 70-73, 85-92, 105-133, 146-188
@@ -1956,7 +1956,7 @@ infrastructure/literature/pdf_handler.py                  154    122     68     
 infrastructure/literature/progress.py                     141     12     30     10  87.13%   110, 244-246, 251, 263-264, 275, 286->285, 290->293, 303, 305->exit, 321, 333, 345
 infrastructure/literature/reference_manager.py             64      7     16      3  85.00%   13, 41, 104->110, 106->104, 162-163, 182-185
 infrastructure/literature/search_orchestrator.py          336    336     86      0   0.00%   2-554
-infrastructure/literature/summarize_orchestrator.py       100    100     42      0   0.00%   2-186
+infrastructure/literature/summarize_orchestrator.py       148    148     54      0   0.00%   2-287
 infrastructure/literature/summarizer.py                   205     21     68     12  87.18%   26, 141-142, 147-148, 153-154, 200->197, 335, 337, 339, 345->387, 355-356, 371-377, 426, 559-560
 infrastructure/literature/workflow.py                     341     53    106     16  82.77%   27, 164->192, 167-189, 197-199, 211-213, 216->221, 240->248, 243-246, 261-263, 287-289, 304-305, 313, 318, 367-368, 418->392, 459-460, 463-467, 485-486, 489, 509-510, 550->557, 560->564, 579->594, 613->612, 620-621
 infrastructure/llm/__init__.py                             18      3      0      0  83.33%   76-79
@@ -2000,11 +2000,11 @@ infrastructure/rendering/poster_renderer.py                13      1      0     
 infrastructure/rendering/render_all_cli.py                 16      0      6      0 100.00%
 infrastructure/rendering/slides_renderer.py                62      8     12      4  83.78%   69-70, 100, 102, 115, 128-134
 infrastructure/rendering/web_renderer.py                   21      0      0      0 100.00%
-infrastructure/reporting/__init__.py                        6      6      0      0   0.00%   9-35
-infrastructure/reporting/error_aggregator.py              116    116     50      0   0.00%   6-296
+infrastructure/reporting/__init__.py                        6      0      0      0 100.00%
+infrastructure/reporting/error_aggregator.py              116     87     50      0  17.47%   33, 50-51, 76-90, 99-111, 126-183, 194-209, 220-274, 288-290, 296
 infrastructure/reporting/html_templates.py                 22     22      8      0   0.00%   5-194
-infrastructure/reporting/output_reporter.py                58     58     24      0   0.00%   6-100
-infrastructure/reporting/pipeline_reporter.py             210    210     58      0   0.00%   6-600
+infrastructure/reporting/output_reporter.py                58     51     24      0   8.54%   24-61, 73-100
+infrastructure/reporting/pipeline_reporter.py             210    173     58      0  13.81%   69-90, 108-150, 162-247, 260-415, 430-431, 447-462, 474-490, 506-512, 528-554, 566-600
 infrastructure/scientific/__init__.py                       2      0      0      0 100.00%
 infrastructure/scientific/scientific_dev.py               300     15    114     12  93.48%   81-82, 89-90, 103, 134-135, 167-170, 178->181, 317->320, 409, 422, 439->443, 500, 523-524, 702->717, 717->729, 825->828, 828->831
 infrastructure/validation/__init__.py                       6      0      0      0 100.00%
@@ -2026,10 +2026,10 @@ infrastructure/validation/repo_scanner.py                 323     50    150     
 infrastructure/validation/validate_markdown_cli.py         88      2     34      0  98.36%   27-29
 infrastructure/validation/validate_pdf_cli.py              67      5     20      1  93.10%   28-32, 59->61
 ----------------------------------------------------------------------------------------------------
-TOTAL                                                   11994   4575   3956    375  59.39%
+TOTAL                                                   12043   4544   3968    375  59.66%
 Coverage HTML written to dir htmlcov
-Required test coverage of 49% reached. Total coverage: 59.39%
-===================== 1843 passed, 41 deselected in 44.26s =====================
+Required test coverage of 49% reached. Total coverage: 59.66%
+===================== 1843 passed, 41 deselected in 40.90s =====================
 ✓ Infrastructure tests passed
 
 [3/9] Project Tests (33% complete)
@@ -2389,27 +2389,27 @@ project/src/visualization.py        68      0     28      0 100.00%
 TOTAL                             1173      0    456      2  99.88%
 Coverage HTML written to dir htmlcov
 Required test coverage of 70% reached. Total coverage: 99.88%
-============================= 320 passed in 2.73s ==============================
+============================= 320 passed in 2.72s ==============================
 ✓ Project tests passed
 
 [1;33m[4/9] Project Analysis (44% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-05 08:58:11] [INFO] 
+[2025-12-05 14:14:38] [INFO] 
 ============================================================
-[2025-12-05 08:58:11] [INFO] STAGE 02: Run Analysis
-[2025-12-05 08:58:11] [INFO] ============================================================
-[2025-12-05 08:58:11] [INFO]   Resource usage (Analysis stage start): Memory: 87 MB, CPU: 0.1%
-[2025-12-05 08:58:11] [INFO] [STAGE-02] Discovering analysis scripts in project/...
-[2025-12-05 08:58:11] [INFO] Found: analysis_pipeline.py
-[2025-12-05 08:58:11] [INFO] Found: example_figure.py
-[2025-12-05 08:58:11] [INFO] Found: generate_research_figures.py
-[2025-12-05 08:58:11] [INFO] Found: generate_scientific_figures.py
-[2025-12-05 08:58:11] [INFO] Found: scientific_simulation.py
-[2025-12-05 08:58:11] [INFO] [STAGE-02] Executing analysis pipeline...
-[2025-12-05 08:58:11] [INFO]   [1/5] analysis_pipeline.py
-[2025-12-05 08:58:11] [INFO] 
+[2025-12-05 14:14:38] [INFO] STAGE 02: Run Analysis
+[2025-12-05 14:14:38] [INFO] ============================================================
+[2025-12-05 14:14:38] [INFO]   Resource usage (Analysis stage start): Memory: 87 MB
+[2025-12-05 14:14:38] [INFO] [STAGE-02] Discovering analysis scripts in project/...
+[2025-12-05 14:14:38] [INFO] Found: analysis_pipeline.py
+[2025-12-05 14:14:38] [INFO] Found: example_figure.py
+[2025-12-05 14:14:38] [INFO] Found: generate_research_figures.py
+[2025-12-05 14:14:38] [INFO] Found: generate_scientific_figures.py
+[2025-12-05 14:14:38] [INFO] Found: scientific_simulation.py
+[2025-12-05 14:14:38] [INFO] [STAGE-02] Executing analysis pipeline...
+[2025-12-05 14:14:38] [INFO]   [1/5] analysis_pipeline.py
+[2025-12-05 14:14:38] [INFO] 
   Running: analysis_pipeline.py
-[2025-12-05 08:58:11] [INFO] Starting: Execute analysis_pipeline.py
+[2025-12-05 14:14:38] [INFO] Starting: Execute analysis_pipeline.py
 [LAYER-2-SCIENTIFIC] Loading and analyzing data from infrastructure/scientific integration...
   [LAYER-2] Data shape after cleaning: (200, 2)
   Mean: 0.0225
@@ -2459,12 +2459,12 @@ Validating analysis results...
 Generated outputs:
   - Figures: output/figures/
   - Reports: output/reports/
-[2025-12-05 08:58:11] [INFO] Completed: Execute analysis_pipeline.py (0.6s)
-[2025-12-05 08:58:11] [INFO]     ✅ Completed in 0s
-[2025-12-05 08:58:11] [INFO]   [2/5] example_figure.py
-[2025-12-05 08:58:11] [INFO] 
+[2025-12-05 14:14:39] [INFO] Completed: Execute analysis_pipeline.py (0.5s)
+[2025-12-05 14:14:39] [INFO]     ✅ Completed in 0s
+[2025-12-05 14:14:39] [INFO]   [2/5] example_figure.py
+[2025-12-05 14:14:39] [INFO] 
   Running: example_figure.py
-[2025-12-05 08:58:11] [INFO] Starting: Execute example_figure.py
+[2025-12-05 14:14:39] [INFO] Starting: Execute example_figure.py
 ✅ Successfully imported functions from src/example.py
 Data analysis using src/ functions:
   Average: 0.129793
@@ -2477,13 +2477,13 @@ Generated: /Users/4d/Documents/GitHub/template/project/output/data/example_data.
 ✅ Generated example figure using src/ functions: /Users/4d/Documents/GitHub/template/project/output/figures/example_figure.png
 ✅ Generated example data: /Users/4d/Documents/GitHub/template/project/output/data/example_data.npz
 ✅ Generated example CSV: /Users/4d/Documents/GitHub/template/project/output/data/example_data.csv
-[2025-12-05 08:58:12] [INFO] Completed: Execute example_figure.py (0.8s)
-[2025-12-05 08:58:12] [INFO]     ✅ Completed in 0s
-[2025-12-05 08:58:12] [INFO]   Progress: 2/5 (40%) - Elapsed: 1s | ETA: 2s
-[2025-12-05 08:58:12] [INFO]   [3/5] generate_research_figures.py
-[2025-12-05 08:58:12] [INFO] 
+[2025-12-05 14:14:40] [INFO] Completed: Execute example_figure.py (0.7s)
+[2025-12-05 14:14:40] [INFO]     ✅ Completed in 0s
+[2025-12-05 14:14:40] [INFO]   Progress: 2/5 (40%) - Elapsed: 1s | ETA: 1s
+[2025-12-05 14:14:40] [INFO]   [3/5] generate_research_figures.py
+[2025-12-05 14:14:40] [INFO] 
   Running: generate_research_figures.py
-[2025-12-05 08:58:12] [INFO] Starting: Execute generate_research_figures.py
+[2025-12-05 14:14:40] [INFO] Starting: Execute generate_research_figures.py
 Generating research figures using src/ modules...
 ✅ Using src/ functions for convergence plot
 Convergence analysis using src/ functions:
@@ -2539,12 +2539,12 @@ Generated: /Users/4d/Documents/GitHub/template/project/output/data/performance_c
    - Mathematical functions from example.py used for data processing
    - Statistical analysis using src/ functions
    - Proper error handling for missing imports
-[2025-12-05 08:58:14] [INFO] Completed: Execute generate_research_figures.py (2.1s)
-[2025-12-05 08:58:14] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:14] [INFO]   [4/5] generate_scientific_figures.py
-[2025-12-05 08:58:14] [INFO] 
+[2025-12-05 14:14:42] [INFO] Completed: Execute generate_research_figures.py (1.9s)
+[2025-12-05 14:14:42] [INFO]     ✅ Completed in 1s
+[2025-12-05 14:14:42] [INFO]   [4/5] generate_scientific_figures.py
+[2025-12-05 14:14:42] [INFO] 
   Running: generate_scientific_figures.py
-[2025-12-05 08:58:14] [INFO] Starting: Execute generate_scientific_figures.py
+[2025-12-05 14:14:42] [INFO] Starting: Execute generate_scientific_figures.py
 Generating convergence figure...
   Saved: output/figures/convergence_analysis.png
 Generating time series figure...
@@ -2575,13 +2575,13 @@ Generated outputs:
   - Figure registry: output/figures/figure_registry.json
 
 Figures are ready for manuscript integration
-[2025-12-05 08:58:15] [INFO] Completed: Execute generate_scientific_figures.py (1.1s)
-[2025-12-05 08:58:15] [INFO]     ✅ Completed in 1s
-[2025-12-05 08:58:15] [INFO]   Progress: 4/5 (80%) - Elapsed: 4s | ETA: 1s
-[2025-12-05 08:58:15] [INFO]   [5/5] scientific_simulation.py
-[2025-12-05 08:58:15] [INFO] 
+[2025-12-05 14:14:43] [INFO] Completed: Execute generate_scientific_figures.py (1.1s)
+[2025-12-05 14:14:43] [INFO]     ✅ Completed in 1s
+[2025-12-05 14:14:43] [INFO]   Progress: 4/5 (80%) - Elapsed: 4s | ETA: 1s
+[2025-12-05 14:14:43] [INFO]   [5/5] scientific_simulation.py
+[2025-12-05 14:14:43] [INFO] 
   Running: scientific_simulation.py
-[2025-12-05 08:58:15] [INFO] Starting: Execute scientific_simulation.py
+[2025-12-05 14:14:43] [INFO] Starting: Execute scientific_simulation.py
 Running scientific simulation example...
 Running simulation...
 Iteration 10, elapsed: 0.00s
@@ -2628,505 +2628,507 @@ Generated outputs:
   - Simulations: output/simulations/
   - Figures: output/figures/
   - Reports: output/reports/
-[2025-12-05 08:58:16] [INFO] Completed: Execute scientific_simulation.py (0.6s)
-[2025-12-05 08:58:16] [INFO]     ✅ Completed in 0s
-[2025-12-05 08:58:16] [INFO]   Progress: 5/5 (100%) - Elapsed: 5s | ETA: 0s
-[2025-12-05 08:58:16] [INFO] Analysis scripts completed: 5/5 (analysis_pipeline.py, example_figure.py, generate_research_figures.py, generate_scientific_figures.py, scientific_simulation.py)
-[2025-12-05 08:58:16] [INFO] [STAGE-02] Verifying analysis outputs...
-[2025-12-05 08:58:16] [INFO] Output directory has 23 file(s): figures
-[2025-12-05 08:58:16] [INFO] Output directory has 5 file(s): data
-[2025-12-05 08:58:16] [INFO] Analysis complete - ready for PDF rendering
-[2025-12-05 08:58:16] [INFO]   Resource usage (Analysis stage end): Memory: 53 MB
+[2025-12-05 14:14:43] [INFO] Completed: Execute scientific_simulation.py (0.6s)
+[2025-12-05 14:14:43] [INFO]     ✅ Completed in 0s
+[2025-12-05 14:14:43] [INFO]   Progress: 5/5 (100%) - Elapsed: 4s | ETA: 0s
+[2025-12-05 14:14:43] [INFO] Analysis scripts completed: 5/5 (analysis_pipeline.py, example_figure.py, generate_research_figures.py, generate_scientific_figures.py, scientific_simulation.py)
+[2025-12-05 14:14:43] [INFO] [STAGE-02] Verifying analysis outputs...
+[2025-12-05 14:14:43] [INFO] Output directory has 23 file(s): figures
+[2025-12-05 14:14:43] [INFO] Output directory has 5 file(s): data
+[2025-12-05 14:14:43] [INFO] Analysis complete - ready for PDF rendering
+[2025-12-05 14:14:43] [INFO]   Resource usage (Analysis stage end): Memory: 87 MB
 [0;32m✓[0m Project analysis complete
-[2025-12-05 08:58:17] [INFO] 
-[2025-12-05 08:58:17] [INFO] ==================================================
-[2025-12-05 08:58:17] [INFO] STAGE 03: Render PDF
-[2025-12-05 08:58:17] [INFO] ==================================================
-[2025-12-05 08:58:17] [INFO]   Resource usage (PDF rendering stage start): Memory: 87 MB, CPU: 0.1%
-[2025-12-05 08:58:17] [INFO] Executing PDF rendering pipeline...
-[2025-12-05 08:58:17] [INFO] Verifying figures from analysis stage...
-[2025-12-05 08:58:17] [INFO] Found 16 figure(s) in figures/
-[2025-12-05 08:58:17] [INFO]   Found figures: ablation_study.png, analysis_comparison.png, convergence_analysis.png
-[2025-12-05 08:58:17] [INFO]   ... and 13 more
-[2025-12-05 08:58:17] [INFO] Discovered 14 manuscript file(s):
-[2025-12-05 08:58:17] [INFO]   Main sections: 8
-[2025-12-05 08:58:17] [INFO]     - 01_abstract.md
-[2025-12-05 08:58:17] [INFO]     - 02_introduction.md
-[2025-12-05 08:58:17] [INFO]     - 03_methodology.md
-[2025-12-05 08:58:17] [INFO]     - 04_experimental_results.md
-[2025-12-05 08:58:17] [INFO]     - 05_discussion.md
-[2025-12-05 08:58:17] [INFO]     - 06_conclusion.md
-[2025-12-05 08:58:17] [INFO]     - 08_acknowledgments.md
-[2025-12-05 08:58:17] [INFO]     - 09_appendix.md
-[2025-12-05 08:58:17] [INFO]   Supplemental: 4
-[2025-12-05 08:58:17] [INFO]     - S01_supplemental_methods.md
-[2025-12-05 08:58:17] [INFO]     - S02_supplemental_results.md
-[2025-12-05 08:58:17] [INFO]     - S03_supplemental_analysis.md
-[2025-12-05 08:58:17] [INFO]     - S04_supplemental_applications.md
-[2025-12-05 08:58:17] [INFO]   Glossary: 1
-[2025-12-05 08:58:17] [INFO]     - 98_symbols_glossary.md
-[2025-12-05 08:58:17] [INFO]   References: 1
-[2025-12-05 08:58:17] [INFO]     - 99_references.md
-[2025-12-05 08:58:17] [INFO] Initialized RenderManager from infrastructure.rendering
-[2025-12-05 08:58:17] [INFO]   [1/14] 01_abstract.md
-[2025-12-05 08:58:17] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/01_abstract.md
-[2025-12-05 08:58:17] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/01_abstract_slides.tex with xelatex
-[2025-12-05 08:58:19] [INFO] Generated beamer slides: 01_abstract_slides.pdf
-[2025-12-05 08:58:19] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/01_abstract.md
-[2025-12-05 08:58:19] [INFO] Generated: 01_abstract_slides.pdf
-[2025-12-05 08:58:19] [INFO] Generated: 01_abstract.html
-[2025-12-05 08:58:19] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:19] [INFO]   [2/14] 02_introduction.md
-[2025-12-05 08:58:19] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/02_introduction.md
-[2025-12-05 08:58:19] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/02_introduction_slides.tex with xelatex
-[2025-12-05 08:58:21] [INFO] Generated beamer slides: 02_introduction_slides.pdf
-[2025-12-05 08:58:21] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/02_introduction.md
-[2025-12-05 08:58:21] [INFO] Generated: 02_introduction_slides.pdf
-[2025-12-05 08:58:21] [INFO] Generated: 02_introduction.html
-[2025-12-05 08:58:21] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:21] [INFO]   [3/14] 03_methodology.md
-[2025-12-05 08:58:21] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/03_methodology.md
-[2025-12-05 08:58:22] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/03_methodology_slides.tex with xelatex
-[2025-12-05 08:58:24] [INFO] Generated beamer slides: 03_methodology_slides.pdf
-[2025-12-05 08:58:24] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/03_methodology.md
-[2025-12-05 08:58:24] [INFO] Generated: 03_methodology_slides.pdf
-[2025-12-05 08:58:24] [INFO] Generated: 03_methodology.html
-[2025-12-05 08:58:24] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:24] [INFO]   [4/14] 04_experimental_results.md
-[2025-12-05 08:58:24] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/04_experimental_results.md
-[2025-12-05 08:58:24] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/04_experimental_results_slides.tex with xelatex
-[2025-12-05 08:58:26] [INFO] Generated beamer slides: 04_experimental_results_slides.pdf
-[2025-12-05 08:58:26] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/04_experimental_results.md
-[2025-12-05 08:58:26] [INFO] Generated: 04_experimental_results_slides.pdf
-[2025-12-05 08:58:26] [INFO] Generated: 04_experimental_results.html
-[2025-12-05 08:58:26] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:26] [INFO]   [5/14] 05_discussion.md
-[2025-12-05 08:58:26] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/05_discussion.md
-[2025-12-05 08:58:26] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/05_discussion_slides.tex with xelatex
-[2025-12-05 08:58:28] [INFO] Generated beamer slides: 05_discussion_slides.pdf
-[2025-12-05 08:58:28] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/05_discussion.md
-[2025-12-05 08:58:28] [INFO] Generated: 05_discussion_slides.pdf
-[2025-12-05 08:58:28] [INFO] Generated: 05_discussion.html
-[2025-12-05 08:58:28] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:28] [INFO]   [6/14] 06_conclusion.md
-[2025-12-05 08:58:28] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/06_conclusion.md
-[2025-12-05 08:58:28] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/06_conclusion_slides.tex with xelatex
-[2025-12-05 08:58:30] [INFO] Generated beamer slides: 06_conclusion_slides.pdf
-[2025-12-05 08:58:30] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/06_conclusion.md
-[2025-12-05 08:58:30] [INFO] Generated: 06_conclusion_slides.pdf
-[2025-12-05 08:58:30] [INFO] Generated: 06_conclusion.html
-[2025-12-05 08:58:30] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:30] [INFO]   [7/14] 08_acknowledgments.md
-[2025-12-05 08:58:30] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/08_acknowledgments.md
-[2025-12-05 08:58:30] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/08_acknowledgments_slides.tex with xelatex
-[2025-12-05 08:58:32] [INFO] Generated beamer slides: 08_acknowledgments_slides.pdf
-[2025-12-05 08:58:32] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/08_acknowledgments.md
-[2025-12-05 08:58:32] [INFO] Generated: 08_acknowledgments_slides.pdf
-[2025-12-05 08:58:32] [INFO] Generated: 08_acknowledgments.html
-[2025-12-05 08:58:32] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:32] [INFO]   [8/14] 09_appendix.md
-[2025-12-05 08:58:32] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/09_appendix.md
-[2025-12-05 08:58:32] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/09_appendix_slides.tex with xelatex
-[2025-12-05 08:58:35] [INFO] Generated beamer slides: 09_appendix_slides.pdf
-[2025-12-05 08:58:35] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/09_appendix.md
-[2025-12-05 08:58:35] [INFO] Generated: 09_appendix_slides.pdf
-[2025-12-05 08:58:35] [INFO] Generated: 09_appendix.html
-[2025-12-05 08:58:35] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:35] [INFO]   [9/14] S01_supplemental_methods.md
-[2025-12-05 08:58:35] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/S01_supplemental_methods.md
-[2025-12-05 08:58:35] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/S01_supplemental_methods_slides.tex with xelatex
-[2025-12-05 08:58:37] [INFO] Generated beamer slides: S01_supplemental_methods_slides.pdf
-[2025-12-05 08:58:37] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/S01_supplemental_methods.md
-[2025-12-05 08:58:37] [INFO] Generated: S01_supplemental_methods_slides.pdf
-[2025-12-05 08:58:37] [INFO] Generated: S01_supplemental_methods.html
-[2025-12-05 08:58:37] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:37] [INFO]   [10/14] S02_supplemental_results.md
-[2025-12-05 08:58:37] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/S02_supplemental_results.md
-[2025-12-05 08:58:37] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/S02_supplemental_results_slides.tex with xelatex
-[2025-12-05 08:58:39] [INFO] Generated beamer slides: S02_supplemental_results_slides.pdf
-[2025-12-05 08:58:39] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/S02_supplemental_results.md
-[2025-12-05 08:58:39] [INFO] Generated: S02_supplemental_results_slides.pdf
-[2025-12-05 08:58:39] [INFO] Generated: S02_supplemental_results.html
-[2025-12-05 08:58:39] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:39] [INFO]   [11/14] S03_supplemental_analysis.md
-[2025-12-05 08:58:39] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/S03_supplemental_analysis.md
-[2025-12-05 08:58:39] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/S03_supplemental_analysis_slides.tex with xelatex
-[2025-12-05 08:58:42] [INFO] Generated beamer slides: S03_supplemental_analysis_slides.pdf
-[2025-12-05 08:58:42] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/S03_supplemental_analysis.md
-[2025-12-05 08:58:42] [INFO] Generated: S03_supplemental_analysis_slides.pdf
-[2025-12-05 08:58:42] [INFO] Generated: S03_supplemental_analysis.html
-[2025-12-05 08:58:42] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:42] [INFO]   [12/14] S04_supplemental_applications.md
-[2025-12-05 08:58:42] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/S04_supplemental_applications.md
-[2025-12-05 08:58:42] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/S04_supplemental_applications_slides.tex with xelatex
-[2025-12-05 08:58:44] [INFO] Generated beamer slides: S04_supplemental_applications_slides.pdf
-[2025-12-05 08:58:44] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/S04_supplemental_applications.md
-[2025-12-05 08:58:44] [INFO] Generated: S04_supplemental_applications_slides.pdf
-[2025-12-05 08:58:44] [INFO] Generated: S04_supplemental_applications.html
-[2025-12-05 08:58:44] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:44] [INFO]   [13/14] 98_symbols_glossary.md
-[2025-12-05 08:58:44] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/98_symbols_glossary.md
-[2025-12-05 08:58:44] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/98_symbols_glossary_slides.tex with xelatex
-[2025-12-05 08:58:46] [INFO] Generated beamer slides: 98_symbols_glossary_slides.pdf
-[2025-12-05 08:58:46] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/98_symbols_glossary.md
-[2025-12-05 08:58:46] [INFO] Generated: 98_symbols_glossary_slides.pdf
-[2025-12-05 08:58:46] [INFO] Generated: 98_symbols_glossary.html
-[2025-12-05 08:58:46] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:46] [INFO]   [14/14] 99_references.md
-[2025-12-05 08:58:46] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/99_references.md
-[2025-12-05 08:58:46] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/99_references_slides.tex with xelatex
-[2025-12-05 08:58:49] [INFO] Generated beamer slides: 99_references_slides.pdf
-[2025-12-05 08:58:49] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/99_references.md
-[2025-12-05 08:58:49] [INFO] Generated: 99_references_slides.pdf
-[2025-12-05 08:58:49] [INFO] Generated: 99_references.html
-[2025-12-05 08:58:49] [INFO]     ✅ Completed in 2s
-[2025-12-05 08:58:49] [INFO] 
+[2025-12-05 14:14:44] [INFO] 
+[2025-12-05 14:14:44] [INFO] ==================================================
+[2025-12-05 14:14:44] [INFO] STAGE 03: Render PDF
+[2025-12-05 14:14:44] [INFO] ==================================================
+[2025-12-05 14:14:44] [INFO]   Resource usage (PDF rendering stage start): Memory: 88 MB
+[2025-12-05 14:14:44] [INFO] Executing PDF rendering pipeline...
+[2025-12-05 14:14:44] [INFO] Verifying figures from analysis stage...
+[2025-12-05 14:14:44] [INFO] Found 16 figure(s) in figures/
+[2025-12-05 14:14:44] [INFO]   Found figures: ablation_study.png, analysis_comparison.png, convergence_analysis.png
+[2025-12-05 14:14:44] [INFO]   ... and 13 more
+[2025-12-05 14:14:44] [INFO] Discovered 14 manuscript file(s):
+[2025-12-05 14:14:44] [INFO]   Main sections: 8
+[2025-12-05 14:14:44] [INFO]     - 01_abstract.md
+[2025-12-05 14:14:44] [INFO]     - 02_introduction.md
+[2025-12-05 14:14:44] [INFO]     - 03_methodology.md
+[2025-12-05 14:14:44] [INFO]     - 04_experimental_results.md
+[2025-12-05 14:14:44] [INFO]     - 05_discussion.md
+[2025-12-05 14:14:44] [INFO]     - 06_conclusion.md
+[2025-12-05 14:14:44] [INFO]     - 08_acknowledgments.md
+[2025-12-05 14:14:44] [INFO]     - 09_appendix.md
+[2025-12-05 14:14:44] [INFO]   Supplemental: 4
+[2025-12-05 14:14:44] [INFO]     - S01_supplemental_methods.md
+[2025-12-05 14:14:44] [INFO]     - S02_supplemental_results.md
+[2025-12-05 14:14:44] [INFO]     - S03_supplemental_analysis.md
+[2025-12-05 14:14:44] [INFO]     - S04_supplemental_applications.md
+[2025-12-05 14:14:44] [INFO]   Glossary: 1
+[2025-12-05 14:14:44] [INFO]     - 98_symbols_glossary.md
+[2025-12-05 14:14:44] [INFO]   References: 1
+[2025-12-05 14:14:44] [INFO]     - 99_references.md
+[2025-12-05 14:14:44] [INFO] Initialized RenderManager from infrastructure.rendering
+[2025-12-05 14:14:44] [INFO]   [1/14] 01_abstract.md
+[2025-12-05 14:14:44] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/01_abstract.md
+[2025-12-05 14:14:44] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/01_abstract_slides.tex with xelatex
+[2025-12-05 14:14:47] [INFO] Generated beamer slides: 01_abstract_slides.pdf
+[2025-12-05 14:14:47] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/01_abstract.md
+[2025-12-05 14:14:47] [INFO] Generated: 01_abstract_slides.pdf
+[2025-12-05 14:14:47] [INFO] Generated: 01_abstract.html
+[2025-12-05 14:14:47] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:14:47] [INFO]   [2/14] 02_introduction.md
+[2025-12-05 14:14:47] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/02_introduction.md
+[2025-12-05 14:14:47] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/02_introduction_slides.tex with xelatex
+[2025-12-05 14:14:49] [INFO] Generated beamer slides: 02_introduction_slides.pdf
+[2025-12-05 14:14:49] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/02_introduction.md
+[2025-12-05 14:14:49] [INFO] Generated: 02_introduction_slides.pdf
+[2025-12-05 14:14:49] [INFO] Generated: 02_introduction.html
+[2025-12-05 14:14:49] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:14:49] [INFO]   [3/14] 03_methodology.md
+[2025-12-05 14:14:49] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/03_methodology.md
+[2025-12-05 14:14:49] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/03_methodology_slides.tex with xelatex
+[2025-12-05 14:14:51] [INFO] Generated beamer slides: 03_methodology_slides.pdf
+[2025-12-05 14:14:51] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/03_methodology.md
+[2025-12-05 14:14:51] [INFO] Generated: 03_methodology_slides.pdf
+[2025-12-05 14:14:51] [INFO] Generated: 03_methodology.html
+[2025-12-05 14:14:51] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:14:51] [INFO]   [4/14] 04_experimental_results.md
+[2025-12-05 14:14:51] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/04_experimental_results.md
+[2025-12-05 14:14:51] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/04_experimental_results_slides.tex with xelatex
+[2025-12-05 14:14:53] [INFO] Generated beamer slides: 04_experimental_results_slides.pdf
+[2025-12-05 14:14:53] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/04_experimental_results.md
+[2025-12-05 14:14:53] [INFO] Generated: 04_experimental_results_slides.pdf
+[2025-12-05 14:14:53] [INFO] Generated: 04_experimental_results.html
+[2025-12-05 14:14:53] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:14:53] [INFO]   [5/14] 05_discussion.md
+[2025-12-05 14:14:53] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/05_discussion.md
+[2025-12-05 14:14:53] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/05_discussion_slides.tex with xelatex
+[2025-12-05 14:14:56] [INFO] Generated beamer slides: 05_discussion_slides.pdf
+[2025-12-05 14:14:56] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/05_discussion.md
+[2025-12-05 14:14:56] [INFO] Generated: 05_discussion_slides.pdf
+[2025-12-05 14:14:56] [INFO] Generated: 05_discussion.html
+[2025-12-05 14:14:56] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:14:56] [INFO]   [6/14] 06_conclusion.md
+[2025-12-05 14:14:56] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/06_conclusion.md
+[2025-12-05 14:14:56] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/06_conclusion_slides.tex with xelatex
+[2025-12-05 14:14:58] [INFO] Generated beamer slides: 06_conclusion_slides.pdf
+[2025-12-05 14:14:58] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/06_conclusion.md
+[2025-12-05 14:14:58] [INFO] Generated: 06_conclusion_slides.pdf
+[2025-12-05 14:14:58] [INFO] Generated: 06_conclusion.html
+[2025-12-05 14:14:58] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:14:58] [INFO]   [7/14] 08_acknowledgments.md
+[2025-12-05 14:14:58] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/08_acknowledgments.md
+[2025-12-05 14:14:58] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/08_acknowledgments_slides.tex with xelatex
+[2025-12-05 14:15:00] [INFO] Generated beamer slides: 08_acknowledgments_slides.pdf
+[2025-12-05 14:15:00] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/08_acknowledgments.md
+[2025-12-05 14:15:00] [INFO] Generated: 08_acknowledgments_slides.pdf
+[2025-12-05 14:15:00] [INFO] Generated: 08_acknowledgments.html
+[2025-12-05 14:15:00] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:15:00] [INFO]   [8/14] 09_appendix.md
+[2025-12-05 14:15:00] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/09_appendix.md
+[2025-12-05 14:15:00] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/09_appendix_slides.tex with xelatex
+[2025-12-05 14:15:03] [INFO] Generated beamer slides: 09_appendix_slides.pdf
+[2025-12-05 14:15:03] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/09_appendix.md
+[2025-12-05 14:15:03] [INFO] Generated: 09_appendix_slides.pdf
+[2025-12-05 14:15:03] [INFO] Generated: 09_appendix.html
+[2025-12-05 14:15:03] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:15:03] [INFO]   [9/14] S01_supplemental_methods.md
+[2025-12-05 14:15:03] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/S01_supplemental_methods.md
+[2025-12-05 14:15:03] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/S01_supplemental_methods_slides.tex with xelatex
+[2025-12-05 14:15:05] [INFO] Generated beamer slides: S01_supplemental_methods_slides.pdf
+[2025-12-05 14:15:05] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/S01_supplemental_methods.md
+[2025-12-05 14:15:05] [INFO] Generated: S01_supplemental_methods_slides.pdf
+[2025-12-05 14:15:05] [INFO] Generated: S01_supplemental_methods.html
+[2025-12-05 14:15:05] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:15:05] [INFO]   [10/14] S02_supplemental_results.md
+[2025-12-05 14:15:05] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/S02_supplemental_results.md
+[2025-12-05 14:15:05] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/S02_supplemental_results_slides.tex with xelatex
+[2025-12-05 14:15:07] [INFO] Generated beamer slides: S02_supplemental_results_slides.pdf
+[2025-12-05 14:15:07] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/S02_supplemental_results.md
+[2025-12-05 14:15:07] [INFO] Generated: S02_supplemental_results_slides.pdf
+[2025-12-05 14:15:07] [INFO] Generated: S02_supplemental_results.html
+[2025-12-05 14:15:07] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:15:07] [INFO]   [11/14] S03_supplemental_analysis.md
+[2025-12-05 14:15:07] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/S03_supplemental_analysis.md
+[2025-12-05 14:15:07] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/S03_supplemental_analysis_slides.tex with xelatex
+[2025-12-05 14:15:10] [INFO] Generated beamer slides: S03_supplemental_analysis_slides.pdf
+[2025-12-05 14:15:10] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/S03_supplemental_analysis.md
+[2025-12-05 14:15:10] [INFO] Generated: S03_supplemental_analysis_slides.pdf
+[2025-12-05 14:15:10] [INFO] Generated: S03_supplemental_analysis.html
+[2025-12-05 14:15:10] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:15:10] [INFO]   [12/14] S04_supplemental_applications.md
+[2025-12-05 14:15:10] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/S04_supplemental_applications.md
+[2025-12-05 14:15:10] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/S04_supplemental_applications_slides.tex with xelatex
+[2025-12-05 14:15:12] [INFO] Generated beamer slides: S04_supplemental_applications_slides.pdf
+[2025-12-05 14:15:12] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/S04_supplemental_applications.md
+[2025-12-05 14:15:12] [INFO] Generated: S04_supplemental_applications_slides.pdf
+[2025-12-05 14:15:12] [INFO] Generated: S04_supplemental_applications.html
+[2025-12-05 14:15:12] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:15:12] [INFO]   [13/14] 98_symbols_glossary.md
+[2025-12-05 14:15:12] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/98_symbols_glossary.md
+[2025-12-05 14:15:12] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/98_symbols_glossary_slides.tex with xelatex
+[2025-12-05 14:15:15] [INFO] Generated beamer slides: 98_symbols_glossary_slides.pdf
+[2025-12-05 14:15:15] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/98_symbols_glossary.md
+[2025-12-05 14:15:15] [INFO] Generated: 98_symbols_glossary_slides.pdf
+[2025-12-05 14:15:15] [INFO] Generated: 98_symbols_glossary.html
+[2025-12-05 14:15:15] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:15:15] [INFO]   [14/14] 99_references.md
+[2025-12-05 14:15:15] [INFO] Generating beamer slides from /Users/4d/Documents/GitHub/template/project/manuscript/99_references.md
+[2025-12-05 14:15:15] [INFO] Compiling /Users/4d/Documents/GitHub/template/project/output/slides/99_references_slides.tex with xelatex
+[2025-12-05 14:15:17] [INFO] Generated beamer slides: 99_references_slides.pdf
+[2025-12-05 14:15:17] [INFO] Generating HTML from /Users/4d/Documents/GitHub/template/project/manuscript/99_references.md
+[2025-12-05 14:15:17] [INFO] Generated: 99_references_slides.pdf
+[2025-12-05 14:15:17] [INFO] Generated: 99_references.html
+[2025-12-05 14:15:17] [INFO]     ✅ Completed in 2s
+[2025-12-05 14:15:17] [INFO] 
 ============================================================
-[2025-12-05 08:58:49] [INFO] Generating combined PDF manuscript...
-[2025-12-05 08:58:49] [INFO] Rendering combined PDF from 14 files...
-[2025-12-05 08:58:49] [INFO] Converting combined markdown to LaTeX...
-[2025-12-05 08:58:49] [INFO] ✓ Fixed 14 figure path(s)
-[2025-12-05 08:58:49] [INFO] ✓ Extracted preamble from preamble.md
-[2025-12-05 08:58:49] [INFO] ✓ Inserted title page (\maketitle) after \begin{document}
-[2025-12-05 08:58:49] [INFO] Verifying 14 figure reference(s)...
-[2025-12-05 08:58:49] [INFO]   Found: 14/14 figures
-[2025-12-05 08:58:49] [INFO] Rendering combined manuscript to PDF: project_combined.pdf
-[2025-12-05 08:58:49] [INFO]   Source files: 14
-[2025-12-05 08:58:49] [INFO]   Bibliography: references.bib
-[2025-12-05 08:58:49] [INFO]   LaTeX compilation pass 1/4...
-[2025-12-05 08:58:53] [INFO]   Bibliography processing...
-[2025-12-05 08:58:53] [INFO] Processing bibliography with bibtex...
-[2025-12-05 08:58:53] [INFO] LaTeX compilation: [██████████░░░░░░░░░░] 50%
-[2025-12-05 08:58:57] [INFO] LaTeX compilation: [███████████████░░░░░] 75%
-[2025-12-05 08:59:01] [INFO] LaTeX compilation: [████████████████████] 100%
-[2025-12-05 08:59:05] [INFO] ✅ Successfully generated: project_combined.pdf
-[2025-12-05 08:59:05] [INFO] ✅ Generated combined PDF: project_combined.pdf
-[2025-12-05 08:59:05] [INFO] 
+[2025-12-05 14:15:17] [INFO] Generating combined PDF manuscript...
+[2025-12-05 14:15:17] [INFO] Rendering combined PDF from 14 files...
+[2025-12-05 14:15:17] [INFO] Converting combined markdown to LaTeX...
+[2025-12-05 14:15:17] [INFO] ✓ Fixed 14 figure path(s)
+[2025-12-05 14:15:17] [INFO] ✓ Extracted preamble from preamble.md
+[2025-12-05 14:15:17] [INFO] ✓ Inserted title page (\maketitle) after \begin{document}
+[2025-12-05 14:15:17] [INFO] Verifying 14 figure reference(s)...
+[2025-12-05 14:15:17] [INFO]   Found: 14/14 figures
+[2025-12-05 14:15:17] [INFO] Rendering combined manuscript to PDF: project_combined.pdf
+[2025-12-05 14:15:17] [INFO]   Source files: 14
+[2025-12-05 14:15:17] [INFO]   Bibliography: references.bib
+[2025-12-05 14:15:17] [INFO]   LaTeX compilation pass 1/4...
+[2025-12-05 14:15:21] [INFO]   Bibliography processing...
+[2025-12-05 14:15:21] [INFO] Processing bibliography with bibtex...
+[2025-12-05 14:15:21] [INFO] LaTeX compilation: [██████████░░░░░░░░░░] 50%
+[2025-12-05 14:15:25] [INFO] LaTeX compilation: [███████████████░░░░░] 75%
+[2025-12-05 14:15:29] [INFO] LaTeX compilation: [████████████████████] 100%
+[2025-12-05 14:15:33] [INFO] ✅ Successfully generated: project_combined.pdf
+[2025-12-05 14:15:33] [INFO] ✅ Generated combined PDF: project_combined.pdf
+[2025-12-05 14:15:33] [INFO] 
 Rendering Summary:
-[2025-12-05 08:59:05] [INFO]   Individual files processed: 14
-[2025-12-05 08:59:05] [INFO]   Markdown files: 14
-[2025-12-05 08:59:05] [INFO] PDF rendering pipeline completed
-[2025-12-05 08:59:05] [INFO] Verifying PDF outputs...
-[2025-12-05 08:59:05] [INFO] Generated 1 PDF file(s)
-[2025-12-05 08:59:05] [INFO]   📕 project_combined.pdf (2.26 MB) ✓
-[2025-12-05 08:59:05] [INFO] 
+[2025-12-05 14:15:33] [INFO]   Individual files processed: 14
+[2025-12-05 14:15:33] [INFO]   Markdown files: 14
+[2025-12-05 14:15:33] [INFO] PDF rendering pipeline completed
+[2025-12-05 14:15:33] [INFO] Verifying PDF outputs...
+[2025-12-05 14:15:33] [INFO] Generated 1 PDF file(s)
+[2025-12-05 14:15:33] [INFO]   📕 project_combined.pdf (2.26 MB) ✓
+[2025-12-05 14:15:33] [INFO] 
 ✅ Bibliography file found and will be processed
-[2025-12-05 08:59:05] [INFO] 
+[2025-12-05 14:15:33] [INFO] 
 ✅ Combined manuscript PDF successfully generated!
-[2025-12-05 08:59:05] [INFO]   File size: 2.26 MB
-[2025-12-05 08:59:05] [INFO]   Valid PDFs: 1/1
-[2025-12-05 08:59:05] [INFO] PDF rendering complete - ready for validation
-[2025-12-05 08:59:05] [INFO]   Resource usage (PDF rendering stage end): Memory: 56 MB, CPU: 0.1%
+[2025-12-05 14:15:33] [INFO]   File size: 2.26 MB
+[2025-12-05 14:15:33] [INFO]   Valid PDFs: 1/1
+[2025-12-05 14:15:33] [INFO] PDF rendering complete - ready for validation
+[2025-12-05 14:15:33] [INFO]   Resource usage (PDF rendering stage end): Memory: 48 MB, CPU: 0.1%
 
 [1;33m[6/9] Output Validation (66% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-05 08:59:05] [INFO] 
-[2025-12-05 08:59:05] [INFO] ==================================================
-[2025-12-05 08:59:05] [INFO] STAGE 04: Validate Output
-[2025-12-05 08:59:05] [INFO] ==================================================
-[2025-12-05 08:59:05] [INFO] 
+[2025-12-05 14:15:34] [INFO] 
+[2025-12-05 14:15:34] [INFO] ==================================================
+[2025-12-05 14:15:34] [INFO] STAGE 04: Validate Output
+[2025-12-05 14:15:34] [INFO] ==================================================
+[2025-12-05 14:15:34] [INFO] 
   Validating PDF files...
-[2025-12-05 08:59:05] [INFO] PDF valid: project_combined.pdf (2366949 bytes)
-[2025-12-05 08:59:05] [INFO] 
+[2025-12-05 14:15:34] [INFO] PDF valid: project_combined.pdf (2373962 bytes)
+[2025-12-05 14:15:34] [INFO] 
   Validating markdown files...
-[2025-12-05 08:59:05] [INFO] Found 17 markdown file(s)
-[2025-12-05 08:59:05] [INFO] Running markdown validation...
-[2025-12-05 08:59:05] [INFO] Markdown validation passed (no issues found)
-[2025-12-05 08:59:05] [INFO] 
+[2025-12-05 14:15:34] [INFO] Found 17 markdown file(s)
+[2025-12-05 14:15:34] [INFO] Running markdown validation...
+[2025-12-05 14:15:34] [INFO] Markdown validation passed (no issues found)
+[2025-12-05 14:15:34] [INFO] 
   Verifying output structure...
-[2025-12-05 08:59:05] [INFO] Directory exists: pdf (9 file(s))
-[2025-12-05 08:59:05] [INFO] Directory exists: figures (23 file(s))
-[2025-12-05 08:59:05] [INFO] Directory exists: data (5 file(s))
-[2025-12-05 08:59:05] [INFO] 
+[2025-12-05 14:15:34] [INFO] Directory exists: pdf (9 file(s))
+[2025-12-05 14:15:34] [INFO] Directory exists: figures (23 file(s))
+[2025-12-05 14:15:34] [INFO] Directory exists: data (5 file(s))
+[2025-12-05 14:15:34] [INFO] 
   Validating figure registry...
-[2025-12-05 08:59:05] [INFO] Figure registry loaded: 16 figure(s)
-[2025-12-05 08:59:05] [INFO] All 14 figure references verified
-[2025-12-05 08:59:05] [INFO] 
+[2025-12-05 14:15:34] [INFO] Figure registry loaded: 16 figure(s)
+[2025-12-05 14:15:34] [INFO] All 14 figure references verified
+[2025-12-05 14:15:34] [INFO] 
   Generating validation report...
-[2025-12-05 08:59:05] [INFO] Validation reports saved: /Users/4d/Documents/GitHub/template/project/output/reports/validation_report.json, /Users/4d/Documents/GitHub/template/project/output/reports/validation_report.md
-[2025-12-05 08:59:05] [INFO] 
+[2025-12-05 14:15:34] [INFO] Validation reports saved: /Users/4d/Documents/GitHub/template/project/output/reports/validation_report.json, /Users/4d/Documents/GitHub/template/project/output/reports/validation_report.md
+[2025-12-05 14:15:34] [INFO] 
 ============================================================
-[2025-12-05 08:59:05] [INFO] Validation Summary
-[2025-12-05 08:59:05] [INFO] ============================================================
-[2025-12-05 08:59:05] [INFO] ✅ PASS: PDF validation
-[2025-12-05 08:59:05] [INFO] ✅ PASS: Markdown validation
-[2025-12-05 08:59:05] [INFO] ✅ PASS: Output structure
-[2025-12-05 08:59:05] [INFO] ✅ PASS: Figure registry
-[2025-12-05 08:59:05] [INFO] 
+[2025-12-05 14:15:34] [INFO] Validation Summary
+[2025-12-05 14:15:34] [INFO] ============================================================
+[2025-12-05 14:15:34] [INFO] ✅ PASS: PDF validation
+[2025-12-05 14:15:34] [INFO] ✅ PASS: Markdown validation
+[2025-12-05 14:15:34] [INFO] ✅ PASS: Output structure
+[2025-12-05 14:15:34] [INFO] ✅ PASS: Figure registry
+[2025-12-05 14:15:34] [INFO] 
 ✅ Validation complete - all checks passed!
 [0;32m✓[0m Output validation complete
 
 [1;33m[7/9] Copy Outputs (77% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-05 08:59:06] [INFO] 
-[2025-12-05 08:59:06] [INFO] ==================================================
-[2025-12-05 08:59:06] [INFO] STAGE 05: Copy Outputs
-[2025-12-05 08:59:06] [INFO] ==================================================
-[2025-12-05 08:59:06] [INFO] Cleaning output directory...
-[2025-12-05 08:59:06] [INFO] Output directory cleaned
-[2025-12-05 08:59:06] [INFO] Copying all project outputs...
-[2025-12-05 08:59:06] [INFO] Recursively copied project/output/ directory
-[2025-12-05 08:59:06] [INFO] Copied combined PDF to root (2.26 MB)
-[2025-12-05 08:59:06] [INFO] Validating copied outputs...
-[2025-12-05 08:59:06] [INFO] Combined PDF at root valid (2.26 MB)
-[2025-12-05 08:59:06] [INFO] pdf/ valid (9 files, 2.58 MB)
-[2025-12-05 08:59:06] [INFO] web/ valid (14 files, 0.14 MB)
-[2025-12-05 08:59:06] [INFO] slides/ valid (102 files, 1.25 MB)
-[2025-12-05 08:59:06] [INFO] figures/ valid (23 files, 2.66 MB)
-[2025-12-05 08:59:06] [INFO] data/ valid (5 files, 0.01 MB)
-[2025-12-05 08:59:06] [INFO] reports/ valid (4 files, 0.00 MB)
-[2025-12-05 08:59:06] [INFO] simulations/ valid (3 files, 0.05 MB)
-[2025-12-05 08:59:06] [INFO] logs/ valid (1 files, 0.29 MB)
-[2025-12-05 08:59:06] [INFO] 
+[2025-12-05 14:15:34] [INFO] 
+[2025-12-05 14:15:34] [INFO] ==================================================
+[2025-12-05 14:15:34] [INFO] STAGE 05: Copy Outputs
+[2025-12-05 14:15:34] [INFO] ==================================================
+[2025-12-05 14:15:34] [INFO] Cleaning output directory...
+[2025-12-05 14:15:34] [INFO] Output directory cleaned
+[2025-12-05 14:15:34] [INFO] Copying all project outputs...
+[2025-12-05 14:15:34] [INFO] Recursively copied project/output/ directory
+[2025-12-05 14:15:34] [INFO] Copied combined PDF to root (2.26 MB)
+[2025-12-05 14:15:34] [INFO] Validating copied outputs...
+[2025-12-05 14:15:34] [INFO] Combined PDF at root valid (2.26 MB)
+[2025-12-05 14:15:34] [INFO] pdf/ valid (9 files, 2.59 MB)
+[2025-12-05 14:15:34] [INFO] web/ valid (14 files, 0.14 MB)
+[2025-12-05 14:15:34] [INFO] slides/ valid (102 files, 1.25 MB)
+[2025-12-05 14:15:34] [INFO] figures/ valid (23 files, 2.67 MB)
+[2025-12-05 14:15:34] [INFO] data/ valid (5 files, 0.01 MB)
+[2025-12-05 14:15:34] [INFO] reports/ valid (4 files, 0.00 MB)
+[2025-12-05 14:15:34] [INFO] simulations/ valid (3 files, 0.05 MB)
+[2025-12-05 14:15:34] [INFO] logs/ valid (1 files, 0.29 MB)
+[2025-12-05 14:15:34] [INFO] 
 ============================================================
-[2025-12-05 08:59:06] [INFO] Output Copying Summary
-[2025-12-05 08:59:06] [INFO] ============================================================
-[2025-12-05 08:59:06] [INFO] 
+[2025-12-05 14:15:34] [INFO] Output Copying Summary
+[2025-12-05 14:15:34] [INFO] ============================================================
+[2025-12-05 14:15:34] [INFO] 
 Output directory: /Users/4d/Documents/GitHub/template/output
-[2025-12-05 08:59:06] [INFO] 
+[2025-12-05 14:15:34] [INFO] 
 Files copied by directory:
-[2025-12-05 08:59:06] [INFO]   • PDF files: 9
-[2025-12-05 08:59:06] [INFO]   • Web files: 14
-[2025-12-05 08:59:06] [INFO]   • Slides files: 102
-[2025-12-05 08:59:06] [INFO]   • Figures: 23
-[2025-12-05 08:59:06] [INFO]   • Data files: 5
-[2025-12-05 08:59:06] [INFO]   • Reports: 4
-[2025-12-05 08:59:06] [INFO]   • Simulations: 3
-[2025-12-05 08:59:06] [INFO]   • LLM reviews: 0
-[2025-12-05 08:59:06] [INFO]   • Log files: 1
-[2025-12-05 08:59:06] [INFO]   • Combined PDF (root): 1
-[2025-12-05 08:59:06] [INFO] 
+[2025-12-05 14:15:34] [INFO]   • PDF files: 9
+[2025-12-05 14:15:34] [INFO]   • Web files: 14
+[2025-12-05 14:15:34] [INFO]   • Slides files: 102
+[2025-12-05 14:15:34] [INFO]   • Figures: 23
+[2025-12-05 14:15:34] [INFO]   • Data files: 5
+[2025-12-05 14:15:34] [INFO]   • Reports: 4
+[2025-12-05 14:15:34] [INFO]   • Simulations: 3
+[2025-12-05 14:15:34] [INFO]   • LLM reviews: 0
+[2025-12-05 14:15:34] [INFO]   • Log files: 1
+[2025-12-05 14:15:34] [INFO]   • Combined PDF (root): 1
+[2025-12-05 14:15:34] [INFO] 
   Total files copied: 161
-[2025-12-05 08:59:06] [INFO] 
+[2025-12-05 14:15:34] [INFO] 
 Directory structure:
-[2025-12-05 08:59:06] [INFO]   ✓ project_combined_pdf: 2.26 MB
-[2025-12-05 08:59:06] [INFO]   ✓ pdf: 9 files, 2.58 MB
-[2025-12-05 08:59:06] [INFO]   ✓ web: 14 files, 0.14 MB
-[2025-12-05 08:59:06] [INFO]   ✓ slides: 102 files, 1.25 MB
-[2025-12-05 08:59:06] [INFO]   ✓ figures: 23 files, 2.66 MB
-[2025-12-05 08:59:06] [INFO]   ✓ data: 5 files, 0.01 MB
-[2025-12-05 08:59:06] [INFO]   ✓ reports: 4 files, 0.0 MB
-[2025-12-05 08:59:06] [INFO]   ✓ simulations: 3 files, 0.05 MB
-[2025-12-05 08:59:06] [INFO]   ✓ llm: 0 files, 0.0 MB
-[2025-12-05 08:59:06] [INFO]   ✓ logs: 1 files, 0.29 MB
-[2025-12-05 08:59:06] [INFO] 
-[2025-12-05 08:59:06] [INFO] 
+[2025-12-05 14:15:34] [INFO]   ✓ project_combined_pdf: 2.26 MB
+[2025-12-05 14:15:34] [INFO]   ✓ pdf: 9 files, 2.59 MB
+[2025-12-05 14:15:34] [INFO]   ✓ web: 14 files, 0.14 MB
+[2025-12-05 14:15:34] [INFO]   ✓ slides: 102 files, 1.25 MB
+[2025-12-05 14:15:34] [INFO]   ✓ figures: 23 files, 2.67 MB
+[2025-12-05 14:15:34] [INFO]   ✓ data: 5 files, 0.01 MB
+[2025-12-05 14:15:34] [INFO]   ✓ reports: 4 files, 0.0 MB
+[2025-12-05 14:15:34] [INFO]   ✓ simulations: 3 files, 0.05 MB
+[2025-12-05 14:15:34] [INFO]   ✓ llm: 0 files, 0.0 MB
+[2025-12-05 14:15:34] [INFO]   ✓ logs: 1 files, 0.29 MB
+[2025-12-05 14:15:34] [INFO] 
+[2025-12-05 14:15:34] [INFO] 
 ✅ Output copying complete - all project outputs ready!
 [0;32m✓[0m Output copying complete
-[2025-12-05 08:59:06] [INFO] 
-[2025-12-05 08:59:06] [INFO] ==================================================
-[2025-12-05 08:59:06] [INFO] Stage 8/9: LLM Scientific Review (English)
-[2025-12-05 08:59:06] [INFO] ==================================================
-[2025-12-05 08:59:06] [INFO] Checking Ollama availability...
-[2025-12-05 08:59:06] [INFO]     Pinging Ollama server at localhost:11434...
-[2025-12-05 08:59:06] [INFO] Ollama server is running
-[2025-12-05 08:59:06] [INFO]     Discovering available models...
-[2025-12-05 08:59:06] [INFO]     Found 13 model(s): qwen3:4b, llama3-gradient:latest, qwen3-vl:latest, gemma3:27b, gemma3:12b
-[2025-12-05 08:59:06] [INFO]     ... and 8 more
-[2025-12-05 08:59:06] [INFO]     Selecting best model for manuscript review...
-[2025-12-05 08:59:06] [INFO] Selected model: llama3-gradient:latest
-[2025-12-05 08:59:06] [INFO]   Selected model: llama3-gradient:latest (4.3 GB)
-[2025-12-05 08:59:06] [INFO]   Context window: ~128K+ context
-[2025-12-05 08:59:06] [INFO] Extracting text from manuscript: project_combined.pdf
-[2025-12-05 08:59:07] [INFO]   Extracted: 77,255 chars (14,544 words, ~19,313 tokens)
-[2025-12-05 08:59:07] [INFO]   Sending full manuscript to LLM (no truncation)
-[2025-12-05 08:59:07] [INFO] 
+[2025-12-05 14:15:35] [INFO] 
+[2025-12-05 14:15:35] [INFO] ==================================================
+[2025-12-05 14:15:35] [INFO] Stage 8/9: LLM Scientific Review (English)
+[2025-12-05 14:15:35] [INFO] ==================================================
+[2025-12-05 14:15:35] [INFO] Checking Ollama availability...
+[2025-12-05 14:15:35] [INFO]     Pinging Ollama server at localhost:11434...
+[2025-12-05 14:15:35] [INFO] Ollama server is running
+[2025-12-05 14:15:35] [INFO]     Discovering available models...
+[2025-12-05 14:15:35] [INFO]     Found 13 model(s): qwen3:4b, llama3-gradient:latest, qwen3-vl:latest, gemma3:27b, gemma3:12b
+[2025-12-05 14:15:35] [INFO]     ... and 8 more
+[2025-12-05 14:15:35] [INFO]     Selecting best model for manuscript review...
+[2025-12-05 14:15:35] [INFO] Selected model: llama3-gradient:latest
+[2025-12-05 14:15:35] [INFO]   Selected model: llama3-gradient:latest (4.3 GB)
+[2025-12-05 14:15:35] [INFO]   Context window: ~128K+ context
+[2025-12-05 14:15:35] [INFO] Extracting text from manuscript: project_combined.pdf
+[2025-12-05 14:15:35] [INFO]   Extracted: 77,255 chars (14,544 words, ~19,313 tokens)
+[2025-12-05 14:15:35] [INFO]   Sending full manuscript to LLM (no truncation)
+[2025-12-05 14:15:35] [INFO] 
   Initializing LLM client...
-[2025-12-05 08:59:07] [INFO] LLM client initialized
-[2025-12-05 08:59:07] [INFO]     Timeout: 300s per review
-[2025-12-05 08:59:07] [INFO]     Max tokens: 4096 per review (configured from: config default long_max_tokens=4096)
-[2025-12-05 08:59:07] [INFO] Warming up model...
-[2025-12-05 08:59:07] [INFO]     Checking loaded models via Ollama API...
-[2025-12-05 08:59:07] [INFO]     ✓ Model llama3-gradient:latest is already loaded in GPU memory
-[2025-12-05 08:59:07] [INFO]     Warmup should be fast (~1-5 seconds)
-[2025-12-05 08:59:07] [INFO]     Generating test response...
-[2025-12-05 08:59:07] [INFO]     (Waiting for model - may take 30-60s if not fully loaded)
+[2025-12-05 14:15:35] [INFO] LLM client initialized
+[2025-12-05 14:15:35] [INFO]     Timeout: 300s per review
+[2025-12-05 14:15:35] [INFO]     Max tokens: 4096 per review (configured from: config default long_max_tokens=4096)
+[2025-12-05 14:15:35] [INFO] Warming up model...
+[2025-12-05 14:15:35] [INFO]     Checking loaded models via Ollama API...
+[2025-12-05 14:15:35] [INFO]     ✓ Model llama3-gradient:latest is already loaded in GPU memory
+[2025-12-05 14:15:35] [INFO]     Warmup should be fast (~1-5 seconds)
+[2025-12-05 14:15:35] [INFO]     Generating test response...
+[2025-12-05 14:15:35] [INFO]     (Waiting for model - may take 30-60s if not fully loaded)
 Waiting for first token...
-[2025-12-05 08:59:10] [INFO]     ✓ First token in 3.1s - generating response...
-[2025-12-05 08:59:11] [INFO] Warmup complete (4.5s)
-[2025-12-05 08:59:11] [INFO]     Response: The main topic of this text is a new approach to test-driven development for a w...
-[2025-12-05 08:59:11] [INFO]     Performance: ~47.4 tokens/sec
-[2025-12-05 08:59:11] [INFO]     Estimated review time: ~5.8 minutes
-[2025-12-05 08:59:11] [INFO] 
+[2025-12-05 14:15:37] [INFO]     ✓ First token in 1.9s - generating response...
+[2025-12-05 14:15:39] [INFO] Warmup complete (3.4s)
+[2025-12-05 14:15:39] [INFO]     Response: **Main topic:** The main topic is a brief overview of the paper's purpose and go...
+[2025-12-05 14:15:39] [INFO]     Performance: ~43.4 tokens/sec
+[2025-12-05 14:15:39] [INFO]     Estimated review time: ~6.3 minutes
+[2025-12-05 14:15:39] [INFO] 
   Generating English scientific reviews...
-[2025-12-05 08:59:11] [INFO] [1/4 - 25%] Review: Executive Summary
-[2025-12-05 08:59:11] [INFO] Generating executive summary...
-[2025-12-05 08:59:21] [INFO]     ✓ First token in 9.8s - generating...
-    Generated 4,095 tokens in 129.7s (31.6 tokens/sec)
-[2025-12-05 09:01:21] [INFO] executive summary generated
-[2025-12-05 09:01:21] [INFO]     Output: 22,795 chars (3,571 words) in 129.7s
-[2025-12-05 09:01:21] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/executive_summary.md (3,571 words)
-[2025-12-05 09:01:21] [INFO] [2/4 - 50%] Review: Quality Review
-[2025-12-05 09:01:21] [INFO] Generating quality review...
-[2025-12-05 09:01:32] [INFO]     ✓ First token in 10.6s - generating...
-    Generated 3,965 tokens in 148.0s (26.8 tokens/sec)
-[2025-12-05 09:03:49] [INFO]     Validation issues: Excessive repetition detected: 34% unique content - retrying
-[2025-12-05 09:03:59] [INFO]     ✓ First token in 10.4s - generating...
-    Generated 3,892 tokens in 146.7s (26.5 tokens/sec)
-[2025-12-05 09:06:16] [INFO]     Accepting response with issues: Excessive repetition detected: 34% unique content
-[2025-12-05 09:06:16] [INFO] quality review generated
-[2025-12-05 09:06:16] [INFO]     Output: 21,216 chars (3,436 words) in 294.9s
-[2025-12-05 09:06:16] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md (3,436 words)
-[2025-12-05 09:06:16] [INFO] [3/4 - 75%] Review: Methodology Review
-[2025-12-05 09:06:16] [INFO] Generating methodology review...
-[2025-12-05 09:06:26] [INFO]     ✓ First token in 10.5s - generating...
-    Generated 4,050 tokens in 145.2s (27.9 tokens/sec)
-[2025-12-05 09:08:41] [INFO]     Validation issues: Excessive repetition detected: 22% unique content - retrying
-[2025-12-05 09:08:52] [INFO]     ✓ First token in 10.4s - generating...
-    Generated 4,084 tokens in 146.1s (28.0 tokens/sec)
-[2025-12-05 09:11:07] [INFO] methodology review generated
-[2025-12-05 09:11:07] [INFO]     Output: 22,590 chars (3,792 words) in 291.4s
-[2025-12-05 09:11:07] [INFO]     Repetition notes: Some repeated content detected (4 duplicates)
-[2025-12-05 09:11:07] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md (3,792 words)
-[2025-12-05 09:11:07] [INFO] [4/4 - 100%] Review: Improvement Suggestions
-[2025-12-05 09:11:07] [INFO] Generating improvement suggestions...
-[2025-12-05 09:11:18] [INFO]     ✓ First token in 10.4s - generating...
-    Generated 4,094 tokens in 145.8s (28.1 tokens/sec)
-[2025-12-05 09:13:33] [INFO] improvement suggestions generated
-[2025-12-05 09:13:33] [INFO]     Output: 21,958 chars (3,776 words) in 145.9s
-[2025-12-05 09:13:33] [INFO]     Repetition notes: Some repeated content detected (378 duplicates)
-[2025-12-05 09:13:33] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md (3,776 words)
-[2025-12-05 09:13:33] [INFO] Saving review outputs...
-[2025-12-05 09:13:33] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/executive_summary.md (3,571 words)
-[2025-12-05 09:13:33] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md (3,436 words)
-[2025-12-05 09:13:33] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md (3,792 words)
-[2025-12-05 09:13:33] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md (3,776 words)
-[2025-12-05 09:13:33] [INFO]   Saved combined review: /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md
-[2025-12-05 09:13:33] [INFO]   Saved metadata: /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json
-[2025-12-05 09:13:33] [INFO] All reviews saved to /Users/4d/Documents/GitHub/template/project/output/llm
-[2025-12-05 09:13:33] [INFO] 
+[2025-12-05 14:15:39] [INFO] [1/4 - 25%] Review: Executive Summary
+[2025-12-05 14:15:39] [INFO] Generating executive summary...
+[2025-12-05 14:15:48] [INFO]     ✓ First token in 9.9s - generating...
+    Generated 420 tokens in 22.0s (19.1 tokens/sec)
+[2025-12-05 14:16:01] [INFO]     Format warnings (non-blocking): Contains conversational AI phrases: let me know if...
+[2025-12-05 14:16:01] [INFO] executive summary generated
+[2025-12-05 14:16:01] [INFO]     Output: 2,286 chars (372 words) in 22.0s
+[2025-12-05 14:16:01] [INFO]     Format notes: conversational phrases detected
+[2025-12-05 14:16:01] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/executive_summary.md (372 words)
+[2025-12-05 14:16:01] [INFO] [2/4 - 50%] Review: Quality Review
+[2025-12-05 14:16:01] [INFO] Generating quality review...
+[2025-12-05 14:16:10] [INFO]     ✓ First token in 9.8s - generating...
+    Generated 598 tokens in 27.1s (22.0 tokens/sec)
+[2025-12-05 14:16:28] [INFO]     Format warnings (non-blocking): Contains conversational AI phrases: let me know if...
+[2025-12-05 14:16:28] [INFO] quality review generated
+[2025-12-05 14:16:28] [INFO]     Output: 2,969 chars (527 words) in 27.1s
+[2025-12-05 14:16:28] [INFO]     Format notes: conversational phrases detected
+[2025-12-05 14:16:28] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md (527 words)
+[2025-12-05 14:16:28] [INFO] [3/4 - 75%] Review: Methodology Review
+[2025-12-05 14:16:28] [INFO] Generating methodology review...
+[2025-12-05 14:16:37] [INFO]     ✓ First token in 9.7s - generating...
+    Generated 4,063 tokens in 121.9s (33.3 tokens/sec)
+[2025-12-05 14:18:30] [INFO]     Validation issues: Excessive repetition detected: 18% unique content - retrying
+[2025-12-05 14:18:39] [INFO]     ✓ First token in 9.7s - generating...
+    Generated 4,043 tokens in 122.0s (33.1 tokens/sec)
+[2025-12-05 14:20:32] [INFO]     Accepting response with issues: Excessive repetition detected: 27% unique content
+[2025-12-05 14:20:32] [INFO] methodology review generated
+[2025-12-05 14:20:32] [INFO]     Output: 22,198 chars (3,742 words) in 244.0s
+[2025-12-05 14:20:32] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md (3,742 words)
+[2025-12-05 14:20:32] [INFO] [4/4 - 100%] Review: Improvement Suggestions
+[2025-12-05 14:20:32] [INFO] Generating improvement suggestions...
+[2025-12-05 14:20:41] [INFO]     ✓ First token in 9.7s - generating...
+    Generated 4,091 tokens in 122.0s (33.5 tokens/sec)
+[2025-12-05 14:22:34] [INFO]     Validation issues: Excessive repetition detected: 7% unique content - retrying
+[2025-12-05 14:22:43] [INFO]     ✓ First token in 9.7s - generating...
+    Generated 730 tokens in 30.7s (23.8 tokens/sec)
+[2025-12-05 14:23:04] [INFO] improvement suggestions generated
+[2025-12-05 14:23:04] [INFO]     Output: 3,926 chars (657 words) in 152.8s
+[2025-12-05 14:23:04] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md (657 words)
+[2025-12-05 14:23:04] [INFO] Saving review outputs...
+[2025-12-05 14:23:04] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/executive_summary.md (372 words)
+[2025-12-05 14:23:04] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md (527 words)
+[2025-12-05 14:23:04] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md (3,742 words)
+[2025-12-05 14:23:04] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md (657 words)
+[2025-12-05 14:23:04] [INFO]   Saved combined review: /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md
+[2025-12-05 14:23:04] [INFO]   Saved metadata: /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json
+[2025-12-05 14:23:04] [INFO] All reviews saved to /Users/4d/Documents/GitHub/template/project/output/llm
+[2025-12-05 14:23:04] [INFO] 
 ============================================================
-[2025-12-05 09:13:33] [INFO] LLM Manuscript Review Summary
-[2025-12-05 09:13:33] [INFO] ============================================================
-[2025-12-05 09:13:33] [INFO] 
+[2025-12-05 14:23:04] [INFO] LLM Manuscript Review Summary
+[2025-12-05 14:23:04] [INFO] ============================================================
+[2025-12-05 14:23:04] [INFO] 
 Input manuscript:
-[2025-12-05 09:13:33] [INFO]   77,255 chars (14,544 words, ~19,313 tokens)
-[2025-12-05 09:13:33] [INFO]   Full text sent to LLM (no truncation)
-[2025-12-05 09:13:33] [INFO] 
+[2025-12-05 14:23:04] [INFO]   77,255 chars (14,544 words, ~19,313 tokens)
+[2025-12-05 14:23:04] [INFO]   Full text sent to LLM (no truncation)
+[2025-12-05 14:23:04] [INFO] 
 Output directory: /Users/4d/Documents/GitHub/template/project/output/llm
-[2025-12-05 09:13:33] [INFO] 
+[2025-12-05 14:23:04] [INFO] 
 Reviews generated:
-[2025-12-05 09:13:33] [INFO]   • Executive Summary: 22,795 chars (3,571 words) in 129.7s
-[2025-12-05 09:13:33] [INFO]   • Quality Review: 21,216 chars (3,436 words) in 294.9s
-[2025-12-05 09:13:33] [INFO]   • Methodology Review: 22,590 chars (3,792 words) in 291.4s
-[2025-12-05 09:13:33] [INFO]   • Improvement Suggestions: 21,958 chars (3,776 words) in 145.9s
-[2025-12-05 09:13:33] [INFO] 
-Total output: 88,559 chars (14,575 words)
-[2025-12-05 09:13:33] [INFO] Total generation time: 861.9s
-[2025-12-05 09:13:33] [INFO] 
+[2025-12-05 14:23:04] [INFO]   • Executive Summary: 2,286 chars (372 words) in 22.0s
+[2025-12-05 14:23:04] [INFO]   • Quality Review: 2,969 chars (527 words) in 27.1s
+[2025-12-05 14:23:04] [INFO]   • Methodology Review: 22,198 chars (3,742 words) in 244.0s
+[2025-12-05 14:23:04] [INFO]   • Improvement Suggestions: 3,926 chars (657 words) in 152.8s
+[2025-12-05 14:23:04] [INFO] 
+Total output: 31,379 chars (5,298 words)
+[2025-12-05 14:23:04] [INFO] Total generation time: 445.9s
+[2025-12-05 14:23:04] [INFO] 
 Files created:
-[2025-12-05 09:13:33] [INFO] 
+[2025-12-05 14:23:04] [INFO] 
   Other files:
-[2025-12-05 09:13:33] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md: 88.2 KB
-[2025-12-05 09:13:33] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/executive_summary.md: 22.4 KB, 3,571 words
-[2025-12-05 09:13:33] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md: 21.6 KB, 3,776 words
-[2025-12-05 09:13:33] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md: 22.2 KB, 3,792 words
-[2025-12-05 09:13:33] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md: 20.8 KB, 3,436 words
-[2025-12-05 09:13:33] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json: 2.4 KB
-[2025-12-05 09:13:33] [INFO] 
-[2025-12-05 09:13:33] [INFO] 
+[2025-12-05 14:23:04] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md: 32.4 KB
+[2025-12-05 14:23:04] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/executive_summary.md: 2.4 KB, 372 words
+[2025-12-05 14:23:04] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md: 4.0 KB, 657 words
+[2025-12-05 14:23:04] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md: 21.8 KB, 3,742 words
+[2025-12-05 14:23:04] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md: 3.0 KB, 527 words
+[2025-12-05 14:23:04] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json: 2.6 KB
+[2025-12-05 14:23:04] [INFO] 
+[2025-12-05 14:23:04] [INFO] 
 ✅ LLM scientific review complete!
-[2025-12-05 09:13:34] [INFO] 
-[2025-12-05 09:13:34] [INFO] ==================================================
-[2025-12-05 09:13:34] [INFO] Stage 9/9: LLM Translations
-[2025-12-05 09:13:34] [INFO] ==================================================
-[2025-12-05 09:13:34] [INFO] Checking Ollama availability...
-[2025-12-05 09:13:34] [INFO]     Pinging Ollama server at localhost:11434...
-[2025-12-05 09:13:34] [INFO] Ollama server is running
-[2025-12-05 09:13:34] [INFO]     Discovering available models...
-[2025-12-05 09:13:34] [INFO]     Found 13 model(s): qwen3:4b, llama3-gradient:latest, qwen3-vl:latest, gemma3:27b, gemma3:12b
-[2025-12-05 09:13:34] [INFO]     ... and 8 more
-[2025-12-05 09:13:34] [INFO]     Selecting best model for manuscript review...
-[2025-12-05 09:13:34] [INFO] Selected model: llama3-gradient:latest
-[2025-12-05 09:13:34] [INFO]   Selected model: llama3-gradient:latest (4.3 GB)
-[2025-12-05 09:13:34] [INFO]   Context window: ~128K+ context
-[2025-12-05 09:13:34] [INFO] Extracting text from manuscript: project_combined.pdf
-[2025-12-05 09:13:34] [INFO]   Extracted: 77,255 chars (14,544 words, ~19,313 tokens)
-[2025-12-05 09:13:34] [INFO]   Sending full manuscript to LLM (no truncation)
-[2025-12-05 09:13:34] [INFO] 
+[2025-12-05 14:23:05] [INFO] 
+[2025-12-05 14:23:05] [INFO] ==================================================
+[2025-12-05 14:23:05] [INFO] Stage 9/9: LLM Translations
+[2025-12-05 14:23:05] [INFO] ==================================================
+[2025-12-05 14:23:05] [INFO] Checking Ollama availability...
+[2025-12-05 14:23:05] [INFO]     Pinging Ollama server at localhost:11434...
+[2025-12-05 14:23:05] [INFO] Ollama server is running
+[2025-12-05 14:23:05] [INFO]     Discovering available models...
+[2025-12-05 14:23:05] [INFO]     Found 13 model(s): qwen3:4b, llama3-gradient:latest, qwen3-vl:latest, gemma3:27b, gemma3:12b
+[2025-12-05 14:23:05] [INFO]     ... and 8 more
+[2025-12-05 14:23:05] [INFO]     Selecting best model for manuscript review...
+[2025-12-05 14:23:05] [INFO] Selected model: llama3-gradient:latest
+[2025-12-05 14:23:05] [INFO]   Selected model: llama3-gradient:latest (4.3 GB)
+[2025-12-05 14:23:05] [INFO]   Context window: ~128K+ context
+[2025-12-05 14:23:05] [INFO] Extracting text from manuscript: project_combined.pdf
+[2025-12-05 14:23:05] [INFO]   Extracted: 77,255 chars (14,544 words, ~19,313 tokens)
+[2025-12-05 14:23:05] [INFO]   Sending full manuscript to LLM (no truncation)
+[2025-12-05 14:23:05] [INFO] 
   Initializing LLM client...
-[2025-12-05 09:13:34] [INFO] LLM client initialized
-[2025-12-05 09:13:34] [INFO]     Timeout: 300s per review
-[2025-12-05 09:13:34] [INFO]     Max tokens: 4096 per review (configured from: config default long_max_tokens=4096)
-[2025-12-05 09:13:34] [INFO] Warming up model...
-[2025-12-05 09:13:34] [INFO]     Checking loaded models via Ollama API...
-[2025-12-05 09:13:34] [INFO]     ✓ Model llama3-gradient:latest is already loaded in GPU memory
-[2025-12-05 09:13:34] [INFO]     Warmup should be fast (~1-5 seconds)
-[2025-12-05 09:13:34] [INFO]     Generating test response...
-[2025-12-05 09:13:34] [INFO]     (Waiting for model - may take 30-60s if not fully loaded)
+[2025-12-05 14:23:05] [INFO] LLM client initialized
+[2025-12-05 14:23:05] [INFO]     Timeout: 300s per review
+[2025-12-05 14:23:05] [INFO]     Max tokens: 4096 per review (configured from: config default long_max_tokens=4096)
+[2025-12-05 14:23:05] [INFO] Warming up model...
+[2025-12-05 14:23:05] [INFO]     Checking loaded models via Ollama API...
+[2025-12-05 14:23:05] [INFO]     ✓ Model llama3-gradient:latest is already loaded in GPU memory
+[2025-12-05 14:23:05] [INFO]     Warmup should be fast (~1-5 seconds)
+[2025-12-05 14:23:05] [INFO]     Generating test response...
+[2025-12-05 14:23:05] [INFO]     (Waiting for model - may take 30-60s if not fully loaded)
 Waiting for first token...
-[2025-12-05 09:13:36] [INFO]     ✓ First token in 1.6s - generating response...
-[2025-12-05 09:13:37] [INFO] Warmup complete (2.8s)
-[2025-12-05 09:13:37] [INFO]     Response: The main topic of this text is the description and evaluation of a test-driven d...
-[2025-12-05 09:13:37] [INFO]     Performance: ~35.1 tokens/sec
-[2025-12-05 09:13:37] [INFO]     Estimated review time: ~7.8 minutes
-[2025-12-05 09:13:37] [INFO] 
+[2025-12-05 14:23:07] [INFO]     ✓ First token in 1.4s - generating response...
+[2025-12-05 14:23:07] [INFO] Warmup complete (1.9s)
+[2025-12-05 14:23:07] [INFO]     Response: The main topic of this text is "An Overview and Implementation of OpenAPI (Swagg...
+[2025-12-05 14:23:07] [INFO]     Performance: ~47.1 tokens/sec
+[2025-12-05 14:23:07] [INFO]     Estimated review time: ~5.8 minutes
+[2025-12-05 14:23:07] [INFO] 
   Generating translations for 3 language(s)...
-[2025-12-05 09:13:37] [INFO] [1/3 - 33%] Translation: Chinese (Simplified)
-[2025-12-05 09:13:37] [INFO] Generating translation (Chinese (Simplified))...
-[2025-12-05 09:16:06] [INFO]     Validation issues: Missing translation section
-[2025-12-05 09:16:06] [INFO] translation (Chinese (Simplified)) generated
-[2025-12-05 09:16:06] [INFO]     Output: 17,089 chars (2,689 words) in 148.4s
-[2025-12-05 09:16:06] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/translation_zh.md (2,689 words) - Translation (Chinese (Simplified))
-[2025-12-05 09:16:06] [INFO] [2/3 - 66%] Translation: Hindi
-[2025-12-05 09:16:06] [INFO] Generating translation (Hindi)...
-[2025-12-05 09:18:32] [INFO]     Validation issues: Missing translation section
-[2025-12-05 09:18:32] [INFO] translation (Hindi) generated
-[2025-12-05 09:18:32] [INFO]     Output: 20,004 chars (3,708 words) in 146.4s
-[2025-12-05 09:18:32] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/translation_hi.md (3,708 words) - Translation (Hindi)
-[2025-12-05 09:18:32] [INFO] [3/3 - 100%] Translation: Russian
-[2025-12-05 09:18:32] [INFO] Generating translation (Russian)...
-[2025-12-05 09:20:59] [INFO]     Validation issues: Missing translation section
-[2025-12-05 09:20:59] [INFO] translation (Russian) generated
-[2025-12-05 09:20:59] [INFO]     Output: 20,946 chars (3,456 words) in 146.7s
-[2025-12-05 09:20:59] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/translation_ru.md (3,456 words) - Translation (Russian)
-[2025-12-05 09:20:59] [INFO] Saving review outputs...
-[2025-12-05 09:20:59] [INFO]   Saved translation (Chinese (Simplified)): /Users/4d/Documents/GitHub/template/project/output/llm/translation_zh.md (2,689 words)
-[2025-12-05 09:20:59] [INFO]   Saved translation (Hindi): /Users/4d/Documents/GitHub/template/project/output/llm/translation_hi.md (3,708 words)
-[2025-12-05 09:20:59] [INFO]   Saved translation (Russian): /Users/4d/Documents/GitHub/template/project/output/llm/translation_ru.md (3,456 words)
-[2025-12-05 09:20:59] [INFO]   Saved combined review: /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md
-[2025-12-05 09:20:59] [INFO]   Saved metadata: /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json
-[2025-12-05 09:20:59] [INFO] All reviews saved to /Users/4d/Documents/GitHub/template/project/output/llm
-[2025-12-05 09:20:59] [INFO] 
+[2025-12-05 14:23:07] [INFO] [1/3 - 33%] Translation: Chinese (Simplified)
+[2025-12-05 14:23:07] [INFO] Generating translation (Chinese (Simplified))...
+[2025-12-05 14:25:09] [INFO]     Validation issues: Excessive repetition detected: 43% unique content
+[2025-12-05 14:25:09] [INFO] translation (Chinese (Simplified)) generated
+[2025-12-05 14:25:09] [INFO]     Output: 15,054 chars (2,266 words) in 121.9s
+[2025-12-05 14:25:09] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/translation_zh.md (2,266 words) - Translation (Chinese (Simplified))
+[2025-12-05 14:25:09] [INFO] [2/3 - 66%] Translation: Hindi
+[2025-12-05 14:25:09] [INFO] Generating translation (Hindi)...
+[2025-12-05 14:27:11] [INFO]     Validation issues: Missing translation section
+[2025-12-05 14:27:11] [INFO] translation (Hindi) generated
+[2025-12-05 14:27:11] [INFO]     Output: 19,762 chars (3,187 words) in 121.9s
+[2025-12-05 14:27:11] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/translation_hi.md (3,187 words) - Translation (Hindi)
+[2025-12-05 14:27:11] [INFO] [3/3 - 100%] Translation: Russian
+[2025-12-05 14:27:11] [INFO] Generating translation (Russian)...
+[2025-12-05 14:29:13] [INFO]     Validation issues: Missing translation section
+[2025-12-05 14:29:13] [INFO] translation (Russian) generated
+[2025-12-05 14:29:13] [INFO]     Output: 22,048 chars (3,102 words) in 121.9s
+[2025-12-05 14:29:13] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/translation_ru.md (3,102 words) - Translation (Russian)
+[2025-12-05 14:29:13] [INFO] Saving review outputs...
+[2025-12-05 14:29:13] [INFO]   Saved translation (Chinese (Simplified)): /Users/4d/Documents/GitHub/template/project/output/llm/translation_zh.md (2,266 words)
+[2025-12-05 14:29:13] [INFO]   Saved translation (Hindi): /Users/4d/Documents/GitHub/template/project/output/llm/translation_hi.md (3,187 words)
+[2025-12-05 14:29:13] [INFO]   Saved translation (Russian): /Users/4d/Documents/GitHub/template/project/output/llm/translation_ru.md (3,102 words)
+[2025-12-05 14:29:13] [INFO]   Saved combined review: /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md
+[2025-12-05 14:29:13] [INFO]   Saved metadata: /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json
+[2025-12-05 14:29:13] [INFO] All reviews saved to /Users/4d/Documents/GitHub/template/project/output/llm
+[2025-12-05 14:29:13] [INFO] 
 ============================================================
-[2025-12-05 09:20:59] [INFO] LLM Manuscript Review Summary
-[2025-12-05 09:20:59] [INFO] ============================================================
-[2025-12-05 09:20:59] [INFO] 
+[2025-12-05 14:29:13] [INFO] LLM Manuscript Review Summary
+[2025-12-05 14:29:13] [INFO] ============================================================
+[2025-12-05 14:29:13] [INFO] 
 Input manuscript:
-[2025-12-05 09:20:59] [INFO]   77,255 chars (14,544 words, ~19,313 tokens)
-[2025-12-05 09:20:59] [INFO]   Full text sent to LLM (no truncation)
-[2025-12-05 09:20:59] [INFO] 
+[2025-12-05 14:29:13] [INFO]   77,255 chars (14,544 words, ~19,313 tokens)
+[2025-12-05 14:29:13] [INFO]   Full text sent to LLM (no truncation)
+[2025-12-05 14:29:13] [INFO] 
 Output directory: /Users/4d/Documents/GitHub/template/project/output/llm
-[2025-12-05 09:20:59] [INFO] 
+[2025-12-05 14:29:13] [INFO] 
 Reviews generated:
-[2025-12-05 09:20:59] [INFO]   • Translation Zh: 17,089 chars (2,689 words) in 148.4s
-[2025-12-05 09:20:59] [INFO]   • Translation Hi: 20,004 chars (3,708 words) in 146.4s
-[2025-12-05 09:20:59] [INFO]   • Translation Ru: 20,946 chars (3,456 words) in 146.7s
-[2025-12-05 09:20:59] [INFO] 
-Total output: 58,039 chars (9,853 words)
-[2025-12-05 09:20:59] [INFO] Total generation time: 441.5s
-[2025-12-05 09:20:59] [INFO] 
+[2025-12-05 14:29:13] [INFO]   • Translation Zh: 15,054 chars (2,266 words) in 121.9s
+[2025-12-05 14:29:13] [INFO]   • Translation Hi: 19,762 chars (3,187 words) in 121.9s
+[2025-12-05 14:29:13] [INFO]   • Translation Ru: 22,048 chars (3,102 words) in 121.9s
+[2025-12-05 14:29:13] [INFO] 
+Total output: 56,864 chars (8,555 words)
+[2025-12-05 14:29:13] [INFO] Total generation time: 365.7s
+[2025-12-05 14:29:13] [INFO] 
 Files created:
-[2025-12-05 09:20:59] [INFO] 
+[2025-12-05 14:29:13] [INFO] 
   Translation files:
-[2025-12-05 09:20:59] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/translation_hi.md (Hindi): 19.7 KB, 3,708 words
-[2025-12-05 09:20:59] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/translation_ru.md (Russian): 20.6 KB, 3,456 words
-[2025-12-05 09:20:59] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/translation_zh.md (Chinese (Simplified)): 16.8 KB, 2,689 words
-[2025-12-05 09:20:59] [INFO] 
+[2025-12-05 14:29:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/translation_hi.md (Hindi): 19.4 KB, 3,187 words
+[2025-12-05 14:29:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/translation_ru.md (Russian): 21.7 KB, 3,102 words
+[2025-12-05 14:29:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/translation_zh.md (Chinese (Simplified)): 18.0 KB, 2,266 words
+[2025-12-05 14:29:13] [INFO] 
   Other files:
-[2025-12-05 09:20:59] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md: 58.8 KB
-[2025-12-05 09:20:59] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/executive_summary.md: 22.4 KB
-[2025-12-05 09:20:59] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md: 21.6 KB
-[2025-12-05 09:20:59] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md: 22.2 KB
-[2025-12-05 09:20:59] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md: 20.8 KB
-[2025-12-05 09:20:59] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json: 2.0 KB
-[2025-12-05 09:20:59] [INFO] 
-[2025-12-05 09:20:59] [INFO] 
+[2025-12-05 14:29:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md: 60.8 KB
+[2025-12-05 14:29:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/executive_summary.md: 2.4 KB
+[2025-12-05 14:29:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md: 4.0 KB
+[2025-12-05 14:29:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md: 21.8 KB
+[2025-12-05 14:29:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md: 3.0 KB
+[2025-12-05 14:29:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json: 2.0 KB
+[2025-12-05 14:29:13] [INFO] 
+[2025-12-05 14:29:13] [INFO] 
 ✅ LLM translations complete!
 
 ============================================================
-Pipeline completed: Fri Dec  5 09:20:59 PST 2025
-Total duration: 23m 39s
-Log file: /Users/4d/Documents/GitHub/template/project/output/logs/pipeline_20251205_085720.log
+Pipeline completed: Fri Dec  5 14:29:13 PST 2025
+Total duration: 15m 22s
+Log file: /Users/4d/Documents/GitHub/template/project/output/logs/pipeline_20251205_141351.log
   (Will be copied to output/logs/ during copy stage)
 ============================================================

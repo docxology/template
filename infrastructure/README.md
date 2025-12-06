@@ -4,18 +4,18 @@ Modular build, validation, and development tools organized by functionality.
 
 ## Module Overview
 
-| Module | Purpose | Key Classes | CLI |
-|--------|---------|-------------|-----|
-| **core** | Foundation utilities | `ConfigLoader`, `Logger`, `TemplateError` | N/A |
-| **validation** | Quality & validation | `PDFValidator`, `MarkdownValidator` | ✅ |
-| **documentation** | Figure management | `FigureManager`, `ImageManager` | ✅ |
-| **build** | Build verification | `BuildVerifier`, `ReproducibilityChecker` | N/A |
-| **scientific** | Scientific utilities | `ScientificDev` | ✅ |
-| **literature** | Literature search | `LiteratureManager` | ✅ |
-| **llm** | LLM integration | `LLMClient` | ✅ |
+| Module | Purpose | Key Classes/Functions | CLI |
+|--------|---------|----------------------|-----|
+| **core** | Foundation utilities | `get_logger`, `load_config`, `TemplateError`, `CheckpointManager` | N/A |
+| **validation** | Quality & validation | `validate_pdf_rendering`, `validate_markdown`, `verify_output_integrity` | ✅ |
+| **documentation** | Figure management | `FigureManager`, `ImageManager`, `MarkdownIntegration` | ✅ |
+| **build** | Build verification | `verify_build_artifacts`, `analyze_document_quality`, `generate_reproducibility_report` | N/A |
+| **scientific** | Scientific utilities | `check_numerical_stability`, `benchmark_function` | ✅ |
+| **literature** | Literature search | `LiteratureSearch`, `LiteratureWorkflow`, `PaperSummarizer` | ✅ |
+| **llm** | LLM integration | `LLMClient`, `generate_review_with_metrics` | ✅ |
 | **rendering** | Multi-format output | `RenderManager` | ✅ |
-| **publishing** | Publishing tools | `PublishingManager` | ✅ |
-| **reporting** | Pipeline reporting | `PipelineReporter`, `ErrorAggregator` | N/A |
+| **publishing** | Publishing tools | `extract_publication_metadata`, `publish_to_zenodo`, `ZenodoClient` | ✅ |
+| **reporting** | Pipeline reporting | `generate_pipeline_report`, `get_error_aggregator` | N/A |
 
 ## Quick Start
 
@@ -45,8 +45,9 @@ from infrastructure.scientific import benchmark_function
 benchmark = benchmark_function(my_algorithm, inputs)
 
 # Literature
-from infrastructure.literature import LiteratureManager
-lit = LiteratureManager()
+from infrastructure.literature import LiteratureSearch, LiteratureConfig
+config = LiteratureConfig()
+lit = LiteratureSearch(config)
 papers = lit.search_papers("machine learning", limit=10)
 
 # LLM
@@ -64,10 +65,18 @@ from infrastructure.publishing import extract_publication_metadata
 metadata = extract_publication_metadata([Path("manuscript.md")])
 
 # Reporting
-from infrastructure.reporting import generate_pipeline_report, get_error_aggregator
+from infrastructure.reporting import (
+    generate_pipeline_report,
+    save_pipeline_report,
+    get_error_aggregator,
+    generate_test_report,
+    generate_validation_report
+)
 report = generate_pipeline_report(stage_results, total_duration, repo_root)
+saved_files = save_pipeline_report(report, Path("output/reports"))
 aggregator = get_error_aggregator()
 aggregator.add_error("test_failure", "Test failed", stage="tests")
+aggregator.save_report(Path("output/reports"))
 ```
 
 ### CLI Usage
@@ -222,13 +231,13 @@ report = validate_scientific_best_practices(my_module)
 **Search and manage academic literature.**
 
 ```python
-from infrastructure.literature import LiteratureManager, LiteratureConfig
+from infrastructure.literature import LiteratureSearch, LiteratureConfig
 
 config = LiteratureConfig()
-manager = LiteratureManager(config)
+search = LiteratureSearch(config)
 
 # Search multiple sources
-papers = manager.search_papers(
+papers = search.search_papers(
     query="machine learning",
     sources=["arxiv", "semanticscholar"],
     limit=10
@@ -236,12 +245,15 @@ papers = manager.search_papers(
 
 # Download PDFs
 for paper in papers:
-    path = manager.download_paper(paper)
-    manager.add_to_library(paper)
+    path = search.download_paper(paper)
+    search.add_to_library(paper)
 
 # Extract citations
-citations = manager.extract_citations(path)
-bibtex = manager.generate_bibtex(paper)
+from infrastructure.literature import PDFHandler, ReferenceManager
+pdf_handler = PDFHandler()
+citations = pdf_handler.extract_citations(path)
+ref_manager = ReferenceManager()
+bibtex = ref_manager.generate_bibtex(paper)
 ```
 
 ## LLM Module
@@ -298,7 +310,10 @@ from infrastructure.reporting import (
     generate_pipeline_report,
     save_pipeline_report,
     get_error_aggregator,
-    generate_validation_report
+    generate_test_report,
+    generate_validation_report,
+    generate_performance_report,
+    generate_error_summary
 )
 
 # Generate pipeline report
@@ -308,6 +323,17 @@ report = generate_pipeline_report(
     repo_root=Path("."),
 )
 saved_files = save_pipeline_report(report, Path("output/reports"))
+
+# Generate test report
+test_report = generate_test_report(
+    test_results={...},
+    coverage_data={...}
+)
+
+# Generate validation report
+validation_report = generate_validation_report(
+    validation_results={...}
+)
 
 # Aggregate errors
 aggregator = get_error_aggregator()

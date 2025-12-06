@@ -81,19 +81,13 @@ print(f"Published with DOI: {doi}")
 
 ```bash
 # Extract metadata
-python3 -m infrastructure.publishing extract-metadata manuscript/
+python3 -m infrastructure.publishing.cli extract-metadata manuscript/
 
 # Generate citations
-python3 -m infrastructure.publishing generate-citation manuscript.md bibtex
-
-# Validate publication readiness
-python3 -m infrastructure.publishing validate-readiness output/
+python3 -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
 
 # Prepare Zenodo upload
-python3 -m infrastructure.publishing publish-zenodo output/ $ZENODO_TOKEN
-
-# Create GitHub release
-python3 -m infrastructure.publishing create-release v1.0 output/ $GITHUB_TOKEN
+python3 -m infrastructure.publishing.cli publish-zenodo output/ --token $ZENODO_TOKEN
 ```
 
 ## Environment Variables

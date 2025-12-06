@@ -4,7 +4,7 @@ This package contains reusable infrastructure modules for building, validating, 
 managing research projects. Organized by functionality into submodules.
 
 Modules:
-    core: Foundation utilities (config, logging, exceptions)
+    core: Foundation utilities (config, logging, exceptions, progress, checkpoint)
     validation: Quality & validation tools (PDF, Markdown, integrity)
     documentation: Documentation & figure management
     build: Build & reproducibility verification
@@ -13,6 +13,7 @@ Modules:
     llm: Local LLM integration for research assistance
     rendering: Multi-format output generation
     publishing: Academic publishing & dissemination
+    reporting: Pipeline reporting & error aggregation
 """
 
 __version__ = "2.0.0"
@@ -50,6 +51,11 @@ try:
         generate_citation_bibtex,
         publish_to_zenodo
     )
+    # Reporting
+    from .reporting import (
+        generate_pipeline_report,
+        get_error_aggregator
+    )
 except ImportError:
     # Graceful fallback if imports fail
     pass
@@ -65,6 +71,7 @@ __all__ = [
     "llm",
     "rendering",
     "publishing",
+    "reporting",
     # Core conveniences
     "get_logger",
     "setup_logger",
@@ -91,5 +98,8 @@ __all__ = [
     "extract_publication_metadata",
     "generate_citation_bibtex",
     "publish_to_zenodo",
+    # Reporting conveniences
+    "generate_pipeline_report",
+    "get_error_aggregator",
 ]
 

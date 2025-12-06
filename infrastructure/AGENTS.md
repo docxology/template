@@ -105,10 +105,40 @@ infrastructure/
   - Environment variable integration
   - Author and metadata formatting
 
+- `progress.py` - Progress tracking utilities
+  - `ProgressBar` - Visual progress indicators
+  - `SubStageProgress` - Nested progress tracking
+
+- `checkpoint.py` - Pipeline checkpoint management
+  - `CheckpointManager` - Save/restore pipeline state
+  - `PipelineCheckpoint` - Checkpoint data structures
+
+- `retry.py` - Retry logic with backoff
+  - `retry_with_backoff` - Exponential backoff retries
+  - `RetryableOperation` - Retryable operation wrapper
+
+- `performance.py` - Performance monitoring
+  - `PerformanceMonitor` - Resource usage tracking
+  - `get_system_resources` - System resource queries
+
+- `environment.py` - Environment setup and validation
+  - Dependency checking and installation
+  - Build tool verification
+  - Directory structure setup
+
+- `script_discovery.py` - Script discovery and execution
+  - `discover_analysis_scripts` - Find project scripts
+  - `discover_orchestrators` - Find orchestrator scripts
+
+- `file_operations.py` - File management utilities
+  - `clean_output_directory` - Cleanup operations
+  - `copy_final_deliverables` - Output copying
+
 **Usage:**
 ```python
 from infrastructure.core import (
-    get_logger, TemplateError, load_config
+    get_logger, TemplateError, load_config,
+    CheckpointManager, ProgressBar, PerformanceMonitor
 )
 ```
 
@@ -208,6 +238,14 @@ Multi-source literature search with:
 - Citation extraction
 - BibTeX management
 - Library organization
+- AI-powered paper summarization
+- Progress tracking and resumability
+
+**Key Classes:**
+- `LiteratureSearch` - Main search interface
+- `LiteratureWorkflow` - High-level workflow orchestration
+- `PaperSummarizer` - AI-powered summarization
+- `ProgressTracker` - Progress persistence
 
 **CLI:**
 ```bash
@@ -261,13 +299,23 @@ Features:
 - Performance metrics and bottleneck analysis
 - Error aggregation with categorized fixes
 - HTML templates for visual reports
+- Output statistics and summaries
+
+**Key Functions:**
+- `generate_pipeline_report` - Main pipeline report generation
+- `generate_test_report` - Test results reporting
+- `generate_validation_report` - Validation results reporting
+- `get_error_aggregator` - Error collection and categorization
+- `generate_output_summary` - Output file statistics
 
 **Usage:**
 ```python
 from infrastructure.reporting import (
     generate_pipeline_report,
     save_pipeline_report,
-    get_error_aggregator
+    get_error_aggregator,
+    generate_test_report,
+    generate_validation_report
 )
 
 # Generate pipeline report
@@ -416,9 +464,10 @@ publication:
 
 ```python
 # 1. Search literature
-from infrastructure.literature import LiteratureManager
-manager = LiteratureManager()
-papers = manager.search_papers("machine learning", limit=5)
+from infrastructure.literature import LiteratureSearch, LiteratureConfig
+config = LiteratureConfig()
+search = LiteratureSearch(config)
+papers = search.search_papers("machine learning", limit=5)
 
 # 2. Summarize with LLM
 from infrastructure.llm import LLMClient

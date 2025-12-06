@@ -61,18 +61,16 @@ markdown = generate_markdown_table(entries)
 - `generate_markdown_table(entries)` - Create Markdown table
 - `inject_between_markers()` - Update content sections
 
-## CLI
+## API Glossary Generation
+
+The module includes a script for generating API documentation:
 
 ```bash
-# Generate API documentation
-python3 -m infrastructure.documentation generate-api src/
-
-# Insert figures
-python3 -m infrastructure.documentation insert-figures manuscript/
-
-# Create figure list
-python3 -m infrastructure.documentation create-figure-list manuscript/
+# Generate API glossary from source code
+python3 infrastructure/documentation/generate_glossary_cli.py
 ```
+
+This script automatically scans `project/src/` for public APIs and updates `project/manuscript/98_symbols_glossary.md`.
 
 ## Testing
 

@@ -28,6 +28,43 @@ The Core module provides fundamental foundation utilities used across the entire
 - Author and metadata formatting
 - Configuration file discovery
 - Environment variable export
+- Translation language configuration
+
+**progress.py**
+- Progress bar utilities for long-running operations
+- Sub-stage progress tracking
+- Visual progress indicators
+
+**checkpoint.py**
+- Pipeline checkpoint management
+- Save/restore pipeline state
+- Stage result tracking
+
+**retry.py**
+- Retry logic with exponential backoff
+- Transient failure handling
+- Retryable operation wrappers
+
+**performance.py**
+- Performance monitoring and resource tracking
+- System resource queries
+- Performance metrics collection
+
+**environment.py**
+- Environment setup and validation
+- Dependency checking and installation
+- Build tool verification
+- Directory structure setup
+
+**script_discovery.py**
+- Script discovery and execution
+- Analysis script finding
+- Orchestrator script discovery
+
+**file_operations.py**
+- File management utilities
+- Output directory cleanup
+- Final deliverable copying
 
 ## Key Features
 
@@ -64,10 +101,79 @@ with log_timing("Algorithm execution", logger):
 
 ### Configuration
 ```python
-from infrastructure.core import load_config, get_config_as_dict
+from infrastructure.core import load_config, get_config_as_dict, get_translation_languages
 
 config = load_config(Path("project/manuscript/config.yaml"))
 env_dict = get_config_as_dict(Path("."))
+languages = get_translation_languages(Path("."))
+```
+
+### Progress Tracking
+```python
+from infrastructure.core import ProgressBar, SubStageProgress
+
+with ProgressBar(total=100, desc="Processing") as pbar:
+    for i in range(100):
+        pbar.update(1)
+```
+
+### Checkpoint Management
+```python
+from infrastructure.core import CheckpointManager, StageResult
+
+checkpoint = CheckpointManager()
+if checkpoint.checkpoint_exists():
+    state = checkpoint.load_checkpoint()
+else:
+    # Run pipeline stages
+    checkpoint.save_checkpoint(stage_results)
+```
+
+### Retry Logic
+```python
+from infrastructure.core import retry_with_backoff
+
+@retry_with_backoff(max_attempts=3, base_delay=1.0)
+def risky_operation():
+    # Operation that may fail
+    pass
+```
+
+### Performance Monitoring
+```python
+from infrastructure.core import PerformanceMonitor, get_system_resources
+
+with PerformanceMonitor() as monitor:
+    # Your code here
+    pass
+
+resources = get_system_resources()
+print(f"CPU: {resources.cpu_percent}%, Memory: {resources.memory_percent}%")
+```
+
+### Environment Setup
+```python
+from infrastructure.core import check_python_version, check_dependencies, setup_directories
+
+check_python_version(min_version=(3, 8))
+check_dependencies(["pandas", "numpy"])
+setup_directories(["output", "output/figures"])
+```
+
+### Script Discovery
+```python
+from infrastructure.core import discover_analysis_scripts, discover_orchestrators
+
+scripts = discover_analysis_scripts(Path("project/scripts"))
+orchestrators = discover_orchestrators(Path("scripts"))
+```
+
+### File Operations
+```python
+from infrastructure.core import clean_output_directory, copy_final_deliverables
+
+clean_output_directory(Path("output"))
+copy_final_deliverables(Path("project/output"), Path("output"))
 ```
 
 ## Testing
