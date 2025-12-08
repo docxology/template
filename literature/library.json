@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "updated": "2025-12-05T08:43:47.841574",
-  "count": 1299,
+  "updated": "2025-12-08T15:42:21.796389",
+  "count": 1309,
   "entries": {
     "watson2020active": {
       "citation_key": "watson2020active",
@@ -28050,6 +28050,190 @@
       "metadata": {
         "pdf_url": "https://www.frontiersin.org/articles/10.3389/fpsyg.2019.02844/pdf"
       }
+    },
+    "friston2009freeenergy": {
+      "citation_key": "friston2009freeenergy",
+      "title": "The free-energy principle: a rough guide to the brain?",
+      "authors": [
+        "Karl J. Friston"
+      ],
+      "year": 2009,
+      "doi": "10.1016/j.tics.2009.04.005",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/a878886efacc6a5d742bf98bfc25c0734ce502b1",
+      "pdf_path": null,
+      "added_date": "2025-12-08T15:13:25.283936",
+      "abstract": "",
+      "venue": "Trends in Cognitive Sciences",
+      "citation_count": 1683,
+      "metadata": {}
+    },
+    "jacques2023active": {
+      "citation_key": "jacques2023active",
+      "title": "Active Inference: The Free Energy Principle in Mind, Brain, and Behaviour by Thomas Parr, Giovanni Pezzulo, and Karl J. Friston (review)",
+      "authors": [
+        "David Jacques"
+      ],
+      "year": 2023,
+      "doi": null,
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/dded71d2681fb42c1d149286b636b066ab6a0910",
+      "pdf_path": null,
+      "added_date": "2025-12-08T15:13:44.860650",
+      "abstract": "",
+      "venue": "",
+      "citation_count": 124,
+      "metadata": {}
+    },
+    "jacques2023active2": {
+      "citation_key": "jacques2023active2",
+      "title": "Active Inference: The Free Energy Principle in Mind, Brain, and Behaviour",
+      "authors": [
+        "David Jacques"
+      ],
+      "year": 2023,
+      "doi": "10.3368/lj.42.2.175",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/e5de43f98bfd367690e3787f130dadc02beb80dc",
+      "pdf_path": null,
+      "added_date": "2025-12-08T15:13:51.640419",
+      "abstract": "",
+      "venue": "Landscape Journal",
+      "citation_count": 74,
+      "metadata": {}
+    },
+    "zhang2024overview": {
+      "citation_key": "zhang2024overview",
+      "title": "An Overview of the Free Energy Principle and Related Research",
+      "authors": [
+        "Zhengquan Zhang",
+        "Feng Xu"
+      ],
+      "year": 2024,
+      "doi": "10.1162/neco_a_01642",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/0d0ec3a44ed0c66b96c3da7cbc3a34568ae6ae0f",
+      "pdf_path": null,
+      "added_date": "2025-12-08T15:14:20.318417",
+      "abstract": "Abstract The free energy principle and its corollary, the active inference framework, serve as theoretical foundations in the domain of neuroscience, explaining the genesis of intelligent behavior. This principle states that the processes of perception, learning, and decision making—within an agent—are all driven by the objective of “minimizing free energy,” evincing the following behaviors: learning and employing a generative model of the environment to interpret observations, thereby achieving perception, and selecting actions to maintain a stable preferred state and minimize the uncertainty about the environment, thereby achieving decision making. This fundamental principle can be used to explain how the brain processes perceptual information, learns about the environment, and selects actions. Two pivotal tenets are that the agent employs a generative model for perception and planning and that interaction with the world (and other agents) enhances the performance of the generative model and augments perception. With the evolution of control theory and deep learning tools, agents based on the FEP have been instantiated in various ways across different domains, guiding the design of a multitude of generative models and decision-making algorithms. This letter first introduces the basic concepts of the FEP, followed by its historical development and connections with other theories of intelligence, and then delves into the specific application of the FEP to perception and decision making, encompassing both low-dimensional simple situations and high-dimensional complex situations. It compares the FEP with model-based reinforcement learning to show that the FEP provides a better objective function. We illustrate this using numerical studies of Dreamer3 by adding expected information gain into the standard objective function. In a complementary fashion, existing reinforcement learning, and deep learning algorithms can also help implement the FEP-based agents. Finally, we discuss the various capabilities that agents need to possess in complex environments and state that the FEP can aid agents in acquiring these capabilities.",
+      "venue": "Neural Computation",
+      "citation_count": 5,
+      "metadata": {}
+    },
+    "wirkuttis2023turntaking": {
+      "citation_key": "wirkuttis2023turntaking",
+      "title": "Turn-Taking Mechanisms in Imitative Interaction: Robotic Social Interaction Based on the Free Energy Principle",
+      "authors": [
+        "Nadine Wirkuttis",
+        "Wataru Ohata",
+        "J. Tani"
+      ],
+      "year": 2023,
+      "doi": "10.3390/e25020263",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/72cfd94737ca87a635b5b5a40beaa25cc97c805c",
+      "pdf_path": null,
+      "added_date": "2025-12-08T15:15:03.207978",
+      "abstract": "This study explains how the leader-follower relationship and turn-taking could develop in a dyadic imitative interaction by conducting robotic simulation experiments based on the free energy principle. Our prior study showed that introducing a parameter during the model training phase can determine leader and follower roles for subsequent imitative interactions. The parameter is defined as w, the so-called meta-prior, and is a weighting factor used to regulate the complexity term versus the accuracy term when minimizing the free energy. This can be read as sensory attenuation, in which the robot’s prior beliefs about action are less sensitive to sensory evidence. The current extended study examines the possibility that the leader-follower relationship shifts depending on changes in w during the interaction phase. We identified a phase space structure with three distinct types of behavioral coordination using comprehensive simulation experiments with sweeps of w of both robots during the interaction. Ignoring behavior in which the robots follow their own intention was observed in the region in which both ws were set to large values. One robot leading, followed by the other robot was observed when one w was set larger and the other was set smaller. Spontaneous, random turn-taking between the leader and the follower was observed when both ws were set at smaller or intermediate values. Finally, we examined a case of slowly oscillating w in anti-phase between the two agents during the interaction. The simulation experiment resulted in turn-taking in which the leader-follower relationship switched during determined sequences, accompanied by periodic shifts of ws. An analysis using transfer entropy found that the direction of information flow between the two agents also shifted along with turn-taking. Herein, we discuss qualitative differences between random/spontaneous turn-taking and agreed-upon sequential turn-taking by reviewing both synthetic and empirical studies.",
+      "venue": "Entropy",
+      "citation_count": 12,
+      "metadata": {
+        "pdf_url": "https://www.mdpi.com/1099-4300/25/2/263/pdf?version=1675240667"
+      }
+    },
+    "carl2023models": {
+      "citation_key": "carl2023models",
+      "title": "Models of the Translation Process and the Free Energy Principle",
+      "authors": [
+        "M. Carl"
+      ],
+      "year": 2023,
+      "doi": "10.3390/e25060928",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/f700a47ad70f9dfe0a614b54b648f43ed2cbd28d",
+      "pdf_path": null,
+      "added_date": "2025-12-08T15:15:27.536685",
+      "abstract": "Translation process research (TPR) has generated a large number of models that aim at explaining human translation processes. In this paper, I suggest an extension of the monitor model to incorporate aspects of relevance theory (RT) and to adopt the free energy principle (FEP) as a generative model to elucidate translational behaviour. The FEP—and its corollary, active inference—provide a general, mathematical framework to explain how organisms resist entropic erosion so as to remain within their phenotypic bounds. It posits that organisms reduce the gap between their expectations and observations by minimising a quantity called free energy. I map these concepts on the translation process and exemplify them with behavioural data. The analysis is based on the notion of translation units (TUs) which exhibit observable traces of the translator’s epistemic and pragmatic engagement with their translation environment, (i.e., the text) that can be measured in terms of translation effort and effects. Sequences of TUs cluster into translation states (steady state, orientation, and hesitation). Drawing on active inference, sequences of translation states combine into translation policies that reduce expected free energy. I show how the notion of free energy is compatible with the concept of relevance, as developed in RT, and how essential concepts of the monitor model and RT can be formalised as deep temporal generative models that can be interpreted under a representationalist view, but also support a non-representationalist account.",
+      "venue": "Entropy",
+      "citation_count": 7,
+      "metadata": {
+        "pdf_url": "https://www.mdpi.com/1099-4300/25/6/928/pdf?version=1686812233"
+      }
+    },
+    "sasaki2023quantification": {
+      "citation_key": "sasaki2023quantification",
+      "title": "Quantification of “novelty” based on free-energy principle and its application for “aesthetic liking” for industrial products",
+      "authors": [
+        "Hiromasa Sasaki",
+        "Takeo Kato",
+        "Hideyoshi Yanagisawa"
+      ],
+      "year": 2023,
+      "doi": "10.1007/s00163-023-00422-6",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/017503359d8501389232c85436ecf00d4c3358bb",
+      "pdf_path": null,
+      "added_date": "2025-12-08T15:15:44.779298",
+      "abstract": "",
+      "venue": "Research in Engineering Design",
+      "citation_count": 6,
+      "metadata": {}
+    },
+    "miyagi2023fetal": {
+      "citation_key": "miyagi2023fetal",
+      "title": "Fetal brain activity and the free energy principle",
+      "authors": [
+        "Yasunari Miyagi",
+        "T. Hata",
+        "T. Miyake"
+      ],
+      "year": 2023,
+      "doi": "10.1515/jpm-2023-0092",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/ad4c8aad105b685734abb75e4782b82b12edbdd3",
+      "pdf_path": null,
+      "added_date": "2025-12-08T15:17:00.745391",
+      "abstract": "Abstract Objectives To study whether the free energy principle can explain fetal brain activity and the existence of fetal consciousness via a chaotic dimension derived using artificial intelligence. Methods In this observational study, we used a four-dimensional ultrasound technique obtained to collect images of fetal faces from pregnancies at 27–37 weeks of gestation, between February and December 2021. We developed an artificial intelligence classifier that recognizes fetal facial expressions, which are thought to relate to fetal brain activity. We then applied the classifier to video files of facial images to generate each expression category’s probabilities. We calculated the chaotic dimensions from the probability lists, and we created and investigated the free energy principle’s mathematical model that was assumed to be linked to the chaotic dimension. We used a Mann–Whitney test, linear regression test, and one-way analysis of variance for statistical analysis. Results The chaotic dimension revealed that the fetus had dense and sparse states of brain activity, which fluctuated at a statistically significant level. The chaotic dimension and free energy were larger in the sparse state than in the dense state. Conclusions The fluctuating free energy suggests consciousness seemed to exist in the fetus after 27 weeks.",
+      "venue": "Journal of Perinatal Medicine",
+      "citation_count": 5,
+      "metadata": {}
+    },
+    "andrews2021math": {
+      "citation_key": "andrews2021math",
+      "title": "The math is not the territory: navigating the free energy principle",
+      "authors": [
+        "Melody Andrews"
+      ],
+      "year": 2021,
+      "doi": "10.1007/s10539-021-09807-0",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/a8f6638dc7e621de192e62a1cdaa4f7f24055940",
+      "pdf_path": null,
+      "added_date": "2025-12-08T15:17:49.913982",
+      "abstract": "",
+      "venue": "Biology & Philosophy",
+      "citation_count": 80,
+      "metadata": {}
+    },
+    "gu2015using": {
+      "citation_key": "gu2015using",
+      "title": "Using Free Energy Principle For Blind Image Quality Assessment",
+      "authors": [
+        "Ke Gu",
+        "Guangtao Zhai",
+        "Xiaokang Yang",
+        "Wenjun Zhang"
+      ],
+      "year": 2015,
+      "doi": "10.1109/TMM.2014.2373812",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/c7c27c520cca5d874460d46639f8e8d7cc39ecd5",
+      "pdf_path": null,
+      "added_date": "2025-12-08T15:19:07.342737",
+      "abstract": "",
+      "venue": "IEEE transactions on multimedia",
+      "citation_count": 573,
+      "metadata": {}
     }
   }
 }

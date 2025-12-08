@@ -277,8 +277,15 @@ When enabled, the system generates a technical abstract (~200-400 words) in Engl
 
 ### 8. Literature Operations (`07_literature_search.py`)
 
-**Purpose:** Manage academic literature with separate operations
+**Purpose:** Manage academic literature with orchestrated pipeline and individual operations
 
+**Orchestrated Pipeline** (recommended for comprehensive literature review):
+- **Full Pipeline**: Search → Download → Summarize in one command
+- Interactive keyword input with configurable limits
+- Automatic PDF acquisition from multiple sources
+- AI-powered summary generation (requires Ollama)
+
+**Individual Operations** (for targeted workflows):
 - **Search-only**: Searches arXiv and Semantic Scholar APIs, adds papers to bibliography (network only, no Ollama required)
 - **Download-only**: Downloads PDFs for existing bibliography entries via HTTP (network only, no Ollama required)
 - **Summarize-only**: Generates AI summaries for papers with PDFs (requires Ollama)
@@ -287,19 +294,28 @@ When enabled, the system generates a technical abstract (~200-400 words) in Engl
 
 **Usage:**
 ```bash
-# Search and add to bibliography only
+# ORCHESTRATED PIPELINE (recommended)
+# Search → Download → Summarize in one workflow
+# Interactive: prompts for keywords and limit
+python3 scripts/07_literature_search.py --search
+
+# Non-interactive: provide keywords and limit
+python3 scripts/07_literature_search.py --search --keywords "machine learning,optimization"
+python3 scripts/07_literature_search.py --search --limit 50 --keywords "AI"
+
+# INDIVIDUAL OPERATIONS
+# Search and add to bibliography only (no download or summarize)
 python3 scripts/07_literature_search.py --search-only
 python3 scripts/07_literature_search.py --search-only --keywords "machine learning,optimization"
-python3 scripts/07_literature_search.py --search-only --limit 50 --keywords "AI"
 
-# Download PDFs for bibliography entries
+# Download PDFs for bibliography entries (no search or summarize)
 python3 scripts/07_literature_search.py --download-only
 
-# Generate summaries for papers with PDFs
+# Generate summaries for papers with PDFs (no search or download)
 python3 scripts/07_literature_search.py --summarize
 
-# All operations in sequence
-python3 scripts/07_literature_search.py --search --summarize
+# Clean up library
+python3 scripts/07_literature_search.py --cleanup
 ```
 
 **Environment Variables:**
@@ -360,7 +376,7 @@ The interactive menu (`./run.sh`) maps to Python scripts as follows. Menu number
 | 6 | `06_llm_review.py` | `--reviews-only` | Yes | LLM Review (manuscript review) |
 | 7 | `06_llm_review.py` | `--translations-only` | Yes | LLM Translations (technical abstract translations) |
 | 8 | `run.sh --pipeline` | - | No* | Run Full Pipeline (10 stages: 0-9, *stages 8-9 require Ollama) |
-| 9 | `07_literature_search.py` | `--search --summarize` | No* | Literature Search (all operations, *summarize requires Ollama) |
+| 9 | `07_literature_search.py` | `--search` | No* | Literature Pipeline (search → download → summarize, *summarize requires Ollama) |
 | 10 | `07_literature_search.py` | `--search-only` | No | Search only (network only) |
 | 11 | `07_literature_search.py` | `--download-only` | No | Download only (network only) |
 | 12 | `07_literature_search.py` | `--summarize` | Yes | Summarize (requires Ollama) |
@@ -369,6 +385,30 @@ The interactive menu (`./run.sh`) maps to Python scripts as follows. Menu number
 | 15 | `exit` | - | No | Exit menu |
 
 This mapping is also available programmatically via `scripts.MENU_SCRIPT_MAPPING`.
+
+### Literature Submenu Mapping
+
+The literature operations submenu (accessed via main menu option 9) provides:
+
+| Submenu Option | Operation | Arguments | Requires Ollama | Description |
+|----------------|-----------|-----------|----------------|-------------|
+| 0 | **Full Pipeline** | `--search` | Yes* | **Orchestrated pipeline: search → download → summarize (interactive)** |
+| 1 | Search Only | `--search-only` | No | Search and add to bibliography (network only) |
+| 2 | Download Only | `--download-only` | No | Download PDFs for existing entries (network only) |
+| 3 | Summarize | `--summarize` | Yes | Generate AI summaries for papers with PDFs |
+| 4 | Cleanup | `--cleanup` | No | Remove papers without PDFs (local only) |
+| 5 | Advanced LLM | `--llm-operation` | Yes | Literature review, comparison, etc. |
+| 6 | Return | - | No | Return to main menu |
+
+*Option 0 (Full Pipeline) searches and downloads without Ollama, but requires Ollama for summarization stage.
+The pipeline prompts interactively for keywords and result limits.
+
+**Recommended Workflow:**
+- **First time**: Use option 0 (Full Pipeline) to build your literature library from scratch
+- **Add papers**: Use option 1 (Search Only) to expand your bibliography
+- **Get PDFs**: Use option 2 (Download Only) to acquire papers
+- **Generate summaries**: Use option 3 (Summarize) for new papers with PDFs
+- **Maintain library**: Use option 4 (Cleanup) to remove incomplete entries
 
 ## Entry Points
 

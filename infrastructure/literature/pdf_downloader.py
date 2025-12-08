@@ -352,7 +352,8 @@ class PDFDownloader:
         output_path: Path,
         attempt_type: str = "standard",
         custom_headers: Optional[Dict[str, str]] = None,
-        parse_html_callback: Optional[Callable[[bytes, str], List[str]]] = None
+        parse_html_callback: Optional[Callable[[bytes, str], List[str]]] = None,
+        recursion_depth: int = 0
     ) -> Tuple[bool, Optional[Exception], Optional[str]]:
         """Single download attempt with specific configuration.
 
@@ -406,46 +407,65 @@ class PDFDownloader:
 
             # If we got HTML instead of PDF, try to extract PDF URLs from the HTML
             if (is_html_by_header or is_html_by_content) and not is_pdf_by_content:
-                logger.debug(f"HTML response from {url}, extracting PDF URLs")
+                # Prevent excessive recursion
+                MAX_RECURSION_DEPTH = 2
+                if recursion_depth >= MAX_RECURSION_DEPTH:
+                    logger.debug(f"Max recursion depth ({MAX_RECURSION_DEPTH}) reached, skipping HTML parsing")
+                    return (False, Exception("HTML received instead of PDF"), "html_response")
+                
+                logger.debug(f"HTML response from {url}, extracting PDF URLs (depth={recursion_depth})")
 
                 # Try to extract PDF URLs from the HTML content if callback provided
-                if parse_html_callback:
+                if parse_html_callback and recursion_depth < MAX_RECURSION_DEPTH:
                     html_pdf_urls = parse_html_callback(response.content, url)
 
                     if html_pdf_urls:
-                        logger.debug(f"Found {len(html_pdf_urls)} PDF URLs in HTML")
+                        # Limit attempts to avoid excessive retries
+                        max_html_urls = 2 if recursion_depth > 0 else 3
+                        urls_to_try = html_pdf_urls[:max_html_urls]
+                        logger.debug(f"Found {len(html_pdf_urls)} PDF URLs in HTML, trying {len(urls_to_try)}")
 
-                        # Try each extracted URL (limit to first few to avoid too many attempts)
-                        for i, pdf_url in enumerate(html_pdf_urls[:3]):  # Try up to 3 extracted URLs
-                            logger.debug(f"Trying HTML PDF URL {i+1}: {pdf_url}")
+                        # Try each extracted URL
+                        for i, pdf_url in enumerate(urls_to_try):
+                            logger.debug(f"Trying HTML PDF URL {i+1}/{len(urls_to_try)}: {pdf_url[:60]}...")
                             try:
                                 # Recursively try the extracted URL (but avoid infinite recursion)
                                 if pdf_url != url:  # Don't retry the same URL
                                     recursive_result = self._download_single_attempt(
-                                        pdf_url, output_path, attempt_type=f"html_{i+1}", parse_html_callback=parse_html_callback
+                                        pdf_url, output_path, attempt_type=f"html_{i+1}", 
+                                        parse_html_callback=parse_html_callback,
+                                        recursion_depth=recursion_depth + 1
                                     )
                                     if recursive_result[0]:  # Success
                                         logger.info(f"Downloaded PDF from HTML URL")
                                         return recursive_result
                                     else:
-                                        logger.debug(f"HTML URL failed: {recursive_result[2]}")
+                                        logger.debug(f"HTML URL {i+1} failed: {recursive_result[2]}")
                             except Exception as e:
-                                logger.debug(f"HTML URL error: {e}")
+                                logger.debug(f"HTML URL {i+1} error: {e}")
                                 continue
 
                         # If we got here, all extracted URLs failed
-                        logger.warning(f"HTML page contains no working PDF URLs")
+                        # Only log warning at top level (recursion_depth == 0)
+                        if recursion_depth == 0:
+                            logger.debug(f"HTML page contains no working PDF URLs ({len(urls_to_try)} URLs tried)")
                         return (False, Exception("HTML page contains no working PDF URLs"), "html_no_pdf_link")
                     else:
-                        logger.warning(f"HTML received instead of PDF")
+                        # Only log warning at top level
+                        if recursion_depth == 0:
+                            logger.debug(f"HTML received instead of PDF (no PDF URLs found in HTML)")
                         return (False, Exception("HTML received instead of PDF"), "html_response")
                 else:
-                    logger.warning(f"HTML received instead of PDF (no HTML parser available)")
+                    # Only log warning at top level
+                    if recursion_depth == 0:
+                        logger.debug(f"HTML received instead of PDF (parser not available or max depth reached)")
                     return (False, Exception("HTML received instead of PDF"), "html_response")
 
             # If content-type suggests PDF but content looks like HTML, also fail
             if not is_html_by_header and is_html_by_content and not is_pdf_by_content:
-                logger.warning(f"Content-Type mismatch: HTML received instead of PDF")
+                # Only log warning at top level
+                if recursion_depth == 0:
+                    logger.debug(f"Content-Type mismatch: HTML received instead of PDF")
                 return (False, Exception("Content-Type mismatch: HTML received instead of PDF"), "content_mismatch")
 
             # Write the file

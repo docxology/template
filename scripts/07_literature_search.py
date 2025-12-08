@@ -161,6 +161,15 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
+  # ORCHESTRATED PIPELINE (search → download → summarize)
+  # Interactive mode - prompts for keywords and limit
+  python3 scripts/07_literature_search.py --search
+
+  # Non-interactive mode - provide keywords and limit
+  python3 scripts/07_literature_search.py --search --keywords "machine learning,optimization"
+  python3 scripts/07_literature_search.py --search --limit 50 --keywords "AI"
+
+  # INDIVIDUAL OPERATIONS
   # Search and add to bibliography only
   python3 scripts/07_literature_search.py --search-only
   python3 scripts/07_literature_search.py --search-only --keywords "machine learning,optimization"
@@ -178,16 +187,12 @@ Examples:
   python3 scripts/07_literature_search.py --llm-operation review
   python3 scripts/07_literature_search.py --llm-operation communication --paper-config my_papers.yaml
   python3 scripts/07_literature_search.py --llm-operation compare
-
-  # Combined operations (legacy - use separate operations instead)
-  python3 scripts/07_literature_search.py --search --limit 50 --keywords "AI"
-  python3 scripts/07_literature_search.py --search --summarize
 """
     )
     parser.add_argument(
         "--search",
         action="store_true",
-        help="Search for papers, download PDFs, and generate summaries"
+        help="ORCHESTRATED PIPELINE: Search for papers, download PDFs, and generate summaries (interactive)"
     )
     parser.add_argument(
         "--search-only",

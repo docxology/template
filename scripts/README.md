@@ -239,6 +239,14 @@ The pipeline automatically generates comprehensive reports in `project/output/re
 **Note**: In `run.sh` pipeline, this is Stage 8 (LLM Scientific Review).
 
 ### Stage 07: Literature Operations (Standalone, not in main pipeline)
+
+**Orchestrated Pipeline** (recommended for comprehensive literature review):
+- **Full Pipeline**: Search → Download → Summarize in one orchestrated workflow
+- Interactive keyword input with configurable limits
+- Automatic PDF acquisition from multiple sources
+- AI-powered summary generation (requires Ollama)
+
+**Individual Operations** (for targeted workflows):
 - **Search**: Searches arXiv and Semantic Scholar APIs, adds to bibliography (network only, no Ollama required)
 - **Download**: Downloads PDFs for existing bibliography entries (network only, no Ollama required)
 - **Summarize**: Generates AI summaries for papers with PDFs (requires Ollama)
@@ -249,6 +257,16 @@ The pipeline automatically generates comprehensive reports in `project/output/re
 
 **Usage**:
 ```bash
+# ORCHESTRATED PIPELINE (recommended - submenu option 0)
+# Search → Download → Summarize in one workflow
+# Interactive: prompts for keywords and limit
+python3 scripts/07_literature_search.py --search
+
+# Non-interactive: provide keywords and limit
+python3 scripts/07_literature_search.py --search --keywords "machine learning,optimization"
+python3 scripts/07_literature_search.py --search --limit 50 --keywords "AI"
+
+# INDIVIDUAL OPERATIONS
 # Search only (network only, no Ollama required)
 python3 scripts/07_literature_search.py --search-only
 python3 scripts/07_literature_search.py --search-only --keywords "machine learning,optimization"

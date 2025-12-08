@@ -319,8 +319,10 @@ display_literature_menu() {
     echo "============================================================"
     echo -e "${NC}"
     echo
-    echo -e "${BOLD}Literature Operations (via 07_literature_search.py):${NC}"
-    echo -e "  0. All Operations ${CYAN}(search + download + summarize)${NC}"
+    echo -e "${BOLD}Orchestrated Pipelines:${NC}"
+    echo -e "  0. ${GREEN}Full Pipeline${NC} ${YELLOW}(search → download → summarize)${NC}"
+    echo
+    echo -e "${BOLD}Individual Operations (via 07_literature_search.py):${NC}"
     echo -e "  1. Search Only ${CYAN}(network only - add to bibliography)${NC}"
     echo -e "  2. Download Only ${CYAN}(network only - download PDFs)${NC}"
     echo -e "  3. Summarize ${YELLOW}(requires Ollama - generate summaries)${NC}"
@@ -685,19 +687,42 @@ run_llm_review() {
 }
 
 run_literature_search_all() {
-    # Run all literature operations interactively (menu option 7)
-    log_header "LITERATURE SEARCH (07_literature_search.py)"
+    # Run orchestrated literature pipeline: search → download → summarize
+    log_header "ORCHESTRATED LITERATURE PIPELINE"
     
     cd "$REPO_ROOT"
     
-    log_info "Running literature search (all operations)..."
-    log_info "This will search, download, and optionally summarize papers"
+    echo
+    log_info "🔄 Starting orchestrated literature pipeline..."
+    echo
+    log_info "Pipeline stages:"
+    log_info "  1️⃣  Search academic databases for keywords"
+    log_info "  2️⃣  Download PDFs from available sources"
+    log_info "  3️⃣  Generate AI-powered summaries (requires Ollama)"
+    echo
+    log_info "You will be prompted for:"
+    log_info "  • Search keywords (comma-separated)"
+    log_info "  • Number of results per keyword (default: 25)"
+    echo
     
-    if python3 scripts/07_literature_search.py --search --summarize; then
-        log_success "Literature search complete"
+    local start_time=$(date +%s)
+    
+    # Use --search which runs the full pipeline interactively
+    if python3 scripts/07_literature_search.py --search; then
+        local end_time=$(date +%s)
+        local duration=$(get_elapsed_time "$start_time" "$end_time")
+        echo
+        log_success "✅ Orchestrated literature pipeline complete in $(format_duration "$duration")"
+        echo
+        log_info "📁 Output locations:"
+        log_info "  • Bibliography: literature/references.bib"
+        log_info "  • JSON index: literature/library.json"
+        log_info "  • PDFs: literature/pdfs/"
+        log_info "  • Summaries: literature/summaries/"
+        echo
         return 0
     else
-        log_error "Literature search failed"
+        log_error "❌ Orchestrated literature pipeline failed"
         return 1
     fi
 }
