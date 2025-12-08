@@ -18,6 +18,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from typing import Tuple
 
 # Add root to path for infrastructure imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -33,6 +34,34 @@ from infrastructure.reporting.test_reporter import (
 
 # Set up logger for this module
 logger = get_logger(__name__)
+
+
+def _run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) -> Tuple[int, str, str]:
+    """Run pytest streaming output to console while capturing logs for reporting."""
+    keywords = ['passed', 'failed', 'skipped', 'warnings', 'ERROR', 'FAILED', 'PASSED', 'coverage']
+    stdout_buf: list[str] = []
+
+    process = subprocess.Popen(
+        cmd,
+        cwd=str(repo_root),
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+    )
+
+    assert process.stdout is not None
+    for line in process.stdout:
+        stdout_buf.append(line)
+        if not quiet:
+            print(line, end='')
+        else:
+            if any(k in line for k in keywords):
+                print(line, end='')
+
+    process.wait()
+    return process.returncode, "".join(stdout_buf), ""
 
 
 def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
@@ -83,43 +112,22 @@ def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, 
         ])
         env["PYTHONPATH"] = pythonpath
         
-        # Capture output to extract warning count and parse results
-        result = subprocess.run(
-            cmd, 
-            cwd=str(repo_root), 
-            env=env, 
-            check=False,
-            capture_output=True,
-            text=True
-        )
+        exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, repo_root, env, quiet)
         
         # Parse test results from output
-        test_results = parse_pytest_output(result.stdout, result.stderr, result.returncode)
-        
-        # Print output (filtered in quiet mode)
-        if result.stdout:
-            if quiet:
-                # In quiet mode, only show summary lines
-                for line in result.stdout.split('\n'):
-                    if any(keyword in line for keyword in ['passed', 'failed', 'skipped', 'warnings', 'ERROR', 'FAILED', 'PASSED', 'coverage']):
-                        print(line)
-            else:
-                print(result.stdout)
-        
-        if result.stderr:
-            print(result.stderr, file=sys.stderr)
+        test_results = parse_pytest_output(stdout_text, stderr_text, exit_code)
         
         # Check for warnings in output
-        warning_count = result.stdout.count(" warning") + result.stderr.count(" warning")
+        warning_count = stdout_text.count(" warning") + stderr_text.count(" warning")
         if warning_count > 0:
             logger.warning(f"Infrastructure tests completed with {warning_count} warning(s)")
         
-        if result.returncode == 0:
+        if exit_code == 0:
             log_success("Infrastructure tests passed", logger)
         else:
             logger.error("Infrastructure tests failed")
         
-        return result.returncode, test_results
+        return exit_code, test_results
     except Exception as e:
         logger.error(f"Failed to run infrastructure tests: {e}", exc_info=True)
         return 1, {}
@@ -169,43 +177,22 @@ def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
         ])
         env["PYTHONPATH"] = pythonpath
         
-        # Capture output to extract warning count and parse results
-        result = subprocess.run(
-            cmd, 
-            cwd=str(repo_root), 
-            env=env, 
-            check=False,
-            capture_output=True,
-            text=True
-        )
+        exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, repo_root, env, quiet)
         
         # Parse test results from output
-        test_results = parse_pytest_output(result.stdout, result.stderr, result.returncode)
-        
-        # Print output (filtered in quiet mode)
-        if result.stdout:
-            if quiet:
-                # In quiet mode, only show summary lines
-                for line in result.stdout.split('\n'):
-                    if any(keyword in line for keyword in ['passed', 'failed', 'skipped', 'warnings', 'ERROR', 'FAILED', 'PASSED', 'coverage']):
-                        print(line)
-            else:
-                print(result.stdout)
-        
-        if result.stderr:
-            print(result.stderr, file=sys.stderr)
+        test_results = parse_pytest_output(stdout_text, stderr_text, exit_code)
         
         # Check for warnings in output
-        warning_count = result.stdout.count(" warning") + result.stderr.count(" warning")
+        warning_count = stdout_text.count(" warning") + stderr_text.count(" warning")
         if warning_count > 0:
             logger.warning(f"Project tests completed with {warning_count} warning(s)")
         
-        if result.returncode == 0:
+        if exit_code == 0:
             log_success("Project tests passed", logger)
         else:
             logger.error("Project tests failed")
         
-        return result.returncode, test_results
+        return exit_code, test_results
     except Exception as e:
         logger.error(f"Failed to run project tests: {e}", exc_info=True)
         return 1, {}

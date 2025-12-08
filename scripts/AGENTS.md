@@ -343,6 +343,17 @@ The **recommended entry point** is the interactive `run.sh` script:
 ./run.sh --cleanup            # Cleanup library (local files only, remove papers without PDFs)
 ```
 
+### Shorthand sequences
+
+You can run multiple menu options in one go by concatenating digits:
+
+- `./run.sh --option 012345` runs options 0 → 1 → 2 → 3 → 4 → 5
+- From the interactive prompt, entering `345` runs analysis → render PDF → validate
+- Comma-separated forms like `3,4,5` also work
+- Sequences stop on the first non-zero exit code
+
+Note: each digit is treated as a separate option; enter two-digit menu numbers (10+) explicitly.
+
 **Features:**
 - 10-stage pipeline (stages 0-9) including optional LLM review stages (8-9)
 - Interactive menu for easy selection

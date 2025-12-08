@@ -88,3 +88,4 @@ def validate_figure_registry(
     return len(issues) == 0, issues
 
 
+

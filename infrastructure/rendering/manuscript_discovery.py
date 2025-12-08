@@ -161,3 +161,4 @@ def discover_manuscript_files(manuscript_dir: Path) -> List[Path]:
     return ordered_files + tex_files
 
 
+

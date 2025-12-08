@@ -244,7 +244,7 @@ Infrastructure modules are integrated into the build pipeline through:
 5. **Validation** (`scripts/04_validate_output.py`) - Quality assurance
 
 **Pipeline Entry Points**: Two orchestrators available:
-- `./run.sh --pipeline`: 9-stage pipeline (0-8) with optional LLM stages
+- `./run.sh --pipeline`: 10 stages (0-9) with optional LLM stages (stage 0 cleanup, stages 1-9 tracked)
 - `python3 scripts/run_all.py`: 6-stage core pipeline (00-05) only
 
 Update these scripts to discover and use new infrastructure modules as needed.

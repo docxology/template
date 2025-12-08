@@ -16,15 +16,6 @@ from __future__ import annotations
 import os
 import sys
 
-# Ensure src/ and infrastructure/ are on Python path FIRST
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-repo_root = os.path.abspath(os.path.join(project_root, ".."))
-src_path = os.path.join(project_root, "src")
-if src_path not in sys.path:
-    sys.path.insert(0, src_path)
-if repo_root not in sys.path:
-    sys.path.insert(0, repo_root)
-
 import matplotlib.pyplot as plt
 import numpy as np
 def _ensure_src_on_path() -> None:

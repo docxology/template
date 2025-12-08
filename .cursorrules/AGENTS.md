@@ -22,6 +22,7 @@ This directory contains comprehensive development standards, coding guidelines, 
 | [git_workflow.md](git_workflow.md) | Git workflow and commit standards | Managing version control |
 | [api_design.md](api_design.md) | API design and interface standards | Creating clean, consistent APIs |
 | [manuscript_style.md](manuscript_style.md) | Manuscript formatting and style standards | Writing research manuscripts |
+| [reporting.md](reporting.md) | Reporting module standards and outputs | Using reporting utilities |
 
 ## Key Principles
 
@@ -62,8 +63,8 @@ The template provides **two pipeline orchestrators** with different scope:
 
 **Interactive Menu (`./run.sh`)**
 - **Use for**: Full pipeline with optional LLM stages
-- **Stages**: 0-8 (displayed as [1/9] to [8/9] in logs)
-- **Features**: Interactive menu, literature search, LLM reviews
+- **Stages**: 0-9 (stage 0 cleanup, stages 1-9 displayed as [1/9] to [9/9])
+- **Features**: Interactive menu, literature search, LLM reviews, translations
 - **When to use**: Comprehensive builds, LLM features needed
 
 **Python Orchestrator (`python3 scripts/run_all.py`)**
@@ -443,6 +444,7 @@ This directory provides modular development standards. Each file covers specific
 | [api_design.md](api_design.md) | API design standards | Creating clean APIs |
 | [llm_standards.md](llm_standards.md) | LLM/Ollama patterns | Using local LLMs |
 | [manuscript_style.md](manuscript_style.md) | Manuscript formatting standards | Writing research manuscripts |
+| [reporting.md](reporting.md) | Reporting module standards | Reporting outputs and dashboards |
 
 ## Integration with Main Documentation
 
@@ -460,6 +462,7 @@ The .cursorrules standards align with and support the main documentation:
 | Code Style | [code_style.md](code_style.md) | [docs/BEST_PRACTICES.md](../docs/BEST_PRACTICES.md) |
 | Git Workflow | [git_workflow.md](git_workflow.md) | [docs/VERSION_CONTROL.md](../docs/VERSION_CONTROL.md) |
 | API Design | [api_design.md](api_design.md) | [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) |
+| Reporting | [reporting.md](reporting.md) | [docs/ADVANCED_MODULES_GUIDE.md](../docs/ADVANCED_MODULES_GUIDE.md) |
 | Documentation | [documentation_standards.md](documentation_standards.md) | [docs/WORKFLOW.md](../docs/WORKFLOW.md) |
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) |
@@ -501,6 +504,7 @@ The .cursorrules standards align with and support the main documentation:
 | Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [project/manuscript/AGENTS.md](../project/manuscript/AGENTS.md) for manuscript structure |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
 | Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
+| Generating reports | [reporting.md](reporting.md) | [docs/ADVANCED_MODULES_GUIDE.md](../docs/ADVANCED_MODULES_GUIDE.md) for module details |
 
 ### By File Size & Detail Level
 

@@ -77,6 +77,17 @@ Literature Sub-Operations (via 07_literature_search.py):
 ./run.sh --help               # Show all options
 ```
 
+### Shorthand sequences
+
+Run multiple menu options in one go by concatenating digits:
+
+- `./run.sh --option 012345` runs options 0 → 1 → 2 → 3 → 4 → 5
+- From the prompt, entering `345` runs analysis → render PDF → validate
+- Comma-separated forms like `3,4,5` also work
+- Sequences stop on the first non-zero exit code
+
+Note: shorthand treats each digit as a separate option; enter two-digit menu numbers (10+) explicitly.
+
 ### Alternative: Python Orchestrator (`run_all.py`)
 
 **Programmatic entry point** - Core pipeline only (6 stages):

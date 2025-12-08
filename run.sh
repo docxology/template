@@ -147,6 +147,44 @@ log_warning() {
     echo -e "${YELLOW}⚠${NC} ${message}"
 }
 
+# Parsed shorthand choices holder (for sequences like "0123" or "345")
+SHORTHAND_CHOICES=()
+
+# Parse a user-supplied option string into a sequence of menu choices.
+# Supports:
+# - Concatenated digits (e.g., "01234" or "345") → each digit is a choice
+# - Comma/space separated numbers (e.g., "3,4,5" or "3 4 5")
+# Returns 0 on success and populates SHORTHAND_CHOICES; 1 on parse failure.
+parse_choice_sequence() {
+    local input="${1//[[:space:]]/}"
+    SHORTHAND_CHOICES=()
+
+    if [[ -z "$input" ]]; then
+        return 1
+    fi
+
+    # Pure digits with length > 1 → treat as shorthand digits
+    if [[ "$input" =~ ^[0-9]+$ && ${#input} -gt 1 ]]; then
+        for ((i = 0; i < ${#input}; i++)); do
+            SHORTHAND_CHOICES+=("${input:i:1}")
+        done
+        return 0
+    fi
+
+    # Otherwise split on commas
+    IFS=',' read -ra parts <<< "$input"
+    for part in "${parts[@]}"; do
+        [[ -z "$part" ]] && continue
+        if [[ "$part" =~ ^[0-9]+$ ]]; then
+            SHORTHAND_CHOICES+=("$part")
+        else
+            return 1
+        fi
+    done
+
+    [[ ${#SHORTHAND_CHOICES[@]} -gt 0 ]]
+}
+
 # Function to log to both terminal and log file
 log_to_file() {
     local message="$1"
@@ -273,6 +311,7 @@ display_menu() {
     echo -e "  Python: ${CYAN}$(python3 --version 2>&1)${NC}"
     echo -e "${BLUE}============================================================${NC}"
     echo
+    echo -e "${CYAN}Tip:${NC} Enter multiple digits to chain steps (e.g., 345 for analysis → render → validate). Comma forms like 3,4,5 work too."
 }
 
 # ============================================================================
@@ -1193,51 +1232,66 @@ print_pipeline_summary() {
 handle_menu_choice() {
     local choice="$1"
     local start_time end_time duration
+    local exit_code=0
     
     start_time=$(date +%s)
     
     case "$choice" in
         0)
             run_setup_environment
+            exit_code=$?
             ;;
         1)
             run_all_tests
+            exit_code=$?
             ;;
         2)
             run_analysis_standalone
+            exit_code=$?
             ;;
         3)
             run_pdf_rendering
+            exit_code=$?
             ;;
         4)
             run_validation_standalone
+            exit_code=$?
             ;;
         5)
             run_copy_outputs_standalone
+            exit_code=$?
             ;;
         6)
             run_llm_review
+            exit_code=$?
             ;;
         7)
             run_literature_search_all
+            exit_code=$?
             ;;
         8)
             run_full_pipeline
+            exit_code=$?
             ;;
         9)
             run_literature_search
+            exit_code=$?
             ;;
         10)
             run_literature_download
+            exit_code=$?
             ;;
         11)
             run_literature_summarize
+            exit_code=$?
             ;;
         12)
             run_literature_cleanup
+            exit_code=$?
             ;;
         13)
             run_literature_llm_operations
+            exit_code=$?
             ;;
         14)
             echo
@@ -1247,6 +1301,7 @@ handle_menu_choice() {
         *)
             log_error "Invalid option: $choice"
             log_info "Please enter a number between 0 and 14"
+            exit_code=1
             ;;
     esac
     
@@ -1255,6 +1310,28 @@ handle_menu_choice() {
     
     echo
     log_info "Operation completed in $(format_duration "$duration")"
+    return $exit_code
+}
+
+# Run a sequence of menu options in order, stopping on first failure.
+run_option_sequence() {
+    local -a options=("$@")
+    local exit_code=0
+
+    if [[ ${#options[@]} -gt 0 ]]; then
+        log_info "Running sequence: ${options[*]}"
+    fi
+
+    for opt in "${options[@]}"; do
+        handle_menu_choice "$opt"
+        exit_code=$?
+        if [[ $exit_code -ne 0 ]]; then
+            log_error "Sequence aborted at option $opt (exit code $exit_code)"
+            return $exit_code
+        fi
+    done
+
+    return $exit_code
 }
 
 # ============================================================================
@@ -1265,12 +1342,16 @@ run_non_interactive() {
     local option="$1"
     
     log_header "NON-INTERACTIVE MODE"
+
+    if parse_choice_sequence "$option" && [[ ${#SHORTHAND_CHOICES[@]} -gt 1 ]]; then
+        log_info "Running shorthand sequence: ${SHORTHAND_CHOICES[*]}"
+        run_option_sequence "${SHORTHAND_CHOICES[@]}"
+        exit $?
+    fi
+
     log_info "Running option: $option"
-    
     handle_menu_choice "$option"
-    local exit_code=$?
-    
-    exit $exit_code
+    exit $?
 }
 
 # ============================================================================
@@ -1436,11 +1517,32 @@ main() {
         
         echo -n "Select option [0-14]: "
         read -r choice
-        
-        handle_menu_choice "$choice"
-        
-        # Return to menu after operation (except for exit)
-        if [[ "$choice" != "12" ]]; then
+
+        local exit_code=0
+        local prompt_for_continue=true
+        if parse_choice_sequence "$choice" && [[ ${#SHORTHAND_CHOICES[@]} -gt 1 ]]; then
+            run_option_sequence "${SHORTHAND_CHOICES[@]}"
+            exit_code=$?
+            # Skip prompt if cleanup (12) included
+            for opt in "${SHORTHAND_CHOICES[@]}"; do
+                if [[ "$opt" == "12" ]]; then
+                    prompt_for_continue=false
+                    break
+                fi
+            done
+        else
+            handle_menu_choice "$choice"
+            exit_code=$?
+            if [[ "$choice" == "12" ]]; then
+                prompt_for_continue=false
+            fi
+        fi
+
+        if [[ $exit_code -ne 0 ]]; then
+            log_error "Last operation exited with code $exit_code"
+        fi
+
+        if [[ "$choice" != "14" && "$prompt_for_continue" == true ]]; then
             press_enter_to_continue
         fi
     done

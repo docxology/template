@@ -75,3 +75,4 @@ class ScanResults:
     statistics: Dict = field(default_factory=dict)
 
 
+

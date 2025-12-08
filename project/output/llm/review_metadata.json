@@ -1,6 +1,6 @@
 {
   "model": "llama3-gradient:latest",
-  "timestamp": "2025-12-05T14:29:13.567001",
+  "timestamp": "2025-12-06T13:52:00.783985",
   "source_pdf": "/Users/4d/Documents/GitHub/template/project/output/pdf/project_combined.pdf",
   "reviews_generated": [
     "translation_zh",
@@ -20,39 +20,41 @@
       "input_chars": 77255,
       "input_words": 14544,
       "input_tokens_est": 19313,
-      "output_chars": 15054,
-      "output_words": 2266,
-      "output_tokens_est": 3763,
-      "generation_time_seconds": 121.91
+      "output_chars": 21211,
+      "output_words": 3574,
+      "output_tokens_est": 5302,
+      "generation_time_seconds": 124.4
     },
     "translation_hi": {
       "input_chars": 77255,
       "input_words": 14544,
       "input_tokens_est": 19313,
-      "output_chars": 19762,
-      "output_words": 3187,
-      "output_tokens_est": 4940,
-      "generation_time_seconds": 121.87
+      "output_chars": 8604,
+      "output_words": 1382,
+      "output_tokens_est": 2151,
+      "generation_time_seconds": 124.51
     },
     "translation_ru": {
       "input_chars": 77255,
       "input_words": 14544,
       "input_tokens_est": 19313,
-      "output_chars": 22048,
-      "output_words": 3102,
-      "output_tokens_est": 5512,
-      "generation_time_seconds": 121.94
+      "output_chars": 16270,
+      "output_words": 2308,
+      "output_tokens_est": 4067,
+      "generation_time_seconds": 125.69
     }
   },
   "format_compliance": {
-    "overall_rate": 100.0,
-    "compliant_reviews": 3,
+    "overall_rate": 66.7,
+    "compliant_reviews": 2,
     "total_reviews": 3,
     "per_review": {
       "translation_zh": {
-        "compliant": true,
-        "issues": [],
-        "conversational_phrases": 0
+        "compliant": false,
+        "issues": [
+          "Contains conversational AI phrases: let me know if..."
+        ],
+        "conversational_phrases": 1
       },
       "translation_hi": {
         "compliant": true,
@@ -66,7 +68,7 @@
       }
     }
   },
-  "total_generation_time_seconds": 365.74,
+  "total_generation_time_seconds": 374.6,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,
