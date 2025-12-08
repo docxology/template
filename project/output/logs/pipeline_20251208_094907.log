@@ -3088,3 +3088,177 @@ Waiting for first token...
     Generated 4,051 tokens in 123.0s (32.9 tokens/sec)
 [2025-12-08 09:53:22] [INFO]     Validation issues: Excessive repetition detected: 33% unique content - retrying
 [2025-12-08 09:53:32] [INFO]     ✓ First token in 9.9s - generating...
+    Generated 3,948 tokens in 123.7s (31.9 tokens/sec)
+[2025-12-08 09:55:26] [INFO]     Accepting response with issues: Excessive repetition detected: 33% unique content
+[2025-12-08 09:55:26] [INFO] quality review generated
+[2025-12-08 09:55:26] [INFO]     Output: 20,632 chars (3,648 words) in 246.8s
+[2025-12-08 09:55:26] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md (3,648 words)
+[2025-12-08 09:55:26] [INFO] [3/4 - 75%] Review: Methodology Review
+[2025-12-08 09:55:26] [INFO] Generating methodology review...
+[2025-12-08 09:55:36] [INFO]     ✓ First token in 9.9s - generating...
+    Generated 4,091 tokens in 123.5s (33.1 tokens/sec)
+[2025-12-08 09:57:29] [INFO]     Validation issues: Excessive repetition detected: 21% unique content - retrying
+[2025-12-08 09:57:39] [INFO]     ✓ First token in 9.9s - generating...
+    Generated 1,475 tokens in 54.0s (27.3 tokens/sec)
+[2025-12-08 09:58:24] [INFO] methodology review generated
+[2025-12-08 09:58:24] [INFO]     Output: 6,825 chars (997 words) in 177.6s
+[2025-12-08 09:58:24] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md (997 words)
+[2025-12-08 09:58:24] [INFO] [4/4 - 100%] Review: Improvement Suggestions
+[2025-12-08 09:58:24] [INFO] Generating improvement suggestions...
+[2025-12-08 09:58:33] [INFO]     ✓ First token in 9.9s - generating...
+    Generated 3,994 tokens in 123.5s (32.3 tokens/sec)
+[2025-12-08 10:00:27] [INFO]     Validation issues: Excessive repetition detected: 33% unique content - retrying
+[2025-12-08 10:00:37] [INFO]     ✓ First token in 9.9s - generating...
+    Generated 4,076 tokens in 123.3s (33.1 tokens/sec)
+[2025-12-08 10:02:31] [INFO]     Accepting response with issues: Excessive repetition detected: 13% unique content
+[2025-12-08 10:02:31] [WARNING] Deduplication would remove too much content (13920/21546 = 64.6%). Using conservative fallback.
+[2025-12-08 10:02:31] [WARNING] Deduplication would remove too much content (16738/21546 = 77.7%). Using conservative fallback.
+[2025-12-08 10:02:31] [INFO] Deduplication removed 11 duplicate sections (21546 → 17768 chars, 82.5% preserved)
+[2025-12-08 10:02:31] [INFO]     Cleaned severe repetition: 21546 → 17768 chars (82.5% preserved)
+[2025-12-08 10:02:31] [INFO] improvement suggestions generated
+[2025-12-08 10:02:31] [INFO]     Output: 17,768 chars (3,007 words) in 247.2s
+[2025-12-08 10:02:31] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md (3,007 words)
+[2025-12-08 10:02:31] [INFO] Saving review outputs...
+[2025-12-08 10:02:31] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/executive_summary.md (340 words)
+[2025-12-08 10:02:31] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md (3,648 words)
+[2025-12-08 10:02:31] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md (997 words)
+[2025-12-08 10:02:31] [INFO]   Saved: /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md (3,007 words)
+[2025-12-08 10:02:31] [INFO]   Saved combined review: /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md
+[2025-12-08 10:02:31] [INFO]   Saved metadata: /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json
+[2025-12-08 10:02:31] [INFO] All reviews saved to /Users/4d/Documents/GitHub/template/project/output/llm
+[2025-12-08 10:02:31] [INFO] 
+============================================================
+[2025-12-08 10:02:31] [INFO] LLM Manuscript Review Summary
+[2025-12-08 10:02:31] [INFO] ============================================================
+[2025-12-08 10:02:31] [INFO] 
+Input manuscript:
+[2025-12-08 10:02:31] [INFO]   79,794 chars (14,922 words, ~19,948 tokens)
+[2025-12-08 10:02:31] [INFO]   Full text sent to LLM (no truncation)
+[2025-12-08 10:02:31] [INFO] 
+Output directory: /Users/4d/Documents/GitHub/template/project/output/llm
+[2025-12-08 10:02:31] [INFO] 
+Reviews generated:
+[2025-12-08 10:02:31] [INFO]   • Executive Summary: 2,303 chars (340 words) in 21.7s
+[2025-12-08 10:02:31] [INFO]   • Quality Review: 20,632 chars (3,648 words) in 246.8s
+[2025-12-08 10:02:31] [INFO]   • Methodology Review: 6,825 chars (997 words) in 177.6s
+[2025-12-08 10:02:31] [INFO]   • Improvement Suggestions: 17,768 chars (3,007 words) in 247.2s
+[2025-12-08 10:02:31] [INFO] 
+Total output: 47,528 chars (7,992 words)
+[2025-12-08 10:02:31] [INFO] Total generation time: 693.4s
+[2025-12-08 10:02:31] [INFO] 
+Files created:
+[2025-12-08 10:02:31] [INFO] 
+  Other files:
+[2025-12-08 10:02:31] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md: 48.2 KB
+[2025-12-08 10:02:31] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/executive_summary.md: 2.4 KB, 340 words
+[2025-12-08 10:02:31] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md: 17.5 KB, 3,007 words
+[2025-12-08 10:02:31] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md: 6.8 KB, 997 words
+[2025-12-08 10:02:31] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md: 20.3 KB, 3,648 words
+[2025-12-08 10:02:31] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json: 2.4 KB
+[2025-12-08 10:02:31] [INFO] 
+[2025-12-08 10:02:31] [INFO] 
+✅ LLM scientific review complete!
+[2025-12-08 10:02:31] [INFO] 
+[2025-12-08 10:02:31] [INFO] ==================================================
+[2025-12-08 10:02:31] [INFO] Stage 9/9: LLM Translations
+[2025-12-08 10:02:31] [INFO] ==================================================
+[2025-12-08 10:02:31] [INFO] Checking Ollama availability...
+[2025-12-08 10:02:31] [INFO]     Pinging Ollama server at localhost:11434...
+[2025-12-08 10:02:31] [INFO] Ollama server is running
+[2025-12-08 10:02:31] [INFO]     Discovering available models...
+[2025-12-08 10:02:31] [INFO]     Found 13 model(s): qwen3:4b, llama3-gradient:latest, qwen3-vl:latest, gemma3:27b, gemma3:12b
+[2025-12-08 10:02:31] [INFO]     ... and 8 more
+[2025-12-08 10:02:31] [INFO]     Selecting best model for manuscript review...
+[2025-12-08 10:02:31] [INFO] Selected model: llama3-gradient:latest
+[2025-12-08 10:02:31] [INFO]   Selected model: llama3-gradient:latest (4.3 GB)
+[2025-12-08 10:02:31] [INFO]   Context window: ~128K+ context
+[2025-12-08 10:02:31] [INFO] Extracting text from manuscript: project_combined.pdf
+[2025-12-08 10:02:32] [INFO]   Extracted: 79,794 chars (14,922 words, ~19,948 tokens)
+[2025-12-08 10:02:32] [INFO]   Sending full manuscript to LLM (no truncation)
+[2025-12-08 10:02:32] [INFO] 
+  Initializing LLM client...
+[2025-12-08 10:02:32] [INFO] LLM client initialized
+[2025-12-08 10:02:32] [INFO]     Timeout: 300s per review
+[2025-12-08 10:02:32] [INFO]     Max tokens: 4096 per review (configured from: config default long_max_tokens=4096)
+[2025-12-08 10:02:32] [INFO] Warming up model...
+[2025-12-08 10:02:32] [INFO]     Checking loaded models via Ollama API...
+[2025-12-08 10:02:32] [INFO]     ✓ Model llama3-gradient:latest is already loaded in GPU memory
+[2025-12-08 10:02:32] [INFO]     Warmup should be fast (~1-5 seconds)
+[2025-12-08 10:02:32] [INFO]     Generating test response...
+[2025-12-08 10:02:32] [INFO]     (Waiting for model - may take 30-60s if not fully loaded)
+Waiting for first token...
+[2025-12-08 10:02:33] [INFO]     ✓ First token in 1.5s - generating response...
+[2025-12-08 10:02:34] [INFO] Warmup complete (2.5s)
+[2025-12-08 10:02:34] [INFO]     Response: The main topic of this text is the description and testing of a software develop...
+[2025-12-08 10:02:34] [INFO]     Performance: ~52.4 tokens/sec
+[2025-12-08 10:02:34] [INFO]     Estimated review time: ~5.2 minutes
+[2025-12-08 10:02:34] [INFO] 
+  Generating translations for 3 language(s)...
+[2025-12-08 10:02:34] [INFO] [1/3 - 33%] Translation: Chinese (Simplified)
+[2025-12-08 10:02:34] [INFO] Generating translation (Chinese (Simplified))...
+[2025-12-08 10:03:06] [INFO]     Validation issues: Too short: 222 words (minimum: 400)
+[2025-12-08 10:03:06] [INFO] translation (Chinese (Simplified)) generated
+[2025-12-08 10:03:06] [INFO]     Output: 2,112 chars (222 words) in 31.5s
+[2025-12-08 10:03:06] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/translation_zh.md (222 words) - Translation (Chinese (Simplified))
+[2025-12-08 10:03:06] [INFO] [2/3 - 66%] Translation: Hindi
+[2025-12-08 10:03:06] [INFO] Generating translation (Hindi)...
+[2025-12-08 10:05:10] [INFO]     Validation issues: Missing translation section
+[2025-12-08 10:05:10] [INFO] translation (Hindi) generated
+[2025-12-08 10:05:10] [INFO]     Output: 22,999 chars (3,538 words) in 123.8s
+[2025-12-08 10:05:10] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/translation_hi.md (3,538 words) - Translation (Hindi)
+[2025-12-08 10:05:10] [INFO] [3/3 - 100%] Translation: Russian
+[2025-12-08 10:05:10] [INFO] Generating translation (Russian)...
+[2025-12-08 10:07:13] [INFO]     Validation issues: Excessive repetition detected: 44% unique content
+[2025-12-08 10:07:13] [INFO] translation (Russian) generated
+[2025-12-08 10:07:13] [INFO]     Output: 18,243 chars (2,532 words) in 123.9s
+[2025-12-08 10:07:13] [INFO] ✅ Saved: /Users/4d/Documents/GitHub/template/project/output/llm/translation_ru.md (2,532 words) - Translation (Russian)
+[2025-12-08 10:07:13] [INFO] Saving review outputs...
+[2025-12-08 10:07:13] [INFO]   Saved translation (Chinese (Simplified)): /Users/4d/Documents/GitHub/template/project/output/llm/translation_zh.md (222 words)
+[2025-12-08 10:07:13] [INFO]   Saved translation (Hindi): /Users/4d/Documents/GitHub/template/project/output/llm/translation_hi.md (3,538 words)
+[2025-12-08 10:07:13] [INFO]   Saved translation (Russian): /Users/4d/Documents/GitHub/template/project/output/llm/translation_ru.md (2,532 words)
+[2025-12-08 10:07:13] [INFO]   Saved combined review: /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md
+[2025-12-08 10:07:13] [INFO]   Saved metadata: /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json
+[2025-12-08 10:07:13] [INFO] All reviews saved to /Users/4d/Documents/GitHub/template/project/output/llm
+[2025-12-08 10:07:13] [INFO] 
+============================================================
+[2025-12-08 10:07:13] [INFO] LLM Manuscript Review Summary
+[2025-12-08 10:07:13] [INFO] ============================================================
+[2025-12-08 10:07:13] [INFO] 
+Input manuscript:
+[2025-12-08 10:07:13] [INFO]   79,794 chars (14,922 words, ~19,948 tokens)
+[2025-12-08 10:07:13] [INFO]   Full text sent to LLM (no truncation)
+[2025-12-08 10:07:13] [INFO] 
+Output directory: /Users/4d/Documents/GitHub/template/project/output/llm
+[2025-12-08 10:07:13] [INFO] 
+Reviews generated:
+[2025-12-08 10:07:13] [INFO]   • Translation Zh: 2,112 chars (222 words) in 31.5s
+[2025-12-08 10:07:13] [INFO]   • Translation Hi: 22,999 chars (3,538 words) in 123.8s
+[2025-12-08 10:07:13] [INFO]   • Translation Ru: 18,243 chars (2,532 words) in 123.9s
+[2025-12-08 10:07:13] [INFO] 
+Total output: 43,354 chars (6,292 words)
+[2025-12-08 10:07:13] [INFO] Total generation time: 279.2s
+[2025-12-08 10:07:13] [INFO] 
+Files created:
+[2025-12-08 10:07:13] [INFO] 
+  Translation files:
+[2025-12-08 10:07:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/translation_hi.md (Hindi): 22.6 KB, 3,538 words
+[2025-12-08 10:07:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/translation_ru.md (Russian): 24.7 KB, 2,532 words
+[2025-12-08 10:07:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/translation_zh.md (Chinese (Simplified)): 3.2 KB, 222 words
+[2025-12-08 10:07:13] [INFO] 
+  Other files:
+[2025-12-08 10:07:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/combined_review.md: 52.3 KB
+[2025-12-08 10:07:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/executive_summary.md: 2.4 KB
+[2025-12-08 10:07:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/improvement_suggestions.md: 17.5 KB
+[2025-12-08 10:07:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/methodology_review.md: 6.8 KB
+[2025-12-08 10:07:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/quality_review.md: 20.3 KB
+[2025-12-08 10:07:13] [INFO]     • /Users/4d/Documents/GitHub/template/project/output/llm/review_metadata.json: 2.0 KB
+[2025-12-08 10:07:13] [INFO] 
+[2025-12-08 10:07:13] [INFO] 
+✅ LLM translations complete!
+
+============================================================
+Pipeline completed: Mon Dec  8 10:07:14 PST 2025
+Total duration: 18m 7s
+Log file: /Users/4d/Documents/GitHub/template/project/output/logs/pipeline_20251208_094907.log
+  (Will be copied to output/logs/ during copy stage)
+============================================================
