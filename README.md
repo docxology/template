@@ -834,6 +834,8 @@ If you use this template in your research, please cite:
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
 
+Archived as `docxology/template` 0.3 — DOI `10.5281/zenodo.16903351` (https://zenodo.org/records/17857724).
+
 **BibTeX:**
 ```bibtex
 @software{friedman_daniel_ari_2025_16903352,
