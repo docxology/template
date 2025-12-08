@@ -26,6 +26,10 @@ if repo_root not in sys.path:
 import matplotlib.pyplot as plt
 import numpy as np
 from typing import Tuple, List
+
+# Import infrastructure validation modules
+from infrastructure.validation import validate_figure_registry, verify_output_integrity
+
 def _ensure_src_on_path() -> None:
     """Ensure src/ and infrastructure/ are on Python path for imports."""
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -680,13 +684,15 @@ def main() -> None:
 
     # Lightweight integrity/validation checks
     try:
-        validate_figure_registry(os.path.join(figure_dir, "figure_registry.json"))
+        registry_path = Path(figure_dir) / "figure_registry.json"
+        manuscript_dir = Path(repo_root) / "manuscript"
+        validate_figure_registry(registry_path, manuscript_dir)
         print("✅ Figure registry validation passed")
     except Exception as exc:
         print(f"⚠️  Figure registry validation warning: {exc}")
 
     try:
-        verify_output_integrity(Path(output_dir))
+        integrity_report = verify_output_integrity(Path(output_dir))
         print("✅ Output integrity check passed")
     except Exception as exc:
         print(f"⚠️  Output integrity warning: {exc}")

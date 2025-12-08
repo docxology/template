@@ -315,7 +315,8 @@ def validate_all_figures() -> None:
     registry_path = Path("output/figures/figure_registry.json")
     if registry_path.exists():
         try:
-            validate_figure_registry(registry_path)
+            manuscript_dir = Path("manuscript")
+            validate_figure_registry(registry_path, manuscript_dir)
             print("  ✅ Figure registry validated")
         except Exception as exc:  # Broad to keep orchestration resilient
             print(f"  ⚠️  Figure registry validation warning: {exc}")
