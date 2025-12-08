@@ -359,9 +359,27 @@ Menu Option 8 (--pipeline) → Full Pipeline (10 stages: 0-9):
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `LOG_LEVEL` | `1` | Logging verbosity (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR) |
+| `MAX_TEST_FAILURES` | `0` | Maximum test failures allowed before halting (0=halt on any failure) |
+| `MAX_INFRA_TEST_FAILURES` | Uses `MAX_TEST_FAILURES` | Max failures for infrastructure tests specifically |
+| `MAX_PROJECT_TEST_FAILURES` | Uses `MAX_TEST_FAILURES` | Max failures for project tests specifically |
+| `MPLBACKEND` | (system default) | Matplotlib backend. `Agg` for headless (auto-set by `02_run_analysis.py`) |
+| `MPLCONFIGDIR` | `~/.matplotlib` | Matplotlib config dir. Use `/tmp/matplotlib` in restricted envs (auto-set by `02_run_analysis.py`) |
 | `LLM_MAX_INPUT_LENGTH` | `500000` | Max chars to send to LLM. Set to `0` for unlimited. |
+| `LLM_LONG_MAX_TOKENS` | `4096` | Maximum tokens per LLM response |
+| `LLM_REVIEW_TIMEOUT` | `300` | Timeout for each review generation (seconds) |
+| `LLM_SUMMARIZATION_TIMEOUT` | `600` | Timeout for paper summarization (seconds) |
 | `LITERATURE_DEFAULT_LIMIT` | `25` | Results per source per keyword |
 | `MAX_PARALLEL_SUMMARIES` | `1` | Parallel summarization workers |
+
+**Test Failure Tolerance:**
+- Set `MAX_TEST_FAILURES=N` to allow up to N test failures before halting
+- Use specific vars (`MAX_INFRA_TEST_FAILURES`, `MAX_PROJECT_TEST_FAILURES`) for different tolerances per suite
+- Useful for development when some tests are known to be flaky
+- Default is `0` (strict mode - halt on any failure)
+
+**Matplotlib Configuration:**
+- The analysis orchestrator (`02_run_analysis.py`) automatically sets `MPLBACKEND=Agg` and `MPLCONFIGDIR=/tmp/matplotlib` for headless operation
+- Manual configuration only needed when running analysis scripts directly
 
 ## Generic vs Project-Specific
 

@@ -38,13 +38,14 @@ Root scripts are **thin orchestrators** that:
 
 **Purpose:** Execute complete test suite with enhanced reporting
 
-- Runs infrastructure tests (`tests/infrastructure/`) with 49% coverage threshold
-- Runs project tests (`project/tests/`) with 70% coverage threshold
+- Runs infrastructure tests (`tests/infrastructure/`) with 60% coverage threshold
+- Runs project tests (`project/tests/`) with 90% coverage threshold
 - Supports quiet mode (`--quiet` or `-q`) - suppresses individual test names (default)
 - Supports verbose mode (`--verbose` or `-v`) - shows all test names
 - Generates HTML coverage reports for both suites
 - Generates structured test reports (JSON, Markdown) to `project/output/reports/test_results.{json,md}`
 - Reports individual and combined results with detailed metrics
+- Supports configurable test failure tolerance (see Environment Variables below)
 - Generic orchestrator - does not implement tests
 
 **Usage:**
@@ -54,6 +55,51 @@ python3 scripts/01_run_tests.py
 
 # Verbose mode - shows all test names
 python3 scripts/01_run_tests.py --verbose
+
+# Allow up to 5 test failures total
+export MAX_TEST_FAILURES=5
+python3 scripts/01_run_tests.py
+
+# Different thresholds for infrastructure vs project
+export MAX_INFRA_TEST_FAILURES=10
+export MAX_PROJECT_TEST_FAILURES=2
+python3 scripts/01_run_tests.py
+```
+
+**Environment Variables:**
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MAX_TEST_FAILURES` | `0` | Maximum number of test failures allowed before halting pipeline (applies to both infrastructure and project tests if specific vars not set) |
+| `MAX_INFRA_TEST_FAILURES` | Uses `MAX_TEST_FAILURES` | Maximum failures for infrastructure tests (overrides `MAX_TEST_FAILURES` for infra tests) |
+| `MAX_PROJECT_TEST_FAILURES` | Uses `MAX_TEST_FAILURES` | Maximum failures for project tests (overrides `MAX_TEST_FAILURES` for project tests) |
+
+**Test Failure Tolerance:**
+
+By default, any test failure halts the pipeline. However, you can configure the system to tolerate a certain number of failures:
+
+- **Within tolerance**: Tests continue, pipeline proceeds with warning message
+- **Exceeds tolerance**: Tests fail, pipeline halts with error message
+- **No failures**: Normal success message
+
+This is useful for:
+- Allowing known flaky tests while working on fixes
+- Gradually improving test coverage without blocking builds
+- Development environments where perfect test success isn't required
+
+**Example scenarios:**
+```bash
+# Strict mode (default) - halt on any failure
+python3 scripts/01_run_tests.py
+
+# Development mode - allow up to 10 failures
+export MAX_TEST_FAILURES=10
+python3 scripts/01_run_tests.py
+
+# Different tolerances per suite
+export MAX_INFRA_TEST_FAILURES=20  # More lenient for infrastructure
+export MAX_PROJECT_TEST_FAILURES=5  # Stricter for project code
+python3 scripts/01_run_tests.py
 ```
 
 **Generic:** Works for any project using pytest
@@ -68,11 +114,19 @@ python3 scripts/01_run_tests.py --verbose
 - Logs resource usage at start and end of stage
 - Validates output generation
 - Collects outputs to `project/output/`
+- **Automatically configures matplotlib** for headless operation (sets `MPLBACKEND=Agg`, `MPLCONFIGDIR=/tmp/matplotlib`)
 
 **Progress Features:**
 - Real-time progress updates with ETA
 - Resource monitoring (memory, CPU)
 - Per-script duration tracking
+
+**Environment Configuration:**
+The orchestrator automatically sets matplotlib environment variables for all subprocess executions:
+- `MPLBACKEND=Agg` - Ensures headless operation (no GUI required)
+- `MPLCONFIGDIR=/tmp/matplotlib` - Uses writable temporary directory for matplotlib config
+
+This prevents matplotlib errors in headless environments and non-writable home directories.
 
 **Generic:** Works for any project with analysis scripts
 
@@ -573,10 +627,46 @@ Each stage is **generic** and works with any project structure.
 
 ## Environment Variables
 
+Complete list of environment variables affecting pipeline execution:
+
+### Core Pipeline
+
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `LLM_MAX_INPUT_LENGTH` | `500000` | Maximum characters to send to LLM (Stage 7). Set to `0` for unlimited. |
 | `LOG_LEVEL` | `1` | Logging verbosity (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR) |
+
+### Test Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MAX_TEST_FAILURES` | `0` | Maximum allowed test failures before halting pipeline (both infrastructure and project) |
+| `MAX_INFRA_TEST_FAILURES` | Uses `MAX_TEST_FAILURES` | Maximum failures for infrastructure tests (overrides general setting) |
+| `MAX_PROJECT_TEST_FAILURES` | Uses `MAX_TEST_FAILURES` | Maximum failures for project tests (overrides general setting) |
+
+### Matplotlib Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MPLBACKEND` | (system default) | Matplotlib backend. Set to `Agg` for headless operation (auto-set by analysis orchestrator) |
+| `MPLCONFIGDIR` | `~/.matplotlib` | Matplotlib config directory. Set to writable location like `/tmp/matplotlib` (auto-set by analysis orchestrator) |
+
+**Note:** The analysis orchestrator (`02_run_analysis.py`) automatically sets matplotlib variables for subprocess execution. Manual configuration is only needed when running analysis scripts directly.
+
+### LLM Operations
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `LLM_MAX_INPUT_LENGTH` | `500000` | Maximum characters to send to LLM. Set to `0` for unlimited. |
+| `LLM_LONG_MAX_TOKENS` | `4096` | Maximum tokens per LLM response |
+| `LLM_REVIEW_TIMEOUT` | `300` | Timeout for each review generation (seconds) |
+| `LLM_SUMMARIZATION_TIMEOUT` | `600` | Timeout for paper summarization (seconds) |
+
+### Literature Operations
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `LITERATURE_DEFAULT_LIMIT` | `25` | Number of results per source per keyword in literature search |
+| `MAX_PARALLEL_SUMMARIES` | `1` | Number of parallel summarization workers |
 
 ## Testing
 

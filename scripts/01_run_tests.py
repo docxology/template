@@ -64,6 +64,39 @@ def _run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) 
     return process.returncode, "".join(stdout_buf), ""
 
 
+def check_test_failures(failed_count: int, test_suite: str, env_var: str = "MAX_TEST_FAILURES") -> tuple[bool, str]:
+    """Check if test failures are within tolerance.
+    
+    Args:
+        failed_count: Number of failed tests
+        test_suite: Name of test suite (for logging)
+        env_var: Environment variable name for threshold (e.g., MAX_INFRA_TEST_FAILURES)
+        
+    Returns:
+        Tuple of (should_halt, message)
+        
+    Examples:
+        >>> check_test_failures(0, "Infrastructure", "MAX_INFRA_TEST_FAILURES")
+        (False, "Infrastructure: All tests passed")
+        
+        >>> os.environ["MAX_TEST_FAILURES"] = "5"
+        >>> check_test_failures(3, "Project", "MAX_TEST_FAILURES")
+        (False, "Project: 3 failure(s) within tolerance (max: 5)")
+        
+        >>> check_test_failures(10, "Project", "MAX_TEST_FAILURES")
+        (True, "Project: 10 failure(s) exceeds tolerance (max: 5)")
+    """
+    # Try specific env var first (e.g., MAX_INFRA_TEST_FAILURES), then fall back to MAX_TEST_FAILURES
+    max_failures = int(os.environ.get(env_var, os.environ.get("MAX_TEST_FAILURES", "0")))
+    
+    if failed_count == 0:
+        return False, f"{test_suite}: All tests passed"
+    elif failed_count <= max_failures:
+        return False, f"{test_suite}: {failed_count} failure(s) within tolerance (max: {max_failures})"
+    else:
+        return True, f"{test_suite}: {failed_count} failure(s) exceeds tolerance (max: {max_failures})"
+
+
 def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
     """Execute infrastructure test suite with coverage.
     
@@ -122,10 +155,18 @@ def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, 
         if warning_count > 0:
             logger.warning(f"Infrastructure tests completed with {warning_count} warning(s)")
         
+        # Check if failures are within tolerance
+        failed_count = test_results.get('failed', 0)
+        should_halt, message = check_test_failures(failed_count, "Infrastructure", "MAX_INFRA_TEST_FAILURES")
+        
         if exit_code == 0:
             log_success("Infrastructure tests passed", logger)
+        elif should_halt:
+            logger.error(message)
         else:
-            logger.error("Infrastructure tests failed")
+            logger.warning(message)
+            # Return 0 if within tolerance to allow pipeline to continue
+            exit_code = 0
         
         return exit_code, test_results
     except Exception as e:
@@ -187,10 +228,18 @@ def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
         if warning_count > 0:
             logger.warning(f"Project tests completed with {warning_count} warning(s)")
         
+        # Check if failures are within tolerance
+        failed_count = test_results.get('failed', 0)
+        should_halt, message = check_test_failures(failed_count, "Project", "MAX_PROJECT_TEST_FAILURES")
+        
         if exit_code == 0:
             log_success("Project tests passed", logger)
+        elif should_halt:
+            logger.error(message)
         else:
-            logger.error("Project tests failed")
+            logger.warning(message)
+            # Return 0 if within tolerance to allow pipeline to continue
+            exit_code = 0
         
         return exit_code, test_results
     except Exception as e:

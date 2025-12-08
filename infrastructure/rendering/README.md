@@ -9,6 +9,46 @@ Multi-format output generation for research manuscripts.
 - **Title Page Generation**: Automatic title page from `config.yaml`.
 - **Figure Integration**: Automatic figure path resolution and verification.
 - **Quality Control**: Automated compilation checks and comprehensive logging.
+- **Package Validation**: Pre-flight checks for LaTeX packages.
+
+## LaTeX Package Requirements
+
+### BasicTeX (Minimal Installation)
+
+This rendering system supports **BasicTeX**, a minimal TeX distribution (~100 MB instead of full MacTeX's ~4 GB).
+
+**Required packages** (some require installation):
+```bash
+sudo tlmgr update --self
+sudo tlmgr install multirow cleveref doi newunicodechar
+```
+
+**Already included in BasicTeX**:
+- Core packages: `amsmath`, `graphicx`, `hyperref`, `natbib`
+- Table enhancement: `bm` (part of `tools`), `subcaption` (part of `caption`)
+
+**Pre-flight validation**:
+```bash
+# Validate packages before rendering
+python3 -m infrastructure.rendering.latex_package_validator
+
+# Or run as part of pipeline (automatic)
+python3 scripts/03_render_pdf.py
+```
+
+**Common issues**:
+- **"File *.sty not found"**: Install missing package via `tlmgr`
+- **No kpsewhich found**: Install BasicTeX or MacTeX
+- **Permission denied**: Use `sudo` for tlmgr commands
+
+### Full MacTeX (Complete Installation)
+
+For a complete installation with all packages, install **MacTeX**:
+```bash
+brew install --cask mactex
+```
+
+MacTeX includes all packages and tools but requires ~4 GB disk space.
 
 ## Quick Start
 

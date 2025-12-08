@@ -66,6 +66,344 @@ uv pip list
 3. **Test after each fix** - Verify resolution
 4. **Document solution** - Note what worked
 
+## Environment Issues and Solutions
+
+This section documents common environment-related issues and their solutions based on real troubleshooting scenarios.
+
+### Missing `patch` Import in Tests
+
+**Symptom:**
+```
+NameError: name 'patch' is not defined
+tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_extract_metadata_with_invalid_path FAILED
+```
+
+**Cause:**
+Test files using `unittest.mock.patch` without importing it.
+
+**Solution:**
+Add the import statement at the top of the test file:
+```python
+from unittest.mock import patch
+```
+
+**Prevention:**
+- Always import `patch` explicitly when using mocks in tests
+- Check imports when copying test code between files
+- Lint test files to catch missing imports early
+
+### Optional `python-dotenv` Dependency
+
+**Symptom:**
+```
+ModuleNotFoundError: No module named 'dotenv'
+```
+
+**Cause:**
+The `infrastructure.core.credentials` module imports `python-dotenv` but it's not installed.
+
+**Impact:**
+System can work without `python-dotenv` - it's an optional dependency for loading `.env` files.
+
+**Solution:**
+The system now uses conditional import with graceful fallback:
+```python
+try:
+    from dotenv import load_dotenv
+    _DOTENV_AVAILABLE = True
+except ImportError:
+    _DOTENV_AVAILABLE = False
+```
+
+**Installation (Optional):**
+```bash
+# Install if you want .env file support
+pip install python-dotenv
+# or
+uv add python-dotenv
+```
+
+**What Works Without It:**
+- Environment variables from shell still work
+- YAML config files still work
+- All core functionality remains operational
+
+### Missing `infrastructure.build` Modules
+
+**Symptom:**
+```
+ModuleNotFoundError: No module named 'infrastructure.build'
+project/scripts/manuscript_preflight.py - failed
+project/scripts/quality_report.py - failed
+```
+
+**Cause:**
+Scripts trying to import quality checker and reproducibility modules that don't exist in the codebase.
+
+**Solution:**
+Scripts now use graceful fallback with stub functions:
+```python
+try:
+    from infrastructure.build.quality_checker import analyze_document_quality
+    _BUILD_MODULES_AVAILABLE = True
+except (ImportError, ModuleNotFoundError):
+    _BUILD_MODULES_AVAILABLE = False
+    def analyze_document_quality(path):
+        return {"status": "skipped", "reason": "infrastructure.build not available"}
+```
+
+**Impact:**
+- Scripts run successfully
+- Optional features gracefully skipped
+- Core validation still works
+- Clear logging indicates what was skipped
+
+**Files Affected:**
+- `project/scripts/manuscript_preflight.py`
+- `project/scripts/quality_report.py`
+
+### Matplotlib Configuration Issues
+
+**Symptom:**
+```
+Exit code 134 (SIGABRT)
+/Users/mini/.matplotlib is not a writable directory
+```
+
+**Cause:**
+Matplotlib trying to write to non-writable directories during figure generation in subprocess execution.
+
+**Solution:**
+Analysis orchestrator now sets matplotlib environment variables:
+```python
+env = os.environ.copy()
+env.setdefault('MPLBACKEND', 'Agg')
+env.setdefault('MPLCONFIGDIR', '/tmp/matplotlib')
+
+subprocess.run(cmd, env=env)
+```
+
+**Manual Override:**
+```bash
+# Set for current shell session
+export MPLBACKEND=Agg
+export MPLCONFIGDIR=/tmp/matplotlib
+
+# Run analysis scripts
+python3 scripts/02_run_analysis.py
+```
+
+**Verification:**
+```bash
+# Should complete without errors
+python3 scripts/02_run_analysis.py
+
+# Check generated figures
+ls -la project/output/figures/
+```
+
+**Why This Happens:**
+- Default matplotlib tries to use GUI backends
+- Tries to write config to home directory
+- Fails when directory not writable or in headless environments
+
+**Prevention:**
+- Always set `MPLBACKEND=Agg` for headless operation
+- Use writable directory for `MPLCONFIGDIR`
+- Orchestrators handle this automatically now
+
+### LaTeX Installation on macOS
+
+**Symptom:**
+```
+xelatex: command not found
+pdflatex: command not found
+```
+
+**Diagnosis:**
+```bash
+# Check if LaTeX is installed
+which xelatex
+which pdflatex
+
+# Check PATH
+echo $PATH | grep -i tex
+```
+
+**Solution 1: Install BasicTeX (Recommended - ~100MB):**
+```bash
+# Install via Homebrew
+brew install --cask basictex
+
+# Add to PATH
+export PATH="/Library/TeX/texbin:$PATH"
+echo 'export PATH="/Library/TeX/texbin:$PATH"' >> ~/.zshrc
+
+# Update TeX Live Manager
+sudo tlmgr update --self
+
+# Install required packages
+sudo tlmgr install \
+    collection-fontsrecommended \
+    collection-latexrecommended \
+    xetex \
+    ucs \
+    fancyhdr \
+    babel-english \
+    hyperref \
+    url \
+    graphics \
+    oberdiek \
+    tools \
+    amsmath
+```
+
+**Solution 2: Install MacTeX (Full - ~4GB):**
+```bash
+# Install full distribution
+brew install --cask mactex
+
+# Add to PATH (same as above)
+export PATH="/Library/TeX/texbin:$PATH"
+echo 'export PATH="/Library/TeX/texbin:$PATH"' >> ~/.zshrc
+```
+
+**Verification:**
+```bash
+# Reload shell
+source ~/.zshrc
+
+# Verify installation
+xelatex --version
+pdflatex --version
+
+# Test PDF rendering
+python3 scripts/03_render_pdf.py
+```
+
+**Common Issues:**
+- **PATH not updated**: Restart terminal or run `source ~/.zshrc`
+- **Packages missing**: Run `sudo tlmgr install <package-name>`
+- **Permission errors**: Use `sudo` with `tlmgr` commands
+
+### Test Failure Tolerance
+
+**Feature:**
+Configure maximum allowed test failures before halting pipeline.
+
+**Environment Variable:**
+```bash
+export MAX_TEST_FAILURES=5  # Allow up to 5 failures
+```
+
+**Default:** `0` (strict - any failure halts pipeline)
+
+**Usage:**
+```bash
+# Allow limited failures during development
+export MAX_TEST_FAILURES=3
+python3 scripts/01_run_tests.py
+
+# Or with full pipeline
+export MAX_TEST_FAILURES=5
+python3 scripts/run_all.py
+```
+
+**Behavior:**
+- **Below threshold**: Pipeline continues, warning logged
+- **At/above threshold**: Pipeline halts, error logged
+- **All pass**: Pipeline continues normally
+
+**When to Use:**
+- **Development**: Work on features while some tests are broken
+- **CI/CD**: Allow known flaky tests without blocking builds
+- **Migration**: Gradual fixing of test suites
+
+**When NOT to Use:**
+- **Production**: Should always be 0 (strict)
+- **Releases**: All tests must pass
+- **Code review**: Tests should pass before PR merge
+
+**Example Output:**
+```bash
+# With MAX_TEST_FAILURES=3 and 2 failures
+Infrastructure tests: 2 failures (max allowed: 3)
+✓ Infrastructure tests passed (within tolerance)
+
+# With MAX_TEST_FAILURES=3 and 5 failures
+Infrastructure tests: 5 failures (max allowed: 3)
+✗ Infrastructure tests failed (exceeded threshold)
+```
+
+### Environment Variables Reference
+
+Complete list of environment variables affecting system behavior:
+
+| Variable | Default | Purpose | Example |
+|----------|---------|---------|---------|
+| `MAX_TEST_FAILURES` | `0` | Maximum allowed test failures | `export MAX_TEST_FAILURES=5` |
+| `MPLBACKEND` | (system) | Matplotlib backend | `export MPLBACKEND=Agg` |
+| `MPLCONFIGDIR` | `~/.matplotlib` | Matplotlib config directory | `export MPLCONFIGDIR=/tmp/matplotlib` |
+| `LOG_LEVEL` | `1` | Logging verbosity (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR) | `export LOG_LEVEL=0` |
+| `AUTHOR_NAME` | `"Project Author"` | Primary author name | `export AUTHOR_NAME="Dr. Jane Smith"` |
+| `AUTHOR_ORCID` | `"0000-0000-0000-0000"` | Author ORCID identifier | `export AUTHOR_ORCID="0000-0001-2345-6789"` |
+| `AUTHOR_EMAIL` | `"author@example.com"` | Author contact email | `export AUTHOR_EMAIL="jane@university.edu"` |
+| `PROJECT_TITLE` | `"Project Title"` | Project/research title | `export PROJECT_TITLE="Novel Framework"` |
+| `DOI` | `""` | Digital Object Identifier | `export DOI="10.5281/zenodo.12345"` |
+
+**Setting Multiple Variables:**
+```bash
+# Create .env file (requires python-dotenv)
+cat > .env << 'EOF'
+MAX_TEST_FAILURES=3
+MPLBACKEND=Agg
+LOG_LEVEL=0
+AUTHOR_NAME=Dr. Jane Smith
+EOF
+
+# Or set in shell
+export MAX_TEST_FAILURES=3 MPLBACKEND=Agg LOG_LEVEL=0
+```
+
+### Quick Diagnostics
+
+**Check Environment:**
+```bash
+# Show all template-related variables
+env | grep -E "MAX_TEST|MPL|LOG_LEVEL|AUTHOR|PROJECT|DOI"
+
+# Test matplotlib configuration
+python3 -c "import matplotlib; print(matplotlib.get_backend())"
+
+# Verify LaTeX installation
+which xelatex && echo "LaTeX OK" || echo "LaTeX missing"
+
+# Check Python imports
+python3 -c "from infrastructure.core import credentials; print('Imports OK')"
+```
+
+**Full Environment Report:**
+```bash
+#!/bin/bash
+echo "=== Test Configuration ==="
+echo "MAX_TEST_FAILURES: ${MAX_TEST_FAILURES:-0 (strict)}"
+
+echo -e "\n=== Matplotlib Configuration ==="
+echo "MPLBACKEND: ${MPLBACKEND:-system default}"
+echo "MPLCONFIGDIR: ${MPLCONFIGDIR:-~/.matplotlib}"
+
+echo -e "\n=== LaTeX Installation ==="
+which xelatex >/dev/null && echo "✓ xelatex found" || echo "✗ xelatex missing"
+which pdflatex >/dev/null && echo "✓ pdflatex found" || echo "✗ pdflatex missing"
+
+echo -e "\n=== Optional Dependencies ==="
+python3 -c "import dotenv" 2>/dev/null && echo "✓ python-dotenv installed" || echo "○ python-dotenv not installed (optional)"
+
+echo -e "\n=== Project Metadata ==="
+echo "AUTHOR_NAME: ${AUTHOR_NAME:-not set}"
+echo "PROJECT_TITLE: ${PROJECT_TITLE:-not set}"
+```
+
 ## Progress Display Issues
 
 ### Progress Bar Not Updating

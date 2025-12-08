@@ -20,13 +20,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import get_logger, log_success, log_header
 from infrastructure.core.progress import SubStageProgress
-from infrastructure.core.exceptions import RenderingError
+from infrastructure.core.exceptions import RenderingError, ValidationError
 from infrastructure.rendering import RenderManager
 from infrastructure.rendering.config import RenderingConfig
 from infrastructure.rendering.manuscript_discovery import (
     discover_manuscript_files,
     verify_figures_exist,
 )
+from infrastructure.rendering.latex_package_validator import validate_preamble_packages
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -38,16 +39,46 @@ def run_render_pipeline() -> int:
     """Execute the PDF rendering pipeline using infrastructure rendering.
     
     This pipeline:
-    1. Verifies figures from analysis stage
-    2. Renders individual manuscript files to multiple formats
-    3. Generates a combined PDF from all manuscript sections
-    4. Reports on all generated outputs
+    1. Validates LaTeX packages (pre-flight check)
+    2. Verifies figures from analysis stage
+    3. Renders individual manuscript files to multiple formats
+    4. Generates a combined PDF from all manuscript sections
+    5. Reports on all generated outputs
     """
     logger.info("Executing PDF rendering pipeline...")
     
     repo_root = Path(__file__).parent.parent
     manuscript_dir = repo_root / "project" / "manuscript"
     project_root = repo_root / "project"
+    
+    # Pre-flight: Validate LaTeX packages
+    logger.info("Running pre-flight LaTeX package validation...")
+    try:
+        package_report = validate_preamble_packages(strict=False)
+        
+        if not package_report.all_required_available:
+            logger.error("❌ Missing required LaTeX packages!")
+            logger.error(f"   Missing: {', '.join(package_report.missing_required)}")
+            logger.error(f"   Install: sudo tlmgr install {' '.join(package_report.missing_required)}")
+            return 1
+        
+        if package_report.missing_optional:
+            logger.warning(f"⚠️  Missing {len(package_report.missing_optional)} optional package(s):")
+            for pkg in package_report.missing_optional:
+                logger.warning(f"   - {pkg}")
+            logger.warning("   PDF will render with reduced functionality")
+            logger.info(f"   To install: sudo tlmgr install {' '.join(package_report.missing_optional)}")
+        else:
+            logger.info("✓ All LaTeX packages available")
+            
+    except ValidationError as e:
+        logger.error(f"❌ LaTeX package validation failed: {e}")
+        for suggestion in e.suggestions:
+            logger.error(f"   {suggestion}")
+        return 1
+    except Exception as e:
+        logger.warning(f"⚠️  Could not validate LaTeX packages: {e}")
+        logger.warning("   Proceeding anyway - compilation may fail if packages are missing")
     
     # Verify figures from analysis stage
     logger.info("Verifying figures from analysis stage...")

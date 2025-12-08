@@ -20,7 +20,15 @@ if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
 
 from infrastructure.validation import validate_markdown, validate_pdf_rendering, verify_output_integrity
-from infrastructure.build.quality_checker import analyze_document_quality
+
+# Try to import build module (may not exist)
+try:
+    from infrastructure.build.quality_checker import analyze_document_quality
+    _BUILD_MODULE_AVAILABLE = True
+except (ImportError, ModuleNotFoundError):
+    _BUILD_MODULE_AVAILABLE = False
+    def analyze_document_quality(path):
+        return {"status": "skipped", "reason": "infrastructure.build module not available"}
 
 FIGURE_PATTERN = re.compile(r"\\includegraphics[^{}]*\{([^}]+)\}")
 GLOSSARY_BEGIN = "<!-- BEGIN: AUTO-API-GLOSSARY -->"

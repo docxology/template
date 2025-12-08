@@ -30,6 +30,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Credentials (keep examples, ignore actual credentials)
+test_credentials.yaml
+
 # Testing
 .coverage
 .pytest_cache/

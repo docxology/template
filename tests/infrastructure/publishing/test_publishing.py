@@ -7,7 +7,7 @@ including DOI validation, citation generation, and metadata handling.
 import pytest
 from pathlib import Path
 import json
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 # Import the module to test
 from infrastructure import publishing
@@ -670,31 +670,58 @@ class TestEdgeCases:
 class TestDissemination:
     """Test dissemination capabilities."""
 
-    def test_publish_to_zenodo(self, tmp_path, mocker):
-        """Test Zenodo publication workflow."""
-        # Mock API
-        mock_client = mocker.patch("infrastructure.publishing.api.ZenodoClient")
-        mock_instance = mock_client.return_value
-        mock_instance.create_deposition.return_value = "12345"
-        mock_instance.publish.return_value = "10.5281/zenodo.12345"
+    @pytest.mark.requires_zenodo
+    @pytest.mark.requires_network
+    @pytest.mark.requires_credentials
+    def test_publish_to_zenodo(self, tmp_path, zenodo_credentials):
+        """Test Zenodo publication workflow with real API calls.
         
-        # Test data
-        metadata = publishing.PublicationMetadata(
-            title="Test",
-            authors=["Author"],
-            abstract="Abstract",
-            keywords=["key"]
+        This test creates a real deposition on Zenodo sandbox, uploads a file,
+        and then deletes the deposition for cleanup.
+        """
+        from infrastructure.publishing.api import ZenodoClient
+        
+        # Create test PDF file
+        file_path = tmp_path / "test_paper.pdf"
+        file_path.write_text("%PDF-1.4\nTest PDF content for Zenodo upload test")
+        
+        # Initialize Zenodo client with real credentials
+        client = ZenodoClient(
+            access_token=zenodo_credentials["token"],
+            use_sandbox=zenodo_credentials["use_sandbox"]
         )
-        file_path = tmp_path / "paper.pdf"
-        file_path.touch()
         
-        # Execute
-        doi = publishing.publish_to_zenodo(metadata, [file_path], "token")
+        # Test metadata
+        metadata = publishing.PublicationMetadata(
+            title="Test Publication for Automated Testing",
+            authors=["Test Author"],
+            abstract="This is a test publication created by automated tests. It will be deleted automatically.",
+            keywords=["test", "automated"]
+        )
         
-        assert doi == "10.5281/zenodo.12345"
-        mock_instance.create_deposition.assert_called_once()
-        mock_instance.upload_file.assert_called_once_with("12345", str(file_path))
-        mock_instance.publish.assert_called_once_with("12345")
+        deposition_id = None
+        try:
+            # 1. Create deposition
+            deposition_id = client.create_deposition(metadata)
+            assert deposition_id is not None
+            assert isinstance(deposition_id, str)
+            
+            # 2. Upload file
+            client.upload_file(deposition_id, str(file_path))
+            
+            # 3. Publish (on sandbox, this is safe)
+            doi = client.publish(deposition_id)
+            assert doi is not None
+            assert doi.startswith("10.5281/zenodo.")
+            
+        finally:
+            # Cleanup: Delete the test deposition
+            if deposition_id:
+                try:
+                    client.delete_deposition(deposition_id)
+                except Exception as e:
+                    # Log but don't fail test if cleanup fails
+                    print(f"Warning: Failed to delete test deposition {deposition_id}: {e}")
 
     def test_prepare_arxiv_submission(self, tmp_path):
         """Test arXiv submission preparation."""
@@ -731,33 +758,58 @@ class TestDissemination:
         assert tar_path.exists()
         assert tar_path.name.endswith(".tar.gz")
 
-    def test_create_github_release(self, tmp_path, mocker):
-        """Test GitHub release creation."""
-        mock_post = mocker.patch("requests.post")
+    @pytest.mark.requires_github
+    @pytest.mark.requires_network
+    @pytest.mark.requires_credentials
+    def test_create_github_release_alt(self, tmp_path, github_credentials):
+        """Test GitHub release creation with real API calls (alternative test).
         
-        # Mock release creation response
-        mock_release_resp = MagicMock()
-        mock_release_resp.json.return_value = {
-            "upload_url": "https://uploads.github.com/repos/user/repo/releases/1/assets{?name,label}",
-            "html_url": "https://github.com/release"
-        }
-        mock_release_resp.raise_for_status.return_value = None
+        This is an additional test for GitHub release functionality.
+        """
+        import requests
+        import time
         
-        # Mock asset upload response
-        mock_asset_resp = MagicMock()
-        mock_asset_resp.raise_for_status.return_value = None
-        
-        mock_post.side_effect = [mock_release_resp, mock_asset_resp]
-        
+        # Create test artifact
         asset = tmp_path / "asset.pdf"
-        asset.touch()
+        asset.write_text("%PDF-1.4\nTest asset for GitHub release")
         
-        url = publishing.create_github_release(
-            "v1.0", "Release", "Desc", [asset], "token", "user/repo"
-        )
+        # Generate unique tag
+        tag = f"test-alt-{int(time.time())}"
         
-        assert url == "https://github.com/release"
-        assert mock_post.call_count == 2
+        release_id = None
+        try:
+            url = publishing.create_github_release(
+                tag, "Test Release Alt", "Test Description", 
+                [asset], github_credentials["token"], github_credentials["repository"]
+            )
+            
+            assert url is not None
+            assert "github.com" in url
+            
+            # Get release ID for cleanup
+            api_url = f"{github_credentials['api_url']}/repos/{github_credentials['repository']}/releases/tags/{tag}"
+            headers = {
+                "Authorization": f"token {github_credentials['token']}",
+                "Accept": "application/vnd.github.v3+json"
+            }
+            response = requests.get(api_url, headers=headers)
+            if response.status_code == 200:
+                release_id = response.json().get("id")
+        finally:
+            # Cleanup
+            if release_id:
+                try:
+                    delete_url = f"{github_credentials['api_url']}/repos/{github_credentials['repository']}/releases/{release_id}"
+                    headers = {"Authorization": f"token {github_credentials['token']}"}
+                    requests.delete(delete_url, headers=headers)
+                except:
+                    pass
+            try:
+                tag_url = f"{github_credentials['api_url']}/repos/{github_credentials['repository']}/git/refs/tags/{tag}"
+                headers = {"Authorization": f"token {github_credentials['token']}"}
+                requests.delete(tag_url, headers=headers)
+            except:
+                pass
 
 
 if __name__ == "__main__":

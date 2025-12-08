@@ -21,6 +21,7 @@ Architecture:
 """
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -59,13 +60,19 @@ def run_analysis_script(script_path: Path, repo_root: Path) -> int:
     
     project_root = repo_root / "project"
     
+    # Set environment variables for matplotlib (headless operation)
+    env = os.environ.copy()
+    env.setdefault('MPLBACKEND', 'Agg')
+    env.setdefault('MPLCONFIGDIR', '/tmp/matplotlib')
+    
     try:
         with log_operation(f"Execute {script_path.name}", logger):
             result = subprocess.run(
                 cmd,
                 cwd=str(project_root),
                 capture_output=False,
-                check=False
+                check=False,
+                env=env
             )
         
         if result.returncode != 0:

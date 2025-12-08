@@ -2,26 +2,51 @@
 
 This file contains LaTeX preamble commands that will be inserted at the beginning of each generated document.
 
+**BasicTeX Compatibility**: All packages listed below are available in BasicTeX 2025 after running:
+```bash
+sudo tlmgr install multirow cleveref doi newunicodechar
+```
+(Note: `bm` and `subcaption` are already included in BasicTeX as part of the `tools` and `caption` packages)
+
 ```latex
-% Essential packages for academic documents
+% ============================================================================
+% REQUIRED PACKAGES - Essential for document rendering
+% ============================================================================
+
+% Mathematical typesetting (required for equations and symbols)
 \usepackage{amsmath,amssymb}          % Mathematical symbols and environments
 \usepackage{amsfonts}                 % Additional math fonts
 \usepackage{amsthm}                   % Theorem environments
-\usepackage{graphicx}                 % Include graphics
-\usepackage[margin=1in]{geometry}     % Wider margins (1 inch all sides)
+
+% Graphics and page layout (required for figures and formatting)
+\usepackage{graphicx}                 % Include graphics (REQUIRED for figures)
+\usepackage[margin=1in]{geometry}     % Page margins
 \usepackage{float}                    % Better float placement
+
+% Tables (required for table formatting)
 \usepackage{booktabs}                 % Professional tables
 \usepackage{longtable}                % Long tables spanning pages
 \usepackage{array}                    % Advanced table formatting
+
+% PDF features (required for cross-references and metadata)
+\usepackage{url}                      % URL formatting
+\usepackage{hyperref}                 % Hyperlinks and cross-references
+\usepackage{natbib}                   % Bibliography support (REQUIRED)
+
+% ============================================================================
+% ENHANCED PACKAGES - Improve formatting and functionality
+% ============================================================================
+
+% Table enhancements (optional but recommended)
 \usepackage{multirow}                 % Multi-row table cells
 \usepackage{caption}                  % Enhanced caption formatting
 \usepackage{subcaption}               % Sub-figures and sub-tables
+
+% Math enhancements (optional but recommended)
 \usepackage{bm}                       % Bold math symbols
-\usepackage{url}                      % URL formatting
-\usepackage{hyperref}                 % Hyperlinks and cross-references
+
+% Reference enhancements (optional but recommended)
 \usepackage{cleveref}                 % Intelligent cross-referencing
-\usepackage[capitalise]{cleveref}     % Capitalize cross-reference labels
-\usepackage{natbib}                   % Bibliography support
 \usepackage{doi}                      % DOI links
 
 % Configure figure numbering and captions
@@ -70,6 +95,10 @@ This file contains LaTeX preamble commands that will be inserted at the beginnin
     pdfproducer={XeLaTeX}
 }
 
+% ============================================================================
+% PACKAGE CONFIGURATION
+% ============================================================================
+
 % Configure cleveref for intelligent cross-references
 \crefname{section}{Section}{Sections}
 \crefname{subsection}{Subsection}{Subsections}
@@ -89,9 +118,17 @@ This file contains LaTeX preamble commands that will be inserted at the beginnin
 \newunicodechar{₂}{\textsubscript{2}}
 \newunicodechar{₃}{\textsubscript{3}}
 
+% ============================================================================
+% FONTS AND TYPOGRAPHY
+% ============================================================================
+
 % Use standard fonts for better compatibility
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
+
+% ============================================================================
+% CODE BLOCK STYLING
+% ============================================================================
 
 % Enhanced code block styling for better contrast and readability
 \usepackage{fancyvrb}
@@ -186,7 +223,23 @@ This file contains LaTeX preamble commands that will be inserted at the beginnin
 % Simple page break support for document structure
 % Note: Page breaks are handled in the markdown generation, not here
 
+% ============================================================================
+% DOCUMENT FORMATTING
+% ============================================================================
+
 % Ensure proper spacing and formatting
 \frenchspacing  % Single space after periods
 \linespread{1.2}  % Slightly increased line spacing for readability
+
+% ============================================================================
+% NOTES FOR BASICTEX USERS
+% ============================================================================
+% If you encounter "File *.sty not found" errors, install missing packages:
+%   sudo tlmgr update --self
+%   sudo tlmgr install multirow cleveref doi newunicodechar
+% 
+% Packages already in BasicTeX (no installation needed):
+%   - bm (part of tools package)
+%   - subcaption (part of caption package)
+%   - amsmath, graphicx, hyperref, natbib (core packages)
 ```

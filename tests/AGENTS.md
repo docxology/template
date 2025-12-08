@@ -237,7 +237,29 @@ pytest tests/ -m "not requires_ollama"
 ```
 
 ### Common Markers
-- `requires_ollama`: marks tests that need a running Ollama service. Skip with `-m "not requires_ollama"`.
+
+Tests use pytest markers to indicate dependencies:
+
+- `requires_ollama`: tests that need a running Ollama service
+- `requires_zenodo`: tests that need Zenodo API credentials
+- `requires_github`: tests that need GitHub API credentials  
+- `requires_arxiv`: tests that need arXiv API credentials (optional)
+- `requires_latex`: tests that need LaTeX installed (pdflatex or xelatex)
+- `requires_network`: tests that need internet access
+- `requires_credentials`: general marker for any external service credentials
+
+**Skip tests without credentials:**
+```bash
+pytest tests/ -m "not requires_credentials"
+```
+
+**Run only specific service tests:**
+```bash
+pytest tests/ -m requires_zenodo
+pytest tests/ -m requires_github
+```
+
+**See [docs/TESTING_WITH_CREDENTIALS.md](../docs/TESTING_WITH_CREDENTIALS.md) for credential setup.**
 
 ## Writing Tests
 
@@ -442,13 +464,68 @@ def test_integration_with_other_modules():
     pass
 ```
 
+## Credential-Based Testing
+
+### Setup
+
+Tests that require external service credentials (Zenodo, GitHub, arXiv) will automatically skip if credentials are not configured. To run these tests:
+
+1. Copy credential templates:
+   ```bash
+   cp .env.example .env
+   cp test_credentials.yaml.example test_credentials.yaml
+   ```
+
+2. Add your credentials to `.env`:
+   ```bash
+   ZENODO_SANDBOX_TOKEN=your_token
+   GITHUB_TOKEN=your_token
+   GITHUB_REPO=username/test-repo
+   ```
+
+3. Run tests (credential-dependent tests will run if configured):
+   ```bash
+   pytest tests/
+   ```
+
+### Credential Fixtures
+
+The test suite provides credential fixtures via `tests/conftest.py`:
+
+- `credential_manager` - CredentialManager instance
+- `zenodo_credentials` - Zenodo API credentials (sandbox)
+- `github_credentials` - GitHub API credentials
+- `arxiv_credentials` - arXiv API credentials (optional)
+- `skip_if_no_latex` - Skip if LaTeX not installed
+
+**Example usage:**
+```python
+@pytest.mark.requires_zenodo
+@pytest.mark.requires_network
+def test_publish_to_zenodo(zenodo_credentials, tmp_path):
+    # Real API test with automatic skip if no credentials
+    from infrastructure.publishing.api import ZenodoClient
+    client = ZenodoClient(access_token=zenodo_credentials["token"])
+    # ... test with real API calls ...
+```
+
+### Security
+
+- Never commit `.env` or `test_credentials.yaml` (in `.gitignore`)
+- Always use Zenodo *sandbox* for tests, not production
+- Tests automatically clean up artifacts (depositions, releases)
+- Tokens should have minimum required scopes
+
+See **[docs/TESTING_WITH_CREDENTIALS.md](../docs/TESTING_WITH_CREDENTIALS.md)** for complete setup guide.
+
 ## See Also
 
-- [`conftest.py`](conftest.py) - Test configuration
+- [`conftest.py`](conftest.py) - Test configuration and fixtures
 - [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure module documentation
 - [`../project/src/AGENTS.md`](../project/src/AGENTS.md) - Project module documentation
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 - [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow
+- [`../docs/TESTING_WITH_CREDENTIALS.md`](../docs/TESTING_WITH_CREDENTIALS.md) - Credential configuration guide
 
 
 

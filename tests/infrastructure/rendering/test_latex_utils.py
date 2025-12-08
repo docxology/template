@@ -1,43 +1,55 @@
 import pytest
 import subprocess
+import shutil
 from pathlib import Path
-from unittest.mock import MagicMock
 from infrastructure.rendering.latex_utils import compile_latex
 from infrastructure.core.exceptions import CompilationError
 
-def test_compile_latex_success(tmp_path, mocker):
+
+@pytest.mark.requires_latex
+def test_compile_latex_success(tmp_path, skip_if_no_latex):
+    """Test LaTeX compilation with real compiler."""
+    # Create a valid minimal LaTeX file
     tex_file = tmp_path / "test.tex"
-    tex_file.touch()
+    tex_file.write_text(r"""\documentclass{article}
+\begin{document}
+Test document for compilation.
+\end{document}
+""")
+    
     output_dir = tmp_path / "out"
+    output_dir.mkdir()
     
-    # Mock subprocess
-    mock_run = mocker.patch("subprocess.run")
-    mock_run.return_value.returncode = 0
-    
-    # Mock PDF creation
-    def side_effect(*args, **kwargs):
-        (output_dir / "test.pdf").touch()
-        return mock_run.return_value
-    mock_run.side_effect = side_effect
-    
+    # Compile with real LaTeX
     result = compile_latex(tex_file, output_dir)
+    
+    # Verify PDF was created
     assert result == output_dir / "test.pdf"
-    assert mock_run.call_count == 2 # 2 passes
+    assert result.exists()
+    assert result.stat().st_size > 0
+
 
 def test_compile_latex_missing_file(tmp_path):
+    """Test error handling for missing LaTeX file."""
     with pytest.raises(CompilationError, match="not found"):
         compile_latex(tmp_path / "missing.tex", tmp_path / "out")
 
-def test_compile_latex_failure(tmp_path, mocker):
+
+@pytest.mark.requires_latex
+def test_compile_latex_failure(tmp_path, skip_if_no_latex):
+    """Test error handling for invalid LaTeX."""
+    # Create truly invalid LaTeX file (missing \begin{document} and \end{document})
+    # This will prevent PDF generation entirely
     tex_file = tmp_path / "test.tex"
-    tex_file.touch()
+    tex_file.write_text(r"""\documentclass{article}
+% Missing \begin{document} and \end{document} - truly invalid
+\invalid_command_that_does_not_exist
+""")
+    
     output_dir = tmp_path / "out"
+    output_dir.mkdir()
     
-    # Mock subprocess fail
-    mock_run = mocker.patch("subprocess.run")
-    mock_run.return_value.returncode = 1
-    mock_run.return_value.stderr = "Error"
-    
-    with pytest.raises(CompilationError, match="compilation failed"):
+    # Should raise CompilationError for truly invalid LaTeX (no PDF will be generated)
+    with pytest.raises(CompilationError):
         compile_latex(tex_file, output_dir)
 

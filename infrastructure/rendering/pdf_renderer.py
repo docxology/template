@@ -16,6 +16,43 @@ from infrastructure.rendering.latex_utils import compile_latex
 logger = get_logger(__name__)
 
 
+def _parse_missing_package_error(log_file: Path) -> Optional[str]:
+    """Parse LaTeX log for missing package errors.
+    
+    Args:
+        log_file: Path to LaTeX .log file
+        
+    Returns:
+        Name of missing package, or None if no package error found
+    """
+    if not log_file.exists():
+        return None
+    
+    try:
+        log_content = log_file.read_text(encoding='utf-8', errors='ignore')
+        
+        # Look for "File `*.sty' not found" pattern
+        import re
+        match = re.search(r"File `([^']+\.sty)' not found", log_content)
+        if match:
+            sty_file = match.group(1)
+            # Extract package name (remove .sty extension)
+            package_name = sty_file.replace('.sty', '')
+            return package_name
+        
+        # Also check for the "! LaTeX Error: File *.sty not found" pattern
+        match = re.search(r"! LaTeX Error: File `?([^'`\s]+\.sty)'? not found", log_content)
+        if match:
+            sty_file = match.group(1)
+            package_name = sty_file.replace('.sty', '')
+            return package_name
+            
+    except Exception as e:
+        logger.debug(f"Error parsing log file for package errors: {e}")
+    
+    return None
+
+
 class PDFRenderer:
     """Handles PDF generation logic."""
 
@@ -450,16 +487,38 @@ class PDFRenderer:
                     else:
                         # Only fail on critical errors after first pass
                         if "!" in result.stdout:
-                            raise RenderingError(
-                                f"XeLaTeX compilation failed (run {run+1})",
-                                context={"source": str(combined_tex), "output": str(output_file)},
-                                suggestions=[
-                                    "Check LaTeX log file for detailed error messages",
-                                    "Verify all required packages are installed (check graphicx, biblatex, etc.)",
-                                    "Ensure figure paths are correct relative to output directory",
-                                    "Run with --verbose flag for detailed compilation output"
-                                ]
-                            )
+                            # Check if this is a missing package error
+                            log_file = output_dir / "_combined_manuscript.log"
+                            missing_pkg = _parse_missing_package_error(log_file)
+                            
+                            if missing_pkg:
+                                raise RenderingError(
+                                    f"Missing LaTeX package: {missing_pkg}",
+                                    context={
+                                        "package": missing_pkg,
+                                        "source": str(combined_tex),
+                                        "log_file": str(log_file)
+                                    },
+                                    suggestions=[
+                                        f"Install package: sudo tlmgr install {missing_pkg}",
+                                        "Verify BasicTeX packages: python3 -m infrastructure.rendering.latex_package_validator",
+                                        "Update TeX Live: sudo tlmgr update --self",
+                                        "Or install full MacTeX instead of BasicTeX: https://www.tug.org/mactex/",
+                                        f"Check log file for details: {log_file}"
+                                    ]
+                                )
+                            else:
+                                raise RenderingError(
+                                    f"XeLaTeX compilation failed (run {run+1})",
+                                    context={"source": str(combined_tex), "output": str(output_file)},
+                                    suggestions=[
+                                        "Check LaTeX log file for detailed error messages",
+                                        "Verify all required packages are installed",
+                                        "Ensure figure paths are correct relative to output directory",
+                                        "Run: python3 -m infrastructure.rendering.latex_package_validator",
+                                        "Run with --verbose flag for detailed compilation output"
+                                    ]
+                                )
                 
                 # Check log file for unresolved references or TOC changes
                 log_file = output_dir / "_combined_manuscript.log"

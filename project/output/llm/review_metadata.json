@@ -1,7 +1,7 @@
 {
-  "model": "llama3-gradient:latest",
-  "timestamp": "2025-12-08T10:07:13.935160",
-  "source_pdf": "/Users/4d/Documents/GitHub/template/project/output/pdf/project_combined.pdf",
+  "model": "llama3:latest",
+  "timestamp": "2025-12-08T14:48:37.192845",
+  "source_pdf": "/Users/mini/Documents/GitHub/template/project/output/pdf/project_combined.pdf",
   "reviews_generated": [
     "translation_zh",
     "translation_hi",
@@ -9,39 +9,39 @@
   ],
   "max_input_length": 500000,
   "manuscript_metrics": {
-    "total_chars": 79794,
-    "total_words": 14922,
+    "total_chars": 79793,
+    "total_words": 14921,
     "total_tokens_est": 19948,
     "truncated": false,
-    "truncated_chars": 79794
+    "truncated_chars": 79793
   },
   "review_metrics": {
     "translation_zh": {
-      "input_chars": 79794,
-      "input_words": 14922,
+      "input_chars": 79793,
+      "input_words": 14921,
       "input_tokens_est": 19948,
-      "output_chars": 2112,
-      "output_words": 222,
-      "output_tokens_est": 528,
-      "generation_time_seconds": 31.55
+      "output_chars": 1174,
+      "output_words": 124,
+      "output_tokens_est": 293,
+      "generation_time_seconds": 38.21
     },
     "translation_hi": {
-      "input_chars": 79794,
-      "input_words": 14922,
+      "input_chars": 79793,
+      "input_words": 14921,
       "input_tokens_est": 19948,
-      "output_chars": 22999,
-      "output_words": 3538,
-      "output_tokens_est": 5749,
-      "generation_time_seconds": 123.79
+      "output_chars": 2457,
+      "output_words": 367,
+      "output_tokens_est": 614,
+      "generation_time_seconds": 67.69
     },
     "translation_ru": {
-      "input_chars": 79794,
-      "input_words": 14922,
+      "input_chars": 79793,
+      "input_words": 14921,
       "input_tokens_est": 19948,
-      "output_chars": 18243,
-      "output_words": 2532,
-      "output_tokens_est": 4560,
-      "generation_time_seconds": 123.86
+      "output_chars": 2315,
+      "output_words": 282,
+      "output_tokens_est": 578,
+      "generation_time_seconds": 51.01
     }
   },
   "format_compliance": {
@@ -66,7 +66,7 @@
       }
     }
   },
-  "total_generation_time_seconds": 279.21,
+  "total_generation_time_seconds": 156.92,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,

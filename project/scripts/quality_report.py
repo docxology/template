@@ -12,8 +12,19 @@ repo_root = Path(__file__).resolve().parents[2]
 if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
 
-from infrastructure.build.quality_checker import analyze_document_quality
-from infrastructure.build.reproducibility import generate_reproducibility_report
+# Try to import build modules (may not exist)
+try:
+    from infrastructure.build.quality_checker import analyze_document_quality
+    from infrastructure.build.reproducibility import generate_reproducibility_report
+    _BUILD_MODULES_AVAILABLE = True
+except (ImportError, ModuleNotFoundError):
+    _BUILD_MODULES_AVAILABLE = False
+    # Provide stub functions
+    def analyze_document_quality(path):
+        return {"status": "skipped", "reason": "infrastructure.build module not available"}
+    def generate_reproducibility_report(path):
+        return {"status": "skipped", "reason": "infrastructure.build module not available"}
+
 from infrastructure.validation import verify_output_integrity, validate_markdown
 from infrastructure.reporting import (
     generate_pipeline_report,
@@ -64,16 +75,20 @@ def main() -> None:
 
     # Quality analysis
     quality_metrics = {}
-    try:
-        quality_metrics = analyze_document_quality(args.manuscript_dir)
-        log_substep("Quality metrics: computed", logger)
-    except Exception as exc:
-        error_agg.add_error(
-            error_type="quality_error",
-            message=f"Quality metrics skipped: {exc}",
-            stage="quality_report",
-            severity="warning",
-        )
+    if not _BUILD_MODULES_AVAILABLE:
+        log_substep("Quality metrics: skipped (build modules not available)", logger)
+        quality_metrics = {"status": "skipped", "reason": "infrastructure.build not available"}
+    else:
+        try:
+            quality_metrics = analyze_document_quality(args.manuscript_dir)
+            log_substep("Quality metrics: computed", logger)
+        except Exception as exc:
+            error_agg.add_error(
+                error_type="quality_error",
+                message=f"Quality metrics skipped: {exc}",
+                stage="quality_report",
+                severity="warning",
+            )
 
     # Output integrity
     integrity_summary = {}
@@ -91,11 +106,15 @@ def main() -> None:
 
     # Reproducibility
     reproducibility = {}
-    try:
-        reproducibility = generate_reproducibility_report(Path("output"))
-        reproducibility = json.loads(json.dumps(reproducibility, default=str))
-    except Exception:
-        reproducibility = {}
+    if not _BUILD_MODULES_AVAILABLE:
+        log_substep("Reproducibility: skipped (build modules not available)", logger)
+        reproducibility = {"status": "skipped", "reason": "infrastructure.build not available"}
+    else:
+        try:
+            reproducibility = generate_reproducibility_report(Path("output"))
+            reproducibility = json.loads(json.dumps(reproducibility, default=str))
+        except Exception:
+            reproducibility = {}
 
     # Aggregate and persist
     summary = {

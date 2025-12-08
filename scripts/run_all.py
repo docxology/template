@@ -239,6 +239,9 @@ def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0, resume:
         })
         
         # Save checkpoint after each successful stage
+        # Note: Test stage (01) returns exit_code=0 even with failures if they're within
+        # tolerance configured via MAX_TEST_FAILURES, MAX_INFRA_TEST_FAILURES, or
+        # MAX_PROJECT_TEST_FAILURES environment variables
         if exit_code == 0:
             checkpoint_manager.save_checkpoint(
                 pipeline_start_time=start_time,
@@ -249,6 +252,7 @@ def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0, resume:
             log_success(f"Stage {i} completed ({stage_duration:.1f}s)", logger)
         else:
             logger.error(f"Stage {i} failed - stopping pipeline")
+            logger.error(f"  To allow test failures, set MAX_TEST_FAILURES environment variable")
             break
     
     # Clear checkpoint on successful completion
@@ -432,7 +436,8 @@ def main() -> int:
     
     try:
         # Discover stages first to get total count
-        orchestrators = discover_orchestrators()
+        repo_root = Path(__file__).parent.parent
+        orchestrators = discover_orchestrators(repo_root)
         
         if not orchestrators:
             raise PipelineError("No pipeline stages found")

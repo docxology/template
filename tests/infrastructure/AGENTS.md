@@ -474,9 +474,79 @@ tests/infrastructure/
 
 ## Testing Approach
 
+### Real Data and Real Services
+
+All infrastructure tests use **real implementations** without mocks:
+
+- **Literature tests**: Real PDF downloads from arXiv/Semantic Scholar
+- **Publishing tests**: Real API calls to Zenodo sandbox and GitHub
+- **Rendering tests**: Real LaTeX/Pandoc compilation
+- **LLM tests**: Real Ollama service connections
+
 ### Network-Dependent Tests
 
-For modules requiring external services:
+Tests requiring external services use pytest markers and automatic skipping:
+
+```python
+@pytest.mark.requires_zenodo
+@pytest.mark.requires_network
+def test_publish_to_zenodo(zenodo_credentials):
+    # Real Zenodo API test
+    # Automatically skipped if ZENODO_SANDBOX_TOKEN not configured
+    pass
+```
+
+**Available markers:**
+- `requires_zenodo` - Zenodo API credentials needed
+- `requires_github` - GitHub API credentials needed
+- `requires_arxiv` - arXiv API credentials needed (optional)
+- `requires_latex` - LaTeX installation needed
+- `requires_network` - Internet access needed
+- `requires_ollama` - Ollama service needed
+
+**Run tests selectively:**
+```bash
+# Skip all credential-dependent tests
+pytest tests/infrastructure/ -m "not requires_credentials"
+
+# Run only Zenodo tests
+pytest tests/infrastructure/ -m requires_zenodo
+
+# Skip LaTeX tests
+pytest tests/infrastructure/ -m "not requires_latex"
+```
+
+### Credential Configuration
+
+1. Create `.env` file from template:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Add credentials:
+   ```bash
+   ZENODO_SANDBOX_TOKEN=your_sandbox_token
+   GITHUB_TOKEN=your_github_token
+   GITHUB_REPO=username/test-repo
+   ```
+
+3. Run tests (credential tests auto-skip if not configured):
+   ```bash
+   pytest tests/infrastructure/
+   ```
+
+See [docs/TESTING_WITH_CREDENTIALS.md](../../docs/TESTING_WITH_CREDENTIALS.md) for detailed setup.
+
+### Test Cleanup
+
+Tests automatically clean up test artifacts:
+
+- **Zenodo**: Depositions deleted after test
+- **GitHub**: Releases and tags deleted after test  
+- **Files**: Temporary files cleaned by pytest fixtures
+- **PDFs**: Downloaded files in temp directories
+
+### For modules requiring external services:
 
 ```python
 @pytest.mark.requires_ollama

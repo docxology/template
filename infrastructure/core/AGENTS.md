@@ -30,6 +30,13 @@ The Core module provides fundamental foundation utilities used across the entire
 - Environment variable export
 - Translation language configuration
 
+**credentials.py**
+- Credential management from .env and YAML config files
+- Environment variable loading
+- YAML configuration with environment variable substitution
+- **Optional dependency**: `python-dotenv` (graceful fallback if not installed)
+- Supports credential access from multiple sources
+
 **progress.py**
 - Progress bar utilities for long-running operations
 - Sub-stage progress tracking
@@ -106,6 +113,28 @@ from infrastructure.core import load_config, get_config_as_dict, get_translation
 config = load_config(Path("project/manuscript/config.yaml"))
 env_dict = get_config_as_dict(Path("."))
 languages = get_translation_languages(Path("."))
+```
+
+### Credential Management
+```python
+from infrastructure.core.credentials import CredentialManager
+
+# Initialize with optional .env and YAML config files
+# Note: python-dotenv is optional - system works without it
+manager = CredentialManager(
+    env_file=Path(".env"),
+    config_file=Path("config.yaml")
+)
+
+# Get credentials from environment or config
+api_key = manager.get("API_KEY", default="default_key")
+```
+
+**Optional Dependency**: The `CredentialManager` uses `python-dotenv` for `.env` file support, but gracefully falls back if not installed. Install with:
+```bash
+pip install python-dotenv
+# or
+uv add python-dotenv
 ```
 
 ### Progress Tracking
@@ -185,9 +214,12 @@ pytest tests/infrastructure/test_core/
 
 ## Configuration
 
-Environment variables (used by logging_utils):
+Environment variables:
 - `LOG_LEVEL` - 0=DEBUG, 1=INFO, 2=WARNING, 3=ERROR (default: 1)
 - `NO_EMOJI` - Disable emoji output (default: enabled for TTY)
+
+**Optional Dependencies:**
+- `python-dotenv` - For `.env` file support in `credentials.py` (graceful fallback if not installed)
 
 ## Integration
 

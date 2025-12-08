@@ -47,15 +47,21 @@ def check_dependencies(required_packages: List[str] | None = None) -> Tuple[bool
     logger.info("Checking dependencies...")
     
     if required_packages is None:
+        # Core required packages (must be present)
         required_packages = [
             'numpy',
             'matplotlib',
             'pytest',
-            'scipy',
             'requests',
         ]
+        # Optional packages (nice to have but not critical)
+        optional_packages = ['scipy']
+    else:
+        optional_packages = []
     
     missing_packages = []
+    optional_missing = []
+    
     for package in required_packages:
         try:
             __import__(package)
@@ -63,6 +69,19 @@ def check_dependencies(required_packages: List[str] | None = None) -> Tuple[bool
         except ImportError:
             logger.error(f"Package '{package}' not found")
             missing_packages.append(package)
+    
+    # Check optional packages - warn but don't fail
+    for package in optional_packages:
+        try:
+            __import__(package)
+            log_success(f"Package '{package}' available", logger)
+        except ImportError:
+            logger.warning(f"Package '{package}' not found (optional)")
+            optional_missing.append(package)
+    
+    if optional_missing:
+        logger.info(f"Optional packages missing: {', '.join(optional_missing)}")
+        logger.info("These are not critical but recommended for full functionality")
     
     return len(missing_packages) == 0, missing_packages
 

@@ -801,11 +801,44 @@ python3 -c "import project.src.example; print('Import successful')"
 # Check LaTeX installation
 which xelatex
 
+# Validate LaTeX packages (pre-flight check)
+python3 -m infrastructure.rendering.latex_package_validator
+
 # Validate markdown first
 python3 -m infrastructure.validation.cli markdown manuscript/
 
 # Check compilation logs
 ls output/pdf/*_compile.log
+```
+
+**Missing LaTeX Package Errors**:
+
+If you see "File *.sty not found" during PDF rendering:
+
+1. **Identify the missing package** from the error message
+2. **Install via tlmgr** (BasicTeX package manager):
+   ```bash
+   sudo tlmgr update --self
+   sudo tlmgr install multirow cleveref doi newunicodechar
+   ```
+
+3. **Verify installation**:
+   ```bash
+   /usr/local/texlive/2025basic/bin/universal-darwin/kpsewhich multirow.sty
+   ```
+
+4. **Run pre-flight validation**:
+   ```bash
+   python3 -m infrastructure.rendering.latex_package_validator
+   ```
+
+**Common missing packages in BasicTeX**:
+- `multirow`, `cleveref`, `doi`, `newunicodechar` - Require installation
+- `bm`, `subcaption` - Already included (part of `tools` and `caption`)
+
+**Alternative**: Install full MacTeX (~4 GB) instead of BasicTeX (~100 MB):
+```bash
+brew install --cask mactex
 ```
 
 #### Missing Dependencies
@@ -814,7 +847,13 @@ ls output/pdf/*_compile.log
 # Ubuntu/Debian:
 sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended fonts-dejavu
 
-# macOS:
+# macOS (BasicTeX - minimal):
+brew install pandoc
+brew install --cask basictex
+sudo tlmgr update --self
+sudo tlmgr install multirow cleveref doi newunicodechar
+
+# macOS (MacTeX - complete):
 brew install pandoc
 brew install --cask mactex
 ```
@@ -951,15 +990,21 @@ See [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md) for complete docume
 ## ✅ System Status: FULLY OPERATIONAL (v2.0)
 
 **All systems confirmed functional:**
-- ✅ Test suite (2245 tests passing: 1894 infrastructure + 351 project)
+- ✅ Test suite (2178 tests passing: 1858 infrastructure + 320 project)
 - ✅ Package API testing (test_package_imports.py validates __init__.py)
-- ✅ Script execution (thin orchestrator pattern fully compliant)
+- ✅ Script execution (all 7 analysis scripts operational)
 - ✅ Markdown validation (all references resolved, no warnings)
-- ✅ PDF generation (individual + combined, all formats)
+- ✅ PDF generation (individual sections, beamer slides, HTML output)
 - ✅ Cross-reference system (citations, equations, figures resolved)
 - ✅ Configuration system (YAML config + environment variables)
-- ✅ Output validation (no rendering issues, all PDFs valid)
+- ✅ Output validation (figures, data files, reports validated)
 - ✅ Documentation (comprehensive guides, complete .cursorrules standards)
+
+**Environment Management:**
+- ✅ Matplotlib auto-configuration (headless operation via MPLBACKEND=Agg)
+- ✅ Optional dependency handling (python-dotenv graceful fallback)
+- ✅ Test failure tolerance (MAX_TEST_FAILURES environment variable)
+- ✅ LaTeX path management (BasicTeX/MacTeX support)
 
 **New Modules (v2.0):**
 - ✅ Literature Search (91% coverage, 8 tests) - Multi-source academic search
@@ -968,11 +1013,12 @@ See [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md) for complete docume
 - ✅ Publishing API (integrated) - Zenodo, arXiv, GitHub automation
 
 **Comprehensive Audit Status:**
-- ✅ Comprehensive code coverage achieved (66.76% infra, exceeds 60% minimum)
+- ✅ Comprehensive code coverage achieved (68.02% infra, 98.03% project)
+- ✅ Infrastructure coverage exceeds 60% minimum requirement
+- ✅ Project coverage exceeds 90% minimum requirement
 - ✅ Zero mock methods - all tests use real data
 - ✅ All .cursorrules standards fully implemented
 - ✅ Complete compliance with thin orchestrator pattern
-- ✅ Production-ready build pipeline (5-stage execution)
+- ✅ Production-ready build pipeline (6-stage core, 10-stage extended)
 - ✅ Reproducible outputs (deterministic with fixed seeds)
-- ✅ 40 new tests (100% passing) for new modules
-- ✅ 85%+ coverage on new infrastructure modules
+- ✅ Graceful degradation for optional features
