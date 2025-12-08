@@ -1,6 +1,6 @@
 # tests/ - Test Suite
 
-Comprehensive test suite ensuring coverage requirements for both infrastructure and project modules (49% infrastructure minimum, 70% project minimum).
+Comprehensive test suite ensuring coverage requirements for both infrastructure and project modules (49% infrastructure minimum, 70% project minimum). Current status: **99.88% project**, **61.48% infrastructure**, **2175 tests passing** (1855 infra + 320 project).
 
 ## Quick Start
 
@@ -31,14 +31,19 @@ pytest tests/integration/test_module_interoperability.py -v
 # By pattern
 pytest tests/ -k "test_config" -v
 
+# Skip Ollama-dependent tests
+pytest tests/ -m "not requires_ollama"
 # Stop on first failure
 pytest tests/ -x
+
+### Common Markers
+- `requires_ollama`: marks tests that need a running Ollama service. Skip with `-m "not requires_ollama"`.
 ```
 
-## Coverage Requirements
+## Coverage Requirements (pipeline enforced)
 
-- **70% minimum coverage** required for project/src/ modules
-- **49% minimum coverage** required for infrastructure/ modules
+- **Project** (`project/src/`): 70% minimum (currently 99.88%)
+- **Infrastructure** (`infrastructure/`): 49% minimum (currently 61.48%)
 - Tests must pass before PDF generation
 - Real data only (no mocks)
 - Coverage report: `htmlcov/index.html`
@@ -200,9 +205,9 @@ The test suite includes comprehensive validation for:
 
 ## Test Coverage Statistics
 
-### Overall Coverage
+### Overall Coverage (latest)
 - **Project** (`project/src/`): **99.88%** (Target: 70%+) ✅
-- **Infrastructure** (`infrastructure/`): **70.09%** (Target: 49%+) ✅
+- **Infrastructure** (`infrastructure/`): **61.48%** (Target: 49%+) ✅
 
 ### Coverage Details
 Both test suites exceed their minimum requirements. For detailed coverage analysis of infrastructure modules, see [`docs/COVERAGE_GAPS.md`](../docs/COVERAGE_GAPS.md).

@@ -38,20 +38,21 @@ Core Pipeline Scripts (aligned with script numbering):
   3. Render PDF (03_render_pdf.py)
   4. Validate Output (04_validate_output.py)
   5. Copy Outputs (05_copy_outputs.py)
-  6. LLM Review (requires Ollama) (06_llm_review.py)
-  7. Literature Search (07_literature_search.py)
+  6. LLM Review (requires Ollama) (06_llm_review.py --reviews-only)
+  7. LLM Translations (requires Ollama) (06_llm_review.py --translations-only)
 
 Orchestration:
   8. Run Full Pipeline (10 stages: 0-9, via run.sh)
 
-Literature Sub-Operations (via 07_literature_search.py):
-  9. Search only (network only)
-  10. Download only (network only)
-  11. Summarize (requires Ollama)
-  12. Cleanup (local files only)
-  13. Advanced LLM operations (requires Ollama)
+Literature Operations (via 07_literature_search.py, not part of core pipeline):
+  9. Literature Search (all operations)
+  10. Search only (network only)
+  11. Download only (network only)
+  12. Summarize (requires Ollama)
+  13. Cleanup (local files only)
+  14. Advanced LLM operations (requires Ollama)
 
-  14. Exit
+  15. Exit
 ============================================================
 ```
 
@@ -127,7 +128,7 @@ Additional stages available in the interactive orchestrator (stages 8-9):
 | 8 | `06_llm_review.py --reviews-only` | LLM Scientific Review (optional) |
 | 9 | `06_llm_review.py --translations-only` | LLM Translations (optional) |
 
-**Note**: Literature operations (menu options 7, 9-13) are standalone operations, not part of the main pipeline stages.
+**Note**: Literature operations (menu options 9-14) are standalone operations, not part of the main pipeline stages.
 
 **Stage Numbering:**
 - `./run.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
@@ -244,7 +245,7 @@ The pipeline automatically generates comprehensive reports in `project/output/re
 - **Cleanup**: Removes papers without PDFs from library (local files only, no Ollama required)
 - **LLM Operations**: Advanced LLM operations like literature review synthesis (requires Ollama)
 
-**Note**: These are standalone operations (menu options 7, 9-13), not part of the main 10-stage pipeline.
+**Note**: These are standalone operations (menu options 9-14), not part of the main 10-stage pipeline.
 
 **Usage**:
 ```bash
@@ -386,7 +387,7 @@ scripts/ (Generic Entry Points)
   ├─ 03_render_pdf.py → Build manuscript
   ├─ 04_validate_output.py → Validate outputs
   ├─ 05_copy_outputs.py → Copy deliverables
-  ├─ 06_llm_review.py → LLM manuscript review (optional)
+  ├─ 06_llm_review.py → LLM manuscript review & translations (optional)
   └─ 07_literature_search.py → Literature search & summarization
 
 project/scripts/ (Project-Specific)

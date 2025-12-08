@@ -352,7 +352,7 @@ Percentage of code executed during test runs. This template requires 70% minimum
 ### Test Suite
 Collection of all test files in `tests/` directory. Ensures all functionality works correctly.
 
-**Status**: 1934 tests passing (1884 infra + 351 project, 100%)
+**Status**: 2175 tests passing (1855 infra + 320 project, 100%)
 
 **Run**: `pytest tests/`
 
@@ -363,7 +363,7 @@ Process of validating code correctness through automated test cases. No mocks al
 
 **Requirements**:
 - 70% minimum for project code (currently 99.88%)
-- 49% minimum for infrastructure (currently 55.89%)
+- 49% minimum for infrastructure (currently 61.48%)
 - Real data (no mocks)
 - Deterministic results
 - All tests must pass

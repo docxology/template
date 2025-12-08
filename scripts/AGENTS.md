@@ -293,7 +293,7 @@ python3 scripts/07_literature_search.py --search --summarize
 
 ## Menu-to-Script Mapping
 
-The interactive menu (`./run.sh`) maps to Python scripts as follows. Menu numbering aligns with script numbering (0-7 for scripts, 8 for full pipeline, 9+ for sub-ops):
+The interactive menu (`./run.sh`) maps to Python scripts as follows. Menu numbering aligns with script numbering (0-7 for core scripts including LLM review/translations, 8 for full pipeline, 9+ for literature operations):
 
 | Menu Option | Script | Arguments | Requires Ollama | Description |
 |-------------|--------|-----------|----------------|-------------|
@@ -303,14 +303,16 @@ The interactive menu (`./run.sh`) maps to Python scripts as follows. Menu number
 | 3 | `03_render_pdf.py` | - | No | Render PDF (also runs `02_run_analysis.py`) |
 | 4 | `04_validate_output.py` | - | No | Validate Output |
 | 5 | `05_copy_outputs.py` | - | No | Copy Outputs |
-| 6 | `06_llm_review.py` | - | Yes | LLM Review (reviews and translations) |
-| 7 | `07_literature_search.py` | `--search --summarize` | No* | Literature Search (all operations, *summarize requires Ollama) |
+| 6 | `06_llm_review.py` | `--reviews-only` | Yes | LLM Review (manuscript review) |
+| 7 | `06_llm_review.py` | `--translations-only` | Yes | LLM Translations (technical abstract translations) |
 | 8 | `run.sh --pipeline` | - | No* | Run Full Pipeline (10 stages: 0-9, *stages 8-9 require Ollama) |
-| 9 | `07_literature_search.py` | `--search-only` | No | Search only (network only) |
-| 10 | `07_literature_search.py` | `--download-only` | No | Download only (network only) |
-| 11 | `07_literature_search.py` | `--summarize` | Yes | Summarize (requires Ollama) |
-| 12 | `07_literature_search.py` | `--cleanup` | No | Cleanup (local files only) |
-| 13 | `07_literature_search.py` | `--llm-operation` | Yes | Advanced LLM operations (requires Ollama) |
+| 9 | `07_literature_search.py` | `--search --summarize` | No* | Literature Search (all operations, *summarize requires Ollama) |
+| 10 | `07_literature_search.py` | `--search-only` | No | Search only (network only) |
+| 11 | `07_literature_search.py` | `--download-only` | No | Download only (network only) |
+| 12 | `07_literature_search.py` | `--summarize` | Yes | Summarize (requires Ollama) |
+| 13 | `07_literature_search.py` | `--cleanup` | No | Cleanup (local files only) |
+| 14 | `07_literature_search.py` | `--llm-operation` | Yes | Advanced LLM operations (requires Ollama) |
+| 15 | `exit` | - | No | Exit menu |
 
 This mapping is also available programmatically via `scripts.MENU_SCRIPT_MAPPING`.
 

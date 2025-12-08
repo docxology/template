@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-The repository demonstrates **excellent architectural adherence** to the thin orchestrator pattern and maintains **comprehensive documentation coverage**. The codebase is well-structured with clear separation between infrastructure (Layer 1) and project-specific code (Layer 2). Test coverage exceeds requirements (99.88% project, 55.89% infrastructure vs. 70% and 49% minimums).
+The repository demonstrates **excellent architectural adherence** to the thin orchestrator pattern and maintains **comprehensive documentation coverage**. The codebase is well-structured with clear separation between infrastructure (Layer 1) and project-specific code (Layer 2). Test coverage exceeds requirements (99.88% project, 61.48% infrastructure vs. 70% and 49% minimums).
 
 **Overall Assessment:** ✅ **Production-ready with minor improvements recommended**
 
@@ -28,9 +28,9 @@ The repository demonstrates **excellent architectural adherence** to the thin or
 
 ### 1.3 Test Coverage ✅
 - **Project layer**: 99.88% coverage (exceeds 70% requirement)
-- **Infrastructure layer**: 55.89% coverage (exceeds 49% requirement)
+- **Infrastructure layer**: 61.48% coverage (exceeds 49% requirement)
 - **No mocks policy**: All tests use real data and computations
-- **Comprehensive test suites**: 1934 tests passing (1884 infrastructure + 351 project)
+- **Comprehensive test suites**: 2175 tests passing (1855 infrastructure + 320 project)
 
 ### 1.4 Code Quality ✅
 - **Type hints**: Present in all public APIs
@@ -128,7 +128,7 @@ def _ensure_src_on_path() -> None:
 **Status:**
 - Documentation indicates improvement plans exist
 - Some test files mentioned as "created" but coverage still low
-- Overall infrastructure coverage (55.89%) exceeds minimum (49%), so not blocking
+- Overall infrastructure coverage (61.48%) exceeds minimum (49%), so not blocking
 
 **Recommendation:**
 - Verify test files exist for all modules mentioned in COVERAGE_GAPS.md
@@ -202,7 +202,7 @@ avg = calculate_average(data)  # ✅ Delegates to tested module
 **Layer 1 (Infrastructure):**
 - ✅ Generic, reusable modules
 - ✅ No project-specific dependencies
-- ✅ Well-tested (55.89% coverage)
+- ✅ Well-tested (61.48% coverage)
 
 **Layer 2 (Project):**
 - ✅ Project-specific scientific code
@@ -228,25 +228,25 @@ avg = calculate_average(data)  # ✅ Delegates to tested module
 | Layer | Current | Requirement | Status |
 |-------|---------|-------------|--------|
 | Project (`project/src/`) | 99.88% | 70% | ✅ Exceeds |
-| Infrastructure (`infrastructure/`) | 55.89% | 49% | ✅ Exceeds |
+| Infrastructure (`infrastructure/`) | 61.48% | 49% | ✅ Exceeds |
 
 ### 4.2 Coverage Gaps
 
 **Documented Gaps (from COVERAGE_GAPS.md):**
-1. `infrastructure/reporting/` - **0% coverage** (no tests exist) ⚠️
+1. `infrastructure/reporting/` - **67.21% coverage** (tests added; continue improving Markdown/HTML sections) ⚠️
 2. `infrastructure/literature/cli.py` - 6.80%
 3. `infrastructure/literature/llm_operations.py` - 13.21%
 4. `infrastructure/core/retry.py` - 22.22%
 5. `infrastructure/core/progress.py` - 18.09%
 
-**Note:** Overall infrastructure coverage (55.89%) still exceeds minimum (49%) despite these gaps.
+**Note:** Overall infrastructure coverage (61.48%) still exceeds minimum (49%) despite these gaps.
 
 ### 4.3 Test Quality ✅
 
 **Strengths:**
 - ✅ No mock methods (all tests use real data)
 - ✅ Deterministic tests (fixed RNG seeds)
-- ✅ Comprehensive test suites (1934 tests)
+- ✅ Comprehensive test suites (2175 tests)
 - ✅ Integration tests present
 
 ---

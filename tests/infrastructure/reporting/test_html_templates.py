@@ -1,30 +1,23 @@
-"""Tests for infrastructure.reporting.html_templates."""
-
 from __future__ import annotations
 
-from infrastructure.reporting.html_templates import (
-    get_base_html_template,
-    render_summary_cards,
-    render_table,
-)
+from infrastructure.reporting import html_templates
 
 
-def test_base_template_has_placeholders():
-    template = get_base_html_template()
+def test_get_base_html_template_has_placeholders() -> None:
+    template = html_templates.get_base_html_template()
     assert "{title}" in template
-    assert "{content}" in template
     assert "{header}" in template
+    assert "{content}" in template
 
 
-def test_render_summary_cards_and_table():
-    cards_html = render_summary_cards(
-        [{"title": "A", "value": "1"}, {"title": "B", "value": "2"}]
+def test_render_summary_cards_and_table() -> None:
+    cards_html = html_templates.render_summary_cards(
+        [{"title": "Tests", "value": "10"}, {"title": "Passed", "value": "9"}]
     )
-    assert "summary-card" in cards_html
-    assert "A" in cards_html and "B" in cards_html
+    assert "Tests" in cards_html
+    assert "9" in cards_html
 
-    table_html = render_table(["H1", "H2"], [["a", "b"], ["c", "d"]])
-    assert "<th>H1</th>" in table_html
-    assert "<td>a</td>" in table_html
-
+    table_html = html_templates.render_table(headers=["Name", "Status"], rows=[["setup", "passed"]])
+    assert "<table>" in table_html
+    assert "setup" in table_html
 

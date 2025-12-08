@@ -36,7 +36,7 @@ The build system is **fully operational** and produces all expected outputs corr
 
 **Result:** ✅ **ALL TESTS PASSING**
 
-**Note:** This shows project tests only (351 tests). Total test suite: 1934 tests (1884 infrastructure + 351 project).
+**Note:** This shows project tests only (320 tests). Total test suite: 2175 tests (1855 infrastructure + 320 project).
 
 ```
 collected 322 items
@@ -432,7 +432,7 @@ cat: /Users/4d/Documents/GitHub/template/manuscript//Users/4d/Documents/GitHub/t
 
 The build system is **production-ready** and performs excellently:
 
-- ✅ **All tests pass** (1934 total: 1884 infrastructure + 351 project)
+- ✅ **All tests pass** (2175 total: 1855 infrastructure + 320 project)
 - ✅ **All PDFs generate correctly** (13/13 successful)
 - ✅ **All scripts execute successfully** (2/2 successful)
 - ✅ **All figures and data generated** (12/12 successful)

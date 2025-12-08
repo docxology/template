@@ -317,7 +317,7 @@ Each module has complete documentation:
 All new code complies with:
 - ✅ Two-layer architecture
 - ✅ Thin orchestrator pattern
-- ✅ Comprehensive test coverage (55.89% infrastructure, exceeds 49% minimum)
+- ✅ Comprehensive test coverage (61.48% infrastructure, exceeds 49% minimum)
 - ✅ Type hints on public APIs
 - ✅ Unified logging
 - ✅ Custom exceptions

@@ -1,4 +1,10 @@
-"""Pytest configuration for template infrastructure tests."""
+"""Pytest configuration for template tests.
+
+This file:
+- Forces headless matplotlib (MPLBACKEND=Agg)
+- Inserts repository roots (infrastructure/, project/src/) ahead of tests/ to avoid shadowing
+- Keeps imports consistent for both infrastructure and project test suites
+"""
 import os
 import sys
 

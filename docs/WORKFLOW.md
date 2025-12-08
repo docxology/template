@@ -183,7 +183,7 @@ The pipeline orchestrator executes 6 stages:
 
 ### Tests (`tests/`)
 - **70% minimum coverage** for project/src/ (currently achieving 99.88%)
-- **49% minimum coverage** for infrastructure/ (currently achieving 55.89%)
+- **49% minimum coverage** for infrastructure/ (currently achieving 61.48%)
 - **Real numerical examples** (no mocks)
 - **Deterministic RNG seeds** for reproducibility
 - **Fast and hermetic** execution

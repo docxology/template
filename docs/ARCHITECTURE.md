@@ -117,7 +117,7 @@ graph TB
 **Purpose**: Validates all source code functionality with comprehensive coverage.
 
 **Coverage Requirements**:
-- **Infrastructure**: 49% minimum (currently achieving 55.89%)
+- **Infrastructure**: 49% minimum (currently achieving 61.48%)
 - **Project code**: 70% minimum (currently achieving 99.88%)
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducible results

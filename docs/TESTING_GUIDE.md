@@ -106,7 +106,7 @@ def test_with_fixture(temp_data_file):
 ## Coverage Requirements
 
 - **70% minimum** for project/src/ (currently achieving 99.88%)
-- **49% minimum** for infrastructure/ (currently achieving 55.89%)
+- **49% minimum** for infrastructure/ (currently achieving 61.48%)
 - No mock methods - use real data
 - Test all error paths
 

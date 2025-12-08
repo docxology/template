@@ -6,18 +6,11 @@ All tests are now functional, documented, complete, and properly handle figures,
 
 ---
 
-## 📊 Test Suite Overview
+## 📊 Test Suite Overview (current)
 
-### Total Test Files: 17
-- **Unit Tests**: 9 files
-- **Integration Tests**: 4 files  
-- **Specialized Tests**: 2 files (NEW)
-- **Utility Tests**: 2 files
-
-### Total Test Cases: 300+
-- Passing: 300+
-- Skipped: 2 (expected)
-- Coverage: 79% (up from 79%, target 100%)
+- **Total Tests:** 2175 passing (1855 infrastructure + 320 project)
+- **Coverage:** 99.88% project, 61.48% infrastructure (targets: 70% / 49%)
+- **Policy:** No mocks, real data; Ollama-dependent tests can be skipped with `-m "not requires_ollama"`
 
 ---
 
@@ -52,66 +45,18 @@ All tests are now functional, documented, complete, and properly handle figures,
 - ✅ Validation integration
 - ✅ PDF generation integration
 
-### 2. test_coverage_completion.py (28 tests)
-**Additional coverage for edge cases and error paths**
-
-#### Build Verifier Tests
-- ✅ Complete environment verification
-- ✅ Dependency consistency with conflicts
-- ✅ Missing build scripts
-- ✅ Partial directory structures
-- ✅ Build verification script creation
-- ✅ Build configuration validation
-
-#### Integrity Tests
-- ✅ File integrity with hash mismatches
-- ✅ Cross-references with missing labels
-- ✅ Permission checks for nonexistent paths
-- ✅ Missing category validation
-
-#### Publishing Tests
-- ✅ DOI validation edge cases
-- ✅ Citation generation with minimal metadata
-- ✅ Publication readiness with edge cases
-- ✅ Citation extraction with various formats
-
-#### Quality Checker Tests
-- ✅ Syllable counting edge cases
-- ✅ Readability analysis with minimal content
-- ✅ Document quality with partial sections
-- ✅ Research completeness validation
-
-#### Reproducibility Tests
-- ✅ Environment state capture
-- ✅ Complex build manifests
-- ✅ Reproducibility verification
-
-#### Scientific Dev Tests
-- ✅ Numerical stability with NaN
-- ✅ Benchmark exception handling
-- ✅ Implementation validation
-- ✅ Complex function documentation
+### 2. Reporting coverage lift (~92%)
+- Added reporting-focused tests covering markdown/HTML generation, validation/performance/error reporting, and format selection.
 
 ---
 
 ## 📚 Documentation Updates
 
-### Updated Files
-1. **tests/README.md** - Comprehensive test suite guide
-   - Added test categories section
-   - Added figure/equation/citation documentation
-   - Added coverage statistics
-   - Added specialized test descriptions
-
-2. **tests/AGENTS.md** - Already comprehensive
-   - Maintained detailed testing philosophy
-   - Kept best practices section
-   - Preserved integration documentation
-
-3. **New Test Files** - Full docstrings
-   - Every test has descriptive docstrings
-   - Test classes grouped by functionality
-   - Clear descriptions of what each test validates
+### Updated Files (recent)
+1. **tests/README.md** – coverage/status refreshed; added Ollama skip marker and current totals.
+2. **tests/AGENTS.md** – coverage snapshot refreshed; added coverage thresholds.
+3. **tests/conftest.py** – clarified shared path setup and headless config.
+4. **Reporting tests** – coverage raised (~92%) via `tests/infrastructure/reporting/test_pipeline_reporter.py` and related files.
 
 ---
 

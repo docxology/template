@@ -12,20 +12,21 @@
 #   3. Render PDF (03_render_pdf.py)
 #   4. Validate Output (04_validate_output.py)
 #   5. Copy Outputs (05_copy_outputs.py)
-#   6. LLM Review (requires Ollama) (06_llm_review.py)
-#   7. Literature Search (07_literature_search.py)
+#   6. LLM Review (requires Ollama) (06_llm_review.py --reviews-only)
+#   7. LLM Translations (requires Ollama) (06_llm_review.py --translations-only)
 #
 # Orchestration:
 #   8. Run Full Pipeline (10 stages: 0-9, via run.sh)
 #
-# Literature Sub-Operations (via 07_literature_search.py):
-#   9. Search only (network only)
-#   10. Download only (network only)
-#   11. Summarize (requires Ollama)
-#   12. Cleanup (local files only)
-#   13. Advanced LLM operations (requires Ollama)
+# Literature Operations (not part of the core pipeline):
+#   9. Literature Search (all operations) (07_literature_search.py)
+#   10. Search only (network only)
+#   11. Download only (network only)
+#   12. Summarize (requires Ollama)
+#   13. Cleanup (local files only)
+#   14. Advanced LLM operations (requires Ollama)
 #
-#   14. Exit
+#   15. Exit
 #
 # Non-interactive mode: Use dedicated flags (--pipeline, --infra-tests, etc.)
 #
@@ -291,20 +292,21 @@ display_menu() {
     echo "  3. Render PDF (03_render_pdf.py)"
     echo "  4. Validate Output (04_validate_output.py)"
     echo "  5. Copy Outputs (05_copy_outputs.py)"
-    echo -e "  6. LLM Review ${YELLOW}(requires Ollama)${NC} (06_llm_review.py)"
-    echo "  7. Literature Search (07_literature_search.py)"
+    echo -e "  6. LLM Review ${YELLOW}(requires Ollama)${NC} (06_llm_review.py --reviews-only)"
+    echo -e "  7. LLM Translations ${YELLOW}(requires Ollama)${NC} (06_llm_review.py --translations-only)"
     echo
     echo -e "${BOLD}Orchestration:${NC}"
     echo "  8. Run Full Pipeline (10 stages: 0-9, via run.sh)"
     echo
-    echo -e "${BOLD}Literature Sub-Operations (via 07_literature_search.py):${NC}"
-    echo -e "  9. Search only ${CYAN}(network only)${NC}"
-    echo -e "  10. Download only ${CYAN}(network only)${NC}"
-    echo -e "  11. Summarize ${YELLOW}(requires Ollama)${NC}"
-    echo -e "  12. Cleanup ${CYAN}(local files only)${NC}"
-    echo -e "  13. Advanced LLM operations ${YELLOW}(requires Ollama)${NC}"
+    echo -e "${BOLD}Literature Operations (via 07_literature_search.py):${NC}"
+    echo -e "  9. Literature Search (all operations)"
+    echo -e "  10. Search only ${CYAN}(network only)${NC}"
+    echo -e "  11. Download only ${CYAN}(network only)${NC}"
+    echo -e "  12. Summarize ${YELLOW}(requires Ollama)${NC}"
+    echo -e "  13. Cleanup ${CYAN}(local files only)${NC}"
+    echo -e "  14. Advanced LLM operations ${YELLOW}(requires Ollama)${NC}"
     echo
-    echo "  14. Exit"
+    echo "  15. Exit"
     echo
     echo -e "${BLUE}============================================================${NC}"
     echo -e "  Repository: ${CYAN}$REPO_ROOT${NC}"
@@ -1266,7 +1268,7 @@ handle_menu_choice() {
             exit_code=$?
             ;;
         7)
-            run_literature_search_all
+            run_llm_translations
             exit_code=$?
             ;;
         8)
@@ -1274,33 +1276,37 @@ handle_menu_choice() {
             exit_code=$?
             ;;
         9)
-            run_literature_search
+            run_literature_search_all
             exit_code=$?
             ;;
         10)
-            run_literature_download
+            run_literature_search
             exit_code=$?
             ;;
         11)
-            run_literature_summarize
+            run_literature_download
             exit_code=$?
             ;;
         12)
-            run_literature_cleanup
+            run_literature_summarize
             exit_code=$?
             ;;
         13)
-            run_literature_llm_operations
+            run_literature_cleanup
             exit_code=$?
             ;;
         14)
+            run_literature_llm_operations
+            exit_code=$?
+            ;;
+        15)
             echo
             log_info "Exiting. Goodbye!"
             exit 0
             ;;
         *)
             log_error "Invalid option: $choice"
-            log_info "Please enter a number between 0 and 14"
+            log_info "Please enter a number between 0 and 15"
             exit_code=1
             ;;
     esac
@@ -1392,19 +1398,20 @@ show_help() {
     echo "  3  Render PDF (03_render_pdf.py)"
     echo "  4  Validate Output (04_validate_output.py)"
     echo "  5  Copy Outputs (05_copy_outputs.py)"
-    echo "  6  LLM Review (requires Ollama) (06_llm_review.py)"
-    echo "  7  Literature Search (07_literature_search.py)"
+    echo "  6  LLM Review (requires Ollama) (06_llm_review.py --reviews-only)"
+    echo "  7  LLM Translations (requires Ollama) (06_llm_review.py --translations-only)"
     echo
     echo "Orchestration:"
     echo "  8  Run Full Pipeline (10 stages: 0-9, via run.sh)"
     echo
-    echo "Literature Sub-Operations (via 07_literature_search.py):"
-    echo "  9  Search only (network only)"
-    echo "  10 Download only (network only)"
-    echo "  11 Summarize (requires Ollama)"
-    echo "  12 Cleanup (local files only)"
-    echo "  13 Advanced LLM operations (requires Ollama)"
-    echo "  14 Exit"
+    echo "Literature Operations (via 07_literature_search.py):"
+    echo "  9  Literature Search (all operations)"
+    echo "  10 Search only (network only)"
+    echo "  11 Download only (network only)"
+    echo "  12 Summarize (requires Ollama)"
+    echo "  13 Cleanup (local files only)"
+    echo "  14 Advanced LLM operations (requires Ollama)"
+    echo "  15 Exit"
     echo
     echo "Examples:"
     echo "  $0                      # Interactive menu mode"
@@ -1419,7 +1426,7 @@ show_help() {
     echo "  $0 --summarize           # Generate summaries (for papers with PDFs)"
     echo "  $0 --cleanup             # Cleanup library (remove papers without PDFs)"
     echo
-    echo "Note: --option N is also supported for compatibility (0-14)"
+    echo "Note: --option N is also supported for compatibility (0-15)"
     echo
 }
 
@@ -1515,7 +1522,7 @@ main() {
     while true; do
         display_menu
         
-        echo -n "Select option [0-14]: "
+        echo -n "Select option [0-15]: "
         read -r choice
 
         local exit_code=0

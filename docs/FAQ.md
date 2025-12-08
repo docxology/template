@@ -26,7 +26,7 @@
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods to generate figures, data, and outputs
 
 ### **Q: What are the test coverage requirements?**
-**A:** Coverage requirements are: 70% minimum for project code (currently achieving 99.88%) and 49% minimum for infrastructure (currently achieving 55.89%). The build pipeline enforces these to maintain professional standards.
+**A:** Coverage requirements are: 70% minimum for project code (currently achieving 99.88%) and 49% minimum for infrastructure (currently achieving 61.48%). The build pipeline enforces these to maintain professional standards.
 
 ## 📚 **Documentation & PDF Generation**
 

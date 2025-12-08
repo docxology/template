@@ -4,7 +4,7 @@ This document analyzes test coverage gaps in infrastructure modules and provides
 
 ## Current Coverage Status
 
-**Overall Infrastructure Coverage: 70.09%** (exceeds 49% minimum requirement)
+**Overall Infrastructure Coverage: 61.48%** (exceeds 49% minimum requirement)
 
 ### Modules Below 50% Coverage
 
@@ -88,7 +88,12 @@ The following modules have coverage below 50% and are prioritized for improvemen
 - Expanded CLI test coverage significantly
 - Created tests for LLM operations and paper selector
 
-### Phase 2: Build and Verification (In Progress)
+### Phase 2: Reporting (Completed)
+
+- Added reporting module tests (coverage ~92%)
+- Covered markdown/HTML generation, validation/performance/error reporting
+
+### Phase 3: Build and Verification (In Progress)
 
 **Target**: `infrastructure/build/build_verifier.py`
 
@@ -98,7 +103,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
 - Test reproducibility checking
 - Test error conditions
 
-### Phase 3: Remaining Low-Coverage Modules
+### Phase 4: Remaining Low-Coverage Modules
 
 **Target**: Other modules below 50% coverage
 
@@ -118,7 +123,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
 
 ### Coverage Goals
 
-- **Infrastructure**: Maintain >55% (currently 70.09%)
+- **Infrastructure**: Maintain >55% (currently 61.48%)
 - **Project**: Maintain >99% (currently 99.88%)
 - **New Code**: 100% coverage for new modules
 
@@ -140,7 +145,7 @@ python3 -m pytest tests/infrastructure/core/ --cov=infrastructure.core.checkpoin
 ### Coverage Trends
 
 Track coverage improvements over time:
-- Baseline: 70.09% (current)
+- Baseline: 61.48% (current)
 - Target: 75%+ (stretch goal)
 - Minimum: 49% (requirement)
 

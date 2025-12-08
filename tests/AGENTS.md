@@ -29,6 +29,7 @@ For modules requiring external services (LLM, Literature, Publishing):
 
 ### Coverage Requirements
 - All project/src/ modules must meet 70% minimum coverage (currently 99.88%)
+- Infrastructure modules must meet 49% minimum coverage (currently 61.48%)
 - Tests must pass before PDF generation proceeds
 - Coverage validated by `pyproject.toml` configuration (`[tool.coverage.*]` sections)
 - No code ships without tests
@@ -221,9 +222,22 @@ pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
 open htmlcov/index.html
 
 # Separate reports
-pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
-pytest project/tests/ --cov=project/src --cov-report=html
+pytest tests/infrastructure/ --cov=infrastructure --cov-report=html --cov-fail-under=49
+pytest project/tests/ --cov=project/src --cov-report=html --cov-fail-under=70
 ```
+
+### Coverage Snapshot (latest)
+- Project: **99.88%** (target 70%+)
+- Infrastructure: **61.48%** (target 49%+)
+- Total tests: **2175** (1855 infrastructure, 320 project)
+
+Skip Ollama-dependent suites when needed:
+```bash
+pytest tests/ -m "not requires_ollama"
+```
+
+### Common Markers
+- `requires_ollama`: marks tests that need a running Ollama service. Skip with `-m "not requires_ollama"`.
 
 ## Writing Tests
 

@@ -176,7 +176,7 @@
     "metadata": {}
   },
   "fig:test": {
-    "figure_id": "figure_083",
+    "figure_id": "figure_037",
     "filename": "test.png",
     "caption": "Test",
     "label": "fig:test",
@@ -187,7 +187,7 @@
     "metadata": {}
   },
   "fig:fig1": {
-    "figure_id": "figure_084",
+    "figure_id": "figure_038",
     "filename": "fig1.png",
     "caption": "Figure 1",
     "label": "fig:fig1",
@@ -198,7 +198,7 @@
     "metadata": {}
   },
   "fig:fig2": {
-    "figure_id": "figure_080",
+    "figure_id": "figure_034",
     "filename": "fig2.png",
     "caption": "Figure 2",
     "label": "fig:fig2",

@@ -115,7 +115,7 @@ These modules implement domain-specific functionality for the research project:
 - "Would multiple projects use this unchanged?"
 
 **Key Properties:**
-- 49% minimum test coverage (currently achieving 55.89%)
+- 49% minimum test coverage (currently achieving 61.48%)
 - Real data testing (no mocks)
 - Comprehensive error handling
 - Logged execution with clear messages

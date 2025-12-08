@@ -11,7 +11,7 @@ This research template implements a clear two-layer architecture separating gene
 | **Location** | `infrastructure/` (root level) | `project/src/` (project-specific) |
 | **Purpose** | Generic, reusable build tools | Domain-specific research code |
 | **Scope** | Works with any project | Specific to this research |
-| **Test Coverage** | 49% minimum (currently 55.89%) | 70% minimum (currently 99.88%) |
+| **Test Coverage** | 49% minimum (currently 61.48%) | 70% minimum (currently 99.88%) |
 | **Scripts** | `scripts/` (root, generic orchestrators) | `project/scripts/` (project orchestrators) |
 | **Tests** | `tests/infrastructure/` (root level) | `project/tests/` (project-specific) |
 | **Imports** | `from infrastructure.module import` | `from project.src.module import` |
@@ -63,7 +63,7 @@ infrastructure/
 **Key Characteristics:**
 - Generic and reusable across projects
 - Handles template infrastructure concerns
-- 49% minimum test coverage (currently achieving 55.89%)
+- 49% minimum test coverage (currently achieving 61.48%)
 - No domain-specific logic
 - Interfaces with project files (manuscript/, output/)
 

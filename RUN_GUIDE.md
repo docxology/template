@@ -26,20 +26,21 @@ Core Pipeline Scripts (aligned with script numbering):
   3. Render PDF (03_render_pdf.py)
   4. Validate Output (04_validate_output.py)
   5. Copy Outputs (05_copy_outputs.py)
-  6. LLM Review (requires Ollama) (06_llm_review.py)
-  7. Literature Search (07_literature_search.py)
+  6. LLM Review (requires Ollama) (06_llm_review.py --reviews-only)
+  7. LLM Translations (requires Ollama) (06_llm_review.py --translations-only)
 
 Orchestration:
   8. Run Full Pipeline (10 stages: 0-9, via run.sh)
 
-Literature Sub-Operations (via 07_literature_search.py):
-  9. Search only (network only)
-  10. Download only (network only)
-  11. Summarize (requires Ollama)
-  12. Cleanup (local files only)
-  13. Advanced LLM operations (requires Ollama)
+Literature Operations (via 07_literature_search.py, not part of core pipeline):
+  9. Literature Search (all operations)
+  10. Search only (network only)
+  11. Download only (network only)
+  12. Summarize (requires Ollama)
+  13. Cleanup (local files only)
+  14. Advanced LLM operations (requires Ollama)
 
-  14. Exit
+  15. Exit
 ============================================================
 ```
 
@@ -313,26 +314,27 @@ Core Pipeline Scripts (aligned with script numbering):
   3. Render PDF (03_render_pdf.py)
   4. Validate Output (04_validate_output.py)
   5. Copy Outputs (05_copy_outputs.py)
-  6. LLM Review (requires Ollama) (06_llm_review.py)
-  7. Literature Search (07_literature_search.py)
+  6. LLM Review (requires Ollama) (06_llm_review.py --reviews-only)
+  7. LLM Translations (requires Ollama) (06_llm_review.py --translations-only)
 
 Orchestration:
   8. Run Full Pipeline (10 stages: 0-9, via run.sh)
 
-Literature Sub-Operations (via 07_literature_search.py):
-  9. Search only (network only)
-  10. Download only (network only)
-  11. Summarize (requires Ollama)
-  12. Cleanup (local files only)
-  13. Advanced LLM operations (requires Ollama)
+Literature Operations (via 07_literature_search.py, not part of core pipeline):
+  9. Literature Search (all operations)
+  10. Search only (network only)
+  11. Download only (network only)
+  12. Summarize (requires Ollama)
+  13. Cleanup (local files only)
+  14. Advanced LLM operations (requires Ollama)
 
-  14. Exit
+  15. Exit
 ════════════════════════════════════════════════════════════════
   Repository: /Users/4d/Documents/GitHub/template
   Python: Python 3.11.0
 ════════════════════════════════════════════════════════════════
 
-Select option [0-14]: 8
+Select option [0-15]: 8
 ```
 
 ## Exit Codes

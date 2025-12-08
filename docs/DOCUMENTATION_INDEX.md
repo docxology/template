@@ -37,6 +37,8 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/COMMON_WORKFLOWS.md`](COMMON_WORKFLOWS.md)** - Step-by-step workflow recipes
 - **[`docs/GLOSSARY.md`](GLOSSARY.md)** - Comprehensive glossary of terms
 - **[`scripts/README.md`](../scripts/README.md)** - Detailed utility documentation
+- **[`tests/README.md`](../tests/README.md)** - Test suite guide and commands
+- **[`tests/AGENTS.md`](../tests/AGENTS.md)** - Testing philosophy and structure
 
 ## 🏗️ **Architecture & Design**
 
@@ -246,9 +248,9 @@ All documentation files include comprehensive cross-references:
 ## 📋 Documentation Maintenance Notes
 
 **Last Updated**: December 3, 2025
-- Removed outdated historical review reports (COMPREHENSIVE_DOCUMENTATION_REVIEW_REPORT.md, DOCUMENTATION_REVIEW_REPORT.md, REPO_ACCURACY_COMPLETENESS_REPORT.md)
-- Removed documentation scan prompt (DOCUMENTATION_SCAN_PROMPT.md) as process guide
-- All remaining documentation verified accurate and complete via comprehensive review
+- Historical review reports have been removed to keep the index current and focused.
+- Removed documentation scan prompt (DOCUMENTATION_SCAN_PROMPT.md) as process guide.
+- All remaining documentation verified accurate and complete via comprehensive review.
 
 **This documentation ecosystem provides everything needed to understand, use, and contribute to the Research Project Template effectively! 🚀**
 

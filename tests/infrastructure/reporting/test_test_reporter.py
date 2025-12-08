@@ -1,5 +1,3 @@
-"""Tests for infrastructure.reporting.test_reporter."""
-
 from __future__ import annotations
 
 import json
@@ -12,48 +10,50 @@ from infrastructure.reporting.test_reporter import (
 )
 
 
-def test_parse_pytest_output_extracts_counts():
-    stdout = "5 passed, 1 failed, 2 skipped in 3.00s\nCoverage: 88.50%"
-    results = parse_pytest_output(stdout, "", exit_code=1)
+def test_parse_pytest_output_extracts_counts_and_coverage() -> None:
+    stdout = "5 passed, 1 failed, 2 skipped, 1 deselected in 1.00s\nCoverage: 85.23%"
+    result = parse_pytest_output(stdout=stdout, stderr="", exit_code=1)
 
-    assert results["passed"] == 5
-    assert results["failed"] == 1
-    assert results["skipped"] == 2
-    assert results["total"] == 8
-    assert results["exit_code"] == 1
-    assert results["coverage_percent"] == 88.50
+    assert result["passed"] == 5
+    assert result["failed"] == 1
+    assert result["skipped"] == 2
+    assert result["total"] == 8
+    assert result["coverage_percent"] == 85.23
+    assert result["exit_code"] == 1
 
 
-def test_generate_and_save_test_report(tmp_path):
-    infra = {
-        "passed": 3,
-        "failed": 0,
-        "skipped": 1,
-        "total": 4,
-        "exit_code": 0,
-        "coverage_percent": 91.0,
+def test_generate_test_report_combines_infra_and_project() -> None:
+    infra = {"passed": 5, "failed": 0, "skipped": 1, "total": 6, "coverage_percent": 91.0, "exit_code": 0}
+    project = {"passed": 7, "failed": 1, "skipped": 0, "total": 8, "coverage_percent": 93.5, "exit_code": 1}
+
+    report = generate_test_report(infra_results=infra, project_results=project, repo_root=Path("."))
+
+    summary = report["summary"]
+    assert summary["total_passed"] == 12
+    assert summary["total_failed"] == 1
+    assert summary["total_tests"] == 14
+    assert not summary["all_passed"]
+    assert summary["infrastructure_coverage"] == 91.0
+    assert summary["project_coverage"] == 93.5
+
+
+def test_save_test_report_writes_json_and_markdown(tmp_path: Path) -> None:
+    report = {
+        "timestamp": "2025-01-01T00:00:00",
+        "infrastructure": {"passed": 1, "failed": 0, "skipped": 0, "total": 1, "coverage_percent": 90.0},
+        "project": {"passed": 2, "failed": 0, "skipped": 0, "total": 2, "coverage_percent": 95.0},
+        "summary": {"total_passed": 3, "total_failed": 0, "total_tests": 3, "all_passed": True},
     }
-    project = {
-        "passed": 5,
-        "failed": 1,
-        "skipped": 0,
-        "total": 6,
-        "exit_code": 1,
-        "coverage_percent": 99.0,
-    }
-
-    report = generate_test_report(infra, project, Path("."))
-
-    assert report["summary"]["total_tests"] == 10
-    assert report["summary"]["total_failed"] == 1
-    assert report["summary"]["all_passed"] is False
 
     json_path, md_path = save_test_report(report, tmp_path)
+
     assert json_path.exists()
     assert md_path.exists()
 
     data = json.loads(json_path.read_text())
-    assert data["summary"]["total_passed"] == 8
-    assert data["summary"]["total_failed"] == 1
+    assert data["summary"]["total_passed"] == 3
 
+    md_content = md_path.read_text()
+    assert "Coverage: 90.00%" in md_content
+    assert "Coverage: 95.00%" in md_content
 
