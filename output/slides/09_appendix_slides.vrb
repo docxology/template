@@ -140,6 +140,36 @@ predictions from Section \ref{sec:methodology}.
 \end{block}
 \end{block}
 
+\begin{block}{E. Infrastructure Capabilities}
+\protect\phantomsection\label{e.-infrastructure-capabilities}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Validation}: \texttt{validate\_markdown} and
+  \texttt{validate\_figure\_registry} ensure anchors, equations, and
+  figures resolve before rendering; \texttt{verify\_output\_integrity}
+  checks generated artifacts post-build.
+\item
+  \textbf{Quality}: \texttt{analyze\_document\_quality} reports
+  readability and structure metrics used in the quality report;
+  \texttt{quality\_report.py} aggregates markdown, integrity, and
+  reproducibility signals.
+\item
+  \textbf{Reproducibility}: \texttt{generate\_reproducibility\_report}
+  captures environment, dependency, and artifact snapshots for each run.
+\item
+  \textbf{Reporting}: Pipeline reports
+  (\texttt{output/reports/pipeline\_report.*}) summarize stage outcomes,
+  errors, and validation findings for auditability.
+\item
+  \textbf{Commands}:
+  \texttt{python3\ project/scripts/manuscript\_preflight.py\ -\/-strict}
+  for gating, \texttt{python3\ project/scripts/quality\_report.py} for
+  consolidated metrics, and \texttt{python3\ scripts/run\_all.py} for
+  full pipeline execution with validation gates.
+\end{itemize}
+\end{block}
+
 \begin{block}{D. Implementation Details}
 \protect\phantomsection\label{d.-implementation-details}
 \begin{block}{D.1 Pseudocode}

@@ -281,7 +281,7 @@ def _ensure_src_on_path():
 def generate_experimental_setup(figure_dir, data_dir):
     _ensure_src_on_path()
     try:
-        from scientific.example import is_even, is_odd
+        from example import is_even, is_odd
         print("✅ Using src/ functions for experimental setup validation")
         num_components = 3
         print(f"Number of components: {num_components}")

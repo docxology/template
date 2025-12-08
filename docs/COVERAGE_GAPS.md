@@ -4,7 +4,7 @@ This document analyzes test coverage gaps in infrastructure modules and provides
 
 ## Current Coverage Status
 
-**Overall Infrastructure Coverage: 61.48%** (exceeds 49% minimum requirement)
+**Overall Infrastructure Coverage: 66.76%** (exceeds 60% minimum requirement)
 
 ### Modules Below 50% Coverage
 
@@ -123,8 +123,8 @@ The following modules have coverage below 50% and are prioritized for improvemen
 
 ### Coverage Goals
 
-- **Infrastructure**: Maintain >55% (currently 61.48%)
-- **Project**: Maintain >99% (currently 99.88%)
+- **Infrastructure**: Maintain >60% (currently 66.76%)
+- **Project**: Maintain >90% (currently 98.03%)
 - **New Code**: 100% coverage for new modules
 
 ## Monitoring Coverage
@@ -145,7 +145,7 @@ python3 -m pytest tests/infrastructure/core/ --cov=infrastructure.core.checkpoin
 ### Coverage Trends
 
 Track coverage improvements over time:
-- Baseline: 61.48% (current)
+- Baseline: 66.76% (current)
 - Target: 75%+ (stretch goal)
 - Minimum: 49% (requirement)
 

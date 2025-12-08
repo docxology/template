@@ -53,6 +53,10 @@ For numerical stability, we use the following adaptive step size rule:
 
 This ensures that the algorithm converges even when the gradient varies significantly across iterations.
 
+## Reproducibility Infrastructure
+
+All methodological steps are paired with automated quality gates provided by the infrastructure layer. Figure generation is registered via `FigureManager` to ensure cross-references resolve, and `validate_markdown` checks anchors, equations, and labels before rendering. A preflight stage evaluates glossary injection markers and bibliography blocks, while `analyze_document_quality` supplies readability and structural metrics that are reported in the quality report. Output integrity (`verify_output_integrity`) is executed after each scripted stage to ensure generated artifacts match expectations, making the methodological pipeline reproducible across runs.
+
 ## Performance Analysis
 
 The computational complexity of our approach is $O(n \log n)$ per iteration, where $n$ is the problem dimension. This is achieved through the efficient data structures shown in Figure \ref{fig:data_structure}.

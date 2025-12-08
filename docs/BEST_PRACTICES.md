@@ -77,8 +77,8 @@ from example import add_numbers, calculate_average
 ### Test Coverage
 
 **Maintain comprehensive coverage:**
-- **Project code**: 70% minimum (currently achieving 99.88%)
-- **Infrastructure**: 49% minimum (currently achieving 61.48%)
+- **Project code**: 90% minimum (currently achieving 98.03%)
+- **Infrastructure**: 60% minimum (currently achieving 66.76%)
 - Test all critical code paths
 - Include edge cases
 - Test error handling

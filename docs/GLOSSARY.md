@@ -47,7 +47,7 @@ Single PDF document containing all manuscript sections in proper order. Generate
 **See**: [PDF Generation](#pdf-generation)
 
 ### Coverage Requirement
-Comprehensive test coverage required: 70% minimum for project code, 49% minimum for infrastructure. Enforced by build pipeline before PDF generation.
+Comprehensive test coverage required: 90% minimum for project code, 60% minimum for infrastructure. Enforced by build pipeline before PDF generation.
 
 **Check**: `pytest tests/ --cov=src --cov-report=term-missing`
 
@@ -339,7 +339,7 @@ GitHub repository type that can be used to create new repositories with same str
 **Use**: Click "Use this template" button on GitHub
 
 ### Test Coverage
-Percentage of code executed during test runs. This template requires 70% minimum coverage for project code and 49% minimum for infrastructure.
+Percentage of code executed during test runs. This template requires 90% minimum coverage for project code and 60% minimum for infrastructure.
 
 **Types**:
 - Statement coverage (every line)
@@ -352,7 +352,7 @@ Percentage of code executed during test runs. This template requires 70% minimum
 ### Test Suite
 Collection of all test files in `tests/` directory. Ensures all functionality works correctly.
 
-**Status**: 2175 tests passing (1855 infra + 320 project, 100%)
+**Status**: 2245 tests total (1894 infra [8 skipped] + 351 project, all passing)
 
 **Run**: `pytest tests/`
 
@@ -362,8 +362,8 @@ Collection of all test files in `tests/` directory. Ensures all functionality wo
 Process of validating code correctness through automated test cases. No mocks allowed - all tests use real data.
 
 **Requirements**:
-- 70% minimum for project code (currently 99.88%)
-- 49% minimum for infrastructure (currently 61.48%)
+- 90% minimum for project code (currently 98.03%)
+- 60% minimum for infrastructure (currently 66.76%)
 - Real data (no mocks)
 - Deterministic results
 - All tests must pass

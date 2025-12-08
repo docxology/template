@@ -12,26 +12,77 @@ logic is in src/ modules, this script only orchestrates the workflow.
 """
 from __future__ import annotations
 
+import argparse
 import os
 import sys
-import logging
 from pathlib import Path
+from typing import List, Tuple
 
 import numpy as np
 
-# Configure logging for layer-aware execution tracking
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
-logger = logging.getLogger(__name__)
-
-# Ensure src/ and infrastructure/ are on path
+# Ensure src/ and infrastructure/ are on path BEFORE imports
 project_root = Path(__file__).parent.parent
 repo_root = project_root.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(repo_root))  # Add repo root so we can import infrastructure.*
+
+# Add infra logging for consistent structured output
+from infrastructure.core.logging_utils import (
+    get_logger,
+    log_stage,
+    log_substep,
+    log_progress_bar,
+    format_error_with_suggestions,
+)
+from infrastructure.core.performance import PerformanceMonitor
+from infrastructure.reporting import (
+    generate_pipeline_report,
+    save_pipeline_report,
+    get_error_aggregator,
+)
+from infrastructure.validation import verify_output_integrity
+
+logger = get_logger(__name__)
+
+
+def _parse_args() -> argparse.Namespace:
+    """Parse CLI arguments for stage control and dry-run support."""
+    parser = argparse.ArgumentParser(
+        description="Run the analysis pipeline with optional stage selection."
+    )
+    stage_names = [
+        "load",
+        "tests",
+        "classification",
+        "plots",
+        "scalability",
+        "report",
+        "validate",
+    ]
+    parser.add_argument(
+        "--only",
+        nargs="+",
+        choices=stage_names,
+        help="Run only the selected stages (preserves execution order).",
+    )
+    parser.add_argument(
+        "--resume",
+        choices=stage_names,
+        help="Resume from the given stage (skips earlier stages).",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print the stages that would run without executing them.",
+    )
+    parser.add_argument(
+        "--list-stages",
+        action="store_true",
+        help="List available stages and exit.",
+    )
+    return parser.parse_args(), stage_names
+
+# Additional infrastructure imports (path already set up above)
 from infrastructure.documentation.figure_manager import FigureManager
 
 print("[LAYER-2-SCIENTIFIC] Loading and analyzing data from infrastructure/scientific integration...")
@@ -55,7 +106,7 @@ from plots import plot_comparison, plot_scatter, plot_bar
 
 def load_and_analyze_data() -> None:
     """Load and analyze simulation data."""
-    
+
     # Generate synthetic data
     data = generate_synthetic_data(
         n_samples=200,
@@ -85,7 +136,7 @@ def load_and_analyze_data() -> None:
 def perform_statistical_tests() -> None:
     """Perform statistical hypothesis tests."""
     print("\nPerforming statistical tests...")
-    
+
     # Generate two groups for comparison
     group1 = generate_synthetic_data(50, distribution="normal", mean=0.0, std=1.0, seed=42)
     group2 = generate_synthetic_data(50, distribution="normal", mean=0.5, std=1.0, seed=43)
@@ -111,7 +162,7 @@ def perform_statistical_tests() -> None:
 def analyze_classification_performance() -> None:
     """Analyze classification performance."""
     print("\nAnalyzing classification performance...")
-    
+
     # Generate classification dataset
     X, y_true = generate_classification_dataset(
         n_samples=100,
@@ -142,7 +193,7 @@ def analyze_classification_performance() -> None:
 def generate_comparison_plots() -> None:
     """Generate comparison plots."""
     print("\nGenerating comparison plots...")
-    
+
     # Setup visualization
     engine = VisualizationEngine(output_dir="output/figures")
     figure_manager = FigureManager()
@@ -181,7 +232,7 @@ def generate_comparison_plots() -> None:
 def run_scalability_analysis() -> None:
     """Analyze algorithm scalability."""
     print("\nAnalyzing scalability...")
-    
+
     # Simulate scalability data
     problem_sizes = [10, 50, 100, 500, 1000]
     execution_times = [0.1, 0.5, 1.2, 6.5, 15.0]  # Simulated times
@@ -206,7 +257,7 @@ def run_scalability_analysis() -> None:
 def generate_analysis_report() -> None:
     """Generate comprehensive analysis report."""
     print("\nGenerating analysis report...")
-    
+
     # Generate analysis results
     data = generate_synthetic_data(100, distribution="normal", seed=42)
     stats = calculate_descriptive_stats(data)
@@ -257,7 +308,7 @@ def generate_analysis_report() -> None:
 def validate_analysis_results() -> None:
     """Validate analysis results."""
     print("\nValidating analysis results...")
-    
+
     validator = ValidationFramework()
     
     # Generate test data
@@ -284,43 +335,127 @@ def validate_analysis_results() -> None:
 def main() -> None:
     """Main function orchestrating the analysis pipeline."""
     os.environ.setdefault("MPLBACKEND", "Agg")
-    
+    args, stage_names = _parse_args()
+
+    staged_functions: List[Tuple[str, callable]] = [
+        ("load", load_and_analyze_data),
+        ("tests", perform_statistical_tests),
+        ("classification", analyze_classification_performance),
+        ("plots", generate_comparison_plots),
+        ("scalability", run_scalability_analysis),
+        ("report", generate_analysis_report),
+        ("validate", validate_analysis_results),
+    ]
+
+    if args.list_stages:
+        print("Available stages (in order):")
+        for name, _ in staged_functions:
+            print(f"- {name}")
+        return
+
+    # Filter stages based on --only while preserving order
+    if args.only:
+        selected = [(name, fn) for name, fn in staged_functions if name in args.only]
+    else:
+        selected = staged_functions
+
+    # Apply resume (skip until the requested stage)
+    if args.resume:
+        resume_seen = False
+        filtered = []
+        for name, fn in selected:
+            if not resume_seen and name != args.resume:
+                continue
+            resume_seen = True
+            filtered.append((name, fn))
+        selected = filtered
+
+    if not selected:
+        print("No stages selected; nothing to do.")
+        return
+
     # Ensure output directories exist
     for dir_path in ["output/figures", "output/reports"]:
         Path(dir_path).mkdir(parents=True, exist_ok=True)
-    
+
+    if args.dry_run:
+        logger.info("Dry-run enabled. Stages that would run (in order): %s", ", ".join(name for name, _ in selected))
+        return
+
+    error_agg = get_error_aggregator()
+    stage_results = []
+
     try:
-        # Load and analyze data
-        load_and_analyze_data()
-        
-        # Perform statistical tests
-        perform_statistical_tests()
-        
-        # Analyze classification
-        analyze_classification_performance()
-        
-        # Generate plots
-        generate_comparison_plots()
-        
-        # Analyze scalability
-        run_scalability_analysis()
-        
-        # Generate report
-        generate_analysis_report()
-        
-        # Validate results
-        validate_analysis_results()
-        
+        for idx, (name, fn) in enumerate(selected, 1):
+            logger.info("Starting stage: %s", name)
+            perf = PerformanceMonitor()
+            perf.start()
+            fn()
+            perf.update_memory()
+            metrics = perf.stop()
+            stage_results.append(
+                {
+                    "name": name,
+                    "exit_code": 0,
+                    "duration": metrics.duration,
+                    "resource_usage": metrics.resource_usage.to_dict(),
+                }
+            )
+            log_substep(f"Stage {name} duration: {metrics.duration:.2f}s", logger)
+            log_progress_bar(
+                current=idx,
+                total=len(selected),
+                message=f"{name} complete",
+                logger=logger,
+            )
+            logger.info("Completed stage: %s", name)
+
+        # Light integrity check on generated outputs
+        try:
+            verify_output_integrity(Path("output"))
+        except Exception as ve:
+            error_agg.add_error(
+                error_type="validation_error",
+                message=f"Output integrity validation warning: {ve}",
+                stage="analysis",
+                severity="warning",
+            )
+
+        # Generate structured pipeline report
+        pipeline_report = generate_pipeline_report(
+            stage_results=stage_results,
+            total_duration=sum(sr["duration"] for sr in stage_results),
+            repo_root=Path("."),
+            error_summary=error_agg.get_summary(),
+        )
+        saved = save_pipeline_report(pipeline_report, Path("output/reports"))
+        log_substep(f"Saved pipeline report: {saved}", logger)
+
         print("\n✅ All analysis pipeline tasks completed successfully!")
         print("\nGenerated outputs:")
         print("  - Figures: output/figures/")
         print("  - Reports: output/reports/")
-        
+
     except ImportError as e:
+        error_agg.add_error(
+            error_type="import_error",
+            message=str(e),
+            stage="analysis",
+            severity="error",
+            suggestions=[
+                "Ensure src/ modules are importable",
+                "Verify PYTHONPATH includes project/src",
+            ],
+        )
         print(f"❌ Failed to import from src/ modules: {e}")
-        print("Make sure all src/ modules are available")
         sys.exit(1)
     except Exception as e:
+        error_agg.add_error(
+            error_type="stage_failure",
+            message=str(e),
+            stage="analysis",
+            severity="error",
+        )
         print(f"❌ Error during analysis: {e}")
         import traceback
         traceback.print_exc()

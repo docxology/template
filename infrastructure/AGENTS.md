@@ -548,25 +548,16 @@ All modules have comprehensive test coverage:
 
 If you see `ModuleNotFoundError: No module named 'infrastructure.xxx'`:
 
-1. Check the new module paths use the `/` structure:
+1. Verify you're using the correct modular import path:
    ```python
-   # OLD (won't work)
-   from infrastructure.pdf_validator import ...
-   
-   # NEW (correct)
-   from infrastructure.validation.pdf_validator import ...
+   from infrastructure.validation.pdf_validator import validate_pdf_rendering
+   from infrastructure.documentation.figure_manager import FigureManager
+   from infrastructure.core.config_loader import load_config
+   from infrastructure.core.logging_utils import get_logger
+   from infrastructure.core.exceptions import TemplateError
    ```
 
 2. Verify the module `__init__.py` exists with proper exports
-
-### API Changes
-
-Migration from old flat structure:
-- `infrastructure.pdf_validator` → `infrastructure.validation.pdf_validator`
-- `infrastructure.figure_manager` → `infrastructure.documentation.figure_manager`
-- `infrastructure.config_loader` → `infrastructure.core.config_loader`
-- `infrastructure.logging_utils` → `infrastructure.core.logging_utils`
-- `infrastructure.exceptions` → `infrastructure.core.exceptions`
 
 ### Configuration Issues
 
@@ -574,40 +565,6 @@ If configuration isn't loading:
 1. Check `project/manuscript/config.yaml` exists
 2. Verify YAML is well-formed
 3. Fall back to environment variables as needed
-
-## Migration Guide
-
-### For Existing Projects
-
-If your project imports from the old flat structure:
-
-**Before:**
-```python
-from infrastructure.pdf_validator import validate_pdf_rendering
-from infrastructure.figure_manager import FigureManager
-from infrastructure.config_loader import load_config
-```
-
-**After:**
-```python
-from infrastructure.validation.pdf_validator import validate_pdf_rendering
-from infrastructure.documentation.figure_manager import FigureManager
-from infrastructure.core.config_loader import load_config
-```
-
-### For Tests
-
-Update test imports similarly:
-
-**Before:**
-```python
-from infrastructure.pdf_validator import ...
-```
-
-**After:**
-```python
-from infrastructure.validation.pdf_validator import ...
-```
 
 ## Architecture Advantages
 

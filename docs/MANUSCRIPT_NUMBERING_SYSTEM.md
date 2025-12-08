@@ -262,18 +262,9 @@ python3 scripts/run_all.py
 
 **Answer: Already deleted! ✅**
 
-The `markdown/` directory was a temporary staging area that is no longer needed:
+The `markdown/` directory was a temporary staging area that is no longer needed.
 
-**Old workflow (deprecated):**
-```
-generate_glossary.py → markdown/98_symbols_glossary.md
-                           ↓ (copy)
-                       manuscript/98_symbols_glossary.md
-                           ↓ (include)
-                       Combined PDF
-```
-
-**New workflow (current):**
+**Current workflow:**
 ```
 generate_glossary.py → manuscript/98_symbols_glossary.md
                            ↓ (include)

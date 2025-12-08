@@ -8,22 +8,22 @@ This guide explains how to use the unified logging system in the Research Projec
 
 ## Overview
 
-The template uses two complementary logging systems:
-- **Python logging** (`infrastructure/logging_utils.py`) - For Python scripts
-- **Bash logging** (`repo_utilities/logging.sh`) - For shell scripts
+The template uses a unified Python logging system:
+- **Python logging** (`infrastructure/core/logging_utils.py`) - For all scripts
 
-Both systems share:
+The logging system provides:
 - Consistent log levels (DEBUG, INFO, WARN, ERROR)
-- Matching timestamp formats
+- Structured timestamp formats
 - Environment-based configuration
 - Emoji support (when appropriate)
+- TTY-aware color output
 
 ## Quick Start
 
 ### Python Scripts
 
 ```python
-from logging_utils import get_logger
+from infrastructure.core.logging_utils import get_logger
 
 # Get a logger for your module
 logger = get_logger(__name__)
@@ -35,27 +35,16 @@ logger.error("Failed to load data")
 logger.debug("Variable value: {value}")
 ```
 
-### Bash Scripts
+### Shell Scripts
 
-```bash
-#!/bin/bash
-
-# Source logging library
-source "$REPO_ROOT/repo_utilities/logging.sh"
-
-# Log messages
-log_info "Starting process"
-log_warn "Potential issue detected"
-log_error "Process failed"
-log_debug "Debug information"
-```
+For shell scripts, use the `run.sh` orchestrator which includes integrated logging, or call Python scripts that use the logging system above.
 
 ## Python Logging System
 
 ### Basic Usage
 
 ```python
-from logging_utils import get_logger, log_operation, log_success
+from infrastructure.core.logging_utils import get_logger, log_operation, log_success
 
 # Set up logger
 logger = get_logger(__name__)
@@ -90,7 +79,7 @@ This outputs logs in JSON format for programmatic parsing:
 Use context managers for automatic operation tracking:
 
 ```python
-from logging_utils import log_operation, log_timing, log_operation_silent, log_with_spinner
+from infrastructure.core.logging_utils import log_operation, log_timing, log_operation_silent, log_with_spinner
 
 # Log operation start and completion
 # Completion message suppressed for operations < 0.1s
@@ -114,7 +103,7 @@ with log_with_spinner("Loading model...", logger):
 Decorate functions for automatic call logging:
 
 ```python
-from logging_utils import log_function_call
+from infrastructure.core.logging_utils import log_function_call
 
 @log_function_call(logger)
 def process_file(filename: str) -> bool:
@@ -393,7 +382,7 @@ The template provides multiple progress tracking utilities for different use cas
 #### Simple Progress Tracking
 
 ```python
-from logging_utils import log_progress, log_progress_bar, StreamingProgress, Spinner
+from infrastructure.core.logging_utils import log_progress, log_progress_bar, StreamingProgress, Spinner
 
 # Simple progress
 def process_files(files: list[Path]) -> None:
@@ -407,7 +396,7 @@ def process_files(files: list[Path]) -> None:
     log_success(f"Processed all {len(files)} files", logger)
 
 # Progress bar with ETA
-log_progress_bar(15, 100, "Processing files", show_eta=True, elapsed_time=30.0)
+log_progress_bar(current=15, total=100, message="Processing files")
 
 # Streaming progress (for real-time updates)
 progress = StreamingProgress(total=1000, message="Generating tokens")

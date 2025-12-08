@@ -249,7 +249,7 @@ Scripts (`scripts/`) are thin orchestrators:
 # ✅ Good: Script uses project modules
 from simulation import SimpleSimulation
 from analysis import analyze_results
-from infrastructure.figure_manager import FigureManager
+from infrastructure.documentation.figure_manager import FigureManager
 
 sim = SimpleSimulation()
 results = sim.run()
@@ -273,8 +273,8 @@ All scientific code requires:
 Scientific code uses infrastructure for document management:
 ```python
 # src/scientific/analysis.py
-from infrastructure.figure_manager import FigureManager
-from infrastructure.markdown_integration import MarkdownIntegration
+from infrastructure.documentation.figure_manager import FigureManager
+from infrastructure.documentation.markdown_integration import MarkdownIntegration
 
 def generate_figures():
     # Scientific computation
@@ -292,7 +292,7 @@ Scripts orchestrate scientific code:
 # scripts/analysis_pipeline.py
 from data_generator import generate_synthetic_data
 from statistics import calculate_descriptive_stats
-from infrastructure.figure_manager import FigureManager
+from infrastructure.documentation.figure_manager import FigureManager
 
 # Generate data
 data = generate_synthetic_data(n_samples=1000)

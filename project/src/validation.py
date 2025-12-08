@@ -6,9 +6,15 @@ quality metrics calculation, anomaly detection, and validation reports.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
+from infrastructure.validation import (
+    validate_markdown,
+    verify_output_integrity,
+    validate_figure_registry,
+)
 
 
 @dataclass
@@ -278,6 +284,64 @@ class ValidationFramework:
                 self.validation_results.append(result)
         
         return results
+
+    def validate_markdown_dir(self, manuscript_dir: str) -> ValidationResult:
+        """Run infrastructure markdown validation on a manuscript directory."""
+        problems, _ = validate_markdown(manuscript_dir, ".")
+        is_valid = len(problems) == 0
+        result = ValidationResult(
+            is_valid=is_valid,
+            check_name="markdown_validation",
+            message="No markdown issues" if is_valid else f"{len(problems)} markdown issues found",
+            details={"problems": problems},
+            severity="warning" if not is_valid else "info",
+        )
+        self.validation_results.append(result)
+        return result
+
+    def validate_outputs(self, output_dir: str = "output") -> ValidationResult:
+        """Verify output integrity using infrastructure validation."""
+        try:
+            report = verify_output_integrity(Path(output_dir))
+            result = ValidationResult(
+                is_valid=True,
+                check_name="output_integrity",
+                message="Output integrity verified",
+                details={"summary": report},
+                severity="info",
+            )
+        except Exception as exc:
+            result = ValidationResult(
+                is_valid=False,
+                check_name="output_integrity",
+                message=str(exc),
+                details={},
+                severity="warning",
+            )
+        self.validation_results.append(result)
+        return result
+
+    def validate_figure_registry(self, registry_path: str) -> ValidationResult:
+        """Validate a figure registry JSON using infrastructure validation."""
+        try:
+            validate_figure_registry(Path(registry_path))
+            result = ValidationResult(
+                is_valid=True,
+                check_name="figure_registry",
+                message="Figure registry validated",
+                details={"registry": registry_path},
+                severity="info",
+            )
+        except Exception as exc:
+            result = ValidationResult(
+                is_valid=False,
+                check_name="figure_registry",
+                message=str(exc),
+                details={"registry": registry_path},
+                severity="warning",
+            )
+        self.validation_results.append(result)
+        return result
     
     def generate_validation_report(self) -> Dict[str, Any]:
         """Generate validation report.

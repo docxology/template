@@ -36,7 +36,7 @@ src/
 ```
 
 **Requirements:**
-- 70% minimum test coverage (currently achieving 99.88%)
+- 90% minimum test coverage (currently achieving 98.03%)
 - Type hints on all public APIs
 - Comprehensive docstrings
 - No mock testing (real data only)
@@ -46,7 +46,7 @@ src/
 
 Comprehensive test suite validating all src/ code:
 
-- **70% minimum coverage required** - All critical code paths tested (currently 99.88%)
+- **90% minimum coverage required** - All critical code paths tested (currently 98.03%)
 - **Real data testing** - Use actual data, not mocks
 - **Integration tests** - Test module interactions
 - **Performance tests** - Validate algorithms
@@ -73,6 +73,7 @@ scripts/
 2. Call src/ functions
 3. Orchestrate workflows
 4. Generate outputs
+5. Use infrastructure modules for logging, validation, reporting, and figure management
 
 ### Manuscript (manuscript/)
 
@@ -138,7 +139,7 @@ def test_analyze_data():
 
 **Step 3: Ensure coverage requirements met**
 ```bash
-pytest tests/test_my_analysis.py --cov=src/my_analysis --cov-fail-under=70
+pytest tests/test_my_analysis.py --cov=src/my_analysis --cov-fail-under=90
 ```
 
 **Step 4: Use in scripts**

@@ -14,6 +14,8 @@ This presents a menu with options for running tests, rendering PDFs, executing t
 
 ## Menu Options
 
+**Main Menu (0-9):**
+
 ```
 ============================================================
   Research Project Template - Main Menu
@@ -32,15 +34,27 @@ Core Pipeline Scripts (aligned with script numbering):
 Orchestration:
   8. Run Full Pipeline (10 stages: 0-9, via run.sh)
 
-Literature Operations (via 07_literature_search.py, not part of core pipeline):
-  9. Literature Search (all operations)
-  10. Search only (network only)
-  11. Download only (network only)
-  12. Summarize (requires Ollama)
-  13. Cleanup (local files only)
-  14. Advanced LLM operations (requires Ollama)
+Literature Operations:
+  9. Literature Operations Menu (submenu)
+============================================================
+```
 
-  15. Exit
+**Literature Submenu (0-6):**
+
+```
+============================================================
+  Literature Operations Menu
+============================================================
+
+Literature Operations (via 07_literature_search.py):
+  0. All Operations (search + download + summarize)
+  1. Search Only (network only - add to bibliography)
+  2. Download Only (network only - download PDFs)
+  3. Summarize (requires Ollama - generate summaries)
+  4. Cleanup (local files only - remove papers without PDFs)
+  5. Advanced LLM Operations (requires Ollama)
+
+  6. Return to Main Menu
 ============================================================
 ```
 
@@ -148,21 +162,6 @@ Generates AI-powered manuscript reviews using local Ollama LLM.
 
 **Generic**: Works for any project with a combined PDF manuscript
 
-### Option 7: Literature Search
-
-Manages academic literature with combined operations.
-
-- Searches arXiv and Semantic Scholar APIs
-- Downloads PDFs for found papers
-- Adds papers to bibliography (`literature/references.bib`)
-- Generates AI summaries for downloaded papers (requires Ollama)
-
-**Requires**: Network access. Summarization requires Ollama.
-
-**Output**: `literature/` directory
-
-**Generic**: Works for any project needing literature management
-
 ### Option 8: Run Full Pipeline
 
 Executes the complete 10-stage build pipeline (stages 0-9):
@@ -196,7 +195,26 @@ Executes the complete 10-stage build pipeline (stages 0-9):
 
 **Checkpoint/Resume**: Supports `--resume` flag to resume from last checkpoint
 
-### Option 9: Search Only
+### Option 9: Literature Operations Menu
+
+Opens a submenu for managing academic literature with various operations.
+
+**Literature Submenu Options:**
+
+#### Submenu Option 0: All Operations
+
+Performs the complete literature workflow: search, download, and summarize.
+
+- Searches arXiv and Semantic Scholar APIs
+- Downloads PDFs for found papers
+- Adds papers to bibliography (`literature/references.bib`)
+- Generates AI summaries for downloaded papers (requires Ollama)
+
+**Requires**: Network access. Summarization requires Ollama.
+
+**Output**: `literature/` directory with PDFs, summaries, and bibliography
+
+#### Submenu Option 1: Search Only
 
 Searches for papers and adds to bibliography (network only, no Ollama required).
 
@@ -209,7 +227,7 @@ Searches for papers and adds to bibliography (network only, no Ollama required).
 
 **Output**: `literature/references.bib`, `literature/library.json`
 
-### Option 10: Download Only
+#### Submenu Option 2: Download Only
 
 Downloads PDFs for existing bibliography entries (network only, no Ollama required).
 
@@ -222,7 +240,7 @@ Downloads PDFs for existing bibliography entries (network only, no Ollama requir
 
 **Output**: `literature/pdfs/`
 
-### Option 11: Summarize
+#### Submenu Option 3: Summarize
 
 Generates AI summaries for papers with PDFs (requires Ollama).
 
@@ -235,7 +253,7 @@ Generates AI summaries for papers with PDFs (requires Ollama).
 
 **Output**: `literature/summaries/`
 
-### Option 12: Cleanup
+#### Submenu Option 4: Cleanup
 
 Removes papers without PDFs from library (local files only, no Ollama required).
 
@@ -247,20 +265,24 @@ Removes papers without PDFs from library (local files only, no Ollama required).
 
 **Output**: Updated `literature/library.json` and `literature/references.bib`
 
-### Option 13: Advanced LLM Operations
+#### Submenu Option 5: Advanced LLM Operations
 
 Performs advanced LLM operations on selected papers (requires Ollama).
 
 Available operations:
-- Literature review synthesis
-- Science communication narrative
-- Comparative analysis
-- Research gap identification
-- Citation network analysis
+1. Literature review synthesis
+2. Science communication narrative
+3. Comparative analysis
+4. Research gap identification
+5. Citation network analysis
 
 **Requires**: Ollama server running with at least one model installed
 
 **Output**: Generated analysis files in `literature/`
+
+#### Submenu Option 6: Return to Main Menu
+
+Returns to the main menu.
 
 ## Usage
 
@@ -302,6 +324,8 @@ For CI/CD integration or scripting:
 
 ### Example Output
 
+**Main Menu:**
+
 ```
 ════════════════════════════════════════════════════════════════
   Research Project Template - Main Menu
@@ -320,21 +344,41 @@ Core Pipeline Scripts (aligned with script numbering):
 Orchestration:
   8. Run Full Pipeline (10 stages: 0-9, via run.sh)
 
-Literature Operations (via 07_literature_search.py, not part of core pipeline):
-  9. Literature Search (all operations)
-  10. Search only (network only)
-  11. Download only (network only)
-  12. Summarize (requires Ollama)
-  13. Cleanup (local files only)
-  14. Advanced LLM operations (requires Ollama)
+Literature Operations:
+  9. Literature Operations Menu (submenu)
 
-  15. Exit
 ════════════════════════════════════════════════════════════════
   Repository: /Users/4d/Documents/GitHub/template
   Python: Python 3.11.0
 ════════════════════════════════════════════════════════════════
 
-Select option [0-15]: 8
+Tip: Enter multiple digits to chain steps (e.g., 345 for analysis → render → validate). Comma forms like 3,4,5 work too.
+Select option [0-9]: 8
+```
+
+**Literature Submenu (when option 9 is selected):**
+
+```
+════════════════════════════════════════════════════════════════
+  Literature Operations Menu
+════════════════════════════════════════════════════════════════
+
+Literature Operations (via 07_literature_search.py):
+  0. All Operations (search + download + summarize)
+  1. Search Only (network only - add to bibliography)
+  2. Download Only (network only - download PDFs)
+  3. Summarize (requires Ollama - generate summaries)
+  4. Cleanup (local files only - remove papers without PDFs)
+  5. Advanced LLM Operations (requires Ollama)
+
+  6. Return to Main Menu
+
+════════════════════════════════════════════════════════════════
+  Repository: /Users/4d/Documents/GitHub/template
+  Python: Python 3.11.0
+════════════════════════════════════════════════════════════════
+
+Select option [0-6]: 0
 ```
 
 ## Exit Codes

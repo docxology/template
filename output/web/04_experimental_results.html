@@ -226,6 +226,17 @@ suitable for problems that don’t fit in main memory.</p>
 class="math inline">\(\ref{tab:performance_comparison}\)</span> provides
 a detailed comparison with state-of-the-art methods across different
 problem sizes.</p>
+<h2 id="automated-quality-validation">Automated Quality Validation</h2>
+<p>Each experiment is accompanied by infrastructure checks: figure
+references are validated via <code>validate_figure_registry</code>,
+manuscript anchors and equations are scanned with
+<code>validate_markdown</code>, and the preflight stage enforces
+glossary markers and bibliography commands before rendering. Output
+bundles are inspected with <code>verify_output_integrity</code>, and
+readability/structure metrics from <code>analyze_document_quality</code>
+are surfaced in the quality report. These automated gates ensure that
+every figure, table, and citation included here is reproducible and
+traceable across builds.</p>
 <h2 id="ablation-studies">Ablation Studies</h2>
 <h3 id="component-analysis">Component Analysis</h3>
 <p>We conducted extensive ablation studies to understand the

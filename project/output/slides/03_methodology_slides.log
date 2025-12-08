@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  8 DEC 2025 06:41
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  8 DEC 2025 09:50
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1348,14 +1348,23 @@ File: ../output/figures/experimental_setup.png Graphic file (type bmp)
 [4
 
 ]
+\openout4 = `03_methodology_slides.vrb'.
+
+
+(/Users/4d/Documents/GitHub/template/project/output/slides/03_methodology_slide
+s.vrb)
+
+[5
+
+]
 
 LaTeX Warning: File `../output/figures/data_structure.png' not found on input l
-ine 187.
+ine 202.
 
 ! Unable to load picture or PDF file '../output/figures/data_structure.png'.
 <to be read again> 
                    }
-l.187 \end{frame}
+l.202 \end{frame}
                  
 The requested image couldn't be read because
 it was not a recognized image format.
@@ -1367,7 +1376,7 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.187 \end{frame}
+l.202 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -1377,16 +1386,16 @@ File: ../output/figures/data_structure.png Graphic file (type bmp)
 <../output/figures/data_structure.png>
 
 
-[5
+[6
 
 ]
 
-LaTeX Warning: Reference `fig:convergence_plot' on page 6 undefined on input li
-ne 205.
+LaTeX Warning: Reference `fig:convergence_plot' on page 7 undefined on input li
+ne 220.
 
 
 
-[6
+[7
 
 ]
 \tf@nav=\write5
@@ -1411,11 +1420,11 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 29514 strings out of 473832
- 600201 string characters out of 5729482
- 1126950 words of memory out of 5000000
- 52036 multiletter control sequences out of 15000+600000
- 562380 words of font info for 69 fonts, out of 8000000 for 9000
+ 29530 strings out of 473832
+ 600643 string characters out of 5729482
+ 1127050 words of memory out of 5000000
+ 52047 multiletter control sequences out of 15000+600000
+ 562388 words of font info for 70 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1076b,496s stack positions out of 10000i,1000n,20000p,200000b,200000s
 

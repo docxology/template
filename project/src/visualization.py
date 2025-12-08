@@ -136,7 +136,20 @@ class VisualizationEngine:
             filepath = self.output_dir / f"{filename}.{fmt}"
             figure.savefig(filepath, format=fmt, dpi=dpi, bbox_inches='tight')
             saved_files[fmt] = filepath
-        
+
+        # Basic quality checks
+        for path in saved_files.values():
+            if not path.exists() or path.stat().st_size == 0:
+                raise RuntimeError(f"Figure save failed for {path}")
+        return saved_files
+
+    def figure_metadata(self, saved: Dict[str, Path]) -> Dict[str, Any]:
+        """Return simple metadata for saved figures (size and path)."""
+        meta = {}
+        for fmt, path in saved.items():
+            size_kb = path.stat().st_size / 1024 if path.exists() else 0
+            meta[fmt] = {"path": str(path), "size_kb": round(size_kb, 2)}
+        return meta
         return saved_files
     
     def apply_publication_style(

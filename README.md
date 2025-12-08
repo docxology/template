@@ -519,7 +519,7 @@ publication:
 
 See `project/manuscript/config.yaml.example` for all available options.
 
-#### Method 2: Environment Variables (Backward Compatible)
+#### Method 2: Environment Variables (Alternative)
 
 ```bash
 # Basic configuration
@@ -614,13 +614,13 @@ pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
 ```
 
 **Test Requirements (Infrastructure Layer - Layer 1):**
-- **49% minimum coverage**: Currently achieving 61.48%
+- **60% minimum coverage**: Currently achieving 66.76%
 - **No mocks**: All tests use real data and computations
 - **Deterministic**: Fixed RNG seeds for reproducible results
 - **Integration testing**: Cross-module interaction validation
 
 **Test Requirements (Project Layer - Layer 2):**
-- **70% minimum coverage**: Currently achieving 99.88%
+- **90% minimum coverage**: Currently achieving 98.03%
 - **Real data testing**: Use actual domain data, not synthetic test data
 - **Reproducible**: Fixed seeds and deterministic computation
 

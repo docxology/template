@@ -13,20 +13,36 @@ logic is in src/ modules, this script only orchestrates the workflow.
 """
 from __future__ import annotations
 
+import argparse
 import os
 import sys
 from pathlib import Path
 
 import numpy as np
 
-# Ensure src/ and infrastructure/ are on path
+# Ensure src/ and infrastructure/ are on path FIRST (before infrastructure imports)
 project_root = Path(__file__).parent.parent
 repo_root = project_root.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(repo_root))  # Add repo root so we can import infrastructure.*
+
+# Infra logging/perf/validation/reporting
+from infrastructure.core.logging_utils import (
+    get_logger,
+    log_substep,
+    log_progress_bar,
+)
+from infrastructure.core.performance import PerformanceMonitor
+from infrastructure.reporting import (
+    generate_pipeline_report,
+    save_pipeline_report,
+    get_error_aggregator,
+)
+from infrastructure.validation import validate_figure_registry, validate_markdown
 from infrastructure.documentation.figure_manager import FigureManager
 from infrastructure.documentation.image_manager import ImageManager
 from infrastructure.documentation.markdown_integration import MarkdownIntegration
+
 # Import src/ modules
 from data_generator import generate_time_series, generate_synthetic_data
 from performance import analyze_convergence
@@ -39,6 +55,38 @@ from plots import (
 )
 from statistics import calculate_descriptive_stats
 from visualization import VisualizationEngine
+
+logger = get_logger(__name__)
+
+
+def _parse_args() -> argparse.Namespace:
+    """Parse CLI arguments for stage selection and dry-run support."""
+    parser = argparse.ArgumentParser(
+        description="Generate scientific figures with optional stage control."
+    )
+    stage_names = ["convergence", "timeseries", "stats", "scatter", "insert", "validate"]
+    parser.add_argument(
+        "--only",
+        nargs="+",
+        choices=stage_names,
+        help="Run only the selected stages (preserves execution order).",
+    )
+    parser.add_argument(
+        "--resume",
+        choices=stage_names,
+        help="Resume from the given stage (skips earlier stages).",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show stages that would run without executing them.",
+    )
+    parser.add_argument(
+        "--list-stages",
+        action="store_true",
+        help="List available stages and exit.",
+    )
+    return parser.parse_args(), stage_names
 
 
 def generate_convergence_figure() -> str:
@@ -241,7 +289,7 @@ def insert_figures_into_manuscript(figure_labels: list[str]) -> None:
 def validate_all_figures() -> None:
     """Validate all generated figures."""
     print("\nValidating figures...")
-    
+
     # Use project_root/manuscript since we are in project/scripts/
     manuscript_dir = project_root / "manuscript"
     markdown_integration = MarkdownIntegration(manuscript_dir=manuscript_dir)
@@ -263,38 +311,147 @@ def validate_all_figures() -> None:
     print(f"  Total figures: {stats['total_figures']}")
     print(f"  Figures by section: {stats['figures_by_section']}")
 
+    # Validate registry if present
+    registry_path = Path("output/figures/figure_registry.json")
+    if registry_path.exists():
+        try:
+            validate_figure_registry(registry_path)
+            print("  ✅ Figure registry validated")
+        except Exception as exc:  # Broad to keep orchestration resilient
+            print(f"  ⚠️  Figure registry validation warning: {exc}")
+
+    # Run lightweight markdown validation for figures/refs
+    try:
+        problems, _ = validate_markdown(str(manuscript_dir), ".")
+        if problems:
+            print("  ⚠️  Markdown validation issues detected:")
+            for prob in problems:
+                print(f"    - {prob}")
+        else:
+            print("  ✅ Markdown references validated")
+    except Exception as exc:
+        print(f"  ⚠️  Markdown validation skipped: {exc}")
+
 
 def main() -> None:
     """Main function orchestrating the complete figure generation workflow."""
     os.environ.setdefault("MPLBACKEND", "Agg")
-    
+    args, stage_names = _parse_args()
+
+    staged_functions = [
+        ("convergence", generate_convergence_figure),
+        ("timeseries", generate_time_series_figure),
+        ("stats", generate_statistical_comparison_figure),
+        ("scatter", generate_scatter_plot_figure),
+        # insert + validate need access to the figure label list; handled in loop
+    ]
+
+    if args.list_stages:
+        print("Available stages (in order):")
+        for name, _ in staged_functions + [("insert", None), ("validate", None)]:
+            print(f"- {name}")
+        return
+
     # Ensure output directories exist
     for dir_path in ["output/figures", "output/simulations"]:
         Path(dir_path).mkdir(parents=True, exist_ok=True)
-    
+
+    # Filter stages based on --only while preserving order
+    if args.only:
+        selected = [(name, fn) for name, fn in staged_functions if name in args.only]
+    else:
+        selected = staged_functions
+
+    # Apply resume (skip until the requested stage)
+    if args.resume:
+        resume_seen = False
+        filtered = []
+        for name, fn in selected:
+            if not resume_seen and name != args.resume:
+                continue
+            resume_seen = True
+            filtered.append((name, fn))
+        selected = filtered
+
+    # Always append insert/validate after generation stages if requested
+    post_stages = [("insert", None), ("validate", None)]
+    if args.only:
+        post_stages = [(n, fn) for n, fn in post_stages if n in args.only]
+    if args.resume:
+        post_stages = [(n, fn) for n, fn in post_stages if stage_names.index(n) >= stage_names.index(args.resume)] if post_stages else post_stages
+
+    selected_with_post = selected + post_stages
+
+    if not selected_with_post:
+        print("No stages selected; nothing to do.")
+        return
+
+    if args.dry_run:
+        logger.info(
+            "Dry-run enabled. Stages that would run (in order): %s",
+            ", ".join(name for name, _ in selected_with_post),
+        )
+        return
+
     try:
-        # Generate all figures
-        figure_labels = []
-        
-        figure_labels.append(generate_convergence_figure())
-        figure_labels.append(generate_time_series_figure())
-        figure_labels.append(generate_statistical_comparison_figure())
-        figure_labels.append(generate_scatter_plot_figure())
-        
-        print(f"\n✅ Generated {len(figure_labels)} figures")
-        
-        # Insert figures into manuscript
-        insert_figures_into_manuscript(figure_labels)
-        
-        # Validate figures
-        validate_all_figures()
-        
+        figure_labels: list[str] = []
+        error_agg = get_error_aggregator()
+        stage_results = []
+
+        for name, fn in selected_with_post:
+            logger.info("Starting stage: %s", name)
+            perf = PerformanceMonitor()
+            perf.start()
+            try:
+                if name == "insert":
+                    insert_figures_into_manuscript(figure_labels)
+                elif name == "validate":
+                    validate_all_figures()
+                else:
+                    label = fn()
+                    figure_labels.append(label)
+                exit_code = 0
+            except Exception as exc:
+                exit_code = 1
+                error_agg.add_error(
+                    error_type="stage_failure",
+                    message=str(exc),
+                    stage=name,
+                    severity="error",
+                )
+                raise
+            finally:
+                perf.update_memory()
+                metrics = perf.stop()
+                stage_results.append(
+                    {
+                        "name": name,
+                        "exit_code": exit_code,
+                        "duration": metrics.duration,
+                        "resource_usage": metrics.resource_usage.to_dict(),
+                    }
+                )
+                log_substep(f"{name} duration: {metrics.duration:.2f}s", logger)
+                log_progress_bar(current=len(stage_results), total=len(selected_with_post), message=f"{name} complete", logger=logger)
+            logger.info("Completed stage: %s", name)
+
+        print(f"\n✅ Generated {len([f for f in figure_labels if f])} figures")
         print("\n✅ All scientific figure generation tasks completed!")
         print("\nGenerated outputs:")
         print("  - Figures: output/figures/")
         print("  - Figure registry: output/figures/figure_registry.json")
         print("\nFigures are ready for manuscript integration")
-        
+
+        # Save structured report
+        report = generate_pipeline_report(
+            stage_results=stage_results,
+            total_duration=sum(s["duration"] for s in stage_results),
+            repo_root=Path("."),
+            error_summary=error_agg.get_summary(),
+        )
+        saved = save_pipeline_report(report, Path("output/reports"))
+        log_substep(f"Saved figure pipeline report: {saved}", logger)
+
     except ImportError as e:
         print(f"❌ Failed to import from src/ modules: {e}")
         print("Make sure all src/ modules are available")

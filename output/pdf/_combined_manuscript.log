@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  8 DEC 2025 06:41
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  8 DEC 2025 09:50
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -982,6 +982,8 @@ Missing character: There is no ≈ ("2248) in font ec-lmr10!
 
 
 [5]
+
+[6]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
 61.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
@@ -991,14 +993,14 @@ LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
 (Font)              Font shape `T1/lmtt/b/n' tried instead on input line 361.
 
 
-[6]
+[7]
 File: ../figures/example_figure.png Graphic file (type bmp)
 <../figures/example_figure.png>
 
 
-[7]
-
 [8]
+
+[9]
 Missing character: There is no ∑ ("2211) in font ec-lmr10!
 Missing character: There is no 𝜙 ("1D719) in font ec-lmr10!
 Missing character: There is no 𝜆 ("1D706) in font ec-lmr10!
@@ -1036,15 +1038,19 @@ Missing character: There is no ∑ ("2211) in font ec-lmr10!
 Missing character: There is no ‖ ("2016) in font ec-lmr10!
 Missing character: There is no ∇ ("2207) in font ec-lmr10!
 Missing character: There is no ‖ ("2016) in font ec-lmr10!
+
+
+[10]
 File: ../figures/data_structure.png Graphic file (type bmp)
 <../figures/data_structure.png>
 
 
-[9]
-
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 Missing character: There is no ⋅ ("22C5) in font ec-lmr10!
+
+
+[11]
 Missing character: There is no ∑ ("2211) in font ec-lmr10!
 Missing character: There is no ≤ ("2264) in font ec-lmr10!
 Missing character: There is no ∗ ("2217) in font ec-lmr7!
@@ -1053,22 +1059,18 @@ Missing character: There is no ⋅ ("22C5) in font ec-lmr10!
 Missing character: There is no 𝜖 ("1D716) in font ec-lmr10!
 
 
-[10]
+[12]
 Missing character: There is no ≥ ("2265) in font ec-lmr10!
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
 Missing character: There is no ≈ ("2248) in font ec-lmr10!
 Missing character: There is no 𝜌 ("1D70C) in font ec-lmr10!
 Missing character: There is no ≈ ("2248) in font ec-lmr10!
-
-
-[11]
 File: ../figures/convergence_plot.png Graphic file (type bmp)
 <../figures/convergence_plot.png>
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
 File: ../figures/step_size_analysis.png Graphic file (type bmp)
 <../figures/step_size_analysis.png>
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -1080,14 +1082,24 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
+
+Overfull \hbox (57.27538pt too wide) in paragraph at lines 775--785
+\T1/latinmodern-math.otf(1)/m/n/10 Each ex-per-i-ment is ac-com-pa-nied by in-f
+ras-truc-ture checks: fig-ure ref-er-ences are val-i-dated via [][][][][][],
+ []
+
+
+
+[13]
 File: ../figures/ablation_study.png Graphic file (type bmp)
 <../figures/ablation_study.png>
 
 
-[12]
-
 LaTeX Warning: `h' float specifier changed to `ht'.
 
+
+
+[14]
 Missing character: There is no 𝛼 ("1D6FC) in font ec-lmr10!
 Missing character: There is no 𝛽 ("1D6FD) in font ec-lmr10!
 File: ../figures/hyperparameter_sensitivity.png Graphic file (type bmp)
@@ -1095,12 +1107,8 @@ File: ../figures/hyperparameter_sensitivity.png Graphic file (type bmp)
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-
-
-[13]
 File: ../figures/image_classification_results.png Graphic file (type bmp)
 <../figures/image_classification_results.png>
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -1111,7 +1119,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
-[14]
+[15]
 File: ../figures/convergence_analysis.png Graphic file (type bmp)
 <../figures/convergence_analysis.png>
 
@@ -1135,43 +1143,45 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
-[15]
+[16]
 Missing character: There is no ≈ ("2248) in font ec-lmr10!
 Missing character: There is no 𝜌 ("1D70C) in font ec-lmr10!
 Missing character: There is no ≈ ("2248) in font ec-lmr10!
 
 
-[16]
+[17]
 Missing character: There is no − ("2212) in font ec-lmr10!
 
 
-[17]
-
 [18]
+
+[19]
 Missing character: There is no ⋅ ("22C5) in font ec-lmr10!
 Missing character: There is no 𝜖 ("1D716) in font ec-lmr10!
 Missing character: There is no 𝜖 ("1D716) in font ec-lmr10!
 
 
-[19]
-
 [20]
+
+[21]
 Missing character: There is no 𝜌 ("1D70C) in font ec-lmr10!
 Missing character: There is no ∈ ("2208) in font ec-lmr10!
 
 
-[21]
+[22]
 Missing character: There is no ≈ ("2248) in font ec-lmr10!
 Missing character: There is no 𝜌 ("1D70C) in font ec-lmr10!
 Missing character: There is no ≈ ("2248) in font ec-lmr10!
 Missing character: There is no − ("2212) in font ec-lmr10!
 
 
-[22]
-
 [23]
 
 [24]
+
+[25]
+
+[26]
 Missing character: There is no − ("2212) in font ec-lmr10!
 Missing character: There is no 𝛼 ("1D6FC) in font ec-lmr10!
 Missing character: There is no ∇ ("2207) in font ec-lmr10!
@@ -1213,7 +1223,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
-[25]
+[27]
 Missing character: There is no ̃ ("303) in font ec-lmr10!
 Missing character: There is no − ("2212) in font ec-lmr10!
 Missing character: There is no 𝜇 ("1D707) in font ec-lmr10!
@@ -1225,13 +1235,25 @@ Missing character: There is no − ("2212) in font ec-lmr7!
 Missing character: There is no − ("2212) in font ec-lmr7!
 Missing character: There is no − ("2212) in font ec-lmr7!
 
+Underfull \hbox (badness 10000) in paragraph at lines 1533--1538
+[]\T1/lmr/bx/n/10 Commands\T1/latinmodern-math.otf(1)/m/n/10 : [][][][][][] for
+ gat-ing,
+ []
+
+
+Overfull \hbox (46.66148pt too wide) in paragraph at lines 1533--1538
+[][][][][][] \T1/latinmodern-math.otf(1)/m/n/10 for con-sol-i-dated met-rics, a
+nd [][][][][][]
+ []
+
+
 ! Package keyval Error: bgcolor undefined.
 
 See the keyval package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1486 \begin{Highlighting}[]
+l.1545 \begin{Highlighting}[]
                              
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -1243,16 +1265,16 @@ See the keyval package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1486 \begin{Highlighting}[]
+l.1545 \begin{Highlighting}[]
                              
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
 
-[26]
+[28]
 
-[27]
+[29]
 Missing character: There is no − ("2212) in font ec-lmr10!
 Missing character: There is no 𝛼 ("1D6FC) in font ec-lmr10!
 Missing character: There is no ∇ ("2207) in font ec-lmr10!
@@ -1301,7 +1323,7 @@ Missing character: There is no 𝜖 ("1D716) in font ec-lmr10!
 Missing character: There is no 𝜖 ("1D716) in font ec-lmr10!
 
 
-[28]
+[30]
 Missing character: There is no ‖ ("2016) in font ec-lmr10!
 Missing character: There is no − ("2212) in font ec-lmr10!
 Missing character: There is no ∗ ("2217) in font ec-lmr7!
@@ -1355,7 +1377,7 @@ Missing character: There is no ℓ ("2113) in font ec-lmr10!
 Missing character: There is no ℓ ("2113) in font ec-lmr10!
 
 
-[29]
+[31]
 Missing character: There is no ⋅ ("22C5) in font ec-lmr10!
 Missing character: There is no − ("2212) in font ec-lmr10!
 Missing character: There is no 𝛾 ("1D6FE) in font ec-lmr10!
@@ -1382,22 +1404,22 @@ Missing character: There is no 𝛼 ("1D6FC) in font ec-lmr10!
 Missing character: There is no 𝜆 ("1D706) in font ec-lmr10!
 
 
-[30]
+[32]
 
-[31]
+[33]
 Missing character: There is no 𝜎 ("1D70E) in font ec-lmr10!
 Missing character: There is no 𝜎 ("1D70E) in font ec-lmr10!
 Missing character: There is no 𝜎 ("1D70E) in font ec-lmr10!
 Missing character: There is no − ("2212) in font ec-lmr10!
 
 
-[32]
+[34]
 Missing character: There is no − ("2212) in font ec-lmr7!
 
 
-[33]
+[35]
 
-[34]
+[36]
 Missing character: There is no Ł ("141) in font ec-lmr10!
 Missing character: There is no ‖ ("2016) in font ec-lmr10!
 Missing character: There is no ∇ ("2207) in font ec-lmr10!
@@ -1414,7 +1436,7 @@ Missing character: There is no 𝜎 ("1D70E) in font ec-lmr10!
 Missing character: There is no 𝜎 ("1D70E) in font ec-lmr10!
 
 
-[35]
+[37]
 Missing character: There is no ⋅ ("22C5) in font ec-lmr10!
 Missing character: There is no 𝜌 ("1D70C) in font ec-lmr10!
 Missing character: There is no 𝜅 ("1D705) in font ec-lmr10!
@@ -1429,19 +1451,19 @@ Missing character: There is no 𝜆 ("1D706) in font ec-lmr10!
 Missing character: There is no 𝛾 ("1D6FE) in font ec-lmr10!
 
 
-[36]
-Missing character: There is no 𝜆 ("1D706) in font ec-lmr10!
-Missing character: There is no ∇ ("2207) in font ec-lmr10!
-Missing character: There is no 𝜆 ("1D706) in font ec-lmr10!
-Missing character: There is no ∇ ("2207) in font ec-lmr10!
-Missing character: There is no 𝜅 ("1D705) in font ec-lmr10!
-Missing character: There is no 𝜅 ("1D705) in font ec-lmr10!
-Missing character: There is no 𝜅 ("1D705) in font ec-lmr10!
-
-
-[37]
-
 [38]
+Missing character: There is no 𝜆 ("1D706) in font ec-lmr10!
+Missing character: There is no ∇ ("2207) in font ec-lmr10!
+Missing character: There is no 𝜆 ("1D706) in font ec-lmr10!
+Missing character: There is no ∇ ("2207) in font ec-lmr10!
+Missing character: There is no 𝜅 ("1D705) in font ec-lmr10!
+Missing character: There is no 𝜅 ("1D705) in font ec-lmr10!
+Missing character: There is no 𝜅 ("1D705) in font ec-lmr10!
+
+
+[39]
+
+[40]
 Missing character: There is no ‖ ("2016) in font ec-lmr10!
 Missing character: There is no − ("2212) in font ec-lmr10!
 Missing character: There is no ‖ ("2016) in font ec-lmr10!
@@ -1451,7 +1473,7 @@ Missing character: There is no ‖ ("2016) in font ec-lmr10!
 Missing character: There is no 𝜆 ("1D706) in font ec-lmr10!
 
 
-[39]
+[41]
 Missing character: There is no 𝜃 ("1D703) in font ec-lmr7!
 Missing character: There is no 𝜃 ("1D703) in font ec-lmr10!
 Missing character: There is no 𝜃 ("1D703) in font ec-lmr10!
@@ -1461,7 +1483,7 @@ Missing character: There is no 𝜃 ("1D703) in font ec-lmr10!
 Missing character: There is no ℓ ("2113) in font ec-lmr10!
 
 
-[40]
+[42]
 Missing character: There is no 𝛴 ("1D6F4) in font ec-lmr10!
 Missing character: There is no − ("2212) in font ec-lmr10!
 Missing character: There is no 𝜇 ("1D707) in font ec-lmr10!
@@ -1478,100 +1500,100 @@ Missing character: There is no 𝜎 ("1D70E) in font ec-lmr10!
 Missing character: There is no ≤ ("2264) in font ec-lmr10!
 
 
-[41]
-
-[42]
-
 [43]
-Overfull \hbox (60.31078pt too wide) in paragraph at lines 2755--2755
+
+[44]
+
+[45]
+Overfull \hbox (60.31078pt too wide) in paragraph at lines 2814--2814
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (23.56088pt too wide) in paragraph at lines 2757--2757
+Overfull \hbox (23.56088pt too wide) in paragraph at lines 2816--2816
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (18.3109pt too wide) in paragraph at lines 2759--2759
+Overfull \hbox (18.3109pt too wide) in paragraph at lines 2818--2818
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (2.56094pt too wide) in paragraph at lines 2761--2761
+Overfull \hbox (2.56094pt too wide) in paragraph at lines 2820--2820
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (34.06085pt too wide) in paragraph at lines 2769--2769
+Overfull \hbox (34.06085pt too wide) in paragraph at lines 2828--2828
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (7.81093pt too wide) in paragraph at lines 2801--2801
+Overfull \hbox (7.81093pt too wide) in paragraph at lines 2860--2860
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (49.8108pt too wide) in paragraph at lines 2803--2803
+Overfull \hbox (49.8108pt too wide) in paragraph at lines 2862--2862
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (7.81093pt too wide) in paragraph at lines 2805--2805
+Overfull \hbox (7.81093pt too wide) in paragraph at lines 2864--2864
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (60.31078pt too wide) in paragraph at lines 2807--2807
+Overfull \hbox (60.31078pt too wide) in paragraph at lines 2866--2866
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (49.8108pt too wide) in paragraph at lines 2809--2809
+Overfull \hbox (49.8108pt too wide) in paragraph at lines 2868--2868
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (2.56094pt too wide) in paragraph at lines 2831--2831
+Overfull \hbox (2.56094pt too wide) in paragraph at lines 2890--2890
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (2.56094pt too wide) in paragraph at lines 2833--2833
+Overfull \hbox (2.56094pt too wide) in paragraph at lines 2892--2892
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (55.06079pt too wide) in paragraph at lines 2837--2837
+Overfull \hbox (55.06079pt too wide) in paragraph at lines 2896--2896
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (49.8108pt too wide) in paragraph at lines 2865--2865
+Overfull \hbox (49.8108pt too wide) in paragraph at lines 2924--2924
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (7.81093pt too wide) in paragraph at lines 2867--2867
+Overfull \hbox (7.81093pt too wide) in paragraph at lines 2926--2926
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (39.31084pt too wide) in paragraph at lines 2869--2869
+Overfull \hbox (39.31084pt too wide) in paragraph at lines 2928--2928
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (28.81087pt too wide) in paragraph at lines 2880--2880
+Overfull \hbox (28.81087pt too wide) in paragraph at lines 2939--2939
 []|[][][][][][]|  
  []
 
-[44] [45] [46]
+[46] [47] [48]
 
-[47] (./_combined_manuscript.bbl)
+[49] (./_combined_manuscript.bbl)
 
-[48] (./_combined_manuscript.aux)
+[50] (./_combined_manuscript.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -1582,12 +1604,12 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 25280 strings out of 473832
- 470119 string characters out of 5729482
+ 25289 strings out of 473832
+ 470343 string characters out of 5729482
  1158229 words of memory out of 5000000
- 47996 multiletter control sequences out of 15000+600000
+ 48005 multiletter control sequences out of 15000+600000
  632198 words of font info for 105 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 90i,10n,113p,1017b,551s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,10n,113p,1017b,553s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on _combined_manuscript.pdf (48 pages).
+Output written on _combined_manuscript.pdf (50 pages).

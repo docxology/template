@@ -6,7 +6,7 @@ The `tests/infrastructure/` directory contains comprehensive tests for the reusa
 
 ## Coverage Requirements
 
-**49% minimum coverage** required for infrastructure modules. This ensures critical infrastructure functionality is validated while allowing flexibility for rapidly evolving research tools.
+**60% minimum coverage** required for infrastructure modules. This ensures critical infrastructure functionality is validated while allowing flexibility for rapidly evolving research tools.
 
 ## Directory Structure
 
@@ -547,7 +547,7 @@ Current coverage: **70.09%** (exceeds 49% requirement)
 
 ```bash
 # From repository root
-pytest tests/infrastructure/ --cov=infrastructure --cov-report=html --cov-fail-under=49
+pytest tests/infrastructure/ --cov=infrastructure --cov-report=html --cov-fail-under=60
 
 # Skip network-dependent tests
 pytest tests/infrastructure/ -m "not requires_ollama"

@@ -18,15 +18,17 @@
 # Orchestration:
 #   8. Run Full Pipeline (10 stages: 0-9, via run.sh)
 #
-# Literature Operations (not part of the core pipeline):
-#   9. Literature Search (all operations) (07_literature_search.py)
-#   10. Search only (network only)
-#   11. Download only (network only)
-#   12. Summarize (requires Ollama)
-#   13. Cleanup (local files only)
-#   14. Advanced LLM operations (requires Ollama)
+# Literature Operations:
+#   9. Literature Operations Menu (submenu with 7 options)
 #
-#   15. Exit
+# Literature Submenu (0-6):
+#   0. All Operations (search + download + summarize)
+#   1. Search Only (network only - add to bibliography)
+#   2. Download Only (network only - download PDFs)
+#   3. Summarize (requires Ollama - generate summaries)
+#   4. Cleanup (local files only - remove papers without PDFs)
+#   5. Advanced LLM Operations (requires Ollama)
+#   6. Return to Main Menu
 #
 # Non-interactive mode: Use dedicated flags (--pipeline, --infra-tests, etc.)
 #
@@ -298,15 +300,8 @@ display_menu() {
     echo -e "${BOLD}Orchestration:${NC}"
     echo "  8. Run Full Pipeline (10 stages: 0-9, via run.sh)"
     echo
-    echo -e "${BOLD}Literature Operations (via 07_literature_search.py):${NC}"
-    echo -e "  9. Literature Search (all operations)"
-    echo -e "  10. Search only ${CYAN}(network only)${NC}"
-    echo -e "  11. Download only ${CYAN}(network only)${NC}"
-    echo -e "  12. Summarize ${YELLOW}(requires Ollama)${NC}"
-    echo -e "  13. Cleanup ${CYAN}(local files only)${NC}"
-    echo -e "  14. Advanced LLM operations ${YELLOW}(requires Ollama)${NC}"
-    echo
-    echo "  15. Exit"
+    echo -e "${BOLD}Literature Operations:${NC}"
+    echo -e "  9. Literature Operations Menu ${CYAN}(submenu)${NC}"
     echo
     echo -e "${BLUE}============================================================${NC}"
     echo -e "  Repository: ${CYAN}$REPO_ROOT${NC}"
@@ -314,6 +309,31 @@ display_menu() {
     echo -e "${BLUE}============================================================${NC}"
     echo
     echo -e "${CYAN}Tip:${NC} Enter multiple digits to chain steps (e.g., 345 for analysis → render → validate). Comma forms like 3,4,5 work too."
+}
+
+display_literature_menu() {
+    clear
+    echo -e "${BOLD}${BLUE}"
+    echo "============================================================"
+    echo "  Literature Operations Menu"
+    echo "============================================================"
+    echo -e "${NC}"
+    echo
+    echo -e "${BOLD}Literature Operations (via 07_literature_search.py):${NC}"
+    echo -e "  0. All Operations ${CYAN}(search + download + summarize)${NC}"
+    echo -e "  1. Search Only ${CYAN}(network only - add to bibliography)${NC}"
+    echo -e "  2. Download Only ${CYAN}(network only - download PDFs)${NC}"
+    echo -e "  3. Summarize ${YELLOW}(requires Ollama - generate summaries)${NC}"
+    echo -e "  4. Cleanup ${CYAN}(local files only - remove papers without PDFs)${NC}"
+    echo -e "  5. Advanced LLM Operations ${YELLOW}(requires Ollama)${NC}"
+    echo
+    echo "  6. Return to Main Menu"
+    echo
+    echo -e "${BLUE}============================================================${NC}"
+    echo -e "  Repository: ${CYAN}$REPO_ROOT${NC}"
+    echo -e "  Python: ${CYAN}$(python3 --version 2>&1)${NC}"
+    echo -e "${BLUE}============================================================${NC}"
+    echo
 }
 
 # ============================================================================
@@ -399,7 +419,7 @@ run_pytest_infrastructure() {
         --cov=infrastructure \
         --cov-report=term-missing \
         --cov-report=html \
-        --cov-fail-under=49 \
+        --cov-fail-under=60 \
         -v --tb=short
 }
 
@@ -417,7 +437,7 @@ run_pytest_project() {
         --cov=project/src \
         --cov-report=term-missing \
         --cov-report=html \
-        --cov-fail-under=70 \
+        --cov-fail-under=90 \
         -v --tb=short
 }
 
@@ -1264,7 +1284,7 @@ handle_menu_choice() {
             exit_code=$?
             ;;
         6)
-            run_llm_review
+            run_llm_scientific_review
             exit_code=$?
             ;;
         7)
@@ -1276,37 +1296,13 @@ handle_menu_choice() {
             exit_code=$?
             ;;
         9)
-            run_literature_search_all
-            exit_code=$?
-            ;;
-        10)
-            run_literature_search
-            exit_code=$?
-            ;;
-        11)
-            run_literature_download
-            exit_code=$?
-            ;;
-        12)
-            run_literature_summarize
-            exit_code=$?
-            ;;
-        13)
-            run_literature_cleanup
-            exit_code=$?
-            ;;
-        14)
-            run_literature_llm_operations
-            exit_code=$?
-            ;;
-        15)
-            echo
-            log_info "Exiting. Goodbye!"
-            exit 0
+            # Enter literature submenu
+            run_literature_submenu
+            return $?
             ;;
         *)
             log_error "Invalid option: $choice"
-            log_info "Please enter a number between 0 and 15"
+            log_info "Please enter a number between 0 and 9"
             exit_code=1
             ;;
     esac
@@ -1317,6 +1313,84 @@ handle_menu_choice() {
     echo
     log_info "Operation completed in $(format_duration "$duration")"
     return $exit_code
+}
+
+handle_literature_menu_choice() {
+    local choice="$1"
+    local start_time end_time duration
+    local exit_code=0
+    
+    start_time=$(date +%s)
+    
+    case "$choice" in
+        0)
+            run_literature_search_all
+            exit_code=$?
+            ;;
+        1)
+            run_literature_search
+            exit_code=$?
+            ;;
+        2)
+            run_literature_download
+            exit_code=$?
+            ;;
+        3)
+            run_literature_summarize
+            exit_code=$?
+            ;;
+        4)
+            run_literature_cleanup
+            exit_code=$?
+            ;;
+        5)
+            run_literature_llm_operations
+            exit_code=$?
+            ;;
+        6)
+            # Return to main menu
+            return 0
+            ;;
+        *)
+            log_error "Invalid option: $choice"
+            log_info "Please enter a number between 0 and 6"
+            exit_code=1
+            ;;
+    esac
+    
+    end_time=$(date +%s)
+    duration=$(get_elapsed_time "$start_time" "$end_time")
+    
+    echo
+    log_info "Operation completed in $(format_duration "$duration")"
+    return $exit_code
+}
+
+run_literature_submenu() {
+    # Interactive literature operations submenu
+    while true; do
+        display_literature_menu
+        
+        echo -n "Select option [0-6]: "
+        read -r choice
+        
+        # Check for return to main menu
+        if [[ "$choice" == "6" ]]; then
+            return 0
+        fi
+        
+        handle_literature_menu_choice "$choice"
+        local exit_code=$?
+        
+        if [[ $exit_code -ne 0 ]]; then
+            log_error "Last operation exited with code $exit_code"
+        fi
+        
+        # Don't prompt for cleanup option
+        if [[ "$choice" != "4" ]]; then
+            press_enter_to_continue
+        fi
+    done
 }
 
 # Run a sequence of menu options in order, stopping on first failure.
@@ -1389,7 +1463,7 @@ show_help() {
     echo "  --summarize         Generate summaries (requires Ollama, for papers with PDFs)"
     echo "  --cleanup           Cleanup library (local files only, remove papers without PDFs)"
     echo
-    echo "Menu Options:"
+    echo "Main Menu Options (0-9):"
     echo
     echo "Core Pipeline Scripts (aligned with script numbering):"
     echo "  0  Setup Environment (00_setup_environment.py)"
@@ -1404,14 +1478,17 @@ show_help() {
     echo "Orchestration:"
     echo "  8  Run Full Pipeline (10 stages: 0-9, via run.sh)"
     echo
-    echo "Literature Operations (via 07_literature_search.py):"
-    echo "  9  Literature Search (all operations)"
-    echo "  10 Search only (network only)"
-    echo "  11 Download only (network only)"
-    echo "  12 Summarize (requires Ollama)"
-    echo "  13 Cleanup (local files only)"
-    echo "  14 Advanced LLM operations (requires Ollama)"
-    echo "  15 Exit"
+    echo "Literature Operations:"
+    echo "  9  Literature Operations Menu (opens submenu)"
+    echo
+    echo "Literature Submenu Options (0-6):"
+    echo "  0  All Operations (search + download + summarize)"
+    echo "  1  Search Only (network only - add to bibliography)"
+    echo "  2  Download Only (network only - download PDFs)"
+    echo "  3  Summarize (requires Ollama - generate summaries)"
+    echo "  4  Cleanup (local files only - remove papers without PDFs)"
+    echo "  5  Advanced LLM Operations (requires Ollama)"
+    echo "  6  Return to Main Menu"
     echo
     echo "Examples:"
     echo "  $0                      # Interactive menu mode"
@@ -1425,8 +1502,6 @@ show_help() {
     echo "  $0 --download            # Download PDFs (for bibliography entries)"
     echo "  $0 --summarize           # Generate summaries (for papers with PDFs)"
     echo "  $0 --cleanup             # Cleanup library (remove papers without PDFs)"
-    echo
-    echo "Note: --option N is also supported for compatibility (0-15)"
     echo
 }
 
@@ -1490,23 +1565,23 @@ main() {
                 exit $?
                 ;;
             --search)
-                run_non_interactive 9
+                run_literature_search
                 exit $?
                 ;;
             --download)
-                run_non_interactive 10
+                run_literature_download
                 exit $?
                 ;;
             --summarize)
-                run_non_interactive 11
+                run_literature_summarize
                 exit $?
                 ;;
             --cleanup)
-                run_non_interactive 12
+                run_literature_cleanup
                 exit $?
                 ;;
             --llm-operation)
-                run_non_interactive 13
+                run_literature_llm_operations
                 exit $?
                 ;;
             *)
@@ -1522,7 +1597,7 @@ main() {
     while true; do
         display_menu
         
-        echo -n "Select option [0-15]: "
+        echo -n "Select option [0-9]: "
         read -r choice
 
         local exit_code=0
@@ -1530,26 +1605,16 @@ main() {
         if parse_choice_sequence "$choice" && [[ ${#SHORTHAND_CHOICES[@]} -gt 1 ]]; then
             run_option_sequence "${SHORTHAND_CHOICES[@]}"
             exit_code=$?
-            # Skip prompt if cleanup (12) included
-            for opt in "${SHORTHAND_CHOICES[@]}"; do
-                if [[ "$opt" == "12" ]]; then
-                    prompt_for_continue=false
-                    break
-                fi
-            done
         else
             handle_menu_choice "$choice"
             exit_code=$?
-            if [[ "$choice" == "12" ]]; then
-                prompt_for_continue=false
-            fi
         fi
 
         if [[ $exit_code -ne 0 ]]; then
             log_error "Last operation exited with code $exit_code"
         fi
 
-        if [[ "$choice" != "14" && "$prompt_for_continue" == true ]]; then
+        if [[ "$choice" != "9" && "$prompt_for_continue" == true ]]; then
             press_enter_to_continue
         fi
     done

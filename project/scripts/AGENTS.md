@@ -176,48 +176,54 @@ import os
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
+from infrastructure.core.logging_utils import get_logger, log_substep, log_progress_bar
 
 
-def _ensure_src_on_path() -> None:
-    """Ensure src/ is on Python path for imports."""
-    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    src_path = os.path.join(repo_root, "src")
+def _ensure_paths() -> None:
+    """Ensure src/ and repo root are on Python path for imports."""
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    repo_root = os.path.abspath(os.path.join(project_root, ".."))
+    src_path = os.path.join(project_root, "src")
     if src_path not in sys.path:
         sys.path.insert(0, src_path)
+    if repo_root not in sys.path:
+        sys.path.insert(0, repo_root)
 
 
 def main() -> None:
     """Main script function."""
     # Set matplotlib backend for headless operation
     os.environ.setdefault("MPLBACKEND", "Agg")
-    
-    # Ensure src/ is on path
-    _ensure_src_on_path()
-    
+    _ensure_paths()
+
+    logger = get_logger(__name__)
+
     # Import src/ methods
     try:
         from example import add_numbers, calculate_average
-        print("✅ Successfully imported from src/")
+        log_substep("✅ Successfully imported from src/example.py", logger)
     except ImportError as e:
-        print(f"❌ Failed to import from src/: {e}")
+        log_substep(f"❌ Failed to import from src/: {e}", logger)
         return
-    
+
     # Use src/ methods for computation
     data = [1, 2, 3, 4, 5]
-    avg = calculate_average(data)  # From src/
-    
+    avg = calculate_average(data)
+    log_substep(f"Computed average: {avg:.3f}", logger)
+
     # Script handles visualization and output
     fig, ax = plt.subplots()
     ax.plot(data)
-    ax.set_title(f"Average: {avg}")
-    
+    ax.set_title(f"Average: {avg:.3f}")
+
     # Save outputs
     output_dir = os.path.join(os.path.dirname(__file__), "..", "output", "figures")
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, "my_figure.png")
     fig.savefig(output_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
-    
+    log_progress_bar(current=5, total=5, message="Saved outputs", logger=logger)
+
     # Print path for render system
     print(output_path)
 
@@ -228,16 +234,19 @@ if __name__ == "__main__":
 
 ## Import Pattern
 
-### Step 1: Add src/ to Path
+### Step 1: Add src/ and repo root to Path
 ```python
-def _ensure_src_on_path() -> None:
-    """Ensure src/ is on Python path."""
-    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    src_path = os.path.join(repo_root, "src")
+def _ensure_paths() -> None:
+    """Ensure src/ and infrastructure/ are importable."""
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    repo_root = os.path.abspath(os.path.join(project_root, ".."))
+    src_path = os.path.join(project_root, "src")
     if src_path not in sys.path:
         sys.path.insert(0, src_path)
+    if repo_root not in sys.path:
+        sys.path.insert(0, repo_root)
 
-_ensure_src_on_path()
+_ensure_paths()
 ```
 
 ### Step 2: Import with Error Handling

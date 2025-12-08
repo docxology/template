@@ -228,6 +228,19 @@ f(x_i)\|^2}}
 \end{equation}\]</span></p>
 <p>This ensures that the algorithm converges even when the gradient
 varies significantly across iterations.</p>
+<h2 id="reproducibility-infrastructure">Reproducibility
+Infrastructure</h2>
+<p>All methodological steps are paired with automated quality gates
+provided by the infrastructure layer. Figure generation is registered
+via <code>FigureManager</code> to ensure cross-references resolve, and
+<code>validate_markdown</code> checks anchors, equations, and labels
+before rendering. A preflight stage evaluates glossary injection markers
+and bibliography blocks, while <code>analyze_document_quality</code>
+supplies readability and structural metrics that are reported in the
+quality report. Output integrity (<code>verify_output_integrity</code>)
+is executed after each scripted stage to ensure generated artifacts
+match expectations, making the methodological pipeline reproducible
+across runs.</p>
 <h2 id="performance-analysis">Performance Analysis</h2>
 <p>The computational complexity of our approach is <span
 class="math inline">\(O(n \log n)\)</span> per iteration, where <span

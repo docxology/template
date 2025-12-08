@@ -450,9 +450,9 @@ metadata:
 - ✅ Structured format (YAML)
 - ✅ Easy to edit and maintain
 
-### Environment Variables (Backward Compatible)
+### Environment Variables (Alternative Method)
 
-For backward compatibility, environment variables still work and take precedence over config file values:
+Environment variables are supported as an alternative configuration method and take precedence over config file values:
 
 ```bash
 export AUTHOR_NAME="Dr. Jane Smith"
@@ -521,6 +521,11 @@ python3 -m infrastructure.validation.cli pdf project/output/pdf/01_abstract.pdf
 - Missing citations ([?])
 - LaTeX warnings
 - Rendering issues
+
+### Quality & Preflight
+- `python3 project/scripts/manuscript_preflight.py --strict` verifies figures exist, glossary markers are present, and bibliography commands are intact before rendering.
+- `python3 project/scripts/quality_report.py` aggregates readability metrics, integrity checks, and reproducibility snapshots using infrastructure quality modules.
+- `validate_figure_registry` and `verify_output_integrity` guard against missing figures or corrupted outputs prior to PDF compilation.
 
 ## Best Practices
 

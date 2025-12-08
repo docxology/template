@@ -11,6 +11,11 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
+from infrastructure.reporting import (
+    generate_pipeline_report,
+    save_pipeline_report,
+    get_error_aggregator,
+)
 
 
 class ReportGenerator:
@@ -205,6 +210,34 @@ class ReportGenerator:
             f.write(html)
         
         return report_path
+
+    def save_structured_report(
+        self,
+        stage_name: str,
+        results: Dict[str, Any],
+        pipeline_duration: float = 0.0,
+    ) -> Dict[str, Path]:
+        """Persist a structured multi-format report using infrastructure.reporting.
+
+        Args:
+            stage_name: Logical name of the stage producing this report.
+            results: Result payload to persist under `validation_results`.
+            pipeline_duration: Optional duration for the stage.
+
+        Returns:
+            Mapping of format to saved paths.
+        """
+        error_agg = get_error_aggregator()
+        report = generate_pipeline_report(
+            stage_results=[
+                {"name": stage_name, "exit_code": 0, "duration": pipeline_duration}
+            ],
+            total_duration=pipeline_duration,
+            repo_root=Path("."),
+            validation_results=results,
+            error_summary=error_agg.get_summary(),
+        )
+        return save_pipeline_report(report, self.output_dir)
     
     def extract_key_findings(
         self,

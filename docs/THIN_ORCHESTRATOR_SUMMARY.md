@@ -94,7 +94,7 @@ save_test_report(report, output_dir)
 ```python
 # project/scripts/example_figure.py - Project orchestrator
 from example import add_numbers, calculate_average  # From project/src/
-from infrastructure.figure_manager import FigureManager  # From infrastructure/
+from infrastructure.documentation.figure_manager import FigureManager  # From infrastructure/
 
 # Use project/src/ methods for computation
 data = [1, 2, 3, 4, 5]

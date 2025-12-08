@@ -86,8 +86,7 @@ publishing.track_metrics(doi)
 
 ### Code Organization
 
-**Before**: Scattered PDF rendering logic in shell scripts  
-**After**: Consolidated in `infrastructure/rendering/` with:
+PDF rendering logic is consolidated in `infrastructure/rendering/` with:
 - Clear module boundaries
 - Single responsibility per class
 - Reusable components
@@ -317,7 +316,7 @@ Each module has complete documentation:
 All new code complies with:
 - ✅ Two-layer architecture
 - ✅ Thin orchestrator pattern
-- ✅ Comprehensive test coverage (61.48% infrastructure, exceeds 49% minimum)
+- ✅ Comprehensive test coverage (66.76% infrastructure, exceeds 60% minimum)
 - ✅ Type hints on public APIs
 - ✅ Unified logging
 - ✅ Custom exceptions

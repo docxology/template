@@ -8,8 +8,8 @@ All tests are now functional, documented, complete, and properly handle figures,
 
 ## 📊 Test Suite Overview (current)
 
-- **Total Tests:** 2175 passing (1855 infrastructure + 320 project)
-- **Coverage:** 99.88% project, 61.48% infrastructure (targets: 70% / 49%)
+- **Total Tests:** 2245 total (1894 infrastructure [8 skipped] + 351 project, all passing)
+- **Coverage:** 98.03% project, 66.76% infrastructure (targets: 90% / 60%)
 - **Policy:** No mocks, real data; Ollama-dependent tests can be skipped with `-m "not requires_ollama"`
 
 ---

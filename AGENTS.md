@@ -247,9 +247,9 @@ llm:
 - ✅ Structured format (YAML)
 - ✅ Easy to edit and maintain
 
-### Environment Variables (Backward Compatible)
+### Environment Variables (Alternative Method)
 
-For backward compatibility, environment variables still work and take precedence over config file values:
+Environment variables are supported as an alternative configuration method and take precedence over config file values:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -433,8 +433,8 @@ python3 -m pytest project/tests/ --cov=project/src --cov-report=html
 ```
 
 **Coverage Requirements**:
-- 70% minimum for project/src/ (currently achieving 99.88%)
-- 49% minimum for infrastructure/ (currently achieving 70.09%)
+- 90% minimum for project/src/ (currently achieving 98.03%)
+- 60% minimum for infrastructure/ (currently achieving 66.76%)
 - All tests must pass before PDF generation
 - No mock methods (real data analysis only)
 
@@ -951,7 +951,7 @@ See [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md) for complete docume
 ## ✅ System Status: FULLY OPERATIONAL (v2.0)
 
 **All systems confirmed functional:**
-- ✅ Test suite (2175 tests passing: 1855 infrastructure + 320 project)
+- ✅ Test suite (2245 tests passing: 1894 infrastructure + 351 project)
 - ✅ Package API testing (test_package_imports.py validates __init__.py)
 - ✅ Script execution (thin orchestrator pattern fully compliant)
 - ✅ Markdown validation (all references resolved, no warnings)
@@ -968,7 +968,7 @@ See [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md) for complete docume
 - ✅ Publishing API (integrated) - Zenodo, arXiv, GitHub automation
 
 **Comprehensive Audit Status:**
-- ✅ Comprehensive code coverage achieved (61.48% infra, exceeds 49% minimum)
+- ✅ Comprehensive code coverage achieved (66.76% infra, exceeds 60% minimum)
 - ✅ Zero mock methods - all tests use real data
 - ✅ All .cursorrules standards fully implemented
 - ✅ Complete compliance with thin orchestrator pattern

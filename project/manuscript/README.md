@@ -118,7 +118,7 @@ publication:
 
 See `config.yaml.example` for all available options.
 
-### Method 2: Environment Variables (Backward Compatible)
+### Method 2: Environment Variables (Alternative)
 
 ```bash
 export AUTHOR_NAME="Dr. Jane Smith"
@@ -138,6 +138,12 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 # Check PDF
 python3 -m infrastructure.validation.cli pdf project/output/pdf/
 ```
+
+## Quality Validation
+
+- Run `python3 project/scripts/manuscript_preflight.py --strict` before rendering to ensure figures, glossary markers, and references are present.
+- Generate consolidated metrics with `python3 project/scripts/quality_report.py` (readability, integrity, reproducibility snapshots).
+- Figure registry and anchors are validated with `validate_figure_registry` and `validate_markdown` as part of the pipeline.
 
 ## Section Ordering
 

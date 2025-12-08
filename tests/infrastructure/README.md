@@ -11,7 +11,7 @@ Comprehensive test suite for reusable infrastructure modules (49%+ coverage requ
 pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
 
 # Require 49% coverage
-pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
+pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 
 # Skip network-dependent tests
 pytest tests/infrastructure/ -m "not requires_ollama"
@@ -32,7 +32,7 @@ pytest tests/infrastructure/validation/ -v
 
 ## Coverage Requirements
 
-- **49% minimum** for infrastructure modules
+- **60% minimum** for infrastructure modules
 - Currently achieving **70.09%** coverage (exceeds requirement)
 - Network-dependent tests can be skipped
 - See [`../../docs/COVERAGE_GAPS.md`](../../docs/COVERAGE_GAPS.md) for detailed analysis

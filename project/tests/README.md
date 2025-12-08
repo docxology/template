@@ -11,7 +11,7 @@ Comprehensive test suite ensuring 70%+ coverage of `project/src/` scientific cod
 pytest tests/ --cov=src --cov-report=html
 
 # Require 70% coverage
-pytest tests/ --cov=src --cov-fail-under=70
+pytest tests/ --cov=src --cov-fail-under=90
 ```
 
 ### Run Specific Tests
@@ -29,7 +29,7 @@ pytest tests/test_example.py -v
 
 ## Coverage Requirements
 
-- **70% minimum** for project/src/ modules
+- **90% minimum** for project/src/ modules
 - Currently achieving **99.88%** coverage
 - Tests must pass before PDF generation
 

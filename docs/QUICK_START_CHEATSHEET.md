@@ -95,7 +95,7 @@ vim scripts/my_figure.py
 # 1. Create module
 vim src/my_module.py
 
-# 2. Create tests (70% minimum coverage required)
+# 2. Create tests (90% minimum coverage required)
 vim tests/test_my_module.py
 
 # 3. Run tests
@@ -164,7 +164,7 @@ Reference it: \ref{fig:my_figure}
 ## 📊 Key Metrics
 
 **Current System Status:**
-- **Tests**: 2175/2175 passing (1855 infra + 320 project)
+- **Tests**: 2245/2245 passing (1894 infra [8 skipped] + 351 project)
 - **Coverage**: 99.88% project, 61.48% infra (exceeds requirements)
 - **Build Time**: 84 seconds (without optional LLM review)
 - **PDFs Generated**: 13 sections
@@ -195,7 +195,7 @@ Reference it: \ref{fig:my_figure}
 
 1. **Always run tests first**: `pytest tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `src/`
-3. **Coverage requirements**: 70% minimum for project code, 49% for infrastructure
+3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
 4. **Run complete pipeline**: `python3 scripts/run_all.py` executes all stages
 5. **Pipeline stages**: 6 stages (00-05) from setup to final deliverables
 6. **Read build logs**: Check `project/output/pdf/*_compile.log` for errors

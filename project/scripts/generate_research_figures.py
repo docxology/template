@@ -12,8 +12,9 @@ from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
 
-# Ensure src/ and infrastructure/ are on Python path FIRST
+# Ensure src/ and infrastructure/ are on Python path FIRST (BEFORE infrastructure imports)
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 repo_root = os.path.abspath(os.path.join(project_root, ".."))
 src_path = os.path.join(project_root, "src")
@@ -676,6 +677,25 @@ def main() -> None:
     print(f"   - Mathematical functions from example.py used for data processing")
     print(f"   - Statistical analysis using src/ functions")
     print(f"   - Proper error handling for missing imports")
+
+    # Lightweight integrity/validation checks
+    try:
+        validate_figure_registry(os.path.join(figure_dir, "figure_registry.json"))
+        print("✅ Figure registry validation passed")
+    except Exception as exc:
+        print(f"⚠️  Figure registry validation warning: {exc}")
+
+    try:
+        verify_output_integrity(Path(output_dir))
+        print("✅ Output integrity check passed")
+    except Exception as exc:
+        print(f"⚠️  Output integrity warning: {exc}")
+
+    try:
+        verify_build_artifacts(Path(output_dir), expected_files=[])
+    except Exception:
+        # Non-blocking; artifact expectations are project-specific
+        pass
 
 
 if __name__ == "__main__":

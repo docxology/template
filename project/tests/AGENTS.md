@@ -6,7 +6,7 @@ The `project/tests/` directory contains comprehensive tests for the project-spec
 
 ## Test Coverage Requirements
 
-**70% minimum coverage** required for `project/src/` modules before PDF generation proceeds. This ensures all critical research code paths are validated.
+**90% minimum coverage** required for `project/src/` modules before PDF generation proceeds. This ensures all critical research code paths are validated.
 
 ## Directory Structure
 
@@ -119,7 +119,7 @@ def test_calculate_average_edge_cases():
 
 ```bash
 # With coverage (from repository root)
-pytest project/tests/ --cov=project/src --cov-report=html --cov-fail-under=70
+pytest project/tests/ --cov=project/src --cov-report=html --cov-fail-under=90
 
 # Using uv
 uv run pytest project/tests/ --cov=project/src --cov-report=term-missing

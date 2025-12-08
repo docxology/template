@@ -512,16 +512,13 @@ For detailed information about each module:
 
 ### Import Errors
 
-Check that you're using the new module paths:
+Check that you're using the correct modular import paths:
 
 ```python
-# ✅ Correct
 from infrastructure.validation.pdf_validator import validate_pdf_rendering
 from infrastructure.documentation.figure_manager import FigureManager
-
-# ❌ Old (won't work)
-from infrastructure.pdf_validator import validate_pdf_rendering
-from infrastructure.figure_manager import FigureManager
+from infrastructure.core.config_loader import load_config
+from infrastructure.core.logging_utils import get_logger
 ```
 
 ### Configuration Not Loading

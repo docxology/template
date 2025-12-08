@@ -84,6 +84,10 @@ L-BFGS & 0.9 & $O(n^2)$ & 85.0 \\
 \label{tab:performance_comparison}
 \end{table}
 
+## Automated Quality Validation
+
+Each experiment is accompanied by infrastructure checks: figure references are validated via `validate_figure_registry`, manuscript anchors and equations are scanned with `validate_markdown`, and the preflight stage enforces glossary markers and bibliography commands before rendering. Output bundles are inspected with `verify_output_integrity`, and readability/structure metrics from `analyze_document_quality` are surfaced in the quality report. These automated gates ensure that every figure, table, and citation included here is reproducible and traceable across builds.
+
 ## Ablation Studies
 
 ### Component Analysis

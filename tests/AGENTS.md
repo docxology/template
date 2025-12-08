@@ -28,8 +28,8 @@ For modules requiring external services (LLM, Literature, Publishing):
 - Skip integration tests with: `pytest -m "not requires_ollama"`
 
 ### Coverage Requirements
-- All project/src/ modules must meet 70% minimum coverage (currently 99.88%)
-- Infrastructure modules must meet 49% minimum coverage (currently 61.48%)
+- All project/src/ modules must meet 90% minimum coverage (currently 98.03%)
+- Infrastructure modules must meet 60% minimum coverage (currently 66.76%)
 - Tests must pass before PDF generation proceeds
 - Coverage validated by `pyproject.toml` configuration (`[tool.coverage.*]` sections)
 - No code ships without tests
@@ -193,8 +193,8 @@ pytest tests/ --cov=infrastructure --cov=project/src --cov-report=term-missing -
 uv run pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
 
 # Verify coverage requirements
-pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
-pytest project/tests/ --cov=project/src --cov-fail-under=70
+pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
+pytest project/tests/ --cov=project/src --cov-fail-under=90
 ```
 
 ### Specific Tests
@@ -299,11 +299,11 @@ def test_double(input, expected):
 ### Current Coverage Status
 
 **Project Modules** (`project/src/`): **99.88%** (Target: 70%+)
-- All project-specific modules exceed the 70% minimum requirement
+- All project-specific modules exceed the 90% minimum requirement
 - Comprehensive test coverage ensures research code reliability
 
 **Infrastructure Modules** (`infrastructure/`): **70.09%** (Target: 49%+)
-- Exceeds the 49% minimum requirement
+- Exceeds the 60% minimum requirement
 - Core modules have higher coverage
 - Some CLI and advanced features have lower coverage (see `docs/COVERAGE_GAPS.md`)
 
@@ -387,10 +387,10 @@ Before committing code:
 # Run all tests with coverage
 pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
 
-# Verify infrastructure coverage (49% minimum)
+# Verify infrastructure coverage (60% minimum)
 pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
 
-# Verify project coverage (70% minimum)
+# Verify project coverage (90% minimum)
 pytest project/tests/ --cov=project/src --cov-fail-under=70
 
 # Check coverage report

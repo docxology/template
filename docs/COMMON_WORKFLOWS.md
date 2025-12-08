@@ -127,7 +127,7 @@
        }
    ```
 
-2. **Create tests (70% minimum coverage required)**
+2. **Create tests (90% minimum coverage required)**
    ```bash
    vim tests/test_data_analysis.py
    ```

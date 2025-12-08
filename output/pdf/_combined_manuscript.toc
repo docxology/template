@@ -1,175 +1,178 @@
 \contentsline {section}{\numberline {1}Abstract}{5}{section.1}%
-\contentsline {section}{\numberline {2}Introduction}{6}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Overview}{6}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Project Structure}{6}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Key Features}{6}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}Test-Driven Development}{6}{subsubsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.2}Automated Script Execution}{6}{subsubsection.2.3.2}%
-\contentsline {subsubsection}{\numberline {2.3.3}Markdown to PDF Pipeline}{6}{subsubsection.2.3.3}%
-\contentsline {subsubsection}{\numberline {2.3.4}Generic and Reusable}{6}{subsubsection.2.3.4}%
-\contentsline {subsection}{\numberline {2.4}Manuscript Organization}{6}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}Example Figure}{7}{subsection.2.5}%
-\contentsline {subsection}{\numberline {2.6}Data Availability}{7}{subsection.2.6}%
-\contentsline {subsection}{\numberline {2.7}Usage}{7}{subsection.2.7}%
-\contentsline {subsection}{\numberline {2.8}Customization}{8}{subsection.2.8}%
-\contentsline {subsection}{\numberline {2.9}Cross-Referencing System}{8}{subsection.2.9}%
-\contentsline {section}{\numberline {3}Methodology}{9}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Mathematical Framework}{9}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Algorithm Description}{9}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Implementation Details}{9}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Performance Analysis}{10}{subsection.3.4}%
-\contentsline {subsection}{\numberline {3.5}Validation Framework}{10}{subsection.3.5}%
-\contentsline {section}{\numberline {4}Experimental Results}{11}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Experimental Setup}{11}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Benchmark Datasets}{11}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Performance Comparison}{11}{subsection.4.3}%
-\contentsline {subsubsection}{\numberline {4.3.1}Convergence Analysis}{11}{subsubsection.4.3.1}%
-\contentsline {subsubsection}{\numberline {4.3.2}Computational Efficiency}{12}{subsubsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.4}Ablation Studies}{13}{subsection.4.4}%
-\contentsline {subsubsection}{\numberline {4.4.1}Component Analysis}{13}{subsubsection.4.4.1}%
-\contentsline {subsubsection}{\numberline {4.4.2}Hyperparameter Sensitivity}{13}{subsubsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.5}Real-world Applications}{14}{subsection.4.5}%
-\contentsline {subsubsection}{\numberline {4.5.1}Case Study 1: Image Classification}{14}{subsubsection.4.5.1}%
-\contentsline {subsubsection}{\numberline {4.5.2}Case Study 2: Recommendation Systems}{14}{subsubsection.4.5.2}%
-\contentsline {subsection}{\numberline {4.6}Statistical Significance}{14}{subsection.4.6}%
-\contentsline {subsection}{\numberline {4.7}Limitations and Future Work}{14}{subsection.4.7}%
-\contentsline {section}{\numberline {5}Discussion}{16}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Theoretical Implications}{16}{subsection.5.1}%
-\contentsline {subsubsection}{\numberline {5.1.1}Convergence Analysis}{16}{subsubsection.5.1.1}%
+\contentsline {section}{\numberline {2}Introduction}{7}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Overview}{7}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Project Structure}{7}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Key Features}{7}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Test-Driven Development}{7}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Automated Script Execution}{7}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}Markdown to PDF Pipeline}{7}{subsubsection.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.3.4}Generic and Reusable}{7}{subsubsection.2.3.4}%
+\contentsline {subsection}{\numberline {2.4}Manuscript Organization}{7}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Example Figure}{8}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Data Availability}{8}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}Usage}{8}{subsection.2.7}%
+\contentsline {subsection}{\numberline {2.8}Customization}{9}{subsection.2.8}%
+\contentsline {subsection}{\numberline {2.9}Cross-Referencing System}{9}{subsection.2.9}%
+\contentsline {section}{\numberline {3}Methodology}{10}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Mathematical Framework}{10}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Algorithm Description}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Implementation Details}{10}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Reproducibility Infrastructure}{11}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Performance Analysis}{11}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Validation Framework}{12}{subsection.3.6}%
+\contentsline {section}{\numberline {4}Experimental Results}{13}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Experimental Setup}{13}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Benchmark Datasets}{13}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Performance Comparison}{13}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Convergence Analysis}{13}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Computational Efficiency}{13}{subsubsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.4}Automated Quality Validation}{14}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Ablation Studies}{14}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Component Analysis}{14}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}Hyperparameter Sensitivity}{15}{subsubsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.6}Real-world Applications}{15}{subsection.4.6}%
+\contentsline {subsubsection}{\numberline {4.6.1}Case Study 1: Image Classification}{15}{subsubsection.4.6.1}%
+\contentsline {subsubsection}{\numberline {4.6.2}Case Study 2: Recommendation Systems}{15}{subsubsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.7}Statistical Significance}{16}{subsection.4.7}%
+\contentsline {subsection}{\numberline {4.8}Limitations and Future Work}{16}{subsection.4.8}%
+\contentsline {section}{\numberline {5}Discussion}{17}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Theoretical Implications}{17}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Convergence Analysis}{17}{subsubsection.5.1.1}%
 \contentsline {subsubsection}{\numberline {5.1.2}Complexity Analysis}{17}{subsubsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.2}Comparison with Existing Work}{17}{subsection.5.2}%
-\contentsline {subsubsection}{\numberline {5.2.1}State-of-the-Art Methods}{17}{subsubsection.5.2.1}%
-\contentsline {subsubsection}{\numberline {5.2.2}Key Advantages}{17}{subsubsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.3}Limitations and Challenges}{18}{subsection.5.3}%
-\contentsline {subsubsection}{\numberline {5.3.1}Theoretical Constraints}{18}{subsubsection.5.3.1}%
-\contentsline {subsubsection}{\numberline {5.3.2}Practical Challenges}{18}{subsubsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.2}Comparison with Existing Work}{18}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}State-of-the-Art Methods}{18}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Key Advantages}{18}{subsubsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.3}Limitations and Challenges}{19}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Theoretical Constraints}{19}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Practical Challenges}{19}{subsubsection.5.3.2}%
 \contentsline {subsection}{\numberline {5.4}Future Research Directions}{19}{subsection.5.4}%
 \contentsline {subsubsection}{\numberline {5.4.1}Algorithmic Improvements}{19}{subsubsection.5.4.1}%
-\contentsline {subsubsection}{\numberline {5.4.2}Theoretical Developments}{19}{subsubsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.5}Broader Impact}{19}{subsection.5.5}%
-\contentsline {subsubsection}{\numberline {5.5.1}Scientific Applications}{19}{subsubsection.5.5.1}%
-\contentsline {subsubsection}{\numberline {5.5.2}Industry Relevance}{20}{subsubsection.5.5.2}%
-\contentsline {subsection}{\numberline {5.6}Conclusion}{20}{subsection.5.6}%
-\contentsline {section}{\numberline {6}Conclusion}{21}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Summary of Contributions}{21}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Key Results}{21}{subsection.6.2}%
-\contentsline {subsubsection}{\numberline {6.2.1}Theoretical Achievements}{21}{subsubsection.6.2.1}%
-\contentsline {subsubsection}{\numberline {6.2.2}Experimental Validation}{22}{subsubsection.6.2.2}%
-\contentsline {subsubsection}{\numberline {6.2.3}Performance Improvements}{22}{subsubsection.6.2.3}%
-\contentsline {subsection}{\numberline {6.3}Broader Impact}{22}{subsection.6.3}%
-\contentsline {subsubsection}{\numberline {6.3.1}Scientific Applications}{22}{subsubsection.6.3.1}%
-\contentsline {subsubsection}{\numberline {6.3.2}Industry Relevance}{23}{subsubsection.6.3.2}%
-\contentsline {subsection}{\numberline {6.4}Future Directions}{23}{subsection.6.4}%
-\contentsline {subsubsection}{\numberline {6.4.1}Immediate Extensions}{23}{subsubsection.6.4.1}%
-\contentsline {subsubsection}{\numberline {6.4.2}Long-term Vision}{23}{subsubsection.6.4.2}%
-\contentsline {subsection}{\numberline {6.5}Final Remarks}{23}{subsection.6.5}%
-\contentsline {section}{\numberline {7}Acknowledgments}{24}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Funding}{24}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Computing Resources}{24}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}Collaborations}{24}{subsection.7.3}%
-\contentsline {subsection}{\numberline {7.4}Data and Software}{24}{subsection.7.4}%
-\contentsline {subsection}{\numberline {7.5}Feedback and Review}{24}{subsection.7.5}%
-\contentsline {subsection}{\numberline {7.6}Institutional Support}{24}{subsection.7.6}%
-\contentsline {section}{\numberline {8}Appendix}{25}{section.8}%
-\contentsline {subsection}{\numberline {8.1}A. Detailed Proofs}{25}{subsection.8.1}%
-\contentsline {subsubsection}{\numberline {8.1.1}A.1 Proof of Convergence (Theorem 1)}{25}{subsubsection.8.1.1}%
-\contentsline {subsubsection}{\numberline {8.1.2}A.2 Complexity Analysis}{25}{subsubsection.8.1.2}%
-\contentsline {subsection}{\numberline {8.2}B. Additional Experimental Details}{25}{subsection.8.2}%
-\contentsline {subsubsection}{\numberline {8.2.1}B.1 Hyperparameter Tuning}{25}{subsubsection.8.2.1}%
-\contentsline {subsubsection}{\numberline {8.2.2}B.2 Computational Environment}{25}{subsubsection.8.2.2}%
-\contentsline {subsubsection}{\numberline {8.2.3}B.3 Dataset Preparation}{26}{subsubsection.8.2.3}%
-\contentsline {subsection}{\numberline {8.3}C. Extended Results}{26}{subsection.8.3}%
-\contentsline {subsubsection}{\numberline {8.3.1}C.1 Additional Benchmark Comparisons}{26}{subsubsection.8.3.1}%
-\contentsline {subsubsection}{\numberline {8.3.2}C.2 Sensitivity Analysis}{26}{subsubsection.8.3.2}%
-\contentsline {subsection}{\numberline {8.4}D. Implementation Details}{26}{subsection.8.4}%
-\contentsline {subsubsection}{\numberline {8.4.1}D.1 Pseudocode}{26}{subsubsection.8.4.1}%
-\contentsline {subsubsection}{\numberline {8.4.2}D.2 Performance Optimizations}{27}{subsubsection.8.4.2}%
-\contentsline {section}{\numberline {9}Supplemental Methods}{28}{section.9}%
-\contentsline {subsection}{\numberline {9.1}S1.1 Extended Algorithm Variants}{28}{subsection.9.1}%
-\contentsline {subsubsection}{\numberline {9.1.1}S1.1.1 Stochastic Variant}{28}{subsubsection.9.1.1}%
-\contentsline {subsubsection}{\numberline {9.1.2}S1.1.2 Mini-Batch Variant}{28}{subsubsection.9.1.2}%
-\contentsline {subsection}{\numberline {9.2}S1.2 Detailed Convergence Analysis}{28}{subsection.9.2}%
-\contentsline {subsubsection}{\numberline {9.2.1}S1.2.1 Strong Convexity Assumptions}{28}{subsubsection.9.2.1}%
-\contentsline {subsubsection}{\numberline {9.2.2}S1.2.2 Lipschitz Continuity}{28}{subsubsection.9.2.2}%
-\contentsline {subsection}{\numberline {9.3}S1.3 Additional Theoretical Results}{29}{subsection.9.3}%
-\contentsline {subsubsection}{\numberline {9.3.1}S1.3.1 Worst-Case Complexity Bounds}{29}{subsubsection.9.3.1}%
-\contentsline {subsubsection}{\numberline {9.3.2}S1.3.2 Expected Convergence for Stochastic Variants}{29}{subsubsection.9.3.2}%
-\contentsline {subsection}{\numberline {9.4}S1.4 Implementation Considerations}{29}{subsection.9.4}%
-\contentsline {subsubsection}{\numberline {9.4.1}S1.4.1 Numerical Stability}{29}{subsubsection.9.4.1}%
-\contentsline {subsubsection}{\numberline {9.4.2}S1.4.2 Initialization Strategies}{29}{subsubsection.9.4.2}%
-\contentsline {subsection}{\numberline {9.5}S1.5 Extended Mathematical Framework}{29}{subsection.9.5}%
-\contentsline {subsubsection}{\numberline {9.5.1}S1.5.1 Generalized Objective Function}{29}{subsubsection.9.5.1}%
-\contentsline {subsubsection}{\numberline {9.5.2}S1.5.2 Adaptive Weight Selection}{30}{subsubsection.9.5.2}%
-\contentsline {subsection}{\numberline {9.6}S1.6 Convergence Diagnostics}{30}{subsection.9.6}%
-\contentsline {subsubsection}{\numberline {9.6.1}S1.6.1 Diagnostic Criteria}{30}{subsubsection.9.6.1}%
-\contentsline {subsubsection}{\numberline {9.6.2}S1.6.2 Failure Detection}{30}{subsubsection.9.6.2}%
-\contentsline {subsection}{\numberline {9.7}S1.7 Parameter Sensitivity}{30}{subsection.9.7}%
-\contentsline {section}{\numberline {10}Supplemental Results}{31}{section.10}%
-\contentsline {subsection}{\numberline {10.1}S2.1 Extended Benchmark Results}{31}{subsection.10.1}%
-\contentsline {subsubsection}{\numberline {10.1.1}S2.1.1 Additional Datasets}{31}{subsubsection.10.1.1}%
-\contentsline {subsubsection}{\numberline {10.1.2}S2.1.2 Performance Across All Datasets}{31}{subsubsection.10.1.2}%
-\contentsline {subsection}{\numberline {10.2}S2.2 Convergence Behavior Analysis}{31}{subsection.10.2}%
-\contentsline {subsubsection}{\numberline {10.2.1}S2.2.1 Problem-Specific Convergence Patterns}{31}{subsubsection.10.2.1}%
-\contentsline {subsubsection}{\numberline {10.2.2}S2.2.2 Iteration-wise Progress}{32}{subsubsection.10.2.2}%
-\contentsline {subsection}{\numberline {10.3}S2.3 Scalability Analysis}{32}{subsection.10.3}%
-\contentsline {subsubsection}{\numberline {10.3.1}S2.3.1 Performance vs.~Problem Size}{32}{subsubsection.10.3.1}%
-\contentsline {subsection}{\numberline {10.4}S2.4 Robustness Analysis}{32}{subsection.10.4}%
-\contentsline {subsubsection}{\numberline {10.4.1}S2.4.1 Performance Under Noise}{32}{subsubsection.10.4.1}%
-\contentsline {subsubsection}{\numberline {10.4.2}S2.4.2 Initialization Sensitivity}{33}{subsubsection.10.4.2}%
-\contentsline {subsection}{\numberline {10.5}S2.5 Comparison with Domain-Specific Methods}{33}{subsection.10.5}%
-\contentsline {subsubsection}{\numberline {10.5.1}S2.5.1 Machine Learning Applications}{33}{subsubsection.10.5.1}%
-\contentsline {subsubsection}{\numberline {10.5.2}S2.5.2 Signal Processing Applications}{33}{subsubsection.10.5.2}%
-\contentsline {subsection}{\numberline {10.6}S2.6 Ablation Study Details}{33}{subsection.10.6}%
-\contentsline {subsubsection}{\numberline {10.6.1}S2.6.1 Component Contribution Analysis}{33}{subsubsection.10.6.1}%
-\contentsline {subsection}{\numberline {10.7}S2.7 Real-World Case Studies}{34}{subsection.10.7}%
-\contentsline {subsubsection}{\numberline {10.7.1}S2.7.1 Industrial Application: Manufacturing Optimization}{34}{subsubsection.10.7.1}%
-\contentsline {subsubsection}{\numberline {10.7.2}S2.7.2 Scientific Application: Climate Modeling}{34}{subsubsection.10.7.2}%
-\contentsline {section}{\numberline {11}Supplemental Analysis}{35}{section.11}%
-\contentsline {subsection}{\numberline {11.1}S3.1 Theoretical Extensions}{35}{subsection.11.1}%
-\contentsline {subsubsection}{\numberline {11.1.1}S3.1.1 Non-Convex Optimization Extensions}{35}{subsubsection.11.1.1}%
-\contentsline {subsubsection}{\numberline {11.1.2}S3.1.2 Stochastic Variants and Convergence Guarantees}{35}{subsubsection.11.1.2}%
-\contentsline {subsection}{\numberline {11.2}S3.2 Computational Complexity Analysis}{35}{subsection.11.2}%
-\contentsline {subsubsection}{\numberline {11.2.1}S3.2.1 Per-Iteration Cost Breakdown}{35}{subsubsection.11.2.1}%
-\contentsline {subsubsection}{\numberline {11.2.2}S3.2.2 Memory Complexity Analysis}{36}{subsubsection.11.2.2}%
-\contentsline {subsection}{\numberline {11.3}S3.3 Convergence Rate Analysis}{36}{subsection.11.3}%
-\contentsline {subsubsection}{\numberline {11.3.1}S3.3.1 Rate of Convergence for Different Problem Classes}{36}{subsubsection.11.3.1}%
-\contentsline {subsubsection}{\numberline {11.3.2}S3.3.2 Comparison with Existing Methods}{36}{subsubsection.11.3.2}%
-\contentsline {subsection}{\numberline {11.4}S3.4 Sensitivity and Robustness Analysis}{36}{subsection.11.4}%
-\contentsline {subsubsection}{\numberline {11.4.1}S3.4.1 Hyperparameter Sensitivity}{36}{subsubsection.11.4.1}%
-\contentsline {subsubsection}{\numberline {11.4.2}S3.4.2 Numerical Stability Analysis}{37}{subsubsection.11.4.2}%
-\contentsline {subsection}{\numberline {11.5}S3.5 Extended Experimental Validation}{37}{subsection.11.5}%
-\contentsline {subsubsection}{\numberline {11.5.1}S3.5.1 Additional Benchmark Problems}{37}{subsubsection.11.5.1}%
-\contentsline {subsubsection}{\numberline {11.5.2}S3.5.2 Statistical Significance Testing}{37}{subsubsection.11.5.2}%
-\contentsline {subsection}{\numberline {11.6}S3.6 Implementation Optimizations}{37}{subsection.11.6}%
-\contentsline {subsubsection}{\numberline {11.6.1}S3.6.1 Vectorization and Parallelization}{37}{subsubsection.11.6.1}%
-\contentsline {subsubsection}{\numberline {11.6.2}S3.6.2 Code Quality and Reproducibility}{37}{subsubsection.11.6.2}%
-\contentsline {subsection}{\numberline {11.7}S3.7 Limitations and Future Directions}{38}{subsection.11.7}%
-\contentsline {subsubsection}{\numberline {11.7.1}S3.7.1 Current Limitations}{38}{subsubsection.11.7.1}%
-\contentsline {subsubsection}{\numberline {11.7.2}S3.7.2 Future Research Directions}{38}{subsubsection.11.7.2}%
-\contentsline {section}{\numberline {12}Supplemental Applications}{39}{section.12}%
-\contentsline {subsection}{\numberline {12.1}S4.1 Machine Learning Applications}{39}{subsection.12.1}%
-\contentsline {subsubsection}{\numberline {12.1.1}S4.1.1 Neural Network Training}{39}{subsubsection.12.1.1}%
-\contentsline {subsubsection}{\numberline {12.1.2}S4.1.2 Large-Scale Logistic Regression}{39}{subsubsection.12.1.2}%
-\contentsline {subsection}{\numberline {12.2}S4.2 Signal Processing Applications}{39}{subsection.12.2}%
-\contentsline {subsubsection}{\numberline {12.2.1}S4.2.1 Sparse Signal Reconstruction}{39}{subsubsection.12.2.1}%
-\contentsline {subsubsection}{\numberline {12.2.2}S4.2.2 Compressed Sensing}{40}{subsubsection.12.2.2}%
-\contentsline {subsection}{\numberline {12.3}S4.3 Computational Biology Applications}{40}{subsection.12.3}%
-\contentsline {subsubsection}{\numberline {12.3.1}S4.3.1 Protein Structure Prediction}{40}{subsubsection.12.3.1}%
-\contentsline {subsubsection}{\numberline {12.3.2}S4.3.2 Gene Expression Analysis}{40}{subsubsection.12.3.2}%
-\contentsline {subsection}{\numberline {12.4}S4.4 Climate Modeling Applications}{40}{subsection.12.4}%
-\contentsline {subsubsection}{\numberline {12.4.1}S4.4.1 Parameter Estimation in Climate Models}{40}{subsubsection.12.4.1}%
-\contentsline {subsubsection}{\numberline {12.4.2}S4.4.2 Ensemble Forecasting}{41}{subsubsection.12.4.2}%
-\contentsline {subsection}{\numberline {12.5}S4.5 Financial Applications}{41}{subsection.12.5}%
-\contentsline {subsubsection}{\numberline {12.5.1}S4.5.1 Portfolio Optimization}{41}{subsubsection.12.5.1}%
-\contentsline {subsubsection}{\numberline {12.5.2}S4.5.2 Risk Management}{41}{subsubsection.12.5.2}%
-\contentsline {subsection}{\numberline {12.6}S4.6 Engineering Applications}{41}{subsection.12.6}%
-\contentsline {subsubsection}{\numberline {12.6.1}S4.6.1 Structural Design Optimization}{41}{subsubsection.12.6.1}%
-\contentsline {subsubsection}{\numberline {12.6.2}S4.6.2 Control System Design}{42}{subsubsection.12.6.2}%
-\contentsline {subsection}{\numberline {12.7}S4.7 Comparison Across Application Domains}{42}{subsection.12.7}%
-\contentsline {subsubsection}{\numberline {12.7.1}S4.7.1 Performance Summary}{42}{subsubsection.12.7.1}%
-\contentsline {subsubsection}{\numberline {12.7.2}S4.7.2 Key Success Factors}{42}{subsubsection.12.7.2}%
-\contentsline {subsection}{\numberline {12.8}S4.8 Implementation Considerations}{42}{subsection.12.8}%
-\contentsline {subsubsection}{\numberline {12.8.1}S4.8.1 Domain-Specific Adaptations}{42}{subsubsection.12.8.1}%
-\contentsline {subsubsection}{\numberline {12.8.2}S4.8.2 Integration with Existing Tools}{42}{subsubsection.12.8.2}%
-\contentsline {section}{\numberline {13}API Symbols Glossary}{44}{section.13}%
-\contentsline {section}{\numberline {14}References}{48}{section.14}%
+\contentsline {subsubsection}{\numberline {5.4.2}Theoretical Developments}{20}{subsubsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.5}Broader Impact}{20}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}Scientific Applications}{20}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}Industry Relevance}{21}{subsubsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.6}Conclusion}{21}{subsection.5.6}%
+\contentsline {section}{\numberline {6}Conclusion}{22}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Summary of Contributions}{22}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Key Results}{22}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Theoretical Achievements}{22}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Experimental Validation}{23}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}Performance Improvements}{23}{subsubsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.3}Broader Impact}{23}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}Scientific Applications}{23}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}Industry Relevance}{24}{subsubsection.6.3.2}%
+\contentsline {subsection}{\numberline {6.4}Future Directions}{24}{subsection.6.4}%
+\contentsline {subsubsection}{\numberline {6.4.1}Immediate Extensions}{24}{subsubsection.6.4.1}%
+\contentsline {subsubsection}{\numberline {6.4.2}Long-term Vision}{24}{subsubsection.6.4.2}%
+\contentsline {subsection}{\numberline {6.5}Final Remarks}{25}{subsection.6.5}%
+\contentsline {section}{\numberline {7}Acknowledgments}{26}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Funding}{26}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Computing Resources}{26}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Collaborations}{26}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Data and Software}{26}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Feedback and Review}{26}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}Institutional Support}{26}{subsection.7.6}%
+\contentsline {section}{\numberline {8}Appendix}{27}{section.8}%
+\contentsline {subsection}{\numberline {8.1}A. Detailed Proofs}{27}{subsection.8.1}%
+\contentsline {subsubsection}{\numberline {8.1.1}A.1 Proof of Convergence (Theorem 1)}{27}{subsubsection.8.1.1}%
+\contentsline {subsubsection}{\numberline {8.1.2}A.2 Complexity Analysis}{27}{subsubsection.8.1.2}%
+\contentsline {subsection}{\numberline {8.2}B. Additional Experimental Details}{27}{subsection.8.2}%
+\contentsline {subsubsection}{\numberline {8.2.1}B.1 Hyperparameter Tuning}{27}{subsubsection.8.2.1}%
+\contentsline {subsubsection}{\numberline {8.2.2}B.2 Computational Environment}{27}{subsubsection.8.2.2}%
+\contentsline {subsubsection}{\numberline {8.2.3}B.3 Dataset Preparation}{28}{subsubsection.8.2.3}%
+\contentsline {subsection}{\numberline {8.3}C. Extended Results}{28}{subsection.8.3}%
+\contentsline {subsubsection}{\numberline {8.3.1}C.1 Additional Benchmark Comparisons}{28}{subsubsection.8.3.1}%
+\contentsline {subsubsection}{\numberline {8.3.2}C.2 Sensitivity Analysis}{28}{subsubsection.8.3.2}%
+\contentsline {subsection}{\numberline {8.4}E. Infrastructure Capabilities}{28}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}D. Implementation Details}{29}{subsection.8.5}%
+\contentsline {subsubsection}{\numberline {8.5.1}D.1 Pseudocode}{29}{subsubsection.8.5.1}%
+\contentsline {subsubsection}{\numberline {8.5.2}D.2 Performance Optimizations}{29}{subsubsection.8.5.2}%
+\contentsline {section}{\numberline {9}Supplemental Methods}{30}{section.9}%
+\contentsline {subsection}{\numberline {9.1}S1.1 Extended Algorithm Variants}{30}{subsection.9.1}%
+\contentsline {subsubsection}{\numberline {9.1.1}S1.1.1 Stochastic Variant}{30}{subsubsection.9.1.1}%
+\contentsline {subsubsection}{\numberline {9.1.2}S1.1.2 Mini-Batch Variant}{30}{subsubsection.9.1.2}%
+\contentsline {subsection}{\numberline {9.2}S1.2 Detailed Convergence Analysis}{30}{subsection.9.2}%
+\contentsline {subsubsection}{\numberline {9.2.1}S1.2.1 Strong Convexity Assumptions}{30}{subsubsection.9.2.1}%
+\contentsline {subsubsection}{\numberline {9.2.2}S1.2.2 Lipschitz Continuity}{30}{subsubsection.9.2.2}%
+\contentsline {subsection}{\numberline {9.3}S1.3 Additional Theoretical Results}{31}{subsection.9.3}%
+\contentsline {subsubsection}{\numberline {9.3.1}S1.3.1 Worst-Case Complexity Bounds}{31}{subsubsection.9.3.1}%
+\contentsline {subsubsection}{\numberline {9.3.2}S1.3.2 Expected Convergence for Stochastic Variants}{31}{subsubsection.9.3.2}%
+\contentsline {subsection}{\numberline {9.4}S1.4 Implementation Considerations}{31}{subsection.9.4}%
+\contentsline {subsubsection}{\numberline {9.4.1}S1.4.1 Numerical Stability}{31}{subsubsection.9.4.1}%
+\contentsline {subsubsection}{\numberline {9.4.2}S1.4.2 Initialization Strategies}{31}{subsubsection.9.4.2}%
+\contentsline {subsection}{\numberline {9.5}S1.5 Extended Mathematical Framework}{31}{subsection.9.5}%
+\contentsline {subsubsection}{\numberline {9.5.1}S1.5.1 Generalized Objective Function}{31}{subsubsection.9.5.1}%
+\contentsline {subsubsection}{\numberline {9.5.2}S1.5.2 Adaptive Weight Selection}{32}{subsubsection.9.5.2}%
+\contentsline {subsection}{\numberline {9.6}S1.6 Convergence Diagnostics}{32}{subsection.9.6}%
+\contentsline {subsubsection}{\numberline {9.6.1}S1.6.1 Diagnostic Criteria}{32}{subsubsection.9.6.1}%
+\contentsline {subsubsection}{\numberline {9.6.2}S1.6.2 Failure Detection}{32}{subsubsection.9.6.2}%
+\contentsline {subsection}{\numberline {9.7}S1.7 Parameter Sensitivity}{32}{subsection.9.7}%
+\contentsline {section}{\numberline {10}Supplemental Results}{33}{section.10}%
+\contentsline {subsection}{\numberline {10.1}S2.1 Extended Benchmark Results}{33}{subsection.10.1}%
+\contentsline {subsubsection}{\numberline {10.1.1}S2.1.1 Additional Datasets}{33}{subsubsection.10.1.1}%
+\contentsline {subsubsection}{\numberline {10.1.2}S2.1.2 Performance Across All Datasets}{33}{subsubsection.10.1.2}%
+\contentsline {subsection}{\numberline {10.2}S2.2 Convergence Behavior Analysis}{33}{subsection.10.2}%
+\contentsline {subsubsection}{\numberline {10.2.1}S2.2.1 Problem-Specific Convergence Patterns}{33}{subsubsection.10.2.1}%
+\contentsline {subsubsection}{\numberline {10.2.2}S2.2.2 Iteration-wise Progress}{34}{subsubsection.10.2.2}%
+\contentsline {subsection}{\numberline {10.3}S2.3 Scalability Analysis}{34}{subsection.10.3}%
+\contentsline {subsubsection}{\numberline {10.3.1}S2.3.1 Performance vs.~Problem Size}{34}{subsubsection.10.3.1}%
+\contentsline {subsection}{\numberline {10.4}S2.4 Robustness Analysis}{34}{subsection.10.4}%
+\contentsline {subsubsection}{\numberline {10.4.1}S2.4.1 Performance Under Noise}{34}{subsubsection.10.4.1}%
+\contentsline {subsubsection}{\numberline {10.4.2}S2.4.2 Initialization Sensitivity}{35}{subsubsection.10.4.2}%
+\contentsline {subsection}{\numberline {10.5}S2.5 Comparison with Domain-Specific Methods}{35}{subsection.10.5}%
+\contentsline {subsubsection}{\numberline {10.5.1}S2.5.1 Machine Learning Applications}{35}{subsubsection.10.5.1}%
+\contentsline {subsubsection}{\numberline {10.5.2}S2.5.2 Signal Processing Applications}{35}{subsubsection.10.5.2}%
+\contentsline {subsection}{\numberline {10.6}S2.6 Ablation Study Details}{35}{subsection.10.6}%
+\contentsline {subsubsection}{\numberline {10.6.1}S2.6.1 Component Contribution Analysis}{35}{subsubsection.10.6.1}%
+\contentsline {subsection}{\numberline {10.7}S2.7 Real-World Case Studies}{36}{subsection.10.7}%
+\contentsline {subsubsection}{\numberline {10.7.1}S2.7.1 Industrial Application: Manufacturing Optimization}{36}{subsubsection.10.7.1}%
+\contentsline {subsubsection}{\numberline {10.7.2}S2.7.2 Scientific Application: Climate Modeling}{36}{subsubsection.10.7.2}%
+\contentsline {section}{\numberline {11}Supplemental Analysis}{37}{section.11}%
+\contentsline {subsection}{\numberline {11.1}S3.1 Theoretical Extensions}{37}{subsection.11.1}%
+\contentsline {subsubsection}{\numberline {11.1.1}S3.1.1 Non-Convex Optimization Extensions}{37}{subsubsection.11.1.1}%
+\contentsline {subsubsection}{\numberline {11.1.2}S3.1.2 Stochastic Variants and Convergence Guarantees}{37}{subsubsection.11.1.2}%
+\contentsline {subsection}{\numberline {11.2}S3.2 Computational Complexity Analysis}{37}{subsection.11.2}%
+\contentsline {subsubsection}{\numberline {11.2.1}S3.2.1 Per-Iteration Cost Breakdown}{37}{subsubsection.11.2.1}%
+\contentsline {subsubsection}{\numberline {11.2.2}S3.2.2 Memory Complexity Analysis}{38}{subsubsection.11.2.2}%
+\contentsline {subsection}{\numberline {11.3}S3.3 Convergence Rate Analysis}{38}{subsection.11.3}%
+\contentsline {subsubsection}{\numberline {11.3.1}S3.3.1 Rate of Convergence for Different Problem Classes}{38}{subsubsection.11.3.1}%
+\contentsline {subsubsection}{\numberline {11.3.2}S3.3.2 Comparison with Existing Methods}{38}{subsubsection.11.3.2}%
+\contentsline {subsection}{\numberline {11.4}S3.4 Sensitivity and Robustness Analysis}{38}{subsection.11.4}%
+\contentsline {subsubsection}{\numberline {11.4.1}S3.4.1 Hyperparameter Sensitivity}{38}{subsubsection.11.4.1}%
+\contentsline {subsubsection}{\numberline {11.4.2}S3.4.2 Numerical Stability Analysis}{39}{subsubsection.11.4.2}%
+\contentsline {subsection}{\numberline {11.5}S3.5 Extended Experimental Validation}{39}{subsection.11.5}%
+\contentsline {subsubsection}{\numberline {11.5.1}S3.5.1 Additional Benchmark Problems}{39}{subsubsection.11.5.1}%
+\contentsline {subsubsection}{\numberline {11.5.2}S3.5.2 Statistical Significance Testing}{39}{subsubsection.11.5.2}%
+\contentsline {subsection}{\numberline {11.6}S3.6 Implementation Optimizations}{39}{subsection.11.6}%
+\contentsline {subsubsection}{\numberline {11.6.1}S3.6.1 Vectorization and Parallelization}{39}{subsubsection.11.6.1}%
+\contentsline {subsubsection}{\numberline {11.6.2}S3.6.2 Code Quality and Reproducibility}{39}{subsubsection.11.6.2}%
+\contentsline {subsection}{\numberline {11.7}S3.7 Limitations and Future Directions}{40}{subsection.11.7}%
+\contentsline {subsubsection}{\numberline {11.7.1}S3.7.1 Current Limitations}{40}{subsubsection.11.7.1}%
+\contentsline {subsubsection}{\numberline {11.7.2}S3.7.2 Future Research Directions}{40}{subsubsection.11.7.2}%
+\contentsline {section}{\numberline {12}Supplemental Applications}{41}{section.12}%
+\contentsline {subsection}{\numberline {12.1}S4.1 Machine Learning Applications}{41}{subsection.12.1}%
+\contentsline {subsubsection}{\numberline {12.1.1}S4.1.1 Neural Network Training}{41}{subsubsection.12.1.1}%
+\contentsline {subsubsection}{\numberline {12.1.2}S4.1.2 Large-Scale Logistic Regression}{41}{subsubsection.12.1.2}%
+\contentsline {subsection}{\numberline {12.2}S4.2 Signal Processing Applications}{41}{subsection.12.2}%
+\contentsline {subsubsection}{\numberline {12.2.1}S4.2.1 Sparse Signal Reconstruction}{41}{subsubsection.12.2.1}%
+\contentsline {subsubsection}{\numberline {12.2.2}S4.2.2 Compressed Sensing}{42}{subsubsection.12.2.2}%
+\contentsline {subsection}{\numberline {12.3}S4.3 Computational Biology Applications}{42}{subsection.12.3}%
+\contentsline {subsubsection}{\numberline {12.3.1}S4.3.1 Protein Structure Prediction}{42}{subsubsection.12.3.1}%
+\contentsline {subsubsection}{\numberline {12.3.2}S4.3.2 Gene Expression Analysis}{42}{subsubsection.12.3.2}%
+\contentsline {subsection}{\numberline {12.4}S4.4 Climate Modeling Applications}{42}{subsection.12.4}%
+\contentsline {subsubsection}{\numberline {12.4.1}S4.4.1 Parameter Estimation in Climate Models}{42}{subsubsection.12.4.1}%
+\contentsline {subsubsection}{\numberline {12.4.2}S4.4.2 Ensemble Forecasting}{43}{subsubsection.12.4.2}%
+\contentsline {subsection}{\numberline {12.5}S4.5 Financial Applications}{43}{subsection.12.5}%
+\contentsline {subsubsection}{\numberline {12.5.1}S4.5.1 Portfolio Optimization}{43}{subsubsection.12.5.1}%
+\contentsline {subsubsection}{\numberline {12.5.2}S4.5.2 Risk Management}{43}{subsubsection.12.5.2}%
+\contentsline {subsection}{\numberline {12.6}S4.6 Engineering Applications}{43}{subsection.12.6}%
+\contentsline {subsubsection}{\numberline {12.6.1}S4.6.1 Structural Design Optimization}{43}{subsubsection.12.6.1}%
+\contentsline {subsubsection}{\numberline {12.6.2}S4.6.2 Control System Design}{44}{subsubsection.12.6.2}%
+\contentsline {subsection}{\numberline {12.7}S4.7 Comparison Across Application Domains}{44}{subsection.12.7}%
+\contentsline {subsubsection}{\numberline {12.7.1}S4.7.1 Performance Summary}{44}{subsubsection.12.7.1}%
+\contentsline {subsubsection}{\numberline {12.7.2}S4.7.2 Key Success Factors}{44}{subsubsection.12.7.2}%
+\contentsline {subsection}{\numberline {12.8}S4.8 Implementation Considerations}{44}{subsection.12.8}%
+\contentsline {subsubsection}{\numberline {12.8.1}S4.8.1 Domain-Specific Adaptations}{44}{subsubsection.12.8.1}%
+\contentsline {subsubsection}{\numberline {12.8.2}S4.8.2 Integration with Existing Tools}{44}{subsubsection.12.8.2}%
+\contentsline {section}{\numberline {13}API Symbols Glossary}{46}{section.13}%
+\contentsline {section}{\numberline {14}References}{50}{section.14}%

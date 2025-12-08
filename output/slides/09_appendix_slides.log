@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  8 DEC 2025 06:41
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  8 DEC 2025 09:50
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1339,9 +1339,9 @@ LaTeX Warning: Reference `sec:methodology' on page 1 undefined on input line 13
 9.
 
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 149.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 179.
 )
-Overfull \vbox (1543.37648pt too high) detected at line 334
+Overfull \vbox (1839.34485pt too high) detected at line 364
  []
 
 
@@ -1371,10 +1371,10 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 29899 strings out of 473832
- 603859 string characters out of 5729482
- 1196445 words of memory out of 5000000
- 52413 multiletter control sequences out of 15000+600000
+ 29911 strings out of 473832
+ 604186 string characters out of 5729482
+ 1205490 words of memory out of 5000000
+ 52425 multiletter control sequences out of 15000+600000
  562396 words of font info for 71 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,13n,123p,1073b,909s stack positions out of 10000i,1000n,20000p,200000b,200000s

@@ -110,6 +110,14 @@ L-BFGS & 16.2 & 198 & $1.1 \times 10^{-6}$ & 425 \\
 
 Detailed sensitivity analysis for all hyperparameters shows robust performance across wide parameter ranges, confirming the theoretical predictions from Section \ref{sec:methodology}.
 
+## E. Infrastructure Capabilities
+
+- **Validation**: `validate_markdown` and `validate_figure_registry` ensure anchors, equations, and figures resolve before rendering; `verify_output_integrity` checks generated artifacts post-build.
+- **Quality**: `analyze_document_quality` reports readability and structure metrics used in the quality report; `quality_report.py` aggregates markdown, integrity, and reproducibility signals.
+- **Reproducibility**: `generate_reproducibility_report` captures environment, dependency, and artifact snapshots for each run.
+- **Reporting**: Pipeline reports (`output/reports/pipeline_report.*`) summarize stage outcomes, errors, and validation findings for auditability.
+- **Commands**: `python3 project/scripts/manuscript_preflight.py --strict` for gating, `python3 project/scripts/quality_report.py` for consolidated metrics, and `python3 scripts/run_all.py` for full pipeline execution with validation gates.
+
 ## D. Implementation Details
 
 ### D.1 Pseudocode

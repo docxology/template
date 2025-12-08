@@ -115,7 +115,7 @@ These modules implement domain-specific functionality for the research project:
 - "Would multiple projects use this unchanged?"
 
 **Key Properties:**
-- 49% minimum test coverage (currently achieving 61.48%)
+- 60% minimum test coverage (currently achieving 61.48%)
 - Real data testing (no mocks)
 - Comprehensive error handling
 - Logged execution with clear messages
@@ -131,7 +131,7 @@ These modules implement domain-specific functionality for the research project:
 - "Does it use domain-specific logic?"
 
 **Key Properties:**
-- 70% minimum test coverage (currently achieving 99.88%)
+- 90% minimum test coverage (currently achieving 99.88%)
 - Uses infrastructure layer tools when needed
 - Real data testing (no mocks)
 - Domain-specific documentation

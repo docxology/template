@@ -594,6 +594,21 @@ For numerical stability, we use the following adaptive step size rule:
 This ensures that the algorithm converges even when the gradient varies
 significantly across iterations.
 
+\subsection{Reproducibility
+Infrastructure}\label{reproducibility-infrastructure}
+
+All methodological steps are paired with automated quality gates
+provided by the infrastructure layer. Figure generation is registered
+via \texttt{FigureManager} to ensure cross-references resolve, and
+\texttt{validate\_markdown} checks anchors, equations, and labels before
+rendering. A preflight stage evaluates glossary injection markers and
+bibliography blocks, while \texttt{analyze\_document\_quality} supplies
+readability and structural metrics that are reported in the quality
+report. Output integrity (\texttt{verify\_output\_integrity}) is
+executed after each scripted stage to ensure generated artifacts match
+expectations, making the methodological pipeline reproducible across
+runs.
+
 \subsection{Performance Analysis}\label{performance-analysis}
 
 The computational complexity of our approach is \(O(n \log n)\) per
@@ -753,6 +768,20 @@ L-BFGS & 0.9 & $O(n^2)$ & 85.0 \\
 \caption{Performance comparison with state-of-the-art methods}
 \label{tab:performance_comparison}
 \end{table}
+
+\subsection{Automated Quality
+Validation}\label{automated-quality-validation}
+
+Each experiment is accompanied by infrastructure checks: figure
+references are validated via \texttt{validate\_figure\_registry},
+manuscript anchors and equations are scanned with
+\texttt{validate\_markdown}, and the preflight stage enforces glossary
+markers and bibliography commands before rendering. Output bundles are
+inspected with \texttt{verify\_output\_integrity}, and
+readability/structure metrics from \texttt{analyze\_document\_quality}
+are surfaced in the quality report. These automated gates ensure that
+every figure, table, and citation included here is reproducible and
+traceable across builds.
 
 \subsection{Ablation Studies}\label{ablation-studies}
 
@@ -1477,6 +1506,36 @@ L-BFGS & 16.2 & 198 & $1.1 \times 10^{-6}$ & 425 \\
 Detailed sensitivity analysis for all hyperparameters shows robust
 performance across wide parameter ranges, confirming the theoretical
 predictions from Section \ref{sec:methodology}.
+
+\subsection{E. Infrastructure
+Capabilities}\label{e.-infrastructure-capabilities}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Validation}: \texttt{validate\_markdown} and
+  \texttt{validate\_figure\_registry} ensure anchors, equations, and
+  figures resolve before rendering; \texttt{verify\_output\_integrity}
+  checks generated artifacts post-build.
+\item
+  \textbf{Quality}: \texttt{analyze\_document\_quality} reports
+  readability and structure metrics used in the quality report;
+  \texttt{quality\_report.py} aggregates markdown, integrity, and
+  reproducibility signals.
+\item
+  \textbf{Reproducibility}: \texttt{generate\_reproducibility\_report}
+  captures environment, dependency, and artifact snapshots for each run.
+\item
+  \textbf{Reporting}: Pipeline reports
+  (\texttt{output/reports/pipeline\_report.*}) summarize stage outcomes,
+  errors, and validation findings for auditability.
+\item
+  \textbf{Commands}:
+  \texttt{python3\ project/scripts/manuscript\_preflight.py\ -\/-strict}
+  for gating, \texttt{python3\ project/scripts/quality\_report.py} for
+  consolidated metrics, and \texttt{python3\ scripts/run\_all.py} for
+  full pipeline execution with validation gates.
+\end{itemize}
 
 \subsection{D. Implementation Details}\label{d.-implementation-details}
 

@@ -2,8 +2,8 @@
 """Test suite orchestrator script.
 
 This thin orchestrator runs the complete test suite for the project:
-1. Runs infrastructure tests with 49%+ coverage
-2. Runs project tests with 70%+ coverage
+1. Runs infrastructure tests with 60%+ coverage
+2. Runs project tests with 90%+ coverage
 3. Reports test results
 4. Validates test infrastructure
 
@@ -74,7 +74,7 @@ def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, 
     Returns:
         Tuple of (exit_code, test_results_dict)
     """
-    log_substep("Running infrastructure tests (49% coverage threshold)...")
+    log_substep("Running infrastructure tests (60% coverage threshold)...")
     log_substep("(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)")
     
     # Build pytest command for infrastructure tests
@@ -92,7 +92,7 @@ def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, 
         "--cov-report=term-missing",
         "--cov-report=html",
         "--cov-report=json",
-        "--cov-fail-under=49",
+        "--cov-fail-under=60",
         "--tb=short",
     ]
     
@@ -143,7 +143,7 @@ def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
     Returns:
         Tuple of (exit_code, test_results_dict)
     """
-    log_substep("Running project tests (70% coverage threshold)...")
+    log_substep("Running project tests (90% coverage threshold)...")
     
     # Build pytest command for project tests
     # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
@@ -157,7 +157,7 @@ def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
         "--cov-report=term-missing",
         "--cov-report=html",
         "--cov-report=json",
-        "--cov-fail-under=70",
+        "--cov-fail-under=90",
         "--tb=short",
     ]
     

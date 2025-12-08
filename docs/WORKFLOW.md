@@ -182,8 +182,8 @@ The pipeline orchestrator executes 6 stages:
 **Critical Principle**: ALL business logic and algorithms must live in `src/` modules.
 
 ### Tests (`tests/`)
-- **70% minimum coverage** for project/src/ (currently achieving 99.88%)
-- **49% minimum coverage** for infrastructure/ (currently achieving 61.48%)
+- **90% minimum coverage** for project/src/ (currently achieving 98.03%)
+- **60% minimum coverage** for infrastructure/ (currently achieving 66.76%)
 - **Real numerical examples** (no mocks)
 - **Deterministic RNG seeds** for reproducibility
 - **Fast and hermetic** execution

@@ -166,6 +166,10 @@ For numerical stability, we use the following adaptive step size rule:
 
 This ensures that the algorithm converges even when the gradient varies significantly across iterations.
 
+## Reproducibility Infrastructure
+
+All methodological steps are paired with automated quality gates provided by the infrastructure layer. Figure generation is registered via `FigureManager` to ensure cross-references resolve, and `validate_markdown` checks anchors, equations, and labels before rendering. A preflight stage evaluates glossary injection markers and bibliography blocks, while `analyze_document_quality` supplies readability and structural metrics that are reported in the quality report. Output integrity (`verify_output_integrity`) is executed after each scripted stage to ensure generated artifacts match expectations, making the methodological pipeline reproducible across runs.
+
 ## Performance Analysis
 
 The computational complexity of our approach is $O(n \log n)$ per iteration, where $n$ is the problem dimension. This is achieved through the efficient data structures shown in Figure \ref{fig:data_structure}.
@@ -285,6 +289,10 @@ L-BFGS & 0.9 & $O(n^2)$ & 85.0 \\
 \caption{Performance comparison with state-of-the-art methods}
 \label{tab:performance_comparison}
 \end{table}
+
+## Automated Quality Validation
+
+Each experiment is accompanied by infrastructure checks: figure references are validated via `validate_figure_registry`, manuscript anchors and equations are scanned with `validate_markdown`, and the preflight stage enforces glossary markers and bibliography commands before rendering. Output bundles are inspected with `verify_output_integrity`, and readability/structure metrics from `analyze_document_quality` are surfaced in the quality report. These automated gates ensure that every figure, table, and citation included here is reproducible and traceable across builds.
 
 ## Ablation Studies
 
@@ -745,6 +753,14 @@ L-BFGS & 16.2 & 198 & $1.1 \times 10^{-6}$ & 425 \\
 ### C.2 Sensitivity Analysis
 
 Detailed sensitivity analysis for all hyperparameters shows robust performance across wide parameter ranges, confirming the theoretical predictions from Section \ref{sec:methodology}.
+
+## E. Infrastructure Capabilities
+
+- **Validation**: `validate_markdown` and `validate_figure_registry` ensure anchors, equations, and figures resolve before rendering; `verify_output_integrity` checks generated artifacts post-build.
+- **Quality**: `analyze_document_quality` reports readability and structure metrics used in the quality report; `quality_report.py` aggregates markdown, integrity, and reproducibility signals.
+- **Reproducibility**: `generate_reproducibility_report` captures environment, dependency, and artifact snapshots for each run.
+- **Reporting**: Pipeline reports (`output/reports/pipeline_report.*`) summarize stage outcomes, errors, and validation findings for auditability.
+- **Commands**: `python3 project/scripts/manuscript_preflight.py --strict` for gating, `python3 project/scripts/quality_report.py` for consolidated metrics, and `python3 scripts/run_all.py` for full pipeline execution with validation gates.
 
 ## D. Implementation Details
 

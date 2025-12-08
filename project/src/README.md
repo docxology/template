@@ -41,7 +41,7 @@ Scripts orchestrate scientific code:
 # scripts/analysis_pipeline.py
 from data_generator import generate_synthetic_data
 from statistics import analyze_results
-from infrastructure.figure_manager import FigureManager
+from infrastructure.documentation.figure_manager import FigureManager
 
 # Science: Generate and analyze
 data = generate_synthetic_data()

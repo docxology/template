@@ -244,7 +244,7 @@ python3 scripts/07_literature_search.py --download-only
 # Generate summaries for papers with PDFs
 python3 scripts/07_literature_search.py --summarize
 
-# Legacy combined operations (deprecated)
+# All operations in sequence
 python3 scripts/07_literature_search.py --search --summarize
 ```
 
@@ -405,7 +405,7 @@ These scripts:
 # project/scripts/analysis_pipeline.py
 from data_generator import generate_synthetic_data
 from statistics import calculate_descriptive_stats
-from infrastructure.figure_manager import FigureManager
+from infrastructure.documentation.figure_manager import FigureManager
 
 # Generate and analyze
 data = generate_synthetic_data(n_samples=1000)
@@ -466,7 +466,7 @@ data = generate_synthetic_data()
 stats = calculate_descriptive_stats(data)
 
 # Import from infrastructure/ for document management
-from infrastructure.figure_manager import FigureManager
+from infrastructure.documentation.figure_manager import FigureManager
 fm = FigureManager()
 fm.register_figure("results.png")
 ```

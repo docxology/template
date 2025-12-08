@@ -13,8 +13,8 @@ pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
 uv run pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
 
 # Verify coverage requirements
-pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
-pytest project/tests/ --cov=project/src --cov-fail-under=70
+pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
+pytest project/tests/ --cov=project/src --cov-fail-under=90
 ```
 
 ### Run Specific Tests
@@ -42,8 +42,8 @@ pytest tests/ -x
 
 ## Coverage Requirements (pipeline enforced)
 
-- **Project** (`project/src/`): 70% minimum (currently 99.88%)
-- **Infrastructure** (`infrastructure/`): 49% minimum (currently 61.48%)
+- **Project** (`project/src/`): 90% minimum (currently 98.03%)
+- **Infrastructure** (`infrastructure/`): 60% minimum (currently 66.76%)
 - Tests must pass before PDF generation
 - Real data only (no mocks)
 - Coverage report: `htmlcov/index.html`

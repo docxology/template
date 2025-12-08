@@ -41,6 +41,13 @@ cd ..
 python3 scripts/03_render_pdf.py
 ```
 
+## Refactor & Extension Quickstart
+- Read `project/docs/refactor_playbook.md` for the safe-change checklist.
+- See `project/docs/refactor_hotspots.md` for current dependency hotspots.
+- Use script CLIs with `--dry-run` to verify wiring (`scripts/analysis_pipeline.py`, `scripts/generate_scientific_figures.py`).
+- Run `project/scripts/manuscript_preflight.py --strict` before rendering PDFs to catch missing assets.
+- Add new logic in `src/`, keep `scripts/` thin, and extend tests alongside changes.
+
 ## Features
 
 - **Comprehensive test coverage** - All scientific code tested with real data (99.88%)
@@ -109,6 +116,13 @@ pytest tests/ --cov=src --cov-report=html
 # View coverage report
 open htmlcov/index.html
 ```
+
+### Quality Validation
+
+- Preflight: `python3 project/scripts/manuscript_preflight.py --strict`
+- Quality report: `python3 project/scripts/quality_report.py`
+- Markdown/PDF: `python3 -m infrastructure.validation.cli markdown project/manuscript/ --strict` and `python3 -m infrastructure.validation.cli pdf project/output/pdf/`
+- Outputs: `python3 - <<'PY'\nfrom infrastructure.validation import verify_output_integrity\nfrom pathlib import Path\nverify_output_integrity(Path('output'))\nPY`
 
 ## Deployment
 
