@@ -375,7 +375,7 @@ The scientific simulation system integrates seamlessly with the existing build p
 
 ## See Also
 
-- [`ARCHITECTURE_ANALYSIS.md`](ARCHITECTURE_ANALYSIS.md) - Architecture analysis and current state
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) - Complete system architecture overview
 - [`VISUALIZATION_GUIDE.md`](VISUALIZATION_GUIDE.md) - Visualization best practices
 - [`IMAGE_MANAGEMENT.md`](IMAGE_MANAGEMENT.md) - Image management guide
 

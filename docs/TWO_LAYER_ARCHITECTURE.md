@@ -11,7 +11,7 @@ This research template implements a clear two-layer architecture separating gene
 | **Location** | `infrastructure/` (root level) | `project/src/` (project-specific) |
 | **Purpose** | Generic, reusable build tools | Domain-specific research code |
 | **Scope** | Works with any project | Specific to this research |
-| **Test Coverage** | 60% minimum (currently 66.76%) | 90% minimum (currently 98.03%) |
+| **Test Coverage** | 60% minimum (currently 61.48%) | 90% minimum (currently 99.88%) |
 | **Scripts** | `scripts/` (root, generic orchestrators) | `project/scripts/` (project orchestrators) |
 | **Tests** | `tests/infrastructure/` (root level) | `project/tests/` (project-specific) |
 | **Imports** | `from infrastructure.module import` | `from project.src.module import` |
@@ -36,10 +36,6 @@ This research template implements a clear two-layer architecture separating gene
 **Modules:**
 ```
 infrastructure/
-├── build/                     # Build & reproducibility tools
-│   ├── build_verifier.py     # Build process verification
-│   ├── quality_checker.py     # Document quality metrics
-│   └── reproducibility.py     # Build reproducibility tracking
 ├── core/                      # Core utilities
 │   ├── exceptions.py         # Exception hierarchy
 │   ├── logging_utils.py      # Unified logging
@@ -63,7 +59,7 @@ infrastructure/
 **Key Characteristics:**
 - Generic and reusable across projects
 - Handles template infrastructure concerns
-- 60% minimum test coverage (currently achieving 66.76%)
+- 60% minimum test coverage (currently achieving 61.48%)
 - No domain-specific logic
 - Interfaces with project files (manuscript/, output/)
 
@@ -121,7 +117,7 @@ project/scripts/
 - Domain-specific and research-focused
 - Implements algorithms and computations
 - Calls infrastructure when needed
-- 90% minimum test coverage (currently achieving 98.03%)
+- 90% minimum test coverage (currently achieving 99.88%)
 - Follows thin orchestrator pattern
 
 **Usage Pattern:**
@@ -151,60 +147,44 @@ fm.register_figure(
 
 ### Architectural Boundaries
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                  LAYER 1: INFRASTRUCTURE                │
-│  (Build orchestration, validation, document management) │
-│                                                         │
-│  ┌──────────────────┬────────────────────────────────┐ │
-│  │ run_all.py       │ scripts/*.py                   │ │
-│  │ (6-stage)        │ - 00_setup_environment.py   │ │
-│  │                  │ - 01_run_tests.py            │ │
-│  │                  │ - 04_validate_output.py      │ │
-│  └──────────────────┴────────────────────────────────┘ │
-│                                                         │
-│  ┌──────────────────────────────────────────────────┐ │
-│  │  infrastructure/                                │ │
-│  │  - build/, core/, validation/, documentation/   │ │
-│  │  - publishing/, literature/, llm/, rendering/   │ │
-│  │  - scientific/ (dev tools)                       │ │
-│  └──────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────┘
-         │                                      │
-         │ Manages structure and               │ Validates
-         │ validates outputs                   │ science
-         ▼                                      ▼
-┌─────────────────────────────────────────────────────────┐
-│                  LAYER 2: SCIENTIFIC                    │
-│     (Algorithms, analysis, visualization, data)         │
-│                                                         │
-│  ┌──────────────────────────────────────────────────┐ │
-│  │  project/src/                                   │ │
-│  │  - simulation, statistics, data_processing      │ │
-│  │  - metrics, parameters, performance             │ │
-│  │  - plots, reporting, validation, visualization  │ │
-│  │  - data_generator, example                      │ │
-│  └──────────────────────────────────────────────────┘ │
-│                                                         │
-│  ┌──────────────────────────────────────────────────┐ │
-│  │  project/scripts/ (thin orchestrators)           │ │
-│  │  - example_figure.py                            │ │
-│  │  - generate_research_figures.py                 │ │
-│  │  - analysis_pipeline.py                         │ │
-│  │  - scientific_simulation.py                     │ │
-│  │  - generate_scientific_figures.py               │ │
-│  └──────────────────────────────────────────────────┘ │
-│                                                         │
-│  Generates figures, data, and analysis output           │
-└─────────────────────────────────────────────────────────┘
-         │                                      
-         │ Input: Manuscripts, configurations  
-         │ Output: Figures, data, reports     
-         ▼
-┌─────────────────────────────────────────────────────────┐
-│  manuscript/ (research content)                         │
-│  01_abstract.md through 99_references.md                │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    subgraph L1["LAYER 1: INFRASTRUCTURE<br/>(Build orchestration, validation, document management)"]
+        subgraph SCRIPTS["Pipeline Orchestrators"]
+            RUN_ALL[run_all.py<br/>6-stage pipeline]
+            SCRIPT_LIST[scripts/*.py<br/>- 00_setup_environment.py<br/>- 01_run_tests.py<br/>- 02_run_analysis.py<br/>- 03_render_pdf.py<br/>- 04_validate_output.py<br/>- 05_copy_outputs.py]
+        end
+        
+        subgraph INFRA["infrastructure/"]
+            INFRA_MODS[core/, validation/,<br/>documentation/, publishing/,<br/>literature/, llm/, rendering/,<br/>scientific/]
+        end
+    end
+    
+    subgraph L2["LAYER 2: SCIENTIFIC<br/>(Algorithms, analysis, visualization, data)"]
+        subgraph SRC["project/src/"]
+            SRC_MODS[simulation, statistics,<br/>data_processing, metrics,<br/>parameters, performance,<br/>plots, reporting, validation,<br/>visualization, data_generator,<br/>example]
+        end
+        
+        subgraph PROJ_SCRIPTS["project/scripts/<br/>(thin orchestrators)"]
+            PROJ_SCRIPT_LIST[example_figure.py<br/>generate_research_figures.py<br/>analysis_pipeline.py<br/>scientific_simulation.py<br/>generate_scientific_figures.py]
+        end
+    end
+    
+    subgraph MANUSCRIPT["manuscript/<br/>(research content)"]
+        MANUSCRIPT_FILES[01_abstract.md through<br/>99_references.md]
+    end
+    
+    L1 -->|"Manages structure and<br/>validates outputs"| L2
+    L1 -->|"Validates science"| L2
+    L2 -->|"Input: Manuscripts, configurations<br/>Output: Figures, data, reports"| MANUSCRIPT
+    
+    classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:3px
+    classDef layer2 fill:#f1f8e9,stroke:#33691e,stroke-width:3px
+    classDef manuscript fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class L1,SCRIPTS,INFRA,RUN_ALL,SCRIPT_LIST,INFRA_MODS layer1
+    class L2,SRC,PROJ_SCRIPTS,SRC_MODS,PROJ_SCRIPT_LIST layer2
+    class MANUSCRIPT,MANUSCRIPT_FILES manuscript
 ```
 
 ### Import Guidelines
@@ -241,7 +221,7 @@ from project.src.statistics import calculate_descriptive_stats
 **❌ Layer 1 → Layer 2:** Infrastructure should NOT import project code
 ```python
 # BAD: Build tools shouldn't depend on project-specific code
-from infrastructure.build.build_verifier import verify_build_artifacts
+from infrastructure.validation.integrity import verify_output_integrity
 from project.src.simulation import SimpleSimulation  # ❌ WRONG
 
 # This breaks the abstraction and makes infrastructure project-specific
@@ -258,10 +238,6 @@ infrastructure/                # Root level - generic tools
 ├── __init__.py
 ├── AGENTS.md                  # Infrastructure documentation
 ├── README.md                  # Quick reference
-├── build/                     # Build & reproducibility
-│   ├── build_verifier.py
-│   ├── quality_checker.py
-│   └── reproducibility.py
 ├── core/                      # Core utilities
 │   ├── exceptions.py
 │   ├── logging_utils.py
@@ -346,91 +322,57 @@ project/tests/                 # [LAYER 2] Project tests
 
 ### Build Pipeline - Layer Transitions
 
-```
-User runs: python3 scripts/run_all.py
-    │
-    ▼
-┌─────────────────────────────────────────────┐
-│ STAGE 0: LAYER 1 - Setup Environment        │
-│ - Validate Python, dependencies            │
-│ - Check build tools                        │
-└─────────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────────┐
-│ PHASE 1: LAYER 1 - Test Validation          │
-│ - Run tests/infrastructure/*.py             │
-│ - Run project/tests/*.py                    │
-│ - Run tests/integration/*.py                │
-│ - Validate coverage requirements             │
-│ - Report: [LAYER-1-INFRASTRUCTURE] Running  │
-└─────────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────────┐
-│ PHASE 2: LAYER 2 - Project Execution        │
-│ - Run project/scripts/*.py                   │
-│ - Generate figures                          │
-│ - Process data                              │
-│ - Create outputs                            │
-│ - Report: [LAYER-2-PROJECT] Running         │
-└─────────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────────┐
-│ PHASE 2.5: LAYER 1 - Utilities              │
-│ - Generate API glossary                     │
-│ - Validate markdown                         │
-│ - Check cross-references                    │
-│ - Report: [LAYER-1-INFRASTRUCTURE] Running  │
-└─────────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────────┐
-│ PHASE 3-5: LAYER 1 - Document Generation    │
-│ - Generate LaTeX preamble                   │
-│ - Build individual PDFs                     │
-│ - Build combined PDF                        │
-│ - Create HTML version                       │
-│ - Report: [LAYER-1-INFRASTRUCTURE] Building │
-└─────────────────────────────────────────────┘
-    │
-    ▼
-┌─────────────────────────────────────────────┐
-│ PHASE 6: LAYER 1 - Validation               │
-│ - Validate PDF quality                      │
-│ - Check for rendering issues                │
-│ - Report: [LAYER-1-INFRASTRUCTURE] Done     │
-└─────────────────────────────────────────────┘
-    │
-    ▼
-Success: All PDFs generated, all layers working
+```mermaid
+flowchart TD
+    START([User runs:<br/>python3 scripts/run_all.py]) --> STAGE0[STAGE 0: LAYER 1<br/>Setup Environment<br/>- Validate Python, dependencies<br/>- Check build tools]
+    
+    STAGE0 --> PHASE1[PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tests/infrastructure/*.py<br/>- Run project/tests/*.py<br/>- Run tests/integration/*.py<br/>- Validate coverage requirements<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
+    
+    PHASE1 --> PHASE2[PHASE 2: LAYER 2<br/>Project Execution<br/>- Run project/scripts/*.py<br/>- Generate figures<br/>- Process data<br/>- Create outputs<br/>Report: [LAYER-2-PROJECT] Running]
+    
+    PHASE2 --> PHASE2_5[PHASE 2.5: LAYER 1<br/>Utilities<br/>- Generate API glossary<br/>- Validate markdown<br/>- Check cross-references<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
+    
+    PHASE2_5 --> PHASE3_5[PHASE 3-5: LAYER 1<br/>Document Generation<br/>- Generate LaTeX preamble<br/>- Build individual PDFs<br/>- Build combined PDF<br/>- Create HTML version<br/>Report: [LAYER-1-INFRASTRUCTURE] Building]
+    
+    PHASE3_5 --> PHASE6[PHASE 6: LAYER 1<br/>Validation<br/>- Validate PDF quality<br/>- Check for rendering issues<br/>Report: [LAYER-1-INFRASTRUCTURE] Done]
+    
+    PHASE6 --> SUCCESS([Success:<br/>All PDFs generated,<br/>all layers working])
+    
+    classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef layer2 fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
+    classDef start fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class STAGE0,PHASE1,PHASE2_5,PHASE3_5,PHASE6 layer1
+    class PHASE2 layer2
+    class SUCCESS success
+    class START start
 ```
 
 ### Logging Output Example
 
 ```
 ━━━ LAYER 1: Infrastructure Validation ━━━
-[2025-11-21 09:31:20] [INFO] Running tests (infrastructure + scientific)
+[YYYY-MM-DD HH:MM:SS] [INFO] Running tests (infrastructure + scientific)
 ...tests output...
-[2025-11-21 09:31:58] [INFO] ✅ All tests passed with adequate coverage
+[YYYY-MM-DD HH:MM:SS] [INFO] ✅ All tests passed with adequate coverage
 
 ━━━ LAYER 2: Project Computation ━━━
-[2025-11-21 09:31:58] [INFO] Executing project scripts...
-[2025-11-21 09:31:58] [INFO] [LAYER-2-PROJECT] Starting analysis pipeline...
+[YYYY-MM-DD HH:MM:SS] [INFO] Executing project scripts...
+[YYYY-MM-DD HH:MM:SS] [INFO] [LAYER-2-PROJECT] Starting analysis pipeline...
 ...script output...
-[2025-11-21 09:32:01] [INFO] ✅ ALL project scripts executed successfully
+[YYYY-MM-DD HH:MM:SS] [INFO] ✅ ALL project scripts executed successfully
 
 ━━━ LAYER 1: Infrastructure Validation ━━━
-[2025-11-21 09:32:01] [INFO] Running repository utilities (glossary + markdown validation)
+[YYYY-MM-DD HH:MM:SS] [INFO] Running repository utilities (glossary + markdown validation)
 ...validation output...
-[2025-11-21 09:32:02] [INFO] ✅ Repository utilities completed
+[YYYY-MM-DD HH:MM:SS] [INFO] ✅ Repository utilities completed
 
 ━━━ LAYER 1: Document Generation ━━━
-[2025-11-21 09:32:02] [INFO] Step 3: Generating LaTeX preamble from markdown...
-[2025-11-21 09:32:02] [INFO] Step 4: Discovering and building ALL markdown modules...
+[YYYY-MM-DD HH:MM:SS] [INFO] Step 3: Generating LaTeX preamble from markdown...
+[YYYY-MM-DD HH:MM:SS] [INFO] Step 4: Discovering and building ALL markdown modules...
 ...PDF generation output...
-[2025-11-21 09:33:06] [INFO] ✅ Combined document built successfully
+[YYYY-MM-DD HH:MM:SS] [INFO] ✅ Combined document built successfully
 ```
 
 ---
@@ -662,7 +604,7 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 
 3. **Update imports:**
    - `from example import` → `from project.src.example import`
-   - `from build_verifier import` → `from infrastructure.build.build_verifier import`
+   - Build verification is handled by the validation module
 
 4. **Update tests:**
    - Infrastructure tests → tests/infrastructure/
@@ -714,7 +656,6 @@ grep -r "import project.src" infrastructure/
 
 ### Architecture Documentation
 - [ARCHITECTURE.md](ARCHITECTURE.md) - Complete system architecture overview
-- [ARCHITECTURE_ANALYSIS.md](ARCHITECTURE_ANALYSIS.md) - Current state analysis
 - [DECISION_TREE.md](DECISION_TREE.md) - Code placement flowchart
 - [THIN_ORCHESTRATOR_SUMMARY.md](THIN_ORCHESTRATOR_SUMMARY.md) - Thin orchestrator pattern details
 

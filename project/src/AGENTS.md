@@ -302,7 +302,7 @@ stats = calculate_descriptive_stats(data)
 
 # Register figures
 fm = FigureManager()
-fm.register_figure("analysis.png", "fig:analysis")
+fm.register_figure("example_figure.png", "fig:analysis")
 ```
 
 ### With Manuscript
@@ -311,7 +311,7 @@ Generated figures and data integrate into manuscript:
 ```markdown
 # Experimental Results
 
-![Analysis Results](../output/figures/analysis.png){fig:analysis width=0.8}
+![Analysis Results](../output/figures/example_figure.png){fig:analysis width=0.8}
 
 See [Figure @fig:analysis] for detailed results.
 ```

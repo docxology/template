@@ -144,12 +144,12 @@ Scripts trying to import quality checker and reproducibility modules that don't 
 Scripts now use graceful fallback with stub functions:
 ```python
 try:
-    from infrastructure.build.quality_checker import analyze_document_quality
-    _BUILD_MODULES_AVAILABLE = True
+    from infrastructure.validation.integrity import verify_output_integrity
+    _VALIDATION_MODULES_AVAILABLE = True
 except (ImportError, ModuleNotFoundError):
-    _BUILD_MODULES_AVAILABLE = False
-    def analyze_document_quality(path):
-        return {"status": "skipped", "reason": "infrastructure.build not available"}
+    _VALIDATION_MODULES_AVAILABLE = False
+    def verify_output_integrity(path):
+        return {"status": "skipped", "reason": "infrastructure.validation not available"}
 ```
 
 **Impact:**
@@ -1097,7 +1097,7 @@ ls -la output/figures/
 **Tools:**
 ```bash
 # Quality check (top-level output after stage 5)
-uv run python -c "from infrastructure.build.quality_checker import analyze_document_quality; print(analyze_document_quality('output/project_combined.pdf'))"
+uv run python -c "from infrastructure.validation.integrity import verify_output_integrity; from pathlib import Path; print(verify_output_integrity(Path('output')))"
 
 # Integrity check
 uv run python -c "from infrastructure.validation import verify_output_integrity; print(verify_output_integrity('output'))"

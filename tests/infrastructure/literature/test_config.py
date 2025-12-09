@@ -76,7 +76,8 @@ class TestLiteratureConfigFromEnv:
         assert config.retry_attempts == 3
         assert config.retry_delay == 5.0
         assert config.semanticscholar_api_key is None
-        assert config.sources == ["arxiv", "semanticscholar"]
+        assert config.sources == ["arxiv", "semanticscholar", "biorxiv", "pubmed", 
+                                  "europepmc", "crossref", "openalex", "dblp"]
 
     def test_from_env_custom_limit(self, monkeypatch):
         """Test from_env reads LITERATURE_DEFAULT_LIMIT."""

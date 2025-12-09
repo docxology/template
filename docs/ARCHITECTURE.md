@@ -78,7 +78,6 @@ graph TB
 **Purpose**: Generic, reusable build and validation tools that work with any research project.
 
 **Key Modules**:
-- `infrastructure/build/` - Build verification and reproducibility
 - `infrastructure/core/` - Core utilities (exceptions, logging, config)
 - `infrastructure/validation/` - PDF and markdown validation
 - `infrastructure/documentation/` - Figure and documentation management
@@ -117,8 +116,8 @@ graph TB
 **Purpose**: Validates all source code functionality with comprehensive coverage.
 
 **Coverage Requirements**:
-- **Infrastructure**: 60% minimum (currently achieving 66.76%)
-- **Project code**: 90% minimum (currently achieving 98.03%)
+- **Infrastructure**: 60% minimum (currently achieving 61.48%)
+- **Project code**: 90% minimum (currently achieving 99.88%)
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducible results
 

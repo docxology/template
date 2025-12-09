@@ -135,5 +135,4 @@ Scientific module is used by:
 
 - [README.md](README.md) - Quick reference guide
 - [`core/`](../core/) - Foundation utilities
-- [`build/`](../build/) - Build & reproducibility
 

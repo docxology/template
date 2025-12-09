@@ -189,7 +189,7 @@ Common test data patterns used across tests:
 
 ## Coverage Status
 
-Current coverage: **99.88%** (exceeds 70% requirement)
+Current coverage: **99.88%** (exceeds 90% requirement)
 
 | Module | Coverage | Status |
 |--------|----------|--------|
@@ -225,7 +225,7 @@ Before manuscript compilation, tests must pass:
 
 ```bash
 # Required before PDF generation
-pytest project/tests/ --cov=project/src --cov-fail-under=70
+pytest project/tests/ --cov=project/src --cov-fail-under=90
 ```
 
 ### CI/CD Integration
@@ -348,7 +348,7 @@ pytest project/tests/ --ff
 - ❌ **Test implementation details** - focus on behavior, not internals
 - ❌ **Create slow tests** - keep unit tests under 1 second each
 - ❌ **Duplicate test logic** - extract common assertions to helper functions
-- ❌ **Leave untested code** - maintain 70%+ coverage requirement
+- ❌ **Leave untested code** - maintain 90%+ coverage requirement
 
 ## Module Test Details
 

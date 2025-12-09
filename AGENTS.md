@@ -441,13 +441,13 @@ python3 -m pytest project/tests/ --cov=project/src --cov-report=html
 ```
 
 **Coverage Requirements**:
-- 90% minimum for project/src/ (currently achieving 98.03%)
-- 60% minimum for infrastructure/ (currently achieving 66.76%)
+- 90% minimum for project/src/ (currently achieving 99.88%)
+- 60% minimum for infrastructure/ (currently achieving 61.48%)
 - All tests must pass before PDF generation
 - No mock methods (real data analysis only)
 
 **Coverage Gap Analysis**:
-- See [`docs/COVERAGE_GAPS.md`](docs/COVERAGE_GAPS.md) for detailed analysis
+- See test coverage reports for detailed analysis
 - Low-coverage modules identified and improvement plans documented
 - New test files created for checkpoint, progress, retry, CLI, LLM operations, and paper selector
 
@@ -528,46 +528,9 @@ output/
 
 ## 🧪 **Advanced Modules**
 
-The template includes 10 advanced modules for comprehensive scientific package development:
+The template includes advanced modules for comprehensive scientific package development:
 
-### 📊 **Quality Analysis** (`infrastructure/quality_checker.py`)
-**Advanced document quality analysis and metrics**
-
-**Key Features:**
-- **Readability Analysis**: Flesch score, Gunning Fog index
-- **Academic Standards**: Compliance with research writing standards
-- **Structural Integrity**: Document organization and completeness
-- **Formatting Quality**: Consistent styling and presentation
-- **Comprehensive Reporting**: Detailed quality assessment reports
-
-**Usage:**
-```python
-from quality_checker import analyze_document_quality, generate_quality_report
-
-metrics = analyze_document_quality(pdf_path)
-report = generate_quality_report(metrics)
-print(report)
-```
-
-### 🔄 **Reproducibility Tools** (`infrastructure/reproducibility.py`)
-**Build reproducibility and environment tracking**
-
-**Key Features:**
-- **Environment Capture**: Platform, Python version, dependencies
-- **Dependency Tracking**: Version management and consistency
-- **Build Manifests**: Comprehensive build artifact tracking
-- **Snapshot Comparison**: Version control and change detection
-- **Reproducible Builds**: Deterministic environment setup
-
-**Usage:**
-```python
-from reproducibility import generate_reproducibility_report, save_reproducibility_report
-
-report = generate_reproducibility_report(output_dir)
-save_reproducibility_report(report, "reproducibility.json")
-```
-
-### 🔍 **Integrity Verification** (`infrastructure/integrity.py`)
+### 🔍 **Integrity Verification** (`infrastructure/validation/integrity.py`)
 **File integrity and cross-reference validation**
 
 **Key Features:**
@@ -630,23 +593,6 @@ stability = check_numerical_stability(your_function, test_inputs)
 benchmark = benchmark_function(your_function, test_inputs)
 ```
 
-### 🏗️ **Build Verification** (`infrastructure/build_verifier.py`)
-**Comprehensive build process validation**
-
-**Key Features:**
-- **Build Process Validation**: Command execution and error handling
-- **Artifact Verification**: Expected output file checking
-- **Reproducibility Testing**: Multiple build run comparison
-- **Environment Validation**: Dependency and tool availability
-- **Build Reporting**: Comprehensive validation reports
-
-**Usage:**
-```python
-from build_verifier import verify_build_artifacts, verify_build_reproducibility
-
-verification = verify_build_artifacts(output_dir, expected_files)
-reproducibility = verify_build_reproducibility(build_command, expected_outputs)
-```
 
 ### 📖 **Literature Search** (`infrastructure/literature/`) **NEW**
 **Academic literature search and reference management**
@@ -765,8 +711,6 @@ All advanced modules follow the **thin orchestrator pattern**:
 - **Documentation** for each module's functionality
 
 **Testing Coverage:**
-- ✅ **Quality Checker**: Comprehensive tests (26 tests)
-- ✅ **Reproducibility**: Comprehensive tests (18 tests)
 - ✅ **Integrity**: Comprehensive tests (16 tests)
 - ✅ **Publishing**: Comprehensive tests (14 tests)
 - ✅ **Scientific Dev**: Comprehensive tests (12 tests)
@@ -1016,7 +960,7 @@ See [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md) for complete docume
 ## ✅ System Status: FULLY OPERATIONAL (v2.0)
 
 **All systems confirmed functional:**
-- ✅ Test suite (2178 tests passing: 1858 infrastructure + 320 project)
+- ✅ Test suite (2175 tests passing: 1855 infrastructure + 320 project)
 - ✅ Package API testing (test_package_imports.py validates __init__.py)
 - ✅ Script execution (all 7 analysis scripts operational)
 - ✅ Markdown validation (all references resolved, no warnings)
@@ -1039,7 +983,7 @@ See [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md) for complete docume
 - ✅ Publishing API (integrated) - Zenodo, arXiv, GitHub automation
 
 **Comprehensive Audit Status:**
-- ✅ Comprehensive code coverage achieved (68.02% infra, 98.03% project)
+- ✅ Comprehensive code coverage achieved (61.48% infra, 99.88% project)
 - ✅ Infrastructure coverage exceeds 60% minimum requirement
 - ✅ Project coverage exceeds 90% minimum requirement
 - ✅ Zero mock methods - all tests use real data

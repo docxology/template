@@ -32,14 +32,14 @@ This directory contains comprehensive development standards, coding guidelines, 
 - Location: `infrastructure/` (root level)
 - Domain-independent tools
 - Reusable across projects
-- 49% minimum test coverage (currently 55.89%)
+- 60% minimum test coverage (currently 61.48%)
 - Tests: `tests/infrastructure/`
 
 **Layer 2: Project** (Specific, customizable)
 - Location: `project/src/` (project-specific code)
 - Research-specific code
 - Uses infrastructure utilities
-- 70% minimum test coverage (currently 99.88%)
+- 90% minimum test coverage (currently 99.88%)
 - Tests: `project/tests/`
 - Scripts: `project/scripts/` (thin orchestrators)
 
@@ -51,7 +51,7 @@ This directory contains comprehensive development standards, coding guidelines, 
 
 ### 3. Quality Standards
 
-- **Testing**: 70%+ coverage required (49% infra, 70% project), real data only
+- **Testing**: 90%+ coverage required (60% infra, 90% project), real data only
 - **Documentation**: AGENTS.md + README.md for each directory
 - **Type Safety**: Type hints on all public APIs
 - **Error Handling**: Use custom exception hierarchy
@@ -113,7 +113,7 @@ The template provides **two pipeline orchestrators** with different scope:
 
 ### Before Committing
 
-1. ✅ Test coverage requirements met (49% infra, 70% project)
+1. ✅ Test coverage requirements met (60% infra, 90% project)
 2. ✅ All tests pass
 3. ✅ No linter errors
 4. ✅ Documentation complete
@@ -165,7 +165,7 @@ See [infrastructure_modules.md](infrastructure_modules.md)
 
 **Key Points**:
 - Generic and domain-independent only
-- 49% minimum test coverage required (currently 55.89% achieved)
+- 60% minimum test coverage required (currently 61.48% achieved)
 - Complete AGENTS.md + README.md
 - Public API in `__init__.py`
 - Type hints on all functions
@@ -221,8 +221,8 @@ As shown in \eqref{eq:objective}, the objective function...
 
 ### Coverage Requirements
 
-- **Infrastructure**: 49% minimum (currently achieving 55.89%)
-- **Project code**: 70% minimum (currently achieving 99.88%)
+- **Infrastructure**: 60% minimum (currently achieving 61.48%)
+- **Project code**: 90% minimum (currently achieving 99.88%)
 - **Integration tests**: All critical workflows covered
 
 ### Test Organization
@@ -401,7 +401,7 @@ template/
 
 ### Before Committing
 
-- [ ] Test coverage requirements met (49% infra, 70% project)
+- [ ] Test coverage requirements met (60% infra, 90% project)
 - [ ] All tests pass
 - [ ] No linter errors
 - [ ] AGENTS.md complete

@@ -25,11 +25,6 @@ infrastructure/
 │   ├── markdown_integration.py # Figure/reference insertion
 │   ├── glossary_gen.py         # API documentation generation
 │   └── cli.py                  # CLI for documentation tools
-├── build/          # Build & reproducibility
-│   ├── build_verifier.py    # Build verification
-│   ├── reproducibility.py   # Environment & reproducibility tracking
-│   ├── quality_checker.py   # Document quality metrics
-│   └── AGENTS.md/README.md  # Documentation
 ├── scientific/     # Scientific development
 │   ├── scientific_dev.py    # Scientific utilities & best practices
 │   └── AGENTS.md/README.md  # Documentation
@@ -198,25 +193,6 @@ python3 -m infrastructure.validation.cli integrity output/
 ```bash
 python3 -m infrastructure.documentation.cli generate-api src/
 ```
-
-### Build Module (`build/`)
-
-**Build verification and quality assurance.**
-
-- `build_verifier.py` - Build process verification
-  - Artifact verification
-  - Reproducibility testing
-  - Environment validation
-
-- `reproducibility.py` - Reproducibility tracking
-  - Environment state capture
-  - Dependency snapshot
-  - Build manifest generation
-
-- `quality_checker.py` - Document quality analysis
-  - Readability metrics
-  - Academic standards compliance
-  - Quality reporting
 
 ### Scientific Module (`scientific/`)
 
@@ -408,8 +384,6 @@ The rendering pipeline (`scripts/02_run_analysis.py`, `scripts/03_render_pdf.py`
 Before PDF generation:
 - Markdown validation via `validation/`
 - File integrity checks via `validation/integrity`
-- Build reproducibility via `build/reproducibility`
-- Document quality analysis via `build/quality_checker`
 
 ## Configuration
 

@@ -597,7 +597,7 @@ def test_api_rate_limit_handling():
 
 ## Coverage Status
 
-Current coverage: **70.09%** (exceeds 49% requirement)
+Current coverage: **61.48%** (exceeds 60% requirement)
 
 | Module | Coverage | Status |
 |--------|----------|--------|

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The `tests/` directory ensures **comprehensive test coverage** for all modules (70% project minimum, 49% infrastructure minimum). Tests validate that core business logic works correctly using real data and real computations.
+The `tests/` directory ensures **comprehensive test coverage** for all modules (90% project minimum, 60% infrastructure minimum). Tests validate that core business logic works correctly using real data and real computations.
 
 ## Testing Philosophy
 
@@ -28,8 +28,8 @@ For modules requiring external services (LLM, Literature, Publishing):
 - Skip integration tests with: `pytest -m "not requires_ollama"`
 
 ### Coverage Requirements
-- All project/src/ modules must meet 90% minimum coverage (currently 98.03%)
-- Infrastructure modules must meet 60% minimum coverage (currently 66.76%)
+- All project/src/ modules must meet 90% minimum coverage (currently 99.88%)
+- Infrastructure modules must meet 60% minimum coverage (currently 61.48%)
 - Tests must pass before PDF generation proceeds
 - Coverage validated by `pyproject.toml` configuration (`[tool.coverage.*]` sections)
 - No code ships without tests
@@ -142,10 +142,6 @@ from project.src.example import add_numbers  # Project imports
 
 ### Infrastructure Module Tests
 Test individual infrastructure modules in `tests/infrastructure/`:
-- **Build Module** (`tests/infrastructure/build/`)
-  - `test_build_verifier.py` - Build verification and validation
-  - `test_quality_checker.py` - Document quality analysis
-  - `test_reproducibility.py` - Build reproducibility tracking
   
 - **Core Module** (`tests/infrastructure/core/`)
   - `test_config_loader.py` - Configuration file handling
@@ -222,13 +218,13 @@ pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
 open htmlcov/index.html
 
 # Separate reports
-pytest tests/infrastructure/ --cov=infrastructure --cov-report=html --cov-fail-under=49
-pytest project/tests/ --cov=project/src --cov-report=html --cov-fail-under=70
+pytest tests/infrastructure/ --cov=infrastructure --cov-report=html --cov-fail-under=60
+pytest project/tests/ --cov=project/src --cov-report=html --cov-fail-under=90
 ```
 
 ### Coverage Snapshot (latest)
-- Project: **99.88%** (target 70%+)
-- Infrastructure: **61.48%** (target 49%+)
+- Project: **99.88%** (target 90%+)
+- Infrastructure: **61.48%** (target 60%+)
 - Total tests: **2175** (1855 infrastructure, 320 project)
 
 Skip Ollama-dependent suites when needed:
@@ -320,14 +316,14 @@ def test_double(input, expected):
 
 ### Current Coverage Status
 
-**Project Modules** (`project/src/`): **99.88%** (Target: 70%+)
+**Project Modules** (`project/src/`): **99.88%** (Target: 90%+)
 - All project-specific modules exceed the 90% minimum requirement
 - Comprehensive test coverage ensures research code reliability
 
-**Infrastructure Modules** (`infrastructure/`): **70.09%** (Target: 49%+)
+**Infrastructure Modules** (`infrastructure/`): **61.48%** (Target: 60%+)
 - Exceeds the 60% minimum requirement
 - Core modules have higher coverage
-- Some CLI and advanced features have lower coverage (see `docs/COVERAGE_GAPS.md`)
+- Some CLI and advanced features have lower coverage (see test coverage reports)
 
 ### Coverage Configuration
 `pyproject.toml` enforces coverage rules via `[tool.coverage.*]` sections:
@@ -337,7 +333,7 @@ branch = true
 source = ["infrastructure", "project/src"]
 
 [tool.coverage.report]
-fail_under = 70
+fail_under = 70  # Global fallback; individual runs use 60% (infra) and 90% (project)
 show_missing = true
 precision = 2
 ```
@@ -397,8 +393,8 @@ def test_something():
 
 ### Automatic Execution
 `scripts/01_run_tests.py` (orchestrated by `scripts/run_all.py`) automatically:
-1. **Runs infrastructure tests** with 49% coverage requirement
-2. **Runs project tests** with 70% coverage requirement
+1. **Runs infrastructure tests** with 60% coverage requirement
+2. **Runs project tests** with 90% coverage requirement
 3. **Fails build** if tests don't pass or coverage requirements not met
 4. **Generates coverage reports** (htmlcov/)
 5. **Validates integration** between components
@@ -410,10 +406,10 @@ Before committing code:
 pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
 
 # Verify infrastructure coverage (60% minimum)
-pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
+pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 
 # Verify project coverage (90% minimum)
-pytest project/tests/ --cov=project/src --cov-fail-under=70
+pytest project/tests/ --cov=project/src --cov-fail-under=90
 
 # Check coverage report
 open htmlcov/index.html
@@ -426,7 +422,7 @@ open htmlcov/index.html
 2. Create test file in appropriate location (`project/tests/` or `tests/infrastructure/`)
 3. Import functions to test from correct module path
 4. Write comprehensive test cases using real data (no mocks)
-5. Ensure coverage requirements met (70% project, 49% infrastructure)
+5. Ensure coverage requirements met (90% project, 60% infrastructure)
 6. Run full test suite to verify
 7. Update this documentation if needed
 

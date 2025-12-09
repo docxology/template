@@ -9,7 +9,6 @@ Modular build, validation, and development tools organized by functionality.
 | **core** | Foundation utilities | `get_logger`, `load_config`, `TemplateError`, `CheckpointManager` | N/A |
 | **validation** | Quality & validation | `validate_pdf_rendering`, `validate_markdown`, `verify_output_integrity` | ✅ |
 | **documentation** | Figure management | `FigureManager`, `ImageManager`, `MarkdownIntegration` | ✅ |
-| **build** | Build verification | `verify_build_artifacts`, `analyze_document_quality`, `generate_reproducibility_report` | N/A |
 | **scientific** | Scientific utilities | `check_numerical_stability`, `benchmark_function` | ✅ |
 | **literature** | Literature search | `LiteratureSearch`, `LiteratureWorkflow`, `PaperSummarizer` | ✅ |
 | **llm** | LLM integration | `LLMClient`, `generate_review_with_metrics` | ✅ |
@@ -36,9 +35,6 @@ from infrastructure.documentation import FigureManager
 fm = FigureManager()
 fm.register_figure("plot.png", "Results")
 
-# Build
-from infrastructure.build import analyze_document_quality
-metrics = analyze_document_quality(Path("output.pdf"))
 
 # Scientific
 from infrastructure.scientific import benchmark_function
@@ -180,28 +176,6 @@ im.insert_figure(Path("results.md"), "fig:results")
 # API documentation
 entries = build_api_index("project/src/")
 table = generate_markdown_table(entries)
-```
-
-## Build Module
-
-**Verify builds and analyze quality.**
-
-```python
-from infrastructure.build import (
-    verify_build_artifacts,
-    analyze_document_quality,
-    generate_reproducibility_report
-)
-
-# Verify artifacts
-verification = verify_build_artifacts(Path("output/"), {"pdf": ["*.pdf"]})
-
-# Quality analysis
-metrics = analyze_document_quality(Path("output.pdf"))
-print(f"Readability: {metrics['readability_scores']}")
-
-# Reproducibility
-report = generate_reproducibility_report(Path("output/"))
 ```
 
 ## Scientific Module
@@ -431,7 +405,6 @@ All modules have comprehensive test coverage:
 - core: 100%
 - validation: 100%
 - documentation: 100%
-- build: 100%
 - scientific: 100%
 - literature: 91%+
 - llm: 91%+
@@ -500,7 +473,6 @@ For detailed information about each module:
 - [`core/`](core/) - See [core/AGENTS.md](core/AGENTS.md)
 - [`validation/`](validation/) - See [validation/AGENTS.md](validation/AGENTS.md)
 - [`documentation/`](documentation/) - See [documentation/AGENTS.md](documentation/AGENTS.md)
-- [`build/`](build/) - See [build/AGENTS.md](build/AGENTS.md)
 - [`scientific/`](scientific/) - See [scientific/AGENTS.md](scientific/AGENTS.md)
 - [`literature/`](literature/) - See [literature/AGENTS.md](literature/AGENTS.md)
 - [`llm/`](llm/) - See [llm/AGENTS.md](llm/AGENTS.md)

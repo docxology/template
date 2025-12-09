@@ -103,5 +103,4 @@ Documentation module is used by:
 
 - [README.md](README.md) - Quick reference guide
 - [`validation/`](../validation/) - Validation & quality assurance
-- [`build/`](../build/) - Build & reproducibility tools
 

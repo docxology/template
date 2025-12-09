@@ -379,28 +379,48 @@ class TestLibraryIndex:
         assert stats["sources"] == {}
         assert stats["years"] == {}
 
-    def test_get_stats_with_entries(self, mock_config):
+    def test_get_stats_with_entries(self, mock_config, tmp_path, monkeypatch):
         """Test stats with entries."""
-        index = LibraryIndex(mock_config)
+        # Set up PDF directory structure matching expected layout
+        literature_dir = tmp_path / "literature"
+        pdf_dir = literature_dir / "pdfs"
+        pdf_dir.mkdir(parents=True)
         
-        index.add_entry(title="Paper 1", authors=["A"], year=2024, source="arxiv")
-        index.add_entry(title="Paper 2", authors=["B"], year=2023, source="arxiv")
-        index.add_entry(title="Paper 3", authors=["C"], year=2024, source="semanticscholar")
+        # Update config to use temp path
+        mock_config.download_dir = str(pdf_dir)
+        mock_config.library_index_file = str(literature_dir / "library.json")
         
-        # Add PDF path to one
-        key = list(index._entries.keys())[0]
-        index.update_pdf_path(key, "test.pdf")
+        # Change to temp directory so relative paths resolve correctly
+        import os
+        original_cwd = os.getcwd()
+        monkeypatch.chdir(tmp_path)
         
-        stats = index.get_stats()
-        
-        assert stats["total_entries"] == 3
-        assert stats["downloaded_pdfs"] == 1
-        assert stats["sources"]["arxiv"] == 2
-        assert stats["sources"]["semanticscholar"] == 1
-        assert stats["years"][2024] == 2
-        assert stats["years"][2023] == 1
-        assert stats["oldest_year"] == 2023
-        assert stats["newest_year"] == 2024
+        try:
+            index = LibraryIndex(mock_config)
+            
+            index.add_entry(title="Paper 1", authors=["A"], year=2024, source="arxiv")
+            index.add_entry(title="Paper 2", authors=["B"], year=2023, source="arxiv")
+            index.add_entry(title="Paper 3", authors=["C"], year=2024, source="semanticscholar")
+            
+            # Add PDF path to one and create the actual file
+            key = list(index._entries.keys())[0]
+            pdf_path = pdf_dir / "test.pdf"
+            pdf_path.write_text("fake pdf content")
+            # Update with relative path - get_stats will resolve it relative to literature/
+            index.update_pdf_path(key, "pdfs/test.pdf")
+            
+            stats = index.get_stats()
+            
+            assert stats["total_entries"] == 3
+            assert stats["downloaded_pdfs"] == 1
+            assert stats["sources"]["arxiv"] == 2
+            assert stats["sources"]["semanticscholar"] == 1
+            assert stats["years"][2024] == 2
+            assert stats["years"][2023] == 1
+            assert stats["oldest_year"] == 2023
+            assert stats["newest_year"] == 2024
+        finally:
+            os.chdir(original_cwd)
 
     def test_handles_corrupt_json(self, mock_config):
         """Test handling of corrupt JSON file."""

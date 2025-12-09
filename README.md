@@ -610,17 +610,17 @@ pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing
 pytest project/tests/ --cov=project/src --cov-report=term-missing
 
 # Verify coverage requirements (infrastructure modules)
-pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
+pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 ```
 
 **Test Requirements (Infrastructure Layer - Layer 1):**
-- **60% minimum coverage**: Currently achieving 66.76%
+- **60% minimum coverage**: Currently achieving 61.48%
 - **No mocks**: All tests use real data and computations
 - **Deterministic**: Fixed RNG seeds for reproducible results
 - **Integration testing**: Cross-module interaction validation
 
 **Test Requirements (Project Layer - Layer 2):**
-- **90% minimum coverage**: Currently achieving 98.03%
+- **90% minimum coverage**: Currently achieving 99.88%
 - **Real data testing**: Use actual domain data, not synthetic test data
 - **Reproducible**: Fixed seeds and deterministic computation
 
@@ -779,12 +779,10 @@ flowchart TD
 ### Advanced Modules
 - **[docs/ADVANCED_MODULES_GUIDE.md](docs/ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all advanced modules
 - **[docs/API_REFERENCE.md](docs/API_REFERENCE.md)** - Complete API documentation for all modules
-- **[infrastructure/build/quality_checker.py](infrastructure/build/quality_checker.py)** - Document quality analysis and metrics
-- **[infrastructure/build/reproducibility.py](infrastructure/build/reproducibility.py)** - Build reproducibility and environment tracking
 - **[infrastructure/validation/integrity.py](infrastructure/validation/integrity.py)** - File integrity and cross-reference validation
 - **[infrastructure/publishing/core.py](infrastructure/publishing/core.py)** - Academic publishing workflow tools
 - **[infrastructure/scientific/](infrastructure/scientific/)** - Scientific computing best practices (modular: stability, benchmarking, documentation, validation, templates)
-- **[infrastructure/build/build_verifier.py](infrastructure/build/build_verifier.py)** - Build process validation and verification
+- **[infrastructure/reporting/](infrastructure/reporting/)** - Pipeline reporting and error aggregation
 
 ### Scientific Computing Modules
 - **[docs/SCIENTIFIC_SIMULATION_GUIDE.md](docs/SCIENTIFIC_SIMULATION_GUIDE.md)** - Scientific simulation and analysis system guide

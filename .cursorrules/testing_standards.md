@@ -8,8 +8,8 @@ All code in this repository requires **comprehensive test coverage** with **real
 
 ### Mandatory Standards
 
-- **Infrastructure modules**: 49% minimum coverage (currently achieving 55.89%)
-- **Project code**: 70% minimum coverage (currently achieving 99.88%)
+- **Infrastructure modules**: 60% minimum coverage (currently achieving 61.48%)
+- **Project code**: 90% minimum coverage (currently achieving 99.88%)
 - **Integration tests**: All critical workflows covered
 - **Edge cases**: All error paths tested
 
@@ -23,8 +23,8 @@ python3 -m pytest tests/ --cov=infrastructure --cov=project/src --cov-report=htm
 open htmlcov/index.html
 
 # Verify coverage meets requirements
-python3 -m pytest tests/ --cov=infrastructure --cov-fail-under=49
-python3 -m pytest project/tests/ --cov=project/src --cov-fail-under=70
+python3 -m pytest tests/ --cov=infrastructure --cov-fail-under=60
+python3 -m pytest project/tests/ --cov=project/src --cov-fail-under=90
 ```
 
 ## Test Organization
@@ -496,7 +496,7 @@ python3 -m pytest tests/ --tb=no
 
 Before committing tests:
 
-- [ ] Coverage requirements met (49% infra, 70% project) verified
+- [ ] Coverage requirements met (60% infra, 90% project) verified
 - [ ] All tests pass (`pytest tests/`)
 - [ ] No skipped tests (`-k "not skip"`)
 - [ ] Tests run in < 30 seconds total

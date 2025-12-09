@@ -36,7 +36,7 @@ src/
 ```
 
 **Requirements:**
-- 90% minimum test coverage (currently achieving 98.03%)
+- 90% minimum test coverage (currently achieving 99.88%)
 - Type hints on all public APIs
 - Comprehensive docstrings
 - No mock testing (real data only)
@@ -46,7 +46,7 @@ src/
 
 Comprehensive test suite validating all src/ code:
 
-- **90% minimum coverage required** - All critical code paths tested (currently 98.03%)
+- **90% minimum coverage required** - All critical code paths tested (currently 99.88%)
 - **Real data testing** - Use actual data, not mocks
 - **Integration tests** - Test module interactions
 - **Performance tests** - Validate algorithms
@@ -157,7 +157,7 @@ results = analyze_data(data)
 
 We implemented the analysis using our src/my_analysis.py module...
 
-![Results](../output/figures/analysis_results.png){fig:analysis width=0.8}
+![Results](../output/figures/example_figure.png){fig:analysis width=0.8}
 ```
 
 ### 2. Generate Figures

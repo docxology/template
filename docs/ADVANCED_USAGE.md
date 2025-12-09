@@ -45,20 +45,27 @@ By the end of this guide, you'll be able to:
 
 ### The TDD Cycle
 
-```
-1. Write Test (RED)
-   ↓
-2. Run Test (FAILS)
-   ↓
-3. Write Minimum Code (GREEN)
-   ↓
-4. Run Test (PASSES)
-   ↓
-5. Refactor (IMPROVE)
-   ↓
-6. Run Test (STILL PASSES)
-   ↓
-7. Repeat
+```mermaid
+flowchart TD
+    START([Start TDD Cycle]) --> WRITE_TEST[1. Write Test<br/>RED]
+    WRITE_TEST --> RUN_TEST1[2. Run Test<br/>FAILS]
+    RUN_TEST1 --> WRITE_CODE[3. Write Minimum Code<br/>GREEN]
+    WRITE_CODE --> RUN_TEST2[4. Run Test<br/>PASSES]
+    RUN_TEST2 --> REFACTOR[5. Refactor<br/>IMPROVE]
+    REFACTOR --> RUN_TEST3[6. Run Test<br/>STILL PASSES]
+    RUN_TEST3 --> REPEAT{Continue?}
+    REPEAT -->|Yes| WRITE_TEST
+    REPEAT -->|No| DONE([Complete])
+    
+    classDef red fill:#ffebee,stroke:#c62828,stroke-width:2px
+    classDef green fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    
+    class WRITE_TEST,RUN_TEST1 red
+    class WRITE_CODE,RUN_TEST2,REFACTOR,RUN_TEST3 green
+    class START,DONE process
+    class REPEAT decision
 ```
 
 ### Example TDD Workflow
@@ -608,7 +615,7 @@ with open('output/environment.json', 'w') as f:
     json.dump(env_info, f, indent=2)
 ```
 
-**See [infrastructure/build/reproducibility.py](../infrastructure/build/reproducibility.py) for advanced tools.**
+**See [infrastructure/validation/integrity.py](../infrastructure/validation/integrity.py) for integrity verification tools.**
 
 ---
 

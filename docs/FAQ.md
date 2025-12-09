@@ -26,7 +26,7 @@
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods to generate figures, data, and outputs
 
 ### **Q: What are the test coverage requirements?**
-**A:** Coverage requirements are: 90% minimum for project code (currently achieving 98.03%) and 60% minimum for infrastructure (currently achieving 66.76%). The build pipeline enforces these to maintain professional standards.
+**A:** Coverage requirements are: 90% minimum for project code (currently achieving 99.88%) and 60% minimum for infrastructure (currently achieving 61.48%). The build pipeline enforces these to maintain professional standards.
 
 ## 📚 **Documentation & PDF Generation**
 
@@ -104,7 +104,7 @@
 ## 🧪 **Advanced Modules**
 
 ### **Q: What are the advanced modules?**
-**A:** The template includes 10 advanced modules: quality_checker (document quality analysis), reproducibility (environment tracking), integrity (output verification), publishing (academic workflows), scientific_dev (scientific computing), build_verifier (build validation), literature search (academic literature management), LLM integration (local LLM assistance), rendering system (multi-format output), and reporting (pipeline reporting and error aggregation). See [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) for complete documentation.
+**A:** The template includes 7 advanced modules: integrity (output verification), publishing (academic workflows), scientific_dev (scientific computing), literature search (academic literature management), LLM integration (local LLM assistance), rendering system (multi-format output), and reporting (pipeline reporting and error aggregation). See [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) for complete documentation.
 
 ### **Q: How do I use the advanced modules?**
 **A:** See the [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) for comprehensive usage examples and integration patterns. Each module includes API documentation and best practices.

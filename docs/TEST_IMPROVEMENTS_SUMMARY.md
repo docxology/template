@@ -9,7 +9,7 @@ All tests are now functional, documented, complete, and properly handle figures,
 ## 📊 Test Suite Overview (current)
 
 - **Total Tests:** 2245 total (1894 infrastructure [8 skipped] + 351 project, all passing)
-- **Coverage:** 98.03% project, 66.76% infrastructure (targets: 90% / 60%)
+- **Coverage:** 99.88% project, 61.48% infrastructure (targets: 90% / 60%)
 - **Policy:** No mocks, real data; Ollama-dependent tests can be skipped with `-m "not requires_ollama"`
 
 ---
@@ -130,12 +130,9 @@ References: \cite{ref1,ref2,ref3}
 - ✅ pdf_validator.py
 
 ### Modules with High Coverage (>75%)
-- 🔄 build_verifier.py: 66% → needs more integration tests
-- 🔄 integrity.py: 79% → needs error path tests
-- 🔄 quality_checker.py: 87% → excellent
-- 🔄 publishing.py: 81% → good
-- 🔄 reproducibility.py: 74% → needs edge case tests
-- 🔄 scientific_dev.py: 86% → excellent
+- 🔄 integrity.py: 81% → excellent
+- 🔄 publishing.py: 86% → excellent
+- 🔄 scientific/ (package): 88% → excellent
 
 ---
 

@@ -145,9 +145,16 @@ class TestLiteratureWorkflow:
 
         # Mock the search method to return our test results
         original_search = literature_search.search
-        def mock_search(query, limit=10, sources=None):
+        def mock_search(query, limit=10, sources=None, return_stats=False):
             if query == "test":
+                if return_stats:
+                    from infrastructure.literature.core import SearchStatistics
+                    stats = SearchStatistics(query=query, total_results=len(search_results))
+                    return (search_results, stats)
                 return search_results
+            if return_stats:
+                from infrastructure.literature.core import SearchStatistics
+                return ([], SearchStatistics(query=query or "", total_results=0))
             return []
         literature_search.search = mock_search
 
@@ -207,11 +214,15 @@ class TestLiteratureWorkflow:
         literature_search = Mock()
         workflow = LiteratureWorkflow(literature_search)
 
-        # Setup mock responses
+        # Setup mock responses - search now returns tuple (results, stats) when return_stats=True
+        from infrastructure.literature.core import SearchStatistics
         arxiv_results = [SearchResult("ArXiv Paper", ["Author"], 2024, "Abstract", "url", source="arxiv")]
         semanticscholar_results = [SearchResult("SS Paper", ["Author"], 2024, "Abstract", "url", source="semanticscholar")]
 
-        literature_search.search.side_effect = [arxiv_results, semanticscholar_results]
+        literature_search.search.side_effect = [
+            (arxiv_results, SearchStatistics(query="keyword1", total_results=len(arxiv_results))),
+            (semanticscholar_results, SearchStatistics(query="keyword2", total_results=len(semanticscholar_results)))
+        ]
         literature_search._deduplicate_results.return_value = arxiv_results + semanticscholar_results
 
         results = workflow._search_papers(["keyword1", "keyword2"], 10)

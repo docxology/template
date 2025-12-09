@@ -898,6 +898,195 @@ class TestArgumentParsingEdgeCases:
                     mock_exit.assert_called_once_with(1)
 
     def test_main_search_no_query(self):
+        """Test main function with search command but no query."""
+        # argparse uses exit code 2 for missing required arguments
+        result = subprocess.run(
+            [sys.executable, "-m", "infrastructure.literature.cli", "search"],
+            capture_output=True,
+            text=True
+        )
+        # argparse uses exit code 2 for missing required arguments
+        assert result.returncode == 2
+        assert "error:" in result.stderr.lower() or "required" in result.stderr.lower()
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_search_command_multiple_papers(self, mock_config, mock_search_class):
+        """Test search command with multiple papers."""
+        papers = []
+        for i in range(3):
+            mock_paper = Mock()
+            mock_paper.title = f"Paper {i+1}"
+            mock_paper.authors = [f"Author {i+1}"]
+            mock_paper.year = 2024
+            mock_paper.doi = f"10.1234/paper{i+1}"
+            mock_paper.citation_count = i * 10
+            mock_paper.pdf_url = None
+            papers.append(mock_paper)
+        
+        mock_manager = Mock()
+        mock_manager.search.return_value = papers
+        mock_manager.add_to_library.side_effect = [f"paper{i+1}2024author{i+1}" for i in range(3)]
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        args.query = "test"
+        args.sources = None
+        args.limit = 10
+        args.download = False
+        
+        with patch('builtins.print') as mock_print:
+            cli.search_command(args)
+            # Should print all papers
+            assert any("Paper 1" in str(call) for call in mock_print.call_args_list)
+            assert any("Paper 2" in str(call) for call in mock_print.call_args_list)
+            assert any("Paper 3" in str(call) for call in mock_print.call_args_list)
+            assert any("Added 3 papers" in str(call) for call in mock_print.call_args_list)
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_search_command_paper_without_doi_or_citations(self, mock_config, mock_search_class):
+        """Test search command with paper missing DOI and citations."""
+        mock_paper = Mock()
+        mock_paper.title = "Test Paper"
+        mock_paper.authors = ["Author"]
+        mock_paper.year = 2024
+        mock_paper.doi = None
+        mock_paper.citation_count = None
+        mock_paper.pdf_url = None
+        
+        mock_manager = Mock()
+        mock_manager.search.return_value = [mock_paper]
+        mock_manager.add_to_library.return_value = "test2024author"
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        args.query = "test"
+        args.sources = None
+        args.limit = 10
+        args.download = False
+        
+        with patch('builtins.print') as mock_print:
+            cli.search_command(args)
+            # Should not print DOI or Citations lines
+            calls_str = ' '.join(str(call) for call in mock_print.call_args_list)
+            assert "DOI:" not in calls_str
+            assert "Citations:" not in calls_str
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_list_entry_without_doi(self, mock_config, mock_search_class):
+        """Test library list entry without DOI."""
+        mock_manager = Mock()
+        mock_manager.get_library_entries.return_value = [
+            {
+                "citation_key": "test2024author",
+                "title": "Test Paper",
+                "authors": ["Author"],
+                "year": 2024,
+                "pdf_path": "/path/to/paper.pdf"
+                # No DOI
+            }
+        ]
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        
+        with patch('builtins.print') as mock_print:
+            cli.library_list_command(args)
+            # Should not print DOI line
+            calls_str = ' '.join(str(call) for call in mock_print.call_args_list)
+            assert "DOI:" not in calls_str
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_list_single_author(self, mock_config, mock_search_class):
+        """Test library list entry with single author (no 'et al.')."""
+        mock_manager = Mock()
+        mock_manager.get_library_entries.return_value = [
+            {
+                "citation_key": "test2024author",
+                "title": "Test Paper",
+                "authors": ["Single Author"],
+                "year": 2024,
+                "pdf_path": "/path/to/paper.pdf"
+            }
+        ]
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        
+        with patch('builtins.print') as mock_print:
+            cli.library_list_command(args)
+            # Should not have "et al."
+            calls_str = ' '.join(str(call) for call in mock_print.call_args_list)
+            assert "et al." not in calls_str
+            assert "Single Author" in calls_str
+
+    @patch('infrastructure.literature.cli.LiteratureSearch')
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_stats_with_all_fields(self, mock_config, mock_search_class):
+        """Test library stats with all optional fields present."""
+        mock_manager = Mock()
+        mock_manager.get_library_stats.return_value = {
+            "total_entries": 20,
+            "downloaded_pdfs": 15,
+            "oldest_year": 2018,
+            "newest_year": 2024,
+            "sources": {"arxiv": 12, "semanticscholar": 8},
+            "years": {"2024": 8, "2023": 6, "2022": 4, "2021": 2}
+        }
+        mock_search_class.return_value = mock_manager
+        
+        args = Mock()
+        
+        with patch('builtins.print') as mock_print:
+            cli.library_stats_command(args)
+            calls_str = ' '.join(str(call) for call in mock_print.call_args_list)
+            assert "Total entries: 20" in calls_str
+            assert "Downloaded PDFs: 15" in calls_str
+            assert "Year range: 2018 - 2024" in calls_str
+            assert "By Source:" in calls_str
+            assert "By Year" in calls_str
+
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_list_uses_from_env_when_env_vars_set(self, mock_config_class, tmp_path, monkeypatch):
+        """Test that library_list_command uses from_env() when env vars are set."""
+        # Set environment variables
+        monkeypatch.setenv("LITERATURE_LIBRARY_INDEX", str(tmp_path / "library.json"))
+        monkeypatch.setenv("LITERATURE_BIBTEX_FILE", str(tmp_path / "refs.bib"))
+        
+        mock_from_env = Mock(return_value=Mock())
+        mock_config_class.from_env = mock_from_env
+        
+        mock_manager = Mock()
+        mock_manager.get_library_entries.return_value = []
+        
+        with patch('infrastructure.literature.cli.LiteratureSearch', return_value=mock_manager):
+            args = Mock()
+            cli.library_list_command(args)
+            
+            # Should have called from_env()
+            mock_from_env.assert_called_once()
+
+    @patch('infrastructure.literature.cli.LiteratureConfig')
+    def test_library_stats_uses_from_env_when_env_vars_set(self, mock_config_class, tmp_path, monkeypatch):
+        """Test that library_stats_command uses from_env() when env vars are set."""
+        # Set environment variables
+        monkeypatch.setenv("LITERATURE_LIBRARY_INDEX", str(tmp_path / "library.json"))
+        
+        mock_from_env = Mock(return_value=Mock())
+        mock_config_class.from_env = mock_from_env
+        
+        mock_manager = Mock()
+        mock_manager.get_library_stats.return_value = {"total_entries": 0}
+        
+        with patch('infrastructure.literature.cli.LiteratureSearch', return_value=mock_manager):
+            args = Mock()
+            cli.library_stats_command(args)
+            
+            # Should have called from_env()
+            mock_from_env.assert_called_once()
         """Test main with search command but no query."""
         result = subprocess.run(
             [sys.executable, "-m", "infrastructure.literature.cli", "search"],

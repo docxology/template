@@ -1,6 +1,6 @@
 # project/tests/ - Project Test Suite
 
-Comprehensive test suite ensuring 70%+ coverage of `project/src/` scientific code.
+Comprehensive test suite ensuring 90%+ coverage of `project/src/` scientific code.
 
 ## Quick Start
 
@@ -10,7 +10,7 @@ Comprehensive test suite ensuring 70%+ coverage of `project/src/` scientific cod
 # With coverage report
 pytest tests/ --cov=src --cov-report=html
 
-# Require 70% coverage
+# Require 90% coverage
 pytest tests/ --cov=src --cov-fail-under=90
 ```
 

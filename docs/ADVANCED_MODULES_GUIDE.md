@@ -1,184 +1,26 @@
 # 🔬 Advanced Modules Guide
 
-> **Comprehensive guide** to the 10 advanced infrastructure modules
+> **Comprehensive guide** to the 7 advanced infrastructure modules
 
 **Quick Reference:** [API Reference](API_REFERENCE.md) | [Architecture](ARCHITECTURE.md) | [Infrastructure Docs](../infrastructure/AGENTS.md) | [Module Standards](../.cursorrules/infrastructure_modules.md) | [LLM Standards](../.cursorrules/llm_standards.md)
 
-This guide provides detailed usage instructions for the ten advanced modules that extend the Research Project Template with professional-grade features for quality assurance, reproducibility, integrity verification, publishing workflows, scientific computing best practices, build process validation, literature search, LLM integration, multi-format rendering, and comprehensive reporting.
+This guide provides detailed usage instructions for the advanced modules that extend the Research Project Template with professional-grade features for integrity verification, publishing workflows, scientific computing best practices, literature search, LLM integration, multi-format rendering, and comprehensive reporting.
 
 ## Module Overview
 
-The template includes ten advanced infrastructure modules that provide enterprise-grade capabilities:
+The template includes advanced infrastructure modules that provide enterprise-grade capabilities:
 
 | Module | Purpose | Key Features |
 |--------|---------|--------------|
-| **Quality Checker** | Document quality analysis | Readability metrics, academic compliance, structural integrity |
-| **Reproducibility** | Environment tracking | Build reproducibility, dependency capture, environment snapshots |
 | **Integrity** | Output verification | File integrity, cross-reference validation, data consistency |
 | **Publishing** | Academic workflows | DOI validation, citation generation, platform integration |
 | **Scientific Dev** | Research best practices | Numerical stability, performance benchmarking, code quality |
-| **Build Verifier** | Pipeline validation | Build artifact verification, reproducibility testing, comprehensive reporting |
 | **Literature Search** | Academic literature management | Multi-source search, PDF download, BibTeX generation, library management |
 | **LLM Integration** | Local LLM assistance | Ollama integration, research templates, context management, streaming |
 | **Rendering System** | Multi-format output | PDF, slides, web, poster generation from single source |
 | **Reporting** | Pipeline reporting | Consolidated reports, error aggregation, performance metrics |
 
 All modules follow the thin orchestrator pattern with comprehensive test coverage.
-
----
-
-## 🔍 Quality Checker Module
-
-**Location**: `infrastructure/build/quality_checker.py`  
-**Purpose**: Advanced document quality analysis and metrics
-
-### Key Features
-
-- **Readability Analysis**: Flesch score, Gunning Fog index, sentence complexity
-- **Academic Standards**: Compliance with research writing standards
-- **Structural Integrity**: Document organization and completeness validation
-- **Formatting Quality**: Consistent styling and presentation assessment
-- **Comprehensive Reporting**: Detailed quality assessment with recommendations
-
-### Usage Examples
-
-#### Basic Quality Analysis
-
-```python
-from infrastructure.build.quality_checker import analyze_document_quality
-
-# Analyze a PDF document
-metrics = analyze_document_quality("output/project_combined.pdf")
-print(f"Overall Score: {metrics.overall_score:.2f}")
-print(f"Readability Score: {metrics.readability_score:.1f}")
-
-# Check for issues
-if metrics.issues:
-    print("Issues found:")
-    for issue in metrics.issues:
-        print(f"- {issue}")
-
-# Get recommendations
-for rec in metrics.recommendations:
-    print(f"💡 {rec}")
-```
-
-#### Comprehensive Quality Report
-
-```python
-from infrastructure.build.quality_checker import generate_quality_report
-
-# Generate detailed report
-report = generate_quality_report(metrics)
-print(report)
-```
-
-**Output Example:**
-```
-Document Quality Report
-======================
-
-Overall Score: 0.87/1.0
-
-Readability Metrics:
-- Flesch Score: 52.3 (College level)
-- Gunning Fog: 12.8 (Advanced reading)
-- Avg Sentence Length: 18.4 words
-
-Academic Compliance:
-- Citation density: Good (12 citations/page)
-- Technical terminology: Appropriate
-- Structure completeness: Excellent
-
-Recommendations:
-- Consider simplifying complex sentences
-- Add more transition phrases for better flow
-- Verify all technical terms are defined
-```
-
-### Integration with Build Pipeline
-
-The quality checker integrates automatically with the build pipeline:
-
-```bash
-# Quality check runs as part of validation
-python3 scripts/04_validate_output.py
-
-# Manual quality assessment
-python3 -m infrastructure.build.quality_checker.cli output/project_combined.pdf
-```
-
----
-
-## 🔄 Reproducibility Module
-
-**Location**: `infrastructure/build/reproducibility.py`  
-**Purpose**: Build reproducibility and environment tracking
-
-### Key Features
-
-- **Environment Capture**: Platform, Python version, dependencies
-- **Dependency Tracking**: Version management and consistency checking
-- **Build Manifests**: Comprehensive build artifact tracking
-- **Snapshot Comparison**: Version control and change detection
-- **Reproducible Builds**: Deterministic environment setup
-
-### Usage Examples
-
-#### Generate Reproducibility Report
-
-```python
-from infrastructure.build.reproducibility import generate_reproducibility_report
-
-# Capture current environment state
-report = generate_reproducibility_report("output/")
-
-print(f"Environment Hash: {report.environment_hash}")
-print(f"Python Version: {report.timestamp}")
-print(f"Platform: {report.platform_info['system']}")
-
-# Check dependency information
-for dep in report.dependency_info[:5]:  # First 5 deps
-    print(f"{dep['name']}: {dep['version']}")
-```
-
-#### Verify Reproducibility
-
-```python
-from infrastructure.build.reproducibility import verify_reproducibility
-
-# Compare two builds
-result = verify_reproducibility(current_report, baseline_report)
-
-if result['reproducible']:
-    print("✅ Builds are reproducible")
-else:
-    print("❌ Reproducibility issues found:")
-    for diff in result['differences']:
-        print(f"- {diff}")
-```
-
-#### Environment State Capture
-
-```python
-from infrastructure.build.reproducibility import capture_environment_state
-
-# Get current environment details
-env = capture_environment_state()
-print(f"Python: {env['platform']['python_version']}")
-print(f"NumPy: {env['packages']['numpy']}")
-print(f"System: {env['platform']['system']}")
-```
-
-### Build Integration
-
-```bash
-# Automatic reproducibility checking
-python3 scripts/04_validate_output.py
-
-# Manual reproducibility report
-python3 -m infrastructure.build.reproducibility.cli output/ --save-report
-```
 
 ---
 
@@ -319,7 +161,7 @@ python3 -m infrastructure.publishing.cli validate-metadata manuscript/
 
 ## 🔬 Scientific Development Module
 
-**Location**: `infrastructure/scientific/scientific_dev.py`  
+**Location**: `infrastructure/scientific/` (modular package: stability.py, benchmarking.py, documentation.py, validation.py, templates.py)  
 **Purpose**: Scientific computing best practices and tools
 
 ### Key Features
@@ -387,74 +229,16 @@ python3 -m infrastructure.scientific.cli benchmark src/algorithms.py
 
 ---
 
-## 🏗️ Build Verifier Module
+## Integration with Build Pipeline
 
-**Location**: `infrastructure/build/build_verifier.py`  
-**Purpose**: Comprehensive build process validation
-
-### Key Features
-
-- **Build Process Validation**: Command execution and error handling
-- **Artifact Verification**: Expected output file checking
-- **Reproducibility Testing**: Multiple build run comparison
-- **Environment Validation**: Dependency and tool availability
-- **Build Reporting**: Comprehensive validation reports
-
-### Usage Examples
-
-#### Build Artifact Verification
-
-```python
-from infrastructure.build.build_verifier import verify_build_artifacts
-
-# Define expected outputs
-expected_files = {
-    'pdfs': ['project_combined.pdf', '01_abstract.pdf'],
-    'figures': ['convergence_plot.png', 'data_structure.png'],
-    'data': ['example_data.csv', 'performance_metrics.csv']
-}
-
-# Verify build outputs
-result = verify_build_artifacts("output/", expected_files)
-
-print("Build Verification Report:")
-for category, files in result.items():
-    print(f"\n{category.upper()}:")
-    for file_info in files:
-        status = "✅" if file_info['exists'] else "❌"
-        print(f"  {status} {file_info['filename']}")
-```
-
-#### Build Reproducibility Testing
-
-```python
-from infrastructure.build.build_verifier import verify_build_reproducibility
-
-# Test build reproducibility
-build_command = ["python3", "scripts/run_all.py"]
-expected_outputs = {
-    "output/project_combined.pdf": "expected_hash",
-    "output/data/example_data.csv": "expected_csv_hash"
-}
-
-result = verify_build_reproducibility(build_command, expected_outputs, iterations=3)
-
-if result['reproducible']:
-    print("✅ Build is reproducible across multiple runs")
-else:
-    print("❌ Build reproducibility issues:")
-    for issue in result['issues']:
-        print(f"- {issue}")
-```
-
-### Build Pipeline Integration
+Build verification and integrity checking are handled by the validation module:
 
 ```bash
 # Automatic build verification
 python3 scripts/04_validate_output.py
 
 # Manual build verification
-python3 -m infrastructure.build.build_verifier.cli output/ --comprehensive
+python3 -m infrastructure.validation.cli integrity output/
 ```
 
 ---
@@ -736,8 +520,6 @@ python3 -m infrastructure.rendering.cli web manuscript.md
 
 ```python
 # Comprehensive project validation pipeline
-from infrastructure.build.quality_checker import analyze_document_quality
-from infrastructure.build.reproducibility import generate_reproducibility_report
 from infrastructure.validation.integrity import verify_output_integrity
 from infrastructure.publishing.core import extract_publication_metadata
 
@@ -746,17 +528,10 @@ def comprehensive_validation(output_dir, manuscript_files):
     
     results = {}
     
-    # 1. Quality analysis
-    pdf_path = f"{output_dir}/project_combined.pdf"
-    results['quality'] = analyze_document_quality(pdf_path)
-    
-    # 2. Reproducibility check
-    results['reproducibility'] = generate_reproducibility_report(output_dir)
-    
-    # 3. Integrity verification
+    # 1. Integrity verification
     results['integrity'] = verify_output_integrity(output_dir)
     
-    # 4. Publication metadata
+    # 2. Publication metadata
     results['publishing'] = extract_publication_metadata(manuscript_files)
     
     return results
@@ -769,10 +544,7 @@ results = comprehensive_validation("output/", ["manuscript/*.md"])
 
 ```bash
 # Quality analysis
-python3 -m infrastructure.build.quality_checker.cli output/project_combined.pdf
-
-# Reproducibility report
-python3 -m infrastructure.build.reproducibility.cli output/ --save-report
+python3 -m infrastructure.validation.cli integrity output/
 
 # Integrity check
 python3 -m infrastructure.validation.integrity.cli output/
@@ -817,7 +589,7 @@ report = generate_pipeline_report(
     stage_results=stage_results,
     total_duration=60.5,
     repo_root=Path("."),
-    test_results={'summary': {'total_tests': 2175, 'total_passed': 2175}},
+    test_results={'summary': {'total_tests': 2245, 'total_passed': 2245}},
     validation_results={'checks': {'pdf_validation': True}},
     performance_metrics={'total_duration': 60.5},
 )
@@ -903,7 +675,7 @@ Include advanced modules in your development workflow from the beginning:
 
 ```python
 # In your analysis scripts
-from infrastructure.build.quality_checker import analyze_document_quality
+from infrastructure.validation.integrity import verify_output_integrity
 from infrastructure.scientific import check_numerical_stability
 
 # Add validation to your research pipeline
@@ -914,8 +686,6 @@ def research_workflow():
     # Validate numerical stability
     stability = check_numerical_stability(my_algorithm, test_inputs)
     
-    # Generate report with quality metrics
-    quality = analyze_document_quality("manuscript.pdf")
     
     return results, stability, quality
 ```
@@ -927,11 +697,6 @@ Set up automated validation in your build pipeline:
 #!/bin/bash
 # validate.sh - Comprehensive validation script
 
-echo "🔍 Running Quality Analysis..."
-python3 -m infrastructure.build.quality_checker.cli output/project_combined.pdf
-
-echo "🔄 Checking Reproducibility..."
-python3 -m infrastructure.build.reproducibility.cli output/
 
 echo "✅ Verifying Integrity..."
 python3 -m infrastructure.validation.integrity.cli output/
@@ -972,16 +737,6 @@ def monitor_performance():
 
 ### Common Issues
 
-#### Quality Checker Issues
-- **Low readability scores**: Check for overly complex sentences
-- **Academic compliance warnings**: Ensure proper citation formatting
-- **Structure issues**: Verify document organization follows standards
-
-#### Reproducibility Problems
-- **Environment differences**: Use virtual environments consistently
-- **Dependency version conflicts**: Pin dependency versions
-- **Random seed issues**: Always set fixed seeds for reproducible results
-
 #### Integrity Validation Failures
 - **File hash mismatches**: Check if outputs are deterministic
 - **Cross-reference errors**: Verify all labels are properly defined
@@ -998,12 +753,9 @@ def monitor_performance():
 
 | Module | Dependencies | Test Coverage |
 |--------|--------------|---------------|
-| Quality Checker | PyMuPDF, textstat | 88% |
-| Reproducibility | psutil, platform | 78% |
 | Integrity | hashlib, pathlib | 81% |
 | Publishing | requests, bibtexparser | 86% |
 | Scientific Dev | numpy, time, psutil | 88% |
-| Build Verifier | subprocess, hashlib | 68% |
 | Literature Search | requests, bibtexparser | 91% |
 | LLM Integration | requests, ollama | 91% |
 | Rendering System | pandoc, xelatex | 91% |

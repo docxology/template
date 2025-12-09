@@ -264,7 +264,7 @@ Level 10-12: Expert Usage (1-2 months)
 
 ### Advanced Topics
 - **[Two-Layer Architecture](TWO_LAYER_ARCHITECTURE.md)** - Complete architecture guide
-- **[Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md)** - Using all 10 advanced modules
+- **[Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md)** - Using all 7 advanced modules
 - **[Dependency Management](DEPENDENCY_MANAGEMENT.md)** - uv package manager guide
 - **[CI/CD Integration](CI_CD_INTEGRATION.md)** - GitHub Actions setup
 - **[Performance Optimization](PERFORMANCE_OPTIMIZATION.md)** - Build time optimization
@@ -307,6 +307,6 @@ Having issues? Here's where to look:
 
 **Ready to start?** Choose your skill level above and dive in!
 
-**System Status**: ✅ All operational | **Build Time**: 84s (without optional LLM review) | **Coverage**: 98.03%/90% (project), 66.76%/60% (infra) | **Tests**: 2245 passing
+**System Status**: ✅ All operational | **Build Time**: 84s (without optional LLM review) | **Coverage**: 99.88%/90% (project), 61.48%/60% (infra) | **Tests**: 2245 passing
 
 **Need help?** Start with **[Getting Started Guide](GETTING_STARTED.md)** or check the **[FAQ](FAQ.md)**

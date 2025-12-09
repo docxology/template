@@ -93,7 +93,8 @@ omit = [
 ]
 
 [tool.coverage.report]
-# fail_under = 70 aligns with project target
+# fail_under = 70 is a global fallback setting
+# Individual test runs use 60% (infrastructure) and 90% (project) thresholds
 # See AGENTS.md#coverage-system and docs/BUILD_SYSTEM.md for details
 fail_under = 70
 show_missing = true

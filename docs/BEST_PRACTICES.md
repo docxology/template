@@ -77,8 +77,8 @@ from example import add_numbers, calculate_average
 ### Test Coverage
 
 **Maintain comprehensive coverage:**
-- **Project code**: 90% minimum (currently achieving 98.03%)
-- **Infrastructure**: 60% minimum (currently achieving 66.76%)
+- **Project code**: 90% minimum (currently achieving 99.88%)
+- **Infrastructure**: 60% minimum (currently achieving 61.48%)
 - Test all critical code paths
 - Include edge cases
 - Test error handling
@@ -98,8 +98,8 @@ uv run pytest tests/ --cov=src --cov-report=term-missing
 ```
 tests/
 ├── test_example.py
-├── test_quality_checker.py
-├── test_reproducibility.py
+├── test_integrity.py
+├── test_pdf_validator.py
 └── ...
 ```
 

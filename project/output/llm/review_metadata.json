@@ -1,6 +1,6 @@
 {
   "model": "llama3:latest",
-  "timestamp": "2025-12-09T09:17:18.191115",
+  "timestamp": "2025-12-09T14:50:23.395451",
   "source_pdf": "/Users/mini/Documents/GitHub/template/project/output/pdf/project_combined.pdf",
   "reviews_generated": [
     "translation_zh",
@@ -20,28 +20,28 @@
       "input_chars": 79793,
       "input_words": 14921,
       "input_tokens_est": 19948,
-      "output_chars": 1558,
-      "output_words": 176,
-      "output_tokens_est": 389,
-      "generation_time_seconds": 44.26
+      "output_chars": 2036,
+      "output_words": 226,
+      "output_tokens_est": 509,
+      "generation_time_seconds": 53.11
     },
     "translation_hi": {
       "input_chars": 79793,
       "input_words": 14921,
       "input_tokens_est": 19948,
-      "output_chars": 2407,
-      "output_words": 332,
-      "output_tokens_est": 601,
-      "generation_time_seconds": 60.43
+      "output_chars": 2113,
+      "output_words": 306,
+      "output_tokens_est": 528,
+      "generation_time_seconds": 56.45
     },
     "translation_ru": {
       "input_chars": 79793,
       "input_words": 14921,
       "input_tokens_est": 19948,
-      "output_chars": 2803,
-      "output_words": 340,
-      "output_tokens_est": 700,
-      "generation_time_seconds": 53.74
+      "output_chars": 2267,
+      "output_words": 283,
+      "output_tokens_est": 566,
+      "generation_time_seconds": 45.58
     }
   },
   "format_compliance": {
@@ -66,7 +66,7 @@
       }
     }
   },
-  "total_generation_time_seconds": 158.43,
+  "total_generation_time_seconds": 155.14,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,

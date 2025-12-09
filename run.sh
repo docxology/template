@@ -429,7 +429,7 @@ clean_output_directories() {
 
 run_pytest_infrastructure() {
     # Execute infrastructure tests with coverage requirements.
-    # Runs pytest on tests/infrastructure/ with 49% coverage threshold.
+    # Runs pytest on tests/infrastructure/ with 60% coverage threshold.
     # Skips requires_ollama tests by default.
     # Returns: 0 on success, 1 on failure
     cd "$REPO_ROOT"
@@ -449,7 +449,7 @@ run_pytest_infrastructure() {
 
 run_pytest_project() {
     # Execute project tests with coverage requirements.
-    # Runs pytest on project/tests/ with 70% coverage threshold.
+    # Runs pytest on project/tests/ with 90% coverage threshold.
     # Skips integration tests by default.
     # Returns: 0 on success, 1 on failure
     cd "$REPO_ROOT"

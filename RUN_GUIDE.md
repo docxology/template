@@ -74,8 +74,8 @@ Verifies the environment is ready for the pipeline.
 
 Executes the complete test suite with coverage validation.
 
-- Runs infrastructure tests (`tests/infrastructure/`) with 49%+ coverage threshold
-- Runs project tests (`project/tests/`) with 70%+ coverage threshold
+- Runs infrastructure tests (`tests/infrastructure/`) with 60%+ coverage threshold
+- Runs project tests (`project/tests/`) with 90%+ coverage threshold
 - Supports quiet mode (default) - shows only summary
 - Supports verbose mode (`--verbose`) - shows all test names
 - Generates HTML coverage reports for both suites
@@ -170,8 +170,8 @@ Executes the complete 10-stage build pipeline (stages 0-9):
 |-------|------|---------|
 | 0 | Clean Output Directories | Prepare fresh output directories |
 | 1 | Setup Environment | Verify Python, dependencies, build tools |
-| 2 | Infrastructure Tests | Test generic modules (49%+ coverage) |
-| 3 | Project Tests | Test project code (70%+ coverage) |
+| 2 | Infrastructure Tests | Test generic modules (60%+ coverage) |
+| 3 | Project Tests | Test project code (90%+ coverage) |
 | 4 | Project Analysis | Run analysis scripts, generate figures |
 | 5 | PDF Rendering | Generate manuscript PDFs |
 | 6 | Output Validation | Validate all outputs |

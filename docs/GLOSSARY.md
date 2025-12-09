@@ -275,7 +275,7 @@ Ability to regenerate exact same results from source. Ensured through determinis
 
 **Tools**: Version locking, seed fixing, environment capture
 
-**See**: [infrastructure/build/reproducibility.py](../infrastructure/build/reproducibility.py)
+**See**: [infrastructure/validation/integrity.py](../infrastructure/validation/integrity.py)
 
 ## S
 
@@ -362,8 +362,8 @@ Collection of all test files in `tests/` directory. Ensures all functionality wo
 Process of validating code correctness through automated test cases. No mocks allowed - all tests use real data.
 
 **Requirements**:
-- 90% minimum for project code (currently 98.03%)
-- 60% minimum for infrastructure (currently 66.76%)
+- 90% minimum for project code (currently 99.88%)
+- 60% minimum for infrastructure (currently 61.48%)
 - Real data (no mocks)
 - Deterministic results
 - All tests must pass

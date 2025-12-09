@@ -22,14 +22,9 @@ These modules are located in `infrastructure/` and provide generic tools applica
 #### Validation & Quality Assurance
 - `infrastructure/validation/pdf_validator.py` - PDF rendering validation
 - `infrastructure/validation/integrity.py` - Output integrity verification
-- `infrastructure/build/quality_checker.py` - Document quality analysis
-
-#### Build & Reproducibility
-- `infrastructure/build/build_verifier.py` - Build process validation
-- `infrastructure/build/reproducibility.py` - Environment tracking and reproducibility
 
 #### Scientific Computing
-- `infrastructure/scientific/scientific_dev.py` - Scientific computing best practices
+- `infrastructure/scientific/` - Scientific computing best practices (modular package)
 
 #### Publishing & Research Tools
 - `infrastructure/publishing/` - Academic publishing workflows (DOI, citations, metadata)
@@ -381,174 +376,6 @@ if report['summary']['has_issues']:
 
 ---
 
-## Module: quality_checker
-
-### Classes
-
-#### `QualityMetrics`
-
-Container for document quality metrics.
-
-**Attributes:**
-- `readability_score` (float): Readability score (0-100)
-- `academic_compliance` (float): Academic standards compliance (0-1)
-- `structural_integrity` (float): Document structure quality (0-1)
-- `formatting_quality` (float): Formatting consistency (0-1)
-- `overall_score` (float): Composite quality score (0-1)
-- `issues` (List[str]): List of detected issues
-- `recommendations` (List[str]): Improvement suggestions
-
----
-
-### Functions
-
-#### `analyze_document_quality(pdf_path: Path, text: Optional[str] = None) -> QualityMetrics`
-
-Analyze document quality and return comprehensive metrics.
-
-**Parameters:**
-- `pdf_path` (Path): Path to PDF file
-- `text` (str, optional): Pre-extracted text (optional)
-
-**Returns:**
-- `QualityMetrics`: Quality metrics object
-
-**Example:**
-```python
-from pathlib import Path
-from infrastructure.build import analyze_document_quality
-metrics = analyze_document_quality(Path("output/pdf/document.pdf"))
-print(f"Overall Score: {metrics.overall_score:.2f}")
-```
-
----
-
-#### `analyze_readability(text: str) -> Dict[str, float]`
-
-Analyze text readability using multiple metrics.
-
-**Parameters:**
-- `text` (str): Text content to analyze
-
-**Returns:**
-- `Dict[str, float]`: Dictionary with:
-  - `flesch_score`: Flesch Reading Ease Score (0-100)
-  - `gunning_fog`: Gunning Fog Index
-  - `avg_sentence_length`: Average sentence length
-  - `avg_syllables_per_word`: Average syllables per word
-
-**Example:**
-```python
-from infrastructure.build import analyze_readability
-metrics = analyze_readability("Your document text here...")
-print(f"Flesch Score: {metrics['flesch_score']:.2f}")
-```
-
----
-
-#### `generate_quality_report(metrics: QualityMetrics) -> str`
-
-Generate a formatted quality report.
-
-**Parameters:**
-- `metrics` (QualityMetrics): Quality metrics object
-
-**Returns:**
-- `str`: Formatted report string
-
-**Example:**
-```python
-from infrastructure.build import analyze_document_quality, generate_quality_report
-metrics = analyze_document_quality(pdf_path)
-report = generate_quality_report(metrics)
-print(report)
-```
-
----
-
-## Module: reproducibility
-
-### Classes
-
-#### `ReproducibilityReport`
-
-Container for reproducibility analysis results.
-
-**Attributes:**
-- `environment_hash` (str): Hash of environment state
-- `dependency_hash` (str): Hash of dependencies
-- `code_hash` (str): Hash of source code
-- `data_hash` (str): Hash of data files
-- `overall_hash` (str): Combined hash
-- `timestamp` (str): Report timestamp
-- `platform_info` (Dict[str, str]): Platform information
-- `dependency_info` (List[Dict[str, str]]): Dependency information
-- `issues` (List[str]): Detected issues
-- `recommendations` (List[str]): Recommendations
-
----
-
-### Functions
-
-#### `generate_reproducibility_report(output_dir: Path) -> ReproducibilityReport`
-
-Generate a comprehensive reproducibility report.
-
-**Parameters:**
-- `output_dir` (Path): Output directory to analyze
-
-**Returns:**
-- `ReproducibilityReport`: Reproducibility report object
-
-**Example:**
-```python
-from pathlib import Path
-from infrastructure.build import generate_reproducibility_report
-report = generate_reproducibility_report(Path("output"))
-print(f"Environment Hash: {report.environment_hash}")
-```
-
----
-
-#### `capture_environment_state() -> Dict[str, Any]`
-
-Capture the current environment state for reproducibility.
-
-**Returns:**
-- `Dict[str, Any]`: Dictionary with environment information
-
-**Example:**
-```python
-from infrastructure.build import capture_environment_state
-env = capture_environment_state()
-print(f"Python: {env['platform']['python_version']}")
-```
-
----
-
-#### `verify_reproducibility(current_report: ReproducibilityReport, baseline_report: ReproducibilityReport) -> Dict[str, Any]`
-
-Verify reproducibility by comparing reports.
-
-**Parameters:**
-- `current_report` (ReproducibilityReport): Current build report
-- `baseline_report` (ReproducibilityReport): Baseline report
-
-**Returns:**
-- `Dict[str, Any]`: Dictionary with:
-  - `reproducible` (bool): Whether builds are reproducible
-  - `differences` (List[str]): List of differences found
-
-**Example:**
-```python
-from infrastructure.build import verify_reproducibility
-result = verify_reproducibility(current, baseline)
-if result['reproducible']:
-    print("✅ Builds are reproducible")
-```
-
----
-
 ## Module: integrity
 
 ### Classes
@@ -698,7 +525,9 @@ if validate_doi("10.5281/zenodo.12345678"):
 
 ---
 
-## Module: scientific_dev
+## Module: scientific
+
+**Location**: `infrastructure/scientific/` (modular package)
 
 ### Classes
 
@@ -748,7 +577,7 @@ Check numerical stability of a function across a range of inputs.
 
 **Example:**
 ```python
-from scientific_dev import check_numerical_stability
+from infrastructure.scientific import check_numerical_stability
 import numpy as np
 stability = check_numerical_stability(my_func, np.linspace(-10, 10, 100))
 print(f"Stability Score: {stability.stability_score:.2f}")
@@ -770,75 +599,9 @@ Benchmark function performance across multiple inputs.
 
 **Example:**
 ```python
-from scientific_dev import benchmark_function
+from infrastructure.scientific import benchmark_function
 result = benchmark_function(my_func, test_inputs, iterations=50)
 print(f"Execution Time: {result.execution_time:.4f}s")
-```
-
----
-
-## Module: build_verifier
-
-### Classes
-
-#### `BuildVerificationReport`
-
-Container for build verification results.
-
-**Attributes:**
-- `build_timestamp` (str): Build timestamp
-- `build_duration` (float): Build duration in seconds
-- `exit_code` (int): Build exit code
-- `output_files` (List[str]): List of output files
-- `build_hash` (str): Build hash
-- `dependency_hash` (str): Dependency hash
-- `environment_hash` (str): Environment hash
-- `verification_passed` (bool): Whether verification passed
-- `issues` (List[str]): Detected issues
-- `warnings` (List[str]): Warnings
-- `recommendations` (List[str]): Recommendations
-
----
-
-### Functions
-
-#### `verify_build_artifacts(output_dir: Path, expected_files: Dict[str, List[str]]) -> Dict[str, Any]`
-
-Verify that expected build artifacts are present.
-
-**Parameters:**
-- `output_dir` (Path): Output directory to verify
-- `expected_files` (Dict[str, List[str]]): Dictionary mapping categories to expected file lists
-
-**Returns:**
-- `Dict[str, Any]`: Dictionary with verification results
-
-**Example:**
-```python
-from pathlib import Path
-from infrastructure.build import verify_build_artifacts
-expected = {"pdf": ["document.pdf"], "figures": ["figure.png"]}
-result = verify_build_artifacts(Path("output"), expected)
-```
-
----
-
-#### `verify_build_reproducibility(build_command: List[str], expected_outputs: Dict[str, str], iterations: int = 3) -> Dict[str, Any]`
-
-Verify build reproducibility by running build multiple times.
-
-**Parameters:**
-- `build_command` (List[str]): Build command to run
-- `expected_outputs` (Dict[str, str]): Dictionary mapping output files to expected content
-- `iterations` (int): Number of times to run build (default: 3)
-
-**Returns:**
-- `Dict[str, Any]`: Dictionary with reproducibility verification results
-
-**Example:**
-```python
-from infrastructure.build import verify_build_reproducibility
-result = verify_build_reproducibility(["./build.sh"], {"output.pdf": "hash"})
 ```
 
 ---

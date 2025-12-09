@@ -1,6 +1,6 @@
 # tests/infrastructure/ - Infrastructure Module Tests
 
-Comprehensive test suite for reusable infrastructure modules (49%+ coverage required).
+Comprehensive test suite for reusable infrastructure modules (60%+ coverage required).
 
 ## Quick Start
 
@@ -10,7 +10,7 @@ Comprehensive test suite for reusable infrastructure modules (49%+ coverage requ
 # With coverage report
 pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
 
-# Require 49% coverage
+# Require 60% coverage
 pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 
 # Skip network-dependent tests
@@ -33,9 +33,9 @@ pytest tests/infrastructure/validation/ -v
 ## Coverage Requirements
 
 - **60% minimum** for infrastructure modules
-- Currently achieving **70.09%** coverage (exceeds requirement)
+- Currently achieving **61.48%** coverage (exceeds requirement)
 - Network-dependent tests can be skipped
-- See [`../../docs/COVERAGE_GAPS.md`](../../docs/COVERAGE_GAPS.md) for detailed analysis
+- See test coverage reports for detailed analysis
 
 ## Test Categories
 

@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "updated": "2025-12-09T12:45:40.005545",
-  "count": 106,
+  "updated": "2025-12-09T13:45:27.307339",
+  "count": 126,
   "entries": {
     "friston2022free": {
       "citation_key": "friston2022free",
@@ -2186,6 +2186,402 @@
       "added_date": "2025-12-09T12:21:23.603374",
       "abstract": "Interoceptive processing is commonly understood in terms of the monitoring and representation of the body’s current physiological (i.e. homeostatic) status, with aversive sensory experiences encoding some impending threat to tissue viability. However, claims that homeostasis fails to fully account for the sophisticated regulatory dynamics observed in complex organisms have led some theorists to incorporate predictive (i.e. allostatic) regulatory mechanisms within broader accounts of interoceptive processing. Critically, these frameworks invoke diverse—and potentially mutually inconsistent—interpretations of the role allostasis plays in the scheme of biological regulation. This chapter argues in favor of a moderate, reconciliatory position in which homeostasis and allostasis are conceived as equally vital (but functionally distinct) modes of physiological control. It explores the implications of this interpretation for free energy-based accounts of interoceptive inference, advocating a similarly complementary (and hierarchical) view of homeostatic and allostatic processing.",
       "venue": "Oxford Scholarship Online",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "boyer20253manifolds": {
+      "citation_key": "boyer20253manifolds",
+      "title": "On 3-manifolds admitting co-orientable taut foliations, but none with vanishing Euler class",
+      "authors": [
+        "Steven Boyer",
+        "Cameron McA. Gordon",
+        "Ying Hu",
+        "Duncan McCoy"
+      ],
+      "year": 2025,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2509.20135v2",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.248470",
+      "abstract": "In this article, we construct infinitely many (small Seifert fibred, hyperbolic and toroidal) rational homology $3$-spheres that admit co-orientable taut foliations, but none with vanishing Euler class. In the context of the $L$-space conjecture, these examples provide rational homology $3$-spheres that admit co-orientable taut foliations (and hence are not $L$-spaces) and have left-orderable fundamental groups, yet none of the left orders arise directly from the universal circle actions associated to co-orientable taut foliations.   The hyperbolic and non-Seifert toroidal examples are obtained from Dehn surgeries on knots in the $3$-sphere and use Heegaard Floer homology to obstruct the existence of a co-orientable foliation with vanishing Euler class. For the Seifert fibred case, we establish necessary and sufficient conditions for the Euler class of the normal bundle of the Seifert fibration to vanish. Moreover, when the base orbifold is hyperbolic, we also provide a second proof of this condition from the viewpoint of discrete faithful representations of Fuchsian groups.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2509.20135"
+      }
+    },
+    "tam2025none": {
+      "citation_key": "tam2025none",
+      "title": "None of the Above, Less of the Right: Parallel Patterns between Humans and LLMs on Multi-Choice Questions Answering",
+      "authors": [
+        "Zhi Rui Tam",
+        "Cheng-Kuang Wu",
+        "Chieh-Yen Lin",
+        "Yun-Nung Chen"
+      ],
+      "year": 2025,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2503.01550v1",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.254694",
+      "abstract": "Multiple-choice exam questions with \"None of the above\" (NA) options have been extensively studied in educational testing, in which existing research suggests that they better assess true knowledge. However, their impact on Large Language Models (LLMs) evaluation remains underexplored. Through systematic experiments with 28 LLMs on the MMLU benchmark, we examine how NA options affect model performance and confidence calibration. Our analysis reveals that NA options, when used as the correct answer, lead to a consistent 30-50\\% performance drop across models regardless of scale--suggesting that LLMs lack the meta-cognitive ability to systematically evaluate and reject all given options when none are correct. This degradation shows strong domain dependence, with minimal impact on mathematical reasoning (14.6\\% drop) but severe effects on tasks requiring uncertainty handling like business ethics (48.1\\% drop). Our results highlight important implications for benchmark design and raise questions about LLMs' ability to handle uncertainty in real-world applications.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2503.01550"
+      }
+    },
+    "marconato2024all": {
+      "citation_key": "marconato2024all",
+      "title": "All or None: Identifiable Linear Properties of Next-token Predictors in Language Modeling",
+      "authors": [
+        "Emanuele Marconato",
+        "Sébastien Lachapelle",
+        "Sebastian Weichwald",
+        "Luigi Gresele"
+      ],
+      "year": 2024,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2410.23501v2",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.259841",
+      "abstract": "We analyze identifiability as a possible explanation for the ubiquity of linear properties across language models, such as the vector difference between the representations of \"easy\" and \"easiest\" being parallel to that between \"lucky\" and \"luckiest\". For this, we ask whether finding a linear property in one model implies that any model that induces the same distribution has that property, too. To answer that, we first prove an identifiability result to characterize distribution-equivalent next-token predictors, lifting a diversity requirement of previous results. Second, based on a refinement of relational linearity [Paccanaro and Hinton, 2001; Hernandez et al., 2024], we show how many notions of linearity are amenable to our analysis. Finally, we show that under suitable conditions, these linear properties either hold in all or none distribution-equivalent next-token predictors.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2410.23501"
+      }
+    },
+    "wang2023learning": {
+      "citation_key": "wang2023learning",
+      "title": "Learning to Branch in Combinatorial Optimization with Graph Pointer Networks",
+      "authors": [
+        "Rui Wang",
+        "Zhiming Zhou",
+        "Tao Zhang",
+        "Ling Wang",
+        "Xin Xu",
+        "Xiangke Liao",
+        "Kaiwen Li"
+      ],
+      "year": 2023,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2307.01434v1",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.264022",
+      "abstract": "Branch-and-bound is a typical way to solve combinatorial optimization problems. This paper proposes a graph pointer network model for learning the variable selection policy in the branch-and-bound. We extract the graph features, global features and historical features to represent the solver state. The proposed model, which combines the graph neural network and the pointer mechanism, can effectively map from the solver state to the branching variable decisions. The model is trained to imitate the classic strong branching expert rule by a designed top-k Kullback-Leibler divergence loss function. Experiments on a series of benchmark problems demonstrate that the proposed approach significantly outperforms the widely used expert-designed branching rules. Our approach also outperforms the state-of-the-art machine-learning-based branch-and-bound methods in terms of solving speed and search tree size on all the test instances. In addition, the model can generalize to unseen instances and scale to larger instances.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2307.01434"
+      }
+    },
+    "hou2022conditions": {
+      "citation_key": "hou2022conditions",
+      "title": "Conditions for none to be whipped by `Rank and Yank' under the majority rule",
+      "authors": [
+        "Fujun Hou"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2208.05093v1",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.267687",
+      "abstract": "`Rank and Yank' is practiced in many organizations. This paper is concerned with the condtions for none to be whipped by `Rank and Yank' when the evaluation data under each criterion are assumed to be ordinal rankings and the majority rule is used. Two sufficient conditions are set forth of which the first one formulates the alternatives indifference definition in terms of the election matrix, while the second one specifies a certain balance in the probabilities of alternatives being ranked at positions. In a sense, `none to be whipped' means that the organization is of stability. Thus the second sufficient condition indicates an intrinsic relation of balance and organization stability. In addition, directions for future research are put forward.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2208.05093"
+      }
+    },
+    "zhou2022none": {
+      "citation_key": "zhou2022none",
+      "title": "None Class Ranking Loss for Document-Level Relation Extraction",
+      "authors": [
+        "Yang Zhou",
+        "Wee Sun Lee"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2205.00476v2",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.271021",
+      "abstract": "Document-level relation extraction (RE) aims at extracting relations among entities expressed across multiple sentences, which can be viewed as a multi-label classification problem. In a typical document, most entity pairs do not express any pre-defined relation and are labeled as \"none\" or \"no relation\". For good document-level RE performance, it is crucial to distinguish such none class instances (entity pairs) from those of pre-defined classes (relations). However, most existing methods only estimate the probability of pre-defined relations independently without considering the probability of \"no relation\". This ignores the context of entity pairs and the label correlations between the none class and pre-defined classes, leading to sub-optimal predictions. To address this problem, we propose a new multi-label loss that encourages large margins of label confidence scores between each pre-defined class and the none class, which enables captured label correlations and context-dependent thresholding for label prediction. To gain further robustness against positive-negative imbalance and mislabeled data that could appear in real-world RE datasets, we propose a margin regularization and a margin shifting technique. Experimental results demonstrate that our method significantly outperforms existing multi-label losses for document-level RE and works well in other multi-label tasks such as emotion classification when none class instances are available for training.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2205.00476"
+      }
+    },
+    "li2022deep": {
+      "citation_key": "li2022deep",
+      "title": "Deep Reinforcement Learning for Online Routing of Unmanned Aerial Vehicles with Wireless Power Transfer",
+      "authors": [
+        "Kaiwen Li",
+        "Tao Zhang",
+        "Rui Wang",
+        "Ling Wang"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2204.11477v1",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.274361",
+      "abstract": "The unmanned aerial vehicle (UAV) plays an vital role in various applications such as delivery, military mission, disaster rescue, communication, etc., due to its flexibility and versatility. This paper proposes a deep reinforcement learning method to solve the UAV online routing problem with wireless power transfer, which can charge the UAV remotely without wires, thus extending the capability of the battery-limited UAV. Our study considers the power consumption of the UAV and the wireless charging process. Unlike the previous works, we solve the problem by a designed deep neural network. The model is trained using a deep reinforcement learning method offline, and is used to optimize the UAV routing problem online. On small and large scale instances, the proposed model runs from four times to 500 times faster than Google OR-tools, the state-of-the-art combinatorial optimization solver, with identical solution quality. It also outperforms different types of heuristic and local search methods in terms of both run-time and optimality. In addition, once the model is trained, it can scale to new generated problem instances with arbitrary topology that are not seen during training. The proposed method is practically applicable when the problem scale is large and the response time is crucial.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2204.11477"
+      }
+    },
+    "liu2022deep": {
+      "citation_key": "liu2022deep",
+      "title": "Deep Reinforcement Learning for Orienteering Problems Based on Decomposition",
+      "authors": [
+        "Wei Liu",
+        "Tao Zhang",
+        "Rui Wang",
+        "Kaiwen Li",
+        "Wenhua Li",
+        "Kang Yang"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2204.11575v2",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.277414",
+      "abstract": "This paper presents a new method for solving an orienteering problem (OP) by breaking it down into two parts: a knapsack problem (KP) and a traveling salesman problem (TSP). A KP solver is responsible for picking nodes, while a TSP solver is responsible for designing the proper path and assisting the KP solver in judging constraint violations. To address constraints, we propose a dual-population coevolutionary algorithm (DPCA) as the KP solver, which simultaneously maintains both feasible and infeasible populations. A dynamic pointer network (DYPN) is introduced as the TSP solver, which takes city locations as inputs and immediately outputs a permutation of nodes. The model, which is trained by reinforcement learning, can capture both the structural and dynamic patterns of the given problem. The model can generalize to other instances with different scales and distributions. Experimental results show that the proposed algorithm can outperform conventional approaches in terms of training, inference, and generalization ability.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2204.11575"
+      }
+    },
+    "anonymous2024loot": {
+      "citation_key": "anonymous2024loot",
+      "title": "Loot Crates",
+      "authors": [],
+      "year": 2024,
+      "doi": "10.1007/978-3-031-23161-2_300726",
+      "source": "crossref",
+      "url": "https://doi.org/10.1007/978-3-031-23161-2_300726",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.280301",
+      "abstract": "",
+      "venue": "Encyclopedia of Computer Graphics and Games",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "iyer2024brain": {
+      "citation_key": "iyer2024brain",
+      "title": "Brain Organoids and the Law",
+      "authors": [
+        "Adithi Iyer"
+      ],
+      "year": 2024,
+      "doi": "10.1007/978-3-031-72371-1_11",
+      "source": "crossref",
+      "url": "https://doi.org/10.1007/978-3-031-72371-1_11",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.282988",
+      "abstract": "",
+      "venue": "Collaborative Bioethics",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "balestrino2023fiscal": {
+      "citation_key": "balestrino2023fiscal",
+      "title": "The Fiscal Treatment of Family Size: A Further Look",
+      "authors": [
+        "Alessandro Balestrino"
+      ],
+      "year": 2023,
+      "doi": "10.1007/978-3-031-28170-9_6",
+      "source": "crossref",
+      "url": "https://doi.org/10.1007/978-3-031-28170-9_6",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.285645",
+      "abstract": "",
+      "venue": "Population Economics",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "zonta2022sensor": {
+      "citation_key": "zonta2022sensor",
+      "title": "Sensor data analysis, reduction, and fusion for assessing and monitoring civil infrastructures",
+      "authors": [
+        "D. Zonta"
+      ],
+      "year": 2022,
+      "doi": "10.1016/b978-0-08-102696-0.00020-8",
+      "source": "crossref",
+      "url": "https://doi.org/10.1016/b978-0-08-102696-0.00020-8",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.288180",
+      "abstract": "",
+      "venue": "Sensor Technologies for Civil Infrastructures",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "ginsburg2022teaching": {
+      "citation_key": "ginsburg2022teaching",
+      "title": "Teaching Comparative Education in Cuba and the United States",
+      "authors": [
+        "Mark Ginsburg",
+        "Rosa Maria Massón Cruz",
+        "Emigdio Rodríguez Alfonso",
+        "Yuitana García Isaac"
+      ],
+      "year": 2022,
+      "doi": "10.1007/978-981-16-8679-5_306",
+      "source": "crossref",
+      "url": "https://doi.org/10.1007/978-981-16-8679-5_306",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.290644",
+      "abstract": "",
+      "venue": "Encyclopedia of Teacher Education",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "noone2017visual": {
+      "citation_key": "noone2017visual",
+      "title": "Visual and Textual Programming Languages: A Systematic Review of the Literature",
+      "authors": [
+        "Mark Noone",
+        "Aidan Mooney"
+      ],
+      "year": 2017,
+      "doi": "10.1007/s40692-018-0101-5",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1710.01547v2",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.293103",
+      "abstract": "It is well documented, and has been the topic of much research, that Computer Science courses tend to have higher than average drop out rates at third level. This is a problem that needs to be addressed with urgency but also caution. The required number of Computer Science graduates is growing every year but the number of graduates is not meeting this demand and one way that this problem can be alleviated is to encourage students at an early age towards studying Computer Science courses.   This paper presents a systematic literature review on the role of visual and textual programming languages when learning to program, particularly as a first programming language. The approach is systematic, in that a structured search of electronic resources has been conducted, and the results are presented and quantitatively analysed. This study will give insight into whether or not the current approaches to teaching young learners programming are viable, and examines what we can do to increase the interest and retention of these students as they progress through their education.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1710.01547"
+      }
+    },
+    "padmavathi2020mutagenic": {
+      "citation_key": "padmavathi2020mutagenic",
+      "title": "Mutagenic Effect of Chemicals on Certain Biochemical Parameters in Two Cultivars of Sunflower (Helianthus annuus L.)",
+      "authors": [
+        "T. Padmavathi",
+        "M. Uma Devi",
+        "B. Prathibha Devi"
+      ],
+      "year": 2020,
+      "doi": "10.1007/978-981-15-1636-8_42",
+      "source": "crossref",
+      "url": "https://doi.org/10.1007/978-981-15-1636-8_42",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.295557",
+      "abstract": "",
+      "venue": "Medicinal Plants: Biodiversity, Sustainable Utilization and Conservation",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "noone2017first": {
+      "citation_key": "noone2017first",
+      "title": "First Programming Language: Visual or Textual?",
+      "authors": [
+        "Mark Noone",
+        "Aidan Mooney"
+      ],
+      "year": 2017,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/1710.11557v2",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.297884",
+      "abstract": "In modern day society, the ability to code is a highly desirable skill. So much so that the current supply from third level institutes across the world does not meet the high demands of industry. One of the major issues is the low progression rates from first to second year in third level Computer Science courses with introductory programming courses proving to be a high contributing factor. This is something that needs to be addressed. One such way to address the issue is to get children involved and engaged with computing at young ages.   This paper describes a study undertaken that is the first step in a body of work that aims to garner the interest of potential Computer Science students at an early age. The study involves a comparison of two short courses; one based in Java and one based in Snap. The goal is to determine whether either of these languages is a better first programming language for students than the other, or if both are viable. These languages were chosen to allow for a comparison between a Visual Programming Language and a Textual Programming Language.   Feedback in the form of a survey will be used to gather the opinions of the students. This will provide data on issues such as which language was easier to learn and which language was preferred amongst others. Based on the outcomes of this study, a full-scale curriculum will be developed in the coming year. The outcomes of this study will help to establish which is the best programming language to suit the learning needs of students.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/1710.11557"
+      }
+    },
+    "howaldt2019soziale": {
+      "citation_key": "howaldt2019soziale",
+      "title": "Soziale Innovation",
+      "authors": [
+        "Jürgen Howaldt",
+        "Michael Schwarz"
+      ],
+      "year": 2019,
+      "doi": "10.1007/978-3-658-17671-6_18-1",
+      "source": "crossref",
+      "url": "https://doi.org/10.1007/978-3-658-17671-6_18-1",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.300194",
+      "abstract": "",
+      "venue": "Handbuch Innovationsforschung",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "hou2013disturbing": {
+      "citation_key": "hou2013disturbing",
+      "title": "Disturbing Noise Identification and Sound Quality Research on Car Generator",
+      "authors": [
+        "Yanfang Hou",
+        "Guohua Han",
+        "Yaozhen Zhao",
+        "Xueying Xu"
+      ],
+      "year": 2013,
+      "doi": "10.1007/978-3-642-33832-8_41",
+      "source": "crossref",
+      "url": "https://doi.org/10.1007/978-3-642-33832-8_41",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.302448",
+      "abstract": "",
+      "venue": "Lecture Notes in Electrical Engineering",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "taylor2015quantum": {
+      "citation_key": "taylor2015quantum",
+      "title": "Quantum Microscopy of Biological Systems",
+      "authors": [
+        "Michael Taylor"
+      ],
+      "year": 2015,
+      "doi": "10.1007/978-3-319-18938-3",
+      "source": "crossref",
+      "url": "https://doi.org/10.1007/978-3-319-18938-3",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.305017",
+      "abstract": "",
+      "venue": "Springer Theses",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://link.springer.com/content/pdf/10.1007/978-3-319-18938-3.pdf"
+      }
+    },
+    "baidouri2015horizontal": {
+      "citation_key": "baidouri2015horizontal",
+      "title": "Horizontal Transfers and the New Model of TE-Driven Genome Evolution in Eukaryotes",
+      "authors": [
+        "Moaine El Baidouri",
+        "Olivier Panaud"
+      ],
+      "year": 2015,
+      "doi": "10.1007/978-3-319-19932-0_5",
+      "source": "crossref",
+      "url": "https://doi.org/10.1007/978-3-319-19932-0_5",
+      "pdf_path": null,
+      "added_date": "2025-12-09T13:45:27.307330",
+      "abstract": "",
+      "venue": "Evolutionary Biology: Biodiversification from Genotype to Phenotype",
       "citation_count": null,
       "metadata": {}
     }

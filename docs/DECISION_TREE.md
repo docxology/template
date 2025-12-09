@@ -4,18 +4,23 @@ Quick reference for determining where new code belongs in the two-layer architec
 
 ## Simple Decision Tree
 
-```
-START: New code to write?
-│
-├─ Is it about building/validating/managing documents?
-│  ├─ YES → LAYER 1: INFRASTRUCTURE
-│  │   (Add to infrastructure/)
-│  │
-│  └─ NO → Does it implement research algorithms/analysis?
-│     ├─ YES → LAYER 2: PROJECT
-│     │   (Add to project/src/)
-│     │
-│     └─ NO → Reconsider scope or ask team
+```mermaid
+flowchart TD
+    START([New code to write?]) --> Q1{Is it about building/<br/>validating/managing documents?}
+    Q1 -->|YES| L1[LAYER 1: INFRASTRUCTURE<br/>Add to infrastructure/]
+    Q1 -->|NO| Q2{Does it implement research<br/>algorithms/analysis?}
+    Q2 -->|YES| L2[LAYER 2: PROJECT<br/>Add to project/src/]
+    Q2 -->|NO| RECONSIDER[Reconsider scope<br/>or ask team]
+    
+    classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef layer2 fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef warning fill:#ffebee,stroke:#c62828,stroke-width:2px
+    
+    class L1 layer1
+    class L2 layer2
+    class Q1,Q2,START decision
+    class RECONSIDER warning
 ```
 
 ---
@@ -95,11 +100,11 @@ class FigureManager:
 - Environment state capture
 - File integrity validation
 
-**Example: Build Verifier**
+**Example: Integrity Verification**
 ```python
-# infrastructure/build/build_verifier.py
+# infrastructure/validation/integrity.py
 
-def verify_build_artifacts(
+def verify_output_integrity(
     output_dir: str,
     expected_files: List[str]
 ) -> bool:
