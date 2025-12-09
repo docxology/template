@@ -408,11 +408,11 @@ open output/project_combined.html
 
 ### Configuration File (Recommended)
 
-The manuscript configuration is managed through `manuscript/config.yaml`, which provides a centralized, version-controllable way to manage all paper metadata.
+The manuscript configuration is managed through `project/manuscript/config.yaml`, which provides a centralized, version-controllable way to manage all paper metadata.
 
-**Location**: `manuscript/config.yaml`
+**Location**: `project/manuscript/config.yaml`
 
-**Template**: `manuscript/config.yaml.example` (copy and customize)
+**Template**: `project/manuscript/config.yaml.example` (copy and customize)
 
 **Example configuration**:
 ```yaml
@@ -466,7 +466,7 @@ python3 scripts/03_render_pdf.py
 
 **Priority order**:
 1. Environment variables (highest priority)
-2. Config file (`manuscript/config.yaml`)
+2. Config file (`project/manuscript/config.yaml`)
 3. Default values (lowest priority)
 
 ### Multiple Authors

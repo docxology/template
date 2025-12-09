@@ -51,14 +51,8 @@ export NO_EMOJI=1   # Disable emojis
 
 ### Location
 
-The configuration file is checked in the following order:
-
-1. **Primary (preferred):** `project/manuscript/config.yaml`
-2. **Legacy (fallback):** `manuscript/config.yaml` (supported for backward compatibility)
-
-**Template:** `project/manuscript/config.yaml.example`
-
-The system automatically checks both locations, preferring the current structure over the legacy location.
+**Location**: `project/manuscript/config.yaml`  
+**Template**: `project/manuscript/config.yaml.example`
 
 ### Structure
 

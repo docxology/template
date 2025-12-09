@@ -384,8 +384,8 @@ class RepositoryScanner:
                 pass
         
         # Check config.yaml structure
-        config_path = self.repo_root / 'manuscript' / 'config.yaml'
-        example_path = self.repo_root / 'manuscript' / 'config.yaml.example'
+        config_path = self.repo_root / 'project' / 'manuscript' / 'config.yaml'
+        example_path = self.repo_root / 'project' / 'manuscript' / 'config.yaml.example'
         
         if config_path.exists() and example_path.exists():
             try:
@@ -399,14 +399,14 @@ class RepositoryScanner:
                     issues.append(AccuracyIssue(
                         category='configuration',
                         severity='warning',
-                        file='manuscript/config.yaml',
+                        file='project/manuscript/config.yaml',
                         message="Config structure may not match example"
                     ))
             except Exception as e:
                 issues.append(AccuracyIssue(
                     category='configuration',
                     severity='warning',
-                    file='manuscript/config.yaml',
+                    file='project/manuscript/config.yaml',
                     message=f"Could not parse config: {e}"
                 ))
         

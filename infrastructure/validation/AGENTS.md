@@ -16,7 +16,7 @@ The Validation module provides comprehensive quality assurance and validation to
 
 **markdown_validator.py**
 - Markdown file discovery and collection
-- Manuscript directory discovery (checks multiple locations including legacy support)
+- Manuscript directory discovery at `project/manuscript/`
 - Image reference validation
 - Cross-reference verification
 - Mathematical equation validation
@@ -45,19 +45,15 @@ report = validate_pdf_rendering(Path("output/pdf/manuscript.pdf"))
 ```python
 from infrastructure.validation import validate_markdown, find_manuscript_directory
 
-# Find manuscript directory (checks multiple locations)
+# Find manuscript directory at standard location
 manuscript_dir = find_manuscript_directory(Path("."))
-# Checks in order: project/manuscript/, manuscript/ (legacy), cwd/manuscript/, manuscript/
+# Returns project/manuscript/ directory
 
 problems, exit_code = validate_markdown("manuscript/", ".")
 # Validates images, references, equations, links
 ```
 
-**Manuscript Directory Discovery**: The `find_manuscript_directory()` function searches for the manuscript directory in the following order:
-1. `project/manuscript/` (preferred - current structure)
-2. `manuscript/` (legacy location at repo root - supported for backward compatibility)
-3. `{cwd}/manuscript/` (current working directory)
-4. `manuscript/` (relative to current directory)
+**Manuscript Directory Discovery**: The `find_manuscript_directory()` function locates the manuscript directory at `project/manuscript/`.
 
 ### Integrity Verification
 ```python

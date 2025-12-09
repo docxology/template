@@ -184,8 +184,8 @@ The pipeline automatically generates comprehensive reports in `project/output/re
 **Note**: In `run.sh` pipeline, this is Stage 1 (Stage 0 is Clean Output Directories).
 
 ### Stage 01: Run Tests
-- Executes infrastructure tests (`tests/infrastructure/`) with 49%+ coverage threshold
-- Executes project tests (`project/tests/`) with 70%+ coverage threshold
+- Executes infrastructure tests (`tests/infrastructure/`) with 60%+ coverage threshold
+- Executes project tests (`project/tests/`) with 90%+ coverage threshold
 - Supports quiet mode (`--quiet` or `-q`) to suppress individual test names
 - Supports verbose mode (`--verbose` or `-v`) to show all test names
 - Generates structured test reports (JSON, Markdown) to `project/output/reports/`
@@ -354,9 +354,9 @@ Menu Option 8 (--pipeline) → Full Pipeline (10 stages: 0-9):
     └─ PASS → STAGE 1
   STAGE 1: Setup Environment
     └─ PASS → STAGE 2
-  STAGE 2: Infrastructure Tests (49%+ coverage)
+  STAGE 2: Infrastructure Tests (60%+ coverage)
     └─ PASS → STAGE 3
-  STAGE 3: Project Tests (70%+ coverage)
+  STAGE 3: Project Tests (90%+ coverage)
     └─ PASS → STAGE 4
   STAGE 4: Project Analysis
     └─ PASS → STAGE 5

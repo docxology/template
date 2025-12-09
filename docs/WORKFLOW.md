@@ -7,7 +7,7 @@ This document explains the complete development workflow that ensures source cod
 The generic project template implements a **unified test-driven development paradigm** where:
 
 - **Source code** implements mathematical functionality
-- **Tests** validate all functionality with comprehensive coverage (49% infra, 70% project minimum)
+- **Tests** validate all functionality with comprehensive coverage (60% infra, 90% project minimum)
 - **Scripts** are **thin orchestrators** that import and use `src/` methods
 - **Documentation** references code and displays generated outputs
 - **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
@@ -225,7 +225,7 @@ output/
 - Error handling for edge cases
 
 ### Test Validation
-- Comprehensive statement and branch coverage (70% project, 49% infra minimum)
+- Comprehensive statement and branch coverage (90% project, 60% infra minimum)
 - All tests must pass
 - No network or file-system writes outside output/
 - Deterministic execution

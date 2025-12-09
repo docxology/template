@@ -1,50 +1,50 @@
 [0;34m════════════════════════════════════════════════════════════════[0m
 [0;34m  SETUP ENVIRONMENT (00_setup_environment.py)[0m
 [0;34m════════════════════════════════════════════════════════════════[0m
-[2025-12-09 07:35:32] [INFO] 
-[2025-12-09 07:35:32] [INFO] ==================================================
-[2025-12-09 07:35:32] [INFO] STAGE 00: Environment Setup
-[2025-12-09 07:35:32] [INFO] ==================================================
-[2025-12-09 07:35:32] [INFO] Checking Python version...
-[2025-12-09 07:35:32] [INFO] Python 3.14.2 available
-[2025-12-09 07:35:32] [INFO] Checking dependencies...
-[2025-12-09 07:35:32] [INFO] Package 'numpy' available
-[2025-12-09 07:35:32] [INFO] Package 'matplotlib' available
-[2025-12-09 07:35:32] [INFO] Package 'pytest' available
-[2025-12-09 07:35:32] [INFO] Package 'requests' available
-[2025-12-09 07:35:32] [INFO] Package 'scipy' available
-[2025-12-09 07:35:32] [INFO] Checking build tools...
-[2025-12-09 07:35:32] [INFO] 'pandoc' available (Document conversion)
-[2025-12-09 07:35:32] [INFO] 'xelatex' available (LaTeX compilation)
-[2025-12-09 07:35:32] [INFO] Setting up directory structure...
-[2025-12-09 07:35:32] [INFO] Directory ready: output
-[2025-12-09 07:35:32] [INFO] Directory ready: output/figures
-[2025-12-09 07:35:32] [INFO] Directory ready: output/data
-[2025-12-09 07:35:32] [INFO] Directory ready: output/tex
-[2025-12-09 07:35:32] [INFO] Directory ready: output/pdf
-[2025-12-09 07:35:32] [INFO] Directory ready: output/logs
-[2025-12-09 07:35:32] [INFO] Directory ready: project/output
-[2025-12-09 07:35:32] [INFO] Directory ready: project/output/logs
-[2025-12-09 07:35:32] [INFO] Verifying source code structure...
-[2025-12-09 07:35:32] [INFO] Directory found: infrastructure
-[2025-12-09 07:35:32] [INFO] Directory found: project
-[2025-12-09 07:35:32] [INFO] Directory found: scripts (optional)
-[2025-12-09 07:35:32] [INFO] Directory found: tests (optional)
-[2025-12-09 07:35:32] [INFO] Setting environment variables...
-[2025-12-09 07:35:32] [INFO] MPLBACKEND=Agg
-[2025-12-09 07:35:32] [INFO] PYTHONIOENCODING=utf-8
-[2025-12-09 07:35:32] [INFO] PROJECT_ROOT=/Users/mini/Documents/GitHub/template
-[2025-12-09 07:35:32] [INFO] 
-[2025-12-09 07:35:32] [INFO] ==================================================
-[2025-12-09 07:35:32] [INFO] Setup Summary
-[2025-12-09 07:35:32] [INFO] ==================================================
-[2025-12-09 07:35:32] [INFO] ✅ PASS: Python version
-[2025-12-09 07:35:32] [INFO] ✅ PASS: Dependencies
-[2025-12-09 07:35:32] [INFO] ✅ PASS: Build tools
-[2025-12-09 07:35:32] [INFO] ✅ PASS: Directory structure
-[2025-12-09 07:35:32] [INFO] ✅ PASS: Source structure
-[2025-12-09 07:35:32] [INFO] ✅ PASS: Environment variables
-[2025-12-09 07:35:32] [INFO] 
+[2025-12-09 09:09:09] [INFO] 
+[2025-12-09 09:09:09] [INFO] ==================================================
+[2025-12-09 09:09:09] [INFO] STAGE 00: Environment Setup
+[2025-12-09 09:09:09] [INFO] ==================================================
+[2025-12-09 09:09:09] [INFO] Checking Python version...
+[2025-12-09 09:09:09] [INFO] Python 3.14.2 available
+[2025-12-09 09:09:09] [INFO] Checking dependencies...
+[2025-12-09 09:09:09] [INFO] Package 'numpy' available
+[2025-12-09 09:09:09] [INFO] Package 'matplotlib' available
+[2025-12-09 09:09:09] [INFO] Package 'pytest' available
+[2025-12-09 09:09:09] [INFO] Package 'requests' available
+[2025-12-09 09:09:09] [INFO] Package 'scipy' available
+[2025-12-09 09:09:09] [INFO] Checking build tools...
+[2025-12-09 09:09:09] [INFO] 'pandoc' available (Document conversion)
+[2025-12-09 09:09:09] [INFO] 'xelatex' available (LaTeX compilation)
+[2025-12-09 09:09:09] [INFO] Setting up directory structure...
+[2025-12-09 09:09:09] [INFO] Directory ready: output
+[2025-12-09 09:09:09] [INFO] Directory ready: output/figures
+[2025-12-09 09:09:09] [INFO] Directory ready: output/data
+[2025-12-09 09:09:09] [INFO] Directory ready: output/tex
+[2025-12-09 09:09:09] [INFO] Directory ready: output/pdf
+[2025-12-09 09:09:09] [INFO] Directory ready: output/logs
+[2025-12-09 09:09:09] [INFO] Directory ready: project/output
+[2025-12-09 09:09:09] [INFO] Directory ready: project/output/logs
+[2025-12-09 09:09:09] [INFO] Verifying source code structure...
+[2025-12-09 09:09:09] [INFO] Directory found: infrastructure
+[2025-12-09 09:09:09] [INFO] Directory found: project
+[2025-12-09 09:09:09] [INFO] Directory found: scripts (optional)
+[2025-12-09 09:09:09] [INFO] Directory found: tests (optional)
+[2025-12-09 09:09:09] [INFO] Setting environment variables...
+[2025-12-09 09:09:09] [INFO] MPLBACKEND=Agg
+[2025-12-09 09:09:09] [INFO] PYTHONIOENCODING=utf-8
+[2025-12-09 09:09:09] [INFO] PROJECT_ROOT=/Users/mini/Documents/GitHub/template
+[2025-12-09 09:09:09] [INFO] 
+[2025-12-09 09:09:09] [INFO] ==================================================
+[2025-12-09 09:09:09] [INFO] Setup Summary
+[2025-12-09 09:09:09] [INFO] ==================================================
+[2025-12-09 09:09:09] [INFO] ✅ PASS: Python version
+[2025-12-09 09:09:09] [INFO] ✅ PASS: Dependencies
+[2025-12-09 09:09:09] [INFO] ✅ PASS: Build tools
+[2025-12-09 09:09:09] [INFO] ✅ PASS: Directory structure
+[2025-12-09 09:09:09] [INFO] ✅ PASS: Source structure
+[2025-12-09 09:09:09] [INFO] ✅ PASS: Environment variables
+[2025-12-09 09:09:09] [INFO] 
 ✅ Environment setup complete - ready to proceed
 [0;32m✓[0m Environment setup complete
 
@@ -57,7 +57,7 @@ cachedir: .pytest_cache
 rootdir: /Users/mini/Documents/GitHub/template
 configfile: pyproject.toml
 plugins: mock-3.15.1, cov-7.0.0
-collecting ... collected 1902 items / 41 deselected / 1861 selected
+collecting ... collected 1896 items / 41 deselected / 1855 selected
 
 tests/infrastructure/core/test_checkpoint.py::TestStageResult::test_stage_result_creation PASSED [  0%]
 tests/infrastructure/core/test_checkpoint.py::TestStageResult::test_stage_result_default_completed PASSED [  0%]
@@ -95,14 +95,11 @@ tests/infrastructure/core/test_config_loader.py::TestFormatAuthorName::test_form
 tests/infrastructure/core/test_config_loader.py::TestFormatAuthorName::test_format_empty_authors PASSED [  1%]
 tests/infrastructure/core/test_config_loader.py::TestFormatAuthorName::test_format_author_without_name PASSED [  1%]
 tests/infrastructure/core/test_config_loader.py::TestGetConfigAsDict::test_get_full_config PASSED [  1%]
-tests/infrastructure/core/test_config_loader.py::TestGetConfigAsDict::test_get_config_legacy_location PASSED [  1%]
-tests/infrastructure/core/test_config_loader.py::TestGetConfigAsDict::test_get_config_no_file PASSED [  2%]
+tests/infrastructure/core/test_config_loader.py::TestGetConfigAsDict::test_get_config_no_file PASSED [  1%]
 tests/infrastructure/core/test_config_loader.py::TestGetConfigAsDict::test_get_config_minimal PASSED [  2%]
 tests/infrastructure/core/test_config_loader.py::TestGetConfigAsEnvVars::test_respects_existing_env_vars PASSED [  2%]
 tests/infrastructure/core/test_config_loader.py::TestGetConfigAsEnvVars::test_ignores_existing_env_vars PASSED [  2%]
 tests/infrastructure/core/test_config_loader.py::TestFindConfigFile::test_finds_project_manuscript_config PASSED [  2%]
-tests/infrastructure/core/test_config_loader.py::TestFindConfigFile::test_finds_legacy_manuscript_config PASSED [  2%]
-tests/infrastructure/core/test_config_loader.py::TestFindConfigFile::test_prefers_project_over_legacy PASSED [  2%]
 tests/infrastructure/core/test_config_loader.py::TestFindConfigFile::test_returns_none_when_not_found PASSED [  2%]
 tests/infrastructure/core/test_config_loader.py::TestIntegration::test_complete_workflow PASSED [  2%]
 tests/infrastructure/core/test_config_loader.py::TestGetTranslationLanguages::test_returns_empty_when_no_config PASSED [  2%]
@@ -111,13 +108,12 @@ tests/infrastructure/core/test_config_loader.py::TestGetTranslationLanguages::te
 tests/infrastructure/core/test_config_loader.py::TestGetTranslationLanguages::test_returns_languages_when_enabled PASSED [  2%]
 tests/infrastructure/core/test_config_loader.py::TestGetTranslationLanguages::test_returns_single_language PASSED [  2%]
 tests/infrastructure/core/test_config_loader.py::TestGetTranslationLanguages::test_returns_empty_for_invalid_languages_type PASSED [  2%]
-tests/infrastructure/core/test_config_loader.py::TestGetTranslationLanguages::test_works_with_legacy_config_location PASSED [  2%]
 tests/infrastructure/core/test_exceptions.py::TestBaseTemplateError::test_basic_error PASSED [  2%]
 tests/infrastructure/core/test_exceptions.py::TestBaseTemplateError::test_error_with_context PASSED [  2%]
-tests/infrastructure/core/test_exceptions.py::TestBaseTemplateError::test_error_inheritance PASSED [  3%]
-tests/infrastructure/core/test_exceptions.py::TestConfigurationErrors::test_configuration_error PASSED [  3%]
-tests/infrastructure/core/test_exceptions.py::TestConfigurationErrors::test_missing_configuration_error PASSED [  3%]
-tests/infrastructure/core/test_exceptions.py::TestConfigurationErrors::test_invalid_configuration_error PASSED [  3%]
+tests/infrastructure/core/test_exceptions.py::TestBaseTemplateError::test_error_inheritance PASSED [  2%]
+tests/infrastructure/core/test_exceptions.py::TestConfigurationErrors::test_configuration_error PASSED [  2%]
+tests/infrastructure/core/test_exceptions.py::TestConfigurationErrors::test_missing_configuration_error PASSED [  2%]
+tests/infrastructure/core/test_exceptions.py::TestConfigurationErrors::test_invalid_configuration_error PASSED [  2%]
 tests/infrastructure/core/test_exceptions.py::TestValidationErrors::test_validation_error PASSED [  3%]
 tests/infrastructure/core/test_exceptions.py::TestValidationErrors::test_markdown_validation_error PASSED [  3%]
 tests/infrastructure/core/test_exceptions.py::TestValidationErrors::test_pdf_validation_error PASSED [  3%]
@@ -133,10 +129,10 @@ tests/infrastructure/core/test_exceptions.py::TestDependencyErrors::test_depende
 tests/infrastructure/core/test_exceptions.py::TestDependencyErrors::test_missing_dependency_error PASSED [  3%]
 tests/infrastructure/core/test_exceptions.py::TestDependencyErrors::test_version_mismatch_error PASSED [  3%]
 tests/infrastructure/core/test_exceptions.py::TestTestErrors::test_test_error PASSED [  3%]
-tests/infrastructure/core/test_exceptions.py::TestTestErrors::test_insufficient_coverage_error PASSED [  4%]
-tests/infrastructure/core/test_exceptions.py::TestIntegrationError::test_integration_error PASSED [  4%]
-tests/infrastructure/core/test_exceptions.py::TestUtilityFunctions::test_raise_with_context PASSED [  4%]
-tests/infrastructure/core/test_exceptions.py::TestUtilityFunctions::test_format_file_context PASSED [  4%]
+tests/infrastructure/core/test_exceptions.py::TestTestErrors::test_insufficient_coverage_error PASSED [  3%]
+tests/infrastructure/core/test_exceptions.py::TestIntegrationError::test_integration_error PASSED [  3%]
+tests/infrastructure/core/test_exceptions.py::TestUtilityFunctions::test_raise_with_context PASSED [  3%]
+tests/infrastructure/core/test_exceptions.py::TestUtilityFunctions::test_format_file_context PASSED [  3%]
 tests/infrastructure/core/test_exceptions.py::TestUtilityFunctions::test_format_file_context_no_line PASSED [  4%]
 tests/infrastructure/core/test_exceptions.py::TestUtilityFunctions::test_format_file_context_with_path PASSED [  4%]
 tests/infrastructure/core/test_exceptions.py::TestUtilityFunctions::test_chain_exceptions PASSED [  4%]
@@ -152,9 +148,9 @@ tests/infrastructure/core/test_logging_utils.py::TestLogLevelConfiguration::test
 tests/infrastructure/core/test_logging_utils.py::TestLogLevelConfiguration::test_get_log_level_debug PASSED [  4%]
 tests/infrastructure/core/test_logging_utils.py::TestLogLevelConfiguration::test_get_log_level_info PASSED [  4%]
 tests/infrastructure/core/test_logging_utils.py::TestLogLevelConfiguration::test_get_log_level_warning PASSED [  4%]
-tests/infrastructure/core/test_logging_utils.py::TestLogLevelConfiguration::test_get_log_level_error PASSED [  5%]
-tests/infrastructure/core/test_logging_utils.py::TestLogLevelConfiguration::test_get_log_level_invalid_defaults_to_info PASSED [  5%]
-tests/infrastructure/core/test_logging_utils.py::TestLoggerSetup::test_setup_logger_basic PASSED [  5%]
+tests/infrastructure/core/test_logging_utils.py::TestLogLevelConfiguration::test_get_log_level_error PASSED [  4%]
+tests/infrastructure/core/test_logging_utils.py::TestLogLevelConfiguration::test_get_log_level_invalid_defaults_to_info PASSED [  4%]
+tests/infrastructure/core/test_logging_utils.py::TestLoggerSetup::test_setup_logger_basic PASSED [  4%]
 tests/infrastructure/core/test_logging_utils.py::TestLoggerSetup::test_setup_logger_with_level PASSED [  5%]
 tests/infrastructure/core/test_logging_utils.py::TestLoggerSetup::test_setup_logger_with_file PASSED [  5%]
 tests/infrastructure/core/test_logging_utils.py::TestLoggerSetup::test_get_logger_creates_if_needed PASSED [  5%]
@@ -170,10 +166,10 @@ tests/infrastructure/core/test_logging_utils.py::TestDecorators::test_log_functi
 tests/infrastructure/core/test_logging_utils.py::TestDecorators::test_log_function_call_with_exception PASSED [  5%]
 tests/infrastructure/core/test_logging_utils.py::TestUtilityFunctions::test_log_success PASSED [  5%]
 tests/infrastructure/core/test_logging_utils.py::TestUtilityFunctions::test_log_header PASSED [  5%]
-tests/infrastructure/core/test_logging_utils.py::TestUtilityFunctions::test_log_progress PASSED [  6%]
-tests/infrastructure/core/test_logging_utils.py::TestUtilityFunctions::test_log_progress_zero_total PASSED [  6%]
-tests/infrastructure/core/test_logging_utils.py::TestGlobalConfiguration::test_set_global_log_level PASSED [  6%]
-tests/infrastructure/core/test_logging_utils.py::TestIntegration::test_complete_logging_workflow PASSED [  6%]
+tests/infrastructure/core/test_logging_utils.py::TestUtilityFunctions::test_log_progress PASSED [  5%]
+tests/infrastructure/core/test_logging_utils.py::TestUtilityFunctions::test_log_progress_zero_total PASSED [  5%]
+tests/infrastructure/core/test_logging_utils.py::TestGlobalConfiguration::test_set_global_log_level PASSED [  5%]
+tests/infrastructure/core/test_logging_utils.py::TestIntegration::test_complete_logging_workflow PASSED [  5%]
 tests/infrastructure/core/test_logging_utils.py::TestIntegration::test_multiple_loggers_independent PASSED [  6%]
 tests/infrastructure/core/test_progress.py::TestProgressBar::test_progress_bar_initialization PASSED [  6%]
 tests/infrastructure/core/test_progress.py::TestProgressBar::test_progress_bar_initialization_defaults PASSED [  6%]
@@ -189,9 +185,9 @@ tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_
 tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_complete_substage PASSED [  6%]
 tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_complete_without_start PASSED [  6%]
 tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_get_eta_zero PASSED [  6%]
-tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_get_eta PASSED [  7%]
-tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_log_progress PASSED [  7%]
-tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_multiple_substages PASSED [  7%]
+tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_get_eta PASSED [  6%]
+tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_log_progress PASSED [  6%]
+tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_multiple_substages PASSED [  6%]
 tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_eta_calculation PASSED [  7%]
 tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_percentage PASSED [  7%]
 tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_progress_bar_update_throttling_interval PASSED [  7%]
@@ -207,10 +203,10 @@ tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_
 tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_eta_across_substages PASSED [  7%]
 tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_logging_multiple_times PASSED [  7%]
 tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_complete_all_substages PASSED [  7%]
-tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_progress_bar_custom_width PASSED [  8%]
-tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_progress_bar_update_interval_zero PASSED [  8%]
-tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_get_eta_after_completion PASSED [  8%]
-tests/infrastructure/core/test_retry.py::TestRetryWithBackoff::test_retry_success_first_attempt PASSED [  8%]
+tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_progress_bar_custom_width PASSED [  7%]
+tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_progress_bar_update_interval_zero PASSED [  7%]
+tests/infrastructure/core/test_progress.py::TestSubStageProgress::test_substage_progress_get_eta_after_completion PASSED [  7%]
+tests/infrastructure/core/test_retry.py::TestRetryWithBackoff::test_retry_success_first_attempt PASSED [  7%]
 tests/infrastructure/core/test_retry.py::TestRetryWithBackoff::test_retry_success_after_retries PASSED [  8%]
 tests/infrastructure/core/test_retry.py::TestRetryWithBackoff::test_retry_failure_after_max_attempts PASSED [  8%]
 tests/infrastructure/core/test_retry.py::TestRetryWithBackoff::test_retry_specific_exception PASSED [  8%]
@@ -226,9 +222,9 @@ tests/infrastructure/core/test_retry.py::TestRetryOnTransientFailure::test_no_re
 tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retryable_operation_success PASSED [  8%]
 tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retryable_operation_retry PASSED [  8%]
 tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retryable_operation_failure PASSED [  8%]
-tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retryable_operation_exponential_backoff PASSED [  9%]
-tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retryable_operation_max_delay PASSED [  9%]
-tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retryable_operation_context_exit PASSED [  9%]
+tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retryable_operation_exponential_backoff PASSED [  8%]
+tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retryable_operation_max_delay PASSED [  8%]
+tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retryable_operation_context_exit PASSED [  8%]
 tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retryable_operation_iteration PASSED [  9%]
 tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retry_with_backoff_custom_exception_types PASSED [  9%]
 tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retry_with_backoff_jitter_calculation PASSED [  9%]
@@ -245,9 +241,9 @@ tests/infrastructure/core/test_retry.py::TestRetryableOperation::test_retryable_
 tests/infrastructure/documentation/test_figure_manager.py::TestFigureMetadata::test_metadata_creation PASSED [  9%]
 tests/infrastructure/documentation/test_figure_manager.py::TestFigureMetadata::test_to_dict PASSED [  9%]
 tests/infrastructure/documentation/test_figure_manager.py::TestFigureMetadata::test_from_dict PASSED [  9%]
-tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::test_initialization PASSED [ 10%]
-tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::test_register_figure PASSED [ 10%]
-tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::test_register_figure_auto_label PASSED [ 10%]
+tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::test_initialization PASSED [  9%]
+tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::test_register_figure PASSED [  9%]
+tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::test_register_figure_auto_label PASSED [  9%]
 tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::test_get_figure PASSED [ 10%]
 tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::test_get_all_figures PASSED [ 10%]
 tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::test_generate_latex_figure_block PASSED [ 10%]
@@ -263,10 +259,10 @@ tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::te
 tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::test_generate_table_of_figures PASSED [ 10%]
 tests/infrastructure/documentation/test_figure_manager.py::TestFigureManager::test_register_figure_with_metadata PASSED [ 10%]
 tests/infrastructure/documentation/test_generate_glossary_cli.py::TestGenerateGlossaryCli::test_module_imports PASSED [ 10%]
-tests/infrastructure/documentation/test_generate_glossary_cli.py::TestGenerateGlossaryCli::test_has_main PASSED [ 11%]
-tests/infrastructure/documentation/test_generate_glossary_cli.py::TestGenerateGlossaryCli::test_main_execution PASSED [ 11%]
-tests/infrastructure/documentation/test_glossary_gen.py::test_build_api_index_discovers_public_functions_and_classes PASSED [ 11%]
-tests/infrastructure/documentation/test_glossary_gen.py::test_generate_markdown_table_includes_all_entries PASSED [ 11%]
+tests/infrastructure/documentation/test_generate_glossary_cli.py::TestGenerateGlossaryCli::test_has_main PASSED [ 10%]
+tests/infrastructure/documentation/test_generate_glossary_cli.py::TestGenerateGlossaryCli::test_main_execution PASSED [ 10%]
+tests/infrastructure/documentation/test_glossary_gen.py::test_build_api_index_discovers_public_functions_and_classes PASSED [ 10%]
+tests/infrastructure/documentation/test_glossary_gen.py::test_generate_markdown_table_includes_all_entries PASSED [ 10%]
 tests/infrastructure/documentation/test_glossary_gen.py::test_generate_markdown_table_empty PASSED [ 11%]
 tests/infrastructure/documentation/test_glossary_gen.py::test_inject_between_markers_replaces_when_present PASSED [ 11%]
 tests/infrastructure/documentation/test_glossary_gen.py::test_inject_between_markers_appends_when_missing PASSED [ 11%]
@@ -282,9 +278,9 @@ tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test
 tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_insert_figure_nonexistent_label PASSED [ 11%]
 tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_insert_figure_success PASSED [ 11%]
 tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_insert_reference PASSED [ 11%]
-tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_validate_figures PASSED [ 12%]
-tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_get_figure_list PASSED [ 12%]
-tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_insert_figure_already_inserted PASSED [ 12%]
+tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_validate_figures PASSED [ 11%]
+tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_get_figure_list PASSED [ 11%]
+tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_insert_figure_already_inserted PASSED [ 11%]
 tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_insert_figure_position_end PASSED [ 12%]
 tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_insert_figure_after_section PASSED [ 12%]
 tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_insert_figure_after_section_no_next PASSED [ 12%]
@@ -300,10 +296,10 @@ tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test
 tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_insert_reference_after_figure_no_paragraph PASSED [ 12%]
 tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_validate_figures_nonexistent_file PASSED [ 12%]
 tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_validate_figures_absolute_path PASSED [ 12%]
-tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_validate_figures_existing_file PASSED [ 13%]
-tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_validate_figures_unregistered_label PASSED [ 13%]
-tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_get_figure_list_nonexistent_file PASSED [ 13%]
-tests/infrastructure/documentation/test_markdown_integration.py::TestMarkdownIntegration::test_initialization PASSED [ 13%]
+tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_validate_figures_existing_file PASSED [ 12%]
+tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_validate_figures_unregistered_label PASSED [ 12%]
+tests/infrastructure/documentation/test_image_manager.py::TestImageManager::test_get_figure_list_nonexistent_file PASSED [ 12%]
+tests/infrastructure/documentation/test_markdown_integration.py::TestMarkdownIntegration::test_initialization PASSED [ 12%]
 tests/infrastructure/documentation/test_markdown_integration.py::TestMarkdownIntegration::test_initialization_default_manuscript_dir PASSED [ 13%]
 tests/infrastructure/documentation/test_markdown_integration.py::TestMarkdownIntegration::test_detect_sections PASSED [ 13%]
 tests/infrastructure/documentation/test_markdown_integration.py::TestMarkdownIntegration::test_detect_sections_nonexistent_file PASSED [ 13%]
@@ -319,9 +315,9 @@ tests/infrastructure/documentation/test_markdown_integration.py::TestMarkdownInt
 tests/infrastructure/documentation/test_markdown_integration.py::TestMarkdownIntegration::test_update_all_references_no_figure_end PASSED [ 13%]
 tests/infrastructure/documentation/test_markdown_integration.py::TestMarkdownIntegration::test_validate_manuscript PASSED [ 13%]
 tests/infrastructure/documentation/test_markdown_integration.py::TestMarkdownIntegration::test_validate_manuscript_with_errors PASSED [ 13%]
-tests/infrastructure/documentation/test_markdown_integration.py::TestMarkdownIntegration::test_get_figure_statistics PASSED [ 14%]
-tests/infrastructure/literature/test_api.py::TestArxivSource::test_xml_parsing_logic PASSED [ 14%]
-tests/infrastructure/literature/test_api.py::TestArxivSource::test_search_error_handling PASSED [ 14%]
+tests/infrastructure/documentation/test_markdown_integration.py::TestMarkdownIntegration::test_get_figure_statistics PASSED [ 13%]
+tests/infrastructure/literature/test_api.py::TestArxivSource::test_xml_parsing_logic PASSED [ 13%]
+tests/infrastructure/literature/test_api.py::TestArxivSource::test_search_error_handling PASSED [ 13%]
 tests/infrastructure/literature/test_api.py::TestArxivSource::test_search_network_call PASSED [ 14%]
 tests/infrastructure/literature/test_api.py::TestSemanticScholarSource::test_json_parsing_logic PASSED [ 14%]
 tests/infrastructure/literature/test_api.py::TestSemanticScholarSource::test_json_parsing_empty_response PASSED [ 14%]
@@ -338,9 +334,9 @@ tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::tes
 tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_retry_attempts PASSED [ 14%]
 tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_retry_delay PASSED [ 14%]
 tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_semanticscholar_api_key PASSED [ 14%]
-tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_download_dir PASSED [ 15%]
-tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_timeout PASSED [ 15%]
-tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_bibtex_file PASSED [ 15%]
+tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_download_dir PASSED [ 14%]
+tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_timeout PASSED [ 14%]
+tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_bibtex_file PASSED [ 14%]
 tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_sources_comma_separated PASSED [ 15%]
 tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_sources_with_whitespace PASSED [ 15%]
 tests/infrastructure/literature/test_config.py::TestLiteratureConfigFromEnv::test_from_env_user_agent PASSED [ 15%]
@@ -356,9 +352,9 @@ tests/infrastructure/literature/test_config.py::TestLiteratureConfigDownloadRetr
 tests/infrastructure/literature/test_config.py::TestLiteratureConfigDownloadRetry::test_from_env_download_retry_attempts PASSED [ 15%]
 tests/infrastructure/literature/test_config.py::TestLiteratureConfigDownloadRetry::test_from_env_download_retry_delay PASSED [ 15%]
 tests/infrastructure/literature/test_config.py::TestLiteratureConfigDownloadRetry::test_from_env_browser_user_agent_false PASSED [ 15%]
-tests/infrastructure/literature/test_config.py::TestLiteratureConfigDownloadRetry::test_from_env_browser_user_agent_default_true PASSED [ 16%]
-tests/infrastructure/literature/test_config.py::TestBrowserUserAgents::test_browser_user_agents_exist PASSED [ 16%]
-tests/infrastructure/literature/test_config.py::TestBrowserUserAgents::test_browser_user_agents_are_strings PASSED [ 16%]
+tests/infrastructure/literature/test_config.py::TestLiteratureConfigDownloadRetry::test_from_env_browser_user_agent_default_true PASSED [ 15%]
+tests/infrastructure/literature/test_config.py::TestBrowserUserAgents::test_browser_user_agents_exist PASSED [ 15%]
+tests/infrastructure/literature/test_config.py::TestBrowserUserAgents::test_browser_user_agents_are_strings PASSED [ 15%]
 tests/infrastructure/literature/test_core.py::test_search_integration PASSED [ 16%]
 tests/infrastructure/literature/test_core.py::test_download_paper SKIPPED [ 16%]
 tests/infrastructure/literature/test_core.py::test_add_to_library PASSED [ 16%]
@@ -375,9 +371,9 @@ tests/infrastructure/literature/test_html_parsing.py::TestExtractPDFUrlsFromHTML
 tests/infrastructure/literature/test_html_parsing.py::TestExtractPDFUrlsFromHTML::test_extract_pdf_urls_complex_html PASSED [ 16%]
 tests/infrastructure/literature/test_html_parsing.py::TestPDFHandlerHTMLIntegration::test_parse_html_for_pdf_method PASSED [ 16%]
 tests/infrastructure/literature/test_html_parsing.py::TestPDFHandlerHTMLIntegration::test_html_parsing_with_real_world_examples PASSED [ 16%]
-tests/infrastructure/literature/test_html_parsing.py::TestPDFHandlerHTMLIntegration::test_html_parsing_edge_cases PASSED [ 17%]
-tests/infrastructure/literature/test_html_parsing.py::TestPDFHandlerHTMLIntegration::test_html_parsing_url_validation PASSED [ 17%]
-tests/infrastructure/literature/test_html_parsing.py::TestHTMLParsingIntegration::test_html_parsing_does_not_break_existing_functionality PASSED [ 17%]
+tests/infrastructure/literature/test_html_parsing.py::TestPDFHandlerHTMLIntegration::test_html_parsing_edge_cases PASSED [ 16%]
+tests/infrastructure/literature/test_html_parsing.py::TestPDFHandlerHTMLIntegration::test_html_parsing_url_validation PASSED [ 16%]
+tests/infrastructure/literature/test_html_parsing.py::TestHTMLParsingIntegration::test_html_parsing_does_not_break_existing_functionality PASSED [ 16%]
 tests/infrastructure/literature/test_html_parsing.py::TestHTMLParsingIntegration::test_html_parsing_performance PASSED [ 17%]
 tests/infrastructure/literature/test_integration.py::test_full_workflow SKIPPEDfter trying 2 URL(s) plus fallbacks: HTTP 404
 (attempted_urls=['http://example.com/paper.pdf',
@@ -386,7 +382,7 @@ tests/infrastructure/literature/test_integration.py::test_full_workflow SKIPPEDf
 'https://doi.org/10.1234/test.123 (retry 1)',
 'https://doi.org/10.1234/test.123 (retry 2)'], output_path=/private/var/
 folders/l5/5t5z6z8d0tn3pth_0f7970q40000gn/T/pytest-of-
-mini/pytest-52/test_full_workflow0/pdfs/one2023test.pdf,
+mini/pytest-67/test_full_workflow0/pdfs/one2023test.pdf,
 failure_reason=not_found))                                               [ 17%]
 tests/infrastructure/literature/test_integration.py::test_reference_manager_deduplication PASSED [ 17%]
 tests/infrastructure/literature/test_library_index.py::TestLibraryEntry::test_entry_creation_basic PASSED [ 17%]
@@ -401,9 +397,9 @@ tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_ge
 tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_generate_citation_key_skips_common_words PASSED [ 17%]
 tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_generate_citation_key_handles_special_chars PASSED [ 17%]
 tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_add_entry_basic PASSED [ 17%]
-tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_add_entry_saves_to_disk PASSED [ 18%]
-tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_add_entry_deduplicates_by_doi PASSED [ 18%]
-tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_add_entry_deduplicates_by_title PASSED [ 18%]
+tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_add_entry_saves_to_disk PASSED [ 17%]
+tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_add_entry_deduplicates_by_doi PASSED [ 17%]
+tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_add_entry_deduplicates_by_title PASSED [ 17%]
 tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_add_entry_stores_metadata PASSED [ 18%]
 tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_update_pdf_path PASSED [ 18%]
 tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_update_pdf_path_nonexistent PASSED [ 18%]
@@ -420,9 +416,9 @@ tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_ge
 tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_handles_corrupt_json PASSED [ 18%]
 tests/infrastructure/literature/test_library_index.py::TestLibraryIndex::test_duplicate_key_handling PASSED [ 18%]
 tests/infrastructure/literature/test_library_index.py::TestLibraryIndexIntegration::test_roundtrip_save_load PASSED [ 18%]
-tests/infrastructure/literature/test_library_index.py::TestLibraryIndexIntegration::test_concurrent_adds PASSED [ 19%]
-tests/infrastructure/literature/test_literature_cli.py::TestCLIExecution::test_cli_help_output PASSED [ 19%]
-tests/infrastructure/literature/test_literature_cli.py::TestCLIExecution::test_cli_importable PASSED [ 19%]
+tests/infrastructure/literature/test_library_index.py::TestLibraryIndexIntegration::test_concurrent_adds PASSED [ 18%]
+tests/infrastructure/literature/test_literature_cli.py::TestCLIExecution::test_cli_help_output PASSED [ 18%]
+tests/infrastructure/literature/test_literature_cli.py::TestCLIExecution::test_cli_importable PASSED [ 18%]
 tests/infrastructure/literature/test_literature_cli.py::TestCLIExecution::test_cli_module_structure PASSED [ 19%]
 tests/infrastructure/literature/test_literature_cli.py::TestCLIExecution::test_cli_no_command_shows_help PASSED [ 19%]
 tests/infrastructure/literature/test_literature_cli.py::TestSearchCommand::test_search_command_no_results PASSED [ 19%]
@@ -439,8 +435,8 @@ tests/infrastructure/literature/test_literature_cli.py::TestLibraryStatsCommand:
 tests/infrastructure/literature/test_literature_cli.py::TestLibraryStatsCommand::test_library_stats_with_year_range PASSED [ 19%]
 tests/infrastructure/literature/test_literature_cli.py::TestLibraryStatsCommand::test_library_stats_with_sources PASSED [ 19%]
 tests/infrastructure/literature/test_literature_cli.py::TestLibraryStatsCommand::test_library_stats_with_years PASSED [ 19%]
-tests/infrastructure/literature/test_literature_cli.py::TestMainFunction::test_main_search_command PASSED [ 20%]
-tests/infrastructure/literature/test_literature_cli.py::TestMainFunction::test_main_library_list PASSED [ 20%]
+tests/infrastructure/literature/test_literature_cli.py::TestMainFunction::test_main_search_command PASSED [ 19%]
+tests/infrastructure/literature/test_literature_cli.py::TestMainFunction::test_main_library_list PASSED [ 19%]
 tests/infrastructure/literature/test_literature_cli.py::TestMainFunction::test_main_library_export PASSED [ 20%]
 tests/infrastructure/literature/test_literature_cli.py::TestMainFunction::test_main_library_stats PASSED [ 20%]
 tests/infrastructure/literature/test_literature_cli.py::TestMainFunction::test_main_no_command PASSED [ 20%]
@@ -457,9 +453,9 @@ tests/infrastructure/literature/test_literature_cli.py::TestLibraryListCommandEd
 tests/infrastructure/literature/test_literature_cli.py::TestLibraryListCommandEdgeCases::test_library_list_entry_no_year PASSED [ 20%]
 tests/infrastructure/literature/test_literature_cli.py::TestLibraryExportCommandEdgeCases::test_library_export_invalid_format PASSED [ 20%]
 tests/infrastructure/literature/test_literature_cli.py::TestLibraryExportCommandEdgeCases::test_library_export_file_io_error PASSED [ 20%]
-tests/infrastructure/literature/test_literature_cli.py::TestLibraryExportCommandEdgeCases::test_library_export_path_conversion PASSED [ 21%]
-tests/infrastructure/literature/test_literature_cli.py::TestLibraryStatsCommandEdgeCases::test_library_stats_empty_stats PASSED [ 21%]
-tests/infrastructure/literature/test_literature_cli.py::TestLibraryStatsCommandEdgeCases::test_library_stats_only_oldest_year PASSED [ 21%]
+tests/infrastructure/literature/test_literature_cli.py::TestLibraryExportCommandEdgeCases::test_library_export_path_conversion PASSED [ 20%]
+tests/infrastructure/literature/test_literature_cli.py::TestLibraryStatsCommandEdgeCases::test_library_stats_empty_stats PASSED [ 20%]
+tests/infrastructure/literature/test_literature_cli.py::TestLibraryStatsCommandEdgeCases::test_library_stats_only_oldest_year PASSED [ 20%]
 tests/infrastructure/literature/test_literature_cli.py::TestLibraryStatsCommandEdgeCases::test_library_stats_only_newest_year PASSED [ 21%]
 tests/infrastructure/literature/test_literature_cli.py::TestLibraryStatsCommandEdgeCases::test_library_stats_many_years PASSED [ 21%]
 tests/infrastructure/literature/test_literature_cli.py::TestArgumentParsingEdgeCases::test_main_invalid_command PASSED [ 21%]
@@ -476,9 +472,9 @@ tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperati
 tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_generate_literature_review_max_papers PASSED [ 21%]
 tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_generate_science_communication PASSED [ 21%]
 tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_generate_comparative_analysis PASSED [ 21%]
-tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_identify_research_gaps PASSED [ 22%]
-tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_analyze_citation_network PASSED [ 22%]
-tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_save_result PASSED [ 22%]
+tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_identify_research_gaps PASSED [ 21%]
+tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_analyze_citation_network PASSED [ 21%]
+tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_save_result PASSED [ 21%]
 tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_generate_literature_review_empty_papers PASSED [ 22%]
 tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_generate_literature_review_summary_read_error PASSED [ 22%]
 tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_generate_science_communication_many_papers PASSED [ 22%]
@@ -495,8 +491,8 @@ tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperati
 tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_llm_client_query_failure PASSED [ 22%]
 tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_token_estimation_accuracy PASSED [ 22%]
 tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_generation_time_tracking PASSED [ 22%]
-tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_save_result_file_path_format PASSED [ 23%]
-tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_save_result_content_structure PASSED [ 23%]
+tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_save_result_file_path_format PASSED [ 22%]
+tests/infrastructure/literature/test_llm_operations.py::TestLiteratureLLMOperations::test_save_result_content_structure PASSED [ 22%]
 tests/infrastructure/literature/test_logging.py::TestWorkflowLogging::test_download_logging_structure PASSED [ 23%]
 tests/infrastructure/literature/test_logging.py::TestWorkflowLogging::test_summarization_logging_structure PASSED [ 23%]
 tests/infrastructure/literature/test_logging.py::TestWorkflowLogging::test_error_logging_structure PASSED [ 23%]
@@ -513,9 +509,9 @@ tests/infrastructure/literature/test_paper_selector.py::TestPaperSelectionConfig
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelectionConfig::test_config_defaults PASSED [ 23%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelectionConfig::test_config_from_dict PASSED [ 23%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelectionConfig::test_config_from_dict_partial PASSED [ 23%]
-tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_selector_initialization PASSED [ 24%]
-tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_from_config_file_exists PASSED [ 24%]
-tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_from_config_file_not_exists PASSED [ 24%]
+tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_selector_initialization PASSED [ 23%]
+tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_from_config_file_exists PASSED [ 23%]
+tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_from_config_file_not_exists PASSED [ 23%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_from_config_invalid_yaml PASSED [ 24%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_select_by_citation_keys PASSED [ 24%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_select_by_year_range PASSED [ 24%]
@@ -532,8 +528,8 @@ tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_config_from_dict_no_selection_key PASSED [ 24%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_config_from_dict_years_min_only PASSED [ 24%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_config_from_dict_years_max_only PASSED [ 24%]
-tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_from_config_file_encoding_error PASSED [ 25%]
-tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_from_config_file_empty_file PASSED [ 25%]
+tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_from_config_file_encoding_error PASSED [ 24%]
+tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_from_config_file_empty_file PASSED [ 24%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_filter_by_citation_keys_empty_list PASSED [ 25%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_filter_by_citation_keys_nonexistent PASSED [ 25%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_filter_by_years_no_year_entries PASSED [ 25%]
@@ -550,9 +546,9 @@ tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_get_selection_summary_with_filters PASSED [ 25%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_get_selection_summary_no_filters PASSED [ 25%]
 tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_get_selection_summary_zero_total PASSED [ 25%]
-tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_select_papers_complex_multi_criteria PASSED [ 26%]
-tests/infrastructure/literature/test_pdf_handler_comprehensive.py::TestPDFHandlerInit::test_init_creates_download_directory PASSED [ 26%]
-tests/infrastructure/literature/test_pdf_handler_comprehensive.py::TestPDFHandlerInit::test_init_with_existing_directory PASSED [ 26%]
+tests/infrastructure/literature/test_paper_selector.py::TestPaperSelector::test_select_papers_complex_multi_criteria PASSED [ 25%]
+tests/infrastructure/literature/test_pdf_handler_comprehensive.py::TestPDFHandlerInit::test_init_creates_download_directory PASSED [ 25%]
+tests/infrastructure/literature/test_pdf_handler_comprehensive.py::TestPDFHandlerInit::test_init_with_existing_directory PASSED [ 25%]
 tests/infrastructure/literature/test_pdf_handler_comprehensive.py::TestPDFHandlerCore::test_download_with_mock_content PASSED [ 26%]
 tests/infrastructure/literature/test_pdf_handler_comprehensive.py::TestPDFHandlerCore::test_file_operations PASSED [ 26%]
 tests/infrastructure/literature/test_pdf_handler_comprehensive.py::TestPDFHandlerCore::test_path_handling PASSED [ 26%]
@@ -569,8 +565,8 @@ tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTitleSimilari
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTitleSimilarity::test_empty_title PASSED [ 26%]
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrl::test_pmc_ncbi_pattern PASSED [ 26%]
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrl::test_pmc_new_domain PASSED [ 26%]
-tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrl::test_europepmc_pattern PASSED [ 27%]
-tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrl::test_arxiv_abs_pattern PASSED [ 27%]
+tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrl::test_europepmc_pattern PASSED [ 26%]
+tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrl::test_arxiv_abs_pattern PASSED [ 26%]
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrl::test_biorxiv_pattern PASSED [ 27%]
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrl::test_medrxiv_pattern PASSED [ 27%]
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrl::test_mdpi_pattern PASSED [ 27%]
@@ -588,8 +584,8 @@ tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestPDFHandlerFal
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestPDFHandlerFallbackIntegration::test_fallback_chain_with_existing_pdf PASSED [ 27%]
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrlMultiplePatterns::test_pmc_with_trailing_content PASSED [ 27%]
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrlMultiplePatterns::test_arxiv_old_format PASSED [ 27%]
-tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrlMultiplePatterns::test_frontiers_pattern PASSED [ 28%]
-tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrlMultiplePatterns::test_sciencedirect_pattern PASSED [ 28%]
+tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrlMultiplePatterns::test_frontiers_pattern PASSED [ 27%]
+tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestTransformPdfUrlMultiplePatterns::test_sciencedirect_pattern PASSED [ 27%]
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestArxivSourceAttributes::test_similarity_threshold PASSED [ 28%]
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestBiorxivSourceAttributes::test_similarity_threshold PASSED [ 28%]
 tests/infrastructure/literature/test_pdf_handler_fallbacks.py::TestPDFHandlerDocstring::test_docstring_mentions_fallbacks PASSED [ 28%]
@@ -606,8 +602,8 @@ tests/infrastructure/literature/test_pdf_handler_simple.py::TestPDFHandlerCore::
 tests/infrastructure/literature/test_pdf_handler_simple.py::TestPDFHandlerIntegration::test_with_search_result PASSED [ 28%]
 tests/infrastructure/literature/test_progress.py::TestProgressEntry::test_creation PASSED [ 28%]
 tests/infrastructure/literature/test_progress.py::TestProgressEntry::test_is_completed PASSED [ 28%]
-tests/infrastructure/literature/test_progress.py::TestProgressEntry::test_custom_values PASSED [ 29%]
-tests/infrastructure/literature/test_progress.py::TestSummarizationProgress::test_creation PASSED [ 29%]
+tests/infrastructure/literature/test_progress.py::TestProgressEntry::test_custom_values PASSED [ 28%]
+tests/infrastructure/literature/test_progress.py::TestSummarizationProgress::test_creation PASSED [ 28%]
 tests/infrastructure/literature/test_progress.py::TestSummarizationProgress::test_statistics_empty PASSED [ 29%]
 tests/infrastructure/literature/test_progress.py::TestSummarizationProgress::test_statistics_with_entries PASSED [ 29%]
 tests/infrastructure/literature/test_progress.py::TestSummarizationProgress::test_serialization PASSED [ 29%]
@@ -625,8 +621,8 @@ tests/infrastructure/literature/test_progress.py::TestProgressTracker::test_arch
 tests/infrastructure/literature/test_pure_logic.py::TestSearchResultDataclass::test_search_result_creation PASSED [ 29%]
 tests/infrastructure/literature/test_pure_logic.py::TestSearchResultDataclass::test_search_result_minimal PASSED [ 29%]
 tests/infrastructure/literature/test_pure_logic.py::TestSearchResultDataclass::test_search_result_defaults PASSED [ 29%]
-tests/infrastructure/literature/test_pure_logic.py::TestReferenceManagerKeyGeneration::test_generate_key_basic PASSED [ 30%]
-tests/infrastructure/literature/test_pure_logic.py::TestReferenceManagerKeyGeneration::test_generate_key_multiple_authors PASSED [ 30%]
+tests/infrastructure/literature/test_pure_logic.py::TestReferenceManagerKeyGeneration::test_generate_key_basic PASSED [ 29%]
+tests/infrastructure/literature/test_pure_logic.py::TestReferenceManagerKeyGeneration::test_generate_key_multiple_authors PASSED [ 29%]
 tests/infrastructure/literature/test_pure_logic.py::TestReferenceManagerKeyGeneration::test_generate_key_no_year PASSED [ 30%]
 tests/infrastructure/literature/test_pure_logic.py::TestReferenceManagerKeyGeneration::test_generate_key_no_authors PASSED [ 30%]
 tests/infrastructure/literature/test_pure_logic.py::TestReferenceManagerKeyGeneration::test_generate_key_special_characters PASSED [ 30%]
@@ -643,9 +639,9 @@ tests/infrastructure/literature/test_pure_logic.py::TestLiteratureSearchDeduplic
 tests/infrastructure/literature/test_pure_logic.py::TestLiteratureSearchDeduplication::test_deduplicate_preserves_order PASSED [ 30%]
 tests/infrastructure/literature/test_pure_logic.py::TestLiteratureSearchDeduplication::test_deduplicate_empty_list PASSED [ 30%]
 tests/infrastructure/literature/test_pure_logic.py::TestLiteratureSearchDeduplication::test_deduplicate_title_whitespace PASSED [ 30%]
-tests/infrastructure/literature/test_pure_logic.py::TestLiteratureSearchDownloadPaper::test_download_paper_no_pdf_url PASSED [ 31%]
-tests/infrastructure/literature/test_pure_logic.py::TestCliIntegration::test_search_command_imports PASSED [ 31%]
-tests/infrastructure/literature/test_pure_logic.py::TestCliIntegration::test_cli_uses_correct_method PASSED [ 31%]
+tests/infrastructure/literature/test_pure_logic.py::TestLiteratureSearchDownloadPaper::test_download_paper_no_pdf_url PASSED [ 30%]
+tests/infrastructure/literature/test_pure_logic.py::TestCliIntegration::test_search_command_imports PASSED [ 30%]
+tests/infrastructure/literature/test_pure_logic.py::TestCliIntegration::test_cli_uses_correct_method PASSED [ 30%]
 tests/infrastructure/literature/test_summarizer.py::TestSummarizationResult::test_creation_success PASSED [ 31%]
 tests/infrastructure/literature/test_summarizer.py::TestSummarizationResult::test_creation_failure PASSED [ 31%]
 tests/infrastructure/literature/test_summarizer.py::TestSummarizationResult::test_compression_ratio_edge_cases PASSED [ 31%]
@@ -662,8 +658,8 @@ tests/infrastructure/literature/test_summarizer.py::TestPaperSummarizer::test_cr
 tests/infrastructure/literature/test_summarizer.py::TestPaperSummarizer::test_summarize_paper_success PASSED [ 31%]
 tests/infrastructure/literature/test_summarizer.py::TestPaperSummarizer::test_summarize_paper_extraction_failure PASSED [ 31%]
 tests/infrastructure/literature/test_summarizer.py::TestPaperSummarizer::test_summarize_paper_insufficient_text PASSED [ 31%]
-tests/infrastructure/literature/test_summarizer.py::TestPaperSummarizer::test_summarize_paper_llm_failure PASSED [ 32%]
-tests/infrastructure/literature/test_summarizer.py::TestPaperSummarizer::test_generate_summary_prompt PASSED [ 32%]
+tests/infrastructure/literature/test_summarizer.py::TestPaperSummarizer::test_summarize_paper_llm_failure PASSED [ 31%]
+tests/infrastructure/literature/test_summarizer.py::TestPaperSummarizer::test_generate_summary_prompt PASSED [ 31%]
 tests/infrastructure/literature/test_summarizer.py::TestPaperSummarizer::test_clean_summary_content PASSED [ 32%]
 tests/infrastructure/literature/test_summarizer.py::TestPaperSummarizer::test_save_summary PASSED [ 32%]
 tests/infrastructure/literature/test_summarizer.py::TestPaperSummarizer::test_save_summary_with_path_field PASSED [ 32%]
@@ -681,8 +677,8 @@ tests/infrastructure/literature/test_unpaywall.py::TestUnpaywallSource::test_doi
 tests/infrastructure/literature/test_unpaywall.py::TestUnpaywallSource::test_parse_response_open_access PASSED [ 32%]
 tests/infrastructure/literature/test_unpaywall.py::TestUnpaywallSource::test_parse_response_closed_access PASSED [ 32%]
 tests/infrastructure/literature/test_unpaywall.py::TestUnpaywallSource::test_parse_response_fallback_to_oa_locations PASSED [ 32%]
-tests/infrastructure/literature/test_unpaywall.py::TestUnpaywallSource::test_lookup_handles_404 PASSED [ 33%]
-tests/infrastructure/literature/test_unpaywall.py::TestUnpaywallSource::test_lookup_handles_request_exception PASSED [ 33%]
+tests/infrastructure/literature/test_unpaywall.py::TestUnpaywallSource::test_lookup_handles_404 PASSED [ 32%]
+tests/infrastructure/literature/test_unpaywall.py::TestUnpaywallSource::test_lookup_handles_request_exception PASSED [ 32%]
 tests/infrastructure/literature/test_unpaywall.py::TestUnpaywallIntegration::test_config_enables_unpaywall PASSED [ 33%]
 tests/infrastructure/literature/test_unpaywall.py::TestUnpaywallIntegration::test_pdf_handler_creates_unpaywall_source_when_enabled PASSED [ 33%]
 tests/infrastructure/literature/test_unpaywall.py::TestUnpaywallIntegration::test_pdf_handler_no_unpaywall_when_disabled PASSED [ 33%]
@@ -699,8 +695,8 @@ tests/infrastructure/literature/test_workflow.py::TestLiteratureWorkflow::test_e
 tests/infrastructure/literature/test_workflow.py::TestLiteratureWorkflow::test_search_papers PASSED [ 33%]
 tests/infrastructure/literature/test_workflow.py::TestLiteratureWorkflow::test_download_papers PASSED [ 33%]
 tests/infrastructure/literature/test_workflow.py::TestLiteratureWorkflow::test_summarize_papers_parallel_single_worker PASSED [ 33%]
-tests/infrastructure/literature/test_workflow.py::TestLiteratureWorkflow::test_summarize_papers_parallel_multiple_workers PASSED [ 34%]
-tests/infrastructure/literature/test_workflow.py::TestLiteratureWorkflow::test_summarize_single_paper PASSED [ 34%]
+tests/infrastructure/literature/test_workflow.py::TestLiteratureWorkflow::test_summarize_papers_parallel_multiple_workers PASSED [ 33%]
+tests/infrastructure/literature/test_workflow.py::TestLiteratureWorkflow::test_summarize_single_paper PASSED [ 33%]
 tests/infrastructure/literature/test_workflow.py::TestLiteratureWorkflow::test_save_summaries PASSED [ 34%]
 tests/infrastructure/literature/test_workflow.py::TestLiteratureWorkflow::test_get_workflow_stats PASSED [ 34%]
 tests/infrastructure/literature/test_workflow.py::TestLiteratureWorkflow::test_workflow_without_summarizer PASSED [ 34%]
@@ -718,8 +714,8 @@ tests/infrastructure/literature/test_workflow_skip_existing.py::TestSkipExisting
 tests/infrastructure/literature/test_workflow_skip_existing.py::TestSkipExistingSummaries::test_mixed_existing_and_new_summaries PASSED [ 34%]
 tests/infrastructure/llm/test_cli.py::TestCLIArgumentParsing::test_main_no_args_exits PASSED [ 34%]
 tests/infrastructure/llm/test_cli.py::TestCLIArgumentParsing::test_query_command_parsing PASSED [ 34%]
-tests/infrastructure/llm/test_cli.py::TestCLIArgumentParsing::test_check_command_parsing PASSED [ 35%]
-tests/infrastructure/llm/test_cli.py::TestCLIArgumentParsing::test_models_command_parsing PASSED [ 35%]
+tests/infrastructure/llm/test_cli.py::TestCLIArgumentParsing::test_check_command_parsing PASSED [ 34%]
+tests/infrastructure/llm/test_cli.py::TestCLIArgumentParsing::test_models_command_parsing PASSED [ 34%]
 tests/infrastructure/llm/test_cli.py::TestCLIArgumentParsing::test_template_command_parsing PASSED [ 35%]
 tests/infrastructure/llm/test_cli.py::TestCLICheckCommand::test_check_command_no_connection PASSED [ 35%]
 tests/infrastructure/llm/test_cli.py::TestCLITemplateCommand::test_template_list PASSED [ 35%]
@@ -736,8 +732,8 @@ tests/infrastructure/llm/test_config.py::TestLLMConfig::test_config_context_wind
 tests/infrastructure/llm/test_config.py::TestLLMConfig::test_config_timeout PASSED [ 35%]
 tests/infrastructure/llm/test_config.py::TestLLMConfig::test_config_response_mode_defaults PASSED [ 35%]
 tests/infrastructure/llm/test_config.py::TestLLMConfig::test_config_auto_inject_system_prompt PASSED [ 35%]
-tests/infrastructure/llm/test_config.py::TestLLMConfigFromEnv::test_config_from_env_defaults PASSED [ 36%]
-tests/infrastructure/llm/test_config.py::TestLLMConfigFromEnv::test_config_from_env_ollama_host PASSED [ 36%]
+tests/infrastructure/llm/test_config.py::TestLLMConfigFromEnv::test_config_from_env_defaults PASSED [ 35%]
+tests/infrastructure/llm/test_config.py::TestLLMConfigFromEnv::test_config_from_env_ollama_host PASSED [ 35%]
 tests/infrastructure/llm/test_config.py::TestLLMConfigFromEnv::test_config_from_env_ollama_model PASSED [ 36%]
 tests/infrastructure/llm/test_config.py::TestLLMConfigFromEnv::test_config_from_env_temperature PASSED [ 36%]
 tests/infrastructure/llm/test_config.py::TestLLMConfigFromEnv::test_config_from_env_invalid_temperature PASSED [ 36%]
@@ -755,8 +751,8 @@ tests/infrastructure/llm/test_config.py::TestLLMConfigMethods::test_config_with_
 tests/infrastructure/llm/test_config.py::TestLLMConfigMethods::test_config_create_options PASSED [ 36%]
 tests/infrastructure/llm/test_config.py::TestLLMConfigMethods::test_config_create_options_partial PASSED [ 36%]
 tests/infrastructure/llm/test_config.py::TestGenerationOptions::test_options_default_initialization PASSED [ 36%]
-tests/infrastructure/llm/test_config.py::TestGenerationOptions::test_options_custom_values PASSED [ 37%]
-tests/infrastructure/llm/test_config.py::TestGenerationOptions::test_options_to_ollama_with_defaults PASSED [ 37%]
+tests/infrastructure/llm/test_config.py::TestGenerationOptions::test_options_custom_values PASSED [ 36%]
+tests/infrastructure/llm/test_config.py::TestGenerationOptions::test_options_to_ollama_with_defaults PASSED [ 36%]
 tests/infrastructure/llm/test_config.py::TestGenerationOptions::test_options_to_ollama_with_overrides PASSED [ 37%]
 tests/infrastructure/llm/test_config.py::TestGenerationOptions::test_options_num_ctx_override PASSED [ 37%]
 tests/infrastructure/llm/test_config.py::TestGenerationOptions::test_options_num_ctx_from_config PASSED [ 37%]
@@ -774,7 +770,7 @@ tests/infrastructure/llm/test_context.py::test_context_limit_error PASSED [ 37%]
 tests/infrastructure/llm/test_core.py::TestLLMClientInitialization::test_client_with_default_config PASSED [ 37%]
 tests/infrastructure/llm/test_core.py::TestLLMClientInitialization::test_client_with_custom_config PASSED [ 37%]
 tests/infrastructure/llm/test_core.py::TestLLMClientInitialization::test_client_context_initialized PASSED [ 37%]
-tests/infrastructure/llm/test_core.py::TestSystemPromptInjection::test_system_prompt_injected_by_default PASSED [ 38%]
+tests/infrastructure/llm/test_core.py::TestSystemPromptInjection::test_system_prompt_injected_by_default PASSED [ 37%]
 tests/infrastructure/llm/test_core.py::TestSystemPromptInjection::test_system_prompt_not_injected_when_disabled PASSED [ 38%]
 tests/infrastructure/llm/test_core.py::TestSystemPromptInjection::test_reset_reinjects_system_prompt PASSED [ 38%]
 tests/infrastructure/llm/test_core.py::TestSystemPromptInjection::test_set_system_prompt PASSED [ 38%]
@@ -792,8 +788,8 @@ tests/infrastructure/llm/test_llm_core_additional.py::TestInjectSystemPrompt::te
 tests/infrastructure/llm/test_llm_core_additional.py::TestQueryFallback::test_query_fallback_on_connection_error PASSED [ 38%]
 tests/infrastructure/llm/test_llm_core_additional.py::TestQueryFallback::test_query_all_fallbacks_fail PASSED [ 38%]
 tests/infrastructure/llm/test_llm_core_additional.py::TestQueryRaw::test_query_raw_add_to_context_true PASSED [ 38%]
-tests/infrastructure/llm/test_llm_core_additional.py::TestQueryRaw::test_query_raw_add_to_context_false PASSED [ 39%]
-tests/infrastructure/llm/test_llm_core_additional.py::TestQueryStructuredJsonParsing::test_query_structured_valid_json PASSED [ 39%]
+tests/infrastructure/llm/test_llm_core_additional.py::TestQueryRaw::test_query_raw_add_to_context_false PASSED [ 38%]
+tests/infrastructure/llm/test_llm_core_additional.py::TestQueryStructuredJsonParsing::test_query_structured_valid_json PASSED [ 38%]
 tests/infrastructure/llm/test_llm_core_additional.py::TestQueryStructuredJsonParsing::test_query_structured_wrapped_json PASSED [ 39%]
 tests/infrastructure/llm/test_llm_core_additional.py::TestQueryStructuredJsonParsing::test_query_structured_invalid_wrapped_json PASSED [ 39%]
 tests/infrastructure/llm/test_llm_core_additional.py::TestQueryStructuredJsonParsing::test_query_structured_no_json PASSED [ 39%]
@@ -811,7 +807,7 @@ tests/infrastructure/llm/test_llm_core_additional.py::TestGetAvailableModels::te
 tests/infrastructure/llm/test_llm_core_additional.py::TestGetAvailableModels::test_get_available_models_connection_error PASSED [ 39%]
 tests/infrastructure/llm/test_llm_core_additional.py::TestCheckConnection::test_check_connection_success PASSED [ 39%]
 tests/infrastructure/llm/test_llm_core_additional.py::TestCheckConnection::test_check_connection_non_200 PASSED [ 39%]
-tests/infrastructure/llm/test_llm_core_additional.py::TestCheckConnection::test_check_connection_exception PASSED [ 40%]
+tests/infrastructure/llm/test_llm_core_additional.py::TestCheckConnection::test_check_connection_exception PASSED [ 39%]
 tests/infrastructure/llm/test_llm_core_additional.py::TestGenerateResponseDirect::test_generate_response_direct_with_format_json PASSED [ 40%]
 tests/infrastructure/llm/test_llm_core_additional.py::TestGenerateResponseDirect::test_generate_response_direct_connection_error PASSED [ 40%]
 tests/infrastructure/llm/test_llm_core_additional.py::TestQueryShortLongOptions::test_query_short_with_options PASSED [ 40%]
@@ -830,7 +826,7 @@ tests/infrastructure/llm/test_llm_core_coverage.py::TestLLMClientInit::test_init
 tests/infrastructure/llm/test_llm_core_coverage.py::TestLLMClientSystemPrompt::test_system_prompt_injection PASSED [ 40%]
 tests/infrastructure/llm/test_llm_core_coverage.py::TestLLMClientSystemPrompt::test_no_auto_inject PASSED [ 40%]
 tests/infrastructure/llm/test_llm_core_coverage.py::TestLLMClientSystemPrompt::test_system_prompt_content PASSED [ 40%]
-tests/infrastructure/llm/test_llm_core_coverage.py::TestLLMClientSystemPrompt::test_inject_system_prompt_idempotent PASSED [ 41%]
+tests/infrastructure/llm/test_llm_core_coverage.py::TestLLMClientSystemPrompt::test_inject_system_prompt_idempotent PASSED [ 40%]
 tests/infrastructure/llm/test_llm_core_coverage.py::TestLLMClientContextManagement::test_context_add_message PASSED [ 41%]
 tests/infrastructure/llm/test_llm_core_coverage.py::TestLLMClientContextManagement::test_context_multiple_messages PASSED [ 41%]
 tests/infrastructure/llm/test_llm_core_coverage.py::TestLLMClientContextManagement::test_reset_clears_user_messages PASSED [ 41%]
@@ -848,8 +844,8 @@ tests/infrastructure/llm/test_llm_core_coverage.py::TestLLMCoreIntegration::test
 tests/infrastructure/llm/test_llm_core_full.py::TestResponseModeDetails::test_response_mode_comparison PASSED [ 41%]
 tests/infrastructure/llm/test_llm_core_full.py::TestResponseModeDetails::test_response_mode_str PASSED [ 41%]
 tests/infrastructure/llm/test_llm_core_full.py::TestGenerationOptionsDetails::test_options_with_seed PASSED [ 41%]
-tests/infrastructure/llm/test_llm_core_full.py::TestGenerationOptionsDetails::test_options_with_max_tokens PASSED [ 42%]
-tests/infrastructure/llm/test_llm_core_full.py::TestGenerationOptionsDetails::test_options_with_all_params PASSED [ 42%]
+tests/infrastructure/llm/test_llm_core_full.py::TestGenerationOptionsDetails::test_options_with_max_tokens PASSED [ 41%]
+tests/infrastructure/llm/test_llm_core_full.py::TestGenerationOptionsDetails::test_options_with_all_params PASSED [ 41%]
 tests/infrastructure/llm/test_llm_core_full.py::TestGenerationOptionsDetails::test_options_defaults PASSED [ 42%]
 tests/infrastructure/llm/test_llm_core_full.py::TestContextManagementPure::test_context_accumulates PASSED [ 42%]
 tests/infrastructure/llm/test_llm_core_full.py::TestContextManagementPure::test_context_preserves_order PASSED [ 42%]
@@ -867,7 +863,7 @@ tests/infrastructure/llm/test_llm_core_full.py::TestLLMCoreEdgeCasesPure::test_m
 tests/infrastructure/llm/test_llm_core_full.py::TestLLMCoreEdgeCasesPure::test_config_response_mode_limits PASSED [ 42%]
 tests/infrastructure/llm/test_llm_core_full.py::TestOptionsConversion::test_options_num_ctx PASSED [ 42%]
 tests/infrastructure/llm/test_llm_core_full.py::TestOptionsConversion::test_options_override_num_ctx PASSED [ 42%]
-tests/infrastructure/llm/test_llm_core_full.py::TestOptionsConversion::test_options_repeat_penalty PASSED [ 43%]
+tests/infrastructure/llm/test_llm_core_full.py::TestOptionsConversion::test_options_repeat_penalty PASSED [ 42%]
 tests/infrastructure/llm/test_llm_core_full.py::TestOptionsConversion::test_options_top_k PASSED [ 43%]
 tests/infrastructure/llm/test_llm_review.py::TestEstimateTokens::test_empty_string PASSED [ 43%]
 tests/infrastructure/llm/test_llm_review.py::TestEstimateTokens::test_short_text PASSED [ 43%]
@@ -885,8 +881,8 @@ tests/infrastructure/llm/test_llm_review.py::TestSessionMetrics::test_default_va
 tests/infrastructure/llm/test_llm_review.py::TestSessionMetrics::test_with_reviews PASSED [ 43%]
 tests/infrastructure/llm/test_llm_review.py::TestSaveReviewOutputs::test_creates_all_files PASSED [ 43%]
 tests/infrastructure/llm/test_llm_review.py::TestSaveReviewOutputs::test_metadata_json_structure PASSED [ 43%]
-tests/infrastructure/llm/test_llm_review.py::TestSaveReviewOutputs::test_combined_review_includes_metrics PASSED [ 44%]
-tests/infrastructure/llm/test_llm_review.py::TestGenerateReviewSummary::test_summary_runs_without_error PASSED [ 44%]
+tests/infrastructure/llm/test_llm_review.py::TestSaveReviewOutputs::test_combined_review_includes_metrics PASSED [ 43%]
+tests/infrastructure/llm/test_llm_review.py::TestGenerateReviewSummary::test_summary_runs_without_error PASSED [ 43%]
 tests/infrastructure/llm/test_llm_review.py::TestGenerateReviewSummary::test_summary_handles_truncated_manuscript PASSED [ 44%]
 tests/infrastructure/llm/test_llm_review.py::TestGenerateReviewSummary::test_summary_handles_multiple_reviews PASSED [ 44%]
 tests/infrastructure/llm/test_llm_review.py::TestNoTruncationByDefault::test_default_limit_is_large PASSED [ 44%]
@@ -904,7 +900,7 @@ tests/infrastructure/llm/test_llm_review.py::TestIsOffTopic::test_casual_greetin
 tests/infrastructure/llm/test_llm_review.py::TestIsOffTopic::test_casual_greeting_hello_detected PASSED [ 44%]
 tests/infrastructure/llm/test_llm_review.py::TestIsOffTopic::test_code_block_detected PASSED [ 44%]
 tests/infrastructure/llm/test_llm_review.py::TestIsOffTopic::test_function_definition_detected PASSED [ 44%]
-tests/infrastructure/llm/test_llm_review.py::TestIsOffTopic::test_feel_free_not_off_topic PASSED [ 45%]
+tests/infrastructure/llm/test_llm_review.py::TestIsOffTopic::test_feel_free_not_off_topic PASSED [ 44%]
 tests/infrastructure/llm/test_llm_review.py::TestIsOffTopic::test_id_be_happy_detected PASSED [ 45%]
 tests/infrastructure/llm/test_llm_review.py::TestValidateReviewQuality::test_valid_executive_summary PASSED [ 45%]
 tests/infrastructure/llm/test_llm_review.py::TestValidateReviewQuality::test_executive_summary_accepts_alternatives PASSED [ 45%]
@@ -923,7 +919,7 @@ tests/infrastructure/llm/test_llm_review.py::TestValidateReviewQuality::test_imp
 tests/infrastructure/llm/test_llm_review.py::TestValidateReviewQuality::test_word_count_tracking PASSED [ 45%]
 tests/infrastructure/llm/test_llm_review.py::TestDetectConversationalPhrases::test_no_conversational_phrases PASSED [ 45%]
 tests/infrastructure/llm/test_llm_review.py::TestDetectConversationalPhrases::test_based_on_document_detected PASSED [ 45%]
-tests/infrastructure/llm/test_llm_review.py::TestDetectConversationalPhrases::test_ill_help_you_detected PASSED [ 46%]
+tests/infrastructure/llm/test_llm_review.py::TestDetectConversationalPhrases::test_ill_help_you_detected PASSED [ 45%]
 tests/infrastructure/llm/test_llm_review.py::TestDetectConversationalPhrases::test_let_me_know_detected PASSED [ 46%]
 tests/infrastructure/llm/test_llm_review.py::TestDetectConversationalPhrases::test_multiple_phrases_detected PASSED [ 46%]
 tests/infrastructure/llm/test_llm_review.py::TestCheckFormatCompliance::test_compliant_response PASSED [ 46%]
@@ -941,7 +937,7 @@ tests/infrastructure/llm/test_llm_review.py::TestValidateReviewQualityRepetition
 tests/infrastructure/llm/test_llm_review.py::TestValidateReviewQualityRepetition::test_validate_unique_content_passes PASSED [ 46%]
 tests/infrastructure/llm/test_llm_review.py::TestValidateReviewQualityRepetition::test_validate_moderate_repetition_warning PASSED [ 46%]
 tests/infrastructure/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_returns_bool PASSED [ 46%]
-tests/infrastructure/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_with_bad_url PASSED [ 47%]
+tests/infrastructure/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_with_bad_url PASSED [ 46%]
 tests/infrastructure/llm/test_ollama_utils.py::TestIsOllamaRunning::test_is_ollama_running_with_default_url PASSED [ 47%]
 tests/infrastructure/llm/test_ollama_utils.py::TestDefaultPreferences::test_default_preferences_is_list PASSED [ 47%]
 tests/infrastructure/llm/test_ollama_utils.py::TestDefaultPreferences::test_default_preferences_not_empty PASSED [ 47%]
@@ -960,7 +956,7 @@ tests/infrastructure/llm/test_prompts_composer.py::TestPromptComposer::test_comp
 tests/infrastructure/llm/test_prompts_composer.py::TestPromptComposer::test_add_retry_prompt_off_topic PASSED [ 47%]
 tests/infrastructure/llm/test_prompts_composer.py::TestPromptComposer::test_add_retry_prompt_format_enforcement PASSED [ 47%]
 tests/infrastructure/llm/test_prompts_composer.py::TestPromptComposer::test_build_format_requirements PASSED [ 47%]
-tests/infrastructure/llm/test_prompts_composer.py::TestPromptComposer::test_build_content_requirements PASSED [ 48%]
+tests/infrastructure/llm/test_prompts_composer.py::TestPromptComposer::test_build_content_requirements PASSED [ 47%]
 tests/infrastructure/llm/test_prompts_composer.py::TestPromptComposer::test_build_section_structure PASSED [ 48%]
 tests/infrastructure/llm/test_prompts_composer.py::TestPromptComposer::test_build_section_structure_not_found PASSED [ 48%]
 tests/infrastructure/llm/test_prompts_composer.py::TestPromptComposer::test_build_token_budget_awareness PASSED [ 48%]
@@ -978,7 +974,7 @@ tests/infrastructure/llm/test_prompts_loader.py::TestPromptFragmentLoader::test_
 tests/infrastructure/llm/test_prompts_loader.py::TestPromptFragmentLoader::test_load_composition PASSED [ 48%]
 tests/infrastructure/llm/test_templates.py::TestGetTemplate::test_get_template PASSED [ 48%]
 tests/infrastructure/llm/test_templates.py::TestGetTemplate::test_get_template_invalid PASSED [ 48%]
-tests/infrastructure/llm/test_templates.py::TestGetTemplate::test_get_translation_template PASSED [ 49%]
+tests/infrastructure/llm/test_templates.py::TestGetTemplate::test_get_translation_template PASSED [ 48%]
 tests/infrastructure/llm/test_templates.py::TestSummarizeAbstract::test_render_success PASSED [ 49%]
 tests/infrastructure/llm/test_templates.py::TestSummarizeAbstract::test_render_missing_var PASSED [ 49%]
 tests/infrastructure/llm/test_templates.py::TestManuscriptTranslationAbstract::test_render_with_language PASSED [ 49%]
@@ -997,7 +993,7 @@ tests/infrastructure/llm/test_templates.py::test_render_success PASSED   [ 49%]
 tests/infrastructure/llm/test_templates.py::test_render_missing_var PASSED [ 49%]
 tests/infrastructure/llm/test_validation.py::TestJSONValidation::test_validate_valid_json PASSED [ 49%]
 tests/infrastructure/llm/test_validation.py::TestJSONValidation::test_validate_markdown_wrapped_json PASSED [ 49%]
-tests/infrastructure/llm/test_validation.py::TestJSONValidation::test_validate_invalid_json PASSED [ 50%]
+tests/infrastructure/llm/test_validation.py::TestJSONValidation::test_validate_invalid_json PASSED [ 49%]
 tests/infrastructure/llm/test_validation.py::TestJSONValidation::test_validate_empty_json_object PASSED [ 50%]
 tests/infrastructure/llm/test_validation.py::TestLengthValidation::test_validate_length_within_bounds PASSED [ 50%]
 tests/infrastructure/llm/test_validation.py::TestLengthValidation::test_validate_length_too_short PASSED [ 50%]
@@ -1016,7 +1012,7 @@ tests/infrastructure/llm/test_validation.py::TestCitationValidation::test_extrac
 tests/infrastructure/llm/test_validation.py::TestCitationValidation::test_extract_numeric_citations PASSED [ 50%]
 tests/infrastructure/llm/test_validation.py::TestCitationValidation::test_extract_bibtex_citations PASSED [ 50%]
 tests/infrastructure/llm/test_validation.py::TestFormattingValidation::test_validate_formatting_good PASSED [ 50%]
-tests/infrastructure/llm/test_validation.py::TestFormattingValidation::test_validate_formatting_excessive_punctuation PASSED [ 51%]
+tests/infrastructure/llm/test_validation.py::TestFormattingValidation::test_validate_formatting_excessive_punctuation PASSED [ 50%]
 tests/infrastructure/llm/test_validation.py::TestFormattingValidation::test_validate_formatting_double_spaces PASSED [ 51%]
 tests/infrastructure/llm/test_validation.py::TestFormattingValidation::test_validate_formatting_question_marks PASSED [ 51%]
 tests/infrastructure/llm/test_validation.py::TestCompleteValidation::test_validate_complete_standard_mode PASSED [ 51%]
@@ -1034,7 +1030,7 @@ tests/infrastructure/llm/test_validation.py::TestTypeCheckingEdgeCases::test_che
 tests/infrastructure/llm/test_validation.py::TestTypeCheckingEdgeCases::test_check_type_boolean PASSED [ 51%]
 tests/infrastructure/llm/test_validation.py::TestTypeCheckingEdgeCases::test_check_type_number PASSED [ 51%]
 tests/infrastructure/llm/test_validation.py::TestTypeCheckingEdgeCases::test_check_type_array PASSED [ 51%]
-tests/infrastructure/llm/test_validation.py::TestTypeCheckingEdgeCases::test_check_type_object PASSED [ 52%]
+tests/infrastructure/llm/test_validation.py::TestTypeCheckingEdgeCases::test_check_type_object PASSED [ 51%]
 tests/infrastructure/llm/test_validation.py::TestCompleteValidationEdgeCases::test_validate_complete_with_formatting_issues PASSED [ 52%]
 tests/infrastructure/llm/test_validation.py::TestCompleteValidationEdgeCases::test_validate_complete_whitespace_only PASSED [ 52%]
 tests/infrastructure/llm/test_validation.py::TestCompleteValidationEdgeCases::test_validate_complete_newline_only PASSED [ 52%]
@@ -1053,7 +1049,7 @@ tests/infrastructure/llm/test_validation.py::TestRepetitionDetection::test_detec
 tests/infrastructure/llm/test_validation.py::TestRepetitionDetection::test_detect_repetition_semantic_similarity PASSED [ 52%]
 tests/infrastructure/llm/test_validation.py::TestRepetitionDetection::test_detect_repetition_different_similarity_methods PASSED [ 52%]
 tests/infrastructure/llm/test_validation.py::TestUniqueContentRatio::test_calculate_unique_content_ratio_unique PASSED [ 52%]
-tests/infrastructure/llm/test_validation.py::TestUniqueContentRatio::test_calculate_unique_content_ratio_repeated PASSED [ 53%]
+tests/infrastructure/llm/test_validation.py::TestUniqueContentRatio::test_calculate_unique_content_ratio_repeated PASSED [ 52%]
 tests/infrastructure/llm/test_validation.py::TestUniqueContentRatio::test_calculate_unique_content_ratio_short PASSED [ 53%]
 tests/infrastructure/llm/test_validation.py::TestDeduplicateSections::test_deduplicate_removes_repeated_sections PASSED [ 53%]
 tests/infrastructure/llm/test_validation.py::TestDeduplicateSections::test_deduplicate_keeps_unique_sections PASSED [ 53%]
@@ -1071,7 +1067,7 @@ tests/infrastructure/llm/test_validation.py::TestSimilarityCalculations::test_ca
 tests/infrastructure/llm/test_validation.py::TestOutputValidatorRepetition::test_validate_no_repetition_valid PASSED [ 53%]
 tests/infrastructure/llm/test_validation.py::TestOutputValidatorRepetition::test_validate_no_repetition_invalid PASSED [ 53%]
 tests/infrastructure/llm/test_validation.py::TestOutputValidatorRepetition::test_clean_repetitive_output PASSED [ 53%]
-tests/infrastructure/llm/test_validation.py::TestOffTopicDetection::test_is_off_topic_email_format PASSED [ 54%]
+tests/infrastructure/llm/test_validation.py::TestOffTopicDetection::test_is_off_topic_email_format PASSED [ 53%]
 tests/infrastructure/llm/test_validation.py::TestOffTopicDetection::test_is_off_topic_ai_refusal PASSED [ 54%]
 tests/infrastructure/llm/test_validation.py::TestOffTopicDetection::test_is_off_topic_self_identification PASSED [ 54%]
 tests/infrastructure/llm/test_validation.py::TestOffTopicDetection::test_is_off_topic_valid_review PASSED [ 54%]
@@ -1090,7 +1086,7 @@ tests/infrastructure/publishing/test_api.py::TestPublishingAPI::test_zenodo_clie
 tests/infrastructure/publishing/test_api.py::TestPublishingAPI::test_arxiv_client_available PASSED [ 54%]
 tests/infrastructure/publishing/test_api.py::TestPublishingAPI::test_github_client_available PASSED [ 54%]
 tests/infrastructure/publishing/test_api.py::TestPublishingAPI::test_api_authentication PASSED [ 54%]
-tests/infrastructure/publishing/test_api.py::TestPublishingAPI::test_api_error_handling PASSED [ 55%]
+tests/infrastructure/publishing/test_api.py::TestPublishingAPI::test_api_error_handling PASSED [ 54%]
 tests/infrastructure/publishing/test_api.py::TestPublishingAPI::test_api_retry_logic PASSED [ 55%]
 tests/infrastructure/publishing/test_cli.py::TestPublishingCLI::test_cli_module_exists PASSED [ 55%]
 tests/infrastructure/publishing/test_cli.py::TestPublishingCLI::test_publish_command_available PASSED [ 55%]
@@ -1127,7 +1123,7 @@ tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_validate
 tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_generate_citations_markdown_no_doi PASSED [ 56%]
 tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_calculate_file_hash_exception PASSED [ 56%]
 tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_extract_publication_metadata_exception PASSED [ 56%]
-tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_extract_publication_metadata_template_content PASSED [ 57%]
+tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_extract_publication_metadata_template_content PASSED [ 56%]
 tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_extract_publication_metadata_author_with_title PASSED [ 57%]
 tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_extract_publication_metadata_conference PASSED [ 57%]
 tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_extract_publication_metadata_proceedings PASSED [ 57%]
@@ -1164,7 +1160,7 @@ tests/infrastructure/publishing/test_publishing_api_coverage.py::TestMetadataExt
 tests/infrastructure/publishing/test_publishing_api_coverage.py::TestPublishingApiIntegration::test_full_publishing_workflow PASSED [ 58%]
 tests/infrastructure/publishing/test_publishing_api_full.py::TestPublishingApiImport::test_module_imports PASSED [ 58%]
 tests/infrastructure/publishing/test_publishing_api_full.py::TestPublishingApiImport::test_module_attributes PASSED [ 58%]
-tests/infrastructure/publishing/test_publishing_api_full.py::TestZenodoConfig::test_sandbox_url PASSED [ 59%]
+tests/infrastructure/publishing/test_publishing_api_full.py::TestZenodoConfig::test_sandbox_url PASSED [ 58%]
 tests/infrastructure/publishing/test_publishing_api_full.py::TestZenodoConfig::test_production_url PASSED [ 59%]
 tests/infrastructure/publishing/test_publishing_api_full.py::TestZenodoConfig::test_access_token PASSED [ 59%]
 tests/infrastructure/publishing/test_publishing_api_full.py::TestZenodoClient::test_init PASSED [ 59%]
@@ -1220,7 +1216,7 @@ tests/infrastructure/rendering/test_cli.py::TestRenderingCLI::test_cli_format_se
 tests/infrastructure/rendering/test_cli.py::TestRenderingCLI::test_render_execution PASSED [ 61%]
 tests/infrastructure/rendering/test_config.py::TestRenderingConfig::test_config_initialization PASSED [ 61%]
 tests/infrastructure/rendering/test_config.py::TestRenderingConfig::test_config_defaults PASSED [ 61%]
-tests/infrastructure/rendering/test_config.py::TestRenderingConfig::test_config_custom_output_dir PASSED [ 62%]
+tests/infrastructure/rendering/test_config.py::TestRenderingConfig::test_config_custom_output_dir PASSED [ 61%]
 tests/infrastructure/rendering/test_config.py::TestRenderingConfig::test_config_pdf_options PASSED [ 62%]
 tests/infrastructure/rendering/test_config.py::TestRenderingConfig::test_config_web_options PASSED [ 62%]
 tests/infrastructure/rendering/test_config.py::TestRenderingConfig::test_config_slides_options PASSED [ 62%]
@@ -1350,7 +1346,7 @@ tests/infrastructure/rendering/test_rendering_cli_full.py::TestRenderCliMain::te
 tests/infrastructure/rendering/test_rendering_cli_full.py::TestRenderCliIntegration::test_full_render_workflow PASSED [ 68%]
 tests/infrastructure/rendering/test_slides_renderer_comprehensive.py::TestSlidesRendererModule::test_module_imports PASSED [ 68%]
 tests/infrastructure/rendering/test_slides_renderer_comprehensive.py::TestSlidesRendererModule::test_module_has_functions PASSED [ 68%]
-tests/infrastructure/rendering/test_slides_renderer_comprehensive.py::TestSlidesRendererClass::test_class_exists PASSED [ 68%]
+tests/infrastructure/rendering/test_slides_renderer_comprehensive.py::TestSlidesRendererClass::test_class_exists PASSED [ 69%]
 tests/infrastructure/rendering/test_slides_renderer_comprehensive.py::TestSlidesRendererClass::test_renderer_init PASSED [ 69%]
 tests/infrastructure/rendering/test_slides_renderer_comprehensive.py::TestBeamerSlides::test_render_beamer_exists PASSED [ 69%]
 tests/infrastructure/rendering/test_slides_renderer_comprehensive.py::TestBeamerSlides::test_render_beamer PASSED [ 69%]
@@ -1443,7 +1439,7 @@ tests/infrastructure/validation/test_check_links.py::TestFindAllMarkdownFiles::t
 tests/infrastructure/validation/test_check_links.py::TestFindAllMarkdownFiles::test_find_markdown_files_nested PASSED [ 73%]
 tests/infrastructure/validation/test_check_links.py::TestExtractLinks::test_extract_internal_anchor_links PASSED [ 73%]
 tests/infrastructure/validation/test_check_links.py::TestExtractLinks::test_extract_external_links PASSED [ 73%]
-tests/infrastructure/validation/test_check_links.py::TestExtractLinks::test_extract_file_references PASSED [ 73%]
+tests/infrastructure/validation/test_check_links.py::TestExtractLinks::test_extract_file_references PASSED [ 74%]
 tests/infrastructure/validation/test_check_links.py::TestExtractLinks::test_extract_links_with_line_numbers PASSED [ 74%]
 tests/infrastructure/validation/test_check_links.py::TestExtractLinks::test_extract_mailto_links PASSED [ 74%]
 tests/infrastructure/validation/test_check_links.py::TestExtractLinks::test_extract_no_links PASSED [ 74%]
@@ -1480,7 +1476,7 @@ tests/infrastructure/validation/test_check_links_comprehensive.py::TestRelativeP
 tests/infrastructure/validation/test_check_links_comprehensive.py::TestRelativePathResolution::test_normalize_path PASSED [ 75%]
 tests/infrastructure/validation/test_check_links_comprehensive.py::TestCheckLinksIntegration::test_full_link_check_workflow PASSED [ 75%]
 tests/infrastructure/validation/test_check_links_edge_cases.py::TestCheckFileReferenceEdgeCases::test_path_outside_repository PASSED [ 75%]
-tests/infrastructure/validation/test_check_links_edge_cases.py::TestCheckFileReferenceEdgeCases::test_path_with_many_parent_refs PASSED [ 75%]
+tests/infrastructure/validation/test_check_links_edge_cases.py::TestCheckFileReferenceEdgeCases::test_path_with_many_parent_refs PASSED [ 76%]
 tests/infrastructure/validation/test_check_links_edge_cases.py::TestCheckFileReferenceEdgeCases::test_exception_during_path_resolution PASSED [ 76%]
 tests/infrastructure/validation/test_check_links_edge_cases.py::TestCheckFileReferenceEdgeCases::test_directory_reference_exists PASSED [ 76%]
 tests/infrastructure/validation/test_check_links_edge_cases.py::TestCheckFileReferenceEdgeCases::test_relative_path_with_dot_prefix PASSED [ 76%]
@@ -1517,7 +1513,7 @@ tests/infrastructure/validation/test_check_links_full.py::TestCheckFileReference
 tests/infrastructure/validation/test_check_links_full.py::TestExtractHeadings::test_basic_headings PASSED [ 77%]
 tests/infrastructure/validation/test_check_links_full.py::TestExtractHeadings::test_explicit_anchors PASSED [ 77%]
 tests/infrastructure/validation/test_check_links_full.py::TestExtractHeadings::test_special_characters PASSED [ 77%]
-tests/infrastructure/validation/test_check_links_full.py::TestExtractHeadingsEdgeCases::test_empty_anchor_after_stripping PASSED [ 77%]
+tests/infrastructure/validation/test_check_links_full.py::TestExtractHeadingsEdgeCases::test_empty_anchor_after_stripping PASSED [ 78%]
 tests/infrastructure/validation/test_check_links_full.py::TestExtractHeadingsEdgeCases::test_heading_with_numbers_and_special_chars PASSED [ 78%]
 tests/infrastructure/validation/test_check_links_full.py::TestExtractHeadingsEdgeCases::test_mixed_explicit_and_auto_anchors PASSED [ 78%]
 tests/infrastructure/validation/test_check_links_full.py::TestCheckFileReferenceEdgeCases::test_markdown_file_without_extension PASSED [ 78%]
@@ -1536,7 +1532,7 @@ tests/infrastructure/validation/test_check_links_full.py::TestCompleteValidation
 tests/infrastructure/validation/test_check_links_full.py::TestCheckLinksIntegration::test_full_workflow PASSED [ 78%]
 tests/infrastructure/validation/test_cli.py::TestValidatePdfCommand::test_pdf_not_found_exits PASSED [ 78%]
 tests/infrastructure/validation/test_cli.py::TestValidatePdfCommand::test_pdf_validation_non_verbose PASSED [ 78%]
-tests/infrastructure/validation/test_cli.py::TestValidateMarkdownCommand::test_markdown_dir_not_found_exits PASSED [ 78%]
+tests/infrastructure/validation/test_cli.py::TestValidateMarkdownCommand::test_markdown_dir_not_found_exits PASSED [ 79%]
 tests/infrastructure/validation/test_cli.py::TestValidateMarkdownCommand::test_valid_markdown_dir PASSED [ 79%]
 tests/infrastructure/validation/test_cli.py::TestVerifyIntegrityCommand::test_output_dir_not_found_exits PASSED [ 79%]
 tests/infrastructure/validation/test_cli.py::TestVerifyIntegrityCommand::test_valid_output_dir_non_verbose PASSED [ 79%]
@@ -1554,7 +1550,7 @@ tests/infrastructure/validation/test_cli.py::TestValidationCLI::test_cli_report_
 tests/infrastructure/validation/test_cli.py::TestValidationCLI::test_strict_mode_option PASSED [ 79%]
 tests/infrastructure/validation/test_doc_scanner.py::TestDataClasses::test_documentation_file_creation PASSED [ 79%]
 tests/infrastructure/validation/test_doc_scanner.py::TestDataClasses::test_link_issue_creation PASSED [ 79%]
-tests/infrastructure/validation/test_doc_scanner.py::TestDataClasses::test_accuracy_issue_creation PASSED [ 79%]
+tests/infrastructure/validation/test_doc_scanner.py::TestDataClasses::test_accuracy_issue_creation PASSED [ 80%]
 tests/infrastructure/validation/test_doc_scanner.py::TestDataClasses::test_completeness_gap_creation PASSED [ 80%]
 tests/infrastructure/validation/test_doc_scanner.py::TestDataClasses::test_quality_issue_creation PASSED [ 80%]
 tests/infrastructure/validation/test_doc_scanner.py::TestDataClasses::test_scan_results_creation PASSED [ 80%]
@@ -1573,7 +1569,7 @@ tests/infrastructure/validation/test_doc_scanner.py::TestDocumentationScanner::t
 tests/infrastructure/validation/test_doc_scanner.py::TestScannerVerificationMethods::test_run_link_checker_no_script PASSED [ 80%]
 tests/infrastructure/validation/test_doc_scanner.py::TestScannerVerificationMethods::test_validate_markdown_syntax PASSED [ 80%]
 tests/infrastructure/validation/test_doc_scanner.py::TestScannerVerificationMethods::test_test_documented_commands PASSED [ 80%]
-tests/infrastructure/validation/test_doc_scanner.py::TestScannerVerificationMethods::test_verify_cross_references PASSED [ 80%]
+tests/infrastructure/validation/test_doc_scanner.py::TestScannerVerificationMethods::test_verify_cross_references PASSED [ 81%]
 tests/infrastructure/validation/test_doc_scanner.py::TestScannerVerificationMethods::test_check_circular_references PASSED [ 81%]
 tests/infrastructure/validation/test_doc_scanner.py::TestReportGeneration::test_generate_report_empty_results PASSED [ 81%]
 tests/infrastructure/validation/test_doc_scanner.py::TestReportGeneration::test_generate_report_with_files PASSED [ 81%]
@@ -1592,7 +1588,7 @@ tests/infrastructure/validation/test_doc_scanner_coverage.py::TestDocScannerVali
 tests/infrastructure/validation/test_doc_scanner_coverage.py::TestDocScannerValidation::test_check_completeness PASSED [ 81%]
 tests/infrastructure/validation/test_doc_scanner_coverage.py::TestDocScannerIntegration::test_full_scan_workflow PASSED [ 81%]
 tests/infrastructure/validation/test_doc_scanner_full.py::TestDataClasses::test_documentation_file PASSED [ 81%]
-tests/infrastructure/validation/test_doc_scanner_full.py::TestDataClasses::test_link_issue PASSED [ 81%]
+tests/infrastructure/validation/test_doc_scanner_full.py::TestDataClasses::test_link_issue PASSED [ 82%]
 tests/infrastructure/validation/test_doc_scanner_full.py::TestDataClasses::test_accuracy_issue PASSED [ 82%]
 tests/infrastructure/validation/test_doc_scanner_full.py::TestDataClasses::test_completeness_gap PASSED [ 82%]
 tests/infrastructure/validation/test_doc_scanner_full.py::TestDataClasses::test_quality_issue PASSED [ 82%]
@@ -1610,7 +1606,7 @@ tests/infrastructure/validation/test_doc_scanner_full.py::TestScannerPhases::tes
 tests/infrastructure/validation/test_doc_scanner_full.py::TestScannerPrivateMethods::test_find_markdown_files PASSED [ 82%]
 tests/infrastructure/validation/test_doc_scanner_full.py::TestScannerPrivateMethods::test_catalog_agents_readme PASSED [ 82%]
 tests/infrastructure/validation/test_doc_scanner_full.py::TestScannerPrivateMethods::test_find_config_files PASSED [ 82%]
-tests/infrastructure/validation/test_doc_scanner_full.py::TestScannerPrivateMethods::test_extract_headings PASSED [ 82%]
+tests/infrastructure/validation/test_doc_scanner_full.py::TestScannerPrivateMethods::test_extract_headings PASSED [ 83%]
 tests/infrastructure/validation/test_doc_scanner_full.py::TestScannerPrivateMethods::test_analyze_documentation_file PASSED [ 83%]
 tests/infrastructure/validation/test_doc_scanner_full.py::TestScannerIntegration::test_full_scan_workflow PASSED [ 83%]
 tests/infrastructure/validation/test_doc_scanner_full.py::TestScannerIntegration::test_scanner_with_issues PASSED [ 83%]
@@ -1629,7 +1625,7 @@ tests/infrastructure/validation/test_doc_scanner_phases.py::TestDocScannerComple
 tests/infrastructure/validation/test_doc_scanner_phases.py::TestDocScannerCompleteness::test_check_troubleshooting PASSED [ 83%]
 tests/infrastructure/validation/test_doc_scanner_phases.py::TestDocScannerStatistics::test_statistics_populated PASSED [ 83%]
 tests/infrastructure/validation/test_integrity.py::TestFileIntegrity::test_verify_file_integrity_existing_file PASSED [ 83%]
-tests/infrastructure/validation/test_integrity.py::TestFileIntegrity::test_verify_file_integrity_nonexistent_file PASSED [ 83%]
+tests/infrastructure/validation/test_integrity.py::TestFileIntegrity::test_verify_file_integrity_nonexistent_file PASSED [ 84%]
 tests/infrastructure/validation/test_integrity.py::TestFileIntegrity::test_verify_file_integrity_with_expected_hashes PASSED [ 84%]
 tests/infrastructure/validation/test_integrity.py::TestHashCalculation::test_calculate_file_hash_existing_file PASSED [ 84%]
 tests/infrastructure/validation/test_integrity.py::TestHashCalculation::test_calculate_file_hash_nonexistent_file PASSED [ 84%]
@@ -1647,7 +1643,7 @@ tests/infrastructure/validation/test_integrity.py::TestBuildArtifacts::test_vali
 tests/infrastructure/validation/test_integrity.py::TestBuildArtifacts::test_validate_build_artifacts_empty PASSED [ 84%]
 tests/infrastructure/validation/test_integrity.py::TestFilePermissions::test_check_file_permissions_readable_directory PASSED [ 84%]
 tests/infrastructure/validation/test_integrity.py::TestFilePermissions::test_check_file_permissions_nonexistent_directory PASSED [ 84%]
-tests/infrastructure/validation/test_integrity.py::TestOutputCompleteness::test_verify_output_completeness_complete PASSED [ 84%]
+tests/infrastructure/validation/test_integrity.py::TestOutputCompleteness::test_verify_output_completeness_complete PASSED [ 85%]
 tests/infrastructure/validation/test_integrity.py::TestOutputCompleteness::test_verify_output_completeness_incomplete PASSED [ 85%]
 tests/infrastructure/validation/test_integrity.py::TestIntegrityManifest::test_create_integrity_manifest_empty_dir PASSED [ 85%]
 tests/infrastructure/validation/test_integrity.py::TestIntegrityManifest::test_create_integrity_manifest_with_files PASSED [ 85%]
@@ -1666,7 +1662,7 @@ tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_da
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_data_consistency_invalid_csv PASSED [ 85%]
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_data_consistency_numpy_file PASSED [ 85%]
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_data_consistency_pickle_file PASSED [ 85%]
-tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_data_consistency_exception PASSED [ 85%]
+tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_data_consistency_exception PASSED [ 86%]
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_academic_standards_exception PASSED [ 86%]
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_output_integrity_with_issues PASSED [ 86%]
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_output_integrity_cross_ref_failures PASSED [ 86%]
@@ -1684,8 +1680,8 @@ tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_ou
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_output_completeness_small_figure PASSED [ 86%]
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_output_completeness_missing_data_dir PASSED [ 86%]
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_output_completeness_missing_data_file PASSED [ 86%]
-tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_output_completeness_empty_data_file PASSED [ 86%]
-tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_output_completeness_missing_tex_dir PASSED [ 86%]
+tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_output_completeness_empty_data_file PASSED [ 87%]
+tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_output_completeness_missing_tex_dir PASSED [ 87%]
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_output_completeness_missing_html PASSED [ 87%]
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_load_integrity_manifest_invalid_json PASSED [ 87%]
 tests/infrastructure/validation/test_integrity.py::TestEdgeCases::test_verify_output_completeness_missing_tex_file PASSED [ 87%]
@@ -1703,7 +1699,7 @@ tests/infrastructure/validation/test_markdown_validator.py::TestFindMarkdownFile
 tests/infrastructure/validation/test_markdown_validator.py::TestFindMarkdownFiles::test_file_instead_of_directory_raises PASSED [ 87%]
 tests/infrastructure/validation/test_markdown_validator.py::TestFindMarkdownFiles::test_empty_directory PASSED [ 87%]
 tests/infrastructure/validation/test_markdown_validator.py::TestCollectSymbols::test_extracts_labels_and_anchors PASSED [ 87%]
-tests/infrastructure/validation/test_markdown_validator.py::TestCollectSymbols::test_empty_file_list PASSED [ 87%]
+tests/infrastructure/validation/test_markdown_validator.py::TestCollectSymbols::test_empty_file_list PASSED [ 88%]
 tests/infrastructure/validation/test_markdown_validator.py::TestValidateImages::test_detects_missing_image PASSED [ 88%]
 tests/infrastructure/validation/test_markdown_validator.py::TestValidateImages::test_validates_existing_image PASSED [ 88%]
 tests/infrastructure/validation/test_markdown_validator.py::TestValidateImages::test_absolute_path PASSED [ 88%]
@@ -1721,11 +1717,9 @@ tests/infrastructure/validation/test_markdown_validator.py::TestValidateMath::te
 tests/infrastructure/validation/test_markdown_validator.py::TestValidateMarkdown::test_no_problems_returns_zero PASSED [ 88%]
 tests/infrastructure/validation/test_markdown_validator.py::TestValidateMarkdown::test_problems_non_strict_returns_zero PASSED [ 88%]
 tests/infrastructure/validation/test_markdown_validator.py::TestValidateMarkdown::test_problems_strict_returns_one PASSED [ 88%]
-tests/infrastructure/validation/test_markdown_validator.py::TestValidateMarkdown::test_nonexistent_directory_raises PASSED [ 88%]
-tests/infrastructure/validation/test_markdown_validator.py::TestValidateMarkdown::test_empty_directory_returns_zero PASSED [ 88%]
+tests/infrastructure/validation/test_markdown_validator.py::TestValidateMarkdown::test_nonexistent_directory_raises PASSED [ 89%]
+tests/infrastructure/validation/test_markdown_validator.py::TestValidateMarkdown::test_empty_directory_returns_zero PASSED [ 89%]
 tests/infrastructure/validation/test_markdown_validator.py::TestFindManuscriptDirectory::test_finds_project_manuscript PASSED [ 89%]
-tests/infrastructure/validation/test_markdown_validator.py::TestFindManuscriptDirectory::test_finds_legacy_manuscript PASSED [ 89%]
-tests/infrastructure/validation/test_markdown_validator.py::TestFindManuscriptDirectory::test_prefers_project_over_legacy PASSED [ 89%]
 tests/infrastructure/validation/test_markdown_validator.py::TestFindManuscriptDirectory::test_raises_when_not_found PASSED [ 89%]
 tests/infrastructure/validation/test_markdown_validator.py::TestIntegration::test_full_validation_flow PASSED [ 89%]
 tests/infrastructure/validation/test_markdown_validator.py::TestIntegration::test_multiple_problems_detected PASSED [ 89%]
@@ -1741,7 +1735,7 @@ tests/infrastructure/validation/test_pdf_validator.py::test_extract_first_n_word
 tests/infrastructure/validation/test_pdf_validator.py::test_extract_first_n_words_empty_text PASSED [ 89%]
 tests/infrastructure/validation/test_pdf_validator.py::test_decode_pdf_hex_strings_empty_text PASSED [ 89%]
 tests/infrastructure/validation/test_pdf_validator.py::test_decode_pdf_hex_strings_valid PASSED [ 89%]
-tests/infrastructure/validation/test_pdf_validator.py::test_decode_pdf_hex_strings_invalid_hex PASSED [ 90%]
+tests/infrastructure/validation/test_pdf_validator.py::test_decode_pdf_hex_strings_invalid_hex PASSED [ 89%]
 tests/infrastructure/validation/test_pdf_validator.py::test_decode_hex_match_exception_path PASSED [ 90%]
 tests/infrastructure/validation/test_pdf_validator.py::test_extract_first_n_words_with_punctuation PASSED [ 90%]
 tests/infrastructure/validation/test_pdf_validator.py::test_validate_pdf_rendering_with_issues PASSED [ 90%]
@@ -1760,7 +1754,7 @@ tests/infrastructure/validation/test_repo_scanner.py::TestDataClasses::test_scan
 tests/infrastructure/validation/test_repo_scanner.py::TestRepositoryScanner::test_scanner_initialization PASSED [ 90%]
 tests/infrastructure/validation/test_repo_scanner.py::TestRepositoryScanner::test_discover_structure PASSED [ 90%]
 tests/infrastructure/validation/test_repo_scanner.py::TestCodeAccuracyChecking::test_check_code_accuracy_basic PASSED [ 90%]
-tests/infrastructure/validation/test_repo_scanner.py::TestCodeAccuracyChecking::test_check_code_accuracy_with_scripts PASSED [ 91%]
+tests/infrastructure/validation/test_repo_scanner.py::TestCodeAccuracyChecking::test_check_code_accuracy_with_scripts PASSED [ 90%]
 tests/infrastructure/validation/test_repo_scanner.py::TestCodeAccuracyChecking::test_check_code_accuracy_exception_handling PASSED [ 91%]
 tests/infrastructure/validation/test_repo_scanner.py::TestReportGeneration::test_generate_report_empty PASSED [ 91%]
 tests/infrastructure/validation/test_repo_scanner.py::TestReportGeneration::test_generate_report_with_accuracy_issues PASSED [ 91%]
@@ -1797,7 +1791,7 @@ tests/infrastructure/validation/test_repo_scanner_coverage.py::TestRepoScannerCo
 tests/infrastructure/validation/test_repo_scanner_coverage.py::TestRepoScannerCore::test_has_scanner_functionality PASSED [ 92%]
 tests/infrastructure/validation/test_repo_scanner_coverage.py::TestRepositoryScanning::test_scan_repository PASSED [ 92%]
 tests/infrastructure/validation/test_repo_scanner_coverage.py::TestRepositoryScanning::test_check_structure PASSED [ 92%]
-tests/infrastructure/validation/test_repo_scanner_coverage.py::TestFileOrganization::test_check_organization PASSED [ 93%]
+tests/infrastructure/validation/test_repo_scanner_coverage.py::TestFileOrganization::test_check_organization PASSED [ 92%]
 tests/infrastructure/validation/test_repo_scanner_coverage.py::TestNamingConventions::test_validate_naming PASSED [ 93%]
 tests/infrastructure/validation/test_repo_scanner_coverage.py::TestRepoScannerIntegration::test_full_scan_workflow PASSED [ 93%]
 tests/infrastructure/validation/test_repo_scanner_full.py::TestDataClasses::test_accuracy_issue PASSED [ 93%]
@@ -1834,7 +1828,7 @@ tests/infrastructure/validation/test_repo_scanner_full.py::TestMainFunction::tes
 tests/infrastructure/validation/test_repo_scanner_full.py::TestRepositoryScannerIntegration::test_scan_all PASSED [ 94%]
 tests/infrastructure/validation/test_repo_scanner_full.py::TestRepositoryScannerIntegration::test_scan_with_repo_utilities PASSED [ 94%]
 tests/infrastructure/validation/test_repo_scanner_full.py::TestRepositoryScannerIntegration::test_scan_with_docs_directory PASSED [ 94%]
-tests/infrastructure/validation/test_validate_markdown_cli.py::TestValidateMarkdownCliImportError::test_main_with_import_error PASSED [ 95%]
+tests/infrastructure/validation/test_validate_markdown_cli.py::TestValidateMarkdownCliImportError::test_main_with_import_error PASSED [ 94%]
 tests/infrastructure/validation/test_validate_markdown_cli.py::TestValidateMarkdownCliImportError::test_import_error_is_none_by_default PASSED [ 95%]
 tests/infrastructure/validation/test_validate_markdown_cli.py::TestValidateMarkdownCliMain::test_module_has_expected_functions PASSED [ 95%]
 tests/infrastructure/validation/test_validate_markdown_cli.py::TestValidateMarkdownCliHelpers::test_repo_root PASSED [ 95%]
@@ -1938,7 +1932,7 @@ infrastructure/__init__.py                                 12      2      0     
 infrastructure/core/__init__.py                            11      0      0      0 100.00%
 infrastructure/core/checkpoint.py                          92     24     24      0  65.52%   136-137, 151-152, 162-192
 infrastructure/core/config_cli.py                          21     11      6      2  44.44%   26-29, 35-37, 45-50
-infrastructure/core/config_loader.py                       88      5     44      7  90.91%   15-16, 29, 110, 115->119, 124->126, 126->130, 136->139, 203
+infrastructure/core/config_loader.py                       87      5     42      7  90.70%   15-16, 29, 110, 115->119, 124->126, 126->130, 136->139, 199
 infrastructure/core/credentials.py                         64     30     20      4  45.24%   11-15, 37, 44, 48-52, 56-66, 81, 86-93, 134, 152-153
 infrastructure/core/environment.py                        125    109     34      0  10.06%   26-35, 47-86, 98-132, 145-161, 175-197, 213-243, 255-273
 infrastructure/core/exceptions.py                         133     21     34      8  74.25%   286->296, 292->296, 296->304, 301->304, 372->381, 378, 382-409, 652->654
@@ -1964,7 +1958,7 @@ infrastructure/literature/core.py                         121     47     32     
 infrastructure/literature/library_index.py                176     28     60      4  81.36%   119-120, 158->164, 214->213, 230-231, 340-341, 363->367, 388-395, 403-414, 422-430
 infrastructure/literature/llm_operations.py               172     12     40      4  92.45%   18, 175, 177, 179, 182-183, 244-245, 303-304, 359-360
 infrastructure/literature/paper_selector.py               119      0     40      0 100.00%
-infrastructure/literature/pdf_downloader.py               230    167    108     11  22.49%   30, 42-66, 85-86, 102, 118, 120, 122, 126, 129-148, 182, 189-300, 313-332, 342, 397-512
+infrastructure/literature/pdf_downloader.py               230    164    108     11  23.37%   30, 42-66, 85-86, 102, 118, 120, 122, 126, 129-148, 182, 189-300, 313-332, 342, 397-497, 500-501, 504-512
 infrastructure/literature/pdf_extractor.py                100     17     78     13  77.53%   37-39, 51->50, 66->65, 81->80, 83->80, 96->95, 98->95, 110-114, 126->125, 131, 144-147, 159->158, 168->167, 182, 200-204
 infrastructure/literature/pdf_fallbacks.py                131     29     64     14  74.87%   32-35, 39, 43, 47, 51, 55, 59, 63, 160->159, 199, 221-229, 232-234, 253-254, 257->263, 260-261, 264-266
 infrastructure/literature/pdf_handler.py                  154     81     68     17  44.14%   23, 68, 119-126, 134-135, 146, 154-157, 162-164, 167->175, 170->169, 175->182, 178-179, 194-204, 212-213, 219->246, 222-243, 246->273, 249-270, 274->277, 296-318, 331-335, 349
@@ -1985,7 +1979,7 @@ infrastructure/llm/cli.py                                 135     64     48     
 infrastructure/llm/config.py                               81      2     18      0  97.98%   178-179
 infrastructure/llm/context.py                              39      0      8      0 100.00%
 infrastructure/llm/core.py                                178      8     30      3  94.71%   29-30, 93-94, 135->138, 209-211, 319->328, 475
-infrastructure/llm/ollama_utils.py                        122     49     44      9  54.22%   63-76, 138-139, 144-145, 164-171, 190-193, 198-204, 217-221, 244, 250, 265-281, 288, 330-339
+infrastructure/llm/ollama_utils.py                        122     57     44      7  46.99%   63-76, 138-139, 144-145, 164-171, 190-193, 198-204, 217-221, 244, 253-288, 330-339
 infrastructure/llm/prompts/__init__.py                      3      0      0      0 100.00%
 infrastructure/llm/prompts/composer.py                    170     28     58     21  77.63%   76-77, 105-109, 144->146, 146->148, 148->150, 150->153, 193, 200, 283->291, 292->300, 302-304, 346, 372, 378, 402-405, 411->417, 423, 429, 442, 456-459, 483, 489-492
 infrastructure/llm/prompts/loader.py                       67      5     16      1  92.77%   92-98, 197
@@ -2045,17 +2039,17 @@ infrastructure/validation/doc_scanner.py                  171     39     18     
 infrastructure/validation/doc_scanner_refactored.py       202    202     18      0   0.00%   13-431
 infrastructure/validation/figure_validator.py              44     36     16      0  13.33%   38-88
 infrastructure/validation/integrity.py                    354      8    158     15  95.51%   178->162, 187, 188->162, 258, 263, 294-295, 318->322, 327->330, 425, 475, 562->579, 575->570, 583->599, 603->620, 649
-infrastructure/validation/markdown_validator.py           109      0     54      1  99.39%   130->127
+infrastructure/validation/markdown_validator.py           108      0     52      1  99.38%   130->127
 infrastructure/validation/output_validator.py              69     62     28      0   7.22%   31-92, 111-183
 infrastructure/validation/pdf_validator.py                 60      3     10      1  94.29%   64, 143-144
 infrastructure/validation/repo_scanner.py                 323     50    150     17  85.84%   104->103, 136-137, 148->147, 151->147, 154-162, 189->191, 201, 212, 217, 219-220, 239, 260, 271-272, 294->292, 322-324, 327->326, 354-361, 364-369, 383-384, 434, 443->442, 456-457, 467-468, 552-577
 infrastructure/validation/validate_markdown_cli.py         88      2     34      0  98.36%   27-29
 infrastructure/validation/validate_pdf_cli.py              67      5     20      1  93.10%   28-32, 59->61
 ----------------------------------------------------------------------------------------------------
-TOTAL                                                   11343   3438   3726    446  67.23%
+TOTAL                                                   11341   3443   3722    444  67.16%
 Coverage HTML written to dir htmlcov
-Required test coverage of 60% reached. Total coverage: 67.23%
-========== 1857 passed, 4 skipped, 41 deselected in 78.71s (0:01:18) ===========
+Required test coverage of 60% reached. Total coverage: 67.16%
+========== 1851 passed, 4 skipped, 41 deselected in 80.99s (0:01:20) ===========
 ✓ Infrastructure tests passed
 
 [3/9] Project Tests (33% complete)
@@ -2411,41 +2405,41 @@ project/src/visualization.py        77      6     34      1  91.89%   143, 148-1
 TOTAL                             1211     28    462      3  98.03%
 Coverage HTML written to dir htmlcov
 Required test coverage of 90% reached. Total coverage: 98.03%
-============================= 320 passed in 1.61s ==============================
+============================= 320 passed in 1.51s ==============================
 ✓ Project tests passed
 
 [1;33m[4/9] Project Analysis (44% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-09 07:36:54] [INFO] 
+[2025-12-09 09:10:33] [INFO] 
 ============================================================
-[2025-12-09 07:36:54] [INFO] STAGE 02: Run Analysis
-[2025-12-09 07:36:54] [INFO] ============================================================
-[2025-12-09 07:36:54] [INFO] [STAGE-02] Discovering analysis scripts in project/...
-[2025-12-09 07:36:54] [INFO] Found: analysis_pipeline.py
-[2025-12-09 07:36:54] [INFO] Found: example_figure.py
-[2025-12-09 07:36:54] [INFO] Found: generate_research_figures.py
-[2025-12-09 07:36:54] [INFO] Found: generate_scientific_figures.py
-[2025-12-09 07:36:54] [INFO] Found: manuscript_preflight.py
-[2025-12-09 07:36:54] [INFO] Found: quality_report.py
-[2025-12-09 07:36:54] [INFO] Found: scientific_simulation.py
-[2025-12-09 07:36:54] [INFO] [STAGE-02] Executing analysis pipeline...
-[2025-12-09 07:36:54] [INFO]   [1/7] analysis_pipeline.py
-[2025-12-09 07:36:54] [INFO] 
+[2025-12-09 09:10:33] [INFO] STAGE 02: Run Analysis
+[2025-12-09 09:10:33] [INFO] ============================================================
+[2025-12-09 09:10:33] [INFO] [STAGE-02] Discovering analysis scripts in project/...
+[2025-12-09 09:10:33] [INFO] Found: analysis_pipeline.py
+[2025-12-09 09:10:33] [INFO] Found: example_figure.py
+[2025-12-09 09:10:33] [INFO] Found: generate_research_figures.py
+[2025-12-09 09:10:33] [INFO] Found: generate_scientific_figures.py
+[2025-12-09 09:10:33] [INFO] Found: manuscript_preflight.py
+[2025-12-09 09:10:33] [INFO] Found: quality_report.py
+[2025-12-09 09:10:33] [INFO] Found: scientific_simulation.py
+[2025-12-09 09:10:33] [INFO] [STAGE-02] Executing analysis pipeline...
+[2025-12-09 09:10:33] [INFO]   [1/7] analysis_pipeline.py
+[2025-12-09 09:10:33] [INFO] 
   Running: analysis_pipeline.py
-[2025-12-09 07:36:54] [INFO] Starting: Execute analysis_pipeline.py
+[2025-12-09 09:10:33] [INFO] Starting: Execute analysis_pipeline.py
 [LAYER-2-SCIENTIFIC] Loading and analyzing data from infrastructure/scientific integration...
-[2025-12-09 07:36:54] [INFO] Starting stage: load
+[2025-12-09 09:10:34] [INFO] Starting stage: load
   [LAYER-2] Data shape after cleaning: (200, 2)
   Mean: 0.0225
   Std: 0.9591
   Median: 0.0592
   Outliers detected: 4 (1.00%)
 ✅ Data analysis complete
-[2025-12-09 07:36:54] [INFO] 
+[2025-12-09 09:10:34] [INFO] 
   Stage load duration: 0.01s
-[2025-12-09 07:36:54] [INFO] load complete: [█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 14%
-[2025-12-09 07:36:54] [INFO] Completed stage: load
-[2025-12-09 07:36:54] [INFO] Starting stage: tests
+[2025-12-09 09:10:34] [INFO] load complete: [█████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 14%
+[2025-12-09 09:10:34] [INFO] Completed stage: load
+[2025-12-09 09:10:34] [INFO] Starting stage: tests
 
 Performing statistical tests...
   Correlation: 0.0478
@@ -2453,11 +2447,11 @@ Performing statistical tests...
   Group 2 CI: [0.3938, 0.9623]
   ANOVA F-statistic: 21.2189
 ✅ Statistical tests complete
-[2025-12-09 07:36:54] [INFO] 
+[2025-12-09 09:10:34] [INFO] 
   Stage tests duration: 0.00s
-[2025-12-09 07:36:54] [INFO] tests complete: [███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 28%
-[2025-12-09 07:36:54] [INFO] Completed stage: tests
-[2025-12-09 07:36:54] [INFO] Starting stage: classification
+[2025-12-09 09:10:34] [INFO] tests complete: [███████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 28%
+[2025-12-09 09:10:34] [INFO] Completed stage: tests
+[2025-12-09 09:10:34] [INFO] Starting stage: classification
 
 Analyzing classification performance...
   Accuracy: 0.7450
@@ -2466,21 +2460,21 @@ Analyzing classification performance...
   F1: 0.7918
   All metrics calculated: 4 metrics
 ✅ Classification analysis complete
-[2025-12-09 07:36:54] [INFO] 
+[2025-12-09 09:10:34] [INFO] 
   Stage classification duration: 0.00s
-[2025-12-09 07:36:54] [INFO] classification complete: [█████████████████░░░░░░░░░░░░░░░░░░░░░░░] 42%
-[2025-12-09 07:36:54] [INFO] Completed stage: classification
-[2025-12-09 07:36:54] [INFO] Starting stage: plots
+[2025-12-09 09:10:34] [INFO] classification complete: [█████████████████░░░░░░░░░░░░░░░░░░░░░░░] 42%
+[2025-12-09 09:10:34] [INFO] Completed stage: classification
+[2025-12-09 09:10:34] [INFO] Starting stage: plots
 
 Generating comparison plots...
   Saved figure: output/figures/analysis_comparison.png
   Registered figure: fig:analysis_comparison
 ✅ Comparison plots generated
-[2025-12-09 07:36:54] [INFO] 
+[2025-12-09 09:10:34] [INFO] 
   Stage plots duration: 0.13s
-[2025-12-09 07:36:54] [INFO] plots complete: [██████████████████████░░░░░░░░░░░░░░░░░░] 57%
-[2025-12-09 07:36:54] [INFO] Completed stage: plots
-[2025-12-09 07:36:54] [INFO] Starting stage: scalability
+[2025-12-09 09:10:34] [INFO] plots complete: [██████████████████████░░░░░░░░░░░░░░░░░░] 57%
+[2025-12-09 09:10:34] [INFO] Completed stage: plots
+[2025-12-09 09:10:34] [INFO] Starting stage: scalability
 
 Analyzing scalability...
   Estimated complexity: O(n)
@@ -2488,33 +2482,33 @@ Analyzing scalability...
   Best method: Optimized
   Best value: 8.50
 ✅ Scalability analysis complete
-[2025-12-09 07:36:54] [INFO] 
+[2025-12-09 09:10:34] [INFO] 
   Stage scalability duration: 0.00s
-[2025-12-09 07:36:54] [INFO] scalability complete: [████████████████████████████░░░░░░░░░░░░] 71%
-[2025-12-09 07:36:54] [INFO] Completed stage: scalability
-[2025-12-09 07:36:54] [INFO] Starting stage: report
+[2025-12-09 09:10:34] [INFO] scalability complete: [████████████████████████████░░░░░░░░░░░░] 71%
+[2025-12-09 09:10:34] [INFO] Completed stage: scalability
+[2025-12-09 09:10:34] [INFO] Starting stage: report
 
 Generating analysis report...
   Generated report: output/reports/analysis_report.md
 ✅ Analysis report generated
-[2025-12-09 07:36:54] [INFO] 
+[2025-12-09 09:10:34] [INFO] 
   Stage report duration: 0.00s
-[2025-12-09 07:36:54] [INFO] report complete: [██████████████████████████████████░░░░░░] 85%
-[2025-12-09 07:36:54] [INFO] Completed stage: report
-[2025-12-09 07:36:54] [INFO] Starting stage: validate
+[2025-12-09 09:10:34] [INFO] report complete: [██████████████████████████████████░░░░░░] 85%
+[2025-12-09 09:10:34] [INFO] Completed stage: report
+[2025-12-09 09:10:34] [INFO] Starting stage: validate
 
 Validating analysis results...
   Validation checks: 3
   All passed: True
 ✅ Validation complete
-[2025-12-09 07:36:54] [INFO] 
+[2025-12-09 09:10:34] [INFO] 
   Stage validate duration: 0.00s
-[2025-12-09 07:36:54] [INFO] validate complete: [████████████████████████████████████████] 100%
-[2025-12-09 07:36:54] [INFO] Completed stage: validate
-[2025-12-09 07:36:54] [INFO] Pipeline report (JSON) saved: output/reports/pipeline_report.json
-[2025-12-09 07:36:54] [INFO] Pipeline report (Markdown) saved: output/reports/pipeline_report.md
-[2025-12-09 07:36:54] [INFO] Pipeline report (HTML) saved: output/reports/pipeline_report.html
-[2025-12-09 07:36:54] [INFO] 
+[2025-12-09 09:10:34] [INFO] validate complete: [████████████████████████████████████████] 100%
+[2025-12-09 09:10:34] [INFO] Completed stage: validate
+[2025-12-09 09:10:34] [INFO] Pipeline report (JSON) saved: output/reports/pipeline_report.json
+[2025-12-09 09:10:34] [INFO] Pipeline report (Markdown) saved: output/reports/pipeline_report.md
+[2025-12-09 09:10:34] [INFO] Pipeline report (HTML) saved: output/reports/pipeline_report.html
+[2025-12-09 09:10:34] [INFO] 
   Saved pipeline report: {'json': PosixPath('output/reports/pipeline_report.json'), 'markdown': PosixPath('output/reports/pipeline_report.md'), 'html': PosixPath('output/reports/pipeline_report.html')}
 
 ✅ All analysis pipeline tasks completed successfully!
@@ -2522,12 +2516,12 @@ Validating analysis results...
 Generated outputs:
   - Figures: output/figures/
   - Reports: output/reports/
-[2025-12-09 07:36:54] [INFO] Completed: Execute analysis_pipeline.py (0.4s)
-[2025-12-09 07:36:54] [INFO]     ✅ Completed in 0s
-[2025-12-09 07:36:54] [INFO]   [2/7] example_figure.py
-[2025-12-09 07:36:54] [INFO] 
+[2025-12-09 09:10:34] [INFO] Completed: Execute analysis_pipeline.py (0.4s)
+[2025-12-09 09:10:34] [INFO]     ✅ Completed in 0s
+[2025-12-09 09:10:34] [INFO]   [2/7] example_figure.py
+[2025-12-09 09:10:34] [INFO] 
   Running: example_figure.py
-[2025-12-09 07:36:54] [INFO] Starting: Execute example_figure.py
+[2025-12-09 09:10:34] [INFO] Starting: Execute example_figure.py
 ✅ Successfully imported functions from src/example.py
 Data analysis using src/ functions:
   Average: 0.129793
@@ -2540,13 +2534,13 @@ Generated: /Users/mini/Documents/GitHub/template/project/output/data/example_dat
 ✅ Generated example figure using src/ functions: /Users/mini/Documents/GitHub/template/project/output/figures/example_figure.png
 ✅ Generated example data: /Users/mini/Documents/GitHub/template/project/output/data/example_data.npz
 ✅ Generated example CSV: /Users/mini/Documents/GitHub/template/project/output/data/example_data.csv
-[2025-12-09 07:36:55] [INFO] Completed: Execute example_figure.py (0.3s)
-[2025-12-09 07:36:55] [INFO]     ✅ Completed in 0s
-[2025-12-09 07:36:55] [INFO]   Progress: 2/7 (28%) - Elapsed: 0s | ETA: 1s
-[2025-12-09 07:36:55] [INFO]   [3/7] generate_research_figures.py
-[2025-12-09 07:36:55] [INFO] 
+[2025-12-09 09:10:34] [INFO] Completed: Execute example_figure.py (0.3s)
+[2025-12-09 09:10:34] [INFO]     ✅ Completed in 0s
+[2025-12-09 09:10:34] [INFO]   Progress: 2/7 (28%) - Elapsed: 0s | ETA: 1s
+[2025-12-09 09:10:34] [INFO]   [3/7] generate_research_figures.py
+[2025-12-09 09:10:34] [INFO] 
   Running: generate_research_figures.py
-[2025-12-09 07:36:55] [INFO] Starting: Execute generate_research_figures.py
+[2025-12-09 09:10:34] [INFO] Starting: Execute generate_research_figures.py
 Generating research figures using src/ modules...
 ✅ Using src/ functions for convergence plot
 Convergence analysis using src/ functions:
@@ -2602,47 +2596,47 @@ Generated: /Users/mini/Documents/GitHub/template/project/output/data/performance
    - Mathematical functions from example.py used for data processing
    - Statistical analysis using src/ functions
    - Proper error handling for missing imports
-[2025-12-09 07:36:56] [INFO] 
+[2025-12-09 09:10:35] [INFO] 
   Validating figure registry...
-[2025-12-09 07:36:56] [INFO] Figure registry loaded: 11 figure(s)
-[2025-12-09 07:36:56] [INFO] All 0 figure references verified
+[2025-12-09 09:10:35] [INFO] Figure registry loaded: 11 figure(s)
+[2025-12-09 09:10:35] [INFO] All 0 figure references verified
 ✅ Figure registry validation passed
 ✅ Output integrity check passed
-[2025-12-09 07:36:56] [INFO] Completed: Execute generate_research_figures.py (1.2s)
-[2025-12-09 07:36:56] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:36:56] [INFO]   [4/7] generate_scientific_figures.py
-[2025-12-09 07:36:56] [INFO] 
+[2025-12-09 09:10:35] [INFO] Completed: Execute generate_research_figures.py (1.1s)
+[2025-12-09 09:10:35] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:35] [INFO]   [4/7] generate_scientific_figures.py
+[2025-12-09 09:10:35] [INFO] 
   Running: generate_scientific_figures.py
-[2025-12-09 07:36:56] [INFO] Starting: Execute generate_scientific_figures.py
-[2025-12-09 07:36:56] [INFO] Starting stage: convergence
+[2025-12-09 09:10:35] [INFO] Starting: Execute generate_scientific_figures.py
+[2025-12-09 09:10:35] [INFO] Starting stage: convergence
 Generating convergence figure...
   Saved: output/figures/convergence_analysis.png
-[2025-12-09 07:36:56] [INFO] 
+[2025-12-09 09:10:35] [INFO] 
   convergence duration: 0.15s
-[2025-12-09 07:36:56] [INFO] convergence complete: [██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 16%
-[2025-12-09 07:36:56] [INFO] Completed stage: convergence
-[2025-12-09 07:36:56] [INFO] Starting stage: timeseries
+[2025-12-09 09:10:35] [INFO] convergence complete: [██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 16%
+[2025-12-09 09:10:35] [INFO] Completed stage: convergence
+[2025-12-09 09:10:35] [INFO] Starting stage: timeseries
 Generating time series figure...
   Saved: output/figures/time_series_analysis.png
-[2025-12-09 07:36:56] [INFO] 
-  timeseries duration: 0.10s
-[2025-12-09 07:36:56] [INFO] timeseries complete: [█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33%
-[2025-12-09 07:36:56] [INFO] Completed stage: timeseries
-[2025-12-09 07:36:56] [INFO] Starting stage: stats
+[2025-12-09 09:10:36] [INFO] 
+  timeseries duration: 0.09s
+[2025-12-09 09:10:36] [INFO] timeseries complete: [█████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░] 33%
+[2025-12-09 09:10:36] [INFO] Completed stage: timeseries
+[2025-12-09 09:10:36] [INFO] Starting stage: stats
 Generating statistical comparison figure...
   Saved: output/figures/statistical_comparison.png
-[2025-12-09 07:36:57] [INFO] 
-  stats duration: 0.08s
-[2025-12-09 07:36:57] [INFO] stats complete: [████████████████████░░░░░░░░░░░░░░░░░░░░] 50%
-[2025-12-09 07:36:57] [INFO] Completed stage: stats
-[2025-12-09 07:36:57] [INFO] Starting stage: scatter
+[2025-12-09 09:10:36] [INFO] 
+  stats duration: 0.07s
+[2025-12-09 09:10:36] [INFO] stats complete: [████████████████████░░░░░░░░░░░░░░░░░░░░] 50%
+[2025-12-09 09:10:36] [INFO] Completed stage: stats
+[2025-12-09 09:10:36] [INFO] Starting stage: scatter
 Generating scatter plot figure...
   Saved: output/figures/scatter_correlation.png
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] 
   scatter duration: 0.08s
-[2025-12-09 07:36:57] [INFO] scatter complete: [██████████████████████████░░░░░░░░░░░░░░] 66%
-[2025-12-09 07:36:57] [INFO] Completed stage: scatter
-[2025-12-09 07:36:57] [INFO] Starting stage: insert
+[2025-12-09 09:10:36] [INFO] scatter complete: [██████████████████████████░░░░░░░░░░░░░░] 66%
+[2025-12-09 09:10:36] [INFO] Completed stage: scatter
+[2025-12-09 09:10:36] [INFO] Starting stage: insert
 
 Inserting figures into manuscript...
   ✅ Inserted figure: fig:convergence_analysis
@@ -2650,26 +2644,26 @@ Inserting figures into manuscript...
   ✅ Inserted figure: fig:statistical_comparison
   ✅ Inserted figure: fig:scatter_correlation
   Reference scan complete: 0 updates (figures already present or no new references)
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] 
   insert duration: 0.00s
-[2025-12-09 07:36:57] [INFO] insert complete: [█████████████████████████████████░░░░░░░] 83%
-[2025-12-09 07:36:57] [INFO] Completed stage: insert
-[2025-12-09 07:36:57] [INFO] Starting stage: validate
+[2025-12-09 09:10:36] [INFO] insert complete: [█████████████████████████████████░░░░░░░] 83%
+[2025-12-09 09:10:36] [INFO] Completed stage: insert
+[2025-12-09 09:10:36] [INFO] Starting stage: validate
 
 Validating figures...
   ✅ All figures validated successfully
   Total figures: 15
   Figures by section: {'experimental_results': 12, 'introduction': 1, 'methodology': 2}
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] 
   Validating figure registry...
-[2025-12-09 07:36:57] [INFO] Figure registry loaded: 15 figure(s)
-[2025-12-09 07:36:57] [INFO] All 14 figure references verified
+[2025-12-09 09:10:36] [INFO] Figure registry loaded: 15 figure(s)
+[2025-12-09 09:10:36] [INFO] All 14 figure references verified
   ✅ Figure registry validated
   ✅ Markdown references validated
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] 
   validate duration: 0.01s
-[2025-12-09 07:36:57] [INFO] validate complete: [████████████████████████████████████████] 100%
-[2025-12-09 07:36:57] [INFO] Completed stage: validate
+[2025-12-09 09:10:36] [INFO] validate complete: [████████████████████████████████████████] 100%
+[2025-12-09 09:10:36] [INFO] Completed stage: validate
 
 ✅ Generated 4 figures
 
@@ -2680,48 +2674,48 @@ Generated outputs:
   - Figure registry: output/figures/figure_registry.json
 
 Figures are ready for manuscript integration
-[2025-12-09 07:36:57] [INFO] Pipeline report (JSON) saved: output/reports/pipeline_report.json
-[2025-12-09 07:36:57] [INFO] Pipeline report (Markdown) saved: output/reports/pipeline_report.md
-[2025-12-09 07:36:57] [INFO] Pipeline report (HTML) saved: output/reports/pipeline_report.html
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] Pipeline report (JSON) saved: output/reports/pipeline_report.json
+[2025-12-09 09:10:36] [INFO] Pipeline report (Markdown) saved: output/reports/pipeline_report.md
+[2025-12-09 09:10:36] [INFO] Pipeline report (HTML) saved: output/reports/pipeline_report.html
+[2025-12-09 09:10:36] [INFO] 
   Saved figure pipeline report: {'json': PosixPath('output/reports/pipeline_report.json'), 'markdown': PosixPath('output/reports/pipeline_report.md'), 'html': PosixPath('output/reports/pipeline_report.html')}
-[2025-12-09 07:36:57] [INFO] Completed: Execute generate_scientific_figures.py (0.7s)
-[2025-12-09 07:36:57] [INFO]     ✅ Completed in 0s
-[2025-12-09 07:36:57] [INFO]   Progress: 4/7 (57%) - Elapsed: 2s | ETA: 1s
-[2025-12-09 07:36:57] [INFO]   [5/7] manuscript_preflight.py
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] Completed: Execute generate_scientific_figures.py (0.6s)
+[2025-12-09 09:10:36] [INFO]     ✅ Completed in 0s
+[2025-12-09 09:10:36] [INFO]   Progress: 4/7 (57%) - Elapsed: 2s | ETA: 1s
+[2025-12-09 09:10:36] [INFO]   [5/7] manuscript_preflight.py
+[2025-12-09 09:10:36] [INFO] 
   Running: manuscript_preflight.py
-[2025-12-09 07:36:57] [INFO] Starting: Execute manuscript_preflight.py
+[2025-12-09 09:10:36] [INFO] Starting: Execute manuscript_preflight.py
 Manuscript dir: /Users/mini/Documents/GitHub/template/project/manuscript
 ✅ All referenced figures exist
 ✅ Glossary markers present
 ✅ References block present
 ℹ️  Quality metrics computed
-[2025-12-09 07:36:57] [INFO] Completed: Execute manuscript_preflight.py (0.2s)
-[2025-12-09 07:36:57] [INFO]     ✅ Completed in 0s
-[2025-12-09 07:36:57] [INFO]   [6/7] quality_report.py
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] Completed: Execute manuscript_preflight.py (0.2s)
+[2025-12-09 09:10:36] [INFO]     ✅ Completed in 0s
+[2025-12-09 09:10:36] [INFO]   [6/7] quality_report.py
+[2025-12-09 09:10:36] [INFO] 
   Running: quality_report.py
-[2025-12-09 07:36:57] [INFO] Starting: Execute quality_report.py
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] Starting: Execute quality_report.py
+[2025-12-09 09:10:36] [INFO] 
   Markdown validation: 0 issue(s)
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] 
   Quality metrics: skipped (build modules not available)
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] 
   Output integrity: completed
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] 
   Reproducibility: skipped (build modules not available)
-[2025-12-09 07:36:57] [INFO] Pipeline report (JSON) saved: output/reports/pipeline_report.json
-[2025-12-09 07:36:57] [INFO] Pipeline report (Markdown) saved: output/reports/pipeline_report.md
-[2025-12-09 07:36:57] [INFO] Pipeline report (HTML) saved: output/reports/pipeline_report.html
+[2025-12-09 09:10:36] [INFO] Pipeline report (JSON) saved: output/reports/pipeline_report.json
+[2025-12-09 09:10:36] [INFO] Pipeline report (Markdown) saved: output/reports/pipeline_report.md
+[2025-12-09 09:10:36] [INFO] Pipeline report (HTML) saved: output/reports/pipeline_report.html
 ✅ Quality report generated at output/reports/quality_report.json
-[2025-12-09 07:36:57] [INFO] Completed: Execute quality_report.py (0.2s)
-[2025-12-09 07:36:57] [INFO]     ✅ Completed in 0s
-[2025-12-09 07:36:57] [INFO]   Progress: 6/7 (85%) - Elapsed: 2s | ETA: 1s
-[2025-12-09 07:36:57] [INFO]   [7/7] scientific_simulation.py
-[2025-12-09 07:36:57] [INFO] 
+[2025-12-09 09:10:36] [INFO] Completed: Execute quality_report.py (0.2s)
+[2025-12-09 09:10:36] [INFO]     ✅ Completed in 0s
+[2025-12-09 09:10:36] [INFO]   Progress: 6/7 (85%) - Elapsed: 2s | ETA: 1s
+[2025-12-09 09:10:36] [INFO]   [7/7] scientific_simulation.py
+[2025-12-09 09:10:36] [INFO] 
   Running: scientific_simulation.py
-[2025-12-09 07:36:57] [INFO] Starting: Execute scientific_simulation.py
+[2025-12-09 09:10:36] [INFO] Starting: Execute scientific_simulation.py
 Running scientific simulation example...
 Running simulation...
 Iteration 10, elapsed: 0.00s
@@ -2768,240 +2762,498 @@ Generated outputs:
   - Simulations: output/simulations/
   - Figures: output/figures/
   - Reports: output/reports/
-[2025-12-09 07:36:57] [INFO] Completed: Execute scientific_simulation.py (0.4s)
-[2025-12-09 07:36:57] [INFO]     ✅ Completed in 0s
-[2025-12-09 07:36:57] [INFO]   Progress: 7/7 (100%) - Elapsed: 3s | ETA: 0s
-[2025-12-09 07:36:57] [INFO] Analysis scripts completed: 7/7 (analysis_pipeline.py, example_figure.py, generate_research_figures.py, generate_scientific_figures.py, manuscript_preflight.py, quality_report.py, scientific_simulation.py)
-[2025-12-09 07:36:57] [INFO] [STAGE-02] Verifying analysis outputs...
-[2025-12-09 07:36:57] [INFO] Output directory has 23 file(s): figures
-[2025-12-09 07:36:57] [INFO] Output directory has 5 file(s): data
-[2025-12-09 07:36:57] [INFO] Analysis complete - ready for PDF rendering
+[2025-12-09 09:10:37] [INFO] Completed: Execute scientific_simulation.py (0.4s)
+[2025-12-09 09:10:37] [INFO]     ✅ Completed in 0s
+[2025-12-09 09:10:37] [INFO]   Progress: 7/7 (100%) - Elapsed: 3s | ETA: 0s
+[2025-12-09 09:10:37] [INFO] Analysis scripts completed: 7/7 (analysis_pipeline.py, example_figure.py, generate_research_figures.py, generate_scientific_figures.py, manuscript_preflight.py, quality_report.py, scientific_simulation.py)
+[2025-12-09 09:10:37] [INFO] [STAGE-02] Verifying analysis outputs...
+[2025-12-09 09:10:37] [INFO] Output directory has 23 file(s): figures
+[2025-12-09 09:10:37] [INFO] Output directory has 5 file(s): data
+[2025-12-09 09:10:37] [INFO] Analysis complete - ready for PDF rendering
 [0;32m✓[0m Project analysis complete
-[2025-12-09 07:36:58] [INFO] 
-[2025-12-09 07:36:58] [INFO] ==================================================
-[2025-12-09 07:36:58] [INFO] STAGE 03: Render PDF
-[2025-12-09 07:36:58] [INFO] ==================================================
-[2025-12-09 07:36:58] [INFO] Executing PDF rendering pipeline...
-[2025-12-09 07:36:58] [INFO] Running pre-flight LaTeX package validation...
-[2025-12-09 07:36:58] [INFO] Validating 12 required and 11 optional LaTeX packages...
-[2025-12-09 07:36:58] [INFO] ✓ All LaTeX packages available
-[2025-12-09 07:36:58] [INFO] Verifying figures from analysis stage...
-[2025-12-09 07:36:58] [INFO] Found 16 figure(s) in figures/
-[2025-12-09 07:36:58] [INFO]   Found figures: ablation_study.png, analysis_comparison.png, convergence_analysis.png
-[2025-12-09 07:36:58] [INFO]   ... and 13 more
-[2025-12-09 07:36:58] [INFO] Discovered 14 manuscript file(s):
-[2025-12-09 07:36:58] [INFO]   Main sections: 8
-[2025-12-09 07:36:58] [INFO]     - 01_abstract.md
-[2025-12-09 07:36:58] [INFO]     - 02_introduction.md
-[2025-12-09 07:36:58] [INFO]     - 03_methodology.md
-[2025-12-09 07:36:58] [INFO]     - 04_experimental_results.md
-[2025-12-09 07:36:58] [INFO]     - 05_discussion.md
-[2025-12-09 07:36:58] [INFO]     - 06_conclusion.md
-[2025-12-09 07:36:58] [INFO]     - 08_acknowledgments.md
-[2025-12-09 07:36:58] [INFO]     - 09_appendix.md
-[2025-12-09 07:36:58] [INFO]   Supplemental: 4
-[2025-12-09 07:36:58] [INFO]     - S01_supplemental_methods.md
-[2025-12-09 07:36:58] [INFO]     - S02_supplemental_results.md
-[2025-12-09 07:36:58] [INFO]     - S03_supplemental_analysis.md
-[2025-12-09 07:36:58] [INFO]     - S04_supplemental_applications.md
-[2025-12-09 07:36:58] [INFO]   Glossary: 1
-[2025-12-09 07:36:58] [INFO]     - 98_symbols_glossary.md
-[2025-12-09 07:36:58] [INFO]   References: 1
-[2025-12-09 07:36:58] [INFO]     - 99_references.md
-[2025-12-09 07:36:58] [INFO] Initialized RenderManager from infrastructure.rendering
-[2025-12-09 07:36:58] [INFO]   [1/14] 01_abstract.md
-[2025-12-09 07:36:58] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/01_abstract.md
-[2025-12-09 07:36:58] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/01_abstract_slides.tex with xelatex
-[2025-12-09 07:36:59] [INFO] Generated beamer slides: 01_abstract_slides.pdf
-[2025-12-09 07:36:59] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/01_abstract.md
-[2025-12-09 07:36:59] [INFO] Generated: 01_abstract_slides.pdf
-[2025-12-09 07:36:59] [INFO] Generated: 01_abstract.html
-[2025-12-09 07:36:59] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:36:59] [INFO]   [2/14] 02_introduction.md
-[2025-12-09 07:36:59] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/02_introduction.md
-[2025-12-09 07:36:59] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/02_introduction_slides.tex with xelatex
-[2025-12-09 07:37:01] [INFO] Generated beamer slides: 02_introduction_slides.pdf
-[2025-12-09 07:37:01] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/02_introduction.md
-[2025-12-09 07:37:01] [INFO] Generated: 02_introduction_slides.pdf
-[2025-12-09 07:37:01] [INFO] Generated: 02_introduction.html
-[2025-12-09 07:37:01] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:01] [INFO]   [3/14] 03_methodology.md
-[2025-12-09 07:37:01] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/03_methodology.md
-[2025-12-09 07:37:01] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/03_methodology_slides.tex with xelatex
-[2025-12-09 07:37:02] [INFO] Generated beamer slides: 03_methodology_slides.pdf
-[2025-12-09 07:37:02] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/03_methodology.md
-[2025-12-09 07:37:02] [INFO] Generated: 03_methodology_slides.pdf
-[2025-12-09 07:37:02] [INFO] Generated: 03_methodology.html
-[2025-12-09 07:37:02] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:02] [INFO]   [4/14] 04_experimental_results.md
-[2025-12-09 07:37:02] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/04_experimental_results.md
-[2025-12-09 07:37:02] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/04_experimental_results_slides.tex with xelatex
-[2025-12-09 07:37:04] [INFO] Generated beamer slides: 04_experimental_results_slides.pdf
-[2025-12-09 07:37:04] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/04_experimental_results.md
-[2025-12-09 07:37:04] [INFO] Generated: 04_experimental_results_slides.pdf
-[2025-12-09 07:37:04] [INFO] Generated: 04_experimental_results.html
-[2025-12-09 07:37:04] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:04] [INFO]   [5/14] 05_discussion.md
-[2025-12-09 07:37:04] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/05_discussion.md
-[2025-12-09 07:37:04] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/05_discussion_slides.tex with xelatex
-[2025-12-09 07:37:05] [INFO] Generated beamer slides: 05_discussion_slides.pdf
-[2025-12-09 07:37:05] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/05_discussion.md
-[2025-12-09 07:37:05] [INFO] Generated: 05_discussion_slides.pdf
-[2025-12-09 07:37:05] [INFO] Generated: 05_discussion.html
-[2025-12-09 07:37:05] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:05] [INFO]   [6/14] 06_conclusion.md
-[2025-12-09 07:37:05] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/06_conclusion.md
-[2025-12-09 07:37:05] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/06_conclusion_slides.tex with xelatex
-[2025-12-09 07:37:07] [INFO] Generated beamer slides: 06_conclusion_slides.pdf
-[2025-12-09 07:37:07] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/06_conclusion.md
-[2025-12-09 07:37:07] [INFO] Generated: 06_conclusion_slides.pdf
-[2025-12-09 07:37:07] [INFO] Generated: 06_conclusion.html
-[2025-12-09 07:37:07] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:07] [INFO]   [7/14] 08_acknowledgments.md
-[2025-12-09 07:37:07] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/08_acknowledgments.md
-[2025-12-09 07:37:07] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/08_acknowledgments_slides.tex with xelatex
-[2025-12-09 07:37:08] [INFO] Generated beamer slides: 08_acknowledgments_slides.pdf
-[2025-12-09 07:37:08] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/08_acknowledgments.md
-[2025-12-09 07:37:08] [INFO] Generated: 08_acknowledgments_slides.pdf
-[2025-12-09 07:37:08] [INFO] Generated: 08_acknowledgments.html
-[2025-12-09 07:37:08] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:08] [INFO]   [8/14] 09_appendix.md
-[2025-12-09 07:37:08] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/09_appendix.md
-[2025-12-09 07:37:08] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/09_appendix_slides.tex with xelatex
-[2025-12-09 07:37:09] [INFO] Generated beamer slides: 09_appendix_slides.pdf
-[2025-12-09 07:37:09] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/09_appendix.md
-[2025-12-09 07:37:09] [INFO] Generated: 09_appendix_slides.pdf
-[2025-12-09 07:37:09] [INFO] Generated: 09_appendix.html
-[2025-12-09 07:37:09] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:09] [INFO]   [9/14] S01_supplemental_methods.md
-[2025-12-09 07:37:09] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/S01_supplemental_methods.md
-[2025-12-09 07:37:10] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/S01_supplemental_methods_slides.tex with xelatex
-[2025-12-09 07:37:11] [INFO] Generated beamer slides: S01_supplemental_methods_slides.pdf
-[2025-12-09 07:37:11] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/S01_supplemental_methods.md
-[2025-12-09 07:37:11] [INFO] Generated: S01_supplemental_methods_slides.pdf
-[2025-12-09 07:37:11] [INFO] Generated: S01_supplemental_methods.html
-[2025-12-09 07:37:11] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:11] [INFO]   [10/14] S02_supplemental_results.md
-[2025-12-09 07:37:11] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/S02_supplemental_results.md
-[2025-12-09 07:37:11] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/S02_supplemental_results_slides.tex with xelatex
-[2025-12-09 07:37:12] [INFO] Generated beamer slides: S02_supplemental_results_slides.pdf
-[2025-12-09 07:37:12] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/S02_supplemental_results.md
-[2025-12-09 07:37:12] [INFO] Generated: S02_supplemental_results_slides.pdf
-[2025-12-09 07:37:12] [INFO] Generated: S02_supplemental_results.html
-[2025-12-09 07:37:12] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:12] [INFO]   [11/14] S03_supplemental_analysis.md
-[2025-12-09 07:37:12] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/S03_supplemental_analysis.md
-[2025-12-09 07:37:13] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/S03_supplemental_analysis_slides.tex with xelatex
-[2025-12-09 07:37:14] [INFO] Generated beamer slides: S03_supplemental_analysis_slides.pdf
-[2025-12-09 07:37:14] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/S03_supplemental_analysis.md
-[2025-12-09 07:37:14] [INFO] Generated: S03_supplemental_analysis_slides.pdf
-[2025-12-09 07:37:14] [INFO] Generated: S03_supplemental_analysis.html
-[2025-12-09 07:37:14] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:14] [INFO]   [12/14] S04_supplemental_applications.md
-[2025-12-09 07:37:14] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/S04_supplemental_applications.md
-[2025-12-09 07:37:14] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/S04_supplemental_applications_slides.tex with xelatex
-[2025-12-09 07:37:15] [INFO] Generated beamer slides: S04_supplemental_applications_slides.pdf
-[2025-12-09 07:37:15] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/S04_supplemental_applications.md
-[2025-12-09 07:37:16] [INFO] Generated: S04_supplemental_applications_slides.pdf
-[2025-12-09 07:37:16] [INFO] Generated: S04_supplemental_applications.html
-[2025-12-09 07:37:16] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:16] [INFO]   [13/14] 98_symbols_glossary.md
-[2025-12-09 07:37:16] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/98_symbols_glossary.md
-[2025-12-09 07:37:16] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/98_symbols_glossary_slides.tex with xelatex
-[2025-12-09 07:37:17] [INFO] Generated beamer slides: 98_symbols_glossary_slides.pdf
-[2025-12-09 07:37:17] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/98_symbols_glossary.md
-[2025-12-09 07:37:17] [INFO] Generated: 98_symbols_glossary_slides.pdf
-[2025-12-09 07:37:17] [INFO] Generated: 98_symbols_glossary.html
-[2025-12-09 07:37:17] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:17] [INFO]   [14/14] 99_references.md
-[2025-12-09 07:37:17] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/99_references.md
-[2025-12-09 07:37:17] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/99_references_slides.tex with xelatex
-[2025-12-09 07:37:18] [INFO] Generated beamer slides: 99_references_slides.pdf
-[2025-12-09 07:37:18] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/99_references.md
-[2025-12-09 07:37:18] [INFO] Generated: 99_references_slides.pdf
-[2025-12-09 07:37:18] [INFO] Generated: 99_references.html
-[2025-12-09 07:37:18] [INFO]     ✅ Completed in 1s
-[2025-12-09 07:37:18] [INFO] 
+[2025-12-09 09:10:37] [INFO] 
+[2025-12-09 09:10:37] [INFO] ==================================================
+[2025-12-09 09:10:37] [INFO] STAGE 03: Render PDF
+[2025-12-09 09:10:37] [INFO] ==================================================
+[2025-12-09 09:10:37] [INFO] Executing PDF rendering pipeline...
+[2025-12-09 09:10:37] [INFO] Running pre-flight LaTeX package validation...
+[2025-12-09 09:10:37] [INFO] Validating 12 required and 11 optional LaTeX packages...
+[2025-12-09 09:10:37] [INFO] ✓ All LaTeX packages available
+[2025-12-09 09:10:37] [INFO] Verifying figures from analysis stage...
+[2025-12-09 09:10:37] [INFO] Found 16 figure(s) in figures/
+[2025-12-09 09:10:37] [INFO]   Found figures: ablation_study.png, analysis_comparison.png, convergence_analysis.png
+[2025-12-09 09:10:37] [INFO]   ... and 13 more
+[2025-12-09 09:10:37] [INFO] Discovered 14 manuscript file(s):
+[2025-12-09 09:10:37] [INFO]   Main sections: 8
+[2025-12-09 09:10:37] [INFO]     - 01_abstract.md
+[2025-12-09 09:10:37] [INFO]     - 02_introduction.md
+[2025-12-09 09:10:37] [INFO]     - 03_methodology.md
+[2025-12-09 09:10:37] [INFO]     - 04_experimental_results.md
+[2025-12-09 09:10:37] [INFO]     - 05_discussion.md
+[2025-12-09 09:10:37] [INFO]     - 06_conclusion.md
+[2025-12-09 09:10:37] [INFO]     - 08_acknowledgments.md
+[2025-12-09 09:10:37] [INFO]     - 09_appendix.md
+[2025-12-09 09:10:37] [INFO]   Supplemental: 4
+[2025-12-09 09:10:37] [INFO]     - S01_supplemental_methods.md
+[2025-12-09 09:10:37] [INFO]     - S02_supplemental_results.md
+[2025-12-09 09:10:37] [INFO]     - S03_supplemental_analysis.md
+[2025-12-09 09:10:37] [INFO]     - S04_supplemental_applications.md
+[2025-12-09 09:10:37] [INFO]   Glossary: 1
+[2025-12-09 09:10:37] [INFO]     - 98_symbols_glossary.md
+[2025-12-09 09:10:37] [INFO]   References: 1
+[2025-12-09 09:10:37] [INFO]     - 99_references.md
+[2025-12-09 09:10:37] [INFO] Initialized RenderManager from infrastructure.rendering
+[2025-12-09 09:10:37] [INFO]   [1/14] 01_abstract.md
+[2025-12-09 09:10:37] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/01_abstract.md
+[2025-12-09 09:10:37] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/01_abstract_slides.tex with xelatex
+[2025-12-09 09:10:38] [INFO] Generated beamer slides: 01_abstract_slides.pdf
+[2025-12-09 09:10:38] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/01_abstract.md
+[2025-12-09 09:10:38] [INFO] Generated: 01_abstract_slides.pdf
+[2025-12-09 09:10:38] [INFO] Generated: 01_abstract.html
+[2025-12-09 09:10:38] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:38] [INFO]   [2/14] 02_introduction.md
+[2025-12-09 09:10:38] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/02_introduction.md
+[2025-12-09 09:10:38] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/02_introduction_slides.tex with xelatex
+[2025-12-09 09:10:40] [INFO] Generated beamer slides: 02_introduction_slides.pdf
+[2025-12-09 09:10:40] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/02_introduction.md
+[2025-12-09 09:10:40] [INFO] Generated: 02_introduction_slides.pdf
+[2025-12-09 09:10:40] [INFO] Generated: 02_introduction.html
+[2025-12-09 09:10:40] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:40] [INFO]   [3/14] 03_methodology.md
+[2025-12-09 09:10:40] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/03_methodology.md
+[2025-12-09 09:10:40] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/03_methodology_slides.tex with xelatex
+[2025-12-09 09:10:41] [INFO] Generated beamer slides: 03_methodology_slides.pdf
+[2025-12-09 09:10:41] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/03_methodology.md
+[2025-12-09 09:10:41] [INFO] Generated: 03_methodology_slides.pdf
+[2025-12-09 09:10:41] [INFO] Generated: 03_methodology.html
+[2025-12-09 09:10:41] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:41] [INFO]   [4/14] 04_experimental_results.md
+[2025-12-09 09:10:41] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/04_experimental_results.md
+[2025-12-09 09:10:41] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/04_experimental_results_slides.tex with xelatex
+[2025-12-09 09:10:42] [INFO] Generated beamer slides: 04_experimental_results_slides.pdf
+[2025-12-09 09:10:42] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/04_experimental_results.md
+[2025-12-09 09:10:42] [INFO] Generated: 04_experimental_results_slides.pdf
+[2025-12-09 09:10:42] [INFO] Generated: 04_experimental_results.html
+[2025-12-09 09:10:42] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:42] [INFO]   [5/14] 05_discussion.md
+[2025-12-09 09:10:42] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/05_discussion.md
+[2025-12-09 09:10:42] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/05_discussion_slides.tex with xelatex
+[2025-12-09 09:10:44] [INFO] Generated beamer slides: 05_discussion_slides.pdf
+[2025-12-09 09:10:44] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/05_discussion.md
+[2025-12-09 09:10:44] [INFO] Generated: 05_discussion_slides.pdf
+[2025-12-09 09:10:44] [INFO] Generated: 05_discussion.html
+[2025-12-09 09:10:44] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:44] [INFO]   [6/14] 06_conclusion.md
+[2025-12-09 09:10:44] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/06_conclusion.md
+[2025-12-09 09:10:44] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/06_conclusion_slides.tex with xelatex
+[2025-12-09 09:10:45] [INFO] Generated beamer slides: 06_conclusion_slides.pdf
+[2025-12-09 09:10:45] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/06_conclusion.md
+[2025-12-09 09:10:45] [INFO] Generated: 06_conclusion_slides.pdf
+[2025-12-09 09:10:45] [INFO] Generated: 06_conclusion.html
+[2025-12-09 09:10:45] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:45] [INFO]   [7/14] 08_acknowledgments.md
+[2025-12-09 09:10:45] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/08_acknowledgments.md
+[2025-12-09 09:10:45] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/08_acknowledgments_slides.tex with xelatex
+[2025-12-09 09:10:46] [INFO] Generated beamer slides: 08_acknowledgments_slides.pdf
+[2025-12-09 09:10:46] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/08_acknowledgments.md
+[2025-12-09 09:10:47] [INFO] Generated: 08_acknowledgments_slides.pdf
+[2025-12-09 09:10:47] [INFO] Generated: 08_acknowledgments.html
+[2025-12-09 09:10:47] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:47] [INFO]   [8/14] 09_appendix.md
+[2025-12-09 09:10:47] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/09_appendix.md
+[2025-12-09 09:10:47] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/09_appendix_slides.tex with xelatex
+[2025-12-09 09:10:48] [INFO] Generated beamer slides: 09_appendix_slides.pdf
+[2025-12-09 09:10:48] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/09_appendix.md
+[2025-12-09 09:10:48] [INFO] Generated: 09_appendix_slides.pdf
+[2025-12-09 09:10:48] [INFO] Generated: 09_appendix.html
+[2025-12-09 09:10:48] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:48] [INFO]   [9/14] S01_supplemental_methods.md
+[2025-12-09 09:10:48] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/S01_supplemental_methods.md
+[2025-12-09 09:10:48] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/S01_supplemental_methods_slides.tex with xelatex
+[2025-12-09 09:10:49] [INFO] Generated beamer slides: S01_supplemental_methods_slides.pdf
+[2025-12-09 09:10:49] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/S01_supplemental_methods.md
+[2025-12-09 09:10:49] [INFO] Generated: S01_supplemental_methods_slides.pdf
+[2025-12-09 09:10:49] [INFO] Generated: S01_supplemental_methods.html
+[2025-12-09 09:10:49] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:49] [INFO]   [10/14] S02_supplemental_results.md
+[2025-12-09 09:10:49] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/S02_supplemental_results.md
+[2025-12-09 09:10:49] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/S02_supplemental_results_slides.tex with xelatex
+[2025-12-09 09:10:51] [INFO] Generated beamer slides: S02_supplemental_results_slides.pdf
+[2025-12-09 09:10:51] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/S02_supplemental_results.md
+[2025-12-09 09:10:51] [INFO] Generated: S02_supplemental_results_slides.pdf
+[2025-12-09 09:10:51] [INFO] Generated: S02_supplemental_results.html
+[2025-12-09 09:10:51] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:51] [INFO]   [11/14] S03_supplemental_analysis.md
+[2025-12-09 09:10:51] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/S03_supplemental_analysis.md
+[2025-12-09 09:10:51] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/S03_supplemental_analysis_slides.tex with xelatex
+[2025-12-09 09:10:52] [INFO] Generated beamer slides: S03_supplemental_analysis_slides.pdf
+[2025-12-09 09:10:52] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/S03_supplemental_analysis.md
+[2025-12-09 09:10:52] [INFO] Generated: S03_supplemental_analysis_slides.pdf
+[2025-12-09 09:10:52] [INFO] Generated: S03_supplemental_analysis.html
+[2025-12-09 09:10:52] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:52] [INFO]   [12/14] S04_supplemental_applications.md
+[2025-12-09 09:10:52] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/S04_supplemental_applications.md
+[2025-12-09 09:10:52] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/S04_supplemental_applications_slides.tex with xelatex
+[2025-12-09 09:10:54] [INFO] Generated beamer slides: S04_supplemental_applications_slides.pdf
+[2025-12-09 09:10:54] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/S04_supplemental_applications.md
+[2025-12-09 09:10:54] [INFO] Generated: S04_supplemental_applications_slides.pdf
+[2025-12-09 09:10:54] [INFO] Generated: S04_supplemental_applications.html
+[2025-12-09 09:10:54] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:54] [INFO]   [13/14] 98_symbols_glossary.md
+[2025-12-09 09:10:54] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/98_symbols_glossary.md
+[2025-12-09 09:10:54] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/98_symbols_glossary_slides.tex with xelatex
+[2025-12-09 09:10:55] [INFO] Generated beamer slides: 98_symbols_glossary_slides.pdf
+[2025-12-09 09:10:55] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/98_symbols_glossary.md
+[2025-12-09 09:10:55] [INFO] Generated: 98_symbols_glossary_slides.pdf
+[2025-12-09 09:10:55] [INFO] Generated: 98_symbols_glossary.html
+[2025-12-09 09:10:55] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:55] [INFO]   [14/14] 99_references.md
+[2025-12-09 09:10:55] [INFO] Generating beamer slides from /Users/mini/Documents/GitHub/template/project/manuscript/99_references.md
+[2025-12-09 09:10:55] [INFO] Compiling /Users/mini/Documents/GitHub/template/project/output/slides/99_references_slides.tex with xelatex
+[2025-12-09 09:10:56] [INFO] Generated beamer slides: 99_references_slides.pdf
+[2025-12-09 09:10:56] [INFO] Generating HTML from /Users/mini/Documents/GitHub/template/project/manuscript/99_references.md
+[2025-12-09 09:10:56] [INFO] Generated: 99_references_slides.pdf
+[2025-12-09 09:10:56] [INFO] Generated: 99_references.html
+[2025-12-09 09:10:56] [INFO]     ✅ Completed in 1s
+[2025-12-09 09:10:56] [INFO] 
 ============================================================
-[2025-12-09 07:37:18] [INFO] Generating combined PDF manuscript...
-[2025-12-09 07:37:18] [INFO] Rendering combined PDF from 14 files...
-[2025-12-09 07:37:18] [INFO] Converting combined markdown to LaTeX...
-[2025-12-09 07:37:18] [INFO] ✓ Fixed 14 figure path(s)
-[2025-12-09 07:37:18] [INFO] ✓ Extracted preamble from preamble.md
-[2025-12-09 07:37:18] [INFO] ✓ Inserted title page (\maketitle) after \begin{document}
-[2025-12-09 07:37:18] [INFO] Verifying 14 figure reference(s)...
-[2025-12-09 07:37:18] [INFO]   Found: 14/14 figures
-[2025-12-09 07:37:18] [INFO] Rendering combined manuscript to PDF: project_combined.pdf
-[2025-12-09 07:37:18] [INFO]   Source files: 14
-[2025-12-09 07:37:18] [INFO]   Bibliography: references.bib
-[2025-12-09 07:37:18] [INFO]   LaTeX compilation pass 1/4...
-[2025-12-09 07:37:22] [INFO]   Bibliography processing...
-[2025-12-09 07:37:22] [INFO] Processing bibliography with bibtex...
-[2025-12-09 07:37:22] [INFO] LaTeX compilation: [██████████░░░░░░░░░░] 50%
-[2025-12-09 07:37:26] [INFO] LaTeX compilation: [███████████████░░░░░] 75%
-[2025-12-09 07:37:29] [INFO] LaTeX compilation: [████████████████████] 100%
-[2025-12-09 07:37:32] [INFO] ✅ Successfully generated: project_combined.pdf
-[2025-12-09 07:37:32] [INFO] ✅ Generated combined PDF: project_combined.pdf
-[2025-12-09 07:37:32] [INFO] 
+[2025-12-09 09:10:56] [INFO] Generating combined PDF manuscript...
+[2025-12-09 09:10:56] [INFO] Rendering combined PDF from 14 files...
+[2025-12-09 09:10:56] [INFO] Converting combined markdown to LaTeX...
+[2025-12-09 09:10:57] [INFO] ✓ Fixed 14 figure path(s)
+[2025-12-09 09:10:57] [INFO] ✓ Extracted preamble from preamble.md
+[2025-12-09 09:10:57] [INFO] ✓ Inserted title page (\maketitle) after \begin{document}
+[2025-12-09 09:10:57] [INFO] Verifying 14 figure reference(s)...
+[2025-12-09 09:10:57] [INFO]   Found: 14/14 figures
+[2025-12-09 09:10:57] [INFO] Rendering combined manuscript to PDF: project_combined.pdf
+[2025-12-09 09:10:57] [INFO]   Source files: 14
+[2025-12-09 09:10:57] [INFO]   Bibliography: references.bib
+[2025-12-09 09:10:57] [INFO]   LaTeX compilation pass 1/4...
+[2025-12-09 09:11:00] [INFO]   Bibliography processing...
+[2025-12-09 09:11:00] [INFO] Processing bibliography with bibtex...
+[2025-12-09 09:11:00] [INFO] LaTeX compilation: [██████████░░░░░░░░░░] 50%
+[2025-12-09 09:11:03] [INFO] LaTeX compilation: [███████████████░░░░░] 75%
+[2025-12-09 09:11:07] [INFO] LaTeX compilation: [████████████████████] 100%
+[2025-12-09 09:11:10] [INFO] ✅ Successfully generated: project_combined.pdf
+[2025-12-09 09:11:10] [INFO] ✅ Generated combined PDF: project_combined.pdf
+[2025-12-09 09:11:10] [INFO] 
 Rendering Summary:
-[2025-12-09 07:37:32] [INFO]   Individual files processed: 14
-[2025-12-09 07:37:32] [INFO]   Markdown files: 14
-[2025-12-09 07:37:32] [INFO] PDF rendering pipeline completed
-[2025-12-09 07:37:32] [INFO] Verifying PDF outputs...
-[2025-12-09 07:37:32] [INFO] Generated 1 PDF file(s)
-[2025-12-09 07:37:32] [INFO]   📕 project_combined.pdf (2.23 MB) ✓
-[2025-12-09 07:37:32] [INFO] 
+[2025-12-09 09:11:10] [INFO]   Individual files processed: 14
+[2025-12-09 09:11:10] [INFO]   Markdown files: 14
+[2025-12-09 09:11:10] [INFO] PDF rendering pipeline completed
+[2025-12-09 09:11:10] [INFO] Verifying PDF outputs...
+[2025-12-09 09:11:10] [INFO] Generated 1 PDF file(s)
+[2025-12-09 09:11:10] [INFO]   📕 project_combined.pdf (2.26 MB) ✓
+[2025-12-09 09:11:10] [INFO] 
 ✅ Bibliography file found and will be processed
-[2025-12-09 07:37:32] [INFO] 
+[2025-12-09 09:11:10] [INFO] 
 ✅ Combined manuscript PDF successfully generated!
-[2025-12-09 07:37:32] [INFO]   File size: 2.23 MB
-[2025-12-09 07:37:32] [INFO]   Valid PDFs: 1/1
-[2025-12-09 07:37:32] [INFO] PDF rendering complete - ready for validation
+[2025-12-09 09:11:10] [INFO]   File size: 2.26 MB
+[2025-12-09 09:11:10] [INFO]   Valid PDFs: 1/1
+[2025-12-09 09:11:10] [INFO] PDF rendering complete - ready for validation
 
 [1;33m[6/9] Output Validation (66% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-09 07:37:33] [INFO] 
-[2025-12-09 07:37:33] [INFO] ==================================================
-[2025-12-09 07:37:33] [INFO] STAGE 04: Validate Output
-[2025-12-09 07:37:33] [INFO] ==================================================
-[2025-12-09 07:37:33] [INFO] 
+[2025-12-09 09:11:10] [INFO] 
+[2025-12-09 09:11:10] [INFO] ==================================================
+[2025-12-09 09:11:10] [INFO] STAGE 04: Validate Output
+[2025-12-09 09:11:10] [INFO] ==================================================
+[2025-12-09 09:11:10] [INFO] 
   Validating PDF files...
-[2025-12-09 07:37:33] [INFO] PDF valid: project_combined.pdf (2342757 bytes)
-[2025-12-09 07:37:33] [INFO] 
+[2025-12-09 09:11:10] [INFO] PDF valid: project_combined.pdf (2372230 bytes)
+[2025-12-09 09:11:10] [INFO] 
   Validating markdown files...
-[2025-12-09 07:37:33] [INFO] Found 17 markdown file(s)
-[2025-12-09 07:37:33] [INFO] Running markdown validation...
-[2025-12-09 07:37:33] [INFO] Markdown validation passed (no issues found)
-[2025-12-09 07:37:33] [INFO] 
+[2025-12-09 09:11:10] [INFO] Found 17 markdown file(s)
+[2025-12-09 09:11:10] [INFO] Running markdown validation...
+[2025-12-09 09:11:10] [INFO] Markdown validation passed (no issues found)
+[2025-12-09 09:11:10] [INFO] 
   Verifying output structure...
-[2025-12-09 07:37:33] [INFO] Directory exists: pdf (9 file(s))
-[2025-12-09 07:37:33] [INFO] Directory exists: figures (23 file(s))
-[2025-12-09 07:37:33] [INFO] Directory exists: data (5 file(s))
-[2025-12-09 07:37:33] [INFO] 
+[2025-12-09 09:11:10] [INFO] Directory exists: pdf (9 file(s))
+[2025-12-09 09:11:10] [INFO] Directory exists: figures (23 file(s))
+[2025-12-09 09:11:10] [INFO] Directory exists: data (5 file(s))
+[2025-12-09 09:11:10] [INFO] 
   Validating figure registry...
-[2025-12-09 07:37:33] [INFO] Figure registry loaded: 16 figure(s)
-[2025-12-09 07:37:33] [INFO] All 14 figure references verified
-[2025-12-09 07:37:33] [INFO] 
+[2025-12-09 09:11:10] [INFO] Figure registry loaded: 16 figure(s)
+[2025-12-09 09:11:10] [INFO] All 14 figure references verified
+[2025-12-09 09:11:10] [INFO] 
   Generating validation report...
-[2025-12-09 07:37:33] [INFO] Validation reports saved: /Users/mini/Documents/GitHub/template/project/output/reports/validation_report.json, /Users/mini/Documents/GitHub/template/project/output/reports/validation_report.md
-[2025-12-09 07:37:33] [INFO] 
+[2025-12-09 09:11:10] [INFO] Validation reports saved: /Users/mini/Documents/GitHub/template/project/output/reports/validation_report.json, /Users/mini/Documents/GitHub/template/project/output/reports/validation_report.md
+[2025-12-09 09:11:10] [INFO] 
 ============================================================
-[2025-12-09 07:37:33] [INFO] Validation Summary
-[2025-12-09 07:37:33] [INFO] ============================================================
-[2025-12-09 07:37:33] [INFO] ✅ PASS: PDF validation
-[2025-12-09 07:37:33] [INFO] ✅ PASS: Markdown validation
-[2025-12-09 07:37:33] [INFO] ✅ PASS: Output structure
-[2025-12-09 07:37:33] [INFO] ✅ PASS: Figure registry
-[2025-12-09 07:37:33] [INFO] 
+[2025-12-09 09:11:10] [INFO] Validation Summary
+[2025-12-09 09:11:10] [INFO] ============================================================
+[2025-12-09 09:11:10] [INFO] ✅ PASS: PDF validation
+[2025-12-09 09:11:10] [INFO] ✅ PASS: Markdown validation
+[2025-12-09 09:11:10] [INFO] ✅ PASS: Output structure
+[2025-12-09 09:11:10] [INFO] ✅ PASS: Figure registry
+[2025-12-09 09:11:10] [INFO] 
 ✅ Validation complete - all checks passed!
 [0;32m✓[0m Output validation complete
 
 [1;33m[7/9] Copy Outputs (77% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-09 07:37:33] [INFO] 
-[2025-12-09 07:37:33] [INFO] ==================================================
-[2025-12-09 07:37:33] [INFO] STAGE 05: Copy Outputs
-[2025-12-09 07:37:33] [INFO] ==================================================
-[2025-12-09 07:37:33] [INFO] Cleaning output directory...
-[2025-12-09 07:37:33] [INFO] Output directory cleaned
-[2025-12-09 07:37:33] [INFO] Copying all project outputs...
+[2025-12-09 09:11:11] [INFO] 
+[2025-12-09 09:11:11] [INFO] ==================================================
+[2025-12-09 09:11:11] [INFO] STAGE 05: Copy Outputs
+[2025-12-09 09:11:11] [INFO] ==================================================
+[2025-12-09 09:11:11] [INFO] Cleaning output directory...
+[2025-12-09 09:11:11] [INFO] Output directory cleaned
+[2025-12-09 09:11:11] [INFO] Copying all project outputs...
+[2025-12-09 09:11:11] [INFO] Recursively copied project/output/ directory
+[2025-12-09 09:11:11] [INFO] Copied combined PDF to root (2.26 MB)
+[2025-12-09 09:11:11] [INFO] Validating copied outputs...
+[2025-12-09 09:11:11] [INFO] Combined PDF at root valid (2.26 MB)
+[2025-12-09 09:11:11] [INFO] pdf/ valid (9 files, 2.59 MB)
+[2025-12-09 09:11:11] [INFO] web/ valid (14 files, 0.14 MB)
+[2025-12-09 09:11:11] [INFO] slides/ valid (97 files, 1.24 MB)
+[2025-12-09 09:11:11] [INFO] figures/ valid (23 files, 2.50 MB)
+[2025-12-09 09:11:11] [INFO] data/ valid (5 files, 0.01 MB)
+[2025-12-09 09:11:11] [INFO] reports/ valid (8 files, 0.01 MB)
+[2025-12-09 09:11:11] [INFO] simulations/ valid (3 files, 0.05 MB)
+[2025-12-09 09:11:11] [INFO] logs/ valid (1 files, 0.30 MB)
+[2025-12-09 09:11:11] [INFO] 
+============================================================
+[2025-12-09 09:11:11] [INFO] Output Copying Summary
+[2025-12-09 09:11:11] [INFO] ============================================================
+[2025-12-09 09:11:11] [INFO] 
+Output directory: /Users/mini/Documents/GitHub/template/output
+[2025-12-09 09:11:11] [INFO] 
+Files copied by directory:
+[2025-12-09 09:11:11] [INFO]   • PDF files: 9
+[2025-12-09 09:11:11] [INFO]   • Web files: 14
+[2025-12-09 09:11:11] [INFO]   • Slides files: 97
+[2025-12-09 09:11:11] [INFO]   • Figures: 23
+[2025-12-09 09:11:11] [INFO]   • Data files: 5
+[2025-12-09 09:11:11] [INFO]   • Reports: 8
+[2025-12-09 09:11:11] [INFO]   • Simulations: 3
+[2025-12-09 09:11:11] [INFO]   • LLM reviews: 0
+[2025-12-09 09:11:11] [INFO]   • Log files: 1
+[2025-12-09 09:11:11] [INFO]   • Combined PDF (root): 1
+[2025-12-09 09:11:11] [INFO] 
+  Total files copied: 160
+[2025-12-09 09:11:11] [INFO] 
+Directory structure:
+[2025-12-09 09:11:11] [INFO]   ✓ project_combined_pdf: 2.26 MB
+[2025-12-09 09:11:11] [INFO]   ✓ pdf: 9 files, 2.59 MB
+[2025-12-09 09:11:11] [INFO]   ✓ web: 14 files, 0.14 MB
+[2025-12-09 09:11:11] [INFO]   ✓ slides: 97 files, 1.24 MB
+[2025-12-09 09:11:11] [INFO]   ✓ figures: 23 files, 2.5 MB
+[2025-12-09 09:11:11] [INFO]   ✓ data: 5 files, 0.01 MB
+[2025-12-09 09:11:11] [INFO]   ✓ reports: 8 files, 0.01 MB
+[2025-12-09 09:11:11] [INFO]   ✓ simulations: 3 files, 0.05 MB
+[2025-12-09 09:11:11] [INFO]   ✓ llm: 0 files, 0.0 MB
+[2025-12-09 09:11:11] [INFO]   ✓ logs: 1 files, 0.3 MB
+[2025-12-09 09:11:11] [INFO] 
+[2025-12-09 09:11:11] [INFO] 
+✅ Output copying complete - all project outputs ready!
+[0;32m✓[0m Output copying complete
+[2025-12-09 09:11:11] [INFO] 
+[2025-12-09 09:11:11] [INFO] ==================================================
+[2025-12-09 09:11:11] [INFO] Stage 8/9: LLM Scientific Review (English)
+[2025-12-09 09:11:11] [INFO] ==================================================
+[2025-12-09 09:11:11] [INFO] Checking Ollama availability...
+[2025-12-09 09:11:11] [INFO]     Pinging Ollama server at localhost:11434...
+[2025-12-09 09:11:11] [INFO] Ollama server is running
+[2025-12-09 09:11:11] [INFO]     Discovering available models...
+[2025-12-09 09:11:11] [INFO]     Found 1 model(s): llama3:latest
+[2025-12-09 09:11:11] [INFO]     Selecting best model for manuscript review...
+[2025-12-09 09:11:11] [INFO] No preference matched, using first available: llama3:latest
+[2025-12-09 09:11:11] [INFO]   Selected model: llama3:latest (4.3 GB)
+[2025-12-09 09:11:11] [INFO]   Context window: ~32K context
+[2025-12-09 09:11:11] [INFO] Extracting text from manuscript: project_combined.pdf
+[2025-12-09 09:11:11] [INFO]   Extracted: 79,793 chars (14,921 words, ~19,948 tokens)
+[2025-12-09 09:11:11] [INFO]   Sending full manuscript to LLM (no truncation)
+[2025-12-09 09:11:11] [INFO] 
+  Initializing LLM client...
+[2025-12-09 09:11:11] [INFO] LLM client initialized
+[2025-12-09 09:11:11] [INFO]     Timeout: 300s per review
+[2025-12-09 09:11:11] [INFO]     Max tokens: 4096 per review (configured from: config default long_max_tokens=4096)
+[2025-12-09 09:11:11] [INFO] Warming up model...
+[2025-12-09 09:11:11] [INFO]     Checking loaded models via Ollama API...
+[2025-12-09 09:11:11] [INFO]     ⏳ No model currently loaded in GPU memory
+[2025-12-09 09:11:11] [INFO]     ⏳ Loading llama3:latest into GPU memory...
+[2025-12-09 09:11:11] [INFO]     (This may take 30-120 seconds depending on model size)
+Loading llama3:latest into GPU memory...
+[2025-12-09 09:11:12] [INFO] Loading llama3:latest into GPU memory complete
+[2025-12-09 09:11:12] [INFO]     ✓ Model loaded successfully
+[2025-12-09 09:11:12] [INFO]     Generating test response...
+[2025-12-09 09:11:12] [INFO]     (Waiting for model - may take 30-60s if not fully loaded)
+Waiting for first token...
+[2025-12-09 09:11:14] [INFO]     ✓ First token in 1.9s - generating response...
+[2025-12-09 09:11:16] [INFO] Warmup complete (3.9s)
+[2025-12-09 09:11:16] [INFO]     Response: The main topic of this text is the development and structure of a project that i...
+[2025-12-09 09:11:16] [INFO]     Performance: ~21.0 tokens/sec
+[2025-12-09 09:11:16] [INFO]     Estimated review time: ~13.0 minutes
+[2025-12-09 09:11:16] [INFO] 
+  Generating English scientific reviews...
+[2025-12-09 09:11:16] [INFO] [1/4 - 25%] Review: Executive Summary
+[2025-12-09 09:11:16] [INFO] Generating executive summary...
+[2025-12-09 09:11:35] [INFO]     ✓ First token in 19.3s - generating...
+    Generated 321 tokens in 38.6s (8.3 tokens/sec)
+[2025-12-09 09:11:55] [INFO] executive summary generated
+[2025-12-09 09:11:55] [INFO]     Output: 2,039 chars (279 words) in 38.6s
+[2025-12-09 09:11:55] [INFO] ✅ Saved: /Users/mini/Documents/GitHub/template/project/output/llm/executive_summary.md (279 words)
+[2025-12-09 09:11:55] [INFO] [2/4 - 50%] Review: Quality Review
+[2025-12-09 09:11:55] [INFO] Generating quality review...
+[2025-12-09 09:12:14] [INFO]     ✓ First token in 19.3s - generating...
+    Generated 771 tokens in 65.7s (11.7 tokens/sec)
+[2025-12-09 09:13:00] [INFO] quality review generated
+[2025-12-09 09:13:00] [INFO]     Output: 4,115 chars (642 words) in 65.7s
+[2025-12-09 09:13:00] [INFO] ✅ Saved: /Users/mini/Documents/GitHub/template/project/output/llm/quality_review.md (642 words)
+[2025-12-09 09:13:00] [INFO] [3/4 - 75%] Review: Methodology Review
+[2025-12-09 09:13:00] [INFO] Generating methodology review...
+[2025-12-09 09:13:20] [INFO]     ✓ First token in 19.2s - generating...
+    Generated 539 tokens in 51.7s (10.4 tokens/sec)
+[2025-12-09 09:13:52] [INFO] methodology review generated
+[2025-12-09 09:13:52] [INFO]     Output: 3,501 chars (467 words) in 51.7s
+[2025-12-09 09:13:52] [INFO] ✅ Saved: /Users/mini/Documents/GitHub/template/project/output/llm/methodology_review.md (467 words)
+[2025-12-09 09:13:52] [INFO] [4/4 - 100%] Review: Improvement Suggestions
+[2025-12-09 09:13:52] [INFO] Generating improvement suggestions...
+[2025-12-09 09:14:11] [INFO]     ✓ First token in 19.3s - generating...
+    Generated 384 tokens in 43.3s (8.9 tokens/sec)
+[2025-12-09 09:14:35] [INFO] improvement suggestions generated
+[2025-12-09 09:14:35] [INFO]     Output: 2,171 chars (322 words) in 43.3s
+[2025-12-09 09:14:35] [INFO] ✅ Saved: /Users/mini/Documents/GitHub/template/project/output/llm/improvement_suggestions.md (322 words)
+[2025-12-09 09:14:35] [INFO] Saving review outputs...
+[2025-12-09 09:14:35] [INFO]   Saved: /Users/mini/Documents/GitHub/template/project/output/llm/executive_summary.md (279 words)
+[2025-12-09 09:14:35] [INFO]   Saved: /Users/mini/Documents/GitHub/template/project/output/llm/quality_review.md (642 words)
+[2025-12-09 09:14:35] [INFO]   Saved: /Users/mini/Documents/GitHub/template/project/output/llm/methodology_review.md (467 words)
+[2025-12-09 09:14:35] [INFO]   Saved: /Users/mini/Documents/GitHub/template/project/output/llm/improvement_suggestions.md (322 words)
+[2025-12-09 09:14:35] [INFO]   Saved combined review: /Users/mini/Documents/GitHub/template/project/output/llm/combined_review.md
+[2025-12-09 09:14:35] [INFO]   Saved metadata: /Users/mini/Documents/GitHub/template/project/output/llm/review_metadata.json
+[2025-12-09 09:14:35] [INFO] All reviews saved to /Users/mini/Documents/GitHub/template/project/output/llm
+[2025-12-09 09:14:35] [INFO] 
+============================================================
+[2025-12-09 09:14:35] [INFO] LLM Manuscript Review Summary
+[2025-12-09 09:14:35] [INFO] ============================================================
+[2025-12-09 09:14:35] [INFO] 
+Input manuscript:
+[2025-12-09 09:14:35] [INFO]   79,793 chars (14,921 words, ~19,948 tokens)
+[2025-12-09 09:14:35] [INFO]   Full text sent to LLM (no truncation)
+[2025-12-09 09:14:35] [INFO] 
+Output directory: /Users/mini/Documents/GitHub/template/project/output/llm
+[2025-12-09 09:14:35] [INFO] 
+Reviews generated:
+[2025-12-09 09:14:35] [INFO]   • Executive Summary: 2,039 chars (279 words) in 38.6s
+[2025-12-09 09:14:35] [INFO]   • Quality Review: 4,115 chars (642 words) in 65.7s
+[2025-12-09 09:14:35] [INFO]   • Methodology Review: 3,501 chars (467 words) in 51.7s
+[2025-12-09 09:14:35] [INFO]   • Improvement Suggestions: 2,171 chars (322 words) in 43.3s
+[2025-12-09 09:14:35] [INFO] 
+Total output: 11,826 chars (1,710 words)
+[2025-12-09 09:14:35] [INFO] Total generation time: 199.3s
+[2025-12-09 09:14:35] [INFO] 
+Files created:
+[2025-12-09 09:14:35] [INFO] 
+  Other files:
+[2025-12-09 09:14:35] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/combined_review.md: 13.3 KB
+[2025-12-09 09:14:35] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/executive_summary.md: 2.1 KB, 279 words
+[2025-12-09 09:14:35] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/improvement_suggestions.md: 2.2 KB, 322 words
+[2025-12-09 09:14:35] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/methodology_review.md: 3.5 KB, 467 words
+[2025-12-09 09:14:35] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/quality_review.md: 4.1 KB, 642 words
+[2025-12-09 09:14:35] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/review_metadata.json: 2.4 KB
+[2025-12-09 09:14:35] [INFO] 
+[2025-12-09 09:14:35] [INFO] 
+✅ LLM scientific review complete!
+[2025-12-09 09:14:36] [INFO] 
+[2025-12-09 09:14:36] [INFO] ==================================================
+[2025-12-09 09:14:36] [INFO] Stage 9/9: LLM Translations
+[2025-12-09 09:14:36] [INFO] ==================================================
+[2025-12-09 09:14:36] [INFO] Checking Ollama availability...
+[2025-12-09 09:14:36] [INFO]     Pinging Ollama server at localhost:11434...
+[2025-12-09 09:14:36] [INFO] Ollama server is running
+[2025-12-09 09:14:36] [INFO]     Discovering available models...
+[2025-12-09 09:14:36] [INFO]     Found 1 model(s): llama3:latest
+[2025-12-09 09:14:36] [INFO]     Selecting best model for manuscript review...
+[2025-12-09 09:14:36] [INFO] No preference matched, using first available: llama3:latest
+[2025-12-09 09:14:36] [INFO]   Selected model: llama3:latest (4.3 GB)
+[2025-12-09 09:14:36] [INFO]   Context window: ~32K context
+[2025-12-09 09:14:36] [INFO] Extracting text from manuscript: project_combined.pdf
+[2025-12-09 09:14:36] [INFO]   Extracted: 79,793 chars (14,921 words, ~19,948 tokens)
+[2025-12-09 09:14:36] [INFO]   Sending full manuscript to LLM (no truncation)
+[2025-12-09 09:14:36] [INFO] 
+  Initializing LLM client...
+[2025-12-09 09:14:36] [INFO] LLM client initialized
+[2025-12-09 09:14:36] [INFO]     Timeout: 300s per review
+[2025-12-09 09:14:36] [INFO]     Max tokens: 4096 per review (configured from: config default long_max_tokens=4096)
+[2025-12-09 09:14:36] [INFO] Warming up model...
+[2025-12-09 09:14:36] [INFO]     Checking loaded models via Ollama API...
+[2025-12-09 09:14:36] [INFO]     ✓ Model llama3:latest is already loaded in GPU memory
+[2025-12-09 09:14:36] [INFO]     Warmup should be fast (~1-5 seconds)
+[2025-12-09 09:14:36] [INFO]     Generating test response...
+[2025-12-09 09:14:36] [INFO]     (Waiting for model - may take 30-60s if not fully loaded)
+Waiting for first token...
+[2025-12-09 09:14:38] [INFO]     ✓ First token in 1.9s - generating response...
+[2025-12-09 09:14:39] [INFO] Warmup complete (3.2s)
+[2025-12-09 09:14:39] [INFO]     Response: The main topic of this text is the development and structure of a software proje...
+[2025-12-09 09:14:39] [INFO]     Performance: ~24.2 tokens/sec
+[2025-12-09 09:14:39] [INFO]     Estimated review time: ~11.3 minutes
+[2025-12-09 09:14:39] [INFO] 
+  Generating translations for 3 language(s)...
+[2025-12-09 09:14:39] [INFO] [1/3 - 33%] Translation: Chinese (Simplified)
+[2025-12-09 09:14:39] [INFO] Generating translation (Chinese (Simplified))...
+[2025-12-09 09:15:24] [INFO]     Validation issues: Too short: 176 words (minimum: 400)
+[2025-12-09 09:15:24] [INFO] translation (Chinese (Simplified)) generated
+[2025-12-09 09:15:24] [INFO]     Output: 1,558 chars (176 words) in 44.3s
+[2025-12-09 09:15:24] [INFO] ✅ Saved: /Users/mini/Documents/GitHub/template/project/output/llm/translation_zh.md (176 words) - Translation (Chinese (Simplified))
+[2025-12-09 09:15:24] [INFO] [2/3 - 66%] Translation: Hindi
+[2025-12-09 09:15:24] [INFO] Generating translation (Hindi)...
+[2025-12-09 09:16:24] [INFO]     Validation issues: Too short: 332 words (minimum: 400)
+[2025-12-09 09:16:24] [INFO] translation (Hindi) generated
+[2025-12-09 09:16:24] [INFO]     Output: 2,407 chars (332 words) in 60.4s
+[2025-12-09 09:16:24] [INFO] ✅ Saved: /Users/mini/Documents/GitHub/template/project/output/llm/translation_hi.md (332 words) - Translation (Hindi)
+[2025-12-09 09:16:24] [INFO] [3/3 - 100%] Translation: Russian
+[2025-12-09 09:16:24] [INFO] Generating translation (Russian)...
+[2025-12-09 09:17:18] [INFO]     Validation issues: Too short: 340 words (minimum: 400)
+[2025-12-09 09:17:18] [INFO] translation (Russian) generated
+[2025-12-09 09:17:18] [INFO]     Output: 2,803 chars (340 words) in 53.7s
+[2025-12-09 09:17:18] [INFO] ✅ Saved: /Users/mini/Documents/GitHub/template/project/output/llm/translation_ru.md (340 words) - Translation (Russian)
+[2025-12-09 09:17:18] [INFO] Saving review outputs...
+[2025-12-09 09:17:18] [INFO]   Saved translation (Chinese (Simplified)): /Users/mini/Documents/GitHub/template/project/output/llm/translation_zh.md (176 words)
+[2025-12-09 09:17:18] [INFO]   Saved translation (Hindi): /Users/mini/Documents/GitHub/template/project/output/llm/translation_hi.md (332 words)
+[2025-12-09 09:17:18] [INFO]   Saved translation (Russian): /Users/mini/Documents/GitHub/template/project/output/llm/translation_ru.md (340 words)
+[2025-12-09 09:17:18] [INFO]   Saved combined review: /Users/mini/Documents/GitHub/template/project/output/llm/combined_review.md
+[2025-12-09 09:17:18] [INFO]   Saved metadata: /Users/mini/Documents/GitHub/template/project/output/llm/review_metadata.json
+[2025-12-09 09:17:18] [INFO] All reviews saved to /Users/mini/Documents/GitHub/template/project/output/llm
+[2025-12-09 09:17:18] [INFO] 
+============================================================
+[2025-12-09 09:17:18] [INFO] LLM Manuscript Review Summary
+[2025-12-09 09:17:18] [INFO] ============================================================
+[2025-12-09 09:17:18] [INFO] 
+Input manuscript:
+[2025-12-09 09:17:18] [INFO]   79,793 chars (14,921 words, ~19,948 tokens)
+[2025-12-09 09:17:18] [INFO]   Full text sent to LLM (no truncation)
+[2025-12-09 09:17:18] [INFO] 
+Output directory: /Users/mini/Documents/GitHub/template/project/output/llm
+[2025-12-09 09:17:18] [INFO] 
+Reviews generated:
+[2025-12-09 09:17:18] [INFO]   • Translation Zh: 1,558 chars (176 words) in 44.3s
+[2025-12-09 09:17:18] [INFO]   • Translation Hi: 2,407 chars (332 words) in 60.4s
+[2025-12-09 09:17:18] [INFO]   • Translation Ru: 2,803 chars (340 words) in 53.7s
+[2025-12-09 09:17:18] [INFO] 
+Total output: 6,768 chars (848 words)
+[2025-12-09 09:17:18] [INFO] Total generation time: 158.4s
+[2025-12-09 09:17:18] [INFO] 
+Files created:
+[2025-12-09 09:17:18] [INFO] 
+  Translation files:
+[2025-12-09 09:17:18] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/translation_hi.md (Hindi): 4.0 KB, 332 words
+[2025-12-09 09:17:18] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/translation_ru.md (Russian): 4.0 KB, 340 words
+[2025-12-09 09:17:18] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/translation_zh.md (Chinese (Simplified)): 2.2 KB, 176 words
+[2025-12-09 09:17:18] [INFO] 
+  Other files:
+[2025-12-09 09:17:18] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/combined_review.md: 12.0 KB
+[2025-12-09 09:17:18] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/executive_summary.md: 2.1 KB
+[2025-12-09 09:17:18] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/improvement_suggestions.md: 2.2 KB
+[2025-12-09 09:17:18] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/methodology_review.md: 3.5 KB
+[2025-12-09 09:17:18] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/quality_review.md: 4.1 KB
+[2025-12-09 09:17:18] [INFO]     • /Users/mini/Documents/GitHub/template/project/output/llm/review_metadata.json: 2.0 KB
+[2025-12-09 09:17:18] [INFO] 
+[2025-12-09 09:17:18] [INFO] 
+✅ LLM translations complete!
+
+============================================================
+Pipeline completed: Tue Dec  9 09:17:18 PST 2025
+Total duration: 8m 9s
+Log file: /Users/mini/Documents/GitHub/template/project/output/logs/pipeline_20251209_090909.log
+  (Will be copied to output/logs/ during copy stage)
+============================================================

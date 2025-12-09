@@ -397,26 +397,6 @@ class TestFindManuscriptDirectory:
         
         assert result == manuscript
     
-    def test_finds_legacy_manuscript(self, tmp_path):
-        """Test find_manuscript_directory finds legacy manuscript."""
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
-        
-        result = find_manuscript_directory(tmp_path)
-        
-        assert result == manuscript
-    
-    def test_prefers_project_over_legacy(self, tmp_path):
-        """Test find_manuscript_directory prefers project/manuscript."""
-        project_manuscript = tmp_path / "project" / "manuscript"
-        project_manuscript.mkdir(parents=True)
-        legacy_manuscript = tmp_path / "manuscript"
-        legacy_manuscript.mkdir()
-        
-        result = find_manuscript_directory(tmp_path)
-        
-        assert result == project_manuscript
-    
     def test_raises_when_not_found(self, tmp_path):
         """Test find_manuscript_directory raises when not found."""
         with pytest.raises(FileNotFoundError):

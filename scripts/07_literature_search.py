@@ -39,7 +39,8 @@ Environment Variables:
     LLM_SUMMARIZATION_TIMEOUT: Timeout for paper summarization (default: 600)
     LOG_LEVEL: Logging verbosity (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR)
 
-Stage 7 of the pipeline orchestration - literature management.
+Standalone literature management orchestrator (not part of main pipeline stages).
+Literature operations are available via menu option 9+ in run.sh interactive menu.
 """
 from __future__ import annotations
 

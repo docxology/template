@@ -72,9 +72,9 @@ with log_operation("Processing", logger):
 
 ### Configuration
 - `load_config()` - Load YAML config file
-- `get_config_as_dict()` - Get config as key-value dict (checks both `project/manuscript/config.yaml` and legacy `manuscript/config.yaml`)
+- `get_config_as_dict()` - Get config as key-value dict from `project/manuscript/config.yaml`
 - `get_config_as_env_vars()` - Get config as env vars
-- `find_config_file()` - Find config in standard locations (checks `project/manuscript/config.yaml` first, then legacy `manuscript/config.yaml`)
+- `find_config_file()` - Find config file at `project/manuscript/config.yaml`
 - `get_translation_languages()` - Get translation languages from config
 
 ### Progress Tracking

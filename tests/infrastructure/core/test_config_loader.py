@@ -205,19 +205,6 @@ class TestGetConfigAsDict:
         assert result['DOI'] == '10.5281/zenodo.12345678'
         assert 'AUTHOR_DETAILS' in result
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
-    def test_get_config_legacy_location(self, tmp_path, sample_config):
-        """Test getting config from legacy manuscript/ location."""
-        import yaml
-        config_file = tmp_path / "manuscript" / "config.yaml"
-        config_file.parent.mkdir(parents=True)
-        with open(config_file, 'w') as f:
-            yaml.dump(sample_config, f)
-        
-        result = get_config_as_dict(tmp_path)
-        
-        assert result['PROJECT_TITLE'] == 'Test Paper Title'
-    
     def test_get_config_no_file(self, tmp_path):
         """Test getting config when no file exists."""
         result = get_config_as_dict(tmp_path)
@@ -286,30 +273,6 @@ class TestFindConfigFile:
         result = find_config_file(tmp_path)
         
         assert result == config_file
-    
-    def test_finds_legacy_manuscript_config(self, tmp_path):
-        """Test finding config in manuscript/."""
-        config_file = tmp_path / "manuscript" / "config.yaml"
-        config_file.parent.mkdir(parents=True)
-        config_file.write_text("test: content")
-        
-        result = find_config_file(tmp_path)
-        
-        assert result == config_file
-    
-    def test_prefers_project_over_legacy(self, tmp_path):
-        """Test that project/manuscript/ is preferred over manuscript/."""
-        project_config = tmp_path / "project" / "manuscript" / "config.yaml"
-        project_config.parent.mkdir(parents=True)
-        project_config.write_text("project content")
-        
-        legacy_config = tmp_path / "manuscript" / "config.yaml"
-        legacy_config.parent.mkdir(parents=True)
-        legacy_config.write_text("legacy content")
-        
-        result = find_config_file(tmp_path)
-        
-        assert result == project_config
     
     def test_returns_none_when_not_found(self, tmp_path):
         """Test returns None when config file not found."""
@@ -453,23 +416,3 @@ class TestGetTranslationLanguages:
         result = get_translation_languages(tmp_path)
         assert result == []
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
-    def test_works_with_legacy_config_location(self, tmp_path):
-        """Test works with legacy manuscript/ location."""
-        import yaml
-        config = {
-            'llm': {
-                'translations': {
-                    'enabled': True,
-                    'languages': ['hi']
-                }
-            }
-        }
-        config_file = tmp_path / "manuscript" / "config.yaml"
-        config_file.parent.mkdir(parents=True)
-        with open(config_file, 'w') as f:
-            yaml.dump(config, f)
-        
-        result = get_translation_languages(tmp_path)
-        assert result == ['hi']
-

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Load manuscript configuration script - THIN ORCHESTRATOR
 
-This script reads manuscript/config.yaml and exports the values as environment
+This script reads project/manuscript/config.yaml and exports the values as environment
 variables for use by bash scripts. Environment variables take precedence over
 config file values.
 
-All business logic is in infrastructure/config_loader.py
+All business logic is in infrastructure/core/config_loader.py
 This script handles only bash export format.
 
 Usage:

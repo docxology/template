@@ -65,15 +65,10 @@ def validate_markdown() -> bool:
     log_substep("Validating markdown files...", logger)
     
     repo_root = Path(__file__).parent.parent
-    # Check project/manuscript first, then fall back to root manuscript/ for backward compatibility
     manuscript_dir = repo_root / "project" / "manuscript"
     
     if not manuscript_dir.exists():
-        # Fallback for backward compatibility
-        manuscript_dir = repo_root / "manuscript"
-    
-    if not manuscript_dir.exists():
-        logger.warning("Manuscript directory not found")
+        logger.warning(f"Manuscript directory not found at expected location: {manuscript_dir}")
         return True
     
     markdown_files = list(manuscript_dir.glob("*.md"))

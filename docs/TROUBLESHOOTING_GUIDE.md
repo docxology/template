@@ -584,7 +584,7 @@ cat tests/test_data.json
 
 **Symptoms:**
 ```
-Coverage: 65% (below 70% requirement)
+Coverage: 65% (below 90% requirement)
 ```
 
 **Diagnosis:**

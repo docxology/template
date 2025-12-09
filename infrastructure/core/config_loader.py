@@ -90,7 +90,7 @@ def format_author_name(authors: List[Dict[str, Any]]) -> str:
 def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:
     """Get configuration as a dictionary of key-value pairs.
     
-    Tries project/manuscript/config.yaml first, then manuscript/config.yaml.
+    Loads configuration from project/manuscript/config.yaml.
     
     Args:
         repo_root: Root directory of the repository
@@ -100,7 +100,7 @@ def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:
     """
     repo_root = Path(repo_root)
     
-    # Try to find config file in both locations
+    # Find config file at standard location
     config_path = find_config_file(repo_root)
     if not config_path:
         return {}
@@ -159,24 +159,20 @@ def get_config_as_env_vars(repo_root: Path | str, respect_existing: bool = True)
 
 
 def find_config_file(repo_root: Path | str) -> Optional[Path]:
-    """Find the manuscript config file in various possible locations.
+    """Find the manuscript config file at the standard location.
     
     Args:
         repo_root: Root directory of the repository
         
     Returns:
-        Path to config.yaml if found, None otherwise
+        Path to config.yaml if found at project/manuscript/config.yaml, None otherwise
     """
     repo_root = Path(repo_root)
     
-    possible_paths = [
-        repo_root / 'project' / 'manuscript' / 'config.yaml',
-        repo_root / 'manuscript' / 'config.yaml',
-    ]
+    config_path = repo_root / 'project' / 'manuscript' / 'config.yaml'
     
-    for path in possible_paths:
-        if path.exists():
-            return path
+    if config_path.exists():
+        return config_path
     
     return None
 

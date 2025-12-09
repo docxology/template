@@ -401,7 +401,7 @@ Scripts in `project/scripts/` demonstrate proper integration with `project/src/`
 ### Test-Driven Development
 **[Complete guide](docs/WORKFLOW.md)** | **[Testing improvements](docs/TEST_IMPROVEMENTS_SUMMARY.md)**
 
-All source code must meet **test coverage requirements** (70% project, 49% infrastructure) before PDF generation proceeds. This ensures that the methods used by scripts are fully validated.
+All source code must meet **test coverage requirements** (90% project, 60% infrastructure) before PDF generation proceeds. This ensures that the methods used by scripts are fully validated.
 
 **Current Coverage**: 99.88% project, 61.48% infrastructure (exceeds requirements) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 
@@ -669,8 +669,8 @@ The template provides **two pipeline entry points**:
 flowchart TD
     START([./run.sh --pipeline]) --> STAGE0[Stage 0: Clean Output Directories]
     STAGE0 --> STAGE1[Stage 1: Setup Environment]
-    STAGE1 --> STAGE2[Stage 2: Infrastructure Tests<br/>49%+ coverage required]
-    STAGE2 --> STAGE3[Stage 3: Project Tests<br/>70%+ coverage required]
+    STAGE1 --> STAGE2[Stage 2: Infrastructure Tests<br/>60%+ coverage required]
+    STAGE2 --> STAGE3[Stage 3: Project Tests<br/>90%+ coverage required]
     STAGE3 --> STAGE4[Stage 4: Project Analysis<br/>Execute project/scripts/]
     STAGE4 --> STAGE5[Stage 5: PDF Rendering<br/>Generate manuscript PDFs]
     STAGE5 --> STAGE6[Stage 6: Output Validation<br/>Quality checks]

@@ -215,7 +215,7 @@ This:
 
 The pipeline orchestrator (`scripts/run_all.py`):
 
-1. **Runs tests** with coverage requirements (70% project, 49% infra)
+1. **Runs tests** with coverage requirements (90% project, 60% infra)
 2. **Executes scripts** to generate figures and data (validating project/src/ integration)
 3. **Validates manuscript** for references and images
 4. **Generates glossary** from source code

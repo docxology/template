@@ -214,35 +214,23 @@ def validate_markdown(markdown_dir: str | Path, repo_root: str | Path, strict: b
 
 
 def find_manuscript_directory(repo_root: str | Path) -> Path:
-    """Find the manuscript directory in various possible locations.
-    
-    Tries multiple locations:
-    1. project/manuscript/ (current structure)
-    2. manuscript/ (legacy location at repo root)
-    3. Current working directory / manuscript
-    4. Relative "manuscript"
+    """Find the manuscript directory at the standard location.
     
     Args:
         repo_root: Root directory of the repository
         
     Returns:
-        Path to the manuscript directory
+        Path to the manuscript directory at project/manuscript/
         
     Raises:
-        FileNotFoundError: If manuscript directory cannot be found
+        FileNotFoundError: If manuscript directory cannot be found at project/manuscript/
     """
     repo_root = Path(repo_root)
     
-    possible_dirs = [
-        repo_root / "project" / "manuscript",  # New monophyletic project location
-        repo_root / "manuscript",  # Legacy location
-        Path.cwd() / "manuscript",  # Current working directory
-        Path("manuscript")  # Relative to current directory
-    ]
+    manuscript_dir = repo_root / "project" / "manuscript"
     
-    for potential_dir in possible_dirs:
-        if potential_dir.exists() and potential_dir.is_dir():
-            return potential_dir
+    if manuscript_dir.exists() and manuscript_dir.is_dir():
+        return manuscript_dir
     
-    raise FileNotFoundError(f"Manuscript directory not found. Tried: {[str(d) for d in possible_dirs]}")
+    raise FileNotFoundError(f"Manuscript directory not found at expected location: {manuscript_dir}")
 

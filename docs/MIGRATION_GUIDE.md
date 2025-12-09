@@ -478,7 +478,7 @@ tar -czf outputs_backup.tar.gz output/
 **Verify migration success:**
 
 - [ ] All tests pass
-- [ ] Code coverage requirements met (70% project, 49% infra)
+- [ ] Code coverage requirements met (90% project, 60% infra)
 - [ ] Build completes successfully
 - [ ] PDFs generate correctly
 - [ ] Cross-references work

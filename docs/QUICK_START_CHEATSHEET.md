@@ -54,7 +54,7 @@ python3 -m infrastructure.validation.cli pdf output/pdf/
 ```
 template/
 ├── src/              # Core business logic (comprehensively tested)
-├── tests/            # Test suite (70% project, 49% infra minimum)
+├── tests/            # Test suite (90% project, 60% infra minimum)
 ├── scripts/          # Entry point orchestrators (generic)
 ├── project/          # Project-specific code
 ├── infrastructure/   # Reusable infrastructure modules

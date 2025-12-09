@@ -362,8 +362,8 @@ class TestCheckConfigurationYAML:
     
     def test_valid_config_files(self, tmp_path):
         """Test valid config.yaml and example match."""
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "project" / "manuscript"
+        manuscript.mkdir(parents=True)
         
         (manuscript / "config.yaml").write_text("""
 paper:
@@ -386,8 +386,8 @@ publication: {}
     
     def test_config_structure_mismatch(self, tmp_path):
         """Test config structure mismatch is flagged."""
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "project" / "manuscript"
+        manuscript.mkdir(parents=True)
         
         (manuscript / "config.yaml").write_text("""
 weird_key: unexpected
@@ -406,8 +406,8 @@ paper:
     
     def test_invalid_yaml_file(self, tmp_path):
         """Test invalid YAML is handled gracefully."""
-        manuscript = tmp_path / "manuscript"
-        manuscript.mkdir()
+        manuscript = tmp_path / "project" / "manuscript"
+        manuscript.mkdir(parents=True)
         
         (manuscript / "config.yaml").write_text("invalid: yaml: content:")
         (manuscript / "config.yaml.example").write_text("paper: {}")

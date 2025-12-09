@@ -121,6 +121,7 @@ Each directory contains comprehensive documentation for easy navigation:
 | Directory | AGENTS.md | README.md | Purpose |
 |-----------|-----------|-----------|---------|
 | [`docs/`](docs/) | [AGENTS.md](docs/AGENTS.md) | [README.md](docs/README.md) | Project documentation hub |
+| [`literature/`](literature/) | [AGENTS.md](literature/AGENTS.md) | [README.md](literature/README.md) | Academic literature search & management |
 
 ### Documentation Navigation
 
@@ -181,6 +182,13 @@ template/                           # Generic Template
 ├── docs/                           # Documentation
 │   ├── AGENTS.md
 │   └── README.md
+├── literature/                     # Academic literature search & management
+│   ├── AGENTS.md
+│   ├── README.md
+│   ├── library.json                # Paper index
+│   ├── references.bib              # Bibliography
+│   ├── pdfs/                       # Downloaded PDFs
+│   └── summaries/                  # LLM-generated summaries
 └── pyproject.toml                  # Root configuration
 ```
 
@@ -199,13 +207,8 @@ template/                           # Generic Template
 
 The system supports configuration through a YAML file, providing a centralized, version-controllable way to manage all paper metadata.
 
-**Locations** (checked in order):
-1. `project/manuscript/config.yaml` (preferred - current structure)
-2. `manuscript/config.yaml` (legacy location - supported for backward compatibility)
-
+**Location**: `project/manuscript/config.yaml`  
 **Template**: `project/manuscript/config.yaml.example`
-
-The system automatically checks both locations, preferring the current structure over the legacy location.
 
 **Example configuration**:
 ```yaml
@@ -267,7 +270,7 @@ Environment variables are supported as an alternative configuration method and t
 
 **Priority order**:
 1. Environment variables (highest priority - override config file)
-2. Config file (checked in order: `project/manuscript/config.yaml`, then `manuscript/config.yaml`)
+2. Config file (`project/manuscript/config.yaml`)
 3. Default values (lowest priority)
 
 ### Configuration Examples
@@ -337,7 +340,7 @@ python3 scripts/run_all.py
 **Core Pipeline Stages** (both entry points):
 
 1. **Environment Setup** - Verify system requirements and dependencies
-2. **Test Validation** (coverage: 70% project, 49% infra) - Run test suites
+2. **Test Validation** (coverage: 90% project, 60% infra) - Run test suites
 3. **Project Analysis** - Execute `project/scripts/` analysis workflows
 4. **PDF Rendering** - Generate manuscript PDFs and figures
 5. **Output Validation** - Validate all generated outputs
@@ -345,8 +348,8 @@ python3 scripts/run_all.py
 
 **Extended Pipeline Stages** (`./run.sh --pipeline` only):
 
-7. **LLM Scientific Review** - AI-powered manuscript analysis (optional)
-8. **LLM Translations** - Multi-language technical abstract generation (optional)
+8. **LLM Scientific Review** - AI-powered manuscript analysis (optional)
+9. **LLM Translations** - Multi-language technical abstract generation (optional)
 
 **Stage Numbering:**
 - `run_all.py`: Stages 00-05 (zero-padded, Python convention) - 6 core stages
