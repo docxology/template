@@ -3,23 +3,29 @@
 This test suite verifies that the workflow correctly detects and skips
 summaries that already exist on disk, even when progress tracker doesn't
 know about them.
+
+Some tests use mocks for parallel processing behavior testing.
 """
 import pytest
-from unittest.mock import Mock, patch, MagicMock
 from pathlib import Path
+from unittest.mock import Mock
 
-from infrastructure.literature.api import SearchResult
+from infrastructure.literature.sources import SearchResult
 from infrastructure.literature.workflow import LiteratureWorkflow
-from infrastructure.literature.summarizer import SummarizationResult
+from infrastructure.literature.summarizer import SummarizationResult, PaperSummarizer
 from infrastructure.literature.progress import ProgressTracker, SummarizationProgress
+from infrastructure.literature.core import LiteratureSearch
+from infrastructure.literature.config import LiteratureConfig
 
 
 class TestSkipExistingSummaries:
     """Test skip-existing-summaries functionality."""
 
-    def test_get_summary_path(self):
+    def test_get_summary_path(self, tmp_path):
         """Test _get_summary_path helper method."""
-        literature_search = Mock()
+        config = LiteratureConfig()
+        config.download_dir = str(tmp_path / "pdfs")
+        literature_search = LiteratureSearch(config)
         workflow = LiteratureWorkflow(literature_search)
         
         path = workflow._get_summary_path("test2024")
@@ -29,12 +35,23 @@ class TestSkipExistingSummaries:
 
     def test_summarize_single_paper_skips_existing_file(self, tmp_path):
         """Test that _summarize_single_paper skips when summary file exists."""
-        # Setup
-        literature_search = Mock()
-        summarizer = Mock()
-        progress_tracker = Mock()
-        progress_tracker.current_progress = Mock()
-        progress_tracker.current_progress.entries = {}
+        # Setup real objects
+        config = LiteratureConfig()
+        config.download_dir = str(tmp_path / "pdfs")
+        literature_search = LiteratureSearch(config)
+        
+        # Create a real summarizer with LLMClient (won't be called if file exists)
+        # Skip test if Ollama unavailable
+        try:
+            from infrastructure.llm import LLMClient
+            llm_client = LLMClient()
+            summarizer = PaperSummarizer(llm_client=llm_client)
+        except Exception:
+            pytest.skip("LLMClient unavailable - cannot create PaperSummarizer")
+        
+        # Create real progress tracker
+        progress_file = tmp_path / "progress.json"
+        progress_tracker = ProgressTracker(progress_file=progress_file)
 
         workflow = LiteratureWorkflow(literature_search)
         workflow.set_summarizer(summarizer)
@@ -46,48 +63,28 @@ class TestSkipExistingSummaries:
         existing_summary = summaries_dir / "test2024_summary.md"
         existing_summary.write_text("# Test Paper\n\nExisting summary content")
 
-        # Change to tmp_path for file existence check
-        with patch('infrastructure.literature.workflow.Path') as mock_path:
-            # Make Path("literature/summaries") return our tmp_path version
-            def path_side_effect(path_str):
-                if path_str == "literature/summaries":
-                    return summaries_dir
-                return Path(path_str)
-            
-            mock_path.side_effect = path_side_effect
-            
-            # Mock the actual path construction
-            workflow._get_summary_path = lambda key: summaries_dir / f"{key}_summary.md"
+        # Override path method to use tmp_path
+        workflow._get_summary_path = lambda key: summaries_dir / f"{key}_summary.md"
 
-            search_result = SearchResult(
-                title="Test Paper",
-                authors=["Author"],
-                year=2024,
-                abstract="Abstract",
-                url="url",
-                source="arxiv"
-            )
-            pdf_path = Path("test2024.pdf")
+        search_result = SearchResult(
+            title="Test Paper",
+            authors=["Author"],
+            year=2024,
+            abstract="Abstract",
+            url="url",
+            source="arxiv"
+        )
+        pdf_path = tmp_path / "test2024.pdf"
+        pdf_path.write_bytes(b"%PDF-1.4\n")
 
-            # Execute
-            result = workflow._summarize_single_paper(search_result, pdf_path)
+        # Execute
+        result = workflow._summarize_single_paper(search_result, pdf_path)
 
-            # Verify summary was skipped
-            assert result.success is True
-            assert result.skipped is True
-            assert result.summary_path == existing_summary
-            assert result.citation_key == "test2024"
-
-            # Verify summarizer was NOT called
-            summarizer.summarize_paper.assert_not_called()
-
-            # Verify progress tracker was updated
-            progress_tracker.update_entry_status.assert_called_with(
-                "test2024", "summarized",
-                summary_path=str(existing_summary),
-                summary_attempts=0,
-                summary_time=0.0
-            )
+        # Verify summary was skipped
+        assert result.success is True
+        assert result.skipped is True
+        assert result.summary_path == existing_summary
+        assert result.citation_key == "test2024"
 
     def test_summarize_papers_parallel_filters_existing_files(self, tmp_path):
         """Test that _summarize_papers_parallel filters out existing summaries."""

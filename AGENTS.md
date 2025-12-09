@@ -197,10 +197,15 @@ template/                           # Generic Template
 
 ### Configuration File (Recommended)
 
-The system supports configuration through a YAML file in `project/manuscript/config.yaml`, providing a centralized, version-controllable way to manage all paper metadata.
+The system supports configuration through a YAML file, providing a centralized, version-controllable way to manage all paper metadata.
 
-**Location**: `project/manuscript/config.yaml`  
+**Locations** (checked in order):
+1. `project/manuscript/config.yaml` (preferred - current structure)
+2. `manuscript/config.yaml` (legacy location - supported for backward compatibility)
+
 **Template**: `project/manuscript/config.yaml.example`
+
+The system automatically checks both locations, preferring the current structure over the legacy location.
 
 **Example configuration**:
 ```yaml
@@ -262,7 +267,7 @@ Environment variables are supported as an alternative configuration method and t
 
 **Priority order**:
 1. Environment variables (highest priority - override config file)
-2. Config file (`project/manuscript/config.yaml`)
+2. Config file (checked in order: `project/manuscript/config.yaml`, then `manuscript/config.yaml`)
 3. Default values (lowest priority)
 
 ### Configuration Examples
@@ -597,8 +602,15 @@ bibtex = generate_citation_bibtex(metadata)
 print(bibtex)
 ```
 
-### 🔬 **Scientific Development** (`infrastructure/scientific_dev.py`)
+### 🔬 **Scientific Development** (`infrastructure/scientific/`)
 **Scientific computing best practices and tools**
+
+**Modular Structure:**
+- `stability.py` - Numerical stability checking
+- `benchmarking.py` - Performance benchmarking
+- `documentation.py` - API documentation generation
+- `validation.py` - Best practices validation
+- `templates.py` - Research workflow templates
 
 **Key Features:**
 - **Numerical Stability**: Algorithm stability testing
@@ -609,7 +621,7 @@ print(bibtex)
 
 **Usage:**
 ```python
-from scientific_dev import check_numerical_stability, benchmark_function
+from infrastructure.scientific import check_numerical_stability, benchmark_function
 
 stability = check_numerical_stability(your_function, test_inputs)
 benchmark = benchmark_function(your_function, test_inputs)
@@ -635,6 +647,17 @@ reproducibility = verify_build_reproducibility(build_command, expected_outputs)
 
 ### 📖 **Literature Search** (`infrastructure/literature/`) **NEW**
 **Academic literature search and reference management**
+
+**Modular Structure:**
+- `sources/` - Modular API adapters for academic databases
+  - `base.py` - Base classes and utilities
+  - `arxiv.py` - arXiv API client
+  - `semanticscholar.py` - Semantic Scholar API client
+  - `unpaywall.py` - Unpaywall open access resolution
+  - `biorxiv.py` - bioRxiv/medRxiv preprints
+- `core.py` - Main LiteratureSearch orchestrator
+- `workflow.py` - Multi-paper operations
+- `pdf_handler.py` - PDF downloading with fallbacks
 
 **Key Features:**
 - **Multi-Source Search**: arXiv, Semantic Scholar, CrossRef, PubMed

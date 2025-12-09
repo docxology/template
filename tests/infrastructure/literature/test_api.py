@@ -1,6 +1,6 @@
 import pytest
 import requests
-from infrastructure.literature.api import ArxivSource, SemanticScholarSource, SearchResult
+from infrastructure.literature.sources import ArxivSource, SemanticScholarSource, SearchResult
 from infrastructure.core.exceptions import LiteratureSearchError, APIRateLimitError
 
 

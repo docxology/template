@@ -70,7 +70,7 @@ class TestResearchWorkflow:
         Tests that modules can work together for metadata creation and validation.
         """
         # 1. Create sample paper metadata (without network search)
-        from infrastructure.literature.api import SearchResult
+        from infrastructure.literature.sources import SearchResult
         
         paper = SearchResult(
             title="Novel Algorithm",

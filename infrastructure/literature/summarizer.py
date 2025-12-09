@@ -19,7 +19,7 @@ from typing import Optional, Tuple, List, Dict, Any, TYPE_CHECKING
 
 from infrastructure.core.logging_utils import get_logger, log_success
 from infrastructure.core.exceptions import LLMConnectionError, FileOperationError
-from infrastructure.literature.api import SearchResult
+from infrastructure.literature.sources import SearchResult
 from infrastructure.validation.pdf_validator import extract_text_from_pdf, PDFValidationError
 
 if TYPE_CHECKING:

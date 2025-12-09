@@ -7,7 +7,21 @@ handling, and complex function signatures.
 import pytest
 from pathlib import Path
 
-from infrastructure.scientific import scientific_dev
+from infrastructure.scientific import (
+    check_numerical_stability,
+    benchmark_function,
+    generate_scientific_documentation,
+    validate_scientific_implementation,
+    create_scientific_test_suite,
+    generate_performance_report,
+    validate_scientific_best_practices,
+    create_scientific_module_template,
+    generate_api_documentation,
+    check_research_compliance,
+    create_scientific_workflow_template,
+    BenchmarkResult,
+    StabilityTest,
+)
 
 
 class TestScientificDevEdgeCases:
@@ -18,10 +32,10 @@ class TestScientificDevEdgeCases:
         def unstable_function(x):
             return float('nan') if x == 0 else x
         
-        result = scientific_dev.check_numerical_stability(unstable_function, [0, 1, 2])
+        result = check_numerical_stability(unstable_function, [0, 1, 2])
         
         # Result is a StabilityTest dataclass
-        assert isinstance(result, scientific_dev.StabilityTest)
+        assert isinstance(result, StabilityTest)
         # Should detect some stability issues (score not perfect)
         assert result.stability_score < 1.0
 
@@ -30,10 +44,10 @@ class TestScientificDevEdgeCases:
         def working_function(x):
             return x * 2
         
-        result = scientific_dev.benchmark_function(working_function, [1, 2, 3])
+        result = benchmark_function(working_function, [1, 2, 3])
         
         # Result is a BenchmarkResult dataclass
-        assert isinstance(result, scientific_dev.BenchmarkResult)
+        assert isinstance(result, BenchmarkResult)
         assert result.execution_time > 0
 
     def test_validate_scientific_implementation_with_tolerance(self):
@@ -44,7 +58,7 @@ class TestScientificDevEdgeCases:
         # Test cases should be tuples of (input, expected_output)
         test_cases = [(1.0, 2.0), (2.0, 3.0), (3.0, 4.0)]
         
-        result = scientific_dev.validate_scientific_implementation(
+        result = validate_scientific_implementation(
             test_function,
             test_cases
         )
@@ -75,7 +89,7 @@ class TestScientificDevEdgeCases:
             """
             return (x, y, z)
         
-        docs = scientific_dev.generate_scientific_documentation(complex_function)
+        docs = generate_scientific_documentation(complex_function)
         
         assert "complex_function" in docs
         assert "float" in docs

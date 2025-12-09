@@ -3,7 +3,7 @@ import pytest
 from unittest.mock import Mock, patch, MagicMock
 from pathlib import Path
 
-from infrastructure.literature.api import SearchResult
+from infrastructure.literature.sources import SearchResult
 from infrastructure.literature.workflow import LiteratureWorkflow, WorkflowResult
 from infrastructure.literature.summarizer import SummarizationResult
 

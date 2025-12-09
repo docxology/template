@@ -18,7 +18,7 @@ from typing import List, Optional, Dict, Any, Tuple, TYPE_CHECKING
 
 from infrastructure.core.logging_utils import get_logger, log_success, log_header
 from infrastructure.core.exceptions import LiteratureSearchError
-from infrastructure.literature.api import SearchResult
+from infrastructure.literature.sources import SearchResult
 from infrastructure.literature.core import LiteratureSearch, DownloadResult
 from infrastructure.literature.summarizer import PaperSummarizer, SummarizationResult
 from infrastructure.literature.progress import ProgressTracker, SummarizationProgress

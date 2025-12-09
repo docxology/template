@@ -335,7 +335,7 @@ python3 -m infrastructure.publishing.cli validate-metadata manuscript/
 #### Numerical Stability Testing
 
 ```python
-from infrastructure.scientific.scientific_dev import check_numerical_stability
+from infrastructure.scientific import check_numerical_stability
 
 # Test function stability across input ranges
 def my_algorithm(x):
@@ -360,7 +360,7 @@ if stability_report.recommendations:
 #### Performance Benchmarking
 
 ```python
-from infrastructure.scientific.scientific_dev import benchmark_function
+from infrastructure.scientific import benchmark_function
 
 # Benchmark algorithm performance
 result = benchmark_function(
@@ -904,7 +904,7 @@ Include advanced modules in your development workflow from the beginning:
 ```python
 # In your analysis scripts
 from infrastructure.build.quality_checker import analyze_document_quality
-from infrastructure.scientific.scientific_dev import check_numerical_stability
+from infrastructure.scientific import check_numerical_stability
 
 # Add validation to your research pipeline
 def research_workflow():
@@ -946,7 +946,7 @@ Track module performance over time:
 ```python
 # Performance monitoring
 import time
-from infrastructure.scientific.scientific_dev import benchmark_function
+from infrastructure.scientific import benchmark_function
 
 def monitor_performance():
     """Track algorithm performance over time."""

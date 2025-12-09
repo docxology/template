@@ -783,7 +783,7 @@ flowchart TD
 - **[infrastructure/build/reproducibility.py](infrastructure/build/reproducibility.py)** - Build reproducibility and environment tracking
 - **[infrastructure/validation/integrity.py](infrastructure/validation/integrity.py)** - File integrity and cross-reference validation
 - **[infrastructure/publishing/core.py](infrastructure/publishing/core.py)** - Academic publishing workflow tools
-- **[infrastructure/scientific/scientific_dev.py](infrastructure/scientific/scientific_dev.py)** - Scientific computing best practices
+- **[infrastructure/scientific/](infrastructure/scientific/)** - Scientific computing best practices (modular: stability, benchmarking, documentation, validation, templates)
 - **[infrastructure/build/build_verifier.py](infrastructure/build/build_verifier.py)** - Build process validation and verification
 
 ### Scientific Computing Modules

@@ -17,13 +17,13 @@ from infrastructure.llm.templates_helpers import (
 
 logger = get_logger(__name__)
 
-# Try to import new prompt system (optional for backward compatibility)
+# Try to import prompt composer system
 try:
     from infrastructure.llm.prompts.composer import PromptComposer
     PROMPT_COMPOSER_AVAILABLE = True
 except ImportError:
     PROMPT_COMPOSER_AVAILABLE = False
-    logger.debug("Prompt composer not available, using legacy template system")
+    logger.debug("Prompt composer not available, using template system")
 
 # Minimum word counts for quality validation
 # Note: improvement_suggestions uses a lower threshold (200) because models often
@@ -102,7 +102,7 @@ Begin your executive summary now:"""
             max_tokens: Optional token budget for response
             **kwargs: Additional template variables (text can be passed here too)
         """
-        # Extract from kwargs if not provided as positional arg (for backward compatibility)
+        # Extract from kwargs if not provided as positional arg
         if text is None:
             text = kwargs.pop('text', None)
         
@@ -124,9 +124,9 @@ Begin your executive summary now:"""
                     **kwargs
                 )
             except Exception as e:
-                logger.debug(f"Failed to use prompt composer, falling back to legacy: {e}")
+                logger.debug(f"Failed to use prompt composer, falling back: {e}")
         
-        # Fallback to legacy implementation
+        # Fallback implementation
         # Define required sections
         required_headers = [
             "## Overview",
@@ -233,7 +233,7 @@ Begin your quality review now:"""
             max_tokens: Optional token budget for response
             **kwargs: Additional template variables (text can be passed here too)
         """
-        # Extract from kwargs if not provided as positional arg (for backward compatibility)
+        # Extract from kwargs if not provided as positional arg
         if text is None:
             text = kwargs.pop('text', None)
         
@@ -343,7 +343,7 @@ Begin your methodology review now:"""
             max_tokens: Optional token budget for response
             **kwargs: Additional template variables (text can be passed here too)
         """
-        # Extract from kwargs if not provided as positional arg (for backward compatibility)
+        # Extract from kwargs if not provided as positional arg
         if text is None:
             text = kwargs.pop('text', None)
         
@@ -442,7 +442,7 @@ Begin your improvement suggestions now:"""
             max_tokens: Optional token budget for response
             **kwargs: Additional template variables (text can be passed here too)
         """
-        # Extract from kwargs if not provided as positional arg (for backward compatibility)
+        # Extract from kwargs if not provided as positional arg
         if text is None:
             text = kwargs.pop('text', None)
         
@@ -554,7 +554,7 @@ Begin with the English abstract, then provide the translation:"""
             max_tokens: Optional token budget for response
             **kwargs: Additional template variables (text and target_language can be passed here too)
         """
-        # Extract from kwargs if not provided as positional args (for backward compatibility)
+        # Extract from kwargs if not provided as positional args
         if text is None:
             text = kwargs.pop('text', None)
         if target_language is None:

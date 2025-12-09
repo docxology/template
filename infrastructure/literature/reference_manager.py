@@ -7,7 +7,7 @@ from typing import Optional, TYPE_CHECKING
 from infrastructure.core.exceptions import FileOperationError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.literature.config import LiteratureConfig
-from infrastructure.literature.api import SearchResult
+from infrastructure.literature.sources import SearchResult
 
 if TYPE_CHECKING:
     from infrastructure.literature.library_index import LibraryIndex

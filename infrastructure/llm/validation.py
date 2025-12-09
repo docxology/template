@@ -265,7 +265,6 @@ class OutputValidator:
         )
 
 
-# Re-export functions from split modules for backward compatibility
 # Note: Functions are imported at module level above for use in OutputValidator methods
 __all__ = [
     # Core class

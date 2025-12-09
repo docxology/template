@@ -45,13 +45,13 @@ from infrastructure.llm.templates_manuscript import (
 
 logger = get_logger(__name__)
 
-# Try to import new prompt system (optional for backward compatibility)
+# Try to import prompt composer system
 try:
     from infrastructure.llm.prompts.composer import PromptComposer
     PROMPT_COMPOSER_AVAILABLE = True
 except ImportError:
     PROMPT_COMPOSER_AVAILABLE = False
-    logger.debug("Prompt composer not available, using legacy template system")
+    logger.debug("Prompt composer not available, using template system")
 
 
 # Registry of available templates
@@ -84,7 +84,7 @@ def get_template(name: str) -> ResearchTemplate:
     return TEMPLATES[name]()
 
 
-# Re-export commonly used items for backward compatibility
+# Public API exports
 __all__ = [
     # Base class
     'ResearchTemplate',

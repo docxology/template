@@ -7,7 +7,7 @@ from pathlib import Path
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.literature.config import LiteratureConfig
-from infrastructure.literature.api import (
+from infrastructure.literature.sources import (
     SearchResult,
     ArxivSource,
     SemanticScholarSource,

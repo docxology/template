@@ -31,7 +31,7 @@ literature/
 
 This module follows the **thin orchestrator pattern**:
 - **Core Logic**: Centralized in `core.py`, coordinating sources and handlers.
-- **Adapters**: `api.py` contains adapters for each external API.
+- **Adapters**: `sources/` directory contains modular API adapters for each external database.
 - **Handlers**: Specialized handlers for PDFs and references.
 - **Library Index**: JSON-based tracking of all papers in `library_index.py`.
 - **Configuration**: Centralized configuration management with environment variable support.
@@ -41,9 +41,10 @@ This module follows the **thin orchestrator pattern**:
 
 ```
 LiteratureSearch (core.py)
-├── ArxivSource (api.py)
-├── SemanticScholarSource (api.py)
-├── UnpaywallSource (api.py)     # Open access PDF resolution
+├── ArxivSource (sources/arxiv.py)
+├── SemanticScholarSource (sources/semanticscholar.py)
+├── UnpaywallSource (sources/unpaywall.py)     # Open access PDF resolution
+├── BiorxivSource (sources/biorxiv.py)         # bioRxiv/medRxiv preprints
 ├── LibraryIndex (library_index.py)
 ├── PDFHandler (pdf_handler.py)
 └── ReferenceManager (reference_manager.py)
@@ -58,10 +59,10 @@ PaperSelector (paper_selector.py)    # NEW: Configurable paper filtering
 LiteratureConfig (config.py)
 └── from_env() - Load from environment variables
 
-SearchResult (api.py)
+SearchResult (sources/base.py)
 └── Normalized result dataclass
 
-UnpaywallResult (api.py)
+UnpaywallResult (sources/unpaywall.py)
 └── OA status and PDF URL
 
 DownloadResult (core.py)
@@ -80,7 +81,12 @@ LLMOperationResult (llm_operations.py)  # NEW: LLM operation results
 |------|---------|
 | `__init__.py` | Public API exports |
 | `core.py` | Main `LiteratureSearch` class + `DownloadResult` |
-| `api.py` | API clients for arXiv, Semantic Scholar, Unpaywall |
+| `sources/` | **Modular API adapters** (see structure below) |
+| `sources/base.py` | Base classes (`SearchResult`, `LiteratureSource`) and utilities |
+| `sources/arxiv.py` | arXiv API client |
+| `sources/semanticscholar.py` | Semantic Scholar API client |
+| `sources/unpaywall.py` | Unpaywall API client for open access PDFs |
+| `sources/biorxiv.py` | bioRxiv/medRxiv preprint API client |
 | `config.py` | Configuration dataclass + browser User-Agents |
 | `library_index.py` | JSON library index manager with cleanup methods |
 | `pdf_handler.py` | PDF downloading with retry logic and fallbacks |

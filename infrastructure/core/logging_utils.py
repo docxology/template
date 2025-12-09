@@ -477,7 +477,7 @@ def set_global_log_level(level: int) -> None:
             logger.setLevel(level)
 
 
-# Re-export commonly used items from split modules for backward compatibility
+# Public API exports
 __all__ = [
     # Core functions
     'get_log_level_from_env',
@@ -519,7 +519,7 @@ __all__ = [
 ]
 
 
-# Wrapper functions for backward compatibility
+# Wrapper functions
 def log_stage_with_eta(
     stage_num: int,
     total_stages: int,

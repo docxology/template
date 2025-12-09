@@ -7,10 +7,23 @@ including numerical stability, performance benchmarking, and best practices.
 import pytest
 import numpy as np
 from pathlib import Path
-from unittest.mock import patch, MagicMock
 
-# Import the module to test
-from infrastructure.scientific import scientific_dev
+# Import the modules to test
+from infrastructure.scientific import (
+    check_numerical_stability,
+    benchmark_function,
+    generate_scientific_documentation,
+    validate_scientific_implementation,
+    create_scientific_test_suite,
+    generate_performance_report,
+    validate_scientific_best_practices,
+    create_scientific_module_template,
+    generate_api_documentation,
+    check_research_compliance,
+    create_scientific_workflow_template,
+    BenchmarkResult,
+    StabilityTest,
+)
 
 
 class TestNumericalStability:
@@ -22,7 +35,7 @@ class TestNumericalStability:
             return x * 2 + 1
 
         test_inputs = [0.1, 1.0, 10.0, 100.0, 1000.0]
-        stability = scientific_dev.check_numerical_stability(stable_function, test_inputs)
+        stability = check_numerical_stability(stable_function, test_inputs)
 
         assert stability.stability_score > 0.8
         assert stability.function_name == "stable_function"
@@ -34,7 +47,7 @@ class TestNumericalStability:
             return 1.0 / x if x != 0 else float('inf')
 
         test_inputs = [0.001, 0.01, 0.1, 0.0, 1.0, 10.0]
-        stability = scientific_dev.check_numerical_stability(unstable_function, test_inputs)
+        stability = check_numerical_stability(unstable_function, test_inputs)
 
         assert stability.stability_score < 1.0
 
@@ -48,7 +61,7 @@ class TestBenchmarking:
             return x ** 2
 
         test_inputs = [1.0, 2.0, 3.0]
-        benchmark = scientific_dev.benchmark_function(simple_function, test_inputs, iterations=10)
+        benchmark = benchmark_function(simple_function, test_inputs, iterations=10)
 
         assert benchmark.function_name == "simple_function"
         assert benchmark.execution_time > 0
@@ -62,7 +75,7 @@ class TestBenchmarking:
             return np.sum(arr)
 
         test_inputs = [1.0, 2.0]
-        benchmark = scientific_dev.benchmark_function(memory_function, test_inputs, iterations=5)
+        benchmark = benchmark_function(memory_function, test_inputs, iterations=5)
 
         # Memory measurement may not be available in all environments
         if benchmark.memory_usage is not None:
@@ -92,7 +105,7 @@ class TestScientificDocumentation:
             """
             return x * y
 
-        doc = scientific_dev.generate_scientific_documentation(test_function)
+        doc = generate_scientific_documentation(test_function)
 
         assert "test_function" in doc
         assert "Args:" in doc
@@ -104,7 +117,7 @@ class TestScientificDocumentation:
         def undocumented_function(x):
             return x + 1
 
-        doc = scientific_dev.generate_scientific_documentation(undocumented_function)
+        doc = generate_scientific_documentation(undocumented_function)
 
         assert "undocumented_function" in doc
         assert "No documentation available" in doc
@@ -119,7 +132,7 @@ class TestScientificValidation:
             return x * 2
 
         test_cases = [(1, 2), (2, 4), (3, 6)]
-        validation = scientific_dev.validate_scientific_implementation(correct_function, test_cases)
+        validation = validate_scientific_implementation(correct_function, test_cases)
 
         assert validation['accuracy_score'] == 1.0
         assert validation['passed_tests'] == 3
@@ -131,7 +144,7 @@ class TestScientificValidation:
             return x * 3  # Wrong multiplier
 
         test_cases = [(1, 2), (2, 4), (3, 6)]
-        validation = scientific_dev.validate_scientific_implementation(incorrect_function, test_cases)
+        validation = validate_scientific_implementation(incorrect_function, test_cases)
 
         assert validation['accuracy_score'] == 0.0
         assert validation['passed_tests'] == 0
@@ -169,7 +182,7 @@ def well_documented_function(x: float) -> float:
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
-        validation = scientific_dev.validate_scientific_best_practices(module)
+        validation = validate_scientific_best_practices(module)
 
         assert validation['docstring_coverage'] == 1.0
         assert validation['type_hints_coverage'] == 1.0
@@ -189,7 +202,7 @@ def undocumented_function(x):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
-        validation = scientific_dev.validate_scientific_best_practices(module)
+        validation = validate_scientific_best_practices(module)
 
         assert validation['docstring_coverage'] == 0.0
         assert validation['type_hints_coverage'] == 0.0
@@ -203,7 +216,7 @@ class TestScientificModuleTemplate:
         """Test creation of scientific module template."""
         module_name = "optimization"
 
-        template = scientific_dev.create_scientific_module_template(module_name)
+        template = create_scientific_module_template(module_name)
 
         assert module_name in template
         assert "from __future__ import annotations" in template
@@ -220,7 +233,7 @@ class TestScientificWorkflowTemplate:
         """Test creation of scientific workflow template."""
         workflow_name = "ml_training"
 
-        template = scientific_dev.create_scientific_workflow_template(workflow_name)
+        template = create_scientific_workflow_template(workflow_name)
 
         assert workflow_name in template
         assert "scientific research workflow" in template.lower()
@@ -234,11 +247,11 @@ class TestAPIDocumentation:
     def test_generate_api_documentation(self):
         """Test generation of API documentation."""
         # Test with a module that has functions
-        from infrastructure.scientific import scientific_dev
+        import infrastructure.scientific.benchmarking as test_module
+        
+        doc = generate_api_documentation(test_module)
 
-        doc = scientific_dev.generate_api_documentation(scientific_dev)
-
-        assert "scientific_dev" in doc
+        assert "benchmarking" in doc
         assert "## Functions" in doc or "## Classes" in doc
 
 
@@ -262,7 +275,7 @@ class TestResearchCompliance:
             """
             return x * 2
 
-        compliance = scientific_dev.check_research_compliance(well_documented_function)
+        compliance = check_research_compliance(well_documented_function)
 
         assert compliance['has_docstring'] == True
         assert compliance['has_type_hints'] == True
@@ -274,7 +287,7 @@ class TestResearchCompliance:
         def poor_function(x):
             return x + 1
 
-        compliance = scientific_dev.check_research_compliance(poor_function)
+        compliance = check_research_compliance(poor_function)
 
         assert compliance['has_docstring'] == False
         assert compliance['has_type_hints'] == False
@@ -287,8 +300,8 @@ class TestPerformanceReporting:
 
     def test_generate_performance_report(self):
         """Test generation of performance analysis report."""
-        from infrastructure.scientific.scientific_dev import BenchmarkResult
-        from infrastructure.scientific import scientific_dev
+        from infrastructure.scientific import BenchmarkResult
+        from infrastructure.scientific import generate_api_documentation
 
         results = [
             BenchmarkResult("func1", 0.001, 10.5, 100, {}, "Fast function", "2024-01-01 10:00:00"),
@@ -296,7 +309,7 @@ class TestPerformanceReporting:
             BenchmarkResult("func3", 0.005, 15.2, 100, {}, "Medium function", "2024-01-01 10:00:02")
         ]
 
-        report = scientific_dev.generate_performance_report(results)
+        report = generate_performance_report(results)
 
         assert "Performance Analysis Report" in report
         assert "func1" in report
@@ -313,7 +326,7 @@ class TestEdgeCases:
         def dummy_function(x):
             return x
 
-        stability = scientific_dev.check_numerical_stability(dummy_function, [])
+        stability = check_numerical_stability(dummy_function, [])
 
         assert stability.stability_score == 0.0
         assert len(stability.recommendations) > 0
@@ -326,7 +339,7 @@ class TestEdgeCases:
             return x
 
         test_inputs = [-1.0, 1.0]  # One should fail
-        benchmark = scientific_dev.benchmark_function(failing_function, test_inputs, iterations=5)
+        benchmark = benchmark_function(failing_function, test_inputs, iterations=5)
 
         # Should still complete despite exceptions
         assert benchmark.function_name == "failing_function"
@@ -346,7 +359,7 @@ class TestValidationNonNumeric:
             (2, "result_2"),  # Should PASS
             (3, "result_3"),  # Should PASS
         ]
-        validation = scientific_dev.validate_scientific_implementation(string_function, test_cases)
+        validation = validate_scientific_implementation(string_function, test_cases)
         
         assert validation['passed_tests'] == 3
         assert validation['failed_tests'] == 0
@@ -361,7 +374,7 @@ class TestValidationNonNumeric:
             (1, "result_1"),  # Should FAIL
             (2, "result_2"),  # Should FAIL
         ]
-        validation = scientific_dev.validate_scientific_implementation(string_function, test_cases)
+        validation = validate_scientific_implementation(string_function, test_cases)
         
         assert validation['passed_tests'] == 0
         assert validation['failed_tests'] == 2
@@ -375,7 +388,7 @@ class TestValidationNonNumeric:
             raise ValueError("Intentional error")
         
         test_cases = [(1, 2), (2, 4)]
-        validation = scientific_dev.validate_scientific_implementation(raising_function, test_cases)
+        validation = validate_scientific_implementation(raising_function, test_cases)
         
         assert validation['failed_tests'] == 2
         assert validation['accuracy_score'] == 0.0
@@ -388,7 +401,7 @@ class TestPerformanceRecommendations:
     
     def test_generate_performance_report_slow_functions(self):
         """Test performance report with slow functions (lines 459-461)."""
-        from infrastructure.scientific.scientific_dev import BenchmarkResult
+        from infrastructure.scientific import BenchmarkResult
         
         results = [
             # Slow function (> 0.1s)
@@ -399,7 +412,7 @@ class TestPerformanceRecommendations:
             BenchmarkResult("fast_func", 0.001, 10.0, 100, {}, "Fast", "2024-01-01 10:00:02"),
         ]
         
-        report = scientific_dev.generate_performance_report(results)
+        report = generate_performance_report(results)
         
         assert "Performance Optimization" in report
         assert "slow_func" in report
@@ -407,7 +420,7 @@ class TestPerformanceRecommendations:
     
     def test_generate_performance_report_memory_intensive(self):
         """Test performance report with memory-intensive functions (lines 463-467)."""
-        from infrastructure.scientific.scientific_dev import BenchmarkResult
+        from infrastructure.scientific import BenchmarkResult
         
         results = [
             # Memory-intensive function (> 100MB)
@@ -418,7 +431,7 @@ class TestPerformanceRecommendations:
             BenchmarkResult("normal_func", 0.01, 10.0, 100, {}, "Normal", "2024-01-01 10:00:02"),
         ]
         
-        report = scientific_dev.generate_performance_report(results)
+        report = generate_performance_report(results)
         
         assert "Memory Optimization" in report
         assert "memory_hog" in report
@@ -426,13 +439,13 @@ class TestPerformanceRecommendations:
     
     def test_generate_performance_report_both_issues(self):
         """Test performance report with both slow and memory-intensive functions."""
-        from infrastructure.scientific.scientific_dev import BenchmarkResult
+        from infrastructure.scientific import BenchmarkResult
         
         results = [
             BenchmarkResult("problem_func", 0.2, 250.0, 100, {}, "Has both issues", "2024-01-01 10:00:00"),
         ]
         
-        report = scientific_dev.generate_performance_report(results)
+        report = generate_performance_report(results)
         
         assert "Performance Optimization" in report
         assert "Memory Optimization" in report
@@ -453,7 +466,7 @@ class TestComplianceExceptionHandling:
         fake_func = FakeFunction()
         
         # This should trigger the exception handling path (lines 795-796)
-        compliance = scientific_dev.check_research_compliance(fake_func)
+        compliance = check_research_compliance(fake_func)
         
         # Should still return a result with default values
         assert 'compliance_score' in compliance
@@ -462,7 +475,7 @@ class TestComplianceExceptionHandling:
     def test_check_research_compliance_builtin(self):
         """Test compliance check on built-in function."""
         # Built-in functions don't have inspectable source
-        compliance = scientific_dev.check_research_compliance(len)
+        compliance = check_research_compliance(len)
         
         # Should handle gracefully
         assert 'compliance_score' in compliance

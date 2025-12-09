@@ -7,12 +7,12 @@ import pytest
 from pathlib import Path
 
 from infrastructure.literature.config import LiteratureConfig
-from infrastructure.literature.api import (
+from infrastructure.literature.sources import (
     SearchResult,
     ArxivSource,
     BiorxivSource,
-    _normalize_title,
-    _title_similarity,
+    normalize_title,
+    title_similarity,
 )
 from infrastructure.literature.pdf_fallbacks import transform_pdf_url
 from infrastructure.literature.pdf_handler import PDFHandler
@@ -23,22 +23,22 @@ class TestTitleNormalization:
 
     def test_normalize_basic(self):
         """Test basic normalization removes punctuation."""
-        result = _normalize_title("Hello, World!")
+        result = normalize_title("Hello, World!")
         assert result == "hello world"
 
     def test_normalize_extra_whitespace(self):
         """Test normalization handles extra whitespace."""
-        result = _normalize_title("  Multiple   Spaces  Here  ")
+        result = normalize_title("  Multiple   Spaces  Here  ")
         assert result == "multiple spaces here"
 
     def test_normalize_special_chars(self):
         """Test normalization removes special characters."""
-        result = _normalize_title("Title: A Study (with notes)")
+        result = normalize_title("Title: A Study (with notes)")
         assert result == "title a study with notes"
 
     def test_normalize_empty_string(self):
         """Test normalization of empty string."""
-        result = _normalize_title("")
+        result = normalize_title("")
         assert result == ""
 
 
@@ -47,22 +47,22 @@ class TestTitleSimilarity:
 
     def test_identical_titles(self):
         """Test identical titles have similarity 1.0."""
-        sim = _title_similarity("Machine Learning", "Machine Learning")
+        sim = title_similarity("Machine Learning", "Machine Learning")
         assert sim == 1.0
 
     def test_case_insensitive(self):
         """Test similarity is case insensitive."""
-        sim = _title_similarity("Machine Learning", "machine learning")
+        sim = title_similarity("Machine Learning", "machine learning")
         assert sim == 1.0
 
     def test_different_titles(self):
         """Test different titles have low similarity."""
-        sim = _title_similarity("Machine Learning", "Quantum Physics")
+        sim = title_similarity("Machine Learning", "Quantum Physics")
         assert sim < 0.5
 
     def test_partial_overlap(self):
         """Test titles with partial overlap."""
-        sim = _title_similarity(
+        sim = title_similarity(
             "Deep Learning for Natural Language Processing",
             "Deep Learning for Computer Vision"
         )
@@ -70,9 +70,9 @@ class TestTitleSimilarity:
 
     def test_empty_title(self):
         """Test empty titles return 0.0."""
-        assert _title_similarity("", "Title") == 0.0
-        assert _title_similarity("Title", "") == 0.0
-        assert _title_similarity("", "") == 0.0
+        assert title_similarity("", "Title") == 0.0
+        assert title_similarity("Title", "") == 0.0
+        assert title_similarity("", "") == 0.0
 
 
 class TestTransformPdfUrl:
@@ -428,7 +428,7 @@ class TestTitleSimilarityEdgeCases:
     def test_unicode_titles(self):
         """Test similarity with Unicode characters."""
         # Unicode accented chars are preserved by alnum check
-        sim = _title_similarity(
+        sim = title_similarity(
             "Étude des systèmes complexes",
             "etude des systemes complexes"
         )
@@ -437,7 +437,7 @@ class TestTitleSimilarityEdgeCases:
 
     def test_identical_unicode_titles(self):
         """Test identical Unicode titles have perfect similarity."""
-        sim = _title_similarity(
+        sim = title_similarity(
             "Étude des systèmes complexes",
             "Étude des systèmes complexes"
         )
@@ -446,7 +446,7 @@ class TestTitleSimilarityEdgeCases:
     def test_hyphenated_words(self):
         """Test similarity with hyphenated words."""
         # Hyphenated words become separate words after punctuation removal
-        sim = _title_similarity(
+        sim = title_similarity(
             "Self-Supervised Learning",
             "Self Supervised Learning"
         )
@@ -456,7 +456,7 @@ class TestTitleSimilarityEdgeCases:
 
     def test_numbers_in_titles(self):
         """Test similarity with numbers."""
-        sim = _title_similarity(
+        sim = title_similarity(
             "GPT-4 Technical Report",
             "GPT4 Technical Report"
         )

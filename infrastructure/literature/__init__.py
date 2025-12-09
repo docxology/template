@@ -34,7 +34,7 @@ Output Files:
 
 from infrastructure.literature.core import LiteratureSearch, DownloadResult
 from infrastructure.literature.config import LiteratureConfig, BROWSER_USER_AGENTS
-from infrastructure.literature.api import (
+from infrastructure.literature.sources import (
     SearchResult,
     UnpaywallResult,
     UnpaywallSource,

@@ -7,7 +7,7 @@ from typing import Optional, List, TYPE_CHECKING
 from infrastructure.core.exceptions import FileOperationError, LiteratureSearchError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.literature.config import LiteratureConfig
-from infrastructure.literature.api import SearchResult
+from infrastructure.literature.sources import SearchResult
 from infrastructure.literature.pdf_fallbacks import (
     transform_pdf_url,
     doi_to_pdf_urls,

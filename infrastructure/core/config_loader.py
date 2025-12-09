@@ -100,11 +100,10 @@ def get_config_as_dict(repo_root: Path | str) -> Dict[str, str]:
     """
     repo_root = Path(repo_root)
     
-    # Try project/manuscript/config.yaml first (new monophyletic structure)
-    config_path = repo_root / 'project' / 'manuscript' / 'config.yaml'
-    if not config_path.exists():
-        # Fall back to manuscript/config.yaml for backward compatibility
-        config_path = repo_root / 'manuscript' / 'config.yaml'
+    # Try to find config file in both locations
+    config_path = find_config_file(repo_root)
+    if not config_path:
+        return {}
     
     config = load_config(config_path)
     if not config:

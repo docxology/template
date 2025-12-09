@@ -216,9 +216,9 @@ def validate_markdown(markdown_dir: str | Path, repo_root: str | Path, strict: b
 def find_manuscript_directory(repo_root: str | Path) -> Path:
     """Find the manuscript directory in various possible locations.
     
-    Tries multiple locations for backward compatibility:
-    1. project/manuscript/ (new monophyletic structure)
-    2. manuscript/ (legacy location)
+    Tries multiple locations:
+    1. project/manuscript/ (current structure)
+    2. manuscript/ (legacy location at repo root)
     3. Current working directory / manuscript
     4. Relative "manuscript"
     

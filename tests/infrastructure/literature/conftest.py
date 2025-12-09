@@ -1,11 +1,11 @@
 import pytest
 from pathlib import Path
-from unittest.mock import MagicMock
 from infrastructure.literature.config import LiteratureConfig
-from infrastructure.literature.api import SearchResult
+from infrastructure.literature.sources import SearchResult
 
 @pytest.fixture
 def mock_config(tmp_path):
+    """Create test configuration with temporary directories."""
     config = LiteratureConfig()
     config.download_dir = str(tmp_path / "pdfs")
     config.bibtex_file = str(tmp_path / "refs.bib")
@@ -18,6 +18,7 @@ def mock_config(tmp_path):
 
 @pytest.fixture
 def sample_result():
+    """Create a sample SearchResult for testing."""
     return SearchResult(
         title="Test Paper",
         authors=["Author One", "Author Two"],
@@ -29,7 +30,3 @@ def sample_result():
         pdf_url="http://example.com/paper.pdf",
         venue="Journal of Testing"
     )
-
-@pytest.fixture
-def mock_requests_get(mocker):
-    return mocker.patch("requests.get")

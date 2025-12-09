@@ -6,7 +6,7 @@ from typing import List, Optional
 from urllib.parse import urljoin
 
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.literature.api import SearchResult, UnpaywallSource, ArxivSource, BiorxivSource
+from infrastructure.literature.sources import SearchResult, UnpaywallSource, ArxivSource, BiorxivSource
 from infrastructure.literature.config import LiteratureConfig
 
 logger = get_logger(__name__)

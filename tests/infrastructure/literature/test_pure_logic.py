@@ -7,7 +7,7 @@ import pytest
 from pathlib import Path
 
 from infrastructure.literature.config import LiteratureConfig
-from infrastructure.literature.api import SearchResult
+from infrastructure.literature.sources import SearchResult
 from infrastructure.literature.reference_manager import ReferenceManager
 from infrastructure.literature.core import LiteratureSearch
 

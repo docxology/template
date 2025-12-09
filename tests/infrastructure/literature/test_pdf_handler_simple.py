@@ -10,7 +10,7 @@ import pytest
 
 from infrastructure.literature.pdf_handler import PDFHandler
 from infrastructure.literature.config import LiteratureConfig
-from infrastructure.literature.api import SearchResult
+from infrastructure.literature.sources import SearchResult
 from infrastructure.core.exceptions import FileOperationError
 
 

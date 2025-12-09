@@ -22,6 +22,7 @@ Development standards and coding guidelines for the Research Project Template.
 - **api_design.md** - API design and interface standards
 - **manuscript_style.md** - Manuscript formatting and style standards
 - **reporting.md** - Reporting module standards and outputs
+- **refactoring.md** - **NEW**: Refactoring and modularization standards (clean break approach)
 
 ## Key Principles
 

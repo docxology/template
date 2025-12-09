@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-08T14:56:46.576687",
+  "timestamp": "2025-12-09T07:36:57.578124",
   "total_duration": 0.0,
   "stages": [
     {
@@ -19,7 +19,7 @@
       "status": "skipped",
       "reason": "infrastructure.build not available"
     },
-    "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x10c422ba0>",
+    "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x10c502ba0>",
     "reproducibility": {
       "status": "skipped",
       "reason": "infrastructure.build not available"

@@ -7,7 +7,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 
 from infrastructure.literature.config import LiteratureConfig
-from infrastructure.literature.api import UnpaywallSource, UnpaywallResult
+from infrastructure.literature.sources import UnpaywallSource, UnpaywallResult
 
 
 class TestUnpaywallResult:

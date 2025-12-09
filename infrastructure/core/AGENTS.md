@@ -26,9 +26,10 @@ The Core module provides fundamental foundation utilities used across the entire
 - YAML configuration file loading
 - Environment variable support with priority
 - Author and metadata formatting
-- Configuration file discovery
+- Configuration file discovery (checks both `project/manuscript/config.yaml` and legacy `manuscript/config.yaml`)
 - Environment variable export
 - Translation language configuration
+- Legacy location support for backward compatibility
 
 **credentials.py**
 - Credential management from .env and YAML config files
@@ -108,12 +109,17 @@ with log_timing("Algorithm execution", logger):
 
 ### Configuration
 ```python
-from infrastructure.core import load_config, get_config_as_dict, get_translation_languages
+from infrastructure.core import load_config, get_config_as_dict, get_translation_languages, find_config_file
 
 config = load_config(Path("project/manuscript/config.yaml"))
-env_dict = get_config_as_dict(Path("."))
+env_dict = get_config_as_dict(Path("."))  # Checks both project/manuscript/config.yaml and manuscript/config.yaml
+config_path = find_config_file(Path("."))  # Returns first found: project/manuscript/config.yaml (preferred) or manuscript/config.yaml (legacy)
 languages = get_translation_languages(Path("."))
 ```
+
+**Legacy Location Support**: Both `get_config_as_dict()` and `find_config_file()` automatically check for configuration files in two locations (in order):
+1. `project/manuscript/config.yaml` (preferred - current structure)
+2. `manuscript/config.yaml` (legacy location - supported for backward compatibility)
 
 ### Credential Management
 ```python

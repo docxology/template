@@ -9,7 +9,7 @@ from typing import Dict, List, Optional, Tuple
 from infrastructure.core.logging_utils import get_logger, log_header, log_success
 from infrastructure.literature.workflow import LiteratureWorkflow
 from infrastructure.literature.library_index import LibraryEntry
-from infrastructure.literature.api import SearchResult
+from infrastructure.literature.sources import SearchResult
 
 logger = get_logger(__name__)
 
