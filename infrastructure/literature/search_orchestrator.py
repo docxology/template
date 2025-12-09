@@ -16,13 +16,36 @@ DEFAULT_LIMIT_PER_KEYWORD = int(os.environ.get("LITERATURE_DEFAULT_LIMIT", "25")
 
 
 def get_keywords_input() -> List[str]:
-    """Prompt user for comma-separated keywords."""
+    """Prompt user for comma-separated keywords.
+    
+    Multi-word terms are automatically quoted (e.g., "free energy principle").
+    Users don't need to type quotes themselves.
+    
+    Returns:
+        List of keyword strings, with multi-word terms automatically quoted.
+    """
     try:
-        keywords_str = input("Enter keywords (comma-separated): ").strip()
+        keywords_str = input("Enter keywords (comma-separated, multi-word terms auto-quoted): ").strip()
         if not keywords_str:
             return []
-        keywords = [k.strip() for k in keywords_str.split(',')]
-        return [k for k in keywords if k]
+        
+        # Split by comma and process each keyword
+        keywords = []
+        for k in keywords_str.split(','):
+            k = k.strip()
+            if not k:
+                continue
+            
+            # Remove existing quotes if user added them (we'll add our own)
+            k = k.strip('"\'')
+            
+            # If keyword contains spaces, wrap it in quotes
+            if ' ' in k:
+                k = f'"{k}"'
+            
+            keywords.append(k)
+        
+        return keywords
     except (EOFError, KeyboardInterrupt):
         return []
 
@@ -119,8 +142,24 @@ def run_search_only(
     """
     log_header("LITERATURE SEARCH (ADD TO BIBLIOGRAPHY)")
 
+    # Get enabled sources
+    enabled_sources = list(workflow.literature_search.sources.keys())
+    # Filter out sources that don't support search (like unpaywall)
+    searchable_sources = [s for s in enabled_sources 
+                         if hasattr(workflow.literature_search.sources[s], 'search')]
+    
+    # Format sources display
+    if not searchable_sources:
+        sources_display = "no sources"
+    elif len(searchable_sources) <= 8:
+        # Show all sources if 8 or fewer
+        sources_display = ', '.join(searchable_sources)
+    else:
+        # For many sources, show first few and count
+        sources_display = f"{', '.join(searchable_sources[:5])}, and {len(searchable_sources) - 5} more"
+
     print("\nThis will:")
-    print("  1. Search arXiv and Semantic Scholar for papers")
+    print(f"  1. Search {sources_display} for papers")
     print("  2. Add papers to bibliography (no download or summarization)")
     print()
 
@@ -163,17 +202,28 @@ def run_search_only(
                 already_existed_count += 1
                 logger.debug(f"Already exists: {result.title[:50]}...")
 
+        # Get source information
+        source_health = workflow.literature_search.get_source_health_status()
+        enabled_sources = list(workflow.literature_search.sources.keys())
+        
         # Display results
         print(f"\n{'=' * 60}")
         print("SEARCH COMPLETED")
         print("=" * 60)
         print(f"Keywords searched: {', '.join(keywords)}")
+        print(f"Sources used: {', '.join(enabled_sources)}")
         print(f"Papers found: {papers_found}")
         print(f"Papers added to bibliography: {added_count}")
         if already_existed_count > 0:
             print(f"Papers already in bibliography: {already_existed_count}")
         print(f"Success rate: {(added_count / papers_found) * 100:.1f}%")
-
+        
+        # Display source health status
+        unhealthy_sources = [name for name, status in source_health.items() 
+                          if not status.get('healthy', True)]
+        if unhealthy_sources:
+            print(f"\n⚠️  Note: Some sources had issues: {', '.join(unhealthy_sources)}")
+        
         log_success("Literature search complete!")
         return 0
 
@@ -323,8 +373,24 @@ def run_search(
                 return 1
             logger.info(f"Cleared summaries: {result['message']}")
     
+    # Get enabled sources
+    enabled_sources = list(workflow.literature_search.sources.keys())
+    # Filter out sources that don't support search (like unpaywall)
+    searchable_sources = [s for s in enabled_sources 
+                         if hasattr(workflow.literature_search.sources[s], 'search')]
+    
+    # Format sources display
+    if not searchable_sources:
+        sources_display = "no sources"
+    elif len(searchable_sources) <= 8:
+        # Show all sources if 8 or fewer
+        sources_display = ', '.join(searchable_sources)
+    else:
+        # For many sources, show first few and count
+        sources_display = f"{', '.join(searchable_sources[:5])}, and {len(searchable_sources) - 5} more"
+
     print("\nThis will:")
-    print("  1. Search arXiv and Semantic Scholar for papers")
+    print(f"  1. Search {sources_display} for papers")
     print("  2. Download PDFs and add to BibTeX library")
     print("  3. Generate AI summaries for each paper")
     print(f"  4. Process up to {max_parallel_summaries} papers in parallel")
@@ -363,10 +429,15 @@ def run_search(
         # Display results
         stats = workflow.get_workflow_stats(result)
         
+        # Get source information
+        source_health = workflow.literature_search.get_source_health_status()
+        enabled_sources = list(workflow.literature_search.sources.keys())
+        
         print(f"\n{'=' * 60}")
         print("SEARCH COMPLETED")
         print("=" * 60)
         print(f"Keywords searched: {', '.join(keywords)}")
+        print(f"Sources used: {', '.join(enabled_sources)}")
         print(f"Papers found: {stats['search']['papers_found']}")
         print(f"Papers already downloaded: {result.papers_already_existed}")
         print(f"Papers newly downloaded: {result.papers_newly_downloaded}")
@@ -376,6 +447,12 @@ def run_search(
             print(f"Summaries skipped (already exist): {result.summaries_skipped}")
         print(f"Summary failures: {result.summaries_failed}")
         print(f"Success rate: {result.success_rate:.1f}%")
+        
+        # Display source health status
+        unhealthy_sources = [name for name, status in source_health.items() 
+                          if not status.get('healthy', True)]
+        if unhealthy_sources:
+            print(f"\n⚠️  Note: Some sources had issues: {', '.join(unhealthy_sources)}")
         
         log_success("Literature search complete!")
         return 0

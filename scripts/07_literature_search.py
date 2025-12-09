@@ -270,7 +270,19 @@ Examples:
     # Parse keywords if provided
     keywords = None
     if args.keywords:
-        keywords = [kw.strip() for kw in args.keywords.split(",") if kw.strip()]
+        # Process keywords: auto-quote multi-word terms
+        keyword_list = []
+        for kw in args.keywords.split(","):
+            kw = kw.strip()
+            if not kw:
+                continue
+            # Remove existing quotes if user added them (we'll add our own)
+            kw = kw.strip('"\'')
+            # If keyword contains spaces, wrap it in quotes
+            if ' ' in kw:
+                kw = f'"{kw}"'
+            keyword_list.append(kw)
+        keywords = keyword_list
         if not keywords:
             logger.error("No valid keywords provided")
             return 1

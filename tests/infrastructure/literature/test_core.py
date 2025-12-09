@@ -75,3 +75,106 @@ def test_add_to_library(mock_config, sample_result, tmp_path):
         bibtex_content = bibtex_path.read_text()
         assert key in bibtex_content
 
+
+class TestHealthStatus:
+    """Tests for health status methods in LiteratureSearch."""
+
+    def test_get_source_health_status_with_unpaywall(self, mock_config):
+        """Test get_source_health_status() handles Unpaywall correctly."""
+        config = mock_config
+        config.use_unpaywall = True
+        config.unpaywall_email = "test@example.com"
+        
+        searcher = LiteratureSearch(config)
+        
+        # Should not raise AttributeError
+        health_status = searcher.get_source_health_status()
+        
+        # Check that all sources have health status
+        assert isinstance(health_status, dict)
+        assert len(health_status) > 0
+        
+        # Check standard sources
+        for source_name in ["arxiv", "semanticscholar", "biorxiv"]:
+            if source_name in health_status:
+                status = health_status[source_name]
+                assert isinstance(status, dict)
+                assert "healthy" in status
+                assert "source_name" in status
+        
+        # Check Unpaywall if enabled
+        if "unpaywall" in health_status:
+            status = health_status["unpaywall"]
+            assert isinstance(status, dict)
+            assert "healthy" in status
+            assert "source_name" in status
+            assert status["source_name"] == "UnpaywallSource"
+
+    def test_get_source_health_status_without_unpaywall(self, mock_config):
+        """Test get_source_health_status() works without Unpaywall."""
+        config = mock_config
+        config.use_unpaywall = False
+        
+        searcher = LiteratureSearch(config)
+        
+        health_status = searcher.get_source_health_status()
+        
+        assert isinstance(health_status, dict)
+        assert "unpaywall" not in health_status
+
+    def test_ping_sources_handles_unpaywall(self, mock_config):
+        """Test _ping_sources() handles Unpaywall correctly."""
+        config = mock_config
+        config.use_unpaywall = True
+        config.unpaywall_email = "test@example.com"
+        
+        searcher = LiteratureSearch(config)
+        
+        # Should not raise AttributeError
+        sources_to_use = ["arxiv", "unpaywall"]
+        health_status = searcher._ping_sources(sources_to_use)
+        
+        assert isinstance(health_status, dict)
+        assert "arxiv" in health_status
+        assert "unpaywall" in health_status
+        # Unpaywall should be marked as healthy (lookup-only, no search)
+        assert health_status["unpaywall"] is True
+
+    def test_check_all_sources_health_with_unpaywall(self, mock_config):
+        """Test check_all_sources_health() handles Unpaywall correctly."""
+        config = mock_config
+        config.use_unpaywall = True
+        config.unpaywall_email = "test@example.com"
+        
+        searcher = LiteratureSearch(config)
+        
+        # Should not raise AttributeError
+        health_results = searcher.check_all_sources_health()
+        
+        assert isinstance(health_results, dict)
+        # Unpaywall should be in results if enabled
+        if "unpaywall" in searcher.sources:
+            assert "unpaywall" in health_results
+            assert isinstance(health_results["unpaywall"], bool)
+
+    def test_health_status_graceful_degradation(self, mock_config):
+        """Test health status methods handle missing methods gracefully."""
+        searcher = LiteratureSearch(mock_config)
+        
+        # Create a mock source without health methods
+        class MockSourceWithoutHealth:
+            def __init__(self):
+                pass
+        
+        # Add mock source
+        searcher.sources["mock_source"] = MockSourceWithoutHealth()
+        
+        # Should not raise AttributeError
+        health_status = searcher.get_source_health_status()
+        
+        assert "mock_source" in health_status
+        # Should return default health status
+        assert isinstance(health_status["mock_source"], dict)
+        assert "healthy" in health_status["mock_source"]
+        assert health_status["mock_source"]["healthy"] is True  # Default assumption
+

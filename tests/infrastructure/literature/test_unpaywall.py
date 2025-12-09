@@ -297,3 +297,164 @@ class TestUnpaywallIntegration:
         
         assert handler._fallbacks._unpaywall is None
 
+
+class TestUnpaywallHealthMethods:
+    """Tests for UnpaywallSource health check methods."""
+
+    def test_get_health_status_returns_proper_format(self):
+        """Test get_health_status() returns proper format."""
+        config = LiteratureConfig(unpaywall_email="test@example.com")
+        source = UnpaywallSource(config)
+        
+        status = source.get_health_status()
+        
+        assert isinstance(status, dict)
+        assert "healthy" in status
+        assert "consecutive_failures" in status
+        assert "last_request_time" in status
+        assert "source_name" in status
+        assert status["source_name"] == "UnpaywallSource"
+        assert isinstance(status["healthy"], bool)
+        assert isinstance(status["consecutive_failures"], int)
+        assert isinstance(status["last_request_time"], float)
+
+    def test_get_health_status_initial_state(self):
+        """Test get_health_status() initial state is healthy."""
+        config = LiteratureConfig(unpaywall_email="test@example.com")
+        source = UnpaywallSource(config)
+        
+        status = source.get_health_status()
+        
+        assert status["healthy"] is True
+        assert status["consecutive_failures"] == 0
+
+    def test_is_healthy_property_initial(self):
+        """Test is_healthy property is True initially."""
+        config = LiteratureConfig(unpaywall_email="test@example.com")
+        source = UnpaywallSource(config)
+        
+        assert source.is_healthy is True
+
+    def test_is_healthy_after_failures(self):
+        """Test is_healthy becomes False after multiple failures."""
+        config = LiteratureConfig(unpaywall_email="test@example.com")
+        source = UnpaywallSource(config)
+        
+        # Simulate failures
+        source._consecutive_failures = 2
+        assert source.is_healthy is True  # Still healthy (< 3)
+        
+        source._consecutive_failures = 3
+        assert source.is_healthy is False  # Now unhealthy (>= 3)
+
+    def test_check_health_success(self):
+        """Test check_health() returns True on successful lookup."""
+        config = LiteratureConfig(unpaywall_email="test@example.com")
+        source = UnpaywallSource(config)
+        
+        # Mock successful response (even 404 means API is responding)
+        with patch.object(source, 'lookup') as mock_lookup:
+            mock_lookup.return_value = None  # 404 response
+            result = source.check_health()
+            
+            assert result is True
+            assert source._consecutive_failures == 0
+
+    def test_check_health_with_result(self):
+        """Test check_health() returns True when lookup returns result."""
+        config = LiteratureConfig(unpaywall_email="test@example.com")
+        source = UnpaywallSource(config)
+        
+        # Mock successful response with result
+        mock_result = UnpaywallResult(
+            doi="10.1038/nature12373",
+            is_oa=True,
+            pdf_url="https://example.com/paper.pdf"
+        )
+        
+        with patch.object(source, 'lookup') as mock_lookup:
+            mock_lookup.return_value = mock_result
+            result = source.check_health()
+            
+            assert result is True
+            assert source._consecutive_failures == 0
+
+    def test_check_health_failure(self):
+        """Test check_health() returns False on exception."""
+        config = LiteratureConfig(unpaywall_email="test@example.com")
+        source = UnpaywallSource(config)
+        
+        # Mock exception
+        with patch.object(source, 'lookup') as mock_lookup:
+            mock_lookup.side_effect = Exception("Network error")
+            result = source.check_health()
+            
+            assert result is False
+            assert source._consecutive_failures == 1
+
+    def test_consecutive_failures_tracking(self):
+        """Test consecutive failures are tracked correctly."""
+        config = LiteratureConfig(unpaywall_email="test@example.com")
+        source = UnpaywallSource(config)
+        
+        assert source._consecutive_failures == 0
+        
+        # Simulate a failed lookup
+        with patch('requests.get') as mock_get:
+            mock_get.side_effect = Exception("Network error")
+            source.lookup("10.1038/nature12373")
+            
+            assert source._consecutive_failures > 0
+
+    def test_consecutive_failures_reset_on_success(self):
+        """Test consecutive failures reset on successful lookup."""
+        config = LiteratureConfig(unpaywall_email="test@example.com")
+        source = UnpaywallSource(config)
+        
+        # Set failures
+        source._consecutive_failures = 2
+        
+        # Mock successful lookup
+        with patch('requests.get') as mock_get:
+            mock_response = MagicMock()
+            mock_response.status_code = 200
+            mock_response.json.return_value = {
+                "doi": "10.1038/nature12373",
+                "is_oa": True
+            }
+            mock_get.return_value = mock_response
+            
+            source.lookup("10.1038/nature12373")
+            
+            assert source._consecutive_failures == 0
+
+    def test_health_status_integration_with_literature_search(self):
+        """Test health status integration with LiteratureSearch."""
+        from infrastructure.literature.core import LiteratureSearch
+        
+        config = LiteratureConfig(
+            use_unpaywall=True,
+            unpaywall_email="test@example.com"
+        )
+        search = LiteratureSearch(config)
+        
+        # Should not raise AttributeError
+        health_status = search.get_source_health_status()
+        
+        assert "unpaywall" in health_status
+        assert isinstance(health_status["unpaywall"], dict)
+        assert "healthy" in health_status["unpaywall"]
+
+    def test_health_status_without_email(self):
+        """Test health status when email not configured."""
+        config = LiteratureConfig(unpaywall_email="")
+        source = UnpaywallSource(config)
+        
+        status = source.get_health_status()
+        
+        # Should still return valid status format
+        assert isinstance(status, dict)
+        assert "healthy" in status
+        # Health check will fail without email, but status should still be returned
+        assert status["consecutive_failures"] == 0  # Initial state
+

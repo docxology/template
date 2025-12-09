@@ -246,13 +246,73 @@ Load configuration from environment with `LiteratureConfig.from_env()`:
 - **Auth**: Optional API key for higher rate limits
 - **Rate Limit**: 1.5 seconds between requests with exponential backoff retry
 
-### Unpaywall (Optional Fallback)
+### Unpaywall (Optional Fallback - Lookup Only)
 - **API**: Unpaywall API (https://api.unpaywall.org/v2)
 - **Auth**: Requires email address (no API key needed)
 - **Purpose**: Finds legal open access versions of paywalled papers
 - **Usage**: Enable with `LITERATURE_USE_UNPAYWALL=true` and `UNPAYWALL_EMAIL=your@email.com`
 - **Features**: Citation counts, open access PDF links, venue information
 - **Retry Logic**: Automatic retry with exponential backoff on rate limit (429) errors
+- **Special Status**: This is a **lookup-only source** - it does not support general search queries. It only provides DOI-based lookups for open access PDF resolution. It is automatically excluded from search operations but included in health status checks.
+- **Health Monitoring**: 
+  - `check_health()`: Performs a test DOI lookup to verify API availability
+  - `is_healthy`: Property indicating health based on recent consecutive failures
+  - `get_health_status()`: Returns detailed health status information matching the format used by other sources
+
+## Source Capabilities and Health Status
+
+### Source Types
+
+Sources are categorized by their capabilities:
+
+1. **Search Sources** (inherit from `LiteratureSource`):
+   - Support general search queries via `search()` method
+   - Examples: arXiv, Semantic Scholar, bioRxiv, PubMed, Europe PMC, CrossRef, OpenAlex, DBLP
+   - All support health status methods: `check_health()`, `is_healthy`, `get_health_status()`
+
+2. **Lookup-Only Sources** (do not inherit from `LiteratureSource`):
+   - Only support specific lookups (e.g., DOI-based)
+   - Example: Unpaywall (DOI-based open access PDF lookup)
+   - Still support health status methods for monitoring
+   - Automatically excluded from general search operations
+
+### Health Status Methods
+
+All sources (search and lookup-only) support health monitoring:
+
+- **`check_health()`**: Performs an actual health check (e.g., test search/lookup)
+  - Returns `True` if source is healthy, `False` otherwise
+  - May make network requests
+  
+- **`is_healthy`** (property): Cached health status based on recent failures
+  - Returns `True` if consecutive failures < 3, `False` otherwise
+  - No network requests required
+  
+- **`get_health_status()`**: Returns detailed health status dictionary:
+  ```python
+  {
+      "healthy": bool,
+      "consecutive_failures": int,
+      "last_request_time": float,
+      "source_name": str
+  }
+  ```
+
+### Health Status in LiteratureSearch
+
+The `LiteratureSearch` class provides methods to check health across all sources:
+
+- **`get_source_health_status()`**: Returns health status for all configured sources
+  - Handles sources without health methods gracefully
+  - Returns default status for unsupported sources
+  
+- **`check_all_sources_health()`**: Performs actual health checks for all sources
+  - May take time as it makes network requests
+  - Returns simple True/False mapping
+  
+- **`_ping_sources()`**: Internal method used before search operations
+  - Checks availability of sources before attempting search
+  - Automatically skips lookup-only sources from search operations
 
 ## PDF Download Optimization
 

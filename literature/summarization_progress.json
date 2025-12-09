@@ -1,0 +1,143 @@
+{
+  "run_id": "run_1765313286",
+  "keywords": [
+    "free energy principle"
+  ],
+  "total_papers": 12,
+  "start_time": 1765313286.943348,
+  "last_update": 1765313826.3707242,
+  "entries": {
+    "friston2010freeenergy": {
+      "citation_key": "friston2010freeenergy",
+      "pdf_path": "literature/pdfs/friston2010freeenergy.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/friston2010freeenergy_summary.md",
+      "download_time": 1765313286.944563,
+      "summary_time": 27.47552490234375
+    },
+    "l2024associations": {
+      "citation_key": "l2024associations",
+      "pdf_path": "literature/pdfs/l2024associations.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/l2024associations_summary.md",
+      "download_time": 1765313286.944938,
+      "summary_time": 42.795032262802124
+    },
+    "s2024deep": {
+      "citation_key": "s2024deep",
+      "pdf_path": "literature/pdfs/s2024deep.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/s2024deep_summary.md",
+      "download_time": 1765313286.945247,
+      "summary_time": 41.7697639465332
+    },
+    "l2024impact": {
+      "citation_key": "l2024impact",
+      "pdf_path": "literature/pdfs/l2024impact.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/l2024impact_summary.md",
+      "download_time": 1765313286.945538,
+      "summary_time": 43.57615327835083
+    },
+    "li2025formalizing": {
+      "citation_key": "li2025formalizing",
+      "pdf_path": "literature/pdfs/li2025formalizing.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/li2025formalizing_summary.md",
+      "download_time": 1765313286.945904,
+      "summary_time": 46.78637099266052
+    },
+    "lu2025improving": {
+      "citation_key": "lu2025improving",
+      "pdf_path": "literature/pdfs/lu2025improving.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/lu2025improving_summary.md",
+      "download_time": 1765313286.946256,
+      "summary_time": 43.93311905860901
+    },
+    "zhao2025structural": {
+      "citation_key": "zhao2025structural",
+      "pdf_path": "literature/pdfs/zhao2025structural.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/zhao2025structural_summary.md",
+      "download_time": 1765313286.946878,
+      "summary_time": 49.72171497344971
+    },
+    "nery2025free": {
+      "citation_key": "nery2025free",
+      "pdf_path": "literature/pdfs/nery2025free.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/nery2025free_summary.md",
+      "download_time": 1765313286.9473972,
+      "summary_time": 47.313233852386475
+    },
+    "isomura2025predicting": {
+      "citation_key": "isomura2025predicting",
+      "pdf_path": "literature/pdfs/isomura2025predicting.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/isomura2025predicting_summary.md",
+      "download_time": 1765313286.947891,
+      "summary_time": 49.946067094802856
+    },
+    "friston2020some": {
+      "citation_key": "friston2020some",
+      "pdf_path": "literature/pdfs/friston2020some.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/friston2020some_summary.md",
+      "download_time": 1765313286.948389,
+      "summary_time": 47.87539720535278
+    },
+    "collaboration2005dark": {
+      "citation_key": "collaboration2005dark",
+      "pdf_path": "literature/pdfs/collaboration2005dark.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/collaboration2005dark_summary.md",
+      "download_time": 1765313286.948909,
+      "summary_time": 49.43092727661133
+    },
+    "collaboration2012large": {
+      "citation_key": "collaboration2012large",
+      "pdf_path": "literature/pdfs/collaboration2012large.pdf",
+      "status": "summarized",
+      "download_attempts": 0,
+      "summary_attempts": 1,
+      "last_error": null,
+      "summary_path": "literature/summaries/collaboration2012large_summary.md",
+      "download_time": 1765313286.949545,
+      "summary_time": 48.7771360874176
+    }
+  }
+}

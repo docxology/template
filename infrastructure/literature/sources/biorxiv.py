@@ -8,9 +8,8 @@ Provides access to bioRxiv and medRxiv preprint servers with:
 """
 from __future__ import annotations
 
-import time
 import requests
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime, timedelta
 
 from infrastructure.core.logging_utils import get_logger
@@ -19,7 +18,7 @@ from infrastructure.literature.sources.base import LiteratureSource, SearchResul
 logger = get_logger(__name__)
 
 
-class BiorxivSource:
+class BiorxivSource(LiteratureSource):
     """Client for bioRxiv/medRxiv API to find preprint PDFs.
     
     bioRxiv and medRxiv are preprint servers for biology and medicine.
@@ -36,24 +35,138 @@ class BiorxivSource:
     BASE_URL = "https://api.biorxiv.org"
     TITLE_SIMILARITY_THRESHOLD = 0.7
     
-    def __init__(self, config):
-        """Initialize bioRxiv source.
+    def search(self, query: str, limit: int = 10) -> List[SearchResult]:
+        """Search bioRxiv/medRxiv for papers matching a query.
+        
+        Note: bioRxiv API doesn't have direct keyword search, so we use
+        the details endpoint to get recent papers and filter by keywords
+        in title and abstract.
         
         Args:
-            config: Literature configuration.
+            query: Search query string (keywords).
+            limit: Maximum number of results to return.
+            
+        Returns:
+            List of SearchResult objects matching the query.
         """
-        self.config = config
-        self._last_request_time = 0
-        self._min_delay = 1.0  # Be polite to the API
+        logger.info(f"Searching bioRxiv/medRxiv for: {query}")
+        
+        def _execute_search():
+            all_results = []
+            query_lower = query.lower()
+            query_words = set(query_lower.split())
+            
+            # Search both servers
+            for server in ["biorxiv", "medrxiv"]:
+                try:
+                    server_results = self._search_server_by_keywords(server, query_words, limit)
+                    all_results.extend(server_results)
+                    logger.debug(f"Found {len(server_results)} results from {server}")
+                except Exception as e:
+                    logger.warning(f"Search failed for {server}: {e}")
+                    continue
+            
+            # Limit total results
+            if len(all_results) > limit:
+                all_results = all_results[:limit]
+            
+            return all_results
+        
+        # Use common retry logic from base class
+        results = self._execute_with_retry(
+            _execute_search,
+            "search",
+            "biorxiv",
+            handle_rate_limit=True
+        )
+        
+        logger.info(f"Found {len(results)} total results from bioRxiv/medRxiv")
+        
+        # Log detailed statistics
+        pdfs_count = sum(1 for r in results if r.pdf_url)
+        dois_count = sum(1 for r in results if r.doi)
+        logger.debug(f"bioRxiv/medRxiv search completed: {len(results)} results, {pdfs_count} with PDFs, {dois_count} with DOIs")
+        
+        return results
     
-    def _rate_limit_delay(self):
-        """Enforce rate limiting between requests."""
-        elapsed = time.time() - self._last_request_time
-        if elapsed < self._min_delay:
-            delay = self._min_delay - elapsed
-            logger.debug(f"bioRxiv rate limiting: waiting {delay:.2f}s")
-            time.sleep(delay)
-        self._last_request_time = time.time()
+    def _search_server_by_keywords(self, server: str, query_words: set, limit: int) -> List[SearchResult]:
+        """Search a specific server by keywords in recent papers.
+        
+        Args:
+            server: "biorxiv" or "medrxiv".
+            query_words: Set of query words to match.
+            limit: Maximum results to return.
+            
+        Returns:
+            List of SearchResult objects.
+        """
+        # Get recent papers (last year) and filter by keywords
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
+        
+        url = f"{self.BASE_URL}/details/{server}/{start_date}/{end_date}/0"
+        results = []
+        
+        try:
+            response = requests.get(
+                url,
+                timeout=self.config.timeout,
+                headers={"User-Agent": self.config.user_agent}
+            )
+            
+            if response.status_code != 200:
+                return results
+            
+            data = response.json()
+            collection = data.get("collection", [])
+            
+            if not collection:
+                return results
+            
+            # Filter papers by keyword matching in title/abstract
+            for paper in collection:
+                if len(results) >= limit:
+                    break
+                
+                title = paper.get("title", "").lower()
+                abstract = paper.get("abstract", "").lower()
+                text = f"{title} {abstract}"
+                
+                # Check if any query words appear in title/abstract
+                text_words = set(text.split())
+                matches = query_words & text_words
+                
+                if matches:
+                    # Build result
+                    biorxiv_doi = paper.get("doi", "")
+                    pdf_url = f"https://www.{server}.org/content/{biorxiv_doi}.full.pdf" if biorxiv_doi else None
+                    
+                    authors_str = paper.get("authors", "")
+                    authors = [a.strip() for a in authors_str.split(";")] if authors_str else []
+                    
+                    date_str = paper.get("date", "")
+                    year = int(date_str[:4]) if date_str and len(date_str) >= 4 else None
+                    
+                    results.append(SearchResult(
+                        title=paper.get("title", ""),
+                        authors=authors,
+                        year=year,
+                        abstract=paper.get("abstract", ""),
+                        url=f"https://www.{server}.org/content/{biorxiv_doi}" if biorxiv_doi else "",
+                        doi=biorxiv_doi,
+                        source=server,
+                        pdf_url=pdf_url,
+                        venue=f"{server} preprint"
+                    ))
+            
+            return results
+            
+        except requests.exceptions.RequestException as e:
+            logger.debug(f"{server} keyword search failed: {e}")
+            return []
+        except Exception as e:
+            logger.debug(f"{server} keyword search error: {e}")
+            return []
     
     def search_by_doi(self, doi: str) -> Optional[SearchResult]:
         """Search for a paper by DOI in bioRxiv/medRxiv.
@@ -100,8 +213,6 @@ class BiorxivSource:
         url = f"{self.BASE_URL}/pub/{server}/{doi}"
         
         try:
-            self._rate_limit_delay()
-            
             response = requests.get(
                 url,
                 timeout=self.config.timeout,
@@ -206,8 +317,6 @@ class BiorxivSource:
         url = f"{self.BASE_URL}/details/{server}/{start_date}/{end_date}/0"
         
         try:
-            self._rate_limit_delay()
-            
             response = requests.get(
                 url,
                 timeout=self.config.timeout,

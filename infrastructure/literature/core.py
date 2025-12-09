@@ -2,15 +2,23 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Union, Tuple
 from pathlib import Path
 
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.exceptions import APIRateLimitError
 from infrastructure.literature.config import LiteratureConfig
 from infrastructure.literature.sources import (
     SearchResult,
     ArxivSource,
     SemanticScholarSource,
+    BiorxivSource,
+    UnpaywallSource,
+    PubMedSource,
+    EuropePMCSource,
+    CrossRefSource,
+    OpenAlexSource,
+    DBLPSource,
     LiteratureSource
 )
 from infrastructure.literature.pdf_handler import PDFHandler
@@ -18,6 +26,76 @@ from infrastructure.literature.reference_manager import ReferenceManager
 from infrastructure.literature.library_index import LibraryIndex
 
 logger = get_logger(__name__)
+
+
+@dataclass
+class SourceStatistics:
+    """Statistics for a single literature source.
+    
+    Tracks per-source metrics including results found, citations,
+    PDF availability, health status, and timing information.
+    
+    Attributes:
+        source_name: Name of the source (e.g., "arxiv", "semanticscholar").
+        results_found: Number of search results found.
+        citations_found: Total citation count across all results.
+        pdfs_available: Number of results with PDF URLs.
+        dois_available: Number of results with DOIs.
+        healthy: Whether the source is currently healthy.
+        time_taken: Time taken for search in seconds.
+        errors: Number of errors encountered.
+        skipped: Whether this source was skipped (unhealthy/unavailable).
+    """
+    source_name: str
+    results_found: int = 0
+    citations_found: int = 0
+    pdfs_available: int = 0
+    dois_available: int = 0
+    healthy: bool = True
+    time_taken: float = 0.0
+    errors: int = 0
+    skipped: bool = False
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for serialization."""
+        return {
+            "source_name": self.source_name,
+            "results_found": self.results_found,
+            "citations_found": self.citations_found,
+            "pdfs_available": self.pdfs_available,
+            "dois_available": self.dois_available,
+            "healthy": self.healthy,
+            "time_taken": self.time_taken,
+            "errors": self.errors,
+            "skipped": self.skipped,
+        }
+
+
+@dataclass
+class SearchStatistics:
+    """Statistics for a complete search operation.
+    
+    Contains per-source statistics and overall search metrics.
+    
+    Attributes:
+        query: Search query string.
+        total_results: Total unique results after deduplication.
+        source_stats: Dictionary mapping source names to SourceStatistics.
+        total_time: Total search time in seconds.
+    """
+    query: str
+    total_results: int = 0
+    source_stats: Dict[str, SourceStatistics] = field(default_factory=dict)
+    total_time: float = 0.0
+    
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary for serialization."""
+        return {
+            "query": self.query,
+            "total_results": self.total_results,
+            "source_stats": {k: v.to_dict() for k, v in self.source_stats.items()},
+            "total_time": self.total_time,
+        }
 
 
 @dataclass
@@ -91,10 +169,20 @@ class LiteratureSearch:
         self.library_index = LibraryIndex(self.config)
         
         # Initialize sources
-        self.sources: Dict[str, LiteratureSource] = {
+        self.sources: Dict[str, Any] = {
             "arxiv": ArxivSource(self.config),
-            "semanticscholar": SemanticScholarSource(self.config)
+            "semanticscholar": SemanticScholarSource(self.config),
+            "biorxiv": BiorxivSource(self.config),
+            "pubmed": PubMedSource(self.config),
+            "europepmc": EuropePMCSource(self.config),
+            "crossref": CrossRefSource(self.config),
+            "openalex": OpenAlexSource(self.config),
+            "dblp": DBLPSource(self.config),
         }
+        
+        # Initialize optional sources if configured
+        if self.config.use_unpaywall and self.config.unpaywall_email:
+            self.sources["unpaywall"] = UnpaywallSource(self.config)
         
         # Source health monitoring
         self._source_health_cache: Dict[str, bool] = {}
@@ -104,51 +192,204 @@ class LiteratureSearch:
         self.pdf_handler = PDFHandler(self.config, self.library_index)
         self.reference_manager = ReferenceManager(self.config, self.library_index)
 
+    def _ping_sources(self, sources_to_use: List[str]) -> Dict[str, bool]:
+        """Ping sources to check availability before search.
+        
+        Performs quick health checks on all sources to verify they're available.
+        Logs which sources are healthy/unhealthy.
+        
+        Args:
+            sources_to_use: List of source names to check.
+            
+        Returns:
+            Dictionary mapping source names to health status (True/False).
+        """
+        logger.info("")
+        logger.info("=" * 60)
+        logger.info("CHECKING SOURCE AVAILABILITY")
+        logger.info("=" * 60)
+        
+        health_status = {}
+        healthy_sources = []
+        unhealthy_sources = []
+        
+        for source_name in sources_to_use:
+            if source_name not in self.sources:
+                logger.warning(f"  {source_name.upper()}: ⚠️  NOT CONFIGURED (skipping)")
+                health_status[source_name] = False
+                unhealthy_sources.append(source_name)
+                continue
+            
+            source = self.sources[source_name]
+            
+            # Check if source supports search
+            if not hasattr(source, 'search'):
+                logger.info(f"  {source_name.upper()}: ℹ️  NO SEARCH SUPPORT (lookup only)")
+                health_status[source_name] = True  # Not unhealthy, just doesn't support search
+                healthy_sources.append(source_name)
+                continue
+            
+            # Quick health check
+            try:
+                # Check if source has health status methods
+                if not hasattr(source, 'get_health_status') or not hasattr(source, 'is_healthy'):
+                    logger.debug(f"  {source_name.upper()}: ℹ️  NO HEALTH STATUS SUPPORT (assuming healthy)")
+                    health_status[source_name] = True
+                    healthy_sources.append(source_name)
+                    continue
+                
+                is_healthy = source.is_healthy
+                health_info = source.get_health_status()
+                consecutive_failures = health_info.get('consecutive_failures', 0)
+                
+                if is_healthy:
+                    logger.info(f"  {source_name.upper()}: ✓ HEALTHY")
+                    health_status[source_name] = True
+                    healthy_sources.append(source_name)
+                else:
+                    logger.warning(f"  {source_name.upper()}: ✗ UNHEALTHY ({consecutive_failures} consecutive failures)")
+                    health_status[source_name] = False
+                    unhealthy_sources.append(source_name)
+            except Exception as e:
+                logger.warning(f"  {source_name.upper()}: ✗ ERROR CHECKING HEALTH: {e}")
+                health_status[source_name] = False
+                unhealthy_sources.append(source_name)
+        
+        logger.info("")
+        logger.info(f"  Healthy sources: {len(healthy_sources)} ({', '.join(healthy_sources) if healthy_sources else 'none'})")
+        if unhealthy_sources:
+            logger.warning(f"  Unhealthy sources: {len(unhealthy_sources)} ({', '.join(unhealthy_sources)})")
+        logger.info("=" * 60)
+        logger.info("")
+        
+        return health_status
+
     def search(
         self, 
         query: str, 
         limit: int = 10, 
-        sources: Optional[List[str]] = None
-    ) -> List[SearchResult]:
+        sources: Optional[List[str]] = None,
+        return_stats: bool = False
+    ) -> Union[List[SearchResult], Tuple[List[SearchResult], SearchStatistics]]:
         """Search for papers across enabled sources.
         
         Args:
             query: Search query string.
             limit: Maximum results per source.
             sources: List of sources to use (default: all enabled in config).
+            return_stats: If True, return tuple of (results, statistics).
             
         Returns:
-            Combined list of deduplicated search results.
+            Combined list of deduplicated search results, or tuple of (results, statistics)
+            if return_stats is True.
         """
+        import time
+        start_time = time.time()
         results = []
+        source_stats: Dict[str, SourceStatistics] = {}
         sources_to_use = sources or self.config.sources
         
+        # Ping sources before search
+        source_health = self._ping_sources(sources_to_use)
+        
+        logger.info(f"Searching across {len(sources_to_use)} source(s): {', '.join(sources_to_use)}")
+        
         for source_name in sources_to_use:
+            source_start_time = time.time()
+            stats = SourceStatistics(source_name=source_name)
+            
             if source_name not in self.sources:
-                logger.warning(f"Unknown source: {source_name}")
+                logger.warning(f"Unknown source: {source_name}, skipping")
+                stats.skipped = True
+                stats.healthy = False
+                source_stats[source_name] = stats
                 continue
             
             # Check source health before attempting search
             source = self.sources[source_name]
-            if not source.is_healthy:
-                logger.warning(f"Source {source_name} appears unhealthy ({source._consecutive_failures} consecutive failures), skipping")
-                continue
+            
+            # Check if source supports health status
+            if hasattr(source, 'get_health_status') and hasattr(source, 'is_healthy'):
+                try:
+                    health_status = source.get_health_status()
+                    stats.healthy = health_status.get("healthy", True)
+                    
+                    if not source.is_healthy:
+                        consecutive_failures = getattr(source, '_consecutive_failures', 0)
+                        logger.warning(f"Source {source_name} appears unhealthy ({consecutive_failures} consecutive failures), skipping")
+                        stats.skipped = True
+                        stats.healthy = False
+                        source_stats[source_name] = stats
+                        continue
+                except Exception as e:
+                    logger.debug(f"Error checking health for {source_name}: {e}, proceeding with search")
+                    stats.healthy = True  # Default to healthy if check fails
+            else:
+                # Source doesn't support health checks, assume healthy
+                stats.healthy = True
                 
             try:
+                # Check if source has search method (some sources like Unpaywall don't)
+                if not hasattr(source, 'search'):
+                    logger.debug(f"Source {source_name} does not support general search, skipping")
+                    stats.skipped = True
+                    source_stats[source_name] = stats
+                    continue
+                
                 source_results = source.search(query, limit)
+                source_time = time.time() - source_start_time
+                
+                # Calculate statistics
+                stats.results_found = len(source_results)
+                stats.citations_found = sum(r.citation_count or 0 for r in source_results)
+                stats.pdfs_available = sum(1 for r in source_results if r.pdf_url)
+                stats.dois_available = sum(1 for r in source_results if r.doi)
+                stats.time_taken = source_time
+                stats.healthy = True
+                
                 results.extend(source_results)
-                logger.info(f"Found {len(source_results)} results from {source_name}")
+                
+                # Log detailed per-source results with health status
+                health_indicator = "✓" if stats.healthy else "✗"
+                logger.info(f"{health_indicator} {source_name.upper()}: {stats.results_found} results "
+                          f"({stats.citations_found} citations, {stats.pdfs_available} PDFs, "
+                          f"{stats.dois_available} DOIs) - {source_time:.1f}s")
+                
             except APIRateLimitError as e:
-                logger.error(f"Search failed for source {source_name}: Rate limit exceeded")
-                # Mark source as potentially unhealthy
-                source._consecutive_failures += 1
+                source_time = time.time() - source_start_time
+                logger.error(f"✗ {source_name.upper()}: Rate limit exceeded - {source_time:.1f}s")
+                stats.errors = 1
+                stats.time_taken = source_time
+                stats.healthy = False
+                if hasattr(source, '_consecutive_failures'):
+                    source._consecutive_failures += 1
             except Exception as e:
-                logger.error(f"Search failed for source {source_name}: {e}")
-                source._consecutive_failures += 1
+                source_time = time.time() - source_start_time
+                logger.error(f"✗ {source_name.upper()}: Search failed - {e} ({source_time:.1f}s)")
+                stats.errors = 1
+                stats.time_taken = source_time
+                stats.healthy = False
+                if hasattr(source, '_consecutive_failures'):
+                    source._consecutive_failures += 1
+            
+            source_stats[source_name] = stats
                 
         # Deduplicate by DOI or Title
         deduplicated = self._deduplicate_results(results)
-        logger.info(f"Total results after deduplication: {len(deduplicated)}")
+        total_time = time.time() - start_time
+        
+        logger.info(f"Total results after deduplication: {len(deduplicated)} (from {len(results)} raw results)")
+        
+        # Create search statistics
+        search_stats = SearchStatistics(
+            query=query,
+            total_results=len(deduplicated),
+            source_stats=source_stats,
+            total_time=total_time
+        )
+        
+        if return_stats:
+            return deduplicated, search_stats
         return deduplicated
 
     def download_paper(self, result: SearchResult) -> Optional[Path]:
@@ -285,7 +526,30 @@ class LiteratureSearch:
         """
         health_status = {}
         for source_name, source in self.sources.items():
-            health_status[source_name] = source.get_health_status()
+            try:
+                # Check if source supports health status reporting
+                if hasattr(source, 'get_health_status'):
+                    health_status[source_name] = source.get_health_status()
+                else:
+                    # Return default health status for sources without health methods
+                    logger.debug(f"Source {source_name} does not support health status reporting, using defaults")
+                    health_status[source_name] = {
+                        "healthy": True,  # Assume healthy if we can't check
+                        "consecutive_failures": 0,
+                        "last_request_time": 0.0,
+                        "source_name": source.__class__.__name__,
+                        "note": "Health status not available for this source type"
+                    }
+            except Exception as e:
+                logger.warning(f"Error getting health status for {source_name}: {e}")
+                # Return error status
+                health_status[source_name] = {
+                    "healthy": False,
+                    "consecutive_failures": 0,
+                    "last_request_time": 0.0,
+                    "source_name": source.__class__.__name__,
+                    "error": str(e)
+                }
         return health_status
     
     def check_all_sources_health(self) -> Dict[str, bool]:
@@ -297,9 +561,15 @@ class LiteratureSearch:
         health_results = {}
         for source_name, source in self.sources.items():
             try:
-                is_healthy = source.check_health()
-                health_results[source_name] = is_healthy
-                logger.debug(f"Source {source_name} health: {'healthy' if is_healthy else 'unhealthy'}")
+                # Check if source supports health checks
+                if hasattr(source, 'check_health'):
+                    is_healthy = source.check_health()
+                    health_results[source_name] = is_healthy
+                    logger.debug(f"Source {source_name} health: {'healthy' if is_healthy else 'unhealthy'}")
+                else:
+                    # Source doesn't support health checks, assume healthy
+                    logger.debug(f"Source {source_name} does not support health checks, assuming healthy")
+                    health_results[source_name] = True
             except Exception as e:
                 logger.warning(f"Health check failed for {source_name}: {e}")
                 health_results[source_name] = False

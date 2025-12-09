@@ -19,7 +19,7 @@ from typing import List, Optional, Dict, Any, Tuple, TYPE_CHECKING
 from infrastructure.core.logging_utils import get_logger, log_success, log_header
 from infrastructure.core.exceptions import LiteratureSearchError
 from infrastructure.literature.sources import SearchResult
-from infrastructure.literature.core import LiteratureSearch, DownloadResult
+from infrastructure.literature.core import LiteratureSearch, DownloadResult, SearchStatistics
 from infrastructure.literature.summarizer import PaperSummarizer, SummarizationResult
 from infrastructure.literature.progress import ProgressTracker, SummarizationProgress
 
@@ -249,15 +249,28 @@ class LiteratureWorkflow:
         return result
 
     def _search_papers(self, keywords: List[str], limit_per_keyword: int) -> List[SearchResult]:
-        """Search for papers across all keywords."""
+        """Search for papers across all keywords.
+        
+        Returns search results and logs comprehensive per-source statistics.
+        """
         all_results = []
+        all_search_stats: List[SearchStatistics] = []
 
         for keyword in keywords:
             log_header(f"Searching: '{keyword}'")
             try:
-                results = self.literature_search.search(keyword, limit=limit_per_keyword)
+                results, search_stats = self.literature_search.search(
+                    keyword, 
+                    limit=limit_per_keyword,
+                    return_stats=True
+                )
                 logger.info(f"Found {len(results)} papers for '{keyword}'")
                 all_results.extend(results)
+                all_search_stats.append(search_stats)
+                
+                # Display per-source breakdown for this keyword
+                self._display_source_breakdown(search_stats, keyword)
+                
             except LiteratureSearchError as e:
                 logger.error(f"Search failed for '{keyword}': {e}")
                 continue
@@ -265,8 +278,113 @@ class LiteratureWorkflow:
         # Deduplicate results
         unique_results = self.literature_search._deduplicate_results(all_results)
         logger.info(f"Total unique papers after deduplication: {len(unique_results)}")
+        
+        # Display overall source statistics across all keywords
+        if all_search_stats:
+            self._display_overall_source_statistics(all_search_stats)
 
         return unique_results
+    
+    def _display_source_breakdown(self, search_stats: SearchStatistics, keyword: str):
+        """Display per-source breakdown for a single search query."""
+        if not search_stats.source_stats:
+            return
+        
+        logger.info("")
+        logger.info(f"Source breakdown for '{keyword}':")
+        logger.info("-" * 60)
+        
+        for source_name, stats in sorted(search_stats.source_stats.items()):
+            # Health status indicator
+            if stats.skipped:
+                if not stats.healthy:
+                    status = "⏭️  SKIPPED (unhealthy)"
+                else:
+                    status = "⏭️  SKIPPED (no search support)"
+            elif stats.errors > 0:
+                status = f"❌ ERROR ({stats.errors} error(s))"
+            elif stats.healthy:
+                status = "✓ HEALTHY"
+            else:
+                status = "⚠️  UNHEALTHY"
+            
+            logger.info(f"  {source_name.upper()}: {status}")
+            if not stats.skipped and stats.errors == 0:
+                logger.info(f"    • Results: {stats.results_found}")
+                if stats.citations_found > 0:
+                    logger.info(f"    • Citations: {stats.citations_found}")
+                logger.info(f"    • PDFs available: {stats.pdfs_available}")
+                logger.info(f"    • DOIs available: {stats.dois_available}")
+                logger.info(f"    • Time: {stats.time_taken:.1f}s")
+            elif stats.errors > 0:
+                logger.info(f"    • Time: {stats.time_taken:.1f}s")
+            logger.info("")
+    
+    def _display_overall_source_statistics(self, all_search_stats: List[SearchStatistics]):
+        """Display aggregated statistics across all search queries."""
+        # Aggregate statistics across all searches
+        aggregated: Dict[str, Dict[str, Any]] = {}
+        
+        for search_stats in all_search_stats:
+            for source_name, stats in search_stats.source_stats.items():
+                if source_name not in aggregated:
+                    aggregated[source_name] = {
+                        "results": 0,
+                        "citations": 0,
+                        "pdfs": 0,
+                        "dois": 0,
+                        "time": 0.0,
+                        "errors": 0,
+                        "skipped": 0,
+                        "searches": 0
+                    }
+                
+                agg = aggregated[source_name]
+                agg["results"] += stats.results_found
+                agg["citations"] += stats.citations_found
+                agg["pdfs"] += stats.pdfs_available
+                agg["dois"] += stats.dois_available
+                agg["time"] += stats.time_taken
+                agg["errors"] += stats.errors
+                if stats.skipped:
+                    agg["skipped"] += 1
+                agg["searches"] += 1
+        
+        if not aggregated:
+            return
+        
+        logger.info("")
+        logger.info("=" * 70)
+        logger.info("OVERALL SOURCE STATISTICS")
+        logger.info("=" * 70)
+        
+        for source_name in sorted(aggregated.keys()):
+            agg = aggregated[source_name]
+            # Health indicator
+            if agg['errors'] > 0:
+                health_indicator = "❌"
+            elif agg['skipped'] > 0:
+                health_indicator = "⚠️"
+            else:
+                health_indicator = "✓"
+            
+            logger.info(f"\n{health_indicator} {source_name.upper()}:")
+            logger.info(f"  • Total results: {agg['results']}")
+            if agg['citations'] > 0:
+                logger.info(f"  • Total citations: {agg['citations']}")
+            logger.info(f"  • PDFs available: {agg['pdfs']}")
+            logger.info(f"  • DOIs available: {agg['dois']}")
+            logger.info(f"  • Total time: {agg['time']:.1f}s")
+            if agg['searches'] > 0:
+                avg_time = agg['time'] / agg['searches']
+                logger.info(f"  • Avg time per search: {avg_time:.1f}s")
+            if agg['errors'] > 0:
+                logger.info(f"  • Errors: {agg['errors']}")
+            if agg['skipped'] > 0:
+                logger.info(f"  • Skipped in {agg['skipped']} search(es)")
+        
+        logger.info("=" * 70)
+        logger.info("")
 
     def _download_papers(self, search_results: List[SearchResult]) -> Tuple[List[Tuple[SearchResult, Path]], List[DownloadResult]]:
         """Download PDFs for search results."""

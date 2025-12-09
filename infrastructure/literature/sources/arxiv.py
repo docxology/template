@@ -57,12 +57,19 @@ class ArxivSource(LiteratureSource):
             return self._parse_response(response.text)
         
         # Use common retry logic from base class
-        return self._execute_with_retry(
+        results = self._execute_with_retry(
             _execute_search,
             "search",
             "arxiv",
             handle_rate_limit=True
         )
+        
+        # Log detailed statistics
+        pdfs_count = sum(1 for r in results if r.pdf_url)
+        dois_count = sum(1 for r in results if r.doi)
+        logger.debug(f"arXiv search completed: {len(results)} results, {pdfs_count} with PDFs, {dois_count} with DOIs")
+        
+        return results
 
     def search_by_title(self, title: str, limit: int = 5) -> Optional[SearchResult]:
         """Search arXiv for a paper by title with similarity matching.

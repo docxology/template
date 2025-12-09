@@ -52,7 +52,7 @@ class LiteratureConfig:
         LITERATURE_TIMEOUT: Override timeout.
         LITERATURE_BIBTEX_FILE: Override bibtex_file.
         LITERATURE_LIBRARY_INDEX: Override library_index_file.
-        LITERATURE_SOURCES: Comma-separated list of sources.
+        LITERATURE_SOURCES: Comma-separated list of sources (available: arxiv, semanticscholar, biorxiv, pubmed, europepmc, crossref, openalex, dblp).
         LITERATURE_USE_UNPAYWALL: Enable Unpaywall (true/false).
         UNPAYWALL_EMAIL: Email for Unpaywall API.
         LITERATURE_DOWNLOAD_RETRY_ATTEMPTS: Override download_retry_attempts.
@@ -86,6 +86,42 @@ class LiteratureConfig:
             "timeout": 30.0,
             "health_check_enabled": True,
             "rate_limit_strategy": "exponential_backoff"
+        },
+        "pubmed": {
+            "delay": 0.34,  # ~3 requests/second (NCBI requirement)
+            "max_retries": 3,
+            "timeout": 30.0,
+            "health_check_enabled": True
+        },
+        "europepmc": {
+            "delay": 0.5,
+            "max_retries": 3,
+            "timeout": 30.0,
+            "health_check_enabled": True
+        },
+        "crossref": {
+            "delay": 1.0,
+            "max_retries": 3,
+            "timeout": 30.0,
+            "health_check_enabled": True
+        },
+        "openalex": {
+            "delay": 0.5,
+            "max_retries": 3,
+            "timeout": 30.0,
+            "health_check_enabled": True
+        },
+        "dblp": {
+            "delay": 1.0,
+            "max_retries": 3,
+            "timeout": 30.0,
+            "health_check_enabled": True
+        },
+        "biorxiv": {
+            "delay": 1.0,
+            "max_retries": 3,
+            "timeout": 30.0,
+            "health_check_enabled": True
         }
     })
     
@@ -97,8 +133,20 @@ class LiteratureConfig:
     bibtex_file: str = "literature/references.bib"
     library_index_file: str = "literature/library.json"
     
-    # Enabled sources (only arxiv and semanticscholar are implemented)
-    sources: List[str] = field(default_factory=lambda: ["arxiv", "semanticscholar"])
+    # Enabled sources
+    # Available sources: arxiv, semanticscholar, biorxiv, pubmed, europepmc, crossref, openalex, dblp, unpaywall
+    # Note: unpaywall requires use_unpaywall=True and unpaywall_email
+    # Note: biorxiv is available but may have limited search capabilities
+    sources: List[str] = field(default_factory=lambda: [
+        "arxiv", 
+        "semanticscholar", 
+        "biorxiv",
+        "pubmed",
+        "europepmc",
+        "crossref",
+        "openalex",
+        "dblp"
+    ])
     
     # Unpaywall integration (optional - for open access fallback)
     use_unpaywall: bool = True  # Enable by default
@@ -152,7 +200,16 @@ class LiteratureConfig:
             timeout=float(os.environ.get("LITERATURE_TIMEOUT", "2")),
             bibtex_file=os.environ.get("LITERATURE_BIBTEX_FILE", "literature/references.bib"),
             library_index_file=os.environ.get("LITERATURE_LIBRARY_INDEX", "literature/library.json"),
-            sources=sources if sources else ["arxiv", "semanticscholar"],
+            sources=sources if sources else [
+                "arxiv", 
+                "semanticscholar", 
+                "biorxiv",
+                "pubmed",
+                "europepmc",
+                "crossref",
+                "openalex",
+                "dblp"
+            ],
             use_unpaywall=use_unpaywall,
             unpaywall_email=os.environ.get("UNPAYWALL_EMAIL", "research@4dresearch.com"),
             download_retry_attempts=int(os.environ.get("LITERATURE_DOWNLOAD_RETRY_ATTEMPTS", "2")),

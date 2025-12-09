@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "updated": "2025-12-09T11:03:47.816974",
-  "count": 51,
+  "updated": "2025-12-09T12:45:40.005545",
+  "count": 106,
   "entries": {
     "friston2022free": {
       "citation_key": "friston2022free",
@@ -1037,6 +1037,1157 @@
       "metadata": {
         "pdf_url": "https://academic.oup.com/scan/article-pdf/12/11/1833/27103406/nsx060.pdf"
       }
+    },
+    "he2024large": {
+      "citation_key": "he2024large",
+      "title": "Large Language Models (LLMs) Inference Offloading and Resource Allocation in Cloud-Edge Computing: An Active Inference Approach",
+      "authors": [
+        "Ying He",
+        "Jingcheng Fang",
+        "F. Yu",
+        "V. Leung"
+      ],
+      "year": 2024,
+      "doi": "10.1109/TMC.2024.3415661",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/4b82d9fbaf5427ff3799de777ffbe3efbf98b81d",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:04:01.097183",
+      "abstract": "With the increasing popularity and demands for large language model applications on mobile devices, it is difficult for resource-limited mobile terminals to run large-model inference tasks efficiently. Traditional deep reinforcement learning (DRL) based approaches have been used to offload large language models (LLMs) inference tasks to servers. However, existing DRL solutions suffer from data inefficiency, insensitivity to latency requirements, and non-adaptability to task load variations, which will degrade the performance of LLMs. In this paper, we propose a novel approach based on active inference for LLMs inference task offloading and resource allocation in cloud-edge computing. Extensive simulation results show that our proposed method has superior performance over mainstream DRLs, improves in data utilization efficiency, and is more adaptable to changing task load scenarios.",
+      "venue": "IEEE Transactions on Mobile Computing",
+      "citation_count": 52,
+      "metadata": {}
+    },
+    "pezzulo2024active": {
+      "citation_key": "pezzulo2024active",
+      "title": "Active inference as a theory of sentient behavior",
+      "authors": [
+        "Giovanni Pezzulo",
+        "Thomas Parr",
+        "Karl J. Friston"
+      ],
+      "year": 2024,
+      "doi": "10.1016/j.biopsycho.2023.108741",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/0d598b16582e344ee621f469787af85b467c78a8",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:04:17.595951",
+      "abstract": "",
+      "venue": "Biological Psychology",
+      "citation_count": 52,
+      "metadata": {
+        "pdf_url": "https://doi.org/10.1016/j.biopsycho.2023.108741"
+      }
+    },
+    "friston2017active": {
+      "citation_key": "friston2017active",
+      "title": "Active Inference: A Process Theory",
+      "authors": [
+        "Karl J. Friston",
+        "Thomas H. B. FitzGerald",
+        "Francesco Rigoli",
+        "P. Schwartenbeck",
+        "G. Pezzulo"
+      ],
+      "year": 2017,
+      "doi": "10.1162/NECO_a_00912",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/0fdd66fcf6b9bc04428e337df66fd510a659eb2f",
+      "pdf_path": "literature/pdfs/friston2017active.pdf",
+      "added_date": "2025-12-09T11:04:33.269618",
+      "abstract": "",
+      "venue": "Neural Computation",
+      "citation_count": 884,
+      "metadata": {
+        "pdf_url": "https://openaccess.city.ac.uk/id/eprint/16683/1/NECO_a_00912.pdf"
+      }
+    },
+    "bouizegarene2024narrative": {
+      "citation_key": "bouizegarene2024narrative",
+      "title": "Narrative as active inference: an integrative account of cognitive and social functions in adaptation",
+      "authors": [
+        "Nabil Bouizegarene",
+        "M. Ramstead",
+        "Axel Constant",
+        "K. Friston",
+        "Laurence J. Kirmayer"
+      ],
+      "year": 2024,
+      "doi": "10.3389/fpsyg.2024.1345480",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/7c7b1aaa0e31360dd888770184e3b6d3c38c829a",
+      "pdf_path": "literature/pdfs/bouizegarene2024narrative.pdf",
+      "added_date": "2025-12-09T11:04:35.466079",
+      "abstract": "While the ubiquity and importance of narratives for human adaptation is widely recognized, there is no integrative framework for understanding the roles of narrative in human adaptation. Research has identified several cognitive and social functions of narratives that are conducive to well-being and adaptation as well as to coordinated social practices and enculturation. In this paper, we characterize the cognitive and social functions of narratives in terms of active inference, to support the claim that one of the main adaptive functions of narrative is to generate more useful (i.e., accurate, parsimonious) predictions for the individual, as well as to coordinate group action (over multiple timescales) through shared predictions about collective behavior. Active inference is a theory that depicts the fundamental tendency of living organisms to adapt by proactively inferring the causes of their sensations (including their own actions). We review narrative research on identity, event segmentation, episodic memory, future projections, storytelling practices, enculturation, and master narratives. We show how this research dovetails with the active inference framework and propose an account of the cognitive and social functions of narrative that emphasizes that narratives are for the future—even when they are focused on recollecting or recounting the past. Understanding narratives as cognitive and cultural tools for mutual prediction in social contexts can guide research on narrative in adaptive behavior and psychopathology, based on a parsimonious mechanistic model of some of the basic adaptive functions of narrative.",
+      "venue": "Frontiers in Psychology",
+      "citation_count": 19,
+      "metadata": {
+        "pdf_url": "https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1345480/pdf"
+      }
+    },
+    "albarracin2024feeling": {
+      "citation_key": "albarracin2024feeling",
+      "title": "Feeling our place in the world: an active inference account of self-esteem",
+      "authors": [
+        "Mahault Albarracin",
+        "Gabriel Bouchard-Joly",
+        "Z. Sheikhbahaee",
+        "Mark Miller",
+        "R. J. Pitliya",
+        "Pierre Poirier"
+      ],
+      "year": 2024,
+      "doi": "10.1093/nc/niae007",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/61d1429db543660df4c2682efed81e4a399800c1",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:04:37.654129",
+      "abstract": "Abstract Self-esteem, the evaluation of one’s own worth or value, is a critical aspect of psychological well-being and mental health. In this paper, we propose an active inference account of self-esteem, casting it as a sociometer or an inferential capacity to interpret one’s standing within a social group. This approach allows us to explore the interaction between an individual’s self-perception and the expectations of their social environment.When there is a mismatch between these perceptions and expectations, the individual needs to adjust their actions or update their self-perception to better align with their current experiences. We also consider this hypothesis in relation with recent research on affective inference, suggesting that self-esteem enables the individual to track and respond to this discrepancy through affective states such as anxiety or positive affect. By acting as an inferential sociometer, self-esteem allows individuals to navigate and adapt to their social environment, ultimately impacting their psychological well-being and mental health.",
+      "venue": "Neuroscience of Consciousness",
+      "citation_count": 15,
+      "metadata": {
+        "pdf_url": "https://academic.oup.com/nc/article-pdf/2024/1/niae007/57135828/niae007.pdf"
+      }
+    },
+    "albarracin2024shared": {
+      "citation_key": "albarracin2024shared",
+      "title": "Shared Protentions in Multi-Agent Active Inference",
+      "authors": [
+        "Mahault Albarracin",
+        "R. J. Pitliya",
+        "T. S. C. Smithe",
+        "D. Friedman",
+        "K. Friston",
+        "M. Ramstead"
+      ],
+      "year": 2024,
+      "doi": "10.3390/e26040303",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/7b2aca8cb0f297c53c539ece9c36fe9a06554f4d",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:04:50.291450",
+      "abstract": "In this paper, we unite concepts from Husserlian phenomenology, the active inference framework in theoretical biology, and category theory in mathematics to develop a comprehensive framework for understanding social action premised on shared goals. We begin with an overview of Husserlian phenomenology, focusing on aspects of inner time-consciousness, namely, retention, primal impression, and protention. We then review active inference as a formal approach to modeling agent behavior based on variational (approximate Bayesian) inference. Expanding upon Husserl’s model of time consciousness, we consider collective goal-directed behavior, emphasizing shared protentions among agents and their connection to the shared generative models of active inference. This integrated framework aims to formalize shared goals in terms of shared protentions, and thereby shed light on the emergence of group intentionality. Building on this foundation, we incorporate mathematical tools from category theory, in particular, sheaf and topos theory, to furnish a mathematical image of individual and group interactions within a stochastic environment. Specifically, we employ morphisms between polynomial representations of individual agent models, allowing predictions not only of their own behaviors but also those of other agents and environmental responses. Sheaf and topos theory facilitates the construction of coherent agent worldviews and provides a way of representing consensus or shared understanding. We explore the emergence of shared protentions, bridging the phenomenology of temporal structure, multi-agent active inference systems, and category theory. Shared protentions are highlighted as pivotal for coordination and achieving common objectives. We conclude by acknowledging the intricacies stemming from stochastic systems and uncertainties in realizing shared goals.",
+      "venue": "Entropy",
+      "citation_count": 9,
+      "metadata": {
+        "pdf_url": "https://www.mdpi.com/1099-4300/26/4/303/pdf?version=1711712497"
+      }
+    },
+    "friston2024from": {
+      "citation_key": "friston2024from",
+      "title": "From pixels to planning: scale-free active inference",
+      "authors": [
+        "Karl J. Friston",
+        "Conor Heins",
+        "Tim Verbelen",
+        "Lancelot Da Costa",
+        "Tommaso Salvatori",
+        "Dimitrije Markovic",
+        "Alexander Tschantz",
+        "Magnus T. Koudahl",
+        "Christopher L. Buckley",
+        "Thomas Parr"
+      ],
+      "year": 2024,
+      "doi": "10.48550/arXiv.2407.20292",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/72cc98148b7c0092ce4babcb03d3c021753935bc",
+      "pdf_path": "literature/pdfs/friston2024from.pdf",
+      "added_date": "2025-12-09T11:05:03.957573",
+      "abstract": "This paper describes a discrete state-space model -- and accompanying methods -- for generative modelling. This model generalises partially observed Markov decision processes to include paths as latent variables, rendering it suitable for active inference and learning in a dynamic setting. Specifically, we consider deep or hierarchical forms using the renormalisation group. The ensuing renormalising generative models (RGM) can be regarded as discrete homologues of deep convolutional neural networks or continuous state-space models in generalised coordinates of motion. By construction, these scale-invariant models can be used to learn compositionality over space and time, furnishing models of paths or orbits; i.e., events of increasing temporal depth and itinerancy. This technical note illustrates the automatic discovery, learning and deployment of RGMs using a series of applications. We start with image classification and then consider the compression and generation of movies and music. Finally, we apply the same variational principles to the learning of Atari-like games.",
+      "venue": "arXiv.org",
+      "citation_count": 16,
+      "metadata": {}
+    },
+    "costa2024active": {
+      "citation_key": "costa2024active",
+      "title": "Active Inference as a Model of Agency",
+      "authors": [
+        "Lancelot Da Costa",
+        "Samuel Tenka",
+        "Dominic Zhao",
+        "Noor Sajid"
+      ],
+      "year": 2024,
+      "doi": "10.48550/arXiv.2401.12917",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/c6dbed0ad43956f87f41a03b0c7d784e649cb086",
+      "pdf_path": "literature/pdfs/costa2024active.pdf",
+      "added_date": "2025-12-09T11:05:12.065227",
+      "abstract": "Is there a canonical way to think of agency beyond reward maximisation? In this paper, we show that any type of behaviour complying with physically sound assumptions about how macroscopic biological agents interact with the world canonically integrates exploration and exploitation in the sense of minimising risk and ambiguity about states of the world. This description, known as active inference, refines the free energy principle, a popular descriptive framework for action and perception originating in neuroscience. Active inference provides a normative Bayesian framework to simulate and model agency that is widely used in behavioural neuroscience, reinforcement learning (RL) and robotics. The usefulness of active inference for RL is three-fold. \\emph{a}) Active inference provides a principled solution to the exploration-exploitation dilemma that usefully simulates biological agency. \\emph{b}) It provides an explainable recipe to simulate behaviour, whence behaviour follows as an explainable mixture of exploration and exploitation under a generative world model, and all differences in behaviour are explicit in differences in world model. \\emph{c}) This framework is universal in the sense that it is theoretically possible to rewrite any RL algorithm conforming to the descriptive assumptions of active inference as an active inference algorithm. Thus, active inference can be used as a tool to uncover and compare the commitments and assumptions of more specific models of agency.",
+      "venue": "arXiv.org",
+      "citation_count": 12,
+      "metadata": {}
+    },
+    "kouw2025message": {
+      "citation_key": "kouw2025message",
+      "title": "Message passing-based inference in an autoregressive active inference agent",
+      "authors": [
+        "Wouter M. Kouw",
+        "Tim N. Nisslbeck",
+        "Wouter L. N. Nuijten"
+      ],
+      "year": 2025,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2509.25482v1",
+      "pdf_path": "literature/pdfs/kouw2025message.pdf",
+      "added_date": "2025-12-09T11:05:20.715313",
+      "abstract": "We present the design of an autoregressive active inference agent in the form of message passing on a factor graph. Expected free energy is derived and distributed across a planning graph. The proposed agent is validated on a robot navigation task, demonstrating exploration and exploitation in a continuous-valued observation space with bounded continuous-valued actions. Compared to a classical optimal controller, the agent modulates action based on predictive uncertainty, arriving later but with a better model of the robot's dynamics.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2509.25482"
+      }
+    },
+    "schubert2025active": {
+      "citation_key": "schubert2025active",
+      "title": "Active Inference for an Intelligent Agent in Autonomous Reconnaissance Missions",
+      "authors": [
+        "Johan Schubert",
+        "Farzad Kamrani",
+        "Tove Gustavi"
+      ],
+      "year": 2025,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2510.17450v1",
+      "pdf_path": "literature/pdfs/schubert2025active.pdf",
+      "added_date": "2025-12-09T11:05:21.362495",
+      "abstract": "We develop an active inference route-planning method for the autonomous control of intelligent agents. The aim is to reconnoiter a geographical area to maintain a common operational picture. To achieve this, we construct an evidence map that reflects our current understanding of the situation, incorporating both positive and \"negative\" sensor observations of possible target objects collected over time, and diffusing the evidence across the map as time progresses. The generative model of active inference uses Dempster-Shafer theory and a Gaussian sensor model, which provides input to the agent. The generative process employs a Bayesian approach to update a posterior probability distribution. We calculate the variational free energy for all positions within the area by assessing the divergence between a pignistic probability distribution of the evidence map and a posterior probability distribution of a target object based on the observations, including the level of surprise associated with receiving new observations. Using the free energy, we direct the agents' movements in a simulation by taking an incremental step toward a position that minimizes the free energy. This approach addresses the challenge of exploration and exploitation, allowing agents to balance searching extensive areas of the geographical map while tracking identified target objects.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2510.17450"
+      }
+    },
+    "priorelli2024dynamic": {
+      "citation_key": "priorelli2024dynamic",
+      "title": "Dynamic planning in hierarchical active inference",
+      "authors": [
+        "Matteo Priorelli",
+        "Ivilin Peev Stoianov"
+      ],
+      "year": 2024,
+      "doi": "10.48550/arXiv.2402.11658",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/e36509babfc4cf04c4a309bbd9f24729e3d8ea80",
+      "pdf_path": "literature/pdfs/priorelli2024dynamic.pdf",
+      "added_date": "2025-12-09T11:05:21.801390",
+      "abstract": "By dynamic planning, we refer to the ability of the human brain to infer and impose motor trajectories related to cognitive decisions. A recent paradigm, active inference, brings fundamental insights into the adaptation of biological organisms, constantly striving to minimize prediction errors to restrict themselves to life-compatible states. Over the past years, many studies have shown how human and animal behaviors could be explained in terms of active inference - either as discrete decision-making or continuous motor control - inspiring innovative solutions in robotics and artificial intelligence. Still, the literature lacks a comprehensive outlook on effectively planning realistic actions in changing environments. Setting ourselves the goal of modeling complex tasks such as tool use, we delve into the topic of dynamic planning in active inference, keeping in mind two crucial aspects of biological behavior: the capacity to understand and exploit affordances for object manipulation, and to learn the hierarchical interactions between the self and the environment, including other agents. We start from a simple unit and gradually describe more advanced structures, comparing recently proposed design choices and providing basic examples. This study distances itself from traditional views centered on neural networks and reinforcement learning, and points toward a yet unexplored direction in active inference: hybrid representations in hierarchical models.",
+      "venue": "Neural Networks",
+      "citation_count": 7,
+      "metadata": {}
+    },
+    "collis2024learning": {
+      "citation_key": "collis2024learning",
+      "title": "Learning in Hybrid Active Inference Models",
+      "authors": [
+        "Poppy Collis",
+        "Ryan Singh",
+        "Paul F Kinghorn",
+        "Christopher L Buckley"
+      ],
+      "year": 2024,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2409.01066v1",
+      "pdf_path": "literature/pdfs/collis2024learning.pdf",
+      "added_date": "2025-12-09T11:05:31.268781",
+      "abstract": "An open problem in artificial intelligence is how systems can flexibly learn discrete abstractions that are useful for solving inherently continuous problems. Previous work in computational neuroscience has considered this functional integration of discrete and continuous variables during decision-making under the formalism of active inference (Parr, Friston & de Vries, 2017; Parr & Friston, 2018). However, their focus is on the expressive physical implementation of categorical decisions and the hierarchical mixed generative model is assumed to be known. As a consequence, it is unclear how this framework might be extended to learning. We therefore present a novel hierarchical hybrid active inference agent in which a high-level discrete active inference planner sits above a low-level continuous active inference controller. We make use of recent work in recurrent switching linear dynamical systems (rSLDS) which implement end-to-end learning of meaningful discrete representations via the piecewise linear decomposition of complex continuous dynamics (Linderman et al., 2016). The representations learned by the rSLDS inform the structure of the hybrid decision-making agent and allow us to (1) specify temporally-abstracted sub-goals in a method reminiscent of the options framework, (2) lift the exploration into discrete space allowing us to exploit information-theoretic exploration bonuses and (3) `cache' the approximate solutions to low-level problems in the discrete planner. We apply our model to the sparse Continuous Mountain Car task, demonstrating fast system identification via enhanced exploration and successful planning through the delineation of abstract sub-goals.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2409.01066"
+      }
+    },
+    "maele2023integrating": {
+      "citation_key": "maele2023integrating",
+      "title": "Integrating cognitive map learning and active inference for planning in ambiguous environments",
+      "authors": [
+        "Toon Van de Maele",
+        "Bart Dhoedt",
+        "Tim Verbelen",
+        "Giovanni Pezzulo"
+      ],
+      "year": 2023,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2308.08307v1",
+      "pdf_path": "literature/pdfs/maele2023integrating.pdf",
+      "added_date": "2025-12-09T11:05:31.874666",
+      "abstract": "Living organisms need to acquire both cognitive maps for learning the structure of the world and planning mechanisms able to deal with the challenges of navigating ambiguous environments. Although significant progress has been made in each of these areas independently, the best way to integrate them is an open research question. In this paper, we propose the integration of a statistical model of cognitive map formation within an active inference agent that supports planning under uncertainty. Specifically, we examine the clone-structured cognitive graph (CSCG) model of cognitive map formation and compare a naive clone graph agent with an active inference-driven clone graph agent, in three spatial navigation scenarios. Our findings demonstrate that while both agents are effective in simple scenarios, the active inference agent is more effective when planning in challenging scenarios, in which sensory observations provide ambiguous information about location.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2308.08307"
+      }
+    },
+    "baioumy2021towards": {
+      "citation_key": "baioumy2021towards",
+      "title": "Towards Stochastic Fault-tolerant Control using Precision Learning and Active Inference",
+      "authors": [
+        "Mohamed Baioumy",
+        "Corrado Pezzato",
+        "Carlos Hernandez Corbato",
+        "Nick Hawes",
+        "Riccardo Ferrari"
+      ],
+      "year": 2021,
+      "doi": "10.1007/978-3-030-93736-2_48",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2109.05870v1",
+      "pdf_path": "literature/pdfs/baioumy2021towards.pdf",
+      "added_date": "2025-12-09T11:05:32.192797",
+      "abstract": "This work presents a fault-tolerant control scheme for sensory faults in robotic manipulators based on active inference. In the majority of existing schemes, a binary decision of whether a sensor is healthy (functional) or faulty is made based on measured data. The decision boundary is called a threshold and it is usually deterministic. Following a faulty decision, fault recovery is obtained by excluding the malfunctioning sensor. We propose a stochastic fault-tolerant scheme based on active inference and precision learning which does not require a priori threshold definitions to trigger fault recovery. Instead, the sensor precision, which represents its health status, is learned online in a model-free way allowing the system to gradually, and not abruptly exclude a failing unit. Experiments on a robotic manipulator show promising results and directions for future work are discussed.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2109.05870"
+      }
+    },
+    "sennesh2022deriving": {
+      "citation_key": "sennesh2022deriving",
+      "title": "Deriving time-averaged active inference from control principles",
+      "authors": [
+        "Eli Sennesh",
+        "Jordan Theriault",
+        "Jan-Willem van de Meent",
+        "Lisa Feldman Barrett",
+        "Karen Quigley"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2208.10601v1",
+      "pdf_path": "literature/pdfs/sennesh2022deriving.pdf",
+      "added_date": "2025-12-09T11:05:33.315926",
+      "abstract": "Active inference offers a principled account of behavior as minimizing average sensory surprise over time. Applications of active inference to control problems have heretofore tended to focus on finite-horizon or discounted-surprise problems, despite deriving from the infinite-horizon, average-surprise imperative of the free-energy principle. Here we derive an infinite-horizon, average-surprise formulation of active inference from optimal control principles. Our formulation returns to the roots of active inference in neuroanatomy and neurophysiology, formally reconnecting active inference to optimal feedback control. Our formulation provides a unified objective functional for sensorimotor control and allows for reference states to vary over time.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2208.10601"
+      }
+    },
+    "heins2022spin": {
+      "citation_key": "heins2022spin",
+      "title": "Spin glass systems as collective active inference",
+      "authors": [
+        "Conor Heins",
+        "Brennan Klein",
+        "Daphne Demekas",
+        "Miguel Aguilera",
+        "Christopher Buckley"
+      ],
+      "year": 2022,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2207.06970v1",
+      "pdf_path": "literature/pdfs/heins2022spin.pdf",
+      "added_date": "2025-12-09T11:05:33.935046",
+      "abstract": "An open question in the study of emergent behaviour in multi-agent Bayesian systems is the relationship, if any, between individual and collective inference. In this paper we explore the correspondence between generative models that exist at two distinct scales, using spin glass models as a sandbox system to investigate this question. We show that the collective dynamics of a specific type of active inference agent is equivalent to sampling from the stationary distribution of a spin glass system. A collective of specifically-designed active inference agents can thus be described as implementing a form of sampling-based inference (namely, from a Boltzmann machine) at the higher level. However, this equivalence is very fragile, breaking upon simple modifications to the generative models of the individual agents or the nature of their interactions. We discuss the implications of this correspondence and its fragility for the study of multiscale systems composed of Bayesian agents.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2207.06970"
+      }
+    },
+    "himst2020deep": {
+      "citation_key": "himst2020deep",
+      "title": "Deep Active Inference for Partially Observable MDPs",
+      "authors": [
+        "Otto van der Himst",
+        "Pablo Lanillos"
+      ],
+      "year": 2020,
+      "doi": "10.1007/978-3-030-64919-7_8",
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2009.03622v1",
+      "pdf_path": "literature/pdfs/himst2020deep.pdf",
+      "added_date": "2025-12-09T11:05:34.410355",
+      "abstract": "Deep active inference has been proposed as a scalable approach to perception and action that deals with large policy and state spaces. However, current models are limited to fully observable domains. In this paper, we describe a deep active inference model that can learn successful policies directly from high-dimensional sensory inputs. The deep learning architecture optimizes a variant of the expected free energy and encodes the continuous state representation by means of a variational autoencoder. We show, in the OpenAI benchmark, that our approach has comparable or better performance than deep Q-learning, a state-of-the-art deep reinforcement learning algorithm.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2009.03622"
+      }
+    },
+    "hoeffelen2021deep": {
+      "citation_key": "hoeffelen2021deep",
+      "title": "Deep Active Inference for Pixel-Based Discrete Control: Evaluation on the Car Racing Problem",
+      "authors": [
+        "Niels van Hoeffelen",
+        "Pablo Lanillos"
+      ],
+      "year": 2021,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2109.04155v1",
+      "pdf_path": "literature/pdfs/hoeffelen2021deep.pdf",
+      "added_date": "2025-12-09T11:05:35.376464",
+      "abstract": "Despite the potential of active inference for visual-based control, learning the model and the preferences (priors) while interacting with the environment is challenging. Here, we study the performance of a deep active inference (dAIF) agent on OpenAI's car racing benchmark, where there is no access to the car's state. The agent learns to encode the world's state from high-dimensional input through unsupervised representation learning. State inference and control are learned end-to-end by optimizing the expected free energy. Results show that our model achieves comparable performance to deep Q-learning. However, vanilla dAIF does not reach state-of-the-art performance compared to other world model approaches. Hence, we discuss the current model implementation's limitations and potential architectures to overcome them.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2109.04155"
+      }
+    },
+    "watson2020active": {
+      "citation_key": "watson2020active",
+      "title": "Active Inference or Control as Inference? A Unifying View",
+      "authors": [
+        "Joe Watson",
+        "Abraham Imohiosen",
+        "Jan Peters"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2010.00262v1",
+      "pdf_path": "literature/pdfs/watson2020active.pdf",
+      "added_date": "2025-12-09T11:05:35.998578",
+      "abstract": "Active inference (AI) is a persuasive theoretical framework from computational neuroscience that seeks to describe action and perception as inference-based computation. However, this framework has yet to provide practical sensorimotor control algorithms that are competitive with alternative approaches. In this work, we frame active inference through the lens of control as inference (CaI), a body of work that presents trajectory optimization as inference. From the wider view of `probabilistic numerics', CaI offers principled, numerically robust optimal control solvers that provide uncertainty quantification, and can scale to nonlinear problems with approximate inference. We show that AI may be framed as partially-observed CaI when the cost function is defined specifically in the observation states.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2010.00262"
+      }
+    },
+    "friston2012free": {
+      "citation_key": "friston2012free",
+      "title": "A Free Energy Principle for Biological Systems",
+      "authors": [
+        "Karl Friston"
+      ],
+      "year": 2012,
+      "doi": "10.3390/e14112100",
+      "source": "openalex",
+      "url": "https://openalex.org/W2154123408",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:47:33.019962",
+      "abstract": "This paper describes a free energy principle that tries to explain the ability of biological systems to resist a natural tendency to disorder. It appeals to circular causality of the sort found in synergetic formulations of self-organization (e.g., the slaving principle) and models of coupled dynamical systems, using nonlinear Fokker Planck equations. Here, circular causality is induced by separating the states of a random dynamical system into external and internal states, where external states are subject to random fluctuations and internal states are not. This reduces the problem to finding some (deterministic) dynamics of the internal states that ensure the system visits a limited number of external states; in other words, the measure of its (random) attracting set, or the Shannon entropy of the external states is small. We motivate a solution using a principle of least action based on variational free energy (from statistical physics) and establish the conditions under which it is formally equivalent to the information bottleneck method. This approach has proved useful in understanding the functional architecture of the brain. The generality of variational free energy minimisation and corresponding information theoretic formulations may speak to interesting applications beyond the neurosciences; e.g., in molecular or evolutionary biology.",
+      "venue": "Entropy",
+      "citation_count": 374,
+      "metadata": {
+        "pdf_url": "https://www.mdpi.com/1099-4300/14/11/2100/pdf?version=1424784890"
+      }
+    },
+    "joffily2013emotional": {
+      "citation_key": "joffily2013emotional",
+      "title": "Emotional Valence and the Free-Energy Principle",
+      "authors": [
+        "Mateus Joffily",
+        "Giorgio Coricelli"
+      ],
+      "year": 2013,
+      "doi": "10.1371/journal.pcbi.1003094",
+      "source": "openalex",
+      "url": "https://openalex.org/W2002907081",
+      "pdf_path": "literature/pdfs/joffily2013emotional.pdf",
+      "added_date": "2025-12-09T11:47:45.846322",
+      "abstract": "The free-energy principle has recently been proposed as a unified Bayesian account of perception, learning and action. Despite the inextricable link between emotion and cognition, emotion has not yet been formulated under this framework. A core concept that permeates many perspectives on emotion is valence, which broadly refers to the positive and negative character of emotion or some of its aspects. In the present paper, we propose a definition of emotional valence in terms of the negative rate of change of free-energy over time. If the second time-derivative of free-energy is taken into account, the dynamics of basic forms of emotion such as happiness, unhappiness, hope, fear, disappointment and relief can be explained. In this formulation, an important function of emotional valence turns out to regulate the learning rate of the causes of sensory inputs. When sensations increasingly violate the agent's expectations, valence is negative and increases the learning rate. Conversely, when sensations increasingly fulfil the agent's expectations, valence is positive and decreases the learning rate. This dynamic interaction between emotional valence and learning rate highlights the crucial role played by emotions in biological agents' adaptation to unexpected changes in their world.",
+      "venue": "PLoS Computational Biology",
+      "citation_count": 323,
+      "metadata": {
+        "pdf_url": "https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1003094&type=printable"
+      }
+    },
+    "friston2006free": {
+      "citation_key": "friston2006free",
+      "title": "A free energy principle for the brain",
+      "authors": [
+        "Karl Friston",
+        "James M. Kilner",
+        "Lee Harrison"
+      ],
+      "year": 2006,
+      "doi": "10.1016/j.jphysparis.2006.10.001",
+      "source": "openalex",
+      "url": "https://openalex.org/W2147008239",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:49:25.171333",
+      "abstract": "",
+      "venue": "Journal of Physiology-Paris",
+      "citation_count": 1361,
+      "metadata": {}
+    },
+    "wright2025minimization": {
+      "citation_key": "wright2025minimization",
+      "title": "Minimization of prediction errors during cerebral embryogenesis and the emergence of agency.",
+      "authors": [
+        "James Joseph Wright",
+        "Paul David Bourke"
+      ],
+      "year": 2025,
+      "doi": "10.3389/fnsys.2025.1683448",
+      "source": "pubmed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41357684",
+      "pdf_path": "literature/pdfs/wright2025minimization.pdf",
+      "added_date": "2025-12-09T11:49:40.714035",
+      "abstract": "A theory of self-organization in the central nervous system is described, proposing that additive and dissipative synaptodendritic summation leads to synchronous oscillation as the equilibrium state, thereby underpinning a primary mechanism of prediction error minimization. As a consequence, synaptic connections become arranged in mirror-symmetric paired patterns, wherein exchanges of synaptic flux within each pattern form coupled spatial eigenmodes. The mirror-reflection axis between each pair functions as a Markov blanket that maintains excitatory-inhibitory equilibrium, while multiway exchanges among mirror pairs converge toward overall error minimization and mutual organization. The primary organization of this type is evident in the spinal cord. During cortical embryogenesis, connections develop in topographies interpretable as mirror reflections with broken symmetry, aligning along the radial and circumferential axes of cortical growth, as described by the Structural Model, and subsequently manifest at the millimetric scale throughout the cortex. The proposed framework integrates a diverse range of experimental data and provides an explanatory basis for how generative models with agency can emerge through both species evolution and individual learning.",
+      "venue": "Frontiers in systems neuroscience",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12679660/pdf/"
+      }
+    },
+    "saeed2025exploring": {
+      "citation_key": "saeed2025exploring",
+      "title": "Exploring photocatalytic, thermoelectric, and SLME efficiency of photovoltaic absorber layers for halide double antiperovskites K",
+      "authors": [
+        "M Usman Saeed",
+        "Irslan Saeed",
+        "Shahan Ali",
+        "Ahmed Ali Khan",
+        "M Zia Ur Rehman",
+        "Shamiala Pervaiz",
+        "Pervaiz Ahmad",
+        "Hosam O Elansary",
+        "Sohail Mumtaz",
+        "Y Saeed"
+      ],
+      "year": 2025,
+      "doi": "10.1039/d5ra05938k",
+      "source": "pubmed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41357121",
+      "pdf_path": "literature/pdfs/saeed2025exploring.pdf",
+      "added_date": "2025-12-09T11:50:08.349900",
+      "abstract": "Density functional theory (DFT) was used in this study to examine the structural, electronic, optical, mechanical, thermoelectric, photovoltaic, thermodynamic, and photocatalytic characteristics of double antiperovskite (DAP) compounds K",
+      "venue": "RSC advances",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12679412/pdf/"
+      }
+    },
+    "l2024associations": {
+      "citation_key": "l2024associations",
+      "title": "Associations Between Menstrual Cycle Phases and Heart Rate, Well-Being, and Perceived Exertion in Female Football Players",
+      "authors": [
+        "Lipkova, L.",
+        "Benickova, M.",
+        "Wagner, A.",
+        "Kumstat, M."
+      ],
+      "year": 2024,
+      "doi": "10.1101/2024.12.05.24318571",
+      "source": "medrxiv",
+      "url": "https://www.medrxiv.org/content/10.1101/2024.12.05.24318571",
+      "pdf_path": "literature/pdfs/l2024associations.pdf",
+      "added_date": "2025-12-09T11:50:36.257058",
+      "abstract": "This study aimed to investigate potential associations between menstrual cycle (MC) phases and heart rate (HR), perceived exertion (RPE), and subjective well-being in female football players. Data were collected from 11 players (aged 17-29 years) across 10 competitive matches. HR metrics, subjective well-being, and RPE were monitored in the pre-match, during-match, and post-match periods, as was the menstrual cycle in detail. Key findings revealed that during the early luteal (EL) phase, players spent significantly more time in moderate-intensity HR zones (Zone 4) in both the first (p = 0.046) and second halves (p = 0.051), while spending less time in high-intensity zones (Zone 5) during the first half (p = 0.012). Subjective measures highlighted elevated energy levels in the EL phase compared to the late luteal phase (p = 0.001), underscoring the influence of different menstrual cycle phases on well-being. However, RPE and maximum HR were predominantly shaped by external factors such as opponent strength (p < 0.001) and match outcome (p = 0.035). These results underscore the importance of exploring individual and contextual factors in understanding performance and well-being in female football players.",
+      "venue": "medrxiv preprint",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://www.medrxiv.org/content/10.1101/2024.12.05.24318571.full.pdf"
+      }
+    },
+    "s2024deep": {
+      "citation_key": "s2024deep",
+      "title": "Deep Chest: an artificial intelligence model for multi-disease diagnosis by chest x-rays",
+      "authors": [
+        "Bozcuk, H. S.",
+        "Artac, M.",
+        "Ugrakli, M.",
+        "Poyraz, N."
+      ],
+      "year": 2024,
+      "doi": "10.1101/2024.12.05.24318531",
+      "source": "medrxiv",
+      "url": "https://www.medrxiv.org/content/10.1101/2024.12.05.24318531",
+      "pdf_path": "literature/pdfs/s2024deep.pdf",
+      "added_date": "2025-12-09T11:50:38.788841",
+      "abstract": "BackgroundArtificial intelligence is increasingly being used for analyzing image data in medicine.\n\nObjectivesWe aimed to develop a computer vision artificial intelligence (AI) application using limited training material to aid in the multi-label, multi-disease diagnosis of chest X-rays.\n\nMethodsWe trained an EfficientNetB0 pre-trained model, leveraging transfer learning and deep learning techniques. Six thoracic disease categories were defined, and the model was initially trained on images sourced online and chest X-rays from a hospital database for training and internal validation. Subsequently, the model underwent external validation.\n\nResultsIn constructing and validating Deep Chest, we utilized 453 images, achieving an area under curve (AUC) of 0.98, sensitivity of 0.98, specificity of 0.80, and accuracy of 0.83. Notably, for diagnosing masses or nodules, the sensitivity, specificity, and accuracy were 0.97, 0.81, and 0.83, respectively. We deployed Deep Chest as a free experimental web application.\n\nConclusionsThis tool demonstrated high accuracy in diagnosing both single and coexisting pulmonary pathologies, including pulmonary masses or nodules. Deep Chest thus represents a promising AI-based solution for enhancing diagnostic capabilities in thoracic radiology, with the potential to be utilized across various medical disciplines, especially in scenarios where expert support is limited.",
+      "venue": "medrxiv preprint",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://www.medrxiv.org/content/10.1101/2024.12.05.24318531.full.pdf"
+      }
+    },
+    "l2024impact": {
+      "citation_key": "l2024impact",
+      "title": "Impact of Mass Distribution of Long-Lasting Insecticide Nets on Malaria Prevention in Lindi Region, Tanzania: A quasi-experimental study",
+      "authors": [
+        "Mwanja, E. L.",
+        "Mwalyanzi, S. A.",
+        "Khalfan, S. S.",
+        "Ambikile, E. J.",
+        "Mkama, M. E.",
+        "Kisendi, D. D."
+      ],
+      "year": 2024,
+      "doi": "10.1101/2024.12.09.24318122",
+      "source": "medrxiv",
+      "url": "https://www.medrxiv.org/content/10.1101/2024.12.09.24318122",
+      "pdf_path": "literature/pdfs/l2024impact.pdf",
+      "added_date": "2025-12-09T11:50:41.407352",
+      "abstract": "BackgroundMalaria is a major public health issue with high rates of morbidity and mortality in the United Republic of Tanzania. To ensure that all households remain protected, national malaria control programs and partners in 2022 implemented free mass distribution of long-lasting insecticides nets to population at risk and high prevalent regions with malaria including Lindi region. The present study aimed to assess the effectiveness of free long-lasting insecticide-treated nets in reducing malaria burden among the population.\n\nMethodswe conducted a quasi-experimental study from September 2021 to August 2022 and September 2022 to August 2023. The data were collected on District Health Information System version two in Lindi region and analysed with T-tests to compare the malaria positive rate before (September 2021 to August 2022) and after the distribution of long-lasting insecticides nets (September 2022 to August 2023). Malaria positive rate in the general population who attended outpatient department was reduced by 7.6% after distribution of long-lasting insecticides nets. A comparison of malaria cases recorded between September 2021 and August 2023 in the different area showed disparities. Before long lasting insecticides nets implementation, the malaria positive rate in all area combined was 20.6%. Whereas malaria positive rate in all area combined was 13% after implementation. The mean difference is 6.60, with a standard deviation of 2.47. The t-value is 6.55, with 5 degrees of freedom. The significance (2-tailed) value is <0.001, indicating a statistically significant difference between the malaria positive rate before and after long lasting insecticides nets implementation.\n\nConclusionthe long-lasting insectides nets distribution campaign synergy with other preventive interventions has had a significant impact on reducing the malaria positive rate in the population.",
+      "venue": "medrxiv preprint",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://www.medrxiv.org/content/10.1101/2024.12.09.24318122.full.pdf"
+      }
+    },
+    "e2024differences": {
+      "citation_key": "e2024differences",
+      "title": "Differences in the serum metabolomic profile of progressive alcohol-related liver disease in comparison to non-progressive alcohol-related liver disease: a cross sectional metabolomics study",
+      "authors": [
+        "Puhakka, E.",
+        "Ahmed, H.",
+        "Haikonen, R.",
+        "Leclercq, S.",
+        "Hanhineva, K.",
+        "Maccioni, L.",
+        "Amadieu, C.",
+        "Lehtonen, M.",
+        "Männistö, V.",
+        "Rysä, J.",
+        "Stärkel, P.",
+        "Kärkkäinen, O."
+      ],
+      "year": 2024,
+      "doi": "10.1101/2024.12.10.24318756",
+      "source": "medrxiv",
+      "url": "https://www.medrxiv.org/content/10.1101/2024.12.10.24318756",
+      "pdf_path": "literature/pdfs/e2024differences.pdf",
+      "added_date": "2025-12-09T11:50:44.522813",
+      "abstract": "Alcohol-related liver disease (ALD) is a major cause of mortality and disability adjusted life years. It is not fully understood why a small proportion of patients develop progressive forms of ALD (e.g. fibrosis, cirrhosis). Differences in the metabolic processes could be behind the individual progression of ALD. Our aim was to examine differences in serum metabolome between patients with non-progressive ALD and patients with an early form of progressive ALD.\n\nThe study had three study groups: progressive ALD (alcohol-related steatohepatitis or early-stage fibrosis, n=50), non-progressive ALD (simple steatosis, n=50) and healthy controls (n=32). Both ALD groups took part in a voluntary alcohol rehabilitation program. A non-targeted metabolomics analysis and targeted analysis of short chain fatty acids was done to the serum samples taken on the day of admission.\n\nWe found 111 significantly (p<0.0005) altered identified metabolites between the study groups. Our main finding was that levels of glycine conjugated bile acids, glutamic acid, 7-methylguanine and several phosphatidylcholines were elevated in the progressive ALD group in comparison to both the non-progressive ALD group and the controls. Glycine conjugated bile acid, glutamic acid and 7-methylguanine also positively correlated with increased levels of aspartate aminotransferase, alanine aminotransferase, gamma-glutamyl transferase, cell death biomarker M65, and liver stiffness.\n\nOur results indicate that the enterohepatic cycle of glycine conjugated bile acids as well as lipid and energy metabolism are altered in early forms of progressive ALD. These metabolic processes could be a target for preventing progression of ALD.",
+      "venue": "medrxiv preprint",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://www.medrxiv.org/content/10.1101/2024.12.10.24318756.full.pdf"
+      }
+    },
+    "f2024evolution": {
+      "citation_key": "f2024evolution",
+      "title": "Evolution of child acute malnutrition during war in the Gaza Strip, 2023-2024: retrospective estimates and scenario-based projections",
+      "authors": [
+        "Checchi, F.",
+        "Jamaluddine, Z."
+      ],
+      "year": 2024,
+      "doi": "10.1101/2024.12.10.24318783",
+      "source": "medrxiv",
+      "url": "https://www.medrxiv.org/content/10.1101/2024.12.10.24318783",
+      "pdf_path": "literature/pdfs/f2024evolution.pdf",
+      "added_date": "2025-12-09T11:50:48.348338",
+      "abstract": "BackgroundNutritional status has been compromised by ongoing war and restrictions on food deliveries in the Gaza Strip. We developed a mathematical model that outputs retrospective estimates and scenario-based projections of acute malnutrition prevalence among children given caloric intake and other factors. We present here the model and its application to the crisis in Gaza.\n\nMethodsWe extended an existing mechanistic model for weight change as a function of energy balance, calibrating it to represent variability in growth curves observed in pre-war Gaza. We simulated open cohorts of children exposed to time-varying caloric intake, infant exclusive breastfeeding prevalence, incidence of infectious disease and coverage of malnutrition treatment, while allowing for adult caloric sacrifice to supplement child intake in times of food scarcity.\n\nResults and conclusionsThe model accurately replicates growth standards, pre-war growth patterns and expected parameter dependencies. It suggests that a considerable increase in acute malnutrition occurred in northern Gaza during early 2024. Projections for late 2024 include a serious nutritional emergency if relatively pessimistic assumptions are made about food availability. The model may hold considerable promise for informing decisions in humanitarian response but requires further validation and development.",
+      "venue": "medrxiv preprint",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://www.medrxiv.org/content/10.1101/2024.12.10.24318783.full.pdf"
+      }
+    },
+    "a2024demedicalising": {
+      "citation_key": "a2024demedicalising",
+      "title": "De-medicalising gluten-free products through a subsidy card scheme: a qualitative study of service users",
+      "authors": [
+        "Sha'aban, A.",
+        "Mazzaschi, F.",
+        "Ingram, B.-J.",
+        "Joseph-Williams, N."
+      ],
+      "year": 2024,
+      "doi": "10.1101/2024.12.09.24318385",
+      "source": "medrxiv",
+      "url": "https://www.medrxiv.org/content/10.1101/2024.12.09.24318385",
+      "pdf_path": "literature/pdfs/a2024demedicalising.pdf",
+      "added_date": "2025-12-09T11:50:52.443696",
+      "abstract": "IntroductionCoeliac disease requires a strict gluten-free diet to prevent complications. In the late 1960s, Gluten free foods (GFF) became available on prescription to support adherence when these foods were scarce in shops. Today, gluten-free foods are more accessible in large supermarkets, making it easier for patients to obtain them without prescriptions. In 2019, Hywel Dda University Health Board introduced the GFF subsidy card as an alternative to prescriptions, a method still used by other health boards in Wales.\n\nAimsThis study aimed to explore individuals perspectives on a new subsidy card scheme for GFF, identify key barriers and facilitators, and provide recommendations to enhance the schemes implementation and effectiveness.\n\nMethodA qualitative approach was employed, involving in-depth interviews with coeliac patients and parents of coeliac children. Participants included current users of the subsidy card, those relying on prescriptions, and individuals who opted out of the card scheme.\n\nResultsParticipants using the subsidy card valued its flexibility, variety of products, and convenience over the prescription system. Challenges included managing card balances, limited retailer acceptance, and geographical disparities. Non-users appreciated the potential for increased choice and mostly showed interest in switching but some raised concerns about inflation, misuse, and the additional burden on taxpayers.\n\nConclusionMost participants view the subsidy card as an acceptable alternative to GFF prescriptions. To improve the subsidy card uptake, recommendations include enhancing digital tools for balance management, card value reviews, expanding retailer partnerships, promoting safer food practices, targeted communication, and ensuring prescription continuity for those who prefer it. These measures can optimize the schemes impact and better support individuals with coeliac disease.",
+      "venue": "medrxiv preprint",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://www.medrxiv.org/content/10.1101/2024.12.09.24318385.full.pdf"
+      }
+    },
+    "i2024investigating": {
+      "citation_key": "i2024investigating",
+      "title": "Investigating the pathogenicity of the recessive HNF1A p.A251T variant in monogenic diabetes using iPSC-derived beta-like cells",
+      "authors": [
+        "Cherkaoui, I.",
+        "Du, Q.",
+        "Egli, D.",
+        "Dion, C.",
+        "Leitch, H.",
+        "Sachedina, D.",
+        "Misra, S.",
+        "Rutter, G."
+      ],
+      "year": 2024,
+      "doi": "10.1101/2024.12.10.24318788",
+      "source": "medrxiv",
+      "url": "https://www.medrxiv.org/content/10.1101/2024.12.10.24318788",
+      "pdf_path": "literature/pdfs/i2024investigating.pdf",
+      "added_date": "2025-12-09T11:50:56.244391",
+      "abstract": "Monogenic diabetes, formerly called Maturity-Onset Diabetes of the Young (MODY), involves single-gene mutations, typically with dominant inheritance, and has been associated with variants in 14 genes. Among these, HNF1A mutations are the most common, and their diagnosis allows the use of alternative therapies, including sulfonylureas. In an earlier study, we described a variant displaying recessive transmission, p.A251T (Misra, S et al, Diabetes Care, 2020). Initial functional studies revealed only a modest impact on protein function. We extend these earlier in vitro studies to demonstrate that beta-like cells derived from pluripotent stem cells from variant carriers show impaired differentiation into insulin-positive cells, whereas differentiation into alpha cells is significantly enhanced. Additionally, mutant cells showed impaired glucose-stimulated insulin secretion but partially preserved responsiveness to treatment with sulfonylureas. Our study provides proof of principle for the utility of using patient-derived stem cells as a platform to assess the pathogenicity of HNF1A variants, and to explore potential treatment strategies.",
+      "venue": "medrxiv preprint",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://www.medrxiv.org/content/10.1101/2024.12.10.24318788.full.pdf"
+      }
+    },
+    "li2025formalizing": {
+      "citation_key": "li2025formalizing",
+      "title": "Formalizing Lacanian psychoanalysis through the free energy principle.",
+      "authors": [
+        "Lingyu Li",
+        "Chunbo Li"
+      ],
+      "year": 2025,
+      "doi": "10.3389/fpsyg.2025.1574650",
+      "source": "europepmc",
+      "url": "https://europepmc.org/article/MED/PMC12180394",
+      "pdf_path": "literature/pdfs/li2025formalizing.pdf",
+      "added_date": "2025-12-09T11:51:00.589878",
+      "abstract": "This study presents a computational formalization of Lacanian psychoanalysis using the framework of the free energy principle (FEP)-a theoretical framework for modeling self-organizing systems across multiple scales. We first examine the theoretical compatibility between the two frameworks, highlighting their shared (1) Kantian epistemological foundations regarding the unknowability of reality, (2) constructive nature of internal representational systems, (3) non-linear temporal dynamics that combine prediction and retrospection, and (4) emphasis on representation failures as key driving forces. Building on these convergences, we develop a computational framework that implements core Lacanian concepts through the FEP framework. Through multi-level simulations, this framework captures the interdependence of <i>three orders</i> as a message-passing network, formalizes <i>desire</i> as generalized synchronization between subjects' Symbolic orders, and models <i>the Other</i> through collective dynamics. This FEP-based reformulation renders traditionally obscure Lacanian concepts computationally tractable, thereby establishing a conceptual bridge between Lacanian psychoanalytic insights and cognitive science.",
+      "venue": null,
+      "citation_count": 1,
+      "metadata": {
+        "pdf_url": "https://europepmc.org/articles/PMC12180394?pdf=render"
+      }
+    },
+    "lu2025improving": {
+      "citation_key": "lu2025improving",
+      "title": "Improving the Minimum Free Energy Principle to the Maximum Information Efficiency Principle.",
+      "authors": [
+        "Chenguang Lu"
+      ],
+      "year": 2025,
+      "doi": "10.3390/e27070684",
+      "source": "europepmc",
+      "url": "https://europepmc.org/article/MED/PMC12293917",
+      "pdf_path": "literature/pdfs/lu2025improving.pdf",
+      "added_date": "2025-12-09T11:51:02.926931",
+      "abstract": "Friston proposed the Minimum Free Energy Principle (FEP) based on the Variational Bayesian (VB) method. This principle emphasizes that the brain and behavior coordinate with the environment, promoting self-organization. However, it has a theoretical flaw, a possibility of being misunderstood, and a limitation (only likelihood functions are used as constraints). This paper first introduces the semantic information G theory and the <i>R</i>(<i>G</i>) function (where <i>R</i> is the minimum mutual information for the given semantic mutual information <i>G</i>). The G theory is based on the P-T probability framework and, therefore, allows for the use of truth, membership, similarity, and distortion functions (related to semantics) as constraints. Based on the study of the <i>R</i>(<i>G</i>) function and logical Bayesian Inference, this paper proposes the Semantic Variational Bayesian (SVB) and the Maximum Information Efficiency (MIE) principle. Theoretic analysis and computing experiments prove that <i>R</i> - <i>G</i> = <i>F</i> - <i>H</i>(<i>X</i>|<i>Y</i>) (where <i>F</i> denotes VFE, and <i>H</i>(<i>X</i>|<i>Y</i>) is Shannon conditional entropy) instead of <i>F</i> continues to decrease when optimizing latent variables; SVB is a reliable and straightforward approach for latent variables and active inference. This paper also explains the relationship between information, entropy, free energy, and VFE in local non-equilibrium and equilibrium systems, concluding that Shannon information, semantic information, and VFE are analogous to the increment of free energy, the increment of exergy, and physical conditional entropy. The MIE principle builds upon the fundamental ideas of the FEP, making them easier to understand and apply. It needs to combine deep learning methods for wider applications.",
+      "venue": null,
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://europepmc.org/articles/PMC12293917?pdf=render"
+      }
+    },
+    "lu2025improving2": {
+      "citation_key": "lu2025improving2",
+      "title": "Improving the Minimum Free Energy Principle to the Maximum Information Efficiency Principle",
+      "authors": [
+        "Chenguang Lu"
+      ],
+      "year": 2025,
+      "doi": "10.20944/preprints202504.2525.v1",
+      "source": "europepmc",
+      "url": "https://europepmc.org/article/MED/PPR1014165",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:51:05.901745",
+      "abstract": "Friston proposed the Minimum Free Energy (MFE) principle based on the Variational Bayesian (VB) method. This principle inherits the basic idea of Evolutionary System Theory. Still, it emphasizes the coordination between the brain, behavior, and the environment, promoting self-organization. However, there are two issues with VB and the MFE principle: 1) When using VB to optimize latent variables, the Variational Free Energy (VFE) F may not always decrease; 2) The concept of VFE is inconsistent with physical free energy. The author proposed the semantic information G theory and R(G) function 30 years ago (R is the minimum mutual information for the given semantic mutual information G). Based on the study of the R(G) function, this paper proposes the Semantic Variational Bayesian (SVB) and the Maximum Information Efficiency (MIE) principle to resolve the two issues with VB and the MFE principle. Theoretic analysis and computing experiments prove that R–G = F-H(X|Y) instead of F continues to decrease when optimizing latent variables. The experiments show that SVB is reliable and straightforward for latent variables and active inference. This paper also explains the relationship between information, entropy, and free energy in local non-equilibrium and equilibrium systems, concluding that Shannon&#039;s information is similar to free energy&#039;s increment, semantic information is similar to exergy&#039;s increment, and VFE is equivalent to some physical entropy. The MIE principle inherits the basic idea of the MFE principle but is easier to understand and apply.",
+      "venue": null,
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://www.preprints.org/frontend/manuscript/4e2034e7504b15a76108ca2ed62f5a93/download_pub"
+      }
+    },
+    "alsouod2025ph": {
+      "citation_key": "alsouod2025ph",
+      "title": "pH- and microhydration-corrected DFT insights into cucurbit[7]uril host-guest thermodynamics: toward predictive models for drug inclusion.",
+      "authors": [
+        "Khaldoun A Al-Sou'od"
+      ],
+      "year": 2025,
+      "doi": "10.1007/s00894-025-06599-y",
+      "source": "pubmed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41364273",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:51:16.240031",
+      "abstract": "Cucurbit[7]uril (CB[7]) host-guest systems display extraordinary binding affinities, yet predicting their thermodynamic profiles from first principles remains an open challenge. Standard implicit-solvent DFT methods systematically overestimate free energies of inclusion because they neglect structured portal hydration, protonation equilibria, and conformational averaging. Here, we present a hydration- and pH-aware DFT workflow that integrates portal microhydration, charge-state correction, and simple conformer averaging within a unified supramolecular thermodynamic framework. Benchmarking on a small set of canonical CB[7] guests spanning six orders of magnitude in affinity shows that the corrected model substantially reduces the discrepancy with experimental ITC data for these systems and provides chemically transparent insight into how electrostatic and hydrophobic driving forces partition across different classes of cationic guests.",
+      "venue": "Journal of molecular modeling",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "zhao2025structural": {
+      "citation_key": "zhao2025structural",
+      "title": "Structural characteristics of the slurry-filled receptive zone in longwall goaf filled with gangue slurry.",
+      "authors": [
+        "Mengye Zhao",
+        "Lei Zhu",
+        "Chengyong Liu",
+        "Wenzhe Gu",
+        "Zhicheng Liu"
+      ],
+      "year": 2025,
+      "doi": "10.1038/s41598-025-30546-9",
+      "source": "pubmed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41361229",
+      "pdf_path": "literature/pdfs/zhao2025structural.pdf",
+      "added_date": "2025-12-09T11:52:42.956455",
+      "abstract": "To address the dual challenges of environmentally sustainable coal gangue disposal and the effective utilization of underground mined-out spaces, this study investigates the structural characteristics of goafs that govern the efficiency of gangue slurry filling. An integrated methodology combining theoretical analysis, physical simulation experiments, and field-scale industrial testing was employed to systematically examine the spatial architecture and void distribution within the goaf. The research elucidates the spatial evolution mechanism of overlying strata, which follows a sequential \"arch-beam-shell\" pattern, leading to the identification of the stable residual \"shell\" structure as the Slurry-Filled Receptive (SF-R) zone. The key stratum governing slurry migration is defined as the Slurry Movement Control (SM-C) stratum, for which a discriminant criterion is established based on mechanical stiffness, strength, and stratal control principles. The influence of the SM-C stratum on the formation of three distinct structural zones-namely, free accumulation, load-affected, and compacted zones-along both strike and dip directions is clarified. Furthermore, the void distribution within the goaf is quantitatively characterized, revealing that the bulking factor of caved rock decreases with increasing depth and height into the goaf, following a negative logarithmic function. The SF-R zone constitutes a quantifiable and exploitable space for slurry injection, with its structural configuration and porosity primarily regulated by the SM-C stratum. These findings were validated through an industrial application at Huangling No. 2 Coal Mine, where targeted filling was implemented in the overlapping region of the free accumulation and load-affected zones. This study establishes a robust theoretical framework and provides a practical methodology for the design and optimization of high-efficiency gangue slurry filling systems.",
+      "venue": "Scientific reports",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "nery2025free": {
+      "citation_key": "nery2025free",
+      "title": "Free energy barrier and thermal-quantum behavior of sliding bilayer graphene.",
+      "authors": [
+        "Jean Paul Nery",
+        "Lorenzo Monacelli",
+        "Francesco Mauri"
+      ],
+      "year": 2025,
+      "doi": "10.1039/d5cp02188j",
+      "source": "pubmed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41358584",
+      "pdf_path": "literature/pdfs/nery2025free.pdf",
+      "added_date": "2025-12-09T11:53:17.406469",
+      "abstract": "In multilayer graphene, the stacking order of the layers plays a crucial role in the electronic properties and the manifestation of superconductivity. By applying shear stress, it is possible to induce sliding between different layers, altering the stacking order. Here, focusing on bilayer graphene, we analyze how ionic fluctuations alter the free energy barrier between different stacking equilibria. We calculate the free energy barrier through the state-of-the-art self-consistent harmonic approximation, which can be evaluated at unstable configurations. We find that above 100 K there is a large reduction of the barrier of more than 30% due to thermal vibrations, which significantly improves the agreement between previous first-principles calculations and experiments on a single graphite crystal. As the temperature increases, the barrier remains nearly constant up to around 500 K, with a more pronounced decrease only at higher temperatures. Our approach is general and paves the way for systematically accounting for thermal effects in free energy barriers of other macroscopic systems.",
+      "venue": "Physical chemistry chemical physics : PCCP",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "pourmostafa2025extracellular": {
+      "citation_key": "pourmostafa2025extracellular",
+      "title": "Extracellular Matrix Physical Properties Regulate Cancer Cell Morphological Transitions in 3D Hydrogel Microtissues.",
+      "authors": [
+        "Ayda Pourmostafa",
+        "Gabrielle Uskach",
+        "Mohammad Jafari",
+        "Elvan Dogan",
+        "Swaprakash Yogeshwaran",
+        "Teresa L Wood",
+        "Sobhan Ghaeini-Hesaroueiye",
+        "Lin Han",
+        "Farid Alisafaei",
+        "Amir K Miri"
+      ],
+      "year": 2025,
+      "doi": "10.1016/j.actbio.2025.12.008",
+      "source": "pubmed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41352623",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:53:21.001467",
+      "abstract": "Solid tumor cells can adopt a range of morphological states linked to distinct functional behaviors during tumor progression. Some remain in a proliferative state, forming tight clusters, others detach and elongate into an invasive state, and some retain a rounded amoeboid form with minimal matrix adhesion. However, factors determining which morphological state a cell adopts remain poorly understood. We used a combined theoretical and experimental framework to study how extracellular matrix (ECM) mechanics regulate solid tumor cell morphology in three-dimensional (3D) environments. We developed a theoretical mechanical energy model based on the minimum energy principle, which suggests that a cell will adopt the morphological state (rounded, elongated, or clustered) that minimizes the total energy of the cell-ECM system. Using MDA-MB-231 breast cancer cells, we established a reliable protocol for encapsulating cells into 3D naturally-derived hydrogels with controlled stiffness. We confirmed the model's results in vitro over an extended culture period. In soft ECMs, cells transitioned over time to an elongated morphology, while in stiff ECMs, cells favored clustered configurations. These transitions were governed by the hydrogel-based ECM's physical, not chemical, properties, as confirmed using chemically distinct yet mechanically matched composite matrices. These new insights have implications for solid tumor cell invasion modeling in vitro. STATEMENT OF SIGNIFICANCE: We study the fundamental question of how solid tumor cells adapt their morphology in response to the physical characteristics of the extracellular matrix. This work establishes a robust experimental platform for studying cellular markers in triple-negative breast cancer cells, followed by a biophysical modeling of the cell invasion. An ameboid-like migration mode was observed in a tumor-like stiffness, while an elongated morphology was observed in a normal-tissue stiffness. Our theoretical modeling revealed how the biophysical properties of the matrix can impact cell morphology and invasion behavior. This work can contribute to personalized medicine by making more effective, tailored cancer models.",
+      "venue": "Acta biomaterialia",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "hansen2025feasibility": {
+      "citation_key": "hansen2025feasibility",
+      "title": "The feasibility of an education video for preventing disease-related malnutrition among home-living older adults after discharge from a surgical hospital department - a randomised controlled feasibility trial.",
+      "authors": [
+        "Monica Christin Hansen",
+        "Lisbeth Uhrenfeldt",
+        "Kari Ingstad",
+        "Preben U Pedersen"
+      ],
+      "year": 2025,
+      "doi": "10.1186/s40814-025-01745-y",
+      "source": "pubmed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41351135",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:53:34.735722",
+      "abstract": "Older adults can have limited knowledge about their specific needs for protein and energy and the importance of nutrition for physical functioning after hospital discharge. This study aimed to examine the feasibility of recruitment, technology access, and data collection procedures in an educational video aimed at improving the nutritional status of live-at-home older adults after discharge from a surgical hospital department.",
+      "venue": "Pilot and feasibility studies",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "bazargani2025brain": {
+      "citation_key": "bazargani2025brain",
+      "title": "Brain in the Dark: Design Principles for Neuromimetic Inference under the Free Energy Principle.",
+      "authors": [
+        "{'@pid': '153/9976', 'text': 'Mehran H. Bazargani'}",
+        "{'@pid': '352/4831', 'text': 'Szymon Urbas'}",
+        "{'@pid': '92/848', 'text': 'Karl J. Friston'}"
+      ],
+      "year": 2025,
+      "doi": "10.48550/ARXIV.2502.08860",
+      "source": "dblp",
+      "url": "https://doi.org/10.48550/arXiv.2502.08860",
+      "pdf_path": "literature/pdfs/bazargani2025brain.pdf",
+      "added_date": "2025-12-09T11:54:05.623650",
+      "abstract": "",
+      "venue": "CoRR",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://doi.org/10.48550/arXiv.2502.08860"
+      }
+    },
+    "sawada2025humanrobot": {
+      "citation_key": "sawada2025humanrobot",
+      "title": "Human-Robot Kinaesthetic Interactions Based on the Free-Energy Principle.",
+      "authors": [
+        "{'@pid': '131/4062', 'text': 'Hiroki Sawada'}",
+        "{'@pid': '258/0860', 'text': 'Wataru Ohata'}",
+        "{'@pid': '59/5598', 'text': 'Jun Tani'}"
+      ],
+      "year": 2025,
+      "doi": "10.1109/TSMC.2024.3481251",
+      "source": "dblp",
+      "url": "https://doi.org/10.1109/TSMC.2024.3481251",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:54:19.424481",
+      "abstract": "",
+      "venue": "IEEE Trans. Syst. Man Cybern. Syst.",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://doi.org/10.1109/TSMC.2024.3481251"
+      }
+    },
+    "kim2024bayesian": {
+      "citation_key": "kim2024bayesian",
+      "title": "Bayesian Mechanics of Synaptic Learning Under the Free-Energy Principle.",
+      "authors": [
+        "Chang Sub Kim"
+      ],
+      "year": 2024,
+      "doi": "10.3390/e26110984",
+      "source": "europepmc",
+      "url": "https://europepmc.org/article/MED/PMC11592945",
+      "pdf_path": "literature/pdfs/kim2024bayesian.pdf",
+      "added_date": "2025-12-09T11:54:34.267243",
+      "abstract": "The brain is a biological system comprising nerve cells and orchestrates its embodied agent's perception, behavior, and learning in dynamic environments. The free-energy principle (FEP) advocated by Karl Friston explicates the local, recurrent, and self-supervised cognitive dynamics of the brain's higher-order functions. In this study, we continue to refine the FEP through a physics-guided formulation; specifically, we apply our theory to synaptic learning by considering it an inference problem under the FEP and derive the governing equations, called Bayesian mechanics. Our study uncovers how the brain infers weight changes and postsynaptic activity, conditioned on the presynaptic input, by deploying generative models of the likelihood and prior belief. Consequently, we exemplify the synaptic efficacy in the brain with a simple model; in particular, we illustrate that the brain organizes an optimal trajectory in neural phase space during synaptic learning in continuous time, which variationally minimizes synaptic surprisal.",
+      "venue": null,
+      "citation_count": 1,
+      "metadata": {
+        "pdf_url": "https://europepmc.org/articles/PMC11592945?pdf=render"
+      }
+    },
+    "radomski2024forced": {
+      "citation_key": "radomski2024forced",
+      "title": "Forced Friends: Why the Free Energy Principle Is Not the New Hamilton's Principle.",
+      "authors": [
+        "Bartosz Michał Radomski",
+        "Krzysztof Dołęga"
+      ],
+      "year": 2024,
+      "doi": "10.3390/e26090797",
+      "source": "europepmc",
+      "url": "https://europepmc.org/article/MED/PMC11431360",
+      "pdf_path": "literature/pdfs/radomski2024forced.pdf",
+      "added_date": "2025-12-09T11:54:36.484422",
+      "abstract": "The claim that the free energy principle is somehow related to Hamilton's principle in statistical mechanics is ubiquitous throughout the subject literature. However, the exact nature of this relationship remains unclear. According to some sources, the free energy principle is merely similar to Hamilton's principle of stationary action; others claim that it is either analogous or equivalent to it, while yet another part of the literature espouses the claim that it is a version of Hamilton's principle. In this article, we aim to clarify the nature of the relationship between the two principles by investigating the two most likely interpretations of the claims that can be found in the subject literature. According to the strong interpretation, the two principles are equivalent and apply to the same subset of physical phenomena; according to the weak interpretation, the two principles are merely analogous to each other by virtue of their similar formal structures. As we show, adopting the stronger reading would lead to a dilemma that is untenable for the proponents of the free energy principle, thus supporting the adoption of the weaker reading for the relationship between the two constructs.",
+      "venue": null,
+      "citation_count": 1,
+      "metadata": {
+        "pdf_url": "https://europepmc.org/articles/PMC11431360?pdf=render"
+      }
+    },
+    "isomura2025predicting": {
+      "citation_key": "isomura2025predicting",
+      "title": "Predicting individual learning trajectories in zebrafish via the free-energy principle",
+      "authors": [
+        "Takuya Isomura",
+        "Yuki Tanimoto",
+        "Makio Torigoe",
+        "Hitoshi Okamoto",
+        "Hideaki Shimazaki"
+      ],
+      "year": 2025,
+      "doi": "10.1101/2025.08.06.668947",
+      "source": "europepmc",
+      "url": "https://europepmc.org/article/MED/PPR1065336",
+      "pdf_path": "literature/pdfs/isomura2025predicting.pdf",
+      "added_date": "2025-12-09T11:54:38.600877",
+      "abstract": "The free-energy principle has been proposed as a unified theory of brain function, and recent evidence from in vitro experiments supports its validity. However, its empirical application to in vivo neuronal dynamics during active decision-making remains limited. This work reverse-engineered generative models—cast as canonical neural networks—from large-scale calcium imaging data of zebrafish performing a visually guided go/no-go task in a virtual-reality environment. Leveraging the formal equivalence between neural network dynamics and variational Bayesian inference, we constructed biologically plausible synthetic agents capable of active inference. These agents recapitulated individual variability in zebrafish neuronal dynamics and behaviour by identifying subject-specific prior and posterior beliefs. Additionally, they enabled quantitative predictions of long-term changes in neural activity, effective synaptic connectivity, and behavioural performance, including task accuracy after training. Our results demonstrate a powerful framework of active inference for modelling in vivo neuronal self-organisation and highlight the predictive validity of the free-energy principle in behaving animals.",
+      "venue": null,
+      "citation_count": 1,
+      "metadata": {}
+    },
+    "miyagi2025characteristics": {
+      "citation_key": "miyagi2025characteristics",
+      "title": "Characteristics of fetal facial expression changes using artificial intelligence: a pilot study.",
+      "authors": [
+        "Yasunari Miyagi",
+        "Toshiyuki Hata",
+        "Takahito Miyake"
+      ],
+      "year": 2025,
+      "doi": "10.1038/s41598-025-30593-2",
+      "source": "pubmed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41315675",
+      "pdf_path": "literature/pdfs/miyagi2025characteristics.pdf",
+      "added_date": "2025-12-09T11:59:15.091594",
+      "abstract": "We aimed to investigate the frequency, changes, and chaotic correlation dimensions of fetal facial expression videos using artificial intelligence (AI) and speculate the state of the fetal brain activity. We applied our original AI for classifying fetal facial expressions to 57,208 frames, total of 95.27 min, from 47singleton pregnancies at 28 to 37 weeks of gestation, obtained at Miyake Clinic between December 2023 and February 2024 at 0.1-second intervals. Time, transitions and correlation dimensions of the facial expressions were investigated. There was a significant difference between expressions. Neutral and mouthing showed significantly longer durations; 71.0, 9.4-174.8 (Mean, 5-95%ile) and 53.3, 0.7-127.3 s for neutral and mouthing, respectively. The longest transitions were neutral to mouthing at 2,237.5 s. The median correlation dimensions for before, during, and after neutral and mouthing were 1.14, 1.22, and 1.23, and 1.07, 1.15, and 1.24, respectively. Analyzing fetal facial expression videos using AI may raise the possibility of being able to indirectly quantify brain activity. The ability to infer fetal brain activity via fetal facial expressions both qualitatively and quantitatively might be considered to have significant biological implications.",
+      "venue": "Scientific reports",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "tazawa2025synaptic": {
+      "citation_key": "tazawa2025synaptic",
+      "title": "Synaptic pruning facilitates online Bayesian model selection.",
+      "authors": [
+        "Ukyo T Tazawa",
+        "Takuya Isomura"
+      ],
+      "year": 2025,
+      "doi": "10.1016/j.neunet.2025.108311",
+      "source": "pubmed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41289617",
+      "pdf_path": null,
+      "added_date": "2025-12-09T11:59:49.398701",
+      "abstract": "Identifying appropriate structures for generative or world models is essential for both biological organisms and machines. This work shows that synaptic pruning facilitates efficient statistical structure learning. We extend previously established canonical neural networks to derive a synaptic pruning scheme that is formally equivalent to an online Bayesian model selection. The proposed scheme, termed Bayesian synaptic model pruning (BSyMP), utilizes connectivity parameters to switch between the presence (ON) and absence (OFF) of synaptic connections. Mathematical analyses reveal that these parameters converge to zero for uninformative connections, thus providing reliable and efficient model reduction. This enables the identification of a plausible structure for the environmental model, particularly when the environment is characterized by sparse likelihood and transition matrices. Through causal inference and rule learning simulations, we demonstrate that BSyMP achieves model reduction more efficiently than the conventional Bayesian model reduction scheme. These findings indicate that synaptic pruning could be a neuronal substrate underlying structure learning and generalizability in the brain.",
+      "venue": "Neural networks : the official journal of the International Neural Network Society",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "dodigcrnkovic2025anticipation": {
+      "citation_key": "dodigcrnkovic2025anticipation",
+      "title": "Anticipation, memory, and top-down causation in living systems.",
+      "authors": [
+        "Gordana Dodig-Crnkovic"
+      ],
+      "year": 2025,
+      "doi": "10.1016/j.biosystems.2025.105640",
+      "source": "pubmed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/41192586",
+      "pdf_path": null,
+      "added_date": "2025-12-09T12:00:03.179145",
+      "abstract": "Many physical systems retain traces of their past, but living systems differ in that they use memory for anticipation. This paper develops the thesis that anticipation depends on memory. In living systems, stored information about past states enables the prediction and modulation of future behavior. Drawing on Robert Rosen's theory of anticipatory systems, Friston's free-energy principle, and recent examples from microbiology, immunology, and cognition, I argue that Rosen's \"model\" is the organized memory of a system. Memory-whether mechanical, chemical, genetic, epigenetic, bioelectric, neural, or cultural-provides the substrate for anticipation, projecting possible futures and constraining present behavior. Examples across biological scales illustrate how this works in practice. Bacteria record viral encounters and use these genomic memories to defend against reinfection. In E. coli, biochemical traces of past interactions direct chemotaxis. Yeast cells store epigenetic stress memories that accelerate adaptation. With the advent of nervous systems, anticipation becomes centralized in internal neural models, enabling flexible simulations of organism-environment interactions. In all cases, anticipatory memory underlies teleonomy as goal-directedness that emerges from evolutionary and developmental processes. Top-down causation plays a central role in shaping the constraints that give rise to purposive, self-maintaining behavior. System-level goals emerge from past-informed constraints, giving living systems their distinctive autonomy, adaptivity, and creativity.",
+      "venue": "Bio Systems",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "rad2025using": {
+      "citation_key": "rad2025using",
+      "title": "Using a mathematical representation of brain processes to explain decision making: adapting Friston's free energy principle for travel behaviour modelling",
+      "authors": [
+        "Jamal Amani Rad",
+        "Thomas Hancock",
+        "Stephane Hess"
+      ],
+      "year": 2025,
+      "doi": "10.31234/osf.io/s9mh3_v1",
+      "source": "europepmc",
+      "url": "https://europepmc.org/article/MED/PPR1107157",
+      "pdf_path": null,
+      "added_date": "2025-12-09T12:00:42.357189",
+      "abstract": "<p>The Free Energy Principle (FEP; Friston 2009, 2010) has been hailed as a groundbreaking idea neuroscience, with the potential to account for a wide range of behavioural phenomena, including exploration and avoidance in uncertain or dynamic environments. Notwithstanding its inherently simple and elegant idea - agents minimise surprise, otherwise known as free energy, through a blief and action updating process referred to as active inference - real-world application has been limited due to computational complexity and the abstract nature of the mathematical framework. This paper introduces FEP to travel behaviour research, developing an active inference model of route choice under uncertainty and applying it to two experimental datasets. Results demonstrate that the FEP model outperforms alternatives based on reinforcement learning (RL), particularly for individuals displaying exploratory or belief- adaptive behaviour. While computationally more demanding, the FEP framework offers substantial advantages in capturing learning dynamics, habit formation, and uncertainty-driven adaptation in travel decision-making, positioning it as a promising neurocomputational foundation for future travel behaviour models.</p>",
+      "venue": null,
+      "citation_count": null,
+      "metadata": {}
+    },
+    "smith2025life": {
+      "citation_key": "smith2025life",
+      "title": "Life on the Cusp: The Trident G Theory of General Intelligence",
+      "authors": [
+        "Mark Ashton Smith"
+      ],
+      "year": 2025,
+      "doi": "10.31234/osf.io/kv43n_v3",
+      "source": "europepmc",
+      "url": "https://europepmc.org/article/MED/PPR1127820",
+      "pdf_path": null,
+      "added_date": "2025-12-09T12:00:52.925919",
+      "abstract": "<p>Standard formulations of the free-energy principle treat adaptive agents as pure surprise minimisers, but in non-stationary niches this can drive brittle, energetically costly behaviour. This article proposes Trident G, a near-critical control architecture in which brains (and other intelligent agents) defend a non-zero metabolic–accuracy budget F★ and regulate a viable operating band on an asymmetric cusp. The state axis x = F − F★ tracks instantaneous deviation from this budget, while engagement ξ = G − F★, where G is expected free energy under the current generative model, and inference tilt δ (Convergent vs Divergent) function as control parameters that define three operational regimes: a subcritical Autopilot shaft, a near-critical Ψ-band that supports flow and fluid intelligence, and a supercritical Trident region with exploitation and exploration wells. General intelligence is reframed as the navigable volume 𝒢 of this landscape, decomposed into Control Range, Navigability (captured by a meta-efficacy η), and Niche Coupling (indexed by coherence χ and environmental feedback λ). I sketch how this cusp geometry can be instantiated from cortical columns to whole-brain control networks, and extended conceptually to teams and institutions, sketch falsifiable neural and behavioural signatures of Ψ-band occupancy and collapse, sketch falsifiable neural and behavioural signatures of Ψ-band occupancy and collapse, and argue that Trident G’s viable-band regulation offers a more resilient target for AI agents, cognitive training, and institutional design than pure free-energy minimisation. <h4>Keywords:</h4> free-energy principle, near-criticality, general intelligence, allostasis, cusp catastrophe, cognitive resilience</p>",
+      "venue": null,
+      "citation_count": null,
+      "metadata": {}
+    },
+    "anonymous2025free": {
+      "citation_key": "anonymous2025free",
+      "title": "The Free Energy Framework",
+      "authors": [],
+      "year": 2025,
+      "doi": "10.7551/mitpress/15519.003.0006",
+      "source": "crossref",
+      "url": "https://doi.org/10.7551/mitpress/15519.003.0006",
+      "pdf_path": null,
+      "added_date": "2025-12-09T12:01:20.733512",
+      "abstract": "",
+      "venue": "A Drive to Survive",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "beni2024free": {
+      "citation_key": "beni2024free",
+      "title": "The Free Energy Principle",
+      "authors": [
+        "Majid D. Beni"
+      ],
+      "year": 2024,
+      "doi": "10.4324/9781003463122-2",
+      "source": "crossref",
+      "url": "https://doi.org/10.4324/9781003463122-2",
+      "pdf_path": null,
+      "added_date": "2025-12-09T12:01:29.141711",
+      "abstract": "",
+      "venue": "Scientific Explanation, Causality, and Agency",
+      "citation_count": null,
+      "metadata": {}
+    },
+    "biehl2020technical": {
+      "citation_key": "biehl2020technical",
+      "title": "A Technical Critique of Some Parts of the Free Energy Principle",
+      "authors": [
+        "Martin Biehl",
+        "Felix A. Pollock",
+        "Ryota Kanai"
+      ],
+      "year": 2020,
+      "doi": null,
+      "source": "arxiv",
+      "url": "http://arxiv.org/abs/2001.06408v3",
+      "pdf_path": "literature/pdfs/biehl2020technical.pdf",
+      "added_date": "2025-12-09T12:01:41.603515",
+      "abstract": "We summarize the original formulation of the free energy principle, and highlight some technical issues. We discuss how these issues affect related results involving generalised coordinates and, where appropriate, mention consequences for and reveal, up to now unacknowledged, differences to newer formulations of the free energy principle. In particular, we reveal that various definitions of the \"Markov blanket\" proposed in different works are not equivalent. We show that crucial steps in the free energy argument which involve rewriting the equations of motion of systems with Markov blankets, are not generally correct without additional (previously unstated) assumptions. We prove by counterexample that the original free energy lemma, when taken at face value, is wrong. We show further that this free energy lemma, when it does hold, implies equality of variational density and ergodic conditional density. The interpretation in terms of Bayesian inference hinges on this point, and we hence conclude that it is not sufficiently justified. Additionally, we highlight that the variational densities presented in newer formulations of the free energy principle and lemma are parameterised by different variables than in older works, leading to a substantially different interpretation of the theory. Note that we only highlight some specific problems in the discussed publications. These problems do not rule out conclusively that the general ideas behind the free energy principle are worth pursuing.",
+      "venue": "arXiv",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://arxiv.org/pdf/2001.06408"
+      }
+    },
+    "ashida2020new": {
+      "citation_key": "ashida2020new",
+      "title": "A new method for estimating the relative binding free energy, derived from a free energy variational principle for the Pim-1-kinase-ligand and FKBP-ligand systems.",
+      "authors": [
+        "{'@pid': '132/6723', 'text': 'Takeshi Ashida'}",
+        "{'@pid': '28/3182', 'text': 'Takeshi Kikuchi'}"
+      ],
+      "year": 2020,
+      "doi": "10.1007/S10822-020-00302-4",
+      "source": "dblp",
+      "url": "https://doi.org/10.1007/s10822-020-00302-4",
+      "pdf_path": null,
+      "added_date": "2025-12-09T12:01:42.149838",
+      "abstract": "",
+      "venue": "J. Comput. Aided Mol. Des.",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://doi.org/10.1007/s10822-020-00302-4"
+      }
+    },
+    "ashida2013estimation": {
+      "citation_key": "ashida2013estimation",
+      "title": "Estimation of relative binding free energy based on a free energy variational principle for the FKBP-ligand system.",
+      "authors": [
+        "{'@pid': '132/6723', 'text': 'Takeshi Ashida'}",
+        "{'@pid': '28/3182', 'text': 'Takeshi Kikuchi'}"
+      ],
+      "year": 2013,
+      "doi": "10.1007/S10822-013-9657-3",
+      "source": "dblp",
+      "url": "https://doi.org/10.1007/s10822-013-9657-3",
+      "pdf_path": null,
+      "added_date": "2025-12-09T12:04:03.483556",
+      "abstract": "",
+      "venue": "J. Comput. Aided Mol. Des.",
+      "citation_count": null,
+      "metadata": {
+        "pdf_url": "https://doi.org/10.1007/s10822-013-9657-3"
+      }
+    },
+    "corcoran2018allostasis": {
+      "citation_key": "corcoran2018allostasis",
+      "title": "Allostasis, interoception, and the free energy principle: Feeling our way forward",
+      "authors": [
+        "Andrew W. Corcoran",
+        "Jakob Hohwy"
+      ],
+      "year": 2018,
+      "doi": "10.1093/oso/9780198811930.003.0015",
+      "source": "crossref",
+      "url": "https://doi.org/10.1093/oso/9780198811930.003.0015",
+      "pdf_path": null,
+      "added_date": "2025-12-09T12:21:23.603374",
+      "abstract": "Interoceptive processing is commonly understood in terms of the monitoring and representation of the body’s current physiological (i.e. homeostatic) status, with aversive sensory experiences encoding some impending threat to tissue viability. However, claims that homeostasis fails to fully account for the sophisticated regulatory dynamics observed in complex organisms have led some theorists to incorporate predictive (i.e. allostatic) regulatory mechanisms within broader accounts of interoceptive processing. Critically, these frameworks invoke diverse—and potentially mutually inconsistent—interpretations of the role allostasis plays in the scheme of biological regulation. This chapter argues in favor of a moderate, reconciliatory position in which homeostasis and allostasis are conceived as equally vital (but functionally distinct) modes of physiological control. It explores the implications of this interpretation for free energy-based accounts of interoceptive inference, advocating a similarly complementary (and hierarchical) view of homeostatic and allostatic processing.",
+      "venue": "Oxford Scholarship Online",
+      "citation_count": null,
+      "metadata": {}
     }
   }
 }

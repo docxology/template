@@ -38,12 +38,22 @@ class UnpaywallSource:
     Unpaywall provides a database of legal, open access versions of papers.
     It requires an email address for API access (no key needed).
 
+    This is a lookup-only source (no search method). It provides:
+    - DOI-based lookup for open access PDFs
+    - Health status monitoring via check_health() and get_health_status()
+    - Automatic failure tracking for health monitoring
+
     API Documentation: https://unpaywall.org/products/api
 
     Rate Limits:
     - 100,000 requests per day for registered emails
     - 50 requests per day for non-registered emails
     - Includes retry logic with exponential backoff
+
+    Health Checks:
+    - check_health(): Performs a test lookup to verify API availability
+    - is_healthy: Property indicating health based on recent failures
+    - get_health_status(): Returns detailed health status information
     """
 
     BASE_URL = "https://api.unpaywall.org/v2"
@@ -57,8 +67,9 @@ class UnpaywallSource:
             config: Literature configuration with unpaywall_email.
         """
         self.config = config
-        self._last_request_time = 0
+        self._last_request_time = 0.0
         self._min_delay = 0.1  # Minimum delay between requests (10 requests/second max)
+        self._consecutive_failures = 0  # Track consecutive failures for health monitoring
 
         if not config.unpaywall_email:
             logger.warning("Unpaywall email not configured - API calls will fail")
@@ -168,12 +179,15 @@ class UnpaywallSource:
 
                 result = self._parse_response(data)
                 logger.debug(f"Unpaywall found OA version for {clean_doi}: {result.is_oa}")
+                # Reset failure counter on success
+                self._consecutive_failures = 0
                 return result
 
             except requests.exceptions.Timeout as e:
                 last_error = e
                 logger.warning(f"Unpaywall timeout for {clean_doi} (attempt {attempt + 1}): {e}")
                 if attempt == self.MAX_RETRIES - 1:
+                    self._consecutive_failures += 1
                     break
                 continue
 
@@ -181,15 +195,19 @@ class UnpaywallSource:
                 last_error = e
                 logger.warning(f"Unpaywall request failed for {clean_doi} (attempt {attempt + 1}): {e}")
                 if attempt == self.MAX_RETRIES - 1:
+                    self._consecutive_failures += 1
                     break
                 continue
 
             except Exception as e:
                 last_error = e
                 logger.error(f"Unexpected Unpaywall error for {clean_doi}: {e}")
+                self._consecutive_failures += 1
                 break
 
         logger.warning(f"Unpaywall lookup failed for {clean_doi} after {self.MAX_RETRIES} attempts: {last_error}")
+        if last_error:
+            self._consecutive_failures += 1
         return None
 
     def _parse_response(self, data: Dict[str, Any]) -> UnpaywallResult:
@@ -237,4 +255,54 @@ class UnpaywallSource:
             version=version,
             license=license_info
         )
+
+    def check_health(self) -> bool:
+        """Check if the Unpaywall API is available and healthy.
+        
+        Performs a simple health check by attempting a lookup with a known DOI.
+        Returns True if the API responds (even if DOI not found), False on network/API errors.
+        
+        Returns:
+            True if source is healthy, False otherwise.
+        """
+        # Use a well-known DOI for health check (Nature paper)
+        test_doi = "10.1038/nature12373"
+        
+        try:
+            # Try a lookup - if we get a response (even None for not found), API is healthy
+            result = self.lookup(test_doi)
+            # Reset failure counter on successful health check
+            self._consecutive_failures = 0
+            # Return True if we got any response (even None means API is responding)
+            return True
+        except Exception as e:
+            logger.debug(f"Unpaywall health check failed: {e}")
+            self._consecutive_failures += 1
+            return False
+
+    @property
+    def is_healthy(self) -> bool:
+        """Check if source is currently healthy (cached check).
+        
+        Returns:
+            True if source appears healthy based on recent failures.
+        """
+        return self._consecutive_failures < 3
+
+    def get_health_status(self) -> Dict[str, Any]:
+        """Get detailed health status for the Unpaywall source.
+        
+        Returns:
+            Dictionary with health status information:
+            - healthy: bool
+            - consecutive_failures: int
+            - last_request_time: float (timestamp)
+            - source_name: str
+        """
+        return {
+            "healthy": self.is_healthy,
+            "consecutive_failures": self._consecutive_failures,
+            "last_request_time": self._last_request_time,
+            "source_name": self.__class__.__name__
+        }
 

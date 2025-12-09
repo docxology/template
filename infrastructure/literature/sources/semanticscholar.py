@@ -61,16 +61,24 @@ class SemanticScholarSource(LiteratureSource):
             response.raise_for_status()
             data = response.json()
             results = self._parse_response(data)
-            logger.debug(f"Semantic Scholar returned {len(results)} results")
             return results
         
         # Use common retry logic from base class
-        return self._execute_with_retry(
+        results = self._execute_with_retry(
             _execute_search,
             "search",
             "semanticscholar",
             handle_rate_limit=True
         )
+        
+        # Log detailed statistics
+        citations_total = sum(r.citation_count or 0 for r in results)
+        pdfs_count = sum(1 for r in results if r.pdf_url)
+        dois_count = sum(1 for r in results if r.doi)
+        logger.debug(f"Semantic Scholar search completed: {len(results)} results, "
+                    f"{citations_total} total citations, {pdfs_count} with PDFs, {dois_count} with DOIs")
+        
+        return results
 
     def _parse_response(self, data: Dict[str, Any]) -> List[SearchResult]:
         results = []
