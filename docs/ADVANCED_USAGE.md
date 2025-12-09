@@ -180,7 +180,7 @@ def test_gradient_descent_tolerance():
 pytest tests/test_optimization.py --cov=src.optimization --cov-report=term-missing
 ```
 
-Expected: Coverage requirements met (70% project, 49% infra)
+Expected: Coverage requirements met (90% project, 60% infra)
 
 ### Ensuring 100% Coverage
 

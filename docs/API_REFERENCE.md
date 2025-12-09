@@ -975,7 +975,7 @@ For complete API documentation of all modules, see:
 This API reference covers all public functions and classes in the `infrastructure/` and `project/src/` directories. All modules:
 
 - Follow the thin orchestrator pattern
-- Maintain required test coverage (70% project, 49% infra)
+- Maintain required test coverage (90% project, 60% infra)
 - Include comprehensive type hints
 - Provide detailed docstrings
 

@@ -297,7 +297,7 @@ When adding new analysis capabilities:
 1. **Design the API** - What functions do you need?
 2. **Write tests first** (TDD) - Define expected behavior
 3. **Implement in `project/src/`** - Write the business logic
-4. **Achieve required coverage** - Test all critical code paths (70% project, 49% infra)
+4. **Achieve required coverage** - Test all critical code paths (90% project, 60% infra)
 5. **Use in scripts** - Create thin orchestrators
 
 ### Example: Correlation Analysis

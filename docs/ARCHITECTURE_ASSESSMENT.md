@@ -32,7 +32,7 @@ This repository implements a sophisticated, well-architected test-driven develop
    - Clear patterns and examples
 
 4. **Build Pipeline**: Production Quality
-   - 6-stage orchestration (stages 00-05: setup, infra tests, project tests, analysis, render PDF, validate, copy outputs) + optional Stage 8 (LLM review)
+   - 6-stage core orchestration (stages 00-05: setup, infra tests, project tests, analysis, render PDF, validate, copy outputs) + optional stages 8-9 (LLM review and translations)
    - 84-second total build time (without optional LLM review)
    - Deterministic outputs
    - Comprehensive logging
@@ -333,8 +333,8 @@ These are already well-implemented:
 
 | Category | Coverage | Status |
 |----------|----------|--------|
-| Infrastructure (overall) | 66.76% | ✅ Exceeds 49% requirement |
-| Project (overall) | 98.03% | ✅ Exceeds 70% requirement |
+| Infrastructure (overall) | 66.76% | ✅ Exceeds 60% requirement |
+| Project (overall) | 98.03% | ✅ Exceeds 90% requirement |
 | Build utilities | High | ✅ Excellent |
 | Data processing | High | ✅ Excellent |
 | Visualization | High | ✅ Excellent |
@@ -363,7 +363,7 @@ These are already well-implemented:
 
 1. ✅ Clean (0 issues)
 2. ✅ Validate dependencies (comprehensive checks)
-3. ✅ Run tests (coverage requirements enforced: 70% project, 49% infra)
+3. ✅ Run tests (coverage requirements enforced: 90% project, 60% infra)
 4. ✅ Execute scripts (real orchestration)
 5. ✅ Generate PDFs (3-pass compilation)
 6. ✅ Create HTML (IDE-friendly)

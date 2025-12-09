@@ -1,7 +1,7 @@
 {
   "version": "1.0",
-  "updated": "2025-12-08T15:42:21.796389",
-  "count": 1309,
+  "updated": "2025-12-09T09:39:21.413076",
+  "count": 1310,
   "entries": {
     "watson2020active": {
       "citation_key": "watson2020active",
@@ -28233,6 +28233,29 @@
       "abstract": "",
       "venue": "IEEE transactions on multimedia",
       "citation_count": 573,
+      "metadata": {}
+    },
+    "song2023human": {
+      "citation_key": "song2023human",
+      "title": "Human ear inspired solar thermochemical reactor for steam methane reforming with the consideration of minimum Gibbs free energy principle",
+      "authors": [
+        "Jintao Song",
+        "Ziming Cheng",
+        "Yaping Fan",
+        "Fuqiang Wang",
+        "Xuhan Shi",
+        "Jie Xu",
+        "Hongliang Yi"
+      ],
+      "year": 2023,
+      "doi": "10.1016/j.est.2023.108172",
+      "source": "semanticscholar",
+      "url": "https://www.semanticscholar.org/paper/46f9641c6aef4297ecefe08c734d0f88850ff89b",
+      "pdf_path": null,
+      "added_date": "2025-12-09T09:38:29.084713",
+      "abstract": "",
+      "venue": "Journal of Energy Storage",
+      "citation_count": 19,
       "metadata": {}
     }
   }

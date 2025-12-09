@@ -68,7 +68,7 @@
 
 ### **Q: The build pipeline fails - what should I check?**
 **A:** 
-1. Ensure all tests pass with required coverage (70% project, 49% infra)
+1. Ensure all tests pass with required coverage (90% project, 60% infra)
 2. Check that all required dependencies are installed
 3. Verify that your markdown files are properly formatted
 4. Check the build logs for specific error messages

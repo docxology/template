@@ -345,7 +345,7 @@ output/
 ## Quality Assurance Mechanisms
 
 ### 1. Test Coverage Enforcement
-- **70% project coverage, 49% infrastructure** minimum via build pipeline
+- **90% project coverage, 60% infrastructure** minimum via build pipeline
 - **Automated validation** in build pipeline
 - **Real numerical examples** ensure mathematical correctness
 

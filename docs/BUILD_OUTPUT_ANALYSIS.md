@@ -19,7 +19,7 @@ The build system is **fully operational** and produces all expected outputs corr
 | Metric | Result | Status |
 |--------|--------|--------|
 | **Tests** | 351 passed | ✅ PASS |
-| **Test Coverage** | 81.90% (exceeds 70% requirement) | ✅ PASS |
+| **Test Coverage** | 81.90% (exceeds 60% requirement) | ✅ PASS |
 | **Scripts Executed** | 2/2 successful | ✅ PASS |
 | **Figures Generated** | 10/10 created | ✅ PASS |
 | **Data Files Generated** | 2/2 created | ✅ PASS |
@@ -75,7 +75,7 @@ tests/test_scientific_dev.py ..................         [100%]
 | `infrastructure/build/build_verifier.py` | 398 | 127 | **68%** ⚠️ |
 | **TOTAL** | **1989** | **360** | **81.90%** ✅ |
 
-**Analysis:** All core modules have excellent coverage. The `build_verifier.py` module has lower coverage (68%) but still exceeds the 70% requirement when averaged with other modules.
+**Analysis:** All core modules have excellent coverage. The `build_verifier.py` module has lower coverage (68%) but still exceeds the 60% requirement when averaged with other modules.
 
 ---
 

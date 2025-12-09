@@ -228,7 +228,7 @@ jobs:
     uv run pytest tests/ --cov=src --cov-report=term
     coverage=$(uv run pytest tests/ --cov=src --cov-report=term | grep TOTAL | awk '{print $NF}' | sed 's/%//')
     if (( $(echo "$coverage < 70" | bc -l) )); then
-      echo "Coverage below 70%"
+      echo "Coverage below 90%"
       exit 1
     fi
 ```

@@ -170,7 +170,7 @@ This section describes the detailed breakdown of what happens during test execut
 | `infrastructure/build/build_verifier.py` | 398 | 127 | **68%** | ✅ Good |
 | **TOTAL** | **1989** | **360** | **81.90%** | ✅ **Excellent** |
 
-**Analysis:** All core modules have excellent coverage. The `build_verifier.py` module has lower coverage (68%) but still exceeds the 70% requirement when averaged with other modules.
+**Analysis:** All core modules have excellent coverage. The `build_verifier.py` module has lower coverage (68%) but still exceeds the 60% requirement when averaged with other modules.
 
 ### Within Project Analysis - Script Execution (6 seconds)
 
@@ -574,6 +574,6 @@ The build system is **production-ready** and performs excellently:
 ---
 
 **Last Updated:** November 30, 2025  
-**Build Version:** v2.0 (6-stage pipeline: stages 00-05, with optional Stage 8 for LLM review)  
+**Build Version:** v2.0 (6-stage core pipeline: stages 00-05, with optional stages 8-9 for LLM review and translations)  
 **Status:** ✅ **APPROVED FOR PRODUCTION USE**
 

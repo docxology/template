@@ -363,7 +363,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 **Key Rules**:
 - ALL business logic in `src/`
-- Comprehensive test coverage required (70% project, 49% infra)
+- Comprehensive test coverage required (90% project, 60% infra)
 - Scripts only orchestrate, never implement algorithms
 
 **See Also**: [Thin Orchestrator Pattern](THIN_ORCHESTRATOR_SUMMARY.md)
@@ -480,7 +480,7 @@ pytest -x
 
 ## Fix Coverage Below Requirements
 
-**Goal**: Achieve required test coverage (70% project, 49% infra)
+**Goal**: Achieve required test coverage (90% project, 60% infra)
 
 **Steps**:
 
@@ -523,7 +523,7 @@ def test_process_negative():
     assert process(-5) == 0
 ```
 
-**Expected Result**: Coverage requirements achieved (70% project, 49% infra)
+**Expected Result**: Coverage requirements achieved (90% project, 60% infra)
 
 **See Also**: [Test Improvements](TEST_IMPROVEMENTS_SUMMARY.md)
 

@@ -14,7 +14,7 @@ This document consolidates best practices from across all documentation, providi
 ```
 project/
 ├── src/              # Business logic (comprehensively tested)
-├── tests/            # Test suite (70% project, 49% infra minimum)
+├── tests/            # Test suite (90% project, 60% infra minimum)
 ├── scripts/          # Thin orchestrators
 ├── manuscript/       # Research sections
 ├── docs/             # Documentation
@@ -250,7 +250,7 @@ python3 scripts/04_validate_output.py
 
 **Review checklist:**
 - [ ] Code follows style guidelines
-- [ ] Tests pass with required coverage (70% project, 49% infra)
+- [ ] Tests pass with required coverage (90% project, 60% infra)
 - [ ] Documentation updated
 - [ ] No breaking changes
 - [ ] Follows thin orchestrator pattern
@@ -454,7 +454,7 @@ save_output(result, output_path)
 ### Testing Quality
 
 **Comprehensive testing:**
-- Coverage requirements: 70% project, 49% infrastructure
+- Coverage requirements: 90% project, 60% infrastructure
 - Test edge cases
 - Test error paths
 - Test integration
