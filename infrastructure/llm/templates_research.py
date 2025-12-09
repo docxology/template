@@ -46,6 +46,7 @@ class PaperSummarization(ResearchTemplate):
     Generates a detailed summary of a research paper focusing on
     relevance, comprehensiveness, and specificity rather than rigid structure.
     Emphasizes extracting key information accurately and substantively.
+    Supports domain-specific variants for better context-aware summarization.
     """
     template_str = """=== PAPER CONTENT ===
 
@@ -53,6 +54,7 @@ Title: ${title}
 Authors: ${authors}
 Year: ${year}
 Source: ${source}
+${domain_info}
 
 PAPER TEXT:
 ${text}
@@ -80,10 +82,7 @@ You are summarizing a scientific research paper. You MUST follow ALL rules below
    - Extract key information accurately: Focus on what the paper actually says and demonstrates
 
 5. DOMAIN-SPECIFIC EMPHASIS:
-   - For PHYSICS papers: Highlight specific equations, experimental parameters, energy scales, detection methods, and statistical significance
-   - For COMPUTER SCIENCE papers: Detail algorithms, complexity analysis, dataset characteristics, performance metrics, and comparisons
-   - For BIOLOGY papers: Include species, sample sizes, statistical methods, biological mechanisms, and experimental conditions
-   - For MATHEMATICS papers: Cover theorems, proofs, mathematical objects, computational complexity, and theoretical implications
+${domain_instructions}
 
 6. QUALITY STANDARDS:
    - Be substantive: Provide detailed analysis rather than surface-level descriptions
@@ -100,6 +99,47 @@ You are summarizing a scientific research paper. You MUST follow ALL rules below
 8. FLEXIBLE STRUCTURE: Use the section headers that best fit the paper's content. You may use fewer or more sections as appropriate, or even combine related information.
 
 Begin your summary now:"""
+    
+    def render(
+        self,
+        title: str,
+        authors: str,
+        year: str,
+        source: str,
+        text: str,
+        domain: Optional[str] = None,
+        domain_instructions: Optional[str] = None
+    ) -> str:
+        """Render template with optional domain-specific instructions.
+        
+        Args:
+            title: Paper title.
+            authors: Author names.
+            year: Publication year.
+            source: Source database.
+            text: Paper text content.
+            domain: Detected domain (e.g., "physics", "computer_science").
+            domain_instructions: Domain-specific instructions.
+            
+        Returns:
+            Rendered prompt string.
+        """
+        domain_info = ""
+        if domain:
+            domain_info = f"Detected Domain: {domain}\n"
+        
+        domain_instructions_text = domain_instructions or (
+            "   - For PHYSICS papers: Highlight specific equations, experimental parameters, energy scales, detection methods, and statistical significance\n"
+            "   - For COMPUTER SCIENCE papers: Detail algorithms, complexity analysis, dataset characteristics, performance metrics, and comparisons\n"
+            "   - For BIOLOGY papers: Include species, sample sizes, statistical methods, biological mechanisms, and experimental conditions\n"
+            "   - For MATHEMATICS papers: Cover theorems, proofs, mathematical objects, computational complexity, and theoretical implications"
+        )
+        
+        return self.template_str.replace("${domain_info}", domain_info).replace(
+            "${domain_instructions}", domain_instructions_text
+        ).replace("${title}", title).replace("${authors}", authors).replace(
+            "${year}", year
+        ).replace("${source}", source).replace("${text}", text)
 
 
 class LiteratureReviewSynthesis(ResearchTemplate):

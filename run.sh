@@ -311,6 +311,22 @@ display_menu() {
     echo -e "${CYAN}Tip:${NC} Enter multiple digits to chain steps (e.g., 345 for analysis → render → validate). Comma forms like 3,4,5 work too."
 }
 
+get_library_stats_display() {
+    # Get library statistics using Python helper
+    cd "$REPO_ROOT" || return
+    python3 << 'PYTHON_EOF'
+import sys
+from pathlib import Path
+
+try:
+    from infrastructure.literature.library_stats import get_library_statistics, format_library_stats_display
+    stats = get_library_statistics()
+    print(format_library_stats_display(stats))
+except Exception as e:
+    print("  • Library: Not available")
+PYTHON_EOF
+}
+
 display_literature_menu() {
     clear
     echo -e "${BOLD}${BLUE}"
@@ -319,6 +335,12 @@ display_literature_menu() {
     echo "============================================================"
     echo -e "${NC}"
     echo
+    
+    # Display library statistics
+    echo -e "${BOLD}${CYAN}Current Library Status:${NC}"
+    get_library_stats_display
+    echo
+    
     echo -e "${BOLD}Orchestrated Pipelines:${NC}"
     echo -e "  0. ${GREEN}Full Pipeline${NC} ${YELLOW}(search → download → summarize)${NC}"
     echo
@@ -703,11 +725,13 @@ run_literature_search_all() {
     log_info "You will be prompted for:"
     log_info "  • Search keywords (comma-separated)"
     log_info "  • Number of results per keyword (default: 25)"
+    log_info "  • Clear options (PDFs/Summaries/Library - default: No)"
     echo
     
     local start_time=$(date +%s)
     
     # Use --search which runs the full pipeline interactively
+    # Clear options are handled interactively in the Python script
     if python3 scripts/07_literature_search.py --search; then
         local end_time=$(date +%s)
         local duration=$(get_elapsed_time "$start_time" "$end_time")

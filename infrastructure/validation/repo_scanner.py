@@ -18,7 +18,7 @@ import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Set, Tuple, Any
 
 import yaml
 
@@ -48,7 +48,7 @@ class ScanResults:
     """Container for scan results."""
     accuracy_issues: List[AccuracyIssue] = field(default_factory=list)
     completeness_gaps: List[CompletenessGap] = field(default_factory=list)
-    statistics: Dict = field(default_factory=dict)
+    statistics: Dict[str, Any] = field(default_factory=dict)
 
 
 class RepositoryScanner:

@@ -418,21 +418,38 @@ class PaperSummarizer:
         )
 
     def _generate_summary(self, result: SearchResult, pdf_text: str) -> str:
-        """Generate summary using LLM with paper-specific prompt."""
+        """Generate summary using LLM with paper-specific prompt and domain detection."""
         from infrastructure.llm.templates import PaperSummarization
+        from infrastructure.literature.domain_detector import DomainDetector
 
         # Truncate if too long
         if len(pdf_text) > self.max_pdf_chars:
             pdf_text = pdf_text[:self.max_pdf_chars] + "\n\n[... truncated for summarization ...]"
 
-        # Create paper summarization prompt
+        # Detect domain for context-aware prompts
+        domain_detector = DomainDetector()
+        domain_result = domain_detector.detect_domain(
+            text=pdf_text,
+            title=result.title,
+            abstract=result.abstract
+        )
+        
+        # Get domain-specific instructions
+        domain_instructions = domain_detector.get_domain_specific_instructions(domain_result.domain)
+        
+        logger.debug(f"Detected domain: {domain_result.domain.value} (confidence: {domain_result.confidence:.2f})")
+        logger.debug(f"Detected paper type: {domain_result.paper_type.value} (confidence: {domain_result.type_confidence:.2f})")
+
+        # Create paper summarization prompt with domain context
         template = PaperSummarization()
         prompt = template.render(
             title=result.title,
             authors=', '.join(result.authors) if result.authors else 'Unknown',
             year=str(result.year) if result.year else 'Unknown',
             source=f"{result.source} ({result.venue or 'N/A'})",
-            text=pdf_text
+            text=pdf_text,
+            domain=domain_result.domain.value if domain_result.confidence > 0.5 else None,
+            domain_instructions=domain_instructions if domain_result.confidence > 0.5 else None
         )
 
         # Generate summary

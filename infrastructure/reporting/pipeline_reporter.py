@@ -93,7 +93,7 @@ def generate_pipeline_report(
 def save_pipeline_report(
     report: PipelineReport,
     output_dir: Path,
-    formats: List[str] = None
+    formats: Optional[List[str]] = None
 ) -> Dict[str, Path]:
     """Save pipeline report in multiple formats.
     

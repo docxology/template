@@ -38,6 +38,29 @@ def get_limit_input(default: int = DEFAULT_LIMIT_PER_KEYWORD) -> int:
         return default
 
 
+def get_clear_options_input() -> tuple:
+    """Prompt user for clear options.
+    
+    Returns:
+        Tuple of (clear_pdfs, clear_summaries, clear_library).
+    """
+    try:
+        print("\nClear options (default: No - incremental/additive behavior):")
+        clear_pdfs_str = input("  Clear PDFs before download? [y/N]: ").strip().lower()
+        clear_pdfs = clear_pdfs_str in ('y', 'yes')
+        
+        clear_summaries_str = input("  Clear summaries before generation? [y/N]: ").strip().lower()
+        clear_summaries = clear_summaries_str in ('y', 'yes')
+        
+        print("  ⚠️  WARNING: Total clear will delete library index, PDFs, summaries, and progress file")
+        clear_library_str = input("  Clear library completely (total clear)? [y/N]: ").strip().lower()
+        clear_library = clear_library_str in ('y', 'yes')
+        
+        return (clear_pdfs, clear_summaries, clear_library)
+    except (EOFError, KeyboardInterrupt):
+        return (False, False, False)
+
+
 def library_entry_to_search_result(entry: LibraryEntry) -> SearchResult:
     """Convert library entry to search result for processing."""
     return SearchResult(
@@ -247,6 +270,10 @@ def run_search(
     keywords: Optional[List[str]] = None,
     limit: Optional[int] = None,
     max_parallel_summaries: int = 1,
+    clear_pdfs: bool = False,
+    clear_summaries: bool = False,
+    clear_library: bool = False,
+    interactive: bool = True,
 ) -> int:
     """Execute literature search workflow.
     
@@ -255,11 +282,46 @@ def run_search(
         keywords: Optional keywords list (prompts if not provided).
         limit: Optional limit per keyword (prompts if not provided).
         max_parallel_summaries: Maximum parallel summarization workers.
+        clear_pdfs: Clear PDFs before download (default: False).
+        clear_summaries: Clear summaries before generation (default: False).
+        clear_library: Perform total clear (library index, PDFs, summaries, progress file) 
+                      before operations (default: False). If True, skips individual clear operations.
+        interactive: Whether in interactive mode.
         
     Returns:
         Exit code (0=success, 1=failure).
     """
     log_header("Literature Search and PDF Download")
+    
+    # Handle clear operations
+    from infrastructure.literature.clear_operations import clear_pdfs, clear_summaries, clear_library
+    
+    # If clear_library is True, it performs a total clear (library, PDFs, summaries, progress)
+    # So we skip individual clear operations to avoid redundancy
+    if clear_library:
+        result = clear_library(confirm=True, interactive=interactive)
+        if not result["success"]:
+            logger.info("Library clear cancelled")
+            return 1
+        logger.info(f"Total clear completed: {result['message']}")
+        # Skip individual clears since total clear already did everything
+        clear_pdfs = False
+        clear_summaries = False
+    else:
+        # Individual clear operations (only if not doing total clear)
+        if clear_pdfs:
+            result = clear_pdfs(confirm=True, interactive=interactive)
+            if not result["success"]:
+                logger.info("PDF clear cancelled")
+                return 1
+            logger.info(f"Cleared PDFs: {result['message']}")
+        
+        if clear_summaries:
+            result = clear_summaries(confirm=True, interactive=interactive)
+            if not result["success"]:
+                logger.info("Summary clear cancelled")
+                return 1
+            logger.info(f"Cleared summaries: {result['message']}")
     
     print("\nThis will:")
     print("  1. Search arXiv and Semantic Scholar for papers")
@@ -278,6 +340,10 @@ def run_search(
         if not keywords:
             logger.info("No keywords provided. Exiting.")
             return 1
+    
+    # Get clear options if in interactive mode
+    if interactive and not (clear_pdfs or clear_summaries or clear_library):
+        clear_pdfs, clear_summaries, clear_library = get_clear_options_input()
     
     # Execute search and summarization
     log_header("Executing Literature Search")

@@ -344,16 +344,39 @@ class LibraryIndex:
             )
 
     def get_stats(self) -> Dict[str, Any]:
-        """Get library statistics.
+        """Get comprehensive library statistics.
         
         Returns:
-            Dictionary with library statistics.
+            Dictionary with comprehensive library statistics including:
+            - Total entries, PDFs, summaries
+            - Source distribution
+            - Year distribution
+            - Completion percentages
+            - Disk usage estimates
         """
         entries = list(self._entries.values())
         
         sources = {}
         years = {}
         downloaded = 0
+        with_summaries = 0
+        
+        # Check for summaries
+        summaries_dir = Path("literature/summaries")
+        if summaries_dir.exists():
+            summary_files = set(f.stem.replace("_summary", "") for f in summaries_dir.glob("*_summary.md"))
+        else:
+            summary_files = set()
+        
+        # Check PDF directory size
+        pdf_dir = Path("literature/pdfs")
+        pdf_size = 0
+        pdf_count_filesystem = 0
+        if pdf_dir.exists():
+            for pdf_file in pdf_dir.glob("*.pdf"):
+                if pdf_file.is_file():
+                    pdf_size += pdf_file.stat().st_size
+                    pdf_count_filesystem += 1
         
         for entry in entries:
             # Count by source
@@ -365,16 +388,57 @@ class LibraryIndex:
             
             # Count downloads
             if entry.pdf_path:
-                downloaded += 1
+                pdf_path = Path(entry.pdf_path)
+                if not pdf_path.is_absolute():
+                    pdf_path = Path("literature") / pdf_path
+                if pdf_path.exists():
+                    downloaded += 1
+            
+            # Count summaries
+            if entry.citation_key in summary_files:
+                with_summaries += 1
+        
+        total = len(entries)
+        pdf_percentage = (downloaded / total * 100) if total > 0 else 0.0
+        summary_percentage = (with_summaries / total * 100) if total > 0 else 0.0
         
         return {
-            "total_entries": len(entries),
+            "total_entries": total,
             "downloaded_pdfs": downloaded,
+            "pdf_percentage": pdf_percentage,
+            "summaries_generated": with_summaries,
+            "summary_percentage": summary_percentage,
+            "pdf_count_filesystem": pdf_count_filesystem,
+            "pdf_size_bytes": pdf_size,
+            "pdf_size_mb": round(pdf_size / (1024 * 1024), 2),
             "sources": sources,
             "years": dict(sorted(years.items(), reverse=True)),
             "oldest_year": min(years.keys()) if years else None,
             "newest_year": max(years.keys()) if years else None,
+            "recent_additions": self._get_recent_additions(5),
         }
+    
+    def _get_recent_additions(self, limit: int = 5) -> List[Dict[str, Any]]:
+        """Get most recently added papers.
+        
+        Args:
+            limit: Maximum number of recent additions to return.
+            
+        Returns:
+            List of recent entry dictionaries with citation_key, title, and added_date.
+        """
+        entries = list(self._entries.values())
+        sorted_entries = sorted(entries, key=lambda e: e.added_date, reverse=True)
+        
+        return [
+            {
+                "citation_key": entry.citation_key,
+                "title": entry.title[:60] + "..." if len(entry.title) > 60 else entry.title,
+                "added_date": entry.added_date,
+                "has_pdf": entry.pdf_path is not None
+            }
+            for entry in sorted_entries[:limit]
+        ]
 
     def remove_entry(self, citation_key: str) -> bool:
         """Remove an entry from the library index.

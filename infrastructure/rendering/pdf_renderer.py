@@ -169,7 +169,7 @@ class PDFRenderer:
                 return False
         except UnboundLocalError:
             if not bib_file.exists():
-                print(f"WARNING: Bibliography file not found: {bib_file}")
+                logger.warning(f"Bibliography file not found: {bib_file}")
                 return False
 
         # Determine which bibliography processor to use
@@ -183,7 +183,7 @@ class PDFRenderer:
                 return False
         except UnboundLocalError:
             if not aux_file.exists():
-                print(f"WARNING: Auxiliary file not found: {aux_file}")
+                logger.warning(f"Auxiliary file not found: {aux_file}")
                 return False
         
         try:
@@ -192,10 +192,7 @@ class PDFRenderer:
             local_bib = output_dir / bib_file.name
             import shutil
             shutil.copy2(str(bib_file), str(local_bib))
-            try:
-                logger.debug(f"Copied bibliography file to: {local_bib}")
-            except UnboundLocalError:
-                print(f"DEBUG: Copied bibliography file to: {local_bib}")
+            logger.debug(f"Copied bibliography file to: {local_bib}")
 
             # Run bibtex to generate bibliography
             # Important: bibtex must be invoked with a filename relative to the
@@ -203,10 +200,7 @@ class PDFRenderer:
             # to write auxiliary files in paranoid mode. Since we set cwd to the
             # output directory, pass only the aux filename.
             cmd = [bibtex_cmd, aux_file.name]
-            try:
-                logger.info(f"Processing bibliography with {bibtex_cmd}...")
-            except UnboundLocalError:
-                print(f"INFO: Processing bibliography with {bibtex_cmd}...")
+            logger.info(f"Processing bibliography with {bibtex_cmd}...")
 
             result = subprocess.run(
                 cmd,
@@ -215,27 +209,15 @@ class PDFRenderer:
                 cwd=str(output_dir)
             )
 
-            try:
-                if result.returncode != 0:
-                    logger.warning(f"Bibliography processing warning: {result.stderr[:200]}")
-                    # Don't fail on warnings - bibtex often returns non-zero for minor issues
-            except UnboundLocalError:
-                if result.returncode != 0:
-                    print(f"WARNING: Bibliography processing warning: {result.stderr[:200]}")
+            if result.returncode != 0:
+                logger.warning(f"Bibliography processing warning: {result.stderr[:200]}")
+                # Don't fail on warnings - bibtex often returns non-zero for minor issues
 
-            try:
-                logger.debug(f"✓ Bibliography processed: {bibtex_cmd} {aux_file.stem}")
-            except UnboundLocalError:
-                print(f"DEBUG: ✓ Bibliography processed: {bibtex_cmd} {aux_file.stem}")
+            logger.debug(f"✓ Bibliography processed: {bibtex_cmd} {aux_file.stem}")
             return True
             
         except Exception as e:
-            # Use a fallback logging approach if logger is not accessible
-            try:
-                logger.warning(f"Bibliography processing failed: {e}")
-            except UnboundLocalError:
-                # Fallback if logger is not accessible in this scope
-                print(f"WARNING: Bibliography processing failed: {e}")
+            logger.warning(f"Bibliography processing failed: {e}", exc_info=True)
             return False
 
     def render_combined(self, source_files: List[Path], manuscript_dir: Path) -> Path:

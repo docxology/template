@@ -24,12 +24,21 @@ New Modules (Thin Orchestrator Pattern):
     ProgressEntry: Individual paper progress tracking.
     SummarizationProgress: Overall progress state.
 
+Enhanced Modules (v2.0):
+    StructuredLogger: Structured logging with JSON format and progress indicators.
+    LiteratureReporter: Comprehensive reporting with JSON/CSV/HTML export.
+    DomainDetector: Automatic domain detection for context-aware prompts.
+    SummaryParser: Extract structured metadata from markdown summaries.
+    PaperAnalyzer: Analyze paper structure and content characteristics.
+    ContextBuilder: Build rich context for enhanced LLM prompts.
+
 Output Files:
     literature/references.bib - BibTeX entries
     literature/library.json - JSON index with full metadata
     literature/summarization_progress.json - Progress tracking
     literature/summaries/ - AI-generated summaries
     literature/pdfs/ - Downloaded PDFs (named by citation key)
+    literature/reports/ - Generated reports (JSON/CSV/HTML)
 """
 
 from infrastructure.literature.core import LiteratureSearch, DownloadResult
@@ -49,6 +58,7 @@ from infrastructure.literature.progress import ProgressTracker, ProgressEntry, S
 from infrastructure.literature.summarizer import PaperSummarizer, SummaryQualityValidator, SummarizationResult
 from infrastructure.literature.paper_selector import PaperSelector, PaperSelectionConfig
 from infrastructure.literature.llm_operations import LiteratureLLMOperations, LLMOperationResult
+from infrastructure.literature.library_stats import get_library_statistics, format_library_stats_display
 
 __all__ = [
     # Original modules
@@ -79,4 +89,7 @@ __all__ = [
     "PaperSelectionConfig",
     "LiteratureLLMOperations",
     "LLMOperationResult",
+    # Library statistics
+    "get_library_statistics",
+    "format_library_stats_display",
 ]

@@ -96,6 +96,10 @@ class LiteratureSearch:
             "semanticscholar": SemanticScholarSource(self.config)
         }
         
+        # Source health monitoring
+        self._source_health_cache: Dict[str, bool] = {}
+        self._last_health_check: float = 0.0
+        
         # Initialize handlers with library index
         self.pdf_handler = PDFHandler(self.config, self.library_index)
         self.reference_manager = ReferenceManager(self.config, self.library_index)
@@ -123,14 +127,24 @@ class LiteratureSearch:
             if source_name not in self.sources:
                 logger.warning(f"Unknown source: {source_name}")
                 continue
+            
+            # Check source health before attempting search
+            source = self.sources[source_name]
+            if not source.is_healthy:
+                logger.warning(f"Source {source_name} appears unhealthy ({source._consecutive_failures} consecutive failures), skipping")
+                continue
                 
             try:
-                source = self.sources[source_name]
                 source_results = source.search(query, limit)
                 results.extend(source_results)
                 logger.info(f"Found {len(source_results)} results from {source_name}")
+            except APIRateLimitError as e:
+                logger.error(f"Search failed for source {source_name}: Rate limit exceeded")
+                # Mark source as potentially unhealthy
+                source._consecutive_failures += 1
             except Exception as e:
                 logger.error(f"Search failed for source {source_name}: {e}")
+                source._consecutive_failures += 1
                 
         # Deduplicate by DOI or Title
         deduplicated = self._deduplicate_results(results)
@@ -262,6 +276,34 @@ class LiteratureSearch:
             - years: Count by year
         """
         return self.library_index.get_stats()
+    
+    def get_source_health_status(self) -> Dict[str, Any]:
+        """Get health status for all sources.
+        
+        Returns:
+            Dictionary mapping source names to health status information.
+        """
+        health_status = {}
+        for source_name, source in self.sources.items():
+            health_status[source_name] = source.get_health_status()
+        return health_status
+    
+    def check_all_sources_health(self) -> Dict[str, bool]:
+        """Check health of all sources.
+        
+        Returns:
+            Dictionary mapping source names to health status (True/False).
+        """
+        health_results = {}
+        for source_name, source in self.sources.items():
+            try:
+                is_healthy = source.check_health()
+                health_results[source_name] = is_healthy
+                logger.debug(f"Source {source_name} health: {'healthy' if is_healthy else 'unhealthy'}")
+            except Exception as e:
+                logger.warning(f"Health check failed for {source_name}: {e}")
+                health_results[source_name] = False
+        return health_results
 
     def get_library_entries(self) -> List[Dict[str, Any]]:
         """Get all entries in the library.
@@ -272,34 +314,179 @@ class LiteratureSearch:
         return [entry.to_dict() for entry in self.library_index.list_entries()]
 
     def _deduplicate_results(self, results: List[SearchResult]) -> List[SearchResult]:
-        """Remove duplicate results based on DOI or normalized title.
+        """Remove duplicate results with fuzzy matching and relevance ranking.
+        
+        Uses multiple strategies:
+        1. Exact DOI matching (highest priority)
+        2. Fuzzy title similarity matching
+        3. Relevance ranking to keep best results
         
         Args:
             results: List of search results.
             
         Returns:
-            Deduplicated list of results.
+            Deduplicated and ranked list of results.
         """
-        seen_dois = set()
-        seen_titles = set()
-        unique_results = []
+        from infrastructure.literature.sources.base import normalize_title, title_similarity
+        
+        if not results:
+            return []
+        
+        # First pass: exact DOI deduplication
+        seen_dois: Dict[str, SearchResult] = {}
+        doi_results = []
+        non_doi_results = []
         
         for r in results:
-            # Check DOI
-            if r.doi and r.doi in seen_dois:
-                continue
-            
-            # Check Title
-            norm_title = r.title.lower().strip()
-            if norm_title in seen_titles:
-                continue
-                
             if r.doi:
-                seen_dois.add(r.doi)
-            seen_titles.add(norm_title)
-            unique_results.append(r)
+                doi_lower = r.doi.lower().strip()
+                if doi_lower not in seen_dois:
+                    seen_dois[doi_lower] = r
+                    doi_results.append(r)
+            else:
+                non_doi_results.append(r)
+        
+        # Second pass: fuzzy title matching for non-DOI results
+        unique_results = list(doi_results)  # Start with DOI-matched results
+        seen_titles: Dict[str, SearchResult] = {}
+        TITLE_SIMILARITY_THRESHOLD = 0.85  # High threshold for fuzzy matching
+        
+        for r in non_doi_results:
+            norm_title = normalize_title(r.title)
             
-        return unique_results
+            # Check for exact match
+            if norm_title in seen_titles:
+                # Keep the one with better metadata (DOI, citation count, etc.)
+                existing = seen_titles[norm_title]
+                if self._is_better_result(r, existing):
+                    seen_titles[norm_title] = r
+                    # Replace in unique_results if it was added
+                    if existing in unique_results:
+                        idx = unique_results.index(existing)
+                        unique_results[idx] = r
+                continue
+            
+            # Check for fuzzy match
+            is_duplicate = False
+            for existing_title, existing_result in seen_titles.items():
+                similarity = title_similarity(norm_title, existing_title)
+                if similarity >= TITLE_SIMILARITY_THRESHOLD:
+                    # Similar title found - keep the better one
+                    if self._is_better_result(r, existing_result):
+                        seen_titles[existing_title] = r
+                        if existing_result in unique_results:
+                            idx = unique_results.index(existing_result)
+                            unique_results[idx] = r
+                    is_duplicate = True
+                    break
+            
+            if not is_duplicate:
+                seen_titles[norm_title] = r
+                unique_results.append(r)
+        
+        # Third pass: relevance ranking
+        ranked_results = self._rank_by_relevance(unique_results)
+        
+        logger.debug(f"Deduplicated {len(results)} results to {len(ranked_results)} unique papers")
+        return ranked_results
+    
+    def _is_better_result(self, r1: SearchResult, r2: SearchResult) -> bool:
+        """Compare two results to determine which is better.
+        
+        Prefers results with:
+        - DOI over no DOI
+        - Higher citation count
+        - More complete metadata
+        
+        Args:
+            r1: First result.
+            r2: Second result.
+            
+        Returns:
+            True if r1 is better than r2.
+        """
+        # DOI is preferred
+        if r1.doi and not r2.doi:
+            return True
+        if r2.doi and not r1.doi:
+            return False
+        
+        # Higher citation count is preferred
+        if r1.citation_count is not None and r2.citation_count is not None:
+            if r1.citation_count > r2.citation_count:
+                return True
+            if r2.citation_count > r1.citation_count:
+                return False
+        
+        # More complete abstract is preferred
+        if len(r1.abstract or "") > len(r2.abstract or ""):
+            return True
+        
+        # Prefer results with venue information
+        if r1.venue and not r2.venue:
+            return True
+        
+        return False
+    
+    def _rank_by_relevance(self, results: List[SearchResult]) -> List[SearchResult]:
+        """Rank results by relevance score.
+        
+        Relevance factors:
+        - Citation count (higher is better)
+        - Recency (newer is better, within reason)
+        - Source quality (prefer certain sources)
+        - Metadata completeness
+        
+        Args:
+            results: List of results to rank.
+            
+        Returns:
+            Ranked list of results (best first).
+        """
+        def relevance_score(r: SearchResult) -> float:
+            score = 0.0
+            
+            # Citation count (normalized, max 100 citations = 1.0)
+            if r.citation_count is not None:
+                score += min(1.0, r.citation_count / 100.0) * 0.4
+            
+            # Recency (prefer papers from last 10 years)
+            if r.year:
+                current_year = 2025  # Could be dynamic
+                age = current_year - r.year
+                if age <= 10:
+                    score += (1.0 - age / 10.0) * 0.3
+                elif age <= 20:
+                    score += 0.1
+            
+            # Source quality
+            source_scores = {
+                "arxiv": 0.1,
+                "semanticscholar": 0.15,
+                "pubmed": 0.1,
+                "crossref": 0.1
+            }
+            score += source_scores.get(r.source, 0.05) * 0.1
+            
+            # Metadata completeness
+            completeness = 0.0
+            if r.doi:
+                completeness += 0.2
+            if r.abstract and len(r.abstract) > 100:
+                completeness += 0.3
+            if r.venue:
+                completeness += 0.2
+            if r.pdf_url:
+                completeness += 0.3
+            score += completeness * 0.2
+            
+            return score
+        
+        # Sort by relevance score (descending)
+        scored_results = [(r, relevance_score(r)) for r in results]
+        scored_results.sort(key=lambda x: x[1], reverse=True)
+        
+        return [r for r, _ in scored_results]
 
     def remove_paper(self, citation_key: str) -> bool:
         """Remove a paper from the library.

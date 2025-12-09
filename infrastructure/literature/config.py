@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 
 # Browser-like User-Agent strings for PDF downloads
@@ -71,6 +71,23 @@ class LiteratureConfig:
     semanticscholar_api_key: Optional[str] = None
     retry_attempts: int = 3  # Retry failed requests
     retry_delay: float = 5.0  # Base delay for exponential backoff
+    
+    # Per-source configuration (can be extended for other sources)
+    source_configs: Dict[str, Dict[str, Any]] = field(default_factory=lambda: {
+        "arxiv": {
+            "delay": 3.0,
+            "max_retries": 3,
+            "timeout": 30.0,
+            "health_check_enabled": True
+        },
+        "semanticscholar": {
+            "delay": 1.5,
+            "max_retries": 3,
+            "timeout": 30.0,
+            "health_check_enabled": True,
+            "rate_limit_strategy": "exponential_backoff"
+        }
+    })
     
     # PDF settings
     download_dir: str = "literature/pdfs"

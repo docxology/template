@@ -165,9 +165,9 @@ class LiteratureWorkflow:
                 existing_progress = self.progress_tracker.load_existing_run()
                 if existing_progress:
                     log_header("RESUME EXISTING RUN")
-                    print(f"Previous run: {existing_progress.run_id}")
-                    print(f"Progress: {existing_progress.completed_summaries}/{existing_progress.total_papers} completed")
-                    print(f"Keywords: {', '.join(existing_progress.keywords)}")
+                    logger.info(f"Previous run: {existing_progress.run_id}")
+                    logger.info(f"Progress: {existing_progress.completed_summaries}/{existing_progress.total_papers} completed")
+                    logger.info(f"Keywords: {', '.join(existing_progress.keywords)}")
 
                     if interactive:
                         resume_choice = input("\nResume previous run? [Y/n]: ").strip().lower()
@@ -181,12 +181,12 @@ class LiteratureWorkflow:
                         self.progress_tracker.current_progress = existing_progress
                         result.progress = existing_progress
                     else:
-                        print("Starting new run...")
+                        logger.info("Starting new run...")
                         # Archive old progress
                         if self.progress_tracker.progress_file.exists():
                             archive_path = self.progress_tracker.archive_progress()
                             if archive_path:
-                                print(f"Archived previous progress to: {archive_path}")
+                                logger.info(f"Archived previous progress to: {archive_path}")
 
             # Search for papers
             log_header("SEARCHING FOR PAPERS")

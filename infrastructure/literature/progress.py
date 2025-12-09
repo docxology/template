@@ -13,10 +13,14 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, TYPE_CHECKING
 from datetime import datetime
 
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.core.progress import ProgressBar
+
+if TYPE_CHECKING:
+    from infrastructure.literature.logging import StructuredLogger
 
 logger = get_logger(__name__)
 
@@ -184,16 +188,28 @@ class ProgressTracker:
     Attributes:
         progress_file: Path to JSON file for progress persistence.
         current_progress: Current SummarizationProgress instance.
+        structured_logger: Optional structured logger for enhanced logging.
+        progress_bars: Dictionary of active progress bars by operation.
     """
 
-    def __init__(self, progress_file: Path):
+    def __init__(
+        self,
+        progress_file: Path,
+        structured_logger: Optional["StructuredLogger"] = None,
+        enable_progress_bars: bool = True
+    ):
         """Initialize progress tracker.
 
         Args:
             progress_file: Path to save/load progress data.
+            structured_logger: Optional structured logger for enhanced logging.
+            enable_progress_bars: Enable visual progress bars.
         """
         self.progress_file = progress_file
         self.current_progress: Optional[SummarizationProgress] = None
+        self.structured_logger = structured_logger
+        self.enable_progress_bars = enable_progress_bars
+        self.progress_bars: Dict[str, ProgressBar] = {}
 
     def start_new_run(self, keywords: List[str], total_papers: int) -> SummarizationProgress:
         """Start a new summarization run.
@@ -217,6 +233,16 @@ class ProgressTracker:
         )
 
         logger.info(f"Started new summarization run: {run_id}")
+        
+        if self.structured_logger:
+            self.structured_logger.start_operation("summarization_run", f"Run {run_id}: {total_papers} papers")
+        
+        if self.enable_progress_bars:
+            self.progress_bars["summarization"] = ProgressBar(
+                total=total_papers,
+                task="Summarizing papers"
+            )
+        
         self.save_progress()
         return self.current_progress
 
@@ -289,6 +315,27 @@ class ProgressTracker:
         # Log status changes
         if old_status != status:
             logger.debug(f"Progress: {citation_key} {old_status} -> {status}")
+            
+            # Update structured logger
+            if self.structured_logger:
+                metrics = {}
+                if "summary_time" in kwargs:
+                    metrics["duration_seconds"] = kwargs["summary_time"]
+                if "download_time" in kwargs:
+                    metrics["download_duration_seconds"] = kwargs["download_time"]
+                
+                self.structured_logger.log(
+                    level="INFO",
+                    operation="paper_status_update",
+                    message=f"Status changed: {old_status} -> {status}",
+                    paper_id=citation_key,
+                    metrics=metrics if metrics else None
+                )
+            
+            # Update progress bars
+            if self.enable_progress_bars and "summarization" in self.progress_bars:
+                completed = self.current_progress.completed_summaries
+                self.progress_bars["summarization"].update(completed)
 
         self.save_progress()
 
@@ -310,6 +357,28 @@ class ProgressTracker:
             )
             logger.debug(f"Added progress tracking for paper: {citation_key}")
             self.save_progress()
+    
+    def finish_progress_bars(self):
+        """Finish all active progress bars."""
+        for operation, bar in self.progress_bars.items():
+            bar.finish()
+        self.progress_bars.clear()
+    
+    def get_progress_summary(self) -> Dict[str, Any]:
+        """Get current progress summary with statistics.
+        
+        Returns:
+            Dictionary with progress statistics.
+        """
+        if not self.current_progress:
+            return {}
+        
+        stats = self.current_progress.get_summary_stats()
+        
+        if self.structured_logger:
+            stats["log_statistics"] = self.structured_logger.get_statistics()
+        
+        return stats
 
     def get_incomplete_papers(self) -> List[str]:
         """Get list of citation keys for papers that haven't been completed.

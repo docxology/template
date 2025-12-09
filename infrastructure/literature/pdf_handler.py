@@ -68,13 +68,9 @@ class PDFHandler:
         self._library_index = library_index
 
     def parse_html_for_pdf(self, html_content: bytes, base_url: str) -> List[str]:
-        """Parse HTML content to extract PDF URLs.
+        """Parse HTML content to extract PDF URLs using modular parser system.
 
-        Uses multiple strategies to find PDF links in HTML content:
-        - Direct PDF links in <a> tags
-        - Meta tags with PDF URLs
-        - JavaScript variables containing PDF URLs
-        - Publisher-specific patterns
+        Automatically detects publisher and uses appropriate parser for best results.
 
         Args:
             html_content: Raw HTML content as bytes.
@@ -83,7 +79,12 @@ class PDFHandler:
         Returns:
             List of candidate PDF URLs found in HTML.
         """
-        return extract_pdf_urls_from_html(html_content, base_url)
+        try:
+            from infrastructure.literature.html_parsers import extract_pdf_urls_modular
+            return extract_pdf_urls_modular(html_content, base_url)
+        except ImportError:
+            # Fallback to original implementation
+            return extract_pdf_urls_from_html(html_content, base_url)
 
     def download_pdf(
         self,

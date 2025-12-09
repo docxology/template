@@ -236,6 +236,21 @@ Examples:
         default=None,
         help=f"Papers per keyword (default: {DEFAULT_LIMIT_PER_KEYWORD})"
     )
+    parser.add_argument(
+        "--clear-pdfs",
+        action="store_true",
+        help="Clear all PDFs before download (default: False, incremental/additive)"
+    )
+    parser.add_argument(
+        "--clear-summaries",
+        action="store_true",
+        help="Clear all summaries before generation (default: False, incremental/additive)"
+    )
+    parser.add_argument(
+        "--clear-library",
+        action="store_true",
+        help="Clear library index before operations (requires confirmation, default: False)"
+    )
     
     args = parser.parse_args()
     
@@ -277,7 +292,16 @@ Examples:
         elif args.download_only:
             exit_code = run_download_only(workflow)
         elif args.search:
-            exit_code = run_search(workflow, keywords=keywords, limit=args.limit, max_parallel_summaries=MAX_PARALLEL_SUMMARIES)
+            exit_code = run_search(
+                workflow,
+                keywords=keywords,
+                limit=args.limit,
+                max_parallel_summaries=MAX_PARALLEL_SUMMARIES,
+                clear_pdfs=args.clear_pdfs,
+                clear_summaries=args.clear_summaries,
+                clear_library=args.clear_library,
+                interactive=True
+            )
         elif args.summarize:
             exit_code = run_summarize(workflow)
         elif args.cleanup:

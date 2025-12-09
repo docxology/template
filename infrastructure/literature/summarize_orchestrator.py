@@ -210,37 +210,34 @@ def run_summarize(workflow: LiteratureWorkflow) -> int:
 
     if not library_entries:
         logger.warning("Library is empty. Use --search-only to find and add papers first.")
-        print("\nLibrary is empty. Use --search-only to find and add papers first.")
+        logger.warning("Library is empty. Use --search-only to find and add papers first.")
         return 0
 
     # Get library analysis
     analysis = get_library_analysis(library_entries)
 
     # Display comprehensive statistics
-    print(f"\n{'=' * 60}")
-    print("LIBRARY ANALYSIS")
-    print("=" * 60)
-    print(f"\nBibliography:")
-    print(f"  Total papers in bibliography: {analysis['total_papers']}")
-    print(f"  Papers with PDFs: {analysis['papers_with_pdf']}")
-    print(f"  Papers with summaries: {analysis['papers_with_summary']}")
-    print(f"  Papers needing summaries: {analysis['papers_needing_summary']}")
-    
-    print(f"\nFilesystem:")
-    print(f"  Total PDFs found: {analysis['total_pdfs_filesystem']}")
-    print(f"  Total summaries found: {analysis['total_summaries_filesystem']}")
-    
-    print(f"\nCategories:")
-    print(f"  In bibliography, no PDF: {analysis['in_bibliography_no_pdf']}")
-    print(f"  PDF, no summary: {analysis['pdf_no_summary']}")
-    print(f"  PDF and summary: {analysis['pdf_and_summary']}")
-    print(f"  Summary, no PDF: {analysis['summary_no_pdf']}")
-    print(f"  PDF not in bibliography (orphaned): {analysis['pdf_not_in_bibliography']}")
-    print(f"  Summary not in bibliography (orphaned): {analysis['summary_not_in_bibliography']}")
-    print("=" * 60)
+    log_header("LIBRARY ANALYSIS")
+    logger.info(f"\nBibliography:")
+    logger.info(f"  Total papers in bibliography: {analysis['total_papers']}")
+    logger.info(f"  Papers with PDFs: {analysis['papers_with_pdf']}")
+    logger.info(f"  Papers with summaries: {analysis['papers_with_summary']}")
+    logger.info(f"  Papers needing summaries: {analysis['papers_needing_summary']}")
+
+    logger.info(f"\nFilesystem:")
+    logger.info(f"  Total PDFs found: {analysis['total_pdfs_filesystem']}")
+    logger.info(f"  Total summaries found: {analysis['total_summaries_filesystem']}")
+
+    logger.info(f"\nCategories:")
+    logger.info(f"  In bibliography, no PDF: {analysis['in_bibliography_no_pdf']}")
+    logger.info(f"  PDF, no summary: {analysis['pdf_no_summary']}")
+    logger.info(f"  PDF and summary: {analysis['pdf_and_summary']}")
+    logger.info(f"  Summary, no PDF: {analysis['summary_no_pdf']}")
+    logger.info(f"  PDF not in bibliography (orphaned): {analysis['pdf_not_in_bibliography']}")
+    logger.info(f"  Summary not in bibliography (orphaned): {analysis['summary_not_in_bibliography']}")
 
     if analysis['papers_needing_summary'] == 0:
-        print("\nAll papers with PDFs already have summaries. Nothing to do.")
+        logger.info("All papers with PDFs already have summaries. Nothing to do.")
         return 0
 
     # Find papers needing summaries
@@ -273,15 +270,13 @@ def run_summarize(workflow: LiteratureWorkflow) -> int:
     failed = sum(1 for r in summarization_results if not r.success)
     skipped = sum(1 for r in summarization_results if getattr(r, 'skipped', False))
 
-    print(f"\n{'=' * 60}")
-    print("SUMMARIZATION COMPLETED")
-    print("=" * 60)
-    print(f"Papers processed: {len(papers_needing_summary)}")
-    print(f"Summaries generated: {successful}")
+    log_header("SUMMARIZATION COMPLETED")
+    logger.info(f"Papers processed: {len(papers_needing_summary)}")
+    logger.info(f"Summaries generated: {successful}")
     if skipped > 0:
-        print(f"Summaries skipped (already exist): {skipped}")
-    print(f"Summary failures: {failed}")
-    print(f"Success rate: {(successful / len(papers_needing_summary)) * 100:.1f}%")
+        logger.info(f"Summaries skipped (already exist): {skipped}")
+    logger.info(f"Summary failures: {failed}")
+    logger.info(f"Success rate: {(successful / len(papers_needing_summary)) * 100:.1f}%")
 
     log_success("Summary generation complete!")
     return 0

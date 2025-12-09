@@ -59,3 +59,81 @@ def test_generate_output_summary_runs_without_errors() -> None:
     generate_output_summary(output_dir=Path("output"), stats=stats, structure_validation=structure_validation)
     # No assertions needed; success is lack of exceptions
 
+
+def test_generate_output_summary_no_validation(tmp_path: Path) -> None:
+    """Test generate_output_summary without structure validation."""
+    stats = {
+        "pdf_files": 1,
+        "web_files": 0,
+        "slides_files": 0,
+        "figures_files": 0,
+        "data_files": 0,
+        "reports_files": 0,
+        "simulations_files": 0,
+        "llm_files": 0,
+        "logs_files": 0,
+        "combined_pdf": 0,
+        "total_files": 1,
+        "errors": [],
+    }
+    generate_output_summary(output_dir=tmp_path, stats=stats, structure_validation=None)
+    # Should complete without errors
+
+
+def test_generate_output_summary_with_errors(tmp_path: Path) -> None:
+    """Test generate_output_summary with error messages."""
+    stats = {
+        "pdf_files": 0,
+        "web_files": 0,
+        "slides_files": 0,
+        "figures_files": 0,
+        "data_files": 0,
+        "reports_files": 0,
+        "simulations_files": 0,
+        "llm_files": 0,
+        "logs_files": 0,
+        "combined_pdf": 0,
+        "total_files": 0,
+        "errors": ["Error 1", "Error 2", "Error 3"],
+    }
+    generate_output_summary(output_dir=tmp_path, stats=stats, structure_validation=None)
+    # Should complete without errors
+
+
+def test_collect_output_statistics_no_output_dir(tmp_path: Path) -> None:
+    """Test collect_output_statistics when output directory doesn't exist."""
+    stats = collect_output_statistics(tmp_path)
+    assert stats["pdf_files"] == 0
+    assert stats["figures"] == 0
+    assert stats["data_files"] == 0
+    assert stats["total_size_mb"] == 0.0
+
+
+def test_collect_output_statistics_empty_directories(tmp_path: Path) -> None:
+    """Test collect_output_statistics with empty directories."""
+    repo_root = tmp_path
+    (repo_root / "project" / "output" / "pdf").mkdir(parents=True, exist_ok=True)
+    (repo_root / "project" / "output" / "figures").mkdir(parents=True, exist_ok=True)
+    (repo_root / "project" / "output" / "data").mkdir(parents=True, exist_ok=True)
+    
+    stats = collect_output_statistics(repo_root)
+    assert stats["pdf_files"] == 0
+    assert stats["figures"] == 0
+    assert stats["data_files"] == 0
+    assert stats["total_size_mb"] == 0.0
+
+
+def test_collect_output_statistics_size_calculation(tmp_path: Path) -> None:
+    """Test collect_output_statistics calculates file sizes correctly."""
+    repo_root = tmp_path
+    pdf_dir = repo_root / "project" / "output" / "pdf"
+    pdf_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Create file with known size (1MB = 1024*1024 bytes)
+    large_file = pdf_dir / "large.pdf"
+    large_file.write_bytes(b"x" * (1024 * 1024))
+    
+    stats = collect_output_statistics(repo_root)
+    assert stats["pdf_files"] == 1
+    assert stats["total_size_mb"] >= 1.0
+

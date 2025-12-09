@@ -4,17 +4,15 @@ Provides access to the arXiv preprint repository with:
 - Title-based search with similarity matching
 - General keyword search
 - PDF URL extraction
-- Rate limiting compliance
+- Rate limiting compliance with retry logic
 """
 from __future__ import annotations
 
-import time
 import re
 import requests
 import xml.etree.ElementTree as ET
 from typing import List, Optional
 
-from infrastructure.core.exceptions import LiteratureSearchError
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.literature.sources.base import LiteratureSource, SearchResult, title_similarity
 
@@ -22,13 +20,25 @@ logger = get_logger(__name__)
 
 
 class ArxivSource(LiteratureSource):
-    """Client for arXiv API."""
+    """Client for arXiv API with standardized retry logic."""
 
     BASE_URL = "http://export.arxiv.org/api/query"
     TITLE_SIMILARITY_THRESHOLD = 0.7  # Minimum similarity for title match
 
     def search(self, query: str, limit: int = 10) -> List[SearchResult]:
-        """Search arXiv."""
+        """Search arXiv with retry logic and rate limiting.
+        
+        Args:
+            query: Search query string.
+            limit: Maximum number of results to return.
+            
+        Returns:
+            List of SearchResult objects.
+            
+        Raises:
+            APIRateLimitError: If rate limit exceeded after all retries.
+            LiteratureSearchError: If API request fails after all retries.
+        """
         logger.info(f"Searching arXiv for: {query}")
         
         params = {
@@ -37,23 +47,28 @@ class ArxivSource(LiteratureSource):
             "max_results": limit
         }
         
-        try:
-            # Rate limiting
-            time.sleep(self.config.arxiv_delay)
-            
-            response = requests.get(self.BASE_URL, params=params)
+        def _execute_search():
+            response = requests.get(
+                self.BASE_URL,
+                params=params,
+                timeout=self.config.timeout
+            )
             response.raise_for_status()
-            
             return self._parse_response(response.text)
-            
-        except requests.exceptions.RequestException as e:
-            raise LiteratureSearchError(f"arXiv API request failed: {e}", context={"source": "arxiv"})
+        
+        # Use common retry logic from base class
+        return self._execute_with_retry(
+            _execute_search,
+            "search",
+            "arxiv",
+            handle_rate_limit=True
+        )
 
     def search_by_title(self, title: str, limit: int = 5) -> Optional[SearchResult]:
         """Search arXiv for a paper by title with similarity matching.
         
         Searches arXiv using the title as a query, then finds the best
-        matching result based on title similarity.
+        matching result based on title similarity. Uses retry logic for reliability.
         
         Args:
             title: Paper title to search for.
@@ -68,58 +83,60 @@ class ArxivSource(LiteratureSource):
         clean_title = re.sub(r'[^\w\s]', ' ', title)
         clean_title = ' '.join(clean_title.split())
         
-        # Use title-specific search
-        params = {
-            "search_query": f'ti:"{clean_title}"',
-            "start": 0,
-            "max_results": limit
-        }
-        
-        try:
-            # Rate limiting
-            time.sleep(self.config.arxiv_delay)
+        def _execute_title_search():
+            # Use title-specific search
+            params = {
+                "search_query": f'ti:"{clean_title}"',
+                "start": 0,
+                "max_results": limit
+            }
             
             response = requests.get(self.BASE_URL, params=params, timeout=self.config.timeout)
             response.raise_for_status()
-            
             results = self._parse_response(response.text)
             
             if not results:
                 # Try broader search without quotes
                 params["search_query"] = f"ti:{clean_title}"
-                time.sleep(self.config.arxiv_delay)
                 response = requests.get(self.BASE_URL, params=params, timeout=self.config.timeout)
                 response.raise_for_status()
                 results = self._parse_response(response.text)
             
-            if not results:
-                logger.debug(f"No arXiv results found for title: {title[:50]}...")
-                return None
-            
-            # Find best matching result by title similarity
-            best_match = None
-            best_similarity = 0.0
-            
-            for result in results:
-                similarity = title_similarity(title, result.title)
-                logger.debug(f"Title similarity: {similarity:.2f} for '{result.title[:50]}...'")
-                
-                if similarity > best_similarity:
-                    best_similarity = similarity
-                    best_match = result
-            
-            if best_match and best_similarity >= self.TITLE_SIMILARITY_THRESHOLD:
-                logger.info(f"Found arXiv match with similarity {best_similarity:.2f}: {best_match.title[:50]}...")
-                return best_match
-            else:
-                logger.debug(f"Best arXiv match similarity {best_similarity:.2f} below threshold {self.TITLE_SIMILARITY_THRESHOLD}")
-                return None
-                
-        except requests.exceptions.RequestException as e:
+            return results
+        
+        try:
+            # Use common retry logic
+            results = self._execute_with_retry(
+                _execute_title_search,
+                "title_search",
+                "arxiv",
+                handle_rate_limit=True
+            )
+        except Exception as e:
             logger.warning(f"arXiv title search failed: {e}")
             return None
-        except Exception as e:
-            logger.warning(f"arXiv title search error: {e}")
+        
+        if not results:
+            logger.debug(f"No arXiv results found for title: {title[:50]}...")
+            return None
+        
+        # Find best matching result by title similarity
+        best_match = None
+        best_similarity = 0.0
+        
+        for result in results:
+            similarity = title_similarity(title, result.title)
+            logger.debug(f"Title similarity: {similarity:.2f} for '{result.title[:50]}...'")
+            
+            if similarity > best_similarity:
+                best_similarity = similarity
+                best_match = result
+        
+        if best_match and best_similarity >= self.TITLE_SIMILARITY_THRESHOLD:
+            logger.info(f"Found arXiv match with similarity {best_similarity:.2f}: {best_match.title[:50]}...")
+            return best_match
+        else:
+            logger.debug(f"Best arXiv match similarity {best_similarity:.2f} below threshold {self.TITLE_SIMILARITY_THRESHOLD}")
             return None
 
     def _parse_response(self, xml_data: str) -> List[SearchResult]:

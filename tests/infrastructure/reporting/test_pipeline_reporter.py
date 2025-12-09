@@ -161,3 +161,159 @@ def test_save_pipeline_report_respects_formats(tmp_path: Path) -> None:
     assert not (tmp_path / "pipeline_report.md").exists()
     assert not (tmp_path / "pipeline_report.html").exists()
 
+
+def test_generate_pipeline_report_empty_stages(tmp_path: Path) -> None:
+    """Test report generation with empty stage list."""
+    report = generate_pipeline_report(
+        stage_results=[],
+        total_duration=0.0,
+        repo_root=tmp_path
+    )
+    assert len(report.stages) == 0
+    assert report.total_duration == 0.0
+
+
+def test_generate_pipeline_report_missing_fields(tmp_path: Path) -> None:
+    """Test report generation with missing optional fields in stage results."""
+    stage_results = [
+        {"name": "setup"},  # Missing exit_code and duration
+        {"name": "tests", "exit_code": 0},  # Missing duration
+    ]
+    report = generate_pipeline_report(
+        stage_results=stage_results,
+        total_duration=5.0,
+        repo_root=tmp_path
+    )
+    assert len(report.stages) == 2
+    assert report.stages[0].name == "setup"
+    assert report.stages[0].exit_code == 1  # Default for missing exit_code
+    assert report.stages[0].duration == 0.0  # Default for missing duration
+
+
+def test_generate_pipeline_report_default_formats(tmp_path: Path) -> None:
+    """Test save_pipeline_report uses default formats when None."""
+    report = generate_pipeline_report(
+        stage_results=_stage_results(),
+        total_duration=5.0,
+        repo_root=tmp_path
+    )
+    saved = save_pipeline_report(report, tmp_path, formats=None)
+    assert "json" in saved
+    assert "markdown" in saved
+    assert "html" in saved
+
+
+def test_generate_markdown_report_empty_sections() -> None:
+    """Test markdown report generation with no optional sections."""
+    report = generate_pipeline_report(
+        stage_results=[{"name": "setup", "exit_code": 0, "duration": 1.0}],
+        total_duration=1.0,
+        repo_root=Path(".")
+    )
+    md_content = generate_markdown_report(report)
+    assert "Pipeline Execution Report" in md_content
+    assert "Summary" in md_content
+    assert "Stage Results" in md_content
+    # Should not have optional sections
+    assert "Test Results" not in md_content
+    assert "Error Summary" not in md_content
+
+
+def test_generate_html_report_all_stages_passed() -> None:
+    """Test HTML report with all stages passed."""
+    report = generate_pipeline_report(
+        stage_results=[
+            {"name": "setup", "exit_code": 0, "duration": 1.0},
+            {"name": "tests", "exit_code": 0, "duration": 2.0},
+        ],
+        total_duration=3.0,
+        repo_root=Path(".")
+    )
+    html = generate_html_report(report)
+    assert "100.0%" in html  # Success rate
+    assert "status-passed" in html
+
+
+def test_generate_validation_markdown_empty_checks() -> None:
+    """Test validation markdown with empty checks."""
+    results = {"checks": {}}
+    md = generate_validation_markdown(results)
+    assert "Validation Report" in md
+    assert "Validation Checks" in md
+
+
+def test_generate_error_summary_empty_errors(tmp_path: Path) -> None:
+    """Test error summary with no errors."""
+    summary = generate_error_summary([], tmp_path)
+    assert summary["total_errors"] == 0
+    assert summary["errors_by_type"] == {}
+    assert (tmp_path / "error_summary.json").exists()
+    assert (tmp_path / "error_summary.md").exists()
+
+
+def test_generate_error_markdown_no_errors() -> None:
+    """Test error markdown generation with no errors."""
+    summary = {"total_errors": 0, "errors_by_type": {}, "errors": []}
+    md = generate_error_markdown(summary)
+    assert "Error Summary" in md
+    assert "**Total Errors:** 0" in md
+
+
+def test_generate_error_markdown_with_suggestions() -> None:
+    """Test error markdown includes suggestions when present."""
+    summary = {
+        "total_errors": 1,
+        "errors_by_type": {"test_failure": 1},
+        "errors": [{
+            "type": "test_failure",
+            "message": "Test failed",
+            "suggestions": ["Fix assertion", "Check data"]
+        }]
+    }
+    md = generate_error_markdown(summary)
+    assert "Fix assertion" in md
+    assert "Check data" in md
+
+
+def test_stage_result_dataclass_fields() -> None:
+    """Test StageResult dataclass with all fields."""
+    from infrastructure.reporting.pipeline_reporter import StageResult
+    
+    stage = StageResult(
+        name="test",
+        exit_code=0,
+        duration=1.5,
+        status="passed",
+        output_files=["file1.pdf"],
+        errors=["error1"],
+        warnings=["warning1"]
+    )
+    assert stage.name == "test"
+    assert stage.exit_code == 0
+    assert stage.duration == 1.5
+    assert stage.status == "passed"
+    assert stage.output_files == ["file1.pdf"]
+    assert stage.errors == ["error1"]
+    assert stage.warnings == ["warning1"]
+
+
+def test_pipeline_report_dataclass_fields() -> None:
+    """Test PipelineReport dataclass with all fields."""
+    from infrastructure.reporting.pipeline_reporter import PipelineReport, StageResult
+    
+    report = PipelineReport(
+        timestamp="2025-01-01T00:00:00",
+        total_duration=5.0,
+        stages=[StageResult(name="test", exit_code=0, duration=1.0, status="passed")],
+        test_results={"summary": {"total_tests": 10}},
+        validation_results={"checks": {"pdf": True}},
+        performance_metrics={"duration": 5.0},
+        error_summary={"total_errors": 0},
+        output_statistics={"pdf_files": 1}
+    )
+    assert report.timestamp == "2025-01-01T00:00:00"
+    assert report.total_duration == 5.0
+    assert len(report.stages) == 1
+    assert report.test_results is not None
+    assert report.validation_results is not None
+

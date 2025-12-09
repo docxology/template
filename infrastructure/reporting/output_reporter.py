@@ -6,14 +6,18 @@ collecting output statistics.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Any, Optional
 
 from infrastructure.core.logging_utils import get_logger
 
 logger = get_logger(__name__)
 
 
-def generate_output_summary(output_dir: Path, stats: Dict, structure_validation: Dict | None = None) -> None:
+def generate_output_summary(
+    output_dir: Path, 
+    stats: Dict[str, Any], 
+    structure_validation: Optional[Dict[str, Any]] = None
+) -> None:
     """Generate summary of output copying results.
     
     Args:
@@ -61,7 +65,7 @@ def generate_output_summary(output_dir: Path, stats: Dict, structure_validation:
     logger.info("")
 
 
-def collect_output_statistics(repo_root: Path) -> Dict:
+def collect_output_statistics(repo_root: Path) -> Dict[str, Any]:
     """Collect output file statistics.
     
     Args:
