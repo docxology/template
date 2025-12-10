@@ -33,3 +33,4 @@ This note summarizes current module boundaries in `project/src/` and highlights 
 - Add performance baseline tests (micro-benchmarks) for `performance.analyze_convergence` to detect accidental O(n²) changes.
 
 
+

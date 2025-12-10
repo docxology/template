@@ -128,3 +128,4 @@ def test_save_test_report_no_coverage(tmp_path: Path) -> None:
     md_content = md_path.read_text()
     assert "Coverage:" not in md_content  # Should not mention coverage
 
+

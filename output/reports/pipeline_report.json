@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-09T14:44:04.738224",
+  "timestamp": "2025-12-09T14:59:25.359876",
   "total_duration": 0.0,
   "stages": [
     {
@@ -15,32 +15,52 @@
   "test_results": null,
   "validation_results": {
     "markdown_issues": [],
-    "quality_metrics": {
-      "status": "skipped",
-      "reason": "infrastructure.build not available"
-    },
-    "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x10a0b2e40>",
-    "reproducibility": {
-      "status": "skipped",
-      "reason": "infrastructure.build not available"
-    },
+    "quality_metrics": {},
+    "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x1070bc830>",
+    "reproducibility": "<infrastructure.build.reproducibility.ReproducibilityReport object at 0x1070bc830>",
     "errors": {
       "total_errors": 0,
-      "total_warnings": 0,
+      "total_warnings": 1,
       "errors_by_type": {},
-      "warnings_by_type": {},
+      "warnings_by_type": {
+        "quality_error": 1
+      },
       "errors": [],
-      "warnings": []
+      "warnings": [
+        {
+          "type": "quality_error",
+          "message": "Quality metrics skipped: Failed to extract text from PDF: Failed to extract text from PDF: [Errno 21] Is a directory: '/Users/4d/Documents/GitHub/template/project/manuscript'",
+          "stage": "quality_report",
+          "file": null,
+          "line": null,
+          "severity": "warning",
+          "suggestions": [],
+          "context": {}
+        }
+      ]
     }
   },
   "performance_metrics": null,
   "error_summary": {
     "total_errors": 0,
-    "total_warnings": 0,
+    "total_warnings": 1,
     "errors_by_type": {},
-    "warnings_by_type": {},
+    "warnings_by_type": {
+      "quality_error": 1
+    },
     "errors": [],
-    "warnings": []
+    "warnings": [
+      {
+        "type": "quality_error",
+        "message": "Quality metrics skipped: Failed to extract text from PDF: Failed to extract text from PDF: [Errno 21] Is a directory: '/Users/4d/Documents/GitHub/template/project/manuscript'",
+        "stage": "quality_report",
+        "file": null,
+        "line": null,
+        "severity": "warning",
+        "suggestions": [],
+        "context": {}
+      }
+    ]
   },
   "output_statistics": null
 }

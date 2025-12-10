@@ -89,3 +89,4 @@ def validate_figure_registry(
 
 
 
+

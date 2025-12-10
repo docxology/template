@@ -51,3 +51,4 @@ validate_figure_registry(Path("output/figures/figure_registry.json"))
 - Keep stages resumable via `--only/--resume/--dry-run` flags in scripts.
 - Treat output checks (`verify_output_integrity`) as gating steps before rendering.
 
+

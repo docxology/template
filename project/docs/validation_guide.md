@@ -32,3 +32,4 @@ This guide summarizes the validation pipeline and quality gates used in the proj
 - Fail on missing figures or bibliography blocks; warn on readability deltas.
 - Persist `project/output/reports/` artifacts for inspection (JSON/HTML/Markdown).
 
+

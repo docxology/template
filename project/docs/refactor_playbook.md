@@ -41,3 +41,4 @@ Concise guidance for refactoring or extending the scientific layer while keeping
 - For figure generation: `python3 project/scripts/generate_scientific_figures.py --dry-run --only convergence scatter`.
 
 
+
