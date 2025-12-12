@@ -8,36 +8,36 @@ This index provides a comprehensive overview of all documentation files in the R
 **Goal:** Write documents and generate PDFs without programming
 
 1. **[README.md](../README.md)** - Project overview
-2. **[GETTING_STARTED.md](GETTING_STARTED.md)** - Write your first document (Levels 1-3)
-3. **[QUICK_START_CHEATSHEET.md](QUICK_START_CHEATSHEET.md)** - Essential commands
-4. **[COMMON_WORKFLOWS.md](COMMON_WORKFLOWS.md)** - Step-by-step recipes
-5. **[FAQ.md](FAQ.md)** - Common questions
+2. **[guides/GETTING_STARTED.md](guides/GETTING_STARTED.md)** - Write your first document (Levels 1-3)
+3. **[reference/QUICK_START_CHEATSHEET.md](reference/QUICK_START_CHEATSHEET.md)** - Essential commands
+4. **[reference/COMMON_WORKFLOWS.md](reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
+5. **[reference/FAQ.md](reference/FAQ.md)** - Common questions
 
 ### 👨‍💻 **Developer / Researcher**
 **Goal:** Add figures, data analysis, and automation
 
-1. **[HOW_TO_USE.md](HOW_TO_USE.md)** - Complete usage guide (all 12 levels)
-2. **[INTERMEDIATE_USAGE.md](INTERMEDIATE_USAGE.md)** - Add figures and automation (Levels 4-6)
-3. **[ARCHITECTURE.md](ARCHITECTURE.md)** - Understand system design
-4. **[THIN_ORCHESTRATOR_SUMMARY.md](THIN_ORCHESTRATOR_SUMMARY.md)** - Learn the pattern
-5. **[WORKFLOW.md](WORKFLOW.md)** - Development process
+1. **[core/HOW_TO_USE.md](core/HOW_TO_USE.md)** - Complete usage guide (all 12 levels)
+2. **[guides/INTERMEDIATE_USAGE.md](guides/INTERMEDIATE_USAGE.md)** - Add figures and automation (Levels 4-6)
+3. **[core/ARCHITECTURE.md](core/ARCHITECTURE.md)** - Understand system design
+4. **[architecture/THIN_ORCHESTRATOR_SUMMARY.md](architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Learn the pattern
+5. **[core/WORKFLOW.md](core/WORKFLOW.md)** - Development process
 
 ### 🏗️ **Contributor / Maintainer**
 **Goal:** Contribute code and understand standards
 
-1. **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines
+1. **[development/CONTRIBUTING.md](development/CONTRIBUTING.md)** - Contribution guidelines
 2. **[.cursorrules/AGENTS.md](../.cursorrules/AGENTS.md)** - Development standards
-3. **[ADVANCED_USAGE.md](ADVANCED_USAGE.md)** - TDD workflow (Levels 7-9)
-4. **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing requirements
-5. **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - Community standards
+3. **[guides/ADVANCED_USAGE.md](guides/ADVANCED_USAGE.md)** - TDD workflow (Levels 7-9)
+4. **[development/TESTING_GUIDE.md](development/TESTING_GUIDE.md)** - Testing requirements
+5. **[development/CODE_OF_CONDUCT.md](development/CODE_OF_CONDUCT.md)** - Community standards
 
 ### 🔍 **Troubleshooter**
 **Goal:** Fix issues and understand problems
 
-1. **[TROUBLESHOOTING_GUIDE.md](TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting
-2. **[FAQ.md](FAQ.md)** - Common questions and solutions
-3. **[BUILD_SYSTEM.md](BUILD_SYSTEM.md)** - Build system details
-4. **[PERFORMANCE_OPTIMIZATION.md](PERFORMANCE_OPTIMIZATION.md)** - Performance issues
+1. **[operational/TROUBLESHOOTING_GUIDE.md](operational/TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting
+2. **[reference/FAQ.md](reference/FAQ.md)** - Common questions and solutions
+3. **[operational/BUILD_SYSTEM.md](operational/BUILD_SYSTEM.md)** - Build system details
+4. **[operational/PERFORMANCE_OPTIMIZATION.md](operational/PERFORMANCE_OPTIMIZATION.md)** - Performance issues
 
 ---
 
@@ -69,14 +69,14 @@ Development standards are documented in the `.cursorrules/` directory:
 ### **Primary Entry Points**
 - **[`README.md`](../README.md)** - **Main project overview** and quick start guide
 - **[`AGENTS.md`](../AGENTS.md)** - **Complete system documentation** - Everything you need to know
-- **[`docs/HOW_TO_USE.md`](HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced levels
+- **[`docs/core/HOW_TO_USE.md`](core/HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced levels
 
 ### **Quick Reference**
-- **[`docs/COPYPASTA.md`](COPYPASTA.md)** - Ready-to-use content for sharing the template
-- **[`docs/FAQ.md`](FAQ.md)** - Frequently asked questions and common issues
-- **[`docs/QUICK_START_CHEATSHEET.md`](QUICK_START_CHEATSHEET.md)** - One-page essential commands reference
-- **[`docs/COMMON_WORKFLOWS.md`](COMMON_WORKFLOWS.md)** - Step-by-step workflow recipes
-- **[`docs/GLOSSARY.md`](GLOSSARY.md)** - Comprehensive glossary of terms
+- **[`docs/reference/COPYPASTA.md`](reference/COPYPASTA.md)** - Ready-to-use content for sharing the template
+- **[`docs/reference/FAQ.md`](reference/FAQ.md)** - Frequently asked questions and common issues
+- **[`docs/reference/QUICK_START_CHEATSHEET.md`](reference/QUICK_START_CHEATSHEET.md)** - One-page essential commands reference
+- **[`docs/reference/COMMON_WORKFLOWS.md`](reference/COMMON_WORKFLOWS.md)** - Step-by-step workflow recipes
+- **[`docs/reference/GLOSSARY.md`](reference/GLOSSARY.md)** - Comprehensive glossary of terms
 - **[`scripts/README.md`](../scripts/README.md)** - Detailed utility documentation
 - **[`tests/README.md`](../tests/README.md)** - Test suite guide and commands
 - **[`tests/AGENTS.md`](../tests/AGENTS.md)** - Testing philosophy and structure
@@ -84,90 +84,90 @@ Development standards are documented in the `.cursorrules/` directory:
 ## 🏗️ **Architecture & Design**
 
 ### **System Architecture**
-- **[`docs/ARCHITECTURE.md`](ARCHITECTURE.md)** - Complete system design overview
-- **[`docs/TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md)** - Complete two-layer architecture guide
-- **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
-- **[`docs/WORKFLOW.md`](WORKFLOW.md)** - Development workflow and build pipeline
+- **[`docs/core/ARCHITECTURE.md`](core/ARCHITECTURE.md)** - Complete system design overview
+- **[`docs/architecture/TWO_LAYER_ARCHITECTURE.md`](architecture/TWO_LAYER_ARCHITECTURE.md)** - Complete two-layer architecture guide
+- **[`docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md`](architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
+- **[`docs/core/WORKFLOW.md`](core/WORKFLOW.md)** - Development workflow and build pipeline
 
 ### **Technical Implementation**
-- **[`docs/PDF_VALIDATION.md`](PDF_VALIDATION.md)** - PDF validation system documentation
+- **[`docs/modules/PDF_VALIDATION.md`](modules/PDF_VALIDATION.md)** - PDF validation system documentation
 
 ## 📝 **Usage Guides**
 
 ### **Getting Started**
-- **[`docs/GETTING_STARTED.md`](GETTING_STARTED.md)** - Basic usage guide (Levels 1-3)
-- **[`docs/EXAMPLES.md`](EXAMPLES.md)** - Project renaming and customization examples
-- **[`docs/EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md)** - Real-world usage examples
-- **[`docs/TEMPLATE_DESCRIPTION.md`](TEMPLATE_DESCRIPTION.md)** - Template overview and features
+- **[`docs/guides/GETTING_STARTED.md`](guides/GETTING_STARTED.md)** - Basic usage guide (Levels 1-3)
+- **[`docs/usage/EXAMPLES.md`](usage/EXAMPLES.md)** - Project renaming and customization examples
+- **[`docs/usage/EXAMPLES_SHOWCASE.md`](usage/EXAMPLES_SHOWCASE.md)** - Real-world usage examples
+- **[`docs/usage/TEMPLATE_DESCRIPTION.md`](usage/TEMPLATE_DESCRIPTION.md)** - Template overview and features
 
 ### **Skill-Level Guides**
-- **[`docs/INTERMEDIATE_USAGE.md`](INTERMEDIATE_USAGE.md)** - Intermediate usage guide (Levels 4-6)
-- **[`docs/ADVANCED_USAGE.md`](ADVANCED_USAGE.md)** - Advanced usage guide (Levels 7-9)
-- **[`docs/EXPERT_USAGE.md`](EXPERT_USAGE.md)** - Expert usage guide (Levels 10-12)
+- **[`docs/guides/INTERMEDIATE_USAGE.md`](guides/INTERMEDIATE_USAGE.md)** - Intermediate usage guide (Levels 4-6)
+- **[`docs/guides/ADVANCED_USAGE.md`](guides/ADVANCED_USAGE.md)** - Advanced usage guide (Levels 7-9)
+- **[`docs/guides/EXPERT_USAGE.md`](guides/EXPERT_USAGE.md)** - Expert usage guide (Levels 10-12)
 
 ### **Advanced Usage**
-- **[`docs/MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown and cross-referencing guide
-- **[`docs/MANUSCRIPT_NUMBERING_SYSTEM.md`](MANUSCRIPT_NUMBERING_SYSTEM.md)** - Manuscript section numbering system
-- **[`docs/TEST_IMPROVEMENTS_SUMMARY.md`](TEST_IMPROVEMENTS_SUMMARY.md)** - Test suite enhancements
-- **[`docs/COVERAGE_GAPS.md`](COVERAGE_GAPS.md)** - Test coverage gap analysis and improvement plans
+- **[`docs/usage/MARKDOWN_TEMPLATE_GUIDE.md`](usage/MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown and cross-referencing guide
+- **[`docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md`](usage/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Manuscript section numbering system
+- **[`docs/development/TEST_IMPROVEMENTS_SUMMARY.md`](development/TEST_IMPROVEMENTS_SUMMARY.md)** - Test suite enhancements
+- **[`docs/development/COVERAGE_GAPS.md`](development/COVERAGE_GAPS.md)** - Test coverage gap analysis and improvement plans
 - **[`scripts/README.md`](../scripts/README.md)** - Thin orchestrator pattern guide
 
 ### **Scientific Computing Guides**
-- **[`docs/SCIENTIFIC_SIMULATION_GUIDE.md`](SCIENTIFIC_SIMULATION_GUIDE.md)** - Scientific simulation and analysis system guide
-- **[`docs/VISUALIZATION_GUIDE.md`](VISUALIZATION_GUIDE.md)** - Visualization system for publication-quality figures
-- **[`docs/IMAGE_MANAGEMENT.md`](IMAGE_MANAGEMENT.md)** - Image insertion, captioning, and cross-referencing guide
+- **[`docs/modules/SCIENTIFIC_SIMULATION_GUIDE.md`](modules/SCIENTIFIC_SIMULATION_GUIDE.md)** - Scientific simulation and analysis system guide
+- **[`docs/usage/VISUALIZATION_GUIDE.md`](usage/VISUALIZATION_GUIDE.md)** - Visualization system for publication-quality figures
+- **[`docs/usage/IMAGE_MANAGEMENT.md`](usage/IMAGE_MANAGEMENT.md)** - Image insertion, captioning, and cross-referencing guide
 
 ## 🔧 **Development & Maintenance**
 
 ### **Contributing**
-- **[`docs/CONTRIBUTING.md`](CONTRIBUTING.md)** - Contribution guidelines and process
-- **[`docs/CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)** - Community standards and behavior
-- **[`docs/SECURITY.md`](SECURITY.md)** - Security policy and vulnerability reporting
+- **[`docs/development/CONTRIBUTING.md`](development/CONTRIBUTING.md)** - Contribution guidelines and process
+- **[`docs/development/CODE_OF_CONDUCT.md`](development/CODE_OF_CONDUCT.md)** - Community standards and behavior
+- **[`docs/development/SECURITY.md`](development/SECURITY.md)** - Security policy and vulnerability reporting
 
 ### **Future Development**
-- **[`docs/ROADMAP.md`](ROADMAP.md)** - Development roadmap and future plans
+- **[`docs/development/ROADMAP.md`](development/ROADMAP.md)** - Development roadmap and future plans
 
 ## 🧪 **Advanced Modules**
 
 ### **Module Guides**
-- **[`docs/ADVANCED_MODULES_GUIDE.md`](ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all 7 advanced modules
-- **[`docs/API_REFERENCE.md`](API_REFERENCE.md)** - Complete API documentation for all src/ modules
+- **[`docs/modules/ADVANCED_MODULES_GUIDE.md`](modules/ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all 7 advanced modules
+- **[`docs/reference/API_REFERENCE.md`](reference/API_REFERENCE.md)** - Complete API documentation for all src/ modules
 
 ## ⚙️ **Operational Guides**
 
 ### **Dependency & Build Management**
-- **[`docs/DEPENDENCY_MANAGEMENT.md`](DEPENDENCY_MANAGEMENT.md)** - Complete guide for uv package manager
-- **[`docs/BUILD_SYSTEM.md`](BUILD_SYSTEM.md)** - Complete build system reference
-- **[`docs/PERFORMANCE_OPTIMIZATION.md`](PERFORMANCE_OPTIMIZATION.md)** - Build time optimization and caching strategies
+- **[`docs/operational/DEPENDENCY_MANAGEMENT.md`](operational/DEPENDENCY_MANAGEMENT.md)** - Complete guide for uv package manager
+- **[`docs/operational/BUILD_SYSTEM.md`](operational/BUILD_SYSTEM.md)** - Complete build system reference
+- **[`docs/operational/PERFORMANCE_OPTIMIZATION.md`](operational/PERFORMANCE_OPTIMIZATION.md)** - Build time optimization and caching strategies
 
 ### **CI/CD & Automation**
-- **[`docs/CI_CD_INTEGRATION.md`](CI_CD_INTEGRATION.md)** - GitHub Actions and CI/CD integration guide
+- **[`docs/operational/CI_CD_INTEGRATION.md`](operational/CI_CD_INTEGRATION.md)** - GitHub Actions and CI/CD integration guide
 
 ### **Pipeline Orchestration**
 - **[`../RUN_GUIDE.md`](../RUN_GUIDE.md)** - Complete pipeline orchestration guide (run.sh, run_manuscript.sh, run_literature.sh)
 
 ### **Troubleshooting & Support**
-- **[`docs/TROUBLESHOOTING_GUIDE.md`](TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting guide
-- **[`docs/FAQ.md`](FAQ.md)** - Frequently asked questions and common issues
-- **[`docs/LLM_REVIEW_TROUBLESHOOTING.md`](LLM_REVIEW_TROUBLESHOOTING.md)** - LLM-specific troubleshooting
-- **[`docs/CHECKPOINT_RESUME.md`](CHECKPOINT_RESUME.md)** - Checkpoint and resume system
-- **[`docs/ERROR_HANDLING_GUIDE.md`](ERROR_HANDLING_GUIDE.md)** - Error handling patterns
-- **[`docs/LOGGING_GUIDE.md`](LOGGING_GUIDE.md)** - Logging system guide
-- **[`docs/TESTING_GUIDE.md`](TESTING_GUIDE.md)** - Testing framework guide
-- **[`docs/TESTING_WITH_CREDENTIALS.md`](TESTING_WITH_CREDENTIALS.md)** - Testing with external service credentials
-- **[`docs/CONFIGURATION.md`](CONFIGURATION.md)** - Configuration system guide
+- **[`docs/operational/TROUBLESHOOTING_GUIDE.md`](operational/TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting guide
+- **[`docs/reference/FAQ.md`](reference/FAQ.md)** - Frequently asked questions and common issues
+- **[`docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](operational/LLM_REVIEW_TROUBLESHOOTING.md)** - LLM-specific troubleshooting
+- **[`docs/operational/CHECKPOINT_RESUME.md`](operational/CHECKPOINT_RESUME.md)** - Checkpoint and resume system
+- **[`docs/operational/ERROR_HANDLING_GUIDE.md`](operational/ERROR_HANDLING_GUIDE.md)** - Error handling patterns
+- **[`docs/operational/LOGGING_GUIDE.md`](operational/LOGGING_GUIDE.md)** - Logging system guide
+- **[`docs/development/TESTING_GUIDE.md`](development/TESTING_GUIDE.md)** - Testing framework guide
+- **[`docs/development/TESTING_WITH_CREDENTIALS.md`](development/TESTING_WITH_CREDENTIALS.md)** - Testing with external service credentials
+- **[`docs/operational/CONFIGURATION.md`](operational/CONFIGURATION.md)** - Configuration system guide
 
 ## 📚 **Reference Materials**
 
 ### **Best Practices & Guidelines**
-- **[`docs/BEST_PRACTICES.md`](BEST_PRACTICES.md)** - Consolidated best practices compilation
-- **[`docs/VERSION_CONTROL.md`](VERSION_CONTROL.md)** - Git workflows and version control best practices
-- **[`docs/DECISION_TREE.md`](DECISION_TREE.md)** - Decision tree for code placement
+- **[`docs/best-practices/BEST_PRACTICES.md`](best-practices/BEST_PRACTICES.md)** - Consolidated best practices compilation
+- **[`docs/best-practices/VERSION_CONTROL.md`](best-practices/VERSION_CONTROL.md)** - Git workflows and version control best practices
+- **[`docs/architecture/DECISION_TREE.md`](architecture/DECISION_TREE.md)** - Decision tree for code placement
 
 ### **Project Management**
-- **[`docs/MULTI_PROJECT_MANAGEMENT.md`](MULTI_PROJECT_MANAGEMENT.md)** - Managing multiple projects using the template
-- **[`docs/MIGRATION_GUIDE.md`](MIGRATION_GUIDE.md)** - Step-by-step migration from other templates
-- **[`docs/BACKUP_RECOVERY.md`](BACKUP_RECOVERY.md)** - Backup strategies and recovery procedures
+- **[`docs/best-practices/MULTI_PROJECT_MANAGEMENT.md`](best-practices/MULTI_PROJECT_MANAGEMENT.md)** - Managing multiple projects using the template
+- **[`docs/best-practices/MIGRATION_GUIDE.md`](best-practices/MIGRATION_GUIDE.md)** - Step-by-step migration from other templates
+- **[`docs/best-practices/BACKUP_RECOVERY.md`](best-practices/BACKUP_RECOVERY.md)** - Backup strategies and recovery procedures
 
 ### **Changelog**
 
@@ -176,96 +176,132 @@ Development standards are documented in the `.cursorrules/` directory:
 ### **Directory Structure**
 ```
 docs/
-├── ADVANCED_MODULES_GUIDE.md          # Advanced modules guide
-├── ADVANCED_USAGE.md                   # Advanced usage (Levels 7-9)
+├── README.md                           # Main docs entry point
 ├── AGENTS.md                           # Directory documentation guide
-├── API_REFERENCE.md                    # Complete API documentation
-├── ARCHITECTURE.md                     # System architecture overview
-├── BACKUP_RECOVERY.md                  # Backup and recovery strategies
-├── BEST_PRACTICES.md                   # Consolidated best practices
-├── BUILD_SYSTEM.md                     # Complete build system documentation
-├── CI_CD_INTEGRATION.md                # CI/CD integration guide
-├── CODE_OF_CONDUCT.md                  # Community standards
-├── COMMON_WORKFLOWS.md                 # Step-by-step workflow recipes
-├── CONTRIBUTING.md                     # Contribution guidelines
-├── COPYPASTA.md                        # Ready-to-use content
-├── DEPENDENCY_MANAGEMENT.md            # uv package manager guide
 ├── DOCUMENTATION_INDEX.md              # Complete documentation index (this file)
-├── EXAMPLES.md                         # Renaming examples
-├── EXAMPLES_SHOWCASE.md                # Real-world examples
-├── EXPERT_USAGE.md                     # Expert usage (Levels 10-12)
-├── FAQ.md                              # Frequently asked questions
-├── GETTING_STARTED.md                  # Getting started (Levels 1-3)
-├── GLOSSARY.md                         # Comprehensive glossary
-├── HOW_TO_USE.md                       # Complete usage guide (navigation hub)
-├── IMAGE_MANAGEMENT.md                 # Image insertion and cross-referencing guide
-├── INTERMEDIATE_USAGE.md               # Intermediate usage (Levels 4-6)
-├── MANUSCRIPT_NUMBERING_SYSTEM.md      # Section numbering guide
-├── MARKDOWN_TEMPLATE_GUIDE.md          # Markdown guide
-├── MIGRATION_GUIDE.md                  # Migration from other templates
-├── MULTI_PROJECT_MANAGEMENT.md         # Managing multiple projects
-├── PDF_VALIDATION.md                   # PDF validation documentation
-├── PERFORMANCE_OPTIMIZATION.md         # Build time optimization
-├── QUICK_START_CHEATSHEET.md           # Essential commands reference
-├── README.md                           # Directory quick start
-├── ROADMAP.md                          # Development roadmap
-├── SCIENTIFIC_SIMULATION_GUIDE.md      # Scientific simulation and analysis guide
-├── SECURITY.md                         # Security policy
-├── TEMPLATE_DESCRIPTION.md             # Template overview
-├── TEST_IMPROVEMENTS_SUMMARY.md        # Test suite documentation
-├── THIN_ORCHESTRATOR_SUMMARY.md        # Pattern implementation
-├── TROUBLESHOOTING_GUIDE.md            # Comprehensive troubleshooting
-├── TWO_LAYER_ARCHITECTURE.md          # Two-layer architecture guide
-├── VERSION_CONTROL.md                  # Git workflows and best practices
-├── VISUALIZATION_GUIDE.md              # Visualization system guide
-└── WORKFLOW.md                         # Development workflow
+│
+├── core/                               # Essential documentation
+│   ├── README.md                       # Core docs overview
+│   ├── HOW_TO_USE.md                   # Complete usage guide
+│   ├── ARCHITECTURE.md                 # System design
+│   └── WORKFLOW.md                     # Development workflow
+│
+├── guides/                             # Usage guides by skill level
+│   ├── README.md                       # Guides overview
+│   ├── GETTING_STARTED.md              # Levels 1-3
+│   ├── INTERMEDIATE_USAGE.md           # Levels 4-6
+│   ├── ADVANCED_USAGE.md               # Levels 7-9
+│   └── EXPERT_USAGE.md                 # Levels 10-12
+│
+├── architecture/                       # Architecture documentation
+│   ├── README.md                       # Architecture overview
+│   ├── TWO_LAYER_ARCHITECTURE.md       # Complete architecture guide
+│   ├── THIN_ORCHESTRATOR_SUMMARY.md    # Pattern implementation
+│   └── DECISION_TREE.md                # Code placement decisions
+│
+├── usage/                              # Usage examples and patterns
+│   ├── README.md                       # Usage docs overview
+│   ├── EXAMPLES.md                     # Basic examples
+│   ├── EXAMPLES_SHOWCASE.md            # Real-world examples
+│   ├── TEMPLATE_DESCRIPTION.md         # Template overview
+│   ├── MARKDOWN_TEMPLATE_GUIDE.md      # Markdown authoring
+│   ├── MANUSCRIPT_NUMBERING_SYSTEM.md  # Section numbering
+│   ├── IMAGE_MANAGEMENT.md             # Image handling
+│   └── VISUALIZATION_GUIDE.md          # Visualization system
+│
+├── operational/                        # Operational workflows
+│   ├── README.md                       # Operational docs overview
+│   ├── BUILD_SYSTEM.md                 # Build system reference
+│   ├── CI_CD_INTEGRATION.md            # CI/CD setup
+│   ├── DEPENDENCY_MANAGEMENT.md        # Package management
+│   ├── PERFORMANCE_OPTIMIZATION.md      # Performance tuning
+│   ├── CONFIGURATION.md                # Configuration guide
+│   ├── CHECKPOINT_RESUME.md            # Checkpoint system
+│   ├── TROUBLESHOOTING_GUIDE.md        # Troubleshooting
+│   ├── LLM_REVIEW_TROUBLESHOOTING.md    # LLM-specific issues
+│   ├── ERROR_HANDLING_GUIDE.md         # Error patterns
+│   └── LOGGING_GUIDE.md                # Logging system
+│
+├── reference/                          # Reference materials
+│   ├── README.md                       # Reference docs overview
+│   ├── API_REFERENCE.md                # Complete API docs
+│   ├── GLOSSARY.md                     # Terms and definitions
+│   ├── FAQ.md                          # Common questions
+│   ├── QUICK_START_CHEATSHEET.md       # Quick reference
+│   ├── COMMON_WORKFLOWS.md             # Step-by-step recipes
+│   └── COPYPASTA.md                    # Sharing content
+│
+├── modules/                            # Advanced modules
+│   ├── README.md                       # Modules overview
+│   ├── ADVANCED_MODULES_GUIDE.md       # Complete modules guide
+│   ├── SCIENTIFIC_SIMULATION_GUIDE.md  # Simulation system
+│   └── PDF_VALIDATION.md               # PDF validation
+│
+├── development/                        # Development & contribution
+│   ├── README.md                       # Development docs overview
+│   ├── CONTRIBUTING.md                 # Contribution guide
+│   ├── CODE_OF_CONDUCT.md             # Community standards
+│   ├── SECURITY.md                     # Security policy
+│   ├── ROADMAP.md                      # Future plans
+│   ├── TESTING_GUIDE.md                # Testing framework
+│   ├── TESTING_WITH_CREDENTIALS.md     # Credential testing
+│   ├── TEST_IMPROVEMENTS_SUMMARY.md    # Test enhancements
+│   └── COVERAGE_GAPS.md                # Coverage analysis
+│
+└── best-practices/                     # Best practices
+    ├── README.md                       # Best practices overview
+    ├── BEST_PRACTICES.md               # Consolidated practices
+    ├── VERSION_CONTROL.md              # Git workflows
+    ├── MULTI_PROJECT_MANAGEMENT.md     # Multi-project setup
+    ├── MIGRATION_GUIDE.md              # Migration from other templates
+    └── BACKUP_RECOVERY.md              # Backup strategies
 ```
 
 ### **Documentation Categories**
 
-| Category | Files | Purpose |
-|----------|-------|---------|
-| **Core** | README.md, AGENTS.md, HOW_TO_USE.md | Essential documentation for all users |
-| **Architecture** | ARCHITECTURE.md, TWO_LAYER_ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md, WORKFLOW.md | System design and implementation |
-| **Usage** | EXAMPLES.md, EXAMPLES_SHOWCASE.md, MARKDOWN_TEMPLATE_GUIDE.md, GETTING_STARTED.md, INTERMEDIATE_USAGE.md, ADVANCED_USAGE.md, EXPERT_USAGE.md | How-to guides and examples by skill level |
-| **Development** | CONTRIBUTING.md, CODE_OF_CONDUCT.md, ROADMAP.md | Contributing and future development |
-| **Reference** | FAQ.md, COPYPASTA.md, DOCUMENTATION_INDEX.md, QUICK_START_CHEATSHEET.md, COMMON_WORKFLOWS.md, GLOSSARY.md | Quick reference and sharing content |
-| **Advanced Modules** | ADVANCED_MODULES_GUIDE.md, API_REFERENCE.md | Advanced module documentation |
-| **Operational** | DEPENDENCY_MANAGEMENT.md, BUILD_SYSTEM.md, PERFORMANCE_OPTIMIZATION.md, CI_CD_INTEGRATION.md, ../RUN_GUIDE.md, TROUBLESHOOTING_GUIDE.md | Operational workflows and guides |
-| **Best Practices** | BEST_PRACTICES.md, VERSION_CONTROL.md, MULTI_PROJECT_MANAGEMENT.md, MIGRATION_GUIDE.md, BACKUP_RECOVERY.md | Best practices and project management |
-| **Technical** | PDF_VALIDATION.md, TEMPLATE_DESCRIPTION.md, COVERAGE_GAPS.md, TESTING_WITH_CREDENTIALS.md | Technical implementation details |
+| Category | Directory | Purpose |
+|----------|-----------|---------|
+| **Core** | `core/` | Essential documentation for all users (HOW_TO_USE.md, ARCHITECTURE.md, WORKFLOW.md) |
+| **Guides** | `guides/` | Usage guides by skill level (GETTING_STARTED.md, INTERMEDIATE_USAGE.md, ADVANCED_USAGE.md, EXPERT_USAGE.md) |
+| **Architecture** | `architecture/` | System design and implementation (TWO_LAYER_ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md, DECISION_TREE.md) |
+| **Usage** | `usage/` | Usage examples and patterns (EXAMPLES.md, MARKDOWN_TEMPLATE_GUIDE.md, VISUALIZATION_GUIDE.md) |
+| **Development** | `development/` | Contributing and future development (CONTRIBUTING.md, CODE_OF_CONDUCT.md, ROADMAP.md, TESTING_GUIDE.md) |
+| **Reference** | `reference/` | Quick reference and sharing content (FAQ.md, API_REFERENCE.md, GLOSSARY.md, QUICK_START_CHEATSHEET.md) |
+| **Modules** | `modules/` | Advanced module documentation (ADVANCED_MODULES_GUIDE.md, SCIENTIFIC_SIMULATION_GUIDE.md, PDF_VALIDATION.md) |
+| **Operational** | `operational/` | Operational workflows and guides (BUILD_SYSTEM.md, TROUBLESHOOTING_GUIDE.md, CONFIGURATION.md) |
+| **Best Practices** | `best-practices/` | Best practices and project management (BEST_PRACTICES.md, VERSION_CONTROL.md, MIGRATION_GUIDE.md) |
 
 ## 🔗 **Cross-Referencing System**
 
 All documentation files include comprehensive cross-references:
 
-- **README.md** → Links to all major documentation files
-- **HOW_TO_USE.md** → Complete usage guide with all sections
-- **ARCHITECTURE.md** → System design with related documentation links
+- **README.md** → Links to all major documentation directories
+- **core/HOW_TO_USE.md** → Complete usage guide with all sections
+- **core/ARCHITECTURE.md** → System design with related documentation links
 - **All files** → Include context about related information
 
 ## 📖 **Detailed Reading Paths**
 
 ### **New Users - Complete Learning Path**
 1. **[README.md](../README.md)** - Project overview (5 min)
-2. **[GETTING_STARTED.md](GETTING_STARTED.md)** - Write first document (30 min)
-3. **[QUICK_START_CHEATSHEET.md](QUICK_START_CHEATSHEET.md)** - Essential commands reference
-4. **[COMMON_WORKFLOWS.md](COMMON_WORKFLOWS.md)** - Common tasks step-by-step
-5. **[EXAMPLES_SHOWCASE.md](EXAMPLES_SHOWCASE.md)** - See real-world usage
+2. **[guides/GETTING_STARTED.md](guides/GETTING_STARTED.md)** - Write first document (30 min)
+3. **[reference/QUICK_START_CHEATSHEET.md](reference/QUICK_START_CHEATSHEET.md)** - Essential commands reference
+4. **[reference/COMMON_WORKFLOWS.md](reference/COMMON_WORKFLOWS.md)** - Common tasks step-by-step
+5. **[usage/EXAMPLES_SHOWCASE.md](usage/EXAMPLES_SHOWCASE.md)** - See real-world usage
 
 ### **Developers - Architecture & Patterns**
-1. **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design overview (15 min)
-2. **[TWO_LAYER_ARCHITECTURE.md](TWO_LAYER_ARCHITECTURE.md)** - Complete architecture guide (30 min)
-3. **[THIN_ORCHESTRATOR_SUMMARY.md](THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation (20 min)
-4. **[WORKFLOW.md](WORKFLOW.md)** - Development process (20 min)
-5. **[INTERMEDIATE_USAGE.md](INTERMEDIATE_USAGE.md)** - Add figures and automation
+1. **[core/ARCHITECTURE.md](core/ARCHITECTURE.md)** - System design overview (15 min)
+2. **[architecture/TWO_LAYER_ARCHITECTURE.md](architecture/TWO_LAYER_ARCHITECTURE.md)** - Complete architecture guide (30 min)
+3. **[architecture/THIN_ORCHESTRATOR_SUMMARY.md](architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation (20 min)
+4. **[core/WORKFLOW.md](core/WORKFLOW.md)** - Development process (20 min)
+5. **[guides/INTERMEDIATE_USAGE.md](guides/INTERMEDIATE_USAGE.md)** - Add figures and automation
 
 ### **Contributors - Standards & Process**
-1. **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines (10 min)
+1. **[development/CONTRIBUTING.md](development/CONTRIBUTING.md)** - Contribution guidelines (10 min)
 2. **[.cursorrules/AGENTS.md](../.cursorrules/AGENTS.md)** - Development standards (30 min)
-3. **[ADVANCED_USAGE.md](ADVANCED_USAGE.md)** - TDD workflow (45 min)
-4. **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing requirements (20 min)
-5. **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - Community standards (5 min)
+3. **[guides/ADVANCED_USAGE.md](guides/ADVANCED_USAGE.md)** - TDD workflow (45 min)
+4. **[development/TESTING_GUIDE.md](development/TESTING_GUIDE.md)** - Testing requirements (20 min)
+5. **[development/CODE_OF_CONDUCT.md](development/CODE_OF_CONDUCT.md)** - Community standards (5 min)
 
 ## 🎯 **Documentation Quality**
 
@@ -278,7 +314,7 @@ All documentation files include comprehensive cross-references:
 - ✅ **Best practices** - Established patterns and guidelines included
 
 ### **Build System**
-- **[`docs/BUILD_SYSTEM.md`](BUILD_SYSTEM.md)** - Complete build system reference (status, performance, fixes)
+- **[`docs/operational/BUILD_SYSTEM.md`](operational/BUILD_SYSTEM.md)** - Complete build system reference (status, performance, fixes)
 
 ### **Documentation Completeness**
 - ✅ **52+ documentation files** covering all aspects (including root-level guides)

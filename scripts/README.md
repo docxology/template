@@ -114,12 +114,12 @@ Additional stages available in the interactive orchestrator:
 
 | Stage | Script | Purpose |
 |-------|--------|---------|
-| 06 | `06_llm_review.py` | LLM manuscript review (optional) |
-| 07 | LLM Translations | Multi-language abstract translation (optional) |
+| 8 | `06_llm_review.py` | LLM Scientific Review (optional, requires Ollama) |
+| 9 | `06_llm_review.py` | LLM Translations (optional, requires Ollama) |
 
 **Stage Numbering:**
-- `./run_manuscript.sh`: Stages 0-9 (displayed as [1/9] to [9/9] in logs)
-- `run_all.py`: Stages 00-05 (zero-padded Python convention)
+- `./run_manuscript.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
+- `run_all.py`: Stages 00-05 (zero-padded Python convention, 6 core stages)
 
 ## Running Individual Stages
 
@@ -167,8 +167,8 @@ The pipeline automatically generates comprehensive reports in `project/output/re
 - Validates directory structure
 
 ### Stage 01: Run Tests
-- Executes infrastructure tests (`tests/infrastructure/`) with 49%+ coverage threshold
-- Executes project tests (`project/tests/`) with 70%+ coverage threshold
+- Executes infrastructure tests (`tests/infrastructure/`) with 60%+ coverage threshold
+- Executes project tests (`project/tests/`) with 90%+ coverage threshold
 - Supports quiet mode (`--quiet` or `-q`) to suppress individual test names
 - Supports verbose mode (`--verbose` or `-v`) to show all test names
 - Generates structured test reports (JSON, Markdown) to `project/output/reports/`
@@ -201,7 +201,7 @@ The pipeline automatically generates comprehensive reports in `project/output/re
 - Copies all web outputs (HTML)
 - Validates all files copied
 
-### Stage 06: LLM Manuscript Review (Optional)
+### Stage 8: LLM Scientific Review (Optional)
 - Checks Ollama availability
 - Extracts full text from combined PDF
 - Generates four types of reviews with detailed metrics
@@ -283,9 +283,9 @@ Menu Option 8 (--pipeline) → Full Pipeline:
     └─ PASS → STAGE 1
   STAGE 1: Setup Environment
     └─ PASS → STAGE 2
-  STAGE 2: Infrastructure Tests (49%+ coverage)
+  STAGE 2: Infrastructure Tests (60%+ coverage)
     └─ PASS → STAGE 3
-  STAGE 3: Project Tests (70%+ coverage)
+  STAGE 3: Project Tests (90%+ coverage)
     └─ PASS → STAGE 4
   STAGE 4: Project Analysis
     └─ PASS → STAGE 5

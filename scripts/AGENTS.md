@@ -61,8 +61,8 @@ The template provides multiple entry points organized by function:
 
 **Purpose:** Execute project test suite
 
-- Runs `project/tests/` with pytest
-- Verifies test coverage meets threshold (70%+)
+- Runs infrastructure and project tests with pytest
+- Verifies test coverage meets thresholds (60% infrastructure, 90% project)
 - Generates coverage reports
 - Generic orchestrator - does not implement tests
 

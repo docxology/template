@@ -149,12 +149,12 @@ template/                           # Generic Template
 ├── scripts/                        # Entry Points (Generic Orchestrators)
 │   ├── AGENTS.md                   # Entry point documentation
 │   ├── README.md                   # Quick reference
-│   ├── 00_setup_environment.py     # Stage 0: Setup
-│   ├── 01_run_tests.py             # Stage 1: Test
-│   ├── 02_run_analysis.py          # Stage 2: Analysis (discovers project/scripts/)
-│   ├── 03_render_pdf.py            # Stage 3: PDF
-│   ├── 04_validate_output.py       # Stage 4: Validate
-│   ├── 05_copy_outputs.py          # Stage 5: Copy outputs
+│   ├── 00_setup_environment.py     # Stage 1: Setup Environment (Stage 0 is cleanup)
+│   ├── 01_run_tests.py             # Stage 2: Test
+│   ├── 02_run_analysis.py          # Stage 3: Analysis (discovers project/scripts/)
+│   ├── 03_render_pdf.py            # Stage 4: PDF
+│   ├── 04_validate_output.py       # Stage 5: Validate
+│   ├── 05_copy_outputs.py          # Stage 6: Copy outputs
 │   └── run_all.py                  # Master orchestrator
 ├── tests/                          # Infrastructure Tests
 │   ├── AGENTS.md
@@ -541,13 +541,13 @@ The template includes advanced modules for comprehensive scientific package deve
 
 **Usage:**
 ```python
-from integrity import verify_output_integrity, generate_integrity_report
+from infrastructure.validation.integrity import verify_output_integrity, generate_integrity_report
 
 report = verify_output_integrity(output_dir)
 print(generate_integrity_report(report))
 ```
 
-### 📚 **Publishing Tools** (`infrastructure/publishing.py`)
+### 📚 **Publishing Tools** (`infrastructure/publishing/`)
 **Academic publishing workflow assistance**
 
 **Key Features:**
@@ -560,7 +560,7 @@ print(generate_integrity_report(report))
 
 **Usage:**
 ```python
-from publishing import extract_publication_metadata, generate_citation_bibtex
+from infrastructure.publishing import extract_publication_metadata, generate_citation_bibtex
 
 metadata = extract_publication_metadata(markdown_files)
 bibtex = generate_citation_bibtex(metadata)
@@ -720,10 +720,10 @@ python3 -m infrastructure.validation.cli pdf output/pdf/
 
 ### Quick Reference
 
-- **General Troubleshooting**: [`docs/TROUBLESHOOTING_GUIDE.md`](docs/TROUBLESHOOTING_GUIDE.md)
-- **LLM Review Issues**: [`docs/LLM_REVIEW_TROUBLESHOOTING.md`](docs/LLM_REVIEW_TROUBLESHOOTING.md)
-- **Checkpoint/Resume**: [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md)
-- **Performance Issues**: [`docs/PERFORMANCE_OPTIMIZATION.md`](docs/PERFORMANCE_OPTIMIZATION.md)
+- **General Troubleshooting**: [`docs/operational/TROUBLESHOOTING_GUIDE.md`](docs/operational/TROUBLESHOOTING_GUIDE.md)
+- **LLM Review Issues**: [`docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](docs/operational/LLM_REVIEW_TROUBLESHOOTING.md)
+- **Checkpoint/Resume**: [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME.md)
+- **Performance Issues**: [`docs/operational/PERFORMANCE_OPTIMIZATION.md`](docs/operational/PERFORMANCE_OPTIMIZATION.md)
 
 ### Common Issues
 
@@ -876,7 +876,7 @@ Key log files for debugging:
 - **Performance Monitoring**: Automatic bottleneck detection in pipeline summary
 - **Resource Tracking**: Memory and CPU usage reporting (when enabled)
 
-See [`docs/PERFORMANCE_OPTIMIZATION.md`](docs/PERFORMANCE_OPTIMIZATION.md) for comprehensive optimization guide.
+See [`docs/operational/PERFORMANCE_OPTIMIZATION.md`](docs/operational/PERFORMANCE_OPTIMIZATION.md) for comprehensive optimization guide.
 
 ### Checkpoint and Resume
 
@@ -898,15 +898,15 @@ python3 scripts/run_all.py
 - Graceful handling of corrupted checkpoints
 - Preserves pipeline start time and stage durations
 
-See [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md) for complete documentation.
+See [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME.md) for complete documentation.
 
 ## 📚 References
 
 ### Internal Documentation
 - [`README.md`](README.md) - Project overview and quick start
-- [`docs/HOW_TO_USE.md`](docs/HOW_TO_USE.md) - Complete usage guide
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) - System design details
-- [`docs/WORKFLOW.md`](docs/WORKFLOW.md) - Development workflow
+- [`docs/core/HOW_TO_USE.md`](docs/core/HOW_TO_USE.md) - Complete usage guide
+- [`docs/core/ARCHITECTURE.md`](docs/core/ARCHITECTURE.md) - System design details
+- [`docs/core/WORKFLOW.md`](docs/core/WORKFLOW.md) - Development workflow
 
 ### External Resources
 - [Pandoc Manual](https://pandoc.org/MANUAL.html) - Document conversion

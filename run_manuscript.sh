@@ -25,9 +25,43 @@
 
 set -euo pipefail
 
+# ============================================================================
+# Bash Version Check
+# ============================================================================
+
+check_bash_compatibility() {
+    # Check bash version and shell compatibility.
+    # Warns if running under incompatible shell or old bash version.
+    # Note: Script uses bash 3.2+ compatible features (no associative arrays).
+    local shell_name="${BASH_VERSION:-}"
+    local shell_type=""
+    
+    # Detect shell type
+    if [[ -n "${ZSH_VERSION:-}" ]]; then
+        shell_type="zsh"
+        log_warning "Running under zsh. This script is designed for bash."
+        log_info "For best compatibility, run with: bash $0"
+    elif [[ -n "$shell_name" ]]; then
+        shell_type="bash"
+        # Extract major and minor version
+        local major="${BASH_VERSINFO[0]:-0}"
+        local minor="${BASH_VERSINFO[1]:-0}"
+        
+        if [[ $major -lt 3 ]] || [[ ($major -eq 3 && $minor -lt 2) ]]; then
+            log_warning "Bash version $major.$minor detected. Bash 3.2+ recommended."
+        fi
+    else
+        log_warning "Unable to detect shell version. Script may not work correctly."
+        log_info "For best compatibility, run with: bash $0"
+    fi
+}
+
 # Source shared utilities
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/scripts/bash_utils.sh"
+
+# Check bash compatibility (non-fatal warning)
+check_bash_compatibility || true
 
 # Stage tracking for full pipeline
 # Note: Stage 0 (Clean Output Directories) is not in this array as it's a pre-pipeline step.
@@ -1174,8 +1208,65 @@ collect_generated_files() {
     printf '%s\n' "${files[@]}"
 }
 
+# ============================================================================
+# Category Management Helpers (Bash 3.2+ Compatible)
+# ============================================================================
+
+get_category_index() {
+    # Find the index of a category in the category_names array.
+    # Args:
+    #   $1: Category name
+    #   $2: Reference to category_names array (by name)
+    # Returns: Index (0-based) or -1 if not found
+    local category="$1"
+    local array_name="$2"
+    local idx=0
+    
+    # Use indirect reference to access the array
+    eval "local arr_size=\${#${array_name}[@]}"
+    while [[ $idx -lt $arr_size ]]; do
+        eval "local arr_item=\${${array_name}[$idx]}"
+        if [[ "$arr_item" == "$category" ]]; then
+            echo "$idx"
+            return 0
+        fi
+        idx=$((idx + 1))
+    done
+    
+    echo "-1"
+    return 1
+}
+
+get_or_create_category_index() {
+    # Get or create an index for a category.
+    # Args:
+    #   $1: Category name
+    #   $2: Reference to category_names array (by name)
+    #   $3: Reference to category_count variable (by name)
+    # Returns: Index (0-based) of the category
+    local category="$1"
+    local array_name="$2"
+    local count_var="$3"
+    
+    # Try to find existing index
+    local idx=$(get_category_index "$category" "$array_name")
+    
+    if [[ $idx -ge 0 ]]; then
+        echo "$idx"
+        return 0
+    fi
+    
+    # Create new category
+    eval "local current_count=\${${count_var}:-0}"
+    eval "${array_name}[$current_count]=\"$category\""
+    eval "${count_var}=$((current_count + 1))"
+    echo "$current_count"
+    return 0
+}
+
 generate_file_inventory() {
     # Generate comprehensive file inventory for display and logging.
+    # Bash 3.2+ compatible implementation using regular arrays instead of associative arrays.
     # Args:
     #   $1: Base directory to scan (project/output or output)
     #   $2: Log file path (optional)
@@ -1189,24 +1280,55 @@ generate_file_inventory() {
     
     # Collect files
     local file_list
-    file_list=$(collect_generated_files "$base_dir")
+    if ! file_list=$(collect_generated_files "$base_dir" 2>/dev/null); then
+        log_warning "Failed to collect files from $base_dir"
+        return 1
+    fi
     
     if [[ -z "$file_list" ]]; then
         log_warning "No files found in $base_dir"
         return 1
     fi
     
-    # Organize by category
-    declare -A category_files
-    declare -A category_sizes
-    declare -A category_counts
+    # Organize by category using regular arrays (bash 3.2+ compatible)
+    # Use parallel arrays: category_names, category_file_lists, category_sizes, category_counts
+    local category_names=()
+    local category_file_lists=()
+    local category_sizes=()
+    local category_counts=()
+    local category_count=0
     
+    # Process file list and organize by category
     while IFS='|' read -r file_path file_size category; do
-        if [[ -n "$file_path" ]] && [[ -n "$category" ]]; then
-            category_files["$category"]+="$file_path|$file_size"$'\n'
-            category_counts["$category"]=$((${category_counts["$category"]:-0} + 1))
-            category_sizes["$category"]=$((${category_sizes["$category"]:-0} + file_size))
+        if [[ -z "$file_path" ]] || [[ -z "$category" ]]; then
+            continue
         fi
+        
+        # Find or create category index
+        local cat_idx=-1
+        local i=0
+        while [[ $i -lt $category_count ]]; do
+            if [[ "${category_names[$i]}" == "$category" ]]; then
+                cat_idx=$i
+                break
+            fi
+            i=$((i + 1))
+        done
+        
+        # Create new category if not found
+        if [[ $cat_idx -lt 0 ]]; then
+            cat_idx=$category_count
+            category_names[$cat_idx]="$category"
+            category_file_lists[$cat_idx]=""
+            category_sizes[$cat_idx]=0
+            category_counts[$cat_idx]=0
+            category_count=$((category_count + 1))
+        fi
+        
+        # Add file to category
+        category_file_lists[$cat_idx]="${category_file_lists[$cat_idx]}$file_path|$file_size"$'\n'
+        category_counts[$cat_idx]=$((${category_counts[$cat_idx]} + 1))
+        category_sizes[$cat_idx]=$((${category_sizes[$cat_idx]} + file_size))
     done <<< "$file_list"
     
     # Display inventory
@@ -1217,11 +1339,22 @@ generate_file_inventory() {
     local display_order=("pdf" "figures" "data" "reports" "simulations" "llm" "logs" "web" "slides" "tex")
     
     for category in "${display_order[@]}"; do
-        local count="${category_counts["$category"]:-0}"
-        if [[ $count -gt 0 ]]; then
-            local total_size="${category_sizes["$category"]:-0}"
+        # Find category index
+        local cat_idx=-1
+        local i=0
+        while [[ $i -lt $category_count ]]; do
+            if [[ "${category_names[$i]}" == "$category" ]]; then
+                cat_idx=$i
+                break
+            fi
+            i=$((i + 1))
+        done
+        
+        if [[ $cat_idx -ge 0 ]] && [[ ${category_counts[$cat_idx]} -gt 0 ]]; then
+            local count="${category_counts[$cat_idx]}"
+            local total_size="${category_sizes[$cat_idx]}"
             local size_formatted=$(format_file_size "$total_size")
-            local category_name="${category^}"
+            local category_name=$(echo "${category:0:1}" | tr '[:lower:]' '[:upper:]')${category:1}
             
             echo "  $category_name ($count file(s), $size_formatted):"
             
@@ -1238,7 +1371,7 @@ generate_file_inventory() {
                         shown_count=$((shown_count + 1))
                     fi
                 fi
-            done <<< "${category_files["$category"]}"
+            done <<< "${category_file_lists[$cat_idx]}"
             
             if [[ $file_count -gt 10 ]]; then
                 local remaining=$((file_count - 10))
@@ -1253,11 +1386,22 @@ generate_file_inventory() {
             echo ""
             echo "Generated Files Inventory:"
             for category in "${display_order[@]}"; do
-                local count="${category_counts["$category"]:-0}"
-                if [[ $count -gt 0 ]]; then
-                    local total_size="${category_sizes["$category"]:-0}"
+                # Find category index
+                local cat_idx=-1
+                local i=0
+                while [[ $i -lt $category_count ]]; do
+                    if [[ "${category_names[$i]}" == "$category" ]]; then
+                        cat_idx=$i
+                        break
+                    fi
+                    i=$((i + 1))
+                done
+                
+                if [[ $cat_idx -ge 0 ]] && [[ ${category_counts[$cat_idx]} -gt 0 ]]; then
+                    local count="${category_counts[$cat_idx]}"
+                    local total_size="${category_sizes[$cat_idx]}"
                     local size_formatted=$(format_file_size "$total_size")
-                    local category_name="${category^}"
+                    local category_name=$(echo "${category:0:1}" | tr '[:lower:]' '[:upper:]')${category:1}
                     echo "  $category_name ($count file(s), $size_formatted):"
                     
                     while IFS='|' read -r file_path file_size; do
@@ -1265,7 +1409,7 @@ generate_file_inventory() {
                             local file_size_formatted=$(format_file_size "$file_size")
                             echo "    - $file_path ($file_size_formatted)"
                         fi
-                    done <<< "${category_files["$category"]}"
+                    done <<< "${category_file_lists[$cat_idx]}"
                 fi
             done
         } >> "$log_file" 2>/dev/null || true

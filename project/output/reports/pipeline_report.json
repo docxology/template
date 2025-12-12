@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-12T09:44:45.435445",
+  "timestamp": "2025-12-12T10:50:33.566716",
   "total_duration": 0.0,
   "stages": [
     {
@@ -16,8 +16,8 @@
   "validation_results": {
     "markdown_issues": [],
     "quality_metrics": {},
-    "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x10a115a90>",
-    "reproducibility": "<infrastructure.build.reproducibility.ReproducibilityReport object at 0x10a115a90>",
+    "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x1031a4e90>",
+    "reproducibility": "<infrastructure.build.reproducibility.ReproducibilityReport object at 0x1031a4e90>",
     "errors": {
       "total_errors": 0,
       "total_warnings": 1,

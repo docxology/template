@@ -27,26 +27,26 @@ infrastructure/
 │   └── cli.py                  # CLI for documentation tools
 ├── scientific/     # Scientific development
 │   ├── scientific_dev.py    # Scientific utilities & best practices
-│   └── AGENTS.md/README.md  # Documentation
+│   └── AGENTS.md, README.md  # Documentation
 ├── llm/            # LLM integration
 │   ├── core.py              # LLM client
 │   ├── templates.py         # Research prompt templates
-│   └── AGENTS.md/README.md  # Documentation
+│   └── AGENTS.md, README.md  # Documentation
 ├── rendering/      # Multi-format rendering
 │   ├── core.py              # Render manager
 │   ├── latex_utils.py       # LaTeX utilities
 │   ├── cli.py               # CLI for rendering
-│   └── AGENTS.md/README.md  # Documentation
+│   └── AGENTS.md, README.md  # Documentation
 ├── publishing/     # Academic publishing & dissemination
 │   ├── core.py              # Publishing workflows
 │   ├── api.py               # Platform API clients
 │   ├── cli.py               # CLI for publishing
-│   └── AGENTS.md/README.md  # Documentation
+│   └── AGENTS.md, README.md  # Documentation
 └── reporting/      # Pipeline reporting & error aggregation
     ├── pipeline_reporter.py  # Pipeline report generation
     ├── error_aggregator.py   # Error collection & categorization
     ├── html_templates.py     # HTML report templates
-    └── AGENTS.md/README.md   # Documentation
+    └── AGENTS.md, README.md   # Documentation
 ```
 
 ## Key Design Principles
