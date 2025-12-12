@@ -190,7 +190,7 @@ The pipeline automatically captures all terminal output to log files:
 **Usage**:
 ```bash
 # Run pipeline - log file is automatically created
-./run.sh --pipeline
+./run_manuscript.sh --pipeline
 
 # Log file location is displayed in pipeline summary
 # Example: output/logs/pipeline_20251205_074830.log
@@ -312,12 +312,44 @@ def main():
 
 ### Don'ts ❌
 
-- **Don't use print()** - Use logger instead
+- **Don't use print() for status messages** - Use logger instead (see exceptions below)
 - **Don't log sensitive data** - Passwords, tokens, personal information
 - **Don't log in tight loops** - Log at appropriate intervals
 - **Don't mix logging systems** - Use unified logging consistently
 - **Don't ignore log levels** - Respect LOG_LEVEL environment variable
 - **Don't duplicate messages** - Log once at the right level
+
+### When to Use print() vs logger
+
+**Use logger for:**
+- Status messages and progress updates
+- Error messages and warnings
+- Debug information
+- All production code output
+
+**Use print() for (acceptable exceptions):**
+- Interactive CLI prompts (user input requests)
+- CLI command results (user-facing output in CLI tools)
+- Test debugging output (when tests fail)
+- Documentation examples (in docstrings, not executed code)
+
+**Examples:**
+
+```python
+# ✅ GOOD: Use logger for status
+logger.info("Processing started")
+logger.error("Operation failed", exc_info=True)
+
+# ✅ GOOD: Use print() for interactive prompts
+print("Enter your choice [y/N]: ", end="")
+choice = input()
+
+# ✅ GOOD: Use print() for CLI output
+print(f"Result: {result}")  # In CLI tool main()
+
+# ❌ BAD: Don't use print() for status in production code
+print("Processing started")  # Should use logger.info()
+```
 
 ## Common Patterns
 

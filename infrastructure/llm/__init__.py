@@ -3,25 +3,37 @@
 This module provides tools for interacting with Local Large Language Models (Ollama)
 for research assistance tasks.
 
-Features:
-- Multiple response modes: short, long, structured, raw
-- Per-query generation options (temperature, seed, stop sequences)
-- Conversation context management with system prompt injection
-- Research prompt templates
-- Comprehensive output validation
-- Streaming and non-streaming queries
-- Environment variable configuration (OLLAMA_HOST, OLLAMA_MODEL, LLM_*)
-- Command-line interface for interactive queries
+Module Structure:
+- core/ - Core LLM functionality (client, config, context)
+- templates/ - Prompt templates for research tasks
+- validation/ - Output validation and quality checks
+- review/ - Manuscript review generation system
+- utils/ - Utility functions (Ollama management)
+- cli/ - Command-line interface
+- prompts/ - Prompt fragment system
 
 CLI Usage:
-    python3 -m infrastructure.llm.cli query "What is machine learning?"
-    python3 -m infrastructure.llm.cli check
-    python3 -m infrastructure.llm.cli models
+    python3 -m infrastructure.llm.cli.main query "What is machine learning?"
+    python3 -m infrastructure.llm.cli.main check
+    python3 -m infrastructure.llm.cli.main models
+
+Direct imports (recommended):
+    from infrastructure.llm.core.client import LLMClient
+    from infrastructure.llm.core.config import LLMConfig, GenerationOptions
+    from infrastructure.llm.templates import get_template
+    from infrastructure.llm.validation import OutputValidator
 """
 
-from infrastructure.llm.core import LLMClient, ResponseMode
-from infrastructure.llm.config import LLMConfig, GenerationOptions
-from infrastructure.llm.context import ConversationContext, Message
+# Convenience re-exports from submodules (use direct imports for better clarity)
+from infrastructure.llm.core import (
+    LLMClient,
+    ResponseMode,
+    strip_thinking_tags,
+    LLMConfig,
+    GenerationOptions,
+    ConversationContext,
+    Message,
+)
 from infrastructure.llm.templates import (
     ResearchTemplate,
     get_template,
@@ -34,12 +46,11 @@ from infrastructure.llm.templates import (
     REVIEW_MIN_WORDS,
     TRANSLATION_LANGUAGES,
 )
-from infrastructure.llm.validation_repetition import (
+from infrastructure.llm.validation import (
+    OutputValidator,
     calculate_unique_content_ratio,
     detect_repetition,
     deduplicate_sections,
-)
-from infrastructure.llm.validation_format import (
     is_off_topic,
     has_on_topic_signals,
     detect_conversational_phrases,
@@ -48,16 +59,11 @@ from infrastructure.llm.validation_format import (
     OFF_TOPIC_PATTERNS_ANYWHERE,
     CONVERSATIONAL_PATTERNS,
     ON_TOPIC_SIGNALS,
-)
-from infrastructure.llm.validation_structure import (
     validate_section_completeness,
     extract_structured_sections,
     validate_response_structure,
 )
-from infrastructure.llm.validation import (
-    OutputValidator,
-)
-from infrastructure.llm.ollama_utils import (
+from infrastructure.llm.utils import (
     is_ollama_running,
     start_ollama_server,
     get_available_models,
@@ -79,13 +85,12 @@ except ImportError:
     PromptComposer = None  # type: ignore
 
 # Review generation modules
-from infrastructure.llm.review_metrics import (
+from infrastructure.llm.review import (
     ReviewMetrics,
     ManuscriptMetrics,
     SessionMetrics,
+    StreamingMetrics,
     estimate_tokens,
-)
-from infrastructure.llm.review_generator import (
     get_manuscript_review_system_prompt,
     get_max_input_length,
     get_review_timeout,
@@ -101,8 +106,6 @@ from infrastructure.llm.review_generator import (
     generate_methodology_review,
     generate_improvement_suggestions,
     generate_translation,
-)
-from infrastructure.llm.review_io import (
     extract_action_items,
     calculate_format_compliance_summary,
     calculate_quality_summary,
@@ -115,6 +118,7 @@ __all__ = [
     # Core client
     "LLMClient",
     "ResponseMode",
+    "strip_thinking_tags",
     # Configuration
     "LLMConfig",
     "GenerationOptions",
@@ -169,6 +173,7 @@ __all__ = [
     "ReviewMetrics",
     "ManuscriptMetrics",
     "SessionMetrics",
+    "StreamingMetrics",
     "estimate_tokens",
     # Review generation
     "get_manuscript_review_system_prompt",

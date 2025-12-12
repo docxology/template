@@ -106,6 +106,26 @@ llm:
     # then translate it to each configured language. Each translation is saved
     # as a separate file (e.g., translation_zh.md) in output/llm/
 
+# Testing Configuration (optional)
+# Maximum acceptable test failures before halting pipeline
+# Priority: Environment variables > Config file > Default (0)
+# Environment variables (MAX_TEST_FAILURES, MAX_INFRA_TEST_FAILURES, MAX_PROJECT_TEST_FAILURES)
+# take precedence over config file values
+testing:
+  # General maximum acceptable test failures (default: 0 = strict, no failures allowed)
+  max_test_failures: 0
+  
+  # Infrastructure test suite maximum (default: 0)
+  max_infra_test_failures: 0
+  
+  # Project test suite maximum (default: 0)
+  max_project_test_failures: 0
+  
+  # Usage examples:
+  # - Development: Set to 3-5 to allow some failures while working on features
+  # - CI/CD: Set to 0 for strict validation (recommended for production)
+  # - Migration: Set higher during test suite refactoring
+
 # Notes:
 # - Environment variables (AUTHOR_NAME, PROJECT_TITLE, etc.) will override
 #   values in this file if set

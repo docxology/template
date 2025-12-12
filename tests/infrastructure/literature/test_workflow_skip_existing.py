@@ -12,10 +12,10 @@ from unittest.mock import Mock
 
 from infrastructure.literature.sources import SearchResult
 from infrastructure.literature.workflow import LiteratureWorkflow
-from infrastructure.literature.summarizer import SummarizationResult, PaperSummarizer
-from infrastructure.literature.progress import ProgressTracker, SummarizationProgress
+from infrastructure.literature.summarization import SummarizationResult, SummarizationEngine
+from infrastructure.literature.workflow import ProgressTracker, SummarizationProgress
 from infrastructure.literature.core import LiteratureSearch
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.core import LiteratureConfig
 
 
 class TestSkipExistingSummaries:
@@ -45,9 +45,9 @@ class TestSkipExistingSummaries:
         try:
             from infrastructure.llm import LLMClient
             llm_client = LLMClient()
-            summarizer = PaperSummarizer(llm_client=llm_client)
+            summarizer = SummarizationEngine(llm_client=llm_client)
         except Exception:
-            pytest.skip("LLMClient unavailable - cannot create PaperSummarizer")
+            pytest.skip("LLMClient unavailable - cannot create SummarizationEngine")
         
         # Create real progress tracker
         progress_file = tmp_path / "progress.json"

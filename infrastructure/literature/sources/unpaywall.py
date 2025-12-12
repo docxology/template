@@ -15,7 +15,7 @@ from dataclasses import dataclass
 
 from infrastructure.core.exceptions import APIRateLimitError
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.core.config import LiteratureConfig
 
 logger = get_logger(__name__)
 

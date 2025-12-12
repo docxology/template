@@ -4,8 +4,8 @@ import json
 from pathlib import Path
 from datetime import datetime
 
-from infrastructure.literature.library_index import LibraryIndex, LibraryEntry
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.library import LibraryIndex, LibraryEntry
+from infrastructure.literature.core import LiteratureConfig
 
 
 class TestLibraryEntry:
@@ -496,6 +496,14 @@ class TestLibraryIndexIntegration:
         # Verify persistence
         index2 = LibraryIndex(mock_config)
         assert len(index2.list_entries()) == 10
+
+
+
+
+
+
+
+
 
 
 

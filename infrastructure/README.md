@@ -410,7 +410,7 @@ All modules have comprehensive test coverage:
 - llm: 91%+
 - rendering: 91%+
 - publishing: 100%
-- reporting: 0% (new module, tests pending)
+- reporting: 67% (tests added; continue improving pipeline reporting paths)
 
 ## Common Workflows
 

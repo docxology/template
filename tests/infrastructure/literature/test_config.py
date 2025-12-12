@@ -6,7 +6,7 @@ import os
 import pytest
 from pathlib import Path
 
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.core import LiteratureConfig
 
 
 class TestLiteratureConfig:
@@ -327,14 +327,14 @@ class TestBrowserUserAgents:
 
     def test_browser_user_agents_exist(self):
         """Test BROWSER_USER_AGENTS is defined and non-empty."""
-        from infrastructure.literature.config import BROWSER_USER_AGENTS
+        from infrastructure.literature.core import BROWSER_USER_AGENTS
         
         assert BROWSER_USER_AGENTS is not None
         assert len(BROWSER_USER_AGENTS) > 0
 
     def test_browser_user_agents_are_strings(self):
         """Test all browser User-Agents are strings."""
-        from infrastructure.literature.config import BROWSER_USER_AGENTS
+        from infrastructure.literature.core import BROWSER_USER_AGENTS
         
         for ua in BROWSER_USER_AGENTS:
             assert isinstance(ua, str)

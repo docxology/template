@@ -57,10 +57,10 @@ python3 scripts/run_all.py
 
 ```bash
 # Resume from checkpoint
-./run.sh --pipeline --resume
+./run_manuscript.sh --pipeline --resume
 
 # Start fresh
-./run.sh --pipeline
+./run_manuscript.sh --pipeline
 ```
 
 ## Checkpoint Validation

@@ -85,7 +85,7 @@ def _parse_args() -> argparse.Namespace:
 # Additional infrastructure imports (path already set up above)
 from infrastructure.documentation.figure_manager import FigureManager
 
-print("[LAYER-2-SCIENTIFIC] Loading and analyzing data from infrastructure/scientific integration...")
+logger.info("[LAYER-2-SCIENTIFIC] Loading and analyzing data from infrastructure/scientific integration...")
 
 # Import src/ modules
 from data_generator import generate_classification_dataset, generate_synthetic_data
@@ -117,25 +117,25 @@ def load_and_analyze_data() -> None:
     
     # Clean data using scientific layer
     cleaned_data = clean_data(data, remove_nan=True, fill_method="mean")
-    print(f"  [LAYER-2] Data shape after cleaning: {cleaned_data.shape}")
+    logger.info(f"  [LAYER-2] Data shape after cleaning: {cleaned_data.shape}")
     
     # Calculate descriptive statistics
     stats = calculate_descriptive_stats(cleaned_data)
-    print(f"  Mean: {stats.mean:.4f}")
-    print(f"  Std: {stats.std:.4f}")
-    print(f"  Median: {stats.median:.4f}")
+    logger.info(f"  Mean: {stats.mean:.4f}")
+    logger.info(f"  Std: {stats.std:.4f}")
+    logger.info(f"  Median: {stats.median:.4f}")
     
     # Detect outliers
     outlier_mask, outlier_info = detect_outliers(cleaned_data, method="iqr")
     n_outliers = np.sum(outlier_mask)
-    print(f"  Outliers detected: {n_outliers} ({100*n_outliers/outlier_mask.size:.2f}%)")
+    logger.info(f"  Outliers detected: {n_outliers} ({100*n_outliers/outlier_mask.size:.2f}%)")
     
-    print("✅ Data analysis complete")
+    logger.info("✅ Data analysis complete")
 
 
 def perform_statistical_tests() -> None:
     """Perform statistical hypothesis tests."""
-    print("\nPerforming statistical tests...")
+    logger.info("\nPerforming statistical tests...")
 
     # Generate two groups for comparison
     group1 = generate_synthetic_data(50, distribution="normal", mean=0.0, std=1.0, seed=42)
@@ -144,24 +144,24 @@ def perform_statistical_tests() -> None:
     # Calculate correlation
     if len(group1) == len(group2):
         correlation = calculate_correlation(group1.flatten(), group2.flatten())
-        print(f"  Correlation: {correlation['correlation']:.4f}")
+        logger.info(f"  Correlation: {correlation['correlation']:.4f}")
     
     # Calculate confidence intervals
     ci1 = calculate_confidence_interval(group1.flatten())
     ci2 = calculate_confidence_interval(group2.flatten())
-    print(f"  Group 1 CI: [{ci1[0]:.4f}, {ci1[1]:.4f}]")
-    print(f"  Group 2 CI: [{ci2[0]:.4f}, {ci2[1]:.4f}]")
+    logger.info(f"  Group 1 CI: [{ci1[0]:.4f}, {ci1[1]:.4f}]")
+    logger.info(f"  Group 2 CI: [{ci2[0]:.4f}, {ci2[1]:.4f}]")
     
     # ANOVA test
     anova_result = anova_test([group1.flatten(), group2.flatten()])
-    print(f"  ANOVA F-statistic: {anova_result['f_statistic']:.4f}")
+    logger.info(f"  ANOVA F-statistic: {anova_result['f_statistic']:.4f}")
     
-    print("✅ Statistical tests complete")
+    logger.info("✅ Statistical tests complete")
 
 
 def analyze_classification_performance() -> None:
     """Analyze classification performance."""
-    print("\nAnalyzing classification performance...")
+    logger.info("\nAnalyzing classification performance...")
 
     # Generate classification dataset
     X, y_true = generate_classification_dataset(
@@ -178,21 +178,21 @@ def analyze_classification_performance() -> None:
     accuracy = calculate_accuracy(y_pred, y_true)
     prf = calculate_precision_recall_f1(y_pred, y_true)
     
-    print(f"  Accuracy: {accuracy:.4f}")
-    print(f"  Precision: {prf['precision']:.4f}")
-    print(f"  Recall: {prf['recall']:.4f}")
-    print(f"  F1: {prf['f1']:.4f}")
+    logger.info(f"  Accuracy: {accuracy:.4f}")
+    logger.info(f"  Precision: {prf['precision']:.4f}")
+    logger.info(f"  Recall: {prf['recall']:.4f}")
+    logger.info(f"  F1: {prf['f1']:.4f}")
     
     # Calculate all metrics
     all_metrics = calculate_all_metrics(predictions=y_pred, targets=y_true)
-    print(f"  All metrics calculated: {len(all_metrics)} metrics")
+    logger.info(f"  All metrics calculated: {len(all_metrics)} metrics")
     
-    print("✅ Classification analysis complete")
+    logger.info("✅ Classification analysis complete")
 
 
 def generate_comparison_plots() -> None:
     """Generate comparison plots."""
-    print("\nGenerating comparison plots...")
+    logger.info("\nGenerating comparison plots...")
 
     # Setup visualization
     engine = VisualizationEngine(output_dir="output/figures")
@@ -213,7 +213,7 @@ def generate_comparison_plots() -> None:
     
     # Save figure
     saved = engine.save_figure(fig, "analysis_comparison")
-    print(f"  Saved figure: {saved['png']}")
+    logger.info(f"  Saved figure: {saved['png']}")
     
     # Register figure
     fig_meta = figure_manager.register_figure(
@@ -222,16 +222,16 @@ def generate_comparison_plots() -> None:
         section="experimental_results",
         generated_by="analysis_pipeline.py"
     )
-    print(f"  Registered figure: {fig_meta.label}")
+    logger.info(f"  Registered figure: {fig_meta.label}")
     
     plt.close(fig)
     
-    print("✅ Comparison plots generated")
+    logger.info("✅ Comparison plots generated")
 
 
 def run_scalability_analysis() -> None:
     """Analyze algorithm scalability."""
-    print("\nAnalyzing scalability...")
+    logger.info("\nAnalyzing scalability...")
 
     # Simulate scalability data
     problem_sizes = [10, 50, 100, 500, 1000]
@@ -239,8 +239,8 @@ def run_scalability_analysis() -> None:
     
     # Analyze scalability
     scalability = analyze_scalability(problem_sizes, execution_times)
-    print(f"  Estimated complexity: {scalability.time_complexity}")
-    print(f"  Speedup: {scalability.speedup}")
+    logger.info(f"  Estimated complexity: {scalability.time_complexity}")
+    logger.info(f"  Speedup: {scalability.speedup}")
     
     # Benchmark comparison
     comparison = benchmark_comparison(
@@ -248,15 +248,15 @@ def run_scalability_analysis() -> None:
         metrics={"execution_time": [15.0, 8.5]},
         metric_name="execution_time"
     )
-    print(f"  Best method: {comparison['best_method']}")
-    print(f"  Best value: {comparison['best_value']:.2f}")
+    logger.info(f"  Best method: {comparison['best_method']}")
+    logger.info(f"  Best value: {comparison['best_value']:.2f}")
     
-    print("✅ Scalability analysis complete")
+    logger.info("✅ Scalability analysis complete")
 
 
 def generate_analysis_report() -> None:
     """Generate comprehensive analysis report."""
-    print("\nGenerating analysis report...")
+    logger.info("\nGenerating analysis report...")
 
     # Generate analysis results
     data = generate_synthetic_data(100, distribution="normal", seed=42)
@@ -300,14 +300,14 @@ def generate_analysis_report() -> None:
         results,
         "analysis_report"
     )
-    print(f"  Generated report: {report_path}")
+    logger.info(f"  Generated report: {report_path}")
     
-    print("✅ Analysis report generated")
+    logger.info("✅ Analysis report generated")
 
 
 def validate_analysis_results() -> None:
     """Validate analysis results."""
-    print("\nValidating analysis results...")
+    logger.info("\nValidating analysis results...")
 
     validator = ValidationFramework()
     
@@ -326,10 +326,10 @@ def validate_analysis_results() -> None:
     
     # Generate validation report
     report = validator.generate_validation_report()
-    print(f"  Validation checks: {report['summary']['total_checks']}")
-    print(f"  All passed: {report['all_passed']}")
+    logger.info(f"  Validation checks: {report['summary']['total_checks']}")
+    logger.info(f"  All passed: {report['all_passed']}")
     
-    print("✅ Validation complete")
+    logger.info("✅ Validation complete")
 
 
 def main() -> None:
@@ -348,9 +348,9 @@ def main() -> None:
     ]
 
     if args.list_stages:
-        print("Available stages (in order):")
+        logger.info("Available stages (in order):")
         for name, _ in staged_functions:
-            print(f"- {name}")
+            logger.info(f"- {name}")
         return
 
     # Filter stages based on --only while preserving order
@@ -371,7 +371,7 @@ def main() -> None:
         selected = filtered
 
     if not selected:
-        print("No stages selected; nothing to do.")
+        logger.info("No stages selected; nothing to do.")
         return
 
     # Ensure output directories exist
@@ -431,10 +431,10 @@ def main() -> None:
         saved = save_pipeline_report(pipeline_report, Path("output/reports"))
         log_substep(f"Saved pipeline report: {saved}", logger)
 
-        print("\n✅ All analysis pipeline tasks completed successfully!")
-        print("\nGenerated outputs:")
-        print("  - Figures: output/figures/")
-        print("  - Reports: output/reports/")
+        logger.info("\n✅ All analysis pipeline tasks completed successfully!")
+        logger.info("\nGenerated outputs:")
+        logger.info("  - Figures: output/figures/")
+        logger.info("  - Reports: output/reports/")
 
     except ImportError as e:
         error_agg.add_error(
@@ -447,7 +447,7 @@ def main() -> None:
                 "Verify PYTHONPATH includes project/src",
             ],
         )
-        print(f"❌ Failed to import from src/ modules: {e}")
+        logger.error(f"❌ Failed to import from src/ modules: {e}", exc_info=True)
         sys.exit(1)
     except Exception as e:
         error_agg.add_error(
@@ -456,9 +456,7 @@ def main() -> None:
             stage="analysis",
             severity="error",
         )
-        print(f"❌ Error during analysis: {e}")
-        import traceback
-        traceback.print_exc()
+        logger.error(f"❌ Error during analysis: {e}", exc_info=True)
         sys.exit(1)
 
 

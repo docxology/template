@@ -9,9 +9,9 @@ import argparse
 import sys
 import pytest
 
-from infrastructure.llm.cli import main, query_command, check_command, models_command, template_command
-from infrastructure.llm.config import LLMConfig
-from infrastructure.llm.core import LLMClient
+from infrastructure.llm.cli.main import main, query_command, check_command, models_command, template_command
+from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.client import LLMClient
 
 
 class TestCLIArgumentParsing:

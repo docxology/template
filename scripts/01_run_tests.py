@@ -26,6 +26,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from infrastructure.core.logging_utils import (
     get_logger, log_success, log_header, log_substep
 )
+from infrastructure.core.config_loader import get_testing_config
 from infrastructure.reporting.test_reporter import (
     parse_pytest_output,
     generate_test_report,
@@ -64,30 +65,60 @@ def _run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) 
     return process.returncode, "".join(stdout_buf), ""
 
 
-def check_test_failures(failed_count: int, test_suite: str, env_var: str = "MAX_TEST_FAILURES") -> tuple[bool, str]:
+def check_test_failures(
+    failed_count: int,
+    test_suite: str,
+    repo_root: Path,
+    env_var: str = "MAX_TEST_FAILURES",
+    config_key: str = "max_test_failures"
+) -> tuple[bool, str]:
     """Check if test failures are within tolerance.
+    
+    Priority order:
+    1. Environment variables (highest priority)
+    2. Config file (project/manuscript/config.yaml)
+    3. Default value (0 - strict by default)
     
     Args:
         failed_count: Number of failed tests
         test_suite: Name of test suite (for logging)
+        repo_root: Repository root path (for loading config file)
         env_var: Environment variable name for threshold (e.g., MAX_INFRA_TEST_FAILURES)
+        config_key: Config file key name (e.g., "max_infra_test_failures")
         
     Returns:
         Tuple of (should_halt, message)
         
     Examples:
-        >>> check_test_failures(0, "Infrastructure", "MAX_INFRA_TEST_FAILURES")
+        >>> check_test_failures(0, "Infrastructure", Path("."), "MAX_INFRA_TEST_FAILURES")
         (False, "Infrastructure: All tests passed")
         
         >>> os.environ["MAX_TEST_FAILURES"] = "5"
-        >>> check_test_failures(3, "Project", "MAX_TEST_FAILURES")
+        >>> check_test_failures(3, "Project", Path("."), "MAX_TEST_FAILURES")
         (False, "Project: 3 failure(s) within tolerance (max: 5)")
         
-        >>> check_test_failures(10, "Project", "MAX_TEST_FAILURES")
+        >>> check_test_failures(10, "Project", Path("."), "MAX_TEST_FAILURES")
         (True, "Project: 10 failure(s) exceeds tolerance (max: 5)")
     """
+    # Priority 1: Check environment variables (highest priority)
     # Try specific env var first (e.g., MAX_INFRA_TEST_FAILURES), then fall back to MAX_TEST_FAILURES
-    max_failures = int(os.environ.get(env_var, os.environ.get("MAX_TEST_FAILURES", "0")))
+    env_value = os.environ.get(env_var) or os.environ.get("MAX_TEST_FAILURES")
+    
+    if env_value is not None:
+        try:
+            max_failures = int(env_value)
+        except (ValueError, TypeError):
+            max_failures = 0  # Invalid env var, use default
+    else:
+        # Priority 2: Check config file
+        testing_config = get_testing_config(repo_root)
+        config_value = testing_config.get(config_key) or testing_config.get("max_test_failures")
+        
+        if config_value is not None:
+            max_failures = int(config_value)
+        else:
+            # Priority 3: Default value (strict - no failures allowed)
+            max_failures = 0
     
     if failed_count == 0:
         return False, f"{test_suite}: All tests passed"
@@ -157,7 +188,9 @@ def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, 
         
         # Check if failures are within tolerance
         failed_count = test_results.get('failed', 0)
-        should_halt, message = check_test_failures(failed_count, "Infrastructure", "MAX_INFRA_TEST_FAILURES")
+        should_halt, message = check_test_failures(
+            failed_count, "Infrastructure", repo_root, "MAX_INFRA_TEST_FAILURES", "max_infra_test_failures"
+        )
         
         if exit_code == 0:
             log_success("Infrastructure tests passed", logger)
@@ -230,7 +263,9 @@ def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
         
         # Check if failures are within tolerance
         failed_count = test_results.get('failed', 0)
-        should_halt, message = check_test_failures(failed_count, "Project", "MAX_PROJECT_TEST_FAILURES")
+        should_halt, message = check_test_failures(
+            failed_count, "Project", repo_root, "MAX_PROJECT_TEST_FAILURES", "max_project_test_failures"
+        )
         
         if exit_code == 0:
             log_success("Project tests passed", logger)

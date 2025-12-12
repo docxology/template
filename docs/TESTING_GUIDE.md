@@ -4,6 +4,11 @@
 
 **Quick Reference:** [Logging Guide](LOGGING_GUIDE.md) | [Error Handling Guide](ERROR_HANDLING_GUIDE.md)
 
+**For detailed testing standards and patterns, see:**
+- **[Testing Standards](../.cursorrules/testing_standards.md)** - Complete testing patterns, coverage requirements, and best practices
+- **[Test Improvements Summary](TEST_IMPROVEMENTS_SUMMARY.md)** - Recent test suite enhancements and coverage improvements
+- **[Advanced Usage](ADVANCED_USAGE.md)** - Test-driven development (TDD) workflow guide
+
 ## Quick Start
 
 ```bash

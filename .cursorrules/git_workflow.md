@@ -163,7 +163,7 @@ Brief description of changes and why they're needed.
 ### Test Coverage
 - [ ] Unit tests pass
 - [ ] Integration tests pass
-- [ ] Coverage meets requirements (70% project, 49% infra)
+- [ ] Coverage meets requirements (90% project, 60% infra)
 
 ### Manual Testing
 - [ ] Tested locally

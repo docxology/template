@@ -6,9 +6,9 @@ These test real data transformations, formatting, and validation.
 import pytest
 from pathlib import Path
 
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.core import LiteratureConfig
 from infrastructure.literature.sources import SearchResult
-from infrastructure.literature.reference_manager import ReferenceManager
+from infrastructure.literature.library import ReferenceManager
 from infrastructure.literature.core import LiteratureSearch
 
 
@@ -531,14 +531,14 @@ class TestCliIntegration:
 
     def test_search_command_imports(self):
         """Test CLI module imports work correctly."""
-        from infrastructure.literature.cli import search_command, main
+        from infrastructure.literature.core.cli import search_command, main
         
         assert callable(search_command)
         assert callable(main)
 
     def test_cli_uses_correct_method(self):
         """Verify CLI calls search() not search_papers()."""
-        from infrastructure.literature import cli
+        from infrastructure.literature.core import cli
         import inspect
         
         # Read the source code of search_command

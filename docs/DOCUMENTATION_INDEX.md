@@ -2,6 +2,45 @@
 
 This index provides a comprehensive overview of all documentation files in the Research Project Template, organized by category and purpose.
 
+## 🎯 **Quick Start by Persona**
+
+### 👤 **New User / Content Creator**
+**Goal:** Write documents and generate PDFs without programming
+
+1. **[README.md](../README.md)** - Project overview
+2. **[GETTING_STARTED.md](GETTING_STARTED.md)** - Write your first document (Levels 1-3)
+3. **[QUICK_START_CHEATSHEET.md](QUICK_START_CHEATSHEET.md)** - Essential commands
+4. **[COMMON_WORKFLOWS.md](COMMON_WORKFLOWS.md)** - Step-by-step recipes
+5. **[FAQ.md](FAQ.md)** - Common questions
+
+### 👨‍💻 **Developer / Researcher**
+**Goal:** Add figures, data analysis, and automation
+
+1. **[HOW_TO_USE.md](HOW_TO_USE.md)** - Complete usage guide (all 12 levels)
+2. **[INTERMEDIATE_USAGE.md](INTERMEDIATE_USAGE.md)** - Add figures and automation (Levels 4-6)
+3. **[ARCHITECTURE.md](ARCHITECTURE.md)** - Understand system design
+4. **[THIN_ORCHESTRATOR_SUMMARY.md](THIN_ORCHESTRATOR_SUMMARY.md)** - Learn the pattern
+5. **[WORKFLOW.md](WORKFLOW.md)** - Development process
+
+### 🏗️ **Contributor / Maintainer**
+**Goal:** Contribute code and understand standards
+
+1. **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines
+2. **[.cursorrules/AGENTS.md](../.cursorrules/AGENTS.md)** - Development standards
+3. **[ADVANCED_USAGE.md](ADVANCED_USAGE.md)** - TDD workflow (Levels 7-9)
+4. **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing requirements
+5. **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - Community standards
+
+### 🔍 **Troubleshooter**
+**Goal:** Fix issues and understand problems
+
+1. **[TROUBLESHOOTING_GUIDE.md](TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting
+2. **[FAQ.md](FAQ.md)** - Common questions and solutions
+3. **[BUILD_SYSTEM.md](BUILD_SYSTEM.md)** - Build system details
+4. **[PERFORMANCE_OPTIMIZATION.md](PERFORMANCE_OPTIMIZATION.md)** - Performance issues
+
+---
+
 ## 🏗️ **Development Rules**
 
 Development standards are documented in the `.cursorrules/` directory:
@@ -20,6 +59,8 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`.cursorrules/git_workflow.md`](../.cursorrules/git_workflow.md)** - Git workflow and commit standards
 - **[`.cursorrules/api_design.md`](../.cursorrules/api_design.md)** - API design and interface standards
 - **[`.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md)** - Manuscript formatting and style standards
+- **[`.cursorrules/reporting.md`](../.cursorrules/reporting.md)** - Reporting module standards and outputs
+- **[`.cursorrules/refactoring.md`](../.cursorrules/refactoring.md)** - Refactoring and modularization standards
 
 **Note**: Use `.cursorrules/` files as quick reference during development. Corresponding `docs/` files provide comprehensive guides.
 
@@ -68,6 +109,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/MARKDOWN_TEMPLATE_GUIDE.md`](MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown and cross-referencing guide
 - **[`docs/MANUSCRIPT_NUMBERING_SYSTEM.md`](MANUSCRIPT_NUMBERING_SYSTEM.md)** - Manuscript section numbering system
 - **[`docs/TEST_IMPROVEMENTS_SUMMARY.md`](TEST_IMPROVEMENTS_SUMMARY.md)** - Test suite enhancements
+- **[`docs/COVERAGE_GAPS.md`](COVERAGE_GAPS.md)** - Test coverage gap analysis and improvement plans
 - **[`scripts/README.md`](../scripts/README.md)** - Thin orchestrator pattern guide
 
 ### **Scientific Computing Guides**
@@ -101,6 +143,9 @@ Development standards are documented in the `.cursorrules/` directory:
 ### **CI/CD & Automation**
 - **[`docs/CI_CD_INTEGRATION.md`](CI_CD_INTEGRATION.md)** - GitHub Actions and CI/CD integration guide
 
+### **Pipeline Orchestration**
+- **[`../RUN_GUIDE.md`](../RUN_GUIDE.md)** - Complete pipeline orchestration guide (run.sh, run_manuscript.sh, run_literature.sh)
+
 ### **Troubleshooting & Support**
 - **[`docs/TROUBLESHOOTING_GUIDE.md`](TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting guide
 - **[`docs/FAQ.md`](FAQ.md)** - Frequently asked questions and common issues
@@ -109,6 +154,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/ERROR_HANDLING_GUIDE.md`](ERROR_HANDLING_GUIDE.md)** - Error handling patterns
 - **[`docs/LOGGING_GUIDE.md`](LOGGING_GUIDE.md)** - Logging system guide
 - **[`docs/TESTING_GUIDE.md`](TESTING_GUIDE.md)** - Testing framework guide
+- **[`docs/TESTING_WITH_CREDENTIALS.md`](TESTING_WITH_CREDENTIALS.md)** - Testing with external service credentials
 - **[`docs/CONFIGURATION.md`](CONFIGURATION.md)** - Configuration system guide
 
 ## 📚 **Reference Materials**
@@ -185,9 +231,9 @@ docs/
 | **Development** | CONTRIBUTING.md, CODE_OF_CONDUCT.md, ROADMAP.md | Contributing and future development |
 | **Reference** | FAQ.md, COPYPASTA.md, DOCUMENTATION_INDEX.md, QUICK_START_CHEATSHEET.md, COMMON_WORKFLOWS.md, GLOSSARY.md | Quick reference and sharing content |
 | **Advanced Modules** | ADVANCED_MODULES_GUIDE.md, API_REFERENCE.md | Advanced module documentation |
-| **Operational** | DEPENDENCY_MANAGEMENT.md, BUILD_SYSTEM.md, PERFORMANCE_OPTIMIZATION.md, CI_CD_INTEGRATION.md, TROUBLESHOOTING_GUIDE.md | Operational workflows and guides |
+| **Operational** | DEPENDENCY_MANAGEMENT.md, BUILD_SYSTEM.md, PERFORMANCE_OPTIMIZATION.md, CI_CD_INTEGRATION.md, ../RUN_GUIDE.md, TROUBLESHOOTING_GUIDE.md | Operational workflows and guides |
 | **Best Practices** | BEST_PRACTICES.md, VERSION_CONTROL.md, MULTI_PROJECT_MANAGEMENT.md, MIGRATION_GUIDE.md, BACKUP_RECOVERY.md | Best practices and project management |
-| **Technical** | PDF_VALIDATION.md, TEMPLATE_DESCRIPTION.md | Technical implementation details |
+| **Technical** | PDF_VALIDATION.md, TEMPLATE_DESCRIPTION.md, COVERAGE_GAPS.md, TESTING_WITH_CREDENTIALS.md | Technical implementation details |
 
 ## 🔗 **Cross-Referencing System**
 
@@ -198,23 +244,28 @@ All documentation files include comprehensive cross-references:
 - **ARCHITECTURE.md** → System design with related documentation links
 - **All files** → Include context about related information
 
-## 📖 **Reading Guide**
+## 📖 **Detailed Reading Paths**
 
-### **For New Users**
-1. **Start here**: [`README.md`](../README.md) - Project overview and quick start
-2. **Learn usage**: [`docs/HOW_TO_USE.md`](HOW_TO_USE.md) - Complete usage guide
-3. **Explore examples**: [`docs/EXAMPLES_SHOWCASE.md`](EXAMPLES_SHOWCASE.md) - Real-world usage
+### **New Users - Complete Learning Path**
+1. **[README.md](../README.md)** - Project overview (5 min)
+2. **[GETTING_STARTED.md](GETTING_STARTED.md)** - Write first document (30 min)
+3. **[QUICK_START_CHEATSHEET.md](QUICK_START_CHEATSHEET.md)** - Essential commands reference
+4. **[COMMON_WORKFLOWS.md](COMMON_WORKFLOWS.md)** - Common tasks step-by-step
+5. **[EXAMPLES_SHOWCASE.md](EXAMPLES_SHOWCASE.md)** - See real-world usage
 
-### **For Developers**
-1. **Understand architecture**: [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) - System design
-2. **Learn two-layer structure**: [`docs/TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md) - Complete architecture guide
-3. **Learn the pattern**: [`docs/THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md) - Implementation
-4. **Follow workflow**: [`docs/WORKFLOW.md`](WORKFLOW.md) - Development process
+### **Developers - Architecture & Patterns**
+1. **[ARCHITECTURE.md](ARCHITECTURE.md)** - System design overview (15 min)
+2. **[TWO_LAYER_ARCHITECTURE.md](TWO_LAYER_ARCHITECTURE.md)** - Complete architecture guide (30 min)
+3. **[THIN_ORCHESTRATOR_SUMMARY.md](THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation (20 min)
+4. **[WORKFLOW.md](WORKFLOW.md)** - Development process (20 min)
+5. **[INTERMEDIATE_USAGE.md](INTERMEDIATE_USAGE.md)** - Add figures and automation
 
-### **For Contributors**
-1. **Read guidelines**: [`docs/CONTRIBUTING.md`](CONTRIBUTING.md) - How to contribute
-2. **Understand standards**: [`docs/CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) - Community standards
-3. **Plan future work**: [`docs/ROADMAP.md`](ROADMAP.md) - Development roadmap
+### **Contributors - Standards & Process**
+1. **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines (10 min)
+2. **[.cursorrules/AGENTS.md](../.cursorrules/AGENTS.md)** - Development standards (30 min)
+3. **[ADVANCED_USAGE.md](ADVANCED_USAGE.md)** - TDD workflow (45 min)
+4. **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Testing requirements (20 min)
+5. **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - Community standards (5 min)
 
 ## 🎯 **Documentation Quality**
 
@@ -230,7 +281,7 @@ All documentation files include comprehensive cross-references:
 - **[`docs/BUILD_SYSTEM.md`](BUILD_SYSTEM.md)** - Complete build system reference (status, performance, fixes)
 
 ### **Documentation Completeness**
-- ✅ **51 documentation files** covering all aspects
+- ✅ **52+ documentation files** covering all aspects (including root-level guides)
 - ✅ **Complete cross-referencing** system
 - ✅ **Real-world examples** and showcase projects
 - ✅ **Technical implementation** details

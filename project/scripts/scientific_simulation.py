@@ -21,7 +21,12 @@ project_root = Path(__file__).parent.parent
 repo_root = project_root.parent
 sys.path.insert(0, str(project_root / "src"))
 sys.path.insert(0, str(repo_root))  # Add repo root so we can import infrastructure.*
+from infrastructure.core.logging_utils import get_logger
 from infrastructure.documentation.figure_manager import FigureManager
+
+# Set up logger
+logger = get_logger(__name__)
+
 # Import src/ modules
 from data_generator import generate_time_series, generate_synthetic_data
 from parameters import ParameterSet, ParameterSweep
@@ -34,7 +39,7 @@ from validation import ValidationFramework
 
 def run_simulation_example() -> None:
     """Run a simple simulation example."""
-    print("Running scientific simulation example...")
+    logger.info("Running scientific simulation example...")
     
     # Set up parameters
     params = ParameterSet()
@@ -49,21 +54,21 @@ def run_simulation_example() -> None:
     )
     
     # Run simulation
-    print("Running simulation...")
+    logger.info("Running simulation...")
     state = sim.run(max_iterations=100, verbose=True)
     
     # Save results
-    print("Saving results...")
+    logger.info("Saving results...")
     saved_files = sim.save_results("simulation_example")
     for fmt, path in saved_files.items():
-        print(f"  Saved {fmt}: {path}")
+        logger.info(f"  Saved {fmt}: {path}")
     
-    print("✅ Simulation complete")
+    logger.info("✅ Simulation complete")
 
 
 def run_parameter_sweep_example() -> None:
     """Run parameter sweep example."""
-    print("\nRunning parameter sweep example...")
+    logger.info("\nRunning parameter sweep example...")
     
     # Base parameters
     base_params = ParameterSet()
@@ -74,12 +79,12 @@ def run_parameter_sweep_example() -> None:
     sweep = ParameterSweep(base_params)
     sweep.add_sweep("target_value", [3.0, 5.0, 7.0])
     
-    print(f"Total combinations: {sweep.get_sweep_size()}")
+    logger.info(f"Total combinations: {sweep.get_sweep_size()}")
     
     # Run all combinations
     results = []
     for i, params in enumerate(sweep.generate_combinations()):
-        print(f"  Running combination {i+1}/{sweep.get_sweep_size()}...")
+        logger.info(f"  Running combination {i+1}/{sweep.get_sweep_size()}...")
         sim = SimpleSimulation(parameters=params, seed=42+i)
         state = sim.run(max_iterations=50, verbose=False)
         results.append({
@@ -87,12 +92,12 @@ def run_parameter_sweep_example() -> None:
             "final_value": state.results.get(f"iteration_{state.iteration-1}", {}).get("value", 0)
         })
     
-    print(f"✅ Parameter sweep complete: {len(results)} runs")
+    logger.info(f"✅ Parameter sweep complete: {len(results)} runs")
 
 
 def generate_analysis_figures() -> None:
     """Generate analysis figures using src/ modules."""
-    print("\nGenerating analysis figures...")
+    logger.info("\nGenerating analysis figures...")
     
     # Generate data
     time, values = generate_time_series(
@@ -105,11 +110,11 @@ def generate_analysis_figures() -> None:
     # Analyze convergence
     convergence = analyze_convergence(values, target=None)
     convergence_status = "reached" if convergence.is_converged else "not yet reached (expected for demo sinusoidal data)"
-    print(f"  Convergence: {convergence_status}")
+    logger.info(f"  Convergence: {convergence_status}")
     
     # Calculate statistics
     stats = calculate_descriptive_stats(values)
-    print(f"  Mean: {stats.mean:.4f}, Std: {stats.std:.4f}")
+    logger.info(f"  Mean: {stats.mean:.4f}, Std: {stats.std:.4f}")
     
     # Create figure using src/ visualization
     from visualization import VisualizationEngine
@@ -125,7 +130,7 @@ def generate_analysis_figures() -> None:
     # Save figure
     figure_manager = FigureManager()
     saved = engine.save_figure(fig, "scientific_simulation_timeseries")
-    print(f"  Saved figure: {saved['png']}")
+    logger.info(f"  Saved figure: {saved['png']}")
     
     # Register figure
     fig_meta = figure_manager.register_figure(
@@ -134,14 +139,14 @@ def generate_analysis_figures() -> None:
         section="experimental_results",
         generated_by="scientific_simulation.py"
     )
-    print(f"  Registered figure: {fig_meta.label}")
+    logger.info(f"  Registered figure: {fig_meta.label}")
     
     plt.close(fig)
 
 
 def generate_report() -> None:
     """Generate analysis report."""
-    print("\nGenerating analysis report...")
+    logger.info("\nGenerating analysis report...")
     
     # Generate some results
     data = generate_synthetic_data(100, n_features=1, distribution="normal", seed=42)
@@ -181,14 +186,14 @@ def generate_report() -> None:
         results,
         "simulation_report"
     )
-    print(f"  Generated report: {report_path}")
+    logger.info(f"  Generated report: {report_path}")
     
-    print("✅ Report generation complete")
+    logger.info("✅ Report generation complete")
 
 
 def validate_results() -> None:
     """Validate simulation results."""
-    print("\nValidating results...")
+    logger.info("\nValidating results...")
     
     validator = ValidationFramework()
     
@@ -210,11 +215,11 @@ def validate_results() -> None:
     
     # Generate validation report
     report = validator.generate_validation_report()
-    print(f"  Validation checks: {report['summary']['total_checks']}")
-    print(f"  Passed: {report['summary']['passed']}")
-    print(f"  Failed: {report['summary']['failed']}")
+    logger.info(f"  Validation checks: {report['summary']['total_checks']}")
+    logger.info(f"  Passed: {report['summary']['passed']}")
+    logger.info(f"  Failed: {report['summary']['failed']}")
     
-    print("✅ Validation complete")
+    logger.info("✅ Validation complete")
 
 
 def main() -> None:
@@ -241,20 +246,18 @@ def main() -> None:
         # Validate results
         validate_results()
         
-        print("\n✅ All scientific simulation tasks completed successfully!")
-        print("\nGenerated outputs:")
-        print("  - Simulations: output/simulations/")
-        print("  - Figures: output/figures/")
-        print("  - Reports: output/reports/")
+        logger.info("\n✅ All scientific simulation tasks completed successfully!")
+        logger.info("\nGenerated outputs:")
+        logger.info("  - Simulations: output/simulations/")
+        logger.info("  - Figures: output/figures/")
+        logger.info("  - Reports: output/reports/")
         
     except ImportError as e:
-        print(f"❌ Failed to import from src/ modules: {e}")
-        print("Make sure all src/ modules are available")
+        logger.error(f"❌ Failed to import from src/ modules: {e}", exc_info=True)
+        logger.error("Make sure all src/ modules are available")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Error during simulation: {e}")
-        import traceback
-        traceback.print_exc()
+        logger.error(f"❌ Error during simulation: {e}", exc_info=True)
         sys.exit(1)
 
 

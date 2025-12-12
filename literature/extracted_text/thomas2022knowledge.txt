@@ -1,0 +1,1064 @@
+arXiv:2206.05684v1  [cs.AI]  12 Jun 2022
+Knowledge as Fruits of Ignorance :
+A kind of global free energy principle of our way of thinking
+Thomas Cailleteau
+Sant Job Skolaj-Lise, 42 Kerguestenen Straed, 56100 BroAnOriant, Breizh∗
+(Dated: 6 Juin 2022)
+In this second article, we show a simple use of the Ignorance a s deﬁned in a previous article
+Jaynes & Shannon’s Constrained Ignorance and Surprise. By giving an example about the journey
+of a person, we believe to show some simple, obvious but mathe matically encoded philosophical
+implications about how we could think, learn and memorize. I n this basic model we will separate
+how we learn from Ignorance, and how we anticipate the world u sing Bayes formula, both should
+however be more entangled to best reﬂect reality. In fact, as we have seen after achieving this work,
+applying ignorance on the system constituting a person ﬁnal ly turns out to be the global approach
+of its local counterpart on systems like neurons, cells and o ther complex probabilistic systems,
+described using the free energy principle, a much more compl exe and detailed approach. The aim of
+this article is therefore to show, as seen from a person, anot her aspect of the application of the free
+energy principle which represents the constrained Shannon ’s entropy, and leads to Bayes’formula.
+We show that, using only ignorance as a single quantity, and i ts minimisation as the main process,
+we can take into account his understandings, assertions, do ubts and assumptions about how he
+perceives the world, by describing them mathematically. As in the following we will be assertive
+and provocative on purpose, any comments are welcomed and wo uld be appreciated.
+Keywords: Entropy, Ignorance, Shannon, Jaynes, Bayes, Free Energy Principle
+I. INTRODUCTION
+This work, grounded ﬁrst in Edwin T. Jaynes’ book Probability Theory: The Logic of Science [1], relies on a previous
+article [ 2] Jaynes & Shannon’s Constrained Ignorance and Surprise about, what we call, Ignorance. As shown in [ 2],
+from a probability tree and a simple mathematical deﬁnition, using con straints, of Ignorance (related to knowledge),
+one is able to derive Shannon’s Entropy as in Jaynes’ maximum entrop y principle by maximizing/minimizing it. Using
+Shannon’s Entropy with constraints was in fact used before, in diﬀe rent approaches but with much more mathematical
+details : see for instance [ 3] or [ 4], but also [ 5], [ 6] for its use in the framework of the Free Energy Principle, [ 7] for
+a recent review and references within. At the time we were redactin g this article, we were not aware about all of
+this, but results are really similar, even if the way to achieve it is diﬀere nt. In fact, here, applying Ignorance on the
+system constituting a person ﬁnally seems to turn out to be the glob al approach of its local counterpart on systems
+like neurons, cells, ... and other complex probabilistic systems, descr ibed using the Free Energy Principle .
+In our opinion, the framework of Ignorance leads to a more unders tandable way of seeing the entropy and its
+consequences, as we start only from a tree of possibilities, and wha t we know. Moreover, as it seemed to be surprising
+that Bayes formula appeared in the calculations in the articles previo usly cited, we think that here Bayes formula is
+clearly seen, as it should be, using a probability tree.
+In this article, we will follow the footsteps of an Ignorant person ca lled Howard, and study the stages of his learning.
+Taking some liberties, we assume that Howard has amnesia (in order t o start from a simili zero blank state) but has
+also some primary knowledge that he is not aware of (he can a priori walk, move, listen, read, understand and speak).
+During this journey, we will discuss a mathematical construction wit h some possible applications on the global
+(!) porcessus of learning and thinking, leading to, what we think are, philosophical consequences. We are also
+deliberately vague about what ”things/stuﬀs” are, because we wa nt to show mainly the learning process and its
+philosophical implications, without going into other ontological philoso phical aspects which go deeper in the way of
+describing reality. Therefore, as it is not easy to describe what ”kn owledge / to know” means, we will use common
+sense and talk about it another time, with a more extended framewo rk using what is shown here. However, about
+what concerns us here, in [ 2], we have decided to describe mathematically what we knows , by taking the opposite view,
+that is, from the prism about what we ignore , as we are mostly Ignorant, using probabilities : because of our mem ory,
+its uncertainties but also those of our perceptions, we are never c onﬁdent in our (relative) knowledge, and therefore
+we should speak in terms of likelihood, plausibility, degree of conﬁdenc e, ... in other words, in terms of probabilities
+about our situation.
+∗ Electronic address: thomas.cailleteau@lpsc.in2p3.fr
+2
+II. AT FIRST HE KNOWS NOTHING EXCEPT THAT HE DOESN’T KNOW MUCH
+We know what we know but don’t know what we don’t ... Let us assume th at, in a corridor, walks Howard, depicted
+by a system S in a state Z (this state depends on the path took by Howard in his life, his knowled ges and choices
+that lead him, at this point in time and space, in this corridor). Theref ore, all what he will learn will be through his
+perceptions and relatively to him. What can he say at ﬁrst ? Somethin g like ”As I am and think, things exist” , which
+can be translated in a proposition as
+• E0 : ”Things exist, like time, space and stuﬀs I can perceive ”
+So, the probability for Howard that E1 is true is .. 1 : P (E0 == T rue|Z) = 1, that is it is a certain event, in
+this particular case ”even before” he has experimented it. We can t hen deﬁne a quantity, called Ignorance, such that
+Deﬁnition 1 The Ignorance h of (this) knowledge is deﬁned as
+h0(E0, Z) = P (E0 == T rue|Z) − 1 → 0 (1)
+which, being a constraint on the system S, is null by deﬁnition.
+In the following, except when needed, we will drop the ”== T rue” as we evaluate the truthfulness of a proposition
+at a moment t in space ⃗ x, in the system of coordinates ( xµ ), µ ∈ { 0, 1, ...}, with the knowledge available at this
+point in Howard space-time. For these reasons, we say that knowle dge are relative, or better, in French, as the word
+”knowledge” is too narrow to express all the subtilities of ”Nature” , la connaissance est relative mais le savoir est
+absolu. That’s also why in Eq.( 1), we have set an arrow to express that, even if Howard ”knows” t hat E0 is true, it
+may be not a reality except for him.
+We can thus summarize his update of knowledge by the evolution Z → Z0 for his state of knowledge (omitting,
+as said before, many things because of his amnesia) at this point in sp acetime, and illustrating it with the following
+weighted probability tree (here with only two branches due to the on ly assertion E0) :
+P (E0|Z) = 1
+E0
+Z0(xµ )E0
+Z
+(2)
+III. SECOND PIECE OF KNOWLEDGE
+Walking down the corridor, he comes to a door with a frame beside it co ntaining a piece of paper that says
+”Somewhere, there is a coin and a dice”. Howard doesn’t wonder abo ut the door, nor about the fact that he can read
+and understand, but he does wonder about the things he has forg otten, the coin and the dice. In his mind, as he
+knows what means ”there is”, appear two new propositions :
+• E1 : ”A coin exists”,
+• E2 : ”A dice exists”,
+Reading the paper and having therefore some informations about w hat can exist, has lead Howard to update his
+knowledge such that his state is now Z0(xµ ) → Z1(Z0(xµ ), x′µ ), that is, in terms of probabilities
+P (E1 ∪ E2|Z1) + P (E1 ∪ E2|Z1) = P (E1|Z1) + P (E2|Z1) + P (E1 ∪ E2|Z1) = 1 , (3)
+as E1 and E2 are independent. Indeed, the creation of the dice may depend on t he creation of the coin, but the
+idea that it exists does not depend on the idea that the coin exists, a s here, Howard has no other knowledge about
+the construction of the dice and the coin. E1 ∪ E2 represents everything that is not E1 or E2 and can therefore be
+anything. His Ignorance for what he knows about his situation, aft er this update, is now deﬁned as
+h1[E1, E2, E1 ∪ E2|Z0] = P (E1|Z0) + P (E2|Z0) + P (E1 ∪ E2|Z0) − 1 = 0 (4)
+and we can represent the evolution of his state of knowledge as
+P (E0|Z) = 1
+E0
+Z0 E0
+Z
+E1
+E2
+E...
+P (E1|Z0)
+P (E2|Z0)
+P (E.. |Z0)
+Z1
+(5)
+3
+where we set E1 ∪ E2 = E.. for short. In [ 2], we have shown that, in this case, the update of knowledge leads us to
+deﬁne another kind of Ignorance, the one about things he does no t know yet, if they will happen, are real or not, ..
+etc etc , which is simply given by the sum of the diﬀerent entropies :
+Deﬁnition 2 The Ignorance ¯h of what he does not know yetcan naturally be described as the sum of the diverse
+entropies that exist due to each event :
+¯h1[E1, E2, E.. |Z1(Z0(xµ ), x′µ )] = −
+∑
+i
+λi(Ei, Z1(Z0(xµ ), x′µ )) P (Ei|Z0) × ln( P (Ei|Z0) ) , (6)
+where λi(Ei, Zn, t, ⃗ x), Lagrange multipliers, are coeﬃcients we could assume not t o be 0 or 1. In the following, it will
+be seen as only λ, as any other greek letters which have the same kind of proper ties.
+Deﬁnition 3 The (whole) Ignorance H is given by the Ignorance h of what is known, as constraints, therefore using
+Lagrange multipliers, and the Ignorance ¯h of what remains to be known, which can be calculated as it cons ists of
+entropies.
+For Howard, at this point, following the probability tree and the fact that Z1(Z0(xµ ), x′µ ), his Ignorance is thus
+H[E0, E1, E2,
+E1 ∪ E2, λ, µ|Z1(Z0(xµ ), x′µ )]
+= µ0 × h0[E0, Z0] + µ1 × h1[E1, E2, E1 ∪ E2, Z0] + ¯h1[E1, E2, E1 ∪ E2, Z0]
+= µ0 × (P (E0|Z0) − 1) + µ1 (P (E1|Z0) + P (E2|Z0) + P (..|Z0) − 1)
+−λ1P (E1|Z0) ln(P (E1|Z0)) − λ2P (E2|Z0) ln(P (E2|Z0)) − λ.. P (..|Z0) ln(P (..|Z0)), (7)
+from which we will explain the use in the next part. Due to the update f rom Z0 to Z1, we should not forget that
+P (E0|Z) → P (E0|Z0) as we wrote previously in Eq.( 7) : the memory of the truth of the proposition is retained during
+the update.
+IV. MINIMISING ONE’S IGNORANCE : THE MAXIMUM ENTROPY PRINCIPLE ON KNOWLEDGE
+A. Results of the derivatives
+Now let’s say Howard is wondering about the coin, and more important ly, how to determine what it is. He is
+therefore asking how to minimize his Ignorance. To do that, he has d iﬀerent ways : using the functional derivatives,
+he can derive the Ignorance
+• with respect to µ0 : using only the Ignorance of what is known when he was at his state Z0 ,
+δH
+δµ0
+⏐
+⏐
+⏐
+⏐
+Z1
+= 0 ⇔ P (E0|Z1) − 1 = 0 ⇔ P (E0|Z1) = 1 (8)
+giving us back the fact that he knows (and remember) for sure tha t ”Things exist”. Notice that we have set
+Z0 → Z1 as we evaluate the proposition ”` a la lumi` ere” of his new possible upd ate.
+• with respect to µ1 in the same way and for the same reason,
+δH
+δµ1
+⏐
+⏐
+⏐
+⏐
+Z1
+= 0 ⇔ P (E1|Z1) + P (E2|Z1) + P (..|Z1) − 1 = 0 ⇔ P (E1|Z1) + P (E2|Z1) + P (..|Z1) = 1 (9)
+which is what he knows now about the whole current situation would re main true after the update.
+• with respect to λi : using only the Igorance of what remains to be known for each unkn ow probability,
+δH
+δλi
+⏐
+⏐
+⏐
+⏐
+Z1
+= 0 ⇔ − P (Ei|Z1) ln(P (Ei|Z1)) = 0 (10)
+which leads to what he can speculate about E1 for instance :
+– P (E1|Z1) → 0 : in this case, if the coin does not exist, he will think, and even more, could assert, as such.
+– ln(P (E1|Z1)) = 0 ⇔ P (E1|Z1) = 1 : if he comes across the coin, he will have a proof of its existence .
+From Eq.(
+9), does it mean for instance that, due to P (E1|Z1) = 1 we can conclude that (A) : P (E2|Z1) =
+P (E.. |Z1) = 0, that is (B) : E2 and E.. are false and therefore neither a dice or something else which is not a
+coin, exist ? Of course, not. (A) is true but does not imply (B): by min imizing his Ignorance, Howard is kind
+of updating his knowledge ”by anticipating” what should be the answe rs, going therefore from a state Z1 to a
+state Z2 (still, at another point in spacetime). Indeed, at the moment he will b e asserting that the coin exists,
+it will be about the coin only and he will have no clues concerning the oth er propositions. That is to say, he
+can not update simultaneously his knowledge about diﬀerent object s due to ... causality : when he (or you) ﬁrst
+read the paper about the coin and the dice, the information about t he coin came ﬁrst and then the mecanisms
+in his brain about the update have ﬁrst recorded the informations a bout the coin (and where/when he had the
+information), and at a second time, the informations about the dice . This means also that, being at the previous
+state Z0, Howard would have set P (E1|Z0) = 1, leading to P (E1|Z1) = 1 at state Z1 too !
+4
+In this example,
+– his knowledge will be given by
+h2[E0, E1, E2, .., Z2(Z1(Z0, .)), .] = µ0(P (E0|Z1)−1)+µ1(P (E1|Z1)−1)+µ2(P (E2|Z1)+P ( ¯E2|Z1)−1) (11)
+– his doubts will be given by
+¯h2[E2, ¯E2, Z1, ..] = −λ1P (E2|Z1) ln P (E2|Z1) − λ2P ( ¯E2|Z1) ln P ( ¯E2|Z1) (12)
+– and his state of knowledge Z2 would be represented by
+P (E0|Z) = 1 E0
+Z0
+E0
+Z
+E1
+E1
+P (E1|Z0) = 1
+Z1
+E2
+¯E2
+Z2
+P (E2|Z1)
+P ( ¯E2|Z1)
+(13)
+• derivating with respect to P (Ei|Zn) : by interacting with both kind of Ignorances, and leading to a much
+more general framework if more constraints are added,
+– for P (E0, Z) : δH
+δP (E0, Z)
+⏐
+⏐
+⏐
+⏐
+Z1
+= 0 naturally due to the constraint setting P (E0, Z) = 1 since H does not
+depend really on P (E0|Z), and as the derivative of 0 is 0 because knowing that E0 is true leads to no
+ignorance from the beginning. Otherwise it would mean that µ0 = 0, that is, Howard has forgotten about
+E0.
+– for P (Ei|Z0) : setting λi ̸= 0 (otherwise there would be no ”unknown” variables)
+δH
+δP (Ei|Z0)
+⏐
+⏐
+⏐
+⏐
+Z1
+= 0 ⇔ µ1 − λi (ln(P (Ei|Z1) + 1) = 0 (14)
+⇔ P (Ei|Z1) = exp
+( µ1
+λi
+− 1
+)
+(15)
+as in [ 3] and [ 6] where a density function J(x),
+∫
+J(x)p(x)dx = C as the constraint, was used instead of
+our discret case
+∑
+i
+pi = 1.
+It seems clear enough to see the consequences of derivatives oth er than those with respect to probabilities, and so
+we will look at the latter in a simple case where the ignorances have the same weight, that is, setting λi = µ1.
+B. Case where λi = µ1
+In this case, an a priori particular one, from
+H[E0, E1, E2, .., µ|Z1(Z0, xµ )] = µ0(P (E0|Z0) − 1) (16)
++µ1
+[
+P (E1|Z0) + P (E2|Z0) + P (..|Z0) − 1 − P (E1|Z0) ln(P (E1|Z0)) − P (E2|Z0) ln(P (E2|Z0)) − P (..|Z0) ln(P (..|Z0))
+]
+and from Eq.( 15), if Howard wants to minimise his Ignorance, then
+P (Ei|Z1) = exp
+( µ1
+λi
+− 1
+)
+= e1−1 = e0 = 1 (17)
+that is, to assert the existence of the coin or the dice, he should .. ﬁ nd them. Of course, since the beginning this is
+obvious, but here we show another way to derive it : from δH[E0, E1, E2, .., λ|Z1]
+δµ1
+⏐
+⏐
+⏐
+⏐
+Z1
+= 0,
+P (E1|Z1)+P (E2|Z1)+P (..|Z1)−1−P (E1|Z1) ln(P (E1|Z1))−P (E2|Z1) ln(P (E2|Z1))−P (..|Z1) ln(P (..|Z1)) = 0 (18)
+5
+and after evaluating it with the help of the constraint P (E1|Z1)+P (E2|Z1)+P (..|Z1)−1 (this constraint was considered
+as true at the previous state, it should also be the case after the u pdate, when one proposition is conﬁrmed , otherwise
+the whole framework would collapse due to inconsitency),
+− P (E1|Z1) ln(P (E1|Z1)) − P (E2|Z1) ln(P (E2|Z1)) − P (..|Z1) ln(P (..|Z1)) = 0 (19)
+which gives, as a priori all events are independent, the following result :
+P (Ei|Z1) → 0 or P (Ei|Z1) = 1 for i ∈ { 1, 2, ..} (20)
+not forgetting that, if P (E1|Z1) = 1, then P (E2|Z1) = 0 and P (E. .|Z1) = 0, so only the event E1 has been assert as
+true for Howard, and we recover the case of the Graph.( 13).
+C. Comment on the constraints ( n = 1 ) and if they are missing (i.e. no knowledge)
+1. On the constraints : why n = 1
+As set in [ 2], in Eq.( 1) and Eq.( 4), we use a constraint of the form 0 =
+(
+1 −
+∑
+i
+pi
+) n
+with n = 1. However, even
+it is not yet clear about the value of n, using n > 1 would bring nothing, as, when evaluating the terms with the help
+of the constraints, because they are constraints, the terms de rived from it will be null :
+((
+1 −
+∑
+i
+pi
+) n) ′
+= n × pi ×
+(
+1 −
+∑
+i
+pi
+) n−1 1−
+∑
+i
+pi = 0
+− − − − − − − − − − →0 (21)
+That is why, in this article, we will set n = 1 and see what we can know from it.
+2. If the constraints are missing : case of no Knowledge
+For instance, let us consider in a simple case that H[pi, λi] = −
+∑
+i
+λi pi × ln pi with pi > 0 or pi → 0. Then, from
+the derivative w.r.t pi for i in 1 , 2, ...
+δH
+δpi
+⏐
+⏐
+⏐
+⏐
+Z
+= 0 ⇔ − λi(ln pi + 1) = 0 ⇔ λi = 0 or p i = e−1 (22)
+• if λi = 0, this could mean that, having no knowledge about the event of pi, we do not have an Ignorance about
+it, whatever the probabilities pi. That is to say, ”I do not have concerns about things I do not know they exist”.
+Je ne m’inqui` ete pas des choses dont je ne connais pas l’exis tence.
+• if pi = e−1, then
+H[.] = −
+∑
+i
+λi pi × ln pi = −
+∑
+i
+λi e−1 × ln(e−1) = e−1 ∑
+i
+λi (23)
+which could mean, related also to the case where maybe λi = 0 for some i, that we would have there a
+”fundamental” value for our Ignorance, that is to say ”I know that I am Ignorant but I do not know about what”.
+Je sais que je suis ignorant mais je ne sais pas ` a propos de quo i, autrement dit, j’ignore ce que je ne sais pas.
+Both mathematical consequences seem to have philosophical mean ing and are in fact used by everyone, at least
+most of the time.
+V. ANTICIPATION AS SUPERPOSITION OF CONFIGURATIONS : THE BAYES FORMULA ?
+Going back to Howard before he asserts that either E1, E2 or EM =
+E1 ∪ E2 are true, starting from the Graph.( 5),
+he knows that E1, E2 and EM are possible. He could therefore wonder in which order he will assert or not their truth
+and draw the graph as the one in Fig.( 1). In the following, we will look at states where E1 and E2 should be true, in
+order to see how Bayes formula takes place in this framework.
+However, the following is not considered as clear as we would want, th e global view showing quite a complexity
+about what we should have. As such, we just sketch a possible proo f about how we can recover Bayes formula in the
+simple case of the state Z2, and comment the more complexe cases of Zn, n > 2. This work is therefore considered to
+be in progress.
+6
+P (E0|Z) = 1
+E0
+Z0 E0
+Z
+E1
+E2
+EM
+P (E1|Z0)
+P (E2|Z0)
+P (EM |Z0)
+Z1
+Z2
+Z3
+Z4..
+P (E2|E1, Z1)
+P (EM |E1, Z1)
+E2
+E2
+E2
+E1
+E..
+E2
+EM
+E..
+E..
+E1
+E1
+E1
+E2
+E..
+E..
+EM
+E..
+E1
+E.. E2
+E1
+E..
+..E2..
+..E1..
+..E2..
+..E1..
+E1..E2..
+E..
+E2..E1....E1/E2..E2/E1..
+FIG. 1: Anticipating what’s next : in blue, paths leading to a state where both E1 and E2 are true (at lot are missing) in the
+general cas (if 4 updates, there are 12 paths containing E1 and E2
+A. The global view
+Looking at Fig.( 1), we see that the states which veriﬁes E1 and E2 have either the probabilitis P (E1 ∩ E2) or
+P (E2 ∩ E1) such that
+P (E1 ∩ E2) =
+∑
+l,m,n
+P
+
+
+( l∏
+i=1
+E.. ∩
+)
+E1
+
+
+m∏
+j=1
+E.. ∩
+
+ E2
+( n∏
+k=1
+∩E..
+) 
+= P (..E1..E2..) (24)
+and
+P (E2 ∩ E1) =
+∑
+l,m,n
+P
+
+
+( l∏
+i=1
+E.. ∩
+)
+E2
+
+
+m∏
+j=1
+E.. ∩
+
+ E1
+( n∏
+k=1
+∩E..
+) 
+= P (..E2..E1..) (25)
+Proposition 1 The number of paths un containing E1 and E2 at the Zn state, follows the recurrence relation
+un+1 = un + 2n, u 1 = 0 (26)
+whose solution is
+un = n2 − n (27)
+As un = n(n − 1) it will always be an even number as expected due to the symmetr y E1 ↔ E2.
+7
+P (E0|Z) = 1
+E0
+Z0 E0
+Z
+E1
+E2
+EM
+⋆
+P (E1|Z0)
+P (E2|Z0)
+P (EM |Z0)
+Z1
+Z2
+P (E2|E1, Z1)
+P (E2|E1, Z1)
+E2
+E2
+E1
+E1
+E..
+E2
+E1
+P (E1|E2, Z1)
+FIG. 2: Case of 2 possible updates after E0 : 2 paths contain E1 and E2
+Proof
+If we denote ( un) the sequence caracterising the number of paths having both E1 and E2 at the state Zn,
+then
+• at Z1, there are u1 = 0 paths
+• at Z2, there are u2 = 2 paths (0+2)
+• at Z3, there are u3 = 6 paths (2+4)
+• at Z4, there are u4 = 12 paths (6+6)
+• at Z5, there are u5 = 20 paths (12+8)
+from which we can see the following recurrence relation un+1 = un + 2n for the number of paths containing
+both E1 and E2, half of them concern the E1, E2 order and the other half the order E2, E2. As the recurrence
+relation is of order 1 due to the term 2 n, the expression of un, using the polynomial method, is the second
+order un = αn2 + βn + γ, and a quick resolution with
+• u1 = 0 = α + β + γ ⇔ γ = −α − β
+• u2 = 2 = 4 α + 2β + γ = 3 α + β ⇔ β = 2 − 3α and γ = 2 α − 2
+• u3 = 6 = 9 α+3(2 −3α)+(2 α−2) ⇔ (2α−2) = 0 ⇔ α = 1, and thus β = 2 −3 = −1 and γ = 2 −2 = 0
+However, due to the complexity it raises, we will focus now on the simp le cases Z2 and Z3.
+B. Case of 2 possible updates after E0 : Z2 state
+In Fig.( 2), we would know that, for the constraints of interest
+• γ × (P (E1|Z0) + P (E2|Z0) + P (EM |Z0) − 1) = 0
+• αP (E1|Z0) × (P (E2|E1, Z1) + P (E.. |E1, Z1) − 1) = 0
+• βP (E2|Z0) × (P (E1|E2, Z1) + P (E.. |E2, Z1) − 1) = 0
+but also that
+P (E1, E2|Z1) = k1P (E1 ∩ E2|Z1) + k2P (E2 ∩ E1|Z1) = C, (28)
+where C is a constant, and we would a priori think that
+∑
+i
+ki = 1 + 1 = u2 = 2. Therefore, we think that Ignorance
+should have an expression as
+H[.|Z2] = γ × (P (E1|Z0) + P (E2|Z0) + P (EM |Z0) − 1) (29)
++αP (E1|Z0) × (P (E2|E1, Z1) + P (E.. |E1, Z1) − 1) + βP (E2|Z0) × (P (E1|E2, Z1) + P (E.. |E2, Z1) − 1) + ...(30)
+−λ1P (E1|Z0) ln P (E1|Z0) − λ2P (E2|Z0) ln P (E2|Z0) − .... (31)
++δ(k1P (E1 ∩ E2|Z1) + k2P (E2 ∩ E1|Z1) − C) (32)
+−µ1P (E1 ∩ E2|Z1) ln P (E1 ∩ E2|Z1) − µ2P (E2 ∩ E1|Z1) ln P (E2 ∩ E1|Z1) (33)
+8
+where Eq.( 29) and Eq.( 30) deal with constraints on each branch of the tree, and Eq.( 31) with their associated
+Ignorance, and Eq.( 32) and Eq.( 33) do the same but for P (E1, E2), and it should be possible to express them with
+terms in Eq.( 29), Eq.( 30) and Eq.( 31).
+Therefore
+δH[.]
+δP (E1 ∩ E2) = 0 ⇔ δk1 − µ1(ln(P (E1 ∩ E2)) − 1) = 0 ⇔ δk1 = µ1(ln(P (E1 ∩ E2)) − 1) (34)
+δH[.]
+δP (E2 ∩ E1) = 0 ⇔ δk2 − µ1(ln(P (E2 ∩ E1)) − 1) = 0 ⇔ δk2 = µ2(ln(P (E2 ∩ E1)) − 1) (35)
+Setting µ1 = µ2 = µ as both P (E1 ∩ E2) and P (E2 ∩ E1) are linked with the constraint in Eq.( 28), but also that
+k1 = k2 = 1 as each probability is given by 1 branch, we have
+δ = µ(ln(P (E1 ∩ E2)) − 1) = µ(ln(P (E2 ∩ E1)) − 1) (36)
+⇔ P (E1 ∩ E2) = P (E2 ∩ E1) (37)
+⇔ P (E1|Z0) × P (E2|E1, Z1) = P (E2|Z0) × P (E1|E2, Z1) Bayes Formula (38)
+In fact, we are not sure this ”proof” is correct as we are biased kn owing that, in order to anticipate, we should do
+it using Bayes Formula. What allows us to get back on our feet is by intr oducing the Ignorance about P (E1, E2)
+through Eq.( 32) and Eq.( 33). However, it does not seem to be incoherent, as it is part of our Ig norance about the
+(futur of the) system represented by Howard.
+C. Case of 3 possible updates after E0 : Z3 state
+P (E0|Z) = 1
+E0
+Z0 E0
+Z
+E1
+E2
+EM
+P (E1|Z0)
+P (E2|Z0)
+P (EM |Z0)
+Z1
+Z2
+Z3
+P (E2|E1, Z1)
+P (EM |E1, Z1)
+E2
+E2
+E2
+E1
+E..
+E2
+EM
+E..
+E..
+E1
+E1
+E1
+E..
+E..
+EM
+E..
+E..
+E..
+E1..E2..
+E..
+E2..E1..
+FIG. 3: Case of 3 possible updates after E0
+With Fig.( 3), we are wondering about what is the more general Bayes Formula w here we should anticipate so much
+more than 2 steps ahead. We start by ﬁrst wondering if
+P (E1, E2|Z2) =
+6∑
+i
+ki P ({∩, E1, E2, E.. }|Z2) (39)
+9
+where {∩, E1, E2, E.. } represent the 6 permutations of E1, E2, E.. . By doing as previously, we would think that the
+derivatives of the Ignorance should lead also to
+P (E1 ∩ E2) = P (E2 ∩ E1) (40)
+⇔
+3∑
+i
+P (1 → 2, E.. ) =
+3∑
+i
+P (2 → 1, E.. ) (41)
+⇔ P (E.. ∩ E1 ∩ E2) + P (E1 ∩ E.. ∩ E2) + P (E1 ∩ E2 ∩ E.. ) = P (E.. ∩ E2 ∩ E1) + P (E2 ∩ E.. ∩ E1) + P (E2 ∩ E1 ∩ E.. )
+where P (i → j, E.. ) is such that Ei appears always before Ej .
+In particular, as the case E.. → (E1, E2) where E1 and E2 would appear at the next update (the last two branches
+at the bottom in our graph), is in fact the same situation as here whe re E.. would be considered as E0, we would say
+that
+• P (E.. ∩ E1 ∩ E2) = P (E.. ∩ E2 ∩ E1),
+• but also that P (E1 ∩ E.. ∩ E2) = P (E2 ∩ E.. ∩ E1)
+• and thus P (E1 ∩ E2 ∩ E.. ) = P (E2 ∩ E1 ∩ E.. ).
+This would seem coherent even for the general case, that is, the B ayes formula P ({i, j}, ..) = P ({j, i}, ..) works for
+every conﬁgurations with symmetry i ↔ j, as the 3 equalities just before.
+This is of course not a rigorous mathematical proof, and we leave th at for later if necessary or if it has not been
+demonstrated somewhere else (as it should not be new).
+D. Ignoring the anticipation is Ignoring Bayes Formula, that is the question
+We have shown here that including probabilities on the states where E1 and E2 would appear during its journey,
+thus the states where E1 ∩ E2 and E2 ∩ E1, leads us to incorporate in our Ignorance new terms which account for the
+fact that we do not also know the probabilities of the joined events, which are however also calculable in ﬁne , with
+the basic probabilities of the tree ! Consequently, by minimizing Ignor ance, we (think that we) were able to recover
+Bayes Formula as a deep tool to anticipate, knowing some caracter istics, what would be the values of the other ones.
+That is to say otherwise that, including in the Ignorance all the prob abilities one can construct from the probabilities
+of the tree, this unique quantity representing Howard’s Ignoranc e, due to its complexity where probabilities are linked,
+will encode all what one should know and guess about the situation. T herefore all informations about what Howard
+knows, ignores, can guess or not, could be condensed in just the I gnorance, representing his memory, and the mecanism
+to remember or anticipate his knowledge could be the one that minimize his Ignorance, respectively with respect to
+constraints for memories, and to the probabilities for the two kind o f anticipations (the one about his current situation,
+and the one one step ahead).
+VI. TWO SIDES OF A COIN LEAD TO A DUCK
+A. The algorithm of an update
+Opening the door, Howard ﬁnds himself in front of a new corridor in th e middle of which, on the ﬂoor, an object still
+unknown to Howard shines. How does it translate into Howard’s brain ? Firstly, in his ”tree of knowledge”, Howard is
+now on the branch ⋆ on Fig.( 2), where EM (”something else”) is veriﬁed, and therefore leads to ( E1, E2, E.. ). Secondly,
+in his brain,
+• An event occurs and his state of knwoledge is updated Z1 → Z2(Z1, xµ ),
+• EM is becoming known such as EM → Ea ”I have met an object”, and thus, a new constraint appears 0 =
+P (Ea|Z1) − 1 in his Ignorance, and so, in his memory.
+• Consequently, a new branch EM is created due to the update, that represents again what he does not know
+yet. Howard is now facing 3 possibilities ( E1, E2, EM ) and the probabilities are also updated as they respect
+the constraint 0 = P (E1|Z1) + P (E2|Z1) + P (EM |Z1) − 1 (same as before but with the update Z1 → Z2),
+• his ”basic” Ignorance is now
+H[.|Z2] = µ0(P (E0|Z1) − 1) + µa(P (Ea|Z1) − 1) + µ1(P (E1|Z1) + P (E2|Z1) + P (EM |Z1) − 1) (42)
+−
+∑
+i=1, 2,M
+λiP (Ei|Z1) ln P (Ei|Z1) (43)
+where Eq.( 42) and Eq.( 43) represents respectively what he knows and so what is in his memory , and his uncer-
+tainties. In the following, except if we say that he forgets one spec iﬁc knowledge (that is putting µi = 0), we
+will write Σ in Eq.( 42) to indicate what is learned.
+10
+B. What could it be ?
+He could also anticipate and update his a priori , that is, his credences which mesure his belief strength about the
+nature of the object. He could then create three new proposition s : knowing that E1 and E2 are possible,
+1. ”the object is a coin” : Ec
+2. ”the object is a dice” : Ed
+3. ”the object is a something else” : Es
+How would it translate in the tree of probabilities ? Let us think.
+As the propositions above are consequences of E1 and E2, their probabilities would be of the form P (Ei|E1, E2, Z1)
+and therefore one would know, ﬁrst, for instance E1, that a coin exists, before assuming that Ec is true. However,
+this does not mean that one can not verify Ec before E1 : indeed, if Howard did not have the knowledge E1 that a
+coin exist before coming across the object, and if a paper had the p roposition Ec written on it, by reading it from left
+to right, Howard would know that, ﬁrst, this is related to the objec t in the corridor, and secondly, that it is a coin,
+knowing therefore that, according to the situation, a coin exists, verifying that E1 is true as a direct consequence.
+Comment : can he be sure, certain, that this object is really a coin ? T he answer is logically no as he has no way
+to assert that outside his current situation, but for him, he can co nsider without trouble that it is true, as it is just
+putting a word without clear concepts behind, on a representation of an object. Knowing Ec is, at this point, true,
+his memory about it would have the expression P (Ec|Zn) − 1 = 0 with a Lagrange multiplier which will be zero if he
+forgets about this, or he can transforme the proposition if someh ow later, he is able to know that the object was not
+in fact a coin : for instance, if living with a lot of persons, all of them ca ll it a ”duck”, then he should think that,
+statiscally, he should follow the main opinion about it and change his mem ory by including terms like
+Hnew[Ec, .] = α(P (Ec|Zn)−0)+β(P (”this object is a duck” |Zn)−1)+γ(P (”I was wrong at Zn−1”|Zn)−1) → 0 (44)
+This leads us to consider the following tree
+EM (Z1)
+E1
+E2
+Ec
+Ed
+Es
+EM
+E1
+Ec
+P (E1|Ec, Z1) = 1
+(45)
+Then, by saying that events are all equiprobable (he is new to this wo rld and therefore has no experience), he could
+think that
+• P (E1|Z1) = P (E2|Z1) = P (Ec|Z1) = P (Ed|Z1) = P (Es|Z1) = P (EM |Z1) = 1
+6
+• but also that P (Ec|E1, Z2) = 1
+5.
+11
+However, because P (E1|Ec) = 1, one would have
+• P (E1 ∩ Ec) = P (E1) × P (Ec|E1) = 1
+6 × 1
+5 = 1
+30
+• P (Ec ∩ E1) = P (Ec) × P (E1|Ec) = 1
+6 × 1 = 1
+6
+One reason that these two quantities are not equal, assuming that they should be as it seems logical, is due to the
+branches EM → EM and E1 → EM (not represented on Fig.( 45)) where Howard supposed that their weight is the
+same as all of the others but he does not know if there is only one eve nt or an inﬁnty in EM (as shown in the algorithm
+before). Nevertheless, another strange thing seems to exist : f rom Bayes formula, we can see that
+P (E1 ∩ Ec) = P (Ec ∩ E1) ⇔ P (E1) × P (Ec|E1) = P (Ec) × 1 = P (Ec) (46)
+which could have diﬀerent results
+• P (E1) = P (Ec) = 0 there are no coins, ﬁne
+• P (Ec|E1) = P (Ec) = 0 this object is not a coin, ﬁne
+• P (E1) = P (Ec) not null, and therefore P (Ec|E1) = 1 : if we ﬁnd an object, we will think that this object is
+surely a coin. In fact this is true at least when P (Ec) = 1 that is when we verify that the object is really a coin,
+implying that P (E1) = 1 and so P (Ec|E1) = 1.
+• P (Ec|E1) = P (Ec)
+P (E1) ≤ 1 , with P (E1) > 0 and P (Ec) ≤ P (E1). In the equiprobable case, then P (Ec) = P (E1)
+and so we recover the case before, even if the number of branche s at one node goes to inﬁnity.
+• P (E1) = 1 and so P (Ec|E1) = P (Ec), that is, if we verify that a coin exists, then from this assertion, w e do not
+know if this object is a coin : both events are independent.
+This would be also true for E2 and Ed. However, we do not know yet if, due to the complexity of the tree, where Ec
+and E1 can appear in many other branches, our interpretation should be a lot more complexe.
+C. Here comes Nyarlathotep
+Not knowing anything else, Howard was not able to decide about the n ature of the object, therefore he set in his
+mind that P (Ec|Z1) = P (Ed|Z1) = P (Es|Z1). In this case, his Ignorance could be written as
+H[.|Z2] = Σ + µ1(P (E1|Z1) + P (E2|Z1) + P (Ec|Z1) + P (Ed|Z1) + P (Es|Z1) + P (EM |Z1) − 1) (47)
++α1(P (Ec|Z1) − P (Ed|Z1)) + α2(P (Ed|Z1) − P (Es|Z1)) + α3(P (Es|Z1) − P (Ec|Z1)) (48)
+−
+∑
+i
+λiP (Ei|Z1) ln P (Ei|Z1) (49)
+Derivatives w.r.t P (Ei|Z1) for i ∈ { c, d, s} give
+δH
+δP (Ec|Z1)
+⏐
+⏐
+⏐
+⏐
+Z2
+= 0 ⇔ µ1 + α1 − α3 − λc(ln P (Ec|Z1) + 1) = 0 (50)
+δH
+δP (Ed|Z1)
+⏐
+⏐
+⏐
+⏐
+Z2
+= 0 ⇔ µ1 + α2 − α1 − λd(ln P (Ed|Z1) + 1) = 0 (51)
+δH
+δP (Es|Z1)
+⏐
+⏐
+⏐
+⏐
+Z2
+= 0 ⇔ µ1 + α3 − α2 − λs(ln P (Es|Z1) + 1) = 0 (52)
+However, as they concerne all the object, we could set α1 = α2 = α3 = α and λi = λ for i ∈ { c, d, s}, leading to the
+same probability such that µ1 = λ(ln(P (Ei|Z2) + 1) which is in fact the same probability as P (E1|Z2), P (E2|Z2) and
+P (EM |Z2).
+Adding constraints, in this case, does not bring anything new. The r eason is that the constraints he set are not
+”real” in the sens that they are coming from Howard’s opinion and con cern therefore his anticipation. Moreover, as
+shown before, the result should be ﬁne because, setting µ = λ leads again to P (Ei|Z2) = 1 : all events have the
+same probability to appear to Howard from the point of view of Howar d, and the one which would appear is the one
+... which appears. This is not a system which send results like a dice or a c oin, Howard is a system which receives
+interactions from outside and so far, its environment does not fav our one piece of information over another (he is not
+closed to a particular source of information that would predominate in Howard’s data acquisition). Thus, one should
+in general not think like that, at least maybe not setting for instanc e the constraints as having all the same value. So,
+how constraints could inﬂuence Howard ? Here comes Nyarlathotep .
+12
+1. What does it change ?
+Hidden from Howard’s view, Nyarlathotep watches him. Determined t o inﬂuence Howard’s fate, at the speed of
+light squared, he substitutes the object that Howard was observ ing, which was a coin, puts it in a bag containing six
+other coins, two dice and a duck, and, randomly and without looking, scatters them in each corridor around him,
+including one object in the one where Howard is standing. Nyarlathot ep has also taken care to place a piece of paper
+underneath each object, stating ”this object is a ...”. Making it so th at Howard’s next action is to pick up the object,
+read the paper and check one of the propositions Ec, Ed or Es. The probability that Howard observes a coin is now
+P (Ec|Z1) = 0 .7, and is the most likely. This knowledge reﬂects the situation in which H oward is, but seen from the
+point of view of Nyarlathotep.
+Nyarlathotep then decides to reveal himself, opens the door and lo oking Howard in the eye, he points his ﬁnger at the
+object and says ”My name is Nobody, the probability that this objec t is a coin is 70%”. Not surprised at all, Howard
+update his knowledge Z2 → Z3, setting EN ”I have met Nobody” and according to him, P (Ec|Z3(EN )) − 0.7 = 0.
+Of course, for Howard, this is an opinion, but as it is also representin g the situation, Howard considers it as another
+constraint (we could say that Nyarlathotep tricks his brain to do as such). How to translate it with the Ignorance ?
+We could add a constraint as before such that
+H[.|Z3] = Σ + µ1(P (E1|Z2) + P (E2|Z2) + P (Ec|Z2) + P (Ed|Z2) + P (Es|Z2) + P (EM |Z2) − 1) (53)
++α1(P (Ec|Z2) − 0.7) (54)
+−
+∑
+i
+λiP (Ei|Z2) ln P (Ei|Z2) (55)
+and therefore
+δH[.|Z3]
+δP (Ec|Z2)
+⏐
+⏐
+⏐
+⏐
+Z3
+= 0 ⇔ µ1 + α1 − λc(ln P (Ec|Z2) + 1) = 0 (56)
+So, how appears the 0.7 as it should play a role ? We could have also set α2(P (Ed|Z2) − 0.2) and again, ”0.2” would
+not appear. What we could do is to put the information about 0.7 such that at the end P (Ec|Z3) = 0 .7 ... as an
+anticipation ! (again, if it is a coin, then for Howard it will be P (Ec|Z3) = 1 when he will assert that). Therefore,
+setting µ1 = λi for all i, we would solve
+δH[.|Z3]
+δP (Ec|Z2)
+⏐
+⏐
+⏐
+⏐
+Z3
+= 0 ⇔ µ + α1 − µ(ln(0.7) + 1) = 0 ⇔ α1 = µ ln(0.7) (57)
+which is the same as setting the Ignorance as
+H[.|Z3] = Σ + µ(P (E1|Z2) + P (E2|Z2) + P (Ed|Z2) + P (Es|Z2) + P (EM |Z2) − 1) (58)
++µ(1 + ln(0 .7))P (Ec|Z2) (59)
+−
+∑
+i
+µP (Ei|Z2) ln P (Ei|Z2) (60)
+that is for P (Ec|Z2) : µP (Ec|Z2)(ln(0.7) − ln P (Ec|Z2)) = µP (Ec|Z2) ln
+( 0.7
+P (Ec|Z2)
+)
+. However, this does not work
+because doing so ...
+δH[.|Z3]
+δP (Ei|Z2)
+⏐
+⏐
+⏐
+⏐
+i̸=c,Z 3
+= 0 ⇔ P (Ei|Z3) = 1 > P (Ec|Z3) (61)
+therefore P (Ec|Z2) is the most probable but not according to the minimization of Ignora nce.
+Howard could also add another proposition to EN : if we set EX : ”the probability of P (Ec|Z3(EN )) is 0.7”, this
+would be veriﬁed by Howard only in a multiverse, after a thousand and thousand of attempts. Therefore, it is not
+considered as relevant here.
+A possible solution was given a century ago by A. Einstein who could hav e said ”Everything is described under
+a general and special relativity”. Of course, we are not talking abo ut the description of the dynamical evolutions
+of objects including space-time, nor the description of objects in q uantum domains by Carlo Rovelli’s theory of
+relational quantum mechanics [
+9] (for which the use of Shannon ignorance or constrained entropy might be useful),
+but as everything is relatively described from one to another, so ar e the probabilities ! If we ”want” to keep notion
+about the percentage of a probability, we have to think as such ! Wh at represents P (Ec|Z2) = 0 .7 in our case ? It
+means that P (Ec|Z3) takes 70% of the total probability, that is P (Ec|Z3) = 0 .7(P (E1|Z2) + P (E2|Z2) + P (Ec|Z2) +
+P (Ed|Z2) + P (Es|Z2) + P (EM |Z2)) and so the constraint would become.
+P (Ec|Z3) − 0.7(P (E1|Z2) + P (E2|Z2) + P (Ec|Z2) + P (Ed|Z2) + P (Es|Z2) + P (EM |Z2)) = 0 (62)
+⇔ 0.3P (Ec|Z2) − 0.7(P (E1|Z2) + P (E2|Z2) + P (Ed|Z2) + P (Es|Z2) + P (EM |Z2)) = 0 (63)
+13
+Keeping a more general case where we set P (Ec|Z2) = β, with 0 ≤ β ≤ 1, the constraint is now
+(1 − β)P (Ec|Z2) − β(P (E1|Z2) + P (E2|Z2) + P (Ed|Z2) + P (Es|Z2) + P (EM |Z2)) = 0 (64)
+and the Ignorance is
+H[.|Z3] = Σ + µ
+[
+P (E1|Z2) + P (E2|Z2) + P (Ec|Z2) + P (Ed|Z2) + P (Es|Z2) + P (EM |Z2) − 1
+]
+(65)
++α
+[
+(1 − β)P (Ec|Z2) − β(P (E1|Z2) + P (E2|Z2) + P (Ed|Z2) + P (Es|Z2) + P (EM |Z2))
+]
+(66)
+−
+∑
+i
+λiP (Ei|Z2) ln P (Ei|Z2). (67)
+Derivatives with respect to P (Ei|Z2) for i ̸= c leads to
+δH[.|Z2]
+δP (Ei|Z2)
+⏐
+⏐
+⏐
+⏐
+Z3
+= 0 ⇔ − λi(ln P (Ei|Z3) + 1) + µ − αβ = 0 (68)
+⇔ µ − αβ = λi(ln P (Ei|Z3) + 1) (69)
+⇔ µ − αβ
+λi
+− 1 = ln P (Ei|Z3) (70)
+⇔ P (Ei|Z3) = exp
+( µ
+λi
+− αβ
+λi
+− 1
+)
+µ =λ i
+− − − →P (Ei|Z3) = e
+−
+αβ
+µ . (71)
+Derivatives with respect to P (Ec|Z2) leads to
+δH[.|Z2]
+δP (Ec|Z2)
+⏐
+⏐
+⏐
+⏐
+Z3
+= 0 ⇔ − λc(ln P (Ec|Z3) + 1) + µ + α(1 − β) = 0 (72)
+⇔ µ − αβ = λc(ln P (Ec|Z3) + 1) − α (73)
+⇔ µ + α(1 − β)
+λc
+− 1 = ln P (Ec|Z3) (74)
+⇔ P (Ec|Z3) = exp
+( α
+λc
++ µ
+λc
+− αβ
+λc
+− 1
+)
+µ =λ i
+− − − →P (Ec|Z3) = e
+α(1 − β)
+µ . (75)
+Considering the case where ∀i, µ = λi, and setting for simpliﬁcity αlbert = kµ, we see that
+P (Ei̸=c|Z3) = P (Ec|Z3) e
+−
+α
+µ = P (Ec|Z3) e−k ∀β ! (76)
+2. Comments about the results
+• In this case, we see from Eq.( 76) that the ratio of the diﬀerent probabilities with respect to P (Ec|Z3) is indepen-
+dent of β, which appears only in the expression of P (Ec|Z3), in Eq.( 75). When α = 0 (case with only the basic
+constraint), we recover the fact that all the possible probabilities can reach 1, that is, they are all equiprobable
+in their appearance ! However, in this case with only one more constraint, we see that it is not true anymore
+and one constraint is diﬀerent
+1. if k > 0, then P (Ec|Z3) has a diﬀerent value than the others, and most importantly, even if P (Ei̸=c|Z3) =
+e−kβ ≤ 1 as 0 ≤ β ≤ 1, we see that P (Ec|Z3) = ek(1−β ) ≥ 1 as k(1 − β) ≥ 0, that is P (Ec|Z3) is greater
+than 1 and so than the others ! It decreases back to 1 when β = 1 ( P (Ec|Z3) = 1 and the others are 0), or
+if α = k = 0 that is if we do not add more informations about the probabilities.
+2. if k < 0, this would have been the contrary. However, the constraints w e consider here would not have the
+same shape : one would be of the form ∑
+i pi − 1 and the other one of the form 1 − ∑
+i pi.
+3. if we add more constraints, we would have more parameters to ﬁn e-tune, however, we guess that the ratio
+of probabilities will not depend on the value of βs.
+• Can we still apply the constraint given in Eq.( 64) ? No, as it would be true only before the (anticiped) update.
+Doing it would lead to
+5e−kβ + ek(1−β ) = 1 ⇔ 5 + ek = ekβ ⇔ 5 + ek − ekβ = 0 (77)
+where we see that β can not be equal to 1 : there would have been no unknown probabilitie s, P (Ei̸=c|Z3) → 0
+and therefore we would not have to applied the constraint in Eq.( 64) and derivatives, as the initial expression
+setting β = 1 would have no Ignorance ¯
+h. But, even if the minimum would be for k = ln β
+1 − β , due to the fact
+that ( β ̸= 0) as ex > 0 ∀x, Eq.( 77) will never be fulﬁlled as 5 + ek − ekβ > 0 for any value of k and β.
+14
+Nevertheless, we could argue that in Eq.( 18), setting µ = λi and after deriving w.r.t µ, the constraint was
+applied leading to probabilities to be 0 or 1 : It was possible because of t hese speciﬁc values. However, when
+adding more constraints, this ”equilibrium” becomes unbalanced, pr obabilities are greater than 1 and it is no
+more possible that a sum of positive values is equal to 1 anymore. In f act, Eq.( 77) is wrong in the sense that
+we have added ”expected” probabilities, that is, when P (Ec|Z3) = ek(1−β ). Then, because the total sum of
+probabilities is still 1, the remaining probabilities should be such that ∑
+i̸=c P (Ei|Z3) = 1 − ek(1−β ) ! and not
+as we did in Eq.( 77). However, only if k < 0, the sum is positive, but P (Ec|Z3) will not be considered as the
+most probable, as seen above (except in the framework of negativ e probabilities, the result would be coherent).
+What we think happens in this case is in fact the following mechanism : loo king only at what becomes the
+Ignorance with Eq.( 70), Eq.( 71) for P (Ei̸=c|Z3) and Eq.( 74), Eq.( 75) for P (Ec|Z3), we see that, setting for
+simplicity λi = µ, α = kµ, and assuming that there are x + 1 propositions where x is the number of ones less
+probable,
+ln P (Ec|Z3) = k(1 − β) P (Ec|Z3) = ek(1−β ) (78)
+ln P (Ei̸=c|Z3) = −kβ P (Ei̸=c|Z3) = e−kβ (79)
+(80)
+H[..|Z3]postupdate = Σ + µ
+[
+ek(1−β ) + xe−kβ − 1
+]
++ kµ(1 − β)ek(1−β ) − kµxβe−kβ (81)
+−µek(1−β ) × k(1 − β) − µx × e−kβ × (−kβ) (82)
+= Σ + µ
+[
+ek(1−β ) + xe−kβ − 1
+]
+(83)
++kµ(1 − β)ek(1−β ) − kµxβe−kβ − kµ(1 − β)ek(1−β ) + kµxβe−kβ (84)
+and after cancellations, remains only
+H[..|Z3]postupdate = Σ + µ
+[
+ek(1−β ) + xe−kβ − 1
+]
+(85)
+But as we have seen, µ
+[
+ek(1−β ) + xe−kβ − 1
+]
+can not be a constraint and should in fact be replaced by
+αc(P (Ec|Z3) − 1). Therefore, one way would be to say that the mechanism which pr events the probabili-
+ties to be larger than 1 is, when creating a node in the tree, to set µ = 0 (to clear the previous situation), to set
+αc(P (Ec|Z3) − 1) as the constraint wich memorizes what would have happened, and set µ(∑
+i p′
+i − 1) as a new
+constraint taking account of the new situation ( P (Ei̸=c|Z2) → p′
+i = P (Ei̸=c|Z3).
+Thus, the previous worries were in fact ... ﬁne, as it would have been j ust a mathematical anticipation (maybe a
+better mathematical description exists, with less worrying aspect s as the one where probabilities are not really
+.. probabilities as here).
+3. A possible interpretation : a network of weighted propositions
+Depending on the sign of k, and therefore of the value of the Lagrange multiplier α, the ”most probable” (of
+probability higher than 1) expected proposition would be either the p roposition on which we have more information,
+or the others. If we consider the case where k > 0, that could mean that the more we hear from a proposition, even
+if at the end its probability will be less than the others ( β-independent !), the more we know about it, and thus, the
+more we should expect its veriﬁcation at some point which seems coherent with what we endure in reality : the more
+an information is ampliﬁed, the more likely we are to come across it in the newspapers, several times and in a short
+space of time, and the greater our degree of conﬁdence in the ver acity of this information. This is of course not correct
+because we do not know if the information is true, if what we know abo ut it could be coherent, but it is natural to
+do so, and this can be seen in what we observe here with the probabilit ies with the constraint αc(P (Ec|Z) − β) : as
+β increases, so is the constraint αc about it, being another weights we have in the conﬁdence of an infor mation.
+If we have information about another proposition, such that αd(P (Ed|Z) − γ) for instance, then another constraint
+will be added in our brain, and then, depending on the weight of αc and αd, either P (Ec|Z) or P (Ed|Z) will be
+more probable. We can imagine than, in a lifetime, Howard will have a lot o f proposition to verify (and so a lot of
+weights to adjust), will hear a lot about some of them, and therefo re, some weights will be higher than others, and
+the total Ignorance will encode all of them as a global quantity but in a really really more complicated expression as
+the ones we use : all of this in one quantity will account for Howard’s s tate, his knowledge, memories and memory,
+his assumptions and doubts, ... at a given time; and the processes of minimising his ignorance, as well as his further
+anticipations using Bayes’ formula, are mechanisms that allow him to g rasp the complexity of the world around him.
+But its use will be ineﬀable to explain in details, in a simpler way, as it could b e seen as a neuron network with
+thousand and thousand of propositions, and relations between th em as informations could not be independent !
+15
+VII. CONCLUSION : MEMORY, SOUVENIRS, IGNORANCE, CREDENCE, ...
+In this article, we have followed Howard in his journey to learn, memor ize and anticipate, and we have been able to
+describe it in a global way; using probabilities and Ignorance as deﬁne d in [ 2]. If Howard would have been a particle,
+cell or anything else, its local description would have also been possib le, as in [ 3], [ 4] or with the use in the Free Energy
+Principle as in [ 7].
+The results we have shown here seem to mathematically account for natural processes that we experience every
+day in our behaviour when faced with new information(s). Their scop e allows for practical but also philosophical
+applications since we can draw conclusions about how we perceive the world.
+• As we said previously, it is not because we have a strong credence ab out a proposition that it will be veriﬁed
+directly. We can however anticipate it, either by minimising the Ignora nce directly with the corresponding
+probability and the weights αi we have about it (as the values of the probabilities seem to not play a r ole in
+the equations), or planning ahead with Bayes’formula. However, be cause the expected probability can be higher
+than 1, one can doubt about it, but this is an anticipation process, n ot something that will be true in reality.
+• Minimising Ignorance seems to be usefull to anticipate the next step , and Bayes’formula to anticipate two steps
+ahead, the latter being a particular case of the former.
+• We have seen also the philosophical implications of Eq.( 22), about Ignorance without Knowledge (see also [ 10]),
+leading us to the facts that
+• ”I do not have concerns about things I do not know they exist”.
+Je ne m’inqui` ete pas des choses dont je ne connais pas l’exis tence..
+• ”I know that I am Ignorant but I do not know about what”.
+J’ignore ce que je ne sais pas.
+which are of course obvious, at least for anyone like Howard.
+• Learning and going from state Z to step Z0 to step Z1 ... etc etc , at each step/state/node in the tree, constraints
+and Ignorance were considered but we think we can distinguish betw een two kind of constraints :
+• at each node α0[P (E0|Z) + P (
+E0|Z) − 1], with the corresponding Ignorance −λ0P (E0|Z) ln P (E0|Z) −
+λ¯
+0P (
+E0|Z) ln P (E0|Z). Both do not evolve and describe what was the situation at one par ticular moment
+in time : they can be derived and one will ﬁnd again the same results, ho wever they do not play a role for the
+other proposition as they have been veriﬁed : for instance here, a pplying the constraint α0[P (E0|Z0)−1] will
+verify α0[P (E0|Z)+P (E0|Z)−1] = 0 and −λ0P (E0|Z) ln P (E0|Z)−λ¯
+0P (
+E0|Z) ln P (E0|Z) = 0 . Therefore,
+their Lagrange multiplier should not be set directly as 0 (meaning Howa rd would have forgotten them) as
+they still should appear in the memory (in what we call Σ in the previous expression of Ignorance) but
+as ”souvenirs/memories” of conﬁgurations of Howard’s previous state of Knowledge ! They r epresent
+doubts Howard had over time at diﬀerent states and he can recall t hem by applying the same processus,
+even at later states.
+• constraints like α0[P (E0|Z0) − 1] → α0[P (E0|Z1) − 1] → α0[P (E0|Z2) − 1] → ... which ”evolve” over the
+states and assert what are the veriﬁed propositions in Howard’s me mory. They represent knowledge of
+Howard (relatively to its path in life) he has in memory over time.
+• What happens if we forget that a proposition EY is true, that we no longer become too sure of its truthfulness ?
+We still are aware that it is possible and have therefore doubts abou t it, meaning that the probability/credence
+is now P (EY |Z. ) = βY . As shown before, its whole Ignorance increases by adding anothe r branch in the tree
+and new weight and terms of Ignorance such that
+H[EY |Z. ] = αY [P (EY |Z. ) − βY ] − λY P (EY |Z. ) ln P (EY |Z. ) (86)
+and then we would still apply naturally what we said in Sec.( VI C 3) : a loss of certainty is only a new doubt
+that appears !
+In this paper we have described what could be called a tool, Ignoranc e, which, like the free energy principle,
+is derived from Shannon entropy with constraints. We have also des cribed its applications and implications for a
+person’s thinking, learning and remembering process, leading to a ma thematical model that could be used to simulate
+the evolution of a person’s memory (see [ 11] for an attempt). Nevertheless, one could go further, especially in the
+philosophical aspect, by including this model in a much more general f ramework and draw other conclusions such as
+the inclusion of Occam’s razor and Hume’s maxim which seem to be descr ibable by Bayes’ formula (see [ 12]). However,
+this work is being saved for later and if you have any thoughts about this work that you would like to share, we would
+be curious and happy to hear them.
+16
+VIII. ACKNOWLEDGMENTS
+The author would like to express his eternal and deepest gratitude to Abhay, Aurelien, Martin, .. and Deusch, for
+time and space spend together. Figures were plotted with the help o f Geogebra, using Tikz in LateX; and as time
+passes, knowledge fade, most of the ”bad English” has been corre cted with the help of DeepL/Translator.
+[1] Jaynes, E. T. (2003) ”Probability Theory: The Logic of Sc ience”, Cambridge University Press, New York,
+ISBN-13 978-0-511-06589-7
+[2] Cailleteau, T. ”Jaynes & Shannon’s Constrained Ignoran ce and Surprise” https://doi.org/10.48550/arXiv.2107.05008
+[3] Giﬃn, A., Caticha, A. ”Updating Probabilities” https://doi.org/10.1063/1.2423258 (arXiv)
+[4] Banavar, J., Maritan, A. ”The maximum relative entropy p rinciple” https://doi.org/10.48550/arXiv.cond-mat/0703622
+[5] Friston, K. ”The free-energy principle: a uniﬁed brain t heory?.” Nature reviews neuroscience 11.2 (2010): 127-138 .
+[6] Sakthivadivel, D. ”Towards a Geometry and Analysis for B ayesian Mechanics ” https://arxiv.org/abs/2204.11900 and
+”A Constraint Geometry for Inference and Integration ” https://arxiv.org/abs/2203.08119
+[7] Ramstead, M., Sakthivadivel, D., Heins, .C, Koudahl, M. , Millidge, B., Da Costa, L., Klein, K., Friston, K. ”On Bayes ian
+Mechanics: A Physics of and by Beliefs” https://arxiv.org/abs/2205.11543
+[8] Jaynes, E. T. (1957) ”Information Theory and Statistica l Mechanics” https://doi.org/10.1103/PhysRev.106.620
+[9] Rovelli, C. (1996), ”Relational quantum mechanics”, In ternational Journal of Theoretical Physics, 35: 1637–1678 .
+[10] Raude-Jehanno, G., Piol, M., Prigent, O. ”Synthese of L asallian Europ. Glob. Think.”, Symposium Brezhonegardol, 2020
+[11] Le Bloa, V., Allaire, N. ”Impl´ ementations Num´ erique s Probabilistes”, Tout nu m´ erique & consciences Informati ques, 2021
+[12] Changenet, A., Martin, N. ”Vers une vision bay´ esienne de la z´ et´ etique: Justiﬁer et enrichir la d´ emarche z´ et´ etique ` a partir
+de la formule de Bayes” ,

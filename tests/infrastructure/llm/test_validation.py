@@ -10,7 +10,7 @@ from infrastructure.llm.validation import (
     detect_conversational_phrases,
     check_format_compliance,
 )
-from infrastructure.llm.validation_repetition import (
+from infrastructure.llm.validation.repetition import (
     calculate_unique_content_ratio,
     _calculate_similarity,
 )

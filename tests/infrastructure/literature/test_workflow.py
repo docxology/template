@@ -5,7 +5,7 @@ from pathlib import Path
 
 from infrastructure.literature.sources import SearchResult
 from infrastructure.literature.workflow import LiteratureWorkflow, WorkflowResult
-from infrastructure.literature.summarizer import SummarizationResult
+from infrastructure.literature.summarization import SummarizationResult
 
 
 class TestWorkflowResult:
@@ -91,9 +91,9 @@ class TestLiteratureWorkflow:
     def test_execute_search_and_summarize(self, tmp_path):
         """Test complete workflow execution with real implementations."""
         from infrastructure.literature.core import LiteratureSearch, DownloadResult
-        from infrastructure.literature.progress import ProgressTracker
-        from infrastructure.literature.config import LiteratureConfig
-        from infrastructure.literature.summarizer import PaperSummarizer
+        from infrastructure.literature.workflow import ProgressTracker
+        from infrastructure.literature.core import LiteratureConfig
+        from infrastructure.literature.summarization import SummarizationEngine
 
         # Create real test configuration
         config = LiteratureConfig(
@@ -108,10 +108,10 @@ class TestLiteratureWorkflow:
         # Create real progress tracker
         progress_tracker = ProgressTracker(progress_file=tmp_path / "progress.json")
 
-        # Create a simple test summarizer that matches the PaperSummarizer interface
+        # Create a simple test summarizer that matches the SummarizationEngine interface
         class TestSummarizer:
-            def summarize_paper(self, result, pdf_path):
-                from infrastructure.literature.summarizer import SummarizationResult
+            def summarize_paper(self, result, pdf_path, max_retries=2, progress_callback=None):
+                from infrastructure.literature.summarization import SummarizationResult
                 citation_key = pdf_path.stem
                 return SummarizationResult(
                     citation_key=citation_key,
@@ -124,7 +124,7 @@ class TestLiteratureWorkflow:
                     attempts=1
                 )
 
-            def save_summary(self, result, summary_result, output_dir):
+            def save_summary(self, result, summary_result, output_dir, pdf_path=None):
                 """Mock save_summary method."""
                 output_dir.mkdir(exist_ok=True)
                 summary_path = output_dir / f"{summary_result.citation_key}_summary.md"
@@ -429,10 +429,10 @@ class TestLiteratureWorkflow:
         with pytest.raises(ValueError, match="Summarizer not configured"):
             workflow._summarize_papers_parallel([], 1)
 
-    @patch('infrastructure.literature.workflow.time')
+    @patch('time.time')
     def test_summarize_single_paper_saves_summary(self, mock_time, tmp_path):
         """Test that _summarize_single_paper saves successful summaries."""
-        mock_time.time.return_value = 1000.0
+        mock_time.return_value = 1000.0
 
         # Setup mocks
         literature_search = Mock()
@@ -483,7 +483,7 @@ class TestLiteratureWorkflow:
 
         # Verify save_summary was called
         mock_summarizer.save_summary.assert_called_once_with(
-            search_result, summary_result, Path("literature/summaries")
+            search_result, summary_result, Path("literature/summaries"), pdf_path=pdf_path
         )
 
         # Verify summary_path was set
@@ -497,10 +497,10 @@ class TestLiteratureWorkflow:
             summary_time=1000.0
         )
 
-    @patch('infrastructure.literature.workflow.time')
+    @patch('time.time')
     def test_summarize_single_paper_save_failure_handling(self, mock_time, tmp_path):
         """Test that _summarize_single_paper handles save failures gracefully."""
-        mock_time.time.return_value = 1000.0
+        mock_time.return_value = 1000.0
 
         # Setup mocks
         literature_search = Mock()
@@ -558,10 +558,10 @@ class TestLiteratureWorkflow:
             summary_attempts=1
         )
 
-    @patch('infrastructure.literature.workflow.time')
+    @patch('time.time')
     def test_summarize_single_paper_no_save_for_failed_summary(self, mock_time):
         """Test that save_summary is not called for failed summarizations."""
-        mock_time.time.return_value = 1000.0
+        mock_time.return_value = 1000.0
 
         # Setup mocks
         literature_search = Mock()

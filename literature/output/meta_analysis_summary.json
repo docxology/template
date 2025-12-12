@@ -1,0 +1,467 @@
+{
+  "metadata": {
+    "generated_at": "2025-12-11T15:15:18.201139",
+    "total_papers": 46,
+    "year_range": {
+      "start": 2006,
+      "end": 2025
+    },
+    "publication_rate": 2.3
+  },
+  "temporal": {
+    "total_years": 12,
+    "papers_by_year": {
+      "2006": 1,
+      "2009": 2,
+      "2010": 1,
+      "2013": 1,
+      "2016": 3,
+      "2018": 1,
+      "2019": 1,
+      "2020": 4,
+      "2022": 8,
+      "2023": 2,
+      "2024": 6,
+      "2025": 15
+    },
+    "peak_year": {
+      "year": 2025,
+      "count": 15
+    }
+  },
+  "keywords": {
+    "total_unique_keywords": 1606,
+    "top_keywords": [
+      {
+        "keyword": "inference",
+        "count": 42
+      },
+      {
+        "keyword": "active",
+        "count": 37
+      },
+      {
+        "keyword": "energy",
+        "count": 35
+      },
+      {
+        "keyword": "free",
+        "count": 34
+      },
+      {
+        "keyword": "principle",
+        "count": 31
+      },
+      {
+        "keyword": "model",
+        "count": 16
+      },
+      {
+        "keyword": "brain",
+        "count": 15
+      },
+      {
+        "keyword": "based",
+        "count": 14
+      },
+      {
+        "keyword": "theory",
+        "count": 13
+      },
+      {
+        "keyword": "models",
+        "count": 12
+      },
+      {
+        "keyword": "learning",
+        "count": 12
+      },
+      {
+        "keyword": "control",
+        "count": 12
+      },
+      {
+        "keyword": "systems",
+        "count": 11
+      },
+      {
+        "keyword": "using",
+        "count": 10
+      },
+      {
+        "keyword": "bayesian",
+        "count": 9
+      },
+      {
+        "keyword": "time",
+        "count": 9
+      },
+      {
+        "keyword": "process",
+        "count": 8
+      },
+      {
+        "keyword": "states",
+        "count": 8
+      },
+      {
+        "keyword": "paper",
+        "count": 8
+      },
+      {
+        "keyword": "friston",
+        "count": 8
+      }
+    ]
+  },
+  "metadata_stats": {
+    "venues": {
+      "total_unique": 27,
+      "top_venues": [
+        {
+          "venue": "arXiv",
+          "count": 7
+        },
+        {
+          "venue": "Active Inference",
+          "count": 3
+        },
+        {
+          "venue": "medrxiv preprint",
+          "count": 2
+        },
+        {
+          "venue": "CoRR",
+          "count": 2
+        },
+        {
+          "venue": "J. Comput. Aided Mol. Des.",
+          "count": 2
+        },
+        {
+          "venue": "Philosophical Transactions of the Royal Society B Biological Sciences",
+          "count": 1
+        },
+        {
+          "venue": "Nature Reviews Neuroscience",
+          "count": 1
+        },
+        {
+          "venue": "Trends in Cognitive Sciences",
+          "count": 1
+        },
+        {
+          "venue": "Journal of Physiology-Paris",
+          "count": 1
+        },
+        {
+          "venue": "Frontiers in systems neuroscience",
+          "count": 1
+        }
+      ]
+    },
+    "authors": {
+      "total_unique": 117,
+      "top_authors": [
+        {
+          "author": "Karl Friston",
+          "count": 6
+        },
+        {
+          "author": "Karl J. Friston",
+          "count": 4
+        },
+        {
+          "author": "Thomas Parr",
+          "count": 3
+        },
+        {
+          "author": "Giovanni Pezzulo",
+          "count": 3
+        },
+        {
+          "author": "{'@pid': '92/848', 'text': 'Karl J. Friston'}",
+          "count": 2
+        },
+        {
+          "author": "Tim Verbelen",
+          "count": 2
+        },
+        {
+          "author": "Lancelot Da Costa",
+          "count": 2
+        },
+        {
+          "author": "{'@pid': '132/6723', 'text': 'Takeshi Ashida'}",
+          "count": 2
+        },
+        {
+          "author": "{'@pid': '28/3182', 'text': 'Takeshi Kikuchi'}",
+          "count": 2
+        },
+        {
+          "author": "Jakob Hohwy",
+          "count": 2
+        }
+      ]
+    },
+    "sources": {
+      "total_unique": 8,
+      "source_distribution": {
+        "openalex": 5,
+        "semanticscholar": 7,
+        "pubmed": 7,
+        "medrxiv": 2,
+        "dblp": 7,
+        "arxiv": 7,
+        "europepmc": 4,
+        "crossref": 7
+      }
+    },
+    "citations": {
+      "mean": 1137.8333333333333,
+      "median": 533.0,
+      "std": 1697.1835902131768,
+      "min": 15,
+      "max": 6415,
+      "total": 13654
+    },
+    "availability": {
+      "dois_available": 38,
+      "pdfs_available": 23,
+      "doi_coverage": 0.8260869565217391,
+      "pdf_coverage": 0.5
+    }
+  },
+  "pca_analysis": {
+    "n_components": 5,
+    "total_variance_explained": 0.2904732094469849,
+    "components": {
+      "PC1": {
+        "explained_variance": 0.11985396244462639,
+        "top_words": [
+          {
+            "word": "active",
+            "loading": 0.3573928789833582
+          },
+          {
+            "word": "free energy",
+            "loading": -0.3543101402059551
+          },
+          {
+            "word": "free",
+            "loading": -0.3437369498518005
+          },
+          {
+            "word": "energy",
+            "loading": -0.3361508036501512
+          },
+          {
+            "word": "active inference",
+            "loading": 0.3081475587774444
+          },
+          {
+            "word": "principle",
+            "loading": -0.29694627806384893
+          },
+          {
+            "word": "energy principle",
+            "loading": -0.28897241430354037
+          },
+          {
+            "word": "inference",
+            "loading": 0.26746497792320095
+          },
+          {
+            "word": "brain",
+            "loading": -0.17019876724650448
+          },
+          {
+            "word": "time",
+            "loading": 0.10996357059552245
+          }
+        ]
+      },
+      "PC2": {
+        "explained_variance": 0.058031054848475205,
+        "top_words": [
+          {
+            "word": "active",
+            "loading": 0.3710997898051405
+          },
+          {
+            "word": "active inference",
+            "loading": 0.3291417547570657
+          },
+          {
+            "word": "inference",
+            "loading": 0.28340573242526956
+          },
+          {
+            "word": "energy principle",
+            "loading": 0.2265606850734617
+          },
+          {
+            "word": "model",
+            "loading": -0.20582372354120998
+          },
+          {
+            "word": "free energy",
+            "loading": 0.17848677275854005
+          },
+          {
+            "word": "principle",
+            "loading": 0.17573622318517612
+          },
+          {
+            "word": "free",
+            "loading": 0.17052355045749593
+          },
+          {
+            "word": "energy",
+            "loading": 0.1588501623493372
+          },
+          {
+            "word": "synaptic",
+            "loading": -0.14559207900804777
+          }
+        ]
+      },
+      "PC3": {
+        "explained_variance": 0.04060205002901642,
+        "top_words": [
+          {
+            "word": "ligand",
+            "loading": 0.3662927184345183
+          },
+          {
+            "word": "relative",
+            "loading": 0.2461597835858505
+          },
+          {
+            "word": "relative binding",
+            "loading": 0.2461597835858505
+          },
+          {
+            "word": "fkbp",
+            "loading": 0.2461597835858505
+          },
+          {
+            "word": "fkbp ligand",
+            "loading": 0.2461597835858505
+          },
+          {
+            "word": "binding",
+            "loading": 0.2461597835858505
+          },
+          {
+            "word": "energy variational",
+            "loading": 0.2461597835858505
+          },
+          {
+            "word": "binding free",
+            "loading": 0.2461597835858505
+          },
+          {
+            "word": "variational principle",
+            "loading": 0.2461597835858505
+          },
+          {
+            "word": "brain",
+            "loading": -0.1961816971506767
+          }
+        ]
+      },
+      "PC4": {
+        "explained_variance": 0.03735328988337275,
+        "top_words": [
+          {
+            "word": "control",
+            "loading": 0.3741041784848535
+          },
+          {
+            "word": "food",
+            "loading": 0.24231779838196454
+          },
+          {
+            "word": "intake",
+            "loading": 0.2181431335974173
+          },
+          {
+            "word": "learning",
+            "loading": -0.17582886172871948
+          },
+          {
+            "word": "ai",
+            "loading": 0.1586865154367903
+          },
+          {
+            "word": "consciousness",
+            "loading": 0.13412470144491714
+          },
+          {
+            "word": "models",
+            "loading": -0.12169279153603252
+          },
+          {
+            "word": "information",
+            "loading": -0.12158773372469747
+          },
+          {
+            "word": "synaptic",
+            "loading": -0.12131238214305597
+          },
+          {
+            "word": "bayesian",
+            "loading": -0.11993660096730248
+          }
+        ]
+      },
+      "PC5": {
+        "explained_variance": 0.03463285224149413,
+        "top_words": [
+          {
+            "word": "information",
+            "loading": 0.2953464922544145
+          },
+          {
+            "word": "learning",
+            "loading": -0.20033205927069753
+          },
+          {
+            "word": "minimum",
+            "loading": 0.18661038304118305
+          },
+          {
+            "word": "model",
+            "loading": -0.18377527774020772
+          },
+          {
+            "word": "mechanics",
+            "loading": 0.16543732298534466
+          },
+          {
+            "word": "maximum",
+            "loading": 0.1628946135698785
+          },
+          {
+            "word": "maximum information",
+            "loading": 0.1628946135698785
+          },
+          {
+            "word": "information efficiency",
+            "loading": 0.1628946135698785
+          },
+          {
+            "word": "minimum free",
+            "loading": 0.1628946135698785
+          },
+          {
+            "word": "self",
+            "loading": 0.1577084951764099
+          }
+        ]
+      }
+    }
+  }
+}

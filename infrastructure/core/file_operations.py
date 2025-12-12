@@ -114,7 +114,13 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> Dict:
         output_dir: Path to top-level output directory
         
     Returns:
-        Dictionary with copy statistics
+        Dictionary with copy statistics and detailed file list:
+        {
+            "stats": {...},
+            "files": [
+                {"path": str, "size": int, "category": str}
+            ]
+        }
     """
     logger.info("Copying all project outputs...")
     
@@ -135,11 +141,13 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> Dict:
         "errors": [],
     }
     
+    files_list = []
+    
     if not project_output.exists():
         msg = f"Project output directory not found: {project_output}"
         logger.warning(msg)
         stats["errors"].append(msg)
-        return stats
+        return {"stats": stats, "files": files_list}
     
     # Recursively copy entire project/output/ directory
     try:
@@ -150,9 +158,9 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> Dict:
         msg = f"Failed to copy project output directory: {e}"
         logger.error(msg)
         stats["errors"].append(msg)
-        return stats
+        return {"stats": stats, "files": files_list}
     
-    # Count files in each subdirectory and copy combined PDF to root
+    # Collect files in each subdirectory with full paths and sizes
     subdirs = {
         "pdf": "pdf_files",
         "web": "web_files",
@@ -168,11 +176,26 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> Dict:
     for subdir_name, stats_key in subdirs.items():
         subdir = output_dir / subdir_name
         if subdir.exists():
-            files = list(subdir.glob("**/*"))
-            file_count = len([f for f in files if f.is_file()])
+            all_items = list(subdir.glob("**/*"))
+            file_items = [f for f in all_items if f.is_file()]
+            file_count = len(file_items)
             stats[stats_key] = file_count
             stats["total_files"] += file_count
-            logger.debug(f"  {subdir_name}/: {file_count} file(s)")
+            
+            # Log each file with full path and size
+            for file_path in file_items:
+                try:
+                    file_size = file_path.stat().st_size
+                    files_list.append({
+                        "path": str(file_path.resolve()),
+                        "size": file_size,
+                        "category": subdir_name,
+                    })
+                    logger.debug(f"  Copied: {file_path.name} ({file_size:,} bytes)")
+                except Exception as e:
+                    logger.warning(f"  Failed to get size for {file_path}: {e}")
+            
+            logger.info(f"  {subdir_name}/: {file_count} file(s)")
     
     # Copy combined PDF to root for convenient access
     combined_pdf_src = output_dir / "pdf" / "project_combined.pdf"
@@ -181,9 +204,18 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> Dict:
     if combined_pdf_src.exists():
         try:
             shutil.copy2(combined_pdf_src, combined_pdf_dst)
-            file_size_mb = combined_pdf_src.stat().st_size / (1024 * 1024)
+            file_size = combined_pdf_src.stat().st_size
+            file_size_mb = file_size / (1024 * 1024)
             log_success(f"Copied combined PDF to root ({file_size_mb:.2f} MB)", logger)
             stats["combined_pdf"] = 1
+            
+            # Add to files list
+            files_list.append({
+                "path": str(combined_pdf_dst.resolve()),
+                "size": file_size,
+                "category": "pdf",
+            })
+            logger.info(f"  Root PDF: {combined_pdf_dst} ({file_size:,} bytes)")
         except Exception as e:
             msg = f"Failed to copy combined PDF to root: {e}"
             logger.warning(msg)
@@ -191,7 +223,15 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> Dict:
     else:
         logger.debug(f"Combined PDF not found at: {combined_pdf_src}")
     
-    return stats
+    return {"stats": stats, "files": files_list}
+
+
+
+
+
+
+
+
 
 
 

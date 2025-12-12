@@ -1,5 +1,14 @@
 # Test Suite Improvements Summary
 
+> **Recent enhancements** to the test suite
+
+**Quick Reference:** [Testing Guide](TESTING_GUIDE.md) | [Testing Standards](../.cursorrules/testing_standards.md) | [Advanced Usage](ADVANCED_USAGE.md)
+
+**Note:** This document focuses on recent improvements. For complete testing documentation, see:
+- **[Testing Guide](TESTING_GUIDE.md)** - Complete testing guide with examples
+- **[Testing Standards](../.cursorrules/testing_standards.md)** - Development standards for testing
+- **[Advanced Usage](ADVANCED_USAGE.md)** - TDD workflow and best practices
+
 ## ✅ Completed Enhancements
 
 All tests are now functional, documented, complete, and properly handle figures, equations, citations, and references.

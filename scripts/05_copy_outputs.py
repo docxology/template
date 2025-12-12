@@ -68,7 +68,21 @@ def main() -> int:
             return 1
         
         # Step 2: Copy final deliverables
-        stats = copy_final_deliverables(repo_root, output_dir)
+        result = copy_final_deliverables(repo_root, output_dir)
+        stats = result.get("stats", {})
+        files_list = result.get("files", [])
+        
+        # Log file details
+        if files_list:
+            logger.info(f"\nCopied {len(files_list)} file(s) with full paths:")
+            for file_info in files_list[:20]:  # Show first 20 files
+                file_path = file_info.get("path", "")
+                file_size = file_info.get("size", 0)
+                category = file_info.get("category", "unknown")
+                size_mb = file_size / (1024 * 1024) if file_size > 0 else 0
+                logger.info(f"  [{category}] {file_path} ({size_mb:.2f} MB)")
+            if len(files_list) > 20:
+                logger.info(f"  ... and {len(files_list) - 20} more file(s)")
         
         # Step 3: Validate copied files
         validation_passed = validate_copied_outputs(output_dir)
@@ -80,7 +94,7 @@ def main() -> int:
         generate_output_summary(output_dir, stats, structure_validation)
         
         # Determine success/failure
-        if stats["total_files"] > 0 and validation_passed:
+        if stats.get("total_files", 0) > 0 and validation_passed:
             log_success("\n✅ Output copying complete - all project outputs ready!", logger)
             return 0
         else:

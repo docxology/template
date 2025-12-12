@@ -1,0 +1,1092 @@
+ 
+ 
+1 
+ 
+Repeated net-tDCS of the hypothalamus appetite-control network 1 
+reduces inhibitory control and sweet food intake in persons with 2 
+overweight or obesity 3 
+Theresa Ester -Nacke 1,2,3* , Ralf Veit 1,2,3 , Julia Thomanek 1,2,3 , Magdalena Book 1,2,3 , 4 
+Lukas Tamble 1,2,3 , Ma rie Beermann 1,2,3 , Dorina Löffler 1,2,3 , Ricardo Salvador 4, 5 
+Giulio Ruffini 4, Martin Heni 1,2,3,5,6 , Andreas L. Birkenfeld 1,2,3 , Christian 6 
+Plewnia 7,8 , Hubert Preissl 1,2,3,8,9 , Stephanie Kullmann 1,2,3  7 
+1Institute for Diabetes Research and Metabolic Diseases (ID M) of the Helmholtz Center 8 
+Munich at the University of Tübingen, Tübingen, Germany; 2Department of Internal Medicine, 9 
+Division of Endocrinology, Diabetology and Nephrology, Eberhard Karls University Tübingen, 10 
+Tübingen, Germany; 3German Center of Diabetes R esearch (DZD), Tübingen, Germany; 11 
+4Neuroelectrics Barcelona, Barcelona, Spain; 5Institute for Clinical Chemistry and 12 
+Pathobiochemistry, Department for Diagnostic Laboratory Medicine, Eberhard Karls 13 
+University Tübingen, Tübingen, Germany; 6Division of Endoc rinology and Diabetology, 14 
+Department of Internal Medicine 1, University Hospital Ulm, Ulm, Germany;  7Department of 15 
+Psychiatry and Psychotherapy, Neurophysiology & Interventional Neuropsychiatry, University 16 
+Hospital Tübingen, Tübingen, Germany; 8German Center for Mental Health (DZPG), Partner 17 
+Site Tübingen, Tübingen, Germany ; 9Institute of Pharmaceutical Sciences, Department of 18 
+Pharmacy and Biochemistry; Interfaculty Centre for Pharmacogenomics and Pharma Research 19 
+at the Eberhard Karls University Tübingen, Tübingen, Germany. 20 
+------------ 21 
+* Corresponding author. Institute for Diabetes Research and Metabolic Diseases (IDM) of the 22 
+Helmholtz Center Munich at the University of Tübingen. Otfried Müller Str. 47, 72076 23 
+Tübingen.  24 
+E-mail address: Theresa.ester@med.uni-tuebingen.de (T. Ester-Nacke). 25 
+ 26 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+NOTE: This preprint reports new research that has not been certified by peer review and should not be used to guide clinical practice.
+ 
+ 
+2 
+ 
+Graphical Abstract 27 
+ 28 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+3 
+ 
+Highlights 29 
+ Active net-tDCS groups showed better inhibitory control compared to the sham group. 30 
+ Stronger increase in hypothalamic functional co nnectivity associated with better 31 
+inhibitory control after active net-tDCS.  32 
+ No differences were found between the active net -tDCS and sham groups for total 33 
+kilocaloric intake. 34 
+ Anodal net-tDCS showed lower sweet food intake compared to the sham group. 35 
+Abstract 36 
+Background Reduced inhibitory control is associated with obesity and neuroimaging studies 37 
+indicate that diminished prefrontal cortex activity influence eating behavior and metabolism . 38 
+The hypothalamus regulates energy homeostasis and is functionally connected to cortical and 39 
+subcortical regions especially the frontal areas. 40 
+Objectives We tested network -targeted transcranial direct current stimulation (net -tDCS) to 41 
+influence the excitability of brain regions involved in appetite control. 42 
+Methods In a ra ndomized, double-blind parallel group design, 44 adults with overweight or 43 
+obesity (BMI 30.6 kg/m 2, 52.3 % female) received active ( anodal or cathodal ) or sham 12-44 
+channel net -tDCS on the hypothalamus appetite -control network for 25 minutes on three 45 
+consecutive days while performing a Stop-Signal-Task to measure response inhibition. Before 46 
+and after stimulation, state questionnaires assessed changes in desire to eat and food craving. 47 
+Directly after stimulation, participants received a breakfast buffet to eva luate ad-libitum food 48 
+intake. An oral glucose tolerance test was conducted at follow-up. Resting-state functional MRI 49 
+was obtained at baseline and follow-up. 50 
+Results The Stop-Signal Reaction Time (SSRT) was shorter in both active groups versus sham, 51 
+indicating improved response inhibition. Additionally, a stronger increase in hypothalamic 52 
+functional connectivity was associated with shorter SSRT. Caloric intake of sweet food was 53 
+lower in the anodal group versus sham, but no main effects between groups were o bserved on 54 
+total and macronutrient intake, food craving ratings and desire to eat. At follow -up, no 55 
+differences were observed between groups on peripheral metabolism. 56 
+Conclusion Our study suggests that modulating hypothalamic functional network 57 
+connectivity patterns via net-tDCS may improve food choice and inhibitory control.  58 
+ 59 
+Keywords eating behaviour , food intake, functional connectivity,  hypothalamus, obesity, 60 
+response inhibition, transcranial direct current stimulation 61 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+4 
+ 
+Abbreviations 62 
+AIC – Akaike Information Criterion 63 
+BMI – Body Mass Index 64 
+CANTAB – Cambridge Neuropsychological Test Automated Battery 65 
+dlPFC – Dorsolateral Prefrontal Cortex 66 
+FC – Functional Connectivity 67 
+FCQ-S – Food Craving Questionnaire State 68 
+fMRI – Functional Magnetic Resonance Imaging 69 
+GIP – Glucose-Dependent Insulinotropic Polypeptide 70 
+GIRs – Glucose Infusion Rates 71 
+GLM – General Linear Model 72 
+GLP1 – Glucagon-like Peptide 1 73 
+HbA1c – Glycohemoglobin A1c 74 
+HD-tDCS – High-definition Transcranial Direct Current Stimulation 75 
+IFG – Interior Frontal Gyrus 76 
+ISI – Insulin Sensitivity Index 77 
+Kcal – Kilocalories 78 
+LMER – Linear Mixed Effects Model 79 
+mA – Milliampere 80 
+MRI – Magnetic Resonance Imaging 81 
+Net-tDCS – Network Transcranial Direct Current Stimulation 82 
+NIBS – Non-Invasive Brain Stimulation 83 
+oGTT – Oral Glucose Tolerance Test 84 
+μA – Microampere 85 
+PANAS – Positive and Negative Affect Scale 86 
+PFC – Prefrontal Cortex 87 
+SBC – Seed-Based Connectivity Maps 88 
+SD – Standard Deviation 89 
+SSRT – Stop-Signal Reaction Time 90 
+SST – Stop-Signal Task 91 
+T2DM – Type 2 Diabetes Mellitus 92 
+tDCS – Transcranial Direct Current Stimulation 93 
+VAS – Visual Analogue Scale 94 
+WHR – Waist-to-Hip Ratio 95 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+5 
+ 
+1. Introduction 96 
+The prevalence of obesity nearly tripled between 1975 and 2016, representing one of the leading 97 
+causes of morbidity and mortality  [1]. Obesity is highly linked with an increased risk for 98 
+numerous health conditions , notably cardiovascular diseases, insulin resistance and the 99 
+development of  type-2 diabetes (T2DM) [2]. Its etiology  is co mplex and includes genetic, 100 
+environmental, social and behavioral factors and the interactions among those  [3] with a 101 
+suspected significant contribution of the brain [4; 5].  102 
+In the long run, various obesity prevention and treatment approaches have demonstrated only 103 
+limited success  [2]. Among current interventions, bariatric surgery and pharmacological 104 
+therapies represent the most effective approach es for significant weight loss  and weight 105 
+maintenance. Moreover, recent pharmacological therapies, particularly glucagon-like peptide 1 106 
+(GLP1) receptor agonists and glucose-dependent insulinotropic polypeptide (GIP)/GLP1 107 
+receptor co -agonists have shown promising results  by targeting brain circuits  involved in 108 
+appetite control [6]. However, these interventions are not universally applicable and  do not 109 
+serve a preventive role, highlighting the need for new prevention approaches reducing obesity 110 
+rates and maintain long-term weight management.  111 
+Thereby, the brain plays a pivotal role in regulating eating behavior wherein its altered response 112 
+to peripheral hormones and external food cues increases the vulnerability to obesity [5; 7] . 113 
+Central to this regulation is the hypothalamus, a key regulator of energy homeostasis, which is 114 
+functionally connected to brain areas important for rew ard processing, food perception  and 115 
+cognitive control such as the prefrontal cortex (PFC), hippocampus and the striatum [8]. 116 
+Neuroimaging studies in persons with overweight or obesity have identified modifications in 117 
+these areas on a local and network level [for review [9–11]]. Specifically, the hypothalamus 118 
+exhibits attenuated functional connectivity (FC) to brain regions crucial f or cognitive control 119 
+over food intake and increased FC to areas involved in reward [12; 13]. Moreover, persons with 120 
+obesity show elevated food cue reactivity in brain regions important for reward and gustatory 121 
+processing [14].  122 
+Inhibitory control refers to the ability to suppress a prepotent response (e.g. [15; 16] ). 123 
+Accordingly, impairments in dorsolateral PFC (dlPFC) activity are associated with  reduced 124 
+inhibitory control  and higher impulsivity , which plays a role in t he development and 125 
+maintenance of obesity [17–19]. For instance, individuals with overweight  or obesity showed 126 
+lower FC between the hypothalamus and the dlPFC [13] and exhibit poorer performance in an 127 
+inhibitory control task  [20–22]. On the other hand, evidence from a functional magnetic 128 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+6 
+ 
+resonance imaging (f MRI) study showed that increasing FC of the dlPFC enhanced control 129 
+mechanisms related to food intake  [23] and is related to better food choices  [24]. Taken 130 
+together, findings suggest that the br ain activation is a predictor for dietary success [25] and 131 
+understanding these connections offers profound insights into the neurobiological 132 
+underpinnings of dietary habits and obesity. 133 
+Changing excitability of these brain areas may result in the modulation of food intake behavior 134 
+and cognitive functions. Transcranial direct current stimulation (tDCS) serves as a non-invasive 135 
+tool for neurostimulation to alter spontaneous firing rate and excitability of cortical neurons in 136 
+the brain [26] to increase (anodal) or decrease (cathodal) resting membrane potential in neurons 137 
+[27].  138 
+Several studies have shown that  tDCS enhanced inhibitory control  [28–30] reduced food 139 
+craving and binge-eating episodes [31–37], especially for sweet foods [33; 35; 36; 38], lowered 140 
+food intake [31; 39] and improved glucose metabolism  [40–42]. Despite encouraging results, 141 
+not all studies showed an effect of tDCS on food -related outcomes  [for review see [43]], 142 
+possibly due to inconsistency of stimulation parameters, large variation in experimental settings 143 
+[44; 45] and inter-subject variations [46]. Moreover, previous efforts have mainly focused on 144 
+stimulating isolated brain region, usually the dlPFC [43], without taking the interplay among 145 
+various brain regions into account.  146 
+The hypothalamic FC network could be an ideal target for influencing eating behavior, reward 147 
+and inhibitory control due to its functional connections to striatal and prefrontal regions. Using 148 
+multiple small-sized electrodes, it is possible to target an entire brain network. This is referred 149 
+to as network (net)-tDCS [47; 48]. Our recent pilot study [49] showed promising results with 150 
+enhanced inhibitory control after anodal net-tDCS stimulation of this hypothalamus appetite-151 
+control network. This network covered areas of the dlPFC, ventromedial PFC, inferior frontal 152 
+gyrus (IFG) and limbic regions that are critical for reward processes and decision making.  153 
+The current study examined net-tDCS targeting the hypothalamus appetite-control network to 154 
+modify inhibitory control, food intake , food craving , and desire to eat in individuals with 155 
+overweight or obesity and at high ri sk to develop T2DM . Given limited research on cathodal 156 
+stimulation in this context, both anodal and cathodal forms were included. We hypothesized 157 
+that the anodal net-tDCS group will show: (i) higher inhibitory control, as measured by the 158 
+Stop-Signal Task (SST); (ii) lower caloric intake, food craving and desire to eat and; (iii) higher 159 
+peripheral insulin sensitivity derived from an oral glucose tolerance test (oGTT) compared to 160 
+those receiving sham or cathodal stimulation.  For this purpose, w e conducted a randomized, 161 
+double-blind, placebo-controlled trial in parallel group design with resting-state fMRI as well 162 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+7 
+ 
+as nutritional and psychometric evaluations before and after the 3-day net-tDCS stimulation 163 
+and an oGTT at follow-up.  164 
+2. Materials and Methods 165 
+2.1 Study population 166 
+Men and women with overweight or obesity  were recruited via email at the University Clinic 167 
+Tübingen in Germany.  Volunteers were eligible to participate if they met the following 168 
+inclusion criteria: age between 20 to 65 years; body mass inde x (BMI) between 25.5 and 39 169 
+kg/m2 with a waist circumference of ≥ 80 cm in women and ≥ 94 cm in men; stable body weight 170 
+(weight gain or loss ≤ 5 kg within 3 months). The exclusion criteria were: manifest T2DM ; 171 
+insufficient knowledge of the German language;  pregnancy or lactation; history of severe 172 
+mental or somatic disorders including neurological disease; drug or alcohol abuse; hemoglobin 173 
+values ≤ 12g/dl for women and ≤ 14g/dl for men; magnetic resonance imaging (MRI) contra-174 
+indications; participation in a lifestyle intervention or pharmaceutical study. Written informed 175 
+consent was obtained from all partici pants. The ethics committee of the University Hospital 176 
+Tübingen approved the study protocol (project number: 243/2019BO1) and it was registered on 177 
+ClinicalTrials-gov (registration number: NCT04420650). The trial was carried out from May 178 
+26, 2020, until September 28, 2023, according to the guidelines of the Declaration of Helsinki.  179 
+2.2 Experimental design and procedure 180 
+The study was conducted as a double -blind, parallel-group design , sham -controlled trial 181 
+comparing active ( anodal or cathodal ) net-tDCS versus sham . The experimental design is 182 
+depicted in Fig. 1 (reporting checklist for tDCS studies is shown in Suppl. Table 1). In short, 183 
+participants attended a total of five visits and were screened for eligibility criteria via phone 184 
+prior to the baseline visit. At baseline, participants were interviewed for pre-existing psychiatric 185 
+and neurological conditions during a detailed medical history  assessment, followed by 186 
+determination of body weight, body size, waist circumference and hip circumference. 187 
+Participants underwent a resting -state fMRI  and completed a series of psychometric 188 
+questionnaires (see Suppl. Methods for questionnaire information) . Following, thre e 189 
+consecutive visits were conducted 7 to 76 days after the baseline visit . Participants were 190 
+assigned using a block randomization method  into either the anodal  net-tDCS, cathodal net -191 
+tDCS or sham group . At the visits, participants, who were instructed to f ast for 4 -6 hours 192 
+beforehand, arrived between 11:00 am and 3:00 pm  and completed a battery of state 193 
+questionnaires, namely Food Craving Questionnaire – State (FCQ-S), Desire to eat Visual 194 
+Analogue Scale (VAS) and positive and negative affect schedule (PANAS) (pre net-tDCS, see 195 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+8 
+ 
+Suppl. Methods for questionnaire information ). This was  followed by 25 minutes of either 196 
+anodal, cathodal, or sham net-tDCS. During stimulation, participants completed a SST for 20 197 
+minutes. Subsequently, they repeated the state questionnaire battery (post net-tDCS) and filled 198 
+out a questionnaire evaluating any side effects that may have occurred during stimulation. After 199 
+the net-tDCS treatment, participants were left alone in an examination room where an ad libitum 200 
+buffet was provided for 30 minutes. The follow -up took place one day after the last visit and 201 
+included the same procedures as the baseline visit, followed by a 75-g oGTT.  202 
+2.3 Network transcranial direct current stimulation 203 
+Stimulation aimed to modulate the hypothalamus appetite control  network and  stimulation 204 
+montage was d erived as described prev iously [49]. In brief, electrode position and current 205 
+strength were determined using the Stimweaver TM algorithm [50], which resulted in a 12 -206 
+channel optimization. The target network was defined based on the correlation strength of the 207 
+resting-state FC network of the hypothalamus  on the Neurosynth website 208 
+(https://neurosynth.org/locations/6_2_-10_6/). Stimulation was applied using a network -209 
+targeted multichannel tDCS device (Starstim® 32, Neuroelectrics Barcelona S.L.U., Barcelona, 210 
+Spain) controlled by the  corresponding NIC 2.0  software ( NIC2 v2.0.11, 211 
+https://www.neuroelectrics.com/resources/software). Twelve circular Ag/AgCl gelled 212 
+electrodes were fitted into a neoprene cap (Neoprene Headcap, Neuroelectics Barcelona S.L.U., 213 
+Barcelona, Spain)  at positions defined by the  international 10-20 EEG system ( see Suppl. 214 
+Table 2  for details on  electrode placement, current intensities and current density).  Prior 215 
+stimulation, the scalp at the electrode positions was gently rubbed with a cotton swab soaked in 216 
+alcohol in order to increase cur rent conductivity. Net-tDCS was aimed to activate (anodal) or 217 
+inhibit (cathodal) the functional connected brain areas of the hypothalamus . Active net-tDCS 218 
+was delivered for 25 min, including a 15 s ramp -up and 60 s ramp-down at the beginning and 219 
+end of the session. The maximum total injected current was limited to 4 mA, with each electrode 220 
+delivering up to 2 mA  (in absolute value) . A reference electrode for the return current was 221 
+attached to the participant's ear. In the sham stimulation, the procedures were identical except 222 
+that the current was only active during the ramp -up and ramp -down phases using the anodal 223 
+protocol to simulate the sensation of stimulation . Impedance was kept below 10 kΩ to reduce 224 
+skin sensation.  225 
+2.3.1 Blinding and Tolerability of net-tDCS 226 
+Blinding was ensured by using the NIC 2.0 software  (Neuroelectrics Barcelona S.L.U., 227 
+Barcelona, Spain), with both the investigator and participant unaware of the particular protocol 228 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+9 
+ 
+being used, which was generically named and activated with a password by a third party in 229 
+‘double-blind’ mode. At follow-up, participants were asked what stimulation (active or sham) 230 
+they believed was delivered during the sessions.  231 
+Side effects during net-tDCS were evaluated using a 100 mm VAS directly after the session. 232 
+Questions included the specification of common possible side effects (itching, tingling, pain, 233 
+exhaustion and nausea). Moreover, participants were asked on a 100 mm VAS, ‘Overall, how 234 
+uncomfortable was the stimulation for you?’  (i.e., discomfort). A blank line was included for 235 
+any other side effects not mentioned as VAS.  236 
+2.4 Stop-Signal task 237 
+For measuring response inhibition during net -tDCS, the SST by CANTAB  (Cambridge 238 
+Neuropsychological Test Automated Battery) was applied simultaneously to the stimulation for 239 
+20 minutes. 240 
+The Stop Signal Reaction Time (SSRT) was used as the primary outcome parameter. For the 241 
+task, participants were instructed to press a button on the left or right edge of a tablet computer 242 
+screen using their corresponding index finger, reacting as swiftly as possible, every time an 243 
+arrow in the screens’ center pointed to the left or right site. In 25 % of the cases, an additional 244 
+auditory signal (beep sound) was presented, signalling the participant to withhold the pre-potent 245 
+response (response inhibition). The experiment includes a 16-item trial block and a total of five 246 
+test blocks, each block consisting of 64 trials. The  task uses a staircase design to dynamically 247 
+adjust to the participants’ perfo rmance, leading to a success rate of 50  % for inhibition. The 248 
+SSRT is calculated by a stochastic model that takes into account the average reaction time in 249 
+runs without a stop signal, as well as the t ime interval between visual and auditory signal in 250 
+which the participant is still able to successfully inhibit in 50 % of cases [51].  251 
+2.5 Oral glucose tolerance test 252 
+All participants underwent during follow-up an oGTT with a standardized 75 g glucose solution 253 
+(ACCU-Check® Dextro, Roche, Germany). At six timepoints (pre and 30, 60, 90, 120, and 150 254 
+min), blood samples were taken to determine glucose and insulin. Blood glucose was measured 255 
+via the glucose dehydrogenase method using a HemoCue blood glucose photometer 256 
+(HemoCueAB, Aengelholm, Sweden). Levels of plasma insulin were determined by using 257 
+chemiluminesence assays for ADVIA Centaur (Siemens Medical Solutions, Fernwald, 258 
+Germany). 259 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+10 
+ 
+2.6 Ad-libitum food buffet 260 
+Ad libitum food consumption was measured using a standardized buffet, which comprised of a 261 
+vast collection of food items ( Suppl. Table 3 for weight and nutritional information). 262 
+Participants were instructed to eat as much as they liked within 30 minutes. During this time , 263 
+they were not allowed to interact with their mobile phone or comparable devices to avoid 264 
+distractions. Participants were told that they could take left over bakery goods home. Food items 265 
+were weighted before and after buffet. For calorie intake evaluation , total calorie intake and 266 
+kilocalories (kcal) intake from marcronu trients were used . Caloric intake by s weet food was 267 
+separately analyzed, with the analysis being based on the percentage of calories from swee t 268 
+foods relative to the total kcal intake from each participant. The analysis included the following 269 
+items: apple filled pastry, chocolate croissant, pastry with with poppy seed filling, cocoa powder 270 
+for chocolate milk, sugar, apple juice, apple, banana, h oney, strawberry jam, hazelnut spread 271 
+(Nutella), raspberry joghurt, chocolate and vanilla pudding. 272 
+2.7 Functional magnetic resonance imaging data acquisition 273 
+Functional fMRI data of the whole brain were collected  at baseline and follow-up using a 3.0 274 
+T sca nner (Magnetom Prisma, Siemens Healthcare GmbH, Erlangen, Germany)  with a 20 -275 
+channel head coil . Functional resting -state data were obtained by using simultaneous multi –276 
+band sequence. The following sequence parameters were used: Acceleration factor = 4; TR = 277 
+1.18s; TE = 34ms; FOV = 205 mm2; flip angle 65°; voxel size 2.5 x 2.5 x 2.5 mm 3; slice 278 
+thickness 2.5 mm; The images were acquired in an interleaved order. The total scan period was 279 
+3 minutes and 56 seconds, with each brain volume consi sting of 60 slices and each functional 280 
+run containing 200 image volumes. Moreover, high-resolution T1 weighted anatomical images 281 
+(MP2RAGE: 192 slices, matrix: 256 x 240, 1 x 1 x 1 mm3) of the brain were acquired.  282 
+2.8 Resting-state fMRI Data preprocessing and analyses 283 
+Analyses of resting state fMRI data were performed using CONN  [52] release 22.a [53] and 284 
+SPM [54] release 12.7771 (see Suppl. Material). First-level analysis: Seed-based connectivity 285 
+maps (SBC) were estimated characterizing the patterns of functional connectivity with the 286 
+hypothalamus seed and the rest of the brain. The hypothalamus seed was defined as MNI 287 
+coordinate x = 6, y = 2, z = -10, including a 4 mm sphere according to our previous published 288 
+research [49]. Functional connectivity strength was represented by Fisher-transformed bivariate 289 
+correlation coefficients from a weighted general linear model (we ighted-GLM), modeling the 290 
+association between their BOLD signal timeseries. The regions of the hypothalamic FC network 291 
+were defined based on the hypothalamic resting -state FC pattern 292 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+11 
+ 
+(https://neurosynth.org/locations/6_2_-10_6/) thresholded at r <  − 0.005 and r > 0.005. The 293 
+thresholded mask was binarized and SBC with the hypothalamus seed and the mask was 294 
+computed. The values were extracted from the participant’s first level SBC analysis.  295 
+2.9 Statistical analysis 296 
+Data is presented as mean and stand ard deviation [ SD] unless otherwise stated. Statistical 297 
+analysis was performed using the program R (R version 4.3.3 (2024-02-29 ucrt), https://cran.r-298 
+project.org/bin/windows/base/) for statistical computing and graphics . Statistical significance 299 
+was set at p ≤ 0.05. The normality of the data distribution was tested using the Shapiro‒Wilk 300 
+test. When data was not normally distributed, parameters were log -transformed prior analysis 301 
+or non-parametrical analyses were conducted.  302 
+Blinding efficiency as well as d ifferences in side effects between study visits  were analyzed 303 
+using a Friedman-test and Kruskal-Wallis test. For post -hoc comparisons, Dunn -Bonferroni 304 
+corrections were used.  305 
+To compare demographics and scores of psychol ogical questionnaires, an ANOVA or a 306 
+Kruskal-Wallis test was used. A Fisher’s exact test was examined to compare sex ratio.  307 
+To analyze the effect of net-tDCS on eating behavior (state questionnaires and food intake) and 308 
+response inhibition, we conducted l inear mixed effects models (LMER) employing the lmer 309 
+function of the lme4 package in R. Net-tDCS visits (visit 1, visit 2, visit 3) and net-tDCS group 310 
+(sham, anodal, cathodal) were entered as fixed effects in all  of these  models. We used the 311 
+extracted FC v alues to evaluate whether changes in resting -state FC of the hypothalamus 312 
+appetite-control network (follow-up minus baseline) show an interaction with the changes in 313 
+SSRT. In this exploratory analysis, the changes in hypothalamic FC from baseline to follow-up 314 
+were considered as fixed effects. Sham and visit 1 were defined as reference category.  315 
+Participants were included as random factor to account for  varying intercepts between 316 
+participants. To evaluate the effects on peripheral metabolism, we used the lm function of the 317 
+stats package in R. Here, condition (sham, anodal, cathodal) were entered as fixed effects in all 318 
+models and sham was defined as reference category.  319 
+To identify the best -fitting model, we employed a stepwise model approach with the Akaike 320 
+Information Criterion (AIC) as basis for the selection. See Suppl. Table 4 for the model 321 
+selection procedures. The general covariates tested across different analyses included age and 322 
+sex. In more specific analyses, the following covariates were tested: For macronutrient intake, 323 
+considered covariates were BMI, total kcal intake, and the time period since the last meal (in 324 
+minutes) prior to net -tDCS. For sweet food intake, the covariates tested were BMI, total kcal 325 
+intake, and the time  period since the last meal (in minutes) prior to net -tDCS. For state 326 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+12 
+ 
+questionnaires, baseline values were considered. For total kcal intake, BMI and the time period 327 
+since the last meal (in minutes) prior to net -tDCS were tested. Residuals of the models were 328 
+investigated to assess normality and homoscedasticity. To check multicollinearity, we used the 329 
+check_collinearity function in the performance package. Results were printed via the tab_model 330 
+function in the sjPlot package. Figures were created using the ggplot2 and ggeffects packages.  331 
+3. Results 332 
+3.1 Participants 333 
+Sixty-six men and women were eligible for the study and forty-four participants were included 334 
+in the final analysis ( 36.3 years, BMI 30.6 kg/m 2, 52.3  % female) . The CONSORT flow 335 
+diagram for the recruitment process is s hown in Suppl. Fig. 1. Participants’ baseline and 336 
+anthropometric characteristics are reported in Table 1. No significant difference between net-337 
+tDCS groups were observed in sex ratio, age, weight, BMI, waist circumference, hip 338 
+circumference, waist-to-hip r atio ( WHR), body -fat content  and number of days between 339 
+baseline and follow-up. In addition, there were no statistical differences in eating behavior trait 340 
+profiles between stimulation groups (Suppl. Table 5).  341 
+3.2 Blinding and tolerability 342 
+Participants were not able to distinguish active net-tDCS from sham net-tDCS (χ²(4) = 2.28, p 343 
+= 0.685). Suppl. Table 6 gives an overview of the net-tDCS groups and the participants’ guess. 344 
+Active and sham net-tDCS was well tolerated and no participant withdrew from the study due 345 
+to side effects. There was no significant difference with respect to  side effects between net-346 
+tDCS groups (see Suppl. Results and Suppl. Table 7 for statistical analysis ). We fou nd 347 
+significant effects of visit;  There was a significant difference for the anodal group regarding 348 
+discomfort (χ²(2) = 7.35, p = 0.025) with higher values at visit 2 compared to visit 1 (p adjust= 349 
+0.043). Moreover, there was a significant difference in the cathodal group ( χ²(2) = 7.00, p = 350 
+0.030) showing post-hoc higher itching values at visit 1 compared to visit 3 (padjust= 0.024). 351 
+3.3 Response inhibition 352 
+There was a significant main effect of net -tDCS on the SSRT for sham vs. anodal net -tDCS 353 
+(Estimate = -0.12, 95%, CI [ -0.19 – -0.04], p  = 0.004) and sham vs. cathodal net -tDCS 354 
+(Estimate = -0.12, 95%, CI [-0.20 – -0.04], p = 0.005), indicating a greater response inhibition 355 
+for active net-tDCS. Age was a significant predictor, indicating a higher SSRT with increasing 356 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+13 
+ 
+age (Estimate = 0.04, 95%, CI [0.01 – 0.06], p = 0.004). No effects of sex was observed. The 357 
+raw values of the SSRT for all visits and net-tDCS groups are available in Suppl. Table 8. 358 
+Since we recently reported that net-tDCS effects on SSRT are associated with hypothalamic FC 359 
+[49], we investigated in an exploratory analysis whether the change in hypothalamic FC from 360 
+baseline to follow -up interacts with the net-tDCS induced effect on SSRT. As in the 361 
+aforementioned model, we found a significant main effect for sham vs. anodal net -tDCS 362 
+(Estimate = -0.13, 95%, CI [ -0.20 – -0.06], p < 0.001) and sham vs. cathodal net -tDCS 363 
+(Estimate = -0.12, 95%, CI [ -0.19 – -0.04], p = 0.00 2). Moreover, w e found a significant 364 
+interaction for anodal net-tDCS × change in hypothalamic FC (Estimate = -1.27, CI [-2.07 – -365 
+0.48], p = 0.002) and cathodal net-tDCS × change in hypothalamic FC (Estimate = -0.67, CI [-366 
+1.31 – -0.03], p = 0.039;  Fig. 2 a-c and Suppl. Table 9 ). This  indicates that an increase in 367 
+hypothalamic FC from baseline to follow -up was related to better response inhibition  in the 368 
+active net-tDCS groups compared to sham. 369 
+3.4 Food consumption 370 
+No significant main effect of net-tDCS group on total intake (kcal) was observed for sham vs. 371 
+anodal net-tDCS (Estimate = -108.64, CI = [-519.61 – 302.32], p = 0.602) or sham vs. cathodal 372 
+net-tDCS (Estimate = 72.19, [CI = -346.20 – 490.58], p = 0.733); Suppl. Table 10). There was 373 
+no effect of visit. Sex was a significant predictor with male participants showing a higher kcal 374 
+intake compared to women (Estimate = 752.14, [CI = 412.28 – 1092.00], p < 0.001). Food 375 
+intake in kcal for all three visits and net -tDCS groups are shown in Suppl. Table 11 and Fig. 376 
+3a-d. 377 
+For macronutrient intake, no main effect for sham vs. anodal net -tDCS and sham vs. cathodal 378 
+net-tDCS was observed (all p > 0.05; Suppl. Table 12). For carbohydrate intake, there was a 379 
+significant interaction effect of cathodal net-tDCS x visit 3 (Estimate = -65.15, [CI = -128.09 – 380 
+-2.20], p = 0.043, Fig. 3e). Hence participants of the sham net-tDCS group consumed more 381 
+calories during visit 3 compared to visit 1, while the cathodal stimulated group showed no rise 382 
+in kcal over time.  Moreover, for protein intake, there was a significant interaction effect of 383 
+anodal net-tDCS x visit 3 (Estimate = 18.06, [CI = 0.56 – 35.56], p = 0.043) and cathodal net-384 
+tDCS x visit 3 (Estimate = 25.90, [CI = 8.10 – 43.71], p = 0.005, Fig. 3f). Hence, participants 385 
+in the sham group consumed  less protein during visit 3 compared to visit 1, while the active 386 
+tDCS groups showed no reduction in comparison.  Anodal tDCS has previously been reported 387 
+to decrease craving or appetite for sweet foods [33; 35; 36; 38] . Therefore, as an exploratory 388 
+analysis, we evaluated if sham vs. active net-tDCS was related to lower  sweet food intake . 389 
+Results showed a significant main effect for sham vs. anodal net-tDCS (Estimate = -8.06, [CI 390 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+14 
+ 
+= -15.61 – -0.50], p = 0.037; Fig. 4a-b) but not for sham vs. cathodal net-tDCS (Estimate = -391 
+7.56, [CI = -15.25 – 0.13], p = 0.054; Suppl. Table 13), indicating a higher sweet food intake 392 
+for sham vs. anodal but not cathodal net-tDCS. Moreover, total intake (kcal) was a significant 393 
+predictor (Estimate = 0.01, [CI = 0.00 – 0.01], p = 0.006).  394 
+3.5 State questionnaires 395 
+Baseline ratings for desire to eat, FCQ-S values and PANAS did not differ between groups (see 396 
+Suppl. Table 14 for baseline values and analysi s). No main effects for sham vs. anodal net -397 
+tDCS and sham vs. cathodal net-tDCS for desire to eat ratings, FCQ-S and positive and negative 398 
+affect of the PANAS questionnaire were found (all p > 0.05; Suppl. Table 15).  399 
+3.6 Glucose metabolism 400 
+There was no significant main effect of net-tDCS groups on metabolic parameters (all p > 0.05). 401 
+The raw metabolic values  (insulin sensitivity index (ISI) Matsuda, glycohemoglobin A1c  402 
+(HbA1c), fasting insulin/glucose, oGTT -derived 2 hour glucose/insulin and triglycerides) 403 
+divided by net-tDCS groups are shown in Table 2. Parameter estimates for the fixed effects , 404 
+based on the linear models are presented in Suppl. Table 16.  405 
+4. Discussion 406 
+Non-invasive brain stimulation (NIBS) such as tDCS is an emerging tool for improving 407 
+cognitive control over eating in individuals with overweight or obesity. Unlike earlier studies 408 
+focusing on single brain areas, net-tDCS targets entire brain networks. Our study examined net-409 
+tDCS effec ts on the hypothalamus appetite -control network. Stimulation was effectively 410 
+blinded and well tolerated. Our results suggest enhanced inhibitory control and lower caloric 411 
+intake from sweet food after active net-tDCS compared to sham , with strongest effects after 412 
+anodal stimulation. Additionally, increased hypothalamic FC predicted better inhibitory control 413 
+performance in both anodal and cathodal net-tDCS groups.  414 
+Overall, our findings imply that especially anodal net -tDCS of the hypothalamus appetite 415 
+control network can modulate eating behavi or and cognitive control. The association between 416 
+increased hypothalamic FC and enhanced inhibitory control further substantiates the specificity 417 
+of the stimulation for the intended brain network. 418 
+4.1 Active net-tDCS related to better inhibitory control 419 
+We previously showed in a pilot study an improved response inhibition after anodal net -tDCS 420 
+compared to sham in a within-subject design in persons with overweight or obesity [49]. Here, 421 
+we could replicate these effects for anodal net-tDCS, supporting our hypothesis that net-tDCS 422 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+15 
+ 
+targeting the hypothalamus appetite -control network can result in better cognitive functions 423 
+related to inhibitory control. Notably, in contrast to our earlier trial, we also revealed better 424 
+inhibitory control in the cathodal net-tDCS group compared to sham. In fact, previous research 425 
+questioned the simple dichotomy of anodal-excitation and cathodal-inhibition effects, which is 426 
+rarely seen in cognitive studies [55] and cognitive performance was shown to be improved 427 
+using cathodal tDCS [for overview [56]]. Moreover, Batsikadze et al. [57] demonstrated that 428 
+low current of 1 mA cathodal tDCS decreased corticospinal excitability while higher current (2 429 
+mA) was associated with excitatory effects. The present study stimulated with a total injected 430 
+current of 4 mA and was aimed to stimulate a brain network , potentially leading to excitatory 431 
+effects during the cathodal stimulation. Future studies should consider implementing varying 432 
+levels of injected currents  or perform brain imaging measurements to further investigate the 433 
+effects of different strength of cathodal stimulation.  434 
+Resting-state FC was shown to be a predictor for individual variances in cognitive performance 435 
+and impairments [58; 59]. Thereby, lower resting-state FC in brain regions related to cognition 436 
+were found in individuals with obesity [9]. Enhancing FC between the dlPFC and ventromedial 437 
+PFC (vmPFC) was shown to increase food intake -related control mechanisms in participants 438 
+with overweight or obesity [23], emphasizing the critical role of FC between brain areas in 439 
+inhibitory control processes . Both the dlPFC and vmPFC are part of the hypothalamic FC 440 
+network targeted in this study; hence, modulating hypothalamic FC to strengthen control 441 
+mechanisms might in the long run promote weight loss and support weight maintenance . The 442 
+current trial showed that higher increase in hypothalamus resting -state FC is associated with 443 
+better cognitive performance during anodal and cathodal net -tDCS. Evidence from a previous 444 
+study showed that tDCS can affect FC, which is associated with enhanced response inhibition 445 
+[60]. In conclusion, our study provides evidence that net -tDCS influences response inhibition 446 
+with hypothalamus network connectivity playing a crucial role. These findings advance our 447 
+understanding of the neural mechanisms underlying cognitive enhancement through tDCS.  448 
+4.2 Anodal net-tDCS does not reduce total caloric intake but associates with 449 
+lower sweet food intake 450 
+In the present study, total kcal intake was not different between anodal, cathodal net-tDCS and 451 
+sham. This is in contrast to the hypothesized calorie-reducing effects of active stimulations 452 
+previously reported in overweight and obese participants [35; 39; 61]. For macronutrient intake, 453 
+however, we found a significant interaction between stimulation group and visit. Active net-454 
+tDCS groups maintained a stable intake of protein and carbohydrates over the study visits. The 455 
+sham group, on the other hand, shifted to an unhealthier eating pattern after repeated exposure 456 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+16 
+ 
+to the breakfast buffet, by increasing carbohydrate intake an d decreasing protein intake on the 457 
+third visit . Hence, active net -tDCS may facilitate inhibitory control during exposure to an 458 
+obesogenic environment. While only few p revious studies investigated tDCS effects on 459 
+macronutrient intake, Jauch-Chara et al. [38] attributed the calorie-reducing effect after anodal 460 
+tDCS to a reduced carbohydrate  intake. Concomitantly, anodal tDCS over the right dlPFC has 461 
+been previously shown to reduce appetite and cravings for highly palatable foods [33–36; 38], 462 
+and left dlPFC stimulation decreased actual sweet food intake [39]. On the other hand, tDCS of 463 
+the right IFG has been linked to increased chocolate consumption [62]. Indeed, variations in 464 
+stimulation parameters such as stimulation site [63] can contribute to the varied outcomes . In 465 
+the present study, we observed lower caloric intake by sweet food with anodal, but not cathodal 466 
+net-tDCS compared to sham . Unlike previous studies focusing on one brain area  [43], our 467 
+design targeted regions functionally connected to the hypothalamus, which is crucial for the 468 
+regulation of hunger and satiety signals [8]. Stimulation therefore might have followed other 469 
+mechanisms compared to previous research targeting the dlPFC or IFG solely. In fact, targeting 470 
+a whole network has been shown to increase excitability twofold compared to bipolar tDCS 471 
+[47]. Moreover, it has been demonstrated that successful dietary self -control requires the 472 
+synchronized activation of the dlPFC and vmPFC [23; 24], whereby our target network included 473 
+both lateral and medial PFC regions. More specifically, the anodal stimulation was aimed to 474 
+increase excitability of positive functional connections of the hypothala mus as part of the 475 
+vmPFC, hippocampus and posterior cingulate cortex, while simultaneously decreasing negative 476 
+functional connections as the striatum and insula cortex. This suggests that stimulating the  477 
+hypothalamus appetite-control network may more effectively influence hedonic food intake by 478 
+integrating key brain regions for cognitive control and reward. Further investigation of this 479 
+specific network is crucial to better understand the underlying processes. 480 
+4.3 Net-tDCS does not influence subjective rating of food cravings  481 
+While previous studies have reported effects of tDCS on food craving [31–36], this was widely 482 
+questioned in the last years. In the present study, no significant differences were found, which 483 
+aligns with more recent research . For instance, studies in  healthy participants could not show 484 
+beneficial effects on food craving [64; 65], which was also concluded in a meta-analysis [66]. 485 
+However, studies in persons with frequent food cravings or persons with binge eating disorders 486 
+reported reduced food cravings after anodal tDCS [31–36], whereas studies with non-selective 487 
+samples reported no effect on food craving or desire to eat ratings [67]. Beaumont et al. [68] 488 
+observed no impact of anodal tDCS over the right dlPFC on craving or appetite in normal and 489 
+overweight females with mild -to-moderate binge eating, attributing this to the subclinical 490 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+17 
+ 
+severity of conditions. In this study, we included individuals with overweight or obesity without 491 
+eating disorders. Our findings therefore support recent findings suggesting that tDCS does not 492 
+significantly impact food cravings or desire to eat in a non-clinical population.  493 
+4.4 Net-tDCS does not affect glucose metabolism 20 hours after last 494 
+stimulation 495 
+In the present study, active net-tDCS did not affect glucose metabolism and peripheral insulin 496 
+sensitivity, as no effects were detectable at the 20-hour follow-up. During stimulation, previous 497 
+research has shown improved glucose tolerance. Specifically, anodal tDCS over the primary 498 
+motor cortex improve d systemic glucose tolerance, demonstrated by higher glucose infusion 499 
+rates (GIRs) derived from a standard hyperinsulinaemic‐euglycaemic glucose clamp procedure 500 
+[40; 42]. Moreover, Kistenmacher et al. [41] found that anodal tDCS lowered blood glucose 501 
+levels compared to sham , with effects lasting more than 50 minutes post stimulation onset. 502 
+Given that tDCS is able to increase neuronal excitability [27] and energy levels of the brain [40; 503 
+42], it is conceivable that the brain could regulate its own glucose uptake from the periphery as 504 
+needed. Indeed, a positive correlation has been shown between overall cerebral energy 505 
+consumption and systemic glucose tolerance  [42]. Moreover, the brain and specifically the 506 
+hypothalamus controls outflows to the periphery that control systemic glucose metabolism [69]. 507 
+In the present study, the  oGTT was conducted more than 20 hours after the third net-tDCS 508 
+session. Thus, the direct effects of net-tDCS, such as an increased neuronal excitability, are no 509 
+longer present. Hence, it is not possible to evaluate whether net -tDCS acutely influenced 510 
+glucose metabolism during stimulation. Further studies are needed to investigate the effects of 511 
+tDCS on glucose metabolism in a more detailed and time-dependent manner. 512 
+4.5 Limitations and further directions 513 
+In interpreting our findings, several limitations and methodological considerations needs to be 514 
+acknowledged. First, the present study used a stimulation design, based on fixed electrode 515 
+positions according to the international 10-20 EEG system. This reflects a standard 516 
+configuration, individual anatomical differences were not considered. Therefore, it is possible 517 
+that for some individuals we did not target the optimal stimulation points. Future trials should 518 
+evaluate the possibility of personalized electrode arrangements, according to their unique brain 519 
+anatomy and fMRI network dynamics.  520 
+Moreover, it is crucial to acknowledge that fMRI measurements and the oGTT were conducted 521 
+one day after the last visit. Consequently, we cannot decipher direct acute effects of net-tDCS 522 
+compared to sham on neural activity and functional con nectivity as well as metabolism . The 523 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+18 
+ 
+excitatory effects of anodal tDCS measured based on changes in motor evoked potential amplitudes 524 
+haven been shown to  be present up to 90 minutes after completion of tDCS  [57]. Hence, future 525 
+studies should implement fMRI recordings directly after stimulation to identify regional and 526 
+network related changes in response to net-tDCS. Additionally, the time span between baseline and 527 
+follow-up ranged from 7-76 days which could have influenced outcomes.  528 
+Furthermore, hormonal fluctuations, which are known to influence food cravings and brain control 529 
+on metabolism, as during the menstrual cycle or menopause in women [70; 71], were not taken into 530 
+account in the present work and should be investigated in future studies.  531 
+5. Conclusion 532 
+In conclusion, these find ings demonstrate that anodal  and cathodal  net-tDCS targeting the 533 
+hypothalamus appetite-control network is a suitable approach for enhancing inhibitory control. 534 
+Anodal stimulation shows a greater potential to ameliorate hedonic food intake than cathodal 535 
+or sham net -tDCS. Furthermore, our results demonstrate the influence of active anodal and 536 
+cathodal network tDCS on hypothalamic functional connectivity 20 hours after simulation and 537 
+its potential link to inhibitory control.  538 
+Acknowledgments 539 
+We thank all parti cipants for their participation in this project. We thank Ronan Le Gleut, 540 
+Aaditya Sharma, and Elmar Spiegel from the Core Facility Statistical Consulting at Helmholtz 541 
+for their statistical consulting. The authors also thank Maike Borutta (University of Tüb ingen, 542 
+Tübingen, Germany) for her excellent technical assistance. The study was supported in parts by 543 
+a grant (01GI0925) from the Federal Ministry of Education and Research (BMBF) to the 544 
+German Center for Diabetes Research (DZD e.V.). Figures were created with BioRender.com. 545 
+Data availability 546 
+The datasets generated and analysed during the current study are not publicly available due to 547 
+being used in further work which is not yet published, but are available from the corresponding 548 
+author on reasonable request. 549 
+CRediT authorship contribution statement 550 
+TEN: Investigation, Methodology, Visualization, Formal analysis, Data Curation , Writing – 551 
+original draft, Writing – Review & Editing . RV: Formal Analysis, Methodology, Writing – 552 
+original draft, Writing – Review & Editing. MB/LT/MG/JT: Investigation, Data Curation. DL: 553 
+Data Curation. GR/RS: Software, Writing – Review & Editing. MH: Conceptualization, 554 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+19 
+ 
+Writing – Review & Editing. ALB: Writing – Review & Editing. CP: Writing – Review & 555 
+Editing. HP: Conceptualization, Resources, Writing – Review & Editing. SK : 556 
+Conceptualization, Project administration, Methodology, Validation, Supervision, Funding 557 
+acquisition, Writing – Review & Editing.  558 
+Declaration of competing interest 559 
+GR is a co -founder and shareholder and works for  Neuroelectrics, a company developing 560 
+medical devices for NIBS. RS works for Neuroe lectrics. Outside of the current work, MH 561 
+reports participation in advisory board for Boehringer Ingelheim, Sanofi and Amryt, and lecture 562 
+fees from Amryt, AstraZeneca, Bayer, Sanofi, Eli Lilly, Novartis, Novo Nordisk  and 563 
+Boehringer Ingelheim. TEN, RV, MB, LT, MG, JT, DL, ALB, CP, HP and SK report no conflict 564 
+of interest. 565 
+References 566 
+1 World Health Organization. Obesity. https://www.who.int/news-room/facts-in-567 
+pictures/detail/6-facts-on-obesity (16 July 2024, date last accessed). 568 
+2 Blüher M. Obesity: global epidemiology and pathogenesis. Nat Rev Endocrinol 569 
+2019;15:288–98. 570 
+3 Hill JO. Understanding and addressing the epidemic of obesity: an energy balance 571 
+perspective. Endocr Rev 2006;27:750–61. 572 
+4 Shefer G, Marcus Y, Stern N. Is obesity a brain disease? Neurosci Biobehav Rev 573 
+2013;37:2489–503. 574 
+5 Kullmann S, Kleinridders A, Small DM et al. Central nervous pathways of insulin action 575 
+in the control of metabolism and food intake. The Lancet Diabetes & Endocrinology 576 
+2020;8:524–34. 577 
+6 Müller TD, Blüher M, Tschöp MH et al. Anti-obesity drug discovery: advances and 578 
+challenges. Nat Rev Drug Discov 2022;21:201–23. 579 
+7 Belfort-DeAguiar R, Seo D. Food Cues and Obesity: Overpowering Hormones and 580 
+Energy Balance Regulation. Curr Obes Rep 2018;7:122–29. 581 
+8 Kullmann S, Veit R. Resting-state functional connectivity of the human hypothalamus. 582 
+Handb Clin Neurol 2021;179:113–24. 583 
+9 Li G, Hu Y, Zhang W et al. Brain functional and structural magnetic resonance imaging 584 
+of obesity and weight loss interventions. Mol Psychiatry 2023;28:1466–79. 585 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+20 
+ 
+10 Morys F, Tremblay C, Rahayel S et al. Neural correlates of obesity across the lifespan. 586 
+Commun Biol 2024;7:656. 587 
+11 Lowe CJ, Reichelt AC, Hall PA. The Prefrontal Cortex and Obesity: A Health 588 
+Neuroscience Perspective. Trends Cogn Sci (Regul Ed ) 2019;23:349–61. 589 
+12 Le TM, Liao D-L, Ide J et al. The interrelationship of body mass index with gray matter 590 
+volume and resting-state functional connectivity of the hypothalamus. Int J Obes (Lond) 591 
+2020;44:1097–107. 592 
+13 Kullmann S, Veit R, Crabtree DR et al. The effect of hunger state on hypothalamic 593 
+functional connectivity in response to food cues. Hum Brain Mapp 2023;44:418–28. 594 
+14 Devoto F, Zapparoli L, Bonandrini R et al. Hungry brains: A meta-analytical review of 595 
+brain activation imaging studies on food perception and appetite in obese individuals. 596 
+Neurosci Biobehav Rev 2018;94:271–85. 597 
+15 Miyake A, Friedman NP, Emerson MJ et al. The unity and diversity of executive 598 
+functions and their contributions to complex "Frontal Lobe" tasks: a latent variable 599 
+analysis. Cogn Psychol 2000;41:49–100. 600 
+16 Verbruggen F, Aron AR, Band GP et al. A consensus guide to capturing the ability to 601 
+inhibit actions and impulsive behaviors in the stop-signal task. Elife 2019;8. 602 
+17 Bartholdy S, Dalton B, O'Daly OG et al. A systematic review of the relationship between 603 
+eating, weight and inhibitory control using the stop signal task. Neurosci Biobehav Rev 604 
+2016;64:35–62. 605 
+18 Klerk MT de, Smeets PAM, La Fleur SE. Inhibitory control as a potential treatment 606 
+target for obesity. Nutr Neurosci 2023;26:429–44. 607 
+19 Veit R, Schag K, Schopf E et al. Diminished prefrontal cortex activation in patients with 608 
+binge eating disorder associates with trait impulsivity and improves after impulsivity-609 
+focused treatment based on a randomized controlled IMPULS trial. Neuroimage Clin 610 
+2021;30:102679. 611 
+20 Price M, Lee M, Higgs S. Food-specific response inhibition, dietary restraint and snack 612 
+intake in lean and overweight/obese adults: a moderated-mediation model. Int J Obes 613 
+(Lond) 2016;40:877–82. 614 
+21 Nederkoorn C, Smulders FTY, Havermans RC et al. Impulsivity in obese women. 615 
+Appetite 2006;47:253–56. 616 
+22 Chamberlain SR, Derbyshire KL, Leppink E et al. Obesity and dissociable forms of 617 
+impulsivity in young adults. CNS Spectr 2015;20:500–07. 618 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+21 
+ 
+23 Kohl SH, Veit R, Spetter MS et al. Real-time fMRI neurofeedback training to improve 619 
+eating behavior by self-regulation of the dorsolateral prefrontal cortex: A randomized 620 
+controlled trial in overweight and obese subjects. Neuroimage 2019;191:596–609. 621 
+24 Hare TA, Camerer CF, Rangel A. Self-control in decision-making involves modulation 622 
+of the vmPFC valuation system. Science 2009;324:646–48. 623 
+25 Szabo-Reed AN, Martin LE, Hu J et al. Modeling interactions between brain function, 624 
+diet adherence behaviors, and weight loss success. Obes Sci Pract 2020;6:282–92. 625 
+26 Stagg CJ, Antal A, Nitsche MA. Physiology of Transcranial Direct Current Stimulation. 626 
+J ECT 2018;34:144–52. 627 
+27 Nitsche MA, Paulus W. Excitability changes induced in the human motor cortex by weak 628 
+transcranial direct current stimulation. J Physiol (Lond ) 2000;527 Pt 3:633–39. 629 
+28 Stinson EJ, Travis KT, Magerowski G et al. Improved food Go/No-Go scores after 630 
+transcranial direct current stimulation (tDCS) to prefrontal cortex in a randomized trial. 631 
+Obesity (Silver Spring) 2022;30:2005–13. 632 
+29 Schroeder PA, Farshad M, Svaldi J. Anodal stimulation of inhibitory control and craving 633 
+in satiated restrained eaters. Nutr Neurosci 2023;26:403–13. 634 
+30 Hogeveen J, Grafman J, Aboseria M et al. Effects of High-Definition and Conventional 635 
+tDCS on Response Inhibition. Brain Stimul 2016;9:720–29. 636 
+31 Lapenta OM, Di Sierve K, Macedo EC de et al. Transcranial direct current stimulation 637 
+modulates ERP-indexed inhibitory control and reduces food consumption. Appetite 638 
+2014;83:42–48. 639 
+32 Fregni F, Orsati F, Pedrosa W et al. Transcranial direct current stimulation of the 640 
+prefrontal cortex modulates the desire for specific foods. Appetite 2008;51:34–41. 641 
+33 Goldman RL, Borckardt JJ, Frohman HA et al. Prefrontal cortex transcranial direct 642 
+current stimulation (tDCS) temporarily reduces food cravings and increases the self-643 
+reported ability to resist food in adults with frequent food craving. Appetite 2011;56:741–644 
+46. 645 
+34 Ljubisavljevic M, Maxood K, Bjekic J et al. Long-Term Effects of Repeated Prefrontal 646 
+Cortex Transcranial Direct Current Stimulation (tDCS) on Food Craving in Normal and 647 
+Overweight Young Adults. Brain Stimul 2016;9:826–33. 648 
+35 Burgess EE, Sylvester MD, Morse KE et al. Effects of transcranial direct current 649 
+stimulation (tDCS) on binge eating disorder. Int J Eat Disord 2016;49:930–36. 650 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+22 
+ 
+36 Kekic M, McClelland J, Campbell I et al. The effects of prefrontal cortex transcranial 651 
+direct current stimulation (tDCS) on food craving and temporal discounting in women 652 
+with frequent food cravings. Appetite 2014;78:55–62. 653 
+37 Giel KE, Schag K, Max SM et al. Inhibitory Control Training Enhanced by Transcranial 654 
+Direct Current Stimulation to Reduce Binge Eating Episodes: Findings from the 655 
+Randomized Phase II ACCElect Trial. Psychother Psychosom 2023;92:101–12. 656 
+38 Jauch-Chara K, Kistenmacher A, Herzog N et al. Repetitive electric brain stimulation 657 
+reduces food intake in humans. Am J Clin Nutr 2014;100:1003–09. 658 
+39 Heinitz S, Reinhardt M, Piaggi P et al. Neuromodulation directed at the prefrontal cortex 659 
+of subjects with obesity reduces snack food intake and hunger in a randomized trial. Am J 660 
+Clin Nutr 2017;106:1347–57. 661 
+40 Wardzinski EK, Friedrichsen L, Dannenberger S et al. Double transcranial direct current 662 
+stimulation of the brain increases cerebral energy levels and systemic glucose tolerance 663 
+in men. J Neuroendocrinol 2019;31:e12688. 664 
+41 Kistenmacher A, Manneck S, Wardzinski EK et al. Persistent blood glucose reduction 665 
+upon repeated transcranial electric stimulation in men. Brain Stimul 2017;10:780–86. 666 
+42 Binkofski F, Loebig M, Jauch-Chara K et al. Brain energy consumption induced by 667 
+electrical stimulation promotes systemic glucose uptake. Biol Psychiatry 2011;70:690–668 
+95. 669 
+43 Ester T, Kullmann S. Neurobiological regulation of eating behavior: Evidence based on 670 
+non-invasive brain stimulation. Rev Endocr Metab Disord 2021. 671 
+44 Hall PA, Vincent CM, Burhan AM. Non-invasive brain stimulation for food cravings, 672 
+consumption, and disorders of eating: A review of methods, findings and controversies. 673 
+Appetite 2018;124:78–88. 674 
+45 To WT, Hart J, Ridder D de et al. Considering the influence of stimulation parameters on 675 
+the effect of conventional and high-definition transcranial direct current stimulation. 676 
+Expert Rev Med Devices 2016;13:391–404. 677 
+46 Tremblay S, Lepage J-F, Latulipe-Loiselle A et al. The uncertain outcome of prefrontal 678 
+tDCS. Brain Stimul 2014;7:773–83. 679 
+47 Fischer DB, Fried PJ, Ruffini G et al. Multifocal tDCS targeting the resting state motor 680 
+network increases cortical excitability beyond traditional tDCS targeting unilateral motor 681 
+cortex. Neuroimage 2017;157:34–44. 682 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+23 
+ 
+48 Mencarelli L, Menardi A, Neri F et al. Impact of network-targeted multichannel 683 
+transcranial direct current stimulation on intrinsic and network-to-network functional 684 
+connectivity. J Neurosci Res 2020;98:1843–56. 685 
+49 Ester-Nacke T, Berti K, Veit R et al. Network-targeted transcranial direct current 686 
+stimulation of the hypothalamus appetite-control network: a feasibility study. Sci Rep 687 
+2024;14:11341. 688 
+50 Ruffini G, Fox MD, Ripolles O et al. Optimization of multifocal transcranial current 689 
+stimulation for weighted cortical pattern targeting from realistic modeling of electric 690 
+fields. Neuroimage 2013;89:216–25. 691 
+51 Logan GD, Schachar RJ, Tannock R. Impulsivity and Inhibitory Control. Psychol Sci 692 
+1997;8:60–64. 693 
+52 Whitfield-Gabrieli S, Nieto-Castanon A. Conn: a functional connectivity toolbox for 694 
+correlated and anticorrelated brain networks. Brain Connect 2012;2:125–41. 695 
+53 Nieto-Castanon A, Whitfield-Gabrieli S. CONN functional connectivity toolbox: RRID 696 
+SCR_009550, release 22. Hilbert Press, 2022. 697 
+54 Friston KJ. Statistical Parametric Mapping. In: Kötter R (ed.). Neuroscience Databases. . 698 
+Boston, MA: Springer US, 237–50. 699 
+55 Jacobson L, Koslowsky M, Lavidor M. tDCS polarity effects in motor and cognitive 700 
+domains: a meta-analytical review. Exp Brain Res 2012;216:1–10. 701 
+56 Schroeder PA, Plewnia C. Beneficial Effects of Cathodal Transcranial Direct Current 702 
+Stimulation (tDCS) on Cognitive Performance. J Cogn Enhanc 2017;1:5–9. 703 
+57 Batsikadze G, Moliadze V, Paulus W et al. Partially non-linear stimulation intensity-704 
+dependent effects of direct current stimulation on motor cortex excitability in humans. J 705 
+Physiol (Lond ) 2013;591:1987–2000. 706 
+58 Corriveau A, Yoo K, Kwon YH et al. Functional connectome stability and optimality are 707 
+markers of cognitive performance. Cereb Cortex 2023;33:5025–41. 708 
+59 Lin Q, Rosenberg MD, Yoo K et al. Resting-State Functional Connectivity Predicts 709 
+Cognitive Impairment Related to Alzheimer's Disease. Front Aging Neurosci 710 
+2018;10:94. 711 
+60 Yu J, Tseng P, Hung DL et al. Brain stimulation improves cognitive control by 712 
+modulating medial-frontal activity and preSMA-vmPFC functional connectivity. Hum 713 
+Brain Mapp 2015;36:4004–15. 714 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+24 
+ 
+61 Gluck ME, Heinitz S, Alonso-Alonso M et al. Decreased Snack Food Intake in Obesity 715 
+Following Noninvasive Neuromodulation Targeted to the Left Dorsolateral Prefrontal 716 
+Cortex (LDLPFC). Brain Stimul 2017;10:e37. 717 
+62 To C, Falcone M, Loughead J et al. Got chocolate? Bilateral prefrontal cortex stimulation 718 
+augments chocolate consumption. Appetite 2018;131:28–35. 719 
+63 Beaumont JD, Smith NC, Starr D et al. Effective Transcranial Direct Current Stimulation 720 
+Parameters for the Modulation of Eating Behavior: A Systematic Literature Review and 721 
+Meta-Analysis. Psychosom Med 2022;84:646–57. 722 
+64 Sedgmond J, Lawrence NS, Verbruggen F et al. Prefrontal brain stimulation during food-723 
+related inhibition training: effects on food craving, food consumption and inhibitory 724 
+control. R Soc Open Sci 2019;6:181186. 725 
+65 Sedgmond J, Chambers CD, Lawrence NS et al. No evidence that prefrontal HD-tDCS 726 
+influences cue-induced food craving. Behavioral neuroscience 2020;134:369–83. 727 
+66 Lowe CJ, Vincent C, Hall PA. Effects of Noninvasive Brain Stimulation on Food 728 
+Cravings and Consumption: A Meta-Analytic Review. Psychosom Med 2017;79:2–13. 729 
+67 Georgii C, Goldhofer P, Meule A et al. Food craving, food choice and consumption: The 730 
+role of impulsivity and sham-controlled tDCS stimulation of the right dlPFC. Physiol 731 
+Behav 2017;177:20–26. 732 
+68 Beaumont JD, Dalton M, Davis D et al. No effect of prefrontal transcranial direct current 733 
+stimulation (tDCS) on food craving, food reward and subjective appetite in females 734 
+displaying mild-to-moderate binge-type behaviour. Appetite 2023;189:106997. 735 
+69 Heni M. The insulin resistant brain: impact on whole-body metabolism and body fat 736 
+distribution. Diabetologia 2024. 737 
+70 Bryant M, Truesdale KP, Dye L. Modest changes in dietary intake across the menstrual 738 
+cycle: implications for food intake research. Br J Nutr 2006;96:888–94. 739 
+71 Hummel J, Benkendorff C, Fritsche L et al. Brain insulin action on peripheral insulin 740 
+sensitivity in women depends on menstrual cycle phase. Nat Metab 741 
+  742 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+25 
+ 
+Figures 743 
+ 744 
+Fig. 1.  Experimental design, electrode setup  and resulting normal electric field. (a) Experimental design. 745 
+Participants were randomly assigned to either the anodal, cathodal, or sham -net-tDCS group and completed five 746 
+study days: one baseline assessment, three consecutive visits during which the net -tDCS was administered, and 747 
+the follow -up. (b) Electrode setup for net -tDCS: The electrode assembly consists of 12 ciruclar Ag/AgCl 748 
+electrodes. Orange dots show electrodes where the current entered into the cortex; blue dots indicate electrodes 749 
+where the cu rrent dissipated. (c) Normal electric field (V/m) induced by the net -tDCS montage aimed at 750 
+stimulating the hypothalamus appetite -control network. Figure (c) from [49], originally provided from 751 
+Neuroelectrics Barcelona S.L.U.  Abbreviations: fM RI, functional magnetic resonance imaging; net -tDCS, 752 
+network-transcranial direct current stimulation; oGTT, oral glucose tolerance test.  753 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+26 
+ 
+ 754 
+Fig. 2. Response inhibition results. (a) Raw data of the SSRT for each condition and each visit. Boxplots display 755 
+median and 1.5 x interquartile range. The half -violin plots show the distribution of the data and the dotted lines 756 
+display changes of mean values across visits. (b) Results indicate a greater response inhibition for active net-tDCS. 757 
+P values are for main effect of active net-tDCS group compared to sham by two-sided linear mixed model adjusted 758 
+for age and sex , with change in hypothalamus functional connectivity (FC) as fixed effects . (c) Results indicate 759 
+that a stronger increase in hypothalamic  FC from baseline  to follow-up is associated with shorter SSRT  (better 760 
+inhibitory control) in the active net -tDCS groups compared to the sham group.  P values are for change in 761 
+hypothalamus FC by net-tDCS group interactions. Shaded areas around the line are depicting the 95% confidence 762 
+interval. Full results output can be found in Suppl. Table 9. N = 44. 763 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+27 
+ 
+ 764 
+Fig. 3 . Food consumption results. Raw data of  (a) total intake, (b) fat intake, (c) carbohydrate intake and (d) 765 
+protein intake in kcal for each condition and visit. Boxplots display median and 1.5 x interquartile range. The half-766 
+violin plots show the distribution of the data and the dotted lines display changes of mean values across visits. (e-767 
+f) For carbohydrates, participants of the sham group showed a greater consumption during visit 3 compared to visit 768 
+1, while the cathodal net -tDCS group showed no increase across visits.  For protein consumption, participants of 769 
+the sham group showed a reduction in protein intake during visit 3 compared to visit 1, while the active net -tDCS 770 
+groups maintained a consistent protein intake. P values are for active net-tDCS group by visit interactions using a 771 
+two-sided linear mixed model adjusted for sex and total caloric intake . Full results output of all models can be 772 
+found in Supp. Table 10, 12. N = 44. 773 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+28 
+ 
+ 774 
+Fig. 4. Sweet food intake results.  (a) Raw data of the percentage of caloric intake by sweet food to total calorie 775 
+intake for each condition and each visit. Boxplots display median and 1.5 x interquartile range. The half -violin 776 
+plots show the distribution of the data and the dotted lines display changes of mean values across visits. (b) Results 777 
+show a significantly lower sweet food intake in the anodal net -tDCS group compared to the sham group.  P value 778 
+is for main effect of anodal net-tDCS group compared to sham by two-sided linear mixed model adjusted for total 779 
+caloric intake. Full results output can be found in Supp. Table 13. N = 44. 780 
+Tables 781 
+Table 1. Participant baseline and anthropometric characteristics of net-tDCS groups.  782 
+ 
+ 
+sham 
+(N=15) 
+anodal 
+(N=15) 
+cathodal 
+(N=14) 
+p-value Total 
+(N=44) 
+Sex Women 8 (53.3%) 8 (53.3%) 7 (50.0%) 0.979 23 (52.3%) 
+ Men 7 (46.7%) 7 (46.7%) 7 (50.0%) 
+ 
+21 (47.7%) 
+Age (years) Mean (SD) 36.5 (13.0) 34.6 (12.0) 37.8 (15.1) 0.997 36.3 (13.1) 
+BMI (kg/m2) Mean (SD) 30.4 (3.06) 30.9 (3.86) 30.6 (2.80) 0.922 30.6 (3.21) 
+Waist 
+circumference 
+(cm) 
+Mean (SD) 94.0 (8.43) 95.6 (10.3) 95.1 (10.3) 0.902 94.9 (9.50) 
+WHR Mean (SD) 0.880 
+(0.0714) 
+0.885 
+(0.0582) 
+0.861 
+(0.0866) 
+0.651 0.876 
+(0.0717) 
+Body fat content 
+(%, BIA-derived) 
+Mean (SD) 34.4 (10.5) 34.9 (9.71) 34.5 (10.2) 0.999 34.6 (9.89) 
+Number of days 
+between baseline 
+and follow-up visit 
+Mean (SD) 32.2 (21.0) 24.3 (16.4) 27.5 (18.0) 0.611 28.0 (18.4) 
+Mean values from variables between net-tDCS groups were compared using an ANOVA or a Kruskal-Wallis test. 783 
+A Fisher’s exact test was used to compare sex ratio. Abbreviations: BIA, Bioelectrical Impedance Analysis; BMI, 784 
+Body Mass Index; WHR, Waist-to-Hip Ratio. 785 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 
+ 
+ 
+29 
+ 
+Table 2. Participant glucose metabolism values at follow-up. 786 
+ 
+ sham 
+(N=15) 
+anodal 
+(N=15) 
+cathodal 
+(N=14) 
+total 
+(N=44) 
+ISI Matsuda, 
+oGTT-derived 
+(AU) 
+Mean (SD) 12.2 (5.64) 12.6 (8.80) 10.5 (3.95) 11.8 (6.41) 
+HbA1c 
+(mmol/mol) 
+Mean (SD) 34.9 (2.89) 34.2 (3.75) 35.3 (4.94) 34.8 (3.85) 
+HbA1c (%) 
+ 
+Mean (SD) 5.35 (0.261) 5.29 (0.352) 5.39 (0.437) 5.34 (0.349) 
+Fasting glucose 
+(mmol/L) 
+Mean (SD) 4.95 (0.419) 4.93 (0.363) 5.16 (0.336) 5.01 (0.382) 
+Fasting insulin 
+(pmol/L) 
+ 
+Mean (SD) 78.7 (28.8) 83.9 (50.4) 79.4 (28.6) 80.7 (36.7) 
+Glucose, 2 hour 
+(mmol/L) 
+Mean (SD) 5.08 (1.19) 5.16 (1.45) 5.31 (0.935) 5.18 (1.19) 
+Insulin, 2 hour 
+(pmol/L) 
+Mean (SD) 338 (389) 385 (205) 352 (209) 359 (277) 
+Fasting 
+Triglycerides 
+(mg/dL) 
+Mean (SD) 111 (66.6) 101 (39.5) 97.4 (39.9) 104 (49.7) 
+Abbreviations: AU, arbitrary units; HbA1c, glycohemoglobin A1c; ISI, insulin sensitivity index; oGTT, oral 787 
+glucose tolerance test. 788 
+ . CC-BY-NC-ND 4.0 International licenseIt is made available under a 
+perpetuity. 
+ is the author/funder, who has granted medRxiv a license to display the preprint in(which was not certified by peer review)preprint 
+The copyright holder for thisthis version posted December 12, 2024. ; https://doi.org/10.1101/2024.12.11.24318873doi: medRxiv preprint 

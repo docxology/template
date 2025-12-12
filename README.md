@@ -2,7 +2,7 @@
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/BUILD_SYSTEM.md)
 [![Test Coverage](https://img.shields.io/badge/coverage-99.88%25%20project%20|%2061.48%25%20infra-brightgreen)](docs/BUILD_SYSTEM.md)
-[![Tests](https://img.shields.io/badge/tests-2175%2F2175%20passing%20(100%25)-brightgreen)](docs/BUILD_SYSTEM.md)
+[![Tests](https://img.shields.io/badge/tests-2245%2F2245%20passing%20(100%25)-brightgreen)](docs/BUILD_SYSTEM.md)
 [![Documentation](https://img.shields.io/badge/docs-50%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
 
@@ -171,11 +171,11 @@ graph TB
 ### Option 2: Quick Commands Reference
 
 ```bash
-# Interactive menu (recommended) - 10-stage extended pipeline
+# Interactive menu (recommended) - dispatcher to choose manuscript or literature operations
 ./run.sh
 
-# Or run full 10-stage pipeline directly (includes optional LLM review)
-./run.sh --pipeline
+# Or run full 10-stage manuscript pipeline directly (includes optional LLM review)
+./run_manuscript.sh --pipeline
 
 # Alternative: Core 6-stage pipeline (no LLM dependencies)
 python3 scripts/run_all.py
@@ -194,7 +194,7 @@ open output/pdf/project_combined.pdf
 ```mermaid
 graph LR
     subgraph Status["✅ System Status"]
-        TESTS[Tests: 2175/2175 passing<br/>1855 infra + 320 project<br/>100% success rate]
+        TESTS[Tests: 2245/2245 passing<br/>1894 infra [8 skipped] + 351 project<br/>100% success rate]
         COV[Coverage: 99.88% project<br/>61.48% infra<br/>Exceeds requirements]
         BUILD[Build Time: 84s<br/>Optimal performance<br/>(without LLM review)]
         PDFS[PDFs: 14/14 generated<br/>All sections complete]
@@ -224,7 +224,7 @@ graph LR
 **Key Metrics:**
 - **Test Coverage**: 99.88% project, 61.48% infrastructure (exceeds requirements) - [Details](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 - **Build Time**: 84 seconds (optimal, without optional LLM review) - [Performance Analysis](docs/BUILD_SYSTEM.md#stage-breakdown)
-- **Tests Passing**: 2175 tests (1855 infrastructure + 320 project) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+- **Tests Passing**: 2245 tests (1894 infrastructure [8 skipped] + 351 project) - [Test Report](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 - **PDFs Generated**: 14 (all sections) - [Output Summary](docs/BUILD_SYSTEM.md#generated-files)
 - **Documentation**: 50+ comprehensive files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 
@@ -324,7 +324,7 @@ graph TB
     
     subgraph PC["Project Components"]
         TESTS[tests/<br/>Test suite<br/>Comprehensive coverage]
-        DOCS[docs/<br/>Documentation<br/>42+ guides]
+        DOCS[docs/<br/>Documentation<br/>50+ guides]
         MANUSCRIPT[project/manuscript/<br/>Research sections<br/>Generate PDFs]
         OUTPUT[output/<br/>Generated files<br/>PDFs, figures, data]
     end
@@ -372,7 +372,7 @@ The project follows a **thin orchestrator pattern** where:
 - **`infrastructure/`** and **`project/src/`** contain **ALL** business logic, algorithms, and implementations
 - **`scripts/`** are **lightweight wrappers** that coordinate pipeline stages
 - **`tests/`** ensure **comprehensive coverage** of all functionality
-- **`run.sh`** provides a unified interactive menu for all operations
+- **`run.sh`** provides a dispatcher menu to choose between manuscript and literature operations
 
 **Benefits:** [Read more](docs/ARCHITECTURE.md#thin-orchestrator-pattern)
 
@@ -459,11 +459,11 @@ pip install -e .
 ### 3. Generate Manuscript
 
 ```bash
-# Interactive menu (recommended) - 10-stage extended pipeline with LLM review
+# Interactive menu (recommended) - dispatcher to choose manuscript or literature operations
 ./run.sh
 
-# Or run full 10-stage pipeline directly (stages 0-9, includes optional LLM)
-./run.sh --pipeline
+# Or run full 10-stage manuscript pipeline directly (stages 0-9, includes optional LLM)
+./run_manuscript.sh --pipeline
 
 # Alternative: Core 6-stage pipeline (stages 00-05, no LLM dependencies)
 python3 scripts/run_all.py
@@ -478,9 +478,10 @@ python3 scripts/05_copy_outputs.py           # Copy final deliverables
 ```
 
 **Pipeline Entry Points:**
-- **`./run.sh --pipeline`**: 10 stages (0-9) - Extended pipeline with optional LLM review and translations
+- **`./run.sh`**: Dispatcher menu - choose between manuscript and literature operations
+- **`./run_manuscript.sh --pipeline`**: 10 stages (0-9) - Extended pipeline with optional LLM review and translations
+- **`./run_literature.sh`**: Literature search and management operations (7 menu options)
 - **`python3 scripts/run_all.py`**: 6 stages (00-05) - Core pipeline only, no LLM dependencies
-- **`./run.sh`**: Interactive menu with all options (individual stages, LLM operations, literature search)
 
 **See [How To Use Guide](docs/HOW_TO_USE.md) for comprehensive setup instructions at all skill levels.**
 
@@ -624,7 +625,7 @@ pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 - **Real data testing**: Use actual domain data, not synthetic test data
 - **Reproducible**: Fixed seeds and deterministic computation
 
-**Current Status**: 2175 tests passing (1855 infra + 320 project), 99.88% project coverage - [Full Analysis](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+**Current Status**: 2245 tests passing (1894 infra [8 skipped] + 351 project), 99.88% project coverage - [Full Analysis](docs/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 
 ## 📤 Output
 
@@ -659,15 +660,23 @@ graph TD
 
 **[Complete workflow](docs/WORKFLOW.md)** | **[Architecture](docs/ARCHITECTURE.md)** | **[Build System](docs/BUILD_SYSTEM.md)** | **[Run Guide](RUN_GUIDE.md)**
 
-The template provides **two pipeline entry points**:
+The template provides **three main entry points** for pipeline operations:
 
-### Entry Point 1: Extended Pipeline (`./run.sh --pipeline`)
+### Entry Point 1: Main Dispatcher (`./run.sh`)
+
+**Dispatcher menu** that routes to manuscript or literature operations:
+
+```bash
+./run.sh  # Choose between manuscript and literature operations
+```
+
+### Entry Point 2: Extended Pipeline (`./run_manuscript.sh --pipeline`)
 
 **10-stage pipeline** (stages 0-9) with optional LLM review:
 
 ```mermaid
 flowchart TD
-    START([./run.sh --pipeline]) --> STAGE0[Stage 0: Clean Output Directories]
+    START([./run_manuscript.sh --pipeline]) --> STAGE0[Stage 0: Clean Output Directories]
     STAGE0 --> STAGE1[Stage 1: Setup Environment]
     STAGE1 --> STAGE2[Stage 2: Infrastructure Tests<br/>60%+ coverage required]
     STAGE2 --> STAGE3[Stage 3: Project Tests<br/>90%+ coverage required]
@@ -702,7 +711,7 @@ flowchart TD
     class STAGE8,STAGE9 optional
 ```
 
-### Entry Point 2: Core Pipeline (`python3 scripts/run_all.py`)
+### Entry Point 3: Core Pipeline (`python3 scripts/run_all.py`)
 
 **6-stage core pipeline** (stages 00-05) without LLM dependencies:
 
@@ -716,7 +725,7 @@ flowchart TD
 | 05 | `05_copy_outputs.py` | Copy final deliverables to `output/` |
 
 **Stage Numbering:**
-- `./run.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
+- `./run_manuscript.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
 - `run_all.py`: Stages 00-05 (zero-padded Python convention, 6 core stages)
 
 **See [RUN_GUIDE.md](RUN_GUIDE.md) for complete pipeline documentation.**
@@ -903,7 +912,7 @@ The thin orchestrator pattern provides:
 - **Clarity**: Clear separation of concerns
 - **Quality**: Automated validation of the entire system
 - **Performance**: 84-second build time for complete regeneration (without optional LLM review)
-- **Reliability**: 2175 tests passing (100% success rate)
+- **Reliability**: 2245 tests passing (100% success rate)
 
 **System Status**: ✅ **FULLY OPERATIONAL** - [Build System](docs/BUILD_SYSTEM.md)
 

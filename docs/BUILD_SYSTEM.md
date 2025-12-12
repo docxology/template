@@ -75,7 +75,7 @@ flowchart TD
     class STAGE0,STAGE1,STAGE2,STAGE3,STAGE4,STAGE5 process
 ```
 
-### Extended Pipeline: Interactive Orchestrator (`./run.sh --pipeline`)
+### Extended Pipeline: Interactive Orchestrator (`./run_manuscript.sh --pipeline`)
 
 **10 stages (0-9), includes optional LLM features:**
 - Stage 0: Cleanup (not tracked in progress display)
@@ -83,7 +83,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START([Start ./run.sh --pipeline]) --> CLEAN[Stage 0: Clean Output Directories]
+    START([Start ./run_manuscript.sh --pipeline]) --> CLEAN[Stage 0: Clean Output Directories]
     CLEAN --> SETUP[Stage 1: Setup Environment]
     SETUP --> INFRA_TESTS[Stage 2: Infrastructure Tests]
     INFRA_TESTS --> PROJ_TESTS[Stage 3: Project Tests]
@@ -137,7 +137,7 @@ flowchart TD
 
 **Notes:**
 - Core pipeline (`run_all.py`): Fast, no LLM dependencies, programmatic use
-- Extended pipeline (`./run.sh --pipeline`): Comprehensive, includes AI features
+- Extended pipeline (`./run_manuscript.sh --pipeline`): Comprehensive, includes AI features
 - LLM stages (8-9) are optional and add ~20.5 minutes to execution time
 
 ---

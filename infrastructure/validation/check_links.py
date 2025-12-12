@@ -35,10 +35,15 @@ def extract_links(content: str, file_path: Path) -> Tuple[List[Dict], List[Dict]
     external_links = []
     file_refs = []
     
+    # Remove code blocks to avoid false positives
+    # Pattern for code blocks: ```...``` or `...`
+    code_block_pattern = re.compile(r'```[\s\S]*?```|`[^`]+`')
+    content_without_code = code_block_pattern.sub('', content)
+    
     # Pattern for markdown links: [text](path)
     link_pattern = re.compile(r'\[([^\]]+)\]\(([^\)]+)\)')
     
-    for match in link_pattern.finditer(content):
+    for match in link_pattern.finditer(content_without_code):
         link_text = match.group(1)
         link_target = match.group(2)
         
@@ -142,7 +147,8 @@ def extract_headings(content: str) -> Set[str]:
 
 def main():
     """Main function to check all documentation links."""
-    repo_root = Path(__file__).parent.parent
+    # Go up from infrastructure/validation/check_links.py to repo root
+    repo_root = Path(__file__).parent.parent.parent
     md_files = find_all_markdown_files(str(repo_root))
     
     print(f"Found {len(md_files)} markdown files")
@@ -186,6 +192,10 @@ def main():
                 # Skip anchor-only links
                 if '#' in target:
                     target = target.split('#')[0]
+                
+                # Skip references to generated files in output directories
+                if 'output/' in target or '/output/' in target:
+                    continue
                 
                 if target:  # Not just an anchor
                     exists, msg = check_file_reference(target, md_file, repo_root)

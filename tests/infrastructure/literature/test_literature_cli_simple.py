@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 import pytest
 
-from infrastructure.literature import cli
+from infrastructure.literature.core import cli
 
 
 class TestCLIExecution:
@@ -17,7 +17,7 @@ class TestCLIExecution:
     def test_cli_help_output(self):
         """Test that CLI help works."""
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.literature.cli", "--help"],
+            [sys.executable, "-m", "infrastructure.literature.core.cli", "--help"],
             capture_output=True,
             text=True
         )
@@ -39,6 +39,14 @@ class TestCLIExecution:
         assert hasattr(cli, 'search_command')
         # Note: library_command might not exist in current implementation
         # assert hasattr(cli, 'library_command')
+
+
+
+
+
+
+
+
 
 
 

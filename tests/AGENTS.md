@@ -225,7 +225,7 @@ pytest project/tests/ --cov=project/src --cov-report=html --cov-fail-under=90
 ### Coverage Snapshot (latest)
 - Project: **99.88%** (target 90%+)
 - Infrastructure: **61.48%** (target 60%+)
-- Total tests: **2175** (1855 infrastructure, 320 project)
+- Total tests: **2245** (1894 infrastructure [8 skipped], 351 project)
 
 Skip Ollama-dependent suites when needed:
 ```bash

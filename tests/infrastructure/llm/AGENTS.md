@@ -210,7 +210,7 @@ class TestNewIntegration:
 LLM integration tests are **skipped** during automated pipeline runs for speed:
 
 ```bash
-# In run.sh (option 4 / --pipeline)
+# In run_manuscript.sh (option 8 / --pipeline)
 pytest tests/infrastructure/ -m "not requires_ollama" ...
 ```
 

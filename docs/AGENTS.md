@@ -1,5 +1,9 @@
 # docs/ - Documentation
 
+> **Documentation hub** for the Research Project Template
+
+**Quick Reference:** [Documentation Index](DOCUMENTATION_INDEX.md) | [How To Use](HOW_TO_USE.md) | [Architecture](ARCHITECTURE.md) | [FAQ](FAQ.md)
+
 ## Purpose
 
 The `docs/` directory contains comprehensive project documentation organized by purpose and audience. This is the central hub for all project documentation beyond code comments.

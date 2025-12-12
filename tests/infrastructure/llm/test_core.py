@@ -8,10 +8,10 @@ Tests LLMClient functionality using real data (No Mocks Policy):
 import pytest
 import requests
 
-from infrastructure.llm.core import LLMClient, ResponseMode
-from infrastructure.llm.config import LLMConfig, GenerationOptions
-from infrastructure.llm.context import ConversationContext
-from infrastructure.llm.ollama_utils import is_ollama_running, select_small_fast_model
+from infrastructure.llm.core.client import LLMClient, ResponseMode
+from infrastructure.llm.core.config import LLMConfig, GenerationOptions
+from infrastructure.llm.core.context import ConversationContext
+from infrastructure.llm.utils.ollama import is_ollama_running, select_small_fast_model
 from infrastructure.core.exceptions import LLMConnectionError, LLMError
 
 
@@ -186,6 +186,18 @@ class TestClientHelperMethods:
         result = client.check_connection()
         assert isinstance(result, bool)
         assert result is False  # Should fail to connect
+
+    def test_check_connection_detailed_returns_tuple(self, default_config):
+        """Test check_connection_detailed returns tuple with error message."""
+        # Use non-existent host to ensure it fails quickly
+        config = LLMConfig(base_url="http://localhost:99999", timeout=0.1)
+        client = LLMClient(config)
+        
+        is_available, error = client.check_connection_detailed()
+        assert isinstance(is_available, bool)
+        assert is_available is False
+        assert error is not None
+        assert isinstance(error, str)
 
 
 # =============================================================================

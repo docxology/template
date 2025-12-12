@@ -1,8 +1,8 @@
 import pytest
 from pathlib import Path
 from infrastructure.literature.core import LiteratureSearch
-from infrastructure.literature.reference_manager import ReferenceManager
-from infrastructure.literature.pdf_handler import PDFHandler
+from infrastructure.literature.library import ReferenceManager
+from infrastructure.literature.pdf import PDFHandler
 
 
 @pytest.mark.requires_network

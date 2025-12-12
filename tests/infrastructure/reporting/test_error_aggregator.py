@@ -194,3 +194,11 @@ def test_error_aggregator_markdown_truncation(tmp_path: Path) -> None:
     assert "... and 5 more errors" in md_content
 
 
+
+
+
+
+
+
+
+

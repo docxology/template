@@ -1,4 +1,4 @@
-"""Tests for infrastructure.literature.llm_operations module.
+"""Tests for infrastructure.literature.llm.operations module.
 
 Tests for advanced LLM operations including literature reviews, comparative analysis,
 and research gap identification.
@@ -10,11 +10,11 @@ import pytest
 from unittest.mock import Mock, MagicMock, patch
 import tempfile
 
-from infrastructure.literature.llm_operations import (
+from infrastructure.literature.llm import (
     LiteratureLLMOperations,
     LLMOperationResult,
 )
-from infrastructure.literature.library_index import LibraryEntry
+from infrastructure.literature.library import LibraryEntry
 
 
 class TestLLMOperationResult:
@@ -63,7 +63,7 @@ class TestLiteratureLLMOperations:
         
         assert operations.llm_client == mock_client
 
-    @patch('infrastructure.literature.llm_operations.Path')
+    @patch('infrastructure.literature.llm.operations.Path')
     def test_generate_literature_review_no_summaries(self, mock_path_class):
         """Test generating literature review without summaries."""
         mock_client = Mock()
@@ -112,7 +112,7 @@ class TestLiteratureLLMOperations:
         assert "Generated literature review" in result.output_text
         assert result.generation_time > 0
 
-    @patch('infrastructure.literature.llm_operations.Path')
+    @patch('infrastructure.literature.llm.operations.Path')
     def test_generate_literature_review_with_summaries(self, mock_path_class):
         """Test generating literature review with summaries."""
         mock_client = Mock()
@@ -318,7 +318,7 @@ class TestLiteratureLLMOperations:
         assert len(result.citation_keys) == 0
         mock_client.query.assert_called_once()
 
-    @patch('infrastructure.literature.llm_operations.Path')
+    @patch('infrastructure.literature.llm.operations.Path')
     def test_generate_literature_review_summary_read_error(self, mock_path_class):
         """Test generating literature review when summary read fails."""
         mock_client = Mock()

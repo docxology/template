@@ -52,3 +52,11 @@ validate_figure_registry(Path("output/figures/figure_registry.json"))
 - Treat output checks (`verify_output_integrity`) as gating steps before rendering.
 
 
+
+
+
+
+
+
+
+

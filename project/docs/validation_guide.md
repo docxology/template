@@ -33,3 +33,11 @@ This guide summarizes the validation pipeline and quality gates used in the proj
 - Persist `project/output/reports/` artifacts for inspection (JSON/HTML/Markdown).
 
 
+
+
+
+
+
+
+
+

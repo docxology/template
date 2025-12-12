@@ -6,7 +6,7 @@ Pure logic tests - no network access required.
 import pytest
 from unittest.mock import patch, MagicMock
 
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.core import LiteratureConfig
 from infrastructure.literature.sources import UnpaywallSource, UnpaywallResult
 
 
@@ -262,7 +262,7 @@ class TestUnpaywallIntegration:
 
     def test_pdf_handler_creates_unpaywall_source_when_enabled(self):
         """Test PDFHandler creates UnpaywallSource when enabled."""
-        from infrastructure.literature.pdf_handler import PDFHandler
+        from infrastructure.literature.pdf import PDFHandler
         
         config = LiteratureConfig(
             use_unpaywall=True,
@@ -275,7 +275,7 @@ class TestUnpaywallIntegration:
 
     def test_pdf_handler_no_unpaywall_when_disabled(self):
         """Test PDFHandler doesn't create UnpaywallSource when disabled."""
-        from infrastructure.literature.pdf_handler import PDFHandler
+        from infrastructure.literature.pdf import PDFHandler
         
         config = LiteratureConfig(
             use_unpaywall=False,
@@ -287,7 +287,7 @@ class TestUnpaywallIntegration:
 
     def test_pdf_handler_no_unpaywall_without_email(self):
         """Test PDFHandler doesn't create UnpaywallSource without email."""
-        from infrastructure.literature.pdf_handler import PDFHandler
+        from infrastructure.literature.pdf import PDFHandler
         
         config = LiteratureConfig(
             use_unpaywall=True,

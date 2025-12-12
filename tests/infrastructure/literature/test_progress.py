@@ -6,7 +6,7 @@ from unittest.mock import patch, mock_open
 
 import pytest
 
-from infrastructure.literature.progress import (
+from infrastructure.literature.workflow import (
     ProgressEntry,
     SummarizationProgress,
     ProgressTracker,

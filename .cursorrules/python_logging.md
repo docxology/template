@@ -72,8 +72,40 @@ Python and Bash logging systems share:
 - Use `get_logger(__name__)` for module loggers
 - Include context in messages
 - Use `exc_info=True` for exceptions
-- Don't use print() - use logger
+- Use logger for all status messages, progress updates, and errors
 - Respect LOG_LEVEL environment variable
+
+### When to Use print() vs logger
+
+**Use logger for:**
+- Status messages and progress updates
+- Error messages and warnings
+- Debug information
+- All production code output
+
+**Use print() for:**
+- Interactive CLI prompts (user input requests)
+- CLI command results (user-facing output in CLI tools)
+- Test debugging output (when tests fail)
+- Documentation examples (in docstrings, not executed code)
+
+**Examples:**
+
+```python
+# ✅ GOOD: Use logger for status
+logger.info("Processing started")
+logger.error("Operation failed", exc_info=True)
+
+# ✅ GOOD: Use print() for interactive prompts
+print("Enter your choice [y/N]: ", end="")
+choice = input()
+
+# ✅ GOOD: Use print() for CLI output
+print(f"Result: {result}")  # In CLI tool main()
+
+# ❌ BAD: Don't use print() for status in production code
+print("Processing started")  # Should use logger.info()
+```
 
 ## Advanced Logging Patterns
 

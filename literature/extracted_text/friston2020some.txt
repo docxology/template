@@ -1,0 +1,680 @@
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+1 
+ 
+Some interesting observations on the free energy principle  
+ 
+Karl J. Friston1, Lancelot Da Costa1,2 and Thomas Parr1 
+ 
+1The Wellcome Centre for Human Neuroimaging, University College London 
+2Department of Mathematics, Imperial College London 
+E-mails: k.friston@ucl.ac.uk, l.da-costa@imperial.ac.uk, thomas.parr.12@ucl.ac.uk 
+ 
+Abstract 
+ 
+Biehl et al (2020) present some interesting observations on an early formulation of the free energy principle 
+in (Friston, 2013) . We use these observations to scaffold a discussion of the technical arguments that 
+underwrite the free energy principle . T his discussion focuse s on solenoidal coupling between various 
+(subsets of) states in sparsely coupled systems that possess a Markov blanket – and the distinction between 
+exact and approximate Bayesian inference, implied by the ensuing Bayesian mechanics. 
+ 
+Keywords: free energy principle; variational; Bayesian; Markov blanket 
+ 
+ 
+Introduction 
+We enjoyed reading the deconstruction of the free energ y principle  (FEP) in (Biehl et al., 2020 ) – as 
+introduced some years ago in (Friston, 2013). Having said this, no one likes to be told that they have made 
+mistakes. Fortunately, all of the observations in  (Biehl et al., 2020)  are interesting, some are correct and 
+none confound the FEP. In what follows, we use the observations of Biehl et al (ibid) to drill down on the 
+interesting points they raise – and their implications in the setting of the FEP.  
+To contextualise these observations, we first rehearse the major steps in deriving the FEP and then focus 
+on three cardinal issues addressed in the Biehl et al1; namely, what is the precise form of the dynamical 
+ 
+1Biehl et al make seven observations; however, some are recapitulated (e.g., in the context of generalised coordinates 
+of motion). We ignore these observations. 
+ 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+2 
+ 
+coupling among (subsets of) states that constitute a Markov blanket partition ? What implications attend a 
+nonzero evidence bound, when interpreting self-organisation as self-evidencing (i.e., Bayesian inference)? 
+And, when do variational free energy gradients vanish? In what follows, we will use the notation  and 
+nomenclature in (Friston, 2019), which is currently the most comprehensive treatment of the FEP2. 
+The free energy principle in brief 
+Technically, the free energy principle asserts that any  ‘thing’ that attains nonequilibrium steady-state can 
+be construed as performing  an elemental sort of Bayesian inference. Informally, this can be described as 
+self-evidencing (Hohwy, 2016); namely, anything that exists is actively seeking evidence for its existence. 
+In short, life is its own existence proof (Colombo and Wright, 2018). This self-evidencing gloss is licensed 
+by the fact that the gradient flows that underwrite nonequilibrium steady-state can be expressed as a gradient 
+descent on surprisal or self-information (Friston, 2013). This is mathematically equivalent to a gradient 
+ascent on log model evidence or marginal likelihood. Technically, the argument involves two moves: 
+First, a thing is defined stipulatively in terms of a Markov blanket  (Clark, 2017; Kirchhoff et al., 2018) , 
+such that something’s internal states are independent of its external states, when conditioned on its blanket 
+states. Blanket states are further partitioned into active and sensory states  – that are not influenced by 
+internal and external states, respectively. By starting from a Langevin formulation of any random dynamical 
+system, the associated density dynamics can be expressed as the solutions to the Fokker Planck equation  
+(Ao, 2005; Frank et al., 2003). Crucially, because we are (stipulatively) assuming nonequilibrium steady-
+state, the steady-state solution to the Fokker Planck system enables us to express th e dynamics or flow of 
+states in terms of a Helmholtz decomposition  (Ao, 2004; Ao, 2008; Friston and Ao, 2012). This 
+decomposition divides flow into dissipative gradient flows on the self-information of any state (i.e., its 
+negative log pro bability at steady -state) and a divergence free or solenoidal flow. When this solution is 
+expressed in terms of a Markov blanket partition, the implicit conditional dependencies require certain 
+solenoidal coupling terms to disappear. This means that one ca n express the dynamics of something ’s 
+ 
+2One could read Biehl et al as a critiqu e of early formulations of the FEP – in terms of implicit assumptions and 
+incomplete (heuristic) proofs – as opposed to a critique of the FEP per se. However, the issues they identify are still 
+fundamental. Some of these issues are addressed in Friston, K., 2019. A free energy principle for a particular physics, 
+eprint arXiv:1906.10184. However, that monograph has not been subject to external peer review (and contains at least 
+one technical error).  A concise version of the Bayesian m echanics presented in ibid. can be found in Parr, T., Da 
+Costa, L., Friston, K., 2020. Markov blankets, information geometry and stochastic thermodynamics. Philosophical 
+Transactions of the Royal Society A. 
+ 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+3 
+ 
+autonomous states (i.e., internal and active states) as a function of – and only of – the blanket and internal 
+states. By construction, this is a (generalised) gradient flow on self-information or surprisal. See Figure 1. 
+The second move is to note that the conditional independencies, implied by the Markov blanket, induces a 
+particular kind of information geometry  (Caticha, 2015; Ikeda et al., 2004)  in the internal state space. In 
+brief, for any blanket state, there must be an expected internal state – and a conditional density over external 
+states, given  that blanket state. Th is m eans there is a statistical manifold in the internal state -space, 
+corresponding to the conditional expectations of internal states, given blanket states. In other words, every 
+point on the internal manifold corresponds to a conditional density – or posterior Bayesian belief – over 
+external states. This endows the internal manifold with an information geometry, where distance between 
+probability distributions can be measured with the Fisher information metric  tensor (Crooks, 2007; Da 
+Costa et al., 2020b; Kim,  2018), supplied by the conditional  distribution over external states. Put simply, 
+flows on the internal manifold can be construed as belief updating or Bayesian inference (Winn and Bishop, 
+2005). This view is licensed by the fact that the (average ) flow on the inter nal statistical manifold is a 
+gradient flow on surprisal (i.e., the negative Bayesian model evidence) of the blanket (and internal) states. 
+In essence, this is the free energy Lemma (Friston, 2019). 
+One can take this further and use arguments related to integral fluctuation theorems (Evans and Searles, 
+2002; Seifert, 2012), to derive probability densities over the trajectory of active states. This allows one to 
+characterise autonomous behaviour (i.e., the dynamics of autonomous states) in terms of constructs from 
+psychology and economics ; e.g., risk in relation to the goal states encoded b y the steady -state density 
+(Fleming and Sheu, 2002; Kahneman and Tversky, 1979). This affords a description of self-organisation to 
+nonequilibrium steady-state as Bayesian inference (a.k.a. , active inference) that has both sentient (i.e., 
+inferring external states of affairs) and enactive (i.e., densities over trajectories of active states) aspects. In 
+short, the FEP furnishes a description of the perception-action cycle (Fuster, 2004) as evinced in anything 
+that exists, in virtue of possessing a Markov blanket. 
+In and of itself, this is just a theoretical exercise. Practically, things get more interesting when we use the 
+free energy principle to engineer gradient flows by writing down a generative model , under which model 
+evidence can be evaluated. This means one can then solve the equations of motion  – that emulate the 
+gradient flows above  – to create systems that self-organise to some nonequilibrium steady-state. In thi s 
+setting, the steady-state is operationally defined in terms of the priors over external or blanket states that 
+are part of the generative model. Having said this, th e application of the free energy principle and active 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+4 
+ 
+inference (Da Costa et al., 2020a; Friston et al., 2017; Parr and Friston, 2017, 2018) is beyond the scope of 
+the critique in Biehl et al (ibid). They focus on the tenets that underwrite the free energy Lemma. We now 
+turn to three key tenets, highlighted by (Biehl et al., 2020). 
+ 
+Figure 1 
+Markov blankets. This schematic illustrates the partition of states into internal states (blue) and hidden or external 
+states (cyan) that are separated by a Markov blanket – comprising sensory (magenta) and active states (red). The upper 
+panel shows this partition as it would be applied to action and perception in a brain. Note that the only missing 
+influences are between internal and external states – and directed influences from external (respectively internal) to 
+active (respectively sensory) states. The surviving directed influences a re highlighted with dotted connectors . In this 
+setting, self-organisation of internal states then corresponds to perception, while active states couple  internal states 
+back to external states. T he lower panel shows the same  partition but rearranged so that  the internal states are 
+associated with the intracellular states of a Bacillus, where the sensory states become the surface states or cell 
+membrane overlying active states (e.g., the actin fila ments of the cytoskeleton).  Here, the coupling between sensory  
+and internal – and between active and external states – has been suppressed to reveal a simple coupling architecture 
+that leads to a Markov blanket . Autonomous states are those states that are not influenced by external states, while 
+particular states constitute a particle; namely, autonomous and sensory states – or blanket and internal states. The 
+
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+5 
+ 
+equations of motion in the upper panel underwrite the conditional independencies of the Markov blanket, as described 
+in the main text. 
+Observation one 
+Certain solenoidal coupling terms are precluded when a Markov blanket emerges under sparse coupling. 
+This observation speaks to the  constitution of the flow of  systemic states 
+( , , , )x s a=  at 
+nonequilibrium steady-state. This flow can be expressed as  the solution to the Fokker Planck equation, in 
+terms of a Helmholtz decomposition3: 
+()
+( ) ( ) ( )
+x f x
+f x Q x
+=+
+= − 
+          (1.1) 
+Here, 
+( ) ln ( )x p x =−  is surprisal or self -information and the antisymmetric matrix 
+TQQ=−  
+mediates solenoidal flow. The positive definit e matrix 
+I  plays the role of a diffusion tensor or 
+covariance matrix describing the amplitude of random fluctuations, 
+  (assumed to be a Wiener process). 
+In this form, the flow can be decomposed into dissip ative gradient flows 
+−  and divergence free or 
+solenoidal flow 
+Q . Note that the off -diagonal terms of 
+ are zero because random fluctuations are 
+independent. However, this independence does not preclude solenoidal coupling among states.  
+The question now is which solenoidal coupling terms are consistent with the conditional independenc ies 
+implied by a Markov blanket ? More generally, we want to know the form of  the steady-state flow that 
+engenders the conditional independencies of a Markov blanket. Technically, a Markov blanket is the set of 
+ 
+3 Also known known as the fundamental theorem of vector calculus. This d ecomposition is at the heart of the free 
+energy principle and most formulations of nonequilibrium steady-state in nonlinear systems; ranging from molecular 
+interactions through to evolution: see Ao, P., 2004. Potential in stochastic differential equations: novel construction. 
+Journal of Physics A: Mathematical and General 37, L25-L30, Ao, P., 2005. Laws in Darwinian evolutionary theory. 
+Physics of Life Reviews 2, 117 -156, Qian, H., Beard, D.A., 2005. Thermodynamics of stoichiometric biochemical 
+networks in living systems far fr om equilibrium. Biophys Chem. 114, 213 -220, Zhang, F., Xu, L., Zhang, K., Wang, 
+E., Wang, J., 2012. The potential and flux landscape theory of evolution. The Journal of chemical physics 137, 065102. 
+Contrary to the assertion in Biehl et al (ibid), the Hel mholtz decomposition is not limited to linear systems. For a 
+concise derivation of (1.1), under simplifying assumptions, please see Lemma D.1 in Friston, K., Ao, P., 2012. Free 
+energy, value, and attractors. Comput Math Methods Med 2012, 937860. 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+6 
+ 
+variables that, if known, render two other sets conditionally independent (Pearl, 1998). This implies th e 
+joint density of internal and external states, conditioned upon blanket states, factorises as follows: 
+( ) | ( , | ) ( | ) ( | )b p b p b p b     ⊥  =
+        (1.2) 
+The identification of Markov blankets at nonequilibrium steady-state is not as straightforward as it might 
+appear. Usually, given a joint density over a partition of states, a Markov blanket comprises the parents, the 
+children and the parents of the children of any random variable. In dynamical systems, the joint density is 
+over states at different  times. For Markovian systems, the states at the current time  are the blanket states 
+that separate states in the futu re from states in the past.  However, these are not Markov blankets of the 
+steady-state density. This joint density rests on the solution to the density dynamics 4. Differentiating this 
+solution (1.1), with respect to the states, reveals the relationship between the flow – specified by a Jacobian 
+()J f x=
+ – and conditional independencies – specified by a Hessian 
+2H =  : 
+2( ) ( ) ( )
+()
+s a s a s a
+TT
+s ss sa s s ss ss sa s s ss s
+TT
+a as aa a a sa aa aa a
+T T T
+s a s a
+f x Q x
+J Q H
+J J J J Q Q Q Q H H H H
+J J J J Q Q Q Q H H H
+J J J J Q Q Q Q
+J J J J Q Q Q Q
+            
+    
+   
+        
+ = −   
+= −
+−   
+    −  −    =    − −  −
+    − − −  −      
+  
+as
+TT
+a sa aa a
+T T T
+sa
+H
+H H H H
+H H H H
+
+
+   
+
+
+
+
+
+ 
+(1.3) 
+Here, the flow constraints are summarised to first -order by the Jacobian. For example, if the Jacobian  
+encoding the coupling between external and internal states is zero, we can express the flow of internal states 
+as a function of, and only of, particular states5: 
+ 
+4 Note that the usual rules of identifying parents, children and parents of children cannot be applied directly to  the 
+dynamical coupling or flow. 
+5 Particular states comprise internal states and their Markov blanket. These can be construed as the states of a particle; 
+hence, particular states. 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+7 
+ 
+( ) 0 ( ) ( )J f x f x f     = =  =
+        (1.4) 
+Similarly, the Hessian or curvature matrix encodes conditional dependencies , in the sense that if the 
+corresponding submatrix is zero, internal and external states are conditionally independent: 
+( ) 0 ( | , ) ( | ) ( ) |H x b b b      =  =  =  ⊥
+     (1.5) 
+Equation (1.3) shows that the amplitude of random fluctuations and solenoidal coupling play a key role in 
+relating flow constraints and conditional dependencies. The solenoidal components are especially important 
+in the setting of nonequilibrium steady-state. Indeed, on one reading of nonequilibrium dynamics, the very 
+presence of solenoidal flow is sufficient to break detailed balance  – and preclude an y equilibria in th e 
+conventional (statistical mechanics) sense  (Ao, 2005; Kwon and Ao, 2011; Seifert, 2012; Zhang et al., 
+2012). 
+The question now is which solenoidal terms and conditional independencies admit a Markov blanket. We 
+are interested in Markov blankets that emerge from sparse coupling among states6. Here, sparse coupling 
+is taken to mean that no state is influenced by all other states 7. In other words, each row of the Jacobian 
+must contain at least one  zero entry. Inspection of (1.3) shows that this can only be satisfied when each 
+row of the Hessian contains at least one zero entry. If we supplement the requisite conditional independence 
+between internal and external states with conditional independenc ies between active and external states – 
+and between sensory and internal states – we have the following functional form8: 
+ 
+ 
+6 Clearly, the flows can be fine-tuned to create Markov blankets in the absence of any sparsity constraints on coupling; 
+however, the FEP only applies to Markov blankets that emerge under sparse flows; in particular, when autonomous 
+states are uncoupled from external states (by definition). This was not made explicit in early formulations of the free 
+energy principle, which focused on simple cases that satisfied this condition. Much of the critique in Biehl et al  is 
+completely understandable in light of this omission. 
+ 
+7 Condition 1 in Biehl et al satisfies this flow constraint, while Condition 2 corresponds to the existence of a Markov 
+blanket. Biehl et al then observe that Condition 1 does not imply Condition 2, and vice versa (Observation 1). This is 
+generally true; however, the FEP only applies when Condition 2 is satisfied under Condition 1. The issue at hand is  
+to identify the functional forms of steady-state flow that satisfy both conditions. 
+8  There are other conditional independence structures that one could consider; however, the conditional 
+independencies in (1.6) lead to the most general or canonical flow constraints. Interesting exceptions include circular 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+8 
+ 
+s a s s
+TT
+s ss sa s ss ss s ss sa
+T
+as aa a aa aa a sa aa a
+TT
+s a a a
+J J J Q Q H H
+J J J Q Q H H H
+J J J Q Q H H H
+J J J Q Q H H
+       
+  
+  
+       
+−    
+     −  −     =     −
+     −  −        
+ 
+(1.6) 
+This form satisfies the sparse coupling constraint by precluding solenoidal coupling between autonomous 
+and non-autonomous states: 
+0
+0 0
+aaa
+sa s s sa a s
+J Q H Q HQQ
+QQ J Q H Q H
+     
+    
+= + = =  = + = 
+      (1.7) 
+There are four special cases of (1.6) that obtain when suppressing solenoidal coupling between sensory and 
+external states, between active and internal states or both. The latter case was considered in (Friston, 2013), 
+in which there is no sole noidal coupling between the different kinds of states 9. This special case may be 
+ubiquitous in systems with short range coupling ; for example, the simple cell -like structure in  the lower 
+panel of Figure 1. In this simple case, active states are effectively shielded from external states by sensory 
+states, while sensory states are separated from internal states by active states. The general case corresponds 
+to the upper panel in Figure 1, in which active states influence external states directly – and sensory states 
+are coupled directly to internal states. In bo th instances, autonomous states are functions of , and only of, 
+particular states and internal states are conditionally independent of external states.  These two conditions 
+underwrite the free energy lemma below. 
+ 
+flow constraints (when external states influence sensory states that influence internal states that influence active states 
+that influence external states) or flow constraints that lead to conditional independence between internal and external 
+states – and bet ween sensory and active states. This latter case was used by Biehl et al, in their so -called 
+counterexamples; however, t hese are simply counterexamples to the functional form of  (1.6), not counterexamples 
+that violate the assumptions of the free energy lemma. 
+9 This special case is referred to as Condition 3 in Biehl et al (ibid). 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+9 
+ 
+In summary, substituting (1.7) into (1.1) allows us to express the flow of autonomous states as a function 
+of, and only of, particular states: 
+( , )
+( , )
+( , )
+s
+T
+s s ss ss s
+f b Q Q
+f b Q Q
+f b Q
+    
+
+   
+
+
+
+−      
+    = − −      
+     −      
+     (1.8) 
+This (sparse) flow precludes solenoidal coupling between autonomous and non -autonomous states  and 
+renders internal and external states conditionally independent . However, it does not preclude solenoidal 
+coupling between internal and active states – or between external and sensory states. Examples of these 
+forms of solenoidal coupling may be commonplace. For example, the solenoidal coupling between external 
+and sensory states may be manifest in oscillatory interactions between the external milieu and sense organs 
+that respond to vibrations (e.g., the tympanic membrane of the ear). Similarly, solenoidal coupling between 
+internal and active states may be ubiquitous in sentient creatures with brains – in the form of pacemakers 
+and central pattern generators that produce stereotyped behaviours, such as  phonation or respiration  
+(Pulvermuller et al., 1995). 
+More generally, solenoidal coupling may be essential for self-organisation and active inference; especially, 
+when considered in the light of oscillations and communication (Friston and Frith, 2015)  or, indeed, 
+evolutionary dynamics:  at an evolutionary level, solenoidal flows and fluxes play a central  role in 
+accounting for self-organisation in evolution in terms of phenomena like Red Queen dynamics (Ao, 2005); 
+namely, the endless co -evolution that persists at evolutionary steady-state, following the optimisation of 
+fitness; i.e., surprisal or, in the treatment of (Zhang et al., 2012), intrinsic potential. 
+Observation two 
+The difference between the variational density and conditional density, as assessed by a KL divergence or 
+bound can be arbitrarily large. 
+[ ( ) || ( | )] 0D q p b c =μ
+ 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+10 
+ 
+This divergence was characterised as (less than) c in (Biehl et al., 2020), who note that c does not have an 
+upper bound. So, what does this imply for the free energy lemma? In itself, this observation is unremarkable. 
+However, it brings into focus a key distinction between different interpretations of the Bayesian mechanics 
+implied by the information geometry endowed by a Markov blanket. Recall from above that there exists a 
+statistical manifold in the internal state space, on which the flow of (conditional expectations of) internal 
+states 
+( ) [ | ] pb E b =μ  perform a gradient descent on the su rprisal of particular states 10. This can be 
+expressed as a gradient flow on a free energy function of particular states 
+( , )b= . From equation (1.8) 
+( , ) ( ) ( , )
+( ) ( , )
+f b Q b
+Q F b
+   
+  
+= −  
+ − 
+μμ
+μ
+        (1.9) 
+This means the most likely path conforms to a varia tional principle of least action, where the free energy 
+( ) [ ( ), ]F F q   
+ is a functional of a conditional (a.k.a., variational) density 
+( ) ( | )q p bμ  that is 
+parameterised by the conditional expectation of internal states. In general, this free energy is an upper bound 
+on the surprisal of particular states: 
+( ) [ ( , )] [ ( )]
+( ) [ ( ) || ( | )]
+[ ( | )] [ ( ) || ( )] ( )
+q
+entropyenergy
+surprisal evidence bound
+q
+complexityinaccuracy
+F E H q
+D q p b
+E D q p
+
+
+
+   
+  
+    
+−
+=  +
+=  + 
+      (1.10) 
+This functional can be expressed in several forms; namely, an expected energy minus the entro py of the 
+variational density, which is equivalent to the self -information associated with particular states (i.e., 
+surprisal) plus the KL divergence between the variational and posterior density (i.e., evidence bound). In 
+turn, this can be decomposed into the  expected negative log likelihood of particular states (i.e., 
+ 
+10 Note that we are dealing with conditional expectations of internal states , denoted by boldface. The derivations in 
+Biehl et al and subsequent observations (e.g., observations 6) ignore this definition of the internal manifold – and can 
+therefore be discounted. They overlooked this because their arguments are based on the heuristics in Friston, K., 2013. 
+Life as we know it. J R Soc Interface 10, 20130475. 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+11 
+ 
+[in]accuracy) and the KL divergence between posterior and prior densities (i.e., complexity). In short, free 
+energy constitutes a Lyapunov function for the expected flow of autonomous states.  
+This functional  is referred to as a free energy  because it comprises a relative entropy (i.e., the KL 
+divergence) plus an expected potential (Feynman, 1972). In this instance, the expected potential is the 
+surprisal and the KL divergence is between the  variational density – parameterised by any po int on the 
+internal manifold – and the posterior over external states , given blanket states. In Bayesian statistics and 
+machine learning, this divergence is known as an evidence bound. This is because it supplies a non-negative 
+bound on surprisal or log evidence (Beal, 2003; Feynman, 1972; Winn and Bishop, 2005) . To license an 
+interpretation of surprisal, in terms of model evidence, we have to express surprisal in terms of a generative 
+model; namely, a joint density over causes and cons equences. Here, the generative model is simply the 
+steady-state density over external (causes) and blanket (consequences) states. 
+Exact or approximate? 
+There are two ways that we can take this interpretation of flows on the internal (statistical) manifold 
+forward. The first and simplest is to stipulate that the variational density – parameterised by the internal 
+state or coordinate on an internal manifold – is the posterior over external states. On this view, the bound 
+in (1.10) collapses to zero and the flow of (the conditional expectation of) internal states can  be read as 
+performing exact Bayesian inference. However,  this interpretation fails to specify  how the (conditional 
+expectations of) internal states parameterise the posterior Bayesian beliefs over external states. To do this, 
+we would need to define a functional form for the variational density and associate internal states with its 
+parameters or suffic ient statistics (e.g., mean and precision). However, as soon as we commit to a 
+parameterised form, we move away from exact Bayesian inference  and into the realm of approximate 
+Bayesian inference. This is because the exact equivalence between the variationa l and posterior density 
+over external states is no longer guaranteed. This inflates the bound above, leading to variational Bayes. 
+This kind of inference predominates in the statistical and machine learning literature, because it is relatively 
+straightforward to compute the variational free energy , given a parameterised form for the variational 
+density (Beal, 2003; Feynman, 1998; MacKay, 1995) . On the other hand, it is practically impossible to 
+evaluate the Bayesian model evidence directly.  On some  accounts of variational Bayes, the use of a 
+variational free energy was introduced by Richard Feynman in the setting of the path integral formulation 
+of quantum electrodynamics (Feynman, 1972). Effectively, it converts an intractable integration problem 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+12 
+ 
+into a tractable  optimisation problem. In other words, it affords a computable objective function , whose 
+minimisation will approximate the minimisation of the evidence, which is always  upper bounded by the 
+variational free energy. Indeed, in machine learning, variational free energy is often referred to as an 
+evidence lower bound (ELBO) (Winn and Bishop, 2005).  
+From our perspective, this means that we can either interpret the flow on an internal manifold as exacting 
+exact Bayesian inference. Alternatively, if we committed to a functional form for the variational density, it 
+will look as if the flow is approximating approximate Bayesian inference. This distinction was articulated 
+in terms of the difference between a particular and variational free energy in (Friston, 2019). The functional 
+form for the variational density was Gaussian, leading to a ubiquitous form of variational Bayes under the 
+Laplace assumption (Friston et al., 2007). The details here are not impo rtant. The key thing to observe is 
+that the bound can either be zero or not. This leaves the question: does the size (of the bound) matter? 
+The answer is  no. This can be seen easily , if one considers the internal states as performing a gradient 
+descent on surprisal. If the corresponding variational free energy has (approximately) the same value  – to 
+within an additive constant  c – the dynamics will be identi cal everywhere (because the gradients do not 
+depend upon the constant) . In other words, it doesn't ma tter whether c is small or large: the approximate 
+Bayesian inference interpretation only requires that the bound is (approximately) the same everywhere on 
+the statistical manifold. See Figure 2. 
+This leads to the interesting questi on: are there any guarantees that the bound is constant? The answer is 
+no. If it were possible to compute the bound, then o ne would use the surprisal or log evidence directly. In 
+other words, the whole point of variational free energy is that it converts a n intractable marginalisation 
+problem into a tractable optimisation problem. Generally, one tries to optimise the form of t he variational 
+density to minimise variational free energy and thereby ensure a relatively tight bound that  cannot vary 
+substantially over the statistical manifold in question  (Cornish and Littenberg, 2007; Winn and Bishop, 
+2005). However, this is a purely practical consideration. From the point of view of self-evidencing, it just 
+means that we can assert that self-organisation to nonequilibrium steady-state necessarily entails exact 
+Bayesian inference (i.e., self-evidencing) with posterior beliefs that are parameterised by something ’s 
+internal states. This inference may be exact; however, we will not be able to specify the form of posterior 
+beliefs. Alternatively, the self-organisation can be interpreted as approximating approximate Bayesian 
+inference under some parameterised form for the encoding of beli efs about the external states by internal 
+states. With this distinction in place, we can now consider observation three. 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+13 
+ 
+ 
+Figure 2 
+Evidence bounds and gradient flows . This schematic tries to convey the intuition that the gradient flows on surprisal 
+(pink) – as a function of some statistical manifold (here conditional expectations of internal states, given blanket states) 
+– are the same as gradient flows on variational free energy (green); if , and only if , the KL divergence  or evidence 
+bound is conserved over the manifold. The left panel shows a view of the two functions from the side, while the right 
+panel provides a view from the top. 
+Observation three 
+The gradients of the evidence bound vanish for nonequilibrium steady-state flows on the internal 
+manifold. 
+(Biehl et al., 2020)  note that – for flow on the internal manifold  – the gradients of the KL divergence or 
+evidence bound disappear. This is true for both exact and approximate Bayesian inference interpretations. 
+For exact Bayesian inference, the KL divergence is stipulatively zero everywhere,  meaning the gradients 
+vanish everywhere. For approximate Bayesian inference, the gradients of the KL div ergence account for 
+the difference between flow on the internal manifold and gradient flow s on variational free energy. This 
+difference accounts for the approximate equality in (1.9). Conceptually, this means that the free energy 
+principle is not claiming that self-organisation to steady-state minimises variational free energy; rather that 
+self-organisation to steady -state can always be read as approxi mating approximate Bayesian inference . 
+Practically, it means that if we specified a generative model (i.e., a desired steady-state density) and solved 
+the following equations of motion (under an assumed form for the variational density), 
+( , ) ( ) ( , )
+( ) ( , )
+f b Q F b
+Qb
+   
+  
+= − 
+ −  
+μμ
+μ
+        (1.11) 
+
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+14 
+ 
+we can approximate self-organisation to a desired steady-state. 
+ 
+Figure 3 
+Sentient dynamics and the representation of order. This figure illustrates approximate Bayesian inference that follows 
+when associating the internal states of a system with a variational (i.e., approximate posterior) density over exter nal 
+states. This figure is based upon the simulation of a small rod-like particle used to illustrate different perspectives on 
+self-organisation in (Friston, 2019). The upper panels illustrate a collection of simulated macromolecules, in terms of 
+internal (blue) active (red) sensory (magenta) and external (cyan) states. The middle left panel shows the first canonical 
+vector of motion over the external states (green arrows) that are represented by the internal states (blue dots). The blue 
+and cyan dots are placed at the location of internal and external states, respectively. The colour level reflects the norm 
+(sum of squares) of the first canonical vectors showing the greatest covariation between external and internal states. 
+The middle panel illustrates a synchronisation manifold (conditioned upon the Markov bl anket) that maps from the 
+electrochemical states of internal macromolecules to the velocity of external macromolecules. The blue dots identify 
+the manifold per se, while the cyan dots are the estimated expectations used to estimate the manifold (using a fi fth 
+order polynomial regression). The  lower panel shows the same infor mation but plotted as a function of time during 
+the last 512 seconds of the simulation.  The conditional expectation is based upon the internal states, while the real 
+motion is shown as a cyan line. The blue shaded areas correspond to 90% confidence intervals. The lower right panel 
+illustrates simulated event-related potentials of the sort illustrated by the insert (lower right panel). The simulated ERP 
+was obtained by time locking the int ernal electrochemical states to the six time points that showed the gr eatest 
+expression of the first canonical variate (indicated by the vertical lines in the middle panel). The dotted lines are six 
+trajectories around these points in time, while the solid lines correspond to the average. The blue lines are the responses 
+of internal states, while the cyan lines correspond to the real motion associated with the first canonical vector. The 
+
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+15 
+ 
+timing in the lower panels has been arbitrarily rescaled to match empi rical peristimulus times  – illustrated with an 
+empirical example of event related potentials in the middle right panel. 
+Conclusion 
+In conclusion, we have looked at three fundamental issues that underpin the free energy principle. The first 
+was the role of solenoidal coupling – within and across the Markov blanket that defines anything of interest. 
+The key observation – here and in Biehl et al (ibid) – is that certain solenoidal coupling terms are precluded. 
+One obvious example is the coupling between internal and external state s. However, this  does not 
+necessarily preclude coupling between internal states and active states – or between external states and 
+sensory states. Furthermore, there can be pronounced solenoidal coupling within any subset of the Markov 
+blanket partition. The role of solenoidal coupling may be quite important in many systems. This is purely 
+based on the heuristic that oscillator y and synchronous behaviour underpins most biorhythms  over many 
+temporal scales and maybe characteristic of biotic self-organisation (Buzsaki and Draguhn, 2004; Desimone 
+et al., 1990; Singer and Gray, 1995) . In this setting, oscillations are assumed to be a manifestation of 
+solenoidal flow; namely , circulation on iso -probability contours that form the fabric of classical 
+(Lagrangian) mechanics (e.g., the orbits of heavenly bodies). 
+The second issue we have looked at is the distinction between flows that look ‘as if’ they are performing 
+exact Bayesian inference, exactly or approximate Bayesian inference, approximately. The only thing that 
+matters – in terms of this distinction  – is if we want to parameterise and evaluate (or indeed simulate) 
+posterior beliefs about external states that are parameterised by internal states. Crucially, these are not the 
+internal states at any given moment. The internal state s that constitute the statisti cal manifold are 
+conditional expectations, given blanket states. This means that the interpretation in terms of Bayesian 
+inference emerges only in expectation – or on average. This is an unremarkable and ubiquitous aspect of 
+empirical studies of sentience. The classical example here is the averaging of multiple responses to sensory 
+perturbations, when characterising evoked responses in internal states (e.g., event related potentials 
+generated by internal neuronal states of the brain). See Figure 3 for an example. In concluding, we would 
+like to thank Martin and his colleagues for a thorough and useful deconstruction of (Friston, 2013). 
+ 
+ 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+16 
+ 
+Acknowledgements 
+K.J.F. is funded by a Wellcome Trust Principal Research Fellowship (Ref: 088130/Z/09/Z). LD is 
+supported by the Fonds National de la Recherche, Luxembourg (Project code: 13568875). 
+Software note 
+The software producing Figure 3 is available as part of the academic software SPM  
+(https://www.fil.ion.ucl.ac.uk/spm/). It can be accessed by typing DEM and selecting the sentient physics 
+button from a graphical user interface (FEP_fluctuations.m).  
+Declaration 
+The authors have no conflicts of interest or declarations 
+ 
+References 
+Ao, P., 2004. Potential in stochastic differential equations: novel construction. Journal of Physics A: 
+Mathematical and General 37, L25-L30. 
+Ao, P., 2005. Laws in Darwinian evolutionary theory. Physics of Life Reviews 2, 117-156. 
+Ao, P., 2008. Emerg ing of Stochastic Dynamical Equalities and Steady-state Thermodynamics. Commun. 
+Theor. Phys. (Beijing, China) 49, 1073-1090. 
+Beal, M.J., 2003. Variational Algorithms for Approximate Bayesian Inference. PhD. Thesis, University 
+College London. 
+Biehl, M., Pollock, F.A., Kanai, R., 2020. A technical critique of the free energy principle as presented in 
+``Life as we know it''. arXiv e-prints, arXiv:2001.06408. 
+Buzsaki, G., Draguhn, A., 2004. Neuronal oscillations in cortical networks. Science 304, 1926-1929. 
+Caticha, A., 2015. The basics of information geometry. AIP Conference Proceedings 1641, 15-26. 
+Clark, A., 2017. How to Knit Your Own Markov Blanket, in: Metzinger, T.K., Wiese, W. (Eds.), Philosophy 
+and Predictive Processing. MIND Group, Frankfurt am Main. 
+Colombo, M., Wright, C., 2018. First princi ples in the life sciences: the free -energy principle, organicism, 
+and mechanism. Synthese. 
+Cornish, N.J., Littenberg, T.B., 2007. Tests of Bayesian model selection techniques for gravitational wave 
+astronomy. Physical Review D 76. 
+Crooks, G.E., 2007. Measuring thermodynamic length. Phys Rev Lett 99, 100602. 
+Da Costa, L., Parr, T., Sajid, N., Veselic, S., Neacsu, V., Friston, K., 2020a. Active inference on discrete state-
+spaces: a synthesis, arXiv:2001.07203. 
+Da Costa , L., Parr, T., Sengupta, B., Friston, K. , 2020b. Natural selection finds natural gradient, 
+arXiv:2001.08028. 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+17 
+ 
+Desimone, R., Wessinger, M., Thomas, L., Schneider, W., 1990. Attentional control of visual perception: 
+cortical and subcortical mechanisms. Cold Spring Harb. Symp. Quant. Biol. 55, 963-971. 
+Evans, D.J., Searles, D.J., 2002. The fluctuation theorem. Advances in Physics 51, 1529-1585. 
+Feynman, R.P., 1972. Statistical mechanics. Benjamin, Reading MA. 
+Feynman, R.P., 1998. Statistical Mechanics: A Set Of Lectures. Avalon Publishing. 
+Fleming, W.H., Sheu, S.J., 2002. Risk -sensitive control and an optimal investment model II. Ann. Appl. 
+Probab. 12, 730-767. 
+Frank, T.D., Beek, P.J., Friedrich, R., 2003. Fokker -Planck perspective on stochastic delay systems: exact 
+solutions and data analysis of biological systems. Phys Rev E Stat Nonlin Soft Matter Phys. 68, 021912. 
+Friston, K., 2013. Life as we know it. J R Soc Interface 10, 20130475. 
+Friston, K., 2019. A free energy principle for a particular physics, eprint arXiv:1906.10184. 
+Friston, K., Ao, P., 2012. Free energy, value, and attractors. Comput Math Methods Med 2012, 937860. 
+Friston, K., Mattout, J., Trujillo-Barreto, N., Ashburner, J., Penny, W., 2007. Variational free energy and the 
+Laplace approximation. NeuroImage 34, 220-234. 
+Friston, K.J., Fri th, C.D., 2015. Active inference, communication and hermeneutics(). Cortex; a journal 
+devoted to the study of the nervous system and behavior 68, 129-143. 
+Friston, K.J., Parr, T., de Vries, B., 2017. The graphical b rain: Belief propagation and active infer ence. 
+Network neuroscience (Cambridge, Mass.) 1, 381-414. 
+Fuster, J.M., 2004. Upper processing stages of the perception-action cycle. Trends Cogn Sci. 8, 143-145. 
+Hohwy, J., 2016. The Self-Evidencing Brain. Noûs 50, 259-285. 
+Ikeda, S., Tanaka, T., Amari, S .-i., 2004. Stochastic reasoning, free energy, and information geometry. 
+Neural Computation 16, 1779-1810. 
+Kahneman, D., Tversky, A., 1979. Prospect Theory: An Analysis of Decision under Risk. Econometrica 47, 
+263-291. 
+Kim, E. -j., 2018. Investigating Infor mation Geometry in Classical and Quantum Systems through 
+Information Length. Entropy 20, 574. 
+Kirchhoff, M., Parr, T., Palacios, E., Friston, K., Kiverstein, J., 2018. The Markov blankets of life: autonomy, 
+active inference and the free energy principle. Journal of The Royal Society Interface 15. 
+Kwon, C., Ao, P., 2011. Nonequilibrium steady-state of a stochastic system driven by a nonlinear drift 
+force. Physical Review E 84, 061106. 
+MacKay, D.J., 1995. Free -energy m inimisation algorithm for decoding and cryptoanalysis. Electronics 
+Letters 31, 445-447. 
+Parr, T., Da Costa, L., Friston, K., 2020. Markov blankets, information geometry and stochastic 
+thermodynamics. Philosophical Transactions of the Royal Society A. 
+Parr, T., Friston, K.J., 2017. Uncertainty, epistemics and active inference. Journal of the Royal Society 
+Interface 14, 20170376. 
+Parr, T., Friston, K.J., 2018. The Anatomy of Inference: Generative Models and Brain Structure. Frontiers 
+in computational neuroscience 12. 
+Pearl, J., 1998. Graphical Models for Probabilistic and Causal Reasoning, in: Smets, P. (Ed.), Quantified 
+Representation of Uncertainty and Imprecision. Springer Netherlands, Dordrecht, pp. 367-389. 
+Pulvermuller, F., Lutzenberger, W., Birbaumer, N ., 1995. Electrocortical d istinction of vocabulary types. 
+Electroencephalogr Clin Neurophysiol 94, 357-370. 
+Qian, H., Beard, D.A., 2005. Thermodynamics of stoichiometric biochemical networks in living systems far 
+from equilibrium. Biophys Chem. 114, 213-220. 
+Seifert, U., 2012. Stochastic thermodynamics, fluctuation theorems and molecular machines. Reports on 
+progress in physics. Physical Society (Great Britain) 75, 126001. 
+Singer, W., Gray, C.M., 1995. Visual feature integration and the temporal correlation  hypothesis. Annu 
+Rev Neurosci. 18, 555-586. 
+A response to a technical critique of the free energy principle as presented in “Life as we know it” 
+18 
+ 
+Winn, J., Bishop, C.M., 2005. Variational message passing. Journal of Machine Learning Research 6, 661 -
+694. 
+Zhang, F., Xu, L., Zhang, K., Wang, E., Wang, J., 2012. The potential and flux landscape theory of evolution. 
+The Journal of chemical physics 137, 065102. 
+ 

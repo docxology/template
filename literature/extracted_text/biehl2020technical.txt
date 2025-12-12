@@ -1,0 +1,1571 @@
+arXiv:2001.06408v3  [q-bio.NC]  28 Feb 2021
+A Technical Critique of Some Parts of the Free Energy
+Principle
+Martin Biehl 1∗ Felix A. Pollock 2∗ Ryota Kanai 1
+1Araya Inc., Tokyo 105-0003, Japan
+2School of Physics and Astronomy, Monash University, Clayton, Vic toria 3800,
+Australia
+March 2, 2021
+Abstract
+We summarize the original formulation of the free energy pri nciple, and highlight some tech-
+nical issues. We discuss how these issues aﬀect related resu lts involving generalised coordinates
+and, where appropriate, mention consequences for and revea l, up to now unacknowledged, dif-
+ferences to newer formulations of the free energy principle . In particular, we reveal that various
+deﬁnitions of the “Markov blanket” proposed in diﬀerent wor ks are not equivalent. We show
+that crucial steps in the free energy argument which involve rewriting the equations of motion of
+systems with Markov blankets, are not generally correct wit hout additional (previously unstated)
+assumptions. We prove by counterexample that the original f ree energy lemma, when taken at
+face value, is wrong. We show further that this free energy le mma, when it does hold, implies
+equality of variational density and ergodic conditional de nsity. The interpretation in terms of
+Bayesian inference hinges on this point, and we hence conclu de that it is not suﬃciently justiﬁed.
+Additionally, we highlight that the variational densities presented in newer formulations of the
+free energy principle and lemma are parameterised by diﬀere nt variables than in older works,
+leading to a substantially diﬀerent interpretation of the t heory. Note that we only highlight some
+speciﬁc problems in the discussed publications. These prob lems do not rule out conclusively that
+the general ideas behind the free energy principle are worth pursuing.
+Overview
+In [
+6] it is argued that the internal coordinates of an ergodic ran dom dynamical system with a
+Markov blanket necessarily appear to engage in active Bayes ian inference. Here, we reproduce the
+argument supporting this interpretation in detail and high light at which points it faces technical
+issues. In the course of our critique, we also mention issues of some closely related alternative
+arguments. In cases where our results have clear consequenc es for the more recent related publi-
+cations [ 7, 14] we also mention those. In particular, we point out a concept ual diﬀerence in these
+latter works that has not previously been acknowledged. How ever, our analysis thereof does not
+go beyond a few remarks. In an additional section we discuss t he eﬀect of our argument on [ 9].
+The logical structure of the present paper is depicted in Fig ure 1. We note that the technical
+issues presented here do not aﬀect the validity of approache s where an (expected) free energy
+minimizing agent is assumed a priori, as presented in, e.g., [8]. None of [ 6, 9, 7, 14] make this
+assumption, they instead aim to identify the conditions und er which such agents will emerge
+within a given stochastic process. We criticize speciﬁc for mal issues in the latter publications
+but leave open whether they can be ﬁxed. We now brieﬂy introdu ce the setting of [ 6] and then
+sketch the content of this paper.
+The starting point is a random dynamical system whose evolut ion is governed by the stochastic
+diﬀerential equation
+˙x= f(x) + ω, (1)
+where the system state x and vector ﬁeld f(x) are multi-dimensional, and ω is a Gaussian noise
+term. There is an additional assumption that the system is er godic, such that the steady state
+∗ These authors contributed equally to this work.
+1
+Equation ( 1), ergodicity,
+Conditions 1 and 2 Condition 2
+Condition 1
+Condition 3
+
+
+
+
+fψ(ψ,s )
+fs(ψ,s,a )
+fa(s,a,λ )
+fλ(a,λ )
+
+
+
+
+Gaussian and
+Markov ω
+Equation ( 4)
+Equations ( 19) and ( 20) Equations ( 21) and ( 22) Equations ( 17) and ( 18)
+∃q(Ψ |λ) s.t.
+Equations ( 29) and ( 30)
+∃q(Ψ |λ) s.t.
+Equations ( 37) and ( 38)
+∃q(Ψ |λ) s.t.
+Equations ( 39) and ( 40)
+Equations ( 35) and ( 36)
+Equation ( 42)
+Interpretation as
+Bayesian inference
+Step 1
+Step 2
+Step 2
+[7]
+Step 2, general
+Step 3
+Step 4
+Step 5
+Step 6
+[14]
+Figure 1: Argument visualization. Numbers labelling edges indicate corresponding steps in this paper. Struck
+out edges indicate implications that we prove incorrect. Th e main argument in [ 6] takes the left path. The box
+in the top right indicates the relations between Conditions 1 to 3 and their role in [ 14]. Merged edges indicate
+a logical AND combination of the parent nodes.
+2
+probability density p∗(x) is well deﬁned. (In the original paper, the ergodic density is simply
+denoted p(x). We here add a star to highlight that it is a time independent probability density.)
+In this case, − ln p∗(x) plays the role of a potential function, in the sense that f can be formulated
+in terms of its gradients [ 1, 11].
+It is then assumed that there is a coordinate system x = ( ψ,s,a,λ ) with ψ = ( ψ1,...,ψ nψ ),
+s = ( s1,...,s ns), a = ( a1,...,a na), and λ = ( λ1,...,λ nλ ), referred to as external, sensory, active,
+and internal coordinates (these are called “states” in [ 6]) respectively, such that the following
+condition holds:
+Condition 1. The function f(x) can be written as
+f(x) =
+
+
+
+
+fψ (ψ,s,a )
+fs(ψ,s,a )
+fa(s,a,λ )
+fλ(s,a,λ )
+
+
+
+ . (2)
+This particular structure is described as “[formalizing] t he dependencies implied by the Markov
+blanket” [
+6]. In contrast, more recent works [ 7, 14] formulate the Markov blanket in terms of
+statistical dependencies of the ergodic density p∗(x) = p∗(ψ,s,a,λ ). Speciﬁcally, the following
+condition is presented:
+Condition 2. The ergodic density factorises as
+p∗(ψ,s,a,λ ) = p∗(ψ|s,a )p∗(λ|s,a )p∗(s,a ). (3)
+In other words, the internal and external coordinates are in dependently distributed when
+conditioned on the sensory and active coordinates. This mea ns we have two diﬀerent formal
+expressions of what constitutes a Markov blanket in these pu blications, and their relationship
+has not previously been established.
+Taking Condition
+1 to hold, the argument of [ 6] then proceeds along the following steps:
+Step 1 Rewrite the vector ﬁeld f(ψ,s,a,λ ) describing the dynamics of the system in terms of
+the gradient of negative logarithm of the ergodic density p∗(ψ,s,a,λ ) of that system.
+Step 2 Rewrite the components fλ(s,a,λ ) and fa(s,a,λ ) of the vector ﬁeld f(ψ,s,a,λ ) in terms
+of only partial gradients of the negative logarithm of p∗(ψ,s,a,λ ).
+Step 3 Assert (in the Free Energy Lemma ) the existence of a density q(ψ|λ) over the external
+coordinates ψ parameterized by the internal coordinates λ, and that f(ψ,s,a,λ ) can again
+be rewritten, this time in terms of a free energy depending on q(Ψ |λ). (Here, and whenever
+it would otherwise be ambiguous, we use a capitalized Ψ to ind icate full distributions, rather
+than the probability density for speciﬁc value of ψ.)
+Step 4 Claim that equivalence of the equations of motion in Step 2 and Step 3 implies that
+certain partial gradients of the KL divergence between q(Ψ |λ) and the conditional ergodic
+density p∗(Ψ |s,a,λ ) must vanish.
+Step 5 Claim that it follows from Step 4 that q(Ψ |λ) and p∗(Ψ |s,a,λ ) are “rendered” equal.
+Step 6 Interpret
+• p∗(Ψ |s,a,λ ) as a posterior over external coordinates given particular values of sensor,
+active, and internal coordinates,
+• q(Ψ |λ) as encoding Bayesian beliefs about the external coordinat es by the internal
+coordinates, and
+• their equality as the internal coordinates appearing to “so lve the problem of Bayesian
+inference”.
+In the present paper, we make the following main observation s
+• The re-expression of Equation ( 1) in the form chosen in Step 1 is derived under restrictive
+assumptions, including that the system is subject to Gaussi an and Markov noise.
+• Condition 1 and Condition 2 are independent from each other.
+• Condition 1 and Condition 3 together lead to a system where the interpretation of s and a
+as sensory and active coordinates is questionable.
+• Under both Conditions 1 and 2, the expressions of fλ(s,a,λ ) and fa(s,a,λ ) resulting from
+Step 2 are not as general as those contained in the result of Step 1. The more general
+alternative expression derived in [ 7] remains insuﬃciently general.
+• Under both Conditions 1 and 2, the Free Energy Lemma, when taken at face value, is wrong
+and cannot be salvaged by using alternatives in Step 2.
+3
+• Under both Conditions 1 and 2, contrary to Step 5 the vanishing of the gradient of the KL
+divergence does not imply equality of q(Ψ |λ) and p∗(Ψ |s,a,λ ).
+• As a consequence, the basic preconditions for the interpret ations in Step 6 are not implied
+by either of the two proposed Markov blanket Conditions 1 and 2.
+The later [ 9] presents an argument almost identical to the one in the orig inal [ 6]. In Section 7
+we discuss how our observations apply to this publication.
+1 Expression via the Gradient of the Ergodic Density
+Here we introduce the expression of the system’s dynamics Eq uation (
+1) in the form used for the
+Free Energy Lemma (Lemma 2.1 in [ 6]). This form expresses the dynamics of internal and active
+coordinates of the given ergodic random dynamical system in terms of the gradient of the ergodic
+density p∗(x). In accordance with the results of [ 11], f(x) is rewritten as (see Equation (2.5) in
+[6]):
+f(x) = (Γ + R) · ∇ ln p∗(x), (4)
+where Γ is the diﬀusion matrix, which we will take to be block d iagonal, (in [ 6], and later work
+such as [ 7], Γ is taken to be proportional to the identity matrix) and R is an antisymmetric
+matrix, deﬁned through the relation
+MR + RMT = MΓ − Γ MT, (5)
+with
+Mij = ∇jfi(x). (6)
+Here, and in all of [ 6, 9, 7, 14], both Γ and R are assumed constant. We emphasise here that,
+for general nonlinear models, these matrices can vary with t he coordinates and
+Equation ( 5) holds only approximately [ 10, 12]. (The exact conditions under which these matri-
+ces can be chosen to be constant can be found in [ 12, 16] and, for the discrete state case, [ 2]).
+Moreover, Equation ( 4) is derived in the literature under the explicit assumption that the ﬂuctu-
+ations ω be Gaussian and Markov [ 1, 11]. For the counterexamples we present here, we restrict
+ourselves to the class of Ornstein-Uhlenbeck processes, fo r which R and Γ are always constant,
+and the ergodic density p∗(x) = p∗(ψ,s,a,λ ) is necessarily a multivariate Gaussian with zero
+mean. Speciﬁcally, following [ 11],
+p∗(ψ,s,a,λ ) := 1
+Z exp
+[
+− 1
+2 (ψ,s,a,λ )U(ψ,s,a,λ )⊤
+]
+, (7)
+where ( ψ,s,a,λ ) is a row vector and Z is a suitable normalisation constant. From
+Equation ( 4) it can be seen that,
+U = −(Γ + R)−1M; (8)
+though we emphasise here that strict relations between M and U can only be made because of
+the assumption that Γ and R are coordinate independent [ 17]. This concludes Step 1.
+Before moving on to Step 2, we note that, under the assumptions implicit in Step 1, we can
+express Condition 1 and Condition 2 in terms of the matrices M and U. (In the nonlinear case,
+these matrices can still be deﬁned in terms of derivatives of the force vector ﬁeld and potential,
+respectively; however, they will be generally coordinate- dependent, even when Γ and R are
+not [ 10].) Firstly, since it eﬀectively states that ∇ψ fa(x) = ∇ψ fλ(x) = ∇λfs(x) = ∇λfψ (x) = 0,
+Condition 1 ⇔ Maψ = Mλψ = Msλ = Mψλ = 0 , (9)
+with Mαβ a block sub-matrix of M in general. Secondly, because of the multivariate Gaussian
+nature of p∗(ψ,s,a,λ ), the dependencies of conditional distributions are encod ed in the inverse
+U of the covariance matrix; we therefore have that
+Condition 2 ⇔ Uψλ = Uλψ = 0 , (10)
+where Uαβ is a block sub-matrix of U. These implications bring us to our ﬁrst observation:
+Observation 1. Neither one of Condition 1 (the vector ﬁeld dependency structure) or Condi-
+tion 2 (conditional independence in the ergodic distribution) im plies the other:
+Condition 1 ⇏ Condition 2 (11)
+Condition 1 ⇍ Condition 2. (12)
+4
+Proof. In Appendix A, we provide direct counterexamples, using the equivalent c onstraints on
+the matrices M and U in Equations ( 9) and ( 10), to implication in either direction. That is, there
+exists a system obeying Condition 1 that does not obey Condition 2 (proving Equation ( 11)),
+and there exists one obeying Condition 2 that does not obey Condition 1 (proving Equation ( 12)).
+Henceforth, unless otherwise stated, we will assume both Co ndition 1 and
+Condition 2. Any implications that fail to hold in this special case cann ot hold generally.
+2 Re-Expression Using only Partial Gradients
+For Step
+2 we focus on the components fλ = ( fλ1 ,...,f nλ ) and fa = ( fa1 ,...,f na) of f. With-
+out loss of generality we can rewrite them from Equation ( 4) as:
+fa(s,a,λ ) = ( Raψ · ∇ψ + Ras · ∇s + (Γ aa + Raa) · ∇a
++Raλ · ∇λ) ln p∗(ψ,s,a,λ ), (13)
+fλ(s,a,λ ) = ( Rλψ · ∇ψ + Rλs · ∇s + (Γ λλ + Rλλ ) · ∇λ
++Rλa · ∇a) ln p∗(ψ,s,a,λ ), (14)
+where Γ nm (Rnm) is the block of Γ ( R) connecting derivatives with respect to the mcoordinates
+to the time derivatives of the n coordinates. The expectation value with respect to p∗(ψ|s,a,λ )
+leaves the left hand side of these equations unchanged. A few manipulations ([ 7] cf. Equation
+(12.14), p. 129) reveal that, on the right hand side, this lea ds to the ergodic density p∗(ψ,s,a,λ )
+being replaced by the marginalised ergodic density p∗(s,a,λ ) so that we get
+fa(s,a,λ ) = ( Raψ · ∇ψ + Ras · ∇s + (Γ aa + Raa) · ∇a
++Raλ · ∇λ) ln p∗(s,a,λ ) (15)
+fλ(s,a,λ ) = ( Rλψ · ∇ψ + Rλs · ∇s + (Γ λλ + Rλλ ) · ∇λ
++Rλa · ∇a) ln p∗(s,a,λ ). (16)
+Since ∇ψ ln p∗(s,a,λ ) = 0, the terms involving ∇ψ drop out:
+fa(s,a,λ ) = ( Ras · ∇s + (Γ aa + Raa) · ∇a + Raλ · ∇λ) ln p∗(s,a,λ ), (17)
+fλ(s,a,λ ) = ( Rλs · ∇s + Rλa · ∇a + (Γ λλ + Rλλ ) · ∇λ) ln p∗(s,a,λ ). (18)
+We are not aware of how to further simplify this equation with out additional assumptions. How-
+ever, in (Equations (2.5) and (2.6) of [ 6] ) all of the oﬀ-diagonal terms are implicitly assumed to
+vanish, i.e., Equation ( 4) is equated with:
+fa(s,a,λ ) = (Γ aa + Raa) · ∇aln p∗(s,a,λ ), (19)
+fλ(s,a,λ ) = (Γ λλ + Rλλ ) · ∇λ ln p∗(s,a,λ ). (20)
+This equation is the result of Step 2.
+In the more recent (Appendix B of [ 7]) a more detailed discussion of Equation ( 4) is presented,
+where it is claimed that Condition 1 implies Condition 2 (cf. our Observation 1) along with the
+following simpliﬁcation of Equations ( 17) and ( 18) ([ 7], Equations (12.8)–(12.11), (12.15), pp.
+126–129):
+fa(s,a,λ ) = ((Γ aa + Raa) · ∇a + Raλ · ∇λ) ln p∗(s,a,λ ), (21)
+fλ(s,a,λ ) = ( Rλa · ∇a + (Γ λλ + Rλλ ) · ∇λ) ln p∗(s,a,λ ). (22)
+However, Equations ( 21) and ( 22) are still provably less general than Equations ( 13) and
+(14), even when both Condition 1 and Condition 2 are satisﬁed.
+Observation 2. Given a random dynamical system obeying Equation ( 1), ergodicity, and both
+Condition 1 and Condition 2, none of Equations ( 19)–(22) generally hold.
+Proof. By counterexample, see Appendix B. There, we show explicitly that a model satisfying
+the above assumptions does not satisfy the equations in ques tion.
+In order to arrive at Equations ( 21) and ( 22) from Equations ( 17) and ( 18) in general, one
+must remove the oﬀending “solenoidal ﬂow” terms by ﬁat. That is, one assumes Ras = Rλs = 0.
+In ([ 7], Equation (12.4)), the following, even stronger, conditi on is assumed as an alternative
+starting point (along with Condition 2):
+5
+Condition 3. The blocks of the R matrix appearing in Equation ( 4) coupling (s,a ) coordinates
+to λ and ψ coordinates, and ψ coordinates to λ coordinates vanish, i.e.,
+Rψs = Rψa = Rψλ = Rsλ = Raλ = 0 . (23)
+This is claimed to imply Mψλ = Mλψ = 0, but not the full Condition 1. However, in [ 14],
+both Condition 1 and Condition 3 are assumed (along with Ras = 0). This prompts our next ob-
+servation.
+Observation 3. In a system satisfying both Condition
+1 and Condition 3, the internal coor-
+dinates cannot be directly inﬂuenced by the sensory coordin ates: fλ(s,a,λ ) = fλ(a,λ ), and the
+external coordinates cannot be directly inﬂuenced by the ac tive coordinates: fψ (ψ,s,a ) = fψ (ψ,s ).
+Proof. From Equation ( 5), it follows that
+M = (Γ + R)MT(Γ − R)−1, (24)
+with the inverse replaced by a pseudoinverse if Γ − R is not invertible. Therefore, if
+Γ αβ = δαβ Γ αα and Rαβ = δαβ Rαα for blocks of coordinates labelled by α and β, then
+Mαβ = (Γ αα + Rαα )MT
+βα (Γ ββ − Rββ )−1, (25)
+and Mβα = 0 ⇒ Mαβ = 0.
+Condition 3 implies that the only nonzero blocks of Rare Rψψ , Rss, Rsa, Ras, Raa, and Rλλ ,
+and Γ is assumed to be block diagonal. As noted in Equation ( 9), Condition 1 requires that
+Maψ = Mλψ = Msλ = Mψλ = 0. Through Equation ( 25), these together imply that Mλs =
+Mψa = 0, and hence that
+f(x) =
+
+
+
+
+fψ (ψ,s )
+fs(ψ,s,a )
+fa(s,a,λ )
+fλ(a,λ )
+
+
+
+ , (26)
+as was to be shown.
+In this case, the four sets of coordinates interact in a chain , and it is questionable whether
+the s and a coordinates can be meaningfully interpreted, respectivel y, as sensory inputs to the
+internal coordinates or their boundary-mediated inﬂuence on the external coordinates.
+3 Free Energy Lemma
+The relation of the dynamics of the internal coordinates to B ayesian beliefs is made by introducing
+a density (called the variational density) q(Ψ |λ) that is then interpreted as encoding a Bayesian
+belief. It is parameterized by the internal coordinates λ and claimed to be “arbitrary”. We
+take this “at face value” and consider q(Ψ |λ) to be parameterized only by λ and, therefore, to be
+independent of ( s,a ). (We note that there is a convention in the literature on var iational Bayesian
+inference e.g., in [
+3] to drop the observed variables/data in the variational den sity. It is possible
+that in [ 6], ( s,a ) is seen as observed variables and dropped from the variatio nal density q(Ψ |λ)
+as in this convention. However, the reason that dropping the observed variables is justiﬁed in
+the established convention is that those observed variable s are ﬁxed throughout the minimization
+of the variational free energy and the parameters of the vari ational density do not inﬂuence
+the observed data in any way. In other words the variational d ensity is optimized for a single
+datapoint. In [ 6] the datapoint is continuously changing and partially doin g so in dependence
+on the parameter λ as ˙a = fa(s,a,λ ). These diﬀerences and their consequences are non-trivial
+and beyond the scope of this paper so we assume that the variat ional density does not depend
+on ( s,a ).) If q(Ψ |λ) is allowed to depend on ( s,a ), Observation 4 does not apply and the Free
+Energy Lemma is made trivially true by setting q(ψ|s,a,λ ) := p∗(ψ|s,a,λ ). The existence of
+the variational density q(Ψ |λ) is asserted by the Free Energy Lemma (see Lemma 2.1 in [ 6]).
+(Explicitly, the Free Energy Lemma asserts the existence of a free energy F(s,a,λ ) in terms of
+which f(ψ,s,a,λ ) can be expressed and not the existence of q(Ψ |λ). However, since the free
+energy is deﬁned as a functional of q(Ψ |λ), it exists if and only if a suitable q(Ψ |λ) exists.)
+More precisely, the Free Energy Lemma (and Step 3) asserts that for every ergodic density
+(equivalently as expressed in [ 6], for every Gibbs energy G(x) := − ln p∗(ψ,s,a,λ )) p∗(ψ,s,a,λ )
+of a system obeying Equations ( 19) and ( 20) there is a free energy F(s,a,λ ), deﬁned as
+F(s,a,λ ) : = − ln p∗(s,a,λ ) +
+∫
+q(ψ|λ) ln q(ψ|λ)
+p∗(ψ|s,a,λ ) dψ (27)
+= − ln p∗(s,a,λ ) + D KL[q(Ψ |λ)||p∗(Ψ |s,a,λ )], (28)
+6
+in terms of the “posterior density” p∗(Ψ |s,a,λ ), (here, we keep the conditioning argument λ,
+as in [ 6], and do not explicitly assume Condition 2, though our conclusions are unaﬀected by it)
+such that Equations ( 19) and ( 20) can be rewritten as:
+fa(s,a,λ ) = −(Γ + R)aa · ∇aF(s,a,λ ), (29)
+fλ(s,a,λ ) = −(Γ + R)λλ · ∇λF(s,a,λ ). (30)
+It is worth considering what a proof of the Free Energy Lemma c ould look like. A proof of
+existence of a free energy (and therefore of the Free Energy L emma) would need to show that,
+for every system satisfying the given assumptions, there al ways exists a q(Ψ |λ) such that the
+right hand sides of Equations ( 29) and ( 30) are equal to the right hand sides of Equations ( 19)
+and ( 20). Expanding Equations ( 29) and ( 30) using ( 28) leads to:
+fa(s,a,λ ) = (Γ + R)aa · ∇aln p∗(s,a,λ )
+− (Γ + R)aa · ∇aDKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )], (31)
+fλ(s,a,λ ) = (Γ + R)λλ · ∇λ ln p∗(s,a,λ )
+− (Γ + R)λλ · ∇λ DKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )]. (32)
+For equality of the right hand sides to those of Equations ( 19) and ( 20) we need:
+(Γ + R)aa · ∇aDKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )] = 0 (33)
+(Γ + R)λλ · ∇λ DKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )] = 0 . (34)
+In words, these equations say that the Free Energy Lemma hold s if any of the following three
+conditions (of strictly increasing strengths) are given:
+1. There is a q(Ψ |λ) such that the partial gradients ∇a and ∇λ of the KL divergence between
+the variational density and the conditional ergodic densit y are elements of the nullspaces of
+(Γ + R)aa and (Γ + R)λλ respectively.
+2. There is a q(Ψ |λ) such that the gradients of the KL divergence to p∗(Ψ |s,a,λ ) are equal to
+the nullvector:
+∇aDKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )] = 0 , (35)
+∇λ DKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )] = 0 , (36)
+Then they are always elements of the nullspaces of (Γ + R)aa and (Γ + R)λλ respectively.
+3. There is a q(Ψ |λ) such that q(Ψ |λ) = p∗(Ψ |s,a,λ ) (and hence p∗(Ψ |s,a,λ ) = p∗(Ψ |λ))
+which implies that the KL divergence to p∗(Ψ |s,a,λ ) vanishes for all a,λ and the two
+partial gradients are always nullvectors and therefore ele ments of the according nullspaces.
+The Free Energy Lemma can then be proven by showing that one of these three cases follows
+from the conditions of the lemma. However, no attempt is made in [ 6] to establish this. Instead
+the given proof discusses purported consequences of the existence of a suitable q(Ψ |λ). These
+will be discussed in Steps 4 and 5.
+Even if the Free Energy Lemma does not hold for systems obeyin g
+Equations ( 19) and ( 20), one might expect that systems that instead only satisfy th e more
+general Equations ( 21) and ( 22) or the most general Equations ( 17) and ( 18). For these systems
+the Free Energy Lemma would require that there is a q(Ψ |λ) such that
+fa(s,a,λ ) = ((Γ aa + Raa) · ∇a + Raλ · ∇λ) F(s,a,λ ), (37)
+fλ(s,a,λ ) = ( Rλa · ∇a + (Γ λλ + Rλλ ) · ∇λ) F(s,a,λ ). (38)
+or
+fa(s,a,λ ) = ( Ras · ∇s + (Γ aa + Raa) · ∇a + Raλ · ∇λ) F(s,a,λ ), (39)
+fλ(s,a,λ ) = ( Rλs · ∇s + Rλa · ∇a + (Γ λλ + Rλλ ) · ∇λ) F(s,a,λ ), (40)
+hold respectively. However, we ﬁnd this not to be the case in g eneral.
+Observation 4. Given a random dynamical system obeying Equation ( 1), ergodicity,
+Condition 1 and Condition 2, there need not exist a free energy expressed in terms of a var i-
+ational density q(Ψ |λ) such that:
+(i) Equations ( 29) and ( 30) hold if Equations ( 19) and ( 20) do;
+(ii) Equations ( 37) and ( 38) hold if Equations ( 19) and ( 20) don’t hold but Equations ( 21) and
+(22) do;
+7
+(iii) Equations ( 39) and ( 40) hold if neither Equations ( 19) and ( 20) norEquations ( 21) and
+(22) hold but Equations ( 17) and ( 18) do.
+Proof. In Appendix C, we derive a set of conditions on the Rand U matrices, and on the putative
+variational density q(Ψ |λ), that follow from each of the pairs of equations in cases (i– iii). We show
+that, in general, each pair leads to a contradiction and, in e ach case, provide a counterexample
+that falls in the according system class.
+Before proceeding, we note that later works present an alter native version of the Free Energy
+Lemma, where the conditioning argument of q(Ψ |λ) is replaced by the most likely value of λ
+conditional on the ( s,a ) coordinates [ 7, 14]. We here concern ourselves with the version apparent
+in [ 6], where q(Ψ |λ) is parameterised by the internal states themselves, but wi ll brieﬂy comment
+on the interpretation of the alternative approach in Step 6.
+4 Vanishing Gradients
+As mentioned in Step
+3, the proof of the Free Energy Lemma in [ 6] only discusses its consequences.
+The ﬁrst proposed consequence is that expressing the vector ﬁeld in terms of a free energy as
+in Equations ( 29) and ( 30) “requires” that the gradients with respect to a and λ of the KL
+divergence vanish, i.e., that Equations ( 35) and ( 36) hold.
+We mentioned in Step 3 that the implication in the opposite direction holds. This c an be seen
+from Equations ( 33) and ( 34). However, if the nullspace of (Γ + R)aa or (Γ + R)λλ is non-trivial,
+then the gradient may be a non-zero element of this subspace a nd
+Equations (29) and ( 30) will still hold. In that case the vanishing gradients would not be necessary
+for the Free Energy Lemma.
+The conditions under which a non-trivial nullspace exists a re discussed in [ 11]. In short,
+the nullspace is guaranteed to be trivial in the special case where Γ is positive deﬁnite. Whether
+or not ergodic systems with a Markov blanket can ever admit a n on-trivial nullspace, and hence
+divergences in Equations ( 31) and ( 32) with non-vanishing gradients, is not immediately clear.
+However, in order to establish the necessity of Equations ( 35) and ( 36) this remains to be proven.
+5 Equality of Q(Ψ |λ) and P ∗(Ψ |s, a, λ )
+The proof of the Free Energy Lemma in [ 6] also proposes that the vanishing of gradients of the KL
+divergence, of the variational density q(Ψ |λ) from the conditional ergodic density p∗(Ψ |s,a,λ ), im-
+plies the equality of these densities. We mentioned in Equat ions ( 4) that the implication in the op-
+posite direction holds. This can also be seen from
+Equations (
+33) and ( 34). Concerning the implication in the direction proposed by [ 6], let us
+now assume that for a given system Equations ( 19) and ( 20) hold, a variational density q(Ψ |λ)
+does exist, and the gradients of the KL divergence of the vari ational and ergodic densities van-
+ish i.e., Equations ( 35) and ( 36) hold. Then consider the argument by [ 6] in this direct quote
+(comments in square brackets by us):
+“However, Equation (2.6) [Equations ( 19) and ( 20) above] requires the gradients of
+the divergence to be zero [Equations ( 35) and ( 36)], which means the divergence must
+be minimized with respect to internal states. This means tha t the variational and
+posterior densities must be equal:
+q(ψ|λ) = p[∗](ψ|s,a,λ ) ⇒ DKL = 0 ⇒
+{
+(Γ + R) · ∇λ DKL = 0 ,
+(Γ + R) · ∇aDKL = 0 .
+In other words, the ﬂow of internal and active states minimiz es free energy, rendering
+the variational density equivalent to the posterior densit y over external states.”
+The ﬁrst problem in the above quote is that the minimization o f the divergence does not
+follow from the vanishing gradients. On the contrary, since Equations ( 35) and ( 36) must hold
+for all ( s,a,λ ), the KL divergence
+DKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )]
+cannot depend on ( λ,a ); it therefore has no extremum (and thus no minimum) with res pect to
+either of these coordinates.
+The second problem pertains to the identiﬁcation of the two d istributions at a minimum.
+In general, if we try to ﬁnd the minimum of a KL divergence betw een a given probability density
+p1(Y) and a family of densities p2(Y|θ) parameterized by θ, then the lowest possible value of zero
+8
+is achieved only if there is a parameter θ1 such that p2(Y|θ1) = p1(Y). If there is no such θ1,
+then the minimum value will be larger than zero. So, even if th e divergence were minimized, it
+would not need to be zero. More generally, the divergence K(s) need not be zero for any value
+of s.
+There is therefore no satisfactory reason given why the vari ational density q(Ψ |λ) and the
+posterior density p∗(Ψ |s,a,λ ) should be equal or have low KL divergence. In fact they need n ot
+be. (Note that, since any q(Ψ |λ) that doesn’t depend on ( s,a ) is an element of the set of those
+that do, Observation 5 remains true for the case where we allow this dependence. In t hat case,
+the Free Energy Lemma holds because we can set q(Ψ |s,a,λ ) := p∗(Ψ |s,a,λ ), and thus a q exists
+for which the densities are actually equal. However, the cla im here is that for every q that obeys
+the conditions in Observation 5 we must have equality.)
+Observation 5. Given a random dynamical system obeying Equation ( 1), ergodicity, Condition 1
+and Condition 2. Then if, additionally,
+(i) Equations ( 19) and ( 20) hold and the Free Energy Lemma holds i.e., there exists a pro bability
+density q(Ψ |λ) such that Equations ( 29) and ( 30) hold, or
+(ii) Equations ( 21) and ( 22) hold and there exists q(Ψ |λ) such that Equations ( 37) and ( 38)
+hold, or
+(iii) Equations ( 17) and ( 18) hold and there exists q(Ψ |λ) such that Equations ( 39) and ( 40)
+hold,
+then there is no c≥ 0 for which it can be guaranteed that
+DKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )] <c. (41)
+In particular, it does not follow from these conditions that
+q(Ψ |λ) = p∗(Ψ |s,a,λ ). (42)
+Proof. By example; see Appendix D. To show that the implication does not generally hold for
+given system and densities q(Ψ |λ) that obey Equations ( 19), ( 20), ( 29) and
+(30), Equations ( 21), ( 22), ( 37) and ( 38), or Equations ( 17), ( 18), ( 39) and ( 40) we only have to
+consider a system that obeys all three pairs of equations, Eq uations ( 19) and ( 20), Equations ( 21)
+and ( 22), and Equations ( 21) and ( 22), and for which suitable q(Ψ |λ) exist. For this system we
+then need to show that the q(Ψ |λ) that obey Equations ( 29) and ( 30) are not necessarily equal
+(or similar) to p∗(Ψ |s,a,λ ).
+We use a variant of the model used in Appendix B as such a counterexample. This system
+obeys all three of Equations ( 19) and ( 20), Equations ( 21) and ( 22), and
+Equations ( 21) and ( 22) and the nullspace of the associated Γ + R is trivial. We identify a set
+of possible q(Ψ |λ) satisfying Equations ( 29) and ( 30) which implies that the gradients of the KL di-
+vergence between those q(Ψ |λ) and p∗(Ψ |s,a,λ ) vanish i.e., Equations
+(35) and ( 36) hold. We then demonstrate that for the q(Ψ |λ) in this set the value of the KL
+divergence to p∗(Ψ |s,a,λ ) can be arbitrarily large.
+6 Interpretation
+Finally, we turn our attention to the interpretation in term s of Bayesian inference, i.e., Step
+6.
+We again quote directly from [ 6]:
+Because (by Gibbs inequality) this divergence [ D KL[q(ψ|λ)||p∗(ψ|s,a,λ )]] cannot be
+less than zero, the internal ﬂow will appear to have minimize d the divergence between
+the variational and posterior density. In other words, the i nternal states will appear
+to have solved the problem of Bayesian inference by encoding posterior beliefs about
+hidden (external) states, under a generative model provide d by the Gibbs energy.
+We have shown that, in general, there is no suitable variatio nal density that is only parame-
+terized by the internal coordinate λ. We then showed that, even if there is a suitable variational
+density (including those parameterized by all of ( s,a,λ )), it can be arbitrarily diﬀerent from the
+posterior density. Since the arguments for the internal ﬂow appearing to minimize the divergence
+between variational and posterior density are therefore in correct, there is no reason why the
+internal states should appear to have solved the problem of B ayesian inference.
+As mentioned in Step 3, some newer works (e.g., [ 7, 14]) formulate a diﬀerent
+Free Energy principle, where the variational density of bel iefs is parameterised
+not by the internal coordinates λ but by ¯λ(s,a ) = arg max λ p∗(λ|s,a ), the most likely value
+of the internal coordinates given the sensory and active one s. In this case, Observations 4 and 5
+9
+do not apply. However, the new parameters ¯λ(s,a ) are strictly a function of the sensory and
+active coordinates. This means we have a Markov chain (with c apitalisations indicating random
+variables associated to the corresponding lower case coord inates (or functions of coordinates))
+Λ → (S,A ) → ¯Λ and, by the data processing inequality [ 5], the mutual information between the
+both sensory and active coordinates and the belief paramete r ¯λ upper bounds that between the
+internal coordinates and the belief parameter. It is theref ore not clear to what extent the inter-
+nal coordinates λ, rather than the active and sensory coordinates ( s,a ) themselves, can be said
+to be encoding beliefs about the external coordinates. Note also that, on any given trajectory,
+unless the distribution p∗(λ|s,a ) is suﬃciently peaked and unimodal, the internal coordinat es are
+not guaranteed to spend most of their time close to their most likely conditional value, and (by
+deﬁnition if Condition 2 holds), they will not be better predictors of the external co ordinates
+than those in the Markov blanket.
+Generally, λ ̸= ¯λ and ¯λ is the solution to an optimization problem that is assumed to be
+solved in these later works. Using this optimized variable t o parameterise beliefs is therefore a
+considerable departure from [ 6]. Contrary to the impression created by the way it is referen ced
+in [ 7, 14], the older theory in [ 6] should be clearly distinguished from the newer ones in thes e
+more recent papers.
+7 Consequences for [
+9]
+The reference [ 9] argues for the same interpretation as [ 6] but there are some diﬀerences in
+the argument.
+The diﬀerences are the following:
+• In [ 9], Equation ( 1) is formulated for “generalized states,” which we refer to h ere as general-
+ized coordinates. This means that the variable xis replaced by a multidimensional variable
+denoted ˜x= ( x,x ′,x ′′,... ).
+• The Markov blanket structure is not explicitly deﬁned via Eq uation ( 2). Formally, it is
+introduced directly (see [ 9] Equation (10)) in a less general form corresponding to Equa tions
+(19) and ( 20). (At the same time [ 6] is referenced in connection to the Markov blanket so
+there seems to be no intention to replace the original deﬁnit ion with the stronger one.)
+Therefore, our observations concerning Steps 1 to 3 are not directly relevant to this paper.
+• The internal coordinate λ is renamed to r and the role of matrix Ris played by the matrix
+−Q.
+• The proof of the Free Energy Lemma given in [ 9] is diﬀerent. It (implicitly) suggests to set
+the variational density equal to the ergodic conditional po sterior.
+• The proof of the Free Energy Lemma no longer contains the prop osition that the gradient
+of the KL divergence of the variational density and the ergod ic conditional density vanish
+i.e., Step 4.
+• The proof also no longer contains the claim that the vanishin g gradients of the KL diver-
+gence of the variational density and the ergodic conditiona l density imply equality of those
+densities i.e., Step 5 is not present.
+The interpretation in terms of Bayesian inference is unchan ged and still relies on the equality
+of the variational and the ergodic conditional density.
+Since there are no explicit generalized coordinate version s of Steps 1, 2, 4 and 5 in [ 9] we
+do not discuss those steps here. We only disprove the Free Ene rgy Lemma and the claim that
+when the Free Energy Lemma holds the variational and ergodic conditional density become equal.
+For this we present a way to translate the counterexamples us ed in Observations 4 and 5 into
+counterexamples in generalized coordinates. The interpre tation in terms of Bayesian inference
+given in [ 9] is therefore equally as unjustiﬁed as the one in [ 6].
+For completeness, we ﬁrst state the generalized coordinate versions of the stochastic diﬀeren-
+tial equation Equation ( 1)
+˙˜x= f(˜x) + ˜ω, (43)
+the less general version of the Markov blanket structure Equ ation ( 2)
+f˜ψ ( ˜ψ, ˜s, ˜a) = (Γ − Q) ˜ψ ˜ψ ∇ ˜ψ ln p∗( ˜ψ, ˜s, ˜a, ˜r)
+f˜s( ˜ψ, ˜s, ˜a) = (Γ − Q)˜s˜s∇˜sln p∗( ˜ψ, ˜s, ˜a, ˜r)
+f˜a(˜s, ˜a, ˜r) = (Γ − Q)˜a˜a∇˜aln p∗( ˜ψ, ˜s, ˜a, ˜r)
+f˜r(˜s, ˜a, ˜r) = (Γ − Q)˜r˜r∇˜rln p∗( ˜ψ, ˜s, ˜a, ˜r),
+(44)
+10
+the expression of the ˜ a and ˜r components of the vectorﬁeld in terms of the marginalised er godic
+density Equations ( 19) and ( 20)
+f˜a(˜s, ˜a, ˜r) = (Γ − Q)˜a˜a · ∇ ˜aln p∗(˜s, ˜a, ˜r), (45)
+f˜r(˜s, ˜a, ˜r) = (Γ − Q)˜r˜r · ∇ ˜rln p∗(˜s, ˜a, ˜r), (46)
+and in terms of free energy Equations ( 29) and ( 30):
+f˜a(˜s, ˜a, ˜r) = ( Q− Γ) ˜a˜a · ∇ ˜aF(˜s, ˜a, ˜r), (47)
+f˜r(˜s, ˜a, ˜r) = ( Q− Γ) ˜r˜r · ∇ ˜rF(˜s, ˜a, ˜r). (48)
+The Free Energy Lemma then requires that there exists q( ˜Ψ |˜r) such that the KL divergence
+between p∗( ˜Ψ |˜s, ˜a, ˜r) vanishes. Without going into further details of the diﬀere nce between the
+proof in [ 9] and that in [ 6], we can prove the former wrong by translating the counterex ample
+used for the latter into generalised coordinates.
+Observation 6. There is a general way to translate a system in ordinary coord inates into a
+system of generalised coordinates that corresponds to an in ﬁnite number of independent copies of
+the original system. This means all properties of the origin al system (e.g., linearity, ergodicity,
+the Gaussian and Markovian property of the noise, Condition s
+1 and 2, properties of Γ ,R,U ) are
+preserved during this translation.
+Proof. By construction, see Appendix
+E.
+This implies that the counterexamples used in proving Obser vations 4 and 5 directly translate
+to the setting of the generalised coordinates. The Free Ener gy Lemma is therefore also wrong for
+generalised coordinates and the variational density q( ˜Ψ |˜r) is not “ensured” [ 9] to be equal to the
+conditional ergodic density p∗( ˜Ψ |˜s, ˜a, ˜r).
+8 Conclusions
+We found that the two diﬀerent Markov blanket conditions pro posed in [
+6, 7, 14] are independent
+from each other. We then showed that under both of those Marko v blanket conditions, among the
+six steps contained in the argument in [ 6], three do not hold independently from each other. We
+also showed that ﬁxing the second of those steps
+(Step
+2) does not provide an valid alternative. The line of reasonin g of [ 6] therefore does not sup-
+port its claim that the internal coordinates of a Markov blan ket “appear to have solved the prob-
+lem of Bayesian inference by encoding posterior beliefs abo ut hidden (external) [coordinates], ...”.
+We have also shown that using generalised coordinates as in [ 9] does not remedy the situation. Ad-
+ditionally, we identiﬁed a technical error in [ 7] and an interpretational issue resulting from possibly
+too strong assumptions (both
+Conditions
+1 and 3) in [ 14]. We also highlighted that the latter publications both arg ue that
+it is the most likely internal coordinates given sensory and active coordinates that encode pos-
+terior beliefs about external states instead of the interna l coordinates themselves. The resulting
+free energy principle and lemma are therefore a diﬀerent pro posal. This is not subject to our
+technical critique.
+Contributions
+Conceptualization, M.B., F.A.P. and R.K.; Formal analysis , M.B. and F.A.P.; Funding acqui-
+sition, F.A.P. and R.K.; Methodology, M.B., F.A.P. and R.K. ; Visualization, M.B. and F.A.P.;
+Writing—original draft, M.B. and F.A.P.; Writing—review & editing, M.B., F.A.P. and R.K. All
+authors have read and agreed to the published version of the m anuscript.
+Funding
+The work by Martin Biehl and Ryota Kanai on this publication w as made possible through the
+support of a grant from Templeton World Charity Foundation, Inc. The opinions expressed in
+this publication are those of the authors and do not necessar ily reﬂect the views of Templeton
+World Charity Foundation, Inc. Martin Biehl and Ryota Kanai are also funded by the Japan
+Science and Technology Agency (JST) CREST project. Felix A. Pollock acknowledges support
+from the Monash University Network of Excellence for Consci ousness and Complexity in the
+Conscious Brain.
+11
+Acknowledgments
+All authors are grateful to Karl Friston and Thomas Parr for c onstructive feedback on an earlier
+version of this work. We also want to thank Danijar Hafner for pointing us to [
+12]. Martin Biehl
+wants to thank Yen Yu for helpful discussions on generalized coordinates.
+Conﬂicts of interest
+The authors declare no conﬂict of interest. The funders had n o role in the design of the study;
+in the collection, analyses, or interpretation of data; in t he writing of the manuscript, or in the
+decision to publish the results.
+A Counterexamples for Observation
+1
+Consider a four dimensional linear system obeying Equation (1) for which there are coordinates
+x= ( ψ,s,a,λ ) with nψ = ns = na = nλ = 1 and
+f(x) = Mx, (49)
+with the parameterisation
+M =
+
+
+
+
+−1 m1 m2 m3
+m2 −1 m2 m3
+m3 m2 −1 m2
+m3 m2 m1 −1
+
+
+
+ . (50)
+From Equation (
+9), it is clear that the system obeys Condition 1 if m3 = 0. In this case, taking
+Γ to be the identity matrix, it is possible to show that
+Uψλ = − m2(m1 − m2 + 2)(m3
+2 + m2
+1m2 − 2m1m2
+2 − 4m1 − 2)
+(m2
+1 + m2
+2 − 4m2 + 4)(m2
+1 + 5m2
+2 − 4m1m2 + 4m2 + 4) . (51)
+For ﬁxed, ﬁnite m2, this is zero only for a few discrete values of m1, such as m1 = m2 − 2; that
+it is generically non-zero proves Equation (
+11). As a concrete example, the following
+M =
+
+
+
+
+−1 −2/ 3 −2/ 3 0
+−2/ 3 −1 −2/ 3 0
+0 −2/ 3 −1 −2/ 3
+0 −2/ 3 −2/ 3 −1
+
+
+
+ , (52)
+has
+R=
+
+
+
+
+0 −1/ 8 3/ 8 0
+1/ 8 0 0 −3/ 8
+−3/ 8 0 0 1/ 8
+0 3/ 8 −1/ 8 0
+
+
+
+ (53)
+and (full rank and hence ergodic)
+U =
+
+
+
+
+236/ 255 127/ 255 −31/ 85 −12/ 85
+127/ 255 274/ 255 206/ 255 31/ 85
+31/ 85 206/ 255 274/ 255 127/ 255
+−12/ 85 31/ 85 127/ 255 236/ 255
+
+
+
+ , (54)
+and hence ergodic density
+p∗(ψ,s,a,λ ) =
+√
+28
+2295π4 exp
+[
+− 1
+255
+(
+137(a2 + s2) + 118( ψ2 + λ2)
++127(ψs + aλ) + 93( ψa + sλ) + 206 as− 36ψλ
+) ]
+, (55)
+which does not conditionally factorise.
+Taking the same parameterisation as in Equation ( 50), and ﬁxing m1 = m2 = −1/ 2, we can
+search for a non-zero value of m3 that leads to Uψλ = 0 (equivalent to
+12
+Condition 2 through Equation ( 10)). We ﬁnd such a value in the real root c ≃ − 0.08 of the
+quintic equation 8 c5 − 4c4 − 6c3 + 31c2 + 40c+ 3 = 0. That is, with
+M =
+
+
+
+
+−1 −1/ 2 −1/ 2 c
+−1/ 2 −1 −1/ 2 c
+c −1/ 2 −1 −1/ 2
+c −1/ 2 −1/ 2 −1
+
+
+
+ , (56)
+which does not satisfy Condition
+1, we have
+R=
+
+
+
+
+0 −0.06 ... 0.22 ... 0
+0.06 ... 0 0 −0.22 ...
+−0.22 ... 0 0 0 .06 ...
+0 0 .22 ... −0.06 ... 0
+
+
+
+ , (57)
+and
+U =
+
+
+
+
+0.96 ... 0.43 ... 0.30 ... 0
+0.43 ... 1.03 ... 0.58 ... 0.30 ...
+0.30 ... 0.58 ... 1.03 ... 0.43 ...
+0 0 .30 ... 0.43 ... 0.96 ...
+
+
+
+ , (58)
+which has non-zero determinant (i.e., the dynamics is ergod ic) and an ergodic density satisfying
+Condition
+2. This proves Equation ( 12).
+B Counterexample for Step 2
+Here, we consider a linear system, as in the previous appendi x. We again assume Γ equal to the
+identity matrix and choose a force matrix of the form
+M =
+
+
+
+
+
+−1 − 1
+2
+√
+2 − 1
+2
+√
+2 0
+− 1
+2
+√
+2 −1 − 1
+16 0
+0 1
+16 −1 − 1
+2
+√
+2
+0 1
+2
+√
+2 − 1
+2
+√
+2 −1
+
+
+
+
+ (59)
+which explicitly satisﬁes Condition
+1 and has full rank such that the system is ergodic. Using
+Equation ( 5) this leads to
+U =
+
+
+
+
+
+1023
+1057
+260
+√
+2
+1057
+136
+√
+2
+1057 0
+260
+√
+2
+1057
+1091
+1057 0 − 136
+√
+2
+1057
+136
+√
+2
+1057 0 1091
+1057
+260
+√
+2
+1057
+0 − 136
+√
+2
+1057
+260
+√
+2
+1057
+1023
+1057
+
+
+
+
+ (60)
+which shows that this system also satisﬁes Condition
+2 since Uψλ = Uλψ = 0. We also ﬁnd
+R=
+
+
+
+
+
+0 − 17
+1786
+√
+2
+479
+1786
+√
+2 − 62
+893
+17
+1786
+√
+2 0 − 65
+14288
+479
+1786
+√
+2
+− 479
+1786
+√
+2
+65
+14288 0 17
+1786
+√
+262
+893 − 479
+1786
+√
+2 − 17
+1786
+√
+2 0
+
+
+
+
+ , (61)
+which shows that all entries or Rthat can be non-zero for an anti-symmetric matrix are non-ze ro.
+For the marginal ergodic density we ﬁnd
+p∗(s,a,λ ) = 239
+16
+√
+2415π3/ 2 exp
+[
+− 69a2
+140 − 37as
+70
+√
+2
++ 1
+35
+√
+22aψ
+− 4867s2
+9660 + 74sψ
+2415 − 8429ψ2
+19320
+] (62)
+The diﬀerence between the right hand sides of Equations ( 17) and ( 19) is
+Ras∇sln p∗(s,a,λ ) + Raλ∇λ ln p∗(s,a,λ ) = 37a+ 69
+√
+2λ− 2563s
+4830 ̸= 0 , (63)
+which shows that Equation ( 19) is wrong in this example and therefore not generally equiva lent
+to Equation ( 17). Similarly, computing the diﬀerence between the right han d sides of Equations
+(18) and ( 20), one ﬁnds
+Rλs∇sln p∗(s,a,λ ) + Rλa∇aln p∗(s,a,λ ) = 2a−
+√
+2λ+ 27s
+70
+√
+2
+̸= 0 , (64)
+13
+and hence Equation ( 20) is also incorrect in general.
+Performing the same comparison for the diﬀerence between th e general expression in Equations
+(17) and ( 18) and the expressions taken from [ 7], one ﬁnds
+Rais∇sln p∗(s,a,λ ) = 73
+(
+296a+ 552
+√
+2λ− 8429s
+)
+1, 154, 370 ̸= 0 (65)
+for the diﬀerence between the right hand sides of Equations ( 17) and ( 21), and
+Rλs∇sln p∗(s,a,λ ) = − 53
+(
+296a+ 552
+√
+2λ− 8429s
+)
+1, 154, 370
+√
+2
+̸= 0 , (66)
+for the diﬀerence between the right hand sides of Equations ( 18) and ( 22). Therefore, Equations
+(21) and ( 22) are also incorrect in general, even when Condition 1 and Condition 2 both hold.
+C Counterexamples for Step 3
+We saw in Appendix B that Equations ( 19) and ( 20) are not generally equivalent to Equation ( 4),
+even when Condition 1 and Condition 2 hold simultaneously. We now show that if we instead use
+Equations ( 17) and ( 18), which are generally equivalent to
+Equation ( 4), the Free Energy Lemma does not hold in general.
+The original Free Energy Lemma requires that (see Equations (31) and ( 32))
+(Γ + R)aa · ∇aDKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )] = 0 (67)
+(Γ + R)λλ · ∇λ DKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )] = 0 . (68)
+replacing the partial gradient in Equations ( 29) and ( 30) with the full gradient and including the
+entire matrix (Γ + R) leads to the corresponding requirement for the more genera l case:
+(Ras · ∇s + (Γ aa + Raa) · ∇a + Raλ · ∇λ) DKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )] = 0 (69)
+(Rλs · ∇s + Rλa · ∇a + (Γ λλ + Rλλ ) · ∇λ) DKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )] = 0 . (70)
+Similarly, the version based on the equations taken from [ 7] implies
+((Γ aa + Raa) · ∇a + Raλ · ∇λ) DKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )] = 0 (71)
+(Rλa · ∇a + (Γ λλ + Rλλ ) · ∇λ) DKL[q(Ψ |λ)||p∗(Ψ |s,a,λ )] = 0 . (72)
+Using the rules of Gaussian integration, we can write the log arithm of the conditional ergodic
+density as
+ln p∗(ψ|s,a,λ ) = − 1
+2 |U
+1
+2
+ψψ ψ + U
+− 1
+2
+ψψ Uψs s+ U
+− 1
+2
+ψψ Uψa a+ U
+− 1
+2
+ψψ Uψλ λ|2 + C, (73)
+with C a constant (and remembering each of ψ, s, aand λ is a vector of coordinates in general).
+We can then expand out the derivatives of the KL divergence to express them in terms of the
+coordinates:
+∇sDKL[q(Ψ |λ)||p∗(ψ|s,a,λ )] = −
+∫
+dψq (ψ|λ)∇sln p∗(ψ|s,a,λ )
+=Usψ U−1
+ψψ
+(
+Uψs s+ Uψa a
++ Uψλ λ+ Uψψ ⟨ψ⟩q(Ψ |λ)
+)
+, (74)
+∇aDKL[q(Ψ |λ)||p∗(ψ|s,a,λ )] = −
+∫
+dψq (ψ|λ)∇aln p∗(ψ|s,a,λ )
+=Uaψ U−1
+ψψ
+(
+Uψs s+ Uψa a
++ Uψλ λ+ Uψψ ⟨ψ⟩q(Ψ |λ)
+)
+, (75)
+∇λ DKL[q(Ψ |λ)||p∗(ψ|s,a,λ )] =
+∫
+dψ
+[
+(ln q(ψ|λ) − ln p∗(ψ|s,a,λ ) + 1) ∇λq(ψ|λ)
+− q(ψ|λ)∇λ ln p∗(ψ|s,a,λ )
+]
+=Uλψ U−1
+ψψ
+(
+Uψs s+ Uψa a
++ Uψλ λ+ Uψψ ⟨ψ⟩q(Ψ |λ)
+)
++ ∇λ⟨ψ⟩q(Ψ |λ)
+(
+Uψs s+ Uψa a+ Uψλ λ
+)
++ ∇λ
+(
+⟨ψTUψψ ψ⟩q(Ψ |λ) − H[q(Ψ |λ)]
+)
+, (76)
+14
+with ⟨g(ψ)⟩q(Ψ |λ) :=
+∫
+dψq (ψ|λ)g(ψ) and H the Shannon entropy.
+Substituting Equations ( 75) and ( 76) into Equations ( 67) and ( 68) leads to
+(Γ aa + Raa)Uaψ U−1
+ψψ
+(
+Uψs s+ Uψa a+ Uψλ λ+ Uψψ ⟨ψ⟩q(Ψ |λ)
+)
+= 0 , (77)
+and
+0 =(Γ λλ + Rλλ )Uλψ U−1
+ψψ
+(
+Uψs s+ Uψa a+ Uψλ λ+ Uψψ ⟨ψ⟩q(Ψ |λ)
+)
++ (Γ λλ + Rλλ )∇λ⟨ψ⟩q(Ψ |λ)
+(
+Uψs s+ Uψa a+ Uψλ λ
+)
++ (Γ λλ + Rλλ )∇λ
+(
+⟨ψTUψψ ψ⟩q(Ψ |λ) − H[q(Ψ |λ)]
+)
+. (78)
+Since these must hold for all values of the coordinates, they put strong requirements on the U
+and R matrices. Speciﬁcally,
+(Γ aa + Raa)Uaψ U−1
+ψψ Uψs = 0 , (79)
+(Γ aa + Raa)Uaψ U−1
+ψψ Uψa = 0 , (80)
+(Γ aa + Raa)Uaψ U−1
+ψψ Uψλ = 0 . (81)
+In other words, since Uψψ and Γ aa must be nonzero for the dynamics to be ergodic, it must be
+that Uψa = 0. (This is equivalent to p∗(Ψ |s,a,λ ) = p∗(Ψ |s,λ ). So if Condition 2 also holds
+we must have p∗(Ψ |s,a,λ ) = p∗(Ψ |s) in order for there to be a suitable q(Ψ |λ).) Speciﬁcally,
+consider the system speciﬁed by the force matrix
+M =
+
+
+
+
+−1 0 1
+2 0
+0 −1 0 0
+0 0 −1 0
+0 0 0 −1
+
+
+
+ (82)
+leads to
+R=
+
+
+
+
+0 0 − 1
+4 0
+0 0 0 0
+1
+4 0 0 0
+0 0 0 0
+
+
+
+ (83)
+and
+U =
+
+
+
+
+16
+17 0 − 4
+17 0
+0 1 0 0
+− 4
+17 0 18
+17 0
+0 0 0 1
+
+
+
+ . (84)
+Here M is full rank so the system is ergodic, clearly it also satisﬁe s Condition
+1 due to the
+structure of M. Since Ras = Raλ = Rλs = 0 it obeys Equations ( 19) and ( 20) and since Qψλ = 0
+it also obeys Condition 2. Additionally, we ﬁnd Uψa = −4/ 17 which is a contradiction.
+For the more general version, substituting Equations ( 74)–(76) into Equation ( 69), one ﬁnds
+0 =
+(
+(RasUsψ + (Raa + Γ aa)Uaψ + RaλUλψ ) U−1
+ψψ + Raλ∇λ⟨ψ⟩q(Ψ |λ)
+)
+Uψs s
++
+(
+(RasUsψ + (Raa + Γ aa)Uaψ + RaλUλψ ) U−1
+ψψ + Raλ∇λ⟨ψ⟩q(Ψ |λ)
+)
+Uψa a
++
+(
+(RasUsψ + (Raa + Γ aa)Uaψ + RaλUλψ ) U−1
+ψψ + Raλ∇λ⟨ψ⟩q(Ψ |λ)
+)
+Uψλ λ
++ (RasUsψ + (Raa + Γ aa)Uaψ + RaλUλψ ) ⟨ψ⟩q(Ψ |λ)
++ Raλ∇λ
+(
+⟨ψTUψψ ψ⟩q(Ψ |λ) − H[q(Ψ |λ)]
+)
+, (85)
+which, considering that the coordinates can take any values , implies that
+(RasUsψ + (Raa + Γ aa)Uaψ + RaλUλψ ) U−1
+ψψ + Raλ∇λ⟨ψ⟩q(Ψ |λ) (86)
+lies in a common (left) nullspace of Uψs , Uψa and Uψλ . However, the existence of such a nontrivial
+nullspace would imply that the corresponding subspace of ψ coordinates is independent of the s,
+aand λ coordinates (to see this, consider marginalising over thei r complement in Equation ( 73)).
+In other words, if only ψ coordinates that play a nontrivial role in the dynamics are c onsidered,
+then Equation ( 69) must imply the quantity in Equation ( 86) is zero, and hence that
+Raλ∇λ⟨ψ⟩q(Ψ |λ) = − (RasUsψ + (Raa + Γ aa)Uaψ + RaλUλψ ) U−1
+ψψ . (87)
+15
+However, through a similar procedure, one ﬁnds that Equatio n ( 70) is equivalent to
+0 =
+(
+(RλsUsψ + RλaUaψ + (Γ λλ + Rλλ )Uλψ ) U−1
+ψψ
++ (Γ λλ + Rλλ )∇λ⟨ψ⟩q(Ψ |λ)
+)
+Uψs s
++
+(
+(RλsUsψ + RλaUaψ + (Γ λλ + Rλλ )Uλψ ) U−1
+ψψ
++ (Γ λλ + Rλλ )∇λ⟨ψ⟩q(Ψ |λ)
+)
+Uψa a
++
+(
+(RλsUsψ + RλaUaψ + (Γ λλ + Rλλ )Uλψ ) U−1
+ψψ
++ (Γ λλ + Rλλ )∇λ⟨ψ⟩q(Ψ |λ)
+)
+Uψλ λ
++ (RλsUsψ + RλaUaψ + (Γ λλ + Rλλ )Uλψ ) ⟨ψ⟩q(Ψ |λ)
++ (Γ λλ + Rλλ )∇λ
+(
+⟨ψTUψψ ψ⟩q(Ψ |λ) − H[q(Ψ |λ)]
+)
+, (88)
+implying that
+(Γ λλ + Rλλ )∇λ⟨ψ⟩q(Ψ |λ) = − (RλsUsψ + RλaUaψ + (Γ λλ + Rλλ )Uλψ ) U−1
+ψψ . (89)
+Unless Raλ and (Γ λλ + Rλλ ) share a common nullspace, or the U and R matrices are ﬁnely
+tuned, then Equations ( 87) and ( 89) contradict one another. In this case, there cannot exist a
+q(Ψ |λ) that satisﬁes both Equations ( 69) and ( 70), and hence the modiﬁed Free Energy Lemma
+is invalid in general. In particular, using the example from Appendix B, if we solve Equation
+(87) for ∇λ⟨ψ⟩q(Ψ |λ) we ﬁnd
+∇λ⟨ψ⟩q(Ψ |λ) = − 53
+5 , (90)
+and from Equation ( 89) we get
+∇λ⟨ψ⟩q(Ψ |λ) = 29
+239 , (91)
+which is a contradiction.
+If we now perform the same procedure for Equations ( 71) and ( 72), we arrive at the following
+conditions on the gradient of the variational density:
+Raλ∇λ⟨ψ⟩q(Ψ |λ) = − ((Raa + Γ aa)Uaψ + RaλUλψ ) U−1
+ψψ . (92)
+and
+Raλ∇λ⟨ψ⟩q(Ψ |λ) = − (RλaUaψ + (Γ λλ + Rλλ )Uλψ ) U−1
+ψψ . (93)
+Even when Condition 2 holds and Uψλ = 0, these will be inconsistent in general. As a speciﬁc
+counterexample, take the system with force matrix
+M =
+
+
+
+
+−1 0 − 1
+2 0
+0 −1 0 0
+0 0 −1
+√
+3
+2
+0 0 0 − 1
+2
+
+
+
+ , (94)
+with correposponding
+R=
+
+
+
+
+
+0 0 1
+3
+1
+3
+√
+3
+0 0 0 0
+− 1
+3 0 0 − 1√
+3
+− 1
+3
+√
+3 0 1√
+3 0
+
+
+
+
+ , (95)
+and
+U =
+
+
+
+
+9
+10 0 3
+10 0
+0 1 0 0
+3
+10 0 17
+20 −
+√
+3
+4
+0 0 −
+√
+3
+4
+3
+4
+
+
+
+ . (96)
+16
+This model is ergodic (full rank U), and it satisﬁes both Condition 1 and Condition 2. Moreover,
+the forces satisfy Equations ( 21) and ( 22). However, substituting the relevant elements of U and
+R matrices into Equation ( 92), we ﬁnd
+∇λ⟨ψ⟩q(Ψ |λ) = 1√
+3
+, (97)
+but doing the same for Equation ( 93) gives
+∇λ⟨ψ⟩q(Ψ |λ) = 1
+3 , (98)
+which is a contradiction.
+D Counterexample for Step
+5
+Here we provide an example system for which Conditions 1 and 2 as well as Steps 1 to 4 are valid
+but Step 5 fails. We use a system with
+f(x) = Mx (99)
+where
+M :=
+
+
+
+
+−1 1/ 2 0 0
+1/ 2 −1 1/ 2 0
+0 1/ 2 −1 1/ 2
+0 0 1/ 2 −1
+
+
+
+ . (100)
+This system is ergodic, satisﬁes Condition
+1 and as we will will see satisﬁes Equations ( 19) and
+(20) as well. Using Equation ( 5) we ﬁnd
+R=
+
+
+
+
+0 0 0 0
+0 0 0 0
+0 0 0 0
+0 0 0 0
+
+
+
+ (101)
+and from Equation (
+8)
+U = −M (102)
+which means that Condition 2 is also satisﬁed.
+This leads to the ergodic density
+p∗(ψ,s,a,λ ) =
+√
+5
+16π2 e− 1
+2 (ψ2−ψs+s2−sa+a2−aλ+λ2) (103)
+which can be used to check that Equations ( 19) and ( 20) hold for this example. The conditional
+ergodic density is
+p∗(ψ|s,a,λ ) = p∗(ψ|s) = 1√
+2π
+e− 1
+2 (ψ− 1
+2 s)
+2
+. (104)
+If we now deﬁne q(ψ|λ) = q(ψ) = exp( −(ψ − µ)2/ 2)/
+√
+2π as a Gaussian distribution with
+mean µ and variance one, we can compute the KL divergence to get:
+DKL[q(Ψ) ||p∗(Ψ |s,a,λ )] = K(s) = 1
+2
+(
+µ − 1
+2 s
+) 2
+. (105)
+Clearly, for this choice of q(ψ|λ) the gradients with respect to a and λ of the KL divergence
+vanish everywhere (Equations ( 35) and ( 36) hold). This also means we can express fa,f λ in terms
+of a free energy i.e., the Free Energy Lemma holds for this sys tem. However, for any proposed
+bound c ≥ 0 on the KL divergence, there is a value of s for which it is exceeded, whatever the
+choice of µ. Moreover, we can choose a µ such that the KL divergence is larger than any given
+c, even when s= 0.
+17
+E Translating Systems into Generalized Coordinates Sys-
+tems
+We show how to get a generalized coordinate system from a ﬁnit e dimensional system. By deﬁni-
+tion the generalized coordinates are inﬁnite dimensional. For all n∈ N and a coordinate x they
+also include the n-th time derivative of x.
+Assume as given an ergodic, linear, random dynamical system described by
+˙x= Mx + ω (106)
+where x= ( x1,...,x k) is a k-dimensional vector, M is a k× k real valued matrix, and ˙ x:= d
+dtx.
+We can look at the second time derivative of the state by diﬀer entiating both sides:
+d
+dt˙x= d
+dt(Mx + ω) (107)
+¨x= M˙x+ ˙ω (108)
+Similarly for the third time derivative:
+d
+dt¨x= d
+dt(M˙x+ ˙ω) (109)
+= M¨x+ ¨ω (110)
+Similarly for all higher derivatives:
+dn
+dtnx= M dn−1
+dtn−1 x+ dn
+dtnω. (111)
+Now deﬁne the generalized coordinates ˜ x= ( x,x ′,x ′′,... ) as
+x= x (112)
+x′ = d
+dtx (113)
+x′′ = d2
+dt2 x (114)
+.
+.
+. (115)
+x(n) = dn
+dtnx (116)
+.
+.
+. (117)
+Deﬁne also
+˜ω := ( ω, d
+dtω, d2
+dt2 ω,..., dn
+dtnω,... ). (118)
+Without further clariﬁcation, the derivatives of ω are not well deﬁned when the latter is a Gaussian
+white noise process, as explicitly assumed in writing the ve ctor ﬁeld f(x) in terms of the ergodic
+density [ 1, 11, 10]. As discussed in [ 15], delta-correlated Markovian noise is always a limiting
+approximation of noise with a ﬁnite correlation time. Meani ngfully taking the derivatives requires
+ﬁrst choosing a functional form for the (co)variance whose l imit is a delta function (Another, more
+direct approach would be in terms of generalized functions, but here too additional information
+is required to specify the derivatives [ 13].) However, diﬀerent choices can lead to vastly diﬀerent
+central moments of the generalized noise distribution, inc luding those that vanish or diverge at all
+orders. In the former case, the process in terms of generaliz ed coordinates may not be ergodic [ 4];
+in the latter case, the process is not well deﬁned. In general , it is not clear that Equation ( 4)
+holds in the non-Markovian case, since the standard derivat ions in [ 1, 11] and related works rely
+on delta-correlated noise.
+Here, we can therefore assume that the noise is such that the d erivatives in Equation ( 118) can
+be treated as Markov and Gaussian. We also assume that dn
+dtnω is independently and identically
+distributed to dn− 1
+dtn− 1 ω for all n. Finally, we can then deﬁne the (inﬁnite) matrix ¯M as the block
+diagonal matrix with all blocks equal to M:
+¯M :=
+
+
+
+M 0 ...
+0 M
+.
+.
+. ...
+
+
+ (119)
+18
+The time derivative of ω is independent of ω, as the changes are independent of the value of ω.
+So we actually get an inﬁnite number of independent and ident ically distributed systems. Using
+these deﬁnitions we have:
+˙˜x= ¯M˜x+ ˜ω. (120)
+These equations describe a random dynamical system compose d of an inﬁnite number of inde-
+pendent linear random dynamical systems, all governed by th e same matrix M and driven by
+independently and identically distributed noise. Since th e ﬁrst of these systems (for the variables
+x) is ergodic by assumption, all of the subsystems are also erg odic and, therefore, the whole
+system is ergodic with the ergodic density equal to a product of the original ergodic density:
+¯p∗(˜x) = p∗(x)p∗(x′)p∗(x′′) · · · p∗(x(n)) · · · . (121)
+Additionally, if M is such that
+Mψ · (ψ,s,a,r )⊤ = fψ (ψ,s,a ) = (Γ − Q)ψψ ∇ψ ln p∗(ψ,s,a,r )
+Ms · (ψ,s,a,r )⊤ = fs(ψ,s,a ) = (Γ − Q)ss∇sln p∗(ψ,s,a,r )
+Ma · (ψ,s,a,r )⊤ = fa(s,a,r ) = (Γ − Q)aa∇aln p∗(ψ,s,a,r )
+Mr · (ψ,s,a,r )⊤ = fr(s,a,r ) = (Γ − Q)rr∇rln p∗(ψ,s,a,r ),
+(122)
+(which is the case for the M in the counterexample to Step 5) then for
+(x1,x 2,x 3,x 4) : = ( ψ,s,a,r )
+(x′
+1,x ′
+2,x ′
+3,x ′
+4) : = ( ψ′,s ′,a ′,r ′)
+(x′′
+1 ,x ′′
+2 ,x ′′
+3 ,x ′′
+4 ) : = ( ψ′′,s ′′,a ′′,r ′′)
+.
+.
+.
+(x(n)
+1 ,x (n)
+2 ,x (n)
+3 ,x (n)
+4 ) : = ( ψ(n),s (n),a (n),r (n))
+.
+.
+.,
+(123)
+¯Q:=
+
+
+
+Q 0 ...
+0 Q
+.
+.
+. ...
+
+
+ , (124)
+¯Γ :=
+
+
+
+Γ 0 ...
+0 Γ
+.
+.
+. ...
+
+
+ , (125)
+and using Equation (
+8) and that the inverse of a block diagonal matrix is block diag onal
+¯U :=
+
+
+
+U 0 ...
+0 U
+.
+.
+. ...
+
+
+ , (126)
+we also have:
+¯M˜ψ · ( ˜ψ, ˜s, ˜a, ˜r)⊤ = f˜ψ ( ˜ψ, ˜s, ˜a) = ( ¯Γ − ¯Q) ˜ψ ˜ψ ∇ ˜ψ ln p∗( ˜ψ, ˜s, ˜a, ˜r)
+¯M˜s · ( ˜ψ, ˜s, ˜a, ˜r)⊤ = f˜s( ˜ψ, ˜s, ˜a) = ( ¯Γ − ¯Q)˜s˜s∇˜sln p∗( ˜ψ, ˜s, ˜a, ˜r)
+¯M˜a · ( ˜ψ, ˜s, ˜a, ˜r)⊤ = f˜a(˜s, ˜a, ˜r) = ( ¯Γ − ¯Q)˜a˜a∇˜aln p∗( ˜ψ, ˜s, ˜a, ˜r)
+¯M˜r · ( ˜ψ, ˜s, ˜a, ˜r)⊤ = f˜r(˜s, ˜a, ˜r) = ( ¯Γ − ¯Q)˜r˜r∇˜rln p∗( ˜ψ, ˜s, ˜a, ˜r).
+(127)
+The ergodic density of such a system is a product of ergodic de nsities of the original system
+Equation (
+104):
+¯p∗( ˜ψ, ˜s, ˜a, ˜r) = p∗(ψ,s,a,r )p∗(ψ′,s ′,a ′,r ′)p∗(ψ′′,s ′′,a ′′,r ′′) · · · . (128)
+Thus any property of the original system is also a property of the generalized coordinate system.
+19
+References
+[1] Ao, P. (2004). Potential in stochastic diﬀerential equa tions: novel construction. Journal of
+Physics A: Mathematical and General , 37(3):L25–L30.
+[2] Ao, P., Chen, T.-Q., and Shi, J.-H. (2013). Dynamical Dec omposition of Markov Processes
+without Detailed Balance. Chinese Physics Letters , 30(7):070201. Publisher: IOP Publishing.
+[3] Bishop, C. (2006). Pattern Recognition and Machine Learning . Information Science and
+Statistics. Springer-Verlag, New York.
+[4] Cornfeld, I. P., Fomin, S. V., and Sinai, Y. G. (1982). Ergodic Theory. Springer-Verlag, New
+York.
+[5] Cover, T. M. and Thomas, J. A. (2006). Elements of information theory . Wiley-Interscience,
+Hoboken, N.J.
+[6] Friston, K. (2013). Life as we know it. Journal of The Royal Society Interface ,
+10(86):2013.0475.
+[7] Friston, K. (2019). A free energy principle for a particu lar physics. arXiv:1906.10184 [q-bio] .
+arXiv: 1906.10184.
+[8] Friston, K., Rigoli, F., Ognibene, D., Mathys, C., Fitzg erald, T., and Pezzulo, G. (2015).
+Active inference and epistemic value. Cognitive Neuroscience, 6(4):187–214.
+[9] Friston, K., Sengupta, B., and Auletta, G. (2014). Cogni tive Dynamics: From Attractors to
+Active Inference. Proceedings of the IEEE , 102(4):427–445.
+[10] Kwon, C. and Ao, P. (2011). Nonequilibrium steady state of a stochastic system driven by
+a nonlinear drift force. Physical Review E , 84:061106.
+[11] Kwon, C., Ao, P., and Thouless, D. J. (2005). Structure o f stochastic dynamics near ﬁxed
+points. Proceedings of the National Academy of Sciences , 102(37):13029–13033.
+[12] Ma, Y.-A., Chen, T., and Fox, E. B. (2015). A complete rec ipe for stochastic gradient
+MCMC. In Proceedings of the 28th International Conference on Neural Information Processing
+Systems - Volume 2 , NeurIPS’15, pages 2917–2925, Montreal, Canada. MIT Press .
+[13] Oberguggenberger, M. (1995). Generalized functions a nd stochastic processes. In
+Bolthausen, E., Dozzi, M., and Russo, F., editors, Seminar on Stochastic Analysis, Random
+Fields and Applications. Progress in Probability, vol 36. , page 215–230. Birkh¨ auser, Basel.
+[14] Parr, T., Da Costa, L., and Friston, K. (2019). Markov bl ankets, information geometry and
+stochastic thermodynamics. Philosophical Transactions of the Royal Society A: Mathema tical,
+Physical and Engineering Sciences , 378(4):2019.0159.
+[15] van Kampen, N. G. (1981). Stochastic Processes in Physics and Chemistry . North-Holland,
+Amsterdam.
+[16] Yuan, R., Tang, Y., and Ao, P. (2017). SDE decomposition and A-type stochastic interpre-
+tation in nonequilibrium processes. Frontiers of Physics , 12(6):120201.
+[17] Yuan, R.-S., Ma, Y.-A., Yuan, B., and Ao, P. (2014). Lyap unov function as potential
+function: A dynamical equivalence. Chinese Physics B , 23(1):010505.
+20

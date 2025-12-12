@@ -30,13 +30,13 @@ Development standards and coding guidelines for the Research Project Template.
 
 - **Layer 1: Infrastructure** (`infrastructure/`): Generic, reusable tools
   - Works with any project
-  - 70%+ test coverage required (49% infra, 70% project)
+  - 60% minimum test coverage required (currently achieving 61.48%)
   - Can be copied to other repositories
 
 - **Layer 2: Project** (`project/`): Research-specific code
   - Domain-specific algorithms and analysis
   - Uses Layer 1 tools
-  - 70%+ test coverage required (49% infra, 70% project)
+  - 90% minimum test coverage required (currently achieving 99.88%)
 
 ### Thin Orchestrator Pattern
 
@@ -47,7 +47,7 @@ Development standards and coding guidelines for the Research Project Template.
 
 ### Quality Standards
 
-- **Tests**: 70%+ coverage required (49% infra, 70% project) with real data (no mocks)
+- **Tests**: 60% infrastructure minimum, 90% project minimum (currently 61.48% infra, 99.88% project) with real data (no mocks)
 - **Types**: Type hints on all public APIs and functions
 - **Docs**: AGENTS.md + README.md for every directory
 - **Errors**: Use custom exception hierarchy from `infrastructure.core.exceptions`
@@ -222,7 +222,7 @@ Multiple sources \cite{key1,key2,key3} show...
 
 Before commit:
 
-- [ ] Test coverage requirements met (49% infra, 70% project)
+- [ ] Test coverage requirements met (60% infra, 90% project)
 - [ ] All tests pass
 - [ ] No linter errors
 - [ ] Docs updated

@@ -230,6 +230,10 @@ class Spinner:
             final_message: Optional message to display when stopping
         """
         if self.thread is None:
+            # No thread was started (non-TTY case), but still write final_message if provided
+            if final_message:
+                self.stream.write(f"{final_message}\n")
+                self.stream.flush()
             return
         
         self.stop_event.set()

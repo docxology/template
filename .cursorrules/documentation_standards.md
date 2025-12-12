@@ -139,8 +139,8 @@ This ensures complete information is available while also providing fast lookup.
 
 ## See Also
 
-- [Related doc](link)
-- [External resource](link)
+- [Related Module](../infrastructure/AGENTS.md) - Infrastructure documentation
+- [External Resource](https://example.com) - External documentation
 ```
 
 ## README.md Structure
@@ -405,9 +405,9 @@ See [../AGENTS.md](../AGENTS.md) for overview
 ```markdown
 ## See Also
 
-- [Related Module](../related/AGENTS.md) - Description
-- [External Resource](https://example.com) - Description
-- [Configuration Guide](./CONFIG.md) - Description
+- [Related Module](../infrastructure/AGENTS.md) - Infrastructure documentation
+- [External Resource](https://example.com) - External documentation
+- [Configuration Guide](CONFIGURATION.md) - Configuration documentation
 ```
 
 ## Format Standards

@@ -52,7 +52,6 @@ def sample_config():
 class TestLoadConfig:
     """Test load_config function."""
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_load_valid_config(self, tmp_path, sample_config):
         """Test loading a valid config file."""
         import yaml
@@ -72,7 +71,6 @@ class TestLoadConfig:
         
         assert result is None
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_load_invalid_yaml(self, tmp_path):
         """Test loading invalid YAML returns None."""
         config_file = tmp_path / "invalid.yaml"
@@ -82,7 +80,6 @@ class TestLoadConfig:
         
         assert result is None
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_load_empty_file(self, tmp_path):
         """Test loading empty file."""
         config_file = tmp_path / "empty.yaml"
@@ -187,7 +184,6 @@ class TestFormatAuthorName:
 class TestGetConfigAsDict:
     """Test get_config_as_dict function."""
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_get_full_config(self, tmp_path, sample_config):
         """Test getting full configuration as dictionary."""
         import yaml
@@ -211,7 +207,6 @@ class TestGetConfigAsDict:
         
         assert result == {}
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_get_config_minimal(self, tmp_path):
         """Test getting config with minimal information."""
         import yaml
@@ -229,7 +224,6 @@ class TestGetConfigAsDict:
 class TestGetConfigAsEnvVars:
     """Test get_config_as_env_vars function."""
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_respects_existing_env_vars(self, tmp_path, sample_config, monkeypatch):
         """Test that existing environment variables are respected."""
         import yaml
@@ -245,7 +239,6 @@ class TestGetConfigAsEnvVars:
         assert 'PROJECT_TITLE' not in result  # Existing env var should be respected
         assert 'AUTHOR_NAME' in result  # But other vars should be present
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_ignores_existing_env_vars(self, tmp_path, sample_config, monkeypatch):
         """Test not respecting existing environment variables."""
         import yaml
@@ -284,7 +277,6 @@ class TestFindConfigFile:
 class TestIntegration:
     """Integration tests for config loading workflow."""
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_complete_workflow(self, tmp_path):
         """Test complete config loading workflow."""
         import yaml
@@ -321,7 +313,6 @@ class TestGetTranslationLanguages:
         result = get_translation_languages(tmp_path)
         assert result == []
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_returns_empty_when_translations_disabled(self, tmp_path):
         """Test returns empty list when translations are disabled."""
         import yaml
@@ -341,7 +332,6 @@ class TestGetTranslationLanguages:
         result = get_translation_languages(tmp_path)
         assert result == []
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_returns_empty_when_no_llm_section(self, tmp_path):
         """Test returns empty list when no llm section in config."""
         import yaml
@@ -356,7 +346,6 @@ class TestGetTranslationLanguages:
         result = get_translation_languages(tmp_path)
         assert result == []
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_returns_languages_when_enabled(self, tmp_path):
         """Test returns language list when translations are enabled."""
         import yaml
@@ -376,7 +365,6 @@ class TestGetTranslationLanguages:
         result = get_translation_languages(tmp_path)
         assert result == ['zh', 'hi', 'ru']
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_returns_single_language(self, tmp_path):
         """Test returns single language when only one configured."""
         import yaml
@@ -396,7 +384,6 @@ class TestGetTranslationLanguages:
         result = get_translation_languages(tmp_path)
         assert result == ['zh']
     
-    @pytest.mark.skipif(not YAML_AVAILABLE, reason="PyYAML not installed")
     def test_returns_empty_for_invalid_languages_type(self, tmp_path):
         """Test returns empty list when languages is not a list."""
         import yaml

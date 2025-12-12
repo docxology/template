@@ -227,7 +227,6 @@ from __future__ import annotations
 import os
 import sys
 import json
-import logging
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any
@@ -238,9 +237,13 @@ import matplotlib.pyplot as plt
 
 # Project imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+from infrastructure.core.logging_utils import get_logger
 from reproducibility import generate_reproducibility_report, save_reproducibility_report
 from integrity import verify_output_integrity
 from quality_checker import analyze_document_quality
+
+# Set up logger using unified logging system
+logger = get_logger(__name__)
 
 
 def setup_workflow_environment():
@@ -248,15 +251,8 @@ def setup_workflow_environment():
     # Set random seeds for reproducibility
     np.random.seed(42)
 
-    # Configure logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        handlers=[
-            logging.FileHandler(f'{workflow_name}_workflow.log'),
-            logging.StreamHandler()
-        ]
-    )
+    # Logging is configured via unified system (get_logger above)
+    # For file logging, use get_logger with log_file parameter if needed
 
     # Create output directories
     output_dirs = ['output', 'output/data', 'output/figures', 'output/reports']
@@ -266,7 +262,7 @@ def setup_workflow_environment():
 
 def run_data_processing() -> Dict[str, Any]:
     """Run the main data processing workflow."""
-    logging.info(f"Starting {workflow_name} workflow")
+    logger.info(f"Starting {workflow_name} workflow")
 
     # Your scientific data processing here
     # Example: load data, process, analyze
@@ -282,7 +278,7 @@ def run_data_processing() -> Dict[str, Any]:
     # Generate figures
     # Save results
 
-    logging.info(f"Completed {workflow_name} workflow")
+    logger.info(f"Completed {workflow_name} workflow")
     return results
 
 
@@ -325,7 +321,7 @@ def main():
 
     # Validate results
     if not validate_workflow_results(results):
-        logging.error("Workflow validation failed")
+        logger.error("Workflow validation failed")
         sys.exit(1)
 
     # Generate final report
@@ -336,7 +332,7 @@ def main():
     # Save reproducibility information
     save_reproducibility_report(reproducibility_report, Path("output/reproducibility_report.json"))
 
-    logging.info("Workflow completed successfully")
+    logger.info("Workflow completed successfully")
 
 
 if __name__ == "__main__":

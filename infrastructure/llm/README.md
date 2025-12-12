@@ -17,7 +17,8 @@ Local LLM integration for research assistance with flexible response modes and c
 ## Quick Start
 
 ```python
-from infrastructure.llm import LLMClient, GenerationOptions
+from infrastructure.llm.core.client import LLMClient
+from infrastructure.llm.core.config import GenerationOptions
 
 # Initialize (reads OLLAMA_HOST, OLLAMA_MODEL from environment)
 client = LLMClient()
@@ -73,7 +74,7 @@ response = client.query_raw("Complete: The quick brown fox")
 Control generation behavior per-query:
 
 ```python
-from infrastructure.llm import GenerationOptions
+from infrastructure.llm.core.config import GenerationOptions
 
 # Deterministic output with seed
 opts = GenerationOptions(
@@ -94,7 +95,7 @@ opts = GenerationOptions(
     stop=["END"],         # Stop sequences
     format_json=True,     # Force JSON output
     repeat_penalty=1.1,   # Repetition penalty
-    num_ctx=4096,         # Context window
+    num_ctx=131072,       # Context window (128K for gemma3:4b)
 )
 ```
 
@@ -105,15 +106,15 @@ opts = GenerationOptions(
 ```bash
 # Connection
 export OLLAMA_HOST="http://localhost:11434"
-export OLLAMA_MODEL="qwen3:4b"
+export OLLAMA_MODEL="gemma3:4b"
 
 # Generation defaults
 export LLM_TEMPERATURE="0.7"
 export LLM_MAX_TOKENS="2048"
-export LLM_LONG_MAX_TOKENS="4096"  # For long responses (review templates)
-export LLM_CONTEXT_WINDOW="4096"
-export LLM_TIMEOUT="300"
-export LLM_NUM_CTX="4096"
+export LLM_CONTEXT_WINDOW="131072"  # 128K for gemma3:4b
+export LLM_TIMEOUT="60"
+export LLM_NUM_CTX="131072"  # 128K for gemma3:4b
+export LLM_LONG_MAX_TOKENS="16384"  # For longer review outputs
 export LLM_SEED="42"  # For reproducibility
 export LLM_SYSTEM_PROMPT="Custom system prompt"
 ```
@@ -125,7 +126,7 @@ from infrastructure.llm import LLMConfig, LLMClient
 
 config = LLMConfig(
     base_url="http://localhost:11434",
-    default_model="qwen3:4b",
+    default_model="llama3",
     temperature=0.7,
     max_tokens=2048,
     seed=42,
@@ -213,6 +214,10 @@ OutputValidator.validate_complete(response, mode="structured", schema=schema)
 
 ## Error Handling
 
+### Connection Errors with Retry
+
+The client automatically retries transient connection failures:
+
 ```python
 from infrastructure.core.exceptions import (
     LLMConnectionError,
@@ -225,8 +230,22 @@ try:
     response = client.query("...")
 except LLMConnectionError as e:
     print(f"Connection failed: {e.context}")
+    # Context includes: url, model, status_code (if HTTP error)
 except ContextLimitError as e:
     print(f"Context limit exceeded: {e.context}")
+```
+
+### Connection Health Checks
+
+```python
+# Simple boolean check
+if client.check_connection():
+    print("Ollama is ready")
+
+# Detailed status with error message
+is_available, error = client.check_connection_detailed()
+if not is_available:
+    print(f"Ollama unavailable: {error}")
 ```
 
 ## Command-Line Interface
@@ -259,187 +278,6 @@ python3 -m infrastructure.llm.cli query --temperature 0.0 --seed 42 "Test"
 python3 -m infrastructure.llm.cli template --list
 python3 -m infrastructure.llm.cli template summarize_abstract --input "Abstract text..."
 ```
-
-## Testing
-
-The LLM module has comprehensive test coverage (88%+) following the **No Mocks Policy**.
-
-### Test Categories
-
-| Category | Tests | Description |
-|----------|-------|-------------|
-| **Configuration** | 38 | LLMConfig, GenerationOptions, environment loading |
-| **Context** | 4 | ConversationContext, token management |
-| **Core Logic** | 80+ | LLMClient pure logic without network |
-| **Integration** | 12 | Real Ollama interactions (requires running server) |
-| **Templates** | 4 | Template rendering and variable substitution |
-| **Validation** | 51 | Output validation, JSON parsing, structure checking |
-| **CLI** | 13 | Command-line interface parsing and execution |
-| **Ollama Utils** | 24 | Model discovery and selection utilities |
-
-### Running Tests
-
-```bash
-# All LLM tests (including integration tests, requires Ollama)
-pytest tests/infrastructure/llm/ -v
-
-# Pure logic tests only (no Ollama required, fast)
-pytest tests/infrastructure/llm/ -m "not requires_ollama" -v
-
-# Integration tests only (requires running Ollama)
-pytest tests/infrastructure/llm/ -m requires_ollama -v
-
-# With coverage report
-pytest tests/infrastructure/llm/ --cov=infrastructure/llm --cov-report=term-missing
-
-# Generate HTML coverage report
-pytest tests/infrastructure/llm/ --cov=infrastructure/llm --cov-report=html
-open htmlcov/index.html
-```
-
-### Test Organization
-
-```
-tests/infrastructure/llm/
-├── conftest.py              # Fixtures (clean_llm_env, default_config, etc.)
-├── test_cli.py              # CLI command tests
-├── test_config.py           # LLMConfig and GenerationOptions tests
-├── test_context.py          # ConversationContext tests
-├── test_core.py             # LLMClient core functionality
-├── test_llm_core_additional.py   # Additional core coverage
-├── test_llm_core_coverage.py     # Extended coverage tests
-├── test_llm_core_full.py         # Complete feature tests
-├── test_ollama_utils.py     # Model discovery utilities
-├── test_templates.py        # Research template tests
-└── test_validation.py       # OutputValidator tests
-```
-
-### Integration Test Behavior
-
-Integration tests marked with `@pytest.mark.requires_ollama`:
-- Auto-skip when Ollama is not running
-- Use extended timeouts for slow models (120s for long queries)
-- Skip gracefully on timeout or model quality issues
-- Skipped during automated pipeline (`./run.sh --pipeline`) for speed
-
-### Test Fixtures
-
-Key fixtures defined in `conftest.py`:
-
-```python
-# Default LLMConfig with discovered model
-default_config
-
-# Config with auto system prompt injection enabled
-config_with_system_prompt
-
-# Sample GenerationOptions
-generation_options
-
-# Clean environment (removes LLM_* env vars for isolation)
-clean_llm_env
-
-# Sample messages and JSON responses
-sample_messages
-sample_json_responses
-sample_schema
-```
-
-### Coverage Summary
-
-| Module | Coverage | Notes |
-|--------|----------|-------|
-| `__init__.py` | 100% | Public API exports |
-| `config.py` | 98% | Configuration management |
-| `context.py` | 100% | Context handling |
-| `core.py` | 98% | Main LLMClient logic |
-| `templates.py` | 100% | Research templates |
-| `validation.py` | 99% | Output validation |
-| `ollama_utils.py` | 83% | Model discovery |
-| `cli.py` | 60% | Command-line interface |
-| **Total** | **88%** | All critical paths covered |
-
-## Prompt Fragment System
-
-The LLM module includes a **prompt fragment system** that allows prompts to be managed as JSON/YAML files instead of hardcoded Python strings. This enables:
-
-- **Version Control**: Prompts can be versioned independently of code
-- **A/B Testing**: Easy to test different prompt variations
-- **Maintainability**: Non-developers can modify prompts without touching Python
-- **Reusability**: Fragments can be shared across templates
-
-### Prompt Directory Structure
-
-```
-infrastructure/llm/prompts/
-├── fragments/              # Reusable prompt fragments
-│   ├── system_prompts.json
-│   ├── format_requirements.json
-│   ├── content_requirements.json
-│   ├── validation_hints.json
-│   └── section_structures.json
-├── templates/              # Template definitions
-│   ├── manuscript_reviews.json
-│   └── paper_summarization.json
-└── compositions/          # Composition rules
-    └── retry_prompts.json
-```
-
-### Using the Prompt System
-
-```python
-from infrastructure.llm.prompts import PromptFragmentLoader, PromptComposer
-
-# Load fragments
-loader = PromptFragmentLoader()
-system_prompt = loader.get_system_prompt("manuscript_review")
-fragment = loader.load_fragment("format_requirements.json#key")
-
-# Compose prompts
-composer = PromptComposer()
-prompt = composer.compose_template(
-    "manuscript_reviews.json#manuscript_executive_summary",
-    text=manuscript_text,
-    max_tokens=4096
-)
-
-# Add retry-specific modifications
-retry_prompt = composer.add_retry_prompt(prompt, retry_type="off_topic")
-```
-
-### Fragment References
-
-Fragments can be referenced using the `file.json#key` syntax:
-
-- `"system_prompts.json#manuscript_review"` - Load specific key from file
-- `"section_structures.json#executive_summary"` - Load nested structure
-- `"format_requirements.json"` - Load entire file
-
-### Template Composition
-
-Templates are composed from fragments with variable substitution:
-
-```json
-{
-  "manuscript_executive_summary": {
-    "version": "1.0",
-    "base_template": "=== MANUSCRIPT BEGIN ===\n\n${text}\n\n...",
-    "fragments": {
-      "format_requirements": "format_requirements.json",
-      "section_structure": "section_structures.json#executive_summary"
-    },
-    "variables": {
-      "word_count_range": [400, 600]
-    }
-  }
-}
-```
-
-The composer automatically:
-- Loads referenced fragments
-- Substitutes variables
-- Builds constraint sections (format, content, validation)
-- Handles token budget allocation
 
 ## See Also
 

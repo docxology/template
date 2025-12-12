@@ -95,7 +95,7 @@ def generate_convergence_figure() -> str:
     Returns:
         Figure label
     """
-    print("Generating convergence figure...")
+    logger.info("Generating convergence figure...")
     
     # Generate convergence data
     iterations = np.arange(1, 101)
@@ -111,7 +111,7 @@ def generate_convergence_figure() -> str:
     
     # Save figure
     saved = engine.save_figure(fig, "convergence_analysis")
-    print(f"  Saved: {saved['png']}")
+    logger.info(f"  Saved: {saved['png']}")
     
     # Register figure
     figure_manager = FigureManager()
@@ -132,7 +132,7 @@ def generate_time_series_figure() -> str:
     Returns:
         Figure label
     """
-    print("Generating time series figure...")
+    logger.info("Generating time series figure...")
     
     # Generate time series data
     time, values = generate_time_series(
@@ -152,7 +152,7 @@ def generate_time_series_figure() -> str:
     
     # Save figure
     saved = engine.save_figure(fig, "time_series_analysis")
-    print(f"  Saved: {saved['png']}")
+    logger.info(f"  Saved: {saved['png']}")
     
     # Register figure
     figure_manager = FigureManager()
@@ -173,7 +173,7 @@ def generate_statistical_comparison_figure() -> str:
     Returns:
         Figure label
     """
-    print("Generating statistical comparison figure...")
+    logger.info("Generating statistical comparison figure...")
     
     # Generate comparison data
     methods = ["Baseline", "Method A", "Method B", "Method C"]
@@ -193,7 +193,7 @@ def generate_statistical_comparison_figure() -> str:
     
     # Save figure
     saved = engine.save_figure(fig, "statistical_comparison")
-    print(f"  Saved: {saved['png']}")
+    logger.info(f"  Saved: {saved['png']}")
     
     # Register figure
     figure_manager = FigureManager()
@@ -214,7 +214,7 @@ def generate_scatter_plot_figure() -> str:
     Returns:
         Figure label
     """
-    print("Generating scatter plot figure...")
+    logger.info("Generating scatter plot figure...")
     
     # Generate correlated data
     x = generate_synthetic_data(100, distribution="normal", seed=42)
@@ -230,7 +230,7 @@ def generate_scatter_plot_figure() -> str:
     
     # Save figure
     saved = engine.save_figure(fig, "scatter_correlation")
-    print(f"  Saved: {saved['png']}")
+    logger.info(f"  Saved: {saved['png']}")
     
     # Register figure
     figure_manager = FigureManager()
@@ -251,7 +251,7 @@ def insert_figures_into_manuscript(figure_labels: list[str]) -> None:
     Args:
         figure_labels: List of figure labels to insert
     """
-    print("\nInserting figures into manuscript...")
+    logger.info("\nInserting figures into manuscript...")
     
     # Setup markdown integration
     # Use project_root/manuscript since we are in project/scripts/
@@ -262,7 +262,7 @@ def insert_figures_into_manuscript(figure_labels: list[str]) -> None:
     target_file = manuscript_dir / "04_experimental_results.md"
     
     if not target_file.exists():
-        print(f"  Warning: Target file {target_file} not found, skipping insertion")
+        logger.warning(f"  Warning: Target file {target_file} not found, skipping insertion")
         return
     
     # Insert each figure
@@ -274,21 +274,21 @@ def insert_figures_into_manuscript(figure_labels: list[str]) -> None:
             position="after"
         )
         if success:
-            print(f"  ✅ Inserted figure: {label}")
+            logger.info(f"  ✅ Inserted figure: {label}")
         else:
-            print(f"  ⚠️  Failed to insert figure: {label}")
+            logger.warning(f"  ⚠️  Failed to insert figure: {label}")
     
     # Update references
     updated = markdown_integration.update_all_references(target_file)
     if updated == 0:
-        print(f"  Reference scan complete: {updated} updates (figures already present or no new references)")
+        logger.info(f"  Reference scan complete: {updated} updates (figures already present or no new references)")
     else:
-        print(f"  Reference scan complete: {updated} reference(s) updated")
+        logger.info(f"  Reference scan complete: {updated} reference(s) updated")
 
 
 def validate_all_figures() -> None:
     """Validate all generated figures."""
-    print("\nValidating figures...")
+    logger.info("\nValidating figures...")
 
     # Use project_root/manuscript since we are in project/scripts/
     manuscript_dir = project_root / "manuscript"
@@ -298,18 +298,18 @@ def validate_all_figures() -> None:
     validation_results = markdown_integration.validate_manuscript()
     
     if validation_results:
-        print("  ⚠️  Validation issues found:")
+        logger.warning("  ⚠️  Validation issues found:")
         for file_path, errors in validation_results.items():
-            print(f"    {file_path}:")
+            logger.warning(f"    {file_path}:")
             for label, error in errors:
-                print(f"      - {label}: {error}")
+                logger.warning(f"      - {label}: {error}")
     else:
-        print("  ✅ All figures validated successfully")
+        logger.info("  ✅ All figures validated successfully")
     
     # Get statistics
     stats = markdown_integration.get_figure_statistics()
-    print(f"  Total figures: {stats['total_figures']}")
-    print(f"  Figures by section: {stats['figures_by_section']}")
+    logger.info(f"  Total figures: {stats['total_figures']}")
+    logger.info(f"  Figures by section: {stats['figures_by_section']}")
 
     # Validate registry if present
     registry_path = Path("output/figures/figure_registry.json")
@@ -317,21 +317,21 @@ def validate_all_figures() -> None:
         try:
             manuscript_dir = Path("manuscript")
             validate_figure_registry(registry_path, manuscript_dir)
-            print("  ✅ Figure registry validated")
+            logger.info("  ✅ Figure registry validated")
         except Exception as exc:  # Broad to keep orchestration resilient
-            print(f"  ⚠️  Figure registry validation warning: {exc}")
+            logger.warning(f"  ⚠️  Figure registry validation warning: {exc}")
 
     # Run lightweight markdown validation for figures/refs
     try:
         problems, _ = validate_markdown(str(manuscript_dir), ".")
         if problems:
-            print("  ⚠️  Markdown validation issues detected:")
+            logger.warning("  ⚠️  Markdown validation issues detected:")
             for prob in problems:
-                print(f"    - {prob}")
+                logger.warning(f"    - {prob}")
         else:
-            print("  ✅ Markdown references validated")
+            logger.info("  ✅ Markdown references validated")
     except Exception as exc:
-        print(f"  ⚠️  Markdown validation skipped: {exc}")
+        logger.warning(f"  ⚠️  Markdown validation skipped: {exc}")
 
 
 def main() -> None:
@@ -348,9 +348,9 @@ def main() -> None:
     ]
 
     if args.list_stages:
-        print("Available stages (in order):")
+        logger.info("Available stages (in order):")
         for name, _ in staged_functions + [("insert", None), ("validate", None)]:
-            print(f"- {name}")
+            logger.info(f"- {name}")
         return
 
     # Ensure output directories exist
@@ -384,7 +384,7 @@ def main() -> None:
     selected_with_post = selected + post_stages
 
     if not selected_with_post:
-        print("No stages selected; nothing to do.")
+        logger.info("No stages selected; nothing to do.")
         return
 
     if args.dry_run:
@@ -436,12 +436,12 @@ def main() -> None:
                 log_progress_bar(current=len(stage_results), total=len(selected_with_post), message=f"{name} complete", logger=logger)
             logger.info("Completed stage: %s", name)
 
-        print(f"\n✅ Generated {len([f for f in figure_labels if f])} figures")
-        print("\n✅ All scientific figure generation tasks completed!")
-        print("\nGenerated outputs:")
-        print("  - Figures: output/figures/")
-        print("  - Figure registry: output/figures/figure_registry.json")
-        print("\nFigures are ready for manuscript integration")
+        logger.info(f"\n✅ Generated {len([f for f in figure_labels if f])} figures")
+        logger.info("\n✅ All scientific figure generation tasks completed!")
+        logger.info("\nGenerated outputs:")
+        logger.info("  - Figures: output/figures/")
+        logger.info("  - Figure registry: output/figures/figure_registry.json")
+        logger.info("\nFigures are ready for manuscript integration")
 
         # Save structured report
         report = generate_pipeline_report(
@@ -454,13 +454,11 @@ def main() -> None:
         log_substep(f"Saved figure pipeline report: {saved}", logger)
 
     except ImportError as e:
-        print(f"❌ Failed to import from src/ modules: {e}")
-        print("Make sure all src/ modules are available")
+        logger.error(f"❌ Failed to import from src/ modules: {e}", exc_info=True)
+        logger.error("Make sure all src/ modules are available")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Error during figure generation: {e}")
-        import traceback
-        traceback.print_exc()
+        logger.error(f"❌ Error during figure generation: {e}", exc_info=True)
         sys.exit(1)
 
 

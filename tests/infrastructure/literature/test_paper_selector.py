@@ -1,4 +1,4 @@
-"""Tests for infrastructure.literature.paper_selector module.
+"""Tests for infrastructure.literature.llm.selector module.
 
 Tests for paper selection and filtering functionality.
 """
@@ -9,11 +9,11 @@ from pathlib import Path
 import pytest
 from unittest.mock import patch, Mock
 
-from infrastructure.literature.paper_selector import (
+from infrastructure.literature.llm import (
     PaperSelector,
     PaperSelectionConfig,
 )
-from infrastructure.literature.library_index import LibraryEntry
+from infrastructure.literature.library import LibraryEntry
 
 
 class TestPaperSelectionConfig:
@@ -224,7 +224,7 @@ class TestPaperSelector:
         assert len(selected) == 2
         assert all(p.source == "arxiv" for p in selected)
 
-    @patch('infrastructure.literature.paper_selector.Path')
+    @patch('infrastructure.literature.llm.selector.Path')
     def test_select_by_has_pdf(self, mock_path_class):
         """Test selecting papers by PDF availability."""
         config = PaperSelectionConfig(has_pdf=True)
@@ -280,7 +280,7 @@ class TestPaperSelector:
             (summary_dir / "p1_summary.md").write_text("Summary")
             
             # Mock the summary path check
-            with patch('infrastructure.literature.paper_selector.Path') as mock_path:
+            with patch('infrastructure.literature.llm.selector.Path') as mock_path:
                 def path_side_effect(path_str):
                     if "summaries" in path_str and "p1" in path_str:
                         mock = Mock()
@@ -326,7 +326,7 @@ class TestPaperSelector:
         
         assert len(selected) == 2
 
-    @patch('infrastructure.literature.paper_selector.Path')
+    @patch('infrastructure.literature.llm.selector.Path')
     def test_select_multiple_criteria(self, mock_path_class):
         """Test selecting papers with multiple criteria."""
         config = PaperSelectionConfig(
@@ -548,7 +548,7 @@ class TestPaperSelector:
         # Should filter out entries without source
         assert len(selected) == 0
 
-    @patch('infrastructure.literature.paper_selector.Path')
+    @patch('infrastructure.literature.llm.selector.Path')
     def test_filter_by_pdf_availability_false(self, mock_path_class):
         """Test filtering for papers without PDF."""
         config = PaperSelectionConfig(has_pdf=False)
@@ -579,7 +579,7 @@ class TestPaperSelector:
         assert len(selected) == 1
         assert selected[0].pdf_path is None
 
-    @patch('infrastructure.literature.paper_selector.Path')
+    @patch('infrastructure.literature.llm.selector.Path')
     def test_filter_by_pdf_availability_relative_path(self, mock_path_class):
         """Test filtering by PDF with relative path."""
         config = PaperSelectionConfig(has_pdf=True)

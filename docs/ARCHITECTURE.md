@@ -4,7 +4,13 @@
 
 **Quick Reference:** [How To Use](HOW_TO_USE.md) | [Two-Layer Architecture](TWO_LAYER_ARCHITECTURE.md) | [Workflow](WORKFLOW.md) | [Thin Orchestrator Summary](THIN_ORCHESTRATOR_SUMMARY.md)
 
-This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline. For related information, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md)** for the complete two-layer architecture guide, **[`WORKFLOW.md`](WORKFLOW.md)**, **[`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
+This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline.
+
+**For detailed information on specific topics:**
+- **[Two-Layer Architecture](TWO_LAYER_ARCHITECTURE.md)** - Complete guide to Layer 1 (Infrastructure) vs Layer 2 (Project) separation
+- **[Thin Orchestrator Pattern](THIN_ORCHESTRATOR_SUMMARY.md)** - Detailed implementation of the thin orchestrator pattern
+- **[Workflow](WORKFLOW.md)** - Complete development workflow and pipeline orchestration
+- **[How To Use](HOW_TO_USE.md)** - Complete usage guide from basic to advanced
 
 ## Development Rules
 

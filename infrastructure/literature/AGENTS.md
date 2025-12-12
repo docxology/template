@@ -29,13 +29,34 @@ literature/
 
 ## Architecture
 
-This module follows the **thin orchestrator pattern**:
-- **Core Logic**: Centralized in `core.py`, coordinating sources and handlers.
+This module follows the **thin orchestrator pattern** and is organized into logical subdirectories:
+
+### Directory Structure
+
+```
+infrastructure/literature/
+├── core/              # Core functionality (search, config, CLI)
+├── pdf/               # PDF handling and processing
+├── library/           # Library management and indexing
+├── analysis/          # Paper analysis tools
+├── workflow/          # Workflow orchestration
+├── meta_analysis/     # Meta-analysis and visualization (NEW)
+├── llm/               # LLM operations
+├── reporting/         # Reporting and export
+├── sources/           # API adapters for external databases
+├── html_parsers/      # HTML parsing for PDF extraction
+└── summarization/     # Summarization system
+```
+
+### Module Organization
+
+- **Core Logic**: Centralized in `core/`, coordinating sources and handlers.
 - **Adapters**: `sources/` directory contains modular API adapters for each external database.
-- **Handlers**: Specialized handlers for PDFs and references.
-- **Library Index**: JSON-based tracking of all papers in `library_index.py`.
-- **Configuration**: Centralized configuration management with environment variable support.
-- **CLI**: Command-line interface for interactive use.
+- **Handlers**: Specialized handlers for PDFs in `pdf/`.
+- **Library Management**: JSON-based tracking in `library/`.
+- **Configuration**: Centralized in `core/config.py` with environment variable support.
+- **CLI**: Command-line interface in `core/cli.py`.
+- **Meta-Analysis**: Temporal, keyword, metadata, and PCA analysis in `meta_analysis/` (NEW).
 
 ### Class Structure
 
@@ -77,26 +98,53 @@ LLMOperationResult (llm_operations.py)  # NEW: LLM operation results
 
 ### Module Files
 
-| File | Purpose |
-|------|---------|
+| Directory/File | Purpose |
+|----------------|---------|
 | `__init__.py` | Public API exports |
-| `core.py` | Main `LiteratureSearch` class + `DownloadResult` |
-| `sources/` | **Modular API adapters** (see structure below) |
-| `sources/base.py` | Base classes (`SearchResult`, `LiteratureSource`) and utilities |
+| **core/** | Core functionality |
+| `core/core.py` | Main `LiteratureSearch` class + `DownloadResult` |
+| `core/config.py` | Configuration dataclass + browser User-Agents |
+| `core/cli.py` | Command-line interface |
+| **pdf/** | PDF handling |
+| `pdf/handler.py` | PDF downloading with retry logic and fallbacks |
+| `pdf/downloader.py` | PDF download implementation |
+| `pdf/extractor.py` | Text extraction utilities |
+| `pdf/fallbacks.py` | Fallback strategies for PDF URLs |
+| **library/** | Library management |
+| `library/index.py` | JSON library index manager |
+| `library/stats.py` | Library statistics |
+| `library/references.py` | BibTeX generation |
+| `library/clear.py` | Library cleanup operations |
+| **analysis/** | Paper analysis |
+| `analysis/paper_analyzer.py` | Paper structure/content analysis |
+| `analysis/domain_detector.py` | Domain detection |
+| `analysis/context_builder.py` | Context building for LLM |
+| **workflow/** | Workflow orchestration |
+| `workflow/workflow.py` | Multi-paper operations orchestration |
+| `workflow/orchestrator.py` | Search workflow orchestration |
+| `workflow/progress.py` | Progress tracking |
+| **meta_analysis/** | Meta-analysis and visualization (NEW) |
+| `meta_analysis/aggregator.py` | Data aggregation for analysis |
+| `meta_analysis/temporal.py` | Publication year analysis |
+| `meta_analysis/keywords.py` | Keyword evolution analysis |
+| `meta_analysis/metadata.py` | Metadata visualization |
+| `meta_analysis/pca.py` | PCA analysis of texts |
+| `meta_analysis/visualizations.py` | Plotting utilities |
+| **llm/** | LLM operations |
+| `llm/operations.py` | Advanced LLM operations for multi-paper synthesis |
+| `llm/selector.py` | Configurable paper selection and filtering |
+| **reporting/** | Reporting |
+| `reporting/reporter.py` | Comprehensive reporting with export |
+| **sources/** | API adapters |
+| `sources/base.py` | Base classes (`SearchResult`, `LiteratureSource`) |
 | `sources/arxiv.py` | arXiv API client |
 | `sources/semanticscholar.py` | Semantic Scholar API client |
-| `sources/unpaywall.py` | Unpaywall API client for open access PDFs |
-| `sources/biorxiv.py` | bioRxiv/medRxiv preprint API client |
-| `config.py` | Configuration dataclass + browser User-Agents |
-| `library_index.py` | JSON library index manager with cleanup methods |
-| `pdf_handler.py` | PDF downloading with retry logic and fallbacks |
-| `reference_manager.py` | BibTeX generation |
-| `cli.py` | Command-line interface |
-| `paper_selector.py` | **NEW**: Configurable paper selection and filtering |
-| `llm_operations.py` | **NEW**: Advanced LLM operations for multi-paper synthesis |
-| `workflow.py` | Orchestrates multi-paper operations with progress tracking |
-| `progress.py` | Progress tracking for long-running literature tasks |
-| `summarizer.py` | AI-powered paper summarization with quality validation |
+| `sources/unpaywall.py` | Unpaywall API client |
+| `sources/biorxiv.py` | bioRxiv/medRxiv API client |
+| **html_parsers/** | HTML parsing |
+| `html_parsers/` | Publisher-specific HTML parsers |
+| **summarization/** | Summarization system |
+| `summarization/` | Modular summarization system (see below) |
 
 ## Usage
 
@@ -622,6 +670,268 @@ class LLMOperationResult:
     metadata: Dict[str, Any]      # Operation-specific metadata
 ```
 
+### SummarizationEngine
+
+```python
+class SummarizationEngine:
+    def __init__(
+        self,
+        llm_client: LLMClient,
+        quality_validator: Optional[SummaryQualityValidator] = None,
+        context_extractor: Optional[ContextExtractor] = None,
+        prompt_builder: Optional[SummarizationPromptBuilder] = None,
+        max_pdf_chars: Optional[int] = None
+    ):
+        """Initialize summarization engine.
+        
+        Args:
+            llm_client: Configured LLM client for summary generation.
+            quality_validator: Quality validator instance (created if None).
+            context_extractor: Context extractor instance (created if None).
+            prompt_builder: Prompt builder instance (created if None).
+            max_pdf_chars: Maximum PDF characters to send to LLM.
+                          Defaults to 200000 (200K) or LLM_MAX_INPUT_LENGTH env var.
+        """
+    
+    def summarize_paper(
+        self,
+        result: SearchResult,
+        pdf_path: Path,
+        max_retries: int = 2
+    ) -> SummarizationResult:
+        """Generate summary for a single paper with quality validation.
+        
+        Implements multi-stage summarization:
+        1. PDF text extraction with section prioritization
+        2. Structured context extraction
+        3. Draft generation
+        4. Quality validation
+        5. Automatic refinement (if needed)
+        
+        Args:
+            result: Search result with paper metadata.
+            pdf_path: Path to PDF file.
+            max_retries: Maximum retry attempts for generation.
+        
+        Returns:
+            SummarizationResult with summary and metadata.
+        """
+    
+    def save_summary(
+        self,
+        result: SearchResult,
+        summary_result: SummarizationResult,
+        output_dir: Path,
+        pdf_path: Optional[Path] = None
+    ) -> Path:
+        """Save summary to markdown file and metadata to JSON.
+        
+        Args:
+            result: Search result with paper metadata.
+            summary_result: Summarization result to save.
+            output_dir: Directory for summary files.
+            pdf_path: Path to PDF file (for metadata).
+        
+        Returns:
+            Path to saved summary file.
+        
+        Raises:
+            FileOperationError: If saving fails.
+        """
+    
+    @property
+    def quality_validator(self) -> SummaryQualityValidator:
+        """Property alias for validator (backward compatibility)."""
+```
+
+### SummaryQualityValidator
+
+```python
+class SummaryQualityValidator:
+    def __init__(self, min_words: int = 200):
+        """Initialize quality validator.
+        
+        Args:
+            min_words: Minimum word count for valid summaries.
+        """
+    
+    def validate_summary(
+        self,
+        summary: str,
+        pdf_text: str,
+        citation_key: str,
+        paper_title: Optional[str] = None
+    ) -> Tuple[bool, float, List[str]]:
+        """Validate summary quality comprehensively.
+        
+        Performs multiple checks:
+        - Title matching
+        - Content topic matching
+        - Quote/evidence presence
+        - Length validation
+        - Repetition detection (sentence, paragraph, section level)
+        - Hallucination detection
+        - Off-topic content detection
+        
+        Args:
+            summary: Generated summary text.
+            pdf_text: Original PDF text for comparison.
+            citation_key: Citation key for logging.
+            paper_title: Paper title for title matching validation.
+        
+        Returns:
+            Tuple of (is_valid, quality_score, error_messages).
+        """
+    
+    def validate_summary_detailed(
+        self,
+        summary: str,
+        pdf_text: str,
+        citation_key: str,
+        paper_title: Optional[str] = None,
+        key_terms: Optional[List[str]] = None
+    ) -> ValidationResult:
+        """Validate summary and return detailed ValidationResult.
+        
+        Args:
+            summary: Generated summary text.
+            pdf_text: Original PDF text for comparison.
+            citation_key: Citation key for logging.
+            paper_title: Paper title for validation.
+            key_terms: Optional list of key terms that should be mentioned.
+        
+        Returns:
+            ValidationResult with detailed validation information.
+        """
+```
+
+### SummarizationResult
+
+```python
+@dataclass
+class SummarizationResult:
+    citation_key: str              # Unique identifier for the paper
+    success: bool                  # Whether summarization succeeded
+    summary_text: Optional[str]    # Generated summary text if successful
+    input_chars: int               # Number of characters in extracted PDF text
+    input_words: int               # Number of words in extracted PDF text
+    output_words: int              # Number of words in generated summary
+    generation_time: float         # Time taken for summarization in seconds
+    attempts: int                  # Number of attempts made
+    error: Optional[str]           # Error message if summarization failed
+    quality_score: float           # Quality validation score (0.0 to 1.0)
+    validation_errors: List[str]   # List of quality validation issues
+    summary_path: Optional[Path]   # Path to the saved summary file if successful
+    skipped: bool                  # Whether this summary was skipped (already exists)
+    
+    @property
+    def compression_ratio(self) -> float:
+        """Calculate compression ratio (output/input words)."""
+    
+    @property
+    def words_per_second(self) -> float:
+        """Calculate generation speed in words per second."""
+```
+
+### MultiStageSummarizer
+
+```python
+class MultiStageSummarizer:
+    def __init__(
+        self,
+        llm_client: LLMClient,
+        validator: SummaryQualityValidator,
+        prompt_builder: SummarizationPromptBuilder,
+        max_refinement_attempts: int = 2
+    ):
+        """Initialize multi-stage summarizer."""
+    
+    def summarize_with_refinement(
+        self,
+        context: SummarizationContext,
+        pdf_text: str,
+        metadata: dict,
+        citation_key: str
+    ) -> Tuple[str, ValidationResult, int]:
+        """Generate summary with automatic refinement.
+        
+        Args:
+            context: Structured context from paper.
+            pdf_text: Full PDF text for validation.
+            metadata: Paper metadata.
+            citation_key: Citation key for logging.
+        
+        Returns:
+            Tuple of (final_summary, final_validation_result, total_attempts).
+        """
+```
+
+### ContextExtractor
+
+```python
+class ContextExtractor:
+    def create_summarization_context(
+        self,
+        pdf_text: str,
+        title: str,
+        max_chars: Optional[int] = None
+    ) -> SummarizationContext:
+        """Create structured context object for summarization.
+        
+        Args:
+            pdf_text: Full PDF text.
+            title: Paper title.
+            max_chars: Optional maximum characters for context.
+        
+        Returns:
+            SummarizationContext with structured information.
+        """
+    
+    def extract_paper_structure(self, pdf_text: str) -> PaperStructure:
+        """Identify all sections in PDF text.
+        
+        Returns:
+            PaperStructure with identified sections.
+        """
+    
+    def extract_key_terms(self, pdf_text: str, title: str) -> List[str]:
+        """Extract actual key terms from title and abstract.
+        
+        Returns:
+            List of key terms (4+ characters, not stop words).
+        """
+```
+
+### PDFProcessor
+
+```python
+class PDFProcessor:
+    def extract_prioritized_text(
+        self,
+        pdf_path: Path,
+        max_chars: int
+    ) -> PrioritizedPDFText:
+        """Extract and prioritize PDF text for summarization.
+        
+        Preserves critical sections (title, abstract, introduction, conclusion)
+        when truncating long papers.
+        
+        Args:
+            pdf_path: Path to PDF file.
+            max_chars: Maximum characters to extract (0 for unlimited).
+        
+        Returns:
+            PrioritizedPDFText with processed text and metadata.
+        """
+    
+    def identify_sections(self, pdf_text: str) -> Dict[str, Tuple[int, int]]:
+        """Identify key sections in PDF text.
+        
+        Returns:
+            Dictionary mapping section names to (start_char, end_char) positions.
+        """
+```
+
 ### PDFHandler
 
 ```python
@@ -735,7 +1045,17 @@ PDF DOWNLOAD SUMMARY
 
 **Summarization Progress:**
 ```
-✓ smith2024novel (45KB) - 8.2s
+[1/3] Processing smith2024novel...
+[smith2024novel] Extracted 125,432 chars, 23,456 words from smith2024novel.pdf
+[smith2024novel] Extracting structured context...
+[smith2024novel] Context extracted in 0.15s: abstract=1,234 chars, intro=3,456 chars, conclusion=2,345 chars, key_terms=12
+[smith2024novel] Starting multi-stage summarization...
+[smith2024novel] Stage 1: Generating draft summary...
+[smith2024novel] Draft generated in 12.3s: 8,234 chars, 1,234 words
+[smith2024novel] Validating summary quality...
+[smith2024novel] Summary accepted (score: 0.85, validation time: 0.45s, quotes: 5)
+[smith2024novel] Summary accepted: 1,234 words, quality score: 0.85, compression ratio: 5.26%
+[1/3] ✓ smith2024novel (45KB) - 13.1s, 1,234 words, quality: 0.85
 
 SUMMARIZATION SUMMARY
 ============================================================
@@ -750,6 +1070,40 @@ SUMMARIZATION SUMMARY
   Average size: 45KB
 ============================================================
 ```
+
+### Summarization Architecture
+
+The literature module uses a **modular, multi-stage summarization system** located in `summarization/`:
+
+**Core Components:**
+- **`SummarizationEngine`** (`core.py`) - Main orchestrator coordinating all stages
+- **`MultiStageSummarizer`** (`multi_stage_summarizer.py`) - Draft generation and refinement workflow
+- **`PDFProcessor`** (`pdf_processor.py`) - Intelligent PDF text extraction with section prioritization
+- **`ContextExtractor`** (`context_extractor.py`) - Structured context extraction from PDFs
+- **`PromptBuilder`** (`prompt_builder.py`) - LLM prompt construction with examples and validation checklists
+- **`SummaryQualityValidator`** (`validator.py`) - Comprehensive quality validation and issue detection
+
+**Summarization Pipeline:**
+1. **PDF Text Extraction** - Prioritized extraction preserving title, abstract, introduction, conclusion
+2. **Context Extraction** - Structured context with key terms, equations, and section identification
+3. **Draft Generation** - Initial summary using domain-aware prompts
+4. **Quality Validation** - Comprehensive validation checking title match, topics, repetition, hallucination
+5. **Refinement** (if needed) - Automatic refinement addressing validation issues
+6. **Final Validation** - Acceptance check with quality scoring
+
+**Real-Time Logging:**
+All stages provide real-time logging with citation key prefixes:
+- `[citation_key]` - All log messages include paper identifier
+- Stage-by-stage progress (extraction, context, generation, validation)
+- Timing information for each stage
+- Quality metrics (score, word count, compression ratio)
+- Validation results (errors, warnings, suggestions)
+
+**Progress Tracking:**
+- Integrated with `ProgressTracker` for resumable operations
+- Real-time status updates (pending → processing → summarized/failed)
+- Progress bars for batch operations
+- Structured logging with JSON format option
 
 **Logging Levels:**
 - **INFO**: Progress updates, completion status, statistics
@@ -784,8 +1138,70 @@ pytest tests/infrastructure/literature/ --cov=infrastructure/literature
 | `test_integration.py` | Integration workflows |
 | `test_literature_cli.py` | CLI interface tests |
 
+## Meta-Analysis Module
+
+The `meta_analysis/` module provides comprehensive analysis and visualization tools for your literature library:
+
+### Features
+
+**Temporal Analysis** (`temporal.py`):
+- Publication trends by year
+- Publication rate analysis
+- Year-based filtering
+
+**Keyword Analysis** (`keywords.py`):
+- Keyword frequency over time
+- Emerging keyword detection
+- Keyword evolution visualization
+
+**Metadata Visualization** (`metadata.py`):
+- Venue distribution
+- Author contributions
+- Citation distribution
+- Source statistics
+
+**PCA Analysis** (`pca.py`):
+- Text feature extraction (TF-IDF)
+- Principal component analysis
+- Paper clustering
+- 2D and 3D visualizations
+
+### Usage Example
+
+```python
+from infrastructure.literature.meta_analysis import (
+    DataAggregator,
+    create_publication_timeline_plot,
+    create_keyword_frequency_plot,
+    create_pca_2d_plot,
+)
+
+# Create aggregator
+aggregator = DataAggregator()
+
+# Publication timeline
+create_publication_timeline_plot()
+
+# Keyword analysis
+from infrastructure.literature.meta_analysis import extract_keywords_over_time
+keyword_data = extract_keywords_over_time()
+create_keyword_frequency_plot(keyword_data, top_n=20)
+
+# PCA analysis
+create_pca_2d_plot(n_clusters=5)
+```
+
+### Dependencies
+
+The meta_analysis module requires:
+- `matplotlib` for plotting
+- `numpy` for numerical operations
+- `scikit-learn` for PCA and clustering (optional, for PCA features)
+- `pandas` for data manipulation (optional)
+
 ## See Also
 
 - [`README.md`](README.md) - Quick reference
+- [`meta_analysis/AGENTS.md`](meta_analysis/AGENTS.md) - Meta-analysis documentation
 - [`../AGENTS.md`](../AGENTS.md) - Infrastructure overview
 - [`../../docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md) - System architecture

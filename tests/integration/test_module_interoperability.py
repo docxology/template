@@ -137,7 +137,7 @@ class TestModuleInteroperability:
 
     def test_configuration_independence(self):
         """Test that module configurations are independent."""
-        from infrastructure.literature.config import LiteratureConfig
+        from infrastructure.literature.core import LiteratureConfig
         from infrastructure.llm.config import LLMConfig
         from infrastructure.rendering.config import RenderingConfig
         
@@ -160,7 +160,7 @@ class TestWrapperScripts:
 
     def test_literature_cli_exists(self):
         """Test that literature CLI exists."""
-        from infrastructure.literature import cli
+        from infrastructure.literature.core import cli
         assert hasattr(cli, 'main')
         assert hasattr(cli, 'search_command')
 

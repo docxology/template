@@ -13,9 +13,7 @@ import pytest
 from unittest.mock import Mock, patch, MagicMock
 from io import StringIO
 
-from infrastructure.literature import cli
-from infrastructure.literature.core import LiteratureSearch
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.core import cli, LiteratureSearch, LiteratureConfig
 
 
 class TestCLIExecution:
@@ -24,7 +22,7 @@ class TestCLIExecution:
     def test_cli_help_output(self):
         """Test that CLI help works."""
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.literature.cli", "--help"],
+            [sys.executable, "-m", "infrastructure.literature.core.cli", "--help"],
             capture_output=True,
             text=True
         )
@@ -51,7 +49,7 @@ class TestCLIExecution:
     def test_cli_no_command_shows_help(self):
         """Test that CLI shows help when no command provided."""
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.literature.cli"],
+            [sys.executable, "-m", "infrastructure.literature.core.cli"],
             capture_output=True,
             text=True
         )
@@ -63,8 +61,8 @@ class TestCLIExecution:
 class TestSearchCommand:
     """Test search_command function."""
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_no_results(self, mock_config, mock_search_class):
         """Test search command with no results."""
         mock_manager = Mock()
@@ -83,8 +81,8 @@ class TestSearchCommand:
             # Should print "No results found."
             mock_print.assert_any_call("No results found.")
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_with_results(self, mock_config, mock_search_class):
         """Test search command with results."""
         # Create mock paper
@@ -119,8 +117,8 @@ class TestSearchCommand:
             mock_print.assert_any_call("   Citation key: test2024author1")
             mock_print.assert_any_call("\nAdded 1 papers to library.")
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_with_download(self, mock_config, mock_search_class):
         """Test search command with download option."""
         mock_paper = Mock()
@@ -149,8 +147,8 @@ class TestSearchCommand:
             mock_manager.download_paper.assert_called_once_with(mock_paper)
             mock_print.assert_any_call("   Downloaded: /path/to/paper.pdf")
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_with_sources(self, mock_config, mock_search_class):
         """Test search command with specific sources."""
         mock_manager = Mock()
@@ -176,8 +174,8 @@ class TestSearchCommand:
 class TestLibraryListCommand:
     """Test library_list_command function."""
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_list_empty(self, mock_config, mock_search_class):
         """Test library list with empty library."""
         mock_manager = Mock()
@@ -190,8 +188,8 @@ class TestLibraryListCommand:
             cli.library_list_command(args)
             mock_print.assert_any_call("Library is empty.")
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_list_with_entries(self, mock_config, mock_search_class):
         """Test library list with entries."""
         mock_manager = Mock()
@@ -217,8 +215,8 @@ class TestLibraryListCommand:
             mock_print.assert_any_call("    Author 1 et al. (2024)")
             mock_print.assert_any_call("    DOI: 10.1234/test")
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_list_no_pdf(self, mock_config, mock_search_class):
         """Test library list entry without PDF."""
         mock_manager = Mock()
@@ -245,8 +243,8 @@ class TestLibraryListCommand:
 class TestLibraryExportCommand:
     """Test library_export_command function."""
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_export_default(self, mock_config, mock_search_class):
         """Test library export with default output."""
         mock_manager = Mock()
@@ -262,8 +260,8 @@ class TestLibraryExportCommand:
             mock_manager.export_library.assert_called_once_with(None, format="json")
             mock_print.assert_called_once_with("Library exported to: /path/to/library.json")
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_export_custom_output(self, mock_config, mock_search_class):
         """Test library export with custom output path."""
         mock_manager = Mock()
@@ -281,8 +279,8 @@ class TestLibraryExportCommand:
                 format="json"
             )
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_export_error(self, mock_config, mock_search_class):
         """Test library export with error."""
         mock_manager = Mock()
@@ -303,8 +301,8 @@ class TestLibraryExportCommand:
 class TestLibraryStatsCommand:
     """Test library_stats_command function."""
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_stats_basic(self, mock_config, mock_search_class):
         """Test library stats with basic stats."""
         mock_manager = Mock()
@@ -323,8 +321,8 @@ class TestLibraryStatsCommand:
             mock_print.assert_any_call("Total entries: 10")
             mock_print.assert_any_call("Downloaded PDFs: 5")
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_stats_with_year_range(self, mock_config, mock_search_class):
         """Test library stats with year range."""
         mock_manager = Mock()
@@ -342,8 +340,8 @@ class TestLibraryStatsCommand:
             cli.library_stats_command(args)
             mock_print.assert_any_call("Year range: 2020 - 2024")
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_stats_with_sources(self, mock_config, mock_search_class):
         """Test library stats with source breakdown."""
         mock_manager = Mock()
@@ -362,8 +360,8 @@ class TestLibraryStatsCommand:
             mock_print.assert_any_call("  arxiv: 7")
             mock_print.assert_any_call("  semanticscholar: 3")
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_stats_with_years(self, mock_config, mock_search_class):
         """Test library stats with year breakdown."""
         mock_manager = Mock()
@@ -385,7 +383,7 @@ class TestLibraryStatsCommand:
 class TestMainFunction:
     """Test main CLI function."""
 
-    @patch('infrastructure.literature.cli.search_command')
+    @patch('infrastructure.literature.core.cli.search_command')
     def test_main_search_command(self, mock_search):
         """Test main function with search command."""
         with patch('sys.argv', ['cli.py', 'search', 'test query']):
@@ -395,7 +393,7 @@ class TestMainFunction:
                 # Should not exit with error
                 mock_exit.assert_not_called()
 
-    @patch('infrastructure.literature.cli.library_list_command')
+    @patch('infrastructure.literature.core.cli.library_list_command')
     def test_main_library_list(self, mock_list):
         """Test main function with library list command."""
         with patch('sys.argv', ['cli.py', 'library', 'list']):
@@ -403,7 +401,7 @@ class TestMainFunction:
                 cli.main()
                 mock_list.assert_called_once()
 
-    @patch('infrastructure.literature.cli.library_export_command')
+    @patch('infrastructure.literature.core.cli.library_export_command')
     def test_main_library_export(self, mock_export):
         """Test main function with library export command."""
         with patch('sys.argv', ['cli.py', 'library', 'export']):
@@ -411,7 +409,7 @@ class TestMainFunction:
                 cli.main()
                 mock_export.assert_called_once()
 
-    @patch('infrastructure.literature.cli.library_stats_command')
+    @patch('infrastructure.literature.core.cli.library_stats_command')
     def test_main_library_stats(self, mock_stats):
         """Test main function with library stats command."""
         with patch('sys.argv', ['cli.py', 'library', 'stats']):
@@ -429,7 +427,7 @@ class TestMainFunction:
                     assert mock_help.called, "print_help should be called"
                     mock_exit.assert_called_once_with(1)
 
-    @patch('infrastructure.literature.cli.search_command')
+    @patch('infrastructure.literature.core.cli.search_command')
     def test_main_exception_handling(self, mock_search):
         """Test main function exception handling."""
         mock_search.side_effect = Exception("Test error")
@@ -445,8 +443,8 @@ class TestMainFunction:
 class TestSearchCommandEdgeCases:
     """Test search_command edge cases and error handling."""
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_search_failure(self, mock_config, mock_search_class):
         """Test search_command when search raises exception."""
         mock_manager = Mock()
@@ -463,8 +461,8 @@ class TestSearchCommandEdgeCases:
         with pytest.raises(Exception, match="Search API error"):
             cli.search_command(args)
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_empty_query(self, mock_config, mock_search_class):
         """Test search_command with empty query."""
         mock_manager = Mock()
@@ -482,8 +480,8 @@ class TestSearchCommandEdgeCases:
             mock_print.assert_any_call("Searching for: ...")
             mock_print.assert_any_call("No results found.")
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_invalid_limit(self, mock_config, mock_search_class):
         """Test search_command with invalid limit (negative or zero)."""
         mock_manager = Mock()
@@ -500,8 +498,8 @@ class TestSearchCommandEdgeCases:
         cli.search_command(args)
         mock_manager.search.assert_called_once()
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_download_failure(self, mock_config, mock_search_class):
         """Test search_command when download fails."""
         mock_paper = Mock()
@@ -530,8 +528,8 @@ class TestSearchCommandEdgeCases:
             download_calls = [str(call) for call in mock_print.call_args_list if "Downloaded:" in str(call)]
             assert len(download_calls) == 0
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_add_to_library_failure(self, mock_config, mock_search_class):
         """Test search_command when add_to_library raises exception."""
         mock_paper = Mock()
@@ -554,8 +552,8 @@ class TestSearchCommandEdgeCases:
         with pytest.raises(Exception, match="Library error"):
             cli.search_command(args)
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_sources_empty_string(self, mock_config, mock_search_class):
         """Test search_command with empty sources string."""
         mock_manager = Mock()
@@ -633,8 +631,8 @@ class TestLibraryListCommandEdgeCases:
         finally:
             sys.stdout = old_stdout
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_list_entry_long_title(self, mock_config, mock_search_class):
         """Test library list with very long title (truncation)."""
         long_title = "A" * 100  # Very long title
@@ -658,8 +656,8 @@ class TestLibraryListCommandEdgeCases:
             title_call = [c for c in calls if "A" * 70 in c]
             assert len(title_call) > 0
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_list_entry_no_authors(self, mock_config, mock_search_class):
         """Test library list with entry having no authors."""
         mock_manager = Mock()
@@ -681,8 +679,8 @@ class TestLibraryListCommandEdgeCases:
             calls = [str(call) for call in mock_print.call_args_list]
             assert any("Unknown" in str(call) for call in calls)
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_list_entry_no_year(self, mock_config, mock_search_class):
         """Test library list with entry having no year."""
         mock_manager = Mock()
@@ -708,8 +706,8 @@ class TestLibraryListCommandEdgeCases:
 class TestLibraryExportCommandEdgeCases:
     """Test library_export_command edge cases."""
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_export_invalid_format(self, mock_config, mock_search_class):
         """Test library export with invalid format (should be caught by argparse)."""
         # Note: argparse should prevent invalid formats, but test error handling
@@ -729,8 +727,8 @@ class TestLibraryExportCommandEdgeCases:
                 mock_exit.assert_called_once_with(1)
                 assert "Error:" in mock_stderr.getvalue()
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_export_file_io_error(self, mock_config, mock_search_class):
         """Test library export with file I/O error."""
         mock_manager = Mock()
@@ -745,8 +743,8 @@ class TestLibraryExportCommandEdgeCases:
         with pytest.raises(IOError, match="Permission denied"):
             cli.library_export_command(args)
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_export_path_conversion(self, mock_config, mock_search_class):
         """Test library export with Path conversion."""
         mock_manager = Mock()
@@ -809,8 +807,8 @@ class TestLibraryStatsCommandEdgeCases:
         finally:
             sys.stdout = old_stdout
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_stats_only_oldest_year(self, mock_config, mock_search_class):
         """Test library stats with only oldest_year (no newest_year)."""
         mock_manager = Mock()
@@ -830,8 +828,8 @@ class TestLibraryStatsCommandEdgeCases:
             calls = [str(call) for call in mock_print.call_args_list]
             assert not any("Year range:" in str(call) for call in calls)
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_stats_only_newest_year(self, mock_config, mock_search_class):
         """Test library stats with only newest_year (no oldest_year)."""
         mock_manager = Mock()
@@ -851,8 +849,8 @@ class TestLibraryStatsCommandEdgeCases:
             calls = [str(call) for call in mock_print.call_args_list]
             assert not any("Year range:" in str(call) for call in calls)
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_stats_many_years(self, mock_config, mock_search_class):
         """Test library stats with more than 10 years (should limit to 10)."""
         years = {str(year): 1 for year in range(2010, 2025)}  # 15 years
@@ -881,7 +879,7 @@ class TestArgumentParsingEdgeCases:
     def test_main_invalid_command(self):
         """Test main with invalid command."""
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.literature.cli", "invalid_command"],
+            [sys.executable, "-m", "infrastructure.literature.core.cli", "invalid_command"],
             capture_output=True,
             text=True
         )
@@ -901,7 +899,7 @@ class TestArgumentParsingEdgeCases:
         """Test main function with search command but no query."""
         # argparse uses exit code 2 for missing required arguments
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.literature.cli", "search"],
+            [sys.executable, "-m", "infrastructure.literature.core.cli", "search"],
             capture_output=True,
             text=True
         )
@@ -909,8 +907,8 @@ class TestArgumentParsingEdgeCases:
         assert result.returncode == 2
         assert "error:" in result.stderr.lower() or "required" in result.stderr.lower()
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_multiple_papers(self, mock_config, mock_search_class):
         """Test search command with multiple papers."""
         papers = []
@@ -943,8 +941,8 @@ class TestArgumentParsingEdgeCases:
             assert any("Paper 3" in str(call) for call in mock_print.call_args_list)
             assert any("Added 3 papers" in str(call) for call in mock_print.call_args_list)
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_search_command_paper_without_doi_or_citations(self, mock_config, mock_search_class):
         """Test search command with paper missing DOI and citations."""
         mock_paper = Mock()
@@ -973,8 +971,8 @@ class TestArgumentParsingEdgeCases:
             assert "DOI:" not in calls_str
             assert "Citations:" not in calls_str
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_list_entry_without_doi(self, mock_config, mock_search_class):
         """Test library list entry without DOI."""
         mock_manager = Mock()
@@ -998,8 +996,8 @@ class TestArgumentParsingEdgeCases:
             calls_str = ' '.join(str(call) for call in mock_print.call_args_list)
             assert "DOI:" not in calls_str
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_list_single_author(self, mock_config, mock_search_class):
         """Test library list entry with single author (no 'et al.')."""
         mock_manager = Mock()
@@ -1023,8 +1021,8 @@ class TestArgumentParsingEdgeCases:
             assert "et al." not in calls_str
             assert "Single Author" in calls_str
 
-    @patch('infrastructure.literature.cli.LiteratureSearch')
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureSearch')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_stats_with_all_fields(self, mock_config, mock_search_class):
         """Test library stats with all optional fields present."""
         mock_manager = Mock()
@@ -1049,7 +1047,7 @@ class TestArgumentParsingEdgeCases:
             assert "By Source:" in calls_str
             assert "By Year" in calls_str
 
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_list_uses_from_env_when_env_vars_set(self, mock_config_class, tmp_path, monkeypatch):
         """Test that library_list_command uses from_env() when env vars are set."""
         # Set environment variables
@@ -1062,14 +1060,14 @@ class TestArgumentParsingEdgeCases:
         mock_manager = Mock()
         mock_manager.get_library_entries.return_value = []
         
-        with patch('infrastructure.literature.cli.LiteratureSearch', return_value=mock_manager):
+        with patch('infrastructure.literature.core.cli.LiteratureSearch', return_value=mock_manager):
             args = Mock()
             cli.library_list_command(args)
             
             # Should have called from_env()
             mock_from_env.assert_called_once()
 
-    @patch('infrastructure.literature.cli.LiteratureConfig')
+    @patch('infrastructure.literature.core.cli.LiteratureConfig')
     def test_library_stats_uses_from_env_when_env_vars_set(self, mock_config_class, tmp_path, monkeypatch):
         """Test that library_stats_command uses from_env() when env vars are set."""
         # Set environment variables
@@ -1081,7 +1079,7 @@ class TestArgumentParsingEdgeCases:
         mock_manager = Mock()
         mock_manager.get_library_stats.return_value = {"total_entries": 0}
         
-        with patch('infrastructure.literature.cli.LiteratureSearch', return_value=mock_manager):
+        with patch('infrastructure.literature.core.cli.LiteratureSearch', return_value=mock_manager):
             args = Mock()
             cli.library_stats_command(args)
             
@@ -1089,7 +1087,7 @@ class TestArgumentParsingEdgeCases:
             mock_from_env.assert_called_once()
         """Test main with search command but no query."""
         result = subprocess.run(
-            [sys.executable, "-m", "infrastructure.literature.cli", "search"],
+            [sys.executable, "-m", "infrastructure.literature.core.cli", "search"],
             capture_output=True,
             text=True
         )

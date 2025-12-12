@@ -23,6 +23,7 @@ This directory contains comprehensive development standards, coding guidelines, 
 | [api_design.md](api_design.md) | API design and interface standards | Creating clean, consistent APIs |
 | [manuscript_style.md](manuscript_style.md) | Manuscript formatting and style standards | Writing research manuscripts |
 | [reporting.md](reporting.md) | Reporting module standards and outputs | Using reporting utilities |
+| [refactoring.md](refactoring.md) | Refactoring and modularization standards | Refactoring code with clean breaks |
 
 ## Key Principles
 
@@ -467,6 +468,7 @@ The .cursorrules standards align with and support the main documentation:
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) |
 | Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [project/manuscript/AGENTS.md](../project/manuscript/AGENTS.md) |
+| Refactoring | [refactoring.md](refactoring.md) | [docs/BEST_PRACTICES.md](../docs/BEST_PRACTICES.md) |
 
 ## Cross-Reference Guide
 
@@ -551,6 +553,19 @@ When creating a new .cursorrules file:
 4. Include code examples for all patterns
 5. Test all examples before committing
 6. Update integration table with main docs
+
+## See Also
+
+**Development Standards:**
+- [`README.md`](README.md) - Quick reference guide
+- [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
+- [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure layer documentation
+- [`../project/AGENTS.md`](../project/AGENTS.md) - Project layer documentation
+
+**Related Documentation:**
+- [`../docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) - System architecture overview
+- [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow
+- [`../tests/AGENTS.md`](../tests/AGENTS.md) - Testing philosophy and guide
 
 ---
 

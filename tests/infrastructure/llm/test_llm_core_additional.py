@@ -14,8 +14,8 @@ from unittest.mock import patch, MagicMock
 import pytest
 import requests
 
-from infrastructure.llm.core import LLMClient, ResponseMode
-from infrastructure.llm.config import LLMConfig, GenerationOptions
+from infrastructure.llm.core.client import LLMClient, ResponseMode
+from infrastructure.llm.core.config import LLMConfig, GenerationOptions
 from infrastructure.core.exceptions import LLMConnectionError, LLMError
 
 
@@ -123,7 +123,7 @@ class TestQueryRaw:
         mock_response.json.return_value = {"message": {"content": "Raw response"}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             result = client.query_raw("Test prompt", add_to_context=True)
             
             assert result == "Raw response"
@@ -145,7 +145,7 @@ class TestQueryRaw:
         mock_response.json.return_value = {"message": {"content": "Raw response"}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             result = client.query_raw("Test prompt", add_to_context=False)
             
             assert result == "Raw response"
@@ -167,7 +167,7 @@ class TestQueryStructuredJsonParsing:
         mock_response.json.return_value = {"message": {"content": '{"key": "value"}'}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             result = client.query_structured("Test prompt")
             
             assert result == {"key": "value"}
@@ -183,7 +183,7 @@ class TestQueryStructuredJsonParsing:
         mock_response.json.return_value = {"message": {"content": wrapped_json}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             result = client.query_structured("Test prompt")
             
             assert result == {"key": "value"}
@@ -199,7 +199,7 @@ class TestQueryStructuredJsonParsing:
         mock_response.json.return_value = {"message": {"content": invalid_wrapped}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             with pytest.raises(LLMError) as exc_info:
                 client.query_structured("Test prompt")
             
@@ -216,7 +216,7 @@ class TestQueryStructuredJsonParsing:
         mock_response.json.return_value = {"message": {"content": no_json}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             with pytest.raises(LLMError) as exc_info:
                 client.query_structured("Test prompt")
             
@@ -237,7 +237,7 @@ class TestQueryStructuredJsonParsing:
         mock_response.json.return_value = {"message": {"content": '{"name": "test"}'}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             result = client.query_structured("Test prompt", schema=schema)
             
             assert result == {"name": "test"}
@@ -264,7 +264,7 @@ class TestStreamQuery:
         mock_response.__enter__ = MagicMock(return_value=mock_response)
         mock_response.__exit__ = MagicMock(return_value=False)
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             chunks = list(client.stream_query("Test prompt"))
             
             assert chunks == ["Hello", " world", "!"]
@@ -285,7 +285,7 @@ class TestStreamQuery:
         mock_response.__enter__ = MagicMock(return_value=mock_response)
         mock_response.__exit__ = MagicMock(return_value=False)
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             # Consume the iterator
             list(client.stream_query("Test prompt"))
             
@@ -301,7 +301,7 @@ class TestStreamQuery:
         config = LLMConfig(auto_inject_system_prompt=False)
         client = LLMClient(config=config)
         
-        with patch('infrastructure.llm.core.requests.post') as mock_post:
+        with patch('infrastructure.llm.core.client.requests.post') as mock_post:
             mock_post.side_effect = requests.exceptions.ConnectionError("Failed")
             
             with pytest.raises(LLMConnectionError):
@@ -324,7 +324,7 @@ class TestStreamQuery:
         mock_response.__enter__ = MagicMock(return_value=mock_response)
         mock_response.__exit__ = MagicMock(return_value=False)
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             chunks = list(client.stream_query("Test prompt"))
             
             # Should skip empty lines
@@ -347,7 +347,7 @@ class TestStreamShort:
         mock_response.__enter__ = MagicMock(return_value=mock_response)
         mock_response.__exit__ = MagicMock(return_value=False)
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             chunks = list(client.stream_short("Test prompt"))
             
             assert len(chunks) > 0
@@ -367,7 +367,7 @@ class TestStreamShort:
         mock_response.__enter__ = MagicMock(return_value=mock_response)
         mock_response.__exit__ = MagicMock(return_value=False)
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             chunks = list(client.stream_short("Test", options=opts))
             
             assert len(chunks) > 0
@@ -389,7 +389,7 @@ class TestStreamLong:
         mock_response.__enter__ = MagicMock(return_value=mock_response)
         mock_response.__exit__ = MagicMock(return_value=False)
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             chunks = list(client.stream_long("Test prompt"))
             
             assert len(chunks) > 0
@@ -409,7 +409,7 @@ class TestStreamLong:
         mock_response.__enter__ = MagicMock(return_value=mock_response)
         mock_response.__exit__ = MagicMock(return_value=False)
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             chunks = list(client.stream_long("Test", options=opts))
             
             assert len(chunks) > 0
@@ -432,7 +432,7 @@ class TestGetAvailableModels:
         }
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.get', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.get', return_value=mock_response):
             models = client.get_available_models()
             
             # Should deduplicate based on base name
@@ -448,7 +448,7 @@ class TestGetAvailableModels:
         mock_response.json.return_value = {"models": []}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.get', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.get', return_value=mock_response):
             models = client.get_available_models()
             
             assert models == []
@@ -458,7 +458,7 @@ class TestGetAvailableModels:
         config = LLMConfig(fallback_models=["fallback1", "fallback2"])
         client = LLMClient(config=config)
         
-        with patch('infrastructure.llm.core.requests.get') as mock_get:
+        with patch('infrastructure.llm.core.client.requests.get') as mock_get:
             mock_get.side_effect = requests.exceptions.ConnectionError("Failed")
             
             models = client.get_available_models()
@@ -477,7 +477,7 @@ class TestCheckConnection:
         mock_response = MagicMock()
         mock_response.status_code = 200
         
-        with patch('infrastructure.llm.core.requests.get', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.get', return_value=mock_response):
             result = client.check_connection()
             
             assert result is True
@@ -489,7 +489,7 @@ class TestCheckConnection:
         mock_response = MagicMock()
         mock_response.status_code = 500
         
-        with patch('infrastructure.llm.core.requests.get', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.get', return_value=mock_response):
             result = client.check_connection()
             
             assert result is False
@@ -498,7 +498,7 @@ class TestCheckConnection:
         """Test check_connection returns False on exception (line 552)."""
         client = LLMClient()
         
-        with patch('infrastructure.llm.core.requests.get') as mock_get:
+        with patch('infrastructure.llm.core.client.requests.get') as mock_get:
             mock_get.side_effect = requests.exceptions.Timeout("Timeout")
             
             result = client.check_connection()
@@ -520,7 +520,7 @@ class TestGenerateResponseDirect:
         mock_response.json.return_value = {"message": {"content": '{"key": "value"}'}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response) as mock_post:
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response) as mock_post:
             result = client._generate_response_direct(
                 "test-model",
                 [{"role": "user", "content": "test"}],
@@ -534,19 +534,21 @@ class TestGenerateResponseDirect:
 
     def test_generate_response_direct_connection_error(self):
         """Test _generate_response_direct raises LLMConnectionError."""
-        config = LLMConfig(auto_inject_system_prompt=False)
+        # Use invalid endpoint to trigger real connection error
+        config = LLMConfig(
+            base_url="http://localhost:99999",
+            timeout=0.1,
+            auto_inject_system_prompt=False
+        )
         client = LLMClient(config=config)
         
-        with patch('infrastructure.llm.core.requests.post') as mock_post:
-            mock_post.side_effect = requests.exceptions.Timeout("Timeout")
-            
-            with pytest.raises(LLMConnectionError) as exc_info:
-                client._generate_response_direct(
-                    "test-model",
-                    [{"role": "user", "content": "test"}]
-                )
-            
-            assert "Failed to connect to Ollama" in str(exc_info.value)
+        with pytest.raises(LLMConnectionError) as exc_info:
+            client._generate_response_direct(
+                "test-model",
+                [{"role": "user", "content": "test"}]
+            )
+        
+        assert "Failed to connect to Ollama" in str(exc_info.value)
 
 
 class TestQueryShortLongOptions:
@@ -563,7 +565,7 @@ class TestQueryShortLongOptions:
         mock_response.json.return_value = {"message": {"content": "Short answer"}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             result = client.query_short("Test prompt", options=opts)
             
             assert result is not None
@@ -579,7 +581,7 @@ class TestQueryShortLongOptions:
         mock_response.json.return_value = {"message": {"content": "Long detailed answer"}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             result = client.query_long("Test prompt", options=opts)
             
             assert result is not None
@@ -593,7 +595,7 @@ class TestQueryShortLongOptions:
         mock_response.json.return_value = {"message": {"content": "Answer"}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             result = client.query_short("Test prompt")
             
             assert result is not None
@@ -607,7 +609,7 @@ class TestQueryShortLongOptions:
         mock_response.json.return_value = {"message": {"content": "Detailed answer"}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             result = client.query_long("Test prompt")
             
             assert result is not None
@@ -632,7 +634,7 @@ class TestQueryResetWithAutoInject:
         mock_response.json.return_value = {"message": {"content": "New response"}}
         mock_response.raise_for_status = MagicMock()
         
-        with patch('infrastructure.llm.core.requests.post', return_value=mock_response):
+        with patch('infrastructure.llm.core.client.requests.post', return_value=mock_response):
             result = client.query("New question", reset_context=True)
             
             messages = client.context.get_messages()

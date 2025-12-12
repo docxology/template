@@ -9,9 +9,9 @@ from pathlib import Path
 
 from infrastructure.literature.workflow import LiteratureWorkflow
 from infrastructure.literature.core import LiteratureSearch
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.core import LiteratureConfig
 from infrastructure.literature.sources import SearchResult
-from infrastructure.literature.summarizer import SummarizationResult
+from infrastructure.literature.summarization import SummarizationResult
 
 
 class TestWorkflowLogging:

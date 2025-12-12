@@ -56,18 +56,20 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from infrastructure.core.logging_utils import get_logger, log_header
 from infrastructure.literature import LiteratureSearch, LiteratureConfig
 from infrastructure.literature.workflow import LiteratureWorkflow
-from infrastructure.literature.progress import ProgressTracker
-from infrastructure.literature.summarizer import PaperSummarizer, SummaryQualityValidator
-from infrastructure.literature.search_orchestrator import (
+from infrastructure.literature.workflow import ProgressTracker
+from infrastructure.literature.summarization import SummarizationEngine, SummaryQualityValidator
+from infrastructure.literature.workflow.orchestrator import (
     run_search_only,
     run_download_only,
     run_search,
+    run_meta_analysis,
     run_cleanup,
     run_llm_operation,
     display_file_locations,
     DEFAULT_LIMIT_PER_KEYWORD,
 )
-from infrastructure.literature.summarize_orchestrator import run_summarize
+from infrastructure.literature.summarization import run_summarize
+from infrastructure.literature.summarization.orchestrator import run_extract_text
 from infrastructure.llm import (
     LLMClient,
     LLMConfig,
@@ -83,6 +85,33 @@ logger = get_logger(__name__)
 
 # Default configuration
 MAX_PARALLEL_SUMMARIES = int(os.environ.get("MAX_PARALLEL_SUMMARIES", "1"))
+
+
+def setup_infrastructure_for_meta_analysis() -> Optional[LiteratureWorkflow]:
+    """Set up infrastructure components for meta-analysis (no Ollama required).
+
+    Returns:
+        Configured LiteratureWorkflow instance, or None if setup fails.
+    """
+    log_header("Setting up Literature Processing Infrastructure")
+    
+    # Initialize literature search
+    lit_config = LiteratureConfig.from_env()
+    logger.info(f"Search limit: {lit_config.default_limit} results per source per keyword")
+    
+    # Log Unpaywall status
+    if lit_config.use_unpaywall:
+        if lit_config.unpaywall_email and lit_config.unpaywall_email != "research@4dresearch.com":
+            logger.info(f"Unpaywall enabled with email: {lit_config.unpaywall_email}")
+        else:
+            logger.info("Unpaywall enabled with default email")
+    
+    literature_search = LiteratureSearch(lit_config)
+    
+    # Create workflow orchestrator (no summarizer needed for meta-analysis)
+    workflow = LiteratureWorkflow(literature_search)
+    
+    return workflow
 
 
 def setup_infrastructure() -> Optional[LiteratureWorkflow]:
@@ -138,7 +167,7 @@ def setup_infrastructure() -> Optional[LiteratureWorkflow]:
 
     # Initialize summarizer
     quality_validator = SummaryQualityValidator()
-    summarizer = PaperSummarizer(llm_client, quality_validator)
+    summarizer = SummarizationEngine(llm_client, quality_validator)
 
     # Initialize progress tracker
     progress_tracker = ProgressTracker(PROGRESS_FILE)
@@ -196,6 +225,11 @@ Examples:
         help="ORCHESTRATED PIPELINE: Search for papers, download PDFs, and generate summaries (interactive)"
     )
     parser.add_argument(
+        "--meta-analysis",
+        action="store_true",
+        help="ORCHESTRATED PIPELINE: Search, download, extract, and perform meta-analysis (PCA, keywords, authors, visualizations)"
+    )
+    parser.add_argument(
         "--search-only",
         action="store_true",
         help="Search for papers and add to bibliography only (no download or summarize)"
@@ -204,6 +238,11 @@ Examples:
         "--download-only",
         action="store_true",
         help="Download PDFs for existing bibliography entries (no search or summarize)"
+    )
+    parser.add_argument(
+        "--extract-text",
+        action="store_true",
+        help="Extract text from PDFs and save to extracted_text/ (no search or download)"
     )
     parser.add_argument(
         "--summarize",
@@ -255,13 +294,13 @@ Examples:
     args = parser.parse_args()
     
     # Require at least one action
-    if not args.search and not args.search_only and not args.download_only and not args.summarize and not args.cleanup and not args.llm_operation:
+    if not args.search and not args.meta_analysis and not args.search_only and not args.download_only and not args.extract_text and not args.summarize and not args.cleanup and not args.llm_operation:
         parser.print_help()
-        print("\nError: Must specify one of --search, --search-only, --download-only, --summarize, --cleanup, or --llm-operation")
+        print("\nError: Must specify one of --search, --meta-analysis, --search-only, --download-only, --extract-text, --summarize, --cleanup, or --llm-operation")
         return 1
 
     # Check for conflicting operations
-    operation_count = sum([args.search, args.search_only, args.download_only, args.summarize, args.cleanup, bool(args.llm_operation)])
+    operation_count = sum([args.search, args.meta_analysis, args.search_only, args.download_only, args.extract_text, args.summarize, args.cleanup, bool(args.llm_operation)])
     if operation_count > 1:
         parser.print_help()
         print("\nError: Can only specify one operation at a time")
@@ -289,12 +328,19 @@ Examples:
     
     try:
         # Set up infrastructure
-        log_header("Setting up Literature Processing Infrastructure")
-        workflow = setup_infrastructure()
+        if args.meta_analysis:
+            # Meta-analysis doesn't require Ollama
+            workflow = setup_infrastructure_for_meta_analysis()
+        else:
+            # Other operations require Ollama
+            workflow = setup_infrastructure()
         
         if workflow is None:
             logger.error("Failed to initialize infrastructure")
-            return 2  # Skip code - Ollama not available
+            if args.meta_analysis:
+                return 1  # Failure
+            else:
+                return 2  # Skip code - Ollama not available
         
         exit_code = 0
 
@@ -303,6 +349,8 @@ Examples:
             exit_code = run_search_only(workflow, keywords=keywords, limit=args.limit)
         elif args.download_only:
             exit_code = run_download_only(workflow)
+        elif args.extract_text:
+            exit_code = run_extract_text(workflow)
         elif args.search:
             exit_code = run_search(
                 workflow,
@@ -311,6 +359,15 @@ Examples:
                 max_parallel_summaries=MAX_PARALLEL_SUMMARIES,
                 clear_pdfs=args.clear_pdfs,
                 clear_summaries=args.clear_summaries,
+                clear_library=args.clear_library,
+                interactive=True
+            )
+        elif args.meta_analysis:
+            exit_code = run_meta_analysis(
+                workflow,
+                keywords=keywords,
+                limit=args.limit,
+                clear_pdfs=args.clear_pdfs,
                 clear_library=args.clear_library,
                 interactive=True
             )

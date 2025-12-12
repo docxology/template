@@ -20,11 +20,12 @@ from infrastructure.core.logging_utils import get_logger, log_success, log_heade
 from infrastructure.core.exceptions import LiteratureSearchError
 from infrastructure.literature.sources import SearchResult
 from infrastructure.literature.core import LiteratureSearch, DownloadResult, SearchStatistics
-from infrastructure.literature.summarizer import PaperSummarizer, SummarizationResult
+from infrastructure.literature.summarization import SummarizationEngine, SummarizationResult
+from infrastructure.literature.summarization.models import SummarizationProgressEvent
 from infrastructure.literature.progress import ProgressTracker, SummarizationProgress
 
 if TYPE_CHECKING:
-    from infrastructure.llm import LLMClient
+    from infrastructure.llm.core.client import LLMClient
 
 logger = get_logger(__name__)
 
@@ -104,7 +105,7 @@ class LiteratureWorkflow:
     def __init__(
         self,
         literature_search: LiteratureSearch,
-        summarizer: Optional[PaperSummarizer] = None,
+        summarizer: Optional[SummarizationEngine] = None,
         progress_tracker: Optional[ProgressTracker] = None
     ):
         """Initialize literature workflow.
@@ -118,7 +119,7 @@ class LiteratureWorkflow:
         self.summarizer = summarizer
         self.progress_tracker = progress_tracker
 
-    def set_summarizer(self, summarizer: PaperSummarizer):
+    def set_summarizer(self, summarizer: SummarizationEngine):
         """Set the summarizer for this workflow."""
         self.summarizer = summarizer
 
@@ -225,7 +226,14 @@ class LiteratureWorkflow:
 
             # Generate summaries
             log_header("GENERATING SUMMARIES")
-            logger.info(f"Using up to {max_parallel_summaries} parallel workers")
+            logger.info(f"Processing {len(downloaded)} papers with up to {max_parallel_summaries} parallel workers")
+            
+            if self.progress_tracker and self.progress_tracker.current_progress:
+                logger.info(
+                    f"Progress: {self.progress_tracker.current_progress.completed_summaries}/"
+                    f"{self.progress_tracker.current_progress.total_papers} completed "
+                    f"({self.progress_tracker.current_progress.completion_percentage:.1f}%)"
+                )
 
             summarization_results = self._summarize_papers_parallel(
                 downloaded, max_parallel_summaries
@@ -542,18 +550,30 @@ class LiteratureWorkflow:
         to_process_count = len(to_process)
 
         if skipped_count > 0:
-            logger.info(f"Skipped {skipped_count} already summarized")
+            logger.info(f"Skipped {skipped_count} already summarized paper(s)")
 
         if not to_process:
+            logger.info("All papers already summarized, no processing needed")
             return skipped_results
 
         processing_mode = "parallel" if max_workers > 1 else "sequential"
-        logger.info(f"Processing {to_process_count} papers ({processing_mode}, {max_workers} workers)")
+        logger.info(
+            f"Processing {to_process_count} paper(s) ({processing_mode} mode, "
+            f"{max_workers} worker(s))"
+        )
+        
+        # Log progress if tracker available
+        if self.progress_tracker and self.progress_tracker.current_progress:
+            pending = self.progress_tracker.current_progress.pending_summaries
+            completed = self.progress_tracker.current_progress.completed_summaries
+            total = self.progress_tracker.current_progress.total_papers
+            logger.info(f"Overall progress: {completed}/{total} completed, {pending} pending")
 
         results = skipped_results.copy()
 
         if max_workers > 1:
             # Parallel processing
+            completed_count = len(skipped_results)
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 future_to_paper = {
                     executor.submit(self._summarize_single_paper, result, pdf_path): (result, pdf_path)
@@ -563,6 +583,7 @@ class LiteratureWorkflow:
                 for future in as_completed(future_to_paper):
                     result, pdf_path = future_to_paper[future]
                     citation_key = pdf_path.stem
+                    completed_count += 1
 
                     try:
                         summary_result = future.result()
@@ -576,12 +597,42 @@ class LiteratureWorkflow:
                                     file_size = f"{size_bytes:,}B"
                                 except Exception:
                                     pass
-                            logger.info(f"✓ {citation_key} ({file_size}) - {summary_result.generation_time:.1f}s")
+                            
+                            # Log with progress indicator
+                            progress_indicator = f"[{completed_count}/{total_papers}]"
+                            logger.info(
+                                f"{progress_indicator} ✓ {citation_key} ({file_size}) - "
+                                f"{summary_result.generation_time:.1f}s, "
+                                f"{summary_result.output_words} words, "
+                                f"quality: {summary_result.quality_score:.2f}"
+                            )
+                            
+                            # Update progress tracker if available
+                            if self.progress_tracker:
+                                self.progress_tracker.update_entry_status(
+                                    citation_key, "summarized",
+                                    summary_path=str(summary_result.summary_path) if summary_result.summary_path else None,
+                                    summary_attempts=summary_result.attempts,
+                                    summary_time=summary_result.generation_time
+                                )
                         else:
-                            logger.warning(f"✗ {citation_key}: {summary_result.error}")
+                            progress_indicator = f"[{completed_count}/{total_papers}]"
+                            logger.warning(
+                                f"{progress_indicator} ✗ {citation_key}: {summary_result.error}"
+                            )
+                            
+                            # Update progress tracker for failures
+                            if self.progress_tracker:
+                                self.progress_tracker.update_entry_status(
+                                    citation_key, "failed",
+                                    last_error=summary_result.error,
+                                    summary_attempts=summary_result.attempts
+                                )
 
                     except Exception as e:
-                        logger.error(f"Error processing {citation_key}: {e}")
+                        completed_count += 1
+                        progress_indicator = f"[{completed_count}/{total_papers}]"
+                        logger.error(f"{progress_indicator} Error processing {citation_key}: {e}")
                         results.append(SummarizationResult(
                             citation_key=citation_key,
                             success=False,
@@ -589,8 +640,13 @@ class LiteratureWorkflow:
                         ))
         else:
             # Sequential processing
-            for result, pdf_path in to_process:
+            completed_count = len(skipped_results)
+            for i, (result, pdf_path) in enumerate(to_process, 1):
                 citation_key = pdf_path.stem
+                completed_count += 1
+                progress_indicator = f"[{completed_count}/{total_papers}]"
+                
+                logger.info(f"{progress_indicator} Processing {citation_key}...")
                 summary_result = self._summarize_single_paper(result, pdf_path)
                 results.append(summary_result)
 
@@ -602,9 +658,16 @@ class LiteratureWorkflow:
                             file_size = f"{size_bytes:,}B"
                         except Exception:
                             pass
-                    logger.info(f"✓ {citation_key} ({file_size}) - {summary_result.generation_time:.1f}s")
+                    logger.info(
+                        f"{progress_indicator} ✓ {citation_key} ({file_size}) - "
+                        f"{summary_result.generation_time:.1f}s, "
+                        f"{summary_result.output_words} words, "
+                        f"quality: {summary_result.quality_score:.2f}"
+                    )
                 else:
-                    logger.warning(f"✗ {citation_key}: {summary_result.error}")
+                    logger.warning(
+                        f"{progress_indicator} ✗ {citation_key}: {summary_result.error}"
+                    )
 
         # Calculate statistics
         total_duration = time.time() - start_time
@@ -656,7 +719,7 @@ class LiteratureWorkflow:
 
         # Check if summary already exists (defensive check, should have been filtered earlier)
         if summary_path.exists():
-            logger.info(f"Summary already exists, skipping: {summary_path.name}")
+            logger.debug(f"[{citation_key}] Summary already exists, skipping: {summary_path.name}")
             # Return success result with existing path
             skipped_result = SummarizationResult(
                 citation_key=citation_key,
@@ -674,24 +737,128 @@ class LiteratureWorkflow:
                 )
             return skipped_result
 
+        # Get paper number for display (if available from progress tracker)
+        paper_number = None
+        if self.progress_tracker and self.progress_tracker.current_progress:
+            # Find paper index in entries
+            entries_list = list(self.progress_tracker.current_progress.entries.keys())
+            try:
+                paper_index = entries_list.index(citation_key)
+                paper_number = paper_index + 1
+                total_papers = self.progress_tracker.current_progress.total_papers
+                paper_number_str = f"[{paper_number}/{total_papers}] "
+            except (ValueError, IndexError):
+                paper_number_str = ""
+        else:
+            paper_number_str = ""
+        
         # Update progress
+        logger.info(f"{paper_number_str}[{citation_key}] Starting summarization for: {result.title[:60]}...")
         if self.progress_tracker:
             self.progress_tracker.update_entry_status(citation_key, "processing")
 
-        # Generate summary
-        summary_result = self.summarizer.summarize_paper(result, pdf_path)
+        # Create progress callback for real-time updates
+        def progress_callback(event: SummarizationProgressEvent):
+            """Handle progress events and update tracker/logging."""
+            try:
+                # Ensure citation_key is available (fallback to paper_number_str or citation_key from outer scope)
+                event_citation_key = event.citation_key or citation_key or "unknown"
+                
+                # Format stage name for display
+                stage_display = {
+                    "pdf_extraction": "PDF extraction",
+                    "context_extraction": "Context extraction",
+                    "draft_generation": "Draft generation",
+                    "validation": "Validation",
+                    "refinement": "Refinement"
+                }.get(event.stage, event.stage)
+                
+                # Log progress with formatted output (always include citation_key for context)
+                if event.status == "started":
+                    logger.info(
+                        f"{paper_number_str}[{event_citation_key}]  → {stage_display}: {event.message or 'Starting...'}"
+                    )
+                elif event.status == "in_progress":
+                    # Handle streaming progress updates
+                    if event.metadata.get("streaming"):
+                        chars = event.metadata.get("chars_received", 0)
+                        words = event.metadata.get("words_received", 0)
+                        elapsed = event.metadata.get("elapsed_time", 0)
+                        chars_per_sec = event.metadata.get("chars_per_sec", 0)
+                        rate_info = f", {chars_per_sec:.1f} chars/s" if chars_per_sec > 0 else ""
+                        logger.info(
+                            f"{paper_number_str}[{event_citation_key}]  ↻ {stage_display}: "
+                            f"Streaming: {chars:,} chars, {words:,} words ({elapsed:.1f}s elapsed{rate_info})"
+                        )
+                    else:
+                        logger.info(
+                            f"{paper_number_str}[{event_citation_key}]  ↻ {stage_display}: "
+                            f"{event.message or 'In progress...'}"
+                        )
+                elif event.status == "completed":
+                    # Format completion message with metadata
+                    msg_parts = [event.message or "Completed"]
+                    if event.metadata:
+                        if "time" in event.metadata:
+                            msg_parts.append(f"({event.metadata['time']:.2f}s)")
+                        elif "elapsed_time" in event.metadata:
+                            msg_parts.append(f"({event.metadata['elapsed_time']:.2f}s)")
+                        if "words" in event.metadata or "words_received" in event.metadata:
+                            words = event.metadata.get("words") or event.metadata.get("words_received", 0)
+                            msg_parts.append(f"{words} words")
+                        if "chars" in event.metadata or "chars_received" in event.metadata:
+                            chars = event.metadata.get("chars") or event.metadata.get("chars_received", 0)
+                            msg_parts.append(f"{chars:,} chars")
+                        if "score" in event.metadata:
+                            msg_parts.append(f"score: {event.metadata['score']:.2f}")
+                    logger.info(
+                        f"{paper_number_str}[{event_citation_key}]  ✓ {stage_display}: {' '.join(msg_parts)}"
+                    )
+                elif event.status == "failed":
+                    # Enhanced error logging with context
+                    error_context = []
+                    if event.metadata:
+                        if "error_type" in event.metadata:
+                            error_context.append(f"type: {event.metadata['error_type']}")
+                        if "elapsed_time" in event.metadata:
+                            error_context.append(f"elapsed: {event.metadata['elapsed_time']:.2f}s")
+                        if "chunks_received" in event.metadata:
+                            error_context.append(f"chunks: {event.metadata['chunks_received']}")
+                    context_str = f" ({', '.join(error_context)})" if error_context else ""
+                    logger.error(
+                        f"{paper_number_str}[{event_citation_key}]  ✗ {stage_display} failed: "
+                        f"{event.message or 'Unknown error'}{context_str}"
+                    )
+            except Exception as callback_error:
+                # Prevent progress callback failures from breaking the main process
+                # Use fallback citation_key from outer scope if event.citation_key is missing
+                fallback_key = event.citation_key if hasattr(event, 'citation_key') and event.citation_key else citation_key or "unknown"
+                logger.warning(
+                    f"[{fallback_key}] Progress callback error: {callback_error}. "
+                    f"Event: {getattr(event, 'stage', 'unknown')}/{getattr(event, 'status', 'unknown')}"
+                )
+        
+        # Generate summary with progress callback
+        summary_result = self.summarizer.summarize_paper(
+            result, 
+            pdf_path,
+            progress_callback=progress_callback
+        )
 
-        # Save summary to disk if successful
-        if summary_result.success and summary_result.summary_text:
+        # Save summary to disk if summary text exists (always save, even if validation failed)
+        if summary_result.summary_text:
             try:
                 summary_path = self.summarizer.save_summary(
-                    result, summary_result, Path("literature/summaries")
+                    result, summary_result, Path("literature/summaries"), pdf_path=pdf_path
                 )
                 summary_result.summary_path = summary_path
+                if not summary_result.success:
+                    logger.info(f"[{citation_key}] Summary saved despite validation failure (quality score: {summary_result.quality_score:.2f})")
             except Exception as e:
                 logger.error(f"Failed to save summary for {citation_key}: {e}")
-                summary_result.success = False
-                summary_result.error = f"Summary generation succeeded but save failed: {e}"
+                if summary_result.success:
+                    summary_result.success = False
+                    summary_result.error = f"Summary generation succeeded but save failed: {e}"
 
         # Update progress based on result
         if self.progress_tracker:
@@ -713,13 +880,13 @@ class LiteratureWorkflow:
 
     def save_summaries(
         self,
-        results: List[Tuple[SearchResult, SummarizationResult]],
+        results: List[Tuple[SearchResult, SummarizationResult, Optional[Path]]],
         output_dir: Path
     ) -> List[Path]:
         """Save successful summaries to files.
 
         Args:
-            results: List of (search_result, summarization_result) tuples.
+            results: List of (search_result, summarization_result, pdf_path) tuples.
             output_dir: Directory to save summaries.
 
         Returns:
@@ -727,11 +894,19 @@ class LiteratureWorkflow:
         """
         saved_paths = []
 
-        for search_result, summary_result in results:
-            if summary_result.success and summary_result.summary_text:
+        for item in results:
+            if len(item) == 3:
+                search_result, summary_result, pdf_path = item
+            else:
+                # Backward compatibility: assume 2-tuple
+                search_result, summary_result = item
+                pdf_path = None
+            
+            # Always save if summary_text exists (even if validation failed)
+            if summary_result.summary_text:
                 try:
                     summary_path = self.summarizer.save_summary(
-                        search_result, summary_result, output_dir
+                        search_result, summary_result, output_dir, pdf_path=pdf_path
                     )
                     saved_paths.append(summary_path)
                     log_success(f"Saved: {summary_path.name}")

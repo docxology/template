@@ -221,8 +221,9 @@ if __name__ == "__main__":
             sys.executable, str(test_script)
         ], cwd=str(project_dir), capture_output=True, text=True)
 
-        # Debug: Print stdout and stderr if the script failed
+        # Debug: Log stdout and stderr if the script failed
         if result.returncode != 0:
+            # Keep print for test debugging - this is acceptable for test failure diagnostics
             print("STDOUT:", result.stdout)
             print("STDERR:", result.stderr)
 

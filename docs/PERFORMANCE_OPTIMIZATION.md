@@ -45,7 +45,7 @@ The pipeline automatically identifies bottlenecks:
 
 ```bash
 # Run pipeline with timing
-time ./run.sh --pipeline
+time ./run_manuscript.sh --pipeline
 
 # Check individual stage times
 python3 scripts/00_setup_environment.py
@@ -117,7 +117,7 @@ with ProcessPoolExecutor() as executor:
 
 ```bash
 # Skip LLM reviews during development
-./run.sh --pipeline  # LLM stages are optional
+./run_manuscript.sh --pipeline  # LLM stages are optional
 
 # Use faster model
 export LLM_MODEL="llama3:8b"  # Smaller, faster model

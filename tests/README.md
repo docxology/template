@@ -1,6 +1,6 @@
 # tests/ - Test Suite
 
-Comprehensive test suite ensuring coverage requirements for both infrastructure and project modules (60% infrastructure minimum, 90% project minimum). Current status: **99.88% project**, **61.48% infrastructure**, **2175 tests passing** (1855 infra + 320 project).
+Comprehensive test suite ensuring coverage requirements for both infrastructure and project modules (60% infrastructure minimum, 90% project minimum). Current status: **99.88% project**, **61.48% infrastructure**, **2245 tests passing** (1894 infra [8 skipped] + 351 project).
 
 ## Quick Start
 

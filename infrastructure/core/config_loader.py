@@ -209,3 +209,57 @@ def get_translation_languages(repo_root: Path | str) -> List[str]:
     languages = translations_config.get('languages', [])
     return languages if isinstance(languages, list) else []
 
+
+def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
+    """Get testing configuration from config.yaml.
+    
+    Reads the testing section from config.yaml and returns
+    configuration values for test failure tolerance.
+    
+    Args:
+        repo_root: Root directory of the repository
+        
+    Returns:
+        Dictionary with testing configuration values:
+        - max_test_failures: Maximum acceptable test failures (default: 0)
+        - max_infra_test_failures: Maximum acceptable infrastructure test failures (default: 0)
+        - max_project_test_failures: Maximum acceptable project test failures (default: 0)
+        Returns empty dict if config file not found or testing section missing
+    """
+    config_path = find_config_file(repo_root)
+    if not config_path:
+        return {}
+    
+    config = load_config(config_path)
+    if not config:
+        return {}
+    
+    testing_config = config.get('testing', {})
+    if not testing_config:
+        return {}
+    
+    result: Dict[str, Any] = {}
+    
+    # Read max_test_failures (general/default)
+    if 'max_test_failures' in testing_config:
+        try:
+            result['max_test_failures'] = int(testing_config['max_test_failures'])
+        except (ValueError, TypeError):
+            pass  # Invalid value, skip
+    
+    # Read max_infra_test_failures (infrastructure-specific)
+    if 'max_infra_test_failures' in testing_config:
+        try:
+            result['max_infra_test_failures'] = int(testing_config['max_infra_test_failures'])
+        except (ValueError, TypeError):
+            pass  # Invalid value, skip
+    
+    # Read max_project_test_failures (project-specific)
+    if 'max_project_test_failures' in testing_config:
+        try:
+            result['max_project_test_failures'] = int(testing_config['max_project_test_failures'])
+        except (ValueError, TypeError):
+            pass  # Invalid value, skip
+    
+    return result
+

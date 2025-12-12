@@ -1359,6 +1359,61 @@ SyntaxWarning: invalid escape sequence '\m' in line 257
 
 **Status:** ✅ **FIXED** - These warnings have been resolved by using raw string literals (`r"..."`).
 
+## Edge Cases and Unusual Scenarios
+
+### Very Large Manuscripts (100+ pages)
+
+**Symptoms:**
+- PDF generation takes >5 minutes
+- LaTeX compilation runs out of memory
+- Cross-references fail to resolve
+
+**Solutions:**
+1. **Split into sections**: Use individual section PDFs instead of combined
+2. **Increase LaTeX memory**: Set `max_print_line=10000` in LaTeX config
+3. **Process incrementally**: Generate sections separately
+4. **Optimize figures**: Compress large images before inclusion
+
+### Unicode and Special Characters
+
+**Symptoms:**
+- Special characters not rendering in PDF
+- Encoding errors during build
+- Bibliography entries corrupted
+
+**Solutions:**
+1. **Use UTF-8 encoding**: Ensure all files are UTF-8 encoded
+2. **LaTeX packages**: Ensure `inputenc` and `fontenc` packages loaded
+3. **Escape LaTeX specials**: Use `\textbackslash` for backslash, etc.
+4. **BibTeX encoding**: Use `@comment{...}` for encoding declaration in .bib files
+
+### Multiple Python Versions
+
+**Symptoms:**
+- Tests pass locally but fail in CI
+- Import errors with different Python versions
+- Dependency resolution conflicts
+
+**Solutions:**
+1. **Pin Python version**: Use `pyproject.toml` to specify `requires-python = ">=3.10"`
+2. **Use uv**: `uv sync` ensures consistent environment
+3. **Check version**: `python --version` should match requirements
+4. **Virtual environment**: Always use project-specific venv
+
+### Network-Dependent Operations Failing
+
+**Symptoms:**
+- Literature search fails
+- LLM operations timeout
+- External API calls fail
+
+**Solutions:**
+1. **Check connectivity**: `ping` or `curl` to verify network
+2. **Proxy settings**: Configure HTTP_PROXY if behind firewall
+3. **Timeout settings**: Increase timeout values in configuration
+4. **Offline mode**: Use cached results when available
+5. **Skip optional features**: Use `--skip-llm` or similar flags
+
 ## Getting Help
 
 ### Before Asking for Help

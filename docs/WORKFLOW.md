@@ -1,6 +1,16 @@
 # Generic Project Development Workflow: The Pipeline Orchestrator Paradigm
 
-This document explains the complete development workflow that ensures source code, tests, and documentation remain in perfect coherence. For related information, see **[`docs/HOW_TO_USE.md`](HOW_TO_USE.md)** for complete usage guidance, **[`docs/ARCHITECTURE.md`](ARCHITECTURE.md)**, **[`docs/THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md)**, and **[`README.md`](README.md)**.
+> **Complete development workflow** ensuring source code, tests, and documentation coherence
+
+**Quick Reference:** [How To Use](HOW_TO_USE.md) | [Architecture](ARCHITECTURE.md) | [Common Workflows](COMMON_WORKFLOWS.md)
+
+This document explains the complete development workflow that ensures source code, tests, and documentation remain in perfect coherence.
+
+**For related information:**
+- **[How To Use](HOW_TO_USE.md)** - Complete usage guide from basic to advanced
+- **[Architecture](ARCHITECTURE.md)** - System design overview
+- **[Thin Orchestrator Summary](THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation details
+- **[Common Workflows](COMMON_WORKFLOWS.md)** - Step-by-step recipes for common tasks
 
 ## Overview
 
@@ -65,7 +75,7 @@ graph TB
 
 ## How the Pipeline Orchestrator Works with Markdown and Code
 
-The `scripts/run_all.py` orchestrator (or `./run.sh --pipeline`) executes 6 stages sequentially, ensuring complete coherence between all components:
+The `scripts/run_all.py` orchestrator (or `./run_manuscript.sh --pipeline`) executes 6 stages sequentially, ensuring complete coherence between all components:
 
 ### 1. Code Validation Phase
 - **Runs all generation scripts** - This validates that `src/` code works correctly

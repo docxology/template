@@ -23,7 +23,7 @@ infrastructure/<module>/
 
 1. **Generic First**: Reusable across all projects
 2. **Domain-Independent**: No research-specific assumptions
-3. **Well-Tested**: 49% minimum coverage with real data (currently 55.89% achieved)
+3. **Well-Tested**: 60% minimum coverage with real data (currently 61.48% achieved)
 4. **Well-Documented**: Complete AGENTS.md and README.md
 5. **Type-Hinted**: All public APIs have type annotations
 
@@ -42,7 +42,7 @@ tests/infrastructure/test_<module>/
 
 ### Coverage Requirements
 
-- **49% minimum coverage** required for infrastructure code (currently 55.89% achieved)
+- **60% minimum coverage** required for infrastructure code (currently 61.48% achieved)
 - **No mock methods** - test with real data
 - **Integration tests** demonstrating complete workflows
 - **Edge cases** and error conditions tested
@@ -253,7 +253,7 @@ Update these scripts to discover and use new infrastructure modules as needed.
 
 Before committing:
 
-- [ ] Test coverage requirements met (49% minimum, currently 55.89% achieved)
+- [ ] Test coverage requirements met (60% minimum, currently 61.48% achieved)
 - [ ] All tests pass
 - [ ] AGENTS.md complete
 - [ ] README.md written
@@ -457,7 +457,7 @@ if __name__ == "__main__":
 Before merging a new infrastructure module:
 
 - [ ] Module structure matches recommended organization
-- [ ] Test coverage requirements met (49% minimum, currently 55.89% achieved)
+- [ ] Test coverage requirements met (60% minimum, currently 61.48% achieved)
 - [ ] All public APIs have type hints
 - [ ] AGENTS.md covers all features
 - [ ] README.md has working quick-start

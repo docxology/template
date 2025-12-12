@@ -1,0 +1,1326 @@
+Spin glass systems as collective active inference
+Conor Heins∗1-4, Brennan Klein1,4,5, Daphne Demekas4,6,
+Miguel Aguilera7,8, and Christopher Buckley1,7,8
+1VERSES Research Labs, Los Angeles, California, USA
+2Department of Collective Behaviour, Max Planck Institute of
+Animal Behavior, 78464 Konstanz, Germany
+3Department of Biology and Centre for the Advanced Study
+of Collective Behaviour, University of Konstanz, 78464 Konstanz, Germany
+4Network Science Institute, Northeastern University, Boston, Massachusetts, USA
+5Laboratory for the Modeling of Biological and Socio-Technical Systems,
+Northeastern University, Boston, Massachusetts, USA
+6Birkbeck Department of Film, Media and Cultural Studies, London, UK
+7Sussex AI Group, Department of Informatics, University of Sussex, Brighton, UK
+8Sackler Centre for Consciousness Science, University of Sussex, Brighton, UK
+July 15, 2022
+Abstract
+An open question in the study of emergent behaviour in multi-agent Bayesian sys-
+tems is the relationship, if any, between individual and collective inference. In this
+paper we explore the correspondence between generative models that exist at two dis-
+tinct scales, using spin glass models as a sandbox system to investigate this question.
+We show that the collective dynamics of a speciﬁc type of active inference agent is equiv-
+alent to sampling from the stationary distribution of a spin glass system. A collective
+of speciﬁcally-designed active inference agents can thus be described as implementing
+a form of sampling-based inference (namely, from a Boltzmann machine) at the higher
+level. However, this equivalence is very fragile, breaking upon simple modiﬁcations
+to the generative models of the individual agents or the nature of their interactions.
+We discuss the implications of this correspondence and its fragility for the study of
+multiscale systems composed of Bayesian agents.
+1 Introduction
+Emergent phenomena in multi-agent systems are central to the study of self-organizing, com-
+plex systems, yet the relationship between individual properties and group-level phenomena
+∗conor.heins@gmail.com
+1
+arXiv:2207.06970v1  [cond-mat.dis-nn]  14 Jul 2022
+remains opaque and lacks formal explanation. One principled approach to understanding
+such phenomena is oﬀered by the Free Energy Principle and so-called ‘multiscale active
+inference’ [1, 2]. Proponents of this multiscale approach propose that groups of individually-
+Bayesian agents necessarily entail an emergent, higher-order Bayesian agent — in other
+words, systems are ‘agents all the way down’ by deﬁnition [2–6]. However, to date, there
+has been little theoretical or modeling work aimed at investigating whether this proposition
+is true in general or even demonstrating an existence proof in a speciﬁc system.
+In this work we investigate this proposal by building a network of active inference agents
+that collectively implement a spin glass system. Spin glasses are a well-studied model class
+with a long history in statistical physics and equilibrium thermodynamics [7, 8]. In the
+context of machine learning and computational neuroscience, spin glass systems can be tied
+to models of Bayesian inference and associative memory, particularly in the form of Hopﬁeld
+networks and undirected graphical models like Boltzmann machines [9, 10]. Boltzmann
+machines are a canonical example of an energy-based model in machine learning — they are
+deﬁned by a global energy function and are analytically equivalent to a particular sort of spin
+glass model. The Boltzmann machine can straightforwardly be shown to be an inferential
+model by conditioning on the states of particular spins and sampling from the posterior
+distribution over the remaining spins’ states [11, 12]. In doing so, Boltzmann machines and
+spin glass systems can be described as performing Bayesian inference about the latent causes
+(spin conﬁgurations) of the ‘data’ (conditioned spins).
+In this paper, we set out to investigate whether an inference machine (in our case, a
+Boltzmann machine) that exists at a ‘higher-level’, can be hierarchically decomposed into
+an ensemble of agents collectively performing active inference at a ‘lower level.’ We show a
+simple but rigorous equivalence between collective active inference and spin glass systems,
+providing the ﬁrst steps for future quantitative study into the relationship between individual
+and collective generative models. We show that a group of active inference agents, equipped
+with a simple but very speciﬁc generative model, collectively sample from the stationary
+distribution of a spin glass system at the higher scale. This can be connected to a particular
+form of sampling known as Glauber dynamics [7, 13]. When we further condition on the
+states of particular agents, then the system can be interpreted as collectively performing
+a form of sampling-based posterior inference over the conﬁgurations of the unconditioned
+agents, i.e., Boltzmann machine inference.
+This paper is structured as follows: ﬁrst, we specify the generative model that each spin
+site in a multi-agent spin glass system is equipped with, noting that the single agents are con-
+structed explicitly such that their interactions at the lower-level lead to a spin glass system at
+the higher level. Then, we establish the equivalence between this multi-agent active inference
+process and Glauber dynamics, a scheme that samples from the stationary distribution of a
+spin glass system. We then generalize this result to sampling-based inference in Boltzmann
+machines by relaxing the homogeneous parameterization of each agent’s generative models.
+We draw exact equivalences between the precisions of each agent’s generative model and
+the parameters of a higher-level Boltzmann machine. We conclude by noting the fragility
+of the equivalence between multi-agent active inference and sampling from a collective spin
+2
+glass system, and discuss the implications of our results for the study of emergent Bayesian
+inference in multiscale systems.
+2 Generative model for a single spin
+We begin by constructing a generative model for a single Bayesian agent, which we imagine
+as a single spin in a collective of similar agents. From the perspective of this single ‘focal
+agent’ or spin, this generative model describes the agent’s internal model of how the local
+environment generates its sensory data. Throughout this section we will take the perspective
+of this single focal agent, keeping in mind that any given agent is embedded in a larger system
+of other agents.
+2.1 States and observations
+We begin by specifying the state-space of observations and hidden states that characterize
+the focal agent’s ‘world.’ The focal agent’s observations or sensations are comprised of a
+collection of binary spin states˜σ = {σj : j ∈M}where σj = ±1 and M is the set of other
+spins that the focal agent has direct access to. In other words, the agent directly observes
+the spin states of neighbouring agents (but not its own).
+The focal agent assumes these observed spin states ˜σ all depend on a single, binary
+latent variable z — the ‘hidden spin state’, which could also be interpreted as a coarse-
+grained ‘average spin’ of its neighbours. Having speciﬁed observations˜σ and latent states
+z, the full generative model can be written as a joint distribution over observations and the
+hidden spin state,P(˜σ,z). This in turn factorizes into a set of distributions that describe
+the likelihood over observations, given the latent stateP(˜σ|z), and prior beliefs about the
+latent stateP(z):
+P(˜σ,z) = P(˜σ|z)P(z)
+We parameterize the likelihood and prior distributions as Bernoulli distributions (ex-
+pressed in a convenient exponential form):
+P(˜σ|z; γ) =
+∏
+j∈M
+exp(γσjz)
+2 cosh(γz)
+Likelihood
+P(z; ζ) = exp(ζz)
+2 cosh(ζz)
+Prior
+The likelihood factorizes into a product of independent Bernoulli distributions over each
+neighbouring spin σj. The full likelihood is parameterized with a single sensory precision
+parameter γ whose magnitude captures the focal agent’s assumption about how reliably
+neighbouring spin statesσj indicate the identity of the latent statez. A positiveγ indicates
+that σj lends evidence toz being aligned withσj, whereas a negativeγ means thatσj lends
+evidence toz being opposite toσj.
+3
+(A) Spin system (B) A single spin (agent)
+(C) Posterior over hidden states
+σl = σi = σj =
+σm=
+σk=
+σl = σi = σj =
+σm=
+σk =
+−10 −5 0 5 10
+Spin difference, ∆σ
+0.0
+0.2
+0.4
+0.6
+0.8
+1.0
+Posterior probability
+−10 −5 0 5 10
+Spin difference, ∆σ
+Sensory data: ˜σ = {σj : j ∈ M} = { , , , } ;
+where K = |M|
+Hidden spin state: z
+Sensory precision: γ
+Prior precision: ζ
+P(z; ζ) = exp(ζz)
+2 cosh(ζz) = exp
+(
+ζz − log(2 cosh(ζ))
+)
+P(σj|z; γ) = exp(γσjz)
+2 cosh(γz)
+=
+
+
+1
+1 + exp(−2γ)
+1
+1 + exp(2γ)
+1
+1 + exp(2γ)
+1
+1 + exp(−2γ)
+
+
+z = −1 z = +1
+conditional Bernoulli distributions over σj
+assume conditional independence
+(likelihood factorizes over K neighbors)
+P(˜σ|z; γ) = ∏
+j∈M
+exp(γσjz)
+2 cosh(γz) = exp
+(
+zγ ∑
+j∈M
+σj − K log
+(
+2 cosh(γz)
+))
+measure of ”reliability” of sensory information from
+neighbors; either uniform or heterogeneous over M
+P(˜σ, z)
+over hidden states
+P(z = +1|˜σ, γ, ζ) = 1
+1 + exp
+(
+− 2(ζ + γ∆σ)
+)where ∆σ = ∑
+j∈M
+σj
+sampled from posterior
+over control states
+σi ∼ Q(ut; φ∗
+u) where φu ≈ φz for 0 ≤ φz ≤ 1 and φz = P(z = +1|˜σ, γ, ζ)
+where σ ∈ {−1, +1} = { , }
+Figure 1: Schematic illustration of individual and collective dynamics. (A)Exam-
+ple of a system of 16 spin sites connected via a 2-D lattice, each in a state ofσ ∈{−1,+1}
+(green down-arrow or yellow up-arrow above), with a focal agent and its spin,σi = −1,
+highlighted in blue. (B) Generative model of a single spin.(C) The posterior belief over
+z = +1 as a function of the spin diﬀerence∆σ. Left: The steepness of the function is tuned
+by γ (ζ = 0.0 shown). Right: The horizontal shift depends onζ (γ = 0.5 shown).
+The prior overz is also a Bernoulli distribution, parameterized by a precisionζ that acts
+as a ‘bias’ in the focal agent’s prior belief about the value ofz. When ζ >0, the focal agent
+believes the ‘UP’ (z = +1) state is more likelya priori, whereas ζ <0 indicates that the
+agent believes thatz = −1 is more likely, with the magnitude ofζ reﬂecting the strength or
+conﬁdence of this prior belief.
+2.2 Bayesian inference of hidden states
+Having speciﬁed a generative model, we now consider (from the perspective of a focal agent)
+the problem of estimatingz, given observations˜σ = {σj : j ∈M}and generative model
+parameters γ,ζ. This is the problem of Bayesian inference, speciﬁcally the calculation of
+the posterior distribution overz. The conjugate-exponential form of the generative model
+means that the Bayesian posterior can be calculated exactly, and has a Bernoulli form that
+depends on˜σ and z:
+4
+P(z|˜σ; γ,ζ) = P(˜σ,z; γ,ζ)
+P(˜σ; γ,ζ) =
+exp
+(
+z(ζ+ γ∑
+j σj)
+)
+2 cosh
+(
+ζ+ γ∑
+j σj
+) (1)
+If we ﬁx the hidden statez to a particular value (e.g.z = +1), then we arrive at a simple
+expression for the posterior probability that the hidden spin state is in the ‘UP’ state, given
+the observations and the generative model parametersγ,ζ. The posterior belief expressed
+as the sum of sensory input∑
+j σj assumes a logistic or sigmoid form. Hereafter we refer
+to the sum of observed spin states as the ‘spin diﬀerence’∆σ = ∑
+j σj, since this sum is
+equivalent to the diﬀerence in the number of positive (σj = +1 ) and negative (σj = −1)
+spins. Intuitively, the steepness and horizontal shift of this logistic function are determined
+by the likelihood and prior precisions:
+P(z = +1|˜σ,γ,ζ ) = 1
+1 + exp (−2(ζ+ γ∆σ)) (2)
+Figure 1C shows the eﬀect of varying the likelihood and prior precisions on the posterior
+belief overzas a function of∆σ. We can also express the posterior as a Bernoulli distribution
+using the more common form, with parameterφz:
+P(z|˜σ,γ,ζ ; φz) = (1 −φz)1−z+1
+2 φ
+z+1
+2
+z
+φz = 1
+1 + exp(−2(ζ+ γ∆σ)) (3)
+We now have a simple update rule that expresses how a focal agent updates its beliefs
+about z in response to observed spins˜σ. This sigmoid belief update has a clear, intuitive
+relationship to the parameters of the focal agent’s generative model, withγ encoding the
+sensitivity of the belief to small changes in∆σ and ζ encoding a ‘bias’ that skews the belief
+towards either−1 or +1. In the next section, we connect the generation of spins themselves
+to an active inference process, that leverages the Bayesian estimation problem of the current
+section to determine a focal agent’s inference of its own spin state.
+2.3 Active inference of spin states
+Having addressed the issue of Bayesian inference or state estimation, we can now specify
+a mechanism by which agents generate their own spin states. These generated spin states
+will then serve as observations for the neighbours to whom the focal agent is connected.
+This turns into a problem of belief-guided action selection or decision-making. To enable
+agents to sample spin states as a function of their beliefs, we supplement each agent’s current
+generative model with an extra random variable that corresponds tocontrol states, and some
+forward model of how those control states determine observations. We useactive inferenceto
+5
+optimize a posterior belief over these control states [14–16]; an agent can then act to change
+its spin state by sampling from this posterior. By equipping each agent with a particular type
+of forward model of how its actions impact observations, we can formally tie the collective
+dynamics of active inference agents with this generative model to a sampling scheme from
+a spin glass model. Appendix B walks through the steps needed to add a representation
+of control states into the generative model introduced in the previous section, and perform
+active inference with respect to this augmented generative model.
+Active inference agents entertain posterior beliefs not only about the hidden states of
+the world, but also about how their own actions aﬀect the world. Posterior beliefs about
+actions are denotedQ(u; φu), whereuis a random variable corresponding to actions andφu
+are the parameters of this belief. As opposed to the analytic posterior over hidden statesz,
+Q(u; φu) is an approximate posterior, optimized using variational Bayesian inference [17]. In
+our focal agent’s simple action model, control states have the same support as hidden states,
+i.e. u= ±1. The value ofurepresents a possible spin action to take (‘UP’ vs. ‘DOWN’). We
+parameterize Q(u; φu) as a Bernoulli distribution with parameterφu, which itself encodes
+the probability of taking the ‘UP’ (+1) action:
+Q(ut; φu) = (1 −φz)1−ut+1
+2 φ
+ut+1
+2
+z (4)
+When we equip our spin glass agents with a particular (predictive) generative model, we
+can show that the approximate posterior over control states simpliﬁes to the state posterior
+(see Appendix B for details), and an agent can generate a spin state by simply sampling
+from the posterior over actions:
+Q(u; φu) ≈P(z|˜σ,γ,ζ ; φz)
+φu ≈φz : 0 ≤φz ≤1
+σ∼Q(u; φu)
+∼Q(z; φz) ≜ P(z|˜σ; γ,ζ) (5)
+We now have an active inference agent that 1) calculates a posterior beliefP(z|˜σ,γ,ζ ; φz)
+about the latent statez in response to the observed spins of other agents and 2) generates a
+spin of its own by sampling from this belief, which ends up being identical to the posterior
+over actions. Intuitively, each agent just broadcasts its beliefs about the latent cause of its
+social observations, by sampling from its posterior over this hidden (average) state. Another
+way of looking at this is that each agent emits actions that maximize the accuracy of its
+beliefs (i.e., minimize variational free energy), under the prior assumption it is the author
+of its sensations, which, implicitly, are shared with other agents. Note that the choice to
+sample from the posterior over actions (as opposed to e.g. taking the maximum) renders this
+action-selection scheme a form of probability matching [18, 19].
+2.4 Completing the loop
+Given this sampling scheme for generating actions, we can simulate a collective active infer-
+ence process by equating the actions of one agent to the observations of another. Speciﬁcally,
+6
+each focal agent’s spin action becomes an observation (σj for somej) for all the other agents
+that it (the focal agent) is connected to. Next, we will show how the dynamics of multi-
+agent active inference is analogous to a particular algorithm for sampling from the stationary
+distribution of a spin glass model, known as Glauber dynamics [7]. We then examine the
+fragility of this equivalence by exploring a number of simple modiﬁcations that break it.
+3 Equivalence to Glauber dynamics
+Spin glass models are formally described in terms of a global energy function over states of
+the system. The global energy is related to the stationary probability distribution of the
+system through a Gibbs law or Boltzmann distribution:
+p∗(˜σ) = 1
+Z exp(−βE(˜σ)) (6)
+where the stationary densityp∗ and energy functionE are deﬁned over spin conﬁgurations,
+where a conﬁguration is a particular setting of each of theN spins that comprise the system:
+˜σ = {σi}N
+i=1 : σi ±1. The partition function Z is a normalizing constant that ensures
+p∗(˜σ) integrates to1.0, andβ plays the role of an inverse temperature that can be used to
+arbitrarily rescale the Gibbs measure. In the case of the Ising model, this energy function is
+a Hamiltonian that can be expressed as a sum of pairwise interaction terms and an external
+drive or bias (often analogized to an external magnetic ﬁeld):
+E(˜σ) = −
+∑
+⟨i,j⟩
+σiJijσj −
+∑
+i
+hiσi (7)
+where Jij speciﬁes a (symmetric) coupling between spin sitesi and j and hi speciﬁes an
+external forcing or bias term for sitei. The bracket notation⟨i,j⟩denotes a sum over pairs.
+In numerical studies of the Ising model, one is typically interested in generating samples
+from this stationary density. One scheme for doing so is known as Glauber dynamics, where
+each spinσi of the system is updated using the following stochastic update rule:
+σi ∼P(σi = (−1,+1))
+P(σi = +1) = 1
+1 + exp(−β∆iE)
+∆iE = Eσi=DOWN −Eσi=UP = 2
+(∑
+j∈Mi
+Jijσj + hi
+)
+(8)
+where ∆iE represents the diﬀerence in the energy between conﬁgurations whereσi = −1 and
+those whereσi = +1. In other words, the probability of unitiﬂipping to+1 is proportional
+7
+to the degree to which the global energyE would decrease as a result of the ﬂip. If units
+are updated sequentially (also known as ‘asynchronous updates’), then given suﬃcient time
+Glauber dynamics are guaranteed to sample from the stationary density in Equation (6) [7].
+The probability of agenti taking actionσi = +1 is given by the action sampling rule in
+Equation (5) of the previous section. We can thus write the probability of taking a particular
+action in terms of the posterior over latent statesz, by plugging in the posterior belief over
+z = +1 (given in Equation (2)) into Equation (5):
+P(σi = +1) = 1
+1 + exp(−2(ζi + γi∆iσ)) (9)
+where we now indexζ,γ, ∆σby ito indicate that these are the generative model parameters
+and observations of agenti. The identical forms shared by Equations (8) and (9) allow us to
+directly relate the parameters of individual generative models to the local energy diﬀerence
+∆iE and the global energy of the system.
+∆iE ∝J
+∑
+j∈Mi
+σj + hi = γ∆iσ+ ζi =⇒ J = γ, hi = ζi
+where we assume all agents share the same likelihood precision γi = γ∗ : ∀i, which is
+equivalent to forcing all couplings to be identicalJij = J : ∀i,j. Individual active inference
+agents in this multi-agent dynamic thus behave as if they are sampling spin states in order
+to minimize a global energy function deﬁned over spin conﬁgurations, which in the case of
+spin glass systems like the Ising model, can be computed using local observations (the spins
+of one’s neighbours) and model parametersγ,ζ. Going the other direction, one can sample
+from the stationary distribution of spin glass system by simulating a collective of active
+inference agents with an appropriately parameterized generative model.
+However, the equivalence between Glauber sampling from the stationary distribution of
+an Ising model and collective active inference breaks down when agents update their actions
+in parallel or synchronously, rather than asynchronously. In particular, under parallel action
+updates, the system samples from a stationary distribution with a diﬀerent energy function
+than that from Equation (7). See Appendix C for derivations on the relationship between
+the schedule of action updates (synchronous vs. asynchronous) and the resulting stationary
+density of the system.
+4 Equivalence to inference in Boltzmann machines
+Connecting the collective dynamics of these specialized active inference agents to inference in
+Boltzmann machines is straightforward. We now equip each agent’s generative model with
+a vector of sensory precisions˜γ = {γj : j ∈M}that act as diﬀerent reliabilities assigned to
+diﬀerent neighbours’ spin observations. The new factorized likelihood can be written:
+8
+P(˜σ|z; ˜γ) =
+∏
+j∈M
+exp(γjσjz)
+2 cosh(γjz) (10)
+We can then write the posterior overzas a function of observations and generative model
+parameters {˜σ,ζ, ˜γ}. By ﬁxingz to the value+1, we obtain again a logistic expression for
+the posterior probabilityP(z = +1|˜σ,˜γ,ζ) that is nearly identical to the original Equation
+(2):
+P(z = +1|˜σ,˜γ,ζ) = 1
+1 + exp(−2(ζ+ ∑
+j∈M γjσj)) (11)
+A Boltzmann machine is a special variant of a spin glass model, deﬁned by a global energy
+that in turn deﬁnes the stationary probability assigned to each of the system’s conﬁgura-
+tions. The Boltzmann energy EB, as with the classical spin glass energy, is deﬁned over
+conﬁgurations of the system’s binary units (also known as nodes or neurons)˜x= {xi}N
+i=1.
+In the context of inference, it is common to partition the system’s units into ‘visible units’
+and ‘hidden units’,˜x= {˜v,˜h}, with the following energy function:
+EB(˜v,˜h) = −1
+2(˜v⊤Wvv˜v+ ˜h⊤Whh˜h+ ˜v⊤Wvh˜h) −˜θ⊤
+v ˜v−˜θ⊤
+h˜h (12)
+where Wvv,Whh,Wvh are weight matrices with symmetric couplings between units with
+no ‘self-edges’ (Wii = 0 : ∀i) that mediate dependencies both within and between the two
+subsets of units˜v,˜h; and˜θv,˜θh are vectors of unit-speciﬁc biases or thresholds. The Bayesian
+inference interpretation of Boltzmann machines considers the conditional probability distri-
+bution over˜h, given some ﬁxed values of˜v. The ‘clamping’ of visible nodes to some data
+vector ˜v= ˜dcan simply be absorbed into the biases˜θv, such that samples from the posterior
+P(˜h|˜v = ˜d) are analogous to sampling from the joint distributionP(˜h,˜v) where the biases
+of the visible nodes are adjusted to reﬂect this clamping. Sampling from this model can
+be achieved with Glauber dynamics, since the model is a spin glass system with heteroge-
+neous (but symmetric) couplings. We can therefore write the single unit ‘ON’ probability as
+follows, now in terms of weightsW and thresholds˜θ:
+P(xi = +1) = 1
+1 + exp(−∆iEB) = 1
+1 + exp(−∑
+j Wijxj −θi) (13)
+where the interaction term that comprises the local energy diﬀerence∆iEB is equivalent to
+a dot-product between theith row ofW and vector of activities˜x. It is thus straightforward
+to relate the weights and biases of a Boltzmann machine to the sensory and prior precisions
+of each agent’s generative model. In particular, the weight connecting unitj to uniti in a
+Boltzmann machine Wij is linearly related to the precision that agenti associates to spin
+9
+observations coming from agentj: Wij = 2γ(i,j) where the subscript(i,j) refers to agenti’s
+likelihood model over observations emitted by agentj. If agentsi and j are not connected,
+then Wij = γ(i,j) = 0. The bias of theith unit is also straightforwardly related to agenti’s
+prior precision viaθi = 2ζi.
+We have seen how sampling from the posterior distribution of a Boltzmann machine with
+ﬁxed visible nodes˜v is equivalent to the collective dynamics of a speciﬁc multi-agent active
+inference scheme. We have thus shown a carefully-constructed system, in which a form of
+sampling-based Bayesian inference at one scale emerges from a process of collective active
+inference at a lower scale.
+5 Discussion
+Although the equivalences we have shown are exact, there are numerous assumptions that,
+when broken, violate the equivalence between the multi-agent dynamics deﬁned at the lower
+level, and the higher-level sampling dynamics of the spin glass system.
+The energy-based models we have studied (Ising models, Boltzmann machines) are all
+undirected graphical models: this means that the global energy function is deﬁned by sym-
+metric interaction terms across pairs of spins:Jij = Jji1. In order to meet this requirement
+at the level of the individual agents, one must force the precisions that a pair of agents assign
+to one another to be identical:γ(i,j) = γ(j,i). This constraint also underpins the equilibrium
+nature of classical spin glass systems where detailed balance conditions are met, i.e., the
+system is in thermodynamic equilibrium. In natural complex systems (especially biological
+ones), these detailed balance conditions are often broken, and the systems operate far from
+equilibrium [20–27]. This may manifest in the case of realistic multi-agent dynamics in the
+form of asymmetric beliefs about reliability of social signals that agents assign to one another
+[28].
+Another fragility of the multiscale equivalence is the structure of the individual gener-
+ative model, which relies on very speciﬁc assumptions about how hidden statesz relate to
+observations. Without this generative model at the single-agent level, there is no equivalence
+between the collective active inference process and a spin glass model — the model’s dy-
+namics could become more complex (and potentially analytically intractable), because the
+posterior update is not guaranteed to be a simple logistic function of the sum of neighbour-
+ing spins. This could be easily shown by changing the single agent’s likelihood model to
+include a separate latent variable for each neighbour’s spin state2, or if the total likelihood
+over neighbouring spin observations did not factorize into a product of neighbour-speciﬁc
+likelihoods, but had some more complex statistical structure.
+Finally, the convergence of Glauber dynamics to samples from the joint density over spin
+conﬁgurations depends on the temporal schedule of action updating; namely, spins have to be
+updated sequentially or asynchronously, rather than in parallel (see Appendix C for details)
+1W= W⊤ for the Boltzmann machine, respectively
+2This is analogous to the approach taken in [28], where each agent had beliefs about the belief state of
+each of its neighbours
+10
+in order to guarantee sampling from the stationary distribution in Equation (6). If agents
+act in parallel, then the stationary distribution of spin states is diﬀerent than that given by
+the classical spin glass Hamiltonian. In other words, depending on the relative timescales
+of collective action, agents either will or will not minimize the global energy function that
+their actions appear to local minimize (i.e. actions that minimize the local energy diﬀerence
+∆iE).
+6 Conclusion
+In this work we demonstrate an exact equivalence between a collective active inference pro-
+cess and sampling from the stationary density of a spin glass system. Furthermore, we
+connect the system’s collective dynamics to sampling-based inference in energy-based mod-
+els like Boltzmann machines. In particular, when we constrain certain agents in the network
+to be ‘visible nodes’ and ﬁx their actions, then the whole system samples from the posterior
+distribution over spin conﬁgurations, given the actions of the ‘visible’ agents. Despite these
+exact relationships, we also note the fragility of the equivalence, which relies on very particu-
+lar assumptions. These include the symmetry of the precisions that pairs of agents assign to
+each other, the temporal scheduling of the action updates, and the speciﬁc generative model
+used by the agents. It remains to be seen, whether when these assumptions are broken,
+an inferential or ‘agentive’ interpretation still obtains at higher scales, and if so, whether
+the form of the ‘collective’ generative model can be analytically related to the individual
+generative models as it was in the present, equilibrium case.
+Our results have important implications for the overall agenda of multiscale active in-
+ference, and the quest to uncover the quantitative relationship between generative models
+operating at distinct scales in complex systems. In the system presented in the current work,
+we show that active inference agents may collectively achieve sampling-based inference at a
+distinct, higher level under particular conditions. Despite the apparent consistency at the
+two scales, our result actually conﬂicts with claims made in the multiscale active inference
+literature, that posits that systems hierarchically decompose into nested levels of active in-
+ference agents [1–5] — in other words, that systems are inherently active inference processes
+‘all the way down.’ Note that in our system, there are only active inference agents operating
+at the lower level — the higher level is not an active inference agent, but is better described
+as a passive agent that performs hidden state-estimation or inference by sampling from a
+posterior belief over spin conﬁgurations. The agenda of the present work also resonates with
+ongoing research into the necessary and suﬃcient conditions for generic complex systems to
+be considered ‘agentive’ or exhibit inferential capacities [29–31].
+Our results suggest that multiscale inference interpretations of complex systems do not
+necessarily emerge in any system. We nevertheless hope that the simple equilibrium case
+we presented here may serve as a launching pad for future studies into whether inference
+interpretations can be rescued at the higher scale in cases when the fragile assumptions at
+the single-agent level are broken.
+11
+Additional information
+Acknowledgements The authors thank Alex Kiefer, Beren Millidge, Dalton Sakthivadi-
+vel, Magnus Koudahl, Dimitrije Markovic and Maxwell Ramstead for their feedback and
+comments throughout the writing of the manuscript.
+Funding information C.H. is supported by the U.S. Oﬃce of Naval Research (N00014-
+19-1-2556). C.H., B.K., & D.D. acknowledge the support of a grant from the John Templeton
+Foundation (61780). The opinions expressed in this publication are those of the author(s)
+and do not necessarily reﬂect the views of the John Templeton Foundation.
+References
+[1] Karl Friston. “A free energy principle for a particular physics”. In:arXiv (2019). doi:
+10.48550/arXiv.1906.10184.
+[2] Maxwell J.D. Ramstead, Paul B. Badcock, and Karl Friston. “Answering Schrödinger’s
+question: A free-energy formulation”. In:Physics of Life Reviews24 (2018), pp. 1–16.
+doi: 10.1016/j.plrev.2017.09.001.
+[3] Michael Kirchhoﬀ, Thomas Parr, Ensor Palacios, Karl Friston, and Julian Kiverstein.
+“The Markov blankets of life: Autonomy, active inference and the free energy principle”.
+In: Journal of the Royal Society Interface15 (138 2018).doi: 10.1098/rsif.2017.
+0792.
+[4] Ensor Rafael Palacios, Adeel Razi, Thomas Parr, Michael Kirchhoﬀ, and Karl Friston.
+“On Markov blankets and hierarchical self-organisation”. In:Journal of Theoretical
+Biology 486 (2020), p. 110089.doi: 10.1016/j.jtbi.2019.110089.
+[5] Maxwell J.D. Ramstead, Axel Constant, Paul B. Badcock, and Karl Friston. “Vari-
+ational ecology and the physics of sentient systems”. In:Physics of Life Reviews31
+(2019), pp. 188–205.doi: 10.1016/j.plrev.2018.12.002.
+[6] CasperHesp,MaxwellJ.D.Ramstead,AxelConstant,PaulB.Badcock,MichaelKirch-
+hoﬀ, and Karl Friston. “A multi-scale view of the emergent complexity of life: A free-
+energy proposal”. In:Evolution, Development and Complexity. Springer, 2019, pp. 195–
+227. doi: 10.1007/978-3-030-00075-2_7 .
+[7] Roy J. Glauber. “Time-dependent statistics of the Ising model”. In:Journal of Math-
+ematical Physics4.2 (1963), pp. 294–307.doi: 10.1063/1.1703954.
+[8] Stephen G. Brush. “History of the Lenz-Ising model”. In:Reviews of Modern Physics
+39.4 (1967), p. 883.doi: 10.1103/RevModPhys.39.883.
+[9] Max Welling and Yee Whye Teh. “Approximate inference in Boltzmann machines”. In:
+Artiﬁcial Intelligence143.1 (2003), pp. 19–50.issn: 0004-3702.doi: 10.1016/S0004-
+3702(02)00361-2.
+12
+[10] John J. Hopﬁeld. “Neural networks and physical systems with emergent collective
+computational abilities”. In:Proceedings of the National Academy of Sciences79.8
+(1982), pp. 2554–2558.doi: 10.1073/pnas.79.8.2554.
+[11] Geoﬀrey E. Hinton and Terrence J. Sejnowski. “Optimal perceptual inference”. In:
+Proceedings of the IEEE conference on Computer Vision and Pattern Recognition.
+Vol. 448. 1983, pp. 448–453.url: http://www.cs.toronto.edu/~hinton/absps/
+optimal.pdf.
+[12] Geoﬀrey E. Hinton and Terrence J. Sejnowski. “Learning and relearning in Boltz-
+mann machines”. In:Parallel Distributed Processing: Explorations in the Microstruc-
+ture of Cognition, Vol. 1: Foundations. Vol. 1. MIT Press, 1986, pp. 282–317.isbn:
+026268053X. url: https://dl.acm.org/doi/10.5555/104279.104291.
+[13] Jean-Charles Walter and Gerard T. Barkema. “An introduction to Monte Carlo meth-
+ods”. In:Physica A418 (2015), pp. 78–87.doi: 10.1016/j.physa.2014.06.014.
+[14] Karl Friston, Jean Daunizeau, and Stefan J. Kiebel. “Reinforcement learning or active
+inference?” In:PloS One 4.7 (2009), e6421.doi: 10.1371/journal.pone.0006421.
+[15] Karl Friston, Francesco Rigoli, Dimitri Ognibene, Christoph Mathys, Thomas Fitzger-
+ald, and Giovanni Pezzulo. “Active inference and epistemic value”. In:Cognitive Neu-
+roscience 6.4 (2015), pp. 187–214.doi: 10.1080/17588928.2015.1020053.
+[16] Karl Friston, Thomas FitzGerald, Francesco Rigoli, Philipp Schwartenbeck, and Gio-
+vanni Pezzulo. “Active inference: A process theory”. In:Neural Computation 29.1
+(2017), pp. 1–49.doi: 10.1162/NECO_a_00912.
+[17] David M. Blei, Alp Kucukelbir, and Jon D. McAuliﬀe. “Variational inference: A review
+for statisticians”. In:Journal of the American Statistical Association112.518 (2017),
+pp. 859–877.doi: 10.1080/01621459.2017.1285773.
+[18] David R. Shanks, Richard J. Tunney, and John D. McCarthy. “A re-examination of
+probability matching and rational choice”. In:Journal of Behavioral Decision Making
+15.3 (2002), pp. 233–250.doi: 10.1002/bdm.413.
+[19] Alfonso Pérez-Escudero and Gonzalo de Polavieja. “Collective animal behavior from
+Bayesian estimation and probability matching”. In:PLOS Computational Biology7.11
+(2011), pp. 1–14.doi: 10.1371/journal.pcbi.1002282.
+[20] Chulan Kwon and Ping Ao. “Nonequilibrium steady state of a stochastic system driven
+by a nonlinear drift force”. In:Physical Review E84.6 (2011), p. 061106.doi: 10.1103/
+PhysRevE.84.061106.
+[21] Han Yan, Lei Zhao, Liang Hu, Xidi Wang, Erkang Wang, and Jin Wang. “Nonequilib-
+rium landscape theory of neural networks”. In:Proceedings of the National Academy
+of Sciences110.45 (2013), E4185–E4194.doi: 10.1073/pnas.1310692110.
+13
+[22] Yian Ma, Qijun Tan, Ruoshi Yuan, Bo Yuan, and Ping Ao. “Potential function in
+a continuous dissipative chaotic system: Decomposition scheme and role of strange
+attractor”. In:International Journal of Bifurcation and Chaos24.02(2014), p. 1450015.
+doi: 10.1142/S0218127414500151.
+[23] Ana P. Millán, Joaquín J. Torres, and Ginestra Bianconi. “Explosive higher-order Ku-
+ramoto dynamics on simplicial complexes”. In:Physical Review Letters124.21 (2020),
+p. 218301.doi: 10.1103/PhysRevLett.124.218301.
+[24] Karl Friston, Conor Heins, Kai Ueltzhöﬀer, Lancelot Da Costa, and Thomas Parr.
+“Stochastic chaos and markov blankets”. In:Entropy 23.9 (2021), p. 1220.doi: 10.
+3390/e23091220.
+[25] Miguel Aguilera, S. Amin Moosavi, and Hideaki Shimazaki. “A unifying framework for
+mean-ﬁeld theories of asymmetric kinetic Ising systems”. In:Nature Communications
+12.1 (2021), pp. 1–12.doi: 10.1038/s41467-021-20890-5.
+[26] Christopher W. Lynn, Eli J. Cornblath, Lia Papadopoulos, Maxwell A. Bertolero, and
+Dani S. Bassett. “Broken detailed balance and entropy production in the human brain”.
+In: Proceedings of the National Academy of Sciences118.47 (2021), e2109889118.doi:
+10.1073/pnas.2109889118.
+[27] Miguel Aguilera, Masanao Igarashi, and Hideaki Shimazaki. “Nonequilibrium thermo-
+dynamics of the asymmetric Sherrington-Kirkpatrick model”. In:arXiv (2022). doi:
+10.48550/arXiv.2205.09886.
+[28] Mahault Albarracin, Daphne Demekas, Maxwell J.D. Ramstead, and Conor Heins.
+“Epistemic communities under active inference”. In:Entropy 24.4 (2022), p. 476.doi:
+10.3390/e24040476.
+[29] Nathaniel Virgo, Martin Biehl, and Simon McGregor. “Interpreting dynamical sys-
+tems as Bayesian reasoners”. In:Joint European Conference on Machine Learning and
+Knowledge Discovery in Databases. Springer. 2021, pp. 726–762.doi: 10.1007/978-
+3-030-93736-2_52.
+[30] David Krakauer, Nils Bertschinger, Eckehard Olbrich, Jessica C. Flack, and Nihat
+Ay. “The information theory of individuality”. In:Theory in Biosciences139.2 (2020),
+pp. 209–223.doi: 10.1007/s12064-020-00313-7.
+[31] PeaksKraﬀt,ErezShmueli,ThomasL.Griﬃths,JoshuaB.Tenenbaum,etal.“Bayesian
+collective learning emerges from heuristic social learning”. In:Cognition 212 (2021),
+p. 104469.doi: 10.1016/j.cognition.2020.104469.
+14
+Appendix: Spin glass systems as collective active inference
+A Bayesian inference for a single agent
+In this appendix we derive the exact Bayesian inference update for the posterior over the
+latentstate z, takingtheperspectiveofasingleagent. Webeginbyrehearsingthecomponent
+likelihood and prior distributions of the generative model in more detail.
+A.1 Likelihood
+The likelihood model relates the hidden statez to the observed spin state of a particular
+neighbour σj as an exponential distribution parameterized by a sensory precision parameter
+γ:
+P(σj|z; γ) = exp(γσjz)
+2 cosh(γz) (A.1)
+The sign and magnitude ofγ determines the nature of the expected mapping between
+hidden states z and neighbouring spin observationsσj. For γ >0, then the observed spin
+is expected to reﬂect the latent statez, and withγ <0, then the observed spin is expected
+to be opposite to the latent statez. The magnitude ofγ then determines how deterministic
+this mapping is.
+Equation (A.1) can alternatively be seen as a collection of two conditional Bernoulli
+distributions overσj, one for each setting ofz. This can be visualized as a symmetric matrix
+mapping from the two settings ofz(the columns, corresponding toz = −1,+1) to the values
+of σj (the rowsσj = −1,+1):
+P(σj|z; γ) =
+
+
+1
+1 + exp(−2γ)
+1
+1 + exp(2γ)
+1
+1 + exp(2γ)
+1
+1 + exp(−2γ)
+
+ (A.2)
+where this mapping approaches the identity matrix asγ →∞.
+Now we can move onto writing down the likelihood over the observed spins of multiple
+neighbours: ˜σ = {σj : j ∈M}where M denotes the set of the focal agent’s neighbours.
+We build in aconditional independenceassumption into the focal agent’s generative model,
+whereby the full likelihood model over all observed spins factorizes across the agent’s neigh-
+bours. Thismeanswecanwritethelikelihoodasaproductofthesingle-neighbourlikelihoods
+shown in Equation (A.1):
+P(˜σ|z; γ) =
+∏
+j∈M
+exp(γσjz)
+2 cosh(γz)
+= exp
+(
+zγ
+∑
+j∈M
+σj −Klog(2 cosh(γz))
+)
+(A.3)
+15
+where K is the number of the focal agent’s neighbours (i.e. the size of the setM). We
+can easily generalize this likelihood to heterogeneous precisions by instead parameterizing it
+with a precision vector˜γ = {γj : j ∈M}that assigns a diﬀerent precision to observations
+coming from each of the focal agent’s neighbours:
+P(˜σ|z; ˜γ) =
+∏
+j∈M
+exp(γjσjz)
+2 cosh(γjz)
+= exp
+(
+z
+∑
+j∈M
+γjσj −
+∑
+j∈M
+log(2 cosh(γjz))
+)
+(A.4)
+A.2 Prior
+We parameterize the focal agent’s prior beliefs about the latent spin statez as a simple
+Bernoulli distribution, and similarly to the likelihood model, we will express it as an expo-
+nential function parameterized by a ‘prior precision’ parameterζ:
+P(z; ζ) = exp(ζz)
+2 cosh(ζz) = exp(ζz −log(2 cosh(ζ)))
+As with the sensory precisionγ, the prior precision also scales the strength of the focal
+agent’s prior belief that the spin statez is +1.3
+A.3 Bayesian inference of hidden states
+Now we ask the question: how would a focal agent (i.e., the agent that occupies a single
+lattice site) optimally compute a belief overz, that is most consistent with a set of observed
+spins ˜σ? This is a problem of Bayesian inference, which can be expressed as calculation of
+the posterior distribution overz via Bayes Rule:
+P(z|˜σ; γ,ζ) = P(˜σ,z; γ,ζ)
+P(˜σ; γ,ζ) (A.5)
+Since we are dealing with a conjugate exponential model4, we can derive an analytic
+form for the posterior:P(z|˜σ,γ,ζ ):
+P(z|˜σ; γ,ζ) =
+exp
+(
+z(ζ+ γ∑
+j σj)
+)
+2 cosh
+(
+ζ+ γ∑
+j σj
+) (A.6)
+3Note thatcosh(ζz) can be re-writtencosh(ζ) when z∈{−1,+1}due to the symmetry of the hyperbolic
+cosine function around the origin.
+4The Bernoulli prior is conjugate to the likelihood model, which can also be described of as a set of
+conditional Bernoulli distributions.
+16
+where the sum over neighbouring spinsj only includes the neighbours of the focal agent, i.e,∑
+j∈M σj. If we ﬁx the hidden statez to a particular value (e.g.z = +1), then we arrive at a
+simple expression for the posterior probability that the hidden spin state is in the ‘UP’ state,
+given the observations and the generative model parametersγ,ζ. This probability reduces
+to a logistic or sigmoid function of sensory input, which is simply the sum of neighbouring
+spin values ∆σ = ∑
+j σj. This can also be seen as the ‘spin diﬀerence’, or the number
+of neighbouring spins that are in the ‘UP’ position, minus those that are in the ‘DOWN’
+position. The steepness and horizontal shift of this logistic function are intuitively given by
+likelihood and prior precisions, respectively:
+P(z = +1|˜σ,γ,ζ ) = exp(ζ+ γ∆σ)
+exp(ζ+ γ∆σ) + exp(−(ζ+ γ∆σ))
+=
+(
+1 + exp(−(ζ+ γ∆σ))
+exp(ζ+ γ∆σ)
+)−1
+= 1
+1 + exp(−2(ζ+ γ∆σ)) (A.7)
+The denominator in the ﬁrst line of (A.7) follows from the identitycosh(x) = 1
+2 (exp(x) +
+exp(−x)).
+B Active inference derivations
+In this section we provide the additional derivations needed to equip each agent with the
+ability to infer a posterior over control states and sample from this posterior to generate
+actions. This achieved through the framework ofactive inference.
+Active inference casts the selection of control states or actions as an inference problem,
+whereby actions u are sampled or drawn from posterior belief about controllable hidden
+states. The posterior over actions is computed as the softmax transform of a quantity called
+the expected free energy[1]. This is the critical objective function for actions that enables
+active inference agents to plan actions into the future, since the expected free energy scores
+the utility of the anticipated consequences of actions.
+B.1 Predictive generative model
+We begin by writing a so-called ‘predictive’ generative model that crucially includes proba-
+bility distributions over the agent’s own control statesu∈{−1,+1}and how those control
+states relate to future (anticipated) observations. In other words, we consider a generative
+model over two timesteps: the current timesteptand one timestep in the future,t+ 1. This
+will endow our agents with a shallow form of ‘planning’, where they choose actions in order
+to maximize some (pseudo-) reward function deﬁned with respect to expected outcomes.
+This can be expressed as follows:
+17
+P(˜σt,zt,ut,Ot+1; γ,ζ) = ˜P(Ot+1|zt,ut,˜σt)P(˜σt,zt,ut; γ,ζ) (B.8)
+where the generative model at the second timestep˜P(Ot+1|zt,ut,˜σt) we hereafter refer to as
+the ‘predictive’ generative model, deﬁned over a single future timestep.
+Active inference consists in sampling a belief from the posterior distribution over control
+states u — this sampled control state or action is then ﬁxed to be the spin state of the
+agent under consideration. Thus the action of one agent is fed in as the observations for
+those spin sites that it’s connected to. In order to imbue active inference agents with a
+sense of goal-directedness or purpose, we encode a prior distribution over actionsP(u) that
+is proportional to the negative of the expected free energy, via the softmax relationship:
+P(u) = exp(−G(u))∑
+uexp(−G(u)) (B.9)
+Crucially, the expected free energy of an actionG is a function of outcomesexpected
+under a particular control stateu, where beliefs about future outcomes are ‘biased‘ by prior
+beliefs about encountering particular states of aﬀairs. In order to optimistically ‘bend’ these
+future beliefs towards certain outcomes, and thus make some actions more probable than
+others, we supplement the predictive generative model˜P with a binary ‘optimality’ variable
+O±1 that the agent has an inherent belief that it will observe. This is encoded via a ‘goal
+prior’ or preference vector, which is a Bernoulli distribution over seeing a particular value of
+Owith some precision parameterω:
+˜P(Ot+1; ω) = exp(ωO)
+2 cosh(ωO) (B.10)
+Hereafter we assume an inﬁnitely high precision, i.e.ω→∞. This renders the preference
+an ‘all-or-nothing’ distribution over observing the optimality variable being in the ‘positive’
+state O= +1:
+=
+[˜P(Ot+1 = −1)
+˜P(Ot+1 = +1)
+]
+=
+[0.0
+1.0
+]
+(B.11)
+To allow an agent the ability to predict the relationship between their actions and ex-
+pected observations, it’s important to include an additional likelihood distribution, what we
+might call the ‘forward model’ of actionsP(Ot+1|zt,ut; ξ). This additional likelihood en-
+codes the focal agent’s assumptions about the relationship between hidden states, actions,
+and the (expected) optimality variable. By encoding a deterministic conditional dependence
+relationship into this likelihood, we motivate the agent (via the expected free energy) to
+honestly signal its own estimate of the hidden state via its spin actionu. To achieve this, we
+18
+explicitly design this likelihood to have the following structure, wherein the optimality vari-
+able is only expected to take its ‘desired value’ ofO= +1 when z = u. This can be written
+as a set of conditional Bernoulli distributions overO, and each of which jointly depends on
+z and u and is parameterized by a (inﬁnitely high) precisionξ:
+P(Ot+1|zt,ut; ξ) = exp(ξOt+1ztut)
+2 cosh(ξztut) (B.12)
+When we assume ξ →∞, then we arrive at a form for this likelihood which can be
+alternatively expressed as a set of Bernoulli distributions that conjunctively depend onz
+and u, and can be visualized as follows:
+P(Ot+1|zt,ut = −1) =
+[0 1
+1 0
+]
+P(Ot+1|zt,ut = +1) =
+[1 0
+0 1
+]
+(B.13)
+where the columns of the matrices above correspond to settings ofz ∈{−1,+1}. Therefore,
+the agent only expects to seeO= +1 (the desired outcome) when the value of the hidden
+stateandthevalueofthecontrolvariableareequal, i.e. z = u; otherwiseO= −1 isexpected.
+For the purposes of the present study, we assume both the optimality prior˜P(O; ω) and the
+optimality variable likelihood P(O|z,u; ξ) are parameterized by inﬁnitely high precisions
+ω = ξ = ∞, and hereafter will exclude them when referring to these distributions for
+notational convenience.
+Having speciﬁed these addition priors and likelihoods, we can write down the new (pre-
+dictive) generative model as follows:
+˜P(Ot+1,ut,zt) = P(Ot+1|zt,ut)P(ut) ˜P(Ot+1)P(zt) (B.14)
+B.2 Active inference
+Under active inference, both state estimation and action are consequences of the optimization
+of an approximate posterior belief over hidden states and actionsQ(z,u; φ). This approxi-
+mate posterior is optimized in order to minimize a variational free energy (or alternatively
+maximize an evidence lower bound). This is the critical concept for a type of approximate
+Bayesian inference known as variational Bayesian inference [2]. This can be described as
+ﬁnding the optimal set of variational parametersφ that minimizes the following quantity:
+φ∗= arg min
+φ
+F
+= EQ[ln Q(zt,ut; φ) −ln ˜P(˜σt,zt,ut,Ot+1; γ,ζ)] (B.15)
+19
+In practice, because of the factorization of the generative model into a generative model
+of the current and future timesteps, we can split state-estimation and action inference into
+two separate optimization procedures. To do this we also need to factorize the posterior as
+follows:
+Q(z,u; φ) = Q(z; φz)Q(u; φu) (B.16)
+where we have also separated the variational parametersφ = {φz,φu}into those that pa-
+rameterize the belief about hidden statesφz, and those that parameterize the belief about
+actions φu.
+When considering state-estimation (i.e. optimization ofQ(zt; φz)), we only have to con-
+sider the generative model of the current timestepP(˜σt,zt; γ,ζ). The optimal posterior
+parameters φ∗
+z are found as the minimum of the variational free energy, re-written using only
+those terms that depend onφz:
+φ∗
+z = arg min
+φz
+F(φz)
+F(φz) = EQ(zt;φz)[ln Q(zt; φz) −ln P(˜σt,zt; γ,ζ)] (B.17)
+To solve this, we also need to decide on a parameterization of the approximate posterior
+over hidden stateszt. We parameterizeQ(zt; φz) as a Bernoulli distribution with parameter
+φz, that can be interpreted as the posterior probability thatzt is in the ‘UP’ (+1) state:
+Q(zt; φz) = (1 −φz)1−zt+1
+2 φ
+zt+1
+2
+z (B.18)
+By minimizing the variational free energy with respect toφz, we can obtain an expression
+for the optimal posteriorQ(z; φ∗
+z) that sits at the variational free energy minimum. Due to
+the exponential and conjugate form of the generative model,Q(zt; φz) is the exact posterior
+and thus variational inference reduces to exact Bayesian inference. This means we can simply
+re-use the posterior update equation of Equation (A.7) to yield an analytic expression for
+φ∗
+z:
+φ∗
+z = 1
+1 + exp (−2(ζ+ γ∆σ)) (B.19)
+When considering inference of actions, we now consider the generative model of the future
+timestep, which crucially depends on the current control stateut and the optimality variable
+Ot+1. We can then write the variational problem as ﬁnding the setting ofφu that minimizes
+the variational free energy, now re-written in terms of its dependence onφu:
+φ∗
+u = arg min
+φu
+F(φu)
+F(φu) = EQ(ut;φu)[ln Q(ut; φu) −ln ˜P(Ot+1,ut,zt)] (B.20)
+20
+As we did for the posterior over hidden states, we need to decide on a parameterization
+for the posterior over actionsQ(ut; φu); we also parameterize this as a Bernoulli distribution
+with parameterφu that represents the probability of taking the ‘UP’ (+1) action:
+Q(ut; φu) = (1 −φz)1−ut+1
+2 φ
+ut+1
+2
+z (B.21)
+FromEquation(B.20)itfollowsthattheoptimal φu isthatwhichminimizestheKullback-
+Leibler divergence between the approximate posteriorQ(ut; φu) and the priorP(ut), which is
+a softmax function of the expected free energy of actionsG(ut). In this particular generative
+model, the expected free energy can be written as a single term that scores the ‘expected
+utility’ of each action [1, 3]:
+G(ut) = −EQ(Ot+1|ut)[ln ˜P(Ot+1)] (B.22)
+To compute this, we need to compute the ‘variational marginal’ overOt+1, denoted
+Q(Ot+1|ut):
+Q(Ot+1|ut) = EQ(zt;φ∗z)[P(Ot+1|zt,ut)] (B.23)
+We can simplify the expression forQ(Ot+1|ut) when we take advantage of the Bernoulli-
+parameterization of the posterior over hidden statesQ(z; φ∗
+z). This allows us to then write
+the variational marginals, conditioned on diﬀerent actions as a matrix, with one column for
+each setting ofut:
+Q(Ot+1|ut) =
+[ φ∗
+z 1 −φ∗
+z
+1 −φ∗
+z φ∗
+z
+]
+(B.24)
+The expected utility (and thus the negative expected free energy) is then computed as
+the dot-product of each column of the matrix expressed in Equation (B.24) with the log of
+the prior preferences˜P(Ot+1):
+EQ(Ot+1|ut)[ln ˜P(Ot+1)] =
+[ −∞φ∗
+z
+−∞(1 −φ∗
+z)
+]
+=⇒ G(ut) =
+[ ∞φ∗
+z
+∞(1 −φ∗
+z)
+]
+(B.25)
+Because the probability of an action is proportional to its negative expected free energy,
+this allows us to write the Bernoulli parameterφ∗
+u of the posterior over actions directly in
+terms of the parameter of the state posterior:
+21
+φ∗
+u = 1
+1 + exp(β(∞(1 −φ∗
+z)))
+= 1
+1 + Cexp(−φ∗
+z))) (B.26)
+The inverse temperature parameterβ is an arbitrary re-scaling factor that can be used
+to linearize the sigmoid function in (B.26) over the range[0,1] such that
+φ∗
+u ≈φ∗
+z (B.27)
+Note that the equivalence relation in Equation (B.27) is only possible due to the inﬁnite
+precisions ω and ξ of the likelihood and prior distributions over the ‘optimality’ variable
+P(Ot+1|ut,zt) and ˜P(Ot+1), and from an appropriately re-scaledβ parameter that linearizes
+the sigmoid relationship in Equation (B.26).
+B.3 Action sampling as probability matching
+Now that we have an expression for the parameterφ∗
+u of the posterior over control states
+Q(ut; φ∗
+u), an agent can generate a spin state by simply sampling from this posterior over
+actions:
+σ∼Q(ut; φ∗
+u)
+∼Q(zt; φ∗
+z) ≜ P(zt|˜σ; γ,ζ) (B.28)
+In short, each agent samples its spin state from a posterior belief over the state of the la-
+tent variablezt, rendering their action-selection a type of probability matching [4–6], whereby
+actions (whether to spin ‘UP’ or ‘DOWN’) are proportional to the probability they are as-
+signed in the agent’s posterior belief. Each agent’s sampled spin state also serves as an
+observation (σj for somej) for the other agents that the focal agent is a neighbour of. This
+collective active inference scheme corresponds to a particular form of sampling from the
+stationary distribution of a spin glass model known as Glauber dynamics [7]. Crucially,
+however, the temporal scheduling of the action-updating across the group determines which
+stationary distribution the system samples from. We explore this distinction in the next
+section.
+C Temporal scheduling of action sampling
+In this appendix we examine how the stationary distribution from which the collective active
+inference system samples depends on the order in which actions are updated across all agents
+22
+in the network. First, we consider the case of synchronous action updates (all agents update
+their actions in parallel and only observe the- spin states of their neighbours from the last
+timestep), and show how this system samples from a diﬀerent stationary distribution than
+the one deﬁned by the standard Ising energy provided in Equation (7). We then derive the
+more ‘classical’ case of asynchronous updates, where agents update their spins one at a time,
+and show how in this case the system converges to the standard statioanry distribution of
+the Ising model. This Appendix thus explains one of the ‘fragilities’ mentioned in the main
+text, that threaten the unique equivalence between local active inference dynamics and a
+unique interpretation at the global level in terms of inference.
+We denote some agent’s spin usingσi and its set of neighbours asMi. The local sum of
+spins or spin diﬀerence∑
+j∈M σj for agenti we denote∆iσ= ∑
+j∈Mi σj.
+C.1 Synchronous updates
+To derive the stationary distribution in case of synchronous updates, we can take advantage
+of the following detailed balance relation, which obtains in the case of systems at thermody-
+namic equilibrium:
+P(˜σ)
+P(˜σ′) = P(˜σ|˜σ′)
+P(˜σ′|˜σ)
+=⇒ P(˜σ) = P(˜σ|˜σ′)P(˜σ′)
+P(˜σ′|˜σ) (C.29)
+where ˜σ and ˜σ′ are spin conﬁgurations at two adjacent timesτ and τ + 1. In the case
+of synchronous updates (all spins are sampled simultaneously, given the spins at the last
+timestep), then the spin action of each agentσ′
+i at timeτ + 1 is conditionally independent
+of all other spins, given the vector of spins˜σ at the previous timestepτ. We can therefore
+expand the ‘forward’ transition distributionP(˜σ′|˜σ) as a product over the action posteriors
+of each agent:
+P(˜σ′|˜σ) = P(σ1|˜σ)P(σ1|˜σ)...P(σN|˜σ)
+=
+∏
+i
+Q(ut; φ∗
+u,i)
+=
+∏
+i
+exp
+(
+σ′
+i
+(
+ζ+ γ∑
+j∈Mi σj
+))
+2 cosh
+(
+ζ+ γ∑
+j∈Mi σj
+)
+= exp
+(∑
+i
+σ′
+i(ζ+ γ
+∑
+j∈Mi
+σj) −
+∑
+i
+log
+(
+2 cosh(ζ+ γ
+∑
+j∈Mi
+σj)
+))
+(C.30)
+Note we have replaced each latent variable in the posteriorz with the agent’s own spin
+stateσi, becausethereisaone-to-onemappingbetweentheposteriorover zt andtheposterior
+over actionsσi.
+23
+The reverse transition distribution, yielding the probability of transitioning from conﬁg-
+uration ˜σ′ →˜σ is the same expression as for the forward transition, except thatσ′
+i and σi
+are swapped:
+P(˜σ|˜σ′) = exp
+(∑
+i
+σi(ζ+ γ
+∑
+j∈Mi
+σ′
+j) −
+∑
+i
+log
+(
+2 cosh(ζ+ γ
+∑
+j∈Mi
+σ′
+j)
+))
+(C.31)
+The detailed balance equation in (C.29) then tells us that the stationary probability
+distribution over˜σ is proportional to the ratio of the backwards transition to the forwards
+transition:
+P(˜σ)
+P( ˜σ′) =
+exp
+(∑
+iσi(ζ+ γ∑
+j∈Mi σ′
+j) −∑
+ilog
+(
+2 cosh(ζ+ γ∑
+j∈Mi σ′
+j)
+))
+exp
+(∑
+iσ′
+i(ζ+ γ∑
+j∈Mi σj) −∑
+ilog
+(
+2 cosh(ζ+ γ∑
+j∈Mi σj)
+))
+=
+exp
+(
+ζ∑
+iσi + γ∑
+⟨i,j⟩σiσ′
+j
+)
+exp
+(
+−∑
+ilog
+(
+2 cosh(ζ+ γ∑
+j∈Mi σ′
+j
+))
+exp
+(
+ζ∑
+iσ′
+i + γ∑
+⟨i,j⟩σ′
+iσj
+)
+exp
+(
+−∑
+ilog
+(
+2 cosh(ζ+ γ∑
+j∈Mi σj
+))
+=
+exp
+(
+ζ∑
+iσi + ∑
+ilog
+(
+2 cosh(ζ+ γ∑
+j∈Mi σj
+))
+exp
+(
+ζ∑
+iσ′
+i + ∑
+ilog
+(
+2 cosh(ζ+ γ∑
+j∈Mi σ′
+j
+)) (C.32)
+Therefore, we can write down the stationary distribution in the case of synchronous
+updates as an exponential term normalized by a partition function:
+P(˜σ) = Z−1 exp
+(
+ζ
+∑
+i
+σi +
+∑
+i
+log
+(
+2 cosh(ζ+ γ
+∑
+j∈Mi
+σj)
+))
+Z =
+∑
+˜σ
+exp
+(
+ζ
+∑
+i
+σi +
+∑
+i
+log
+(
+2 cosh(ζ+ γ
+∑
+j∈Mi
+σj)
+))
+(C.33)
+Note that the action update for an individual agent can still be written in terms of the
+local energy diﬀerence ∆iE, where the energy is deﬁned using the standard Hamiltonian
+function given by Equation (7) in the main text. However, due to the temporal sampling of
+each agent’s action with respect to the others, the system collectively sample from a system
+with a diﬀerent energy function and Gibbs measure, given by Equation (C.33). This energy
+function is therefore nonlinear and can be written:
+Esync(˜σ) = −ζ
+∑
+i
+σ−
+∑
+i
+log(2 cosh(ζ+ γ
+∑
+j∈Mi
+σj)) (C.34)
+24
+C.2 Asynchronous updates
+Now we treat the case where agents update their agents one-by-one or asynchronously. This
+means that at each timestep only one agent is updated, and that particular agent uses the
+spin states of all the other agents at the last timestep as inputs for its posterior inference.
+We can write down the forward transition as follows, using the notationσ\i to denote all
+the spins except forσi:
+p(σ′
+i,˜σ\i|˜σ) =
+exp(σ′
+i(ζ+ γ∑
+j∈Mi σj))
+2 cosh(ζ+ γ∑
+j∈Mi σj) (C.35)
+which indicates that only agenti is updated at the current timestep. The detailed balance
+condition implies that
+p(σ′
+i,˜σ\i|˜σ)p(˜σ) = p(˜σ|σ′
+i,˜σ\i)p(σ′
+i,˜σ\i) (C.36)
+Then
+p(˜σ)
+p(σ′
+i,˜σ\i) =p(˜σ|σ′
+i,˜σ\i)
+p(σ′
+i,˜σ\i|˜σ) =
+exp(σi(ζ+ γ∑
+j∈Mi σj) −log(2 cosh(ζ+ γ∑
+j∈Mi σj)))
+exp(σ′
+i(ζ+ γ∑
+j∈Mi σj) −log(2 cosh(ζ+ γ∑
+j∈Mi σj))) (C.37)
+=
+exp(σi(ζ+ γ∑
+j∈Mi σj))
+exp(σ′
+i(ζ+ γ∑
+j∈Miiσj)) (C.38)
+By repeating this operation for every agent (i.e.N −1 more times), then we arrive at:
+p(˜σ)
+p(˜σ′) = p(˜σ)
+p(σ′
+i,˜σ\i)
+p(σ′
+i,˜σ\i)
+p(σ′
+i,σ′
+j,˜σ\i,j) ...
+p(˜σ′
+\i,σi)
+p(˜σ′) =
+exp(ζ∑
+iσi + γ∑
+i<j σiσj)
+exp(ζ∑
+iσ′
+i + γ∑
+i<j σ′
+iσ′
+j) (C.39)
+We can therefore write the marginal distributionsp(˜σ) as proportional to the numerator
+of the last term in Equation (C.39)5:
+p(˜σ) ∝exp(ζ
+∑
+i
+σi + γ
+∑
+⟨i,j⟩
+σiσj)
+=⇒ p(x) =Z−1 exp(ζ
+∑
+i
+σi + γ
+∑
+⟨i,j⟩
+σiσj) (C.40)
+We thus recover the original stationary distribution with the standard, linear energy
+function as given by Equation (7) in the main text, written now in terms of generative
+model parametersγ,ζ instead of the standard ‘couplings’ and ‘biases’J,h:
+5Note that because of assumption that the system is at thermal equilibrium, the same reasoning could
+be applied to write the distribution overp(˜σ′) in terms of the denominator of Equation (C.39)
+25
+Easync(˜σ) = −γ
+∑
+⟨i,j⟩
+σiσj −ζ
+∑
+i
+σi (C.41)
+Supplemental References
+[1] Karl Friston, Francesco Rigoli, Dimitri Ognibene, Christoph Mathys, Thomas Fitzger-
+ald, and Giovanni Pezzulo. “Active inference and epistemic value”. In:Cognitive Neu-
+roscience 6.4 (2015), pp. 187–214.doi: 10.1080/17588928.2015.1020053.
+[2] David M. Blei, Alp Kucukelbir, and Jon D. McAuliﬀe. “Variational inference: A review
+for statisticians”. In:Journal of the American Statistical Association112.518 (2017),
+pp. 859–877.doi: 10.1080/01621459.2017.1285773.
+[3] Karl Friston, Thomas FitzGerald, Francesco Rigoli, Philipp Schwartenbeck, and Gio-
+vanni Pezzulo. “Active inference: A process theory”. In:Neural Computation 29.1
+(2017), pp. 1–49.doi: 10.1162/NECO_a_00912.
+[4] Nir Vulkan. “An economist’s perspective on probability matching”. In:Journal of Eco-
+nomic Surveys 14.1 (2000), pp. 101–118.doi: 10.1111/1467-6419.00106.
+[5] David R. Shanks, Richard J. Tunney, and John D. McCarthy. “A re-examination of
+probability matching and rational choice”. In:Journal of Behavioral Decision Making
+15.3 (2002), pp. 233–250.doi: 10.1002/bdm.413.
+[6] Wolfgang Gaissmaier and Lael J. Schooler. “The smart potential behind probability
+matching”. In:Cognition 109.3 (2008), pp. 416–422.doi: 10.1016/j.cognition.
+2008.09.007.
+[7] Roy J. Glauber. “Time-dependent statistics of the Ising model”. In:Journal of Math-
+ematical Physics4.2 (1963), pp. 294–307.doi: 10.1063/1.1703954.
+26

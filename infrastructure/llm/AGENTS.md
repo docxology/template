@@ -14,6 +14,35 @@ The LLM module provides a unified interface for interacting with local large lan
 
 This module follows the **thin orchestrator pattern** with clear separation of concerns:
 
+### Module Structure
+
+```
+infrastructure/llm/
+├── core/              # Core LLM functionality
+│   ├── client.py      # LLMClient main interface
+│   ├── config.py      # LLMConfig, GenerationOptions
+│   └── context.py     # ConversationContext, Message
+├── templates/         # Prompt templates
+│   ├── base.py        # ResearchTemplate base class
+│   ├── helpers.py     # Template helper functions
+│   ├── research.py    # Research task templates
+│   └── manuscript.py  # Manuscript review templates
+├── validation/        # Output validation
+│   ├── core.py        # OutputValidator
+│   ├── format.py      # Format validation
+│   ├── repetition.py # Repetition detection
+│   └── structure.py   # Structure validation
+├── review/            # Manuscript review system
+│   ├── generator.py   # Review generation
+│   ├── io.py          # Review I/O operations
+│   └── metrics.py     # Review metrics
+├── utils/             # Utility functions
+│   └── ollama.py      # Ollama management
+├── cli/               # Command-line interface
+│   └── main.py        # CLI commands
+└── prompts/           # Prompt fragment system
+```
+
 ### Core Components
 
 1. **LLMClient** - Main interface for querying LLMs
@@ -129,12 +158,11 @@ The module reads configuration from environment variables:
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `OLLAMA_HOST` | `http://localhost:11434` | Ollama server URL |
-| `OLLAMA_MODEL` | `qwen3:4b` | Default model name (128K context, fast) |
+| `OLLAMA_MODEL` | `gemma3:4b` | Default model name (128K context, fast) |
 | `LLM_TEMPERATURE` | `0.7` | Generation temperature |
 | `LLM_MAX_TOKENS` | `2048` | Maximum tokens per response |
-| `LLM_LONG_MAX_TOKENS` | `4096` | Maximum tokens for long responses (used by review templates) |
-| `LLM_CONTEXT_WINDOW` | `131072` | Context window size (128K default) |
-| `LLM_TIMEOUT` | `300` | Request timeout (seconds) |
+| `LLM_CONTEXT_WINDOW` | `131072` | Context window size (128K default for gemma3:4b) |
+| `LLM_TIMEOUT` | `60` | Request timeout (seconds) |
 | `LLM_NUM_CTX` | `None` | Ollama num_ctx parameter |
 | `LLM_SEED` | `None` | Default seed for reproducibility |
 | `LLM_SYSTEM_PROMPT` | Research assistant | Custom system prompt |
@@ -142,14 +170,15 @@ The module reads configuration from environment variables:
 ### Programmatic Configuration
 
 ```python
-from infrastructure.llm import LLMConfig, LLMClient
+from infrastructure.llm.core.config import LLMConfig
+from infrastructure.llm.core.client import LLMClient
 
 config = LLMConfig(
     base_url="http://localhost:11434",
-    default_model="qwen3:4b",
+    default_model="gemma3:4b",
     temperature=0.7,
     max_tokens=2048,
-    context_window=131072,  # 128K context
+    context_window=131072,  # 128K context (supports gemma3:4b)
     seed=42,  # For reproducibility
     system_prompt="You are an expert research assistant.",
     auto_inject_system_prompt=True,
@@ -194,7 +223,7 @@ Comprehensive, detailed answers with extended output:
 
 ```python
 explanation = client.query_long("Explain neural networks in detail")
-# Automatically sets max_tokens to long_max_tokens (4096)
+# Automatically sets max_tokens to long_max_tokens (16384)
 ```
 
 **Use cases:**
@@ -243,7 +272,7 @@ response = client.query_raw("Complete: The quick brown fox")
 Control generation behavior per-query with `GenerationOptions`:
 
 ```python
-from infrastructure.llm import GenerationOptions
+from infrastructure.llm.core.config import GenerationOptions
 
 # Deterministic output
 opts = GenerationOptions(
@@ -340,7 +369,6 @@ for chunk in client.stream_query("...", options=opts):
 | `literature_review` | Synthesize multiple summaries | `summaries` |
 | `code_doc` | Generate Python docstrings | `code` |
 | `data_interpret` | Interpret statistical results | `stats` |
-| `manuscript_translation_abstract` | Generate technical abstract and translate to target language | `text`, `target_language` |
 
 ### Using Templates
 
@@ -359,7 +387,7 @@ review = client.apply_template(
 ### Creating Custom Templates
 
 ```python
-from infrastructure.llm.templates import ResearchTemplate
+from infrastructure.llm.templates.base import ResearchTemplate
 
 class MyTemplate(ResearchTemplate):
     template_str = (
@@ -471,6 +499,10 @@ pytest tests/infrastructure/llm/ --cov=infrastructure.llm --cov-report=html
 
 ## Error Handling
 
+### Connection Errors
+
+The LLM client includes automatic retry logic for transient connection failures:
+
 ```python
 from infrastructure.core.exceptions import (
     LLMConnectionError,
@@ -483,9 +515,37 @@ try:
     response = client.query("...")
 except LLMConnectionError as e:
     print(f"Connection failed: {e.context}")
+    # Context includes: url, model, status_code (if HTTP error)
 except ContextLimitError as e:
     print(f"Context limit exceeded: {e.context}")
 ```
+
+### Connection Health Checks
+
+Check Ollama availability with detailed error information:
+
+```python
+# Simple boolean check (backward compatible)
+if client.check_connection():
+    print("Ollama is ready")
+
+# Detailed status with error message
+is_available, error = client.check_connection_detailed()
+if not is_available:
+    print(f"Ollama unavailable: {error}")
+```
+
+### Retry Logic
+
+The client automatically retries on transient failures:
+- **Connection errors**: Retried with exponential backoff
+- **Timeouts**: Retried with increasing wait times
+- **HTTP errors (4xx/5xx)**: Not retried (not transient)
+
+Retry behavior:
+- Default: 1 retry attempt
+- Wait time: Exponential backoff (1s, 2s, max 5s)
+- Logs retry attempts at DEBUG level
 
 ## Performance Considerations
 
@@ -523,29 +583,29 @@ The LLM module includes a CLI for interactive queries from the terminal.
 
 ```bash
 # Check Ollama connection
-python3 -m infrastructure.llm.cli check
+python3 -m infrastructure.llm.cli.main check
 
 # List available models
-python3 -m infrastructure.llm.cli models
+python3 -m infrastructure.llm.cli.main models
 
 # Query the LLM
-python3 -m infrastructure.llm.cli query "What is machine learning?"
+python3 -m infrastructure.llm.cli.main query "What is machine learning?"
 
 # Short response mode
-python3 -m infrastructure.llm.cli query --short "Summarize X"
+python3 -m infrastructure.llm.cli.main query --short "Summarize X"
 
 # Long response mode
-python3 -m infrastructure.llm.cli query --long "Explain X in detail"
+python3 -m infrastructure.llm.cli.main query --long "Explain X in detail"
 
 # Streaming output
-python3 -m infrastructure.llm.cli query --stream "Write a poem"
+python3 -m infrastructure.llm.cli.main query --stream "Write a poem"
 
 # With generation options
-python3 -m infrastructure.llm.cli query --temperature 0.0 --seed 42 --max-tokens 500 "Test"
+python3 -m infrastructure.llm.cli.main query --temperature 0.0 --seed 42 --max-tokens 500 "Test"
 
 # Apply research templates
-python3 -m infrastructure.llm.cli template --list
-python3 -m infrastructure.llm.cli template summarize_abstract --input "Abstract text..."
+python3 -m infrastructure.llm.cli.main template --list
+python3 -m infrastructure.llm.cli.main template summarize_abstract --input "Abstract text..."
 ```
 
 ### CLI Options
@@ -566,11 +626,51 @@ python3 -m infrastructure.llm.cli template summarize_abstract --input "Abstract 
 
 ### Connection Issues
 
+**Check Ollama Status:**
 ```python
+# Simple check
 if not client.check_connection():
     print("Ollama not running")
     # Start Ollama: ollama serve
+
+# Detailed diagnosis
+is_available, error = client.check_connection_detailed()
+if not is_available:
+    print(f"Ollama unavailable: {error}")
+    if "timeout" in error.lower():
+        print("  → Ollama may be slow to respond, try increasing timeout")
+    elif "connection" in error.lower():
+        print("  → Ollama server may not be running")
+        print("  → Start with: ollama serve")
 ```
+
+**Common Issues:**
+- **Timeout errors**: Increase `LLM_TIMEOUT` environment variable or config timeout
+- **Connection refused**: Ensure Ollama server is running (`ollama serve`)
+- **Model not found**: Install model with `ollama pull <model_name>`
+- **Empty responses**: Check model is loaded and has sufficient memory
+
+### Model Preloading
+
+Preload models to reduce first-query latency:
+
+```python
+from infrastructure.llm.utils.ollama import preload_model
+
+# Preload with error handling
+success, error = preload_model("llama3:latest", timeout=60.0)
+if not success:
+    print(f"Preload failed: {error}")
+    print("Model will load on first query (may be slower)")
+else:
+    print("Model preloaded successfully")
+```
+
+**Preload Behavior:**
+- Checks if model is already loaded (avoids redundant preloads)
+- Retries on transient failures
+- Returns detailed error messages
+- Timeout may indicate model is still loading (not necessarily failed)
 
 ### Context Overflow
 
@@ -594,72 +694,6 @@ except ValidationError as e:
 ## Manuscript Review Integration
 
 The LLM module is used by `scripts/06_llm_review.py` to generate comprehensive manuscript reviews. This section documents best practices for long-form review generation.
-
-### Review Types
-
-The system generates four standard review types plus optional translations:
-
-1. **Executive Summary** - Key findings and contributions overview
-2. **Quality Review** - Writing clarity and style assessment
-3. **Methodology Review** - Structure and methods evaluation
-4. **Improvement Suggestions** - Actionable recommendations
-5. **Translations** (optional) - Technical abstract in multiple languages
-
-### Translation Feature
-
-The translation feature generates a medium-length technical abstract (~200-400 words) in English, then translates it to configured target languages.
-
-**Configuration:**
-
-Translations are configured in `project/manuscript/config.yaml`:
-
-```yaml
-llm:
-  translations:
-    enabled: true
-    languages:
-      - zh  # Chinese (Simplified)
-      - hi  # Hindi
-      - ru  # Russian
-```
-
-**Supported Languages:**
-
-| Code | Language |
-|------|----------|
-| `zh` | Chinese (Simplified) |
-| `hi` | Hindi |
-| `ru` | Russian |
-
-**Usage:**
-
-```python
-from infrastructure.llm import ManuscriptTranslationAbstract, TRANSLATION_LANGUAGES
-from infrastructure.core.config_loader import get_translation_languages
-
-# Get configured languages
-languages = get_translation_languages(repo_root)  # ['zh', 'hi', 'ru']
-
-# Generate translation for each language
-for lang_code in languages:
-    template = ManuscriptTranslationAbstract()
-    target_language = TRANSLATION_LANGUAGES[lang_code]
-    prompt = template.render(text=manuscript_text, target_language=target_language)
-    response = client.query(prompt, options=options)
-```
-
-**Output Structure:**
-
-The translation template generates:
-- `## English Abstract` - 200-400 word technical summary
-- `## {Language} Translation` - Complete translation preserving technical terminology
-
-**Validation:**
-
-Translation reviews are validated for:
-- Presence of English abstract section
-- Presence of translation section
-- Minimum word count (400 words total: ~200 English + ~200 translation)
 
 ### Review Generation Best Practices
 
@@ -755,7 +789,7 @@ For long-form reviews, use these recommended settings:
 ```python
 options = GenerationOptions(
     temperature=0.3,       # Low for consistency
-    max_tokens=4096,       # Allow long responses
+    max_tokens=16384,      # Allow long responses
     seed=42,               # Reproducibility
 )
 ```
@@ -1000,93 +1034,6 @@ The manuscript presents a research framework for optimization algorithms.
 
 The research employs gradient-based optimization techniques...
 ```
-
-## Repetition Detection
-
-The validation module includes comprehensive repetition detection to catch when LLMs get stuck in output loops.
-
-### Detection Functions
-
-```python
-from infrastructure.llm import (
-    detect_repetition,
-    calculate_unique_content_ratio,
-    deduplicate_sections,
-)
-
-# Detect repetitive content
-has_repetition, duplicates, unique_ratio = detect_repetition(text)
-# has_repetition: True if significant repetition detected
-# duplicates: List of repeated chunks (first 5)
-# unique_ratio: 0.0 (all repeated) to 1.0 (all unique)
-
-# Calculate unique content ratio
-ratio = calculate_unique_content_ratio(text)
-# Returns 0.0-1.0 indicating uniqueness
-
-# Clean up repetitive output
-cleaned = deduplicate_sections(text, max_repetitions=2)
-# Removes sections repeated more than max_repetitions times
-```
-
-### OutputValidator Methods
-
-```python
-# Validate response doesn't have excessive repetition
-is_valid, details = OutputValidator.validate_no_repetition(
-    response,
-    max_allowed_ratio=0.3  # Max 30% repeated content
-)
-
-# Post-process to clean repetitive content
-cleaned = OutputValidator.clean_repetitive_output(response)
-```
-
-### Integration with Review Validation
-
-The `validate_review_quality()` function automatically checks for repetition:
-
-```python
-is_valid, issues, details = validate_review_quality(response, "executive_summary")
-# details["repetition"] contains:
-# - has_repetition: bool
-# - unique_ratio: float
-# - duplicates_found: int
-```
-
-### Thresholds
-
-| Unique Ratio | Severity | Action |
-|--------------|----------|--------|
-| > 80% | Normal | Pass |
-| 50-80% | Warning | Log warning, continue |
-| < 50% | Error | Fail validation, retry |
-
-### Post-Processing Cleanup
-
-Generated reviews are automatically post-processed to remove repetitive content:
-
-```python
-# Applied after generation in generate_review_with_metrics()
-original_length = len(response)
-response = deduplicate_sections(response, max_repetitions=2)
-if len(response) < original_length * 0.9:
-    logger.info(f"Cleaned repetitive content: {original_length} → {len(response)} chars")
-```
-
-### Common Causes of Repetition
-
-1. **Model getting stuck** - LLM repeats same output in a loop
-2. **Prompt confusion** - Model interprets prompt as requiring repetition
-3. **Context overflow** - Long inputs cause degenerate output
-4. **Low temperature** - Too deterministic, falls into patterns
-
-### Prevention Strategies
-
-1. Use `repeat_penalty` in GenerationOptions (1.1-1.2)
-2. Increase temperature slightly on retries
-3. Clear context before retry with `client.reset()`
-4. Use post-processing deduplication as safety net
 
 ## See Also
 

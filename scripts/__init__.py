@@ -108,7 +108,7 @@ MENU_SCRIPT_MAPPING = {
 }
 
 # Import from infrastructure modules (where functions were moved during refactoring)
-from infrastructure.llm.review_generator import (
+from infrastructure.llm.review.generator import (
     DEFAULT_MAX_INPUT_LENGTH,
     get_max_input_length,
     check_ollama_availability,
@@ -120,12 +120,12 @@ from infrastructure.llm.review_generator import (
     validate_review_quality,
 )
 from infrastructure.core.logging_utils import log_stage
-from infrastructure.llm.review_metrics import (
+from infrastructure.llm.review.metrics import (
     ReviewMetrics,
     ManuscriptMetrics,
     estimate_tokens,
 )
-from infrastructure.llm.review_io import (
+from infrastructure.llm.review.io import (
     SessionMetrics,
     save_review_outputs,
     generate_review_summary,
@@ -144,8 +144,8 @@ _spec.loader.exec_module(_llm_review)
 main = _llm_review.main
 ReviewMode = _llm_review.ReviewMode
 
-# Re-export validation functions for backward compatibility
-from infrastructure.llm.validation_format import (
+# Re-export validation functions
+from infrastructure.llm.validation.format import (
     is_off_topic,
     detect_conversational_phrases,
     check_format_compliance,
@@ -153,9 +153,9 @@ from infrastructure.llm.validation_format import (
 
 # Re-export infrastructure utilities for tests
 try:
-    from infrastructure.llm import (
-        LLMClient,
-        LLMConfig,
+    from infrastructure.llm.core.client import LLMClient
+    from infrastructure.llm.core.config import LLMConfig
+    from infrastructure.llm.utils.ollama import (
         is_ollama_running,
         select_best_model,
     )

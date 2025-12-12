@@ -10,7 +10,7 @@ This master orchestrator coordinates the core build pipeline (6 stages):
 6. STAGE 05: Copy Outputs - Copy final deliverables to root output/
 
 Note: This is the CORE pipeline (6 stages) for manuscript building. 
-For the full pipeline with optional LLM review and translations (10 stages: 0-9), use run.sh --pipeline.
+For the full pipeline with optional LLM review and translations (10 stages: 0-9), use ./run_manuscript.sh --pipeline.
 
 One-line execution for complete end-to-end build.
 
@@ -148,7 +148,7 @@ def run_pipeline(orchestrators: list[Path], clean_duration: float = 0.0, resume:
     logger.info("  0. Clean Output Directories")
     for i, script in enumerate(orchestrators, 1):
         logger.info(f"  {i}. {script.name}")
-    logger.info("\nNote: This is the core pipeline. For full pipeline with LLM stages, use run.sh --pipeline")
+    logger.info("\nNote: This is the core pipeline. For full pipeline with LLM stages, use ./run_manuscript.sh --pipeline")
     
     # Initialize checkpoint manager
     checkpoint_manager = CheckpointManager()

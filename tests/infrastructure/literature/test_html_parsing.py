@@ -4,9 +4,8 @@ Tests the _extract_pdf_urls_from_html function and related HTML parsing capabili
 """
 
 import pytest
-from infrastructure.literature.pdf_extractor import extract_pdf_urls_from_html
-from infrastructure.literature.pdf_handler import PDFHandler
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.pdf import extract_pdf_urls_from_html, PDFHandler
+from infrastructure.literature.core import LiteratureConfig
 
 
 class TestExtractPDFUrlsFromHTML:

@@ -6,7 +6,7 @@ and bioRxiv/medRxiv DOI lookup fallback features.
 import pytest
 from pathlib import Path
 
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.core import LiteratureConfig
 from infrastructure.literature.sources import (
     SearchResult,
     ArxivSource,
@@ -14,8 +14,7 @@ from infrastructure.literature.sources import (
     normalize_title,
     title_similarity,
 )
-from infrastructure.literature.pdf_fallbacks import transform_pdf_url
-from infrastructure.literature.pdf_handler import PDFHandler
+from infrastructure.literature.pdf import transform_pdf_url, PDFHandler
 
 
 class TestTitleNormalization:

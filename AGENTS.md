@@ -314,25 +314,42 @@ Configuration is read at runtime by `scripts/03_render_pdf.py` and applied to:
 
 ### Complete Pipeline Execution
 
-The template provides **two entry points** for pipeline execution:
+The template provides **three entry points** for pipeline execution:
 
-**Interactive Menu (Recommended)**
+**Main Dispatcher (Recommended)**
 ```bash
-# Full interactive menu with all options
+# Interactive menu to choose between manuscript and literature operations
 ./run.sh
 ```
 
-**Non-Interactive Pipelines**
+**Manuscript Operations**
 ```bash
-# Extended pipeline (10 stages: 0-9) with optional LLM review
-./run.sh --pipeline
+# Interactive menu with manuscript operations
+./run_manuscript.sh
 
+# Non-interactive: Extended pipeline (10 stages: 0-9) with optional LLM review
+./run_manuscript.sh --pipeline
+```
+
+**Literature Operations**
+```bash
+# Interactive menu with literature operations
+./run_literature.sh
+
+# Non-interactive: Search literature
+./run_literature.sh --search
+```
+
+**Alternative: Python Orchestrator**
+```bash
 # Core pipeline (6 stages) - Python orchestrator
 python3 scripts/run_all.py
 ```
 
 **Entry Point Comparison**
-- **`./run.sh --pipeline`**: 10 stages (0-9), includes optional LLM review stages. Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs.
+- **`./run.sh`**: Dispatcher menu - choose between manuscript and literature operations
+- **`./run_manuscript.sh --pipeline`**: 10 stages (0-9), includes optional LLM review stages. Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs.
+- **`./run_literature.sh`**: Literature search and management operations (7 menu options)
 - **`python3 scripts/run_all.py`**: 6 stages (00-05), core pipeline only
 
 ### Pipeline Stages
@@ -346,14 +363,14 @@ python3 scripts/run_all.py
 5. **Output Validation** - Validate all generated outputs
 6. **Copy Outputs** - Copy final deliverables to root `output/` directory
 
-**Extended Pipeline Stages** (`./run.sh --pipeline` only):
+**Extended Pipeline Stages** (`./run_manuscript.sh --pipeline` only):
 
 8. **LLM Scientific Review** - AI-powered manuscript analysis (optional)
 9. **LLM Translations** - Multi-language technical abstract generation (optional)
 
 **Stage Numbering:**
 - `run_all.py`: Stages 00-05 (zero-padded, Python convention) - 6 core stages
-- `run.sh`: Stages 0-9 (10 total stages). Stage 0 is cleanup (not in STAGE_NAMES array), stages 1-9 are tracked and displayed as [1/9] to [9/9] in logs
+- `run_manuscript.sh`: Stages 0-9 (10 total stages). Stage 0 is cleanup (not in STAGE_NAMES array), stages 1-9 are tracked and displayed as [1/9] to [9/9] in logs
 
 ### Manual Execution Options
 
@@ -677,8 +694,15 @@ html = manager.render_web("manuscript.md")
 all_outputs = manager.render_all("manuscript.md")
 ```
 
-### 🚀 **Publishing API** (`infrastructure/publishing_api.py`) **NEW**
+### 🚀 **Publishing Module** (`infrastructure/publishing/`) **NEW**
 **Automated publishing to academic platforms**
+
+**Module Structure:**
+- `core.py` - Publication metadata extraction, DOI validation, citation generation
+- `api.py` - Platform API clients (Zenodo, arXiv, GitHub)
+- `citations.py` - Citation format generation (BibTeX, APA, MLA)
+- `metadata.py` - Publication metadata management
+- `platforms.py` - Platform-specific integration logic
 
 **Key Features:**
 - **Zenodo Integration**: Upload with DOI minting
@@ -689,16 +713,24 @@ all_outputs = manager.render_all("manuscript.md")
 
 **Usage:**
 ```python
-from infrastructure import publishing
+from infrastructure.publishing import (
+    extract_publication_metadata,
+    publish_to_zenodo,
+    create_github_release,
+    prepare_arxiv_submission
+)
+
+# Extract metadata
+metadata = extract_publication_metadata([Path("manuscript.md")])
 
 # Publish to Zenodo
-doi = publishing.publish_to_zenodo(metadata, files, token)
+doi = publish_to_zenodo(metadata, files, token)
 
 # Create GitHub release
-release = publishing.create_github_release(metadata, files, token)
+release = create_github_release(metadata, files, token)
 
 # Prepare arXiv submission
-package = publishing.publish_to_arxiv(metadata, files)
+package = prepare_arxiv_submission(metadata, files)
 ```
 
 ### **Module Integration**
@@ -905,11 +937,11 @@ The pipeline includes automatic checkpointing for resume capability:
 ```bash
 # Resume from last checkpoint
 python3 scripts/run_all.py --resume
-./run.sh --pipeline --resume
+./run_manuscript.sh --pipeline --resume
 
 # Start fresh (clears checkpoint on success)
 python3 scripts/run_all.py
-./run.sh --pipeline
+./run_manuscript.sh --pipeline
 ```
 
 **Features**:
@@ -960,7 +992,7 @@ See [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md) for complete docume
 ## ✅ System Status: FULLY OPERATIONAL (v2.0)
 
 **All systems confirmed functional:**
-- ✅ Test suite (2175 tests passing: 1855 infrastructure + 320 project)
+- ✅ Test suite (2245 tests passing: 1894 infrastructure [8 skipped] + 351 project)
 - ✅ Package API testing (test_package_imports.py validates __init__.py)
 - ✅ Script execution (all 7 analysis scripts operational)
 - ✅ Markdown validation (all references resolved, no warnings)

@@ -1,0 +1,357 @@
+arXiv:2010.00262v1  [cs.LG]  1 Oct 2020
+Active Inference or Control as Inference?
+A Unifying View
+Abraham Imohiosen*† Joe Watson*§ Jan Peters§
+†RWTH Aachen University, Germany
+§IAS, Technical University Darmstadt, Germany
+abraham.imohiosen@rwth-aachen.de
+{watson,peters}@ias.informatik.tu-darmstadt.de
+Abstract
+Active inference (AI) is a persuasive theoretical framewor k from com-
+putational neuroscience that seeks to describe action and p erception as
+inference-based computation. However, this framework has yet to pro-
+vide practical sensorimotor control algorithms that are co mpetitive with
+alternative approaches. In this work, we frame active infer ence through
+the lens of control as inference (CaI), a body of work that pre sents tra-
+jectory optimization as inference. From the wider view of ‘p robabilistic
+numerics’, CaI oﬀers principled, numerically robust optim al control solvers
+that provide uncertainty quantiﬁcation, and can scale to no nlinear prob-
+lems with approximate inference. We show that AI may be frame d as
+partially-observed CaI when the cost function is deﬁned spe ciﬁcally in the
+observation states.
+1 Introduction
+Active inference (AI) [2, 4, 5] is a probabilistic framework for senso rimotor
+behavior that enjoyed sustained interest from computational ne uroscientists.
+However, its formulation has been criticized for its opacity and similar ity to
+optimal control [7, 8, 9], but is seemingly diﬃcult to translate into an e qually
+eﬀective algorithmic form. In this work, we oﬀer a critical analysis of AI from the
+view of control as inference (CaI) [1, 11, 14, 21, 24, 28], the syn thesis of optimal
+control and approximate inference. The goal is to appreciate the insights from
+the AI literature, but in a form with computational and theoretical clarity.
+2 Background
+Here we outline the foundational theory and assumptions in this wor k.
+1
+2.1 Problem Formulation
+We speciﬁcally consider a known stochastic, continuous, discrete- time, partially-
+observed, nonlinear, dynamical system with state x∈ Rdx , observations y∈ Rdy
+and control inputs u ∈ Rdu , operating over a time horizon T . We deﬁne
+the states in upper case to denote the variables over the time horiz on, i.e.
+U = {u0, . . . , uT −1}. The joint distribution (generative model) p(Y, X, U)
+over these variables factorizes into several interpretable distrib utions: The dy-
+namics p(xt+1|xt, ut), observation model p(yt | xt, ut), and behavior policy
+p(ut |xt).
+2.2 Variational Inference for Latent Variable Models
+Inference may be described by minimizing the distance between the ‘t rue’ data
+distribution p(·) and a parameterized family qθ(·) [17]. A popular approach is to
+minimize the Kullback-Liebler (KL) divergence, e.g. min DKL[qθ ||p] w.r.t. θ.
+More complex inference tasks can be described by observations yinﬂuenced by
+unseen latent variables x. Given an observation y∗, maximizing the likelihood
+involves integrating over the hidden states, and so is termed the ma rginal like-
+lihood p(y∗) =
+∫
+p(y=y∗, x)dx. Unfortunately this marginalization is typically
+intractable in closed-form. A more useful objective may be obtaine d by apply-
+ing a variational approximation of latent state qθ(x | y∗) = qθ(x | y=y∗) to
+the log marginal likelihood and obtaining a lower bound via Jensen’s inequ ality
+[17]
+log ∫ p(y∗, x)dx= log ∫ p(y∗, x)qθ (x|y∗)
+qθ (x|y∗) dx= log E x∼qθ (·|y∗)
+[
+p(y∗, x)
+qθ (x|y∗)
+]
+, (1)
+≥ E x∼qθ (·|y∗)
+[
+log p(y∗ , x)
+qθ (x|y∗)
+]
+= - DKL[qθ(x|y∗)||p(x, y∗))], (2)
+= E x∼qθ (·|y∗)[log p(y∗ |x)] − DKL[qθ(x|y∗) ||p(x)], (3)
+where equations 2, 3 are variations of the ‘evidence lower bound obj ective’
+(ELBO). The expectation maximization algorithm (EM) [17], can be und erstood
+via Equation 3 as iteratively estimating the latent states (minimizing th e KL
+term via q) in the E step and maximizing the likelihood term in the M step.
+3 Active Inference
+Active Inference frames sensorimotor behaviour as the goal of e quilibrium be-
+tween its current and desired observations, which in practice can b e expressed as
+the minimization of a distance between these two quantities. This dist ance is ex-
+pressed using the KL divergence, resulting in a variational free ene rgy objective
+as described in Section 2.2. Curiously, AI is motivated directly by the E LBO,
+whose negative is referred to in the AI literature as the ‘free energ y’F(·). The
+minimization of this quantity, F(y∗, x, u) = DKL[qθ(x, u|y∗) ||p(x, u, y∗)], as
+a model of behavior (i.e. state estimation and control), has been co ined the
+‘free energy principle’.
+2
+3.1 Free Energy of the Future
+Despite the ELBO not being temporally restricted, AI delineates a ‘fu ture’
+free energy. This free energy is used to describe the distance bet ween future
+predicted and desired observations, where uis directly represented as a policy
+u = π(x), so F(y∗
+t , xt |π) over the future trajectory is minimized. In active
+inference, π is commonly restricted to discrete actions or an ensemble of ﬁxed
+policies, so inferring p(π) can be approximated through a softmax σ(·) applied
+to the expected ‘future’ free energies for each policy over t = [ τ, . . . , T − 1], with
+temperature γ and prior p(π)
+p(π |Y∗) ≈ σ(log p(π) + γ ∑ T −1
+t=τ F(y∗
+t , xt, |π)). (4)
+Moreover, for the ‘past’ where t = [0 , . . . , τ − 1], minimizing F(·) amounts for
+state estimation of x given y. Another consideration is whether the dynamic
+and observation models are known or unknown. In this work we assu me they
+are given, but AI can also include estimating these models from data.
+3.2 Active Inference in Practice
+Initial AI work was restricted to discrete domains and evaluated on simple grid-
+world environments [5, 6]. Later work on continuous state spaces u se various
+black-box approaches such as cross-entropy [25], evolutionary s trategies [26],
+and policy gradient [16] to infer π. A model-based method was achieved by
+using stochastic VI on expert data [3]. Connections between AI and CaI, per-
+forming inference via message passing, have been previously discus sed [13, 27].
+AI has been applied to real robots for kinematic planning, performin g gradient
+descent on the free energy using the Laplace approximation every timestep [18].
+Despite these various approaches, AI has yet to demonstrate th e sophisticated
+control achieved by advanced optimal methods, such as diﬀerent ial dynamic
+programming [20].
+4 Control as Inference
+From its origins in probabilistic control design [12], deﬁning a state z∈ Rdz to
+describe the desired system trajectory 1 p(Z), optimal control can be expressed
+as ﬁnding the state-action distribution that minimizes the distance f or a gener-
+ative model parameterized by θ, which can be framed as a likelihood objective
+[17]
+min DKL[p(Z) ||qθ(Z)] ≡ max EZ∼p(·)[log
+∫
+qθ(Z, X, U)dXdU]. (5)
+When p(Z) simply describes a desired state z∗
+t , so p(zt) = δ(zt − z∗
+t ), and the la-
+tent state-action trajectory is approximated by qφ(X, U), the objective (Equa-
+1while z could be deﬁned from [ x,u]⊺, it could also include a transformation, e.g. applying
+kinematics to joint space-based control for a cartesian spa ce objective.
+3
+tion 5) can be expressed as an ELBO where the ‘data’ is Z∗
+max E X, U∼qφ (·|Z∗)[log qθ(Z∗ |X, U)]− DKL[qφ(X, U |Z∗) |qθ(X, U)], (6)
+where φ captures the latent state parameterization and θ deﬁnes the remaining
+terms, i.e. the priors on the system parameters and latent states . This objective
+can be optimized using EM, estimating the latent state-action traje ctory φ
+in the E step and optimizing the remaining unknowns θ in the M step. By
+exploiting the temporal structure, qφ(X, U |Z∗) can be inferred eﬃciently in
+the E step by factorizing the joint distribution (Equation 7) and app lying Bayes
+rule recursively
+qφ(Z∗, X, U)=qφ(x0) ∏ T −1
+t=0 qφ(xt+1|xt, ut) ∏ T
+t=0 qφ(z∗
+t |xt, ut)qφ(ut|xt), (7)
+qφ(xt, ut |z∗
+0:t) ∝ qφ(z∗
+t |xt, ut) qφ(xt, ut |z∗
+0:t−1), (8)
+qφ(xt, ut |z∗
+0:T ) ∝ qφ(xt, ut |xt+1) qφ(xt+1 |z∗
+0:T ). (9)
+Equations 8, 9 are commonly known as Bayesian ﬁltering and smoothin g [19].
+The key distinction of this framework from state estimation is the ha ndling of
+u during the forward pass, as qφ(xt, ut)=qφ(ut | xt)qφ(xt), control is incor-
+porated into the inference. We can demonstrate this in closed-for m with linear
+Gaussian inference and linear quadratic optimal control.
+4.1 Linear Gaussian Inference & Linear Quadratic Con-
+trol
+While the formulation above is intentionally abstract, it can be ground ed clearly
+by unifying linear Gaussian dynamical system inference (LGDS, i.e. Ka lman
+ﬁltering and smoothing) and linear quadratic Gaussian (LQG) optimal con-
+trol [22]. While both cases have linear dynamical systems, here LQG is fully-
+observed2 and has a quadratic control cost, while the LGDS is partially ob-
+served and has a quadratic log-likelihood due to the Gaussian additive un-
+certainties. These two domains can be uniﬁed by viewing the quadrat ic con-
+trol cost function as an Gaussian observation likelihood. For examp le, given
+zt = xt + ξ, ξ∼ N (0, Σ ) and z∗
+t = 0 ∀ t,
+log qθ(z∗
+t |xt, ut) = - 1
+2 (dz log 2π + log |Σ |+ x⊺
+t Σ -1xt) = α x⊺
+t Qxt + β (10)
+where ( α, β ) represents the aﬃne transformation mapping the quadratic con trol
+cost x⊺Qx to the Gaussian likelihood. As convex objectives are invariant to
+aﬃne transforms, this mapping preserves the control problem wh ile translating
+it into an inference one. The key unknown here is α , which incorporates Q
+into the additive uncertainty ξ, Σ = α Q-1. Moreover, inference is performed
+2Confusingly, LQG can refer to both Gaussian disturbance and /or observation noise. While
+all varieties share the same optimal solution as LQR, the obs ervation noise case results in a
+partially observed system and therefore requires state est imation. i2c is motivated by the LQR
+solution and therefore does not consider observation noise , but it would be straightforward to
+integrate.
+4
+by using message passing [15] in the E step to estimate X and U, while α is
+optimized in the M step. This view scales naturally to not just the typic al LQG
+cost x⊺Qx+ u⊺Ru, but also nonlinear mappings to z by using approximate
+inference. While the classic LQG result includes the backward Ricatti equations
+and an optimal linear control law, the inference setting derives dire ct parallels
+to the backward pass during smoothing [22] and the linear conditiona l distribu-
+tion of the Gaussian, qθ(ut |xt)=N (Ktxt + kt, Σ kt ) [10] respectively. As the
+conditional distribution is linear, updating the prior joint density p(xt, ut) in
+the forward pass with updated state estimate x′
+t corresponds to linear feedback
+control w.r.t. the prior
+p(u′
+t) =
+∫
+p(ut|xt=x′
+t)p(x′
+t)dx′
+t, (11)
+µu′
+t = µut + Kt(µxt − µx′
+t ), (12)
+Σ uu′
+t = Σ uut − Σ uxt Σ -1
+xxt Σ ⊺
+xut + KtΣ xx′
+t K⊺
+t , (13)
+Kt = Σ uxt Σ -1
+xxt . (14)
+From Equation 14, it is evident that the strength of the feedback c ontrol depends
+on both the certainty in the state and the correlation between the optimal state
+and action.
+The general EM algorithm for obtaining qθ(x, u) from p(Z) is referred to as
+input inference for control ( i2c) [28] due to its equivalence with input estimation.
+Note that for linear Gaussian EM, the ELBO is tight as the variational distri-
+bution is the exact posterior. For nonlinear ﬁltering and smoothing, mature
+approximate inference methods such as Taylor approximations, qu adrature and
+sequential Monte Carlo may be used for eﬃcient and accurate comp utation [19].
+Another aspect to draw attention to is the inclusion of z compared to alter-
+native CaI formulations, which frame optimality as the probability for some
+discrete variable o, p(o=1 | x, u) [14]. Previous discussion on CaI vs AI have
+framed this discrete variable as an important distinction. However, it is merely
+a generalization to allow for a general cost function C(·) to be framed as a log-
+likelihood, i.e. p(o=1 | x, u) ∝ exp(− αC (x, u)). For the typical state-action
+cost functions that are a distance metric in some transformed spa ce, the key con-
+sideration is the choice of observation space z and corresponding exponential
+density.
+5 The Unifying View: Control of the Observa-
+tions
+A key distinction to the AI and CaI formulations described above is th at, while
+AI combines state estimation and control with a uniﬁed objective, C aI focuses
+on trajectory optimization. However, this need not be the case. I n a similar
+fashion to the partially-observed case of LQG, CaI also naturally inc orporates
+5
+observations [23]. As Section 4 describes i2c through a general Bayesian dy-
+namical system, the formulation can be readily adapted to include inf erence
+using past measurements. Moreover, as i2c frames the control objective as an
+observation likelihood, when z and y are the same transform of x and u, the
+objective can also be uniﬁed and directly compared to active inferen ce. For
+‘measurements’Y∗ = {y∗
+0 , . . . , y∗
+τ -1, z∗
+τ , . . . , z∗
+T −1}, following Equation 5 using
+the F(·) notation
+min DKL[p(Y)||qθ(Y)]= min
+τ -1∑
+t=0
+Fψ (y∗
+t , xt, ut)
+  
+state estimation
++
+T -1∑
+t=τ
+Fψ (z∗
+t , xt, ut),
+  
+optimal control
+(15)
+where ψ = {θ, φ}. Here, p(yt)=δ(yt − y∗
+t ) now also describes the empirical
+density of past measurements y∗
+<τ . The crucial detail for this representation is
+that the observation model qθ(yt | xt, ut, t ) is now time dependent, switching
+from estimation to control at t = τ. For the Gaussian example in Section 4.1,
+Σ <τ is the measurement noise and Σ -1
+≥τ =α Q. A beneﬁt of this view is that
+the computation of active inference can now be easily compared to t he classic
+results of Kalman ﬁltering and LQG (Fig. 1), and also scaled to nonlinea r tasks
+Prior Posterior y∗ z∗ lqr
+x1x2
+0 20 40 60 80 100
+t
+u
+Figure 1: Linear Gaussian i2c performing state estimation and control follow-
+ing Section 5, with state x=[x1, x 2]⊺, action u and [ x, u ]⊺ as the observation
+space. With τ = 50, for t < τ i2c performs state estimation under random
+controls. For t ≥ τ, i2c switches to optimal control. This example is in the low
+noise setting, with a large prior on u, to illustrate that i2c returns the LQR
+solution for the same initial state and planning horizon.
+6
+through approximate inference. Moreover, obtaining the policy π(·) using the
+joint distribution qθ(xt, ut) is arguably a more informed approach compared to
+direct policy search on an arbitrary policy class.
+6 Conclusion
+We have derived an equivalent formulation to active inference by con sider-
+ing partially-observed, inference-based optimal control, which ha s a principled
+derivation and is well-suited for approximate inference. While we have delin-
+eated state estimation as operating on past measurement and con trol as plan-
+ning future actions (Equation 15), both AI and i2c demonstrate the duality
+between estimation and control due to the mathematical similarity w hen both
+are treated probabilistically. We hope the inclusion of the CaI literatu re enables
+a greater theoretical understanding of AI and more eﬀective imple mentations
+through approximate inference.
+References
+[1] Attias, H.: Planning by probabilistic inference. In: In ternational Workshop on Artiﬁcial
+Intelligence and Statistics (2003)
+[2] Biehl, M., Guckelsberger, C., Salge, C., Smith, S.C., Po lani, D.: Expanding the active
+inference landscape: More intrinsic motivations in the per ception-action loop. Frontiers
+in Neurorobotics (2018)
+[3] Catal, O., Nauta, J., Verbelen, T., Simoens, P., Dhoedt, B.: Bayesian policy selection
+using active inference. In: ICLR Workshop on Structure & Pri ors in Reinforcement
+Learning (2019)
+[4] Friston, K.: The free-energy principle: a uniﬁed brain t heory? Nature reviews neuro-
+science (2010)
+[5] Friston, K., FitzGerald, T., Rigoli, F., Schwartenbeck , P., Pezzulo, G.: Active inference:
+a process theory. Neural computation (2017)
+[6] Friston, K.J., Daunizeau, J., Kiebel, S.J.: Reinforcem ent learning or active inference?
+PloS one (2009)
+[7] Gershman, S.J.: What does the free energy principle tell us about the brain? Neurons,
+Behavior, Data analysis, and Theory (2019)
+[8] Guzm´ an, N.: twitter.com/NoahGuzman14/status/1259953086241492992, Accessed:
+2020-06-17
+[9] Herreros, I., Verschure, P.F.: About the goal of a goals’ goal theory. Cognitive Neuro-
+science (2015)
+[10] Hoﬀmann, C., Rostalski, P.: Linear optimal control on f actor graphs - a message passing
+perspective -. International Federation of Automatic Cont rol (2017)
+[11] Kappen, H.J.: Path integrals and symmetry breaking for optimal control theory. Journal
+of Statistical Mechanics: Theory and Experiment (2005)
+[12] K´ arn` y, M.: Towards fully probabilistic control desi gn. Automatica (1996)
+[13] van de Laar, T., ¨Oz¸ celikkale, A., Wymeersch, H.: Application of the free en ergy principle
+to estimation and control. arXiv preprint arXiv:1910.0982 3 (2019)
+[14] Levine, S.: Reinforcement learning and control as prob abilistic inference: Tutorial and
+review. arXiv preprint arXiv:1805.00909 (2018)
+7
+[15] Loeliger, H.A., Dauwels, J., Hu, J., Korl, S., Ping, L., Kschischang, F.R.: The factor
+graph approach to model-based signal processing. Proc. of t he IEEE (2007)
+[16] Millidge, B.: Deep active inference as variational pol icy gradients. arXiv preprint
+arXiv:1907.03876 (2019)
+[17] Murphy, K.P.: Machine learning: a probabilistic persp ective. MIT press (2012)
+[18] Oliver, G., Lanillos, P., Cheng, G.: Active inference b ody perception and action for
+humanoid robots. arXiv preprint arXiv:1906.03022 (2019)
+[19] Srkk, S.: Bayesian Filtering and Smoothing. Cambridge University Press (2013)
+[20] Tassa, Y., Erez, T., Todorov, E.: Synthesis and stabili zation of complex behaviors
+through online trajectory optimization. In: Internationa l Conference on Intelligent
+Robots and Systems. IEEE (2012)
+[21] Todorov, E.: Linearly-solvable markov decision probl ems. In: Advances in neural infor-
+mation processing systems (2007)
+[22] Toussaint, M.: Robot trajectory optimization using ap proximate inference. In: Interna-
+tional conference on machine learning (2009)
+[23] Toussaint, M., Charlin, L., Poupart, P.: Hierarchical pomdp controller optimization by
+likelihood maximization. In: Uncertainty in Artiﬁcial Int elligence (2008)
+[24] Toussaint, M., Storkey, A.: Probabilistic inference f or solving discrete and continuous
+state Markov Decision Processes. In: International Confer ence on Machine Learning
+(2006)
+[25] Tschantz, A., Millidge, B., Seth, A.K., Buckley, C.L.: Reinforcement learning through
+active inference. arXiv preprint arXiv:2002.12636 (2020)
+[26] Ueltzh¨ oﬀer, K.: Deep active inference. Biological Cy bernetics (2018)
+[27] de Vries, B., Friston, K.J.: A factor graph description of deep temporal active inference.
+Frontiers in Computational Neuroscience (2017)
+[28] Watson, J., Abdulsamad, H., Peters, J.: Stochastic opt imal control as approximate input
+inference. In: Conference on Robot Learning (2019)
+8

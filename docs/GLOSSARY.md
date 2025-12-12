@@ -6,6 +6,17 @@
 
 ---
 
+## Terminology Standards
+
+**Preferred Terms (as of v2.0):**
+- **Thin Orchestrator Pattern**: Core architectural principle (capitalized when referring to the pattern name, lowercase in prose)
+- **Two-Layer Architecture**: Layer 1 (Infrastructure) and Layer 2 (Project)
+- **Version**: v2.0 (current system version)
+- **Test Coverage**: 90% minimum for project code, 60% minimum for infrastructure code
+- **Build Pipeline**: 6-stage automated pipeline (00-05) or 10-stage extended pipeline (0-9)
+
+---
+
 ## A
 
 ### AGENTS.md

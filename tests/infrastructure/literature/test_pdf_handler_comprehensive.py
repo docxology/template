@@ -8,8 +8,8 @@ from pathlib import Path
 import os
 import pytest
 
-from infrastructure.literature.pdf_handler import PDFHandler
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.pdf import PDFHandler
+from infrastructure.literature.core import LiteratureConfig
 from infrastructure.literature.sources import SearchResult
 from infrastructure.core.exceptions import FileOperationError
 

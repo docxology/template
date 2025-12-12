@@ -18,7 +18,7 @@ import requests
 
 from infrastructure.core.exceptions import APIRateLimitError, LiteratureSearchError
 from infrastructure.core.logging_utils import get_logger
-from infrastructure.literature.config import LiteratureConfig
+from infrastructure.literature.core.config import LiteratureConfig
 
 logger = get_logger(__name__)
 

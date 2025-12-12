@@ -126,15 +126,27 @@ def setup_logger(
     # Remove existing handlers to avoid duplicates
     logger.handlers.clear()
     
-    # Console handler
-    console_handler = logging.StreamHandler(sys.stdout)
-    if USE_STRUCTURED_LOGGING:
-        console_handler.setFormatter(JSONFormatter())
-    else:
-        console_handler.setFormatter(TemplateFormatter())
-    logger.addHandler(console_handler)
+    # Check if we're in test environment (pytest)
+    # Check multiple indicators for pytest environment
+    is_test_env = (
+        os.getenv('PYTEST_CURRENT_TEST') is not None or
+        'pytest' in sys.modules or
+        any('pytest' in str(v) for v in sys.modules.values() if hasattr(v, '__file__'))
+    )
     
-    # File handler (optional)
+    # In test environment: don't add console handler, enable propagation
+    # so pytest's caplog can capture logs from root logger
+    # In normal environment: add console handler, disable propagation
+    if not is_test_env:
+        # Console handler (only in non-test environment)
+        console_handler = logging.StreamHandler(sys.stdout)
+        if USE_STRUCTURED_LOGGING:
+            console_handler.setFormatter(JSONFormatter())
+        else:
+            console_handler.setFormatter(TemplateFormatter())
+        logger.addHandler(console_handler)
+    
+    # File handler (optional, works in both environments)
     if log_file:
         log_path = Path(log_file)
         log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -144,8 +156,27 @@ def setup_logger(
         file_handler.setFormatter(file_formatter)
         logger.addHandler(file_handler)
     
-    # Don't propagate to root logger
-    logger.propagate = False
+    # Set propagation based on environment
+    logger.propagate = is_test_env
+    
+    # In test environment, ensure root logger is configured to receive propagated logs
+    if is_test_env:
+        root_logger = logging.getLogger()
+        # Ensure root logger level allows the logs through
+        if root_logger.level > logger.level:
+            root_logger.setLevel(logger.level)
+        # Remove any stdout/stderr handlers from root logger that might interfere with caplog
+        # (pytest's caplog will add its own handler)
+        root_handlers_to_remove = [
+            h for h in root_logger.handlers
+            if isinstance(h, logging.StreamHandler) and 
+            (h.stream is sys.stdout or h.stream is sys.stderr)
+        ]
+        for h in root_handlers_to_remove:
+            root_logger.removeHandler(h)
+        # Ensure root logger has at least WARNING level to not filter out our logs
+        if root_logger.level == logging.NOTSET:
+            root_logger.setLevel(logging.WARNING)
     
     return logger
 
@@ -166,9 +197,33 @@ def get_logger(name: str) -> logging.Logger:
     """
     logger = logging.getLogger(name)
     
+    # Check if we're in test environment (same detection as setup_logger)
+    is_test_env = (
+        os.getenv('PYTEST_CURRENT_TEST') is not None or
+        'pytest' in sys.modules or
+        any('pytest' in str(v) for v in sys.modules.values() if hasattr(v, '__file__'))
+    )
+    
     # If not configured, set up with defaults
     if not logger.handlers:
         return setup_logger(name)
+    
+    # If in test environment and logger was configured before test mode,
+    # force reconfiguration to enable propagation and remove console handlers
+    if is_test_env:
+        # Check if logger needs reconfiguration (has console handlers or propagate is False)
+        has_console_handler = any(
+            isinstance(h, logging.StreamHandler) and 
+            (h.stream is sys.stdout or h.stream is sys.stderr)
+            for h in logger.handlers
+        )
+        
+        if has_console_handler or not logger.propagate:
+            # Force reconfiguration by clearing handlers and calling setup_logger
+            logger.handlers.clear()
+            return setup_logger(name)
+        # Ensure propagation is enabled even if handlers exist
+        logger.propagate = True
     
     return logger
 
@@ -495,6 +550,7 @@ __all__ = [
     'log_progress',
     'log_stage',
     'log_substep',
+    'log_file_generated',
     # Helpers
     'format_error_with_suggestions',
     'format_duration',

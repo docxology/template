@@ -41,8 +41,14 @@ Output Files:
     literature/reports/ - Generated reports (JSON/CSV/HTML)
 """
 
-from infrastructure.literature.core import LiteratureSearch, DownloadResult
-from infrastructure.literature.config import LiteratureConfig, BROWSER_USER_AGENTS
+# Core functionality
+from infrastructure.literature.core import (
+    LiteratureSearch,
+    DownloadResult,
+    LiteratureConfig,
+    BROWSER_USER_AGENTS,
+)
+# Sources
 from infrastructure.literature.sources import (
     SearchResult,
     UnpaywallResult,
@@ -50,15 +56,40 @@ from infrastructure.literature.sources import (
     ArxivSource,
     BiorxivSource,
 )
-from infrastructure.literature.pdf_handler import PDFHandler
-from infrastructure.literature.reference_manager import ReferenceManager
-from infrastructure.literature.library_index import LibraryIndex, LibraryEntry
-from infrastructure.literature.workflow import LiteratureWorkflow, WorkflowResult
-from infrastructure.literature.progress import ProgressTracker, ProgressEntry, SummarizationProgress
-from infrastructure.literature.summarizer import PaperSummarizer, SummaryQualityValidator, SummarizationResult
-from infrastructure.literature.paper_selector import PaperSelector, PaperSelectionConfig
-from infrastructure.literature.llm_operations import LiteratureLLMOperations, LLMOperationResult
-from infrastructure.literature.library_stats import get_library_statistics, format_library_stats_display
+# PDF handling
+from infrastructure.literature.pdf import PDFHandler
+# Library management
+from infrastructure.literature.library import (
+    LibraryIndex,
+    LibraryEntry,
+    ReferenceManager,
+    get_library_statistics,
+    format_library_stats_display,
+)
+# Workflow
+from infrastructure.literature.workflow import (
+    LiteratureWorkflow,
+    WorkflowResult,
+    ProgressTracker,
+    ProgressEntry,
+    SummarizationProgress,
+)
+# Summarization
+from infrastructure.literature.summarization import (
+    SummarizationEngine,
+    PaperSummarizer,  # Alias for backward compatibility
+    SummaryQualityValidator,
+    SummarizationResult,
+)
+# LLM operations
+from infrastructure.literature.llm import (
+    PaperSelector,
+    PaperSelectionConfig,
+    LiteratureLLMOperations,
+    LLMOperationResult,
+)
+# Reporting
+from infrastructure.literature.reporting import LiteratureReporter
 
 __all__ = [
     # Original modules
@@ -81,7 +112,8 @@ __all__ = [
     "ProgressTracker",
     "ProgressEntry",
     "SummarizationProgress",
-    "PaperSummarizer",
+    "SummarizationEngine",
+    "PaperSummarizer",  # Alias for backward compatibility
     "SummaryQualityValidator",
     "SummarizationResult",
     # NEW: Advanced literature operations

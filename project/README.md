@@ -157,6 +157,16 @@ See `pyproject.toml` for complete dependencies.
 - `docs/` - Additional project-specific documentation
 - Docstrings in source code
 
+## See Also
+
+- [`AGENTS.md`](AGENTS.md) - Complete project documentation
+- [`src/README.md`](src/README.md) - Scientific code overview
+- [`scripts/README.md`](scripts/README.md) - Analysis scripts guide
+- [`tests/README.md`](tests/README.md) - Test suite overview
+- [`manuscript/README.md`](manuscript/README.md) - Manuscript guide
+- [`../../AGENTS.md`](../../AGENTS.md) - Complete system documentation
+- [`../../infrastructure/README.md`](../../infrastructure/README.md) - Infrastructure layer
+
 ## License
 
 See LICENSE file in template root.

@@ -43,7 +43,7 @@ Guidelines for using and extending the reporting utilities (multi-format reports
 - **No mocks** for core logic; use real sample data.
 - Cover JSON/Markdown/HTML outputs for structure and key fields.
 - Test error aggregation edge cases (empty inputs, mixed severities).
-- Keep coverage ≥49% for infrastructure code; integration paths should exercise orchestrator hooks.
+- Keep coverage ≥60% for infrastructure code; integration paths should exercise orchestrator hooks.
 
 ## Documentation
 
@@ -66,6 +66,7 @@ report = generate_pipeline_report(
 )
 report.save_markdown("output/reports/pipeline.md")
 ```
+
 
 
 

@@ -1,5 +1,5 @@
 import pytest
-from infrastructure.llm.context import ConversationContext
+from infrastructure.llm.core.context import ConversationContext
 from infrastructure.core.exceptions import ContextLimitError
 
 def test_add_message():

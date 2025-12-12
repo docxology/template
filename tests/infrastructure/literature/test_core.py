@@ -2,8 +2,8 @@ import pytest
 from pathlib import Path
 from infrastructure.literature.core import LiteratureSearch
 from infrastructure.literature.sources import SearchResult
-from infrastructure.literature.library_index import LibraryIndex
-from infrastructure.literature.reference_manager import ReferenceManager
+from infrastructure.literature.library import LibraryIndex
+from infrastructure.literature.library import ReferenceManager
 
 
 @pytest.mark.requires_network

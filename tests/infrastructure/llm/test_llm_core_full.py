@@ -7,8 +7,8 @@ Tests LLM core functionality using real data (No Mocks Policy):
 
 import pytest
 
-from infrastructure.llm.core import LLMClient, ResponseMode
-from infrastructure.llm.config import LLMConfig, GenerationOptions
+from infrastructure.llm.core.client import LLMClient, ResponseMode
+from infrastructure.llm.core.config import LLMConfig, GenerationOptions
 
 
 class TestResponseModeDetails:

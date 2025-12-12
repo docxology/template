@@ -59,7 +59,7 @@ template/
 ├── project/          # Project-specific code
 ├── infrastructure/   # Reusable infrastructure modules
 ├── manuscript/       # Research sections (generate PDFs)
-├── docs/             # Documentation (42+ guides)
+├── docs/             # Documentation (50+ guides)
 └── output/           # Generated files (disposable)
 ```
 

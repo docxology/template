@@ -1,0 +1,88 @@
+SUPPLEMENTARY INFORMATION  In format provided by Friston (FEBRUARY 2010) 
+NATURE REVIEWS | NEUROSCIENCE www.nature.com/reviews/neuro 
+Supplementary information S1 (box): The entropy of sensory states and their causes 
+This box shows that the entropy of hidden states in the environment is bounded by the 
+entropy of sensory states. This means that if the entropy of sensory signals is minimised, so 
+is the entropy of the environmental states that caused them. For any agent or model 
+m  the 
+entropy of generalised sensory states 
+( ) [ , , , ]Ts t s s s′ ′′=% K  is simply their average surprise 
+ln ( | )p s m− %
+ (with a sight abuse of notion) 
+ 
+0
+( | ): ( | )ln ( | ) lim ln ( ( )| )
+T
+T
+H s m p s m p s m ds p s t m dt→ •
+= − = −∫ ∫% % % % %
+   S1.1 
+ 
+Under ergodic assumptions, this is just the long-term time or path-integral of surprise. We will 
+assume sensory states are an analytic function of hidden environmental states plus some 
+generalised random fluctuations 
+ 
+( , )
+( , )
+s g x z
+x f x w
+θ
+θ
+= +
+= +
+% % %
+&% % %
+        S1.2 
+ 
+Here, hidden states change according to the stochastic differential equations of motion (with 
+parameters 
+θ ) in S1.2. Because 
+x%  and 
+z%  are statistically independent, we have (see Eq. 
+6.4.6 in Jones 1979, p149) 
+ 
+( , ) ( | ) ( | ) ( | )ln | |xI s z H s m H x m p x m g dx= − − ∂∫ %% % % % %%
+    S1.3 
+ 
+Here, 
+( , ) 0I s z ≥% %  is the mutual information between the sensory states and noise. By Gibb’s 
+inequality this cross-entropy or Kullback-Leibler divergence is non-negative (Theorem 6.5; 
+Jones 1979, p151). This means the entropy of the sensory states is greater than the entropy 
+of the sensory mapping. Here. 
+x g∂ %  is the sensitivity or gradient of the sensory mapping with 
+respect to the hidden states. The integral in S1.3 reflects the fact that entropy is not invariant 
+©  2010 Macmillan Publishers Limited.  All rights reserved. 
+ 
+SUPPLEMENTARY INFORMATION  In format provided by Friston (FEBRUARY 2010) 
+NATURE REVIEWS | NEUROSCIENCE www.nature.com/reviews/neuro 
+to a change of variables and assumes that the sensory mapping 
+:g x s→% %   is diffeomorphic 
+(i.e., bijective and smooth). This requires the hidden and sensory state-spaces to have the 
+same dimension, which can be assured by truncating generalised states at an appropriately 
+high order. For example, if we had 
+n  hidden states in 
+m  generalised coordinates of motion, 
+we would consider 
+m  sensory states in 
+n  generalised coordinates; so that 
+dim( ) dim( )x s n m= = ×% %
+.  Finally, rearranging S1.3 gives 
+ 
+( | ) ( | ) ( | )ln | |xH x m H s m p x m g dx≤ − ∂∫ %% % % %
+     S1.4 
+ 
+In conclusion, the entropy of hidden states is upper-bounded by the entropy of sensations, 
+assuming their sensitivity to hidden states is constant, over the range of states encountered. 
+ 
+Clearly, the ergodic assumption in S1.1 only holds over certain temporal scales for real 
+organisms that are on a trajectory from birth to death. This scale can be somatic (e.g., over 
+days or months, where development is locally stationary) or evolutionary (e.g., over 
+generations, where evolution is locally stationary). 
+ 
+ 
+Reference 
+Jones, DS. (1979). Elementary information theory. Publisher: Oxford: Clarendon Press; New 
+York: Oxford University Press 
+ 
+©  2010 Macmillan Publishers Limited.  All rights reserved. 
+ 

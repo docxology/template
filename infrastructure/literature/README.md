@@ -111,13 +111,18 @@ config = LiteratureConfig.from_env()
 
 ```python
 from infrastructure.literature import (
-    LiteratureSearch,   # Main search interface
-    LiteratureConfig,   # Configuration dataclass
-    SearchResult,       # Search result dataclass
-    PDFHandler,         # PDF download handler
-    ReferenceManager,   # BibTeX management
-    LibraryIndex,       # JSON library index
-    LibraryEntry,       # Library entry dataclass
+    LiteratureSearch,        # Main search interface
+    LiteratureConfig,        # Configuration dataclass
+    SearchResult,            # Search result dataclass
+    PDFHandler,              # PDF download handler
+    ReferenceManager,        # BibTeX management
+    LibraryIndex,            # JSON library index
+    LibraryEntry,            # Library entry dataclass
+    SummarizationEngine,     # Paper summarization (main interface)
+    PaperSummarizer,         # Alias for SummarizationEngine (backward compatibility)
+    SummaryQualityValidator, # Summary quality validation
+    SummarizationResult,     # Summarization result dataclass
+    LiteratureWorkflow,      # High-level workflow orchestration
 )
 ```
 
