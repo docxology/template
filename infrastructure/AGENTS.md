@@ -28,11 +28,6 @@ infrastructure/
 ├── scientific/     # Scientific development
 │   ├── scientific_dev.py    # Scientific utilities & best practices
 │   └── AGENTS.md/README.md  # Documentation
-├── literature/     # Literature search & management
-│   ├── core.py              # Literature manager
-│   ├── config.py            # Configuration
-│   ├── cli.py               # CLI for literature search
-│   └── AGENTS.md/README.md  # Documentation
 ├── llm/            # LLM integration
 │   ├── core.py              # LLM client
 │   ├── templates.py         # Research prompt templates
@@ -86,7 +81,7 @@ infrastructure/
 
 - `exceptions.py` - Exception hierarchy with context preservation
   - `TemplateError` - Base exception
-  - Module-specific exceptions (Literature, LLM, Rendering, Publishing)
+  - Module-specific exceptions (LLM, Rendering, Publishing)
   - Context utilities and exception chaining
 
 - `logging_utils.py` - Unified Python logging system
@@ -203,30 +198,6 @@ python3 -m infrastructure.documentation.cli generate-api src/
   - Performance benchmarking
   - Scientific documentation generation
   - Best practices validation
-
-### Literature Module (`literature/`)
-
-**Literature search and reference management.**
-
-Multi-source literature search with:
-- arXiv, Semantic Scholar, CrossRef, PubMed integration
-- PDF download with retry logic
-- Citation extraction
-- BibTeX management
-- Library organization
-- AI-powered paper summarization
-- Progress tracking and resumability
-
-**Key Classes:**
-- `LiteratureSearch` - Main search interface
-- `LiteratureWorkflow` - High-level workflow orchestration
-- `PaperSummarizer` - AI-powered summarization
-- `ProgressTracker` - Progress persistence
-
-**CLI:**
-```bash
-python3 -m infrastructure.literature.cli search "machine learning" --limit 10 --download
-```
 
 ### LLM Module (`llm/`)
 
@@ -434,16 +405,10 @@ publication:
 
 ## Usage Examples
 
-### Complete Example: Literature Search → Summarization → Publication
+### Complete Example: Summarization → Publication
 
 ```python
-# 1. Search literature
-from infrastructure.literature import LiteratureSearch, LiteratureConfig
-config = LiteratureConfig()
-search = LiteratureSearch(config)
-papers = search.search_papers("machine learning", limit=5)
-
-# 2. Summarize with LLM
+# 1. Summarize with LLM
 from infrastructure.llm import LLMClient
 client = LLMClient()
 for paper in papers:
@@ -469,9 +434,6 @@ print(f"Published with DOI: {doi}")
 ### CLI Example: Full Workflow
 
 ```bash
-# Search and download papers
-python3 -m infrastructure.literature.cli search "quantum computing" --download
-
 # Validate manuscript
 python3 -m infrastructure.validation.cli markdown manuscript/
 python3 -m infrastructure.validation.cli integrity output/
@@ -510,7 +472,6 @@ All modules have comprehensive test coverage:
 - documentation: 100%
 - build: 100%
 - scientific: 100%
-- literature: 91%+
 - llm: 91%+
 - rendering: 91%+
 - publishing: 100%
@@ -556,7 +517,6 @@ Planned additions:
 - Enhanced LLM template library
 - Additional rendering formats (EPUB, docx)
 - Extended publishing platform support
-- Advanced literature analysis tools
 - Data visualization utilities
 - Collaboration features
 

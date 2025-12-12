@@ -1,0 +1,18 @@
+{
+  "base_template": "TOKEN BUDGET AWARENESS:\n\n${total_tokens_block}\n${section_budgets_block}\n${word_targets_block}",
+  "total_tokens_template": "1. Total response budget: approximately ${total_tokens} tokens\n   (Plan your response to stay within this limit)",
+  "section_budgets_template": "2. Approximate token budgets per section:\n${budgets_list}",
+  "word_targets_template": "3. Word count targets per section:\n${targets_list}"
+}
+
+
+
+
+
+
+
+
+
+
+
+

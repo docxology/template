@@ -1,0 +1,126 @@
+{
+  "manuscript_executive_summary": {
+    "version": "1.0",
+    "base_template": "=== MANUSCRIPT BEGIN ===\n\n${text}\n\n=== MANUSCRIPT END ===\n\nTASK: Write an executive summary of the manuscript above.\n\n${format_requirements}\n\n${section_structure}\n\n${token_budget_awareness}\n\n${content_requirements}\n\n${validation_hints}\n\nBegin your executive summary now:",
+    "fragments": {
+      "format_requirements": "format_requirements.json",
+      "section_structure": "section_structures.json#executive_summary",
+      "token_budget_awareness": "token_budget_awareness.json",
+      "content_requirements": "content_requirements.json",
+      "validation_hints": "validation_hints.json"
+    },
+    "variables": {
+      "word_count_range": [400, 600],
+      "required_elements": ["all 5 section headers", "specific manuscript references"],
+      "format_checks": ["word count", "section presence", "content relevance"]
+    },
+    "section_config": {
+      "structure_key": "executive_summary",
+      "token_allocation": "equal",
+      "sections": 5
+    }
+  },
+  "manuscript_quality_review": {
+    "version": "1.0",
+    "base_template": "=== MANUSCRIPT BEGIN ===\n\n${text}\n\n=== MANUSCRIPT END ===\n\nTASK: Provide a quality review of the manuscript above.\n\n${format_requirements}\n\n${section_structure}\n\n${token_budget_awareness}\n\n${content_requirements}\n\n${validation_hints}\n\nBegin your quality review now:",
+    "fragments": {
+      "format_requirements": "format_requirements.json",
+      "section_structure": "section_structures.json#quality_review",
+      "token_budget_awareness": "token_budget_awareness.json",
+      "content_requirements": "content_requirements.json",
+      "validation_hints": "validation_hints.json"
+    },
+    "variables": {
+      "word_count_range": [500, 700],
+      "required_elements": ["all 7 section headers", "scores in **Score: X/5** format", "specific manuscript references"],
+      "format_checks": ["word count", "section presence", "score format", "content relevance"]
+    },
+    "section_config": {
+      "structure_key": "quality_review",
+      "token_allocation": "equal",
+      "sections": 7
+    }
+  },
+  "manuscript_methodology_review": {
+    "version": "1.0",
+    "base_template": "=== MANUSCRIPT BEGIN ===\n\n${text}\n\n=== MANUSCRIPT END ===\n\nTASK: Provide a methodology review of the manuscript above.\n\n${format_requirements}\n\n${section_structure}\n\n${token_budget_awareness}\n\n${content_requirements}\n\n${validation_hints}\n\nBegin your methodology review now:",
+    "fragments": {
+      "format_requirements": "format_requirements.json",
+      "section_structure": "section_structures.json#methodology_review",
+      "token_budget_awareness": "token_budget_awareness.json",
+      "content_requirements": "content_requirements.json",
+      "validation_hints": "validation_hints.json"
+    },
+    "variables": {
+      "word_count_range": [500, 700],
+      "required_elements": ["all 5 section headers", "methodology references", "strengths and weaknesses"],
+      "format_checks": ["word count", "section presence", "content relevance"]
+    },
+    "section_config": {
+      "structure_key": "methodology_review",
+      "token_allocation": "equal",
+      "sections": 5
+    }
+  },
+  "manuscript_improvement_suggestions": {
+    "version": "1.0",
+    "base_template": "=== MANUSCRIPT BEGIN ===\n\n${text}\n\n=== MANUSCRIPT END ===\n\nTASK: Provide improvement suggestions for the manuscript above.\n\n${format_requirements}\n\n${section_structure}\n\n${token_budget_awareness}\n\n${content_requirements}\n\n${validation_hints}\n\nBegin your improvement suggestions now:",
+    "fragments": {
+      "format_requirements": "format_requirements.json",
+      "section_structure": "section_structures.json#improvement_suggestions",
+      "token_budget_awareness": "token_budget_awareness.json",
+      "content_requirements": "content_requirements.json",
+      "validation_hints": "validation_hints.json"
+    },
+    "variables": {
+      "word_count_range": [500, 800],
+      "required_elements": ["all 5 section headers", "WHAT/WHY/HOW for each improvement", "overall recommendation choice"],
+      "format_checks": ["word count", "section presence", "actionability", "content relevance"]
+    },
+    "section_config": {
+      "structure_key": "improvement_suggestions",
+      "token_allocation": "weighted",
+      "sections": 5,
+      "weights": {
+        "Summary": 1.0,
+        "High Priority Improvements": 1.3,
+        "Medium Priority Improvements": 1.1,
+        "Low Priority Improvements": 1.0,
+        "Overall Recommendation": 1.0
+      }
+    }
+  },
+  "manuscript_translation_abstract": {
+    "version": "1.0",
+    "base_template": "=== MANUSCRIPT BEGIN ===\n\n${text}\n\n=== MANUSCRIPT END ===\n\nTASK: Write a technical abstract summary of the manuscript, then translate it to ${target_language}.\n\n${format_requirements}\n\n${section_structure}\n\n${token_budget_awareness}\n\n${content_requirements}\n\n${validation_hints}\n\nBegin with the English abstract, then provide the translation:",
+    "fragments": {
+      "format_requirements": "format_requirements.json",
+      "section_structure": "section_structures.json#translation_abstract",
+      "token_budget_awareness": "token_budget_awareness.json",
+      "content_requirements": "content_requirements.json",
+      "validation_hints": "validation_hints.json"
+    },
+    "variables": {
+      "word_count_range": [400, 800],
+      "required_elements": ["English abstract section", "${target_language} translation section", "technical terminology preservation"],
+      "format_checks": ["word count", "section presence", "translation completeness", "content relevance"]
+    },
+    "section_config": {
+      "structure_key": "translation_abstract",
+      "token_allocation": "equal",
+      "sections": 2
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

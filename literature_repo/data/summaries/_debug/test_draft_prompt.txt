@@ -1,0 +1,27 @@
+Title: Test Paper
+Authors: Author One
+Year: 2024
+
+Key Terms: test, trigger, minimum, exceeds, call, enough, text, character, summarization, long
+
+=== FULL PAPER TEXT ===
+
+This is a long enough text for summarization that exceeds the minimum character requirement and should trigger the LLM call.
+Additional content to ensure we have more than 100 characters of extractable text from this PDF document.
+
+
+=== INSTRUCTIONS ===
+1. Start with exact title: "Test Paper"
+
+2. Discuss key terms: test, trigger, minimum, exceeds, call, enough, text, character
+
+3. Include 10-15 quotes from paper text with format: 'The authors state: "quote"'
+   - All claims must be supported by evidence from the paper
+   - Search the full text to find relevant quotes
+
+4. NO REPETITION: Each sentence and paragraph must be UNIQUE.
+   - Do NOT repeat the same sentence, even with slight variations
+   - Do NOT repeat paragraphs or sections
+   - Each claim should appear only once
+
+6. Structure: ### Overview, ### Methodology, ### Results, ### Discussion (1000-1500 words)

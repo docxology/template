@@ -1,0 +1,113 @@
+{
+  "executive_summary": {
+    "headers": [
+      "## Overview",
+      "## Key Contributions",
+      "## Methodology Summary",
+      "## Principal Results",
+      "## Significance and Impact"
+    ],
+    "descriptions": {
+      "## Overview": "Brief introduction to the research topic and objectives (80-120 words)",
+      "## Key Contributions": "Main advances and novel contributions (100-150 words)",
+      "## Methodology Summary": "Approach and methods used (80-120 words)",
+      "## Principal Results": "Key findings and outcomes (100-150 words)",
+      "## Significance and Impact": "Importance and implications (80-120 words)"
+    },
+    "word_targets": {
+      "Overview": [80, 120],
+      "Key Contributions": [100, 150],
+      "Methodology Summary": [80, 120],
+      "Principal Results": [100, 150],
+      "Significance and Impact": [80, 120]
+    }
+  },
+  "quality_review": {
+    "headers": [
+      "## Overall Quality Score",
+      "## Clarity Assessment",
+      "## Structure and Organization",
+      "## Technical Accuracy",
+      "## Readability",
+      "## Specific Issues Found",
+      "## Recommendations"
+    ],
+    "descriptions": {
+      "## Overall Quality Score": "Provide overall score (1-5) with brief justification (50-80 words)",
+      "## Clarity Assessment": "Evaluate writing clarity with score and specific examples (80-120 words)",
+      "## Structure and Organization": "Assess organization with score and structural observations (80-120 words)",
+      "## Technical Accuracy": "Review technical correctness with score and evidence (80-120 words)",
+      "## Readability": "Evaluate readability with score and specific issues (60-100 words)",
+      "## Specific Issues Found": "List concrete issues with manuscript references (100-150 words)",
+      "## Recommendations": "Provide actionable recommendations (80-120 words)"
+    },
+    "section_requirements": {
+      "Overall Quality Score": "Must include: **Score: X/5** format where X is 1-5",
+      "All scoring sections": "Each section with 'Assessment' or 'Accuracy' must include **Score: X/5**",
+      "Specific Issues Found": "Must quote or reference specific manuscript sections",
+      "Recommendations": "Must be actionable and specific to manuscript content"
+    }
+  },
+  "methodology_review": {
+    "headers": [
+      "## Methodology Overview",
+      "## Research Design Assessment",
+      "## Strengths",
+      "## Weaknesses",
+      "## Recommendations"
+    ],
+    "descriptions": {
+      "## Methodology Overview": "Summarize the methodology used in the manuscript (100-150 words)",
+      "## Research Design Assessment": "Evaluate the research design and approach (120-180 words)",
+      "## Strengths": "Identify methodological strengths with evidence (100-150 words)",
+      "## Weaknesses": "Identify methodological weaknesses with evidence (100-150 words)",
+      "## Recommendations": "Provide specific improvement recommendations (80-120 words)"
+    }
+  },
+  "improvement_suggestions": {
+    "headers": [
+      "## Summary",
+      "## High Priority Improvements",
+      "## Medium Priority Improvements",
+      "## Low Priority Improvements",
+      "## Overall Recommendation"
+    ],
+    "descriptions": {
+      "## Summary": "Brief overview of key improvement areas (80-120 words)",
+      "## High Priority Improvements": "Critical issues requiring immediate attention (150-200 words)",
+      "## Medium Priority Improvements": "Important but not critical improvements (120-180 words)",
+      "## Low Priority Improvements": "Minor enhancements and suggestions (100-150 words)",
+      "## Overall Recommendation": "Final recommendation: Accept with Minor Revisions, Accept with Major Revisions, or Revise and Resubmit (80-120 words)"
+    },
+    "section_requirements": {
+      "All improvement sections": "Each improvement must include: WHAT (the issue), WHY (why it matters), HOW (how to address it)",
+      "Overall Recommendation": "Must choose exactly ONE: 'Accept with Minor Revisions', 'Accept with Major Revisions', or 'Revise and Resubmit'"
+    }
+  },
+  "translation_abstract": {
+    "headers": [
+      "## English Abstract",
+      "## {target_language} Translation"
+    ],
+    "descriptions": {
+      "## English Abstract": "Technical abstract in English (200-400 words) covering: research objective, methodology, key findings, significance",
+      "## {target_language} Translation": "Complete and accurate translation in {target_language}, preserving technical terminology and scientific accuracy"
+    },
+    "section_requirements": {
+      "English Abstract": "Must include: research objective and motivation, methodology overview, key findings and results, significance and implications",
+      "{target_language} Translation": "Must be complete translation (not summary), preserve technical terms, use native script (not transliteration), maintain formal academic tone"
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

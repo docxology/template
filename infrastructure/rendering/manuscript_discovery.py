@@ -72,15 +72,32 @@ def discover_manuscript_files(manuscript_dir: Path) -> List[Path]:
         logger.warning(f"Manuscript directory not found: {manuscript_dir}")
         return []
     
-    # Files to exclude (metadata, infrastructure)
+    # Files to exclude (metadata, infrastructure) - case-sensitive matching
     exclude_names = {
         'preamble.md', 'AGENTS.md', 'README.md', 'config.yaml', 
         'config.yaml.example', 'references.bib'
     }
     
     # Discover all markdown files
-    all_md_files = [f for f in manuscript_dir.glob("*.md") 
-                    if f.name not in exclude_names]
+    # On case-insensitive filesystems, we need to check all files manually
+    # because glob patterns are case-sensitive
+    all_md_files = []
+    seen_keys = set()  # Track (stem_lower, suffix_lower) to detect duplicates
+    
+    # Check all files in directory for markdown extensions
+    for f in manuscript_dir.iterdir():
+        if not f.is_file():
+            continue
+        # Check if it's a markdown file (case-insensitive check)
+        if f.suffix.lower() == '.md':
+            # Check if it's excluded (case-sensitive)
+            if f.name not in exclude_names:
+                key = (f.stem.lower(), f.suffix.lower())
+                # On case-insensitive filesystems, skip duplicates
+                # Preserve the original case as returned by the filesystem
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    all_md_files.append(f)
     
     # Organize files by category for proper ordering
     main_sections: List[Path] = []      # 01_*.md - 09_*.md
@@ -110,8 +127,9 @@ def discover_manuscript_files(manuscript_dir: Path) -> List[Path]:
     references.sort(key=lambda x: x.stem)
     other.sort(key=lambda x: x.stem)
     
-    # Combine in order: main -> supplemental -> glossary -> references
-    ordered_files = main_sections + supplemental + glossary + references + other
+    # Combine in order: main -> supplemental -> glossary -> other -> references
+    # References must always be last
+    ordered_files = main_sections + supplemental + glossary + other + references
     
     # Log discovery with details
     logger.info(f"Discovered {len(ordered_files)} manuscript file(s):")

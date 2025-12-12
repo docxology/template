@@ -10,7 +10,6 @@ Modular build, validation, and development tools organized by functionality.
 | **validation** | Quality & validation | `validate_pdf_rendering`, `validate_markdown`, `verify_output_integrity` | ✅ |
 | **documentation** | Figure management | `FigureManager`, `ImageManager`, `MarkdownIntegration` | ✅ |
 | **scientific** | Scientific utilities | `check_numerical_stability`, `benchmark_function` | ✅ |
-| **literature** | Literature search | `LiteratureSearch`, `LiteratureWorkflow`, `PaperSummarizer` | ✅ |
 | **llm** | LLM integration | `LLMClient`, `generate_review_with_metrics` | ✅ |
 | **rendering** | Multi-format output | `RenderManager` | ✅ |
 | **publishing** | Publishing tools | `extract_publication_metadata`, `publish_to_zenodo`, `ZenodoClient` | ✅ |
@@ -39,12 +38,6 @@ fm.register_figure("plot.png", "Results")
 # Scientific
 from infrastructure.scientific import benchmark_function
 benchmark = benchmark_function(my_algorithm, inputs)
-
-# Literature
-from infrastructure.literature import LiteratureSearch, LiteratureConfig
-config = LiteratureConfig()
-lit = LiteratureSearch(config)
-papers = lit.search_papers("machine learning", limit=10)
 
 # LLM
 from infrastructure.llm import LLMClient
@@ -84,9 +77,6 @@ python3 -m infrastructure.validation.cli markdown manuscript/
 
 # Documentation
 python3 -m infrastructure.documentation.cli generate-api project/src/
-
-# Literature
-python3 -m infrastructure.literature.cli search "quantum computing" --download
 
 # LLM
 python3 -m infrastructure.llm.cli query "Summarize quantum computing"
@@ -198,36 +188,6 @@ print(f"Average time: {benchmark['mean']:.3f}s")
 
 # Best practices
 report = validate_scientific_best_practices(my_module)
-```
-
-## Literature Module
-
-**Search and manage academic literature.**
-
-```python
-from infrastructure.literature import LiteratureSearch, LiteratureConfig
-
-config = LiteratureConfig()
-search = LiteratureSearch(config)
-
-# Search multiple sources
-papers = search.search_papers(
-    query="machine learning",
-    sources=["arxiv", "semanticscholar"],
-    limit=10
-)
-
-# Download PDFs
-for paper in papers:
-    path = search.download_paper(paper)
-    search.add_to_library(paper)
-
-# Extract citations
-from infrastructure.literature import PDFHandler, ReferenceManager
-pdf_handler = PDFHandler()
-citations = pdf_handler.extract_citations(path)
-ref_manager = ReferenceManager()
-bibtex = ref_manager.generate_bibtex(paper)
 ```
 
 ## LLM Module
@@ -406,7 +366,6 @@ All modules have comprehensive test coverage:
 - validation: 100%
 - documentation: 100%
 - scientific: 100%
-- literature: 91%+
 - llm: 91%+
 - rendering: 91%+
 - publishing: 100%
@@ -417,22 +376,19 @@ All modules have comprehensive test coverage:
 ### Complete Research Workflow
 
 ```bash
-# 1. Search literature
-python3 -m infrastructure.literature.cli search "machine learning" --download
-
-# 2. Validate manuscript
+# 1. Validate manuscript
 python3 -m infrastructure.validation.cli markdown manuscript/
 
-# 3. Generate API docs
+# 2. Generate API docs
 python3 -m infrastructure.documentation.cli generate-api project/src/
 
-# 4. Render to multiple formats
+# 3. Render to multiple formats
 python3 -m infrastructure.rendering.cli all manuscript.tex
 
-# 5. Validate quality
+# 4. Validate quality
 python3 -m infrastructure.validation.cli integrity output/
 
-# 6. Publish release
+# 5. Publish release
 python3 -m infrastructure.publishing.cli publish-zenodo output/ --title "My Research"
 ```
 
@@ -474,7 +430,6 @@ For detailed information about each module:
 - [`validation/`](validation/) - See [validation/AGENTS.md](validation/AGENTS.md)
 - [`documentation/`](documentation/) - See [documentation/AGENTS.md](documentation/AGENTS.md)
 - [`scientific/`](scientific/) - See [scientific/AGENTS.md](scientific/AGENTS.md)
-- [`literature/`](literature/) - See [literature/AGENTS.md](literature/AGENTS.md)
 - [`llm/`](llm/) - See [llm/AGENTS.md](llm/AGENTS.md)
 - [`rendering/`](rendering/) - See [rendering/AGENTS.md](rendering/AGENTS.md)
 - [`publishing/`](publishing/) - See [publishing/AGENTS.md](publishing/AGENTS.md)

@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-12-12T09:44:45.435445",
+  "total_duration": 0.0,
+  "stages": [
+    {
+      "name": "quality_report",
+      "exit_code": 0,
+      "duration": 0.0,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "test_results": null,
+  "validation_results": {
+    "markdown_issues": [],
+    "quality_metrics": {},
+    "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x10a115a90>",
+    "reproducibility": "<infrastructure.build.reproducibility.ReproducibilityReport object at 0x10a115a90>",
+    "errors": {
+      "total_errors": 0,
+      "total_warnings": 1,
+      "errors_by_type": {},
+      "warnings_by_type": {
+        "quality_error": 1
+      },
+      "errors": [],
+      "warnings": [
+        {
+          "type": "quality_error",
+          "message": "Quality metrics skipped: Failed to extract text from PDF: Failed to extract text from PDF: [Errno 21] Is a directory: '/Users/4d/Documents/GitHub/template/project/manuscript'",
+          "stage": "quality_report",
+          "file": null,
+          "line": null,
+          "severity": "warning",
+          "suggestions": [],
+          "context": {}
+        }
+      ]
+    }
+  },
+  "performance_metrics": null,
+  "error_summary": {
+    "total_errors": 0,
+    "total_warnings": 1,
+    "errors_by_type": {},
+    "warnings_by_type": {
+      "quality_error": 1
+    },
+    "errors": [],
+    "warnings": [
+      {
+        "type": "quality_error",
+        "message": "Quality metrics skipped: Failed to extract text from PDF: Failed to extract text from PDF: [Errno 21] Is a directory: '/Users/4d/Documents/GitHub/template/project/manuscript'",
+        "stage": "quality_report",
+        "file": null,
+        "line": null,
+        "severity": "warning",
+        "suggestions": [],
+        "context": {}
+      }
+    ]
+  },
+  "output_statistics": null
+}

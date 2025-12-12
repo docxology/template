@@ -1,0 +1,222 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Methodology}\label{sec:methodology}
+
+\begin{frame}{Mathematical Framework}
+\protect\phantomsection\label{mathematical-framework}
+Our approach is based on a novel optimization framework that combines
+multiple mathematical techniques, extending classical convex
+optimization methods \cite{boyd2004, nesterov2018} with modern adaptive
+strategies \cite{kingma2014, duchi2011}. The core algorithm can be
+expressed as follows:
+
+\begin{equation}\label{eq:objective}
+f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
+\end{equation}
+
+where \(x \in \mathbb{R}^d\) is the optimization variable, \(w_i\) are
+learned weights, \(\phi_i\) are basis functions, and \(R(x)\) is a
+regularization term with strength \(\lambda\).
+
+The optimization problem we solve is:
+
+\begin{equation}\label{eq:optimization}
+\min_{x \in \mathcal{X}} f(x) \quad \text{subject to} \quad g_i(x) \leq 0, \quad i = 1, \ldots, m
+\end{equation}
+
+where \(\mathcal{X}\) is the feasible set and \(g_i(x)\) are constraint
+functions.
+\end{frame}
+
+\begin{frame}{Algorithm Description}
+\protect\phantomsection\label{algorithm-description}
+Our iterative algorithm updates the solution according to:
+
+\begin{equation}\label{eq:update}
+x_{k+1} = x_k - \alpha_k \nabla f(x_k) + \beta_k (x_k - x_{k-1})
+\end{equation}
+
+where \(\alpha_k\) is the learning rate and \(\beta_k\) is the momentum
+coefficient. The convergence rate is characterized by:
+
+\begin{equation}\label{eq:convergence}
+\|x_k - x^*\| \leq C \rho^k
+\end{equation}
+
+where \(x^*\) is the optimal solution, \(C > 0\) is a constant, and
+\(\rho \in (0,1)\) is the convergence rate.
+\end{frame}
+
+\begin{frame}{Implementation Details}
+\protect\phantomsection\label{implementation-details}
+The algorithm implementation follows the pseudocode shown in Figure
+\ref{fig:experimental_setup}. The key insight is that we can decompose
+the objective function \eqref{eq:objective} into separable components,
+allowing for efficient parallel computation. This approach builds upon
+proximal optimization techniques \cite{beck2009, parikh2014} and recent
+advances in large-scale optimization \cite{schmidt2017, wright2010}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/experimental_setup.png}
+\caption{Experimental pipeline showing the complete workflow}
+\label{fig:experimental_setup}
+\end{figure}
+
+For numerical stability, we use the following adaptive step size rule:
+
+\begin{equation}\label{eq:adaptive_step}
+\alpha_k = \frac{\alpha_0}{\sqrt{1 + \sum_{i=1}^{k} \|\nabla f(x_i)\|^2}}
+\end{equation}
+
+This ensures that the algorithm converges even when the gradient varies
+significantly across iterations.
+\end{frame}
+
+\begin{frame}[fragile]{Reproducibility Infrastructure}
+\protect\phantomsection\label{reproducibility-infrastructure}
+All methodological steps are paired with automated quality gates
+provided by the infrastructure layer. Figure generation is registered
+via \texttt{FigureManager} to ensure cross-references resolve, and
+\texttt{validate\_markdown} checks anchors, equations, and labels before
+rendering. A preflight stage evaluates glossary injection markers and
+bibliography blocks, while \texttt{analyze\_document\_quality} supplies
+readability and structural metrics that are reported in the quality
+report. Output integrity (\texttt{verify\_output\_integrity}) is
+executed after each scripted stage to ensure generated artifacts match
+expectations, making the methodological pipeline reproducible across
+runs.
+\end{frame}
+
+\begin{frame}{Performance Analysis}
+\protect\phantomsection\label{performance-analysis}
+The computational complexity of our approach is \(O(n \log n)\) per
+iteration, where \(n\) is the problem dimension. This is achieved
+through the efficient data structures shown in Figure
+\ref{fig:data_structure}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{../output/figures/data_structure.png}
+\caption{Efficient data structures used in our implementation}
+\label{fig:data_structure}
+\end{figure}
+
+The memory requirements scale as:
+
+\begin{equation}\label{eq:memory}
+M(n) = O(n) + O(\log n) \cdot \text{number of iterations}
+\end{equation}
+
+This makes our method suitable for large-scale problems where memory is
+a constraint.
+\end{frame}
+
+\begin{frame}{Validation Framework}
+\protect\phantomsection\label{validation-framework}
+To validate our theoretical results, we use the experimental setup
+illustrated in Figure \ref{fig:experimental_setup}. The performance
+metrics are computed using:
+
+\begin{equation}\label{eq:accuracy}
+\text{Accuracy} = \frac{1}{N} \sum_{i=1}^{N} \mathbb{I}[f(x_i) \leq f(x^*) + \epsilon]
+\end{equation}
+
+where \(\mathbb{I}[\cdot]\) is the indicator function and \(\epsilon\)
+is the tolerance threshold.
+
+The convergence analysis results are summarized in Figure
+\ref{fig:convergence_plot}, which shows the empirical convergence rates
+compared to the theoretical bound \eqref{eq:convergence}.
+\end{frame}
+
+\end{document}

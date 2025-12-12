@@ -1,0 +1,16 @@
+{
+  "base_template": "FORMAT REQUIREMENTS:\n\n1. Use markdown formatting with proper headers\n2. Include these exact section headers (in order):\n${headers_list}\n\n${section_requirements_block}",
+  "section_requirements_template": "3. Section-specific requirements:\n${requirements_list}"
+}
+
+
+
+
+
+
+
+
+
+
+
+

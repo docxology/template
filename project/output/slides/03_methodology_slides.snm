@@ -1,0 +1,15 @@
+\beamer@slide {mathematical-framework}{2}
+\beamer@slide {eq:objective}{2}
+\beamer@slide {eq:optimization}{2}
+\beamer@slide {algorithm-description}{3}
+\beamer@slide {eq:update}{3}
+\beamer@slide {eq:convergence}{3}
+\beamer@slide {implementation-details}{4}
+\beamer@slide {fig:experimental_setup}{4}
+\beamer@slide {eq:adaptive_step}{4}
+\beamer@slide {reproducibility-infrastructure}{5}
+\beamer@slide {performance-analysis}{6}
+\beamer@slide {fig:data_structure}{6}
+\beamer@slide {eq:memory}{6}
+\beamer@slide {validation-framework}{7}
+\beamer@slide {eq:accuracy}{7}

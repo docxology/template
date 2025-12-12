@@ -137,7 +137,7 @@ class TestCopyFinalDeliverables:
         
         stats = copy_final_deliverables(repo_root, output_dir)
         
-        assert stats["slides_copied"] == 2
+        assert stats["slides_files"] == 2
         assert (output_dir / "slides" / "01_abstract_slides.pdf").exists()
         assert (output_dir / "slides" / "02_introduction_slides.pdf").exists()
     
@@ -147,7 +147,7 @@ class TestCopyFinalDeliverables:
         
         stats = copy_final_deliverables(repo_root, output_dir)
         
-        assert stats["web_copied"] == 2  # HTML files only
+        assert stats["web_files"] == 3  # 2 HTML files + 1 CSS file
         assert (output_dir / "web" / "01_abstract.html").exists()
         assert (output_dir / "web" / "02_introduction.html").exists()
         assert (output_dir / "web" / "style.css").exists()  # CSS copied too
@@ -162,8 +162,8 @@ class TestCopyFinalDeliverables:
         stats = copy_final_deliverables(repo_root, output_dir)
         
         assert stats["combined_pdf"] == 0
-        assert len(stats["errors"]) > 0
-        assert any("Combined PDF" in err for err in stats["errors"])
+        # Missing combined PDF is not an error, just logged as debug
+        assert not (output_dir / "project_combined.pdf").exists()
     
     def test_copy_missing_slides_directory(self, temp_project_structure):
         """Test handling missing slides directory."""
@@ -176,7 +176,7 @@ class TestCopyFinalDeliverables:
         
         # Should still copy PDF and handle missing slides gracefully
         assert stats["combined_pdf"] == 1
-        assert stats["slides_copied"] == 0
+        assert stats["slides_files"] == 0
 
 
 class TestValidateCopiedOutputs:

@@ -1,0 +1,19 @@
+{
+  "base_template": "CONTENT QUALITY REQUIREMENTS:\n\n${no_hallucination_block}\n${cite_sources_block}\n${evidence_based_block}\n${no_meta_commentary_block}",
+  "no_hallucination": "1. NO HALLUCINATION: Only discuss information explicitly present in the provided content\n   - Do NOT add external knowledge, assumptions, or invented details\n   - Do NOT reference sources not mentioned in the provided content",
+  "cite_sources": "2. CITE SOURCES: Reference specific sections, passages, or elements from the content\n   - Quote or paraphrase actual text when making observations\n   - Use specific section titles or page references when available",
+  "evidence_based": "3. EVIDENCE-BASED: Base all claims on evidence from the provided content\n   - Support observations with specific examples\n   - Explain reasoning with reference to actual content",
+  "no_meta_commentary": "4. NO META-COMMENTARY: Do not mention being an AI, assistant, or that this is generated content\n   - Write as if you are a human expert reviewer\n   - Use professional, academic tone throughout"
+}
+
+
+
+
+
+
+
+
+
+
+
+

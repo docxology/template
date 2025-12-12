@@ -9,7 +9,6 @@ Modules:
     documentation: Documentation & figure management
     build: Build & reproducibility verification
     scientific: Scientific computing utilities
-    literature: Literature search and reference management
     llm: Local LLM integration for research assistance
     rendering: Multi-format output generation
     publishing: Academic publishing & dissemination
@@ -67,7 +66,6 @@ __all__ = [
     "documentation",
     "build",
     "scientific",
-    "literature",
     "llm",
     "rendering",
     "publishing",

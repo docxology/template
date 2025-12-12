@@ -1,0 +1,21 @@
+{
+  "paper_summarization": {
+    "version": "1.0",
+    "base_template": "=== PAPER CONTENT ===\n\nTitle: ${title}\nAuthors: ${authors}\nYear: ${year}\nSource: ${source}\n\nPAPER TEXT:\n${text}\n\n=== END PAPER CONTENT ===\n\nCRITICAL INSTRUCTIONS:\nYou are summarizing a scientific research paper. You MUST follow ALL rules below:\n\n1. ONLY use information that appears in the paper text above. Do NOT add external knowledge, assumptions, or invented details.\n\n2. Provide a comprehensive summary that covers the key aspects of the paper. Use section headers that make sense for the content, such as:\n   - Overview/Summary (what the paper is about)\n   - Key Contributions/Findings (main results and advances)\n   - Methodology/Approach (how the research was conducted)\n   - Results/Data (what was found or measured)\n   - Limitations/Discussion (weaknesses and future work)\n\n3. Word count: Aim for 400-700 words of substantive, detailed content. Focus on quality over quantity.\n\n4. CONTENT FOCUS:\n   - Emphasize relevance: Explain why this research matters and how it connects to broader scientific questions\n   - Be comprehensive: Cover all major aspects mentioned in the paper without leaving out important details\n   - Prioritize specificity: Use concrete details, numbers, methods, measurements, and findings from the paper\n   - Extract key information accurately: Focus on what the paper actually says and demonstrates\n\n5. DOMAIN-SPECIFIC EMPHASIS:\n   - For PHYSICS papers: Highlight specific equations, experimental parameters, energy scales, detection methods, and statistical significance\n   - For COMPUTER SCIENCE papers: Detail algorithms, complexity analysis, dataset characteristics, performance metrics, and comparisons\n   - For BIOLOGY papers: Include species, sample sizes, statistical methods, biological mechanisms, and experimental conditions\n   - For MATHEMATICS papers: Cover theorems, proofs, mathematical objects, computational complexity, and theoretical implications\n\n6. QUALITY STANDARDS:\n   - Be substantive: Provide detailed analysis rather than surface-level descriptions\n   - Explain significance: Discuss why methods, results, and contributions matter\n   - Maintain coherence: Ensure different sections complement rather than repeat each other\n   - Use evidence: Support claims with specific details from the paper\n\n7. ACCURACY REQUIREMENTS:\n   - NO HALLUCINATION: Only discuss what the paper explicitly states\n   - NO REPETITION: Avoid repeating the same information in multiple places\n   - NO META-COMMENTARY: Do not mention being an AI or that this is a summary\n   - SCIENTIFIC TONE: Use formal, academic language throughout\n\n8. FLEXIBLE STRUCTURE: Use the section headers that best fit the paper's content. You may use fewer or more sections as appropriate, or even combine related information.\n\nBegin your summary now:",
+    "variables": {
+      "word_count_range": [400, 700]
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

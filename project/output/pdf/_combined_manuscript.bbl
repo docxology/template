@@ -1,0 +1,109 @@
+\begin{thebibliography}{16}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Beck and Teboulle(2009)]{beck2009}
+Amir Beck and Marc Teboulle.
+\newblock A fast iterative shrinkage-thresholding algorithm for linear inverse
+  problems.
+\newblock \emph{SIAM Journal on Imaging Sciences}, 2\penalty0 (1):\penalty0
+  183--202, 2009.
+\newblock \doi{10.1137/080716542}.
+
+\bibitem[Bertsekas(2015)]{bertsekas2015}
+Dimitri~P. Bertsekas.
+\newblock \emph{Convex Optimization Algorithms}.
+\newblock Athena Scientific, Belmont, MA, 2015.
+\newblock ISBN 978-1-886529-28-1.
+
+\bibitem[Boyd and Vandenberghe(2004)]{boyd2004}
+Stephen Boyd and Lieven Vandenberghe.
+\newblock \emph{Convex Optimization}.
+\newblock Cambridge University Press, Cambridge, UK, 2004.
+\newblock ISBN 978-0-521-83378-3.
+
+\bibitem[Brown and Wilson(2022)]{optimization2022}
+Alice Brown and Robert Wilson.
+\newblock Advanced optimization techniques for machine learning.
+\newblock In \emph{Proceedings of the International Conference on Machine
+  Learning}, pages 456--467. ICML, 2022.
+
+\bibitem[Duchi et~al.(2011)Duchi, Hazan, and Singer]{duchi2011}
+John Duchi, Elad Hazan, and Yoram Singer.
+\newblock Adaptive subgradient methods for online learning and stochastic
+  optimization.
+\newblock In \emph{Proceedings of the 24th Annual Conference on Learning
+  Theory}, pages 257--269. COLT, 2011.
+
+\bibitem[Kingma and Ba(2015)]{kingma2014}
+Diederik~P. Kingma and Jimmy Ba.
+\newblock Adam: A method for stochastic optimization.
+\newblock In \emph{Proceedings of the 3rd International Conference on Learning
+  Representations}, 2015.
+\newblock URL \url{https://arxiv.org/abs/1412.6980}.
+
+\bibitem[Nesterov(2018)]{nesterov2018}
+Yurii Nesterov.
+\newblock Lectures on convex optimization.
+\newblock \emph{Springer Optimization and Its Applications}, 137, 2018.
+\newblock \doi{10.1007/978-3-319-91578-4}.
+
+\bibitem[{Pandoc Development Team}(2024)]{pandoc2024}
+{Pandoc Development Team}.
+\newblock Pandoc: A universal document converter, 2024.
+\newblock URL \url{https://pandoc.org/}.
+\newblock Accessed: 2024-10-09.
+
+\bibitem[Parikh and Boyd(2014)]{parikh2014}
+Neal Parikh and Stephen Boyd.
+\newblock Proximal algorithms.
+\newblock Technical Report~3, Foundations and Trends in Optimization, 2014.
+
+\bibitem[Polak(1997)]{polak1997}
+Elijah Polak.
+\newblock Optimization: Algorithms and consistent approximations.
+\newblock \emph{Applied Mathematical Sciences}, 124, 1997.
+\newblock \doi{10.1007/978-1-4612-0663-7}.
+
+\bibitem[Reddi et~al.(2018)Reddi, Kale, and Kumar]{reddi2018}
+Sashank~J. Reddi, Satyen Kale, and Sanjiv Kumar.
+\newblock On the convergence of adam and beyond.
+\newblock In \emph{Proceedings of the 6th International Conference on Learning
+  Representations}, 2018.
+\newblock URL \url{https://arxiv.org/abs/1904.09237}.
+
+\bibitem[Ruder(2016)]{ruder2016}
+Sebastian Ruder.
+\newblock An overview of gradient descent optimization algorithms.
+\newblock \emph{arXiv preprint arXiv:1609.04747}, 2016.
+\newblock URL \url{https://arxiv.org/abs/1609.04747}.
+
+\bibitem[Schmidt et~al.(2017)Schmidt, Le~Roux, and Bach]{schmidt2017}
+Mark Schmidt, Nicolas Le~Roux, and Francis Bach.
+\newblock Minimizing finite sums with the stochastic average gradient.
+\newblock \emph{Mathematical Programming}, 162\penalty0 (1):\penalty0 83--112,
+  2017.
+\newblock \doi{10.1007/s10107-016-1030-6}.
+
+\bibitem[Smith and Johnson(2023)]{example2023}
+John Smith and Jane Johnson.
+\newblock Example research paper.
+\newblock \emph{Journal of Example Research}, 42\penalty0 (3):\penalty0
+  123--145, 2023.
+\newblock \doi{10.1234/example.2023.001}.
+
+\bibitem[Team(2024)]{template2024}
+Template Team.
+\newblock \emph{Research Project Template: A Comprehensive Guide}.
+\newblock Academic Press, New York, NY, 2024.
+\newblock ISBN 978-0123456789.
+
+\bibitem[Wright(2010)]{wright2010}
+Stephen~J. Wright.
+\newblock \emph{Optimization Algorithms for Large-Scale Machine Learning}.
+\newblock Phd thesis, University of Wisconsin-Madison, 2010.
+
+\end{thebibliography}

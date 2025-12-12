@@ -72,8 +72,3 @@ Thumbs.db
 
 # Test artifacts
 invalid/
-
-# Literature
-literature/pdfs/
-literature/failed_downloads.json
-# We include the summaries in the repository commits for reproducibility purposes

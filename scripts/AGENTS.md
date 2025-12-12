@@ -27,10 +27,9 @@ The template provides multiple entry points organized by function:
 
 ### Root-Level Scripts
 
-**Main Dispatcher** (`run.sh`):
-- Interactive menu to choose between manuscript and literature operations
-- Routes to `run_manuscript.sh` or `run_literature.sh`
-- Non-interactive: `./run.sh --manuscript [options]` or `./run.sh --literature [options]`
+**Main Entry Point** (`run.sh`):
+- Routes to manuscript operations
+- Non-interactive: `./run.sh [options]` passes options to `run_manuscript.sh`
 
 **Manuscript Operations** (`run_manuscript.sh`):
 - Interactive menu with manuscript pipeline operations (0-8)
@@ -38,18 +37,12 @@ The template provides multiple entry points organized by function:
 - Non-interactive flags: `--pipeline`, `--infra-tests`, `--project-tests`, `--render-pdf`, `--reviews`, `--translations`
 - Sources shared utilities from `scripts/bash_utils.sh`
 
-**Literature Operations** (`run_literature.sh`):
-- Interactive menu with literature operations (0-7)
-- Full pipeline: search → download → extract → summarize
-- Non-interactive flags: `--search`, `--download`, `--extract-text`, `--summarize`, `--cleanup`, `--llm-operation`
-- Sources shared utilities from `scripts/bash_utils.sh`
-
 **Shared Utilities** (`scripts/bash_utils.sh`):
 - Color codes and formatting
 - Logging functions (log_header, log_success, log_error, etc.)
 - Utility functions (format_duration, get_elapsed_time, parse_choice_sequence)
 - File logging functions
-- Sourced by both `run_manuscript.sh` and `run_literature.sh`
+- Sourced by `run_manuscript.sh`
 
 ### Python Scripts
 
@@ -284,7 +277,10 @@ scripts/
 ├── 02_run_analysis.py          # Entry: Analysis (discovers project/scripts/)
 ├── 03_render_pdf.py            # Entry: PDF rendering
 ├── 04_validate_output.py       # Entry: Validation
+├── 05_copy_outputs.py          # Entry: Copy outputs
+├── 06_llm_review.py            # Entry: LLM review (optional)
 ├── run_all.py                  # Entry: Complete pipeline
+├── bash_utils.sh               # Shared utilities
 ├── AGENTS.md                   # This file
 └── README.md                   # Quick reference
 

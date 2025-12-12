@@ -1,0 +1,36 @@
+{
+  "off_topic_reinforcement": {
+    "version": "1.0",
+    "content": "IMPORTANT: You must review the ACTUAL manuscript text provided below. Do NOT generate hypothetical content, generic book descriptions, or unrelated topics. Your review must reference specific content from the manuscript.\n\n"
+  },
+  "format_enforcement": {
+    "executive_summary": {
+      "version": "1.0",
+      "content": "IMPORTANT: Your response MUST use these exact markdown headers:\n## Overview\n## Key Contributions\n## Methodology Summary\n## Principal Results\n## Significance and Impact\n\n"
+    },
+    "quality_review": {
+      "version": "1.0",
+      "content": "IMPORTANT: Include scoring using: **Score: [1-5]**\n\n"
+    },
+    "methodology_review": {
+      "version": "1.0",
+      "content": "IMPORTANT: Your response MUST include all required sections with proper markdown headers.\n\n"
+    },
+    "improvement_suggestions": {
+      "version": "1.0",
+      "content": "IMPORTANT: Each improvement must include WHAT (the issue), WHY (why it matters), and HOW (how to address it).\n\n"
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+

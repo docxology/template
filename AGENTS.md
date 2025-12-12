@@ -121,7 +121,6 @@ Each directory contains comprehensive documentation for easy navigation:
 | Directory | AGENTS.md | README.md | Purpose |
 |-----------|-----------|-----------|---------|
 | [`docs/`](docs/) | [AGENTS.md](docs/AGENTS.md) | [README.md](docs/README.md) | Project documentation hub |
-| [`literature/`](literature/) | [AGENTS.md](literature/AGENTS.md) | [README.md](literature/README.md) | Academic literature search & management |
 
 ### Documentation Navigation
 
@@ -182,13 +181,6 @@ template/                           # Generic Template
 ├── docs/                           # Documentation
 │   ├── AGENTS.md
 │   └── README.md
-├── literature/                     # Academic literature search & management
-│   ├── AGENTS.md
-│   ├── README.md
-│   ├── library.json                # Paper index
-│   ├── references.bib              # Bibliography
-│   ├── pdfs/                       # Downloaded PDFs
-│   └── summaries/                  # LLM-generated summaries
 └── pyproject.toml                  # Root configuration
 ```
 
@@ -316,9 +308,9 @@ Configuration is read at runtime by `scripts/03_render_pdf.py` and applied to:
 
 The template provides **three entry points** for pipeline execution:
 
-**Main Dispatcher (Recommended)**
+**Main Entry Point (Recommended)**
 ```bash
-# Interactive menu to choose between manuscript and literature operations
+# Routes to manuscript operations
 ./run.sh
 ```
 
@@ -331,15 +323,6 @@ The template provides **three entry points** for pipeline execution:
 ./run_manuscript.sh --pipeline
 ```
 
-**Literature Operations**
-```bash
-# Interactive menu with literature operations
-./run_literature.sh
-
-# Non-interactive: Search literature
-./run_literature.sh --search
-```
-
 **Alternative: Python Orchestrator**
 ```bash
 # Core pipeline (6 stages) - Python orchestrator
@@ -347,9 +330,8 @@ python3 scripts/run_all.py
 ```
 
 **Entry Point Comparison**
-- **`./run.sh`**: Dispatcher menu - choose between manuscript and literature operations
+- **`./run.sh`**: Routes to manuscript operations
 - **`./run_manuscript.sh --pipeline`**: 10 stages (0-9), includes optional LLM review stages. Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs.
-- **`./run_literature.sh`**: Literature search and management operations (7 menu options)
 - **`python3 scripts/run_all.py`**: 6 stages (00-05), core pipeline only
 
 ### Pipeline Stages
@@ -611,38 +593,6 @@ benchmark = benchmark_function(your_function, test_inputs)
 ```
 
 
-### 📖 **Literature Search** (`infrastructure/literature/`) **NEW**
-**Academic literature search and reference management**
-
-**Modular Structure:**
-- `sources/` - Modular API adapters for academic databases
-  - `base.py` - Base classes and utilities
-  - `arxiv.py` - arXiv API client
-  - `semanticscholar.py` - Semantic Scholar API client
-  - `unpaywall.py` - Unpaywall open access resolution
-  - `biorxiv.py` - bioRxiv/medRxiv preprints
-- `core.py` - Main LiteratureSearch orchestrator
-- `workflow.py` - Multi-paper operations
-- `pdf_handler.py` - PDF downloading with fallbacks
-
-**Key Features:**
-- **Multi-Source Search**: arXiv, Semantic Scholar, CrossRef, PubMed
-- **PDF Download**: Automatic paper retrieval with retry logic
-- **Citation Extraction**: Extract citations from papers
-- **BibTeX Management**: Generate and manage bibliography files
-- **Reference Deduplication**: Merge results from multiple sources
-- **Library Management**: Organize research papers
-
-**Usage:**
-```python
-from infrastructure.literature import LiteratureSearch
-
-searcher = LiteratureSearch()
-papers = searcher.search("machine learning", limit=10)
-searcher.add_to_library(papers[0])
-searcher.export_bibtex("references.bib")
-```
-
 ### 🤖 **LLM Integration** (`infrastructure/llm/`) **NEW**
 **Local LLM assistance for research workflows**
 
@@ -656,7 +606,6 @@ searcher.export_bibtex("references.bib")
 
 **Research Templates:**
 - Abstract summarization
-- Literature review generation
 - Code documentation
 - Data interpretation
 - Section drafting assistance
@@ -747,7 +696,6 @@ All advanced modules follow the **thin orchestrator pattern**:
 - ✅ **Publishing**: Comprehensive tests (14 tests)
 - ✅ **Scientific Dev**: Comprehensive tests (12 tests)
 - ✅ **Build Verifier**: Comprehensive tests (10 tests)
-- ✅ **Literature Search**: 91% coverage (8 tests)
 - ✅ **LLM Integration**: 91% coverage (11 tests)
 - ✅ **Rendering System**: 91% coverage (10 tests)
 - ✅ **Reporting**: 0% coverage (new module, tests pending) **NEW**
@@ -1009,7 +957,6 @@ See [`docs/CHECKPOINT_RESUME.md`](docs/CHECKPOINT_RESUME.md) for complete docume
 - ✅ LaTeX path management (BasicTeX/MacTeX support)
 
 **New Modules (v2.0):**
-- ✅ Literature Search (91% coverage, 8 tests) - Multi-source academic search
 - ✅ LLM Integration (91% coverage, 11 tests) - Local Ollama support
 - ✅ Rendering System (91% coverage, 10 tests) - Multi-format output
 - ✅ Publishing API (integrated) - Zenodo, arXiv, GitHub automation

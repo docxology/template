@@ -1,0 +1,18 @@
+{
+  "base_template": "VALIDATION HINTS (what will be checked):\n\n${word_count_block}\n${required_elements_block}\n${format_checks_block}",
+  "word_count_template": "1. Word count: Must be between ${min_words} and ${max_words} words",
+  "required_elements_template": "2. Required elements:\n${elements_list}",
+  "format_checks_template": "3. Format compliance checks:\n${checks_list}"
+}
+
+
+
+
+
+
+
+
+
+
+
+

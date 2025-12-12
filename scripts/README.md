@@ -14,40 +14,22 @@ Project-specific analysis scripts go in `project/scripts/`, not here.
 
 ## Entry Points
 
-The template provides **three entry points** organized by function:
+The template provides **two entry points** for manuscript operations:
 
-### Primary: Main Dispatcher (`./run.sh`)
+### Primary: Main Entry Point (`./run.sh`)
 
-**Recommended entry point** - Interactive menu to choose operation type:
+**Recommended entry point** - Routes to manuscript operations:
 
 ```bash
 ./run.sh
 ```
 
-This presents a menu to choose between manuscript and literature operations:
-
-```
-============================================================
-  Research Project Template - Main Menu
-============================================================
-
-Select operation type:
-
-  1. Manuscript Operations
-     (Setup, Tests, Analysis, PDF Rendering, Validation, LLM Review)
-
-  2. Literature Operations
-     (Search, Download, Extract, Summarize, Advanced LLM Operations)
-
-  3. Exit
-============================================================
-```
+This routes directly to the manuscript pipeline operations menu.
 
 **Non-Interactive Mode:**
 ```bash
-./run.sh --manuscript [options]  # Route to manuscript operations
-./run.sh --literature [options]   # Route to literature operations
-./run.sh --help                   # Show all options
+./run.sh [options]  # Pass options to manuscript operations
+./run.sh --help    # Show help
 ```
 
 ### Manuscript Operations (`./run_manuscript.sh`)
@@ -96,48 +78,6 @@ Orchestration:
 ./run_manuscript.sh --help               # Show all options
 ```
 
-### Literature Operations (`./run_literature.sh`)
-
-**Literature operations orchestrator** - Interactive menu with literature operations:
-
-```bash
-./run_literature.sh
-```
-
-This presents a menu with literature operations:
-
-```
-============================================================
-  Literature Operations Menu
-============================================================
-
-Orchestrated Pipelines:
-  0. Full Pipeline (search → download → extract → summarize)
-
-Individual Operations:
-  1. Search Only (network only - add to bibliography)
-  2. Download Only (network only - download PDFs)
-  3. Extract Text (local only - extract text from PDFs)
-  4. Summarize (requires Ollama - generate summaries)
-  5. Cleanup (local files only - remove papers without PDFs)
-  6. Advanced LLM Operations (requires Ollama)
-  7. Exit
-============================================================
-```
-
-**Non-Interactive Mode:**
-```bash
-# Literature Operations
-./run_literature.sh --search        # Search literature (add to bibliography)
-./run_literature.sh --download      # Download PDFs (for bibliography entries)
-./run_literature.sh --extract-text   # Extract text from PDFs
-./run_literature.sh --summarize      # Generate summaries (for papers with PDFs)
-./run_literature.sh --cleanup        # Cleanup library (remove papers without PDFs)
-./run_literature.sh --llm-operation  # Advanced LLM operations
-
-./run_literature.sh --help           # Show all options
-```
-
 ### Alternative: Python Orchestrator (`run_all.py`)
 
 **Programmatic entry point** - Core pipeline only (6 stages):
@@ -175,8 +115,7 @@ Additional stages available in the interactive orchestrator:
 | Stage | Script | Purpose |
 |-------|--------|---------|
 | 06 | `06_llm_review.py` | LLM manuscript review (optional) |
-| 07 | `07_literature_search.py` | Literature search & summarization |
-| 08 | LLM Translations | Multi-language abstract translation (optional) |
+| 07 | LLM Translations | Multi-language abstract translation (optional) |
 
 **Stage Numbering:**
 - `./run_manuscript.sh`: Stages 0-9 (displayed as [1/9] to [9/9] in logs)
@@ -193,8 +132,6 @@ python3 scripts/03_render_pdf.py         # Render PDFs only
 python3 scripts/04_validate_output.py    # Validate outputs only
 python3 scripts/05_copy_outputs.py       # Copy final deliverables
 python3 scripts/06_llm_review.py         # LLM manuscript review
-python3 scripts/07_literature_search.py --search     # Search for papers
-python3 scripts/07_literature_search.py --summarize  # Generate summaries
 ```
 
 ## Generated Reports
@@ -272,26 +209,6 @@ The pipeline automatically generates comprehensive reports in `project/output/re
 - Saves reviews to `output/llm/` with generation stats
 - **Requires**: Running Ollama server with at least one model
 
-### Stage 07: Literature Search
-- Searches arXiv and Semantic Scholar
-- Downloads PDFs to `literature/pdfs/`
-- Generates AI summaries for papers
-- **Requires**: Running Ollama server for summarization
-
-**Usage**:
-```bash
-# Search mode (interactive keyword input)
-python3 scripts/07_literature_search.py --search
-
-# Search with specific keywords
-python3 scripts/07_literature_search.py --search --keywords "machine learning,optimization"
-
-# Generate summaries for existing PDFs
-python3 scripts/07_literature_search.py --summarize
-
-# Both operations
-python3 scripts/07_literature_search.py --search --summarize
-```
 
 ## Checkpoint and Resume
 
@@ -388,8 +305,6 @@ Menu Option 8 (--pipeline) → Full Pipeline:
 |----------|---------|-------------|
 | `LOG_LEVEL` | `1` | Logging verbosity (0=DEBUG, 1=INFO, 2=WARN, 3=ERROR) |
 | `LLM_MAX_INPUT_LENGTH` | `500000` | Max chars to send to LLM. Set to `0` for unlimited. |
-| `LITERATURE_DEFAULT_LIMIT` | `25` | Results per source per keyword |
-| `MAX_PARALLEL_SUMMARIES` | `1` | Parallel summarization workers |
 
 ## Generic vs Project-Specific
 
@@ -415,8 +330,7 @@ scripts/ (Generic Entry Points)
   ├─ 03_render_pdf.py → Build manuscript
   ├─ 04_validate_output.py → Validate outputs
   ├─ 05_copy_outputs.py → Copy deliverables
-  ├─ 06_llm_review.py → LLM manuscript review (optional)
-  └─ 07_literature_search.py → Literature search & summarization
+  └─ 06_llm_review.py → LLM manuscript review (optional)
 
 project/scripts/ (Project-Specific)
   ├─ analysis_pipeline.py → Your analysis
@@ -425,7 +339,7 @@ project/scripts/ (Project-Specific)
 
 ## Shared Utilities
 
-Both `run_manuscript.sh` and `run_literature.sh` source shared utilities from `scripts/bash_utils.sh`:
+`run_manuscript.sh` sources shared utilities from `scripts/bash_utils.sh`:
 - Color codes and formatting
 - Logging functions (log_header, log_success, log_error, etc.)
 - Utility functions (format_duration, get_elapsed_time, parse_choice_sequence)

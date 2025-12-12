@@ -171,7 +171,7 @@ graph TB
 ### Option 2: Quick Commands Reference
 
 ```bash
-# Interactive menu (recommended) - dispatcher to choose manuscript or literature operations
+# Interactive menu (recommended) - routes to manuscript operations
 ./run.sh
 
 # Or run full 10-stage manuscript pipeline directly (includes optional LLM review)
@@ -372,7 +372,7 @@ The project follows a **thin orchestrator pattern** where:
 - **`infrastructure/`** and **`project/src/`** contain **ALL** business logic, algorithms, and implementations
 - **`scripts/`** are **lightweight wrappers** that coordinate pipeline stages
 - **`tests/`** ensure **comprehensive coverage** of all functionality
-- **`run.sh`** provides a dispatcher menu to choose between manuscript and literature operations
+- **`run.sh`** provides the main entry point for manuscript operations
 
 **Benefits:** [Read more](docs/ARCHITECTURE.md#thin-orchestrator-pattern)
 
@@ -459,7 +459,7 @@ pip install -e .
 ### 3. Generate Manuscript
 
 ```bash
-# Interactive menu (recommended) - dispatcher to choose manuscript or literature operations
+# Interactive menu (recommended) - routes to manuscript operations
 ./run.sh
 
 # Or run full 10-stage manuscript pipeline directly (stages 0-9, includes optional LLM)
@@ -478,9 +478,8 @@ python3 scripts/05_copy_outputs.py           # Copy final deliverables
 ```
 
 **Pipeline Entry Points:**
-- **`./run.sh`**: Dispatcher menu - choose between manuscript and literature operations
+- **`./run.sh`**: Routes to manuscript operations
 - **`./run_manuscript.sh --pipeline`**: 10 stages (0-9) - Extended pipeline with optional LLM review and translations
-- **`./run_literature.sh`**: Literature search and management operations (7 menu options)
 - **`python3 scripts/run_all.py`**: 6 stages (00-05) - Core pipeline only, no LLM dependencies
 
 **See [How To Use Guide](docs/HOW_TO_USE.md) for comprehensive setup instructions at all skill levels.**
@@ -660,14 +659,14 @@ graph TD
 
 **[Complete workflow](docs/WORKFLOW.md)** | **[Architecture](docs/ARCHITECTURE.md)** | **[Build System](docs/BUILD_SYSTEM.md)** | **[Run Guide](RUN_GUIDE.md)**
 
-The template provides **three main entry points** for pipeline operations:
+The template provides **two main entry points** for pipeline operations:
 
-### Entry Point 1: Main Dispatcher (`./run.sh`)
+### Entry Point 1: Main Entry Point (`./run.sh`)
 
-**Dispatcher menu** that routes to manuscript or literature operations:
+**Main entry point** that routes to manuscript operations:
 
 ```bash
-./run.sh  # Choose between manuscript and literature operations
+./run.sh  # Routes to manuscript operations
 ```
 
 ### Entry Point 2: Extended Pipeline (`./run_manuscript.sh --pipeline`)
