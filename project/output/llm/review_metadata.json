@@ -1,0 +1,79 @@
+{
+  "model": "gemma3:4b",
+  "timestamp": "2025-12-12T09:51:47.323711",
+  "source_pdf": "/Users/4d/Documents/GitHub/template/project/output/pdf/project_combined.pdf",
+  "reviews_generated": [
+    "translation_zh",
+    "translation_hi",
+    "translation_ru"
+  ],
+  "max_input_length": 500000,
+  "manuscript_metrics": {
+    "total_chars": 79795,
+    "total_words": 14922,
+    "total_tokens_est": 19948,
+    "truncated": false,
+    "truncated_chars": 79795
+  },
+  "review_metrics": {
+    "translation_zh": {
+      "input_chars": 79795,
+      "input_words": 14922,
+      "input_tokens_est": 19948,
+      "output_chars": 2646,
+      "output_words": 304,
+      "output_tokens_est": 661,
+      "generation_time_seconds": 48.49
+    },
+    "translation_hi": {
+      "input_chars": 79795,
+      "input_words": 14922,
+      "input_tokens_est": 19948,
+      "output_chars": 4143,
+      "output_words": 597,
+      "output_tokens_est": 1035,
+      "generation_time_seconds": 50.4
+    },
+    "translation_ru": {
+      "input_chars": 79795,
+      "input_words": 14922,
+      "input_tokens_est": 19948,
+      "output_chars": 4297,
+      "output_words": 524,
+      "output_tokens_est": 1074,
+      "generation_time_seconds": 50.46
+    }
+  },
+  "format_compliance": {
+    "overall_rate": 100.0,
+    "compliant_reviews": 3,
+    "total_reviews": 3,
+    "per_review": {
+      "translation_zh": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "translation_hi": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "translation_ru": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      }
+    }
+  },
+  "total_generation_time_seconds": 149.36,
+  "config": {
+    "temperature_summary": 0.3,
+    "temperature_review": 0.3,
+    "temperature_suggestions": 0.4,
+    "max_tokens": 16384,
+    "max_tokens_source": "config default long_max_tokens=16384",
+    "timeout_seconds": 300.0,
+    "system_prompt": "manuscript_review"
+  }
+}
