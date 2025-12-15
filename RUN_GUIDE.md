@@ -4,72 +4,16 @@
 
 The Research Project Template provides **three main entry points** for pipeline operations:
 
-1. **`run.sh`** - Main dispatcher menu (routes to manuscript or literature operations)
-2. **`run_manuscript.sh`** - Manuscript pipeline operations (10 stages: 0-9)
-3. **`run_literature.sh`** - Literature search and management operations (7 menu options)
+1. **`run.sh`** - Main entry point for manuscript pipeline operations (10 stages: 0-9)
+2. **`run_literature.sh`** - Literature search and management operations (located in `literature_repo/` directory)
+3. **`python3 scripts/run_all.py`** - Alternative core 6-stage pipeline without LLM features
 
-**Alternative Entry Point**: For a simpler 6-stage core pipeline without LLM features, use `python3 scripts/run_all.py` instead.
+## Entry Point 1: Manuscript Operations (`run.sh`)
 
-## Entry Point 1: Main Dispatcher (`run.sh`)
-
-`run.sh` is a **dispatcher script** that provides a simple menu to choose between manuscript and literature operations:
+`run.sh` provides an interactive menu for all manuscript pipeline operations:
 
 ```bash
 ./run.sh
-```
-
-### Dispatcher Menu
-
-```
-============================================================
-  Research Project Template - Main Menu
-============================================================
-
-Select operation type:
-
-  1. Manuscript Operations
-     (Setup, Tests, Analysis, PDF Rendering, Validation, LLM Review)
-
-  2. Literature Operations
-     (Search, Download, Extract, Summarize, Advanced LLM Operations)
-
-  3. Exit
-============================================================
-```
-
-### Dispatcher Usage
-
-**Interactive Mode (Default)**:
-```bash
-./run.sh
-```
-
-**Non-Interactive Mode**:
-```bash
-# Route to manuscript operations
-./run.sh --manuscript [options]
-
-# Route to literature operations
-./run.sh --literature [options]
-
-# Examples:
-./run.sh --manuscript --pipeline        # Run manuscript full pipeline
-./run.sh --literature --search          # Run literature search
-./run.sh --help                         # Show help
-```
-
-**Direct Access**: You can also run the specialized scripts directly:
-```bash
-./run_manuscript.sh [options]   # Direct access to manuscript operations
-./run_literature.sh [options]  # Direct access to literature operations
-```
-
-## Entry Point 2: Manuscript Operations (`run_manuscript.sh`)
-
-`run_manuscript.sh` provides an interactive menu for all manuscript pipeline operations:
-
-```bash
-./run_manuscript.sh
 ```
 
 ### Manuscript Menu (Options 0-8)
@@ -191,18 +135,18 @@ Executes the complete 10-stage build pipeline (stages 0-9):
 
 ```bash
 # Core Build Operations
-./run_manuscript.sh --pipeline          # Run full pipeline (10 stages: 0-9, includes LLM)
-./run_manuscript.sh --pipeline --resume # Resume from last checkpoint
-./run_manuscript.sh --infra-tests        # Run infrastructure tests only
-./run_manuscript.sh --project-tests      # Run project tests only
-./run_manuscript.sh --render-pdf         # Render PDF manuscript only
+./run.sh --pipeline          # Run full pipeline (10 stages: 0-9, includes LLM)
+./run.sh --pipeline --resume # Resume from last checkpoint
+./run.sh --infra-tests        # Run infrastructure tests only
+./run.sh --project-tests      # Run project tests only
+./run.sh --render-pdf         # Render PDF manuscript only
 
 # LLM Operations (requires Ollama)
-./run_manuscript.sh --reviews            # LLM manuscript review only (English)
-./run_manuscript.sh --translations       # LLM translations only
+./run.sh --reviews            # LLM manuscript review only (English)
+./run.sh --translations       # LLM translations only
 
 # Show help
-./run_manuscript.sh --help
+./run.sh --help
 ```
 
 ## Entry Point 3: Literature Operations (`run_literature.sh`)
@@ -334,7 +278,7 @@ Available operations:
 ./run_literature.sh --help
 ```
 
-## Entry Point 4: Python Orchestrator (`scripts/run_all.py`)
+## Entry Point 3: Python Orchestrator (`scripts/run_all.py`)
 
 For programmatic access or CI/CD integration, use the Python orchestrator:
 
@@ -365,9 +309,9 @@ python3 scripts/run_all.py
 
 | Entry Point | Pipeline Stages | LLM Support | Use Case |
 |-------------|----------------|--------------|----------|
-| `./run.sh` | Dispatcher (routes to others) | Via routing | Interactive menu selection |
-| `./run_manuscript.sh --pipeline` | 10 stages (0-9) | Optional | Full manuscript pipeline with LLM |
-| `./run_literature.sh` | 7 menu options | Optional | Literature search and management |
+| `./run.sh` | Main entry point | Optional | Interactive menu or full manuscript pipeline with LLM |
+| `./run.sh --pipeline` | 10 stages (0-9) | Optional | Full manuscript pipeline with LLM |
+| `./run_literature.sh` | 7 menu options | Optional | Literature search and management (in `literature_repo/` directory) |
 | `python3 scripts/run_all.py` | 6 stages (00-05) | None | Core pipeline, CI/CD automation |
 
 ## Usage Examples
@@ -379,7 +323,7 @@ python3 scripts/run_all.py
 ./run.sh
 
 # Direct access to manuscript operations
-./run_manuscript.sh
+./run.sh
 
 # Direct access to literature operations
 ./run_literature.sh
@@ -389,10 +333,10 @@ python3 scripts/run_all.py
 
 ```bash
 # Run full manuscript pipeline
-./run_manuscript.sh --pipeline
+./run.sh --pipeline
 
 # Resume manuscript pipeline from checkpoint
-./run_manuscript.sh --pipeline --resume
+./run.sh --pipeline --resume
 
 # Run literature search
 ./run_literature.sh --search
@@ -438,7 +382,7 @@ The scripts automatically set:
 You can override by setting before running:
 ```bash
 export LOG_LEVEL=0  # Enable debug logging
-./run_manuscript.sh --pipeline
+./run.sh --pipeline
 ```
 
 ### Literature Search Variables
@@ -480,7 +424,7 @@ Press Enter to return to menu...
 
 Make the script executable:
 ```bash
-chmod +x run.sh run_manuscript.sh run_literature.sh
+chmod +x run.sh run_literature.sh
 ```
 
 ### Tests fail with import errors

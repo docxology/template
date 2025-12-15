@@ -41,3 +41,4 @@ The `core/` directory contains the essential documentation that all users should
 - [`../README.md`](../README.md) - Documentation hub overview
 - [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
 
+

@@ -62,3 +62,4 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
     except Exception as e:
         raise PDFValidationError(f"Failed to extract text from PDF: {e}")
 
+

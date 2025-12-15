@@ -32,12 +32,12 @@ This routes directly to the manuscript pipeline operations menu.
 ./run.sh --help    # Show help
 ```
 
-### Manuscript Operations (`./run_manuscript.sh`)
+### Main Entry Point (`./run.sh`)
 
 **Manuscript pipeline orchestrator** - Interactive menu with manuscript operations:
 
 ```bash
-./run_manuscript.sh
+./run.sh
 ```
 
 This presents a menu with manuscript operations:
@@ -65,17 +65,17 @@ Orchestration:
 **Non-Interactive Mode:**
 ```bash
 # Core Build Operations
-./run_manuscript.sh --pipeline          # Extended pipeline (10 stages, includes LLM)
-./run_manuscript.sh --pipeline --resume # Resume from last checkpoint
-./run_manuscript.sh --infra-tests       # Run infrastructure tests only
-./run_manuscript.sh --project-tests     # Run project tests only
-./run_manuscript.sh --render-pdf        # Render PDF manuscript only
+./run.sh --pipeline          # Extended pipeline (10 stages, includes LLM)
+./run.sh --pipeline --resume # Resume from last checkpoint
+./run.sh --infra-tests       # Run infrastructure tests only
+./run.sh --project-tests     # Run project tests only
+./run.sh --render-pdf        # Render PDF manuscript only
 
 # LLM Operations (requires Ollama)
-./run_manuscript.sh --reviews            # LLM manuscript review only
-./run_manuscript.sh --translations       # LLM translations only
+./run.sh --reviews            # LLM manuscript review only
+./run.sh --translations       # LLM translations only
 
-./run_manuscript.sh --help               # Show all options
+./run.sh --help               # Show all options
 ```
 
 ### Alternative: Python Orchestrator (`run_all.py`)
@@ -108,7 +108,7 @@ Both entry points support these core stages:
 | 04 | `04_validate_output.py` | Output validation & reporting |
 | 05 | `05_copy_outputs.py` | Copy final deliverables to output/ |
 
-### Extended Pipeline Stages (`./run_manuscript.sh` only)
+### Extended Pipeline Stages (`./run.sh` only)
 
 Additional stages available in the interactive orchestrator:
 
@@ -118,7 +118,7 @@ Additional stages available in the interactive orchestrator:
 | 9 | `06_llm_review.py` | LLM Translations (optional, requires Ollama) |
 
 **Stage Numbering:**
-- `./run_manuscript.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
+- `./run.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
 - `run_all.py`: Stages 00-05 (zero-padded Python convention, 6 core stages)
 
 ## Running Individual Stages
@@ -227,7 +227,7 @@ The pipeline supports automatic checkpointing and resume capability:
 python3 scripts/run_all.py --resume
 
 # Resume from last checkpoint (Shell orchestrator)
-./run_manuscript.sh --pipeline --resume
+./run.sh --pipeline --resume
 ```
 
 ### Checkpoint Validation
@@ -274,10 +274,10 @@ These scripts:
 ## Pipeline Architecture
 
 ```
-Unified Entry Point (run.sh):
-  → Dispatcher Menu → Choose Manuscript or Literature
+Main Entry Point (run.sh):
+  → Interactive Menu → Choose Manuscript Operations
 
-Manuscript Operations (run_manuscript.sh):
+Manuscript Operations (run.sh):
 Menu Option 8 (--pipeline) → Full Pipeline:
   STAGE 0: Clean Output Directories
     └─ PASS → STAGE 1
@@ -339,7 +339,7 @@ project/scripts/ (Project-Specific)
 
 ## Shared Utilities
 
-`run_manuscript.sh` sources shared utilities from `scripts/bash_utils.sh`:
+`run.sh` sources shared utilities from `scripts/bash_utils.sh`:
 - Color codes and formatting
 - Logging functions (log_header, log_success, log_error, etc.)
 - Utility functions (format_duration, get_elapsed_time, parse_choice_sequence)

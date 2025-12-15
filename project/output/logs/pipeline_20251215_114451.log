@@ -1,35 +1,35 @@
 [0;34m════════════════════════════════════════════════════════════════[0m
 [0;34m  SETUP ENVIRONMENT (00_setup_environment.py)[0m
 [0;34m════════════════════════════════════════════════════════════════[0m
-[2025-12-12 10:49:38] [INFO] Checking Python version...
-[2025-12-12 10:49:38] [INFO] Python 3.12.11 available
-[2025-12-12 10:49:38] [INFO] Checking dependencies...
-[2025-12-12 10:49:38] [INFO] Package 'numpy' available
-[2025-12-12 10:49:38] [INFO] Package 'matplotlib' available
-[2025-12-12 10:49:38] [INFO] Package 'pytest' available
-[2025-12-12 10:49:38] [INFO] Package 'requests' available
-[2025-12-12 10:49:38] [INFO] Package 'scipy' available
-[2025-12-12 10:49:38] [INFO] Checking build tools...
-[2025-12-12 10:49:38] [INFO] 'pandoc' available (Document conversion)
-[2025-12-12 10:49:38] [INFO] 'xelatex' available (LaTeX compilation)
-[2025-12-12 10:49:38] [INFO] Setting up directory structure...
-[2025-12-12 10:49:38] [INFO] Directory ready: output
-[2025-12-12 10:49:38] [INFO] Directory ready: output/figures
-[2025-12-12 10:49:38] [INFO] Directory ready: output/data
-[2025-12-12 10:49:38] [INFO] Directory ready: output/tex
-[2025-12-12 10:49:38] [INFO] Directory ready: output/pdf
-[2025-12-12 10:49:38] [INFO] Directory ready: output/logs
-[2025-12-12 10:49:38] [INFO] Directory ready: project/output
-[2025-12-12 10:49:38] [INFO] Directory ready: project/output/logs
-[2025-12-12 10:49:38] [INFO] Verifying source code structure...
-[2025-12-12 10:49:38] [INFO] Directory found: infrastructure
-[2025-12-12 10:49:38] [INFO] Directory found: project
-[2025-12-12 10:49:38] [INFO] Directory found: scripts (optional)
-[2025-12-12 10:49:38] [INFO] Directory found: tests (optional)
-[2025-12-12 10:49:38] [INFO] Setting environment variables...
-[2025-12-12 10:49:38] [INFO] MPLBACKEND=Agg
-[2025-12-12 10:49:38] [INFO] PYTHONIOENCODING=utf-8
-[2025-12-12 10:49:38] [INFO] PROJECT_ROOT=/Users/4d/Documents/GitHub/template
+[2025-12-15 11:44:52] [INFO] Checking Python version...
+[2025-12-15 11:44:52] [INFO] Python 3.12.11 available
+[2025-12-15 11:44:52] [INFO] Checking dependencies...
+[2025-12-15 11:44:52] [INFO] Package 'numpy' available
+[2025-12-15 11:44:52] [INFO] Package 'matplotlib' available
+[2025-12-15 11:44:52] [INFO] Package 'pytest' available
+[2025-12-15 11:44:52] [INFO] Package 'requests' available
+[2025-12-15 11:44:52] [INFO] Package 'scipy' available
+[2025-12-15 11:44:52] [INFO] Checking build tools...
+[2025-12-15 11:44:52] [INFO] 'pandoc' available (Document conversion)
+[2025-12-15 11:44:52] [INFO] 'xelatex' available (LaTeX compilation)
+[2025-12-15 11:44:52] [INFO] Setting up directory structure...
+[2025-12-15 11:44:52] [INFO] Directory ready: output
+[2025-12-15 11:44:52] [INFO] Directory ready: output/figures
+[2025-12-15 11:44:52] [INFO] Directory ready: output/data
+[2025-12-15 11:44:52] [INFO] Directory ready: output/tex
+[2025-12-15 11:44:52] [INFO] Directory ready: output/pdf
+[2025-12-15 11:44:52] [INFO] Directory ready: output/logs
+[2025-12-15 11:44:52] [INFO] Directory ready: project/output
+[2025-12-15 11:44:52] [INFO] Directory ready: project/output/logs
+[2025-12-15 11:44:52] [INFO] Verifying source code structure...
+[2025-12-15 11:44:52] [INFO] Directory found: infrastructure
+[2025-12-15 11:44:52] [INFO] Directory found: project
+[2025-12-15 11:44:52] [INFO] Directory found: scripts (optional)
+[2025-12-15 11:44:52] [INFO] Directory found: tests (optional)
+[2025-12-15 11:44:52] [INFO] Setting environment variables...
+[2025-12-15 11:44:52] [INFO] MPLBACKEND=Agg
+[2025-12-15 11:44:52] [INFO] PYTHONIOENCODING=utf-8
+[2025-12-15 11:44:52] [INFO] PROJECT_ROOT=/Users/4d/Documents/GitHub/template
 [0;32m✓[0m Environment setup complete
 
 [2/9] Infrastructure Tests (22% complete)
@@ -1958,7 +1958,7 @@ infrastructure/validation/validate_pdf_cli.py              67      5     20     
 TOTAL                                                    9598   2397   3122    350  72.90%
 Coverage HTML written to dir htmlcov
 Required test coverage of 60% reached. Total coverage: 72.90%
-=============== 1796 passed, 2 skipped, 48 deselected in 41.09s ================
+=============== 1796 passed, 2 skipped, 48 deselected in 46.29s ================
 ✓ Infrastructure tests passed
 
 [3/9] Project Tests (33% complete)
@@ -2314,22 +2314,23 @@ project/src/visualization.py        77      6     34      1  91.89%   143, 148-1
 TOTAL                             1211     28    462      3  98.03%
 Coverage HTML written to dir htmlcov
 Required test coverage of 90% reached. Total coverage: 98.03%
-============================= 320 passed in 7.16s ==============================
+============================= 320 passed in 8.00s ==============================
 ✓ Project tests passed
 
 [1;33m[4/9] Project Analysis (44% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-12 10:50:28] [INFO] [STAGE-02] Discovering analysis scripts in project/...
-[2025-12-12 10:50:28] [INFO] Found: analysis_pipeline.py
-[2025-12-12 10:50:28] [INFO] Found: example_figure.py
-[2025-12-12 10:50:28] [INFO] Found: generate_research_figures.py
-[2025-12-12 10:50:28] [INFO] Found: generate_scientific_figures.py
-[2025-12-12 10:50:28] [INFO] Found: manuscript_preflight.py
-[2025-12-12 10:50:28] [INFO] Found: quality_report.py
-[2025-12-12 10:50:28] [INFO] Found: scientific_simulation.py
-[2025-12-12 10:50:28] [INFO]   [1/7] analysis_pipeline.py
-[2025-12-12 10:50:29] [INFO]     ✅ Completed in 0s
-[2025-12-12 10:50:29] [INFO]   [2/7] example_figure.py
+[2025-12-15 11:45:49] [INFO] [STAGE-02] Discovering analysis scripts in project/...
+[2025-12-15 11:45:49] [INFO] Found: analysis_pipeline.py
+[2025-12-15 11:45:49] [INFO] Found: example_figure.py
+[2025-12-15 11:45:49] [INFO] Found: generate_research_figures.py
+[2025-12-15 11:45:49] [INFO] Found: generate_scientific_figures.py
+[2025-12-15 11:45:49] [INFO] Found: manuscript_preflight.py
+[2025-12-15 11:45:49] [INFO] Found: quality_report.py
+[2025-12-15 11:45:49] [INFO] Found: scientific_simulation.py
+[2025-12-15 11:45:49] [INFO]   [1/7] analysis_pipeline.py
+Matplotlib is building the font cache; this may take a moment.
+[2025-12-15 11:46:01] [INFO]     ✅ Completed in 12s
+[2025-12-15 11:46:01] [INFO]   [2/7] example_figure.py
 ✅ Successfully imported functions from src/example.py
 Data analysis using src/ functions:
   Average: 0.129793
@@ -2342,9 +2343,9 @@ Generated: /Users/4d/Documents/GitHub/template/project/output/data/example_data.
 ✅ Generated example figure using src/ functions: /Users/4d/Documents/GitHub/template/project/output/figures/example_figure.png
 ✅ Generated example data: /Users/4d/Documents/GitHub/template/project/output/data/example_data.npz
 ✅ Generated example CSV: /Users/4d/Documents/GitHub/template/project/output/data/example_data.csv
-[2025-12-12 10:50:30] [INFO]     ✅ Completed in 0s
-[2025-12-12 10:50:30] [INFO]   Progress: 2/7 (28%) - Elapsed: 1s | ETA: 3s
-[2025-12-12 10:50:30] [INFO]   [3/7] generate_research_figures.py
+[2025-12-15 11:46:02] [INFO]     ✅ Completed in 0s
+[2025-12-15 11:46:02] [INFO]   Progress: 2/7 (28%) - Elapsed: 13s | ETA: 32s
+[2025-12-15 11:46:02] [INFO]   [3/7] generate_research_figures.py
 Generating research figures using src/ modules...
 ✅ Using src/ functions for convergence plot
 Convergence analysis using src/ functions:
@@ -2402,22 +2403,22 @@ Generated: /Users/4d/Documents/GitHub/template/project/output/data/performance_c
    - Proper error handling for missing imports
 ✅ Figure registry validation passed
 ✅ Output integrity check passed
-[2025-12-12 10:50:31] [INFO]     ✅ Completed in 1s
-[2025-12-12 10:50:31] [INFO]   [4/7] generate_scientific_figures.py
-[2025-12-12 10:50:32] [INFO]     ✅ Completed in 0s
-[2025-12-12 10:50:32] [INFO]   Progress: 4/7 (57%) - Elapsed: 3s | ETA: 2s
-[2025-12-12 10:50:32] [INFO]   [5/7] manuscript_preflight.py
+[2025-12-15 11:46:03] [INFO]     ✅ Completed in 1s
+[2025-12-15 11:46:03] [INFO]   [4/7] generate_scientific_figures.py
+[2025-12-15 11:46:04] [INFO]     ✅ Completed in 1s
+[2025-12-15 11:46:04] [INFO]   Progress: 4/7 (57%) - Elapsed: 15s | ETA: 26s
+[2025-12-15 11:46:04] [INFO]   [5/7] manuscript_preflight.py
 Manuscript dir: /Users/4d/Documents/GitHub/template/project/manuscript
 ✅ All referenced figures exist
 ✅ Glossary markers present
 ✅ References block present
 ℹ️  Quality check skipped: Failed to extract text from PDF: Failed to extract text from PDF: [Errno 21] Is a directory: '/Users/4d/Documents/GitHub/template/project/manuscript'
-[2025-12-12 10:50:33] [INFO]     ✅ Completed in 0s
-[2025-12-12 10:50:33] [INFO]   [6/7] quality_report.py
+[2025-12-15 11:46:05] [INFO]     ✅ Completed in 0s
+[2025-12-15 11:46:05] [INFO]   [6/7] quality_report.py
 ✅ Quality report generated at output/reports/quality_report.json
-[2025-12-12 10:50:33] [INFO]     ✅ Completed in 0s
-[2025-12-12 10:50:33] [INFO]   Progress: 6/7 (85%) - Elapsed: 4s | ETA: 2s
-[2025-12-12 10:50:33] [INFO]   [7/7] scientific_simulation.py
+[2025-12-15 11:46:05] [INFO]     ✅ Completed in 0s
+[2025-12-15 11:46:05] [INFO]   Progress: 6/7 (85%) - Elapsed: 16s | ETA: 19s
+[2025-12-15 11:46:05] [INFO]   [7/7] scientific_simulation.py
 Iteration 10, elapsed: 0.00s
 Iteration 20, elapsed: 0.00s
 Iteration 30, elapsed: 0.00s
@@ -2428,266 +2429,76 @@ Iteration 70, elapsed: 0.00s
 Iteration 80, elapsed: 0.00s
 Iteration 90, elapsed: 0.00s
 Iteration 100, elapsed: 0.00s
-[2025-12-12 10:50:34] [INFO]     ✅ Completed in 0s
-[2025-12-12 10:50:34] [INFO]   Progress: 7/7 (100%) - Elapsed: 5s | ETA: 0s
-[2025-12-12 10:50:34] [INFO] [STAGE-02] Verifying analysis outputs...
-[2025-12-12 10:50:34] [INFO] Output directory has 23 file(s): figures
-[2025-12-12 10:50:34] [INFO] Output directory has 5 file(s): data
+[2025-12-15 11:46:06] [INFO]     ✅ Completed in 0s
+[2025-12-15 11:46:06] [INFO]   Progress: 7/7 (100%) - Elapsed: 17s | ETA: 0s
+[2025-12-15 11:46:06] [INFO] [STAGE-02] Verifying analysis outputs...
+[2025-12-15 11:46:06] [INFO] Output directory has 23 file(s): figures
+[2025-12-15 11:46:06] [INFO] Output directory has 5 file(s): data
 [0;32m✓[0m Project analysis complete
-[2025-12-12 10:50:36] [INFO]   [1/14] 01_abstract.md
-[2025-12-12 10:50:39] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:50:39] [INFO]   [2/14] 02_introduction.md
-[2025-12-12 10:50:41] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:50:41] [INFO]   [3/14] 03_methodology.md
-[2025-12-12 10:50:43] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:50:43] [INFO]   [4/14] 04_experimental_results.md
-[2025-12-12 10:50:46] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:50:46] [INFO]   [5/14] 05_discussion.md
-[2025-12-12 10:50:48] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:50:48] [INFO]   [6/14] 06_conclusion.md
-[2025-12-12 10:50:50] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:50:50] [INFO]   [7/14] 08_acknowledgments.md
-[2025-12-12 10:50:53] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:50:53] [INFO]   [8/14] 09_appendix.md
-[2025-12-12 10:50:55] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:50:55] [INFO]   [9/14] S01_supplemental_methods.md
-[2025-12-12 10:50:58] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:50:58] [INFO]   [10/14] S02_supplemental_results.md
-[2025-12-12 10:51:00] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:51:00] [INFO]   [11/14] S03_supplemental_analysis.md
-[2025-12-12 10:51:03] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:51:03] [INFO]   [12/14] S04_supplemental_applications.md
-[2025-12-12 10:51:06] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:51:06] [INFO]   [13/14] 98_symbols_glossary.md
-[2025-12-12 10:51:08] [INFO]     ✅ Completed in 2s
-[2025-12-12 10:51:08] [INFO]   [14/14] 99_references.md
-[2025-12-12 10:51:11] [INFO]     ✅ Completed in 2s
+[2025-12-15 11:46:09] [INFO]   [1/14] 01_abstract.md
+[2025-12-15 11:46:13] [INFO]     ✅ Completed in 3s
+[2025-12-15 11:46:13] [INFO]   [2/14] 02_introduction.md
+[2025-12-15 11:46:15] [INFO]     ✅ Completed in 2s
+[2025-12-15 11:46:15] [INFO]   [3/14] 03_methodology.md
+[2025-12-15 11:46:18] [INFO]     ✅ Completed in 3s
+[2025-12-15 11:46:18] [INFO]   [4/14] 04_experimental_results.md
+[2025-12-15 11:46:21] [INFO]     ✅ Completed in 2s
+[2025-12-15 11:46:21] [INFO]   [5/14] 05_discussion.md
+[2025-12-15 11:46:24] [INFO]     ✅ Completed in 2s
+[2025-12-15 11:46:24] [INFO]   [6/14] 06_conclusion.md
+[2025-12-15 11:46:27] [INFO]     ✅ Completed in 3s
+[2025-12-15 11:46:27] [INFO]   [7/14] 08_acknowledgments.md
+[2025-12-15 11:46:30] [INFO]     ✅ Completed in 2s
+[2025-12-15 11:46:30] [INFO]   [8/14] 09_appendix.md
+[2025-12-15 11:46:33] [INFO]     ✅ Completed in 3s
+[2025-12-15 11:46:33] [INFO]   [9/14] S01_supplemental_methods.md
+[2025-12-15 11:46:36] [INFO]     ✅ Completed in 2s
+[2025-12-15 11:46:36] [INFO]   [10/14] S02_supplemental_results.md
+[2025-12-15 11:46:39] [INFO]     ✅ Completed in 2s
+[2025-12-15 11:46:39] [INFO]   [11/14] S03_supplemental_analysis.md
+[2025-12-15 11:46:42] [INFO]     ✅ Completed in 2s
+[2025-12-15 11:46:42] [INFO]   [12/14] S04_supplemental_applications.md
+[2025-12-15 11:46:44] [INFO]     ✅ Completed in 2s
+[2025-12-15 11:46:44] [INFO]   [13/14] 98_symbols_glossary.md
+[2025-12-15 11:46:47] [INFO]     ✅ Completed in 2s
+[2025-12-15 11:46:47] [INFO]   [14/14] 99_references.md
+[2025-12-15 11:46:49] [INFO]     ✅ Completed in 2s
 
 [1;33m[6/9] Output Validation (66% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-12 10:51:28] [INFO] 
+[2025-12-15 11:47:07] [INFO] 
   Validating figure registry...
-[2025-12-12 10:51:28] [INFO] Figure registry loaded: 16 figure(s)
-[2025-12-12 10:51:28] [INFO] All 14 figure references verified
+[2025-12-15 11:47:07] [INFO] Figure registry loaded: 16 figure(s)
+[2025-12-15 11:47:07] [INFO] All 14 figure references verified
 [0;32m✓[0m Output validation complete
 
 [1;33m[7/9] Copy Outputs (77% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-12 10:51:29] [INFO] Cleaning output directory...
-[2025-12-12 10:51:29] [INFO] Output directory cleaned
-[2025-12-12 10:51:29] [INFO] Copying all project outputs...
-[2025-12-12 10:51:29] [INFO] Recursively copied project/output/ directory
-[2025-12-12 10:51:29] [INFO]   pdf/: 9 file(s)
-[2025-12-12 10:51:29] [INFO]   web/: 14 file(s)
-[2025-12-12 10:51:29] [INFO]   slides/: 103 file(s)
-[2025-12-12 10:51:29] [INFO]   figures/: 23 file(s)
-[2025-12-12 10:51:29] [INFO]   data/: 5 file(s)
-[2025-12-12 10:51:29] [INFO]   reports/: 8 file(s)
-[2025-12-12 10:51:29] [INFO]   simulations/: 3 file(s)
-[2025-12-12 10:51:29] [INFO]   llm/: 0 file(s)
-[2025-12-12 10:51:29] [INFO]   logs/: 1 file(s)
-[2025-12-12 10:51:29] [INFO] Copied combined PDF to root (2.26 MB)
-[2025-12-12 10:51:29] [INFO]   Root PDF: /Users/4d/Documents/GitHub/template/output/project_combined.pdf (2,372,276 bytes)
-[2025-12-12 10:51:29] [INFO] Validating copied outputs...
-[2025-12-12 10:51:29] [INFO] Combined PDF at root valid (2.26 MB)
-[2025-12-12 10:51:29] [INFO] pdf/ valid (9 files, 2.59 MB)
-[2025-12-12 10:51:29] [INFO] web/ valid (14 files, 0.14 MB)
-[2025-12-12 10:51:29] [INFO] slides/ valid (103 files, 1.26 MB)
-[2025-12-12 10:51:29] [INFO] figures/ valid (23 files, 2.50 MB)
-[2025-12-12 10:51:29] [INFO] data/ valid (5 files, 0.01 MB)
-[2025-12-12 10:51:29] [INFO] reports/ valid (8 files, 0.01 MB)
-[2025-12-12 10:51:29] [INFO] simulations/ valid (3 files, 0.05 MB)
-[2025-12-12 10:51:29] [INFO] logs/ valid (1 files, 0.27 MB)
+[2025-12-15 11:47:08] [INFO] Cleaning output directory...
+[2025-12-15 11:47:08] [INFO] Output directory cleaned
+[2025-12-15 11:47:08] [INFO] Copying all project outputs...
+[2025-12-15 11:47:08] [INFO] Recursively copied project/output/ directory
+[2025-12-15 11:47:08] [INFO]   pdf/: 9 file(s)
+[2025-12-15 11:47:08] [INFO]   web/: 14 file(s)
+[2025-12-15 11:47:08] [INFO]   slides/: 103 file(s)
+[2025-12-15 11:47:08] [INFO]   figures/: 23 file(s)
+[2025-12-15 11:47:08] [INFO]   data/: 5 file(s)
+[2025-12-15 11:47:08] [INFO]   reports/: 8 file(s)
+[2025-12-15 11:47:08] [INFO]   simulations/: 3 file(s)
+[2025-12-15 11:47:08] [INFO]   llm/: 0 file(s)
+[2025-12-15 11:47:08] [INFO]   logs/: 1 file(s)
+[2025-12-15 11:47:08] [INFO] Copied combined PDF to root (2.23 MB)
+[2025-12-15 11:47:08] [INFO]   Root PDF: /Users/4d/Documents/GitHub/template/output/project_combined.pdf (2,343,149 bytes)
+[2025-12-15 11:47:08] [INFO] Validating copied outputs...
+[2025-12-15 11:47:08] [INFO] Combined PDF at root valid (2.23 MB)
+[2025-12-15 11:47:08] [INFO] pdf/ valid (9 files, 2.56 MB)
+[2025-12-15 11:47:08] [INFO] web/ valid (14 files, 0.14 MB)
+[2025-12-15 11:47:08] [INFO] slides/ valid (103 files, 1.26 MB)
+[2025-12-15 11:47:08] [INFO] figures/ valid (23 files, 2.47 MB)
+[2025-12-15 11:47:08] [INFO] data/ valid (5 files, 0.01 MB)
+[2025-12-15 11:47:08] [INFO] reports/ valid (8 files, 0.01 MB)
+[2025-12-15 11:47:08] [INFO] simulations/ valid (3 files, 0.05 MB)
+[2025-12-15 11:47:08] [INFO] logs/ valid (1 files, 0.27 MB)
 [0;32m✓[0m Output copying complete
 Loading gemma3:4b into GPU memory...
 Waiting for first token...
-    Generated 251 tokens in 39.3s (6.4 tokens/sec)
-    Generated 1,020 tokens in 55.0s (18.6 tokens/sec)
-    Generated 800 tokens in 49.3s (16.2 tokens/sec)
-    Generated 896 tokens in 51.5s (17.4 tokens/sec)
-Loading gemma3:4b into GPU memory...
-Waiting for first token...
-
-Generated Files Inventory:
-  Pdf (10 file(s), 4MB):
-    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.md (72KB)
-    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.log (61KB)
-    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.aux (77KB)
-    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.blg (918B)
-    - /Users/4d/Documents/GitHub/template/output/pdf/references.bib (3KB)
-    - /Users/4d/Documents/GitHub/template/output/pdf/project_combined.pdf (2MB)
-    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.tex (100KB)
-    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.toc (17KB)
-    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.bbl (4KB)
-    - /Users/4d/Documents/GitHub/template/output/project_combined.pdf (2MB)
-  Figures (23 file(s), 2MB):
-    - /Users/4d/Documents/GitHub/template/output/figures/scatter_correlation.pdf (12KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/analysis_comparison.png (75KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/recommendation_scalability.png (194KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/analysis_comparison.pdf (16KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/example_figure.png (172KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/scatter_correlation.png (143KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/figure_registry.json (5KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/hyperparameter_sensitivity.png (89KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/scalability_analysis.png (156KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/ablation_study.png (85KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/step_size_analysis.png (369KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/time_series_analysis.pdf (17KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/time_series_analysis.png (220KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/convergence_plot.png (143KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/scientific_simulation_timeseries.pdf (16KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/scientific_simulation_timeseries.png (214KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/image_classification_results.png (160KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/experimental_setup.png (62KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/data_structure.png (168KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/convergence_analysis.pdf (17KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/statistical_comparison.png (80KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/statistical_comparison.pdf (17KB)
-    - /Users/4d/Documents/GitHub/template/output/figures/convergence_analysis.png (115KB)
-  Data (5 file(s), 10KB):
-    - /Users/4d/Documents/GitHub/template/output/data/example_data.npz (3KB)
-    - /Users/4d/Documents/GitHub/template/output/data/dataset_summary.csv (313B)
-    - /Users/4d/Documents/GitHub/template/output/data/performance_comparison.csv (153B)
-    - /Users/4d/Documents/GitHub/template/output/data/convergence_data.npz (3KB)
-    - /Users/4d/Documents/GitHub/template/output/data/example_data.csv (2KB)
-  Reports (8 file(s), 8KB):
-    - /Users/4d/Documents/GitHub/template/output/reports/pipeline_report.json (1KB)
-    - /Users/4d/Documents/GitHub/template/output/reports/quality_report.json (859B)
-    - /Users/4d/Documents/GitHub/template/output/reports/simulation_report.md (398B)
-    - /Users/4d/Documents/GitHub/template/output/reports/analysis_report.md (545B)
-    - /Users/4d/Documents/GitHub/template/output/reports/validation_report.json (598B)
-    - /Users/4d/Documents/GitHub/template/output/reports/pipeline_report.md (402B)
-    - /Users/4d/Documents/GitHub/template/output/reports/validation_report.md (202B)
-    - /Users/4d/Documents/GitHub/template/output/reports/pipeline_report.html (3KB)
-  Simulations (3 file(s), 50KB):
-    - /Users/4d/Documents/GitHub/template/output/simulations/simulation_example.npz (36KB)
-    - /Users/4d/Documents/GitHub/template/output/simulations/simulation_example.json (13KB)
-    - /Users/4d/Documents/GitHub/template/output/simulations/checkpoint_000000.json (319B)
-  Logs (1 file(s), 272KB):
-    - /Users/4d/Documents/GitHub/template/output/logs/pipeline_20251212_104938.log (272KB)
-  Web (14 file(s), 142KB):
-    - /Users/4d/Documents/GitHub/template/output/web/S02_supplemental_results.html (8KB)
-    - /Users/4d/Documents/GitHub/template/output/web/06_conclusion.html (9KB)
-    - /Users/4d/Documents/GitHub/template/output/web/S04_supplemental_applications.html (13KB)
-    - /Users/4d/Documents/GitHub/template/output/web/05_discussion.html (10KB)
-    - /Users/4d/Documents/GitHub/template/output/web/98_symbols_glossary.html (13KB)
-    - /Users/4d/Documents/GitHub/template/output/web/S03_supplemental_analysis.html (11KB)
-    - /Users/4d/Documents/GitHub/template/output/web/09_appendix.html (19KB)
-    - /Users/4d/Documents/GitHub/template/output/web/01_abstract.html (6KB)
-    - /Users/4d/Documents/GitHub/template/output/web/S01_supplemental_methods.html (11KB)
-    - /Users/4d/Documents/GitHub/template/output/web/99_references.html (3KB)
-    - /Users/4d/Documents/GitHub/template/output/web/04_experimental_results.html (10KB)
-    - /Users/4d/Documents/GitHub/template/output/web/03_methodology.html (8KB)
-    - /Users/4d/Documents/GitHub/template/output/web/02_introduction.html (9KB)
-    - /Users/4d/Documents/GitHub/template/output/web/08_acknowledgments.html (5KB)
-  Slides (103 file(s), 1MB):
-    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.nav (307B)
-    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.pdf (15KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.toc (48B)
-    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.tex (8KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.snm (902B)
-    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.aux (3KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.log (52KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.nav (307B)
-    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.toc (0B)
-    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.log (63KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.aux (6KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.snm (1KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.vrb (802B)
-    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.tex (4KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.nav (307B)
-    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.vrb (791B)
-    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.log (51KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.snm (1KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.aux (4KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.tex (7KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.toc (47B)
-    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.pdf (16KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.snm (776B)
-    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.log (52KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.aux (4KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.snm (507B)
-    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.log (52KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.pdf (37KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.aux (3KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.toc (0B)
-    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.tex (12KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.pdf (2KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.toc (0B)
-    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.nav (899B)
-    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.tex (10KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.nav (987B)
-    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.log (52KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.aux (5KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.snm (1KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.nav (307B)
-    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.vrb (7KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.pdf (16KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.nav (307B)
-    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.nav (1KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.log (52KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.aux (4KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.snm (1KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.log (49KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.pdf (3KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.aux (714B)
-    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.snm (34B)
-    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.tex (4KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.toc (0B)
-    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.pdf (39KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.tex (10KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.toc (0B)
-    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.log (53KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.vrb (713B)
-    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.snm (561B)
-    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.nav (307B)
-    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.aux (3KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.toc (46B)
-    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.vrb (8KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.tex (8KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.toc (46B)
-    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.tex (9KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.nav (307B)
-    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.snm (525B)
-    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.nav (395B)
-    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.aux (4KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.pdf (2KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.log (53KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.toc (0B)
-    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.pdf (32KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.tex (13KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.tex (12KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.snm (32B)
-    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.aux (868B)
-    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.log (51KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.toc (56B)
-    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.pdf (2KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.tex (11KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.pdf (45KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.nav (307B)
-    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.toc (0B)
-    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.tex (2KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.toc (0B)
-    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.log (51KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.aux (1KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.snm (256B)
-    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.nav (1KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.pdf (29KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.snm (1KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.aux (5KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.nav (989B)
-    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.log (53KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.pdf (32KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.snm (32B)
-    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.aux (809B)
-    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.log (59KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.pdf (39KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.tex (14KB)
-    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.toc (0B)
-
-============================================================
-Pipeline completed: Fri Dec 12 10:58:21 PST 2025
-Total duration: 8m 42s
-Log file: /Users/4d/Documents/GitHub/template/project/output/logs/pipeline_20251212_104938.log
-  (Will be copied to output/logs/ during copy stage)
-============================================================

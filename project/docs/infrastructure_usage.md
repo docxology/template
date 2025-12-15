@@ -60,3 +60,4 @@ validate_figure_registry(Path("output/figures/figure_registry.json"))
 
 
 
+

@@ -228,3 +228,4 @@ class TestValidateFigureRegistry:
         assert any("fig:unregistered2" in issue for issue in issues)
 
 
+

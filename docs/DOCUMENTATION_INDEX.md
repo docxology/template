@@ -144,7 +144,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/operational/CI_CD_INTEGRATION.md`](operational/CI_CD_INTEGRATION.md)** - GitHub Actions and CI/CD integration guide
 
 ### **Pipeline Orchestration**
-- **[`../RUN_GUIDE.md`](../RUN_GUIDE.md)** - Complete pipeline orchestration guide (run.sh, run_manuscript.sh, run_literature.sh)
+- **[`../RUN_GUIDE.md`](../RUN_GUIDE.md)** - Complete pipeline orchestration guide (run.sh, run_literature.sh)
 
 ### **Troubleshooting & Support**
 - **[`docs/operational/TROUBLESHOOTING_GUIDE.md`](operational/TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting guide

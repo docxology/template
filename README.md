@@ -111,7 +111,7 @@ flowchart TD
 | 4 | **[docs/development/SECURITY.md](docs/development/SECURITY.md)** | Security practices |
 | 5 | **[.cursorrules/AGENTS.md](.cursorrules/AGENTS.md)** | Development standards |
 
-**Recent improvements:** See **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)** and **[docs/development/TEST_IMPROVEMENTS_SUMMARY.md](docs/development/TEST_IMPROVEMENTS_SUMMARY.md)**
+**Recent improvements:** See **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)**
 
 ### 🔬 Advanced Users - Technical Deep Dive
 
@@ -239,7 +239,7 @@ graph TB
 ./run.sh
 
 # Or run full 10-stage manuscript pipeline directly (includes optional LLM review)
-./run_manuscript.sh --pipeline
+./run.sh --pipeline
 
 # Alternative: Core 6-stage pipeline (no LLM dependencies)
 python3 scripts/run_all.py
@@ -427,7 +427,7 @@ The project follows a **thin orchestrator pattern** where:
 - **`infrastructure/`** and **`project/src/`** contain **ALL** business logic, algorithms, and implementations
 - **`scripts/`** are **lightweight wrappers** that coordinate pipeline stages
 - **`tests/`** ensure **comprehensive coverage** of all functionality
-- **`run.sh`** provides the main entry point for manuscript operations
+- **`run.sh`** provides the main entry point for manuscript operations (interactive menu and pipeline orchestration)
 
 **Benefits:** [Read more](docs/core/ARCHITECTURE.md#thin-orchestrator-pattern)
 
@@ -518,7 +518,7 @@ pip install -e .
 ./run.sh
 
 # Or run full 10-stage manuscript pipeline directly (stages 0-9, includes optional LLM)
-./run_manuscript.sh --pipeline
+./run.sh --pipeline
 
 # Alternative: Core 6-stage pipeline (stages 00-05, no LLM dependencies)
 python3 scripts/run_all.py
@@ -533,8 +533,8 @@ python3 scripts/05_copy_outputs.py           # Copy final deliverables
 ```
 
 **Pipeline Entry Points:**
-- **`./run.sh`**: Routes to manuscript operations
-- **`./run_manuscript.sh --pipeline`**: 10 stages (0-9) - Extended pipeline with optional LLM review and translations
+- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages: 0-9) with optional LLM review and translations
+- **`./run.sh --pipeline`**: 10 stages (0-9) - Extended pipeline with optional LLM review and translations
 - **`python3 scripts/run_all.py`**: 6 stages (00-05) - Core pipeline only, no LLM dependencies
 
 **See [How To Use Guide](docs/core/HOW_TO_USE.md) for comprehensive setup instructions at all skill levels.**
@@ -724,13 +724,13 @@ The template provides **two main entry points** for pipeline operations:
 ./run.sh  # Routes to manuscript operations
 ```
 
-### Entry Point 2: Extended Pipeline (`./run_manuscript.sh --pipeline`)
+### Entry Point 2: Extended Pipeline (`./run.sh --pipeline`)
 
 **10-stage pipeline** (stages 0-9) with optional LLM review:
 
 ```mermaid
 flowchart TD
-    START([./run_manuscript.sh --pipeline]) --> STAGE0[Stage 0: Clean Output Directories]
+    START([./run.sh --pipeline]) --> STAGE0[Stage 0: Clean Output Directories]
     STAGE0 --> STAGE1[Stage 1: Setup Environment]
     STAGE1 --> STAGE2[Stage 2: Infrastructure Tests<br/>60%+ coverage required]
     STAGE2 --> STAGE3[Stage 3: Project Tests<br/>90%+ coverage required]
@@ -779,7 +779,7 @@ flowchart TD
 | 05 | `05_copy_outputs.py` | Copy final deliverables to `output/` |
 
 **Stage Numbering:**
-- `./run_manuscript.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
+- `./run.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
 - `run_all.py`: Stages 00-05 (zero-padded Python convention, 6 core stages)
 
 **See [RUN_GUIDE.md](RUN_GUIDE.md) for complete pipeline documentation.**

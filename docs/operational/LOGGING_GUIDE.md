@@ -190,7 +190,7 @@ The pipeline automatically captures all terminal output to log files:
 **Usage**:
 ```bash
 # Run pipeline - log file is automatically created
-./run_manuscript.sh --pipeline
+./run.sh --pipeline
 
 # Log file location is displayed in pipeline summary
 # Example: output/logs/pipeline_20251205_074830.log

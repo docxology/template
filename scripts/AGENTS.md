@@ -28,12 +28,9 @@ The template provides multiple entry points organized by function:
 ### Root-Level Scripts
 
 **Main Entry Point** (`run.sh`):
-- Routes to manuscript operations
-- Non-interactive: `./run.sh [options]` passes options to `run_manuscript.sh`
-
-**Manuscript Operations** (`run_manuscript.sh`):
-- Interactive menu with manuscript pipeline operations (0-8)
+- Interactive menu with manuscript pipeline operations (0-9)
 - Full pipeline execution (10 stages: 0-9)
+- Non-interactive: `./run.sh [options]` for direct pipeline operations
 - Non-interactive flags: `--pipeline`, `--infra-tests`, `--project-tests`, `--render-pdf`, `--reviews`, `--translations`
 - Sources shared utilities from `scripts/bash_utils.sh`
 
@@ -42,7 +39,7 @@ The template provides multiple entry points organized by function:
 - Logging functions (log_header, log_success, log_error, etc.)
 - Utility functions (format_duration, get_elapsed_time, parse_choice_sequence)
 - File logging functions
-- Sourced by `run_manuscript.sh`
+- Sourced by `run.sh`
 
 ### Python Scripts
 

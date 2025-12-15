@@ -277,3 +277,4 @@ class TestValidateOutputStructure:
         assert result["directory_structure"]["project_combined_pdf"]["readable"] is True
 
 
+

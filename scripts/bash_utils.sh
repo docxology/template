@@ -2,13 +2,13 @@
 ################################################################################
 # Shared Bash Utilities
 #
-# Common utilities for run_manuscript.sh and run_literature.sh:
+# Common utilities for run.sh and run_literature.sh:
 # - Color codes and formatting
 # - Logging functions
 # - Utility functions (duration formatting, choice parsing, etc.)
 # - Environment setup
 #
-# This file is sourced by both run_manuscript.sh and run_literature.sh
+# This file is sourced by both run.sh and run_literature.sh
 ################################################################################
 
 # Color codes for output
@@ -247,5 +247,7 @@ parse_choice_sequence() {
 
     [[ ${#SHORTHAND_CHOICES[@]} -gt 0 ]]
 }
+
+
 
 

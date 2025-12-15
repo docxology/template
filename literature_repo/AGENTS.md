@@ -365,3 +365,4 @@ python3 -m infrastructure.literature.cli library validate
 - [infrastructure/core/AGENTS.md](infrastructure/core/AGENTS.md) - Core utilities
 - [infrastructure/llm/AGENTS.md](infrastructure/llm/AGENTS.md) - LLM integration
 
+

@@ -1,0 +1,30 @@
+{
+  "timestamp": "2025-12-15T11:50:56.857001",
+  "infrastructure": {
+    "passed": 1796,
+    "failed": 0,
+    "skipped": 2,
+    "total": 1798,
+    "warnings": 0,
+    "exit_code": 0,
+    "coverage_percent": 83.33
+  },
+  "project": {
+    "passed": 320,
+    "failed": 0,
+    "skipped": 0,
+    "total": 320,
+    "warnings": 0,
+    "exit_code": 0,
+    "coverage_percent": 100.0
+  },
+  "summary": {
+    "total_passed": 2116,
+    "total_failed": 0,
+    "total_skipped": 2,
+    "total_tests": 2118,
+    "all_passed": true,
+    "infrastructure_coverage": 83.33,
+    "project_coverage": 100.0
+  }
+}

@@ -215,3 +215,4 @@ class TestFormatDuration:
         assert format_duration(3661) == "1h 1m"  # 1h 1m 1s -> 1h 1m
 
 
+

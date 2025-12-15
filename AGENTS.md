@@ -317,10 +317,10 @@ The template provides **three entry points** for pipeline execution:
 **Manuscript Operations**
 ```bash
 # Interactive menu with manuscript operations
-./run_manuscript.sh
+./run.sh
 
 # Non-interactive: Extended pipeline (10 stages: 0-9) with optional LLM review
-./run_manuscript.sh --pipeline
+./run.sh --pipeline
 ```
 
 **Alternative: Python Orchestrator**
@@ -330,8 +330,8 @@ python3 scripts/run_all.py
 ```
 
 **Entry Point Comparison**
-- **`./run.sh`**: Routes to manuscript operations
-- **`./run_manuscript.sh --pipeline`**: 10 stages (0-9), includes optional LLM review stages. Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs.
+- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages: 0-9), includes optional LLM review stages. Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs.
+- **`./run.sh --pipeline`**: 10 stages (0-9), includes optional LLM review stages. Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs.
 - **`python3 scripts/run_all.py`**: 6 stages (00-05), core pipeline only
 
 ### Pipeline Stages
@@ -345,14 +345,14 @@ python3 scripts/run_all.py
 5. **Output Validation** - Validate all generated outputs
 6. **Copy Outputs** - Copy final deliverables to root `output/` directory
 
-**Extended Pipeline Stages** (`./run_manuscript.sh --pipeline` only):
+**Extended Pipeline Stages** (`./run.sh --pipeline` only):
 
 8. **LLM Scientific Review** - AI-powered manuscript analysis (optional)
 9. **LLM Translations** - Multi-language technical abstract generation (optional)
 
 **Stage Numbering:**
 - `run_all.py`: Stages 00-05 (zero-padded, Python convention) - 6 core stages
-- `run_manuscript.sh`: Stages 0-9 (10 total stages). Stage 0 is cleanup (not in STAGE_NAMES array), stages 1-9 are tracked and displayed as [1/9] to [9/9] in logs
+- `./run.sh`: Stages 0-9 (10 total stages). Stage 0 is cleanup (not in STAGE_NAMES array), stages 1-9 are tracked and displayed as [1/9] to [9/9] in logs
 
 ### Manual Execution Options
 
@@ -885,11 +885,11 @@ The pipeline includes automatic checkpointing for resume capability:
 ```bash
 # Resume from last checkpoint
 python3 scripts/run_all.py --resume
-./run_manuscript.sh --pipeline --resume
+./run.sh --pipeline --resume
 
 # Start fresh (clears checkpoint on success)
 python3 scripts/run_all.py
-./run_manuscript.sh --pipeline
+./run.sh --pipeline
 ```
 
 **Features**:
