@@ -229,3 +229,6 @@ class TestValidateFigureRegistry:
 
 
 
+
+
+

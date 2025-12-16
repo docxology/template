@@ -553,7 +553,7 @@ def test_process_negative():
    ```
 
 2. **Check for errors**
-   - Tests must pass (2245/2245)
+   - Tests must pass (2118/2118)
    - Scripts must succeed
    - Markdown validation must pass
    - PDF compilation must succeed
@@ -732,7 +732,7 @@ def test_process_negative():
    ```
 
 **Contribution Checklist**:
-- [ ] Tests pass (2245/2245)
+- [ ] Tests pass (2118/2118)
 - [ ] Coverage maintained/improved
 - [ ] Documentation updated
 - [ ] Thin orchestrator pattern followed

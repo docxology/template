@@ -366,3 +366,6 @@ python3 -m infrastructure.literature.cli library validate
 - [infrastructure/llm/AGENTS.md](infrastructure/llm/AGENTS.md) - LLM integration
 
 
+
+
+

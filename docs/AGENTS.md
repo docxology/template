@@ -217,7 +217,7 @@ pytest tests/
 
 # Good: Complete with output
 $ pytest tests/ --cov=src
-===== Coverage: 99.88% =====
+===== Coverage: 100% =====
 ```
 
 ## Documentation Maintenance

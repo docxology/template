@@ -1,6 +1,6 @@
 # 📚 Documentation Index
 
-This index provides a comprehensive overview of all documentation files in the Research Project Template, organized by category and purpose.
+This index provides an overview of all documentation files in the Research Project Template, organized by category and purpose.
 
 ## 🎯 **Quick Start by Persona**
 
@@ -62,7 +62,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`.cursorrules/reporting.md`](../.cursorrules/reporting.md)** - Reporting module standards and outputs
 - **[`.cursorrules/refactoring.md`](../.cursorrules/refactoring.md)** - Refactoring and modularization standards
 
-**Note**: Use `.cursorrules/` files as quick reference during development. Corresponding `docs/` files provide comprehensive guides.
+**Note**: Use `.cursorrules/` files as quick reference during development. Corresponding `docs/` files provide guides.
 
 ## 🎯 **Core Documentation**
 

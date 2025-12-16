@@ -589,7 +589,7 @@ report = generate_pipeline_report(
     stage_results=stage_results,
     total_duration=60.5,
     repo_root=Path("."),
-    test_results={'summary': {'total_tests': 2245, 'total_passed': 2245}},
+    test_results={'summary': {'total_tests': 2118, 'total_passed': 2118}},
     validation_results={'checks': {'pdf_validation': True}},
     performance_metrics={'total_duration': 60.5},
 )

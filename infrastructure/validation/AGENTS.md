@@ -81,6 +81,100 @@ Validation module is used by:
 - Quality checker for document analysis
 - CI/CD systems for automated validation
 
+## Troubleshooting
+
+### PDF Validation Fails
+
+**Issue**: `validate_pdf_rendering()` fails to extract text or analyze PDF.
+
+**Solutions**:
+- Verify PDF file exists and is readable
+- Check PDF is not password-protected
+- Ensure PDF contains extractable text (not just images)
+- Review PDF file permissions
+- Try with a different PDF to isolate file-specific issues
+
+### Markdown Validation Errors
+
+**Issue**: `validate_markdown()` reports false positives or misses issues.
+
+**Solutions**:
+- Verify manuscript directory path is correct
+- Check markdown file encoding (UTF-8 required)
+- Review image paths are relative to manuscript directory
+- Ensure figure files exist before validation
+- Check LaTeX syntax in markdown files
+
+### Image References Not Found
+
+**Issue**: Validation reports missing image files.
+
+**Solutions**:
+- Verify image paths are relative to manuscript directory
+- Check image file extensions match references
+- Ensure images are generated before validation
+- Review path resolution logic for your directory structure
+- Check for case sensitivity issues (Linux vs macOS/Windows)
+
+### Cross-Reference Validation Fails
+
+**Issue**: Cross-references reported as unresolved.
+
+**Solutions**:
+- Verify reference labels match exactly (case-sensitive)
+- Check that referenced sections/equations/figures exist
+- Ensure LaTeX label syntax is correct (`\label{...}`)
+- Review reference format (`\ref{...}`, `\eqref{...}`, etc.)
+- Check for typos in reference keys
+
+### Integrity Check False Positives
+
+**Issue**: Integrity verification reports issues that don't exist.
+
+**Solutions**:
+- Verify file paths are correct
+- Check file modification times (may affect hash comparison)
+- Review integrity check configuration
+- Ensure files are not being modified during check
+- Compare integrity reports over time
+
+## Best Practices
+
+### PDF Validation
+
+- **Validate Early**: Check PDFs immediately after generation
+- **Check Structure**: Verify document structure before content
+- **Review Warnings**: Address warnings before they become errors
+- **Track Issues**: Log all validation issues for tracking
+
+### Markdown Validation
+
+- **Validate Before Rendering**: Check markdown before PDF generation
+- **Use Strict Mode**: Enable strict mode in CI/CD pipelines
+- **Fix References**: Resolve all reference issues before proceeding
+- **Validate Images**: Ensure all referenced images exist
+
+### Integrity Verification
+
+- **Run Regularly**: Integrate integrity checks into build pipeline
+- **Compare Baselines**: Compare against known-good baselines
+- **Track Changes**: Monitor integrity reports for unexpected changes
+- **Document Issues**: Document any expected integrity differences
+
+### Cross-Reference Management
+
+- **Use Consistent Labels**: Follow consistent naming conventions
+- **Validate References**: Check references before final rendering
+- **Document Patterns**: Document reference patterns for team
+- **Automate Checks**: Integrate reference validation into workflow
+
+### Error Reporting
+
+- **Provide Context**: Include file paths and line numbers in errors
+- **Actionable Messages**: Give specific steps to fix issues
+- **Categorize Issues**: Distinguish errors from warnings
+- **Track Trends**: Monitor validation results over time
+
 ## See Also
 
 - [README.md](README.md) - Quick reference guide

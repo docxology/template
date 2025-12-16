@@ -48,7 +48,7 @@ That's it! You now have a complete research project structure.
 - ✅ **Complete project structure** with clear organization
 - ✅ **Professional PDF generation** from markdown
 - ✅ **Cross-referencing system** for equations and figures
-- ✅ **Automated testing** framework (2245 tests: 1894 infrastructure [8 skipped] + 351 project, all passing)
+- ✅ **Automated testing** framework (2118 tests: 1796 infrastructure [2 skipped] + 320 project, all passing)
 - ✅ **Build pipeline** that validates everything (58-second builds)
 - ✅ **Terminal output logging** - all pipeline output saved to timestamped log files
 - ✅ **25+ comprehensive guides** for all skill levels
@@ -307,6 +307,6 @@ Having issues? Here's where to look:
 
 **Ready to start?** Choose your skill level above and dive in!
 
-**System Status**: ✅ All operational | **Build Time**: 84s (without optional LLM review) | **Coverage**: 99.88%/90% (project), 61.48%/60% (infra) | **Tests**: 2245 passing
+**System Status**: ✅ All operational | **Build Time**: 84s (without optional LLM review) | **Coverage**: 100%/90% (project), 83.33%/60% (infra) | **Tests**: 2118 passing
 
 **Need help?** Start with **[Getting Started Guide](../guides/GETTING_STARTED.md)** or check the **[FAQ](../reference/FAQ.md)**

@@ -1,46 +1,50 @@
 [0;34m════════════════════════════════════════════════════════════════[0m
 [0;34m  SETUP ENVIRONMENT (00_setup_environment.py)[0m
 [0;34m════════════════════════════════════════════════════════════════[0m
-[2025-12-15 11:44:52] [INFO] Checking Python version...
-[2025-12-15 11:44:52] [INFO] Python 3.12.11 available
-[2025-12-15 11:44:52] [INFO] Checking dependencies...
-[2025-12-15 11:44:52] [INFO] Package 'numpy' available
-[2025-12-15 11:44:52] [INFO] Package 'matplotlib' available
-[2025-12-15 11:44:52] [INFO] Package 'pytest' available
-[2025-12-15 11:44:52] [INFO] Package 'requests' available
-[2025-12-15 11:44:52] [INFO] Package 'scipy' available
-[2025-12-15 11:44:52] [INFO] Checking build tools...
-[2025-12-15 11:44:52] [INFO] 'pandoc' available (Document conversion)
-[2025-12-15 11:44:52] [INFO] 'xelatex' available (LaTeX compilation)
-[2025-12-15 11:44:52] [INFO] Setting up directory structure...
-[2025-12-15 11:44:52] [INFO] Directory ready: output
-[2025-12-15 11:44:52] [INFO] Directory ready: output/figures
-[2025-12-15 11:44:52] [INFO] Directory ready: output/data
-[2025-12-15 11:44:52] [INFO] Directory ready: output/tex
-[2025-12-15 11:44:52] [INFO] Directory ready: output/pdf
-[2025-12-15 11:44:52] [INFO] Directory ready: output/logs
-[2025-12-15 11:44:52] [INFO] Directory ready: project/output
-[2025-12-15 11:44:52] [INFO] Directory ready: project/output/logs
-[2025-12-15 11:44:52] [INFO] Verifying source code structure...
-[2025-12-15 11:44:52] [INFO] Directory found: infrastructure
-[2025-12-15 11:44:52] [INFO] Directory found: project
-[2025-12-15 11:44:52] [INFO] Directory found: scripts (optional)
-[2025-12-15 11:44:52] [INFO] Directory found: tests (optional)
-[2025-12-15 11:44:52] [INFO] Setting environment variables...
-[2025-12-15 11:44:52] [INFO] MPLBACKEND=Agg
-[2025-12-15 11:44:52] [INFO] PYTHONIOENCODING=utf-8
-[2025-12-15 11:44:52] [INFO] PROJECT_ROOT=/Users/4d/Documents/GitHub/template
+[2025-12-16 06:40:51] [INFO] Checking Python version...
+[2025-12-16 06:40:51] [INFO] Python 3.13.11 available
+[2025-12-16 06:40:51] [INFO] Checking dependencies...
+[2025-12-16 06:40:51] [INFO] Package 'numpy' available
+[2025-12-16 06:40:51] [INFO] Package 'matplotlib' available
+[2025-12-16 06:40:51] [INFO] Package 'pytest' available
+[2025-12-16 06:40:51] [INFO] Package 'requests' available
+[2025-12-16 06:40:51] [INFO] Package 'scipy' available
+[2025-12-16 06:40:51] [INFO] Checking build tools...
+[2025-12-16 06:40:51] [INFO] 'pandoc' available (Document conversion)
+[2025-12-16 06:40:51] [INFO] 'xelatex' available (LaTeX compilation)
+[2025-12-16 06:40:51] [INFO] Setting up directory structure...
+[2025-12-16 06:40:51] [INFO] Directory ready: output
+[2025-12-16 06:40:51] [INFO] Directory ready: output/figures
+[2025-12-16 06:40:51] [INFO] Directory ready: output/data
+[2025-12-16 06:40:51] [INFO] Directory ready: output/tex
+[2025-12-16 06:40:51] [INFO] Directory ready: output/pdf
+[2025-12-16 06:40:51] [INFO] Directory ready: output/logs
+[2025-12-16 06:40:51] [INFO] Directory ready: project/output
+[2025-12-16 06:40:51] [INFO] Directory ready: project/output/logs
+[2025-12-16 06:40:51] [INFO] Verifying source code structure...
+[2025-12-16 06:40:51] [INFO] Directory found: infrastructure
+[2025-12-16 06:40:51] [INFO] Directory found: project
+[2025-12-16 06:40:51] [INFO] Directory found: scripts (optional)
+[2025-12-16 06:40:51] [INFO] Directory found: tests (optional)
+[2025-12-16 06:40:51] [INFO] Setting environment variables...
+[2025-12-16 06:40:51] [INFO] MPLBACKEND=Agg
+[2025-12-16 06:40:51] [INFO] PYTHONIOENCODING=utf-8
+[2025-12-16 06:40:51] [INFO] PROJECT_ROOT=/Users/4d/Documents/GitHub/template
 [0;32m✓[0m Environment setup complete
 
 [2/9] Infrastructure Tests (22% complete)
   Running infrastructure module tests...
   (Skipping LLM integration tests - run separately with: pytest -m requires_ollama)
 ============================= test session starts ==============================
-platform darwin -- Python 3.12.11, pytest-8.4.2, pluggy-1.6.0 -- /Users/4d/Documents/GitHub/template/.venv/bin/python3
+platform darwin -- Python 3.13.11, pytest-8.4.2, pluggy-1.6.0 -- /opt/homebrew/opt/python@3.13/bin/python3.13
 cachedir: .pytest_cache
+metadata: {'Python': '3.13.11', 'Platform': 'macOS-26.2-arm64-arm-64bit-Mach-O', 'Packages': {'pytest': '8.4.2', 'pluggy': '1.6.0'}, 'Plugins': {'mock': '3.15.1', 'asyncio': '1.2.0', 'jaxtyping': '0.3.3', 'anyio': '4.9.0', 'html': '4.1.1', 'xdist': '3.8.0', 'timeout': '2.4.0', 'metadata': '3.1.1', 'hypothesis': '6.138.15', 'benchmark': '5.1.0', 'cov': '7.0.0'}}
+hypothesis profile 'default'
+benchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
 rootdir: /Users/4d/Documents/GitHub/template
 configfile: pyproject.toml
-plugins: mock-3.15.1, cov-7.0.0
+plugins: mock-3.15.1, asyncio-1.2.0, jaxtyping-0.3.3, anyio-4.9.0, html-4.1.1, xdist-3.8.0, timeout-2.4.0, metadata-3.1.1, hypothesis-6.138.15, benchmark-5.1.0, cov-7.0.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
 collecting ... collected 1846 items / 48 deselected / 1798 selected
 
 tests/infrastructure/core/test_checkpoint.py::TestStageResult::test_stage_result_creation PASSED [  0%]
@@ -1843,7 +1847,7 @@ tests/infrastructure/validation/test_validation_cli.py::TestCliArgumentParsing::
 tests/infrastructure/validation/test_validation_cli.py::TestCliArgumentParsing::test_pdf_parser_verbose_flag PASSED [100%]
 
 ================================ tests coverage ================================
-______________ coverage: platform darwin, python 3.12.11-final-0 _______________
+______________ coverage: platform darwin, python 3.13.11-final-0 _______________
 
 Name                                                    Stmts   Miss Branch BrPart   Cover   Missing
 ----------------------------------------------------------------------------------------------------
@@ -1931,7 +1935,7 @@ infrastructure/reporting/html_templates.py                 22      0      8     
 infrastructure/reporting/output_reporter.py                58      2     24      4  92.68%   54, 55->49, 58, 87->92
 infrastructure/reporting/pipeline_reporter.py             210      0     58      7  97.39%   127->135, 205->207, 207->209, 406->408, 408->410, 482->490, 591->595
 infrastructure/scientific/__init__.py                       8      0      0      0 100.00%
-infrastructure/scientific/benchmarking.py                  91      9     24      4  88.70%   45, 75-80, 91, 114, 131->135
+infrastructure/scientific/benchmarking.py                  91      6     24      4  91.30%   46-47, 79-82, 90->93, 114, 131->135
 infrastructure/scientific/documentation.py                 55      0     24      2  97.47%   94->109, 109->121
 infrastructure/scientific/stability.py                     42      5     14      2  87.50%   56-57, 64-65, 78
 infrastructure/scientific/templates.py                      8      1      0      0  87.50%   202
@@ -1955,20 +1959,24 @@ infrastructure/validation/repo_scanner.py                 323     50    150     
 infrastructure/validation/validate_markdown_cli.py         88      2     34      0  98.36%   27-29
 infrastructure/validation/validate_pdf_cli.py              67      5     20      1  93.10%   28-32, 59->61
 ----------------------------------------------------------------------------------------------------
-TOTAL                                                    9598   2397   3122    350  72.90%
+TOTAL                                                    9598   2394   3122    350  72.92%
 Coverage HTML written to dir htmlcov
-Required test coverage of 60% reached. Total coverage: 72.90%
-=============== 1796 passed, 2 skipped, 48 deselected in 46.29s ================
+Required test coverage of 60% reached. Total coverage: 72.92%
+=============== 1796 passed, 2 skipped, 48 deselected in 40.97s ================
 ✓ Infrastructure tests passed
 
 [3/9] Project Tests (33% complete)
   Running project tests...
 ============================= test session starts ==============================
-platform darwin -- Python 3.12.11, pytest-8.4.2, pluggy-1.6.0 -- /Users/4d/Documents/GitHub/template/.venv/bin/python3
+platform darwin -- Python 3.13.11, pytest-8.4.2, pluggy-1.6.0 -- /opt/homebrew/opt/python@3.13/bin/python3.13
 cachedir: .pytest_cache
+metadata: {'Python': '3.13.11', 'Platform': 'macOS-26.2-arm64-arm-64bit-Mach-O', 'Packages': {'pytest': '8.4.2', 'pluggy': '1.6.0'}, 'Plugins': {'mock': '3.15.1', 'asyncio': '1.2.0', 'jaxtyping': '0.3.3', 'anyio': '4.9.0', 'html': '4.1.1', 'xdist': '3.8.0', 'timeout': '2.4.0', 'metadata': '3.1.1', 'hypothesis': '6.138.15', 'benchmark': '5.1.0', 'cov': '7.0.0'}}
+hypothesis profile 'default'
+benchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
 rootdir: /Users/4d/Documents/GitHub/template/project
 configfile: pyproject.toml
-plugins: mock-3.15.1, cov-7.0.0
+plugins: mock-3.15.1, asyncio-1.2.0, jaxtyping-0.3.3, anyio-4.9.0, html-4.1.1, xdist-3.8.0, timeout-2.4.0, metadata-3.1.1, hypothesis-6.138.15, benchmark-5.1.0, cov-7.0.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
 collecting ... collected 320 items
 
 project/tests/test_data_generator.py::TestGenerateSyntheticData::test_normal_distribution PASSED [  0%]
@@ -2293,7 +2301,7 @@ project/tests/test_visualization.py::TestCreateMultiPanelFigure::test_multi_pane
 project/tests/test_visualization.py::TestCreateMultiPanelFigure::test_multi_panel_hide_extra PASSED [100%]
 
 ================================ tests coverage ================================
-______________ coverage: platform darwin, python 3.12.11-final-0 _______________
+______________ coverage: platform darwin, python 3.13.11-final-0 _______________
 
 Name                             Stmts   Miss Branch BrPart   Cover   Missing
 -----------------------------------------------------------------------------
@@ -2314,23 +2322,23 @@ project/src/visualization.py        77      6     34      1  91.89%   143, 148-1
 TOTAL                             1211     28    462      3  98.03%
 Coverage HTML written to dir htmlcov
 Required test coverage of 90% reached. Total coverage: 98.03%
-============================= 320 passed in 8.00s ==============================
+============================= 320 passed in 2.93s ==============================
 ✓ Project tests passed
 
 [1;33m[4/9] Project Analysis (44% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-15 11:45:49] [INFO] [STAGE-02] Discovering analysis scripts in project/...
-[2025-12-15 11:45:49] [INFO] Found: analysis_pipeline.py
-[2025-12-15 11:45:49] [INFO] Found: example_figure.py
-[2025-12-15 11:45:49] [INFO] Found: generate_research_figures.py
-[2025-12-15 11:45:49] [INFO] Found: generate_scientific_figures.py
-[2025-12-15 11:45:49] [INFO] Found: manuscript_preflight.py
-[2025-12-15 11:45:49] [INFO] Found: quality_report.py
-[2025-12-15 11:45:49] [INFO] Found: scientific_simulation.py
-[2025-12-15 11:45:49] [INFO]   [1/7] analysis_pipeline.py
+[2025-12-16 06:41:38] [INFO] [STAGE-02] Discovering analysis scripts in project/...
+[2025-12-16 06:41:38] [INFO] Found: analysis_pipeline.py
+[2025-12-16 06:41:38] [INFO] Found: example_figure.py
+[2025-12-16 06:41:38] [INFO] Found: generate_research_figures.py
+[2025-12-16 06:41:38] [INFO] Found: generate_scientific_figures.py
+[2025-12-16 06:41:38] [INFO] Found: manuscript_preflight.py
+[2025-12-16 06:41:38] [INFO] Found: quality_report.py
+[2025-12-16 06:41:38] [INFO] Found: scientific_simulation.py
+[2025-12-16 06:41:38] [INFO]   [1/7] analysis_pipeline.py
 Matplotlib is building the font cache; this may take a moment.
-[2025-12-15 11:46:01] [INFO]     ✅ Completed in 12s
-[2025-12-15 11:46:01] [INFO]   [2/7] example_figure.py
+[2025-12-16 06:41:51] [INFO]     ✅ Completed in 12s
+[2025-12-16 06:41:51] [INFO]   [2/7] example_figure.py
 ✅ Successfully imported functions from src/example.py
 Data analysis using src/ functions:
   Average: 0.129793
@@ -2343,9 +2351,9 @@ Generated: /Users/4d/Documents/GitHub/template/project/output/data/example_data.
 ✅ Generated example figure using src/ functions: /Users/4d/Documents/GitHub/template/project/output/figures/example_figure.png
 ✅ Generated example data: /Users/4d/Documents/GitHub/template/project/output/data/example_data.npz
 ✅ Generated example CSV: /Users/4d/Documents/GitHub/template/project/output/data/example_data.csv
-[2025-12-15 11:46:02] [INFO]     ✅ Completed in 0s
-[2025-12-15 11:46:02] [INFO]   Progress: 2/7 (28%) - Elapsed: 13s | ETA: 32s
-[2025-12-15 11:46:02] [INFO]   [3/7] generate_research_figures.py
+[2025-12-16 06:41:52] [INFO]     ✅ Completed in 0s
+[2025-12-16 06:41:52] [INFO]   Progress: 2/7 (28%) - Elapsed: 13s | ETA: 33s
+[2025-12-16 06:41:52] [INFO]   [3/7] generate_research_figures.py
 Generating research figures using src/ modules...
 ✅ Using src/ functions for convergence plot
 Convergence analysis using src/ functions:
@@ -2403,22 +2411,22 @@ Generated: /Users/4d/Documents/GitHub/template/project/output/data/performance_c
    - Proper error handling for missing imports
 ✅ Figure registry validation passed
 ✅ Output integrity check passed
-[2025-12-15 11:46:03] [INFO]     ✅ Completed in 1s
-[2025-12-15 11:46:03] [INFO]   [4/7] generate_scientific_figures.py
-[2025-12-15 11:46:04] [INFO]     ✅ Completed in 1s
-[2025-12-15 11:46:04] [INFO]   Progress: 4/7 (57%) - Elapsed: 15s | ETA: 26s
-[2025-12-15 11:46:04] [INFO]   [5/7] manuscript_preflight.py
+[2025-12-16 06:41:54] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:41:54] [INFO]   [4/7] generate_scientific_figures.py
+[2025-12-16 06:41:55] [INFO]     ✅ Completed in 1s
+[2025-12-16 06:41:55] [INFO]   Progress: 4/7 (57%) - Elapsed: 17s | ETA: 27s
+[2025-12-16 06:41:55] [INFO]   [5/7] manuscript_preflight.py
 Manuscript dir: /Users/4d/Documents/GitHub/template/project/manuscript
 ✅ All referenced figures exist
 ✅ Glossary markers present
 ✅ References block present
 ℹ️  Quality check skipped: Failed to extract text from PDF: Failed to extract text from PDF: [Errno 21] Is a directory: '/Users/4d/Documents/GitHub/template/project/manuscript'
-[2025-12-15 11:46:05] [INFO]     ✅ Completed in 0s
-[2025-12-15 11:46:05] [INFO]   [6/7] quality_report.py
+[2025-12-16 06:41:56] [INFO]     ✅ Completed in 0s
+[2025-12-16 06:41:56] [INFO]   [6/7] quality_report.py
 ✅ Quality report generated at output/reports/quality_report.json
-[2025-12-15 11:46:05] [INFO]     ✅ Completed in 0s
-[2025-12-15 11:46:05] [INFO]   Progress: 6/7 (85%) - Elapsed: 16s | ETA: 19s
-[2025-12-15 11:46:05] [INFO]   [7/7] scientific_simulation.py
+[2025-12-16 06:41:57] [INFO]     ✅ Completed in 1s
+[2025-12-16 06:41:57] [INFO]   Progress: 6/7 (85%) - Elapsed: 18s | ETA: 20s
+[2025-12-16 06:41:57] [INFO]   [7/7] scientific_simulation.py
 Iteration 10, elapsed: 0.00s
 Iteration 20, elapsed: 0.00s
 Iteration 30, elapsed: 0.00s
@@ -2429,76 +2437,51 @@ Iteration 70, elapsed: 0.00s
 Iteration 80, elapsed: 0.00s
 Iteration 90, elapsed: 0.00s
 Iteration 100, elapsed: 0.00s
-[2025-12-15 11:46:06] [INFO]     ✅ Completed in 0s
-[2025-12-15 11:46:06] [INFO]   Progress: 7/7 (100%) - Elapsed: 17s | ETA: 0s
-[2025-12-15 11:46:06] [INFO] [STAGE-02] Verifying analysis outputs...
-[2025-12-15 11:46:06] [INFO] Output directory has 23 file(s): figures
-[2025-12-15 11:46:06] [INFO] Output directory has 5 file(s): data
+[2025-12-16 06:41:58] [INFO]     ✅ Completed in 0s
+[2025-12-16 06:41:58] [INFO]   Progress: 7/7 (100%) - Elapsed: 19s | ETA: 0s
+[2025-12-16 06:41:58] [INFO] [STAGE-02] Verifying analysis outputs...
+[2025-12-16 06:41:58] [INFO] Output directory has 23 file(s): figures
+[2025-12-16 06:41:58] [INFO] Output directory has 5 file(s): data
 [0;32m✓[0m Project analysis complete
-[2025-12-15 11:46:09] [INFO]   [1/14] 01_abstract.md
-[2025-12-15 11:46:13] [INFO]     ✅ Completed in 3s
-[2025-12-15 11:46:13] [INFO]   [2/14] 02_introduction.md
-[2025-12-15 11:46:15] [INFO]     ✅ Completed in 2s
-[2025-12-15 11:46:15] [INFO]   [3/14] 03_methodology.md
-[2025-12-15 11:46:18] [INFO]     ✅ Completed in 3s
-[2025-12-15 11:46:18] [INFO]   [4/14] 04_experimental_results.md
-[2025-12-15 11:46:21] [INFO]     ✅ Completed in 2s
-[2025-12-15 11:46:21] [INFO]   [5/14] 05_discussion.md
-[2025-12-15 11:46:24] [INFO]     ✅ Completed in 2s
-[2025-12-15 11:46:24] [INFO]   [6/14] 06_conclusion.md
-[2025-12-15 11:46:27] [INFO]     ✅ Completed in 3s
-[2025-12-15 11:46:27] [INFO]   [7/14] 08_acknowledgments.md
-[2025-12-15 11:46:30] [INFO]     ✅ Completed in 2s
-[2025-12-15 11:46:30] [INFO]   [8/14] 09_appendix.md
-[2025-12-15 11:46:33] [INFO]     ✅ Completed in 3s
-[2025-12-15 11:46:33] [INFO]   [9/14] S01_supplemental_methods.md
-[2025-12-15 11:46:36] [INFO]     ✅ Completed in 2s
-[2025-12-15 11:46:36] [INFO]   [10/14] S02_supplemental_results.md
-[2025-12-15 11:46:39] [INFO]     ✅ Completed in 2s
-[2025-12-15 11:46:39] [INFO]   [11/14] S03_supplemental_analysis.md
-[2025-12-15 11:46:42] [INFO]     ✅ Completed in 2s
-[2025-12-15 11:46:42] [INFO]   [12/14] S04_supplemental_applications.md
-[2025-12-15 11:46:44] [INFO]     ✅ Completed in 2s
-[2025-12-15 11:46:44] [INFO]   [13/14] 98_symbols_glossary.md
-[2025-12-15 11:46:47] [INFO]     ✅ Completed in 2s
-[2025-12-15 11:46:47] [INFO]   [14/14] 99_references.md
-[2025-12-15 11:46:49] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:00] [INFO]   [1/14] 01_abstract.md
+[2025-12-16 06:42:03] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:03] [INFO]   [2/14] 02_introduction.md
+[2025-12-16 06:42:06] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:06] [INFO]   [3/14] 03_methodology.md
+[2025-12-16 06:42:08] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:08] [INFO]   [4/14] 04_experimental_results.md
+[2025-12-16 06:42:11] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:11] [INFO]   [5/14] 05_discussion.md
+[2025-12-16 06:42:13] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:13] [INFO]   [6/14] 06_conclusion.md
+[2025-12-16 06:42:15] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:15] [INFO]   [7/14] 08_acknowledgments.md
+[2025-12-16 06:42:18] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:18] [INFO]   [8/14] 09_appendix.md
+[2025-12-16 06:42:21] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:21] [INFO]   [9/14] S01_supplemental_methods.md
+[2025-12-16 06:42:23] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:23] [INFO]   [10/14] S02_supplemental_results.md
+[2025-12-16 06:42:26] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:26] [INFO]   [11/14] S03_supplemental_analysis.md
+[2025-12-16 06:42:28] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:28] [INFO]   [12/14] S04_supplemental_applications.md
+[2025-12-16 06:42:31] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:31] [INFO]   [13/14] 98_symbols_glossary.md
+[2025-12-16 06:42:34] [INFO]     ✅ Completed in 2s
+[2025-12-16 06:42:34] [INFO]   [14/14] 99_references.md
+[2025-12-16 06:42:36] [INFO]     ✅ Completed in 2s
 
 [1;33m[6/9] Output Validation (66% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-15 11:47:07] [INFO] 
+[2025-12-16 06:42:54] [INFO] 
   Validating figure registry...
-[2025-12-15 11:47:07] [INFO] Figure registry loaded: 16 figure(s)
-[2025-12-15 11:47:07] [INFO] All 14 figure references verified
+[2025-12-16 06:42:54] [INFO] Figure registry loaded: 16 figure(s)
+[2025-12-16 06:42:54] [INFO] All 14 figure references verified
 [0;32m✓[0m Output validation complete
 
 [1;33m[7/9] Copy Outputs (77% complete)[0m
 [1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
-[2025-12-15 11:47:08] [INFO] Cleaning output directory...
-[2025-12-15 11:47:08] [INFO] Output directory cleaned
-[2025-12-15 11:47:08] [INFO] Copying all project outputs...
-[2025-12-15 11:47:08] [INFO] Recursively copied project/output/ directory
-[2025-12-15 11:47:08] [INFO]   pdf/: 9 file(s)
-[2025-12-15 11:47:08] [INFO]   web/: 14 file(s)
-[2025-12-15 11:47:08] [INFO]   slides/: 103 file(s)
-[2025-12-15 11:47:08] [INFO]   figures/: 23 file(s)
-[2025-12-15 11:47:08] [INFO]   data/: 5 file(s)
-[2025-12-15 11:47:08] [INFO]   reports/: 8 file(s)
-[2025-12-15 11:47:08] [INFO]   simulations/: 3 file(s)
-[2025-12-15 11:47:08] [INFO]   llm/: 0 file(s)
-[2025-12-15 11:47:08] [INFO]   logs/: 1 file(s)
-[2025-12-15 11:47:08] [INFO] Copied combined PDF to root (2.23 MB)
-[2025-12-15 11:47:08] [INFO]   Root PDF: /Users/4d/Documents/GitHub/template/output/project_combined.pdf (2,343,149 bytes)
-[2025-12-15 11:47:08] [INFO] Validating copied outputs...
-[2025-12-15 11:47:08] [INFO] Combined PDF at root valid (2.23 MB)
-[2025-12-15 11:47:08] [INFO] pdf/ valid (9 files, 2.56 MB)
-[2025-12-15 11:47:08] [INFO] web/ valid (14 files, 0.14 MB)
-[2025-12-15 11:47:08] [INFO] slides/ valid (103 files, 1.26 MB)
-[2025-12-15 11:47:08] [INFO] figures/ valid (23 files, 2.47 MB)
-[2025-12-15 11:47:08] [INFO] data/ valid (5 files, 0.01 MB)
-[2025-12-15 11:47:08] [INFO] reports/ valid (8 files, 0.01 MB)
-[2025-12-15 11:47:08] [INFO] simulations/ valid (3 files, 0.05 MB)
-[2025-12-15 11:47:08] [INFO] logs/ valid (1 files, 0.27 MB)
-[0;32m✓[0m Output copying complete
-Loading gemma3:4b into GPU memory...
-Waiting for first token...
+[2025-12-16 06:42:54] [INFO] Cleaning output directory...
+[2025-12-16 06:42:54] [INFO] Output directory cleaned
+[2025-12-16 06:42:54] [INFO] Copying all project outputs...

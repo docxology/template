@@ -20,7 +20,7 @@ Our vision is to create the **most comprehensive and user-friendly research proj
 
 ### 🔧 **Current Capabilities**
 - Python-based research project structure with two-layer architecture
-- Automated testing and quality assurance (2245 tests passing)
+- Automated testing and quality assurance (2118 tests passing)
 - Professional PDF output generation with cross-referencing
 - Cross-referencing and glossary generation
 - Modular and extensible architecture

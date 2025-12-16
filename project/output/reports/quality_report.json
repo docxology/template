@@ -1,8 +1,8 @@
 {
   "markdown_issues": [],
   "quality_metrics": {},
-  "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x1208f7aa0>",
-  "reproducibility": "<infrastructure.build.reproducibility.ReproducibilityReport object at 0x1208f7aa0>",
+  "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x12c9cf8c0>",
+  "reproducibility": "<infrastructure.build.reproducibility.ReproducibilityReport object at 0x12c9cf8c0>",
   "errors": {
     "total_errors": 0,
     "total_warnings": 1,

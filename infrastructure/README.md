@@ -7,6 +7,7 @@ Modular build, validation, and development tools organized by functionality.
 | Module | Purpose | Key Classes/Functions | CLI |
 |--------|---------|----------------------|-----|
 | **core** | Foundation utilities | `get_logger`, `load_config`, `TemplateError`, `CheckpointManager` | N/A |
+| **build** | Build verification | `verify_build_artifacts`, `run_build_command`, `analyze_document_quality` | N/A |
 | **validation** | Quality & validation | `validate_pdf_rendering`, `validate_markdown`, `verify_output_integrity` | ✅ |
 | **documentation** | Figure management | `FigureManager`, `ImageManager`, `MarkdownIntegration` | ✅ |
 | **scientific** | Scientific utilities | `check_numerical_stability`, `benchmark_function` | ✅ |
@@ -24,6 +25,11 @@ Modular build, validation, and development tools organized by functionality.
 from infrastructure.core import get_logger, load_config
 logger = get_logger(__name__)
 config = load_config(Path("config.yaml"))
+
+# Build verification
+from infrastructure.build import verify_build_artifacts, analyze_document_quality
+verification = verify_build_artifacts(Path("output/"), {"pdf": ["manuscript.pdf"]})
+quality = analyze_document_quality(Path("output/pdf/manuscript.pdf"))
 
 # Validation
 from infrastructure.validation import validate_pdf_rendering
@@ -427,6 +433,7 @@ if not report['summary']['has_issues']:
 
 For detailed information about each module:
 - [`core/`](core/) - See [core/AGENTS.md](core/AGENTS.md)
+- [`build/`](build/) - See [build/AGENTS.md](build/AGENTS.md)
 - [`validation/`](validation/) - See [validation/AGENTS.md](validation/AGENTS.md)
 - [`documentation/`](documentation/) - See [documentation/AGENTS.md](documentation/AGENTS.md)
 - [`scientific/`](scientific/) - See [scientific/AGENTS.md](scientific/AGENTS.md)

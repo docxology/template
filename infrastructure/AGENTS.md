@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Infrastructure layer provides reusable, modular tools for building, validating, and managing research projects. Organized by functionality into submodules, each with clear responsibilities and comprehensive testing.
+The Infrastructure layer provides reusable, modular tools for building, validating, and managing research projects. Organized by functionality into submodules, each with clear responsibilities and testing.
 
 ## New Modular Architecture (v2.1)
 
@@ -14,6 +14,11 @@ infrastructure/
 │   ├── exceptions.py       # Exception hierarchy with context
 │   ├── logging_utils.py    # Unified Python logging
 │   └── config_loader.py    # Configuration management
+├── build/          # Build verification & reproducibility
+│   ├── build_verifier.py    # Build process verification
+│   ├── reproducibility.py  # Reproducibility tracking
+│   ├── quality_checker.py   # Document quality analysis
+│   └── AGENTS.md, README.md # Documentation
 ├── validation/     # Quality & validation tools
 │   ├── pdf_validator.py      # PDF rendering validation
 │   ├── markdown_validator.py # Markdown structure validation
@@ -129,6 +134,38 @@ infrastructure/
 from infrastructure.core import (
     get_logger, TemplateError, load_config,
     CheckpointManager, ProgressBar, PerformanceMonitor
+)
+```
+
+### Build Module (`build/`)
+
+**Build verification, reproducibility, and quality analysis.**
+
+- `build_verifier.py` - Build process verification
+  - Build command execution and monitoring
+  - Build artifact verification
+  - Build reproducibility validation
+  - Environment dependency checking
+
+- `reproducibility.py` - Reproducibility tracking
+  - Environment state capture (OS, Python, dependencies)
+  - Build environment snapshot creation
+  - Reproducibility comparison and verification
+  - Build manifest generation
+
+- `quality_checker.py` - Document quality analysis
+  - Readability analysis (Flesch score, Gunning Fog)
+  - Academic standards compliance checking
+  - Structural integrity analysis
+  - Formatting quality assessment
+
+**Usage:**
+```python
+from infrastructure.build import (
+    verify_build_artifacts,
+    run_build_command,
+    generate_reproducibility_report,
+    analyze_document_quality
 )
 ```
 
@@ -466,7 +503,7 @@ pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
 
 ### Coverage Status
 
-All modules have comprehensive test coverage:
+All modules have test coverage:
 - core: 100%
 - validation: 100%
 - documentation: 100%
