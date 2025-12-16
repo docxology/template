@@ -4,29 +4,38 @@
     "PDF validation": true,
     "Markdown validation": true,
     "Output structure": true,
-    "Figure registry": true
+    "Figure registry": false
   },
-  "figure_issues": [],
+  "figure_issues": [
+    "Unregistered figure reference: fig:figure_name"
+  ],
   "output_statistics": {
     "pdf": {
       "files": 9,
-      "size_mb": 2.5833911895751953
+      "size_mb": 1.0243005752563477
     },
     "figures": {
-      "files": 23,
-      "size_mb": 2.6530494689941406
+      "files": 41,
+      "size_mb": 2.7687978744506836
     },
     "data": {
-      "files": 5,
-      "size_mb": 0.010295867919921875
+      "files": 0,
+      "size_mb": 0.0
     }
   },
   "summary": {
     "total_checks": 4,
-    "passed": 4,
-    "failed": 0,
-    "figure_issues_count": 0,
-    "all_passed": true
+    "passed": 3,
+    "failed": 1,
+    "figure_issues_count": 1,
+    "all_passed": false
   },
-  "recommendations": []
+  "recommendations": [
+    {
+      "priority": "medium",
+      "issue": "1 figure reference issue(s)",
+      "action": "Register missing figures or remove unused references",
+      "file": "project/output/figures/figure_registry.json"
+    }
+  ]
 }

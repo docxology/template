@@ -1,0 +1,718 @@
+[0;34m════════════════════════════════════════════════════════════════[0m
+[0;34m  SETUP ENVIRONMENT (00_setup_environment.py)[0m
+[0;34m════════════════════════════════════════════════════════════════[0m
+[2025-12-16 12:28:32] [INFO] Checking Python version...
+[2025-12-16 12:28:32] [INFO] Python 3.12.11 available
+[2025-12-16 12:28:32] [INFO] Checking dependencies...
+[2025-12-16 12:28:32] [INFO] Package 'numpy' available
+[2025-12-16 12:28:32] [INFO] Package 'matplotlib' available
+[2025-12-16 12:28:32] [INFO] Package 'pytest' available
+[2025-12-16 12:28:32] [INFO] Package 'requests' available
+[2025-12-16 12:28:32] [INFO] Package 'scipy' available
+[2025-12-16 12:28:32] [INFO] Checking build tools...
+[2025-12-16 12:28:32] [INFO] 'pandoc' available (Document conversion)
+[2025-12-16 12:28:32] [INFO] 'xelatex' available (LaTeX compilation)
+[2025-12-16 12:28:32] [INFO] Setting up directory structure...
+[2025-12-16 12:28:32] [INFO] Directory ready: output
+[2025-12-16 12:28:32] [INFO] Directory ready: output/figures
+[2025-12-16 12:28:32] [INFO] Directory ready: output/data
+[2025-12-16 12:28:32] [INFO] Directory ready: output/tex
+[2025-12-16 12:28:32] [INFO] Directory ready: output/pdf
+[2025-12-16 12:28:32] [INFO] Directory ready: output/logs
+[2025-12-16 12:28:32] [INFO] Directory ready: project/output
+[2025-12-16 12:28:32] [INFO] Directory ready: project/output/logs
+[2025-12-16 12:28:32] [INFO] Verifying source code structure...
+[2025-12-16 12:28:32] [INFO] Directory found: infrastructure
+[2025-12-16 12:28:32] [INFO] Directory found: project
+[2025-12-16 12:28:32] [INFO] Directory found: scripts (optional)
+[2025-12-16 12:28:32] [INFO] Directory found: tests (optional)
+[2025-12-16 12:28:32] [INFO] Setting environment variables...
+[2025-12-16 12:28:32] [INFO] MPLBACKEND=Agg
+[2025-12-16 12:28:32] [INFO] PYTHONIOENCODING=utf-8
+[2025-12-16 12:28:32] [INFO] PROJECT_ROOT=/Users/4d/Documents/GitHub/template
+[0;32m✓[0m Environment setup complete
+  Skipping Infrastructure Tests (Stage 2)
+
+[2/8] Project Tests (25% complete)
+  Running project tests...
+============================= test session starts ==============================
+platform darwin -- Python 3.12.11, pytest-8.4.2, pluggy-1.6.0 -- /Users/4d/Documents/GitHub/template/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /Users/4d/Documents/GitHub/template/project
+configfile: pyproject.toml
+plugins: mock-3.15.1, cov-7.0.0
+collecting ... collected 276 items
+
+project/tests/test_biological_simulation.py::TestGraftSimulationState::test_state_creation PASSED [  0%]
+project/tests/test_biological_simulation.py::TestGraftSimulationState::test_state_to_dict PASSED [  0%]
+project/tests/test_biological_simulation.py::TestGraftSimulationState::test_state_from_dict PASSED [  1%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_initialization PASSED [  1%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_initialize PASSED [  1%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_step PASSED [  2%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_should_continue PASSED [  2%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_run_simulation PASSED [  2%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_save_results PASSED [  3%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_save_results_csv PASSED [  3%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_save_checkpoint PASSED [  3%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_load_checkpoint_valid PASSED [  4%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_load_checkpoint_invalid PASSED [  4%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_load_checkpoint_corrupted PASSED [  5%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_run_with_checkpoints PASSED [  5%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_run_with_verbose PASSED [  5%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_step_temperature_ranges PASSED [  6%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_step_humidity_ranges PASSED [  6%]
+project/tests/test_biological_simulation.py::TestCambiumIntegrationSimulation::test_should_continue_high_union_strength PASSED [  6%]
+project/tests/test_compatibility_prediction.py::TestPhylogenyPrediction::test_same_species PASSED [  7%]
+project/tests/test_compatibility_prediction.py::TestPhylogenyPrediction::test_distant_species PASSED [  7%]
+project/tests/test_compatibility_prediction.py::TestCambiumPrediction::test_perfect_match PASSED [  7%]
+project/tests/test_compatibility_prediction.py::TestCambiumPrediction::test_mismatch PASSED [  8%]
+project/tests/test_compatibility_prediction.py::TestCambiumPrediction::test_cambium_zero_thickness PASSED [  8%]
+project/tests/test_compatibility_prediction.py::TestCambiumPrediction::test_cambium_zero_scion_thickness PASSED [  9%]
+project/tests/test_compatibility_prediction.py::TestCambiumPrediction::test_cambium_both_zero PASSED [  9%]
+project/tests/test_compatibility_prediction.py::TestCombinedPrediction::test_combined_prediction PASSED [  9%]
+project/tests/test_compatibility_prediction.py::TestCombinedPrediction::test_combined_prediction_custom_weights PASSED [ 10%]
+project/tests/test_compatibility_prediction.py::TestGrowthRatePrediction::test_growth_rate_zero_rootstock PASSED [ 10%]
+project/tests/test_compatibility_prediction.py::TestGrowthRatePrediction::test_growth_rate_zero_scion PASSED [ 10%]
+project/tests/test_compatibility_prediction.py::TestGrowthRatePrediction::test_growth_rate_both_zero PASSED [ 11%]
+project/tests/test_compatibility_prediction.py::TestSuccessProbability::test_high_probability PASSED [ 11%]
+project/tests/test_compatibility_prediction.py::TestSuccessProbability::test_low_probability PASSED [ 11%]
+project/tests/test_economic_analysis.py::TestCostCalculation::test_calculate_costs PASSED [ 12%]
+project/tests/test_economic_analysis.py::TestRevenueCalculation::test_calculate_revenue PASSED [ 12%]
+project/tests/test_economic_analysis.py::TestRevenueCalculation::test_calculate_revenue_time_to_market_zero PASSED [ 13%]
+project/tests/test_economic_analysis.py::TestRevenueCalculation::test_calculate_revenue_short_time_to_market PASSED [ 13%]
+project/tests/test_economic_analysis.py::TestProfitability::test_profitability PASSED [ 13%]
+project/tests/test_economic_analysis.py::TestProfitability::test_profitability_zero_cost PASSED [ 14%]
+project/tests/test_economic_analysis.py::TestProfitability::test_profitability_zero_revenue PASSED [ 14%]
+project/tests/test_economic_analysis.py::TestProfitability::test_profitability_zero_grafts PASSED [ 14%]
+project/tests/test_economic_analysis.py::TestBreakEven::test_break_even PASSED [ 15%]
+project/tests/test_economic_analysis.py::TestBreakEven::test_break_even_zero_value PASSED [ 15%]
+project/tests/test_economic_analysis.py::TestBreakEven::test_break_even_negative_value PASSED [ 15%]
+project/tests/test_economic_analysis.py::TestOptimization::test_optimize_with_budget PASSED [ 16%]
+project/tests/test_economic_analysis.py::TestOptimization::test_optimize_without_budget PASSED [ 16%]
+project/tests/test_economic_analysis.py::TestOptimization::test_optimize_unprofitable PASSED [ 17%]
+project/tests/test_economic_analysis.py::TestOptimization::test_optimize_budget_exceeds_max PASSED [ 17%]
+project/tests/test_economic_analysis.py::TestProductivity::test_productivity_metrics PASSED [ 17%]
+project/tests/test_economic_analysis.py::TestProductivity::test_productivity_custom_days PASSED [ 18%]
+project/tests/test_graft_analysis.py::TestGraftOutcomes::test_analyze_outcomes PASSED [ 18%]
+project/tests/test_graft_analysis.py::TestTemporalPatterns::test_monthly_analysis PASSED [ 18%]
+project/tests/test_graft_analysis.py::TestTemporalPatterns::test_temporal_with_dates PASSED [ 19%]
+project/tests/test_graft_analysis.py::TestTemporalPatterns::test_temporal_best_month PASSED [ 19%]
+project/tests/test_graft_analysis.py::TestTechniqueComparison::test_compare_techniques PASSED [ 19%]
+project/tests/test_graft_analysis.py::TestTechniqueComparison::test_compare_techniques_anova PASSED [ 20%]
+project/tests/test_graft_analysis.py::TestFactorImportance::test_factor_importance PASSED [ 20%]
+project/tests/test_graft_analysis.py::TestSpeciesCompatibility::test_analyze_species_compatibility_patterns PASSED [ 21%]
+project/tests/test_graft_analysis.py::TestSpeciesCompatibility::test_analyze_species_compatibility_with_names PASSED [ 21%]
+project/tests/test_graft_analysis.py::TestEnvironmentalEffects::test_analyze_environmental_effects_optimal PASSED [ 21%]
+project/tests/test_graft_analysis.py::TestEnvironmentalEffects::test_analyze_environmental_effects_suboptimal PASSED [ 22%]
+project/tests/test_graft_basics.py::TestCambiumAlignment::test_perfect_match PASSED [ 22%]
+project/tests/test_graft_basics.py::TestCambiumAlignment::test_within_tolerance PASSED [ 22%]
+project/tests/test_graft_basics.py::TestCambiumAlignment::test_outside_tolerance PASSED [ 23%]
+project/tests/test_graft_basics.py::TestCambiumAlignment::test_invalid_diameters PASSED [ 23%]
+project/tests/test_graft_basics.py::TestGraftAngle::test_whip_technique PASSED [ 23%]
+project/tests/test_graft_basics.py::TestGraftAngle::test_cleft_technique PASSED [ 24%]
+project/tests/test_graft_basics.py::TestGraftAngle::test_bark_technique PASSED [ 24%]
+project/tests/test_graft_basics.py::TestGraftAngle::test_approach_technique PASSED [ 25%]
+project/tests/test_graft_basics.py::TestGraftAngle::test_default_angle PASSED [ 25%]
+project/tests/test_graft_basics.py::TestCallusFormation::test_optimal_conditions PASSED [ 25%]
+project/tests/test_graft_basics.py::TestCallusFormation::test_cold_temperature PASSED [ 26%]
+project/tests/test_graft_basics.py::TestCallusFormation::test_low_humidity PASSED [ 26%]
+project/tests/test_graft_basics.py::TestCallusFormation::test_low_compatibility PASSED [ 26%]
+project/tests/test_graft_basics.py::TestCallusFormation::test_humidity_percentage PASSED [ 27%]
+project/tests/test_graft_basics.py::TestCallusFormation::test_hot_temperature PASSED [ 27%]
+project/tests/test_graft_basics.py::TestUnionStrength::test_initial_strength PASSED [ 27%]
+project/tests/test_graft_basics.py::TestUnionStrength::test_increasing_strength PASSED [ 28%]
+project/tests/test_graft_basics.py::TestUnionStrength::test_high_compatibility PASSED [ 28%]
+project/tests/test_graft_basics.py::TestUnionStrength::test_low_compatibility PASSED [ 28%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_optimal_temperate_season PASSED [ 29%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_winter_temperate PASSED [ 29%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_tropical_season PASSED [ 30%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_southern_hemisphere PASSED [ 30%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_temperate_too_early PASSED [ 30%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_temperate_too_late PASSED [ 31%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_tropical_optimal PASSED [ 31%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_tropical_acceptable PASSED [ 31%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_subtropical_optimal PASSED [ 32%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_subtropical_acceptable PASSED [ 32%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_subtropical_outside PASSED [ 32%]
+project/tests/test_graft_basics.py::TestSeasonalTiming::test_unknown_species_type PASSED [ 33%]
+project/tests/test_graft_basics.py::TestScionLength::test_basic_calculation PASSED [ 33%]
+project/tests/test_graft_basics.py::TestScionLength::test_bud_grafting PASSED [ 34%]
+project/tests/test_graft_basics.py::TestScionLength::test_large_rootstock PASSED [ 34%]
+project/tests/test_graft_basics.py::TestScionLength::test_cleft_technique_length PASSED [ 34%]
+project/tests/test_graft_basics.py::TestScionLength::test_bark_technique_length PASSED [ 35%]
+project/tests/test_graft_basics.py::TestScionLength::test_unknown_technique_length PASSED [ 35%]
+project/tests/test_graft_basics.py::TestSuccessProbability::test_high_probability PASSED [ 35%]
+project/tests/test_graft_basics.py::TestSuccessProbability::test_low_probability PASSED [ 36%]
+project/tests/test_graft_basics.py::TestSuccessProbability::test_weighted_combination PASSED [ 36%]
+project/tests/test_graft_data_generator.py::TestGraftTrialData::test_basic_generation PASSED [ 36%]
+project/tests/test_graft_data_generator.py::TestGraftTrialData::test_success_rate PASSED [ 37%]
+project/tests/test_graft_data_generator.py::TestGraftTrialData::test_data_structure PASSED [ 37%]
+project/tests/test_graft_data_generator.py::TestCompatibilityMatrix::test_matrix_shape PASSED [ 38%]
+project/tests/test_graft_data_generator.py::TestCompatibilityMatrix::test_self_compatibility PASSED [ 38%]
+project/tests/test_graft_data_generator.py::TestCompatibilityMatrix::test_symmetry PASSED [ 38%]
+project/tests/test_graft_data_generator.py::TestCompatibilityMatrix::test_compatibility_matrix_no_phylogeny PASSED [ 39%]
+project/tests/test_graft_data_generator.py::TestEnvironmentalData::test_seasonal_data PASSED [ 39%]
+project/tests/test_graft_data_generator.py::TestEnvironmentalData::test_temperature_range PASSED [ 39%]
+project/tests/test_graft_data_generator.py::TestEnvironmentalData::test_environmental_data_summer PASSED [ 40%]
+project/tests/test_graft_data_generator.py::TestEnvironmentalData::test_environmental_data_fall PASSED [ 40%]
+project/tests/test_graft_data_generator.py::TestEnvironmentalData::test_environmental_data_unknown_season PASSED [ 40%]
+project/tests/test_graft_data_generator.py::TestDataValidation::test_valid_data PASSED [ 41%]
+project/tests/test_graft_data_generator.py::TestDataValidation::test_invalid_ranges PASSED [ 41%]
+project/tests/test_graft_data_generator.py::TestDataValidation::test_validate_no_checks PASSED [ 42%]
+project/tests/test_graft_data_generator.py::TestDataValidation::test_validate_non_finite PASSED [ 42%]
+project/tests/test_graft_data_generator.py::TestDataValidation::test_validate_temperature_range PASSED [ 42%]
+project/tests/test_graft_data_generator.py::TestDataValidation::test_validate_with_nans PASSED [ 43%]
+project/tests/test_graft_data_generator.py::TestSuccessScenarios::test_generate_success_scenarios PASSED [ 43%]
+project/tests/test_graft_data_generator.py::TestSuccessScenarios::test_success_scenarios_minimum_trials PASSED [ 43%]
+project/tests/test_graft_data_processing.py::TestDataCleaning::test_remove_failed PASSED [ 44%]
+project/tests/test_graft_data_processing.py::TestDataCleaning::test_fill_missing PASSED [ 44%]
+project/tests/test_graft_data_processing.py::TestDataCleaning::test_fill_missing_median PASSED [ 44%]
+project/tests/test_graft_data_processing.py::TestDataCleaning::test_fill_missing_zero PASSED [ 45%]
+project/tests/test_graft_data_processing.py::TestNormalization::test_z_score_normalization PASSED [ 45%]
+project/tests/test_graft_data_processing.py::TestNormalization::test_min_max_normalization PASSED [ 46%]
+project/tests/test_graft_data_processing.py::TestFeatureExtraction::test_diameter_ratio PASSED [ 46%]
+project/tests/test_graft_data_processing.py::TestFeatureExtraction::test_environmental_score PASSED [ 46%]
+project/tests/test_graft_data_processing.py::TestFeatureExtraction::test_overall_quality PASSED [ 47%]
+project/tests/test_graft_data_processing.py::TestOutlierDetection::test_iqr_method PASSED [ 47%]
+project/tests/test_graft_data_processing.py::TestOutlierDetection::test_z_score_method PASSED [ 47%]
+project/tests/test_graft_data_processing.py::TestValidationPipeline::test_validation_pipeline_check_finite PASSED [ 48%]
+project/tests/test_graft_data_processing.py::TestValidationPipeline::test_validation_pipeline_check_ranges PASSED [ 48%]
+project/tests/test_graft_data_processing.py::TestValidationPipeline::test_validation_pipeline_check_outliers PASSED [ 48%]
+project/tests/test_graft_data_processing.py::TestValidationPipeline::test_validation_pipeline_all_steps PASSED [ 49%]
+project/tests/test_graft_data_processing.py::TestValidationPipeline::test_validation_pipeline_exception_handling PASSED [ 49%]
+project/tests/test_graft_metrics.py::TestSuccessMetrics::test_success_rate PASSED [ 50%]
+project/tests/test_graft_metrics.py::TestSuccessMetrics::test_take_rate PASSED [ 50%]
+project/tests/test_graft_metrics.py::TestUnionStrength::test_union_strength_metrics PASSED [ 50%]
+project/tests/test_graft_metrics.py::TestUnionStrength::test_union_strength_no_success_filter PASSED [ 51%]
+project/tests/test_graft_metrics.py::TestUnionStrength::test_union_strength_empty_data PASSED [ 51%]
+project/tests/test_graft_metrics.py::TestEconomicMetrics::test_economic_calculation PASSED [ 51%]
+project/tests/test_graft_metrics.py::TestCompatibilityScore::test_compatibility_score PASSED [ 52%]
+project/tests/test_graft_metrics.py::TestCompatibilityScore::test_compatibility_score_out_of_range PASSED [ 52%]
+project/tests/test_graft_metrics.py::TestGrowthRate::test_growth_rate PASSED [ 52%]
+project/tests/test_graft_metrics.py::TestQualityIndex::test_quality_index PASSED [ 53%]
+project/tests/test_graft_metrics.py::TestHealingEfficiency::test_healing_efficiency PASSED [ 53%]
+project/tests/test_graft_metrics.py::TestHealingEfficiency::test_healing_efficiency_empty_data PASSED [ 53%]
+project/tests/test_graft_metrics.py::TestCustomMetric::test_custom_metric PASSED [ 54%]
+project/tests/test_graft_metrics.py::TestAllMetrics::test_all_metrics_full PASSED [ 54%]
+project/tests/test_graft_metrics.py::TestAllMetrics::test_all_metrics_minimal PASSED [ 55%]
+project/tests/test_graft_parameters.py::TestGraftParameterConstraint::test_validate_numeric_range PASSED [ 55%]
+project/tests/test_graft_parameters.py::TestGraftParameterConstraint::test_validate_allowed_values PASSED [ 55%]
+project/tests/test_graft_parameters.py::TestGraftParameterConstraint::test_validate_type_check PASSED [ 56%]
+project/tests/test_graft_parameters.py::TestGraftParameterSet::test_add_parameter PASSED [ 56%]
+project/tests/test_graft_parameters.py::TestGraftParameterSet::test_get_parameter PASSED [ 56%]
+project/tests/test_graft_parameters.py::TestGraftParameterSet::test_validate PASSED [ 57%]
+project/tests/test_graft_parameters.py::TestDefaultParameters::test_create_default PASSED [ 57%]
+project/tests/test_graft_parameters.py::TestParameterSweep::test_generate_combinations PASSED [ 57%]
+project/tests/test_graft_plots.py::TestPlottingFunctions::test_plot_success_rates PASSED [ 58%]
+project/tests/test_graft_plots.py::TestPlottingFunctions::test_plot_success_rates_with_kwargs PASSED [ 58%]
+project/tests/test_graft_plots.py::TestPlottingFunctions::test_plot_compatibility_matrix PASSED [ 59%]
+project/tests/test_graft_plots.py::TestPlottingFunctions::test_plot_compatibility_matrix_with_labels PASSED [ 59%]
+project/tests/test_graft_plots.py::TestPlottingFunctions::test_plot_healing_timeline PASSED [ 59%]
+project/tests/test_graft_plots.py::TestPlottingFunctions::test_plot_healing_timeline_with_markers PASSED [ 60%]
+project/tests/test_graft_plots.py::TestPlottingFunctions::test_plot_success_by_factor PASSED [ 60%]
+project/tests/test_graft_plots.py::TestPlottingFunctions::test_plot_technique_comparison PASSED [ 60%]
+project/tests/test_graft_plots.py::TestPlottingFunctions::test_plot_survival_curve PASSED [ 61%]
+project/tests/test_graft_plots.py::TestPlottingFunctions::test_plot_environmental_effects PASSED [ 61%]
+project/tests/test_graft_reporting.py::TestReportGenerator::test_markdown_report PASSED [ 61%]
+project/tests/test_graft_reporting.py::TestReportGenerator::test_trial_report PASSED [ 62%]
+project/tests/test_graft_reporting.py::TestReportGenerator::test_markdown_report_with_tables PASSED [ 62%]
+project/tests/test_graft_reporting.py::TestReportGenerator::test_markdown_report_with_string_details PASSED [ 63%]
+project/tests/test_graft_reporting.py::TestReportGenerator::test_markdown_report_complete_structure PASSED [ 63%]
+project/tests/test_graft_statistics.py::TestGraftStatistics::test_calculate_statistics PASSED [ 63%]
+project/tests/test_graft_statistics.py::TestGraftStatistics::test_technique_difference PASSED [ 64%]
+project/tests/test_graft_statistics.py::TestGraftStatistics::test_success_correlation PASSED [ 64%]
+project/tests/test_graft_statistics.py::TestSurvivalAnalysis::test_survival_curve PASSED [ 64%]
+project/tests/test_graft_statistics.py::TestConfidenceIntervals::test_confidence_interval PASSED [ 65%]
+project/tests/test_graft_validation.py::TestValidationFramework::test_compatibility_validation PASSED [ 65%]
+project/tests/test_graft_validation.py::TestValidationFramework::test_environmental_validation PASSED [ 65%]
+project/tests/test_graft_validation.py::TestValidationFramework::test_diameter_match PASSED [ 66%]
+project/tests/test_graft_validation.py::TestValidationFramework::test_validation_summary PASSED [ 66%]
+project/tests/test_graft_validation.py::TestValidationFramework::test_biological_constraints_valid PASSED [ 67%]
+project/tests/test_graft_validation.py::TestValidationFramework::test_biological_constraints_out_of_range PASSED [ 67%]
+project/tests/test_graft_validation.py::TestValidationFramework::test_biological_constraints_negative PASSED [ 67%]
+project/tests/test_graft_validation.py::TestValidationFramework::test_biological_constraints_unrealistic_early PASSED [ 68%]
+project/tests/test_graft_validation.py::TestValidationFramework::test_biological_constraints_early_acceptable PASSED [ 68%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_initialization PASSED [ 68%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_create_figure PASSED [ 69%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_create_figure_single_subplot PASSED [ 69%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_create_figure_single_row PASSED [ 69%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_create_figure_single_col PASSED [ 70%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_save_figure PASSED [ 70%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_save_figure_svg PASSED [ 71%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_save_figure_eps PASSED [ 71%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_save_figure_multiple_formats PASSED [ 71%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_apply_publication_style PASSED [ 72%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_apply_publication_style_no_labels PASSED [ 72%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_get_color PASSED [ 72%]
+project/tests/test_graft_visualization.py::TestVisualizationEngine::test_color_palette_colorblind PASSED [ 73%]
+project/tests/test_graft_visualization.py::TestMultiPanel::test_create_multi_panel PASSED [ 73%]
+project/tests/test_graft_visualization.py::TestMultiPanel::test_create_multi_panel_custom_layout PASSED [ 73%]
+project/tests/test_graft_visualization.py::TestMultiPanel::test_create_multi_panel_custom_figsize PASSED [ 74%]
+project/tests/test_graft_visualization.py::TestMultiPanel::test_create_multi_panel_extra_subplots_hidden PASSED [ 74%]
+project/tests/test_package_imports.py::TestPackageLevelImports::test_core_function_imports PASSED [ 75%]
+project/tests/test_package_imports.py::TestPackageLevelImports::test_class_imports PASSED [ 75%]
+project/tests/test_package_imports.py::TestPackageLevelImports::test_statistics_imports PASSED [ 75%]
+project/tests/test_package_imports.py::TestPackageLevelImports::test_package_metadata PASSED [ 76%]
+project/tests/test_package_imports.py::TestPackageLevelImports::test_package_all_exports PASSED [ 76%]
+project/tests/test_package_imports.py::TestPackageLevelImports::test_package_imports_without_errors PASSED [ 76%]
+project/tests/test_package_imports.py::TestPackageLevelImports::test_module_docstring PASSED [ 77%]
+project/tests/test_rootstock_analysis.py::TestRootstockProfile::test_profile_creation PASSED [ 77%]
+project/tests/test_rootstock_analysis.py::TestRootstockProfile::test_disease_resistance PASSED [ 77%]
+project/tests/test_rootstock_analysis.py::TestRootstockEvaluation::test_evaluate_suitability PASSED [ 78%]
+project/tests/test_rootstock_analysis.py::TestRootstockEvaluation::test_evaluate_suitability_insufficient_resistance PASSED [ 78%]
+project/tests/test_rootstock_analysis.py::TestRootstockEvaluation::test_evaluate_suitability_climate_mismatch PASSED [ 78%]
+project/tests/test_rootstock_analysis.py::TestRootstockEvaluation::test_evaluate_suitability_soil_mismatch PASSED [ 79%]
+project/tests/test_rootstock_analysis.py::TestVigorAnalysis::test_vigor_effects PASSED [ 79%]
+project/tests/test_rootstock_analysis.py::TestVigorAnalysis::test_vigor_effects_scion_overgrowth PASSED [ 80%]
+project/tests/test_rootstock_analysis.py::TestVigorAnalysis::test_vigor_effects_rootstock_overgrowth PASSED [ 80%]
+project/tests/test_rootstock_analysis.py::TestVigorAnalysis::test_vigor_effects_balanced PASSED [ 80%]
+project/tests/test_rootstock_analysis.py::TestOptimalSelection::test_select_optimal_rootstock PASSED [ 81%]
+project/tests/test_rootstock_analysis.py::TestDwarfing::test_calculate_dwarfing_effect PASSED [ 81%]
+project/tests/test_rootstock_analysis.py::TestDwarfing::test_calculate_dwarfing_effect_standard PASSED [ 81%]
+project/tests/test_rootstock_analysis.py::TestDwarfing::test_calculate_dwarfing_effect_high_vigor PASSED [ 82%]
+project/tests/test_rootstock_analysis.py::TestDwarfing::test_calculate_dwarfing_effect_low_vigor PASSED [ 82%]
+project/tests/test_seasonal_planning.py::TestGraftingWindow::test_temperate_window PASSED [ 82%]
+project/tests/test_seasonal_planning.py::TestGraftingWindow::test_tropical_window PASSED [ 83%]
+project/tests/test_seasonal_planning.py::TestGraftingWindow::test_subtropical_window PASSED [ 83%]
+project/tests/test_seasonal_planning.py::TestGraftingWindow::test_southern_hemisphere_window PASSED [ 84%]
+project/tests/test_seasonal_planning.py::TestGraftingWindow::test_unknown_species_type_window PASSED [ 84%]
+project/tests/test_seasonal_planning.py::TestSeasonalSuitability::test_optimal_month PASSED [ 84%]
+project/tests/test_seasonal_planning.py::TestSeasonalSuitability::test_suboptimal_month PASSED [ 85%]
+project/tests/test_seasonal_planning.py::TestTemperatureSuitability::test_optimal_temperature PASSED [ 85%]
+project/tests/test_seasonal_planning.py::TestTemperatureSuitability::test_cold_temperature PASSED [ 85%]
+project/tests/test_seasonal_planning.py::TestTemperatureSuitability::test_hot_temperature PASSED [ 86%]
+project/tests/test_seasonal_planning.py::TestTemperatureSuitability::test_tropical_optimal PASSED [ 86%]
+project/tests/test_seasonal_planning.py::TestTemperatureSuitability::test_unknown_species_type PASSED [ 86%]
+project/tests/test_seasonal_planning.py::TestTemperatureSuitability::test_temperature_below_optimal PASSED [ 87%]
+project/tests/test_seasonal_planning.py::TestTemperatureSuitability::test_temperature_above_optimal PASSED [ 87%]
+project/tests/test_seasonal_planning.py::TestTemperatureSuitability::test_temperature_outside_acceptable PASSED [ 88%]
+project/tests/test_seasonal_planning.py::TestTemperatureSuitability::test_temperature_above_acceptable PASSED [ 88%]
+project/tests/test_seasonal_planning.py::TestTemperatureSuitability::test_subtropical_temperature PASSED [ 88%]
+project/tests/test_seasonal_planning.py::TestGraftingCalendar::test_calendar_generation PASSED [ 89%]
+project/tests/test_seasonal_planning.py::TestGraftingCalendar::test_calendar_tropical PASSED [ 89%]
+project/tests/test_seasonal_planning.py::TestGraftingCalendar::test_calendar_subtropical PASSED [ 89%]
+project/tests/test_seasonal_planning.py::TestGraftingCalendar::test_calendar_southern_hemisphere PASSED [ 90%]
+project/tests/test_seasonal_planning.py::TestClimateZone::test_adjust_for_climate_zone PASSED [ 90%]
+project/tests/test_seasonal_planning.py::TestClimateZone::test_adjust_continental PASSED [ 90%]
+project/tests/test_seasonal_planning.py::TestClimateZone::test_adjust_oceanic PASSED [ 91%]
+project/tests/test_seasonal_planning.py::TestClimateZone::test_adjust_unknown PASSED [ 91%]
+project/tests/test_seasonal_planning.py::TestClimateZone::test_adjust_tropical PASSED [ 92%]
+project/tests/test_seasonal_planning.py::TestClimateZone::test_adjust_cold PASSED [ 92%]
+project/tests/test_seasonal_planning.py::TestClimateZone::test_adjust_subtropical_climate PASSED [ 92%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_add_species PASSED [ 93%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_get_compatibility PASSED [ 93%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_find_compatible_pairs PASSED [ 93%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_suitable_techniques PASSED [ 94%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_get_compatibility_matrix_error PASSED [ 94%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_get_compatibility_fallback PASSED [ 94%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_get_compatibility_not_found PASSED [ 95%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_set_compatibility_matrix_no_species_list PASSED [ 95%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_set_compatibility_matrix_mismatched_size PASSED [ 96%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_find_compatible_pairs_with_rootstock PASSED [ 96%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_find_compatible_pairs_invalid_rootstock PASSED [ 96%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_find_compatible_pairs_no_matrix PASSED [ 97%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_get_suitable_techniques_intersection PASSED [ 97%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_get_suitable_techniques_no_intersection PASSED [ 97%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_get_suitable_techniques_only_rootstock PASSED [ 98%]
+project/tests/test_species_database.py::TestSpeciesDatabase::test_get_suitable_techniques_only_scion PASSED [ 98%]
+project/tests/test_technique_library.py::TestTechniqueLibrary::test_get_technique PASSED [ 98%]
+project/tests/test_technique_library.py::TestTechniqueLibrary::test_list_techniques PASSED [ 99%]
+project/tests/test_technique_library.py::TestTechniqueLibrary::test_recommend_technique PASSED [ 99%]
+project/tests/test_technique_library.py::TestTechniqueLibrary::test_get_protocol PASSED [100%]
+
+================================ tests coverage ================================
+______________ coverage: platform darwin, python 3.12.11-final-0 _______________
+
+Name                                      Stmts   Miss Branch BrPart   Cover   Missing
+--------------------------------------------------------------------------------------
+project/src/__init__.py                       7      0      0      0 100.00%
+project/src/biological_simulation.py        154      4     50     10  93.14%   150->152, 152->154, 154->156, 156->160, 208->211, 230, 233, 326->332, 332->338, 339-340
+project/src/compatibility_prediction.py      31      4      6      1  86.49%   85-90
+project/src/economic_analysis.py             46      0      8      0 100.00%
+project/src/graft_analysis.py                90      1     28      8  92.37%   25, 54->59, 56->59, 60->65, 62->65, 102->107, 132->138, 138->144, 170->173
+project/src/graft_basics.py                  82      1     44      1  98.41%   185
+project/src/graft_data_generator.py          88      0     40      6  95.31%   33->37, 105->108, 159->163, 226->230, 273->272, 292->288
+project/src/graft_data_processing.py        126      7     72     10  91.41%   48->60, 56, 62, 104, 111, 198->182, 245->244, 256->252, 260->241, 266-269
+project/src/graft_metrics.py                 68      0     16      0 100.00%
+project/src/graft_parameters.py             104     11     36      3  90.00%   98, 110->109, 120, 129, 141-143, 155-158, 308
+project/src/graft_plots.py                  116      4     32     10  90.54%   34->37, 69->72, 114->117, 125, 149->153, 194->197, 208-209, 241->244, 252, 276->280
+project/src/graft_reporting.py               67      0     28      2  97.89%   59->63, 132->135
+project/src/graft_statistics.py              88      4     16      3  91.35%   78->91, 92-94, 168
+project/src/graft_validation.py              64      0      6      0 100.00%
+project/src/graft_visualization.py           71      3     32      4  93.20%   96->99, 142, 218, 220
+project/src/rootstock_analysis.py            56      1     10      1  96.97%   46
+project/src/seasonal_planning.py             76      1     48      1  98.39%   40
+project/src/species_database.py              82      0     42      2  98.39%   35->exit, 82->exit
+project/src/technique_library.py             39      3     10      2  85.71%   196-197, 221
+--------------------------------------------------------------------------------------
+TOTAL                                      1455     44    524     64  94.34%
+Coverage HTML written to dir htmlcov
+Required test coverage of 90% reached. Total coverage: 94.34%
+============================= 276 passed in 2.30s ==============================
+✓ Project tests passed
+
+[3/8] Project Analysis (38% complete)
+
+[1;33m[4/9] Project Analysis (44% complete)[0m
+[1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[2025-12-16 12:28:36] [INFO] [STAGE-02] Discovering analysis scripts in project/...
+[2025-12-16 12:28:36] [INFO] Found: basic_grafting_figures.py
+[2025-12-16 12:28:36] [INFO] Found: biological_process_simulation.py
+[2025-12-16 12:28:36] [INFO] Found: generate_biological_figures.py
+[2025-12-16 12:28:36] [INFO] Found: generate_grafting_figures.py
+[2025-12-16 12:28:36] [INFO] Found: generate_manuscript_figures.py
+[2025-12-16 12:28:36] [INFO] Found: graft_analysis_pipeline.py
+[2025-12-16 12:28:36] [INFO] Found: manuscript_preflight.py
+[2025-12-16 12:28:36] [INFO] Found: quality_report.py
+[2025-12-16 12:28:36] [INFO]   [1/8] basic_grafting_figures.py
+✅ Successfully imported functions from src/graft_basics.py
+  Registered figures: fig:graft_anatomy, fig:technique_comparison
+✅ Generated graft anatomy figure: /Users/4d/Documents/GitHub/template/project/output/figures/graft_anatomy.png
+✅ Generated technique comparison: /Users/4d/Documents/GitHub/template/project/output/figures/technique_comparison.png
+[2025-12-16 12:28:36] [INFO]     ✅ Completed in 0s
+[2025-12-16 12:28:36] [INFO]   [2/8] biological_process_simulation.py
+Day 5, Union strength: 0.189, Elapsed: 0.00s
+Day 10, Union strength: 0.236, Elapsed: 0.00s
+Day 15, Union strength: 0.277, Elapsed: 0.00s
+Day 20, Union strength: 0.312, Elapsed: 0.00s
+Day 25, Union strength: 0.343, Elapsed: 0.00s
+Day 30, Union strength: 0.385, Elapsed: 0.00s
+Day 35, Union strength: 0.429, Elapsed: 0.00s
+Day 40, Union strength: 0.469, Elapsed: 0.00s
+Day 45, Union strength: 0.506, Elapsed: 0.00s
+Day 50, Union strength: 0.541, Elapsed: 0.00s
+Day 55, Union strength: 0.573, Elapsed: 0.00s
+Day 60, Union strength: 0.601, Elapsed: 0.00s
+[2025-12-16 12:28:37] [INFO]     ✅ Completed in 0s
+[2025-12-16 12:28:37] [INFO]   Progress: 2/8 (25%) - Elapsed: 1s | ETA: 3s
+[2025-12-16 12:28:37] [INFO]   [3/8] generate_biological_figures.py
+Generating biological process figures...
+
+✅ Generated 2 biological figures:
+  - /Users/4d/Documents/GitHub/template/project/output/figures/vascular_integration.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/callus_formation.png
+[2025-12-16 12:28:38] [INFO]     ✅ Completed in 0s
+[2025-12-16 12:28:38] [INFO]   [4/8] generate_grafting_figures.py
+Generating grafting figures for manuscript...
+
+✅ Generated 13 figures:
+  - /Users/4d/Documents/GitHub/template/project/output/figures/convergence_plot.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/experimental_setup.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/scalability_analysis.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/ablation_study.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/hyperparameter_sensitivity.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/image_classification_results.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/recommendation_scalability.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/convergence_analysis.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/time_series_analysis.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/statistical_comparison.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/scatter_correlation.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/data_structure.png
+  - /Users/4d/Documents/GitHub/template/project/output/figures/step_size_analysis.png
+[2025-12-16 12:28:40] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:28:40] [INFO]   Progress: 4/8 (50%) - Elapsed: 4s | ETA: 4s
+[2025-12-16 12:28:40] [INFO]   [5/8] generate_manuscript_figures.py
+[2025-12-16 12:28:41] [INFO]     ✅ Completed in 1s
+[2025-12-16 12:28:41] [INFO]   [6/8] graft_analysis_pipeline.py
+[2025-12-16 12:28:43] [INFO]     ✅ Completed in 1s
+[2025-12-16 12:28:43] [INFO]   Progress: 6/8 (75%) - Elapsed: 7s | ETA: 3s
+[2025-12-16 12:28:43] [INFO]   [7/8] manuscript_preflight.py
+Manuscript dir: /Users/4d/Documents/GitHub/template/project/manuscript
+❌ Missing figures:
+  - AGENTS.md: ../output/figures/example_figure.png
+  - README.md: ../output/figures/example_figure.png
+✅ Glossary markers present
+✅ References block present
+ℹ️  Markdown validation issues: 1
+ℹ️  Quality check skipped: Failed to extract text from PDF: Failed to extract text from PDF: [Errno 21] Is a directory: '/Users/4d/Documents/GitHub/template/project/manuscript'
+[2025-12-16 12:28:43] [INFO]     ✅ Completed in 0s
+[2025-12-16 12:28:43] [INFO]   [8/8] quality_report.py
+✅ Quality report generated at output/reports/quality_report.json
+[2025-12-16 12:28:43] [INFO]     ✅ Completed in 0s
+[2025-12-16 12:28:43] [INFO]   Progress: 8/8 (100%) - Elapsed: 7s | ETA: 0s
+[2025-12-16 12:28:43] [INFO] [STAGE-02] Verifying analysis outputs...
+[2025-12-16 12:28:43] [INFO] Output directory has 41 file(s): figures
+[2025-12-16 12:28:43] [INFO]   ℹ️  Output directory is empty: data
+[0;32m✓[0m Project analysis complete
+
+[4/8] PDF Rendering (50% complete)
+[2025-12-16 12:28:46] [INFO]   [1/14] 01_abstract.md
+[2025-12-16 12:28:49] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:28:49] [INFO]   [2/14] 02_introduction.md
+[2025-12-16 12:28:51] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:28:51] [INFO]   [3/14] 03_methodology.md
+[2025-12-16 12:28:54] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:28:54] [INFO]   [4/14] 04_experimental_results.md
+[2025-12-16 12:28:56] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:28:56] [INFO]   [5/14] 05_discussion.md
+[2025-12-16 12:28:59] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:28:59] [INFO]   [6/14] 06_conclusion.md
+[2025-12-16 12:29:01] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:29:01] [INFO]   [7/14] 08_acknowledgments.md
+[2025-12-16 12:29:04] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:29:04] [INFO]   [8/14] 09_appendix.md
+[2025-12-16 12:29:07] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:29:07] [INFO]   [9/14] S01_supplemental_methods.md
+[2025-12-16 12:29:09] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:29:09] [INFO]   [10/14] S02_supplemental_results.md
+[2025-12-16 12:29:12] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:29:12] [INFO]   [11/14] S03_supplemental_analysis.md
+[2025-12-16 12:29:14] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:29:14] [INFO]   [12/14] S04_supplemental_applications.md
+[2025-12-16 12:29:17] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:29:17] [INFO]   [13/14] 98_symbols_glossary.md
+[2025-12-16 12:29:19] [INFO]     ✅ Completed in 2s
+[2025-12-16 12:29:19] [INFO]   [14/14] 99_references.md
+[2025-12-16 12:29:22] [INFO]     ✅ Completed in 2s
+
+[5/8] Output Validation (63% complete)
+
+[1;33m[6/9] Output Validation (66% complete)[0m
+[1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[2025-12-16 12:29:31] [INFO] 
+  Validating figure registry...
+[2025-12-16 12:29:31] [INFO] Figure registry loaded: 21 figure(s)
+[2025-12-16 12:29:31] [WARNING]   Found 1 figure issue(s)
+[2025-12-16 12:29:31] [WARNING]     • Unregistered figure reference: fig:figure_name
+  • Unregistered figure reference: fig:figure_name
+[0;32m✓[0m Output validation complete
+
+[6/8] Copy Outputs (75% complete)
+
+[1;33m[7/9] Copy Outputs (77% complete)[0m
+[1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━[0m
+[2025-12-16 12:29:31] [INFO] Cleaning output directory...
+[2025-12-16 12:29:31] [INFO] Output directory cleaned
+[2025-12-16 12:29:31] [INFO] Copying all project outputs...
+[2025-12-16 12:29:31] [INFO] Recursively copied project/output/ directory
+[2025-12-16 12:29:31] [INFO]   pdf/: 9 file(s)
+[2025-12-16 12:29:31] [INFO]   web/: 14 file(s)
+[2025-12-16 12:29:31] [INFO]   slides/: 99 file(s)
+[2025-12-16 12:29:31] [INFO]   figures/: 41 file(s)
+[2025-12-16 12:29:31] [INFO]   data/: 0 file(s)
+[2025-12-16 12:29:31] [INFO]   reports/: 7 file(s)
+[2025-12-16 12:29:31] [INFO]   simulations/: 8 file(s)
+[2025-12-16 12:29:31] [INFO]   llm/: 0 file(s)
+[2025-12-16 12:29:31] [INFO]   logs/: 1 file(s)
+[2025-12-16 12:29:31] [INFO] Copied combined PDF to root (0.65 MB)
+[2025-12-16 12:29:31] [INFO]   Root PDF: /Users/4d/Documents/GitHub/template/output/project_combined.pdf (685,672 bytes)
+[2025-12-16 12:29:31] [INFO] Validating copied outputs...
+[2025-12-16 12:29:31] [INFO] Combined PDF at root valid (0.65 MB)
+[2025-12-16 12:29:31] [INFO] pdf/ valid (9 files, 1.02 MB)
+[2025-12-16 12:29:31] [INFO] web/ valid (14 files, 0.17 MB)
+[2025-12-16 12:29:31] [INFO] slides/ valid (99 files, 1.28 MB)
+[2025-12-16 12:29:31] [INFO] figures/ valid (41 files, 2.77 MB)
+[2025-12-16 12:29:31] [WARNING] data/ directory exists but is empty
+[2025-12-16 12:29:31] [INFO] reports/ valid (7 files, 0.01 MB)
+[2025-12-16 12:29:31] [INFO] simulations/ valid (8 files, 0.06 MB)
+[2025-12-16 12:29:31] [INFO] logs/ valid (1 files, 0.04 MB)
+[0;32m✓[0m Output copying complete
+
+[7/8] LLM Scientific Review (88% complete)
+Loading gemma3:4b into GPU memory...
+Waiting for first token...
+    Generated 270 tokens in 48.3s (5.6 tokens/sec)
+    Generated 778 tokens in 58.6s (13.3 tokens/sec)
+    Generated 728 tokens in 56.8s (12.8 tokens/sec)
+    Generated 782 tokens in 58.6s (13.3 tokens/sec)
+
+[8/8] LLM Translations (100% complete)
+Loading gemma3:4b into GPU memory...
+Waiting for first token...
+
+Generated Files Inventory:
+  Pdf (10 file(s), 1MB):
+    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.md (84KB)
+    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.log (60KB)
+    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.aux (81KB)
+    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.blg (920B)
+    - /Users/4d/Documents/GitHub/template/output/pdf/references.bib (5KB)
+    - /Users/4d/Documents/GitHub/template/output/pdf/project_combined.pdf (669KB)
+    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.tex (118KB)
+    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.toc (21KB)
+    - /Users/4d/Documents/GitHub/template/output/pdf/_combined_manuscript.bbl (5KB)
+    - /Users/4d/Documents/GitHub/template/output/project_combined.pdf (669KB)
+  Figures (41 file(s), 2MB):
+    - /Users/4d/Documents/GitHub/template/output/figures/scatter_correlation.pdf (17KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/compatibility_matrix.png (183KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/success_rate_analysis.png (83KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/recommendation_scalability.pdf (17KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/environmental_effects.pdf (24KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/success_rate_analysis.pdf (20KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/recommendation_scalability.png (122KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/environmental_effects.png (121KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/scatter_correlation.png (182KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/compatibility_matrix.pdf (36KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/hyperparameter_sensitivity.pdf (19KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/vascular_integration.png (64KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/figure_registry.json (7KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/vascular_integration.pdf (16KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/hyperparameter_sensitivity.png (150KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/scalability_analysis.pdf (16KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/ablation_study.pdf (15KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/step_size_analysis.pdf (18KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/scalability_analysis.png (123KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/ablation_study.png (110KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/step_size_analysis.png (162KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/time_series_analysis.pdf (16KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/time_series_analysis.png (227KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/convergence_plot.png (114KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/convergence_plot.pdf (19KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/experimental_setup.pdf (11KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/image_classification_results.pdf (18KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/image_classification_results.png (124KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/technique_comparison.png (85KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/experimental_setup.png (74KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/healing_timeline.pdf (19KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/graft_anatomy.png (66KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/healing_timeline.png (97KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/data_structure.png (79KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/convergence_analysis.pdf (18KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/statistical_comparison.png (76KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/callus_formation.pdf (20KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/statistical_comparison.pdf (13KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/callus_formation.png (112KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/data_structure.pdf (14KB)
+    - /Users/4d/Documents/GitHub/template/output/figures/convergence_analysis.png (107KB)
+  Reports (7 file(s), 8KB):
+    - /Users/4d/Documents/GitHub/template/output/reports/graft_trial_report.md (805B)
+    - /Users/4d/Documents/GitHub/template/output/reports/pipeline_report.json (1KB)
+    - /Users/4d/Documents/GitHub/template/output/reports/quality_report.json (954B)
+    - /Users/4d/Documents/GitHub/template/output/reports/validation_report.json (860B)
+    - /Users/4d/Documents/GitHub/template/output/reports/pipeline_report.md (402B)
+    - /Users/4d/Documents/GitHub/template/output/reports/validation_report.md (202B)
+    - /Users/4d/Documents/GitHub/template/output/reports/pipeline_report.html (3KB)
+  Simulations (8 file(s), 56KB):
+    - /Users/4d/Documents/GitHub/template/output/simulations/graft_healing_simulation.json (15KB)
+    - /Users/4d/Documents/GitHub/template/output/simulations/graft_healing_simulation.npz (1KB)
+    - /Users/4d/Documents/GitHub/template/output/simulations/checkpoint_day_0030.json (7KB)
+    - /Users/4d/Documents/GitHub/template/output/simulations/checkpoint_day_0010.json (3KB)
+    - /Users/4d/Documents/GitHub/template/output/simulations/checkpoint_day_0050.json (12KB)
+    - /Users/4d/Documents/GitHub/template/output/simulations/checkpoint_day_0000.json (750B)
+    - /Users/4d/Documents/GitHub/template/output/simulations/checkpoint_day_0020.json (5KB)
+    - /Users/4d/Documents/GitHub/template/output/simulations/checkpoint_day_0040.json (10KB)
+  Logs (1 file(s), 41KB):
+    - /Users/4d/Documents/GitHub/template/output/logs/pipeline_20251216_122832.log (41KB)
+  Web (14 file(s), 173KB):
+    - /Users/4d/Documents/GitHub/template/output/web/S02_supplemental_results.html (11KB)
+    - /Users/4d/Documents/GitHub/template/output/web/06_conclusion.html (12KB)
+    - /Users/4d/Documents/GitHub/template/output/web/S04_supplemental_applications.html (12KB)
+    - /Users/4d/Documents/GitHub/template/output/web/05_discussion.html (15KB)
+    - /Users/4d/Documents/GitHub/template/output/web/98_symbols_glossary.html (13KB)
+    - /Users/4d/Documents/GitHub/template/output/web/S03_supplemental_analysis.html (12KB)
+    - /Users/4d/Documents/GitHub/template/output/web/09_appendix.html (19KB)
+    - /Users/4d/Documents/GitHub/template/output/web/01_abstract.html (6KB)
+    - /Users/4d/Documents/GitHub/template/output/web/S01_supplemental_methods.html (12KB)
+    - /Users/4d/Documents/GitHub/template/output/web/99_references.html (3KB)
+    - /Users/4d/Documents/GitHub/template/output/web/04_experimental_results.html (17KB)
+    - /Users/4d/Documents/GitHub/template/output/web/03_methodology.html (16KB)
+    - /Users/4d/Documents/GitHub/template/output/web/02_introduction.html (15KB)
+    - /Users/4d/Documents/GitHub/template/output/web/08_acknowledgments.html (5KB)
+  Slides (99 file(s), 1MB):
+    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.nav (307B)
+    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.pdf (17KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.toc (48B)
+    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.tex (13KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.snm (1KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.aux (5KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.log (55KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.nav (307B)
+    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.toc (0B)
+    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.log (52KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.aux (4KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.vrb (1KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.tex (5KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.nav (307B)
+    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.vrb (821B)
+    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.log (51KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.snm (1KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.aux (3KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.tex (14KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.toc (47B)
+    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.pdf (16KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.snm (924B)
+    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.log (51KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.aux (11KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.snm (652B)
+    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.log (51KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.pdf (29KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.aux (3KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.toc (0B)
+    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.tex (10KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.pdf (47KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.toc (0B)
+    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.nav (987B)
+    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.tex (10KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.nav (4KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.log (51KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.aux (3KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.snm (1KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.nav (307B)
+    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.vrb (7KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.pdf (13KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.nav (307B)
+    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.log (54KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.aux (4KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.snm (1KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.log (49KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.pdf (6KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.aux (714B)
+    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.snm (34B)
+    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.tex (5KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.toc (0B)
+    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.pdf (23KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.tex (11KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.toc (0B)
+    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.log (52KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.snm (1KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.nav (307B)
+    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.aux (6KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.toc (578B)
+    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.vrb (11KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.tex (11KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.toc (46B)
+    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.tex (14KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.nav (307B)
+    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.snm (664B)
+    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.nav (395B)
+    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.aux (4KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.pdf (2KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.log (54KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.toc (0B)
+    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.pdf (26KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.tex (16KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.tex (15KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.snm (32B)
+    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.aux (838B)
+    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.log (51KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/04_experimental_results_slides.pdf (285B)
+    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.tex (11KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/09_appendix_slides.pdf (43KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/01_abstract_slides.nav (307B)
+    - /Users/4d/Documents/GitHub/template/output/slides/S02_supplemental_results_slides.toc (0B)
+    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.tex (2KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/99_references_slides.toc (0B)
+    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.log (51KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.aux (1KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/08_acknowledgments_slides.snm (256B)
+    - /Users/4d/Documents/GitHub/template/output/slides/02_introduction_slides.nav (1KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/06_conclusion_slides.pdf (27KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.snm (1KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.aux (3KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/03_methodology_slides.nav (1KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S03_supplemental_analysis_slides.log (51KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/05_discussion_slides.pdf (40KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.snm (32B)
+    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.aux (809B)
+    - /Users/4d/Documents/GitHub/template/output/slides/98_symbols_glossary_slides.log (59KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S01_supplemental_methods_slides.pdf (25KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.tex (11KB)
+    - /Users/4d/Documents/GitHub/template/output/slides/S04_supplemental_applications_slides.toc (0B)
+
+============================================================
+Pipeline completed: Tue Dec 16 12:36:30 PST 2025
+Total duration: 7m 56s
+Log file: /Users/4d/Documents/GitHub/template/project/output/logs/pipeline_20251216_122832.log
+  (Will be copied to output/logs/ during copy stage)
+Note: Infrastructure tests were skipped in this pipeline
+============================================================

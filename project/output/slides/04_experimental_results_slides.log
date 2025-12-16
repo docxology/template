@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  16 DEC 2025 06:42
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  16 DEC 2025 12:28
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -864,41 +864,61 @@ LaTeX Info: Redefining \microtypesetup on input line 3065.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
 )
+(/usr/local/texlive/2025/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2024/01/20 4.5c verbatim text (tvz,hv)
+\FV@CodeLineNo=\count372
+\FV@InFile=\read3
+\FV@TabBox=\box81
+\c@FancyVerbLine=\count373
+\FV@StepNumber=\count374
+\FV@OutFile=\write5
+)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
-\BKM@id=\count372
+\BKM@id=\count375
 ))
 (/usr/local/texlive/2025/texmf-dist/tex/latex/xurl/xurl.sty
 Package: xurl 2022/01/09 v 0.10 modify URL breaks
 )
 (/Users/4d/Documents/GitHub/template/project/output/slides/04_experimental_resu
 lts_slides.aux)
+Runaway argument?
+{ 
+! File ended while scanning use of \@writefile.
+<inserted text> 
+                \par 
+l.128 \begin{document}
+                      
+I suspect you have forgotten a `}', causing me
+to read past where you wanted me to stop.
+I'll try to recover; but if the error is serious,
+you'd better type `E' or `X' now and fix your file.
+
 \openout1 = `04_experimental_results_slides.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
 *geometry* verbose mode - [ preamble ] result:
@@ -933,7 +953,7 @@ LaTeX Font Info:    ... okay on input line 90.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 90.
+Package hyperref Info: Link coloring OFF on input line 128.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/translator/translator-basic-dicti
 onary-English.dict
@@ -960,19 +980,19 @@ tionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 90.
+(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 90.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 90.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 90.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 90.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 90.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 90.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 128.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1003,7 +1023,7 @@ allCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
 =math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 90.
+(Font)              scaled to size 11.28015pt on input line 128.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1046,17 +1066,18 @@ dern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 =math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 90.
+(Font)              scaled to size 11.28015pt on input line 128.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 90.
+(Font)              `operators' in the math version `normal' on input line 128.
+
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 90.
+ line 128.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 90.
+(Font)              `operators' in the math version `bold' on input line 128.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 90.
+t line 128.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1130,15 +1151,15 @@ nmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 90.
+(Font)              `symbols' in the math version `normal' on input line 128.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 90.
+t line 128.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 90.
+(Font)              `symbols' in the math version `bold' on input line 128.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 90.
+t line 128.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1206,24 +1227,24 @@ nmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `normal' on input line 9
-0.
+(Font)              `largesymbols' in the math version `normal' on input line 1
+28.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 90.
+t line 128.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 90.
-
+(Font)              `largesymbols' in the math version `bold' on input line 128
+.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 90.
-LaTeX Info: Redefining \microtypecontext on input line 90.
-Package microtype Info: Applying patch `item' on input line 90.
-Package microtype Info: Applying patch `toc' on input line 90.
-Package microtype Info: Applying patch `eqnum' on input line 90.
-Package microtype Info: Applying patch `footnote' on input line 90.
-Package microtype Info: Applying patch `verbatim' on input line 90.
-LaTeX Info: Redefining \microtypesetup on input line 90.
+t line 128.
+LaTeX Info: Redefining \microtypecontext on input line 128.
+Package microtype Info: Applying patch `item' on input line 128.
+Package microtype Info: Applying patch `toc' on input line 128.
+Package microtype Info: Applying patch `eqnum' on input line 128.
+Package microtype Info: Applying patch `footnote' on input line 128.
+Package microtype Info: Applying patch `verbatim' on input line 128.
+LaTeX Info: Redefining \microtypesetup on input line 128.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1234,56 +1255,64 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-(/Users/4d/Documents/GitHub/template/project/output/slides/04_experimental_resu
-lts_slides.nav)
+No file 04_experimental_results_slides.nav.
+
 
 [1
 
 ]
-\openout4 = `04_experimental_results_slides.vrb'.
+
+LaTeX Warning: File `../output/figures/compatibility_matrix.png' not found on i
+nput line 174.
+
+! Unable to load picture or PDF file '../output/figures/compatibility_matrix.pn
+g'.
+<to be read again> 
+                   }
+l.174 \end{frame}
+                 
+The requested image couldn't be read because
+it was not a recognized image format.
 
 
-(/Users/4d/Documents/GitHub/template/project/output/slides/04_experimental_resu
-lts_slides.vrb
+! Package graphics Error: Division by 0.
 
-LaTeX Warning: Reference `sec:methodology' on page 2 undefined on input line 4.
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.174 \end{frame}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
 
-
-
-LaTeX Warning: Reference `sec:methodology' on page 2 undefined on input line 5.
-
-
-
-LaTeX Warning: Reference `fig:experimental_setup' on page 2 undefined on input 
-line 10.
-
-)
-
-[2
-
-]
+File: ../output/figures/compatibility_matrix.png Graphic file (type bmp)
+<../output/figures/compatibility_matrix.png>
+LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 144.
+(Font)              scaled to size 7.8961pt on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 144.
+(Font)              scaled to size 5.64008pt on input line 174.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-44.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
+74.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 144.
+(Font)              scaled to size 11.28131pt on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 144.
+(Font)              scaled to size 7.89691pt on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 144.
+(Font)              scaled to size 5.64066pt on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 144.
+(Font)              scaled to size 11.27914pt on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 144.
+(Font)              scaled to size 7.8954pt on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 144.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 144
+(Font)              scaled to size 5.63957pt on input line 174.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 174
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1292,7 +1321,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 144
+LaTeX Font Info:    Trying to load font information for U+msb on input line 174
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1301,472 +1330,21 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-Overfull \hbox (151.10162pt too wide) in paragraph at lines 144--144
- [] 
- []
+
+LaTeX Warning: Reference `eq:phylogenetic_compatibility' on page 2 undefined on
+ input line 174.
 
 
-Overfull \vbox (4.2196pt too high) detected at line 144
- []
-
-
-
-[3
-
-]
-
-LaTeX Warning: Citation `ruder2016' on page 4 undefined on input line 212.
-
-
-LaTeX Warning: Citation `kingma2014' on page 4 undefined on input line 212.
-
-
-LaTeX Warning: Citation `schmidt2017' on page 4 undefined on input line 212.
-
-
-LaTeX Warning: Reference `eq:convergence' on page 4 undefined on input line 212
-.
-
-
-LaTeX Warning: Citation `nesterov2018' on page 4 undefined on input line 212.
-
-
-LaTeX Warning: File `../output/figures/convergence_plot.png' not found on input
- line 212.
-
-! Unable to load picture or PDF file '../output/figures/convergence_plot.png'.
-<to be read again> 
-                   }
-l.212 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.212 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/convergence_plot.png Graphic file (type bmp)
-<../output/figures/convergence_plot.png>
-
-LaTeX Warning: Reference `eq:adaptive_step' on page 4 undefined on input line 2
-12.
-
-
-LaTeX Warning: File `../output/figures/step_size_analysis.png' not found on inp
-ut line 212.
-
-! Unable to load picture or PDF file '../output/figures/step_size_analysis.png'
-.
-<to be read again> 
-                   }
-l.212 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.212 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/step_size_analysis.png Graphic file (type bmp)
-<../output/figures/step_size_analysis.png>
-
-(/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
-File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
-ern Roman (RS)
-)
-
-LaTeX Warning: Reference `eq:memory' on page 4 undefined on input line 212.
-
-
-LaTeX Warning: File `../output/figures/scalability_analysis.png' not found on i
-nput line 212.
-
-! Unable to load picture or PDF file '../output/figures/scalability_analysis.pn
-g'.
-<to be read again> 
-                   }
-l.212 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.212 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/scalability_analysis.png Graphic file (type bmp)
-<../output/figures/scalability_analysis.png>
-
-LaTeX Warning: Citation `kingma2014' on page 4 undefined on input line 212.
-
-
-LaTeX Warning: Citation `ruder2016' on page 4 undefined on input line 212.
-
-
-LaTeX Warning: Citation `schmidt2017' on page 4 undefined on input line 212.
-
-
-LaTeX Warning: Citation `reddi2018' on page 4 undefined on input line 212.
-
-
-Overfull \hbox (76.85321pt too wide) in paragraph at lines 212--212
- [] 
- []
-
-
-Overfull \vbox (215.26672pt too high) detected at line 212
+Overfull \vbox (92.64186pt too high) detected at line 174
  []
 
 
 
-[4
-
-]
-\openout4 = `04_experimental_results_slides.vrb'.
-
-
-(/Users/4d/Documents/GitHub/template/project/output/slides/04_experimental_resu
-lts_slides.vrb)
-
-[5
+[2
 
 ]
 
-LaTeX Warning: File `../output/figures/ablation_study.png' not found on input l
-ine 268.
+LaTeX Warning: File `../output/figures/technique_comparison.png' not found on i
+nput line 234.
 
-! Unable to load picture or PDF file '../output/figures/ablation_study.png'.
-<to be read again> 
-                   }
-l.268 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.268 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/ablation_study.png Graphic file (type bmp)
-<../output/figures/ablation_study.png>
-
-LaTeX Warning: Reference `eq:objective' on page 6 undefined on input line 268.
-
-
-LaTeX Warning: Reference `eq:update' on page 6 undefined on input line 268.
-
-
-LaTeX Warning: Reference `eq:adaptive_step' on page 6 undefined on input line 2
-68.
-
-
-LaTeX Warning: File `../output/figures/hyperparameter_sensitivity.png' not foun
-d on input line 268.
-
-! Unable to load picture or PDF file '../output/figures/hyperparameter_sensitiv
-ity.png'.
-<to be read again> 
-                   }
-l.268 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.268 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/hyperparameter_sensitivity.png Graphic file (type bmp)
-<../output/figures/hyperparameter_sensitivity.png>
-
-Overfull \vbox (2.26225pt too high) detected at line 268
- []
-
-
-
-[6
-
-]
-
-LaTeX Warning: File `../output/figures/image_classification_results.png' not fo
-und on input line 306.
-
-! Unable to load picture or PDF file '../output/figures/image_classification_re
-sults.png'.
-<to be read again> 
-                   }
-l.306 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.306 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/image_classification_results.png Graphic file (type bmp
-)
-<../output/figures/image_classification_results.png>
-
-LaTeX Warning: Reference `eq:convergence' on page 7 undefined on input line 306
-.
-
-
-LaTeX Warning: File `../output/figures/recommendation_scalability.png' not foun
-d on input line 306.
-
-! Unable to load picture or PDF file '../output/figures/recommendation_scalabil
-ity.png'.
-<to be read again> 
-                   }
-l.306 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.306 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/recommendation_scalability.png Graphic file (type bmp)
-<../output/figures/recommendation_scalability.png>
-
-Overfull \vbox (21.58678pt too high) detected at line 306
- []
-
-
-
-[7
-
-]
-
-[8
-
-]
-
-LaTeX Warning: Reference `sec:supplemental_analysis' on page 9 undefined on inp
-ut line 371.
-
-
-LaTeX Warning: Reference `sec:supplemental_applications' on page 9 undefined on
- input line 371.
-
-
-LaTeX Warning: File `../output/figures/convergence_analysis.png' not found on i
-nput line 371.
-
-! Unable to load picture or PDF file '../output/figures/convergence_analysis.pn
-g'.
-<to be read again> 
-                   }
-l.371 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.371 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/convergence_analysis.png Graphic file (type bmp)
-<../output/figures/convergence_analysis.png>
-
-LaTeX Warning: File `../output/figures/time_series_analysis.png' not found on i
-nput line 371.
-
-! Unable to load picture or PDF file '../output/figures/time_series_analysis.pn
-g'.
-<to be read again> 
-                   }
-l.371 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.371 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/time_series_analysis.png Graphic file (type bmp)
-<../output/figures/time_series_analysis.png>
-
-LaTeX Warning: File `../output/figures/statistical_comparison.png' not found on
- input line 371.
-
-! Unable to load picture or PDF file '../output/figures/statistical_comparison.
-png'.
-<to be read again> 
-                   }
-l.371 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.371 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/statistical_comparison.png Graphic file (type bmp)
-<../output/figures/statistical_comparison.png>
-
-LaTeX Warning: File `../output/figures/scatter_correlation.png' not found on in
-put line 371.
-
-! Unable to load picture or PDF file '../output/figures/scatter_correlation.png
-'.
-<to be read again> 
-                   }
-l.371 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.371 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/scatter_correlation.png Graphic file (type bmp)
-<../output/figures/scatter_correlation.png>
-
-Overfull \vbox (188.77971pt too high) detected at line 371
- []
-
-
-
-[9
-
-]
-\tf@nav=\write5
-\openout5 = `04_experimental_results_slides.nav'.
-
-\tf@toc=\write6
-\openout6 = `04_experimental_results_slides.toc'.
-
-\tf@snm=\write7
-\openout7 = `04_experimental_results_slides.snm'.
-
-
-(/Users/4d/Documents/GitHub/template/project/output/slides/04_experimental_resu
-lts_slides.aux)
- ***********
-LaTeX2e <2024-11-01> patch level 2
-L3 programming layer <2025-01-18>
- ***********
-
-
-LaTeX Warning: There were undefined references.
-
- ) 
-Here is how much of TeX's memory you used:
- 30086 strings out of 473832
- 627881 string characters out of 5729482
- 1137098 words of memory out of 5000000
- 52593 multiletter control sequences out of 15000+600000
- 562380 words of font info for 69 fonts, out of 8000000 for 9000
- 1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1085b,669s stack positions out of 10000i,1000n,20000p,200000b,200000s
-
-Error 256 (driver return code) generating output;
-file /Users/4d/Documents/GitHub/template/project/output/slides/04_experimental_
-results_slides.pdf may not be valid.
+! Unable to load picture or PDF file

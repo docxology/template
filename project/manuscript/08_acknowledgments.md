@@ -1,42 +1,34 @@
 # Acknowledgments {#sec:acknowledgments}
 
-We gratefully acknowledge the contributions of many individuals and institutions that made this research possible.
+This comprehensive review and computational framework synthesizes 4,000+ years of accumulated grafting knowledge, drawing from diverse sources across agricultural science, plant biology, and horticultural practice.
 
-## Funding
+## Historical Knowledge
 
-This work was supported by [grant numbers and funding agencies to be specified].
+We acknowledge the countless generations of agricultural practitioners, from ancient Mesopotamian and Chinese grafters to contemporary horticultural researchers, whose empirical observations and innovations form the foundation of this work.
 
-## Computing Resources
+## Scientific Literature
 
-Computational resources were provided by [institution/facility name], enabling the large-scale experiments reported in Section \ref{sec:experimental_results}.
+This research builds upon foundational works in grafting biology \cite{melnyk2018, goldschmidt2014}, horticultural practice \cite{garner2013, hartmann2014}, and rootstock development \cite{webster2002}, among many others cited throughout this manuscript.
 
-## Collaborations
+## Computational Infrastructure
 
-We thank our collaborators for valuable discussions and feedback throughout the development of this work:
+The computational toolkit was developed using open-source scientific computing resources:
 
-- Prof. [Name], [Institution] - for insights into the theoretical framework
-- Dr. [Name], [Institution] - for providing benchmark datasets
-- [Research Group], [Institution] - for computational infrastructure support
+- Python scientific computing stack (NumPy, SciPy, Matplotlib) for numerical analysis and visualization
+- LaTeX, Pandoc, and XeLaTeX for professional document preparation
+- Research Project Template framework for reproducible research workflows
 
-## Data and Software
+## Traditional Knowledge Systems
 
-This research builds upon open-source software tools and publicly available datasets. We acknowledge:
+We recognize the importance of traditional grafting knowledge systems across cultures—Mediterranean, Asian, Indigenous, and others—whose practices have been refined through millennia of observation and adaptation. This work attempts to honor these traditions by integrating them with modern scientific understanding.
 
-- Python scientific computing stack (NumPy, SciPy, Matplotlib)
-- LaTeX and Pandoc for document preparation
-- Public datasets used in our evaluation
+## Educational Mission
 
-## Feedback and Review
-
-We are grateful to the anonymous reviewers whose constructive feedback significantly improved this manuscript.
-
-## Institutional Support
-
-This research was conducted with the support of [Institution Name], providing research facilities and academic resources essential to this work.
+This project is dedicated to making grafting knowledge accessible to students, practitioners, researchers, and enthusiasts across the agricultural sciences. The integration of comprehensive documentation with practical computational tools aims to support both learning and application.
 
 ---
 
-*All errors and omissions remain the sole responsibility of the authors.*
+*All errors and interpretations remain the sole responsibility of the author. This work represents an ongoing synthesis of grafting science, and contributions, corrections, and extensions are welcomed.*
 
 
 

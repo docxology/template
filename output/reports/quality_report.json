@@ -1,8 +1,10 @@
 {
-  "markdown_issues": [],
+  "markdown_issues": [
+    "Missing equation label for \\eqref{eq:equation_name} in manuscript/02_introduction.md"
+  ],
   "quality_metrics": {},
-  "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x12c9cf8c0>",
-  "reproducibility": "<infrastructure.build.reproducibility.ReproducibilityReport object at 0x12c9cf8c0>",
+  "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x110e284d0>",
+  "reproducibility": "<infrastructure.build.reproducibility.ReproducibilityReport object at 0x110e284d0>",
   "errors": {
     "total_errors": 0,
     "total_warnings": 1,

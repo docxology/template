@@ -74,6 +74,44 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -91,65 +129,106 @@
 
 \section{Introduction}\label{sec:introduction}
 
-\begin{frame}{Overview}
-\protect\phantomsection\label{overview}
-This is an example project that demonstrates the generic repository
-structure for tested code, manuscript editing, and PDF rendering. The
-work presents a novel optimization framework with comprehensive
-theoretical analysis and experimental validation, building upon
-foundational optimization theory \cite{boyd2004, nesterov2018} and
-recent advances in adaptive methods \cite{kingma2014, duchi2011}.
+\begin{frame}{Historical Overview}
+\protect\phantomsection\label{historical-overview}
+Tree grafting stands as one of humanity's most enduring agricultural
+innovations, with archaeological evidence suggesting its practice dates
+to at least 2000 BCE in ancient Mesopotamia and China \cite{garner2013}.
+The technique has been independently developed across multiple
+civilizations, from the sophisticated fruit tree cultivation of ancient
+Rome documented by Cato and Pliny \cite{white1970}, to the elaborate
+grafting practices of imperial Chinese gardens \cite{needham1984}, to
+the traditional knowledge systems of indigenous peoples worldwide. This
+4,000+ year history demonstrates grafting's fundamental importance to
+human agriculture and food security.
 \end{frame}
 
-\begin{frame}[fragile]{Project Structure}
-\protect\phantomsection\label{project-structure}
-The project follows a standardized structure:
+\begin{frame}{Modern Context and Agricultural Importance}
+\protect\phantomsection\label{modern-context-and-agricultural-importance}
+In contemporary agriculture, grafting remains essential for commercial
+fruit and nut production, enabling the combination of desirable scion
+characteristics (fruit quality, yield, disease resistance) with
+rootstock advantages (vigor control, soil adaptation, pest resistance)
+\cite{webster2002, hartmann2014}. The global fruit industry, valued at
+over \$100 billion annually, relies heavily on grafted trees for
+consistent production, quality control, and disease management. Beyond
+commercial agriculture, grafting serves critical roles in ornamental
+horticulture, forest restoration, urban tree management, and
+conservation of rare or endangered species \cite{stebbins1950}.
+\end{frame}
+
+\begin{frame}{Economic Scale and Impact}
+\protect\phantomsection\label{economic-scale-and-impact}
+The economic impact of grafting extends far beyond direct agricultural
+production. Grafted trees enable: - \textbf{Increased productivity}:
+20-40\% yield improvements through optimized rootstock-scion
+combinations - \textbf{Disease resistance}: Protection against
+soil-borne pathogens through resistant rootstocks - \textbf{Climate
+adaptation}: Extension of cultivation ranges through rootstock selection
+- \textbf{Quality consistency}: Uniform fruit characteristics across
+orchards - \textbf{Cost efficiency}: Reduced pesticide use and improved
+resource utilization
+
+These benefits translate to significant economic value, with grafting
+operations representing a multi-billion dollar industry supporting
+millions of livelihoods worldwide.
+\end{frame}
+
+\begin{frame}[fragile]{Project Structure and Objectives}
+\protect\phantomsection\label{project-structure-and-objectives}
+This research project provides both a comprehensive transdisciplinary
+review of tree grafting and a computational toolkit for practical
+application. The project follows a standardized structure:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{\texttt{src/}} - Source code with comprehensive test coverage
+  \textbf{\texttt{src/}} - Source code implementing grafting analysis
+  algorithms, compatibility prediction, biological simulation, and
+  statistical analysis
 \item
-  \textbf{\texttt{tests/}} - Test files ensuring 100\% coverage
+  \textbf{\texttt{tests/}} - Comprehensive test suite ensuring 100\%
+  code coverage
 \item
-  \textbf{\texttt{scripts/}} - Project-specific scripts for generating
-  figures and data
+  \textbf{\texttt{scripts/}} - Analysis scripts for generating figures,
+  running simulations, and creating reports
 \item
   \textbf{\texttt{manuscript/}} - Markdown source files for the
-  manuscript
+  comprehensive review manuscript
 \item
-  \textbf{\texttt{output/}} - Generated outputs (PDFs, figures, data)
-\item
-  \textbf{\texttt{repo\_utilities/}} - Generic utility scripts for any
-  project
+  \textbf{\texttt{output/}} - Generated outputs (PDFs, figures, data,
+  reports)
 \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Key Features}
-\protect\phantomsection\label{key-features}
-\begin{block}{Test-Driven Development}
-\protect\phantomsection\label{test-driven-development}
-All source code must have 100\% test coverage before PDF generation
-proceeds, as enforced by the build system.
+\begin{frame}{Key Features of the Toolkit}
+\protect\phantomsection\label{key-features-of-the-toolkit}
+\begin{block}{Compatibility Prediction}
+\protect\phantomsection\label{compatibility-prediction}
+The toolkit provides algorithms for predicting graft compatibility based
+on phylogenetic distance, cambium characteristics, growth rates, and
+environmental factors, enabling informed rootstock-scion pair selection.
 \end{block}
 
-\begin{block}{Automated Script Execution}
-\protect\phantomsection\label{automated-script-execution}
-Project-specific scripts in the \texttt{scripts/} directory are
-automatically executed to generate figures and data, ensuring
-reproducibility.
+\begin{block}{Biological Process Simulation}
+\protect\phantomsection\label{biological-process-simulation}
+Simulation models capture the temporal dynamics of graft healing,
+including cambium integration, callus formation, and vascular
+connection, providing insights into union development.
 \end{block}
 
-\begin{block}{Markdown to PDF Pipeline}
-\protect\phantomsection\label{markdown-to-pdf-pipeline}
-Individual markdown modules are converted to PDFs, and a combined
-document is generated with proper cross-referencing.
+\begin{block}{Statistical Analysis}
+\protect\phantomsection\label{statistical-analysis}
+Comprehensive statistical tools analyze success rates, factor
+importance, technique comparisons, and survival curves, supporting
+evidence-based decision making.
 \end{block}
 
-\begin{block}{Generic and Reusable}
-\protect\phantomsection\label{generic-and-reusable}
-The utility scripts can be used with any project that follows this
-structure, making it easy to adopt for new research projects.
+\begin{block}{Decision Support Systems}
+\protect\phantomsection\label{decision-support-systems}
+Interactive tools assist with rootstock selection, technique
+recommendation, seasonal planning, and economic analysis, making expert
+knowledge accessible to practitioners.
 \end{block}
 \end{frame}
 
@@ -160,101 +239,91 @@ The manuscript is organized into several key sections:
 \begin{enumerate}
 \tightlist
 \item
-  \textbf{Abstract} (Section \ref{sec:abstract}): Research overview and
-  key contributions
+  \textbf{Abstract} (Section \ref{sec:abstract}): Comprehensive overview
+  of grafting and toolkit contributions
 \item
-  \textbf{Introduction} (Section \ref{sec:introduction}): Overview and
-  project structure
+  \textbf{Introduction} (Section \ref{sec:introduction}): Historical
+  context, modern importance, and project structure
 \item
-  \textbf{Methodology} (Section \ref{sec:methodology}): Mathematical
-  framework and algorithms
+  \textbf{Methodology} (Section \ref{sec:methodology}): Biological
+  mechanisms, grafting techniques, compatibility theory, and
+  computational framework
 \item
   \textbf{Experimental Results} (Section
-  \ref{sec:experimental_results}): Performance evaluation and validation
+  \ref{sec:experimental_results}): Compatibility database results,
+  technique effectiveness, environmental analysis, and model validation
 \item
-  \textbf{Discussion} (Section \ref{sec:discussion}): Theoretical
-  implications and comparisons
+  \textbf{Discussion} (Section \ref{sec:discussion}): Biological
+  insights, technical implications, agricultural applications, and
+  economic considerations
 \item
-  \textbf{Conclusion} (Section \ref{sec:conclusion}): Summary and future
-  directions
+  \textbf{Conclusion} (Section \ref{sec:conclusion}): Synthesis of
+  findings, practical recommendations, and future research directions
 \item
-  \textbf{References} (Section \ref{sec:references}): Bibliography and
-  cited works
+  \textbf{References} (Section \ref{sec:references}): Comprehensive
+  bibliography of grafting literature
 \end{enumerate}
 \end{frame}
 
 \begin{frame}{Example Figure}
 \protect\phantomsection\label{example-figure}
-The following figure was generated by the example script:
+The following figure demonstrates graft union anatomy:
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.8\textwidth]{../output/figures/example_figure.png}
-\caption{Example project figure showing a mathematical function}
-\label{fig:example_figure}
+\includegraphics[width=0.8\textwidth]{../output/figures/graft_anatomy.png}
+\caption{Anatomical diagram showing graft union with cambium alignment between rootstock and scion}
+\label{fig:graft_anatomy}
 \end{figure}
 
-This demonstrates how figures are automatically integrated into the
-manuscript with proper cross-referencing capabilities. The figure shows
-a mathematical function that demonstrates the project's capabilities. As
-shown in Figure \ref{fig:example_figure}, the system generates
-high-quality visualizations that are automatically integrated into the
-manuscript.
+As shown in Figure \ref{fig:graft_anatomy}, successful grafting requires
+precise alignment of the cambium layers, the thin meristematic tissue
+responsible for secondary growth. This alignment enables vascular
+connection and callus formation, ultimately establishing a functional
+union between rootstock and scion.
 \end{frame}
 
-\begin{frame}[fragile]{Data Availability}
-\protect\phantomsection\label{data-availability}
-All generated data is saved alongside figures for reproducibility:
+\begin{frame}[fragile]{Data Availability and Reproducibility}
+\protect\phantomsection\label{data-availability-and-reproducibility}
+All generated data, figures, and analysis results are saved for
+reproducibility:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Figures}: PNG format in \texttt{output/figures/}
+  \textbf{Figures}: PNG and PDF formats in \texttt{output/figures/}
 \item
   \textbf{Data}: NPZ and CSV formats in \texttt{output/data/}
 \item
+  \textbf{Simulations}: JSON and NPZ formats in
+  \texttt{output/simulations/}
+\item
+  \textbf{Reports}: Markdown and HTML formats in
+  \texttt{output/reports/}
+\item
   \textbf{PDFs}: Individual and combined documents in
   \texttt{output/pdf/}
-\item
-  \textbf{LaTeX}: Source files in \texttt{output/tex/}
 \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Usage}
 \protect\phantomsection\label{usage}
-To generate the complete manuscript:
+To generate the complete manuscript and run analyses:
 
-\begin{verbatim}
-# Clean previous outputs
-./repo_utilities/clean_output.sh
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Run complete pipeline (tests + analysis + PDF generation)}
+\ExtensionTok{python3}\NormalTok{ scripts/run\_all.py}
 
-# Generate everything (tests + scripts + PDFs)
-./repo_utilities/render_pdf.sh
-\end{verbatim}
+\CommentTok{\# Or use the shell script}
+\ExtensionTok{./run.sh} \AttributeTok{{-}{-}pipeline}
+\end{Highlighting}
+\end{Shaded}
 
-The system will automatically: 1. Run all tests with 100\% coverage
-requirement 2. Execute project-specific scripts to generate figures and
-data 3. Validate markdown references and images 4. Generate individual
-and combined PDFs 5. Export LaTeX source files
-\end{frame}
-
-\begin{frame}[fragile]{Customization}
-\protect\phantomsection\label{customization}
-This template can be customized for any project by:
-
-\begin{enumerate}
-\tightlist
-\item
-  Adding project-specific scripts to \texttt{scripts/}
-\item
-  Modifying markdown files in \texttt{markdown/}
-\item
-  Setting environment variables for author information
-\item
-  Adjusting LaTeX preamble in \texttt{preamble.md}
-\item
-  Adding new sections with proper cross-references
-\end{enumerate}
+The system automatically: 1. Runs all tests with 100\% coverage
+requirement 2. Executes grafting analysis scripts to generate figures
+and data 3. Validates markdown references and images 4. Generates
+individual and combined PDFs 5. Creates comprehensive reports
 \end{frame}
 
 \begin{frame}[fragile]{Cross-Referencing System}
@@ -264,21 +333,24 @@ The manuscript demonstrates comprehensive cross-referencing:
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Section References}: Use the ref command with \texttt{sec:}
-  prefix for sections
+  \textbf{Section References}: Use
+  \texttt{\textbackslash{}ref\{sec:section\_name\}} for sections
 \item
-  \textbf{Equation References}: Use the eqref command with \texttt{eq:}
-  prefix for equations (see Section \ref{sec:methodology})
+  \textbf{Equation References}: Use
+  \texttt{\textbackslash{}eqref\{eq:equation\_name\}} for equations
 \item
-  \textbf{Figure References}: Use the ref command with figure labels
+  \textbf{Figure References}: Use
+  \texttt{\textbackslash{}ref\{fig:figure\_name\}} for figures
 \item
-  \textbf{Table References}: Use the ref command with \texttt{tab:}
-  prefix for tables
+  \textbf{Table References}: Use
+  \texttt{\textbackslash{}ref\{tab:table\_name\}} for tables
+\item
+  \textbf{Citation References}: Use
+  \texttt{\textbackslash{}cite\{author\_year\}} for literature citations
 \end{itemize}
 
-All references are automatically numbered and updated when the document
-is regenerated. For example, the main objective function
-\eqref{eq:objective} is defined in the methodology section.
+This system ensures proper navigation and maintains consistency
+throughout the document.
 \end{frame}
 
 \end{document}

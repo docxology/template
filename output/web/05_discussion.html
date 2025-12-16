@@ -175,153 +175,201 @@
 </head>
 <body>
 <h1 id="sec:discussion">Discussion</h1>
-<h2 id="theoretical-implications">Theoretical Implications</h2>
-<p>The experimental results presented in Section <span
-class="math inline">\(\ref{sec:experimental_results}\)</span> have
-several important theoretical implications. Our analysis reveals that
-the convergence rate <span
-class="math inline">\(\eqref{eq:convergence}\)</span> is not only
-theoretically sound but also practically achievable.</p>
-<p>The experimental setup shown in Figure <span
-class="math inline">\(\ref{fig:experimental_setup}\)</span> demonstrates
-our comprehensive validation approach, which includes data
-preprocessing, algorithm execution, and performance evaluation.</p>
-<h3 id="convergence-analysis">Convergence Analysis</h3>
-<p>The empirical convergence constants <span class="math inline">\(C
-\approx 1.2\)</span> and <span class="math inline">\(\rho \approx
-0.85\)</span> from our experiments suggest that the theoretical bound
-<span class="math inline">\(\eqref{eq:convergence}\)</span> is tight.
-This is significant because it means our algorithm achieves near-optimal
-performance in practice.</p>
-<p>The adaptive step size strategy <span
-class="math inline">\(\eqref{eq:adaptive_step}\)</span> plays a crucial
-role in this achievement. By dynamically adjusting the learning rate
-based on gradient history, the algorithm maintains stability while
-accelerating convergence.</p>
-<h3 id="complexity-analysis">Complexity Analysis</h3>
-<p>Our theoretical complexity analysis <span class="math inline">\(O(n
-\log n)\)</span> per iteration is validated by the scalability results
-shown in Figure <span
-class="math inline">\(\ref{fig:scalability_analysis}\)</span>. The
-empirical data closely follows the theoretical prediction, confirming
-our analysis.</p>
-<p>The memory scaling <span
-class="math inline">\(\eqref{eq:memory}\)</span> is particularly
-important for large-scale applications. Unlike many competing methods
-that require <span class="math inline">\(O(n^2)\)</span> memory, our
-approach scales linearly with problem size.</p>
-<h2 id="comparison-with-existing-work">Comparison with Existing
-Work</h2>
-<h3 id="state-of-the-art-methods">State-of-the-Art Methods</h3>
-<p>We compared our approach with several state-of-the-art optimization
-methods:</p>
-<ol type="1">
-<li><strong>Gradient Descent</strong>: Standard first-order method with
-fixed step size </li>
-<li><strong>Adam</strong>: Adaptive moment estimation with momentum
-</li>
-<li><strong>L-BFGS</strong>: Limited-memory quasi-Newton method </li>
-<li><strong>Our Method</strong>: Novel approach combining regularization
-and adaptive step sizes</li>
-</ol>
-<p>The results, summarized in Table <span
-class="math inline">\(\ref{tab:performance_comparison}\)</span>,
-demonstrate that our method achieves superior performance across
-multiple metrics.</p>
-<h3 id="key-advantages">Key Advantages</h3>
-<p>Our approach offers several key advantages over existing methods:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:advantage_metric}
-\text{Advantage} = \frac{\text{Performance}_{\text{ours}} -
-\text{Performance}_{\text{baseline}}}{\text{Performance}_{\text{baseline}}}
-\times 100\%
-\end{equation}\]</span></p>
-<p>Using this metric, our method shows an average improvement of 23.7%
-over the best baseline method.</p>
-<h2 id="limitations-and-challenges">Limitations and Challenges</h2>
-<h3 id="theoretical-constraints">Theoretical Constraints</h3>
-<p>While our method performs well in practice, several theoretical
-limitations remain:</p>
-<ol type="1">
-<li><strong>Convexity Assumption</strong>: The convergence guarantee
-<span class="math inline">\(\eqref{eq:convergence}\)</span> requires the
-objective function to be convex</li>
-<li><strong>Lipschitz Continuity</strong>: We assume the gradient is
-Lipschitz continuous with constant <span
-class="math inline">\(L\)</span></li>
-<li><strong>Bounded Domain</strong>: The feasible set <span
-class="math inline">\(\mathcal{X}\)</span> must be bounded</li>
-</ol>
-<h3 id="practical-challenges">Practical Challenges</h3>
-<p>In real-world applications, we encountered several practical
-challenges:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:robustness_metric}
-\text{Robustness} = \frac{\text{Successful runs}}{\text{Total runs}}
-\times 100\%
-\end{equation}\]</span></p>
-<p>Our method achieved a robustness score of 94.3% across diverse
-problem instances, which is competitive with state-of-the-art
-methods.</p>
-<h2 id="future-research-directions">Future Research Directions</h2>
-<h3 id="algorithmic-improvements">Algorithmic Improvements</h3>
-<p>Several promising directions for future research emerged from our
-analysis:</p>
-<ol type="1">
-<li><strong>Non-convex Extensions</strong>: Extending the theoretical
-guarantees to non-convex problems</li>
-<li><strong>Stochastic Variants</strong>: Developing stochastic versions
-for large-scale problems</li>
-<li><strong>Multi-objective Optimization</strong>: Handling multiple
-conflicting objectives</li>
-</ol>
-<h3 id="theoretical-developments">Theoretical Developments</h3>
-<p>The theoretical analysis suggests several areas for future
-development:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:complexity_bound}
-T(n) = O\left(n \log n \cdot \log\left(\frac{1}{\epsilon}\right)\right)
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\epsilon\)</span> is the desired
-accuracy. This bound could potentially be improved through more
-sophisticated analysis techniques.</p>
-<h2 id="broader-impact">Broader Impact</h2>
-<h3 id="scientific-applications">Scientific Applications</h3>
-<p>Our optimization framework has applications across multiple
-scientific domains:</p>
-<ol type="1">
-<li><strong>Machine Learning</strong>: Training large-scale neural
-networks </li>
-<li><strong>Signal Processing</strong>: Sparse signal reconstruction
-</li>
-<li><strong>Computational Biology</strong>: Protein structure
-prediction</li>
-<li><strong>Climate Modeling</strong>: Parameter estimation in complex
-systems </li>
-</ol>
-<h3 id="industry-relevance">Industry Relevance</h3>
-<p>The efficiency improvements demonstrated in our experiments have
-direct implications for industry applications:</p>
+<h2 id="biological-insights">Biological Insights</h2>
+<h3 id="compatibility-mechanisms">Compatibility Mechanisms</h3>
+<p>The strong correlation between phylogenetic distance and graft
+compatibility (<span class="math inline">\(r = -0.75\)</span>) confirms
+that evolutionary relationships are the primary determinant of
+successful graft unions. This relationship reflects shared anatomical
+structures, biochemical pathways, and growth patterns that enable
+vascular integration. Closely related species share similar cambium
+characteristics, vascular anatomy, and hormonal signaling systems,
+facilitating successful union formation .</p>
+<p>The exponential decay model <span
+class="math inline">\(\eqref{eq:phylogenetic_compatibility}\)</span>
+with decay constant <span class="math inline">\(k \approx 2.0\)</span>
+suggests that compatibility decreases rapidly beyond genus-level
+relationships. This finding has practical implications for
+rootstock-scion selection, indicating that intra-generic combinations
+should be prioritized when high success rates are required.</p>
+<h3 id="healing-process-dynamics">Healing Process Dynamics</h3>
+<p>Our simulation models <span
+class="math inline">\(\eqref{eq:healing_dynamics}\)</span>-<span
+class="math inline">\(\eqref{eq:vascular_dynamics}\)</span> capture the
+sequential nature of graft healing: cambium contact must precede callus
+formation, which in turn enables vascular connection. This temporal
+sequence reflects the biological reality that each stage provides the
+foundation for the next, with environmental conditions modulating the
+rate of progression at each stage.</p>
+<p>The model predictions align well with literature-reported healing
+timelines, validating our understanding of the biological processes. The
+exponential growth patterns observed in callus formation and vascular
+connection reflect the self-reinforcing nature of tissue development,
+where established connections facilitate further growth.</p>
+<h2 id="technical-implications">Technical Implications</h2>
+<h3 id="technique-selection-guidelines">Technique Selection
+Guidelines</h3>
+<p>The comparative analysis of grafting techniques reveals clear
+guidelines for technique selection:</p>
 <ul>
-<li><strong>Reduced Computational Costs</strong>: 30% fewer iterations
-translate to significant cost savings</li>
-<li><strong>Scalability</strong>: Linear memory scaling enables larger
-problem sizes</li>
-<li><strong>Robustness</strong>: High success rates reduce the need for
-manual intervention</li>
+<li><strong>Diameter matching</strong>: Whip and tongue requires precise
+diameter matching (within 10%), while cleft and bark grafting tolerate
+larger mismatches</li>
+<li><strong>Rootstock size</strong>: Large diameter rootstock (&gt;20
+mm) favors cleft or bark grafting</li>
+<li><strong>Mass propagation</strong>: Bud grafting offers highest
+efficiency for commercial operations</li>
+<li><strong>Precision requirement</strong>: Whip and tongue demands
+highest skill level but offers best success rates</li>
 </ul>
-<h2 id="conclusion">Conclusion</h2>
-<p>The experimental validation of our theoretical framework demonstrates
-that the novel optimization approach achieves both theoretical
-guarantees and practical performance. The convergence analysis confirms
-the tightness of our bounds, while the scalability results validate our
-complexity analysis. Extended theoretical analysis and additional
-application examples are provided in Sections <span
-class="math inline">\(\ref{sec:supplemental_analysis}\)</span> and <span
-class="math inline">\(\ref{sec:supplemental_applications}\)</span>.</p>
-<p>Future work will focus on extending the theoretical guarantees to
-broader problem classes and developing more sophisticated variants for
-specific application domains. The foundation established here provides a
-solid basis for these developments.</p>
+<p>These findings support evidence-based technique selection, moving
+beyond traditional rules of thumb to data-driven recommendations.</p>
+<h3 id="environmental-management">Environmental Management</h3>
+<p>The environmental analysis demonstrates the critical importance of
+post-grafting care. Optimal conditions (temperature 20-25°C, humidity
+70-90%) can improve success rates by 15-20% compared to suboptimal
+conditions. This finding emphasizes the need for controlled environments
+in commercial grafting operations, particularly for high-value species
+or difficult combinations.</p>
+<p>The environmental suitability model <span
+class="math inline">\(\eqref{eq:environmental_score}\)</span> provides a
+quantitative framework for assessing grafting conditions, enabling
+practitioners to optimize their operations through environmental
+control.</p>
+<h2 id="agricultural-applications">Agricultural Applications</h2>
+<h3 id="commercial-fruit-production">Commercial Fruit Production</h3>
+<p>The economic analysis reveals that grafting operations are highly
+viable, with break-even success rates (17.5%) well below typical
+performance (70-85%). This economic margin provides flexibility for
+experimentation and optimization, supporting innovation in
+rootstock-scion combinations.</p>
+<p>The productivity metrics (8,750-17,000 successful grafts per year per
+worker) demonstrate the scalability of commercial grafting operations.
+Combined with the economic viability, these figures support the
+continued importance of grafting in modern fruit production.</p>
+<h3 id="rootstock-breeding-programs">Rootstock Breeding Programs</h3>
+<p>The compatibility prediction framework enables more efficient
+rootstock breeding programs by identifying promising combinations before
+extensive field trials. The ability to predict compatibility from
+phylogenetic relationships and biological characteristics reduces the
+time and cost of rootstock development, accelerating the introduction of
+improved rootstocks for disease resistance, vigor control, and climate
+adaptation.</p>
+<h3 id="climate-adaptation">Climate Adaptation</h3>
+<p>As climate change alters growing conditions, grafting provides a
+mechanism for rapid adaptation. The ability to combine climate-adapted
+rootstocks with desirable scion characteristics enables extension of
+cultivation ranges and maintenance of production under changing
+conditions. Our seasonal planning algorithms support this adaptation by
+identifying optimal timing windows across different climate zones.</p>
+<h2 id="economic-considerations">Economic Considerations</h2>
+<h3 id="cost-benefit-analysis">Cost-Benefit Analysis</h3>
+<p>The economic analysis demonstrates that grafting operations are
+economically viable across a wide range of success rates. With
+break-even rates around 17.5% and typical success rates of 70-85%,
+grafting operations generate substantial economic returns. The high
+value of successful grafts ($20 per graft) relative to costs ($3.50 per
+attempt) creates strong economic incentives for quality execution and
+optimal technique selection.</p>
+<h3 id="market-dynamics">Market Dynamics</h3>
+<p>The economic viability of grafting supports a robust market for
+grafted plants, with commercial nurseries producing millions of grafted
+trees annually. The ability to predict success rates and optimize
+operations through our computational toolkit can improve profitability
+and reduce waste, benefiting both producers and consumers.</p>
+<h2 id="cultural-and-historical-perspectives">Cultural and Historical
+Perspectives</h2>
+<h3 id="traditional-knowledge-integration">Traditional Knowledge
+Integration</h3>
+<p>The 4,000+ year history of grafting represents a rich repository of
+traditional knowledge that has been refined through generations of
+practice. Our computational framework synthesizes this traditional
+knowledge with modern scientific understanding, creating a bridge
+between empirical practice and theoretical analysis.</p>
+<p>The technique library documents methods that have been passed down
+through generations, preserving this knowledge while making it
+accessible to modern practitioners. This integration of traditional and
+scientific knowledge represents a valuable contribution to agricultural
+science.</p>
+<h3 id="regional-variations">Regional Variations</h3>
+<p>Grafting techniques have evolved differently across regions,
+reflecting local conditions, available species, and cultural practices.
+Our framework accommodates these variations through parameterized models
+that can be adjusted for different contexts, supporting both
+preservation of traditional methods and adaptation to new
+conditions.</p>
+<h2 id="limitations-and-challenges">Limitations and Challenges</h2>
+<h3 id="model-limitations">Model Limitations</h3>
+<p>While our compatibility prediction model shows good accuracy (<span
+class="math inline">\(r = 0.78\)</span>), several limitations
+remain:</p>
+<ol type="1">
+<li><strong>Molecular factors</strong>: Current models do not
+incorporate molecular compatibility markers (DNA, proteins)</li>
+<li><strong>Long-term performance</strong>: Predictions focus on initial
+union formation, not long-term compatibility</li>
+<li><strong>Disease interactions</strong>: Models do not account for
+disease transmission through grafts</li>
+<li><strong>Stress responses</strong>: Limited incorporation of
+stress-induced incompatibility</li>
+</ol>
+<p>These limitations represent opportunities for future research and
+model refinement.</p>
+<h3 id="data-availability">Data Availability</h3>
+<p>The synthetic nature of our trial data, while realistic and based on
+literature parameters, represents a limitation. Validation with
+real-world field trial data would strengthen the model predictions and
+provide more accurate success rate estimates for specific species
+combinations.</p>
+<h3 id="computational-complexity">Computational Complexity</h3>
+<p>While our simulation models provide valuable insights, they simplify
+the complex biological processes involved in graft healing. More
+sophisticated models incorporating molecular-level interactions,
+hormonal signaling, and stress responses could provide deeper
+understanding but would require significantly more computational
+resources.</p>
+<h2 id="future-research-directions">Future Research Directions</h2>
+<h3 id="molecular-compatibility-markers">Molecular Compatibility
+Markers</h3>
+<p>Future research should explore molecular markers for compatibility
+prediction, potentially enabling rapid screening of rootstock-scion
+combinations without extensive field trials. DNA sequencing, proteomic
+analysis, and metabolomic profiling could identify compatibility markers
+that improve prediction accuracy beyond phylogenetic relationships.</p>
+<h3 id="climate-adaptation-strategies">Climate Adaptation
+Strategies</h3>
+<p>As climate change accelerates, research into climate-adapted
+rootstock-scion combinations becomes increasingly important. Our
+framework provides a foundation for this research, but extension to
+incorporate climate projections and adaptation strategies would enhance
+its utility.</p>
+<h3 id="novel-grafting-techniques">Novel Grafting Techniques</h3>
+<p>Development of new grafting techniques for difficult species or
+challenging conditions represents an important research direction. Our
+framework can support this development by providing simulation
+capabilities for testing hypothetical techniques before field
+trials.</p>
+<h3 id="machine-learning-integration">Machine Learning Integration</h3>
+<p>Integration of machine learning methods could improve prediction
+accuracy by identifying complex patterns in compatibility data that are
+not captured by our current models. Large-scale data collection from
+commercial operations could support this development.</p>
+<h2 id="broader-impact">Broader Impact</h2>
+<h3 id="food-security">Food Security</h3>
+<p>Grafting contributes to global food security by enabling efficient
+production of high-quality fruits and nuts. The ability to optimize
+grafting operations through our computational toolkit can improve
+productivity and reduce waste, supporting food security goals.</p>
+<h3 id="conservation-applications">Conservation Applications</h3>
+<p>Grafting enables conservation of rare or endangered species by
+allowing propagation when seed production is limited. Our framework
+supports these conservation efforts by providing compatibility
+predictions and technique recommendations for challenging species.</p>
+<h3 id="educational-value">Educational Value</h3>
+<p>The comprehensive review and computational toolkit provide
+educational resources for students and practitioners. The integration of
+biological mechanisms, historical context, and practical applications
+creates a rich learning environment that supports skill development in
+horticulture and arboriculture.</p>
 </body>
 </html>

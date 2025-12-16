@@ -5,18 +5,21 @@ The manuscript demonstrates comprehensive cross-referencing:
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Section References}: Use the ref command with \texttt{sec:}
-  prefix for sections
+  \textbf{Section References}: Use
+  \texttt{\textbackslash{}ref\{sec:section\_name\}} for sections
 \item
-  \textbf{Equation References}: Use the eqref command with \texttt{eq:}
-  prefix for equations (see Section \ref{sec:methodology})
+  \textbf{Equation References}: Use
+  \texttt{\textbackslash{}eqref\{eq:equation\_name\}} for equations
 \item
-  \textbf{Figure References}: Use the ref command with figure labels
+  \textbf{Figure References}: Use
+  \texttt{\textbackslash{}ref\{fig:figure\_name\}} for figures
 \item
-  \textbf{Table References}: Use the ref command with \texttt{tab:}
-  prefix for tables
+  \textbf{Table References}: Use
+  \texttt{\textbackslash{}ref\{tab:table\_name\}} for tables
+\item
+  \textbf{Citation References}: Use
+  \texttt{\textbackslash{}cite\{author\_year\}} for literature citations
 \end{itemize}
 
-All references are automatically numbered and updated when the document
-is regenerated. For example, the main objective function
-\eqref{eq:objective} is defined in the methodology section.
+This system ensures proper navigation and maintains consistency
+throughout the document.

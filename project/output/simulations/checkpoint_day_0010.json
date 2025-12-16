@@ -1,0 +1,112 @@
+{
+  "day": 10,
+  "parameters": {
+    "temperature": 22.0,
+    "humidity": 0.8,
+    "compatibility": 0.8,
+    "rootstock_diameter": 15.0,
+    "scion_diameter": 15.0,
+    "technique": "whip",
+    "technique_quality": 0.8,
+    "month": 3,
+    "species_type": "temperate",
+    "max_days": 45
+  },
+  "cambium_contact": 0.6765352271869826,
+  "callus_formation": 0.18884862421380222,
+  "vascular_connection": 0.0,
+  "union_strength": 0.20769212433618833,
+  "results": {
+    "day_0": {
+      "cambium_contact": 0.5019648,
+      "callus_formation": 0.015902244864,
+      "vascular_connection": 0.0,
+      "union_strength": 0.12428809076735998,
+      "temperature": 22.0,
+      "humidity": 0.8
+    },
+    "day_1": {
+      "cambium_contact": 0.523001806848,
+      "callus_formation": 0.032207462624341654,
+      "vascular_connection": 0.0,
+      "union_strength": 0.13325022467336198,
+      "temperature": 22.0,
+      "humidity": 0.8
+    },
+    "day_2": {
+      "cambium_contact": 0.5431502105267405,
+      "callus_formation": 0.04886026752730419,
+      "vascular_connection": 0.0,
+      "union_strength": 0.14208251473297073,
+      "temperature": 22.0,
+      "humidity": 0.8
+    },
+    "day_3": {
+      "cambium_contact": 0.5624475456340909,
+      "callus_formation": 0.06580799699941588,
+      "vascular_connection": 0.0,
+      "union_strength": 0.15078133023204165,
+      "temperature": 22.0,
+      "humidity": 0.8
+    },
+    "day_4": {
+      "cambium_contact": 0.580929761306507,
+      "callus_formation": 0.08300073101363671,
+      "vascular_connection": 0.0,
+      "union_strength": 0.15934331815683447,
+      "temperature": 22.0,
+      "humidity": 0.8
+    },
+    "day_5": {
+      "cambium_contact": 0.5986312881889201,
+      "callus_formation": 0.10039129130563634,
+      "vascular_connection": 0.0,
+      "union_strength": 0.16776541907869355,
+      "temperature": 22.0,
+      "humidity": 0.8
+    },
+    "day_6": {
+      "cambium_contact": 0.6155851025758201,
+      "callus_formation": 0.1179352228905171,
+      "vascular_connection": 0.0,
+      "union_strength": 0.17604487811192093,
+      "temperature": 22.0,
+      "humidity": 0.8
+    },
+    "day_7": {
+      "cambium_contact": 0.6318227878430175,
+      "callus_formation": 0.1355907601790332,
+      "vascular_connection": 0.0,
+      "union_strength": 0.18417925152529216,
+      "temperature": 22.0,
+      "humidity": 0.8
+    },
+    "day_8": {
+      "cambium_contact": 0.6473745932845284,
+      "callus_formation": 0.15331877983534942,
+      "vascular_connection": 0.0,
+      "union_strength": 0.19216640954877068,
+      "temperature": 22.0,
+      "humidity": 0.8
+    },
+    "day_9": {
+      "cambium_contact": 0.6622694904641899,
+      "callus_formation": 0.17108274235891427,
+      "vascular_connection": 0.0,
+      "union_strength": 0.200004535877545,
+      "temperature": 22.0,
+      "humidity": 0.8
+    },
+    "day_10": {
+      "cambium_contact": 0.6765352271869826,
+      "callus_formation": 0.18884862421380222,
+      "vascular_connection": 0.0,
+      "union_strength": 0.20769212433618833,
+      "temperature": 22.0,
+      "humidity": 0.8
+    }
+  },
+  "metadata": {},
+  "timestamp": "2025-12-16 12:28:36",
+  "seed": 42
+}

@@ -1,13 +1,33 @@
-\frametitle{Reproducibility Infrastructure}
-\protect\phantomsection\label{reproducibility-infrastructure}
-All methodological steps are paired with automated quality gates
-provided by the infrastructure layer. Figure generation is registered
-via \texttt{FigureManager} to ensure cross-references resolve, and
-\texttt{validate\_markdown} checks anchors, equations, and labels before
-rendering. A preflight stage evaluates glossary injection markers and
-bibliography blocks, while \texttt{analyze\_document\_quality} supplies
-readability and structural metrics that are reported in the quality
-report. Output integrity (\texttt{verify\_output\_integrity}) is
-executed after each scripted stage to ensure generated artifacts match
-expectations, making the methodological pipeline reproducible across
-runs.
+\frametitle{Implementation Details}
+\protect\phantomsection\label{implementation-details}
+The computational toolkit implements these models through modular Python
+packages:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{\texttt{graft\_basics.py}}: Core grafting calculations and
+  compatibility checks
+\item
+  \textbf{\texttt{biological\_simulation.py}}: Simulation framework for
+  healing processes
+\item
+  \textbf{\texttt{compatibility\_prediction.py}}: Compatibility
+  prediction algorithms
+\item
+  \textbf{\texttt{species\_database.py}}: Database of species
+  compatibility information
+\item
+  \textbf{\texttt{technique\_library.py}}: Encyclopedia of grafting
+  techniques
+\item
+  \textbf{\texttt{graft\_statistics.py}}: Statistical analysis of
+  grafting outcomes
+\item
+  \textbf{\texttt{graft\_analysis.py}}: Factor analysis and outcome
+  evaluation
+\end{itemize}
+
+All implementations follow the thin orchestrator pattern, with business
+logic in \texttt{src/} modules and orchestration in \texttt{scripts/}
+files, ensuring maintainability and testability.

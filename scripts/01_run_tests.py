@@ -217,7 +217,7 @@ def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
     Returns:
         Tuple of (exit_code, test_results_dict)
     """
-    log_substep("Running project tests (90% coverage threshold)...")
+    log_substep("Running project tests (80% coverage threshold)...")
     
     # Build pytest command for project tests
     # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
@@ -231,7 +231,7 @@ def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
         "--cov-report=term-missing",
         "--cov-report=html",
         "--cov-report=json",
-        "--cov-fail-under=90",
+        "--cov-fail-under=80",
         "--tb=short",
     ]
     

@@ -1,4 +1,4 @@
-"""Test package-level imports and API exposure for scientific layer.
+"""Test package-level imports and API exposure for tree grafting toolkit.
 
 This module ensures that package-level imports from project.src are properly
 exposed through the __init__.py file and that package metadata is correct.
@@ -15,44 +15,49 @@ class TestPackageLevelImports:
         """Test that core functions are accessible from package level."""
         # Import from package level (tests __init__.py)
         from src import (
-            add_numbers,
-            calculate_average,
+            check_cambium_alignment,
+            calculate_graft_angle,
+            estimate_callus_formation_time,
         )
         
         # Verify functions work
-        assert add_numbers(2, 3) == 5
-        assert calculate_average([1, 2, 3]) == 2.0
+        is_compat, ratio = check_cambium_alignment(15.0, 15.0)
+        assert is_compat is True
+        assert ratio == pytest.approx(1.0)
+        
+        angle = calculate_graft_angle(15.0, 15.0, "whip")
+        assert angle == 35.0
 
     def test_class_imports(self) -> None:
         """Test that core classes are accessible from package level."""
         from src import (
-            SimpleSimulation,
-            SimulationBase,
-            VisualizationEngine,
+            CambiumIntegrationSimulation,
+            GraftSimulationBase,
+            GraftVisualizationEngine,
         )
         
         # Verify classes exist and can be instantiated
-        assert SimpleSimulation is not None
-        assert SimulationBase is not None
-        assert VisualizationEngine is not None
+        assert CambiumIntegrationSimulation is not None
+        assert GraftSimulationBase is not None
+        assert GraftVisualizationEngine is not None
         
-        # Verify VisualizationEngine can be created
-        engine = VisualizationEngine(output_dir=".")
+        # Verify GraftVisualizationEngine can be created
+        engine = GraftVisualizationEngine(output_dir=".")
         assert engine is not None
 
     def test_statistics_imports(self) -> None:
         """Test that statistics functions are accessible from package level."""
-        from src import calculate_descriptive_stats
+        from src import calculate_graft_statistics
         
         import numpy as np
         
         # Test statistics function
-        data = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
-        stats = calculate_descriptive_stats(data)
+        success = np.array([1, 1, 0, 1, 0])
+        stats = calculate_graft_statistics(success)
         
         assert stats is not None
-        assert hasattr(stats, 'mean')
-        assert stats.mean == 3.0
+        assert "success" in stats
+        assert stats["success"].success_rate == 0.6
 
     def test_package_metadata(self) -> None:
         """Test that package metadata is properly defined."""
@@ -76,18 +81,24 @@ class TestPackageLevelImports:
         
         # Verify expected modules are in __all__
         expected_modules = [
-            "example",
-            "simulation",
-            "statistics",
-            "data_generator",
-            "data_processing",
-            "metrics",
-            "parameters",
-            "performance",
-            "plots",
-            "reporting",
-            "validation",
-            "visualization",
+            "graft_basics",
+            "biological_simulation",
+            "graft_statistics",
+            "graft_data_generator",
+            "graft_data_processing",
+            "graft_metrics",
+            "graft_parameters",
+            "graft_analysis",
+            "graft_plots",
+            "graft_reporting",
+            "graft_validation",
+            "graft_visualization",
+            "compatibility_prediction",
+            "species_database",
+            "technique_library",
+            "rootstock_analysis",
+            "seasonal_planning",
+            "economic_analysis",
         ]
         
         for module in expected_modules:
@@ -106,20 +117,4 @@ class TestPackageLevelImports:
         import src as pkg
         
         assert pkg.__doc__ is not None
-        assert "scientific" in pkg.__doc__.lower()
-        assert "layer" in pkg.__doc__.lower()
-
-    def test_import_error_fallback(self) -> None:
-        """Test that ImportError fallback doesn't break package loading.
-        
-        This tests that even if individual imports fail, the package
-        still loads gracefully (the except clause in __init__.py).
-        """
-        # This test verifies that the try/except block exists and works
-        # The pass statement ensures graceful failure
-        import src as pkg
-        
-        # Verify that despite potential import errors, the package works
-        assert hasattr(pkg, '__version__')
-        assert hasattr(pkg, '__all__')
-
+        assert "grafting" in pkg.__doc__.lower() or "tree" in pkg.__doc__.lower()

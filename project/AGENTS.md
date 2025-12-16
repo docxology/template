@@ -1,8 +1,8 @@
-# Project - Complete Research Unit
+# Tree Grafting Research Project - Complete Research Unit
 
 ## Overview
 
-This is a complete, self-contained scientific research project. Everything needed for the research is in this folder:
+This is a complete, self-contained scientific research project on **tree grafting science and practice**. The project provides both a comprehensive transdisciplinary review and a computational toolkit for practical application. Everything needed for the research is in this folder:
 
 - **src/** - Scientific algorithms and analysis code
 - **tests/** - Test suite (100% coverage)
@@ -12,6 +12,14 @@ This is a complete, self-contained scientific research project. Everything neede
 - **output/** - Generated results (figures, data, PDFs)
 
 This folder can be copied as a complete unit to start new research based on this work.
+
+**Research Focus:**
+- Biological mechanisms of graft union formation (cambium integration, callus formation, vascular connection)
+- Grafting techniques (whip & tongue, cleft, bark, bud, approach, bridge, inarching)
+- Compatibility prediction based on phylogenetic relationships, cambium characteristics, and growth rates
+- Species database with 15+ major fruit tree species
+- Economic analysis and decision support systems
+- Synthesis of 4,000+ years of grafting knowledge across cultures and civilizations
 
 ## Architecture
 

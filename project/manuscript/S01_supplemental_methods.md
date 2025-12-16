@@ -2,164 +2,228 @@
 
 This section provides detailed methodological information that supplements Section \ref{sec:methodology}.
 
-## S1.1 Extended Algorithm Variants
+## S1.1 Extended Grafting Techniques
 
-### S1.1.1 Stochastic Variant
+### S1.1.1 Approach Grafting
 
-For large-scale problems, we developed a stochastic variant of our algorithm:
+Approach grafting (also called inarching) involves joining two growing plants while both remain on their own roots, then severing the scion from its roots after union formation. This technique is particularly useful for difficult-to-graft species or when precise alignment is challenging.
 
-\begin{equation}\label{eq:stochastic_update}
-x_{k+1} = x_k - \alpha_k \nabla f_{i_k}(x_k) + \beta_k (x_k - x_{k-1})
-\end{equation}
+**Procedure**:
+1. Select healthy rootstock and scion plants in close proximity
+2. Make matching cuts on both plants (30-40° angle)
+3. Align cambium layers and secure together
+4. Allow union to form over 4-8 weeks
+5. Gradually reduce scion root system
+6. Sever scion from its roots after full union establishment
 
-where $i_k$ is a randomly sampled index from $\{1, \ldots, n\}$ at iteration $k$.
+**Success Rate**: 70-80% for compatible species, 50-60% for difficult combinations
 
-**Convergence Analysis**: Under appropriate sampling strategies, this variant achieves $O(1/\sqrt{k})$ convergence rate for non-strongly convex problems, following the analysis in \cite{kingma2014, ruder2016}.
+### S1.1.2 Bridge Grafting
 
-### S1.1.2 Mini-Batch Variant
+Bridge grafting is used to repair damaged bark by bridging wounds with scion pieces. This technique is essential for tree rescue operations and bark damage repair.
 
-To balance between computational efficiency and convergence speed:
+**Procedure**:
+1. Prepare damaged area by cleaning and removing dead tissue
+2. Make cuts above and below the damaged region
+3. Prepare scion pieces (typically 2-4 pieces depending on wound size)
+4. Insert scion pieces to bridge the gap, aligning cambium
+5. Secure and seal all connections
+6. Monitor and protect until union forms
 
-\begin{equation}\label{eq:minibatch_update}
-x_{k+1} = x_k - \alpha_k \frac{1}{|B_k|} \sum_{i \in B_k} \nabla f_i(x_k) + \beta_k (x_k - x_{k-1})
-\end{equation}
+**Success Rate**: 60-70% depending on wound severity and timing
 
-where $B_k \subset \{1, \ldots, n\}$ is a mini-batch of size $|B_k| = b$.
+### S1.1.3 Inarching
 
-## S1.2 Detailed Convergence Analysis
+Inarching involves grafting rootstock seedlings to established trees to add roots, improving root system health and stability.
 
-### S1.2.1 Strong Convexity Assumptions
+**Procedure**:
+1. Prepare rootstock seedlings (typically 1-2 years old)
+2. Make matching cuts on tree and rootstock
+3. Join and secure with cambium alignment
+4. Allow union to form (6-12 weeks)
+5. Rootstock provides additional root system support
 
-We assume the objective function $f$ satisfies:
+**Success Rate**: 65-75% for compatible species
 
-\begin{equation}\label{eq:strong_convexity_detailed}
-f(y) \geq f(x) + \nabla f(x)^T (y - x) + \frac{\mu}{2} \|y - x\|^2, \quad \forall x, y \in \mathcal{X}
-\end{equation}
+## S1.2 Detailed Technique Protocols
 
-where $\mu > 0$ is the strong convexity parameter.
+### S1.2.1 Whip and Tongue Grafting - Step by Step
 
-### S1.2.2 Lipschitz Continuity
+**Materials Required**:
+- Sharp grafting knife
+- Grafting tape or wax
+- Rootstock and scion of matching diameter
+- Protective covering
 
-The gradient is Lipschitz continuous:
+**Detailed Steps**:
 
-\begin{equation}\label{eq:lipschitz_detailed}
-\|\nabla f(x) - \nabla f(y)\| \leq L \|x - y\|, \quad \forall x, y \in \mathcal{X}
-\end{equation}
+1. **Rootstock Preparation**:
+   - Select healthy rootstock with diameter 5-25 mm
+   - Make 30-45° angle cut, 2-3 cm long
+   - Create tongue (notch) 1/3 from top of cut, 1 cm deep
 
-The condition number $\kappa = L/\mu$ determines the convergence rate: $\rho = \sqrt{1 - 1/\kappa}$, as established in \cite{nesterov2018, boyd2004}.
+2. **Scion Preparation**:
+   - Select dormant scion with 2-4 buds
+   - Make matching angle cut and tongue
+   - Ensure cambium is visible on both sides
 
-## S1.3 Additional Theoretical Results
+3. **Joining**:
+   - Insert scion tongue into rootstock notch
+   - Align cambium layers precisely on both sides
+   - Ensure tight fit with no gaps
 
-### S1.3.1 Worst-Case Complexity Bounds
+4. **Securing**:
+   - Wrap with grafting tape, starting below union
+   - Overlap tape by 50% for complete coverage
+   - Seal exposed surfaces with grafting wax
 
-**Theorem S1**: Under the assumptions of Lipschitz continuity and strong convexity, the algorithm requires at most $O(\kappa \log(1/\epsilon))$ iterations to achieve $\epsilon$-accuracy.
+5. **Post-Grafting Care**:
+   - Protect from direct sunlight
+   - Maintain humidity 70-90%
+   - Monitor for 4-6 weeks
+   - Remove tape after union forms
 
-**Proof**: From the convergence rate \eqref{eq:convergence}, we have:
+### S1.2.2 Cleft Grafting - Detailed Protocol
 
-\begin{equation}\label{eq:iterations_bound}
-\|x_k - x^*\| \leq C \rho^k \leq \epsilon \Rightarrow k \geq \frac{\log(C/\epsilon)}{\log(1/\rho)} = O(\kappa \log(1/\epsilon))
-\end{equation}
+**Optimal Conditions**:
+- Rootstock diameter: 10-50 mm
+- Timing: Late winter to early spring
+- Temperature: 15-25°C
+- Humidity: 70-85%
 
-since $\log(1/\rho) \approx 1/\kappa$ for small $1/\kappa$. $\square$
+**Procedure Details**:
 
-### S1.3.2 Expected Convergence for Stochastic Variants
+1. **Rootstock Preparation**:
+   - Cut rootstock horizontally at desired height
+   - Make vertical split 3-5 cm deep using grafting tool
+   - Keep split open with wedge if needed
 
-For the stochastic variant \eqref{eq:stochastic_update}:
+2. **Scion Preparation**:
+   - Select scion with 2-3 buds
+   - Make wedge-shaped cut (30-40° angle on both sides)
+   - Ensure cambium exposed on both sides of wedge
 
-\begin{equation}\label{eq:stochastic_convergence}
-\mathbb{E}[\|x_k - x^*\|^2] \leq \frac{C}{k} + \sigma^2
-\end{equation}
+3. **Insertion**:
+   - Insert scion into cleft, aligning cambium on one side
+   - For large rootstock, insert 2 scions (one on each side)
+   - Remove wedge and allow rootstock to close
 
-where $\sigma^2$ is the variance of the stochastic gradient estimates.
+4. **Sealing**:
+   - Apply grafting wax to all exposed surfaces
+   - Cover entire union area
+   - Protect from weather
 
-## S1.4 Implementation Considerations
+## S1.3 Regional Variations and Adaptations
 
-### S1.4.1 Numerical Stability
+### S1.3.1 Mediterranean Techniques
 
-To ensure numerical stability, we implement the following safeguards:
+Mediterranean grafting practices emphasize:
+- Timing: Late fall to early spring
+- Emphasis on olive and citrus grafting
+- Use of traditional tools (grafting knives, waxes)
+- Emphasis on water management post-grafting
 
-1. **Gradient clipping**: $\nabla f(x_k) \leftarrow \min(1, \theta/\|\nabla f(x_k)\|) \nabla f(x_k)$
-2. **Step size bounds**: $\alpha_{\min} \leq \alpha_k \leq \alpha_{\max}$
-3. **Momentum bounds**: $0 \leq \beta_k \leq \beta_{\max} < 1$
+### S1.3.2 Asian Techniques
 
-### S1.4.2 Initialization Strategies
+Asian grafting traditions include:
+- Emphasis on precision and alignment
+- Use of specialized tools for delicate operations
+- Integration with traditional agricultural calendars
+- Focus on ornamental and fruit tree combinations
 
-We tested three initialization strategies:
+### S1.3.3 Tropical Adaptations
 
-1. **Random**: $x_0 \sim \mathcal{N}(0, I)$
-2. **Warm start**: $x_0 = \text{solution from simpler problem}$
-3. **Problem-specific**: $x_0 = \text{domain knowledge-based initialization}$
+Tropical grafting adaptations:
+- Year-round grafting potential
+- Emphasis on humidity management
+- Protection from intense sunlight
+- Disease prevention measures
 
-Results show that warm start initialization reduces iterations by approximately 30% for related problem instances.
+## S1.4 Tool Specifications and Requirements
 
-## S1.5 Extended Mathematical Framework
+### S1.4.1 Grafting Knives
 
-### S1.5.1 Generalized Objective Function
+**Essential Characteristics**:
+- Sharp, single-bevel blade
+- Blade length: 5-8 cm
+- Handle: Comfortable grip, non-slip
+- Material: High-carbon steel or stainless steel
 
-The framework extends to more general objectives:
+**Maintenance**:
+- Regular sharpening to maintain edge
+- Sterilization between uses
+- Proper storage to prevent rust
 
-\begin{equation}\label{eq:general_objective}
-f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \sum_{j=1}^{m} \lambda_j R_j(x) + \sum_{k=1}^{p} \gamma_k C_k(x)
-\end{equation}
+### S1.4.2 Grafting Tape and Wax
 
-where:
-- $\phi_i(x)$: Data fitting terms
-- $R_j(x)$: Regularization terms (e.g., $\ell_1$, $\ell_2$, elastic net)
-- $C_k(x)$: Constraint terms (penalty or barrier functions)
+**Grafting Tape**:
+- Material: Polyethylene or rubber-based
+- Width: 1-2 cm
+- Stretchability: 200-300% elongation
+- UV resistance for outdoor use
 
-### S1.5.2 Adaptive Weight Selection
+**Grafting Wax**:
+- Composition: Beeswax, resin, and oil
+- Melting point: 60-70°C
+- Application temperature: 80-90°C
+- Protection duration: 3-6 months
 
-Weights $w_i$ can be adapted during optimization:
+## S1.5 Specialized Grafting Methods
 
-\begin{equation}\label{eq:adaptive_weights}
-w_i^{(k+1)} = w_i^{(k)} \cdot \exp\left(-\gamma \frac{|\phi_i(x_k)|}{|\phi(x_k)|}\right)
-\end{equation}
+### S1.5.1 Nurse Seed Grafting
 
-This reweighting scheme gives more emphasis to terms that are harder to optimize.
+Used for difficult species or very young rootstock:
+- Graft scion to temporary nurse plant
+- Allow union to form
+- Transfer to permanent rootstock
+- Success rate: 50-65%
 
-## S1.6 Convergence Diagnostics
+### S1.5.2 Four-Flap Grafting
 
-### S1.6.1 Diagnostic Criteria
+Advanced technique for large diameter rootstock:
+- Create four flaps on rootstock
+- Prepare scion with matching cuts
+- Insert and align cambium
+- Success rate: 70-80%
 
-We monitor the following quantities for convergence:
+### S1.5.3 Chip Budding
 
-1. **Gradient norm**: $\|\nabla f(x_k)\| < \epsilon_g$
-2. **Step size**: $\|x_{k+1} - x_k\| < \epsilon_x$
-3. **Function improvement**: $|f(x_{k+1}) - f(x_k)| < \epsilon_f$
-4. **Relative improvement**: $|f(x_{k+1}) - f(x_k)|/|f(x_k)| < \epsilon_r$
+Variation of bud grafting:
+- Remove chip of bark with bud
+- Insert into matching cut on rootstock
+- Simpler than T-budding
+- Success rate: 75-85%
 
-All four criteria must be satisfied for declared convergence.
+## S1.6 Quality Control Measures
 
-### S1.6.2 Failure Detection
+### S1.6.1 Pre-Grafting Assessment
 
-Algorithm failure is detected if:
+Before grafting, assess:
+- Rootstock health and vigor
+- Scion quality and dormancy
+- Diameter matching (within 10-20%)
+- Environmental conditions
+- Tool condition and sterility
 
-1. Maximum iterations exceeded
-2. Step size becomes too small ($\alpha_k < \alpha_{\min}$)
-3. NaN or Inf values encountered
-4. Objective function increases for consecutive iterations
+### S1.6.2 Post-Grafting Monitoring
 
-## S1.7 Parameter Sensitivity
+Monitor grafts for:
+- Union formation (visual inspection)
+- Callus development (4-7 days)
+- Vascular connection (14-28 days)
+- Scion growth initiation
+- Signs of rejection or disease
 
-Detailed sensitivity analysis for each parameter:
+### S1.6.3 Success Evaluation
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Parameter} & \textbf{Nominal} & \textbf{Range} & \textbf{Impact on Performance} \\
-\hline
-$\alpha_0$ & 0.01 & [0.001, 0.1] & High (±30\%) \\
-$\beta$ & 0.9 & [0.5, 0.99] & Medium (±15\%) \\
-$\lambda$ & 0.001 & [0, 0.01] & Low (±5\%) \\
-\hline
-\end{tabular}
-\caption{Parameter sensitivity analysis results}
-\label{tab:parameter_sensitivity_detailed}
-\end{table}
+Evaluate success at:
+- **30 days**: Initial union formation
+- **60 days**: Vascular connection established
+- **90 days**: Full union strength
+- **1 year**: Long-term compatibility
 
-The learning rate $\alpha_0$ has the strongest impact on convergence speed, while regularization $\lambda$ primarily affects the final solution quality rather than convergence dynamics.
-
-
-
-
+Success criteria:
+- Visible callus formation
+- Scion bud break and growth
+- No signs of rejection
+- Strong union (resistance to movement)

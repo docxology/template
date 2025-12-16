@@ -11,10 +11,10 @@
 
 paper:
   # Main paper title (required for PDF generation)
-  title: "Novel Optimization Framework for Machine Learning"
+  title: "Tree Grafting Science and Practice: Biological Mechanisms, Computational Analysis, and Decision Support Framework"
   
   # Optional subtitle (appears below main title)
-  subtitle: "A Comprehensive Approach to Large-Scale Problems"
+  subtitle: "A Comprehensive Synthesis of 4,000 Years of Agricultural Knowledge"
   
   # Paper version (for tracking revisions)
   version: "1.0"
@@ -26,23 +26,23 @@ paper:
 # Supports single or multiple authors
 authors:
   # Primary/Corresponding author
-  - name: "Dr. Jane Smith"
-    orcid: "0000-0000-0000-1234"  # ORCID identifier
-    email: "jane.smith@university.edu"
-    affiliation: "Department of Computer Science, University of Example"
+  - name: "InferAnt #016"
+    orcid: "0000-0000-0000-0000"  # ORCID identifier
+    email: "inferant016@research.ai"
+    affiliation: "Computational Agricultural Systems Laboratory"
     corresponding: true  # Mark as corresponding author
 
   # Additional authors (uncomment and modify as needed)
   # - name: "Dr. John Doe"
   #   orcid: "0000-0000-0000-5678"
   #   email: "john.doe@university.edu"
-  #   affiliation: "Department of Mathematics, Another University"
+  #   affiliation: "Department of Horticulture, University Example"
   #   corresponding: false
 
   # - name: "Dr. Alice Johnson"
   #   orcid: "0000-0000-0000-9012"
   #   email: "alice.johnson@research.org"
-  #   affiliation: "Research Institute"
+  #   affiliation: "Agricultural Research Institute"
   #   corresponding: false
 
 # Publication information (optional - for published papers)
@@ -52,10 +52,10 @@ publication:
   doi: ""
   
   # Journal or conference name
-  journal: "Journal of Example Research"
+  journal: ""
   
   # Journal volume
-  volume: "42"
+  volume: ""
   
   # Page numbers (e.g., "123-145")
   pages: ""
@@ -65,11 +65,13 @@ publication:
 
 # Keywords for metadata and searchability
 keywords:
-  - "optimization"
-  - "machine learning"
-  - "convex optimization"
-  - "adaptive algorithms"
-  - "large-scale problems"
+  - "tree grafting"
+  - "horticultural science"
+  - "compatibility prediction"
+  - "computational agriculture"
+  - "plant propagation"
+  - "rootstock selection"
+  - "decision support systems"
 
 # Additional metadata
 metadata:

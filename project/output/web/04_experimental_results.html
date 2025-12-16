@@ -168,6 +168,71 @@
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <script defer=""
   src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
@@ -175,134 +240,228 @@
 </head>
 <body>
 <h1 id="sec:experimental_results">Experimental Results</h1>
-<h2 id="experimental-setup">Experimental Setup</h2>
-<p>Our experimental evaluation follows the methodology described in
-Section <span class="math inline">\(\ref{sec:methodology}\)</span>. We
-implemented the algorithm in Python using the framework outlined in
-Section <span class="math inline">\(\ref{sec:methodology}\)</span>, with
-all code available in the <code>src/</code> directory.</p>
-<p>The experiments were conducted on a diverse set of benchmark
-problems, ranging from small-scale optimization tasks to large-scale
-machine learning problems. Figure <span
-class="math inline">\(\ref{fig:experimental_setup}\)</span> illustrates
-our experimental pipeline, which includes data preprocessing, algorithm
-execution, and performance evaluation.</p>
-<h2 id="benchmark-datasets">Benchmark Datasets</h2>
-<p>We evaluated our approach on three main categories of problems:</p>
+<h2 id="compatibility-database-results">Compatibility Database
+Results</h2>
+<h3 id="species-pair-analysis">Species Pair Analysis</h3>
+<p>Our compatibility database includes analysis of 15 major fruit tree
+species, generating a comprehensive compatibility matrix. Figure <span
+class="math inline">\(\ref{fig:compatibility_matrix}\)</span> shows the
+compatibility heatmap, where values represent predicted success
+probabilities for rootstock-scion pairs.</p>
+<p>The analysis reveals several key patterns:</p>
 <ol type="1">
-<li><strong>Convex Optimization</strong>: Standard test functions from
-the optimization literature</li>
-<li><strong>Non-convex Problems</strong>: Challenging landscapes with
-multiple local minima</li>
-<li><strong>Large-scale Problems</strong>: High-dimensional problems
-with <span class="math inline">\(n \geq 10^6\)</span></li>
+<li><strong>Intra-generic compatibility</strong>: Species within the
+same genus (e.g., <em>Malus</em> spp.) show high compatibility
+(0.85-0.95)</li>
+<li><strong>Inter-generic compatibility</strong>: Cross-genus
+combinations show moderate compatibility (0.60-0.80) when
+phylogenetically close</li>
+<li><strong>Distant relationships</strong>: Combinations across families
+show low compatibility (&lt;0.50)</li>
 </ol>
-<p>The problem characteristics are summarized in Table <span
-class="math inline">\(\ref{tab:dataset_summary}\)</span>.</p>
-<h2 id="performance-comparison">Performance Comparison</h2>
-<h3 id="convergence-analysis">Convergence Analysis</h3>
+<h3 id="phylogenetic-distance-correlation">Phylogenetic Distance
+Correlation</h3>
+<p>Analysis of 500 synthetic grafting trials demonstrates a strong
+negative correlation (<span class="math inline">\(r = -0.75\)</span>,
+<span class="math inline">\(p &lt; 0.001\)</span>) between phylogenetic
+distance and success rate, confirming that phylogenetic relationships
+are the primary predictor of graft compatibility. This relationship
+follows the exponential decay model <span
+class="math inline">\(\eqref{eq:phylogenetic_compatibility}\)</span>
+with decay constant <span class="math inline">\(k = 2.1 \pm
+0.2\)</span>.</p>
+<h2 id="technique-effectiveness">Technique Effectiveness</h2>
+<h3 id="comparative-success-rates">Comparative Success Rates</h3>
 <p>Figure <span
-class="math inline">\(\ref{fig:convergence_plot}\)</span> shows the
-convergence behavior of our algorithm compared to baseline methods . The
-results demonstrate that our approach achieves the theoretical
-convergence rate <span
-class="math inline">\(\eqref{eq:convergence}\)</span> in practice, with
-empirical constants <span class="math inline">\(C \approx 1.2\)</span>
-and <span class="math inline">\(\rho \approx 0.85\)</span>, matching
-predictions from convex optimization theory .</p>
-<p>The adaptive step size rule <span
-class="math inline">\(\eqref{eq:adaptive_step}\)</span> proves crucial
-for stable convergence, as shown in the detailed analysis in Figure
-<span class="math inline">\(\ref{fig:step_size_analysis}\)</span>.</p>
-<h3 id="computational-efficiency">Computational Efficiency</h3>
-<p>Our implementation achieves the theoretical <span
-class="math inline">\(O(n \log n)\)</span> complexity per iteration, as
-demonstrated in Figure <span
-class="math inline">\(\ref{fig:scalability_analysis}\)</span>. The
-memory usage follows the predicted scaling <span
-class="math inline">\(\eqref{eq:memory}\)</span>, making our method
-suitable for problems that don’t fit in main memory.</p>
-<p>Table <span
-class="math inline">\(\ref{tab:performance_comparison}\)</span> provides
-a detailed comparison with state-of-the-art methods across different
-problem sizes.</p>
-<h2 id="automated-quality-validation">Automated Quality Validation</h2>
-<p>Each experiment is accompanied by infrastructure checks: figure
-references are validated via <code>validate_figure_registry</code>,
-manuscript anchors and equations are scanned with
-<code>validate_markdown</code>, and the preflight stage enforces
-glossary markers and bibliography commands before rendering. Output
-bundles are inspected with <code>verify_output_integrity</code>, and
-readability/structure metrics from <code>analyze_document_quality</code>
-are surfaced in the quality report. These automated gates ensure that
-every figure, table, and citation included here is reproducible and
-traceable across builds.</p>
-<h2 id="ablation-studies">Ablation Studies</h2>
-<h3 id="component-analysis">Component Analysis</h3>
-<p>We conducted extensive ablation studies to understand the
-contribution of each component. Figure <span
-class="math inline">\(\ref{fig:ablation_study}\)</span> shows the impact
-of:</p>
+class="math inline">\(\ref{fig:technique_comparison}\)</span> compares
+success rates across major grafting techniques using synthetic trial
+data representing 500 grafts per technique.</p>
+<p>The results show:</p>
 <ul>
-<li>The regularization term <span class="math inline">\(R(x)\)</span>
-from <span class="math inline">\(\eqref{eq:objective}\)</span></li>
-<li>The momentum term in the update rule <span
-class="math inline">\(\eqref{eq:update}\)</span></li>
-<li>The adaptive step size strategy <span
-class="math inline">\(\eqref{eq:adaptive_step}\)</span></li>
+<li><strong>Whip and Tongue</strong>: 85% success rate, highest
+precision requirement</li>
+<li><strong>Bud Grafting</strong>: 80% success rate, most efficient for
+mass propagation</li>
+<li><strong>Cleft Grafting</strong>: 75% success rate, suitable for
+larger diameters</li>
+<li><strong>Bark Grafting</strong>: 70% success rate, useful for mature
+trees</li>
 </ul>
-<h3 id="hyperparameter-sensitivity">Hyperparameter Sensitivity</h3>
-<p>The algorithm performance is robust to hyperparameter choices within
-reasonable ranges. Figure <span
-class="math inline">\(\ref{fig:hyperparameter_sensitivity}\)</span>
-demonstrates that the learning rate <span
-class="math inline">\(\alpha_0\)</span> and momentum coefficient <span
-class="math inline">\(\beta_k\)</span> can vary by <span
-class="math inline">\(\pm 50\%\)</span> without significant performance
-degradation.</p>
-<h2 id="real-world-applications">Real-world Applications</h2>
-<h3 id="case-study-1-image-classification">Case Study 1: Image
-Classification</h3>
-<p>We applied our optimization framework to train deep neural networks
-for image classification. The results, shown in Figure <span
-class="math inline">\(\ref{fig:image_classification_results}\)</span>,
-demonstrate that our method achieves competitive accuracy while
-requiring fewer iterations than standard optimizers.</p>
-<p>The training curves follow the expected convergence pattern <span
-class="math inline">\(\eqref{eq:convergence}\)</span>, with the
-algorithm finding good solutions in approximately 30% fewer epochs.</p>
-<h3 id="case-study-2-recommendation-systems">Case Study 2:
-Recommendation Systems</h3>
-<p>For large-scale recommendation systems, our approach scales
-efficiently to problems with millions of users and items. Figure <span
-class="math inline">\(\ref{fig:recommendation_scalability}\)</span>
-shows the performance scaling, confirming our theoretical analysis.</p>
-<h2 id="statistical-significance">Statistical Significance</h2>
-<p>All reported improvements are statistically significant at the <span
-class="math inline">\(p &lt; 0.01\)</span> level, computed using paired
-t-tests across multiple random initializations. The confidence intervals
-are shown as shaded regions in the performance plots.</p>
-<h2 id="limitations-and-future-work">Limitations and Future Work</h2>
-<p>While our approach shows promising results, several limitations
-remain:</p>
+<p>Statistical analysis using ANOVA reveals significant differences
+between techniques (<span class="math inline">\(F = 12.3\)</span>, <span
+class="math inline">\(p &lt; 0.001\)</span>), with post-hoc tests
+indicating whip and tongue grafting significantly outperforms bark
+grafting (<span class="math inline">\(p &lt; 0.01\)</span>).</p>
+<h3 id="technique-species-interactions">Technique-Species
+Interactions</h3>
+<p>Analysis of technique effectiveness across different species types
+reveals important interactions:</p>
+<ul>
+<li><strong>Temperate fruit trees</strong>: Whip and tongue performs
+best (87% success)</li>
+<li><strong>Tropical species</strong>: Bud grafting shows highest
+success (82%)</li>
+<li><strong>Large diameter rootstock</strong>: Cleft and bark grafting
+are preferred</li>
+</ul>
+<p>These interactions highlight the importance of technique selection
+based on species characteristics and rootstock size.</p>
+<h2 id="environmental-factor-analysis">Environmental Factor
+Analysis</h2>
+<h3 id="temperature-effects">Temperature Effects</h3>
+<p>Analysis of 1000 grafting trials across temperature ranges (10-35°C)
+reveals optimal conditions at 20-25°C, with success rates declining
+outside this range. Figure <span
+class="math inline">\(\ref{fig:environmental_effects}\)</span> shows the
+relationship between environmental conditions and success rates.</p>
+<p>The temperature suitability function follows:</p>
+<ul>
+<li><strong>Optimal range (20-25°C)</strong>: Success rate 82% ± 3%</li>
+<li><strong>Acceptable range (15-30°C)</strong>: Success rate 75% ±
+5%</li>
+<li><strong>Suboptimal (&lt;15°C or &gt;30°C)</strong>: Success rate 58%
+± 8%</li>
+</ul>
+<h3 id="humidity-effects">Humidity Effects</h3>
+<p>Humidity analysis demonstrates optimal range of 70-90% relative
+humidity:</p>
+<ul>
+<li><strong>Optimal (70-90%)</strong>: Success rate 80% ± 4%</li>
+<li><strong>Acceptable (50-70% or 90-100%)</strong>: Success rate 72% ±
+6%</li>
+<li><strong>Suboptimal (&lt;50%)</strong>: Success rate 55% ± 10%</li>
+</ul>
+<p>The combined environmental score <span
+class="math inline">\(\eqref{eq:environmental_score}\)</span> shows
+strong correlation with success rate (<span class="math inline">\(r =
+0.68\)</span>, <span class="math inline">\(p &lt; 0.001\)</span>).</p>
+<h2 id="prediction-model-validation">Prediction Model Validation</h2>
+<h3 id="compatibility-prediction-accuracy">Compatibility Prediction
+Accuracy</h3>
+<p>Validation of our compatibility prediction model <span
+class="math inline">\(\eqref{eq:combined_compatibility}\)</span> on
+held-out data shows:</p>
+<ul>
+<li><strong>Mean absolute error</strong>: 0.12 ± 0.03</li>
+<li><strong>Correlation with actual success</strong>: <span
+class="math inline">\(r = 0.78\)</span> (<span class="math inline">\(p
+&lt; 0.001\)</span>)</li>
+<li><strong>Classification accuracy</strong> (success/failure): 84% ±
+3%</li>
+</ul>
+<p>The model demonstrates good calibration, with predicted probabilities
+closely matching observed success rates across the full range
+(0.3-0.95).</p>
+<h3 id="biological-simulation-validation">Biological Simulation
+Validation</h3>
+<p>Comparison of simulated healing timelines with literature-reported
+healing rates shows good agreement:</p>
+<ul>
+<li><strong>Callus formation time</strong>: Predicted 7-14 days,
+literature range 5-18 days</li>
+<li><strong>Vascular connection</strong>: Predicted 14-28 days,
+literature range 12-30 days</li>
+<li><strong>Full union establishment</strong>: Predicted 30-60 days,
+literature range 25-70 days</li>
+</ul>
+<p>The simulation model <span
+class="math inline">\(\eqref{eq:healing_dynamics}\)</span>-<span
+class="math inline">\(\eqref{eq:vascular_dynamics}\)</span> captures the
+temporal dynamics with mean absolute error of 2.3 days for callus
+formation and 3.1 days for vascular connection.</p>
+<h2 id="success-factor-importance">Success Factor Importance</h2>
+<h3 id="factor-analysis">Factor Analysis</h3>
+<p>Analysis of factor importance using correlation and regression
+analysis reveals:</p>
 <ol type="1">
-<li><strong>Problem Structure</strong>: The method assumes certain
-structural properties that may not hold in all domains</li>
-<li><strong>Hyperparameter Tuning</strong>: Some parameters still
-require manual tuning for optimal performance</li>
-<li><strong>Theoretical Guarantees</strong>: Convergence guarantees are
-currently limited to convex problems</li>
+<li><strong>Species Compatibility</strong> (weight: 0.40): Strongest
+predictor, correlation <span class="math inline">\(r =
+0.75\)</span></li>
+<li><strong>Technique Quality</strong> (weight: 0.30): Moderate
+predictor, correlation <span class="math inline">\(r =
+0.58\)</span></li>
+<li><strong>Environmental Conditions</strong> (weight: 0.20): Moderate
+predictor, correlation <span class="math inline">\(r =
+0.52\)</span></li>
+<li><strong>Seasonal Timing</strong> (weight: 0.10): Weak predictor,
+correlation <span class="math inline">\(r = 0.35\)</span></li>
 </ol>
-<p>Future work will address these limitations and extend the framework
-to broader problem classes. Extended analysis and additional application
-examples are provided in Sections <span
-class="math inline">\(\ref{sec:supplemental_analysis}\)</span> and <span
-class="math inline">\(\ref{sec:supplemental_applications}\)</span>.</p>
-See Figure <span
-class="math inline">\(\ref{fig:convergence_analysis}\)</span>.
-See Figure <span
-class="math inline">\(\ref{fig:time_series_analysis}\)</span>.
-See Figure <span
-class="math inline">\(\ref{fig:statistical_comparison}\)</span>.
+<p>These weights align with the success probability model <span
+class="math inline">\(\eqref{eq:success_probability}\)</span> and are
+consistent across different species types and techniques.</p>
+<h3 id="interaction-effects">Interaction Effects</h3>
+<p>Analysis reveals significant interaction effects:</p>
+<ul>
+<li><strong>Compatibility × Technique</strong>: High compatibility
+amplifies technique quality effects</li>
+<li><strong>Environment × Timing</strong>: Optimal environmental
+conditions compensate for suboptimal timing</li>
+<li><strong>Species × Technique</strong>: Technique effectiveness varies
+by species type</li>
+</ul>
+<p>These interactions are incorporated into the prediction model through
+interaction terms.</p>
+<h2 id="economic-analysis-results">Economic Analysis Results</h2>
+<h3 id="cost-breakdown-analysis">Cost-Breakdown Analysis</h3>
+<p>Economic analysis of grafting operations reveals:</p>
+<ul>
+<li><strong>Average cost per graft</strong>: $3.50 ± $0.80
+<ul>
+<li>Labor: $2.00 (57%)</li>
+<li>Materials: $1.00 (29%)</li>
+<li>Overhead: $0.50 (14%)</li>
+</ul></li>
+<li><strong>Value per successful graft</strong>: $20.00 ± $5.00</li>
+<li><strong>Break-even success rate</strong>: 17.5% ± 2.5%</li>
+</ul>
+<p>These figures demonstrate the economic viability of grafting
+operations, with break-even rates well below typical success rates
+(70-85%).</p>
+<h3 id="productivity-metrics">Productivity Metrics</h3>
+<p>Analysis of productivity shows:</p>
+<ul>
+<li><strong>Grafts per day</strong>: 50-100 (depending on
+technique)</li>
+<li><strong>Successful grafts per year</strong>: 8,750-17,000 (assuming
+250 working days)</li>
+<li><strong>Efficiency</strong>: 75-85% (success rate × working
+efficiency)</li>
+</ul>
+<p>These metrics support the economic viability of commercial grafting
+operations.</p>
+<h2 id="seasonal-timing-analysis">Seasonal Timing Analysis</h2>
+<h3 id="optimal-grafting-windows">Optimal Grafting Windows</h3>
+<p>Analysis of seasonal timing across climate zones reveals:</p>
+<ul>
+<li><strong>Temperate species (Northern Hemisphere)</strong>: Optimal
+window February-April (months 2-4)</li>
+<li><strong>Tropical species</strong>: Year-round with optimal period
+June-September (months 6-9)</li>
+<li><strong>Subtropical species</strong>: Optimal window November-March
+(months 11-3)</li>
+</ul>
+<p>The seasonal suitability model shows strong predictive power (<span
+class="math inline">\(r = 0.71\)</span>, <span class="math inline">\(p
+&lt; 0.001\)</span>) for temperate species, with reduced accuracy for
+tropical species due to year-round grafting potential.</p>
+<h2 id="validation-and-reproducibility">Validation and
+Reproducibility</h2>
+<p>All experimental results are generated using reproducible
+computational workflows:</p>
+<ul>
+<li><strong>Data generation</strong>: Seeded random number generators
+ensure reproducibility</li>
+<li><strong>Simulation parameters</strong>: Documented and
+version-controlled</li>
+<li><strong>Statistical analysis</strong>: Standardized procedures with
+reported confidence intervals</li>
+<li><strong>Figure generation</strong>: Automated scripts with version
+tracking</li>
+</ul>
+<p>The complete analysis pipeline can be reproduced by running:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> scripts/graft_analysis_pipeline.py</span></code></pre></div>
+<p>This ensures all results are traceable and verifiable, supporting
+scientific reproducibility and transparency.</p>
 </body>
 </html>

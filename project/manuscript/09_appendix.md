@@ -1,182 +1,244 @@
 # Appendix {#sec:appendix}
 
-This appendix provides additional technical details and derivations that support the main results.
+This appendix provides additional technical details, species compatibility tables, and detailed protocols that support the main results.
 
-## A. Detailed Proofs
+## A. Detailed Technique Protocols
 
-### A.1 Proof of Convergence (Theorem 1)
+### A.1 Whip and Tongue Grafting Protocol
 
-The convergence rate established in \eqref{eq:convergence} follows from the following detailed analysis.
+**Complete Step-by-Step Procedure**:
 
-**Proof**: Let $x_k$ be the iterate at step $k$. From the update rule \eqref{eq:update}, we have:
+1. **Timing**: Late winter to early spring (February-April in northern hemisphere)
+2. **Rootstock Selection**: Healthy, vigorous, diameter 5-25 mm
+3. **Scion Selection**: Dormant, 1-year-old wood, 2-4 buds, matching diameter
+4. **Cut Preparation**: 
+   - Rootstock: 30-45° angle cut, 2-3 cm long, tongue 1 cm deep
+   - Scion: Matching cut and tongue
+5. **Alignment**: Precise cambium alignment on both sides
+6. **Securing**: Grafting tape wrap, wax seal
+7. **Protection**: Shade, humidity control, monitoring
 
-\begin{equation}\label{eq:appendix_update}
-x_{k+1} = x_k - \alpha_k \nabla f(x_k) + \beta_k (x_k - x_{k-1})
-\end{equation}
+**Success Factors**:
+- Diameter match within 10%
+- Sharp, clean cuts
+- Rapid operation (<2 minutes)
+- Proper sealing
 
-By the Lipschitz continuity of $\nabla f$, there exists a constant $L > 0$ such that:
+### A.2 Cleft Grafting Protocol
 
-\begin{equation}\label{eq:lipschitz}
-\|\nabla f(x) - \nabla f(y)\| \leq L \|x - y\|, \quad \forall x, y \in \mathcal{X}
-\end{equation}
+**Complete Procedure**:
 
-Using strong convexity with parameter $\mu > 0$ \cite{boyd2004, nesterov2018}:
+1. **Timing**: Late winter (dormant season)
+2. **Rootstock**: Diameter 10-50 mm, cut horizontally
+3. **Split**: Vertical split 3-5 cm deep
+4. **Scion**: Wedge-shaped, 2-3 buds, cambium exposed
+5. **Insertion**: Align cambium, insert 1-2 scions
+6. **Sealing**: Complete wax coverage
+7. **Protection**: Weather protection, monitoring
 
-\begin{equation}\label{eq:strong_convexity}
-f(y) \geq f(x) + \nabla f(x)^T (y - x) + \frac{\mu}{2} \|y - x\|^2
-\end{equation}
+## B. Species Compatibility Tables
 
-Combining these properties with the adaptive step size rule \eqref{eq:adaptive_step}, following the analysis framework in \cite{duchi2011, bertsekas2015}, we obtain the linear convergence rate with $\rho = \sqrt{1 - \mu/L}$. $\square$
+### B.1 Apple (Malus domestica) Compatibility
 
-### A.2 Complexity Analysis
+| Rootstock | Scion | Compatibility | Notes |
+|-----------|-------|---------------|-------|
+| M.9 | M. domestica | 0.95 | Standard combination |
+| M.26 | M. domestica | 0.93 | Dwarfing rootstock |
+| Seedling | M. domestica | 0.90 | Variable vigor |
+| M.9 | Pyrus communis | 0.65 | Cross-genus, moderate |
 
-The computational complexity per iteration is derived as follows:
+### B.2 Pear (Pyrus communis) Compatibility
 
-1. **Gradient computation**: $O(n)$ for dense problems, $O(k)$ for sparse problems with $k$ non-zeros
-2. **Update rule**: $O(n)$ for vector operations
-3. **Adaptive step size**: $O(1)$ for the update in \eqref{eq:adaptive_step}
-4. **Momentum term**: $O(n)$ for the momentum computation
+| Rootstock | Scion | Compatibility | Notes |
+|-----------|-------|---------------|-------|
+| P. betulifolia | P. communis | 0.92 | Common rootstock |
+| P. calleryana | P. communis | 0.88 | Ornamental rootstock |
+| Quince | P. communis | 0.75 | Inter-generic, dwarfing |
 
-Total per-iteration complexity: $O(n)$ for dense problems.
+### B.3 Stone Fruits Compatibility
 
-For structured problems, we can exploit the separable structure of \eqref{eq:objective} to achieve $O(n \log n)$ complexity using efficient data structures (see Figure \ref{fig:data_structure}).
+| Rootstock | Scion | Compatibility | Notes |
+|-----------|-------|---------------|-------|
+| Prunus avium | P. avium | 0.94 | Cherry on cherry |
+| P. mahaleb | P. avium | 0.85 | Standard cherry rootstock |
+| P. persica | P. persica | 0.92 | Peach on peach |
+| P. domestica | P. persica | 0.70 | Cross-species, moderate |
 
-## B. Additional Experimental Details
+## C. Software API Documentation
 
-### B.1 Hyperparameter Tuning
+### C.1 Core Functions
 
-The following hyperparameters were used in our experiments:
+**`check_cambium_alignment(rootstock_diameter, scion_diameter, tolerance=0.1)`**
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Parameter} & \textbf{Symbol} & \textbf{Value} & \textbf{Range Tested} \\
-\hline
-Learning rate & $\alpha_0$ & 0.01 & [0.001, 0.1] \\
-Momentum & $\beta$ & 0.9 & [0.5, 0.99] \\
-Regularization & $\lambda$ & 0.001 & [0, 0.01] \\
-Tolerance & $\epsilon$ & $10^{-6}$ & [$10^{-8}$, $10^{-4}$] \\
-\hline
-\end{tabular}
-\caption{Hyperparameter settings used in experiments}
-\label{tab:hyperparameters}
-\end{table}
+Checks if rootstock and scion diameters are compatible for cambium alignment.
 
-### B.2 Computational Environment
+**Parameters**:
+- `rootstock_diameter`: Rootstock stem diameter (mm)
+- `scion_diameter`: Scion stem diameter (mm)
+- `tolerance`: Maximum relative difference allowed (default 0.1)
 
-All experiments were conducted on:
-- **CPU**: Intel Xeon E5-2690 v4 @ 2.60GHz (28 cores)
-- **RAM**: 128GB DDR4
-- **GPU**: NVIDIA Tesla V100 (32GB VRAM) for large-scale experiments
-- **OS**: Ubuntu 20.04 LTS
-- **Python**: 3.10.12
-- **NumPy**: 1.24.3
-- **SciPy**: 1.10.1
+**Returns**: Tuple of (is_compatible: bool, diameter_ratio: float)
 
-### B.3 Dataset Preparation
-
-Datasets were preprocessed using standard normalization:
-
-\begin{equation}\label{eq:normalization}
-\tilde{x}_i = \frac{x_i - \mu}{\sigma}
-\end{equation}
-
-where $\mu$ and $\sigma$ are the mean and standard deviation computed from the training set.
-
-## C. Extended Results
-
-### C.1 Additional Benchmark Comparisons
-
-Table \ref{tab:extended_comparison} provides detailed performance comparison across all tested methods.
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|c|}
-\hline
-\textbf{Method} & \textbf{Time (s)} & \textbf{Iterations} & \textbf{Final Error} & \textbf{Memory (MB)} \\
-\hline
-Our Method & 12.3 & 245 & $1.2 \times 10^{-6}$ & 156 \\
-Gradient Descent & 18.7 & 412 & $1.5 \times 10^{-6}$ & 312 \\
-Adam & 15.4 & 358 & $1.4 \times 10^{-6}$ & 298 \\
-L-BFGS & 16.2 & 198 & $1.1 \times 10^{-6}$ & 425 \\
-\hline
-\end{tabular}
-\caption{Extended performance comparison with computational details}
-\label{tab:extended_comparison}
-\end{table}
-
-### C.2 Sensitivity Analysis
-
-Detailed sensitivity analysis for all hyperparameters shows robust performance across wide parameter ranges, confirming the theoretical predictions from Section \ref{sec:methodology}.
-
-## E. Infrastructure Capabilities
-
-- **Validation**: `validate_markdown` and `validate_figure_registry` ensure anchors, equations, and figures resolve before rendering; `verify_output_integrity` checks generated artifacts post-build.
-- **Quality**: `analyze_document_quality` reports readability and structure metrics used in the quality report; `quality_report.py` aggregates markdown, integrity, and reproducibility signals.
-- **Reproducibility**: `generate_reproducibility_report` captures environment, dependency, and artifact snapshots for each run.
-- **Reporting**: Pipeline reports (`output/reports/pipeline_report.*`) summarize stage outcomes, errors, and validation findings for auditability.
-- **Commands**: `python3 project/scripts/manuscript_preflight.py --strict` for gating, `python3 project/scripts/quality_report.py` for consolidated metrics, and `python3 scripts/run_all.py` for full pipeline execution with validation gates.
-
-## D. Implementation Details
-
-### D.1 Pseudocode
-
+**Example**:
 ```python
-def optimize(f, x0, alpha0, beta, max_iter, tol):
-    """
-    Optimization algorithm implementation.
-    
-    Args:
-        f: Objective function
-        x0: Initial point
-        alpha0: Initial learning rate
-        beta: Momentum coefficient
-        max_iter: Maximum iterations
-        tol: Convergence tolerance
-    
-    Returns:
-        x_opt: Optimal solution
-        history: Convergence history
-    """
-    x = x0
-    x_prev = x0
-    history = []
-    grad_sum_sq = 0
-    
-    for k in range(max_iter):
-        # Compute gradient
-        grad = compute_gradient(f, x)
-        grad_sum_sq += np.linalg.norm(grad)**2
-        
-        # Adaptive step size
-        alpha = alpha0 / np.sqrt(1 + grad_sum_sq)
-        
-        # Update with momentum
-        x_new = x - alpha * grad + beta * (x - x_prev)
-        
-        # Check convergence
-        if np.linalg.norm(x_new - x) < tol:
-            break
-        
-        # Update history
-        history.append({'iter': k, 'error': f(x_new)})
-        
-        # Prepare next iteration
-        x_prev = x
-        x = x_new
-    
-    return x, history
+is_compat, ratio = check_cambium_alignment(15.0, 14.5, tolerance=0.1)
+# Returns: (True, 0.967)
 ```
 
-### D.2 Performance Optimizations
+**`predict_compatibility_combined(phylogenetic_distance, cambium_match, growth_rate_match, weights=None)`**
 
-Key performance optimizations implemented:
-1. Vectorized operations using NumPy
-2. Sparse matrix representations when applicable
-3. In-place updates to reduce memory allocation
-4. Parallel gradient computations for separable problems
+Predicts compatibility using multiple factors.
 
+**Parameters**:
+- `phylogenetic_distance`: Phylogenetic distance (0-1)
+- `cambium_match`: Cambium thickness match score (0-1)
+- `growth_rate_match`: Growth rate match score (0-1)
+- `weights`: Optional weights dictionary
 
+**Returns**: Combined compatibility score (0-1)
 
+### C.2 Simulation Functions
 
+**`CambiumIntegrationSimulation(parameters, seed, output_dir)`**
+
+Simulates cambium integration and callus formation process.
+
+**Parameters**:
+- `parameters`: Dictionary with compatibility, temperature, humidity, etc.
+- `seed`: Random seed for reproducibility
+- `output_dir`: Directory for saving results
+
+**Methods**:
+- `run(max_days, save_checkpoints, verbose)`: Run simulation
+- `save_results(filename, formats)`: Save simulation results
+
+**Example**:
+```python
+params = {"compatibility": 0.8, "temperature": 22.0, "humidity": 0.8}
+sim = CambiumIntegrationSimulation(parameters=params, seed=42)
+state = sim.run(max_days=60)
+```
+
+## D. Statistical Methods Details
+
+### D.1 Success Rate Analysis
+
+Success rates are calculated using:
+
+\begin{equation}\label{eq:success_rate_calc}
+\text{Success Rate} = \frac{\text{Number of Successful Grafts}}{\text{Total Number of Grafts}}
+\end{equation}
+
+Confidence intervals are calculated using the normal approximation to the binomial distribution:
+
+\begin{equation}\label{eq:confidence_interval}
+CI = p \pm z_{\alpha/2} \sqrt{\frac{p(1-p)}{n}}
+\end{equation}
+
+where $p$ is the observed success rate, $n$ is the sample size, and $z_{\alpha/2}$ is the critical value for confidence level $\alpha$.
+
+### D.2 Correlation Analysis
+
+Correlation between factors and success is calculated using point-biserial correlation for binary success outcomes:
+
+\begin{equation}\label{eq:point_biserial}
+r_{pb} = \frac{M_1 - M_0}{s} \sqrt{\frac{n_1 n_0}{n^2}}
+\end{equation}
+
+where $M_1$ and $M_0$ are means for successful and failed grafts, $s$ is the standard deviation, and $n_1$, $n_0$, $n$ are sample sizes.
+
+### D.3 ANOVA for Technique Comparison
+
+One-way ANOVA is used to compare success rates across techniques:
+
+\begin{equation}\label{eq:anova_f}
+F = \frac{MS_{between}}{MS_{within}} = \frac{SS_{between} / df_{between}}{SS_{within} / df_{within}}
+\end{equation}
+
+Post-hoc tests (Tukey HSD) identify specific technique differences.
+
+## E. Economic Model Parameters
+
+### E.1 Cost Parameters
+
+**Labor Costs**:
+- Skilled grafter: \$25-40/hour
+- Grafts per hour: 20-50 (depending on technique)
+- Labor cost per graft: \$0.50-2.00
+
+**Material Costs**:
+- Grafting tape: \$0.10-0.20 per graft
+- Grafting wax: \$0.05-0.15 per graft
+- Tools (amortized): \$0.10-0.30 per graft
+- Total material: \$0.25-0.65 per graft
+
+**Overhead Costs**:
+- Facility and utilities: \$0.20-0.50 per graft
+- Management and administration: \$0.10-0.30 per graft
+
+**Total Cost Range**: \$1.05-3.45 per graft (average \$3.50)
+
+### E.2 Revenue Parameters
+
+**Value per Successful Graft**:
+- Fruit tree sapling: \$15-30
+- Ornamental tree: \$20-50
+- Specialty/rare species: \$50-200
+- Average: \$20.00
+
+**Time to Market**: 1-3 years depending on species and growth rate
+
+### E.3 Economic Metrics
+
+**Net Profit**:
+\begin{equation}\label{eq:net_profit}
+\text{Net Profit} = \text{Revenue} - \text{Total Cost}
+\end{equation}
+
+**Return on Investment (ROI)**:
+\begin{equation}\label{eq:roi}
+\text{ROI} = \frac{\text{Net Profit}}{\text{Total Cost}} \times 100\%
+\end{equation}
+
+**Break-Even Success Rate**:
+\begin{equation}\label{eq:break_even}
+\text{Break-Even Rate} = \frac{\text{Cost per Graft}}{\text{Value per Successful Graft}}
+\end{equation}
+
+Typical break-even rates: 15-20%, well below average success rates of 70-85%.
+
+## F. Environmental Parameter Ranges
+
+### F.1 Temperature Ranges by Species Type
+
+| Species Type | Optimal Range | Acceptable Range | Suboptimal |
+|--------------|---------------|------------------|------------|
+| Temperate | 20-25°C | 15-30°C | <15°C or >30°C |
+| Tropical | 22-28°C | 18-35°C | <18°C or >35°C |
+| Subtropical | 15-25°C | 8-32°C | <8°C or >32°C |
+
+### F.2 Humidity Ranges
+
+| Condition | Optimal | Acceptable | Suboptimal |
+|-----------|---------|------------|------------|
+| Relative Humidity | 70-90% | 50-70% or 90-100% | <50% |
+
+### F.3 Seasonal Windows
+
+| Species Type | Northern Hemisphere | Southern Hemisphere |
+|--------------|---------------------|-------------------|
+| Temperate | Feb-Apr (months 2-4) | Aug-Oct (months 8-10) |
+| Tropical | Jun-Sep (months 6-9) | Dec-Mar (months 12-3) |
+| Subtropical | Nov-Mar (months 11-3) | May-Sep (months 5-9) |
+
+## G. Computational Environment
+
+All computational analyses were conducted using:
+
+- **Python**: 3.10+
+- **NumPy**: 1.24+ (numerical computations)
+- **Matplotlib**: 3.7+ (visualization)
+- **SciPy**: 1.10+ (statistical analysis)
+- **Platform**: Cross-platform (Linux, macOS, Windows)
+
+Simulations use seeded random number generators for reproducibility, with all random seeds documented in analysis scripts.

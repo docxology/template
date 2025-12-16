@@ -240,168 +240,361 @@
 </head>
 <body>
 <h1 id="sec:appendix">Appendix</h1>
-<p>This appendix provides additional technical details and derivations
-that support the main results.</p>
-<h2 id="a.-detailed-proofs">A. Detailed Proofs</h2>
-<h3 id="a.1-proof-of-convergence-theorem-1">A.1 Proof of Convergence
-(Theorem 1)</h3>
-<p>The convergence rate established in <span
-class="math inline">\(\eqref{eq:convergence}\)</span> follows from the
-following detailed analysis.</p>
-<p><strong>Proof</strong>: Let <span class="math inline">\(x_k\)</span>
-be the iterate at step <span class="math inline">\(k\)</span>. From the
-update rule <span class="math inline">\(\eqref{eq:update}\)</span>, we
-have:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:appendix_update}
-x_{k+1} = x_k - \alpha_k \nabla f(x_k) + \beta_k (x_k - x_{k-1})
-\end{equation}\]</span></p>
-<p>By the Lipschitz continuity of <span class="math inline">\(\nabla
-f\)</span>, there exists a constant <span class="math inline">\(L &gt;
-0\)</span> such that:</p>
-<p><span class="math display">\[\begin{equation}\label{eq:lipschitz}
-\|\nabla f(x) - \nabla f(y)\| \leq L \|x - y\|, \quad \forall x, y \in
-\mathcal{X}
-\end{equation}\]</span></p>
-<p>Using strong convexity with parameter <span class="math inline">\(\mu
-&gt; 0\)</span> :</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:strong_convexity}
-f(y) \geq f(x) + \nabla f(x)^T (y - x) + \frac{\mu}{2} \|y - x\|^2
-\end{equation}\]</span></p>
-<p>Combining these properties with the adaptive step size rule <span
-class="math inline">\(\eqref{eq:adaptive_step}\)</span>, following the
-analysis framework in , we obtain the linear convergence rate with <span
-class="math inline">\(\rho = \sqrt{1 - \mu/L}\)</span>. <span
-class="math inline">\(\square\)</span></p>
-<h3 id="a.2-complexity-analysis">A.2 Complexity Analysis</h3>
-<p>The computational complexity per iteration is derived as follows:</p>
+<p>This appendix provides additional technical details, species
+compatibility tables, and detailed protocols that support the main
+results.</p>
+<h2 id="a.-detailed-technique-protocols">A. Detailed Technique
+Protocols</h2>
+<h3 id="a.1-whip-and-tongue-grafting-protocol">A.1 Whip and Tongue
+Grafting Protocol</h3>
+<p><strong>Complete Step-by-Step Procedure</strong>:</p>
 <ol type="1">
-<li><strong>Gradient computation</strong>: <span
-class="math inline">\(O(n)\)</span> for dense problems, <span
-class="math inline">\(O(k)\)</span> for sparse problems with <span
-class="math inline">\(k\)</span> non-zeros</li>
-<li><strong>Update rule</strong>: <span
-class="math inline">\(O(n)\)</span> for vector operations</li>
-<li><strong>Adaptive step size</strong>: <span
-class="math inline">\(O(1)\)</span> for the update in <span
-class="math inline">\(\eqref{eq:adaptive_step}\)</span></li>
-<li><strong>Momentum term</strong>: <span
-class="math inline">\(O(n)\)</span> for the momentum computation</li>
-</ol>
-<p>Total per-iteration complexity: <span
-class="math inline">\(O(n)\)</span> for dense problems.</p>
-<p>For structured problems, we can exploit the separable structure of
-<span class="math inline">\(\eqref{eq:objective}\)</span> to achieve
-<span class="math inline">\(O(n \log n)\)</span> complexity using
-efficient data structures (see Figure <span
-class="math inline">\(\ref{fig:data_structure}\)</span>).</p>
-<h2 id="b.-additional-experimental-details">B. Additional Experimental
-Details</h2>
-<h3 id="b.1-hyperparameter-tuning">B.1 Hyperparameter Tuning</h3>
-<p>The following hyperparameters were used in our experiments:</p>
-<h3 id="b.2-computational-environment">B.2 Computational
-Environment</h3>
-<p>All experiments were conducted on: - <strong>CPU</strong>: Intel Xeon
-E5-2690 v4 @ 2.60GHz (28 cores) - <strong>RAM</strong>: 128GB DDR4 -
-<strong>GPU</strong>: NVIDIA Tesla V100 (32GB VRAM) for large-scale
-experiments - <strong>OS</strong>: Ubuntu 20.04 LTS -
-<strong>Python</strong>: 3.10.12 - <strong>NumPy</strong>: 1.24.3 -
-<strong>SciPy</strong>: 1.10.1</p>
-<h3 id="b.3-dataset-preparation">B.3 Dataset Preparation</h3>
-<p>Datasets were preprocessed using standard normalization:</p>
-<p><span class="math display">\[\begin{equation}\label{eq:normalization}
-\tilde{x}_i = \frac{x_i - \mu}{\sigma}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\mu\)</span> and <span
-class="math inline">\(\sigma\)</span> are the mean and standard
-deviation computed from the training set.</p>
-<h2 id="c.-extended-results">C. Extended Results</h2>
-<h3 id="c.1-additional-benchmark-comparisons">C.1 Additional Benchmark
-Comparisons</h3>
-<p>Table <span
-class="math inline">\(\ref{tab:extended_comparison}\)</span> provides
-detailed performance comparison across all tested methods.</p>
-<h3 id="c.2-sensitivity-analysis">C.2 Sensitivity Analysis</h3>
-<p>Detailed sensitivity analysis for all hyperparameters shows robust
-performance across wide parameter ranges, confirming the theoretical
-predictions from Section <span
-class="math inline">\(\ref{sec:methodology}\)</span>.</p>
-<h2 id="e.-infrastructure-capabilities">E. Infrastructure
-Capabilities</h2>
+<li><strong>Timing</strong>: Late winter to early spring (February-April
+in northern hemisphere)</li>
+<li><strong>Rootstock Selection</strong>: Healthy, vigorous, diameter
+5-25 mm</li>
+<li><strong>Scion Selection</strong>: Dormant, 1-year-old wood, 2-4
+buds, matching diameter</li>
+<li><strong>Cut Preparation</strong>:
 <ul>
-<li><strong>Validation</strong>: <code>validate_markdown</code> and
-<code>validate_figure_registry</code> ensure anchors, equations, and
-figures resolve before rendering; <code>verify_output_integrity</code>
-checks generated artifacts post-build.</li>
-<li><strong>Quality</strong>: <code>analyze_document_quality</code>
-reports readability and structure metrics used in the quality report;
-<code>quality_report.py</code> aggregates markdown, integrity, and
-reproducibility signals.</li>
-<li><strong>Reproducibility</strong>:
-<code>generate_reproducibility_report</code> captures environment,
-dependency, and artifact snapshots for each run.</li>
-<li><strong>Reporting</strong>: Pipeline reports
-(<code>output/reports/pipeline_report.*</code>) summarize stage
-outcomes, errors, and validation findings for auditability.</li>
-<li><strong>Commands</strong>:
-<code>python3 project/scripts/manuscript_preflight.py --strict</code>
-for gating, <code>python3 project/scripts/quality_report.py</code> for
-consolidated metrics, and <code>python3 scripts/run_all.py</code> for
-full pipeline execution with validation gates.</li>
-</ul>
-<h2 id="d.-implementation-details">D. Implementation Details</h2>
-<h3 id="d.1-pseudocode">D.1 Pseudocode</h3>
+<li>Rootstock: 30-45° angle cut, 2-3 cm long, tongue 1 cm deep</li>
+<li>Scion: Matching cut and tongue</li>
+</ul></li>
+<li><strong>Alignment</strong>: Precise cambium alignment on both
+sides</li>
+<li><strong>Securing</strong>: Grafting tape wrap, wax seal</li>
+<li><strong>Protection</strong>: Shade, humidity control,
+monitoring</li>
+</ol>
+<p><strong>Success Factors</strong>: - Diameter match within 10% -
+Sharp, clean cuts - Rapid operation (&lt;2 minutes) - Proper sealing</p>
+<h3 id="a.2-cleft-grafting-protocol">A.2 Cleft Grafting Protocol</h3>
+<p><strong>Complete Procedure</strong>:</p>
+<ol type="1">
+<li><strong>Timing</strong>: Late winter (dormant season)</li>
+<li><strong>Rootstock</strong>: Diameter 10-50 mm, cut horizontally</li>
+<li><strong>Split</strong>: Vertical split 3-5 cm deep</li>
+<li><strong>Scion</strong>: Wedge-shaped, 2-3 buds, cambium exposed</li>
+<li><strong>Insertion</strong>: Align cambium, insert 1-2 scions</li>
+<li><strong>Sealing</strong>: Complete wax coverage</li>
+<li><strong>Protection</strong>: Weather protection, monitoring</li>
+</ol>
+<h2 id="b.-species-compatibility-tables">B. Species Compatibility
+Tables</h2>
+<h3 id="b.1-apple-malus-domestica-compatibility">B.1 Apple (Malus
+domestica) Compatibility</h3>
+<table>
+<thead>
+<tr>
+<th>Rootstock</th>
+<th>Scion</th>
+<th>Compatibility</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M.9</td>
+<td>M. domestica</td>
+<td>0.95</td>
+<td>Standard combination</td>
+</tr>
+<tr>
+<td>M.26</td>
+<td>M. domestica</td>
+<td>0.93</td>
+<td>Dwarfing rootstock</td>
+</tr>
+<tr>
+<td>Seedling</td>
+<td>M. domestica</td>
+<td>0.90</td>
+<td>Variable vigor</td>
+</tr>
+<tr>
+<td>M.9</td>
+<td>Pyrus communis</td>
+<td>0.65</td>
+<td>Cross-genus, moderate</td>
+</tr>
+</tbody>
+</table>
+<h3 id="b.2-pear-pyrus-communis-compatibility">B.2 Pear (Pyrus communis)
+Compatibility</h3>
+<table>
+<thead>
+<tr>
+<th>Rootstock</th>
+<th>Scion</th>
+<th>Compatibility</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P. betulifolia</td>
+<td>P. communis</td>
+<td>0.92</td>
+<td>Common rootstock</td>
+</tr>
+<tr>
+<td>P. calleryana</td>
+<td>P. communis</td>
+<td>0.88</td>
+<td>Ornamental rootstock</td>
+</tr>
+<tr>
+<td>Quince</td>
+<td>P. communis</td>
+<td>0.75</td>
+<td>Inter-generic, dwarfing</td>
+</tr>
+</tbody>
+</table>
+<h3 id="b.3-stone-fruits-compatibility">B.3 Stone Fruits
+Compatibility</h3>
+<table>
+<thead>
+<tr>
+<th>Rootstock</th>
+<th>Scion</th>
+<th>Compatibility</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prunus avium</td>
+<td>P. avium</td>
+<td>0.94</td>
+<td>Cherry on cherry</td>
+</tr>
+<tr>
+<td>P. mahaleb</td>
+<td>P. avium</td>
+<td>0.85</td>
+<td>Standard cherry rootstock</td>
+</tr>
+<tr>
+<td>P. persica</td>
+<td>P. persica</td>
+<td>0.92</td>
+<td>Peach on peach</td>
+</tr>
+<tr>
+<td>P. domestica</td>
+<td>P. persica</td>
+<td>0.70</td>
+<td>Cross-species, moderate</td>
+</tr>
+</tbody>
+</table>
+<h2 id="c.-software-api-documentation">C. Software API
+Documentation</h2>
+<h3 id="c.1-core-functions">C.1 Core Functions</h3>
+<p><strong><code>check_cambium_alignment(rootstock_diameter, scion_diameter, tolerance=0.1)</code></strong></p>
+<p>Checks if rootstock and scion diameters are compatible for cambium
+alignment.</p>
+<p><strong>Parameters</strong>: - <code>rootstock_diameter</code>:
+Rootstock stem diameter (mm) - <code>scion_diameter</code>: Scion stem
+diameter (mm) - <code>tolerance</code>: Maximum relative difference
+allowed (default 0.1)</p>
+<p><strong>Returns</strong>: Tuple of (is_compatible: bool,
+diameter_ratio: float)</p>
+<p><strong>Example</strong>:</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> optimize(f, x0, alpha0, beta, max_iter, tol):</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Optimization algorithm implementation.</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">        f: Objective function</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">        x0: Initial point</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">        alpha0: Initial learning rate</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">        beta: Momentum coefficient</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">        max_iter: Maximum iterations</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">        tol: Convergence tolerance</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">        x_opt: Optimal solution</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">        history: Convergence history</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x0</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    x_prev <span class="op">=</span> x0</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    history <span class="op">=</span> []</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    grad_sum_sq <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(max_iter):</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Compute gradient</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        grad <span class="op">=</span> compute_gradient(f, x)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        grad_sum_sq <span class="op">+=</span> np.linalg.norm(grad)<span class="op">**</span><span class="dv">2</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Adaptive step size</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        alpha <span class="op">=</span> alpha0 <span class="op">/</span> np.sqrt(<span class="dv">1</span> <span class="op">+</span> grad_sum_sq)</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Update with momentum</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        x_new <span class="op">=</span> x <span class="op">-</span> alpha <span class="op">*</span> grad <span class="op">+</span> beta <span class="op">*</span> (x <span class="op">-</span> x_prev)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Check convergence</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> np.linalg.norm(x_new <span class="op">-</span> x) <span class="op">&lt;</span> tol:</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Update history</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        history.append({<span class="st">&#39;iter&#39;</span>: k, <span class="st">&#39;error&#39;</span>: f(x_new)})</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Prepare next iteration</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        x_prev <span class="op">=</span> x</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x_new</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x, history</span></code></pre></div>
-<h3 id="d.2-performance-optimizations">D.2 Performance
-Optimizations</h3>
-<p>Key performance optimizations implemented: 1. Vectorized operations
-using NumPy 2. Sparse matrix representations when applicable 3. In-place
-updates to reduce memory allocation 4. Parallel gradient computations
-for separable problems</p>
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>is_compat, ratio <span class="op">=</span> check_cambium_alignment(<span class="fl">15.0</span>, <span class="fl">14.5</span>, tolerance<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns: (True, 0.967)</span></span></code></pre></div>
+<p><strong><code>predict_compatibility_combined(phylogenetic_distance, cambium_match, growth_rate_match, weights=None)</code></strong></p>
+<p>Predicts compatibility using multiple factors.</p>
+<p><strong>Parameters</strong>: - <code>phylogenetic_distance</code>:
+Phylogenetic distance (0-1) - <code>cambium_match</code>: Cambium
+thickness match score (0-1) - <code>growth_rate_match</code>: Growth
+rate match score (0-1) - <code>weights</code>: Optional weights
+dictionary</p>
+<p><strong>Returns</strong>: Combined compatibility score (0-1)</p>
+<h3 id="c.2-simulation-functions">C.2 Simulation Functions</h3>
+<p><strong><code>CambiumIntegrationSimulation(parameters, seed, output_dir)</code></strong></p>
+<p>Simulates cambium integration and callus formation process.</p>
+<p><strong>Parameters</strong>: - <code>parameters</code>: Dictionary
+with compatibility, temperature, humidity, etc. - <code>seed</code>:
+Random seed for reproducibility - <code>output_dir</code>: Directory for
+saving results</p>
+<p><strong>Methods</strong>: -
+<code>run(max_days, save_checkpoints, verbose)</code>: Run simulation -
+<code>save_results(filename, formats)</code>: Save simulation
+results</p>
+<p><strong>Example</strong>:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {<span class="st">&quot;compatibility&quot;</span>: <span class="fl">0.8</span>, <span class="st">&quot;temperature&quot;</span>: <span class="fl">22.0</span>, <span class="st">&quot;humidity&quot;</span>: <span class="fl">0.8</span>}</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sim <span class="op">=</span> CambiumIntegrationSimulation(parameters<span class="op">=</span>params, seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> sim.run(max_days<span class="op">=</span><span class="dv">60</span>)</span></code></pre></div>
+<h2 id="d.-statistical-methods-details">D. Statistical Methods
+Details</h2>
+<h3 id="d.1-success-rate-analysis">D.1 Success Rate Analysis</h3>
+<p>Success rates are calculated using:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:success_rate_calc}
+\text{Success Rate} = \frac{\text{Number of Successful
+Grafts}}{\text{Total Number of Grafts}}
+\end{equation}\]</span></p>
+<p>Confidence intervals are calculated using the normal approximation to
+the binomial distribution:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:confidence_interval}
+CI = p \pm z_{\alpha/2} \sqrt{\frac{p(1-p)}{n}}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(p\)</span> is the observed success
+rate, <span class="math inline">\(n\)</span> is the sample size, and
+<span class="math inline">\(z_{\alpha/2}\)</span> is the critical value
+for confidence level <span class="math inline">\(\alpha\)</span>.</p>
+<h3 id="d.2-correlation-analysis">D.2 Correlation Analysis</h3>
+<p>Correlation between factors and success is calculated using
+point-biserial correlation for binary success outcomes:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:point_biserial}
+r_{pb} = \frac{M_1 - M_0}{s} \sqrt{\frac{n_1 n_0}{n^2}}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(M_1\)</span> and <span
+class="math inline">\(M_0\)</span> are means for successful and failed
+grafts, <span class="math inline">\(s\)</span> is the standard
+deviation, and <span class="math inline">\(n_1\)</span>, <span
+class="math inline">\(n_0\)</span>, <span
+class="math inline">\(n\)</span> are sample sizes.</p>
+<h3 id="d.3-anova-for-technique-comparison">D.3 ANOVA for Technique
+Comparison</h3>
+<p>One-way ANOVA is used to compare success rates across techniques:</p>
+<p><span class="math display">\[\begin{equation}\label{eq:anova_f}
+F = \frac{MS_{between}}{MS_{within}} = \frac{SS_{between} /
+df_{between}}{SS_{within} / df_{within}}
+\end{equation}\]</span></p>
+<p>Post-hoc tests (Tukey HSD) identify specific technique
+differences.</p>
+<h2 id="e.-economic-model-parameters">E. Economic Model Parameters</h2>
+<h3 id="e.1-cost-parameters">E.1 Cost Parameters</h3>
+<p><strong>Labor Costs</strong>: - Skilled grafter: $25-40/hour - Grafts
+per hour: 20-50 (depending on technique) - Labor cost per graft:
+$0.50-2.00</p>
+<p><strong>Material Costs</strong>: - Grafting tape: $0.10-0.20 per
+graft - Grafting wax: $0.05-0.15 per graft - Tools (amortized):
+$0.10-0.30 per graft - Total material: $0.25-0.65 per graft</p>
+<p><strong>Overhead Costs</strong>: - Facility and utilities: $0.20-0.50
+per graft - Management and administration: $0.10-0.30 per graft</p>
+<p><strong>Total Cost Range</strong>: $1.05-3.45 per graft (average
+$3.50)</p>
+<h3 id="e.2-revenue-parameters">E.2 Revenue Parameters</h3>
+<p><strong>Value per Successful Graft</strong>: - Fruit tree sapling:
+$15-30 - Ornamental tree: $20-50 - Specialty/rare species: $50-200 -
+Average: $20.00</p>
+<p><strong>Time to Market</strong>: 1-3 years depending on species and
+growth rate</p>
+<h3 id="e.3-economic-metrics">E.3 Economic Metrics</h3>
+<p><strong>Net Profit</strong>: <span
+class="math display">\[\begin{equation}\label{eq:net_profit}
+\text{Net Profit} = \text{Revenue} - \text{Total Cost}
+\end{equation}\]</span></p>
+<p><strong>Return on Investment (ROI)</strong>: <span
+class="math display">\[\begin{equation}\label{eq:roi}
+\text{ROI} = \frac{\text{Net Profit}}{\text{Total Cost}} \times 100\%
+\end{equation}\]</span></p>
+<p><strong>Break-Even Success Rate</strong>: <span
+class="math display">\[\begin{equation}\label{eq:break_even}
+\text{Break-Even Rate} = \frac{\text{Cost per Graft}}{\text{Value per
+Successful Graft}}
+\end{equation}\]</span></p>
+<p>Typical break-even rates: 15-20%, well below average success rates of
+70-85%.</p>
+<h2 id="f.-environmental-parameter-ranges">F. Environmental Parameter
+Ranges</h2>
+<h3 id="f.1-temperature-ranges-by-species-type">F.1 Temperature Ranges
+by Species Type</h3>
+<table>
+<thead>
+<tr>
+<th>Species Type</th>
+<th>Optimal Range</th>
+<th>Acceptable Range</th>
+<th>Suboptimal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Temperate</td>
+<td>20-25°C</td>
+<td>15-30°C</td>
+<td>&lt;15°C or &gt;30°C</td>
+</tr>
+<tr>
+<td>Tropical</td>
+<td>22-28°C</td>
+<td>18-35°C</td>
+<td>&lt;18°C or &gt;35°C</td>
+</tr>
+<tr>
+<td>Subtropical</td>
+<td>15-25°C</td>
+<td>8-32°C</td>
+<td>&lt;8°C or &gt;32°C</td>
+</tr>
+</tbody>
+</table>
+<h3 id="f.2-humidity-ranges">F.2 Humidity Ranges</h3>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Optimal</th>
+<th>Acceptable</th>
+<th>Suboptimal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Relative Humidity</td>
+<td>70-90%</td>
+<td>50-70% or 90-100%</td>
+<td>&lt;50%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="f.3-seasonal-windows">F.3 Seasonal Windows</h3>
+<table>
+<thead>
+<tr>
+<th>Species Type</th>
+<th>Northern Hemisphere</th>
+<th>Southern Hemisphere</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Temperate</td>
+<td>Feb-Apr (months 2-4)</td>
+<td>Aug-Oct (months 8-10)</td>
+</tr>
+<tr>
+<td>Tropical</td>
+<td>Jun-Sep (months 6-9)</td>
+<td>Dec-Mar (months 12-3)</td>
+</tr>
+<tr>
+<td>Subtropical</td>
+<td>Nov-Mar (months 11-3)</td>
+<td>May-Sep (months 5-9)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="g.-computational-environment">G. Computational Environment</h2>
+<p>All computational analyses were conducted using:</p>
+<ul>
+<li><strong>Python</strong>: 3.10+</li>
+<li><strong>NumPy</strong>: 1.24+ (numerical computations)</li>
+<li><strong>Matplotlib</strong>: 3.7+ (visualization)</li>
+<li><strong>SciPy</strong>: 1.10+ (statistical analysis)</li>
+<li><strong>Platform</strong>: Cross-platform (Linux, macOS,
+Windows)</li>
+</ul>
+<p>Simulations use seeded random number generators for reproducibility,
+with all random seeds documented in analysis scripts.</p>
 </body>
 </html>

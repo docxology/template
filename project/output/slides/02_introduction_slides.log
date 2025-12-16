@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  16 DEC 2025 06:42
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  16 DEC 2025 12:28
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -864,12 +864,21 @@ LaTeX Info: Redefining \microtypesetup on input line 3065.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2021-03-14 v2.0h non-zero parskip adjustments
 )
+(/usr/local/texlive/2025/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2024/01/20 4.5c verbatim text (tvz,hv)
+\FV@CodeLineNo=\count372
+\FV@InFile=\read3
+\FV@TabBox=\box81
+\c@FancyVerbLine=\count373
+\FV@StepNumber=\count374
+\FV@OutFile=\write5
+)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/bookmark/bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/bookmark/bkm-dvipdfm.def
 File: bkm-dvipdfm.def 2023-12-10 v1.31 bookmark driver for dvipdfm (HO)
-\BKM@id=\count372
+\BKM@id=\count375
 ))
 (/usr/local/texlive/2025/texmf-dist/tex/latex/xurl/xurl.sty
 Package: xurl 2022/01/09 v 0.10 modify URL breaks
@@ -878,26 +887,26 @@ Package: xurl 2022/01/09 v 0.10 modify URL breaks
 es.aux)
 \openout1 = `02_introduction_slides.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 90.
-LaTeX Font Info:    ... okay on input line 90.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -933,7 +942,7 @@ LaTeX Font Info:    ... okay on input line 90.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 90.
+Package hyperref Info: Link coloring OFF on input line 128.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/translator/translator-basic-dicti
 onary-English.dict
@@ -960,19 +969,19 @@ tionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 90.
+(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 90.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 90.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 90.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 90.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 90.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 90.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 128.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1003,7 +1012,7 @@ allCapsFont={},Script=Math,BoldFont={latinmodern-math.otf}].
 =math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 90.
+(Font)              scaled to size 11.28015pt on input line 128.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1046,17 +1055,18 @@ dern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 =math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 11.28015pt on input line 90.
+(Font)              scaled to size 11.28015pt on input line 128.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 90.
+(Font)              `operators' in the math version `normal' on input line 128.
+
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 90.
+ line 128.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 90.
+(Font)              `operators' in the math version `bold' on input line 128.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 90.
+t line 128.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1130,15 +1140,15 @@ nmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 90.
+(Font)              `symbols' in the math version `normal' on input line 128.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 90.
+t line 128.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 90.
+(Font)              `symbols' in the math version `bold' on input line 128.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 90.
+t line 128.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 1.03015890977869.
@@ -1206,24 +1216,24 @@ nmodern-math.otf]/OT:script=math;language=dflt;+ssty=1;"
 t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `normal' on input line 9
-0.
+(Font)              `largesymbols' in the math version `normal' on input line 1
+28.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 90.
+t line 128.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 90.
-
+(Font)              `largesymbols' in the math version `bold' on input line 128
+.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 90.
-LaTeX Info: Redefining \microtypecontext on input line 90.
-Package microtype Info: Applying patch `item' on input line 90.
-Package microtype Info: Applying patch `toc' on input line 90.
-Package microtype Info: Applying patch `eqnum' on input line 90.
-Package microtype Info: Applying patch `footnote' on input line 90.
-Package microtype Info: Applying patch `verbatim' on input line 90.
-LaTeX Info: Redefining \microtypesetup on input line 90.
+t line 128.
+LaTeX Info: Redefining \microtypecontext on input line 128.
+Package microtype Info: Applying patch `item' on input line 128.
+Package microtype Info: Applying patch `toc' on input line 128.
+Package microtype Info: Applying patch `eqnum' on input line 128.
+Package microtype Info: Applying patch `footnote' on input line 128.
+Package microtype Info: Applying patch `verbatim' on input line 128.
+LaTeX Info: Redefining \microtypesetup on input line 128.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1241,20 +1251,35 @@ es.nav)
 
 ]
 
-LaTeX Warning: Citation `boyd2004' on page 2 undefined on input line 102.
+LaTeX Warning: Citation `garner2013' on page 2 undefined on input line 144.
 
 
-LaTeX Warning: Citation `nesterov2018' on page 2 undefined on input line 102.
+LaTeX Warning: Citation `white1970' on page 2 undefined on input line 144.
 
 
-LaTeX Warning: Citation `kingma2014' on page 2 undefined on input line 102.
-
-
-LaTeX Warning: Citation `duchi2011' on page 2 undefined on input line 102.
+LaTeX Warning: Citation `needham1984' on page 2 undefined on input line 144.
 
 
 
 [2
+
+]
+
+LaTeX Warning: Citation `webster2002' on page 3 undefined on input line 158.
+
+
+LaTeX Warning: Citation `hartmann2014' on page 3 undefined on input line 158.
+
+
+LaTeX Warning: Citation `stebbins1950' on page 3 undefined on input line 158.
+
+
+
+[3
+
+]
+
+[4
 
 ]
 \openout4 = `02_introduction_slides.vrb'.
@@ -1263,27 +1288,28 @@ LaTeX Warning: Citation `duchi2011' on page 2 undefined on input line 102.
 (/Users/4d/Documents/GitHub/template/project/output/slides/02_introduction_slid
 es.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 8.
+(Font)              scaled to size 7.8961pt on input line 10.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 8.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 8
-.
+(Font)              scaled to size 5.64008pt on input line 10.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
+0.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 8.
+(Font)              scaled to size 11.28131pt on input line 10.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 8.
+(Font)              scaled to size 7.89691pt on input line 10.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 8.
+(Font)              scaled to size 5.64066pt on input line 10.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 8.
+(Font)              scaled to size 11.27914pt on input line 10.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 8.
+(Font)              scaled to size 7.8954pt on input line 10.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 8.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 8.
+(Font)              scaled to size 5.63957pt on input line 10.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 10.
+
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -1291,7 +1317,8 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 8.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 10.
+
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1300,61 +1327,64 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 8.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 10.
 )
-
-[3
-
-]
-\openout4 = `02_introduction_slides.vrb'.
-
-
-(/Users/4d/Documents/GitHub/template/project/output/slides/02_introduction_slid
-es.vrb)
-
-[4
-
-]
-
-LaTeX Warning: Reference `sec:abstract' on page 5 undefined on input line 184.
-
-
-LaTeX Warning: Reference `sec:introduction' on page 5 undefined on input line 1
-84.
-
-
-LaTeX Warning: Reference `sec:methodology' on page 5 undefined on input line 18
-4.
-
-
-LaTeX Warning: Reference `sec:experimental_results' on page 5 undefined on inpu
-t line 184.
-
-
-LaTeX Warning: Reference `sec:discussion' on page 5 undefined on input line 184
-.
-
-
-LaTeX Warning: Reference `sec:conclusion' on page 5 undefined on input line 184
-.
-
-
-LaTeX Warning: Reference `sec:references' on page 5 undefined on input line 184
-.
-
-
 
 [5
 
 ]
+Overfull \vbox (13.3376pt too high) detected at line 233
+ []
 
-LaTeX Warning: File `../output/figures/example_figure.png' not found on input l
-ine 203.
 
-! Unable to load picture or PDF file '../output/figures/example_figure.png'.
+
+[6
+
+]
+
+LaTeX Warning: Reference `sec:abstract' on page 7 undefined on input line 266.
+
+
+LaTeX Warning: Reference `sec:introduction' on page 7 undefined on input line 2
+66.
+
+
+LaTeX Warning: Reference `sec:methodology' on page 7 undefined on input line 26
+6.
+
+
+LaTeX Warning: Reference `sec:experimental_results' on page 7 undefined on inpu
+t line 266.
+
+
+LaTeX Warning: Reference `sec:discussion' on page 7 undefined on input line 266
+.
+
+
+LaTeX Warning: Reference `sec:conclusion' on page 7 undefined on input line 266
+.
+
+
+LaTeX Warning: Reference `sec:references' on page 7 undefined on input line 266
+.
+
+
+Overfull \vbox (7.59543pt too high) detected at line 266
+ []
+
+
+
+[7
+
+]
+
+LaTeX Warning: File `../output/figures/graft_anatomy.png' not found on input li
+ne 284.
+
+! Unable to load picture or PDF file '../output/figures/graft_anatomy.png'.
 <to be read again> 
                    }
-l.203 \end{frame}
+l.284 \end{frame}
                  
 The requested image couldn't be read because
 it was not a recognized image format.
@@ -1366,33 +1396,15 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.203 \end{frame}
+l.284 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
-File: ../output/figures/example_figure.png Graphic file (type bmp)
-<../output/figures/example_figure.png>
+File: ../output/figures/graft_anatomy.png Graphic file (type bmp)
+<../output/figures/graft_anatomy.png>
 
-
-[6
-
-]
-\openout4 = `02_introduction_slides.vrb'.
-
-
-(/Users/4d/Documents/GitHub/template/project/output/slides/02_introduction_slid
-es.vrb)
-
-[7
-
-]
-\openout4 = `02_introduction_slides.vrb'.
-
-
-(/Users/4d/Documents/GitHub/template/project/output/slides/02_introduction_slid
-es.vrb)
 
 [8
 
@@ -1410,27 +1422,28 @@ es.vrb)
 
 
 (/Users/4d/Documents/GitHub/template/project/output/slides/02_introduction_slid
-es.vrb
-
-LaTeX Warning: Reference `sec:methodology' on page 10 undefined on input line 1
-2.
-
-
-LaTeX Warning: Reference `eq:objective' on page 10 undefined on input line 22.
-
-)
+es.vrb)
 
 [10
 
 ]
-\tf@nav=\write5
-\openout5 = `02_introduction_slides.nav'.
+\openout4 = `02_introduction_slides.vrb'.
 
-\tf@toc=\write6
-\openout6 = `02_introduction_slides.toc'.
 
-\tf@snm=\write7
-\openout7 = `02_introduction_slides.snm'.
+(/Users/4d/Documents/GitHub/template/project/output/slides/02_introduction_slid
+es.vrb)
+
+[11
+
+]
+\tf@nav=\write6
+\openout6 = `02_introduction_slides.nav'.
+
+\tf@toc=\write7
+\openout7 = `02_introduction_slides.toc'.
+
+\tf@snm=\write8
+\openout8 = `02_introduction_slides.snm'.
 
 
 (/Users/4d/Documents/GitHub/template/project/output/slides/02_introduction_slid
@@ -1445,11 +1458,11 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 29467 strings out of 473832
- 597111 string characters out of 5729482
- 1126170 words of memory out of 5000000
- 51991 multiletter control sequences out of 15000+600000
- 562372 words of font info for 68 fonts, out of 8000000 for 9000
+ 29908 strings out of 473832
+ 603825 string characters out of 5729482
+ 1135946 words of memory out of 5000000
+ 52430 multiletter control sequences out of 15000+600000
+ 562380 words of font info for 69 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1077b,417s stack positions out of 10000i,1000n,20000p,200000b,200000s
 

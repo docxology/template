@@ -87,11 +87,11 @@ sudo tlmgr install multirow cleveref doi newunicodechar
     bookmarks=true,
     bookmarksnumbered=true,
     bookmarkstype=toc,
-    pdftitle={Research Project Template},
-    pdfauthor={Template Author},
-    pdfsubject={Academic Research},
-    pdfkeywords={research, template, academic, LaTeX},
-    pdfcreator={render_pdf.sh},
+    pdftitle={Tree Grafting Science and Practice},
+    pdfauthor={InferAnt #016},
+    pdfsubject={Horticultural Science and Computational Agriculture},
+    pdfkeywords={tree grafting, compatibility prediction, rootstock selection, computational agriculture},
+    pdfcreator={Research Project Template},
     pdfproducer={XeLaTeX}
 }
 

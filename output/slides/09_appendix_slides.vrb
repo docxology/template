@@ -1,234 +1,346 @@
 \frametitle{Appendix}
 \protect\phantomsection\label{sec:appendix}
-This appendix provides additional technical details and derivations that
-support the main results.
+This appendix provides additional technical details, species
+compatibility tables, and detailed protocols that support the main
+results.
 
-\begin{block}{A. Detailed Proofs}
-\protect\phantomsection\label{a.-detailed-proofs}
-\begin{block}{A.1 Proof of Convergence (Theorem 1)}
-\protect\phantomsection\label{a.1-proof-of-convergence-theorem-1}
-The convergence rate established in \eqref{eq:convergence} follows from
-the following detailed analysis.
-
-\textbf{Proof}: Let \(x_k\) be the iterate at step \(k\). From the
-update rule \eqref{eq:update}, we have:
-
-\begin{equation}\label{eq:appendix_update}
-x_{k+1} = x_k - \alpha_k \nabla f(x_k) + \beta_k (x_k - x_{k-1})
-\end{equation}
-
-By the Lipschitz continuity of \(\nabla f\), there exists a constant
-\(L > 0\) such that:
-
-\begin{equation}\label{eq:lipschitz}
-\|\nabla f(x) - \nabla f(y)\| \leq L \|x - y\|, \quad \forall x, y \in \mathcal{X}
-\end{equation}
-
-Using strong convexity with parameter \(\mu > 0\)
-\cite{boyd2004, nesterov2018}:
-
-\begin{equation}\label{eq:strong_convexity}
-f(y) \geq f(x) + \nabla f(x)^T (y - x) + \frac{\mu}{2} \|y - x\|^2
-\end{equation}
-
-Combining these properties with the adaptive step size rule
-\eqref{eq:adaptive_step}, following the analysis framework in
-\cite{duchi2011, bertsekas2015}, we obtain the linear convergence rate
-with \(\rho = \sqrt{1 - \mu/L}\). \(\square\)
-\end{block}
-
-\begin{block}{A.2 Complexity Analysis}
-\protect\phantomsection\label{a.2-complexity-analysis}
-The computational complexity per iteration is derived as follows:
+\begin{block}{A. Detailed Technique Protocols}
+\protect\phantomsection\label{a.-detailed-technique-protocols}
+\begin{block}{A.1 Whip and Tongue Grafting Protocol}
+\protect\phantomsection\label{a.1-whip-and-tongue-grafting-protocol}
+\textbf{Complete Step-by-Step Procedure}:
 
 \begin{enumerate}
 \tightlist
 \item
-  \textbf{Gradient computation}: \(O(n)\) for dense problems, \(O(k)\)
-  for sparse problems with \(k\) non-zeros
+  \textbf{Timing}: Late winter to early spring (February-April in
+  northern hemisphere)
 \item
-  \textbf{Update rule}: \(O(n)\) for vector operations
+  \textbf{Rootstock Selection}: Healthy, vigorous, diameter 5-25 mm
 \item
-  \textbf{Adaptive step size}: \(O(1)\) for the update in
-  \eqref{eq:adaptive_step}
+  \textbf{Scion Selection}: Dormant, 1-year-old wood, 2-4 buds, matching
+  diameter
 \item
-  \textbf{Momentum term}: \(O(n)\) for the momentum computation
+  \textbf{Cut Preparation}:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Rootstock: 30-45° angle cut, 2-3 cm long, tongue 1 cm deep
+  \item
+    Scion: Matching cut and tongue
+  \end{itemize}
+\item
+  \textbf{Alignment}: Precise cambium alignment on both sides
+\item
+  \textbf{Securing}: Grafting tape wrap, wax seal
+\item
+  \textbf{Protection}: Shade, humidity control, monitoring
 \end{enumerate}
 
-Total per-iteration complexity: \(O(n)\) for dense problems.
-
-For structured problems, we can exploit the separable structure of
-\eqref{eq:objective} to achieve \(O(n \log n)\) complexity using
-efficient data structures (see Figure \ref{fig:data_structure}).
-\end{block}
+\textbf{Success Factors}: - Diameter match within 10\% - Sharp, clean
+cuts - Rapid operation (\textless2 minutes) - Proper sealing
 \end{block}
 
-\begin{block}{B. Additional Experimental Details}
-\protect\phantomsection\label{b.-additional-experimental-details}
-\begin{block}{B.1 Hyperparameter Tuning}
-\protect\phantomsection\label{b.1-hyperparameter-tuning}
-The following hyperparameters were used in our experiments:
+\begin{block}{A.2 Cleft Grafting Protocol}
+\protect\phantomsection\label{a.2-cleft-grafting-protocol}
+\textbf{Complete Procedure}:
 
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Parameter} & \textbf{Symbol} & \textbf{Value} & \textbf{Range Tested} \\
-\hline
-Learning rate & $\alpha_0$ & 0.01 & [0.001, 0.1] \\
-Momentum & $\beta$ & 0.9 & [0.5, 0.99] \\
-Regularization & $\lambda$ & 0.001 & [0, 0.01] \\
-Tolerance & $\epsilon$ & $10^{-6}$ & [$10^{-8}$, $10^{-4}$] \\
-\hline
-\end{tabular}
-\caption{Hyperparameter settings used in experiments}
-\label{tab:hyperparameters}
-\end{table}
-\end{block}
-
-\begin{block}{B.2 Computational Environment}
-\protect\phantomsection\label{b.2-computational-environment}
-All experiments were conducted on: - \textbf{CPU}: Intel Xeon E5-2690 v4
-@ 2.60GHz (28 cores) - \textbf{RAM}: 128GB DDR4 - \textbf{GPU}: NVIDIA
-Tesla V100 (32GB VRAM) for large-scale experiments - \textbf{OS}: Ubuntu
-20.04 LTS - \textbf{Python}: 3.10.12 - \textbf{NumPy}: 1.24.3 -
-\textbf{SciPy}: 1.10.1
-\end{block}
-
-\begin{block}{B.3 Dataset Preparation}
-\protect\phantomsection\label{b.3-dataset-preparation}
-Datasets were preprocessed using standard normalization:
-
-\begin{equation}\label{eq:normalization}
-\tilde{x}_i = \frac{x_i - \mu}{\sigma}
-\end{equation}
-
-where \(\mu\) and \(\sigma\) are the mean and standard deviation
-computed from the training set.
-\end{block}
-\end{block}
-
-\begin{block}{C. Extended Results}
-\protect\phantomsection\label{c.-extended-results}
-\begin{block}{C.1 Additional Benchmark Comparisons}
-\protect\phantomsection\label{c.1-additional-benchmark-comparisons}
-Table \ref{tab:extended_comparison} provides detailed performance
-comparison across all tested methods.
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|c|}
-\hline
-\textbf{Method} & \textbf{Time (s)} & \textbf{Iterations} & \textbf{Final Error} & \textbf{Memory (MB)} \\
-\hline
-Our Method & 12.3 & 245 & $1.2 \times 10^{-6}$ & 156 \\
-Gradient Descent & 18.7 & 412 & $1.5 \times 10^{-6}$ & 312 \\
-Adam & 15.4 & 358 & $1.4 \times 10^{-6}$ & 298 \\
-L-BFGS & 16.2 & 198 & $1.1 \times 10^{-6}$ & 425 \\
-\hline
-\end{tabular}
-\caption{Extended performance comparison with computational details}
-\label{tab:extended_comparison}
-\end{table}
-\end{block}
-
-\begin{block}{C.2 Sensitivity Analysis}
-\protect\phantomsection\label{c.2-sensitivity-analysis}
-Detailed sensitivity analysis for all hyperparameters shows robust
-performance across wide parameter ranges, confirming the theoretical
-predictions from Section \ref{sec:methodology}.
-\end{block}
-\end{block}
-
-\begin{block}{E. Infrastructure Capabilities}
-\protect\phantomsection\label{e.-infrastructure-capabilities}
-\begin{itemize}
+\begin{enumerate}
 \tightlist
 \item
-  \textbf{Validation}: \texttt{validate\_markdown} and
-  \texttt{validate\_figure\_registry} ensure anchors, equations, and
-  figures resolve before rendering; \texttt{verify\_output\_integrity}
-  checks generated artifacts post-build.
+  \textbf{Timing}: Late winter (dormant season)
 \item
-  \textbf{Quality}: \texttt{analyze\_document\_quality} reports
-  readability and structure metrics used in the quality report;
-  \texttt{quality\_report.py} aggregates markdown, integrity, and
-  reproducibility signals.
+  \textbf{Rootstock}: Diameter 10-50 mm, cut horizontally
 \item
-  \textbf{Reproducibility}: \texttt{generate\_reproducibility\_report}
-  captures environment, dependency, and artifact snapshots for each run.
+  \textbf{Split}: Vertical split 3-5 cm deep
 \item
-  \textbf{Reporting}: Pipeline reports
-  (\texttt{output/reports/pipeline\_report.*}) summarize stage outcomes,
-  errors, and validation findings for auditability.
+  \textbf{Scion}: Wedge-shaped, 2-3 buds, cambium exposed
 \item
-  \textbf{Commands}:
-  \texttt{python3\ project/scripts/manuscript\_preflight.py\ -\/-strict}
-  for gating, \texttt{python3\ project/scripts/quality\_report.py} for
-  consolidated metrics, and \texttt{python3\ scripts/run\_all.py} for
-  full pipeline execution with validation gates.
-\end{itemize}
+  \textbf{Insertion}: Align cambium, insert 1-2 scions
+\item
+  \textbf{Sealing}: Complete wax coverage
+\item
+  \textbf{Protection}: Weather protection, monitoring
+\end{enumerate}
+\end{block}
 \end{block}
 
-\begin{block}{D. Implementation Details}
-\protect\phantomsection\label{d.-implementation-details}
-\begin{block}{D.1 Pseudocode}
-\protect\phantomsection\label{d.1-pseudocode}
+\begin{block}{B. Species Compatibility Tables}
+\protect\phantomsection\label{b.-species-compatibility-tables}
+\begin{block}{B.1 Apple (Malus domestica) Compatibility}
+\protect\phantomsection\label{b.1-apple-malus-domestica-compatibility}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Rootstock & Scion & Compatibility & Notes \\
+\midrule\noalign{}
+\endhead
+M.9 & M. domestica & 0.95 & Standard combination \\
+M.26 & M. domestica & 0.93 & Dwarfing rootstock \\
+Seedling & M. domestica & 0.90 & Variable vigor \\
+M.9 & Pyrus communis & 0.65 & Cross-genus, moderate \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{B.2 Pear (Pyrus communis) Compatibility}
+\protect\phantomsection\label{b.2-pear-pyrus-communis-compatibility}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Rootstock & Scion & Compatibility & Notes \\
+\midrule\noalign{}
+\endhead
+P. betulifolia & P. communis & 0.92 & Common rootstock \\
+P. calleryana & P. communis & 0.88 & Ornamental rootstock \\
+Quince & P. communis & 0.75 & Inter-generic, dwarfing \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{B.3 Stone Fruits Compatibility}
+\protect\phantomsection\label{b.3-stone-fruits-compatibility}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Rootstock & Scion & Compatibility & Notes \\
+\midrule\noalign{}
+\endhead
+Prunus avium & P. avium & 0.94 & Cherry on cherry \\
+P. mahaleb & P. avium & 0.85 & Standard cherry rootstock \\
+P. persica & P. persica & 0.92 & Peach on peach \\
+P. domestica & P. persica & 0.70 & Cross-species, moderate \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+\end{block}
+
+\begin{block}{C. Software API Documentation}
+\protect\phantomsection\label{c.-software-api-documentation}
+\begin{block}{C.1 Core Functions}
+\protect\phantomsection\label{c.1-core-functions}
+\textbf{\texttt{check\_cambium\_alignment(rootstock\_diameter,\ scion\_diameter,\ tolerance=0.1)}}
+
+Checks if rootstock and scion diameters are compatible for cambium
+alignment.
+
+\textbf{Parameters}: - \texttt{rootstock\_diameter}: Rootstock stem
+diameter (mm) - \texttt{scion\_diameter}: Scion stem diameter (mm) -
+\texttt{tolerance}: Maximum relative difference allowed (default 0.1)
+
+\textbf{Returns}: Tuple of (is\_compatible: bool, diameter\_ratio:
+float)
+
+\textbf{Example}:
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{def}\NormalTok{ optimize(f, x0, alpha0, beta, max\_iter, tol):}
-    \CommentTok{"""}
-\CommentTok{    Optimization algorithm implementation.}
-\CommentTok{    }
-\CommentTok{    Args:}
-\CommentTok{        f: Objective function}
-\CommentTok{        x0: Initial point}
-\CommentTok{        alpha0: Initial learning rate}
-\CommentTok{        beta: Momentum coefficient}
-\CommentTok{        max\_iter: Maximum iterations}
-\CommentTok{        tol: Convergence tolerance}
-\CommentTok{    }
-\CommentTok{    Returns:}
-\CommentTok{        x\_opt: Optimal solution}
-\CommentTok{        history: Convergence history}
-\CommentTok{    """}
-\NormalTok{    x }\OperatorTok{=}\NormalTok{ x0}
-\NormalTok{    x\_prev }\OperatorTok{=}\NormalTok{ x0}
-\NormalTok{    history }\OperatorTok{=}\NormalTok{ []}
-\NormalTok{    grad\_sum\_sq }\OperatorTok{=} \DecValTok{0}
+\NormalTok{is\_compat, ratio }\OperatorTok{=}\NormalTok{ check\_cambium\_alignment(}\FloatTok{15.0}\NormalTok{, }\FloatTok{14.5}\NormalTok{, tolerance}\OperatorTok{=}\FloatTok{0.1}\NormalTok{)}
+\CommentTok{\# Returns: (True, 0.967)}
+\end{Highlighting}
+\end{Shaded}
 
-    \ControlFlowTok{for}\NormalTok{ k }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(max\_iter):}
-        \CommentTok{\# Compute gradient}
-\NormalTok{        grad }\OperatorTok{=}\NormalTok{ compute\_gradient(f, x)}
-\NormalTok{        grad\_sum\_sq }\OperatorTok{+=}\NormalTok{ np.linalg.norm(grad)}\OperatorTok{**}\DecValTok{2}
+\textbf{\texttt{predict\_compatibility\_combined(phylogenetic\_distance,\ cambium\_match,\ growth\_rate\_match,\ weights=None)}}
 
-        \CommentTok{\# Adaptive step size}
-\NormalTok{        alpha }\OperatorTok{=}\NormalTok{ alpha0 }\OperatorTok{/}\NormalTok{ np.sqrt(}\DecValTok{1} \OperatorTok{+}\NormalTok{ grad\_sum\_sq)}
+Predicts compatibility using multiple factors.
 
-        \CommentTok{\# Update with momentum}
-\NormalTok{        x\_new }\OperatorTok{=}\NormalTok{ x }\OperatorTok{{-}}\NormalTok{ alpha }\OperatorTok{*}\NormalTok{ grad }\OperatorTok{+}\NormalTok{ beta }\OperatorTok{*}\NormalTok{ (x }\OperatorTok{{-}}\NormalTok{ x\_prev)}
+\textbf{Parameters}: - \texttt{phylogenetic\_distance}: Phylogenetic
+distance (0-1) - \texttt{cambium\_match}: Cambium thickness match score
+(0-1) - \texttt{growth\_rate\_match}: Growth rate match score (0-1) -
+\texttt{weights}: Optional weights dictionary
 
-        \CommentTok{\# Check convergence}
-        \ControlFlowTok{if}\NormalTok{ np.linalg.norm(x\_new }\OperatorTok{{-}}\NormalTok{ x) }\OperatorTok{\textless{}}\NormalTok{ tol:}
-            \ControlFlowTok{break}
+\textbf{Returns}: Combined compatibility score (0-1)
+\end{block}
 
-        \CommentTok{\# Update history}
-\NormalTok{        history.append(\{}\StringTok{\textquotesingle{}iter\textquotesingle{}}\NormalTok{: k, }\StringTok{\textquotesingle{}error\textquotesingle{}}\NormalTok{: f(x\_new)\})}
+\begin{block}{C.2 Simulation Functions}
+\protect\phantomsection\label{c.2-simulation-functions}
+\textbf{\texttt{CambiumIntegrationSimulation(parameters,\ seed,\ output\_dir)}}
 
-        \CommentTok{\# Prepare next iteration}
-\NormalTok{        x\_prev }\OperatorTok{=}\NormalTok{ x}
-\NormalTok{        x }\OperatorTok{=}\NormalTok{ x\_new}
+Simulates cambium integration and callus formation process.
 
-    \ControlFlowTok{return}\NormalTok{ x, history}
+\textbf{Parameters}: - \texttt{parameters}: Dictionary with
+compatibility, temperature, humidity, etc. - \texttt{seed}: Random seed
+for reproducibility - \texttt{output\_dir}: Directory for saving results
+
+\textbf{Methods}: -
+\texttt{run(max\_days,\ save\_checkpoints,\ verbose)}: Run simulation -
+\texttt{save\_results(filename,\ formats)}: Save simulation results
+
+\textbf{Example}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{params }\OperatorTok{=}\NormalTok{ \{}\StringTok{"compatibility"}\NormalTok{: }\FloatTok{0.8}\NormalTok{, }\StringTok{"temperature"}\NormalTok{: }\FloatTok{22.0}\NormalTok{, }\StringTok{"humidity"}\NormalTok{: }\FloatTok{0.8}\NormalTok{\}}
+\NormalTok{sim }\OperatorTok{=}\NormalTok{ CambiumIntegrationSimulation(parameters}\OperatorTok{=}\NormalTok{params, seed}\OperatorTok{=}\DecValTok{42}\NormalTok{)}
+\NormalTok{state }\OperatorTok{=}\NormalTok{ sim.run(max\_days}\OperatorTok{=}\DecValTok{60}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 \end{block}
-
-\begin{block}{D.2 Performance Optimizations}
-\protect\phantomsection\label{d.2-performance-optimizations}
-Key performance optimizations implemented: 1. Vectorized operations
-using NumPy 2. Sparse matrix representations when applicable 3. In-place
-updates to reduce memory allocation 4. Parallel gradient computations
-for separable problems
 \end{block}
+
+\begin{block}{D. Statistical Methods Details}
+\protect\phantomsection\label{d.-statistical-methods-details}
+\begin{block}{D.1 Success Rate Analysis}
+\protect\phantomsection\label{d.1-success-rate-analysis}
+Success rates are calculated using:
+
+\begin{equation}\label{eq:success_rate_calc}
+\text{Success Rate} = \frac{\text{Number of Successful Grafts}}{\text{Total Number of Grafts}}
+\end{equation}
+
+Confidence intervals are calculated using the normal approximation to
+the binomial distribution:
+
+\begin{equation}\label{eq:confidence_interval}
+CI = p \pm z_{\alpha/2} \sqrt{\frac{p(1-p)}{n}}
+\end{equation}
+
+where \(p\) is the observed success rate, \(n\) is the sample size, and
+\(z_{\alpha/2}\) is the critical value for confidence level \(\alpha\).
+\end{block}
+
+\begin{block}{D.2 Correlation Analysis}
+\protect\phantomsection\label{d.2-correlation-analysis}
+Correlation between factors and success is calculated using
+point-biserial correlation for binary success outcomes:
+
+\begin{equation}\label{eq:point_biserial}
+r_{pb} = \frac{M_1 - M_0}{s} \sqrt{\frac{n_1 n_0}{n^2}}
+\end{equation}
+
+where \(M_1\) and \(M_0\) are means for successful and failed grafts,
+\(s\) is the standard deviation, and \(n_1\), \(n_0\), \(n\) are sample
+sizes.
+\end{block}
+
+\begin{block}{D.3 ANOVA for Technique Comparison}
+\protect\phantomsection\label{d.3-anova-for-technique-comparison}
+One-way ANOVA is used to compare success rates across techniques:
+
+\begin{equation}\label{eq:anova_f}
+F = \frac{MS_{between}}{MS_{within}} = \frac{SS_{between} / df_{between}}{SS_{within} / df_{within}}
+\end{equation}
+
+Post-hoc tests (Tukey HSD) identify specific technique differences.
+\end{block}
+\end{block}
+
+\begin{block}{E. Economic Model Parameters}
+\protect\phantomsection\label{e.-economic-model-parameters}
+\begin{block}{E.1 Cost Parameters}
+\protect\phantomsection\label{e.1-cost-parameters}
+\textbf{Labor Costs}: - Skilled grafter: \$25-40/hour - Grafts per hour:
+20-50 (depending on technique) - Labor cost per graft: \$0.50-2.00
+
+\textbf{Material Costs}: - Grafting tape: \$0.10-0.20 per graft -
+Grafting wax: \$0.05-0.15 per graft - Tools (amortized): \$0.10-0.30 per
+graft - Total material: \$0.25-0.65 per graft
+
+\textbf{Overhead Costs}: - Facility and utilities: \$0.20-0.50 per graft
+- Management and administration: \$0.10-0.30 per graft
+
+\textbf{Total Cost Range}: \$1.05-3.45 per graft (average \$3.50)
+\end{block}
+
+\begin{block}{E.2 Revenue Parameters}
+\protect\phantomsection\label{e.2-revenue-parameters}
+\textbf{Value per Successful Graft}: - Fruit tree sapling: \$15-30 -
+Ornamental tree: \$20-50 - Specialty/rare species: \$50-200 - Average:
+\$20.00
+
+\textbf{Time to Market}: 1-3 years depending on species and growth rate
+\end{block}
+
+\begin{block}{E.3 Economic Metrics}
+\protect\phantomsection\label{e.3-economic-metrics}
+\textbf{Net Profit}: \begin{equation}\label{eq:net_profit}
+\text{Net Profit} = \text{Revenue} - \text{Total Cost}
+\end{equation}
+
+\textbf{Return on Investment (ROI)}: \begin{equation}\label{eq:roi}
+\text{ROI} = \frac{\text{Net Profit}}{\text{Total Cost}} \times 100\%
+\end{equation}
+
+\textbf{Break-Even Success Rate}: \begin{equation}\label{eq:break_even}
+\text{Break-Even Rate} = \frac{\text{Cost per Graft}}{\text{Value per Successful Graft}}
+\end{equation}
+
+Typical break-even rates: 15-20\%, well below average success rates of
+70-85\%.
+\end{block}
+\end{block}
+
+\begin{block}{F. Environmental Parameter Ranges}
+\protect\phantomsection\label{f.-environmental-parameter-ranges}
+\begin{block}{F.1 Temperature Ranges by Species Type}
+\protect\phantomsection\label{f.1-temperature-ranges-by-species-type}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Species Type & Optimal Range & Acceptable Range & Suboptimal \\
+\midrule\noalign{}
+\endhead
+Temperate & 20-25°C & 15-30°C & \textless15°C or \textgreater30°C \\
+Tropical & 22-28°C & 18-35°C & \textless18°C or \textgreater35°C \\
+Subtropical & 15-25°C & 8-32°C & \textless8°C or \textgreater32°C \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{F.2 Humidity Ranges}
+\protect\phantomsection\label{f.2-humidity-ranges}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Condition & Optimal & Acceptable & Suboptimal \\
+\midrule\noalign{}
+\endhead
+Relative Humidity & 70-90\% & 50-70\% or 90-100\% & \textless50\% \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+
+\begin{block}{F.3 Seasonal Windows}
+\protect\phantomsection\label{f.3-seasonal-windows}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Species Type & Northern Hemisphere & Southern Hemisphere \\
+\midrule\noalign{}
+\endhead
+Temperate & Feb-Apr (months 2-4) & Aug-Oct (months 8-10) \\
+Tropical & Jun-Sep (months 6-9) & Dec-Mar (months 12-3) \\
+Subtropical & Nov-Mar (months 11-3) & May-Sep (months 5-9) \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+\end{block}
+
+\begin{block}{G. Computational Environment}
+\protect\phantomsection\label{g.-computational-environment}
+All computational analyses were conducted using:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Python}: 3.10+
+\item
+  \textbf{NumPy}: 1.24+ (numerical computations)
+\item
+  \textbf{Matplotlib}: 3.7+ (visualization)
+\item
+  \textbf{SciPy}: 1.10+ (statistical analysis)
+\item
+  \textbf{Platform}: Cross-platform (Linux, macOS, Windows)
+\end{itemize}
+
+Simulations use seeded random number generators for reproducibility,
+with all random seeds documented in analysis scripts.
 \end{block}

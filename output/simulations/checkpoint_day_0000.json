@@ -1,0 +1,32 @@
+{
+  "day": 0,
+  "parameters": {
+    "temperature": 22.0,
+    "humidity": 0.8,
+    "compatibility": 0.8,
+    "rootstock_diameter": 15.0,
+    "scion_diameter": 15.0,
+    "technique": "whip",
+    "technique_quality": 0.8,
+    "month": 3,
+    "species_type": "temperate",
+    "max_days": 45
+  },
+  "cambium_contact": 0.5019648,
+  "callus_formation": 0.015902244864,
+  "vascular_connection": 0.0,
+  "union_strength": 0.12428809076735998,
+  "results": {
+    "day_0": {
+      "cambium_contact": 0.5019648,
+      "callus_formation": 0.015902244864,
+      "vascular_connection": 0.0,
+      "union_strength": 0.12428809076735998,
+      "temperature": 22.0,
+      "humidity": 0.8
+    }
+  },
+  "metadata": {},
+  "timestamp": "2025-12-16 12:28:36",
+  "seed": 42
+}

@@ -175,99 +175,263 @@
 </head>
 <body>
 <h1 id="sec:methodology">Methodology</h1>
-<h2 id="mathematical-framework">Mathematical Framework</h2>
-<p>Our approach is based on a novel optimization framework that combines
-multiple mathematical techniques, extending classical convex
-optimization methods with modern adaptive strategies . The core
-algorithm can be expressed as follows:</p>
-<p><span class="math display">\[\begin{equation}\label{eq:objective}
-f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \lambda R(x)
+<h2 id="biological-mechanisms">Biological Mechanisms</h2>
+<h3 id="cambium-alignment-and-contact">Cambium Alignment and
+Contact</h3>
+<p>The success of graft union formation fundamentally depends on precise
+alignment of the cambium layers, the thin meristematic tissue
+responsible for secondary growth in plants . The cambium, located
+between the xylem and phloem, contains actively dividing cells that
+generate new vascular tissue. For successful grafting, the cambium
+layers of rootstock and scion must be brought into direct contact,
+enabling cell-to-cell communication and tissue integration.</p>
+<p>The cambium contact area can be quantified as:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:cambium_contact}
+C(t) = C_0 + \int_0^t r_c(\tau) \cdot A(\tau) \, d\tau
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\(x \in \mathbb{R}^d\)</span> is the
-optimization variable, <span class="math inline">\(w_i\)</span> are
-learned weights, <span class="math inline">\(\phi_i\)</span> are basis
-functions, and <span class="math inline">\(R(x)\)</span> is a
-regularization term with strength <span
-class="math inline">\(\lambda\)</span>.</p>
-<p>The optimization problem we solve is:</p>
-<p><span class="math display">\[\begin{equation}\label{eq:optimization}
-\min_{x \in \mathcal{X}} f(x) \quad \text{subject to} \quad g_i(x) \leq
-0, \quad i = 1, \ldots, m
+<p>where <span class="math inline">\(C(t)\)</span> is the cambium
+contact area at time <span class="math inline">\(t\)</span>, <span
+class="math inline">\(C_0\)</span> is the initial contact area
+(determined by technique quality), <span
+class="math inline">\(r_c(\tau)\)</span> is the cambium growth rate, and
+<span class="math inline">\(A(\tau)\)</span> is the available contact
+area.</p>
+<h3 id="callus-formation">Callus Formation</h3>
+<p>Following cambium contact, callus tissue forms at the graft
+interface. Callus consists of undifferentiated parenchyma cells that
+proliferate to bridge the gap between rootstock and scion . The callus
+formation process follows an exponential growth pattern:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:callus_formation}
+F(t) = F_{\max} \left(1 - e^{-\lambda_c t}\right)
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\(\mathcal{X}\)</span> is the
-feasible set and <span class="math inline">\(g_i(x)\)</span> are
-constraint functions.</p>
-<h2 id="algorithm-description">Algorithm Description</h2>
-<p>Our iterative algorithm updates the solution according to:</p>
-<p><span class="math display">\[\begin{equation}\label{eq:update}
-x_{k+1} = x_k - \alpha_k \nabla f(x_k) + \beta_k (x_k - x_{k-1})
+<p>where <span class="math inline">\(F(t)\)</span> is the callus
+formation fraction (0-1), <span class="math inline">\(F_{\max}\)</span>
+is the maximum possible formation (typically 0.9-1.0), and <span
+class="math inline">\(\lambda_c\)</span> is the formation rate constant,
+which depends on species compatibility, temperature, and humidity.</p>
+<h3 id="vascular-connection">Vascular Connection</h3>
+<p>The final stage of graft union involves differentiation of callus
+cells into functional vascular tissue (xylem and phloem), establishing
+nutrient and water transport between rootstock and scion . Vascular
+connection strength can be modeled as:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:vascular_connection}
+V(t) = V_{\max} \cdot \min\left(1, \frac{F(t) - F_{threshold}}{F_{max} -
+F_{threshold}}\right)
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\(\alpha_k\)</span> is the learning
-rate and <span class="math inline">\(\beta_k\)</span> is the momentum
-coefficient. The convergence rate is characterized by:</p>
-<p><span class="math display">\[\begin{equation}\label{eq:convergence}
-\|x_k - x^*\| \leq C \rho^k
+<p>where <span class="math inline">\(V(t)\)</span> is the vascular
+connection strength, <span class="math inline">\(F_{threshold}\)</span>
+is the minimum callus formation required for vascular differentiation
+(typically 0.5), and <span class="math inline">\(V_{\max}\)</span> is
+the maximum connection strength.</p>
+<h2 id="grafting-techniques">Grafting Techniques</h2>
+<h3 id="whip-and-tongue-grafting">Whip and Tongue Grafting</h3>
+<p>Whip and tongue grafting (also called splice grafting) is among the
+most precise methods, suitable for rootstock and scion of similar
+diameter (5-25 mm) . The technique involves:</p>
+<ol type="1">
+<li>Making matching 30-45° angle cuts on both rootstock and scion</li>
+<li>Creating interlocking tongues (notches) on both pieces</li>
+<li>Aligning cambium layers precisely</li>
+<li>Securing with grafting tape or wax</li>
+<li>Protecting from desiccation</li>
+</ol>
+<p>Success rates typically range from 75-90%, depending on species
+compatibility and execution quality.</p>
+<h3 id="cleft-grafting">Cleft Grafting</h3>
+<p>Cleft grafting is suitable for larger diameter rootstock (10-50 mm)
+and is particularly useful for top-working established trees . The
+procedure involves:</p>
+<ol type="1">
+<li>Making a vertical split in the rootstock</li>
+<li>Preparing wedge-shaped scion with 2-3 buds</li>
+<li>Inserting scion into cleft, ensuring cambium alignment</li>
+<li>Sealing with grafting wax</li>
+<li>Protecting from weather</li>
+</ol>
+<p>Success rates are typically 70-80%, with higher success for larger
+diameter matches.</p>
+<h3 id="bark-grafting">Bark Grafting</h3>
+<p>Bark grafting is employed for large diameter rootstock (20-100 mm)
+and is useful for mature tree renovation . The method involves:</p>
+<ol type="1">
+<li>Making vertical cut through bark on rootstock</li>
+<li>Loosening bark flaps</li>
+<li>Preparing scion with beveled cut</li>
+<li>Inserting scion under bark, aligning cambium</li>
+<li>Securing and sealing</li>
+</ol>
+<p>Success rates range from 65-75%, with optimal timing in early spring
+when bark is slipping.</p>
+<h3 id="bud-grafting-t-budding">Bud Grafting (T-budding)</h3>
+<p>Bud grafting (T-budding) is highly efficient for mass propagation,
+using a single bud rather than a complete scion . The technique
+involves:</p>
+<ol type="1">
+<li>Making T-shaped cut in rootstock bark</li>
+<li>Removing bud from scion with shield</li>
+<li>Inserting bud under bark flaps</li>
+<li>Wrapping securely with budding tape</li>
+<li>Removing tape after bud takes (typically 2-4 weeks)</li>
+</ol>
+<p>Success rates are typically 75-85%, making this method highly
+efficient for commercial propagation.</p>
+<h2 id="compatibility-theory">Compatibility Theory</h2>
+<h3 id="phylogenetic-distance-model">Phylogenetic Distance Model</h3>
+<p>Phylogenetic distance is the strongest predictor of graft
+compatibility . Closely related species share similar vascular anatomy,
+biochemical pathways, and growth patterns, enabling successful union
+formation. Compatibility decreases exponentially with phylogenetic
+distance:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:phylogenetic_compatibility}
+P_{phyl}(d) = e^{-k \cdot d / d_{max}}
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\(x^*\)</span> is the optimal
-solution, <span class="math inline">\(C &gt; 0\)</span> is a constant,
-and <span class="math inline">\(\rho \in (0,1)\)</span> is the
-convergence rate.</p>
+<p>where <span class="math inline">\(P_{phyl}(d)\)</span> is the
+phylogenetic compatibility (0-1), <span class="math inline">\(d\)</span>
+is the phylogenetic distance, <span
+class="math inline">\(d_{max}\)</span> is the maximum distance for
+compatibility, and <span class="math inline">\(k\)</span> is a decay
+constant (typically <span class="math inline">\(k \approx
+2.0\)</span>).</p>
+<h3 id="cambium-match-model">Cambium Match Model</h3>
+<p>Similar cambium thickness indicates better alignment potential and
+reduced stress at the union interface:</p>
+<p><span class="math display">\[\begin{equation}\label{eq:cambium_match}
+P_{camb}(r_s, r_r) = 1 - \min\left(1, \frac{|r_s - r_r|}{\tau \cdot
+r_r}\right)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(P_{camb}\)</span> is the cambium
+match score, <span class="math inline">\(r_s\)</span> and <span
+class="math inline">\(r_r\)</span> are scion and rootstock cambium
+thicknesses, and <span class="math inline">\(\tau\)</span> is the
+tolerance threshold (typically 0.2).</p>
+<h3 id="growth-rate-compatibility">Growth Rate Compatibility</h3>
+<p>Similar growth rates reduce stress at the graft union, preventing
+overgrowth or undergrowth issues:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:growth_compatibility}
+P_{growth}(g_s, g_r) = 1 - \min\left(1, \frac{|g_s - g_r|}{\tau_g \cdot
+g_r}\right)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(P_{growth}\)</span> is the growth
+rate compatibility, <span class="math inline">\(g_s\)</span> and <span
+class="math inline">\(g_r\)</span> are scion and rootstock growth rates,
+and <span class="math inline">\(\tau_g\)</span> is the growth rate
+tolerance (typically 0.3).</p>
+<h3 id="combined-compatibility-score">Combined Compatibility Score</h3>
+<p>The overall compatibility prediction combines multiple factors:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:combined_compatibility}
+P_{total} = w_1 P_{phyl} + w_2 P_{camb} + w_3 P_{growth}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(w_1 = 0.5\)</span>, <span
+class="math inline">\(w_2 = 0.3\)</span>, and <span
+class="math inline">\(w_3 = 0.2\)</span> are weights determined through
+empirical analysis.</p>
+<h2 id="success-factors">Success Factors</h2>
+<h3 id="environmental-conditions">Environmental Conditions</h3>
+<p>Optimal environmental conditions are critical for graft success:</p>
+<ul>
+<li><strong>Temperature</strong>: 20-25°C optimal, 15-30°C acceptable
+range</li>
+<li><strong>Humidity</strong>: 70-90% relative humidity optimal</li>
+<li><strong>Light</strong>: Moderate indirect light, avoid direct sun
+exposure</li>
+<li><strong>Season</strong>: Late winter to early spring for temperate
+species</li>
+</ul>
+<p>The environmental suitability score can be calculated as:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:environmental_score}
+E(T, H) = E_T(T) \cdot E_H(H)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(E_T(T)\)</span> and <span
+class="math inline">\(E_H(H)\)</span> are temperature and humidity
+suitability functions, respectively.</p>
+<h3 id="technique-quality">Technique Quality</h3>
+<p>The quality of technique execution significantly impacts success
+rates. Key factors include:</p>
+<ul>
+<li>Precision of cuts and alignment</li>
+<li>Speed of operation (minimizing desiccation)</li>
+<li>Proper sealing and protection</li>
+<li>Post-grafting care</li>
+</ul>
+<p>Technique quality can be quantified on a 0-1 scale, with values above
+0.8 associated with success rates 15-20% higher than values below
+0.6.</p>
+<h2 id="computational-framework">Computational Framework</h2>
+<h3 id="biological-process-simulation">Biological Process
+Simulation</h3>
+<p>Our simulation framework models the temporal dynamics of graft
+healing using a system of differential equations:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:healing_dynamics}
+\frac{dC}{dt} = r_c \cdot (1 - C) \cdot E(T, H) \cdot P_{total}
+\end{equation}\]</span></p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:callus_dynamics}
+\frac{dF}{dt} = r_f \cdot C \cdot (1 - F) \cdot E(T, H) \cdot P_{total}
+\end{equation}\]</span></p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:vascular_dynamics}
+\frac{dV}{dt} = r_v \cdot F \cdot (1 - V) \cdot E(T, H) \cdot P_{total}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(r_c\)</span>, <span
+class="math inline">\(r_f\)</span>, and <span
+class="math inline">\(r_v\)</span> are growth rate constants for cambium
+contact, callus formation, and vascular connection, respectively.</p>
+<h3 id="success-probability-prediction">Success Probability
+Prediction</h3>
+<p>The overall graft success probability combines compatibility,
+technique quality, environmental conditions, and seasonal timing:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:success_probability}
+P_{success} = 0.4 P_{total} + 0.3 Q_{tech} + 0.2 E(T, H) + 0.1
+S_{timing}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(Q_{tech}\)</span> is technique
+quality (0-1) and <span class="math inline">\(S_{timing}\)</span> is
+seasonal timing score (0-1).</p>
 <h2 id="implementation-details">Implementation Details</h2>
-<p>The algorithm implementation follows the pseudocode shown in Figure
-<span class="math inline">\(\ref{fig:experimental_setup}\)</span>. The
-key insight is that we can decompose the objective function <span
-class="math inline">\(\eqref{eq:objective}\)</span> into separable
-components, allowing for efficient parallel computation. This approach
-builds upon proximal optimization techniques and recent advances in
-large-scale optimization .</p>
-<p>For numerical stability, we use the following adaptive step size
-rule:</p>
-<p><span class="math display">\[\begin{equation}\label{eq:adaptive_step}
-\alpha_k = \frac{\alpha_0}{\sqrt{1 + \sum_{i=1}^{k} \|\nabla
-f(x_i)\|^2}}
-\end{equation}\]</span></p>
-<p>This ensures that the algorithm converges even when the gradient
-varies significantly across iterations.</p>
-<h2 id="reproducibility-infrastructure">Reproducibility
-Infrastructure</h2>
-<p>All methodological steps are paired with automated quality gates
-provided by the infrastructure layer. Figure generation is registered
-via <code>FigureManager</code> to ensure cross-references resolve, and
-<code>validate_markdown</code> checks anchors, equations, and labels
-before rendering. A preflight stage evaluates glossary injection markers
-and bibliography blocks, while <code>analyze_document_quality</code>
-supplies readability and structural metrics that are reported in the
-quality report. Output integrity (<code>verify_output_integrity</code>)
-is executed after each scripted stage to ensure generated artifacts
-match expectations, making the methodological pipeline reproducible
-across runs.</p>
-<h2 id="performance-analysis">Performance Analysis</h2>
-<p>The computational complexity of our approach is <span
-class="math inline">\(O(n \log n)\)</span> per iteration, where <span
-class="math inline">\(n\)</span> is the problem dimension. This is
-achieved through the efficient data structures shown in Figure <span
-class="math inline">\(\ref{fig:data_structure}\)</span>.</p>
-<p>The memory requirements scale as:</p>
-<p><span class="math display">\[\begin{equation}\label{eq:memory}
-M(n) = O(n) + O(\log n) \cdot \text{number of iterations}
-\end{equation}\]</span></p>
-<p>This makes our method suitable for large-scale problems where memory
-is a constraint.</p>
+<p>The computational toolkit implements these models through modular
+Python packages:</p>
+<ul>
+<li><strong><code>graft_basics.py</code></strong>: Core grafting
+calculations and compatibility checks</li>
+<li><strong><code>biological_simulation.py</code></strong>: Simulation
+framework for healing processes</li>
+<li><strong><code>compatibility_prediction.py</code></strong>:
+Compatibility prediction algorithms</li>
+<li><strong><code>species_database.py</code></strong>: Database of
+species compatibility information</li>
+<li><strong><code>technique_library.py</code></strong>: Encyclopedia of
+grafting techniques</li>
+<li><strong><code>graft_statistics.py</code></strong>: Statistical
+analysis of grafting outcomes</li>
+<li><strong><code>graft_analysis.py</code></strong>: Factor analysis and
+outcome evaluation</li>
+</ul>
+<p>All implementations follow the thin orchestrator pattern, with
+business logic in <code>src/</code> modules and orchestration in
+<code>scripts/</code> files, ensuring maintainability and
+testability.</p>
 <h2 id="validation-framework">Validation Framework</h2>
-<p>To validate our theoretical results, we use the experimental setup
-illustrated in Figure <span
-class="math inline">\(\ref{fig:experimental_setup}\)</span>. The
-performance metrics are computed using:</p>
-<p><span class="math display">\[\begin{equation}\label{eq:accuracy}
-\text{Accuracy} = \frac{1}{N} \sum_{i=1}^{N} \mathbb{I}[f(x_i) \leq
-f(x^*) + \epsilon]
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\mathbb{I}[\cdot]\)</span> is the
-indicator function and <span class="math inline">\(\epsilon\)</span> is
-the tolerance threshold.</p>
-<p>The convergence analysis results are summarized in Figure <span
-class="math inline">\(\ref{fig:convergence_plot}\)</span>, which shows
-the empirical convergence rates compared to the theoretical bound <span
-class="math inline">\(\eqref{eq:convergence}\)</span>.</p>
+<p>To validate our models and predictions, we use:</p>
+<ol type="1">
+<li><strong>Literature Review</strong>: Comparison with published
+success rates and compatibility data</li>
+<li><strong>Synthetic Data Generation</strong>: Realistic trial data
+based on known biological parameters</li>
+<li><strong>Statistical Validation</strong>: Hypothesis testing and
+correlation analysis</li>
+<li><strong>Cross-Validation</strong>: Model performance on held-out
+data</li>
+</ol>
+<p>The validation framework ensures that predictions align with
+established horticultural knowledge and biological principles.</p>
 </body>
 </html>

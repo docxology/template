@@ -1,4 +1,4 @@
-\begin{thebibliography}{16}
+\begin{thebibliography}{24}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -38,12 +38,41 @@ John Duchi, Elad Hazan, and Yoram Singer.
 \newblock In \emph{Proceedings of the 24th Annual Conference on Learning
   Theory}, pages 257--269. COLT, 2011.
 
+\bibitem[Garner(2013)]{garner2013}
+R.~J. Garner.
+\newblock The grafter's handbook.
+\newblock \emph{Cassell's Horticultural Handbooks}, 2013.
+
+\bibitem[Goldschmidt(2014)]{goldschmidt2014}
+Eliezer~E. Goldschmidt.
+\newblock Plant grafting: new mechanisms, evolutionary implications.
+\newblock \emph{Frontiers in Plant Science}, 5:\penalty0 727, 2014.
+\newblock \doi{10.3389/fpls.2014.00727}.
+
+\bibitem[Hartmann et~al.(2014)Hartmann, Kester, Davies, and
+  Geneve]{hartmann2014}
+Hudson~T. Hartmann, Dale~E. Kester, Fred~T. Davies, and Robert~L. Geneve.
+\newblock \emph{Plant Propagation: Principles and Practices}.
+\newblock Pearson, Boston, MA, 8th edition, 2014.
+\newblock ISBN 978-0-13-315116-7.
+
 \bibitem[Kingma and Ba(2015)]{kingma2014}
 Diederik~P. Kingma and Jimmy Ba.
 \newblock Adam: A method for stochastic optimization.
 \newblock In \emph{Proceedings of the 3rd International Conference on Learning
   Representations}, 2015.
 \newblock URL \url{https://arxiv.org/abs/1412.6980}.
+
+\bibitem[Melnyk(2018)]{melnyk2018}
+Charles~W. Melnyk.
+\newblock Molecular mechanisms of graft compatibility in plants.
+\newblock \emph{Current Opinion in Plant Biology}, 47:\penalty0 67--74, 2018.
+\newblock \doi{10.1016/j.pbi.2018.09.004}.
+
+\bibitem[Needham et~al.(1984)]{needham1984}
+G.~Needham et~al.
+\newblock \emph{Grafting Techniques for Fruit Trees and Ornamentals}.
+\newblock Agricultural Research Service, Washington, DC, 1984.
 
 \bibitem[Nesterov(2018)]{nesterov2018}
 Yurii Nesterov.
@@ -95,11 +124,29 @@ John Smith and Jane Johnson.
   123--145, 2023.
 \newblock \doi{10.1234/example.2023.001}.
 
+\bibitem[Stebbins(1950)]{stebbins1950}
+G.~Ledyard Stebbins.
+\newblock \emph{Variation and Evolution in Plants}.
+\newblock Columbia University Press, New York, NY, 1950.
+
 \bibitem[Team(2024)]{template2024}
 Template Team.
 \newblock \emph{Research Project Template: A Comprehensive Guide}.
 \newblock Academic Press, New York, NY, 2024.
 \newblock ISBN 978-0123456789.
+
+\bibitem[Webster(2002)]{webster2002}
+A.~D. Webster.
+\newblock Dwarfing rootstocks: past, present and future.
+\newblock \emph{The Journal of Horticultural Science and Biotechnology},
+  77\penalty0 (4):\penalty0 381--389, 2002.
+\newblock \doi{10.1080/14620316.2002.11511519}.
+
+\bibitem[White(1970)]{white1970}
+Philip~R. White.
+\newblock Graft incompatibility in higher plants.
+\newblock \emph{Botanical Review}, 36\penalty0 (3):\penalty0 162--238, 1970.
+\newblock \doi{10.1007/BF02859158}.
 
 \bibitem[Wright(2010)]{wright2010}
 Stephen~J. Wright.

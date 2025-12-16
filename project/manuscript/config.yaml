@@ -3,8 +3,8 @@
 # Edit this file to customize your paper's metadata
 
 paper:
-  title: "Example Default Project Title"
-  subtitle: "Subtitle Example"  # Optional subtitle
+  title: "Tree Grafting Science and Practice: Biological Mechanisms, Computational Analysis, and Decision Support Framework"
+  subtitle: "A Comprehensive Synthesis of 4,000 Years of Agricultural Knowledge"  # Optional subtitle
   version: "1.0"  # Paper version
   date: ""  # Auto-generated if empty (uses current date)
 
@@ -12,10 +12,10 @@ paper:
 # For single author, use one entry
 # For multiple authors, add additional entries
 authors:
-  - name: "Project Author"
-    orcid: "0000-0000-0000-1234"
-    email: "author@example.com"
-    affiliation: "Template Institute"  # Optional: Institution or organization
+  - name: "InferAnt #016"
+    orcid: "0000-0000-0000-0000"
+    email: "inferant016@research.ai"
+    affiliation: "Computational Agricultural Systems Laboratory"  # Optional: Institution or organization
     corresponding: true  # Mark corresponding author
 
 # Optional: Additional authors
@@ -28,17 +28,21 @@ authors:
 
 # Publication information (optional)
 publication:
-  doi: "10.5281/zenodo.12345678"  # Digital Object Identifier, e.g., "10.5281/zenodo.12345678"
-  journal: "Example Journal"  # Journal name if published
-  volume: "42"  # Journal volume
-  pages: "123-145"  # Page numbers
+  doi: ""  # Digital Object Identifier, e.g., "10.5281/zenodo.12345678"
+  journal: ""  # Journal name if published
+  volume: ""  # Journal volume
+  pages: ""  # Page numbers
   year: "2025"  # Publication year (auto-generated if empty)
 
 # Keywords for metadata
 keywords:
-  - "research"
-  - "template"
-  - "academic"
+  - "tree grafting"
+  - "horticultural science"
+  - "compatibility prediction"
+  - "computational agriculture"
+  - "plant propagation"
+  - "rootstock selection"
+  - "decision support systems"
 
 # Additional metadata
 metadata:

@@ -1,1 +1,9 @@
 \beamer@sectionintoc {1}{Discussion}{1}{0}{1}
+\beamer@subsectionintoc {1}{1}{Biological Insights}{2}{0}{1}
+\beamer@subsectionintoc {1}{2}{Technical Implications}{5}{0}{1}
+\beamer@subsectionintoc {1}{3}{Agricultural Applications}{8}{0}{1}
+\beamer@subsectionintoc {1}{4}{Economic Considerations}{12}{0}{1}
+\beamer@subsectionintoc {1}{5}{Cultural and Historical Perspectives}{15}{0}{1}
+\beamer@subsectionintoc {1}{6}{Limitations and Challenges}{18}{0}{1}
+\beamer@subsectionintoc {1}{7}{Future Research Directions}{22}{0}{1}
+\beamer@subsectionintoc {1}{8}{Broader Impact}{27}{0}{1}

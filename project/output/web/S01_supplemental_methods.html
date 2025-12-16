@@ -178,171 +178,178 @@
 <p>This section provides detailed methodological information that
 supplements Section <span
 class="math inline">\(\ref{sec:methodology}\)</span>.</p>
-<h2 id="s1.1-extended-algorithm-variants">S1.1 Extended Algorithm
-Variants</h2>
-<h3 id="s1.1.1-stochastic-variant">S1.1.1 Stochastic Variant</h3>
-<p>For large-scale problems, we developed a stochastic variant of our
-algorithm:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:stochastic_update}
-x_{k+1} = x_k - \alpha_k \nabla f_{i_k}(x_k) + \beta_k (x_k - x_{k-1})
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(i_k\)</span> is a randomly sampled
-index from <span class="math inline">\(\{1, \ldots, n\}\)</span> at
-iteration <span class="math inline">\(k\)</span>.</p>
-<p><strong>Convergence Analysis</strong>: Under appropriate sampling
-strategies, this variant achieves <span
-class="math inline">\(O(1/\sqrt{k})\)</span> convergence rate for
-non-strongly convex problems, following the analysis in .</p>
-<h3 id="s1.1.2-mini-batch-variant">S1.1.2 Mini-Batch Variant</h3>
-<p>To balance between computational efficiency and convergence
-speed:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:minibatch_update}
-x_{k+1} = x_k - \alpha_k \frac{1}{|B_k|} \sum_{i \in B_k} \nabla
-f_i(x_k) + \beta_k (x_k - x_{k-1})
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(B_k \subset \{1, \ldots,
-n\}\)</span> is a mini-batch of size <span class="math inline">\(|B_k| =
-b\)</span>.</p>
-<h2 id="s1.2-detailed-convergence-analysis">S1.2 Detailed Convergence
-Analysis</h2>
-<h3 id="s1.2.1-strong-convexity-assumptions">S1.2.1 Strong Convexity
-Assumptions</h3>
-<p>We assume the objective function <span
-class="math inline">\(f\)</span> satisfies:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:strong_convexity_detailed}
-f(y) \geq f(x) + \nabla f(x)^T (y - x) + \frac{\mu}{2} \|y - x\|^2,
-\quad \forall x, y \in \mathcal{X}
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\mu &gt; 0\)</span> is the strong
-convexity parameter.</p>
-<h3 id="s1.2.2-lipschitz-continuity">S1.2.2 Lipschitz Continuity</h3>
-<p>The gradient is Lipschitz continuous:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:lipschitz_detailed}
-\|\nabla f(x) - \nabla f(y)\| \leq L \|x - y\|, \quad \forall x, y \in
-\mathcal{X}
-\end{equation}\]</span></p>
-<p>The condition number <span class="math inline">\(\kappa =
-L/\mu\)</span> determines the convergence rate: <span
-class="math inline">\(\rho = \sqrt{1 - 1/\kappa}\)</span>, as
-established in .</p>
-<h2 id="s1.3-additional-theoretical-results">S1.3 Additional Theoretical
-Results</h2>
-<h3 id="s1.3.1-worst-case-complexity-bounds">S1.3.1 Worst-Case
-Complexity Bounds</h3>
-<p><strong>Theorem S1</strong>: Under the assumptions of Lipschitz
-continuity and strong convexity, the algorithm requires at most <span
-class="math inline">\(O(\kappa \log(1/\epsilon))\)</span> iterations to
-achieve <span class="math inline">\(\epsilon\)</span>-accuracy.</p>
-<p><strong>Proof</strong>: From the convergence rate <span
-class="math inline">\(\eqref{eq:convergence}\)</span>, we have:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:iterations_bound}
-\|x_k - x^*\| \leq C \rho^k \leq \epsilon \Rightarrow k \geq
-\frac{\log(C/\epsilon)}{\log(1/\rho)} = O(\kappa \log(1/\epsilon))
-\end{equation}\]</span></p>
-<p>since <span class="math inline">\(\log(1/\rho) \approx
-1/\kappa\)</span> for small <span
-class="math inline">\(1/\kappa\)</span>. <span
-class="math inline">\(\square\)</span></p>
-<h3 id="s1.3.2-expected-convergence-for-stochastic-variants">S1.3.2
-Expected Convergence for Stochastic Variants</h3>
-<p>For the stochastic variant <span
-class="math inline">\(\eqref{eq:stochastic_update}\)</span>:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:stochastic_convergence}
-\mathbb{E}[\|x_k - x^*\|^2] \leq \frac{C}{k} + \sigma^2
-\end{equation}\]</span></p>
-<p>where <span class="math inline">\(\sigma^2\)</span> is the variance
-of the stochastic gradient estimates.</p>
-<h2 id="s1.4-implementation-considerations">S1.4 Implementation
-Considerations</h2>
-<h3 id="s1.4.1-numerical-stability">S1.4.1 Numerical Stability</h3>
-<p>To ensure numerical stability, we implement the following
-safeguards:</p>
+<h2 id="s1.1-extended-grafting-techniques">S1.1 Extended Grafting
+Techniques</h2>
+<h3 id="s1.1.1-approach-grafting">S1.1.1 Approach Grafting</h3>
+<p>Approach grafting (also called inarching) involves joining two
+growing plants while both remain on their own roots, then severing the
+scion from its roots after union formation. This technique is
+particularly useful for difficult-to-graft species or when precise
+alignment is challenging.</p>
+<p><strong>Procedure</strong>: 1. Select healthy rootstock and scion
+plants in close proximity 2. Make matching cuts on both plants (30-40°
+angle) 3. Align cambium layers and secure together 4. Allow union to
+form over 4-8 weeks 5. Gradually reduce scion root system 6. Sever scion
+from its roots after full union establishment</p>
+<p><strong>Success Rate</strong>: 70-80% for compatible species, 50-60%
+for difficult combinations</p>
+<h3 id="s1.1.2-bridge-grafting">S1.1.2 Bridge Grafting</h3>
+<p>Bridge grafting is used to repair damaged bark by bridging wounds
+with scion pieces. This technique is essential for tree rescue
+operations and bark damage repair.</p>
+<p><strong>Procedure</strong>: 1. Prepare damaged area by cleaning and
+removing dead tissue 2. Make cuts above and below the damaged region 3.
+Prepare scion pieces (typically 2-4 pieces depending on wound size) 4.
+Insert scion pieces to bridge the gap, aligning cambium 5. Secure and
+seal all connections 6. Monitor and protect until union forms</p>
+<p><strong>Success Rate</strong>: 60-70% depending on wound severity and
+timing</p>
+<h3 id="s1.1.3-inarching">S1.1.3 Inarching</h3>
+<p>Inarching involves grafting rootstock seedlings to established trees
+to add roots, improving root system health and stability.</p>
+<p><strong>Procedure</strong>: 1. Prepare rootstock seedlings (typically
+1-2 years old) 2. Make matching cuts on tree and rootstock 3. Join and
+secure with cambium alignment 4. Allow union to form (6-12 weeks) 5.
+Rootstock provides additional root system support</p>
+<p><strong>Success Rate</strong>: 65-75% for compatible species</p>
+<h2 id="s1.2-detailed-technique-protocols">S1.2 Detailed Technique
+Protocols</h2>
+<h3 id="s1.2.1-whip-and-tongue-grafting---step-by-step">S1.2.1 Whip and
+Tongue Grafting - Step by Step</h3>
+<p><strong>Materials Required</strong>: - Sharp grafting knife -
+Grafting tape or wax - Rootstock and scion of matching diameter -
+Protective covering</p>
+<p><strong>Detailed Steps</strong>:</p>
 <ol type="1">
-<li><strong>Gradient clipping</strong>: <span
-class="math inline">\(\nabla f(x_k) \leftarrow \min(1, \theta/\|\nabla
-f(x_k)\|) \nabla f(x_k)\)</span></li>
-<li><strong>Step size bounds</strong>: <span
-class="math inline">\(\alpha_{\min} \leq \alpha_k \leq
-\alpha_{\max}\)</span></li>
-<li><strong>Momentum bounds</strong>: <span class="math inline">\(0 \leq
-\beta_k \leq \beta_{\max} &lt; 1\)</span></li>
+<li><strong>Rootstock Preparation</strong>:
+<ul>
+<li>Select healthy rootstock with diameter 5-25 mm</li>
+<li>Make 30-45° angle cut, 2-3 cm long</li>
+<li>Create tongue (notch) 1/3 from top of cut, 1 cm deep</li>
+</ul></li>
+<li><strong>Scion Preparation</strong>:
+<ul>
+<li>Select dormant scion with 2-4 buds</li>
+<li>Make matching angle cut and tongue</li>
+<li>Ensure cambium is visible on both sides</li>
+</ul></li>
+<li><strong>Joining</strong>:
+<ul>
+<li>Insert scion tongue into rootstock notch</li>
+<li>Align cambium layers precisely on both sides</li>
+<li>Ensure tight fit with no gaps</li>
+</ul></li>
+<li><strong>Securing</strong>:
+<ul>
+<li>Wrap with grafting tape, starting below union</li>
+<li>Overlap tape by 50% for complete coverage</li>
+<li>Seal exposed surfaces with grafting wax</li>
+</ul></li>
+<li><strong>Post-Grafting Care</strong>:
+<ul>
+<li>Protect from direct sunlight</li>
+<li>Maintain humidity 70-90%</li>
+<li>Monitor for 4-6 weeks</li>
+<li>Remove tape after union forms</li>
+</ul></li>
 </ol>
-<h3 id="s1.4.2-initialization-strategies">S1.4.2 Initialization
-Strategies</h3>
-<p>We tested three initialization strategies:</p>
+<h3 id="s1.2.2-cleft-grafting---detailed-protocol">S1.2.2 Cleft Grafting
+- Detailed Protocol</h3>
+<p><strong>Optimal Conditions</strong>: - Rootstock diameter: 10-50 mm -
+Timing: Late winter to early spring - Temperature: 15-25°C - Humidity:
+70-85%</p>
+<p><strong>Procedure Details</strong>:</p>
 <ol type="1">
-<li><strong>Random</strong>: <span class="math inline">\(x_0 \sim
-\mathcal{N}(0, I)\)</span></li>
-<li><strong>Warm start</strong>: <span class="math inline">\(x_0 =
-\text{solution from simpler problem}\)</span></li>
-<li><strong>Problem-specific</strong>: <span class="math inline">\(x_0 =
-\text{domain knowledge-based initialization}\)</span></li>
+<li><strong>Rootstock Preparation</strong>:
+<ul>
+<li>Cut rootstock horizontally at desired height</li>
+<li>Make vertical split 3-5 cm deep using grafting tool</li>
+<li>Keep split open with wedge if needed</li>
+</ul></li>
+<li><strong>Scion Preparation</strong>:
+<ul>
+<li>Select scion with 2-3 buds</li>
+<li>Make wedge-shaped cut (30-40° angle on both sides)</li>
+<li>Ensure cambium exposed on both sides of wedge</li>
+</ul></li>
+<li><strong>Insertion</strong>:
+<ul>
+<li>Insert scion into cleft, aligning cambium on one side</li>
+<li>For large rootstock, insert 2 scions (one on each side)</li>
+<li>Remove wedge and allow rootstock to close</li>
+</ul></li>
+<li><strong>Sealing</strong>:
+<ul>
+<li>Apply grafting wax to all exposed surfaces</li>
+<li>Cover entire union area</li>
+<li>Protect from weather</li>
+</ul></li>
 </ol>
-<p>Results show that warm start initialization reduces iterations by
-approximately 30% for related problem instances.</p>
-<h2 id="s1.5-extended-mathematical-framework">S1.5 Extended Mathematical
-Framework</h2>
-<h3 id="s1.5.1-generalized-objective-function">S1.5.1 Generalized
-Objective Function</h3>
-<p>The framework extends to more general objectives:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:general_objective}
-f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \sum_{j=1}^{m} \lambda_j R_j(x) +
-\sum_{k=1}^{p} \gamma_k C_k(x)
-\end{equation}\]</span></p>
-<p>where: - <span class="math inline">\(\phi_i(x)\)</span>: Data fitting
-terms - <span class="math inline">\(R_j(x)\)</span>: Regularization
-terms (e.g., <span class="math inline">\(\ell_1\)</span>, <span
-class="math inline">\(\ell_2\)</span>, elastic net) - <span
-class="math inline">\(C_k(x)\)</span>: Constraint terms (penalty or
-barrier functions)</p>
-<h3 id="s1.5.2-adaptive-weight-selection">S1.5.2 Adaptive Weight
-Selection</h3>
-<p>Weights <span class="math inline">\(w_i\)</span> can be adapted
-during optimization:</p>
-<p><span
-class="math display">\[\begin{equation}\label{eq:adaptive_weights}
-w_i^{(k+1)} = w_i^{(k)} \cdot \exp\left(-\gamma
-\frac{|\phi_i(x_k)|}{|\phi(x_k)|}\right)
-\end{equation}\]</span></p>
-<p>This reweighting scheme gives more emphasis to terms that are harder
-to optimize.</p>
-<h2 id="s1.6-convergence-diagnostics">S1.6 Convergence Diagnostics</h2>
-<h3 id="s1.6.1-diagnostic-criteria">S1.6.1 Diagnostic Criteria</h3>
-<p>We monitor the following quantities for convergence:</p>
-<ol type="1">
-<li><strong>Gradient norm</strong>: <span class="math inline">\(\|\nabla
-f(x_k)\| &lt; \epsilon_g\)</span></li>
-<li><strong>Step size</strong>: <span class="math inline">\(\|x_{k+1} -
-x_k\| &lt; \epsilon_x\)</span></li>
-<li><strong>Function improvement</strong>: <span
-class="math inline">\(|f(x_{k+1}) - f(x_k)| &lt;
-\epsilon_f\)</span></li>
-<li><strong>Relative improvement</strong>: <span
-class="math inline">\(|f(x_{k+1}) - f(x_k)|/|f(x_k)| &lt;
-\epsilon_r\)</span></li>
-</ol>
-<p>All four criteria must be satisfied for declared convergence.</p>
-<h3 id="s1.6.2-failure-detection">S1.6.2 Failure Detection</h3>
-<p>Algorithm failure is detected if:</p>
-<ol type="1">
-<li>Maximum iterations exceeded</li>
-<li>Step size becomes too small (<span class="math inline">\(\alpha_k
-&lt; \alpha_{\min}\)</span>)</li>
-<li>NaN or Inf values encountered</li>
-<li>Objective function increases for consecutive iterations</li>
-</ol>
-<h2 id="s1.7-parameter-sensitivity">S1.7 Parameter Sensitivity</h2>
-<p>Detailed sensitivity analysis for each parameter:</p>
-<p>The learning rate <span class="math inline">\(\alpha_0\)</span> has
-the strongest impact on convergence speed, while regularization <span
-class="math inline">\(\lambda\)</span> primarily affects the final
-solution quality rather than convergence dynamics.</p>
+<h2 id="s1.3-regional-variations-and-adaptations">S1.3 Regional
+Variations and Adaptations</h2>
+<h3 id="s1.3.1-mediterranean-techniques">S1.3.1 Mediterranean
+Techniques</h3>
+<p>Mediterranean grafting practices emphasize: - Timing: Late fall to
+early spring - Emphasis on olive and citrus grafting - Use of
+traditional tools (grafting knives, waxes) - Emphasis on water
+management post-grafting</p>
+<h3 id="s1.3.2-asian-techniques">S1.3.2 Asian Techniques</h3>
+<p>Asian grafting traditions include: - Emphasis on precision and
+alignment - Use of specialized tools for delicate operations -
+Integration with traditional agricultural calendars - Focus on
+ornamental and fruit tree combinations</p>
+<h3 id="s1.3.3-tropical-adaptations">S1.3.3 Tropical Adaptations</h3>
+<p>Tropical grafting adaptations: - Year-round grafting potential -
+Emphasis on humidity management - Protection from intense sunlight -
+Disease prevention measures</p>
+<h2 id="s1.4-tool-specifications-and-requirements">S1.4 Tool
+Specifications and Requirements</h2>
+<h3 id="s1.4.1-grafting-knives">S1.4.1 Grafting Knives</h3>
+<p><strong>Essential Characteristics</strong>: - Sharp, single-bevel
+blade - Blade length: 5-8 cm - Handle: Comfortable grip, non-slip -
+Material: High-carbon steel or stainless steel</p>
+<p><strong>Maintenance</strong>: - Regular sharpening to maintain edge -
+Sterilization between uses - Proper storage to prevent rust</p>
+<h3 id="s1.4.2-grafting-tape-and-wax">S1.4.2 Grafting Tape and Wax</h3>
+<p><strong>Grafting Tape</strong>: - Material: Polyethylene or
+rubber-based - Width: 1-2 cm - Stretchability: 200-300% elongation - UV
+resistance for outdoor use</p>
+<p><strong>Grafting Wax</strong>: - Composition: Beeswax, resin, and oil
+- Melting point: 60-70°C - Application temperature: 80-90°C - Protection
+duration: 3-6 months</p>
+<h2 id="s1.5-specialized-grafting-methods">S1.5 Specialized Grafting
+Methods</h2>
+<h3 id="s1.5.1-nurse-seed-grafting">S1.5.1 Nurse Seed Grafting</h3>
+<p>Used for difficult species or very young rootstock: - Graft scion to
+temporary nurse plant - Allow union to form - Transfer to permanent
+rootstock - Success rate: 50-65%</p>
+<h3 id="s1.5.2-four-flap-grafting">S1.5.2 Four-Flap Grafting</h3>
+<p>Advanced technique for large diameter rootstock: - Create four flaps
+on rootstock - Prepare scion with matching cuts - Insert and align
+cambium - Success rate: 70-80%</p>
+<h3 id="s1.5.3-chip-budding">S1.5.3 Chip Budding</h3>
+<p>Variation of bud grafting: - Remove chip of bark with bud - Insert
+into matching cut on rootstock - Simpler than T-budding - Success rate:
+75-85%</p>
+<h2 id="s1.6-quality-control-measures">S1.6 Quality Control
+Measures</h2>
+<h3 id="s1.6.1-pre-grafting-assessment">S1.6.1 Pre-Grafting
+Assessment</h3>
+<p>Before grafting, assess: - Rootstock health and vigor - Scion quality
+and dormancy - Diameter matching (within 10-20%) - Environmental
+conditions - Tool condition and sterility</p>
+<h3 id="s1.6.2-post-grafting-monitoring">S1.6.2 Post-Grafting
+Monitoring</h3>
+<p>Monitor grafts for: - Union formation (visual inspection) - Callus
+development (4-7 days) - Vascular connection (14-28 days) - Scion growth
+initiation - Signs of rejection or disease</p>
+<h3 id="s1.6.3-success-evaluation">S1.6.3 Success Evaluation</h3>
+<p>Evaluate success at: - <strong>30 days</strong>: Initial union
+formation - <strong>60 days</strong>: Vascular connection established -
+<strong>90 days</strong>: Full union strength - <strong>1 year</strong>:
+Long-term compatibility</p>
+<p>Success criteria: - Visible callus formation - Scion bud break and
+growth - No signs of rejection - Strong union (resistance to
+movement)</p>
 </body>
 </html>

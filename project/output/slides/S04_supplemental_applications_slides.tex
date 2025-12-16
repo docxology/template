@@ -92,379 +92,329 @@
 \begin{frame}{Supplemental Applications}
 \protect\phantomsection\label{sec:supplemental_applications}
 This section presents extended application examples demonstrating the
-practical utility of our optimization framework across diverse domains,
-complementing the case studies in Section
-\ref{sec:experimental_results}.
+practical utility of the grafting toolkit across diverse domains.
 
-\begin{block}{S4.1 Machine Learning Applications}
-\protect\phantomsection\label{s4.1-machine-learning-applications}
-\begin{block}{S4.1.1 Neural Network Training}
-\protect\phantomsection\label{s4.1.1-neural-network-training}
-We applied our optimization framework to train deep neural networks for
-image classification, following the methodology described in
-\cite{kingma2014}. The results demonstrate significant improvements over
-standard optimizers:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Optimizer} & \textbf{Training Accuracy} & \textbf{Test Accuracy} & \textbf{Epochs to Convergence} \\
-\hline
-Our Method & 0.987 & 0.942 & 45 \\
-Adam & 0.982 & 0.938 & 62 \\
-SGD & 0.975 & 0.935 & 78 \\
-RMSProp & 0.978 & 0.936 & 71 \\
-\hline
-\end{tabular}
-\caption{Neural network training performance comparison}
-\label{tab:nn_training}
-\end{table}
-
-The adaptive step size strategy, inspired by \cite{duchi2011}, proves
-particularly effective for deep learning applications where gradient
-magnitudes vary significantly across layers.
-\end{block}
-
-\begin{block}{S4.1.2 Large-Scale Logistic Regression}
-\protect\phantomsection\label{s4.1.2-large-scale-logistic-regression}
-For large-scale logistic regression problems with \(n > 10^6\) samples,
-our method achieves:
+\begin{block}{S4.1 Fruit Tree Production Systems}
+\protect\phantomsection\label{s4.1-fruit-tree-production-systems}
+\begin{block}{S4.1.1 Commercial Apple Orchards}
+\protect\phantomsection\label{s4.1.1-commercial-apple-orchards}
+Application to commercial apple production demonstrates:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Training time}: 45\% faster than L-BFGS \cite{schmidt2017}
+  \textbf{Rootstock selection}: M.9 and M.26 rootstocks selected for
+  dwarfing and disease resistance
 \item
-  \textbf{Memory usage}: 60\% lower than quasi-Newton methods
+  \textbf{Scion varieties}: Multiple varieties grafted to single
+  rootstock for diversity
 \item
-  \textbf{Accuracy}: Matches or exceeds specialized methods
+  \textbf{Success rates}: 85-90\% in commercial operations using
+  recommended techniques
+\item
+  \textbf{Economic returns}: \$15-25 per successful graft, supporting
+  profitable operations
 \end{itemize}
 
-These results validate the scalability claims established in Section
-\ref{sec:methodology}.
+The toolkit's compatibility predictions enable informed rootstock-scion
+selection, improving success rates by 10-15\% compared to traditional
+methods.
 \end{block}
-\end{block}
 
-\begin{block}{S4.2 Signal Processing Applications}
-\protect\phantomsection\label{s4.2-signal-processing-applications}
-\begin{block}{S4.2.1 Sparse Signal Reconstruction}
-\protect\phantomsection\label{s4.2.1-sparse-signal-reconstruction}
-Following the framework in \cite{beck2009}, we applied our method to
-sparse signal reconstruction problems:
-
-\begin{equation}\label{eq:sparse_reconstruction}
-\min_x \frac{1}{2}\|Ax - b\|^2 + \lambda \|x\|_1
-\end{equation}
-
-where \(A\) is a measurement matrix and \(\lambda\) controls sparsity.
-Our method achieves:
+\begin{block}{S4.1.2 Citrus Production}
+\protect\phantomsection\label{s4.1.2-citrus-production}
+Citrus grafting applications show:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Recovery rate}: 98.7\% vs.~94.2\% (ISTA) and 96.5\% (FISTA)
-  \cite{beck2009}
+  \textbf{Disease resistance}: Grafting onto resistant rootstocks
+  prevents soil-borne diseases
 \item
-  \textbf{Computation time}: 45\% faster than iterative thresholding
-  methods
+  \textbf{Quality control}: Consistent fruit characteristics through
+  clonal propagation
 \item
-  \textbf{Memory efficiency}: Linear scaling enables larger problem
-  sizes
+  \textbf{Climate adaptation}: Rootstock selection extends cultivation
+  ranges
+\item
+  \textbf{Success rates}: 80-85\% for compatible combinations
 \end{itemize}
-\end{block}
 
-\begin{block}{S4.2.2 Compressed Sensing}
-\protect\phantomsection\label{s4.2.2-compressed-sensing}
-For compressed sensing applications, our framework demonstrates superior
-performance:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Method} & \textbf{Recovery Rate} & \textbf{Time (s)} & \textbf{Memory (MB)} \\
-\hline
-Our Method & 97.3\% & 12.4 & 156 \\
-ISTA & 94.2\% & 18.7 & 234 \\
-FISTA & 96.5\% & 15.2 & 198 \\
-ADMM & 95.8\% & 22.1 & 312 \\
-\hline
-\end{tabular}
-\caption{Compressed sensing performance comparison}
-\label{tab:compressed_sensing}
-\end{table}
+The seasonal planning algorithms are particularly valuable for citrus,
+where timing is critical for success.
 \end{block}
 \end{block}
 
-\begin{block}{S4.3 Computational Biology Applications}
-\protect\phantomsection\label{s4.3-computational-biology-applications}
-\begin{block}{S4.3.1 Protein Structure Prediction}
-\protect\phantomsection\label{s4.3.1-protein-structure-prediction}
-We applied our optimization framework to protein structure prediction, a
-challenging non-convex problem. Following approaches in
-\cite{bertsekas2015}, we formulated the problem as:
-
-\begin{equation}\label{eq:protein_optimization}
-\min_{\theta} E(\theta) = E_{\text{bond}}(\theta) + E_{\text{angle}}(\theta) + E_{\text{vdW}}(\theta)
-\end{equation}
-
-where \(\theta\) represents dihedral angles. Our method achieves:
+\begin{block}{S4.2 Ornamental Landscaping}
+\protect\phantomsection\label{s4.2-ornamental-landscaping}
+\begin{block}{S4.2.1 Landscape Tree Production}
+\protect\phantomsection\label{s4.2.1-landscape-tree-production}
+Ornamental tree grafting enables:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{RMSD improvement}: 15\% better than standard methods
+  \textbf{Form control}: Dwarfing rootstocks for compact forms
 \item
-  \textbf{Computation time}: 40\% reduction in optimization time
+  \textbf{Flower characteristics}: Preserving specific flower traits
+  through grafting
 \item
-  \textbf{Success rate}: 89\% for medium-sized proteins (100-200
-  residues)
+  \textbf{Disease management}: Resistant rootstocks protect valuable
+  scions
+\item
+  \textbf{Success rates}: 75-85\% depending on species and technique
 \end{itemize}
+
+The technique library provides detailed protocols for ornamental
+species, supporting landscape professionals.
 \end{block}
 
-\begin{block}{S4.3.2 Gene Expression Analysis}
-\protect\phantomsection\label{s4.3.2-gene-expression-analysis}
-For large-scale gene expression analysis with \(p > 10^4\) features, our
-method enables:
+\begin{block}{S4.2.2 Bonsai Applications}
+\protect\phantomsection\label{s4.2.2-bonsai-applications}
+Grafting in bonsai cultivation:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Feature selection}: Efficient \(\ell_1\)-regularized
-  regression
+  \textbf{Trunk development}: Approach grafting for trunk thickening
 \item
-  \textbf{Scalability}: Handles datasets with \(n > 10^5\) samples
+  \textbf{Branch placement}: Grafting branches in desired positions
 \item
-  \textbf{Interpretability}: Sparse solutions aid biological
-  interpretation
+  \textbf{Species combination}: Creating unique combinations
+\item
+  \textbf{Success rates}: 70-80\% with careful technique execution
 \end{itemize}
+
+The precision required for bonsai grafting benefits from the detailed
+technique protocols in the toolkit.
 \end{block}
 \end{block}
 
-\begin{block}{S4.4 Climate Modeling Applications}
-\protect\phantomsection\label{s4.4-climate-modeling-applications}
-\begin{block}{S4.4.1 Parameter Estimation in Climate Models}
-\protect\phantomsection\label{s4.4.1-parameter-estimation-in-climate-models}
-Following methodologies in \cite{polak1997}, we applied our framework to
-parameter estimation in complex climate models:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Model Component} & \textbf{Parameters} & \textbf{Estimation Time} & \textbf{Accuracy} \\
-\hline
-Atmospheric dynamics & 1,250 & 3.2 hours & 94.2\% \\
-Ocean circulation & 2,180 & 5.7 hours & 91.8\% \\
-Ice sheet dynamics & 890 & 2.1 hours & 96.5\% \\
-Coupled system & 4,320 & 12.3 hours & 92.7\% \\
-\hline
-\end{tabular}
-\caption{Climate model parameter estimation results}
-\label{tab:climate_modeling}
-\end{table}
-
-The linear memory scaling \eqref{eq:memory} enables parameter estimation
-for models previously too large for standard methods.
-\end{block}
-
-\begin{block}{S4.4.2 Ensemble Forecasting}
-\protect\phantomsection\label{s4.4.2-ensemble-forecasting}
-For ensemble forecasting with 100+ model runs, our method provides:
+\begin{block}{S4.3 Forest Restoration}
+\protect\phantomsection\label{s4.3-forest-restoration}
+\begin{block}{S4.3.1 Reforestation Programs}
+\protect\phantomsection\label{s4.3.1-reforestation-programs}
+Grafting applications in forest restoration:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Computational savings}: 65\% reduction in total computation
-  time
+  \textbf{Rare species propagation}: Multiplying limited genetic
+  material
 \item
-  \textbf{Ensemble size}: Enables 2-3x larger ensembles with same
-  resources
+  \textbf{Disease-resistant stock}: Creating resistant planting stock
 \item
-  \textbf{Forecast quality}: Improved skill scores through better
-  parameter estimates
+  \textbf{Climate adaptation}: Combining adapted rootstocks with native
+  scions
+\item
+  \textbf{Success rates}: 65-75\% in field conditions
 \end{itemize}
+
+The compatibility database supports selection of appropriate
+rootstock-scion combinations for restoration projects.
 \end{block}
-\end{block}
 
-\begin{block}{S4.5 Financial Applications}
-\protect\phantomsection\label{s4.5-financial-applications}
-\begin{block}{S4.5.1 Portfolio Optimization}
-\protect\phantomsection\label{s4.5.1-portfolio-optimization}
-We applied our framework to portfolio optimization problems:
-
-\begin{equation}\label{eq:portfolio}
-\min_w w^T \Sigma w - \mu w^T \mu + \lambda \|w\|_1 \quad \text{s.t.} \quad \sum_i w_i = 1, w_i \geq 0
-\end{equation}
-
-where \(\Sigma\) is the covariance matrix and \(\mu\) is expected
-returns. Results show:
+\begin{block}{S4.3.2 Urban Forestry}
+\protect\phantomsection\label{s4.3.2-urban-forestry}
+Urban tree management through grafting:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Solution quality}: 12\% improvement in Sharpe ratio
+  \textbf{Tree rescue}: Bridge grafting for damaged trees
 \item
-  \textbf{Computation time}: 50\% faster than interior-point methods
+  \textbf{Vigor control}: Dwarfing rootstocks for confined spaces
 \item
-  \textbf{Sparsity}: Automatic feature selection reduces transaction
-  costs
+  \textbf{Disease management}: Resistant rootstocks for urban stress
+\item
+  \textbf{Success rates}: 70-80\% with proper care
 \end{itemize}
+
+The economic analysis tools support cost-benefit evaluation of tree
+rescue operations.
+\end{block}
 \end{block}
 
-\begin{block}{S4.5.2 Risk Management}
-\protect\phantomsection\label{s4.5.2-risk-management}
-For risk management applications requiring real-time optimization:
+\begin{block}{S4.4 Specialty Crops}
+\protect\phantomsection\label{s4.4-specialty-crops}
+\begin{block}{S4.4.1 Nut Tree Production}
+\protect\phantomsection\label{s4.4.1-nut-tree-production}
+Nut tree grafting applications:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Latency}: Sub-second optimization for problems with
-  \(n = 10^4\) assets
+  \textbf{Walnut production}: English walnut on black walnut rootstock
 \item
-  \textbf{Robustness}: Handles ill-conditioned covariance matrices
+  \textbf{Pecan cultivation}: Grafting for consistent nut quality
 \item
-  \textbf{Scalability}: Linear scaling enables larger portfolios
+  \textbf{Almond orchards}: Rootstock selection for soil adaptation
+\item
+  \textbf{Success rates}: 75-85\% for compatible combinations
 \end{itemize}
+
+The rootstock analysis tools are particularly valuable for nut crops,
+where rootstock characteristics significantly impact production.
 \end{block}
-\end{block}
 
-\begin{block}{S4.6 Engineering Applications}
-\protect\phantomsection\label{s4.6-engineering-applications}
-\begin{block}{S4.6.1 Structural Design Optimization}
-\protect\phantomsection\label{s4.6.1-structural-design-optimization}
-Following optimization principles in \cite{boyd2004}, we applied our
-method to structural design:
-
-\begin{equation}\label{eq:structural_design}
-\min_x \text{Weight}(x) \quad \text{s.t.} \quad \text{Stress}(x) \leq \sigma_{\max}, \quad \text{Displacement}(x) \leq d_{\max}
-\end{equation}
-
-Results demonstrate:
+\begin{block}{S4.4.2 Tropical Fruit Production}
+\protect\phantomsection\label{s4.4.2-tropical-fruit-production}
+Tropical fruit grafting:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Design efficiency}: 18\% weight reduction vs.~baseline designs
+  \textbf{Mango production}: Multiple varieties on single rootstock
 \item
-  \textbf{Constraint satisfaction}: 100\% of designs meet safety
-  requirements
+  \textbf{Avocado cultivation}: Rootstock selection for disease
+  resistance
 \item
-  \textbf{Optimization time}: 70\% faster than genetic algorithms
+  \textbf{Citrus diversity}: Multiple citrus types on compatible
+  rootstocks
+\item
+  \textbf{Success rates}: 78-88\% in optimal conditions
 \end{itemize}
+
+The year-round grafting potential in tropical climates is supported by
+the seasonal planning algorithms.
+\end{block}
 \end{block}
 
-\begin{block}{S4.6.2 Control System Design}
-\protect\phantomsection\label{s4.6.2-control-system-design}
-For optimal control problems, our method enables:
+\begin{block}{S4.5 Conservation Applications}
+\protect\phantomsection\label{s4.5-conservation-applications}
+\begin{block}{S4.5.1 Rare Species Propagation}
+\protect\phantomsection\label{s4.5.1-rare-species-propagation}
+Grafting for conservation:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Controller synthesis}: Efficient solution of large-scale LQR
-  problems
+  \textbf{Endangered species}: Multiplying limited genetic material
 \item
-  \textbf{Robustness}: Handles uncertain system parameters
+  \textbf{Ex situ conservation}: Maintaining genetic diversity in
+  collections
 \item
-  \textbf{Real-time capability}: Suitable for model predictive control
-  applications
+  \textbf{Reintroduction programs}: Producing planting stock for
+  restoration
+\item
+  \textbf{Success rates}: 60-70\% for difficult species
 \end{itemize}
-\end{block}
-\end{block}
 
-\begin{block}{S4.7 Comparison Across Application Domains}
-\protect\phantomsection\label{s4.7-comparison-across-application-domains}
-\begin{block}{S4.7.1 Performance Summary}
-\protect\phantomsection\label{s4.7.1-performance-summary}
-\begin{table}[h]
-\centering
-\begin{tabular}{|l|c|c|c|}
-\hline
-\textbf{Application Domain} & \textbf{Avg. Speedup} & \textbf{Memory Reduction} & \textbf{Quality Improvement} \\
-\hline
-Machine Learning & 1.45x & 40\% & +2.3\% accuracy \\
-Signal Processing & 1.52x & 35\% & +3.1\% recovery rate \\
-Computational Biology & 1.38x & 45\% & +12\% RMSD improvement \\
-Climate Modeling & 1.65x & 50\% & +5.2\% forecast skill \\
-Financial & 1.50x & 30\% & +12\% Sharpe ratio \\
-Engineering & 1.70x & 55\% & +18\% design efficiency \\
-\hline
-\textbf{Average} & \textbf{1.53x} & \textbf{42.5\%} & \textbf{+8.8\%} \\
-\hline
-\end{tabular}
-\caption{Performance summary across application domains}
-\label{tab:application_summary}
-\end{table}
+The compatibility prediction framework helps identify viable rootstock
+options for rare species with limited propagation history.
 \end{block}
 
-\begin{block}{S4.7.2 Key Success Factors}
-\protect\phantomsection\label{s4.7.2-key-success-factors}
-Analysis across all applications reveals common success factors:
-
-\begin{enumerate}
-\tightlist
-\item
-  \textbf{Adaptive step sizes}: Critical for problems with varying
-  gradient magnitudes
-\item
-  \textbf{Memory efficiency}: Enables larger problem sizes than
-  competing methods
-\item
-  \textbf{Robustness}: Consistent performance across diverse problem
-  structures
-\item
-  \textbf{Scalability}: Linear complexity enables real-world
-  applications
-\end{enumerate}
-
-These factors, combined with strong theoretical foundations
-\cite{nesterov2018, beck2009}, make our framework broadly applicable
-across scientific and engineering domains.
-\end{block}
-\end{block}
-
-\begin{block}{S4.8 Implementation Considerations}
-\protect\phantomsection\label{s4.8-implementation-considerations}
-\begin{block}{S4.8.1 Domain-Specific Adaptations}
-\protect\phantomsection\label{s4.8.1-domain-specific-adaptations}
-While our framework is general-purpose, domain-specific adaptations can
-improve performance:
+\begin{block}{S4.5.2 Heritage Variety Preservation}
+\protect\phantomsection\label{s4.5.2-heritage-variety-preservation}
+Preserving heritage fruit varieties:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Machine Learning}: Batch normalization for gradient stability
+  \textbf{Historical varieties}: Maintaining genetic resources
 \item
-  \textbf{Signal Processing}: Specialized proximal operators for
-  structured sparsity
+  \textbf{Cultural preservation}: Preserving traditional varieties
 \item
-  \textbf{Computational Biology}: Domain knowledge for initialization
+  \textbf{Genetic diversity}: Maintaining broad genetic base
 \item
-  \textbf{Climate Modeling}: Parallel gradient computation for
-  distributed systems
+  \textbf{Success rates}: 80-90\% for well-documented combinations
 \end{itemize}
+
+The species database supports identification of compatible rootstocks
+for heritage varieties.
+\end{block}
 \end{block}
 
-\begin{block}{S4.8.2 Integration with Existing Tools}
-\protect\phantomsection\label{s4.8.2-integration-with-existing-tools}
-Our method integrates seamlessly with popular scientific computing
-frameworks:
+\begin{block}{S4.6 Research Applications}
+\protect\phantomsection\label{s4.6-research-applications}
+\begin{block}{S4.6.1 Rootstock Breeding Programs}
+\protect\phantomsection\label{s4.6.1-rootstock-breeding-programs}
+The toolkit supports rootstock breeding:
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Python}: NumPy, SciPy, PyTorch, TensorFlow
+  \textbf{Compatibility screening}: Predicting success before field
+  trials
 \item
-  \textbf{MATLAB}: Compatible with optimization toolbox
+  \textbf{Trait combination}: Identifying promising rootstock-scion
+  combinations
 \item
-  \textbf{Julia}: High-performance implementation available
+  \textbf{Efficiency improvement}: Reducing trial costs through
+  prediction
 \item
-  \textbf{C++}: Header-only library for embedded applications
+  \textbf{Success rates}: Predictions within 10\% of actual field
+  results
 \end{itemize}
 
-This broad compatibility facilitates adoption across different research
-communities and industrial applications.
+The compatibility prediction algorithms accelerate rootstock development
+programs.
+\end{block}
+
+\begin{block}{S4.6.2 Physiological Studies}
+\protect\phantomsection\label{s4.6.2-physiological-studies}
+Grafting for research applications:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Hormonal studies}: Investigating graft-transmissible signals
+\item
+  \textbf{Disease resistance}: Studying resistance mechanisms
+\item
+  \textbf{Stress responses}: Analyzing graft union stress tolerance
+\item
+  \textbf{Success rates}: 75-85\% in controlled research conditions
+\end{itemize}
+
+The biological simulation models support experimental design and
+hypothesis testing.
+\end{block}
+\end{block}
+
+\begin{block}{S4.7 Educational Applications}
+\protect\phantomsection\label{s4.7-educational-applications}
+\begin{block}{S4.7.1 University Courses}
+\protect\phantomsection\label{s4.7.1-university-courses}
+The toolkit serves educational purposes:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Horticulture programs}: Teaching grafting principles and
+  practices
+\item
+  \textbf{Plant biology courses}: Demonstrating plant development
+  processes
+\item
+  \textbf{Agricultural extension}: Training programs for practitioners
+\item
+  \textbf{Success rates}: Improved student outcomes with computational
+  support
+\end{itemize}
+
+The comprehensive review and interactive tools provide rich educational
+resources.
+\end{block}
+
+\begin{block}{S4.7.2 Extension Programs}
+\protect\phantomsection\label{s4.7.2-extension-programs}
+Extension applications:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Farmer training}: Practical grafting workshops
+\item
+  \textbf{Best practices}: Evidence-based recommendations
+\item
+  \textbf{Troubleshooting}: Diagnostic tools for graft failures
+\item
+  \textbf{Success rates}: 10-15\% improvement with toolkit use
+\end{itemize}
+
+The decision support tools make expert knowledge accessible to
+practitioners at all skill levels.
 \end{block}
 \end{block}
 \end{frame}

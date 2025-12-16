@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  16 DEC 2025 06:42
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  16 DEC 2025 12:28
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1241,39 +1241,34 @@ s.nav)
 
 ]
 
-LaTeX Warning: Citation `boyd2004' on page 2 undefined on input line 118.
+LaTeX Warning: Citation `melnyk2018' on page 2 undefined on input line 150.
 
 
-LaTeX Warning: Citation `nesterov2018' on page 2 undefined on input line 118.
-
-
-LaTeX Warning: Citation `kingma2014' on page 2 undefined on input line 118.
-
-
-LaTeX Warning: Citation `duchi2011' on page 2 undefined on input line 118.
+LaTeX Warning: Citation `goldschmidt2014' on page 2 undefined on input line 150
+.
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 118.
+(Font)              scaled to size 7.8961pt on input line 150.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 118.
+(Font)              scaled to size 5.64008pt on input line 150.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-18.
+50.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 118.
+(Font)              scaled to size 11.28131pt on input line 150.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 118.
+(Font)              scaled to size 7.89691pt on input line 150.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 118.
+(Font)              scaled to size 5.64066pt on input line 150.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 118.
+(Font)              scaled to size 11.27914pt on input line 150.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 118.
+(Font)              scaled to size 7.8954pt on input line 150.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 118.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 118
+(Font)              scaled to size 5.63957pt on input line 150.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 150
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1282,7 +1277,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 118
+LaTeX Font Info:    Trying to load font information for U+msb on input line 150
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1291,111 +1286,100 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
+
+LaTeX Warning: Citation `melnyk2018' on page 2 undefined on input line 150.
+
+
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
 File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
 )
 
+LaTeX Warning: Citation `melnyk2018' on page 2 undefined on input line 150.
+
+
+Overfull \vbox (302.20042pt too high) detected at line 150
+ []
+
+
+
 [2
 
 ]
+
+LaTeX Warning: Citation `garner2013' on page 3 undefined on input line 249.
+
+
+LaTeX Warning: Citation `hartmann2014' on page 3 undefined on input line 249.
+
+
+LaTeX Warning: Citation `webster2002' on page 3 undefined on input line 249.
+
+
+LaTeX Warning: Citation `garner2013' on page 3 undefined on input line 249.
+
+
+LaTeX Warning: Citation `hartmann2014' on page 3 undefined on input line 249.
+
+
+Overfull \vbox (394.72578pt too high) detected at line 249
+ []
+
+
 
 [3
 
 ]
 
-LaTeX Warning: Citation `beck2009' on page 4 undefined on input line 163.
+LaTeX Warning: Citation `stebbins1950' on page 4 undefined on input line 310.
 
 
-LaTeX Warning: Citation `parikh2014' on page 4 undefined on input line 163.
-
-
-LaTeX Warning: Citation `schmidt2017' on page 4 undefined on input line 163.
-
-
-LaTeX Warning: Citation `wright2010' on page 4 undefined on input line 163.
-
-
-LaTeX Warning: File `../output/figures/experimental_setup.png' not found on inp
-ut line 163.
-
-! Unable to load picture or PDF file '../output/figures/experimental_setup.png'
+LaTeX Warning: Citation `goldschmidt2014' on page 4 undefined on input line 310
 .
-<to be read again> 
-                   }
-l.163 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
 
 
-! Package graphics Error: Division by 0.
+Overfull \vbox (275.06015pt too high) detected at line 310
+ []
 
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.163 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/experimental_setup.png Graphic file (type bmp)
-<../output/figures/experimental_setup.png>
 
 
 [4
+
+]
+Overfull \vbox (53.42973pt too high) detected at line 360
+ []
+
+
+
+[5
+
+]
+Overfull \vbox (64.15883pt too high) detected at line 398
+ []
+
+
+
+[6
 
 ]
 \openout4 = `03_methodology_slides.vrb'.
 
 
 (/Users/4d/Documents/GitHub/template/project/output/slides/03_methodology_slide
-s.vrb)
-
-[5
-
-]
-
-LaTeX Warning: File `../output/figures/data_structure.png' not found on input l
-ine 202.
-
-! Unable to load picture or PDF file '../output/figures/data_structure.png'.
-<to be read again> 
-                   }
-l.202 \end{frame}
-                 
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.202 \end{frame}
-                 
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: ../output/figures/data_structure.png Graphic file (type bmp)
-<../output/figures/data_structure.png>
-
-
-[6
-
-]
-
-LaTeX Warning: Reference `fig:convergence_plot' on page 7 undefined on input li
-ne 220.
+s.vrb
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 9.
+)
+Overfull \vbox (0.79543pt too high) detected at line 433
+ []
 
 
 
 [7
+
+]
+
+[8
 
 ]
 \tf@nav=\write5
@@ -1420,14 +1404,13 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 29530 strings out of 473832
- 600643 string characters out of 5729482
- 1127049 words of memory out of 5000000
- 52047 multiletter control sequences out of 15000+600000
- 562388 words of font info for 70 fonts, out of 8000000 for 9000
+ 29483 strings out of 473832
+ 597406 string characters out of 5729482
+ 1141040 words of memory out of 5000000
+ 52004 multiletter control sequences out of 15000+600000
+ 562380 words of font info for 69 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1076b,496s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1076b,714s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Error 256 (driver return code) generating output;
-file /Users/4d/Documents/GitHub/template/project/output/slides/03_methodology_s
-lides.pdf may not be valid.
+Output written on /Users/4d/Documents/GitHub/template/project/output/slides/03_
+methodology_slides.pdf (8 pages).
