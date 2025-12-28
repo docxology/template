@@ -1005,34 +1005,64 @@ class TestValidateReviewQualityWithFormatCompliance:
 @pytest.mark.requires_ollama
 class TestLLMReviewIntegration:
     """Integration tests requiring Ollama server."""
-    
+
+    @pytest.fixture(autouse=True)
+    def check_ollama(self, ensure_ollama_for_tests):
+        """Ensure Ollama is running and functional for tests."""
+        # Fixture dependency ensures Ollama is ready
+        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
+        pass
+
     def test_check_ollama_availability(self):
         """Test Ollama availability check."""
-        from scripts import check_ollama_availability, is_ollama_running
-        
-        if not is_ollama_running():
-            pytest.skip("Ollama not running")
-        
-        available, model = check_ollama_availability()
-        assert available is True
+        from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model, get_available_models
+
+        # Since the fixture ensures Ollama is ready, these should all work
+        assert is_ollama_running() is True
+
+        models = get_available_models()
+        assert len(models) > 0
+
+        model = select_best_model()
         assert model is not None
+        assert isinstance(model, str)
     
     def test_generate_review_with_real_llm(self):
         """Test generating a review with real LLM."""
-        from scripts import (
-            generate_executive_summary,
-            is_ollama_running,
-            select_best_model,
-            LLMClient,
-            LLMConfig,
-        )
+        from infrastructure.llm.utils.ollama import is_ollama_running, select_best_model
+        from infrastructure.llm.core.client import LLMClient
+        from infrastructure.llm.core.config import LLMConfig
+        from infrastructure.llm.review.generator import generate_executive_summary
         
         if not is_ollama_running():
-            pytest.skip("Ollama not running")
-        
+            pytest.fail(
+                "\n" + "="*80 + "\n"
+                "❌ TEST FAILURE: Ollama server is not running!\n"
+                "="*80 + "\n"
+                "This test requires Ollama to be running.\n"
+                "The ensure_ollama_for_tests fixture should have started it.\n\n"
+                "Troubleshooting:\n"
+                "  1. Check if Ollama is installed: ollama --version\n"
+                "  2. Start Ollama manually: ollama serve\n"
+                "  3. Check logs above for auto-start errors\n"
+                "="*80
+            )
+
         model = select_best_model()
         if not model:
-            pytest.skip("No Ollama models available")
+            pytest.fail(
+                "\n" + "="*80 + "\n"
+                "❌ TEST FAILURE: No Ollama models available!\n"
+                "="*80 + "\n"
+                "This test requires at least one Ollama model to be installed.\n"
+                "The ensure_ollama_for_tests fixture should have verified models are available.\n\n"
+                "Install a model:\n"
+                "  ollama pull llama3-gradient    # Recommended (4.7GB, 256K context)\n"
+                "  ollama pull llama3.1:latest     # Alternative (4.7GB, 128K context)\n"
+                "  ollama pull gemma2:2b          # Small/fast option (2B params)\n\n"
+                "Verify models: ollama list\n"
+                "="*80
+            )
         
         config = LLMConfig.from_env()
         config.default_model = model
@@ -1045,12 +1075,11 @@ class TestLLMReviewIntegration:
         Results show 95% accuracy on the test dataset.
         """
         
-        response, metrics = generate_executive_summary(client, test_text)
-        
+        response = generate_executive_summary(test_text, model)
+
+        assert response is not None
         assert len(response) > 0
-        assert metrics.output_chars > 0
-        assert metrics.output_words > 0
-        assert metrics.generation_time_seconds > 0
+        assert isinstance(response, str)
 
 
 class TestValidateReviewQualityRepetition:

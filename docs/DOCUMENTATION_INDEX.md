@@ -108,7 +108,6 @@ Development standards are documented in the `.cursorrules/` directory:
 ### **Advanced Usage**
 - **[`docs/usage/MARKDOWN_TEMPLATE_GUIDE.md`](usage/MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown and cross-referencing guide
 - **[`docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md`](usage/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Manuscript section numbering system
-- **[`docs/development/TEST_IMPROVEMENTS_SUMMARY.md`](development/TEST_IMPROVEMENTS_SUMMARY.md)** - Test suite enhancements
 - **[`docs/development/COVERAGE_GAPS.md`](development/COVERAGE_GAPS.md)** - Test coverage gap analysis and improvement plans
 - **[`scripts/README.md`](../scripts/README.md)** - Thin orchestrator pattern guide
 
@@ -144,7 +143,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/operational/CI_CD_INTEGRATION.md`](operational/CI_CD_INTEGRATION.md)** - GitHub Actions and CI/CD integration guide
 
 ### **Pipeline Orchestration**
-- **[`../RUN_GUIDE.md`](../RUN_GUIDE.md)** - Complete pipeline orchestration guide (run.sh, run_literature.sh)
+- **[`../RUN_GUIDE.md`](../RUN_GUIDE.md)** - Complete pipeline orchestration guide (run.sh)
 
 ### **Troubleshooting & Support**
 - **[`docs/operational/TROUBLESHOOTING_GUIDE.md`](operational/TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting guide
@@ -245,7 +244,6 @@ docs/
 │   ├── ROADMAP.md                      # Future plans
 │   ├── TESTING_GUIDE.md                # Testing framework
 │   ├── TESTING_WITH_CREDENTIALS.md     # Credential testing
-│   ├── TEST_IMPROVEMENTS_SUMMARY.md    # Test enhancements
 │   └── COVERAGE_GAPS.md                # Coverage analysis
 │
 └── best-practices/                     # Best practices

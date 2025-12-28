@@ -27,7 +27,7 @@ pytest tests/ --cov=src --cov-report=html
 python3 scripts/02_run_analysis.py
 
 # Validate markdown
-python3 -m infrastructure.validation.cli markdown manuscript/
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 # Open manuscript
 open output/project_combined.pdf  # Top-level output

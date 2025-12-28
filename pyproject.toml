@@ -38,31 +38,32 @@ dependencies = [
   "numpy>=1.22",
   "matplotlib>=3.7",
   "pypdf>=5.0",
-  "reportlab>=4.0",
   "pyyaml>=6.0",
   "requests>=2.31.0",
   "python-dotenv>=1.0.0",
-  "scikit-learn>=1.3.0",
 ]
 
 [project.optional-dependencies]
 dev = [
   "pytest>=7.0",
   "pytest-cov>=4.0",
+  "mypy>=1.17.1",
+  "safety>=3.0.0",
+  "bandit>=1.7.0",
 ]
 
 [tool.uv]
 
 [tool.pytest.ini_options]
 # Pytest configuration (consolidated from pytest.ini)
-pythonpath = [".", "infrastructure", "project/src"]
-testpaths = ["tests", "project/tests"]
+pythonpath = [".", "infrastructure", "project/src", "projects/*/src"]
+testpaths = ["tests", "project/tests", "projects/*/tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short --strict-markers --disable-warnings"
 markers = [
-    "requires_ollama: mark test as requiring running Ollama server (skip with -m 'not requires_ollama')",
+    "requires_ollama: mark test as requiring running Ollama server (Ollama will be auto-started; tests FAIL if Ollama unavailable)",
     "slow: mark test as slow running",
     "integration: mark test as integration test",
 ]
@@ -119,6 +120,5 @@ dev = [
     "pydocstyle>=6.3.0",
     "pytest>=8.4.1",
     "pytest-cov>=4.0",
-    "pytest-mock>=3.10",
 ]
 

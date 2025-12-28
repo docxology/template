@@ -67,9 +67,9 @@ tests/infrastructure/test_<module>/
 
 ## Testing Principles
 
-### 1. No Mocks - Use Real Data
+### 1. ABSOLUTE PROHIBITION: Never Use Mocks
 
-**CRITICAL**: Never use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework.
+**ABSOLUTE REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **real data** and **real computations only**.
 
 ```python
 # ✅ GOOD: Test with real data
@@ -77,15 +77,11 @@ def test_validation_passes():
     data = {"name": "Alice", "age": 30}
     assert validate_data(data) is True
 
-# ❌ BAD: Using mock data
-def test_validation_passes():
-    mock_data = MagicMock()  # NEVER use MagicMock
-    mock_data.name = "Alice"
-    assert validate_data(mock_data) is True
-
-# ❌ BAD: Using mocker.patch
-def test_with_mock(mocker):
-    mocker.patch("module.function")  # NEVER use mocker.patch
+# ❌ ABSOLUTELY FORBIDDEN: NEVER use any mocking
+# def test_validation_passes():
+#     mock_data = MagicMock()  # NEVER ALLOWED
+#     mocker.patch("module.function")  # NEVER ALLOWED
+#     # This would break the testing philosophy
 ```
 
 ### Network-Dependent Modules
@@ -131,10 +127,8 @@ def test_sort_returns_sorted_list():
     assert result == [1, 2, 3]
 
 # ❌ BAD: Testing implementation details
-def test_sort_uses_sorted_builtin():
-    with patch('builtins.sorted') as mock:
-        sort_numbers([3, 1, 2])
-        mock.assert_called_once()
+# Testing "how" something works (implementation) is brittle and not valuable.
+# Only test "what" the function does (observable behavior).
 ```
 
 ### 3. Clear, Self-Documenting Names
@@ -377,8 +371,8 @@ def temp_dir():
         yield Path(tmpdir)
 
 @pytest.fixture
-def logger_mock(caplog):
-    """Mock logger for testing logging."""
+def logger_fixture(caplog):
+    """Set up logging capture for testing logging."""
     import logging
     caplog.set_level(logging.DEBUG)
     return caplog

@@ -12,9 +12,23 @@ The `tests/` directory ensures **comprehensive test coverage** for all modules (
 3. Run tests until they pass
 4. Refactor with confidence
 
-### No Mocks Policy
+### ABSOLUTE PROHIBITION: No Mocks Policy
+
+**NON-NEGOTIABLE REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **real data** and **real computations only**.
+
+This is a fundamental testing principle that ensures:
+- Tests validate actual behavior, not mocked behavior
+- Integration points are truly tested
+- Code is tested in realistic conditions
+- No false confidence from mocked tests
+
+**ABSOLUTELY FORBIDDEN:**
+- `MagicMock()`, `mocker.patch()`, `unittest.mock`
+- Any form of dependency injection for testing
+- Mocking external services or APIs
+- Creating fake test data instead of real data
+
 - **Always use real data** and real computations
-- **No mock methods** - test actual behavior
 - Create temporary directories/files for testing
 - Use deterministic seeds for reproducibility
 - Test real integration between components

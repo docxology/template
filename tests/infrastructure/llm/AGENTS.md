@@ -55,7 +55,7 @@ pytest tests/infrastructure/llm/ -v
 # Pure logic tests only (fast, no Ollama)
 pytest tests/infrastructure/llm/ -m "not requires_ollama" -v
 
-# Integration tests only (requires Ollama)
+# All tests (Ollama will be auto-started; tests FAIL if unavailable)
 pytest tests/infrastructure/llm/ -m requires_ollama -v
 
 # With coverage
@@ -113,21 +113,27 @@ def sample_schema():
 
 Integration tests are designed to be robust against external service variability:
 
-### Graceful Skipping
+### Loud Failures
 
-Tests skip gracefully when:
-- Ollama server is not running
-- Connection times out (extended to 120s for long queries)
-- Model returns empty or invalid responses
+Tests now FAIL loudly when:
+- Ollama server cannot be started automatically
+- Ollama server is running but has no models
+- Connection issues persist after auto-start attempts
+
+Tests use the `ensure_ollama_for_tests` session fixture which:
+- Automatically starts Ollama if not running
+- Verifies Ollama has at least one model installed
+- Provides detailed error messages with troubleshooting steps
 
 ```python
 @pytest.mark.requires_ollama
 class TestLLMClientWithOllama:
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        """Auto-skip if Ollama not available."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+    def check_ollama(self, ensure_ollama_for_tests):
+        """Ensure Ollama is running and functional for tests."""
+        # Fixture dependency ensures Ollama is ready
+        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
+        pass
 ```
 
 ### Timeout Handling

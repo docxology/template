@@ -215,10 +215,11 @@ class TestLLMClientWithOllama:
     """
 
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        """Skip tests if Ollama is not available."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+    def check_ollama(self, ensure_ollama_for_tests):
+        """Ensure Ollama is running and functional for tests."""
+        # Fixture dependency ensures Ollama is ready
+        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
+        pass
 
     @pytest.fixture
     def client(self, default_config):

@@ -1,494 +1,105 @@
-# Infrastructure Layer - Quick Reference
+# Infrastructure Modules
 
-Modular build, validation, and development tools organized by functionality.
+Reusable build tools, validation systems, and integration components that support research projects. These modules provide the foundation for reproducible, high-quality research workflows.
 
-## Module Overview
+## Overview
 
-| Module | Purpose | Key Classes/Functions | CLI |
-|--------|---------|----------------------|-----|
-| **core** | Foundation utilities | `get_logger`, `load_config`, `TemplateError`, `CheckpointManager` | N/A |
-| **build** | Build verification | `verify_build_artifacts`, `run_build_command`, `analyze_document_quality` | N/A |
-| **validation** | Quality & validation | `validate_pdf_rendering`, `validate_markdown`, `verify_output_integrity` | ✅ |
-| **documentation** | Figure management | `FigureManager`, `ImageManager`, `MarkdownIntegration` | ✅ |
-| **scientific** | Scientific utilities | `check_numerical_stability`, `benchmark_function` | ✅ |
-| **llm** | LLM integration | `LLMClient`, `generate_review_with_metrics` | ✅ |
-| **rendering** | Multi-format output | `RenderManager` | ✅ |
-| **publishing** | Publishing tools | `extract_publication_metadata`, `publish_to_zenodo`, `ZenodoClient` | ✅ |
-| **reporting** | Pipeline reporting | `generate_pipeline_report`, `get_error_aggregator` | N/A |
+The infrastructure layer provides generic, reusable functionality that can be applied across different research projects. All modules follow the **thin orchestrator pattern** - scripts coordinate business logic implemented in these infrastructure modules.
 
-## Quick Start
+## Module Categories
 
-### Using a Module
+### Core Infrastructure
+- **[core/](core/)** - Fundamental utilities (logging, configuration, progress tracking)
+- **[core/](core/)** - Custom exception hierarchy and error handling
+
+### Document Processing
+- **[documentation/](documentation/)** - Figure management and API documentation generation
+- **[rendering/](rendering/)** - Multi-format output generation (PDF, HTML, slides)
+- **[validation/](validation/)** - Quality assurance and content validation
+
+### External Integrations
+- **[llm/](llm/)** - Local Large Language Model integration
+- **[publishing/](publishing/)** - Academic publishing workflows
+- **[scientific/](scientific/)** - Scientific computing utilities
+
+### Build & Quality
+- **[reporting/](reporting/)** - Pipeline reporting and error aggregation
+
+## Usage in Projects
+
+Infrastructure modules are imported by project-specific scripts:
 
 ```python
-# Core utilities
-from infrastructure.core import get_logger, load_config
-logger = get_logger(__name__)
-config = load_config(Path("config.yaml"))
-
-# Build verification
-from infrastructure.build import verify_build_artifacts, analyze_document_quality
-verification = verify_build_artifacts(Path("output/"), {"pdf": ["manuscript.pdf"]})
-quality = analyze_document_quality(Path("output/pdf/manuscript.pdf"))
-
-# Validation
-from infrastructure.validation import validate_pdf_rendering
-report = validate_pdf_rendering(Path("output.pdf"))
-
-# Documentation
-from infrastructure.documentation import FigureManager
-fm = FigureManager()
-fm.register_figure("plot.png", "Results")
-
-
-# Scientific
-from infrastructure.scientific import benchmark_function
-benchmark = benchmark_function(my_algorithm, inputs)
-
-# LLM
-from infrastructure.llm import LLMClient
-llm = LLMClient()
-response = llm.apply_template("summarize_abstract", text=abstract)
-
-# Rendering
+# In project/scripts/analysis.py
 from infrastructure.rendering import RenderManager
+from infrastructure.validation import validate_markdown
+from infrastructure.llm.core import LLMClient
+
+# Use infrastructure components
 renderer = RenderManager()
-pdf = renderer.render_pdf(Path("manuscript.tex"))
-
-# Publishing
-from infrastructure.publishing import extract_publication_metadata
-metadata = extract_publication_metadata([Path("manuscript.md")])
-
-# Reporting
-from infrastructure.reporting import (
-    generate_pipeline_report,
-    save_pipeline_report,
-    get_error_aggregator,
-    generate_test_report,
-    generate_validation_report
-)
-report = generate_pipeline_report(stage_results, total_duration, repo_root)
-saved_files = save_pipeline_report(report, Path("output/reports"))
-aggregator = get_error_aggregator()
-aggregator.add_error("test_failure", "Test failed", stage="tests")
-aggregator.save_report(Path("output/reports"))
-```
-
-### CLI Usage
-
-```bash
-# Validation
-python3 -m infrastructure.validation.cli pdf output/pdf/manuscript.pdf
-python3 -m infrastructure.validation.cli markdown manuscript/
-
-# Documentation
-python3 -m infrastructure.documentation.cli generate-api project/src/
-
-# LLM
-python3 -m infrastructure.llm.cli query "Summarize quantum computing"
-
-# Rendering
-python3 -m infrastructure.rendering.cli pdf manuscript.tex
-python3 -m infrastructure.rendering.cli all manuscript.tex
-
-# Publishing
-python3 -m infrastructure.publishing.cli extract-metadata manuscript/
-python3 -m infrastructure.publishing.cli publish-zenodo output/ --token $ZENODO_TOKEN
-
-# Reporting (integrated into pipeline - reports auto-generated)
-# Reports saved to: project/output/reports/
-```
-
-## Core Module
-
-**Foundation utilities used by all modules.**
-
-```python
-from infrastructure.core import (
-    # Logging
-    get_logger, setup_logger, log_operation,
-    # Configuration
-    load_config, get_config_as_dict,
-    # Exceptions
-    TemplateError, ValidationError, ConfigurationError
-)
-
-# Logging
-logger = get_logger(__name__)
-logger.info("Processing data")
-
-# Configuration
-config = load_config(Path("config.yaml"))
-print(config['paper']['title'])
-
-# Error handling
-try:
-    risky_operation()
-except Exception as e:
-    raise TemplateError("Operation failed") from e
-```
-
-## Validation Module
-
-**Validate PDFs, Markdown, and data integrity.**
-
-```python
-from infrastructure.validation import (
-    validate_pdf_rendering,
-    validate_markdown,
-    verify_output_integrity
-)
-
-# Validate PDF
-report = validate_pdf_rendering(Path("output.pdf"))
-print(f"Issues: {report['issues']['total_issues']}")
-
-# Validate Markdown
-problems, exit_code = validate_markdown("manuscript/", ".")
-for problem in problems:
-    print(problem)
-
-# Verify integrity
-integrity = verify_output_integrity(Path("output/"))
-print(f"Files checked: {integrity.get('total_files', 0)}")
-```
-
-## Documentation Module
-
-**Manage figures and generate API documentation.**
-
-```python
-from infrastructure.documentation import (
-    FigureManager, ImageManager, MarkdownIntegration,
-    build_api_index, generate_markdown_table
-)
-
-# Figure management
-fm = FigureManager()
-fm.register_figure("plot.png", "Results", label="fig:results")
-im = ImageManager(fm)
-im.insert_figure(Path("results.md"), "fig:results")
-
-# API documentation
-entries = build_api_index("project/src/")
-table = generate_markdown_table(entries)
-```
-
-## Scientific Module
-
-**Scientific computing tools and best practices.**
-
-```python
-from infrastructure.scientific import (
-    check_numerical_stability,
-    benchmark_function,
-    validate_scientific_best_practices
-)
-
-# Stability checking
-stability = check_numerical_stability(algorithm, test_inputs)
-
-# Benchmarking
-benchmark = benchmark_function(algorithm, test_inputs, iterations=100)
-print(f"Average time: {benchmark['mean']:.3f}s")
-
-# Best practices
-report = validate_scientific_best_practices(my_module)
-```
-
-## LLM Module
-
-**Local LLM integration with research templates.**
-
-```python
-from infrastructure.llm import LLMClient
-
 client = LLMClient()
-
-# Use research templates
-summary = client.apply_template("summarize_abstract", text=abstract)
-code_docs = client.apply_template("document_code", code=my_function)
-section = client.apply_template("draft_section", topic="methods")
-
-# Direct queries
-response = client.query_model("What are the key implications?")
-
-# Streaming responses
-for chunk in client.query_model_stream("Explain quantum computing"):
-    print(chunk, end='', flush=True)
-```
-
-## Rendering Module
-
-**Generate documents in multiple formats.**
-
-```python
-from infrastructure.rendering import RenderManager
-
-renderer = RenderManager()
-
-# PDF rendering
-pdf = renderer.render_pdf(Path("manuscript.tex"))
-
-# All formats
-outputs = renderer.render_all(Path("manuscript.tex"))
-for output in outputs:
-    print(f"Generated: {output}")
-
-# Specific formats
-slides = renderer.render_slides(Path("slides.md"), format="revealjs")
-web = renderer.render_web(Path("manuscript.md"))
-html = renderer.render_html(Path("manuscript.md"))
-```
-
-## Reporting Module
-
-**Pipeline reporting and error aggregation.**
-
-```python
-from infrastructure.reporting import (
-    generate_pipeline_report,
-    save_pipeline_report,
-    get_error_aggregator,
-    generate_test_report,
-    generate_validation_report,
-    generate_performance_report,
-    generate_error_summary
-)
-
-# Generate pipeline report
-report = generate_pipeline_report(
-    stage_results=[...],
-    total_duration=60.5,
-    repo_root=Path("."),
-)
-saved_files = save_pipeline_report(report, Path("output/reports"))
-
-# Generate test report
-test_report = generate_test_report(
-    test_results={...},
-    coverage_data={...}
-)
-
-# Generate validation report
-validation_report = generate_validation_report(
-    validation_results={...}
-)
-
-# Aggregate errors
-aggregator = get_error_aggregator()
-aggregator.add_error("test_failure", "Test failed", stage="tests")
-aggregator.save_report(Path("output/reports"))
-```
-
-## Publishing Module
-
-**Publish to academic platforms and generate citations.**
-
-```python
-from infrastructure.publishing import (
-    extract_publication_metadata,
-    generate_citation_bibtex,
-    publish_to_zenodo
-)
-
-# Extract metadata
-metadata = extract_publication_metadata([Path("manuscript.md")])
-
-# Generate citations
-bibtex = generate_citation_bibtex(metadata)
-apa = generate_citation_apa(metadata)
-print(bibtex)
-
-# Publish to Zenodo
-doi = publish_to_zenodo(metadata, [Path("output.pdf")], token)
-print(f"DOI: {doi}")
-
-# Create GitHub release
-url = create_github_release(
-    tag="v1.0", name="Release 1.0", files=[Path("output.pdf")],
-    token=os.getenv("GITHUB_TOKEN"), repo="owner/repo"
-)
-```
-
-## Configuration
-
-### Environment Variables
-
-```bash
-# Logging
-export LOG_LEVEL=0  # 0=DEBUG, 1=INFO, 2=WARN, 3=ERROR
-
-# Metadata
-export AUTHOR_NAME="Dr. Jane Smith"
-export AUTHOR_ORCID="0000-0000-0000-1234"
-export PROJECT_TITLE="My Research"
-
-# Publishing
-export ZENODO_TOKEN="..."
-export GITHUB_TOKEN="..."
-
-# LLM
-export OLLAMA_HOST="http://localhost:11434"
-```
-
-### YAML Configuration
-
-Create `project/manuscript/config.yaml`:
-
-```yaml
-paper:
-  title: "Novel Framework"
-  version: "1.0"
-
-authors:
-  - name: "Dr. Jane Smith"
-    orcid: "0000-0000-0000-1234"
-
-publication:
-  doi: "10.5281/zenodo.12345678"
-  license: "Apache-2.0"
 ```
 
 ## Testing
 
-### Run Tests
+Infrastructure modules maintain **83.33% test coverage** (exceeds 60% requirement):
 
 ```bash
-# All infrastructure tests
-pytest tests/infrastructure/ -v
+# Test all infrastructure
+pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing
 
-# Specific module
-pytest tests/infrastructure/test_validation/ -v
-
-# With coverage report
-pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
+# Test specific module
+pytest tests/infrastructure/core/ -v
 ```
 
-### Coverage
+## Architecture Principles
 
-All modules have comprehensive test coverage:
-- core: 100%
-- validation: 100%
-- documentation: 100%
-- scientific: 100%
-- llm: 91%+
-- rendering: 91%+
-- publishing: 100%
-- reporting: 67% (tests added; continue improving pipeline reporting paths)
+### Thin Orchestrator Pattern
+- **Business logic** resides in infrastructure modules
+- **Scripts** provide thin orchestration layer
+- **Clean separation** between reusable code and project-specific logic
 
-## Common Workflows
+### Real Data Policy
+- **No mock methods** in business logic
+- **Real computations** with actual data
+- **Deterministic outputs** for reproducibility
 
-### Complete Research Workflow
+### Comprehensive Validation
+- **Quality assurance** for all outputs
+- **Integration testing** across modules
+- **Error handling** with informative messages
 
-```bash
-# 1. Validate manuscript
-python3 -m infrastructure.validation.cli markdown manuscript/
+## Development
 
-# 2. Generate API docs
-python3 -m infrastructure.documentation.cli generate-api project/src/
+### Adding New Infrastructure
 
-# 3. Render to multiple formats
-python3 -m infrastructure.rendering.cli all manuscript.tex
+1. Create module in appropriate category
+2. Implement business logic with comprehensive tests
+3. Add AGENTS.md documentation
+4. Update integration tests
+5. Ensure 60%+ test coverage
 
-# 4. Validate quality
-python3 -m infrastructure.validation.cli integrity output/
-
-# 5. Publish release
-python3 -m infrastructure.publishing.cli publish-zenodo output/ --title "My Research"
+### Module Structure
+```
+infrastructure/new_module/
+├── __init__.py      # Public API exports
+├── core.py          # Main functionality
+├── utils.py         # Helper functions
+├── cli.py           # Command-line interface (if needed)
+├── AGENTS.md        # Technical documentation
+└── README.md        # Quick reference
 ```
 
-### Python API Example
+## Quality Standards
 
-```python
-from pathlib import Path
-from infrastructure.core import get_logger
-from infrastructure.validation import validate_markdown, validate_pdf_rendering
-from infrastructure.rendering import RenderManager
-from infrastructure.publishing import publish_to_zenodo
-
-logger = get_logger(__name__)
-
-# Validate manuscript
-logger.info("Validating manuscript...")
-validate_markdown("manuscript/", ".")
-
-# Render PDF
-logger.info("Rendering PDF...")
-renderer = RenderManager()
-pdf = renderer.render_pdf(Path("manuscript.tex"))
-
-# Validate output
-logger.info("Validating output...")
-report = validate_pdf_rendering(pdf)
-
-# Publish
-if not report['summary']['has_issues']:
-    logger.info("Publishing...")
-    doi = publish_to_zenodo(metadata, [pdf], token)
-    logger.info(f"Published with DOI: {doi}")
-```
-
-## Module Navigation
-
-For detailed information about each module:
-- [`core/`](core/) - See [core/AGENTS.md](core/AGENTS.md)
-- [`build/`](build/) - See [build/AGENTS.md](build/AGENTS.md)
-- [`validation/`](validation/) - See [validation/AGENTS.md](validation/AGENTS.md)
-- [`documentation/`](documentation/) - See [documentation/AGENTS.md](documentation/AGENTS.md)
-- [`scientific/`](scientific/) - See [scientific/AGENTS.md](scientific/AGENTS.md)
-- [`llm/`](llm/) - See [llm/AGENTS.md](llm/AGENTS.md)
-- [`rendering/`](rendering/) - See [rendering/AGENTS.md](rendering/AGENTS.md)
-- [`publishing/`](publishing/) - See [publishing/AGENTS.md](publishing/AGENTS.md)
-- [`reporting/`](reporting/) - See [reporting/AGENTS.md](reporting/AGENTS.md)
-
-## Troubleshooting
-
-### Import Errors
-
-Check that you're using the correct modular import paths:
-
-```python
-from infrastructure.validation.pdf_validator import validate_pdf_rendering
-from infrastructure.documentation.figure_manager import FigureManager
-from infrastructure.core.config_loader import load_config
-from infrastructure.core.logging_utils import get_logger
-```
-
-### Configuration Not Loading
-
-1. Check `project/manuscript/config.yaml` exists and is valid YAML
-2. Verify permissions to read file
-3. Fall back to environment variables if needed
-
-### Missing Dependencies
-
-Install with:
-```bash
-# Using uv (recommended)
-uv sync
-
-# Or using pip
-pip install -r requirements.txt
-```
-
-## Performance Tips
-
-1. **Caching** - Results are cached when available
-2. **Streaming** - Use streaming APIs for large outputs
-3. **Batching** - Process multiple items efficiently
-4. **Parallel** - Some operations support parallel execution
-
-## Contributing
-
-To extend infrastructure:
-1. Add functionality to appropriate module
-2. Add comprehensive tests (meet coverage requirements)
-3. Update module documentation (AGENTS.md + README.md)
-4. Update this file if adding new module
+- **Test Coverage**: Minimum 60% for infrastructure modules
+- **Documentation**: Complete AGENTS.md for all modules
+- **Error Handling**: Comprehensive exception handling
+- **Performance**: Efficient resource usage
+- **Security**: Safe credential handling
 
 ## See Also
 
-- [`AGENTS.md`](AGENTS.md) - Complete architecture documentation
-- [`../AGENTS.md`](../AGENTS.md) - System overview
-- [`../README.md`](../README.md) - Project quick start
+- [AGENTS.md](AGENTS.md) - Complete infrastructure documentation
+- [../tests/infrastructure/](../tests/infrastructure/) - Infrastructure test suite
+- [../scripts/](../scripts/) - Orchestration scripts

@@ -45,10 +45,11 @@ class TestGetAvailableModels:
     """Test get_available_models function (requires Ollama)."""
 
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        """Skip tests if Ollama is not available."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+    def check_ollama(self, ensure_ollama_for_tests):
+        """Ensure Ollama is running and functional for tests."""
+        # Fixture dependency ensures Ollama is ready
+        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
+        pass
 
     def test_get_available_models_returns_list(self):
         """Test that get_available_models returns a list."""
@@ -72,10 +73,11 @@ class TestGetModelNames:
     """Test get_model_names function (requires Ollama)."""
 
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        """Skip tests if Ollama is not available."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+    def check_ollama(self, ensure_ollama_for_tests):
+        """Ensure Ollama is running and functional for tests."""
+        # Fixture dependency ensures Ollama is ready
+        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
+        pass
 
     def test_get_model_names_returns_list(self):
         """Test that get_model_names returns a list of strings."""
@@ -96,10 +98,11 @@ class TestSelectBestModel:
     """Test select_best_model function (requires Ollama)."""
 
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        """Skip tests if Ollama is not available."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+    def check_ollama(self, ensure_ollama_for_tests):
+        """Ensure Ollama is running and functional for tests."""
+        # Fixture dependency ensures Ollama is ready
+        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
+        pass
 
     def test_select_best_model_returns_string(self):
         """Test that select_best_model returns a string."""
@@ -140,10 +143,11 @@ class TestSelectSmallFastModel:
     """Test select_small_fast_model function (requires Ollama)."""
 
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        """Skip tests if Ollama is not available."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+    def check_ollama(self, ensure_ollama_for_tests):
+        """Ensure Ollama is running and functional for tests."""
+        # Fixture dependency ensures Ollama is ready
+        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
+        pass
 
     def test_select_small_fast_model_returns_string(self):
         """Test that select_small_fast_model returns a model name."""
@@ -158,10 +162,11 @@ class TestEnsureOllamaReady:
     """Test ensure_ollama_ready function (requires Ollama)."""
 
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        """Skip tests if Ollama is not available."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+    def check_ollama(self, ensure_ollama_for_tests):
+        """Ensure Ollama is running and functional for tests."""
+        # Fixture dependency ensures Ollama is ready
+        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
+        pass
 
     def test_ensure_ollama_ready_returns_true(self):
         """Test ensure_ollama_ready returns True when Ollama is ready."""
@@ -180,10 +185,11 @@ class TestGetModelInfo:
     """Test get_model_info function (requires Ollama)."""
 
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        """Skip tests if Ollama is not available."""
-        if not is_ollama_running():
-            pytest.skip("Ollama server not available")
+    def check_ollama(self, ensure_ollama_for_tests):
+        """Ensure Ollama is running and functional for tests."""
+        # Fixture dependency ensures Ollama is ready
+        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
+        pass
 
     def test_get_model_info_returns_dict(self):
         """Test get_model_info returns model info dict."""

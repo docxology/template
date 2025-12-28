@@ -2,11 +2,42 @@
 
 ## Overview
 
-The Research Project Template provides **three main entry points** for pipeline operations:
+The Research Project Template provides **two main entry points** for pipeline operations:
 
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (10 stages: 0-9)
-2. **`run_literature.sh`** - Literature search and management operations (located in `literature_repo/` directory)
-3. **`python3 scripts/run_all.py`** - Alternative core 6-stage pipeline without LLM features
+2. **`python3 scripts/run_all.py`** - Alternative core 6-stage pipeline without LLM features
+
+## 🔀 Multi-Project Support
+
+The template now supports **multiple research projects** in a single repository. You can:
+
+- **Run individual projects**: `./run.sh --project <name> --pipeline`
+- **Run all projects sequentially**: `./run.sh --all-projects --pipeline`
+- **Interactive project selection**: `./run.sh` (shows menu of available projects)
+
+### Available Projects
+
+The template includes three example projects:
+
+- **`project`** - Full-featured research template (default, backward compatible)
+- **`small_prose_project`** - Manuscript-focused with equations and prose
+- **`small_code_project`** - Code-focused with analysis pipeline and figures
+
+### Multi-Project Commands
+
+```bash
+# Interactive project selection
+./run.sh
+
+# Run specific project
+./run.sh --project small_code_project --pipeline
+
+# Run all projects sequentially
+./run.sh --all-projects --pipeline
+
+# Alternative orchestrator (all projects)
+python3 scripts/run_all.py --all-projects
+```
 
 ## Entry Point 1: Manuscript Operations (`run.sh`)
 
@@ -149,136 +180,7 @@ Executes the complete 10-stage build pipeline (stages 0-9):
 ./run.sh --help
 ```
 
-## Entry Point 3: Literature Operations (`run_literature.sh`)
-
-`run_literature.sh` provides an interactive menu for all literature search and management operations:
-
-```bash
-./run_literature.sh
-```
-
-### Literature Menu (Options 0-7)
-
-```
-============================================================
-  Literature Operations Menu
-============================================================
-
-Current Library Status:
-  • Total papers: X
-  • With PDFs: Y
-  • With summaries: Z
-
-Orchestrated Pipelines:
-  0. Full Pipeline (search → download → extract → summarize)
-
-Individual Operations (via 07_literature_search.py):
-  1. Search Only (network only - add to bibliography)
-  2. Download Only (network only - download PDFs)
-  3. Extract Text (local only - extract text from PDFs)
-  4. Summarize (requires Ollama - generate summaries)
-  5. Cleanup (local files only - remove papers without PDFs)
-  6. Advanced LLM Operations (requires Ollama)
-
-  7. Exit
-============================================================
-```
-
-### Literature Menu Options
-
-#### Option 0: Full Pipeline
-Runs orchestrated literature pipeline: search → download → extract → summarize.
-- Searches academic databases for keywords
-- Downloads PDFs from available sources
-- Extracts text from PDFs (save to extracted_text/)
-- Generates AI-powered summaries (requires Ollama)
-
-**Requires**: Network access. Summarization requires Ollama.
-
-#### Option 1: Search Only
-Searches for papers and adds to bibliography (network only, no Ollama required).
-- Searches arXiv and Semantic Scholar APIs
-- Adds papers to bibliography (`literature/references.bib`)
-- Updates library index (`literature/library.json`)
-- Does NOT download PDFs or generate summaries
-
-**Requires**: Network access only
-
-**Output**: `literature/references.bib`, `literature/library.json`
-
-#### Option 2: Download Only
-Downloads PDFs for existing bibliography entries (network only, no Ollama required).
-- Downloads PDFs for papers in bibliography without PDFs
-- Saves PDFs to `literature/pdfs/`
-- Updates library index
-- Does NOT search for new papers or generate summaries
-
-**Requires**: Network access only
-
-**Output**: `literature/pdfs/`
-
-#### Option 3: Extract Text
-Extracts text from downloaded PDFs (local operation, no network or Ollama required).
-- Processes PDFs in `literature/pdfs/`
-- Extracts text content
-- Saves extracted text to `literature/extracted_text/`
-- Does NOT require network or Ollama
-
-**Requires**: Local file access only
-
-**Output**: `literature/extracted_text/`
-
-#### Option 4: Summarize
-Generates AI summaries for papers with PDFs (requires Ollama).
-- Analyzes all papers in `literature/library.json`
-- Generates summaries for papers with PDFs but without summaries
-- Saves summaries to `literature/summaries/`
-- Does NOT search for new papers or download PDFs
-
-**Requires**: Ollama server running with at least one model installed
-
-**Output**: `literature/summaries/`
-
-#### Option 5: Cleanup
-Removes papers without PDFs from library (local files only, no Ollama required).
-- Removes entries from `literature/library.json` that don't have PDFs
-- Updates `literature/references.bib` accordingly
-- Does NOT require network or Ollama
-
-**Requires**: Local file access only
-
-**Output**: Updated `literature/library.json` and `literature/references.bib`
-
-#### Option 6: Advanced LLM Operations
-Performs advanced LLM operations on selected papers (requires Ollama).
-
-Available operations:
-- Literature review synthesis
-- Science communication narrative
-- Comparative analysis
-- Research gap identification
-- Citation network analysis
-
-**Requires**: Ollama server running with at least one model installed
-
-**Output**: Generated analysis files in `literature/`
-
-### Literature Non-Interactive Mode
-
-```bash
-# Literature Operations:
-./run_literature.sh --search             # Search literature (network only, add to bibliography)
-./run_literature.sh --download           # Download PDFs (network only, for bibliography entries)
-./run_literature.sh --extract-text       # Extract text from PDFs
-./run_literature.sh --summarize          # Generate summaries (requires Ollama, for papers with PDFs)
-./run_literature.sh --cleanup            # Cleanup library (local files only, remove papers without PDFs)
-./run_literature.sh --llm-operation      # Advanced LLM operations (requires Ollama)
-
-# Show help
-./run_literature.sh --help
-```
-
-## Entry Point 3: Python Orchestrator (`scripts/run_all.py`)
+## Entry Point 2: Python Orchestrator (`scripts/run_all.py`)
 
 For programmatic access or CI/CD integration, use the Python orchestrator:
 
@@ -311,7 +213,6 @@ python3 scripts/run_all.py
 |-------------|----------------|--------------|----------|
 | `./run.sh` | Main entry point | Optional | Interactive menu or full manuscript pipeline with LLM |
 | `./run.sh --pipeline` | 10 stages (0-9) | Optional | Full manuscript pipeline with LLM |
-| `./run_literature.sh` | 7 menu options | Optional | Literature search and management (in `literature_repo/` directory) |
 | `python3 scripts/run_all.py` | 6 stages (00-05) | None | Core pipeline, CI/CD automation |
 
 ## Usage Examples
@@ -325,8 +226,6 @@ python3 scripts/run_all.py
 # Direct access to manuscript operations
 ./run.sh
 
-# Direct access to literature operations
-./run_literature.sh
 ```
 
 ### Non-Interactive Mode
@@ -338,8 +237,6 @@ python3 scripts/run_all.py
 # Resume manuscript pipeline from checkpoint
 ./run.sh --pipeline --resume
 
-# Run literature search
-./run_literature.sh --search
 
 # Run core pipeline (Python)
 python3 scripts/run_all.py
@@ -360,11 +257,6 @@ python3 scripts/05_copy_outputs.py       # Copy final deliverables
 python3 scripts/06_llm_review.py         # LLM manuscript review
 python3 scripts/06_llm_review.py --reviews-only     # Reviews only
 python3 scripts/06_llm_review.py --translations-only # Translations only
-python3 scripts/07_literature_search.py --search-only     # Search only
-python3 scripts/07_literature_search.py --download-only   # Download only
-python3 scripts/07_literature_search.py --extract-text     # Extract text
-python3 scripts/07_literature_search.py --summarize        # Summarize
-python3 scripts/07_literature_search.py --cleanup         # Cleanup library
 ```
 
 ## Exit Codes
@@ -384,14 +276,6 @@ You can override by setting before running:
 export LOG_LEVEL=0  # Enable debug logging
 ./run.sh --pipeline
 ```
-
-### Literature Search Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `LITERATURE_DEFAULT_LIMIT` | `25` | Results per source per keyword |
-| `MAX_PARALLEL_SUMMARIES` | `1` | Parallel summarization workers |
-| `LLM_SUMMARIZATION_TIMEOUT` | `600` | Timeout for paper summarization (seconds) |
 
 ### LLM Review Variables
 
@@ -424,7 +308,7 @@ Press Enter to return to menu...
 
 Make the script executable:
 ```bash
-chmod +x run.sh run_literature.sh
+chmod +x run.sh
 ```
 
 ### Tests fail with import errors
@@ -458,16 +342,10 @@ ollama serve
 ollama pull llama3-gradient
 ```
 
-### Literature search fails
-
-- **Search/Download operations**: Require network access only (no Ollama)
-- **Summarization**: Requires Ollama server running
-- **Cleanup**: Requires local file access only (no network or Ollama)
-
 ## See Also
 
 - [`scripts/README.md`](scripts/README.md) - Stage orchestrators documentation
 - [`scripts/AGENTS.md`](scripts/AGENTS.md) - Complete scripts documentation
 - [`AGENTS.md`](AGENTS.md) - Complete system documentation
-- [`docs/WORKFLOW.md`](docs/WORKFLOW.md) - Development workflow
-- [`docs/BUILD_SYSTEM.md`](docs/BUILD_SYSTEM.md) - Detailed build system reference
+- [`docs/core/WORKFLOW.md`](docs/core/WORKFLOW.md) - Development workflow
+- [`docs/operational/BUILD_SYSTEM.md`](docs/operational/BUILD_SYSTEM.md) - Detailed build system reference

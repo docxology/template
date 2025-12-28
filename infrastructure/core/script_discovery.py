@@ -14,34 +14,35 @@ from infrastructure.core.logging_utils import get_logger, log_success
 logger = get_logger(__name__)
 
 
-def discover_analysis_scripts(repo_root: Path) -> List[Path]:
-    """Discover all analysis scripts in project/scripts/ to execute.
+def discover_analysis_scripts(repo_root: Path, project_name: str = "project") -> List[Path]:
+    """Discover all analysis scripts in projects/{project_name}/scripts/ to execute.
     
     Args:
         repo_root: Repository root directory
+        project_name: Name of project in projects/ directory (default: "project")
         
     Returns:
-        List of Python script paths from project/scripts/ directory
+        List of Python script paths from projects/{project_name}/scripts/ directory
         
     Raises:
         PipelineError: If project scripts directory not found
         
     Example:
-        >>> scripts = discover_analysis_scripts(Path("."))
+        >>> scripts = discover_analysis_scripts(Path("."), "project")
         >>> all(s.suffix == '.py' for s in scripts)
         True
+        >>> scripts = discover_analysis_scripts(Path("."), "myresearch")
+        >>> # Discovers scripts in projects/myresearch/scripts/
     """
-    logger.info("[STAGE-02] Discovering analysis scripts in project/...")
+    logger.info(f"[STAGE-02] Discovering analysis scripts in projects/{project_name}/...")
     
-    project_scripts_dir = repo_root / "project" / "scripts"
+    project_scripts_dir = repo_root / "projects" / project_name / "scripts"
     
     if not project_scripts_dir.exists():
-        raise PipelineError(
-            "Project scripts directory not found",
-            context={"expected_path": str(project_scripts_dir)}
-        )
+        logger.info(f"[STAGE-02] No scripts directory found for '{project_name}' - analysis stage will be skipped")
+        return []
     
-    # Find all Python scripts in project/scripts/ except README files
+    # Find all Python scripts in projects/{project_name}/scripts/ except README files
     scripts = sorted([
         f for f in project_scripts_dir.glob('*.py')
         if f.is_file() and not f.name.startswith('_')
@@ -91,20 +92,21 @@ def discover_orchestrators(repo_root: Path) -> List[Path]:
     return available
 
 
-def verify_analysis_outputs(repo_root: Path) -> bool:
+def verify_analysis_outputs(repo_root: Path, project_name: str = "project") -> bool:
     """Verify that analysis generated expected outputs.
     
     Args:
         repo_root: Repository root directory
+        project_name: Name of project in projects/ directory (default: "project")
         
     Returns:
         True if outputs are valid, False otherwise
     """
-    logger.info("[STAGE-02] Verifying analysis outputs...")
+    logger.info(f"[STAGE-02] Verifying analysis outputs for projects/{project_name}/...")
     
     output_dirs = [
-        repo_root / "project" / "output" / "figures",
-        repo_root / "project" / "output" / "data",
+        repo_root / "projects" / project_name / "output" / "figures",
+        repo_root / "projects" / project_name / "output" / "data",
     ]
     
     all_valid = True

@@ -196,35 +196,57 @@ class TestSetupDirectories:
     """Test setup_directories function."""
 
     def test_setup_directories_default(self, tmp_path):
-        """Test setting up default directories."""
-        result = setup_directories(tmp_path)
-        
+        """Test setting up default directories for multi-project."""
+        # Create a fake project directory
+        project_root = tmp_path / "projects" / "testproject"
+        project_root.mkdir(parents=True)
+
+        result = setup_directories(tmp_path, "testproject")
+
         assert result is True
-        
+
         # Check default directories were created
-        default_dirs = [
-            'output',
-            'output/figures',
-            'output/data',
-            'output/tex',
-            'output/pdf',
-            'output/logs',
-            'project/output',
-            'project/output/logs',
+        expected_dirs = [
+            'output/testproject',
+            'output/testproject/figures',
+            'output/testproject/data',
+            'output/testproject/tex',
+            'output/testproject/pdf',
+            'output/testproject/logs',
+            'output/testproject/reports',
+            'output/testproject/simulations',
+            'output/testproject/slides',
+            'output/testproject/web',
+            'output/testproject/llm',
+            'projects/testproject/output',
+            'projects/testproject/output/figures',
+            'projects/testproject/output/data',
+            'projects/testproject/output/pdf',
+            'projects/testproject/output/tex',
+            'projects/testproject/output/logs',
+            'projects/testproject/output/reports',
+            'projects/testproject/output/simulations',
+            'projects/testproject/output/slides',
+            'projects/testproject/output/web',
+            'projects/testproject/output/llm',
         ]
-        
-        for directory in default_dirs:
+
+        for directory in expected_dirs:
             assert (tmp_path / directory).exists()
             assert (tmp_path / directory).is_dir()
 
     def test_setup_directories_custom(self, tmp_path):
-        """Test setting up custom directories."""
+        """Test setting up custom directories for multi-project."""
+        # Create a fake project directory
+        project_root = tmp_path / "projects" / "testproject"
+        project_root.mkdir(parents=True)
+
         custom_dirs = ['custom1', 'custom2/subdir', 'custom3/nested/deep']
-        
-        result = setup_directories(tmp_path, custom_dirs)
-        
+
+        result = setup_directories(tmp_path, "testproject", custom_dirs)
+
         assert result is True
-        
+
         for directory in custom_dirs:
             assert (tmp_path / directory).exists()
             assert (tmp_path / directory).is_dir()
@@ -244,7 +266,7 @@ class TestSetupDirectories:
 
     def test_setup_directories_empty_list(self, tmp_path):
         """Test with empty directory list."""
-        result = setup_directories(tmp_path, [])
+        result = setup_directories(tmp_path, "", directories=[])
         
         assert result is True
 
@@ -252,40 +274,54 @@ class TestSetupDirectories:
 class TestVerifySourceStructure:
     """Test verify_source_structure function."""
 
-    def test_verify_source_structure_complete(self, tmp_path):
-        """Test verifying complete source structure."""
-        # Create required directories
+    def test_verify_source_structure(self, tmp_path):
+        """Test verifying source structure for multi-project."""
+        # Create required directories for multi-project
         (tmp_path / "infrastructure").mkdir()
-        (tmp_path / "project").mkdir()
-        
-        result = verify_source_structure(tmp_path)
-        
+        (tmp_path / "projects").mkdir()
+        (tmp_path / "projects" / "project").mkdir()
+        (tmp_path / "projects" / "project" / "src").mkdir()
+        (tmp_path / "projects" / "project" / "tests").mkdir()
+
+        # Create __init__.py files to satisfy Python package requirements
+        (tmp_path / "projects" / "project" / "src" / "__init__.py").write_text("")
+        (tmp_path / "projects" / "project" / "tests" / "__init__.py").write_text("")
+
+        result = verify_source_structure(tmp_path, "project")
+
         assert result is True
 
     def test_verify_source_structure_missing_required(self, tmp_path):
-        """Test verifying when required directories are missing."""
+        """Test verifying when required directories are missing for multi-project."""
         # Only create one required directory
         (tmp_path / "infrastructure").mkdir()
-        # Don't create project/
-        
-        result = verify_source_structure(tmp_path)
-        
+        # Don't create projects/project structure
+
+        result = verify_source_structure(tmp_path, "project")
+
         assert result is False
 
     def test_verify_source_structure_with_optional(self, tmp_path):
-        """Test verifying with optional directories present."""
+        """Test verifying with optional directories present for multi-project."""
         (tmp_path / "infrastructure").mkdir()
-        (tmp_path / "project").mkdir()
+        (tmp_path / "projects").mkdir()
+        (tmp_path / "projects" / "project").mkdir()
+        (tmp_path / "projects" / "project" / "src").mkdir()
+        (tmp_path / "projects" / "project" / "tests").mkdir()
         (tmp_path / "scripts").mkdir()
         (tmp_path / "tests").mkdir()
-        
-        result = verify_source_structure(tmp_path)
-        
+
+        # Create required __init__.py files
+        (tmp_path / "projects" / "project" / "src" / "__init__.py").write_text("")
+        (tmp_path / "projects" / "project" / "tests" / "__init__.py").write_text("")
+
+        result = verify_source_structure(tmp_path, "project")
+
         assert result is True
 
     def test_verify_source_structure_missing_all(self, tmp_path):
         """Test verifying when all directories are missing."""
-        result = verify_source_structure(tmp_path)
+        result = verify_source_structure(tmp_path, "project")
         
         assert result is False
 

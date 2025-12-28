@@ -161,31 +161,47 @@ def check_build_tools(required_tools: dict[str, str] | None = None) -> bool:
     return all_present
 
 
-def setup_directories(repo_root: Path, directories: List[str] | None = None) -> bool:
+def setup_directories(repo_root: Path, project_name: str = "project", directories: List[str] | None = None) -> bool:
     """Create required directory structure.
-    
+
     Args:
         repo_root: Repository root directory
+        project_name: Name of project in projects/ directory (default: "project")
         directories: List of directory paths to create (relative to repo_root).
                     If None, uses default directories.
-        
+
     Returns:
         True if all directories created successfully, False otherwise
     """
     logger.info("Setting up directory structure...")
-    
+
     if directories is None:
+        # For multi-project, create both repo-level and project-level directories
         directories = [
-            'output',
-            'output/figures',
-            'output/data',
-            'output/tex',
-            'output/pdf',
-            'output/logs',
-            'project/output',
-            'project/output/logs',
+            f'output/{project_name}',
+            f'output/{project_name}/figures',
+            f'output/{project_name}/data',
+            f'output/{project_name}/tex',
+            f'output/{project_name}/pdf',
+            f'output/{project_name}/logs',
+            f'output/{project_name}/reports',
+            f'output/{project_name}/simulations',
+            f'output/{project_name}/slides',
+            f'output/{project_name}/web',
+            f'output/{project_name}/llm',
+            f'projects/{project_name}/output',
+            f'projects/{project_name}/output/figures',
+            f'projects/{project_name}/output/data',
+            f'projects/{project_name}/output/pdf',
+            f'projects/{project_name}/output/tex',
+            f'projects/{project_name}/output/logs',
+            f'projects/{project_name}/output/reports',
+            f'projects/{project_name}/output/simulations',
+            f'projects/{project_name}/output/slides',
+            f'projects/{project_name}/output/web',
+            f'projects/{project_name}/output/llm',
         ]
-    
+
     try:
         for directory in directories:
             dir_path = repo_root / directory
@@ -197,32 +213,37 @@ def setup_directories(repo_root: Path, directories: List[str] | None = None) -> 
         return False
 
 
-def verify_source_structure(repo_root: Path) -> bool:
+def verify_source_structure(repo_root: Path, project_name: str = "project") -> bool:
     """Verify source code structure exists.
-    
-    Checks for the core components of the repository architecture:
+
+    For multi-project template, checks:
     - infrastructure/ - Generic reusable build tools
-    - project/ - Standalone research project
-    
+    - projects/{name}/ - Specified project structure
+
     Args:
         repo_root: Repository root directory
-        
+        project_name: Name of project in projects/ directory (default: "project")
+
     Returns:
         True if required directories exist, False otherwise
     """
     logger.info("Verifying source code structure...")
-    
+
     # Core components (required for template operation)
     required_dirs = [
         'infrastructure',      # Generic tools (build_verifier, figure_manager, etc.)
-        'project',             # Standalone project with src/, tests/, scripts/, manuscript/
+        f'projects/{project_name}',  # Project directory
+        f'projects/{project_name}/src',     # Source code
+        f'projects/{project_name}/tests',   # Tests
     ]
-    
+
     optional_dirs = [
-        'scripts',             # Optional: orchestration scripts (can be elsewhere)
+        'scripts',             # Optional: orchestration scripts
         'tests',               # Optional: infrastructure tests
+        f'projects/{project_name}/scripts',   # Optional: project scripts
+        f'projects/{project_name}/manuscript', # Optional: manuscript
     ]
-    
+
     all_present = True
     for directory in required_dirs:
         dir_path = repo_root / directory
@@ -231,7 +252,7 @@ def verify_source_structure(repo_root: Path) -> bool:
         else:
             logger.error(f"Directory not found: {directory}")
             all_present = False
-    
+
     # Check optional directories
     for directory in optional_dirs:
         dir_path = repo_root / directory
@@ -239,7 +260,7 @@ def verify_source_structure(repo_root: Path) -> bool:
             log_success(f"Directory found: {directory} (optional)", logger)
         else:
             logger.warning(f"Directory not found: {directory} (optional)")
-    
+
     return all_present
 
 

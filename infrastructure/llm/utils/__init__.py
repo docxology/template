@@ -11,6 +11,7 @@ from infrastructure.llm.utils.ollama import (
     check_model_loaded,
     preload_model,
 )
+from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
 
 __all__ = [
     "is_ollama_running",
@@ -23,6 +24,7 @@ __all__ = [
     "get_model_info",
     "check_model_loaded",
     "preload_model",
+    "StreamHeartbeatMonitor",
 ]
 
 

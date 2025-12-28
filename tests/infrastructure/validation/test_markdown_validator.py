@@ -389,18 +389,18 @@ class TestFindManuscriptDirectory:
     """Test find_manuscript_directory function."""
     
     def test_finds_project_manuscript(self, tmp_path):
-        """Test find_manuscript_directory finds project/manuscript."""
-        manuscript = tmp_path / "project" / "manuscript"
+        """Test find_manuscript_directory finds projects/project/manuscript."""
+        manuscript = tmp_path / "projects" / "project" / "manuscript"
         manuscript.mkdir(parents=True)
-        
-        result = find_manuscript_directory(tmp_path)
-        
+
+        result = find_manuscript_directory(tmp_path, "project")
+
         assert result == manuscript
     
     def test_raises_when_not_found(self, tmp_path):
         """Test find_manuscript_directory raises when not found."""
         with pytest.raises(FileNotFoundError):
-            find_manuscript_directory(tmp_path)
+            find_manuscript_directory(tmp_path, "project")
 
 
 class TestIntegration:

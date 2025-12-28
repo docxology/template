@@ -31,6 +31,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from infrastructure.core.logging_utils import get_logger, log_success, log_header
 from infrastructure.core.file_operations import (
     clean_output_directory,
+    clean_root_output_directory,
     copy_final_deliverables,
 )
 from infrastructure.validation.output_validator import (
@@ -56,19 +57,37 @@ def main() -> int:
     Returns:
         Exit code (0=success, 1=failure)
     """
-    log_header("STAGE 05: Copy Outputs")
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Copy outputs")
+    parser.add_argument(
+        '--project',
+        default='project',
+        help='Project name in projects/ directory (default: project)'
+    )
+    args = parser.parse_args()
+    
+    log_header(f"STAGE 05: Copy Outputs (Project: {args.project})", logger)
     
     repo_root = Path(__file__).parent.parent
-    output_dir = repo_root / "output"
+    output_dir = repo_root / "output" / args.project
     
     try:
-        # Step 1: Clean output directory
+        # Step 1: Clean root-level directories from output/ (keep only project folders)
+        from infrastructure.project.discovery import discover_projects
+        projects = discover_projects(repo_root)
+        project_names = [p.name for p in projects]
+        if not clean_root_output_directory(repo_root, project_names):
+            logger.error("Failed to clean root output directory")
+            return 1
+
+        # Step 2: Clean project-specific output directory
         if not clean_output_directory(output_dir):
             logger.error("Failed to clean output directory")
             return 1
         
         # Step 2: Copy final deliverables
-        stats = copy_final_deliverables(repo_root, output_dir)
+        stats = copy_final_deliverables(repo_root, output_dir, args.project)
         
         # Step 3: Validate copied files
         validation_passed = validate_copied_outputs(output_dir)

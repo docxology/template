@@ -322,11 +322,11 @@ class TestLLMClientQueryIntegration:
     """
     
     @pytest.fixture(autouse=True)
-    def check_ollama(self):
-        """Skip tests if Ollama is not available."""
-        client = LLMClient()
-        if not client.check_connection():
-            pytest.skip("Ollama server not available")
+    def check_ollama(self, ensure_ollama_for_tests):
+        """Ensure Ollama is running and functional for tests."""
+        # Fixture dependency ensures Ollama is ready
+        # If Ollama can't be started, ensure_ollama_for_tests will fail loudly
+        pass
     
     def test_query_basic(self):
         """Test basic query to Ollama."""

@@ -79,18 +79,28 @@ tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_extract_
 ```
 
 **Cause:**
-Test files using `unittest.mock.patch` without importing it.
+This template **absolutely prohibits** the use of mocks. All tests must use real data and real computations only.
 
 **Solution:**
-Add the import statement at the top of the test file:
+Instead of mocking, ensure tests use real data:
 ```python
-from unittest.mock import patch
+# ✅ CORRECT: Use real data
+def test_function_with_real_data():
+    real_data = load_test_dataset("sample.csv")
+    result = process_data(real_data)
+    assert result is not None
+
+# ❌ FORBIDDEN: Never use mocks
+# def test_function_with_mock():
+#     from unittest.mock import patch
+#     # This is absolutely prohibited
 ```
 
 **Prevention:**
-- Always import `patch` explicitly when using mocks in tests
-- Check imports when copying test code between files
-- Lint test files to catch missing imports early
+- Always use real data in tests
+- Create test datasets when needed
+- Test real integration between components
+- Follow the "No Mocks Policy" strictly
 
 ### Optional `python-dotenv` Dependency
 
@@ -1255,7 +1265,7 @@ uv sync
 uv run pytest tests/
 
 # Regenerate only figures
-python3 scripts/example_figure.py
+python3 project/scripts/example_figure.py
 
 # Rebuild PDFs (run stage 3 only)
 python3 scripts/03_render_pdf.py

@@ -293,7 +293,18 @@ class TestReviewGeneratorsIntegration:
         
         client = LLMClient()
         if not client.check_connection():
-            pytest.skip("Ollama not available")
+            pytest.fail(
+                "\n" + "="*80 + "\n"
+                "❌ TEST FAILURE: Ollama server is not available!\n"
+                "="*80 + "\n"
+                "This test requires Ollama to be running.\n"
+                "The ensure_ollama_for_tests fixture should have started it.\n\n"
+                "Troubleshooting:\n"
+                "  1. Check if Ollama is installed: ollama --version\n"
+                "  2. Start Ollama manually: ollama serve\n"
+                "  3. Check logs above for auto-start errors\n"
+                "="*80
+            )
         
         manuscript_text = "This is a test manuscript about machine learning and AI."
         result = generate_executive_summary(manuscript_text)
@@ -307,7 +318,18 @@ class TestReviewGeneratorsIntegration:
         
         client = LLMClient()
         if not client.check_connection():
-            pytest.skip("Ollama not available")
+            pytest.fail(
+                "\n" + "="*80 + "\n"
+                "❌ TEST FAILURE: Ollama server is not available!\n"
+                "="*80 + "\n"
+                "This test requires Ollama to be running.\n"
+                "The ensure_ollama_for_tests fixture should have started it.\n\n"
+                "Troubleshooting:\n"
+                "  1. Check if Ollama is installed: ollama --version\n"
+                "  2. Start Ollama manually: ollama serve\n"
+                "  3. Check logs above for auto-start errors\n"
+                "="*80
+            )
         
         manuscript_text = "Test manuscript about optimization algorithms."
         review_text, metrics = generate_review_with_metrics(

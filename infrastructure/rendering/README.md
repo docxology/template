@@ -4,6 +4,71 @@ Multi-format output generation for research manuscripts.
 
 ## Features
 
+```mermaid
+graph TD
+    subgraph Input["Input Sources"]
+        MANUSCRIPT[Manuscript Files<br/>Markdown sections<br/>project/manuscript/*.md]
+        CONFIG[Configuration<br/>config.yaml<br/>Title page & metadata]
+        FIGURES[Figures<br/>Generated figures<br/>output/figures/*.png]
+        BIBLIOGRAPHY[Bibliography<br/>references.bib<br/>Academic citations]
+    end
+
+    subgraph Rendering["Rendering Engine"]
+        MANAGER[RenderManager<br/>Orchestrates all formats<br/>Single entry point]
+        PDF[pdf_renderer.py<br/>LaTeX compilation<br/>Professional PDFs]
+        SLIDES[slides_renderer.py<br/>Beamer & reveal.js<br/>Presentation slides]
+        WEB[web_renderer.py<br/>HTML with MathJax<br/>Web-compatible output]
+    end
+
+    subgraph Processing["Processing Steps"]
+        COMBINE[Combine Sections<br/>Single LaTeX document<br/>Cross-references]
+        TITLE[Title Page<br/>Auto-generated<br/>From config.yaml]
+        FIGURES_PROC[Figure Integration<br/>Path resolution<br/>Verification]
+        BIB_PROC[Bibliography<br/>BibTeX processing<br/>Citation resolution]
+    end
+
+    subgraph Output["Output Formats"]
+        PDF_OUT[PDF Document<br/>Professional typesetting<br/>output/pdf/*.pdf]
+        SLIDES_OUT[Slides<br/>PDF & HTML formats<br/>output/slides/]
+        WEB_OUT[Web HTML<br/>Interactive with MathJax<br/>output/web/*.html]
+        POSTER_OUT[Posters<br/>Large format<br/>output/posters/]
+    end
+
+    MANUSCRIPT --> MANAGER
+    CONFIG --> MANAGER
+    FIGURES --> MANAGER
+    BIBLIOGRAPHY --> MANAGER
+
+    MANAGER --> PDF
+    MANAGER --> SLIDES
+    MANAGER --> WEB
+
+    PDF --> COMBINE
+    SLIDES --> COMBINE
+    WEB --> COMBINE
+
+    COMBINE --> TITLE
+    COMBINE --> FIGURES_PROC
+    COMBINE --> BIB_PROC
+
+    TITLE --> PDF_OUT
+    FIGURES_PROC --> PDF_OUT
+    BIB_PROC --> PDF_OUT
+    COMBINE --> SLIDES_OUT
+    COMBINE --> WEB_OUT
+    COMBINE --> POSTER_OUT
+
+    classDef input fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef rendering fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef processing fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class Input input
+    class Rendering rendering
+    class Processing processing
+    class Output output
+```
+
 - **Consolidated Pipeline**: Single entry point for all formats.
 - **Multiple Outputs**: PDF, Slides (Beamer/HTML), Web, Posters.
 - **Title Page Generation**: Automatic title page from `config.yaml`.
@@ -238,7 +303,7 @@ Key sections:
 1. Check preamble in `manuscript/preamble.md` for required packages
 2. Verify all LaTeX commands are valid (use `\ref{}`, not `\ref {}`)
 3. Ensure all `\label{}` commands exist for referenced items
-4. Run validation: `python3 -m infrastructure.validation.cli markdown manuscript/`
+4. Run validation: `python3 -m infrastructure.validation.cli markdown project/manuscript/`
 
 ## Testing
 

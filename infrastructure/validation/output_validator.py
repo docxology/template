@@ -92,6 +92,87 @@ def validate_copied_outputs(output_dir: Path) -> bool:
     return validation_passed
 
 
+def validate_root_output_structure(repo_root: Path) -> Dict[str, Any]:
+    """Validate that root output/ directory structure is correct.
+
+    Checks that output/ directory only contains project-specific folders
+    and no root-level directories (data/, figures/, pdf/, etc.).
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        Validation report dictionary with:
+        - valid: Boolean indicating if structure is correct
+        - issues: List of issues found
+        - project_folders: List of project folders found
+        - invalid_folders: List of invalid root-level directories
+    """
+    output_dir = repo_root / "output"
+
+    if not output_dir.exists():
+        return {
+            "valid": False,
+            "issues": ["Output directory does not exist"],
+            "project_folders": [],
+            "invalid_folders": []
+        }
+
+    # Discover valid project names
+    from infrastructure.project.discovery import discover_projects
+    projects = discover_projects(repo_root)
+    project_names = set(p.name for p in projects)
+
+    issues = []
+    project_folders = []
+    invalid_folders = []
+
+    # Check each item in output directory
+    for item in output_dir.iterdir():
+        if not item.is_dir():
+            continue  # Skip files
+
+        item_name = item.name
+
+        # Keep project-specific folders
+        if item_name in project_names:
+            project_folders.append(item_name)
+            continue
+
+        # Keep special directories
+        if item_name in ['.gitkeep', '.gitignore']:
+            continue
+
+        # Check for root-level directories that shouldn't exist
+        root_level_dirs = {
+            'data', 'figures', 'pdf', 'web', 'slides',
+            'reports', 'simulations', 'llm', 'logs', 'tex'
+        }
+
+        if item_name in root_level_dirs:
+            invalid_folders.append(item_name)
+            issues.append(f"Root-level directory '{item_name}' should not exist in output/")
+        else:
+            # Unknown directory - flag as potential issue
+            issues.append(f"Unknown directory '{item_name}' in output/ (should only contain project folders)")
+
+    valid = len(issues) == 0
+
+    report = {
+        "valid": valid,
+        "issues": issues,
+        "project_folders": sorted(project_folders),
+        "invalid_folders": sorted(invalid_folders)
+    }
+
+    if valid:
+        logger.info(f"Root output structure valid: {len(project_folders)} project folders found")
+    else:
+        logger.warning(f"Root output structure invalid: {len(issues)} issues found")
+
+    return report
+
+
 def validate_output_structure(output_dir: Path) -> Dict:
     """Validate complete output directory structure.
     

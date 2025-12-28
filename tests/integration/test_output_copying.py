@@ -47,15 +47,22 @@ def temp_project_structure(tmp_path):
     repo_root = tmp_path / "repo"
     repo_root.mkdir()
     
-    # Create project/output structure
-    project_output = repo_root / "project" / "output"
+    # Create projects/project/output structure (multi-project format)
+    project_output = repo_root / "projects" / "project" / "output"
     pdf_dir = project_output / "pdf"
     slides_dir = project_output / "slides"
     web_dir = project_output / "web"
-    
-    pdf_dir.mkdir(parents=True)
-    slides_dir.mkdir(parents=True)
-    web_dir.mkdir(parents=True)
+    figures_dir = project_output / "figures"
+    data_dir = project_output / "data"
+    reports_dir = project_output / "reports"
+    simulations_dir = project_output / "simulations"
+    llm_dir = project_output / "llm"
+    logs_dir = project_output / "logs"
+
+    # Create all expected directories
+    for dir_path in [pdf_dir, slides_dir, web_dir, figures_dir, data_dir,
+                     reports_dir, simulations_dir, llm_dir, logs_dir]:
+        dir_path.mkdir(parents=True)
     
     # Create top-level output dir
     output_dir = repo_root / "output"
@@ -157,7 +164,7 @@ class TestCopyFinalDeliverables:
         repo_root, output_dir = temp_project_structure
         
         # Remove combined PDF
-        (repo_root / "project" / "output" / "pdf" / "project_combined.pdf").unlink()
+        (repo_root / "projects" / "project" / "output" / "pdf" / "project_combined.pdf").unlink()
         
         stats = copy_final_deliverables(repo_root, output_dir)
         
@@ -170,7 +177,7 @@ class TestCopyFinalDeliverables:
         repo_root, output_dir = temp_project_structure
         
         # Remove slides directory
-        shutil.rmtree(repo_root / "project" / "output" / "slides")
+        shutil.rmtree(repo_root / "projects" / "project" / "output" / "slides")
         
         stats = copy_final_deliverables(repo_root, output_dir)
         
@@ -248,8 +255,8 @@ class TestCompleteOutputCopyingWorkflow:
         # Copy
         stats = copy_final_deliverables(repo_root, output_dir)
         assert stats["combined_pdf"] == 1
-        assert stats["slides_copied"] == 2
-        assert stats["web_copied"] == 2
+        assert stats["slides_files"] == 2
+        assert stats["web_files"] == 3
         
         # Validate
         valid_result = validate_copied_outputs(output_dir)
@@ -260,7 +267,7 @@ class TestCompleteOutputCopyingWorkflow:
         repo_root, output_dir = temp_project_structure
         
         # Remove one slide
-        slides_dir = repo_root / "project" / "output" / "slides"
+        slides_dir = repo_root / "projects" / "project" / "output" / "slides"
         (slides_dir / "02_introduction_slides.pdf").unlink()
         
         # Clean
@@ -270,7 +277,7 @@ class TestCompleteOutputCopyingWorkflow:
         # Copy
         stats = copy_final_deliverables(repo_root, output_dir)
         assert stats["combined_pdf"] == 1
-        assert stats["slides_copied"] == 1  # Only one slide copied
+        assert stats["slides_files"] == 1  # Only one slide copied
         
         # Validate
         valid_result = validate_copied_outputs(output_dir)
@@ -280,8 +287,8 @@ class TestCompleteOutputCopyingWorkflow:
 class TestValidateOutputStructure:
     """Test the comprehensive output structure validation."""
     
-    def test_structure_valid_complete(self, temp_project_structure):
-        """Test structure validation with complete valid outputs."""
+    def test_structure_validation(self, temp_project_structure):
+        """Test structure validation with valid outputs."""
         repo_root, output_dir = temp_project_structure
         
         # Copy files first
@@ -293,8 +300,8 @@ class TestValidateOutputStructure:
         assert result["valid"] is True
         assert len(result["issues"]) == 0
         assert len(result["missing_files"]) == 0
-        assert "combined_pdf" in result["directory_structure"]
-        assert result["directory_structure"]["combined_pdf"]["exists"] is True
+        assert "project_combined_pdf" in result["directory_structure"]
+        assert result["directory_structure"]["project_combined_pdf"]["exists"] is True
     
     def test_structure_missing_output_dir(self, tmp_path):
         """Test structure validation with missing output directory."""
@@ -312,7 +319,7 @@ class TestValidateOutputStructure:
         result = validate_output_structure(output_dir)
         
         assert result["valid"] is False
-        assert "project_combined.pdf" in result["missing_files"]
+        assert "project_combined.pdf (root)" in result["missing_files"]
     
     def test_structure_empty_directories(self, tmp_path):
         """Test structure validation with empty subdirectories."""

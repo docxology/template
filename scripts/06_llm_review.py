@@ -67,6 +67,7 @@ from infrastructure.core.logging_utils import (
     get_logger, log_success, log_header, log_progress, format_error_with_suggestions,
     format_duration, log_with_spinner, StreamingProgress, Spinner
 )
+from infrastructure.core.exceptions import LLMConnectionError, LLMTemplateError
 from infrastructure.core.config_loader import get_translation_languages
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import LLMConfig, GenerationOptions
@@ -79,6 +80,7 @@ from infrastructure.llm.utils.ollama import (
     check_model_loaded,
     preload_model,
 )
+from infrastructure.llm.utils.heartbeat import StreamHeartbeatMonitor
 from infrastructure.llm.templates.manuscript import (
     ManuscriptExecutiveSummary,
     ManuscriptQualityReview,
@@ -183,7 +185,7 @@ def get_max_input_length() -> int:
 
 def get_review_timeout() -> float:
     """Get configured timeout for review generation.
-    
+
     Returns:
         Timeout in seconds
     """
@@ -194,6 +196,19 @@ def get_review_timeout() -> float:
         except ValueError:
             logger.warning(f"Invalid LLM_REVIEW_TIMEOUT value: {env_value}, using default")
     return DEFAULT_REVIEW_TIMEOUT
+
+
+def log_timeout_info(timeout: float, operation: str) -> None:
+    """Log timeout configuration with warnings.
+
+    Args:
+        timeout: Timeout in seconds
+        operation: Description of the operation
+    """
+    logger.info(f"    Timeout: {timeout:.0f}s per {operation}")
+    if timeout < 60:
+        logger.warning(f"    ⚠️  Low timeout ({timeout:.0f}s) - may cause failures for slow models")
+        logger.info(f"    Consider: export LLM_REVIEW_TIMEOUT=300 (5 minutes) for better reliability")
 
 
 def get_review_max_tokens() -> Tuple[int, str]:
@@ -503,26 +518,44 @@ def log_stage(message: str) -> None:
 
 def check_ollama_availability() -> Tuple[bool, Optional[str]]:
     """Check if Ollama is running and select best model.
-    
-    Provides detailed status messages about Ollama server and model availability.
-    
+
+    Attempts to start Ollama automatically if not running (unless disabled).
+
     Returns:
         Tuple of (is_available, model_name)
     """
     log_stage("Checking Ollama availability...")
-    
-    # Step 1: Check if Ollama server is responding
-    logger.info("    Pinging Ollama server at localhost:11434...")
-    
+
+    # Check if auto-start is enabled (default: True)
+    auto_start = os.environ.get("OLLAMA_AUTO_START", "true").lower() == "true"
+
+    # Step 1: Check if Ollama server is responding, auto-start if needed
+    logger.info("    Checking Ollama server status...")
+
     if not is_ollama_running():
-        logger.warning("❌ Ollama server is not running")
-        logger.info("  To start Ollama:")
-        logger.info("    1. Open a terminal: ollama serve")
-        logger.info("    2. Or start Ollama app if installed")
-        logger.info("  To install a model: ollama pull llama3-gradient")
-        return False, None
-    
-    log_success("Ollama server is running", logger)
+        if auto_start:
+            logger.info("    Ollama not running, attempting to start automatically...")
+            if ensure_ollama_ready(auto_start=True):
+                log_success("Ollama server started and ready", logger)
+            else:
+                logger.warning("❌ Failed to start Ollama server automatically")
+                logger.info("  To start manually:")
+                logger.info("    1. Open a terminal: ollama serve")
+                logger.info("    2. Or start Ollama app if installed")
+                logger.info("  To disable auto-start: export OLLAMA_AUTO_START=false")
+                logger.info("  To install a model: ollama pull llama3-gradient")
+                return False, None
+        else:
+            logger.warning("❌ Ollama server is not running")
+            logger.info("  Auto-start is disabled (OLLAMA_AUTO_START=false)")
+            logger.info("  To start Ollama:")
+            logger.info("    1. Open a terminal: ollama serve")
+            logger.info("    2. Or start Ollama app if installed")
+            logger.info("  To enable auto-start: export OLLAMA_AUTO_START=true")
+            logger.info("  To install a model: ollama pull llama3-gradient")
+            return False, None
+    else:
+        log_success("Ollama server is running", logger)
     
     # Step 2: List available models
     logger.info("    Discovering available models...")
@@ -597,7 +630,11 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple
         Tuple of (success, tokens_per_second)
     """
     log_stage("Warming up model...")
-    
+
+    # Log timeout configuration for warmup
+    warmup_timeout = get_review_timeout()
+    logger.info(f"    Timeout: {warmup_timeout:.0f}s for warmup and performance test")
+
     # Check if model might already be loaded using Ollama's /api/ps
     logger.info(f"    Checking loaded models via Ollama API...")
     model_preloaded, loaded_model = check_model_loaded(model_name)
@@ -621,7 +658,10 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple
     if need_preload:
         logger.info(f"    ⏳ Loading {model_name} into GPU memory...")
         logger.info(f"    (This may take 30-120 seconds depending on model size)")
-        
+
+        # Track preload time for warnings
+        preload_start = time.time()
+
         # Use improved spinner utility
         with log_with_spinner(
             f"Loading {model_name} into GPU memory...",
@@ -629,9 +669,14 @@ def warmup_model(client: LLMClient, text_preview: str, model_name: str) -> Tuple
             final_message=None  # We'll log success separately
         ):
             preload_success, preload_error = preload_model(model_name)
-        
+
+        preload_elapsed = time.time() - preload_start
+
         if preload_success:
-            logger.info(f"    ✓ Model loaded successfully")
+            logger.info(f"    ✓ Model loaded successfully in {preload_elapsed:.1f}s")
+            if preload_elapsed > 120:  # Warn if loading took more than 2 minutes
+                logger.warning(f"    ⚠️ Model loading took {preload_elapsed:.1f}s (>2 minutes)")
+                logger.info(f"    Consider using a smaller model for faster startup")
         else:
             error_msg = f": {preload_error}" if preload_error else ""
             logger.warning(f"    ⚠️ Preload returned error{error_msg}, continuing anyway...")
@@ -887,16 +932,30 @@ def generate_review_with_metrics(
                     message=f"Generating {review_name}",
                     update_interval=0.5
                 )
-                
-                for chunk in client.stream_query(current_prompt, options=options):
-                    if first_token_time is None:
-                        first_token_time = time.time()
-                        time_to_first = first_token_time - start_gen_time
-                        logger.info(f"    ✓ First token in {time_to_first:.1f}s - generating...")
-                    
-                    response_chunks.append(chunk)
-                    tokens_generated += len(chunk.split())  # Rough token estimate
-                    progress.set(tokens_generated)
+
+                # Start heartbeat monitor for long operations
+                config = LLMConfig.from_env()
+                heartbeat_monitor = StreamHeartbeatMonitor(
+                    operation_name=review_name,
+                    timeout_seconds=get_review_timeout(),
+                    heartbeat_interval=config.heartbeat_interval,
+                    stall_threshold=config.stall_threshold,
+                    early_warning_threshold=config.early_warning_threshold,
+                    logger=logger
+                )
+                heartbeat_monitor.set_estimated_total(estimated_total_tokens)
+                heartbeat_monitor.start_monitoring()
+
+                try:
+                    for chunk in client.stream_query(current_prompt, options=options):
+                        response_chunks.append(chunk)
+                        tokens_generated += len(chunk.split())  # Rough token estimate
+                        progress.set(tokens_generated)
+                        heartbeat_monitor.update_token_received()  # Update heartbeat
+
+                finally:
+                    # Stop heartbeat monitor
+                    heartbeat_monitor.stop_monitoring()
                 
                 # Finish progress display
                 total_time = time.time() - start_gen_time
@@ -1142,7 +1201,11 @@ def generate_translation(
     
     # Use configured max_tokens
     max_tokens, _ = get_review_max_tokens()
-    
+
+    # Get timeout configuration and log warnings
+    timeout = get_review_timeout()
+    log_timeout_info(timeout, f"translation ({target_language})")
+
     # Render the template with manuscript text, target language, and token budget
     template = ManuscriptTranslationAbstract()
     prompt = template.render(text=text, target_language=target_language, max_tokens=max_tokens)
@@ -1157,22 +1220,126 @@ def generate_translation(
     )
     
     start_time = time.time()
-    
+
     try:
-        response = client.query(prompt, options=options)
-        
+        # Use streaming for better progress visibility with improved progress indicator
+        try:
+            # Create streaming progress tracker
+            progress = StreamingProgress(
+                total=max_tokens,
+                message=f"Generating translation ({target_language})",
+                update_interval=0.5
+            )
+
+            # Start heartbeat monitor for long operations
+            config = LLMConfig.from_env()
+            heartbeat_monitor = StreamHeartbeatMonitor(
+                operation_name=f"translation ({target_language})",
+                timeout_seconds=timeout,
+                heartbeat_interval=config.heartbeat_interval,
+                stall_threshold=config.stall_threshold,
+                early_warning_threshold=config.early_warning_threshold,
+                logger=logger
+            )
+            heartbeat_monitor.set_estimated_total(max_tokens)
+            heartbeat_monitor.start_monitoring()
+
+            response_chunks = []
+            tokens_generated = 0
+
+            try:
+                for chunk in client.stream_query(prompt, options=options):
+                    response_chunks.append(chunk)
+                    tokens_generated += len(chunk.split())  # Rough token estimate
+                    progress.set(tokens_generated)
+                    heartbeat_monitor.update_token_received()  # Update heartbeat
+
+                # Finish progress display
+                total_time = time.time() - heartbeat_monitor.start_time
+                final_tokens_per_sec = tokens_generated / total_time if total_time > 0 else 0
+                progress.finish(f"    Generated {tokens_generated:,} tokens in {total_time:.1f}s ({final_tokens_per_sec:.1f} tokens/sec)")
+
+            finally:
+                # Stop heartbeat monitor
+                heartbeat_monitor.stop_monitoring()
+
+            response = "".join(response_chunks)
+
+        except Exception as stream_error:
+            # Fallback to non-streaming if streaming fails
+            logger.warning(f"    Streaming failed, using non-streaming: {stream_error}")
+            response = client.query(prompt, options=options)
+
         # Validate response quality
         is_valid, issues, details = validate_review_quality(
             response, "translation", model_name=model_name
         )
-        
+
         if not is_valid:
             logger.info(f"    Validation issues: {', '.join(issues[:2])}")
-        
+
+    except LLMConnectionError as e:
+        metrics.generation_time_seconds = time.time() - start_time
+        logger.error(f"Connection failed during translation ({target_language}): {e}")
+
+        # Provide specific guidance for connection issues
+        if "timeout" in str(e).lower():
+            logger.error("  This appears to be a timeout issue:")
+            logger.error(f"  - Current timeout: {get_review_timeout():.0f}s")
+            logger.error("  - Try increasing: export LLM_REVIEW_TIMEOUT=300")
+            logger.error("  - Or use faster model: smaller models load faster")
+        elif "connection" in str(e).lower():
+            logger.error("  This appears to be a connection issue:")
+            logger.error("  - Check Ollama: ollama ps")
+            logger.error("  - Restart if needed: ollama serve")
+
+        error_response = f"*Connection error generating translation to {target_language}: {e}*"
+        metrics.output_chars = len(error_response)
+        metrics.output_words = len(error_response.split())
+        return error_response, metrics
+
+    except LLMTemplateError as e:
+        metrics.generation_time_seconds = time.time() - start_time
+        logger.error(f"Template error during translation ({target_language}): {e}")
+        logger.error("  This may indicate an issue with the translation prompt")
+        error_response = f"*Template error generating translation to {target_language}: {e}*"
+        metrics.output_chars = len(error_response)
+        metrics.output_words = len(error_response.split())
+        return error_response, metrics
+
     except Exception as e:
         metrics.generation_time_seconds = time.time() - start_time
+
+        # Check if we have partial response from streaming
+        partial_response = ""
+        if 'response_chunks' in locals() and response_chunks:
+            partial_response = "".join(response_chunks)
+            if len(partial_response.strip()) > 50:  # Only log if meaningful content
+                logger.warning(f"Partial response received ({len(partial_response)} chars)")
+                logger.debug(f"Partial content: {partial_response[:200]}...")
+
         logger.error(f"Failed to generate translation ({target_language}): {e}")
-        error_response = f"*Error generating translation to {target_language}: {e}*"
+
+        # Provide actionable suggestions based on error type
+        error_str = str(e).lower()
+        if "timeout" in error_str:
+            logger.error("  Suggestion: Increase timeout for translations:")
+            logger.error("    export LLM_REVIEW_TIMEOUT=300  # 5 minutes")
+        elif "memory" in error_str or "gpu" in error_str.lower():
+            logger.error("  Suggestion: Model may be too large for available memory")
+            logger.error("    Try: ollama pull gemma2:2b  # Smaller model")
+        elif "context" in error_str:
+            logger.error("  Suggestion: Manuscript may be too long for model context")
+            logger.error("    Try: export LLM_MAX_INPUT_LENGTH=250000  # Reduce input size")
+        else:
+            logger.error("  Suggestion: Check Ollama status and model availability")
+            logger.error("    ollama ps && ollama list")
+
+        if partial_response:
+            error_response = f"*Error generating translation to {target_language}: {e}*\n\n*Partial response saved:*\n{partial_response[:500]}{'...' if len(partial_response) > 500 else ''}"
+        else:
+            error_response = f"*Error generating translation to {target_language}: {e}*"
+
         metrics.output_chars = len(error_response)
         metrics.output_words = len(error_response.split())
         return error_response, metrics
@@ -1190,12 +1357,13 @@ def generate_translation(
     return response, metrics
 
 
-def main(mode: ReviewMode = ReviewMode.ALL) -> int:
+def main(mode: ReviewMode = ReviewMode.ALL, project_name: str = "project") -> int:
     """Execute LLM manuscript review orchestration.
-    
+
     Args:
         mode: Execution mode - ALL (both), REVIEWS_ONLY, or TRANSLATIONS_ONLY
-    
+        project_name: Name of project in projects/ directory
+
     Returns:
         Exit code (0=success, 1=failure, 2=skipped)
     """
@@ -1206,10 +1374,10 @@ def main(mode: ReviewMode = ReviewMode.ALL) -> int:
         log_header("Stage 9/9: LLM Translations")
     else:
         log_header("Stage 8/9: LLM Manuscript Review")
-    
+
     repo_root = Path(__file__).parent.parent
-    project_output = repo_root / "project" / "output"
-    pdf_path = project_output / "pdf" / "project_combined.pdf"
+    project_output = repo_root / "projects" / project_name / "output"
+    pdf_path = project_output / "pdf" / f"{project_name}_combined.pdf"
     output_dir = project_output / "llm"
     
     # Initialize session metrics
@@ -1285,6 +1453,21 @@ def main(mode: ReviewMode = ReviewMode.ALL) -> int:
             translation_languages = get_translation_languages(repo_root)
             if translation_languages:
                 logger.info(f"\n  Generating translations for {len(translation_languages)} language(s)...")
+
+                # Estimate time per translation based on warmup performance
+                if session_metrics.warmup_tokens_per_sec > 0:
+                    max_tokens, _ = get_review_max_tokens()
+                    estimated_tokens_per_translation = max_tokens
+                    estimated_seconds_per_translation = estimated_tokens_per_translation / session_metrics.warmup_tokens_per_sec
+                    logger.info(f"    Estimated time per translation: ~{estimated_seconds_per_translation:.0f} seconds")
+                    logger.info(f"    Total estimated time: ~{(estimated_seconds_per_translation * len(translation_languages)):.0f} seconds")
+
+                # Get timeout for warnings
+                translation_timeout = get_review_timeout()
+                if translation_timeout < 120:
+                    logger.warning(f"    ⚠️  Low timeout ({translation_timeout:.0f}s) may cause translation failures")
+                    logger.info(f"    Consider: export LLM_REVIEW_TIMEOUT=300 for translations")
+
                 for i, lang_code in enumerate(translation_languages, 1):
                     lang_name = TRANSLATION_LANGUAGES.get(lang_code, lang_code)
                     log_progress(i, len(translation_languages), f"Translation: {lang_name}", logger)
@@ -1295,7 +1478,7 @@ def main(mode: ReviewMode = ReviewMode.ALL) -> int:
                     save_single_review(review_name, response, output_dir, model_name, metrics)
             elif mode == ReviewMode.TRANSLATIONS_ONLY:
                 logger.warning("\n⚠️  No translation languages configured")
-                logger.info("  Configure translations in project/manuscript/config.yaml:")
+                logger.info(f"  Configure translations in projects/{project_name}/manuscript/config.yaml:")
                 logger.info("    llm:")
                 logger.info("      translations:")
                 logger.info("        enabled: true")
@@ -1350,6 +1533,12 @@ Requires Ollama to be running with at least one model installed.
         """
     )
     
+    parser.add_argument(
+        '--project',
+        default='project',
+        help='Project name in projects/ directory (default: project)'
+    )
+
     mode_group = parser.add_mutually_exclusive_group()
     mode_group.add_argument(
         "--reviews-only",
@@ -1361,13 +1550,13 @@ Requires Ollama to be running with at least one model installed.
         action="store_true",
         help="Run only translations to configured languages"
     )
-    
+
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    
+
     # Determine mode from arguments
     if args.reviews_only:
         mode = ReviewMode.REVIEWS_ONLY
@@ -1375,5 +1564,5 @@ if __name__ == "__main__":
         mode = ReviewMode.TRANSLATIONS_ONLY
     else:
         mode = ReviewMode.ALL
-    
-    exit(main(mode))
+
+    exit(main(mode, args.project))

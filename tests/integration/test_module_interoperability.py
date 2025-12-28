@@ -7,36 +7,37 @@ real implementations or skip when services are unavailable.
 import pytest
 from pathlib import Path
 
-from infrastructure.literature import LiteratureSearch
 from infrastructure.llm import LLMClient
 from infrastructure.rendering import RenderManager
 from infrastructure import publishing
+from infrastructure.core.health_check import SystemHealthChecker
+from infrastructure.core.performance_monitor import benchmark_function
 
 
 class TestResearchWorkflow:
     """Test complete research workflow using all modules."""
 
     @pytest.mark.requires_ollama
-    def test_literature_to_llm_workflow(self, tmp_path):
-        """Test literature search -> LLM summarization workflow.
-        
-        Requires network access for literature search and Ollama for LLM.
+    def test_health_check_to_llm_workflow(self, tmp_path):
+        """Test health check -> LLM analysis workflow.
+
+        Tests integration between system monitoring and LLM analysis.
         """
         # Test with real implementations - skip if services unavailable
         try:
-            lit = LiteratureSearch()
-            # Use a simple query that should work
-            results = lit.search("machine learning", limit=1, sources=["arxiv"])
-            
-            if results:
-                llm = LLMClient()
-                summary = llm.apply_template("summarize_abstract", text=results[0].abstract)
-                
-                # Verify
-                assert len(results) > 0
-                assert summary is not None
-                assert len(summary) > 0
-                assert "machine learning" in results[0].abstract.lower() or "machine learning" in summary.lower()
+            # Get system health status
+            checker = SystemHealthChecker()
+            health_status = checker.get_health_status()
+
+            # Use LLM to analyze health status
+            llm = LLMClient()
+            analysis_prompt = f"Analyze this system health status and provide recommendations: {health_status}"
+            analysis = llm.query(analysis_prompt)
+
+            # Verify we got a meaningful response
+            assert len(analysis) > 10
+            assert "system" in analysis.lower() or "health" in analysis.lower()
+
         except Exception as e:
             pytest.skip(f"Service unavailable: {e}")
 

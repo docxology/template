@@ -16,7 +16,7 @@ The Validation module provides comprehensive quality assurance and validation to
 
 **markdown_validator.py**
 - Markdown file discovery and collection
-- Manuscript directory discovery at `project/manuscript/`
+- Manuscript directory discovery at `projects/{name}/manuscript/`
 - Image reference validation
 - Cross-reference verification
 - Mathematical equation validation
@@ -30,6 +30,461 @@ The Validation module provides comprehensive quality assurance and validation to
 - Academic standards compliance
 - Build artifact verification
 - Completeness validation
+
+## Function Signatures
+
+### pdf_validator.py
+
+#### extract_text_from_pdf (function)
+```python
+def extract_text_from_pdf(pdf_path: Path) -> str:
+    """Extract text content from a PDF file.
+
+    Args:
+        pdf_path: Path to the PDF file
+
+    Returns:
+        Extracted text content as a string
+
+    Raises:
+        PDFValidationError: If PDF cannot be read or processed
+    """
+```
+
+#### scan_for_issues (function)
+```python
+def scan_for_issues(text: str) -> Dict[str, int]:
+    """Scan extracted PDF text for common rendering issues.
+
+    Args:
+        text: Extracted PDF text content
+
+    Returns:
+        Dictionary with issue counts by type
+    """
+```
+
+#### decode_pdf_hex_strings (function)
+```python
+def decode_pdf_hex_strings(text: str) -> str:
+    """Decode PDF hex-encoded strings in extracted text.
+
+    Args:
+        text: Raw PDF text with potential hex strings
+
+    Returns:
+        Text with hex strings decoded to readable characters
+    """
+```
+
+#### extract_first_n_words (function)
+```python
+def extract_first_n_words(text: str, n: int = 200) -> str:
+    """Extract the first N words from PDF text for preview.
+
+    Args:
+        text: Extracted PDF text
+        n: Number of words to extract (default: 200)
+
+    Returns:
+        First N words of the document
+    """
+```
+
+#### validate_pdf_rendering (function)
+```python
+def validate_pdf_rendering(
+    pdf_path: Path,
+    n_words: int = 200
+) -> Dict[str, Any]:
+    """Comprehensive PDF validation for research documents.
+
+    Args:
+        pdf_path: Path to PDF file to validate
+        n_words: Number of words to extract for preview (default: 200)
+
+    Returns:
+        Validation report with issues, preview, and metadata
+
+    Raises:
+        PDFValidationError: If PDF validation fails critically
+    """
+```
+
+### markdown_validator.py
+
+#### find_markdown_files (function)
+```python
+def find_markdown_files(markdown_dir: str | Path) -> List[str]:
+    """Find all markdown files in a directory recursively.
+
+    Args:
+        markdown_dir: Directory to search for markdown files
+
+    Returns:
+        List of markdown file paths as strings
+    """
+```
+
+#### collect_symbols (function)
+```python
+def collect_symbols(md_paths: List[str]) -> Tuple[Set[str], Set[str]]:
+    """Collect all labels and anchors from markdown files.
+
+    Args:
+        md_paths: List of markdown file paths
+
+    Returns:
+        Tuple of (labels, anchors) sets
+    """
+```
+
+#### validate_images (function)
+```python
+def validate_images(
+    md_paths: List[str],
+    repo_root: str | Path
+) -> List[str]:
+    """Validate that all image references in markdown files exist.
+
+    Args:
+        md_paths: List of markdown file paths
+        repo_root: Repository root directory
+
+    Returns:
+        List of validation error messages
+    """
+```
+
+#### validate_refs (function)
+```python
+def validate_refs(
+    md_paths: List[str],
+    labels: Set[str],
+    anchors: Set[str],
+    repo_root: str | Path
+) -> List[str]:
+    """Validate cross-references in markdown files.
+
+    Args:
+        md_paths: List of markdown file paths
+        labels: Set of available labels
+        anchors: Set of available anchors
+        repo_root: Repository root directory
+
+    Returns:
+        List of validation error messages
+    """
+```
+
+#### validate_math (function)
+```python
+def validate_math(
+    md_paths: List[str],
+    repo_root: str | Path
+) -> List[str]:
+    """Validate mathematical equations in markdown files.
+
+    Args:
+        md_paths: List of markdown file paths
+        repo_root: Repository root directory
+
+    Returns:
+        List of validation error messages
+    """
+```
+
+#### validate_markdown (function)
+```python
+def validate_markdown(
+    markdown_dir: str | Path,
+    repo_root: str | Path,
+    strict: bool = False
+) -> Tuple[List[str], int]:
+    """Comprehensive markdown validation for research manuscripts.
+
+    Args:
+        markdown_dir: Directory containing markdown files
+        repo_root: Repository root directory
+        strict: Enable strict validation mode (default: False)
+
+    Returns:
+        Tuple of (error_messages, exit_code)
+    """
+```
+
+#### find_manuscript_directory (function)
+```python
+def find_manuscript_directory(repo_root: str | Path) -> Path:
+    """Find the manuscript directory at the standard location.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        Path to manuscript directory (projects/{name}/manuscript/)
+
+    Raises:
+        FileNotFoundError: If manuscript directory not found
+    """
+```
+
+### integrity.py
+
+#### IntegrityReport (class)
+```python
+@dataclass
+class IntegrityReport:
+    """Comprehensive integrity report for output validation."""
+    total_files: int = 0
+    file_integrity: Dict[str, bool] = field(default_factory=dict)
+    cross_references: Dict[str, bool] = field(default_factory=dict)
+    data_consistency: Dict[str, bool] = field(default_factory=dict)
+    academic_standards: Dict[str, bool] = field(default_factory=dict)
+    build_artifacts: Dict[str, Any] = field(default_factory=dict)
+    completeness: Dict[str, Any] = field(default_factory=dict)
+    permissions: Dict[str, Any] = field(default_factory=dict)
+    errors: List[str] = field(default_factory=list)
+    warnings: List[str] = field(default_factory=list)
+    recommendations: List[str] = field(default_factory=list)
+```
+
+#### verify_file_integrity (function)
+```python
+def verify_file_integrity(
+    file_paths: List[Path],
+    expected_hashes: Optional[Dict[str, str]] = None
+) -> Dict[str, bool]:
+    """Verify file integrity using SHA-256 hashing.
+
+    Args:
+        file_paths: List of file paths to check
+        expected_hashes: Optional dictionary of filename to expected hash
+
+    Returns:
+        Dictionary mapping file paths to integrity status
+    """
+```
+
+#### calculate_file_hash (function)
+```python
+def calculate_file_hash(
+    file_path: Path,
+    algorithm: str = 'sha256'
+) -> Optional[str]:
+    """Calculate hash of a file.
+
+    Args:
+        file_path: Path to file to hash
+        algorithm: Hash algorithm (default: 'sha256')
+
+    Returns:
+        Hexadecimal hash string, or None if file cannot be read
+    """
+```
+
+#### verify_cross_references (function)
+```python
+def verify_cross_references(markdown_files: List[Path]) -> Dict[str, bool]:
+    """Verify cross-references between markdown files.
+
+    Args:
+        markdown_files: List of markdown file paths
+
+    Returns:
+        Dictionary mapping reference types to validation status
+    """
+```
+
+#### verify_data_consistency (function)
+```python
+def verify_data_consistency(data_files: List[Path]) -> Dict[str, bool]:
+    """Verify data file consistency and format validity.
+
+    Args:
+        data_files: List of data file paths
+
+    Returns:
+        Dictionary mapping data files to consistency status
+    """
+```
+
+#### verify_academic_standards (function)
+```python
+def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
+    """Verify compliance with academic writing standards.
+
+    Args:
+        markdown_files: List of markdown file paths
+
+    Returns:
+        Dictionary mapping standards to compliance status
+    """
+```
+
+#### verify_output_integrity (function)
+```python
+def verify_output_integrity(output_dir: Path) -> IntegrityReport:
+    """Comprehensive output integrity verification.
+
+    Args:
+        output_dir: Output directory to verify
+
+    Returns:
+        Complete integrity report
+    """
+```
+
+#### generate_integrity_report (function)
+```python
+def generate_integrity_report(report: IntegrityReport) -> str:
+    """Generate human-readable integrity report.
+
+    Args:
+        report: Integrity report to format
+
+    Returns:
+        Formatted report string
+    """
+```
+
+#### validate_build_artifacts (function)
+```python
+def validate_build_artifacts(
+    output_dir: Path,
+    expected_files: Optional[Dict[str, List[str]]] = None
+) -> Dict[str, Any]:
+    """Validate build artifacts exist and are properly structured.
+
+    Args:
+        output_dir: Output directory to check
+        expected_files: Optional expected file structure
+
+    Returns:
+        Validation results dictionary
+    """
+```
+
+#### check_file_permissions (function)
+```python
+def check_file_permissions(output_dir: Path) -> Dict[str, Any]:
+    """Check file permissions for generated outputs.
+
+    Args:
+        output_dir: Output directory to check
+
+    Returns:
+        Permission check results
+    """
+```
+
+#### verify_output_completeness (function)
+```python
+def verify_output_completeness(output_dir: Path) -> Dict[str, Any]:
+    """Verify output directory has all expected deliverables.
+
+    Args:
+        output_dir: Output directory to check
+
+    Returns:
+        Completeness check results
+    """
+```
+
+#### create_integrity_manifest (function)
+```python
+def create_integrity_manifest(output_dir: Path) -> Dict[str, Any]:
+    """Create integrity manifest for output directory.
+
+    Args:
+        output_dir: Output directory to document
+
+    Returns:
+        Integrity manifest dictionary
+    """
+```
+
+#### save_integrity_manifest (function)
+```python
+def save_integrity_manifest(
+    manifest: Dict[str, Any],
+    output_path: Path
+) -> None:
+    """Save integrity manifest to file.
+
+    Args:
+        manifest: Integrity manifest to save
+        output_path: Path to save manifest file
+    """
+```
+
+#### load_integrity_manifest (function)
+```python
+def load_integrity_manifest(manifest_path: Path) -> Optional[Dict[str, Any]]:
+    """Load integrity manifest from file.
+
+    Args:
+        manifest_path: Path to manifest file
+
+    Returns:
+        Loaded manifest dictionary, or None if loading fails
+    """
+```
+
+#### verify_integrity_against_manifest (function)
+```python
+def verify_integrity_against_manifest(
+    current_manifest: Dict[str, Any],
+    saved_manifest: Dict[str, Any]
+) -> Dict[str, Any]:
+    """Compare current integrity against saved manifest.
+
+    Args:
+        current_manifest: Current integrity manifest
+        saved_manifest: Previously saved manifest
+
+    Returns:
+        Comparison results dictionary
+    """
+```
+
+### cli.py
+
+#### validate_pdf_command (function)
+```python
+def validate_pdf_command(args):
+    """CLI command for PDF validation.
+
+    Args:
+        args: Parsed command line arguments
+    """
+```
+
+#### validate_markdown_command (function)
+```python
+def validate_markdown_command(args):
+    """CLI command for markdown validation.
+
+    Args:
+        args: Parsed command line arguments
+    """
+```
+
+#### verify_integrity_command (function)
+```python
+def verify_integrity_command(args):
+    """CLI command for integrity verification.
+
+    Args:
+        args: Parsed command line arguments
+    """
+```
+
+#### main (function)
+```python
+def main():
+    """Main CLI entry point for validation tools."""
+```
 
 ## Key Features
 
@@ -47,13 +502,13 @@ from infrastructure.validation import validate_markdown, find_manuscript_directo
 
 # Find manuscript directory at standard location
 manuscript_dir = find_manuscript_directory(Path("."))
-# Returns project/manuscript/ directory
+# Returns projects/{name}/manuscript/ directory
 
 problems, exit_code = validate_markdown("manuscript/", ".")
 # Validates images, references, equations, links
 ```
 
-**Manuscript Directory Discovery**: The `find_manuscript_directory()` function locates the manuscript directory at `project/manuscript/`.
+**Manuscript Directory Discovery**: The `find_manuscript_directory()` function locates the manuscript directory at `projects/{name}/manuscript/`.
 
 ### Integrity Verification
 ```python

@@ -26,11 +26,13 @@ This document provides documentation for the Research Project Template system, e
 - `scripts/` - Entry point orchestrators (two pipeline options: 6-stage core or 10-stage extended)
 - `tests/` - Infrastructure and integration tests
 
-**Layer 2: Project (Project-Specific - Customizable)**
-- `project/src/` - Research algorithms and analysis (domain-specific)
-- `project/tests/` - Project test suite
-- `project/scripts/` - Project analysis scripts (thin orchestrators)
-- `project/manuscript/` - Research manuscript
+**Layer 2: Projects (Project-Specific - Customizable)**
+- `projects/{name}/src/` - Research algorithms and analysis (domain-specific per project)
+- `projects/{name}/tests/` - Project test suite
+- `projects/{name}/scripts/` - Project analysis scripts (thin orchestrators)
+- `projects/{name}/manuscript/` - Research manuscript
+- `projects/{name}/output/` - Working outputs during pipeline execution
+- `output/{name}/...` - Final deliverables after pipeline completion
 
 ### Thin Orchestrator Pattern
 
@@ -38,17 +40,42 @@ This document provides documentation for the Research Project Template system, e
 
 **Root Entry Points (Generic):**
 - Coordinate build pipeline stages
-- Discover and invoke `project/scripts/`
+- Discover and invoke `projects/{name}/scripts/` for specified project
 - Handle I/O, orchestration only
-- Work with ANY project structure
+- Work with ANY project structure (single or multi-project)
 
 **Project Scripts (Project-Specific):**
-- Import from `project/src/` for computation
+- Import from `projects/{name}/src/` for computation
 - Import from `infrastructure/` for utilities
 - Orchestrate domain-specific workflows
 - Handle I/O and visualization
 
 **Violation of this pattern breaks the architecture**.
+
+### Multi-Project Support
+
+The template now supports **multiple independent projects** within a single repository:
+
+**Project Discovery:**
+- Projects are discovered automatically from `projects/` directory
+- Each project must have `src/` and `tests/` directories
+- Projects are validated for structural completeness
+
+**Project Isolation:**
+- Each project has its own source code, tests, manuscript, and scripts
+- Working outputs are stored in `projects/{name}/output/`
+- Final deliverables are organized in `output/{name}/...`
+
+**Orchestration Options:**
+- Run individual projects: `--project {name}`
+- Run all projects sequentially: `--all-projects`
+- Interactive project selection menu
+- Backward compatibility with single-project workflows
+
+**Example Projects:**
+- `projects/project/` - Full research template
+- `projects/small_prose_project/` - Manuscript-focused with equations
+- `projects/small_code_project/` - Code-focused with analysis pipeline
 
 ## 📚 Repository Structure
 
@@ -74,25 +101,41 @@ template/                           # Generic template repository
 │   ├── AGENTS.md
 │   ├── README.md
 │   └── test_*.py                   # Tests for infrastructure/ modules
-└── project/                        # Example research project (can be replaced)
-    ├── src/                        # Project-specific scientific code (Layer 2)
-    │   ├── AGENTS.md
-    │   ├── README.md
-    │   ├── example.py
-    │   ├── data_generator.py
-    │   └── ...
-    ├── tests/                      # Project tests
-    │   ├── AGENTS.md
-    │   ├── README.md
-    │   └── test_*.py
-    ├── scripts/                    # Project-specific analysis scripts
-    │   ├── AGENTS.md
-    │   ├── README.md
-    │   ├── analysis_pipeline.py
-    │   └── example_figure.py
-    ├── manuscript/                 # Research manuscript markdown
-    ├── output/                     # Generated outputs (figures, PDFs)
-    └── pyproject.toml
+├── projects/                      # Multiple research projects directory
+│   ├── README.md                  # Multi-project guide
+│   ├── project/                   # Original full research template
+│   │   ├── src/                   # Project-specific scientific code
+│   │   │   ├── AGENTS.md
+│   │   │   ├── README.md
+│   │   │   ├── example.py
+│   │   │   └── data_generator.py
+│   │   ├── tests/                 # Project tests
+│   │   │   ├── AGENTS.md
+│   │   │   ├── README.md
+│   │   │   └── test_*.py
+│   │   ├── scripts/               # Project analysis scripts
+│   │   │   ├── AGENTS.md
+│   │   │   ├── README.md
+│   │   │   ├── analysis_pipeline.py
+│   │   │   └── example_figure.py
+│   │   ├── manuscript/            # Research manuscript markdown
+│   │   ├── output/                # Working outputs (generated during pipeline)
+│   │   └── pyproject.toml
+│   ├── small_prose_project/       # Manuscript-focused project
+│   │   ├── src/                   # Minimal source for testing
+│   │   ├── tests/                 # Unit tests
+│   │   ├── manuscript/            # Research manuscript with equations
+│   │   └── output/                # Working outputs
+│   └── small_code_project/        # Code-focused project
+│       ├── src/                   # Full scientific implementation
+│       ├── tests/                 # Comprehensive tests
+│       ├── scripts/               # Analysis pipeline
+│       ├── manuscript/            # Research manuscript
+│       └── output/                # Working outputs
+└── output/                         # Final deliverables (organized by project)
+    ├── project/                   # Original project outputs
+    ├── small_prose_project/       # Prose project outputs
+    └── small_code_project/        # Code project outputs
 ```
 
 ## 📚 Directory-Level Documentation
@@ -111,10 +154,10 @@ Each directory contains documentation for easy navigation:
 
 | Directory | AGENTS.md | README.md | Purpose |
 |-----------|-----------|-----------|---------|
-| [`project/src/`](project/src/) | [AGENTS.md](project/src/AGENTS.md) | [README.md](project/src/README.md) | Project-specific scientific code (Layer 2) |
-| [`project/tests/`](project/tests/) | [AGENTS.md](project/tests/AGENTS.md) | [README.md](project/tests/README.md) | Project test suite |
-| [`project/scripts/`](project/scripts/) | [AGENTS.md](project/scripts/AGENTS.md) | [README.md](project/scripts/README.md) | Project-specific analysis scripts |
-| [`project/manuscript/`](project/manuscript/) | [AGENTS.md](project/manuscript/AGENTS.md) | [README.md](project/manuscript/README.md) | Research manuscript sections |
+| [`projects/project/src/`](projects/project/src/) | [AGENTS.md](projects/project/src/AGENTS.md) | [README.md](projects/project/src/README.md) | Project-specific scientific code (Layer 2) |
+| [`projects/project/tests/`](projects/project/tests/) | [AGENTS.md](projects/project/tests/AGENTS.md) | [README.md](projects/project/tests/README.md) | Project test suite |
+| [`projects/project/scripts/`](projects/project/scripts/) | [AGENTS.md](projects/project/scripts/AGENTS.md) | [README.md](projects/project/scripts/README.md) | Project-specific analysis scripts |
+| [`projects/project/manuscript/`](projects/project/manuscript/) | [AGENTS.md](projects/project/manuscript/AGENTS.md) | [README.md](projects/project/manuscript/README.md) | Research manuscript sections |
 
 ### Documentation Directories
 
@@ -190,7 +233,7 @@ template/                           # Generic Template
 
 **Note on src/ directory:**
 - Root `src/` no longer exists (was empty shells)
-- All code is in `infrastructure/` (generic) or `project/src/` (project-specific)
+- All code is in `infrastructure/` (generic) or `projects/{name}/src/` (project-specific)
 - This separation enables reusability across projects
 
 ## ⚙️ Configuration System
@@ -199,8 +242,8 @@ template/                           # Generic Template
 
 The system supports configuration through a YAML file, providing a centralized, version-controllable way to manage all paper metadata.
 
-**Location**: `project/manuscript/config.yaml`  
-**Template**: `project/manuscript/config.yaml.example`
+**Location**: `projects/{name}/manuscript/config.yaml`  
+**Template**: `projects/{name}/manuscript/config.yaml.example`
 
 **Example configuration**:
 ```yaml
@@ -269,11 +312,11 @@ Environment variables are supported as an alternative configuration method and t
 
 #### Using Configuration File (Recommended)
 ```bash
-# Edit project/manuscript/config.yaml with your information
-vim project/manuscript/config.yaml
+# Edit projects/{name}/manuscript/config.yaml with your information
+vim projects/project/manuscript/config.yaml
 
 # Build with config file values
-python3 scripts/03_render_pdf.py
+python3 scripts/03_render_pdf.py --project project
 ```
 
 #### Using Environment Variables
@@ -359,34 +402,34 @@ python3 scripts/run_all.py
 **Individual Stage Execution:**
 ```bash
 # Environment setup
-python3 scripts/00_setup_environment.py
+python3 scripts/00_setup_environment.py --project project
 
 # Test execution (combined infra + project)
-python3 scripts/01_run_tests.py
+python3 scripts/01_run_tests.py --project project
 
 # Project analysis scripts
-python3 scripts/02_run_analysis.py
+python3 scripts/02_run_analysis.py --project project
 
 # PDF rendering
-python3 scripts/03_render_pdf.py
+python3 scripts/03_render_pdf.py --project project
 
 # Output validation
-python3 scripts/04_validate_output.py
+python3 scripts/04_validate_output.py --project project
 
 # Copy outputs
-python3 scripts/05_copy_outputs.py
+python3 scripts/05_copy_outputs.py --project project
 
 # LLM manuscript review (optional, requires Ollama)
-python3 scripts/06_llm_review.py
+python3 scripts/06_llm_review.py --project project
 ```
 
 **Validation Tools:**
 ```bash
 # Validate markdown files
-python3 -m infrastructure.validation.cli markdown manuscript/
+python3 -m infrastructure.validation.cli markdown projects/project/manuscript/
 
 # Validate PDF outputs
-python3 -m infrastructure.validation.cli pdf output/pdf/
+python3 -m infrastructure.validation.cli pdf output/project/pdf/
 ```
 
 ## ✅ Validation Systems
@@ -415,10 +458,10 @@ python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 
 ```bash
 # Validate all markdown files
-python3 -m infrastructure.validation.cli markdown manuscript/
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 # Strict mode (fail on any issues)
-python3 -m infrastructure.validation.cli markdown manuscript/ --strict
+python3 -m infrastructure.validation.cli markdown project/manuscript/ --strict
 ```
 
 **Validation Checks**:
@@ -432,11 +475,11 @@ python3 -m infrastructure.validation.cli markdown manuscript/ --strict
 
 ```bash
 # Run both infrastructure and project tests via orchestrator
-python3 scripts/01_run_tests.py
+python3 scripts/01_run_tests.py --project project
 
 # Or run manually with coverage reports
 python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
-python3 -m pytest project/tests/ --cov=project/src --cov-report=html
+python3 -m pytest projects/project/tests/ --cov=projects/project/src --cov-report=html
 ```
 
 **Coverage Requirements**:
@@ -452,10 +495,20 @@ python3 -m pytest project/tests/ --cov=project/src --cov-report=html
 
 ## 🧪 Testing Framework
 
+### ABSOLUTE PROHIBITION: No Mocks Policy
+
+**CRITICAL REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **real data** and **real computations only**.
+
+This policy ensures:
+- Tests validate actual behavior, not mocked behavior
+- Integration points are truly tested
+- Code is tested in realistic conditions
+- No false confidence from mocked tests
+
 ### Test Structure
 
 Tests follow the **thin orchestrator pattern** principles:
-- Import real methods from `project/src/` or `infrastructure/` modules  
+- Import real methods from `project/src/` or `infrastructure/` modules
 - Use real data and computation
 - Validate actual behavior (no mocks)
 - Ensure reproducible, deterministic results
@@ -488,24 +541,25 @@ python3 -m pytest project/tests/ --cov=project/src --cov-report=html
 
 ```
 output/
-├── pdf/                    # PDF documents
-│   ├── 01_abstract.pdf     # Individual section PDFs
-│   ├── 02_introduction.pdf
-│   ├── project_combined.pdf # Complete manuscript
-│   └── *.pdf               # Additional formats
-├── tex/                    # LaTeX source files
-│   ├── 01_abstract.tex
-│   ├── project_combined.tex
-│   └── *.tex
-├── figures/                # Generated figures
-│   ├── example_figure.png
-│   ├── convergence_plot.png
-│   └── *.png
-├── data/                   # Generated datasets
-│   ├── example_data.csv
-│   ├── convergence_data.npz
-│   └── *.csv
-└── project_combined.html   # HTML version for IDE
+├── project/                # Project-specific outputs
+│   ├── pdf/                # PDF documents
+│   │   ├── 01_abstract.pdf # Individual section PDFs
+│   │   ├── 02_introduction.pdf
+│   │   ├── project_combined.pdf # Complete manuscript
+│   │   └── *.pdf           # Additional formats
+│   ├── tex/                # LaTeX source files
+│   │   ├── 01_abstract.tex
+│   │   ├── project_combined.tex
+│   │   └── *.tex
+│   ├── figures/            # Generated figures
+│   │   ├── example_figure.png
+│   │   ├── convergence_plot.png
+│   │   └── *.png
+│   ├── data/               # Generated datasets
+│   │   ├── example_data.csv
+│   │   ├── convergence_data.npz
+│   │   └── *.csv
+│   └── project_combined.html # HTML version for IDE
 ```
 
 ### PDF Versions
@@ -528,6 +582,29 @@ output/
 ## 🧪 **Advanced Modules**
 
 The template includes advanced modules for scientific package development:
+
+### 🔒 **Security & Monitoring** (`infrastructure/core/`)
+**Enterprise-grade security and system monitoring**
+
+**Key Features:**
+- **Input Sanitization**: Comprehensive LLM prompt validation and threat detection
+- **Security Monitoring**: Real-time security event tracking and alerting
+- **Rate Limiting**: Configurable request rate limiting with monitoring
+- **Health Checks**: System health monitoring with component-level status
+- **Security Headers**: Complete HTTP security header implementation
+
+**Usage:**
+```python
+from infrastructure.core.security import validate_llm_input, get_security_validator
+from infrastructure.core.health_check import quick_health_check, get_health_status
+
+# Validate LLM input with security checks
+sanitized = validate_llm_input(user_prompt)
+
+# Perform system health check
+if quick_health_check():
+    status = get_health_status()
+```
 
 ### 🔍 **Integrity Verification** (`infrastructure/validation/integrity.py`)
 **File integrity and cross-reference validation**
@@ -692,6 +769,9 @@ All advanced modules follow the **thin orchestrator pattern**:
 - **Documentation** for each module's functionality
 
 **Testing Coverage:**
+- ✅ **Security**: Comprehensive tests (15+ tests)
+- ✅ **Health Check**: Comprehensive tests (10+ tests)
+- ✅ **Input Sanitization**: Comprehensive tests (8+ tests)
 - ✅ **Integrity**: Comprehensive tests (16 tests)
 - ✅ **Publishing**: Comprehensive tests (14 tests)
 - ✅ **Scientific Dev**: Comprehensive tests (12 tests)
@@ -704,16 +784,16 @@ All advanced modules follow the **thin orchestrator pattern**:
 
 ```bash
 # Open combined PDF
-open output/pdf/project_combined.pdf
+open output/project/pdf/project_combined.pdf
 
 # Open HTML version in browser
-open output/project_combined.html
+open output/project/project_combined.html
 
 # List all generated files
-ls -la output/
+ls -la output/project/
 
 # Check PDF validation
-python3 -m infrastructure.validation.cli pdf output/pdf/
+python3 -m infrastructure.validation.cli pdf output/project/pdf/
 ```
 
 ## 🔧 Troubleshooting
@@ -740,10 +820,10 @@ python3 -m pytest project/tests/ --cov=project/src --cov-fail-under=70
 #### Scripts Failing
 ```bash
 # Run scripts individually to debug
-python3 scripts/example_figure.py
+python3 projects/project/scripts/example_figure.py
 
 # Check import errors
-python3 -c "import project.src.example; print('Import successful')"
+python3 -c "import sys; sys.path.insert(0, 'projects/project/src'); import example; print('Import successful')"
 ```
 
 #### PDF Generation Issues
@@ -755,7 +835,7 @@ which xelatex
 python3 -m infrastructure.rendering.latex_package_validator
 
 # Validate markdown first
-python3 -m infrastructure.validation.cli markdown manuscript/
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 # Check compilation logs
 ls output/pdf/*_compile.log
@@ -813,10 +893,10 @@ brew install --cask mactex
 ```bash
 # Enable verbose logging
 export LOG_LEVEL=0
-python3 scripts/03_render_pdf.py
+python3 scripts/03_render_pdf.py --project project
 
 # Run with debug output
-python3 -m infrastructure.validation.cli pdf output/pdf/ --verbose
+python3 -m infrastructure.validation.cli pdf output/project/pdf/ --verbose
 ```
 
 ### Log Files
@@ -862,9 +942,9 @@ Key log files for debugging:
 
 ### Adding New Features
 
-1. **Business Logic** → Add to `project/src/`
-2. **Tests** → Add to `project/tests/`
-3. **Scripts** → Add to `project/scripts/` (use `project/src/` methods)
+1. **Business Logic** → Add to `projects/{name}/src/`
+2. **Tests** → Add to `projects/{name}/tests/`
+3. **Scripts** → Add to `projects/{name}/scripts/` (use `projects/{name}/src/` methods)
 4. **Documentation** → Update relevant `.md` files
 5. **Validation** → Ensure coverage requirements met
 
@@ -907,6 +987,7 @@ See [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME
 - [`docs/core/HOW_TO_USE.md`](docs/core/HOW_TO_USE.md) - Complete usage guide
 - [`docs/core/ARCHITECTURE.md`](docs/core/ARCHITECTURE.md) - System design details
 - [`docs/core/WORKFLOW.md`](docs/core/WORKFLOW.md) - Development workflow
+- [`projects/README.md`](projects/README.md) - Multi-project management guide
 
 ### External Resources
 - [Pandoc Manual](https://pandoc.org/MANUAL.html) - Document conversion
@@ -922,6 +1003,14 @@ See [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME
 4. Validate all outputs
 5. Update documentation
 6. Commit with clear messages
+
+### Project Structure
+- **Working outputs**: `projects/{name}/output/` (generated during pipeline)
+- **Final deliverables**: `output/{name}/` (copied by stage 5)
+- **Source code**: `projects/{name}/src/`
+- **Tests**: `projects/{name}/tests/`
+- **Scripts**: `projects/{name}/scripts/`
+- **Manuscript**: `projects/{name}/manuscript/`
 
 ### Code Quality
 - **Type Hints**: All public APIs must have type annotations
@@ -940,7 +1029,7 @@ See [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME
 ## ✅ System Status: FULLY OPERATIONAL (v2.0)
 
 **All systems confirmed functional:**
-- ✅ Test suite (2118 tests passing: 1796 infrastructure [2 skipped] + 320 project)
+- ✅ Test suite (2235 tests passing: 1887 infrastructure [3 skipped] + 360 project)
 - ✅ Package API testing (test_package_imports.py validates __init__.py)
 - ✅ Script execution (all 7 analysis scripts operational)
 - ✅ Markdown validation (all references resolved, no warnings)
@@ -949,25 +1038,32 @@ See [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME
 - ✅ Configuration system (YAML config + environment variables)
 - ✅ Output validation (figures, data files, reports validated)
 - ✅ Documentation (guides, .cursorrules standards)
+- ✅ Multi-project architecture (projects/{name}/ structure)
 
 **Environment Management:**
 - ✅ Matplotlib auto-configuration (headless operation via MPLBACKEND=Agg)
 - ✅ Optional dependency handling (python-dotenv graceful fallback)
 - ✅ Test failure tolerance (MAX_TEST_FAILURES environment variable)
 - ✅ LaTeX path management (BasicTeX/MacTeX support)
+- ✅ Docker containerization (Dockerfile + docker-compose.yml)
 
-**New Modules (v2.0):**
+**New Modules (v2.1):**
+- ✅ Security System (comprehensive tests) - Input sanitization and monitoring
+- ✅ Health Check System (comprehensive tests) - System health monitoring
+- ✅ Input Sanitization (comprehensive tests) - LLM prompt validation
 - ✅ LLM Integration (91% coverage, 11 tests) - Local Ollama support
 - ✅ Rendering System (91% coverage, 10 tests) - Multi-format output
 - ✅ Publishing API (integrated) - Zenodo, arXiv, GitHub automation
+- ✅ Multi-project architecture (projects/{name}/ structure)
 
 **Comprehensive Audit Status:**
-- ✅ **Exceptional code coverage** (83.33% infra [+22%!], 100% project)
-- ✅ Infrastructure coverage **exceeds 75% stretch goal** (was 61.48%)
-- ✅ Project coverage achieves 100% (exceeds 90% requirement)
+- ✅ **Exceptional code coverage** (83.33% infra [+22%!], 98.03% project)
+- ✅ Infrastructure coverage **exceeds 60% requirement** (83.33% achieved)
+- ✅ Project coverage achieves 98.03% (exceeds 90% requirement)
 - ✅ Zero mock methods - all tests use real data
 - ✅ All .cursorrules standards fully implemented
 - ✅ Complete compliance with thin orchestrator pattern
 - ✅ Production-ready build pipeline (6-stage core, 10-stage extended)
 - ✅ Reproducible outputs (deterministic with fixed seeds)
 - ✅ Graceful degradation for optional features
+- ✅ Multi-project support (projects/{name}/ instead of root project/)

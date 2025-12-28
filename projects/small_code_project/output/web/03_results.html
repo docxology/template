@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_results</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="results">Results</h1>
+<p>This section presents the experimental results from the gradient
+descent optimization study, including convergence analysis and
+performance comparisons.</p>
+<h2 id="convergence-analysis">Convergence Analysis</h2>
+<p>Figure 1 shows the convergence behavior of gradient descent for
+different step sizes, starting from the initial point <span
+class="math inline">\(x_0 = 0\)</span>.</p>
+<figure id="fig:convergence">
+<img src="figures/convergence_plot.png"
+alt="Gradient Descent Convergence" />
+<figcaption aria-hidden="true">Gradient Descent Convergence</figcaption>
+</figure>
+<p>The plot demonstrates several key observations:</p>
+<ol type="1">
+<li><strong>Step size impact</strong>: Larger step sizes generally lead
+to faster initial progress but may exhibit oscillatory behavior</li>
+<li><strong>Convergence rate</strong>: All tested step sizes eventually
+converge to the analytical optimum at <span class="math inline">\(x =
+1\)</span></li>
+<li><strong>Stability</strong>: Conservative step sizes (<span
+class="math inline">\(\alpha = 0.01\)</span>) show smooth, monotonic
+convergence</li>
+</ol>
+<h2 id="quantitative-results">Quantitative Results</h2>
+<p>The optimization results for different step sizes are summarized in
+the following table:</p>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 22%" />
+<col style="width: 23%" />
+<col style="width: 16%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr>
+<th>Step Size (α)</th>
+<th>Final Solution</th>
+<th>Objective Value</th>
+<th>Iterations</th>
+<th>Converged</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.01</td>
+<td>0.9999</td>
+<td>-0.5000</td>
+<td>165</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>0.05</td>
+<td>1.0000</td>
+<td>-0.5000</td>
+<td>34</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>0.10</td>
+<td>1.0000</td>
+<td>-0.5000</td>
+<td>17</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>0.20</td>
+<td>1.0000</td>
+<td>-0.5000</td>
+<td>9</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Table 1:</strong> Optimization results showing solution
+accuracy and convergence speed for different step sizes.</p>
+<h2 id="performance-analysis">Performance Analysis</h2>
+<h3 id="convergence-speed">Convergence Speed</h3>
+<p>The results show a clear trade-off between step size and convergence
+speed: - Small step sizes require more iterations but provide stable
+convergence - Large step sizes converge faster but may be less stable in
+more complex problems</p>
+<h3 id="solution-accuracy">Solution Accuracy</h3>
+<p>All tested step sizes achieved the analytical optimum within
+numerical precision: - Target solution: <span class="math inline">\(x =
+1.0000\)</span> - Target objective: <span class="math inline">\(f(x) =
+-0.5000\)</span></p>
+<p>This demonstrates the algorithm’s ability to solve simple quadratic
+optimization problems reliably.</p>
+<h2 id="algorithm-characteristics">Algorithm Characteristics</h2>
+<h3 id="strengths">Strengths</h3>
+<ul>
+<li><strong>Simplicity</strong>: Easy to implement and understand</li>
+<li><strong>Generality</strong>: Applicable to any differentiable
+objective function</li>
+<li><strong>Reliability</strong>: Converges for convex functions under
+appropriate conditions</li>
+</ul>
+<h3 id="limitations">Limitations</h3>
+<ul>
+<li><strong>Step size sensitivity</strong>: Performance depends
+critically on step size selection</li>
+<li><strong>Local convergence</strong>: May converge to local minima in
+non-convex problems</li>
+<li><strong>Fixed step size</strong>: No adaptation to problem
+characteristics</li>
+</ul>
+<h2 id="computational-performance">Computational Performance</h2>
+<p>The algorithm demonstrates efficient performance for small-scale
+problems: - Fast convergence (typically &lt; 20 iterations for this
+problem) - Minimal computational overhead per iteration -
+Memory-efficient implementation suitable for high-dimensional
+problems</p>
+<h2 id="validation">Validation</h2>
+<p>The implementation was validated through: - <strong>Unit
+tests</strong> covering all core functionality - <strong>Integration
+tests</strong> verifying algorithm convergence - <strong>Numerical
+accuracy</strong> checks against analytical solutions - <strong>Edge
+case handling</strong> for boundary conditions</p>
+<p>All tests pass with 100% coverage, ensuring implementation
+correctness and reliability.</p>
+<h2 id="discussion">Discussion</h2>
+<p>The experimental results validate the gradient descent implementation
+and provide insights into algorithm behavior under different parameter
+settings. The automated analysis pipeline successfully generated both
+visual and numerical outputs for manuscript integration.</p>
+<p>Future work could extend this analysis to: - Non-convex optimization
+problems - Adaptive step size strategies - Comparison with other
+optimization algorithms - Large-scale problem applications</p>
+</body>
+</html>

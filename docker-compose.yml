@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  research-template:
+    build: .
+    container_name: research-template-dev
+    volumes:
+      - .:/home/research/template
+      - ./output:/home/research/template/output
+      - ./project/output:/home/research/template/project/output
+    working_dir: /home/research/template
+    environment:
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - LOG_LEVEL=1
+    ports:
+      - "8000:8000"  # For any web interfaces
+    command: sleep infinity
+    profiles:
+      - dev
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: research-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+    profiles:
+      - ollama
+    # Uncomment to pull models on startup
+    # command: |
+    #   sh -c "
+    #     ollama serve &
+    #     sleep 5 &&
+    #     ollama pull gemma3:4b &&
+    #     ollama pull llama3.1:8b &&
+    #     wait
+    #   "
+
+volumes:
+  ollama_data:
+
+networks:
+  default:
+    name: research-network

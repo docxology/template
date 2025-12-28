@@ -62,48 +62,11 @@ MENU_SCRIPT_MAPPING = {
         "requires_ollama": True,
         "description": "LLM Review (reviews and translations)"
     },
-    7: {
-        "script": "07_literature_search.py",
-        "function": "run_literature_search_all",
-        "requires_ollama": False,
-        "note": "Runs search and summarize (summarize requires Ollama)",
-        "description": "Literature Search (all operations)"
-    },
     8: {
         "script": "run_all.py",
         "function": "run_full_pipeline",
         "requires_ollama": False,
         "description": "Run Full Pipeline (10 stages: 0-9, via run.sh)"
-    },
-    9: {
-        "script": "07_literature_search.py",
-        "args": ["--search-only"],
-        "requires_ollama": False,
-        "description": "Search only (network only)"
-    },
-    10: {
-        "script": "07_literature_search.py",
-        "args": ["--download-only"],
-        "requires_ollama": False,
-        "description": "Download only (network only)"
-    },
-    11: {
-        "script": "07_literature_search.py",
-        "args": ["--summarize"],
-        "requires_ollama": True,
-        "description": "Summarize (requires Ollama)"
-    },
-    12: {
-        "script": "07_literature_search.py",
-        "args": ["--cleanup"],
-        "requires_ollama": False,
-        "description": "Cleanup (local files only)"
-    },
-    13: {
-        "script": "07_literature_search.py",
-        "args": ["--llm-operation"],
-        "requires_ollama": True,
-        "description": "Advanced LLM operations (requires Ollama)"
     },
 }
 

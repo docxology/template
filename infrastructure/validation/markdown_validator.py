@@ -213,21 +213,22 @@ def validate_markdown(markdown_dir: str | Path, repo_root: str | Path, strict: b
         return ([], 0)
 
 
-def find_manuscript_directory(repo_root: str | Path) -> Path:
+def find_manuscript_directory(repo_root: str | Path, project_name: str = "project") -> Path:
     """Find the manuscript directory at the standard location.
-    
+
     Args:
         repo_root: Root directory of the repository
-        
+        project_name: Name of the project (default: "project")
+
     Returns:
-        Path to the manuscript directory at project/manuscript/
-        
+        Path to the manuscript directory at projects/{project_name}/manuscript/
+
     Raises:
-        FileNotFoundError: If manuscript directory cannot be found at project/manuscript/
+        FileNotFoundError: If manuscript directory cannot be found at projects/{project_name}/manuscript/
     """
     repo_root = Path(repo_root)
-    
-    manuscript_dir = repo_root / "project" / "manuscript"
+
+    manuscript_dir = repo_root / "projects" / project_name / "manuscript"
     
     if manuscript_dir.exists() and manuscript_dir.is_dir():
         return manuscript_dir

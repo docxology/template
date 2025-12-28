@@ -45,7 +45,8 @@ pytest tests/infrastructure/llm/ -m requires_ollama -v
 - **Pure logic tests** - Configuration and validation without network
 - **Integration tests** - Full LLM interactions (requires Ollama)
 - **No mocks** - Real LLM responses when possible
-- **Graceful skipping** - Tests skip when Ollama unavailable
+- **Loud failures** - Tests FAIL when Ollama unavailable (auto-start attempted)
+- **Auto-start** - Ollama server is automatically started for tests
 
 ## See Also
 

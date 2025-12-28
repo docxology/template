@@ -157,7 +157,7 @@ coverage report
 uv run pytest
 
 # Generate figures and data
-uv run python scripts/example_figure.py
+uv run python project/scripts/example_figure.py
 uv run python scripts/generate_research_figures.py
 
 # Validate markdown integrity
@@ -250,7 +250,7 @@ uv sync
 uv run pytest tests/ --cov=src --cov-report=term-missing
 
 # Generate figures
-uv run python scripts/example_figure.py
+uv run python project/scripts/example_figure.py
 uv run python scripts/generate_research_figures.py
 
 # Validate markdown
@@ -323,7 +323,7 @@ All directories under `output/` are disposable and can be safely cleaned.
 python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 # Regenerate specific figures
-uv run python scripts/example_figure.py
+uv run python project/scripts/example_figure.py
 
 # Check test coverage gaps
 coverage report -m

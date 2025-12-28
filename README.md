@@ -2,8 +2,8 @@
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/operational/BUILD_SYSTEM.md)
 [![Test Coverage](https://img.shields.io/badge/coverage-100%25%20project%20|%2083.33%25%20infra-brightgreen)](docs/operational/BUILD_SYSTEM.md)
-[![Tests](https://img.shields.io/badge/tests-2118%2F2118%20passing%20(100%25)-brightgreen)](docs/operational/BUILD_SYSTEM.md)
-[![Documentation](https://img.shields.io/badge/docs-50%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
+[![Tests](https://img.shields.io/badge/tests-2235%2F2247%20passing%20(99.6%25)-brightgreen)](docs/operational/BUILD_SYSTEM.md)
+[![Documentation](https://img.shields.io/badge/docs-89%20files-blue)](docs/DOCUMENTATION_INDEX.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
 
 > **Template Repository** - Click "Use this template" to create a new research project with this structure
@@ -14,6 +14,7 @@ A system for research and development projects. This template provides a test-dr
 
 This is a **GitHub Template Repository** that gives you:
 
+- ✅ **Multi-project support** - Run multiple projects in one repository
 - ✅ **Complete project structure** with clear separation of concerns
 - ✅ **Test-driven development** setup with coverage requirements
 - ✅ **Automated PDF generation** from markdown sources
@@ -115,7 +116,7 @@ flowchart TD
 
 ### 🔬 Advanced Users - Technical Deep Dive
 
-**Goal:** Understand system internals and advanced features
+**Goal:** Understand system internals and additional features
 
 | Step | Document | Purpose |
 |------|---------|---------|
@@ -123,7 +124,7 @@ flowchart TD
 | 2 | **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)** | Complete build system reference |
 | 3 | **[docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md](docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md)** | Section organization |
 | 4 | **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** | Complete documentation index |
-| 5 | **[docs/modules/ADVANCED_MODULES_GUIDE.md](docs/modules/ADVANCED_MODULES_GUIDE.md)** | All 7 advanced modules |
+| 5 | **[docs/modules/ADVANCED_MODULES_GUIDE.md](docs/modules/ADVANCED_MODULES_GUIDE.md)** | All 7 additional modules |
 
 **Technical resources:** See **[project/manuscript/preamble.md](project/manuscript/preamble.md)** and **[docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md)**
 
@@ -131,7 +132,7 @@ flowchart TD
 
 **📚 [Complete Documentation Index](docs/DOCUMENTATION_INDEX.md)** | **📖 [Documentation Guide](docs/AGENTS.md)** | **🔍 [Quick Reference](docs/README.md)**
 
-The template includes **50+ documentation files** organized in the `docs/` directory. Use the visual map below to navigate:
+The template includes **89 documentation files** organized in the `docs/` directory. Use the visual map below to navigate:
 
 ```mermaid
 graph TB
@@ -221,6 +222,44 @@ graph TB
     class Reference,Architecture,Usage,Development reference
 ```
 
+## 🔀 Multi-Project Support
+
+This template now supports **multiple research projects** in a single repository. Each project is isolated with its own:
+
+- Source code (`src/`), tests (`tests/`), manuscript (`manuscript/`), and scripts (`scripts/`)
+- Working outputs (`projects/{name}/output/`)
+- Final deliverables (`output/{name}/...`)
+
+### Example Projects
+
+The template includes three example projects:
+
+- **`projects/project/`** - Full-featured research template (original)
+- **`projects/small_prose_project/`** - Manuscript-focused with equations
+- **`projects/small_code_project/`** - Code-focused with analysis pipeline
+
+### Usage
+
+```bash
+# Interactive project selection
+./run.sh
+
+# Run specific project
+./run.sh --project small_code_project --pipeline
+
+# Run all projects sequentially
+./run.sh --all-projects --pipeline
+```
+
+### Adding New Projects
+
+Create a new directory under `projects/` with the required structure:
+
+```bash
+mkdir -p projects/my_research/{src,tests,manuscript,scripts}
+# Add __init__.py files, write code, manuscripts, tests...
+```
+
 ## 🚀 Quick Start {#quick-start}
 
 ### Option 1: Use This Template (Recommended)
@@ -258,14 +297,14 @@ open output/pdf/project_combined.pdf
 ```mermaid
 graph LR
     subgraph Status["✅ System Status"]
-        TESTS[Tests: 2118/2118 passing<br/>1796 infra [2 skipped] + 320 project<br/>100% success rate]
+        TESTS[Tests: 2235/2247 passing<br/>1887 infra [3 skipped] + 360 project<br/>99.6% success rate]
         COV[Coverage: 100% project<br/>83.33% infra<br/>Exceeds requirements]
         BUILD[Build Time: 53s<br/>Optimal performance<br/>(without LLM review)]
         PDFS[PDFs: 14/14 generated<br/>All sections complete]
     end
     
     subgraph Documentation["📚 Documentation"]
-        DOCS[50+ documentation files<br/>Comprehensive coverage]
+        DOCS[89 documentation files<br/>Comprehensive coverage]
         CROSS[Complete cross-referencing<br/>All links validated]
         EXAMPLES[Real-world examples<br/>Multiple use cases]
     end
@@ -286,11 +325,11 @@ graph LR
 ```
 
 **Key Metrics:**
-- **Test Coverage**: 100% project, 83.33% infrastructure (exceeds requirements by 39%!) - [Details](docs/operational/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
-- **Build Time**: 84 seconds (optimal, without optional LLM review) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#stage-breakdown)
-- **Tests Passing**: 2118 tests (1796 infrastructure [2 skipped] + 320 project) - [Test Report](docs/operational/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+- **Test Coverage**: 98.03% project, 83.33% infrastructure (exceeds requirements!) - [Details](docs/operational/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+- **Build Time**: 152 seconds (comprehensive, with full test suite) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#stage-breakdown)
+- **Tests Passing**: 2235 tests (1887 infrastructure [3 skipped] + 360 project) - [Test Report](docs/operational/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 - **PDFs Generated**: 14 (all sections) - [Output Summary](docs/operational/BUILD_SYSTEM.md#generated-files)
-- **Documentation**: 50+ files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
+- **Documentation**: 89 files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 
 ## 🎓 Skill-Based Learning Paths
 
@@ -400,6 +439,206 @@ graph TB
     class MANUSCRIPT,OUTPUT content
 ```
 
+### System Architecture Overview
+
+```mermaid
+graph TB
+    subgraph Entry["🚀 Entry Points"]
+        RUNSH[./run.sh<br/>Interactive menu<br/>Full pipeline control]
+        RUNALL[python3 scripts/run_all.py<br/>Programmatic<br/>Core pipeline]
+        INDIVIDUAL[Individual Scripts<br/>scripts/00-05_*.py<br/>Stage-specific execution]
+    end
+
+    subgraph Orchestration["⚙️ Orchestration Layer"]
+        SETUP[Environment Setup<br/>Dependencies & validation]
+        TESTING[Test Execution<br/>Coverage requirements]
+        ANALYSIS[Script Discovery<br/>Project analysis execution]
+        RENDERING[PDF Generation<br/>Manuscript compilation]
+        VALIDATION[Quality Assurance<br/>Content validation]
+        DELIVERY[Output Distribution<br/>Final deliverables]
+    end
+
+    subgraph Core["🧠 Core Systems"]
+        INFRASTRUCTURE[Infrastructure Modules<br/>9 specialized modules<br/>Validation, rendering, LLM]
+        BUSINESS_LOGIC[Business Logic<br/>Project algorithms<br/>100% test coverage]
+        CONFIGURATION[Configuration System<br/>YAML + environment<br/>Runtime flexibility]
+    end
+
+    subgraph Data["📊 Data Flow"]
+        SOURCE_CODE[Source Code<br/>Python modules<br/>Algorithm implementation]
+        MANUSCRIPT_CONTENT[Manuscript Content<br/>Markdown sections<br/>Research writing]
+        GENERATED_OUTPUTS[Generated Outputs<br/>PDFs, figures, data<br/>Research deliverables]
+    end
+
+    subgraph Quality["✅ Quality Assurance"]
+        UNIT_TESTS[Unit Tests<br/>Function validation<br/>Real data, no mocks]
+        INTEGRATION_TESTS[Integration Tests<br/>System validation<br/>End-to-end workflows]
+        VALIDATION_CHECKS[Content Validation<br/>Quality assurance<br/>Academic standards]
+    end
+
+    RUNSH --> Orchestration
+    RUNALL --> Orchestration
+    INDIVIDUAL --> Orchestration
+
+    Orchestration --> Core
+    Core --> Data
+    Data --> Quality
+
+    Quality -.->|Feedback| Orchestration
+
+    classDef entry fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef orchestration fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef core fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef data fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef quality fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+
+    class Entry entry
+    class Orchestration orchestration
+    class Core core
+    class Data data
+    class Quality quality
+```
+
+### Module Dependency Graph
+
+```mermaid
+graph TD
+    subgraph CoreDeps["Core Dependencies"]
+        EXCEPTIONS[exceptions.py<br/>Exception hierarchy<br/>Context preservation]
+        LOGGING[logging_utils.py<br/>Unified logging<br/>Environment configuration]
+        CONFIG[config_loader.py<br/>Configuration loading<br/>YAML + environment]
+    end
+
+    subgraph InfrastructureModules["Infrastructure Modules"]
+        VALIDATION[validation/<br/>Quality assurance<br/>PDF, markdown validation]
+        RENDERING[rendering/<br/>Multi-format output<br/>PDF, HTML, slides]
+        LLM[llm/<br/>AI assistance<br/>Ollama integration]
+        PUBLISHING[publishing/<br/>Academic dissemination<br/>Zenodo, arXiv, GitHub]
+        DOCUMENTATION[documentation/<br/>Figure management<br/>API documentation]
+        SCIENTIFIC[scientific/<br/>Research utilities<br/>Benchmarking, validation]
+        REPORTING[reporting/<br/>Pipeline reporting<br/>Error aggregation]
+    end
+
+    subgraph ProjectLayer["Project Layer"]
+        PROJECT_SRC[project/src/<br/>Research algorithms<br/>Domain-specific logic]
+        PROJECT_SCRIPTS[project/scripts/<br/>Analysis workflows<br/>Thin orchestrators]
+        PROJECT_MANUSCRIPT[project/manuscript/<br/>Research content<br/>Markdown sections]
+    end
+
+    EXCEPTIONS --> InfrastructureModules
+    LOGGING --> InfrastructureModules
+    CONFIG --> InfrastructureModules
+
+    InfrastructureModules --> PROJECT_SCRIPTS
+    PROJECT_SRC --> PROJECT_SCRIPTS
+
+    PROJECT_SCRIPTS --> PROJECT_MANUSCRIPT
+    InfrastructureModules --> PROJECT_MANUSCRIPT
+
+    classDef core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef infra fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef project fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class CoreDeps core
+    class InfrastructureModules infra
+    class ProjectLayer project
+```
+
+### Data Flow Through Pipeline Stages
+
+```mermaid
+flowchart TD
+    subgraph Input["📥 Input Data"]
+        SOURCE_CODE[Source Code<br/>project/src/*.py<br/>Algorithm implementations]
+        ANALYSIS_SCRIPTS[Analysis Scripts<br/>project/scripts/*.py<br/>Workflow orchestrators]
+        MANUSCRIPT_FILES[Manuscript Files<br/>project/manuscript/*.md<br/>Research content]
+        CONFIG_FILES[Configuration<br/>config.yaml<br/>Runtime parameters]
+    end
+
+    subgraph Processing["⚙️ Processing Pipeline"]
+        STAGE0[Stage 0<br/>Clean<br/>Remove old outputs]
+        STAGE1[Stage 1<br/>Setup<br/>Environment validation]
+        STAGE2[Stage 2<br/>Test<br/>Coverage verification]
+        STAGE3[Stage 3<br/>Analysis<br/>Script execution]
+        STAGE4[Stage 4<br/>Render<br/>PDF generation]
+        STAGE5[Stage 5<br/>Validate<br/>Quality checks]
+        STAGE6[Stage 6<br/>Copy<br/>Output distribution]
+    end
+
+    subgraph Output["📤 Generated Outputs"]
+        PDF_DOCS[PDF Documents<br/>output/pdf/*.pdf<br/>Professional manuscripts]
+        FIGURES[Figures<br/>output/figures/*.png<br/>Publication-quality plots]
+        DATA_FILES[Data Files<br/>output/data/*.csv<br/>Analysis results]
+        REPORTS[Reports<br/>output/reports/*.md<br/>Validation summaries]
+        HTML_OUTPUT[HTML Output<br/>output/web/*.html<br/>Web-compatible versions]
+    end
+
+    SOURCE_CODE --> STAGE2
+    ANALYSIS_SCRIPTS --> STAGE3
+    MANUSCRIPT_FILES --> STAGE4
+    CONFIG_FILES --> STAGE1
+
+    STAGE0 --> STAGE1 --> STAGE2 --> STAGE3 --> STAGE4 --> STAGE5 --> STAGE6
+
+    STAGE3 --> FIGURES
+    STAGE3 --> DATA_FILES
+    STAGE4 --> PDF_DOCS
+    STAGE4 --> HTML_OUTPUT
+    STAGE5 --> REPORTS
+
+    classDef input fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef process fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class Input input
+    class Processing process
+    class Output output
+```
+
+### Configuration System Flow
+
+```mermaid
+flowchart TD
+    subgraph Sources["Configuration Sources"]
+        YAML_FILE[config.yaml<br/>project/manuscript/config.yaml<br/>Version-controlled settings]
+        ENV_VARS[Environment Variables<br/>AUTHOR_NAME, PROJECT_TITLE<br/>Runtime overrides]
+        DEFAULTS[Default Values<br/>Template defaults<br/>Fallback values]
+    end
+
+    subgraph Processing["Configuration Processing"]
+        LOAD_YAML[Load YAML<br/>Parse config.yaml<br/>Validate structure]
+        MERGE_ENV[Merge Environment<br/>Override with env vars<br/>Priority: env > yaml > defaults]
+        VALIDATE_CONFIG[Validate Configuration<br/>Check required fields<br/>Type validation]
+        FORMAT_DATA[Format Data<br/>Author formatting<br/>Metadata preparation]
+    end
+
+    subgraph Usage["Configuration Usage"]
+        PDF_METADATA[PDF Metadata<br/>Title, author, date<br/>Document properties]
+        LATEX_VARS[LaTeX Variables<br/>Preamble settings<br/>Styling options]
+        FIGURE_LABELS[Figure Labels<br/>Automatic numbering<br/>Cross-references]
+        VALIDATION_RULES[Validation Rules<br/>Quality thresholds<br/>Format requirements]
+    end
+
+    YAML_FILE --> LOAD_YAML
+    ENV_VARS --> MERGE_ENV
+    DEFAULTS --> MERGE_ENV
+
+    LOAD_YAML --> MERGE_ENV --> VALIDATE_CONFIG --> FORMAT_DATA
+
+    FORMAT_DATA --> PDF_METADATA
+    FORMAT_DATA --> LATEX_VARS
+    FORMAT_DATA --> FIGURE_LABELS
+    FORMAT_DATA --> VALIDATION_RULES
+
+    classDef sources fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef processing fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef usage fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class Sources sources
+    class Processing processing
+    class Usage usage
+```
+
 **Directory Overview with Documentation Links:**
 
 | Directory | Purpose | Documentation |
@@ -410,7 +649,7 @@ graph TB
 | **`project/src/`** | Project-specific scientific code (Layer 2) | [project/src/AGENTS.md](project/src/AGENTS.md) |
 | **`project/scripts/`** | Project-specific analysis scripts | [project/scripts/AGENTS.md](project/scripts/AGENTS.md) |
 | **`project/tests/`** | Project test suite | [project/tests/AGENTS.md](project/tests/AGENTS.md) |
-| **`docs/`** | **Documentation hub (50+ guides)** | **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** |
+| **`docs/`** | **Documentation hub (89 guides)** | **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** |
 | **`project/manuscript/`** | Research manuscript sections | [project/manuscript/AGENTS.md](project/manuscript/AGENTS.md) |
 | **`output/`** | Generated outputs (disposable) | Regenerated by build pipeline |
 
@@ -426,7 +665,7 @@ The project follows a **thin orchestrator pattern** where:
 
 - **`infrastructure/`** and **`project/src/`** contain **ALL** business logic, algorithms, and implementations
 - **`scripts/`** are **lightweight wrappers** that coordinate pipeline stages
-- **`tests/`** ensure **comprehensive coverage** of all functionality
+- **`tests/`** ensure coverage of all functionality
 - **`run.sh`** provides the main entry point for manuscript operations (interactive menu and pipeline orchestration)
 
 **Benefits:** [Read more](docs/core/ARCHITECTURE.md#thin-orchestrator-pattern)
@@ -454,7 +693,7 @@ Scripts in `project/scripts/` demonstrate proper integration with `project/src/`
 ## ✨ Key Features
 
 ### Test-Driven Development
-**[Complete guide](docs/core/WORKFLOW.md)** | **[Testing improvements](docs/development/TEST_IMPROVEMENTS_SUMMARY.md)**
+**[Complete guide](docs/core/WORKFLOW.md)**
 
 All source code must meet **test coverage requirements** (90% project, 60% infrastructure) before PDF generation proceeds. This ensures that the methods used by scripts are fully validated.
 
@@ -468,7 +707,7 @@ Project-specific scripts in the `project/scripts/` directory are automatically e
 ### Markdown to PDF Pipeline
 **[Markdown guide](docs/usage/MARKDOWN_TEMPLATE_GUIDE.md)** | **[PDF validation](docs/modules/PDF_VALIDATION.md)**
 
-Manuscript sections are converted to individual PDFs with proper figure integration, and a combined manuscript document is generated with comprehensive cross-referencing.
+Manuscript sections are converted to individual PDFs with proper figure integration, and a combined manuscript document is generated with cross-referencing.
 
 **Build Performance**: 53 seconds for complete regeneration (without optional LLM review) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#stage-breakdown)
 
@@ -485,6 +724,31 @@ The build system has been validated:
 **[Template description](docs/usage/TEMPLATE_DESCRIPTION.md)** | **[Copypasta](docs/reference/COPYPASTA.md)**
 
 The utility scripts can be used with any project that follows this structure, making it easy to adopt for new research projects.
+
+## 🔒 Security & Monitoring
+
+**[Security Guide](docs/development/SECURITY.md)** | **[Health Monitoring](infrastructure/core/health_check.py)**
+
+The template includes enterprise-grade security features:
+
+- **Input Sanitization**: Comprehensive LLM prompt validation and sanitization
+- **Security Monitoring**: Real-time security event tracking and threat detection
+- **Rate Limiting**: Configurable request rate limiting
+- **Health Checks**: System health monitoring with component-level status
+- **Security Headers**: Complete HTTP security header implementation
+
+**Usage:**
+```python
+from infrastructure.core.security import validate_llm_input, get_security_validator
+from infrastructure.core.health_check import quick_health_check, get_health_status
+
+# Validate LLM input
+sanitized = validate_llm_input(user_prompt)
+
+# Check system health
+if quick_health_check():
+    status = get_health_status()
+```
 
 ## 🛠️ Installation & Setup
 
@@ -537,13 +801,35 @@ python3 scripts/05_copy_outputs.py           # Copy final deliverables
 - **`./run.sh --pipeline`**: 10 stages (0-9) - Extended pipeline with optional LLM review and translations
 - **`python3 scripts/run_all.py`**: 6 stages (00-05) - Core pipeline only, no LLM dependencies
 
-**See [How To Use Guide](docs/core/HOW_TO_USE.md) for comprehensive setup instructions at all skill levels.**
+**See [How To Use Guide](docs/core/HOW_TO_USE.md) for setup instructions at all skill levels.**
 
 **Architecture Note:** The project uses a **two-layer architecture**:
 - **Layer 1 (infrastructure/)**: Generic, reusable tools
 - **Layer 2 (project/)**: Project-specific scientific code
 
 The root-level `scripts/` directory contains generic entry point orchestrators that discover and coordinate project-specific code in `project/scripts/`.
+
+## 🐳 Docker Support
+
+The template includes Docker configuration for reproducible development environments:
+
+**Quick Start:**
+```bash
+# Build and run with Docker Compose
+docker-compose up
+
+# Or build Docker image directly
+docker build -t research-template .
+docker run -it research-template
+```
+
+**Features:**
+- Pre-configured environment with all dependencies
+- Integrated Ollama LLM server support
+- Persistent volume for models and outputs
+- Hot-reload development mode
+
+See `Dockerfile` and `docker-compose.yml` for configuration details.
 
 ## 🔧 Customization
 
@@ -648,9 +934,9 @@ if __name__ == "__main__":
 
 ## 📊 Testing
 
-**[Testing guide](tests/AGENTS.md)** | **[Workflow](docs/core/WORKFLOW.md)** | **[Test improvements](docs/development/TEST_IMPROVEMENTS_SUMMARY.md)**
+**[Testing guide](tests/AGENTS.md)** | **[Workflow](docs/core/WORKFLOW.md)**
 
-The system enforces comprehensive test coverage using TDD principles:
+The system enforces test coverage using TDD principles:
 
 ```bash
 # Run all tests with coverage (infrastructure + project)
@@ -679,7 +965,7 @@ pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 - **Real data testing**: Use actual domain data, not synthetic test data
 - **Reproducible**: Fixed seeds and deterministic computation
 
-**Current Status**: 2118 tests passing (1796 infra [2 skipped] + 320 project), 100% project coverage - [Full Analysis](docs/operational/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+**Current Status**: 2235 tests passing (1887 infra [3 skipped] + 360 project), 98.03% project coverage - [Full Analysis](docs/operational/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
 
 ## 📤 Output
 
@@ -765,7 +1051,7 @@ flowchart TD
     class STAGE8,STAGE9 optional
 ```
 
-### Entry Point 3: Core Pipeline (`python3 scripts/run_all.py`)
+### Entry Point 2: Core Pipeline (`python3 scripts/run_all.py`)
 
 **6-stage core pipeline** (stages 00-05) without LLM dependencies:
 
@@ -821,7 +1107,6 @@ flowchart TD
 ### Reference & Resources
 - **[docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md)** - Shareable content for promoting the template
 - **[project/manuscript/preamble.md](project/manuscript/preamble.md)** - LaTeX preamble and styling configuration
-- **[docs/development/TEST_IMPROVEMENTS_SUMMARY.md](docs/development/TEST_IMPROVEMENTS_SUMMARY.md)** - Testing enhancements and standards
 
 ### Directory-Specific Documentation
 - **[infrastructure/AGENTS.md](infrastructure/AGENTS.md)** - Infrastructure layer documentation
@@ -840,7 +1125,7 @@ flowchart TD
 - **[docs/README.md](docs/README.md)** - Documentation quick reference
 
 ### Advanced Modules
-- **[docs/modules/ADVANCED_MODULES_GUIDE.md](docs/modules/ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all advanced modules
+- **[docs/modules/ADVANCED_MODULES_GUIDE.md](docs/modules/ADVANCED_MODULES_GUIDE.md)** - Guide for all additional modules
 - **[docs/reference/API_REFERENCE.md](docs/reference/API_REFERENCE.md)** - Complete API documentation for all modules
 - **[infrastructure/validation/integrity.py](infrastructure/validation/integrity.py)** - File integrity and cross-reference validation
 - **[infrastructure/publishing/core.py](infrastructure/publishing/core.py)** - Academic publishing workflow tools
@@ -882,7 +1167,7 @@ We welcome contributions! To contribute:
 
 **Recent Improvements:**
 - Build system optimizations - [Details](docs/operational/BUILD_SYSTEM.md#historical-fixes)
-- Test suite enhancements - [Details](docs/development/TEST_IMPROVEMENTS_SUMMARY.md)
+- Test suite enhancements
 - Simplified directory structure with markdown/ elimination
 
 ## 📄 License
@@ -920,7 +1205,7 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 
 ### Common Issues
 
-- **Tests Fail**: Ensure coverage requirements met and all tests pass - [Testing Guide](tests/AGENTS.md) | [Test Improvements](docs/development/TEST_IMPROVEMENTS_SUMMARY.md)
+- **Tests Fail**: Ensure coverage requirements met and all tests pass - [Testing Guide](tests/AGENTS.md)
 - **Scripts Fail**: Check Python dependencies and error handling - [Script Guide](scripts/AGENTS.md)
 - **PDF Generation Fails**: Verify pandoc and xelatex installation - [Build System](docs/operational/BUILD_SYSTEM.md#troubleshooting)
 - **Coverage Below 100%**: Add tests for uncovered code - [Workflow](docs/core/WORKFLOW.md)
@@ -952,7 +1237,7 @@ To adapt this template for your existing project:
 4. Set appropriate environment variables for your project - [Configuration](AGENTS.md#configuration-system)
 5. Run the entry points to validate the setup - [Scripts Guide](scripts/AGENTS.md)
 
-**See [EXAMPLES.md](docs/EXAMPLES.md) for project customization patterns.**
+**See [EXAMPLES.md](docs/usage/EXAMPLES.md) for project customization patterns.**
 
 ## 🏗️ Architecture Benefits
 
@@ -1038,4 +1323,4 @@ flowchart TD
 3. **Need Help?** → Check **[docs/reference/FAQ.md](docs/reference/FAQ.md)** or **[docs/operational/TROUBLESHOOTING_GUIDE.md](docs/operational/TROUBLESHOOTING_GUIDE.md)**
 4. **Explore All Docs?** → Browse **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)**
 
-**📚 Documentation Hub:** All documentation is organized in the **[docs/](docs/)** directory with comprehensive guides for every aspect of the template.
+**📚 Documentation Hub:** All documentation is organized in the **[docs/](docs/)** directory with guides for every aspect of the template.

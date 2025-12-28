@@ -65,16 +65,17 @@ def generate_output_summary(
     logger.info("")
 
 
-def collect_output_statistics(repo_root: Path) -> Dict[str, Any]:
+def collect_output_statistics(repo_root: Path, project_name: str = "project") -> Dict[str, Any]:
     """Collect output file statistics.
-    
+
     Args:
         repo_root: Repository root path
-        
+        project_name: Name of the project (default: "project")
+
     Returns:
         Dictionary with output statistics
     """
-    output_dir = repo_root / "project" / "output"
+    output_dir = repo_root / "projects" / project_name / "output"
     stats = {
         'pdf_files': 0,
         'figures': 0,

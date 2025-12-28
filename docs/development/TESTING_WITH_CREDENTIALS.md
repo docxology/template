@@ -96,12 +96,52 @@ arXiv submission tests are optional and require SWORD API credentials:
 
 Most users can skip arXiv tests as they're not required for the core test suite.
 
+### Ollama Setup
+
+Ollama tests require a running Ollama server with at least one model installed:
+
+1. **Install Ollama:**
+   ```bash
+   # macOS
+   brew install ollama
+
+   # Linux
+   curl -fsSL https://ollama.ai/install.sh | sh
+
+   # Windows
+   # Download from https://ollama.ai/download
+   ```
+
+2. **Start Ollama server:**
+   ```bash
+   ollama serve
+   ```
+
+3. **Install at least one model:**
+   ```bash
+   # Recommended models for testing
+   ollama pull llama3.1:latest    # 4.7GB, good quality
+   ollama pull llama3-gradient    # 4.7GB, 256K context
+   ollama pull gemma2:2b         # 2GB, fast and lightweight
+
+   # Verify models are available
+   ollama list
+   ```
+
+4. **Optional: Configure Ollama host** (if not using default):
+   ```bash
+   export OLLAMA_HOST=http://localhost:11434
+   ```
+
+**Note:** Ollama tests will automatically skip if the server is not running or no models are available. No credentials are required - tests use the local Ollama installation.
+
 ## Test Markers
 
 Tests are marked with the following markers:
 
 | Marker | Description | Skip Condition |
 |--------|-------------|----------------|
+| `requires_ollama` | Needs Ollama server running | Ollama not running or no models |
 | `requires_zenodo` | Needs Zenodo API access | No `ZENODO_SANDBOX_TOKEN` |
 | `requires_github` | Needs GitHub API access | No `GITHUB_TOKEN` or `GITHUB_REPO` |
 | `requires_arxiv` | Needs arXiv API access | No `ARXIV_USERNAME` |
@@ -129,6 +169,15 @@ pytest tests/ -m requires_zenodo
 ### Run only GitHub tests:
 ```bash
 pytest tests/ -m requires_github
+```
+
+### Run only Ollama tests:
+```bash
+# Ensure Ollama server is running first
+ollama serve
+
+# Then run tests
+pytest tests/ -m requires_ollama
 ```
 
 ### Run only local tests (no network):

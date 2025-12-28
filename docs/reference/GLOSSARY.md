@@ -189,9 +189,9 @@ Automated checking of markdown files for broken references, missing images, inva
 **See**: [MARKDOWN_TEMPLATE_GUIDE.md](../usage/MARKDOWN_TEMPLATE_GUIDE.md)
 
 ### Mock Method
-Fake implementation of function for testing purposes. **NEVER USED** in this template - all tests use real data and real methods.
+**ABSOLUTELY PROHIBITED**: Fake implementation of function for testing purposes. **STRICTLY FORBIDDEN** in this template - all tests must use real data and real methods only.
 
-**Philosophy**: Test actual behavior, not mocked behavior
+**Philosophy**: Test actual behavior, not mocked behavior. Mocking undermines test reliability and integration validation.
 
 **See**: [Testing](#testing)
 
@@ -370,7 +370,7 @@ Collection of all test files in `tests/` directory. Ensures all functionality wo
 **See**: [tests/AGENTS.md](../tests/AGENTS.md)
 
 ### Testing
-Process of validating code correctness through automated test cases. No mocks allowed - all tests use real data.
+Process of validating code correctness through automated test cases. **ABSOLUTE PROHIBITION**: No mocks allowed - all tests must use real data and real computations only.
 
 **Requirements**:
 - 90% minimum for project code (currently 100% - perfect coverage!)

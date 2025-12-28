@@ -98,23 +98,23 @@ class TestCleanOutputDirectories:
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
         
-        # Create project/output and output directories with content
-        project_output = repo_root / "project" / "output"
+        # Create projects/project/output and output/project directories with content
+        project_output = repo_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
         (project_output / "old_file.txt").write_text("old")
-        
-        top_output = repo_root / "output"
-        top_output.mkdir()
+
+        top_output = repo_root / "output" / "project"
+        top_output.mkdir(parents=True)
         (top_output / "old_file.txt").write_text("old")
-        
-        clean_output_directories(repo_root)
-        
+
+        clean_output_directories(repo_root, project_name="project")
+
         # Check that default subdirs were created
         default_subdirs = ["pdf", "figures", "data", "reports", "simulations", "slides", "web", "logs"]
         for subdir in default_subdirs:
             assert (project_output / subdir).exists()
             assert (top_output / subdir).exists()
-        
+
         # Check old files are gone
         assert not (project_output / "old_file.txt").exists()
         assert not (top_output / "old_file.txt").exists()
@@ -124,19 +124,19 @@ class TestCleanOutputDirectories:
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
         
-        project_output = repo_root / "project" / "output"
+        project_output = repo_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
-        top_output = repo_root / "output"
-        top_output.mkdir()
-        
+        top_output = repo_root / "output" / "project"
+        top_output.mkdir(parents=True)
+
         custom_subdirs = ["custom1", "custom2", "custom3"]
-        clean_output_directories(repo_root, subdirs=custom_subdirs)
-        
+        clean_output_directories(repo_root, project_name="project", subdirs=custom_subdirs)
+
         # Check that custom subdirs were created
         for subdir in custom_subdirs:
             assert (project_output / subdir).exists()
             assert (top_output / subdir).exists()
-        
+
         # Check default subdirs were NOT created
         assert not (project_output / "pdf").exists()
 
@@ -145,12 +145,12 @@ class TestCleanOutputDirectories:
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
         
-        # Don't create project/output or output directories
-        clean_output_directories(repo_root)
-        
-        project_output = repo_root / "project" / "output"
-        top_output = repo_root / "output"
-        
+        # Don't create projects/project/output or output/project directories
+        clean_output_directories(repo_root, project_name="project")
+
+        project_output = repo_root / "projects" / "project" / "output"
+        top_output = repo_root / "output" / "project"
+
         assert project_output.exists()
         assert top_output.exists()
 
@@ -159,20 +159,20 @@ class TestCleanOutputDirectories:
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
         
-        project_output = repo_root / "project" / "output"
+        project_output = repo_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
-        
+
         # Create files and directories
         (project_output / "file.txt").write_text("content")
         (project_output / "old_dir").mkdir()
         (project_output / "old_dir" / "nested.txt").write_text("nested")
-        
-        clean_output_directories(repo_root)
-        
+
+        clean_output_directories(repo_root, project_name="project")
+
         # Old content should be gone
         assert not (project_output / "file.txt").exists()
         assert not (project_output / "old_dir").exists()
-        
+
         # New subdirs should exist
         assert (project_output / "pdf").exists()
 
@@ -181,12 +181,12 @@ class TestCleanOutputDirectories:
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
         
-        project_output = repo_root / "project" / "output"
+        project_output = repo_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
         (project_output / "file.txt").write_text("content")
-        
-        clean_output_directories(repo_root, subdirs=[])
-        
+
+        clean_output_directories(repo_root, project_name="project", subdirs=[])
+
         # Directory should exist but be empty (or only have subdirs if they were created)
         assert project_output.exists()
         assert not (project_output / "file.txt").exists()
@@ -200,24 +200,24 @@ class TestCopyFinalDeliverables:
         project_root = tmp_path / "repo"
         project_root.mkdir()
         
-        project_output = project_root / "project" / "output"
+        project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
-        
+
         # Create subdirectories with files
         (project_output / "pdf").mkdir()
         (project_output / "pdf" / "document.pdf").write_text("pdf content")
         (project_output / "pdf" / "project_combined.pdf").write_text("combined pdf")
-        
+
         (project_output / "figures").mkdir()
         (project_output / "figures" / "plot.png").write_text("png content")
-        
+
         (project_output / "data").mkdir()
         (project_output / "data" / "results.csv").write_text("csv content")
-        
-        output_dir = tmp_path / "final_output"
-        output_dir.mkdir()
-        
-        stats = copy_final_deliverables(project_root, output_dir)
+
+        output_dir = tmp_path / "final_output" / "project"
+        output_dir.mkdir(parents=True)
+
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
         
         # Check files were copied
         assert (output_dir / "pdf" / "document.pdf").exists()
@@ -255,9 +255,9 @@ class TestCopyFinalDeliverables:
         project_root = tmp_path / "repo"
         project_root.mkdir()
         
-        project_output = project_root / "project" / "output"
+        project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
-        
+
         # Create files in various subdirectories
         subdirs = {
             "pdf": ["doc1.pdf", "doc2.pdf"],
@@ -270,16 +270,16 @@ class TestCopyFinalDeliverables:
             "llm": ["review1.md"],
             "logs": ["log1.log"],
         }
-        
+
         for subdir, files in subdirs.items():
             (project_output / subdir).mkdir()
             for filename in files:
                 (project_output / subdir / filename).write_text("content")
-        
-        output_dir = tmp_path / "final_output"
-        output_dir.mkdir()
-        
-        stats = copy_final_deliverables(project_root, output_dir)
+
+        output_dir = tmp_path / "final_output" / "project"
+        output_dir.mkdir(parents=True)
+
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
         
         # Check counts
         assert stats["pdf_files"] >= 2
@@ -297,17 +297,17 @@ class TestCopyFinalDeliverables:
         project_root = tmp_path / "repo"
         project_root.mkdir()
         
-        project_output = project_root / "project" / "output"
+        project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
-        
+
         (project_output / "pdf").mkdir()
         (project_output / "pdf" / "other.pdf").write_text("content")
         # Don't create project_combined.pdf
-        
-        output_dir = tmp_path / "final_output"
-        output_dir.mkdir()
-        
-        stats = copy_final_deliverables(project_root, output_dir)
+
+        output_dir = tmp_path / "final_output" / "project"
+        output_dir.mkdir(parents=True)
+
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
         
         # Combined PDF should not be copied
         assert not (output_dir / "project_combined.pdf").exists()
@@ -319,18 +319,18 @@ class TestCopyFinalDeliverables:
         project_root = tmp_path / "repo"
         project_root.mkdir()
         
-        project_output = project_root / "project" / "output"
+        project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
-        
+
         # Create nested structure
         (project_output / "pdf" / "subdir").mkdir(parents=True)
         (project_output / "pdf" / "subdir" / "nested.pdf").write_text("nested")
         (project_output / "pdf" / "top.pdf").write_text("top")
-        
-        output_dir = tmp_path / "final_output"
-        output_dir.mkdir()
-        
-        stats = copy_final_deliverables(project_root, output_dir)
+
+        output_dir = tmp_path / "final_output" / "project"
+        output_dir.mkdir(parents=True)
+
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
         
         # Check nested structure preserved
         assert (output_dir / "pdf" / "subdir" / "nested.pdf").exists()
@@ -345,16 +345,16 @@ class TestCopyFinalDeliverables:
         project_root = tmp_path / "repo"
         project_root.mkdir()
         
-        project_output = project_root / "project" / "output"
+        project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
         (project_output / "pdf").mkdir()
         (project_output / "pdf" / "new.pdf").write_text("new content")
-        
-        output_dir = tmp_path / "final_output"
-        output_dir.mkdir()
+
+        output_dir = tmp_path / "final_output" / "project"
+        output_dir.mkdir(parents=True)
         (output_dir / "old_file.txt").write_text("old")
-        
-        stats = copy_final_deliverables(project_root, output_dir)
+
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
         
         # New files should be present
         assert (output_dir / "pdf" / "new.pdf").exists()
@@ -366,22 +366,22 @@ class TestCopyFinalDeliverables:
         project_root = tmp_path / "repo"
         project_root.mkdir()
         
-        project_output = project_root / "project" / "output"
+        project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
-        
+
         # Create known number of files
         (project_output / "pdf").mkdir()
         for i in range(5):
             (project_output / "pdf" / f"doc{i}.pdf").write_text(f"content{i}")
-        
+
         (project_output / "figures").mkdir()
         for i in range(3):
             (project_output / "figures" / f"fig{i}.png").write_text(f"fig{i}")
-        
-        output_dir = tmp_path / "final_output"
-        output_dir.mkdir()
-        
-        stats = copy_final_deliverables(project_root, output_dir)
+
+        output_dir = tmp_path / "final_output" / "project"
+        output_dir.mkdir(parents=True)
+
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
         
         # Verify counts match
         assert stats["pdf_files"] == 5
@@ -393,19 +393,19 @@ class TestCopyFinalDeliverables:
         project_root = tmp_path / "repo"
         project_root.mkdir()
         
-        project_output = project_root / "project" / "output"
+        project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
         (project_output / "file.txt").write_text("content")
-        
-        output_dir = tmp_path / "final_output"
+
+        output_dir = tmp_path / "final_output" / "project"
         # Don't create output_dir - but function should handle this via copytree
-        
+
         # Actually, let's test with a read-only directory scenario
         # Create output_dir but make it read-only (if possible on this system)
-        output_dir.mkdir()
-        
+        output_dir.mkdir(parents=True)
+
         # Normal case should work
-        stats = copy_final_deliverables(project_root, output_dir)
+        stats = copy_final_deliverables(project_root, output_dir, project_name="project")
         
         # Should complete successfully
         assert len(stats["errors"]) == 0 or all("not found" not in err.lower() for err in stats["errors"])

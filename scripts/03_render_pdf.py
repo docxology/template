@@ -35,7 +35,7 @@ logger = get_logger(__name__)
 
 
 
-def run_render_pipeline() -> int:
+def run_render_pipeline(project_name: str = "project") -> int:
     """Execute the PDF rendering pipeline using infrastructure rendering.
     
     This pipeline:
@@ -44,12 +44,15 @@ def run_render_pipeline() -> int:
     3. Renders individual manuscript files to multiple formats
     4. Generates a combined PDF from all manuscript sections
     5. Reports on all generated outputs
+    
+    Args:
+        project_name: Name of project in projects/ directory (default: "project")
     """
-    logger.info("Executing PDF rendering pipeline...")
+    logger.info(f"Executing PDF rendering pipeline for project '{project_name}'...")
     
     repo_root = Path(__file__).parent.parent
-    manuscript_dir = repo_root / "project" / "manuscript"
-    project_root = repo_root / "project"
+    project_root = repo_root / "projects" / project_name
+    manuscript_dir = project_root / "manuscript"
     
     # Pre-flight: Validate LaTeX packages
     logger.info("Running pre-flight LaTeX package validation...")
@@ -186,7 +189,7 @@ def run_render_pipeline() -> int:
     return 0
 
 
-def verify_pdf_outputs() -> bool:
+def verify_pdf_outputs(project_name: str = "project") -> bool:
     """Verify that PDFs were generated with quality checks.
     
     Verifies:
@@ -194,19 +197,23 @@ def verify_pdf_outputs() -> bool:
     - Combined manuscript PDF exists
     - PDFs have reasonable file size
     - Bibliography references are resolvable
+    
+    Args:
+        project_name: Name of project in projects/ directory (default: "project")
     """
     logger.info("Verifying PDF outputs...")
     
     repo_root = Path(__file__).parent.parent
-    pdf_dir = repo_root / "project" / "output" / "pdf"
-    manuscript_dir = repo_root / "project" / "manuscript"
+    project_root = repo_root / "projects" / project_name
+    pdf_dir = project_root / "output" / "pdf"
+    manuscript_dir = project_root / "manuscript"
     
     if not pdf_dir.exists():
         logger.error("PDF output directory not found")
         return False
     
     pdf_files = list(pdf_dir.glob("*.pdf"))
-    combined_pdf = pdf_dir / "project_combined.pdf"
+    combined_pdf = pdf_dir / f"{project_name}_combined.pdf"
     
     if pdf_files:
         log_success(f"Generated {len(pdf_files)} PDF file(s)", logger)
@@ -251,7 +258,17 @@ def verify_pdf_outputs() -> bool:
 
 def main() -> int:
     """Execute PDF rendering orchestration."""
-    log_header("STAGE 03: Render PDF", logger)
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Render PDF manuscript")
+    parser.add_argument(
+        '--project',
+        default='project',
+        help='Project name in projects/ directory (default: project)'
+    )
+    args = parser.parse_args()
+    
+    log_header(f"STAGE 03: Render PDF (Project: {args.project})", logger)
     
     # Log resource usage at start
     from infrastructure.core.logging_utils import log_resource_usage
@@ -259,11 +276,11 @@ def main() -> int:
     
     try:
         # Run rendering pipeline
-        exit_code = run_render_pipeline()
+        exit_code = run_render_pipeline(args.project)
         
         if exit_code == 0:
             # Verify outputs
-            outputs_valid = verify_pdf_outputs()
+            outputs_valid = verify_pdf_outputs(args.project)
             
             if outputs_valid:
                 log_success("PDF rendering complete - ready for validation", logger)

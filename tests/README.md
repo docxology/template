@@ -50,6 +50,63 @@ pytest tests/ -x
 
 ## Test Organization
 
+```mermaid
+graph TD
+    subgraph TestStructure["Test Suite Structure"]
+        ROOT[tests/<br/>Root configuration<br/>conftest.py]
+
+        INFRA[tests/infrastructure/<br/>Module-specific tests<br/>Mirrors infrastructure/]
+
+        INTEGRATION[tests/integration/<br/>Cross-module tests<br/>End-to-end workflows]
+
+        PROJECT[project/tests/<br/>Project-specific tests<br/>90%+ coverage required]
+    end
+
+    subgraph InfrastructureTests["Infrastructure Module Tests"]
+        CORE[core/<br/>Config, logging, exceptions]
+        VALIDATION[validation/<br/>Quality assurance]
+        RENDERING[rendering/<br/>PDF & HTML generation]
+        LLM[llm/<br/>AI integration]
+        PUBLISHING[publishing/<br/>Academic dissemination]
+        DOCS[documentation/<br/>Figure management]
+        SCIENTIFIC[scientific/<br/>Research utilities]
+    end
+
+    subgraph IntegrationTests["Integration Tests"]
+        INTEROP[test_module_interoperability.py<br/>Cross-module integration]
+        FIGURES[test_figure_equation_citation.py<br/>Figure/equation handling]
+        OUTPUT[test_output_copying.py<br/>File operations]
+        EDGES[test_edge_cases_and_error_paths.py<br/>Error conditions]
+    end
+
+    ROOT --> INFRA
+    ROOT --> INTEGRATION
+    ROOT --> PROJECT
+
+    INFRA --> CORE
+    INFRA --> VALIDATION
+    INFRA --> RENDERING
+    INFRA --> LLM
+    INFRA --> PUBLISHING
+    INFRA --> DOCS
+    INFRA --> SCIENTIFIC
+
+    INTEGRATION --> INTEROP
+    INTEGRATION --> FIGURES
+    INTEGRATION --> OUTPUT
+    INTEGRATION --> EDGES
+
+    classDef root fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef infra fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef integration fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef project fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class ROOT root
+    class INFRA,CORE,VALIDATION,RENDERING,LLM,PUBLISHING,DOCS,SCIENTIFIC infra
+    class INTEGRATION,INTEROP,FIGURES,OUTPUT,EDGES integration
+    class PROJECT project
+```
+
 ```
 tests/
 ├── conftest.py                          # Root test configuration

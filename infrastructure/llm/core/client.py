@@ -854,17 +854,21 @@ class LLMClient:
                     r.raise_for_status()
                     
                     for line in r.iter_lines():
+                        current_time = time_module.time()
+
+                        # Note: Early warning is handled by StreamHeartbeatMonitor in review/translation scripts
+                        # This avoids duplicate warnings. Stall detection after first token is handled below.
+
                         if line:
                             try:
                                 data = json.loads(line)
                                 chunk = data.get("message", {}).get("content", "")
-                                
+
                                 if chunk:
                                     chunk_count += 1
                                     full_response.append(chunk)
-                                    
+
                                     # Track timing
-                                    current_time = time_module.time()
                                     if first_chunk_time is None:
                                         first_chunk_time = current_time
                                         metrics.first_chunk_time = current_time - start_time
@@ -872,9 +876,24 @@ class LLMClient:
                                             f"First chunk received after {metrics.first_chunk_time:.2f}s",
                                             extra={"chunk_count": chunk_count}
                                         )
-                                    
+
                                     last_chunk_time = current_time
-                                    
+
+                                    # Check for stalled stream (configurable threshold)
+                                    if last_chunk_time and (current_time - last_chunk_time) > self.config.stall_threshold:
+                                        time_since_last_chunk = current_time - last_chunk_time
+                                        logger.error(
+                                            f"🚨 Streaming stalled: no tokens received for {time_since_last_chunk:.1f}s",
+                                            extra={
+                                                "model": model_name,
+                                                "time_since_last_chunk": time_since_last_chunk,
+                                                "stall_threshold": self.config.stall_threshold,
+                                                "total_elapsed": current_time - start_time,
+                                                "timeout_remaining": max(0, self.config.timeout - (current_time - start_time)),
+                                                "token_count": chunk_count
+                                            }
+                                        )
+
                                     # Log chunk progress (DEBUG level)
                                     if log_progress:
                                         logger.debug(
@@ -885,9 +904,25 @@ class LLMClient:
                                                 "chunk_count": chunk_count,
                                             }
                                         )
-                                    
+
                                     yield chunk
-                                    
+
+                                    # Log timeout remaining when approaching limit (earlier warnings)
+                                    elapsed = current_time - start_time
+                                    if elapsed > self.config.timeout * 0.3:  # After 30% of timeout
+                                        remaining = self.config.timeout - elapsed
+                                        if remaining > 0:
+                                            logger.info(
+                                                f"Streaming timeout warning: {remaining:.1f}s remaining",
+                                                extra={
+                                                    "model": model_name,
+                                                    "elapsed": elapsed,
+                                                    "timeout": self.config.timeout,
+                                                    "remaining": remaining,
+                                                    "progress": f"{chunk_count} chunks, {sum(len(c) for c in full_response)} chars"
+                                                }
+                                            )
+
                             except json.JSONDecodeError as e:
                                 logger.warning(f"Failed to parse streaming chunk: {e}", extra={"line": line[:100]})
                                 error_count += 1

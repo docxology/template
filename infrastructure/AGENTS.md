@@ -193,7 +193,7 @@ from infrastructure.build import (
 **CLI:**
 ```bash
 python3 -m infrastructure.validation.cli pdf output/pdf/manuscript.pdf
-python3 -m infrastructure.validation.cli markdown manuscript/
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 python3 -m infrastructure.validation.cli integrity output/
 ```
 
@@ -472,7 +472,7 @@ print(f"Published with DOI: {doi}")
 
 ```bash
 # Validate manuscript
-python3 -m infrastructure.validation.cli markdown manuscript/
+python3 -m infrastructure.validation.cli markdown project/manuscript/
 python3 -m infrastructure.validation.cli integrity output/
 
 # Generate API documentation
@@ -570,5 +570,5 @@ Planned additions:
 
 **System Documentation:**
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
-- [`../docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) - System architecture overview
-- [`../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Orchestrator pattern details
+- [`../docs/core/ARCHITECTURE.md`](../docs/core/ARCHITECTURE.md) - System architecture overview
+- [`../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Orchestrator pattern details

@@ -128,16 +128,18 @@ def check_test_failures(
         return True, f"{test_suite}: {failed_count} failure(s) exceeds tolerance (max: {max_failures})"
 
 
-def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
+def run_infrastructure_tests(repo_root: Path, project_name: str = "project", quiet: bool = True) -> tuple[int, dict]:
     """Execute infrastructure test suite with coverage.
-    
+
     Args:
         repo_root: Repository root path
+        project_name: Name of project in projects/ directory (default: "project")
         quiet: If True, suppress individual test names (show only summary)
-        
+
     Returns:
         Tuple of (exit_code, test_results_dict)
     """
+    project_root = repo_root / "projects" / project_name
     log_substep("Running infrastructure tests (60% coverage threshold)...")
     log_substep("(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)")
     
@@ -172,7 +174,7 @@ def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, 
         pythonpath = os.pathsep.join([
             str(repo_root),
             str(repo_root / "infrastructure"),
-            str(repo_root / "project" / "src"),
+            str(project_root / "src"),
         ])
         env["PYTHONPATH"] = pythonpath
         
@@ -207,17 +209,20 @@ def run_infrastructure_tests(repo_root: Path, quiet: bool = True) -> tuple[int, 
         return 1, {}
 
 
-def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
+def run_project_tests(repo_root: Path, project_name: str = "project", quiet: bool = True) -> tuple[int, dict]:
     """Execute project test suite with coverage.
     
     Args:
         repo_root: Repository root path
+        project_name: Name of project in projects/ directory (default: "project")
         quiet: If True, suppress individual test names (show only summary)
         
     Returns:
         Tuple of (exit_code, test_results_dict)
     """
-    log_substep("Running project tests (90% coverage threshold)...")
+    log_substep(f"Running project tests for '{project_name}' (90% coverage threshold)...")
+    
+    project_root = repo_root / "projects" / project_name
     
     # Build pytest command for project tests
     # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
@@ -225,9 +230,9 @@ def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
         sys.executable,
         "-m",
         "pytest",
-        str(repo_root / "project" / "tests"),
-        "--ignore=" + str(repo_root / "project" / "tests" / "integration"),
-        "--cov=project/src",
+        str(project_root / "tests"),
+        "--ignore=" + str(project_root / "tests" / "integration"),
+        f"--cov=projects/{project_name}/src",
         "--cov-report=term-missing",
         "--cov-report=html",
         "--cov-report=json",
@@ -247,7 +252,7 @@ def run_project_tests(repo_root: Path, quiet: bool = True) -> tuple[int, dict]:
         pythonpath = os.pathsep.join([
             str(repo_root),
             str(repo_root / "infrastructure"),
-            str(repo_root / "project" / "src"),
+            str(project_root / "src"),
         ])
         env["PYTHONPATH"] = pythonpath
         
@@ -351,11 +356,16 @@ def main() -> int:
         action='store_true',
         help='Show individual test names (default: quiet mode)'
     )
+    parser.add_argument(
+        '--project',
+        default='project',
+        help='Project name in projects/ directory (default: project)'
+    )
     args = parser.parse_args()
     
     quiet = not args.verbose
     
-    log_header("STAGE 01: Run Tests", logger)
+    log_header(f"STAGE 01: Run Tests (Project: {args.project})", logger)
     
     # Log resource usage at start
     from infrastructure.core.logging_utils import log_resource_usage
@@ -364,14 +374,14 @@ def main() -> int:
     repo_root = Path(__file__).parent.parent
     
     # Run infrastructure tests first
-    infra_exit, infra_results = run_infrastructure_tests(repo_root, quiet=quiet)
+    infra_exit, infra_results = run_infrastructure_tests(repo_root, args.project, quiet=quiet)
     
     # Run project tests (even if infrastructure tests fail, for complete reporting)
-    project_exit, project_results = run_project_tests(repo_root, quiet=quiet)
+    project_exit, project_results = run_project_tests(repo_root, args.project, quiet=quiet)
     
     # Generate and save test report
     report = generate_test_report(infra_results, project_results, repo_root)
-    output_dir = repo_root / "project" / "output" / "reports"
+    output_dir = repo_root / "projects" / args.project / "output" / "reports"
     save_test_report_to_files(report, output_dir)
     
     # Report combined results

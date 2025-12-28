@@ -10,7 +10,7 @@ Scripts in this directory:
 - Handle template-level orchestration
 - Work with ANY project structure
 
-**Project-specific analysis scripts belong in `project/scripts/`**, not here.
+**Project-specific analysis scripts belong in `projects/{name}/scripts/`**, not here.
 
 ## Architectural Role
 
@@ -69,10 +69,10 @@ The template provides multiple entry points organized by function:
 
 **Purpose:** Execute project analysis scripts
 
-- Discovers scripts in `project/scripts/`
+- Discovers scripts in `projects/{name}/scripts/`
 - Executes each script in order
 - Validates output generation
-- Collects outputs to `project/output/`
+- Collects outputs to `projects/{name}/output/`
 
 **Generic:** Works for any project with analysis scripts
 
@@ -80,7 +80,7 @@ The template provides multiple entry points organized by function:
 
 **Purpose:** Generate manuscript PDFs
 
-- Processes `project/manuscript/` markdown files
+- Processes `projects/{name}/manuscript/` markdown files
 - Converts to LaTeX via pandoc
 - Compiles to PDF via xelatex
 - Generic orchestrator
@@ -102,7 +102,8 @@ The template provides multiple entry points organized by function:
 
 **Purpose:** Copy final deliverables to top-level output directory
 
-- Cleans top-level `output/` directory
+- Cleans root-level directories from `output/` (keeps only project folders)
+- Cleans project-specific `output/{name}/` directory
 - Copies combined PDF manuscript
 - Copies all presentation slides (PDF format)
 - Copies all web outputs (HTML format)
@@ -123,10 +124,10 @@ The template provides multiple entry points organized by function:
 
 ## Project-Specific Scripts
 
-Analysis scripts specific to a project belong in `project/scripts/`:
+Analysis scripts specific to a project belong in `projects/{name}/scripts/`:
 
 ```
-project/scripts/
+projects/{name}/scripts/
 ├── analysis_pipeline.py     # Project-specific analysis
 ├── example_figure.py        # Project-specific figures
 └── README.md                # Project script documentation
@@ -140,7 +141,7 @@ These scripts:
 
 **Example:**
 ```python
-# project/scripts/analysis_pipeline.py
+# projects/{name}/scripts/analysis_pipeline.py
 from data_generator import generate_synthetic_data
 from statistics import calculate_descriptive_stats
 from infrastructure.figure_manager import FigureManager
@@ -191,11 +192,11 @@ def run_render_pipeline() -> int:
 ### ✅ CORRECT Pattern (Project Scripts)
 
 ```python
-# project/scripts/analysis_pipeline.py - Project-specific orchestrator
+# projects/{name}/scripts/analysis_pipeline.py - Project-specific orchestrator
 from data_generator import generate_synthetic_data
 from statistics import calculate_descriptive_stats
 
-# Import from project/src/ for computation
+# Import from projects/{name}/src/ for computation
 data = generate_synthetic_data()
 stats = calculate_descriptive_stats(data)
 
@@ -218,7 +219,7 @@ fm.register_figure("results.png")
 from scientific.data_generator import generate_synthetic_data
 
 # ❌ Root scripts should NOT contain analysis
-# ❌ Duplicates project/scripts/ logic
+# ❌ Duplicates projects/{name}/scripts/ logic
 # ❌ Not generic across projects
 ```
 
@@ -233,12 +234,12 @@ python3 scripts/run_all.py
 Stages:
 1. **00_setup_environment.py** - Environment ready?
 2. **01_run_tests.py** - Tests pass?
-3. **02_run_analysis.py** - Executes `project/scripts/*.py`
+3. **02_run_analysis.py** - Executes `projects/{name}/scripts/*.py`
 4. **03_render_pdf.py** - PDFs generated?
 5. **04_validate_output.py** - Output valid?
 6. **05_copy_outputs.py** - Final deliverables copied?
 
-Each stage is **generic** and works with any project structure.
+Each stage is **generic** and works with any project structure in `projects/{name}/`.
 
 ## Testing
 
@@ -254,7 +255,7 @@ No unit tests needed for orchestrators - they're thin wrappers.
 ### Do's ✅
 - Keep root scripts generic
 - Discover project scripts dynamically
-- Delegate to `project/scripts/`
+- Delegate to `projects/{name}/scripts/`
 - Handle I/O and orchestration
 - Use clear logging
 
@@ -263,7 +264,7 @@ No unit tests needed for orchestrators - they're thin wrappers.
 - Hardcode paths to specific analyses
 - Assume specific project structure
 - Skip error handling
-- Import from `project/src/` in root scripts
+- Import from `projects/{name}/src/` in root scripts
 
 ## File Organization
 
@@ -271,7 +272,7 @@ No unit tests needed for orchestrators - they're thin wrappers.
 scripts/
 ├── 00_setup_environment.py     # Entry: Setup
 ├── 01_run_tests.py             # Entry: Test
-├── 02_run_analysis.py          # Entry: Analysis (discovers project/scripts/)
+├── 02_run_analysis.py          # Entry: Analysis (discovers projects/{name}/scripts/)
 ├── 03_render_pdf.py            # Entry: PDF rendering
 ├── 04_validate_output.py       # Entry: Validation
 ├── 05_copy_outputs.py          # Entry: Copy outputs
@@ -281,7 +282,7 @@ scripts/
 ├── AGENTS.md                   # This file
 └── README.md                   # Quick reference
 
-project/scripts/
+projects/{name}/scripts/
 ├── analysis_pipeline.py        # Project-specific analysis
 ├── example_figure.py           # Project-specific figures
 ├── AGENTS.md                   # Project script docs
@@ -294,14 +295,14 @@ project/scripts/
 
 ```bash
 cd /path/to/template
-python3 scripts/run_all.py  # Executes project/scripts/
+python3 scripts/run_all.py --project project  # Executes projects/project/scripts/
 ```
 
 ### Using with Different Project
 
-1. Create new `project/` structure
-2. Add your code to `project/src/`
-3. Add your scripts to `project/scripts/`
+1. Create new `projects/{name}/` structure
+2. Add your code to `projects/{name}/src/`
+3. Add your scripts to `projects/{name}/scripts/`
 4. Run root entry points - they auto-discover your code
 
 Root entry points work with **ANY** project that follows this structure.
@@ -309,7 +310,7 @@ Root entry points work with **ANY** project that follows this structure.
 ## See Also
 
 - [`README.md`](README.md) - Quick reference
-- [`project/scripts/AGENTS.md`](../project/scripts/AGENTS.md) - Project scripts
+- [`projects/project/scripts/AGENTS.md`](../projects/project/scripts/AGENTS.md) - Project scripts
 - [`../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern explanation
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
 
@@ -324,6 +325,6 @@ Root entry points work with **ANY** project that follows this structure.
 
 **Project scripts are specific to each research:**
 - ✅ Implement domain-specific logic
-- ✅ Import from `project/src/`
+- ✅ Import from `projects/{name}/src/`
 - ✅ Use infrastructure tools
 - ❌ Never duplicate root orchestration

@@ -35,20 +35,9 @@ DEFAULT_MODEL_PREFERENCES = [
 
 
 def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float = 2.0) -> bool:
-    """Check if Ollama server is running and responding.
-    
-    Args:
-        base_url: Ollama server URL
-        timeout: Connection timeout in seconds
-        
-    Returns:
-        True if Ollama is responding, False otherwise
-        
-    Example:
-        >>> if is_ollama_running():
-        ...     print("Ollama is ready")
-    """
+    """Check if Ollama server is running and responding."""
     try:
+        logger.debug(f"Checking Ollama server at {base_url}...")
         response = requests.get(f"{base_url}/api/tags", timeout=timeout)
         if response.status_code == 200:
             logger.debug(f"Ollama server responding at {base_url}")
@@ -67,29 +56,66 @@ def is_ollama_running(base_url: str = "http://localhost:11434", timeout: float =
         return False
 
 
-def start_ollama_server(wait_seconds: float = 3.0) -> bool:
-    """Attempt to start the Ollama server.
-    
+def start_ollama_server(wait_seconds: float = 3.0, max_retries: int = 2) -> bool:
+    """Attempt to start the Ollama server with detailed logging.
+
     Args:
         wait_seconds: How long to wait for server to start
-        
+        max_retries: Number of retry attempts on failure
+
     Returns:
         True if server started successfully, False otherwise
     """
-    try:
-        # Try to start ollama serve in background
-        subprocess.Popen(
-            ["ollama", "serve"],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            start_new_session=True
-        )
-        
-        # Wait for server to be ready
-        time.sleep(wait_seconds)
-        return is_ollama_running()
-    except (subprocess.SubprocessError, FileNotFoundError):
-        return False
+    logger.info("Attempting to start Ollama server...")
+
+    for attempt in range(max_retries + 1):
+        try:
+            # Log attempt number
+            if attempt > 0:
+                logger.info(f"Retry {attempt}/{max_retries}...")
+
+            # Check if ollama command exists
+            result = subprocess.run(
+                ["which", "ollama"],
+                capture_output=True,
+                timeout=2.0
+            )
+            if result.returncode != 0:
+                logger.error("Ollama command not found. Install Ollama: https://ollama.ai")
+                return False
+
+            # Start server
+            process = subprocess.Popen(
+                ["ollama", "serve"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=True
+            )
+            logger.debug(f"Started Ollama process (PID: {process.pid})")
+
+            # Wait and verify
+            time.sleep(wait_seconds)
+            if is_ollama_running():
+                logger.info("✓ Ollama server started successfully")
+                return True
+            else:
+                logger.warning(f"Ollama process started but server not responding after {wait_seconds}s")
+
+        except FileNotFoundError:
+            logger.error("Ollama command not found. Install Ollama: https://ollama.ai")
+            return False
+        except PermissionError as e:
+            logger.error(f"Permission denied starting Ollama: {e}")
+            return False
+        except subprocess.SubprocessError as e:
+            logger.warning(f"Failed to start Ollama (attempt {attempt + 1}): {e}")
+            if attempt < max_retries:
+                wait_time = (attempt + 1) * 1.0
+                logger.debug(f"Retrying in {wait_time}s...")
+                time.sleep(wait_time)
+
+    logger.error("Failed to start Ollama server after all retries")
+    return False
 
 
 def get_available_models(
@@ -233,32 +259,40 @@ def ensure_ollama_ready(
     base_url: str = "http://localhost:11434",
     auto_start: bool = True
 ) -> bool:
-    """Ensure Ollama server is running and has models available.
-    
-    Args:
-        base_url: Ollama server URL
-        auto_start: Whether to attempt starting Ollama if not running
-        
-    Returns:
-        True if Ollama is ready with models, False otherwise
-    """
+    """Ensure Ollama server is running and has models available."""
     # Check if running
     if not is_ollama_running(base_url):
         if auto_start:
-            logger.info("Ollama not running, attempting to start...")
-            if not start_ollama_server():
-                logger.warning("Failed to start Ollama server")
+            logger.info("Ollama server not running, attempting to start...")
+            if start_ollama_server():
+                logger.info("Ollama server started successfully")
+            else:
+                logger.warning("Failed to start Ollama server automatically")
+                logger.info("Possible reasons:")
+                logger.info("  - Ollama not installed (install from https://ollama.ai)")
+                logger.info("  - Permission denied (check file permissions)")
+                logger.info("  - Port 11434 already in use")
                 return False
         else:
+            logger.debug("Ollama not running and auto_start=False")
             return False
-    
-    # Check for available models
+
+    # Check for available models with progress logging
+    logger.debug("Checking for available models...")
     models = get_model_names(base_url)
     if not models:
-        logger.warning("No Ollama models available. Install with: ollama pull <model>")
+        logger.warning("No Ollama models available")
+        logger.info("Install a model with: ollama pull llama3-gradient")
+        logger.info("Recommended models:")
+        logger.info("  - llama3-gradient:latest (4.7GB, 256K context)")
+        logger.info("  - llama3.1:latest (4.7GB, 128K context)")
         return False
-    
-    logger.info(f"Ollama ready with {len(models)} model(s): {', '.join(models[:5])}")
+
+    logger.info(f"Ollama ready with {len(models)} model(s)")
+    if len(models) <= 5:
+        logger.info(f"  Models: {', '.join(models)}")
+    else:
+        logger.info(f"  Models: {', '.join(models[:5])} ... and {len(models) - 5} more")
     return True
 
 

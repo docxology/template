@@ -26,12 +26,17 @@ from infrastructure.validation.figure_validator import validate_figure_registry
 logger = get_logger(__name__)
 
 
-def validate_pdfs() -> bool:
-    """Validate generated PDF files."""
+def validate_pdfs(project_name: str = "project") -> bool:
+    """Validate generated PDF files.
+    
+    Args:
+        project_name: Name of project in projects/ directory (default: "project")
+    """
     log_substep("Validating PDF files...", logger)
     
     repo_root = Path(__file__).parent.parent
-    pdf_dir = repo_root / "project" / "output" / "pdf"
+    project_root = repo_root / "projects" / project_name
+    pdf_dir = project_root / "output" / "pdf"
     
     if not pdf_dir.exists():
         logger.error("PDF directory not found")
@@ -60,12 +65,17 @@ def validate_pdfs() -> bool:
     return valid_count == len(pdf_files)
 
 
-def validate_markdown() -> bool:
-    """Validate markdown files in manuscript using infrastructure validation module."""
+def validate_markdown(project_name: str = "project") -> bool:
+    """Validate markdown files in manuscript using infrastructure validation module.
+    
+    Args:
+        project_name: Name of project in projects/ directory (default: "project")
+    """
     log_substep("Validating markdown files...", logger)
     
     repo_root = Path(__file__).parent.parent
-    manuscript_dir = repo_root / "project" / "manuscript"
+    project_root = repo_root / "projects" / project_name
+    manuscript_dir = project_root / "manuscript"
     
     if not manuscript_dir.exists():
         logger.warning(f"Manuscript directory not found at expected location: {manuscript_dir}")
@@ -106,16 +116,21 @@ def validate_markdown() -> bool:
         return True  # Non-critical
 
 
-def verify_outputs_exist() -> bool:
-    """Verify all expected output files exist."""
+def verify_outputs_exist(project_name: str = "project") -> bool:
+    """Verify all expected output files exist.
+    
+    Args:
+        project_name: Name of project in projects/ directory (default: "project")
+    """
     log_substep("Verifying output structure...", logger)
     
     repo_root = Path(__file__).parent.parent
+    project_root = repo_root / "projects" / project_name
     
     required_dirs = [
-        repo_root / "project" / "output" / "pdf",
-        repo_root / "project" / "output" / "figures",
-        repo_root / "project" / "output" / "data",
+        project_root / "output" / "pdf",
+        project_root / "output" / "figures",
+        project_root / "output" / "data",
     ]
     
     all_exist = True
@@ -135,7 +150,8 @@ def verify_outputs_exist() -> bool:
 def generate_validation_report(
     check_results: list[tuple[str, bool]],
     figure_issues: list[str],
-    output_statistics: dict
+    output_statistics: dict,
+    project_name: str = "project"
 ) -> dict:
     """Generate enhanced validation report with structured output.
     
@@ -150,7 +166,7 @@ def generate_validation_report(
     log_substep("Generating validation report...", logger)
     
     repo_root = Path(__file__).parent.parent
-    output_dir = repo_root / "project" / "output" / "reports"
+    output_dir = repo_root / "projects" / project_name / "output" / "reports"
     
     # Build validation results dictionary
     validation_results = {
@@ -184,14 +200,14 @@ def generate_validation_report(
                     'priority': 'medium',
                     'issue': 'Markdown validation issues found',
                     'action': 'Review markdown validation output for formatting issues',
-                    'file': 'project/manuscript/',
+                    'file': f'projects/{args.project}/manuscript/',
                 })
             elif check_name == "Output structure":
                 recommendations.append({
                     'priority': 'high',
                     'issue': 'Missing output directories',
                     'action': 'Ensure all analysis scripts completed successfully',
-                    'file': 'project/output/',
+                    'file': f'projects/{args.project}/output/',
                 })
     
     if figure_issues:
@@ -199,7 +215,7 @@ def generate_validation_report(
             'priority': 'medium',
             'issue': f'{len(figure_issues)} figure reference issue(s)',
             'action': 'Register missing figures or remove unused references',
-            'file': 'project/output/figures/figure_registry.json',
+            'file': f'projects/{args.project}/output/figures/figure_registry.json',
         })
     
     validation_results['recommendations'] = recommendations
@@ -233,12 +249,22 @@ def generate_validation_report(
 
 def main() -> int:
     """Execute validation orchestration."""
-    log_header("STAGE 04: Validate Output")
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Validate output")
+    parser.add_argument(
+        '--project',
+        default='project',
+        help='Project name in projects/ directory (default: project)'
+    )
+    args = parser.parse_args()
+    
+    log_header(f"STAGE 04: Validate Output (Project: {args.project})", logger)
     
     checks = [
-        ("PDF validation", validate_pdfs),
-        ("Markdown validation", validate_markdown),
-        ("Output structure", verify_outputs_exist),
+        ("PDF validation", lambda: validate_pdfs(args.project)),
+        ("Markdown validation", lambda: validate_markdown(args.project)),
+        ("Output structure", lambda: verify_outputs_exist(args.project)),
     ]
     
     results = []
@@ -255,8 +281,9 @@ def main() -> int:
     # Validate figure registry separately (returns tuple)
     try:
         repo_root = Path(__file__).parent.parent
-        registry_path = repo_root / "project" / "output" / "figures" / "figure_registry.json"
-        manuscript_dir = repo_root / "project" / "manuscript"
+        project_root = repo_root / "projects" / args.project
+        registry_path = project_root / "output" / "figures" / "figure_registry.json"
+        manuscript_dir = project_root / "manuscript"
         fig_result, figure_issues = validate_figure_registry(registry_path, manuscript_dir)
         results.append(("Figure registry", fig_result))
     except Exception as e:
@@ -265,8 +292,7 @@ def main() -> int:
         figure_issues = []
     
     # Collect output statistics
-    repo_root = Path(__file__).parent.parent
-    output_dir = repo_root / "project" / "output"
+    output_dir = project_root / "output"
     output_statistics = {}
     
     for subdir in ["pdf", "figures", "data"]:
@@ -282,7 +308,7 @@ def main() -> int:
             }
     
     # Generate enhanced validation report
-    validation_results = generate_validation_report(results, figure_issues, output_statistics)
+    validation_results = generate_validation_report(results, figure_issues, output_statistics, args.project)
     
     # Summary
     logger.info("\n" + "="*60)

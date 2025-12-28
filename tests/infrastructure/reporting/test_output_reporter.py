@@ -17,16 +17,16 @@ def _create_file(path: Path, size: int = 10) -> None:
 
 def test_collect_output_statistics_counts_files(tmp_path: Path) -> None:
     repo_root = tmp_path
-    pdf_dir = repo_root / "project" / "output" / "pdf"
-    figures_dir = repo_root / "project" / "output" / "figures"
-    data_dir = repo_root / "project" / "output" / "data"
+    pdf_dir = repo_root / "projects" / "project" / "output" / "pdf"
+    figures_dir = repo_root / "projects" / "project" / "output" / "figures"
+    data_dir = repo_root / "projects" / "project" / "output" / "data"
 
     _create_file(pdf_dir / "paper.pdf")
     _create_file(figures_dir / "figure1.png")
     _create_file(figures_dir / "figure2.pdf")
     _create_file(data_dir / "data.csv")
 
-    stats = collect_output_statistics(repo_root)
+    stats = collect_output_statistics(repo_root, "project")
 
     assert stats["pdf_files"] == 1
     assert stats["figures"] == 2
@@ -102,7 +102,7 @@ def test_generate_output_summary_with_errors(tmp_path: Path) -> None:
 
 def test_collect_output_statistics_no_output_dir(tmp_path: Path) -> None:
     """Test collect_output_statistics when output directory doesn't exist."""
-    stats = collect_output_statistics(tmp_path)
+    stats = collect_output_statistics(tmp_path, "project")
     assert stats["pdf_files"] == 0
     assert stats["figures"] == 0
     assert stats["data_files"] == 0
@@ -116,7 +116,7 @@ def test_collect_output_statistics_empty_directories(tmp_path: Path) -> None:
     (repo_root / "project" / "output" / "figures").mkdir(parents=True, exist_ok=True)
     (repo_root / "project" / "output" / "data").mkdir(parents=True, exist_ok=True)
     
-    stats = collect_output_statistics(repo_root)
+    stats = collect_output_statistics(repo_root, "project")
     assert stats["pdf_files"] == 0
     assert stats["figures"] == 0
     assert stats["data_files"] == 0
@@ -126,14 +126,14 @@ def test_collect_output_statistics_empty_directories(tmp_path: Path) -> None:
 def test_collect_output_statistics_size_calculation(tmp_path: Path) -> None:
     """Test collect_output_statistics calculates file sizes correctly."""
     repo_root = tmp_path
-    pdf_dir = repo_root / "project" / "output" / "pdf"
+    pdf_dir = repo_root / "projects" / "project" / "output" / "pdf"
     pdf_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # Create file with known size (1MB = 1024*1024 bytes)
     large_file = pdf_dir / "large.pdf"
     large_file.write_bytes(b"x" * (1024 * 1024))
-    
-    stats = collect_output_statistics(repo_root)
+
+    stats = collect_output_statistics(repo_root, "project")
     assert stats["pdf_files"] == 1
     assert stats["total_size_mb"] >= 1.0
 

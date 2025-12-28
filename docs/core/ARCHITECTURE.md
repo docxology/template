@@ -242,7 +242,7 @@ flowchart TD
 ### Phase 1: Code Validation
 ```bash
 # Run all generation scripts to validate project/src/ code works
-uv run python scripts/example_figure.py
+uv run python project/scripts/example_figure.py
 uv run python scripts/generate_research_figures.py
 ```
 
@@ -408,7 +408,7 @@ See Figure \ref{fig:example} and Equation \eqref{eq:example}.
 uv run pytest tests/ --cov=src --cov-report=term-missing
 
 # Generate figures and validate
-uv run python scripts/example_figure.py
+uv run python project/scripts/example_figure.py
 python3 -m infrastructure.validation.cli markdown project/manuscript/
 ```
 

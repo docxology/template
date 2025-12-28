@@ -112,7 +112,7 @@ def test_with_fixture(temp_data_file):
 
 - **90% minimum** for project/src/ (currently achieving 100% - perfect coverage!)
 - **60% minimum** for infrastructure/ (currently achieving 83.33% - exceeds stretch goal!)
-- No mock methods - use real data
+- **ABSOLUTE PROHIBITION**: Never use mock methods - use real data only
 - Test all error paths
 
 ```bash
@@ -131,7 +131,7 @@ open htmlcov/index.html
 - One assertion per concept
 
 ### Don'ts ❌
-- Don't use mock methods
+- **ABSOLUTELY FORBIDDEN**: Never use mock methods, MagicMock, mocker.patch, or any mocking
 - Don't skip tests
 - Don't test implementation details
 - Don't ignore coverage gaps

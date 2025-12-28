@@ -7,7 +7,7 @@ This thin orchestrator coordinates the analysis and figure generation stage:
 3. Collects generated outputs from project/output/
 4. Validates output quality
 
-**Entry Point 3:** Generic orchestrator for template
+**Entry Point 2:** Generic orchestrator for template
 - Works with any project by looking in project/scripts/
 - Does NOT implement analysis logic
 - Delegates to project-specific scripts
@@ -41,12 +41,13 @@ from infrastructure.core.script_discovery import (
 logger = get_logger(__name__)
 
 
-def run_analysis_script(script_path: Path, repo_root: Path) -> int:
+def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = "project") -> int:
     """Execute a single analysis script.
     
     Args:
         script_path: Path to the script to execute
         repo_root: Repository root directory
+        project_name: Name of project in projects/ directory (default: "project")
         
     Returns:
         Exit code from script execution
@@ -58,12 +59,20 @@ def run_analysis_script(script_path: Path, repo_root: Path) -> int:
     
     cmd = [sys.executable, str(script_path)]
     
-    project_root = repo_root / "project"
+    project_root = repo_root / "projects" / project_name
     
     # Set environment variables for matplotlib (headless operation)
     env = os.environ.copy()
     env.setdefault('MPLBACKEND', 'Agg')
     env.setdefault('MPLCONFIGDIR', '/tmp/matplotlib')
+
+    # Set up Python path to include infrastructure and project modules
+    pythonpath = os.pathsep.join([
+        str(repo_root),
+        str(repo_root / "infrastructure"),
+        str(project_root / "src"),
+    ])
+    env["PYTHONPATH"] = pythonpath
     
     try:
         with log_operation(f"Execute {script_path.name}", logger):
@@ -91,11 +100,12 @@ def run_analysis_script(script_path: Path, repo_root: Path) -> int:
         ) from e
 
 
-def run_analysis_pipeline(scripts: list[Path]) -> int:
+def run_analysis_pipeline(scripts: list[Path], project_name: str = "project") -> int:
     """Execute all analysis scripts in sequence.
     
     Args:
         scripts: List of script paths to execute
+        project_name: Name of project in projects/ directory (default: "project")
         
     Returns:
         Exit code (0=success, non-zero=at least one script failed)
@@ -120,7 +130,7 @@ def run_analysis_pipeline(scripts: list[Path]) -> int:
     
     for i, script in enumerate(scripts, 1):
         progress.start_substage(i, script.name)
-        exit_code = run_analysis_script(script, repo_root)
+        exit_code = run_analysis_script(script, repo_root, project_name)
         progress.complete_substage()
         
         # Log progress with ETA every few scripts
@@ -159,8 +169,18 @@ def main() -> int:
     Returns:
         Exit code (0=success, 1=failure)
     """
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Run analysis pipeline")
+    parser.add_argument(
+        '--project',
+        default='project',
+        help='Project name in projects/ directory (default: project)'
+    )
+    args = parser.parse_args()
+    
     logger.info("\n" + "="*60)
-    logger.info("STAGE 02: Run Analysis")
+    logger.info(f"STAGE 02: Run Analysis (Project: {args.project})")
     logger.info("="*60)
     
     # Log resource usage at start
@@ -170,19 +190,19 @@ def main() -> int:
     try:
         repo_root = Path(__file__).parent.parent
         
-        # Discover scripts
-        scripts = discover_analysis_scripts(repo_root)
+        # Discover scripts for the specified project
+        scripts = discover_analysis_scripts(repo_root, args.project)
         
         if not scripts:
             logger.info("  No analysis scripts found - skipping stage")
             return 0
         
         # Run analysis pipeline
-        exit_code = run_analysis_pipeline(scripts)
+        exit_code = run_analysis_pipeline(scripts, args.project)
         
         if exit_code == 0:
             # Verify outputs
-            outputs_valid = verify_analysis_outputs(repo_root)
+            outputs_valid = verify_analysis_outputs(repo_root, args.project)
             
             if outputs_valid:
                 log_success("Analysis complete - ready for PDF rendering", logger)

@@ -33,6 +33,46 @@ with log_operation("Processing", logger):
 
 ## Modules
 
+```mermaid
+graph TD
+    subgraph Foundation["Foundation Layer"]
+        EXCEPTIONS[exceptions.py<br/>Exception hierarchy<br/>Context preservation]
+        LOGGING[logging_utils.py<br/>Unified logging<br/>Environment configuration]
+        CONFIG[config_loader.py<br/>YAML + env loading<br/>Metadata formatting]
+    end
+
+    subgraph Utilities["Utility Layer"]
+        PROGRESS[progress.py<br/>Progress tracking<br/>Visual indicators]
+        CHECKPOINT[checkpoint.py<br/>Pipeline state<br/>Resume capability]
+        RETRY[retry.py<br/>Retry logic<br/>Exponential backoff]
+        PERFORMANCE[performance.py<br/>Resource monitoring<br/>System metrics]
+    end
+
+    subgraph Operations["Operations Layer"]
+        ENVIRONMENT[environment.py<br/>System validation<br/>Dependency checking]
+        SCRIPTS[script_discovery.py<br/>Script finding<br/>Execution coordination]
+        FILES[file_operations.py<br/>File management<br/>Output handling]
+    end
+
+    EXCEPTIONS --> LOGGING
+    LOGGING --> CONFIG
+    CONFIG --> PROGRESS
+    PROGRESS --> CHECKPOINT
+    CHECKPOINT --> RETRY
+    RETRY --> PERFORMANCE
+    PERFORMANCE --> ENVIRONMENT
+    ENVIRONMENT --> SCRIPTS
+    SCRIPTS --> FILES
+
+    classDef foundation fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef utilities fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef operations fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class Foundation foundation
+    class Utilities utilities
+    class Operations operations
+```
+
 - **exceptions** - Exception hierarchy and context preservation
 - **logging_utils** - Unified Python logging system
 - **config_loader** - Configuration file and environment loading

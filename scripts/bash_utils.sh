@@ -2,13 +2,13 @@
 ################################################################################
 # Shared Bash Utilities
 #
-# Common utilities for run.sh and run_literature.sh:
+# Common utilities for run.sh:
 # - Color codes and formatting
 # - Logging functions
 # - Utility functions (duration formatting, choice parsing, etc.)
 # - Environment setup
 #
-# This file is sourced by both run.sh and run_literature.sh
+# This file is sourced by run.sh
 ################################################################################
 
 # Color codes for output
@@ -35,7 +35,7 @@ fi
 
 # Export for subprocess use
 export PROJECT_ROOT="$REPO_ROOT"
-export PYTHONPATH="${REPO_ROOT}:${REPO_ROOT}/infrastructure:${REPO_ROOT}/project/src:${PYTHONPATH:-}"
+# PYTHONPATH will be set dynamically based on project name in scripts
 
 # ============================================================================
 # Logging Functions

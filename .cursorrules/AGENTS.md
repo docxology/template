@@ -10,6 +10,7 @@ This directory contains comprehensive development standards, coding guidelines, 
 |------|---------|----------|
 | [AGENTS.md](AGENTS.md) | This file - overview and navigation | Understanding the complete system |
 | [README.md](README.md) | Quick reference guide | Finding quick answers |
+| [folder_structure.md](folder_structure.md) | Folder structure documentation standard | Understanding folder organization |
 | [error_handling.md](error_handling.md) | Error handling and exception patterns | Writing error handling code |
 | [security.md](security.md) | Security standards and guidelines | Writing secure code |
 | [python_logging.md](python_logging.md) | Logging standards and best practices | Adding logging to code |
@@ -433,6 +434,7 @@ This directory provides modular development standards. Each file covers specific
 |------|---------|----------|
 | [AGENTS.md](AGENTS.md) | Overview & navigation | Understanding the system |
 | [README.md](README.md) | Quick reference | Finding patterns fast |
+| [folder_structure.md](folder_structure.md) | Folder organization standard | Setting up documentation |
 | [error_handling.md](error_handling.md) | Exception patterns | Writing error handling |
 | [security.md](security.md) | Security standards | Writing secure code |
 | [python_logging.md](python_logging.md) | Logging standards | Adding logging to code |
@@ -454,6 +456,7 @@ The .cursorrules standards align with and support the main documentation:
 | Development Aspect | .cursorrules File | Main Documentation |
 |---|---|---|
 | System Design | [AGENTS.md](AGENTS.md) | [Root AGENTS.md](../AGENTS.md) |
+| Documentation Structure | [folder_structure.md](folder_structure.md) | [Root AGENTS.md](../AGENTS.md) |
 | Architecture | [AGENTS.md](AGENTS.md) | [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) |
 | Infrastructure | [infrastructure_modules.md](infrastructure_modules.md) | [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) |
 | Error Handling | [error_handling.md](error_handling.md) | [docs/TROUBLESHOOTING_GUIDE.md](../docs/TROUBLESHOOTING_GUIDE.md) |
@@ -493,6 +496,7 @@ The .cursorrules standards align with and support the main documentation:
 
 | Activity | Start Here | Then Read |
 |----------|-----------|-----------|
+| Setting up folders | [folder_structure.md](folder_structure.md) | [documentation_standards.md](documentation_standards.md) for writing docs |
 | Writing functions | [type_hints_standards.md](type_hints_standards.md) | [error_handling.md](error_handling.md), [python_logging.md](python_logging.md) |
 | Code formatting | [code_style.md](code_style.md) | [type_hints_standards.md](type_hints_standards.md) for consistency |
 | Git workflow | [git_workflow.md](git_workflow.md) | [testing_standards.md](testing_standards.md) for commit testing |

@@ -460,7 +460,7 @@ python3 scripts/05_copy_outputs.py       # Stage 05
 **Solutions:**
 1. Check imports: Ensure scripts import from `project/src/` modules
 2. Check file paths: Verify output directories exist
-3. Run scripts individually: `python3 scripts/example_figure.py`
+3. Run scripts individually: `python3 project/scripts/example_figure.py`
 
 ### References Show ??
 

@@ -34,7 +34,17 @@ logger = get_logger(__name__)
 
 def main() -> int:
     """Execute environment setup orchestration."""
-    log_header("STAGE 00: Environment Setup", logger)
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Setup environment")
+    parser.add_argument(
+        '--project',
+        default='project',
+        help='Project name in projects/ directory (default: project)'
+    )
+    args = parser.parse_args()
+    
+    log_header(f"STAGE 00: Environment Setup (Project: {args.project})", logger)
     
     repo_root = Path(__file__).parent.parent
     
@@ -49,8 +59,8 @@ def main() -> int:
         ("Python version", lambda: check_python_version()),
         ("Dependencies", check_and_install_dependencies),
         ("Build tools", lambda: check_build_tools()),
-        ("Directory structure", lambda: setup_directories(repo_root)),
-        ("Source structure", lambda: verify_source_structure(repo_root)),
+        ("Directory structure", lambda: setup_directories(repo_root, args.project)),
+        ("Source structure", lambda: verify_source_structure(repo_root, args.project)),
         ("Environment variables", lambda: set_environment_variables(repo_root)),
     ]
     

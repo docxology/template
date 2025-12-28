@@ -35,6 +35,421 @@ The Documentation module provides comprehensive tools for managing figures, imag
 - Markdown table generation from API entries
 - Marker-based content injection
 
+## Function Signatures
+
+### figure_manager.py
+
+#### FigureMetadata (class)
+```python
+@dataclass
+class FigureMetadata:
+    """Metadata for a registered figure."""
+    filename: str
+    label: str
+    caption: str
+    section: str
+    number: int
+    registered_at: str
+    file_path: Optional[Path] = None
+    width: Optional[float] = None
+    height: Optional[float] = None
+```
+
+#### FigureManager (class)
+```python
+class FigureManager:
+    """Manages figure registration and cross-reference generation."""
+
+    def __init__(self, registry_file: Optional[Path] = None):
+        """Initialize figure manager.
+
+        Args:
+            registry_file: Path to figure registry JSON file
+        """
+```
+
+#### register_figure (method)
+```python
+def register_figure(
+    self,
+    filename: str,
+    caption: str,
+    label: Optional[str] = None,
+    section: str = "",
+    file_path: Optional[Path] = None
+) -> FigureMetadata:
+    """Register a new figure in the registry.
+
+    Args:
+        filename: Name of the figure file
+        caption: Figure caption
+        label: Figure label (auto-generated if None)
+        section: Section where figure appears
+        file_path: Path to figure file
+
+    Returns:
+        FigureMetadata for the registered figure
+    """
+```
+
+#### get_figure (method)
+```python
+def get_figure(self, label: str) -> Optional[FigureMetadata]:
+    """Get figure metadata by label.
+
+    Args:
+        label: Figure label
+
+    Returns:
+        FigureMetadata if found, None otherwise
+    """
+```
+
+#### generate_latex_figure_block (method)
+```python
+def generate_latex_figure_block(
+    self,
+    label: str,
+    width: float = 0.8,
+    placement: str = "h"
+) -> str:
+    """Generate LaTeX figure block for a registered figure.
+
+    Args:
+        label: Figure label
+        width: Figure width (0-1)
+        placement: LaTeX placement specifier
+
+    Returns:
+        Complete LaTeX figure environment
+    """
+```
+
+#### generate_table_of_figures (method)
+```python
+def generate_table_of_figures(self, format: str = "markdown") -> str:
+    """Generate table of figures in specified format.
+
+    Args:
+        format: Output format ("markdown" or "latex")
+
+    Returns:
+        Formatted table of figures
+    """
+```
+
+#### save_registry (method)
+```python
+def save_registry(self) -> bool:
+    """Save figure registry to JSON file.
+
+    Returns:
+        True if save successful, False otherwise
+    """
+```
+
+#### load_registry (method)
+```python
+def load_registry(self) -> bool:
+    """Load figure registry from JSON file.
+
+    Returns:
+        True if load successful, False otherwise
+    """
+```
+
+#### clear_registry (method)
+```python
+def clear_registry(self) -> None:
+    """Clear all registered figures."""
+```
+
+#### get_statistics (method)
+```python
+def get_statistics(self) -> Dict[str, Any]:
+    """Get statistics about registered figures.
+
+    Returns:
+        Dictionary with figure statistics
+    """
+```
+
+### image_manager.py
+
+#### ImageManager (class)
+```python
+class ImageManager:
+    """Manages image insertion into markdown files."""
+
+    def __init__(self, figure_manager: Optional[FigureManager] = None):
+        """Initialize image manager.
+
+        Args:
+            figure_manager: FigureManager instance for cross-references
+        """
+```
+
+#### insert_figure (method)
+```python
+def insert_figure(
+    self,
+    markdown_file: Path,
+    figure_label: str,
+    section: Optional[str] = None,
+    width: float = 0.8
+) -> bool:
+    """Insert figure reference into markdown file.
+
+    Args:
+        markdown_file: Path to markdown file
+        figure_label: Figure label to insert
+        section: Section to insert in (if None, insert at end)
+        width: Figure width (0-1)
+
+    Returns:
+        True if insertion successful, False otherwise
+    """
+```
+
+#### extract_figure_list (method)
+```python
+def extract_figure_list(self, markdown_file: Path) -> List[str]:
+    """Extract list of figure labels from markdown file.
+
+    Args:
+        markdown_file: Path to markdown file
+
+    Returns:
+        List of figure labels found in file
+    """
+```
+
+#### validate_figure_references (method)
+```python
+def validate_figure_references(
+    self,
+    markdown_file: Path,
+    available_labels: Optional[Set[str]] = None
+) -> List[str]:
+    """Validate figure references in markdown file.
+
+    Args:
+        markdown_file: Path to markdown file
+        available_labels: Set of available figure labels
+
+    Returns:
+        List of validation error messages
+    """
+```
+
+#### find_insertion_point (method)
+```python
+def find_insertion_point(
+    self,
+    markdown_file: Path,
+    section: str
+) -> Optional[int]:
+    """Find line number to insert figure in specified section.
+
+    Args:
+        markdown_file: Path to markdown file
+        section: Section name
+
+    Returns:
+        Line number for insertion, or None if section not found
+    """
+```
+
+### markdown_integration.py
+
+#### MarkdownIntegration (class)
+```python
+class MarkdownIntegration:
+    """Integrates figures and references into markdown manuscripts."""
+
+    def __init__(self, manuscript_dir: Path):
+        """Initialize markdown integration.
+
+        Args:
+            manuscript_dir: Directory containing manuscript files
+        """
+```
+
+#### detect_sections (method)
+```python
+def detect_sections(self, markdown_file: Path) -> List[str]:
+    """Detect all sections in a markdown file.
+
+    Args:
+        markdown_file: Path to markdown file
+
+    Returns:
+        List of section names
+    """
+```
+
+#### insert_figure_in_section (method)
+```python
+def insert_figure_in_section(
+    self,
+    markdown_file: Path,
+    figure_label: str,
+    section: str,
+    width: float = 0.8
+) -> bool:
+    """Insert figure reference in specific section.
+
+    Args:
+        markdown_file: Path to markdown file
+        figure_label: Figure label to insert
+        section: Section name
+        width: Figure width (0-1)
+
+    Returns:
+        True if insertion successful, False otherwise
+    """
+```
+
+#### generate_table_of_figures (method)
+```python
+def generate_table_of_figures(
+    self,
+    output_file: Path,
+    format: str = "markdown"
+) -> bool:
+    """Generate table of figures and save to file.
+
+    Args:
+        output_file: Path to output file
+        format: Output format ("markdown" or "latex")
+
+    Returns:
+        True if generation successful, False otherwise
+    """
+```
+
+#### update_cross_references (method)
+```python
+def update_cross_references(self, markdown_files: List[Path]) -> bool:
+    """Update cross-references across multiple markdown files.
+
+    Args:
+        markdown_files: List of markdown files to update
+
+    Returns:
+        True if update successful, False otherwise
+    """
+```
+
+#### validate_manuscript (method)
+```python
+def validate_manuscript(self) -> Dict[str, Any]:
+    """Validate entire manuscript structure.
+
+    Returns:
+        Validation results dictionary
+    """
+```
+
+#### collect_figure_statistics (method)
+```python
+def collect_figure_statistics(self) -> Dict[str, Any]:
+    """Collect statistics about figures in manuscript.
+
+    Returns:
+        Figure statistics dictionary
+    """
+```
+
+### glossary_gen.py
+
+#### ApiEntry (class)
+```python
+@dataclass
+class ApiEntry:
+    """Represents an API entry for documentation."""
+    name: str
+    kind: str  # 'function', 'class', 'method', 'constant'
+    module: str
+    signature: str
+    docstring: Optional[str] = None
+    line_number: Optional[int] = None
+    source_file: Optional[str] = None
+```
+
+#### _first_sentence (function)
+```python
+def _first_sentence(doc: str | None) -> str:
+    """Extract first sentence from docstring.
+
+    Args:
+        doc: Docstring text
+
+    Returns:
+        First sentence of docstring
+    """
+```
+
+#### _iter_py_files (function)
+```python
+def _iter_py_files(root: str) -> Iterable[str]:
+    """Iterate over Python files in directory tree.
+
+    Args:
+        root: Root directory to search
+
+    Yields:
+        Paths to Python files
+    """
+```
+
+#### build_api_index (function)
+```python
+def build_api_index(src_dir: str) -> List[ApiEntry]:
+    """Build API index from Python source files.
+
+    Args:
+        src_dir: Source directory to scan
+
+    Returns:
+        List of ApiEntry objects
+    """
+```
+
+#### generate_markdown_table (function)
+```python
+def generate_markdown_table(entries: List[ApiEntry]) -> str:
+    """Generate markdown table from API entries.
+
+    Args:
+        entries: List of ApiEntry objects
+
+    Returns:
+        Markdown table string
+    """
+```
+
+#### inject_between_markers (function)
+```python
+def inject_between_markers(
+    text: str,
+    begin_marker: str,
+    end_marker: str,
+    content: str
+) -> str:
+    """Inject content between markers in text.
+
+    Args:
+        text: Original text
+        begin_marker: Beginning marker
+        end_marker: Ending marker
+        content: Content to inject
+
+    Returns:
+        Modified text with content injected
+    """
+```
+
 ## Key Features
 
 ### Figure Management

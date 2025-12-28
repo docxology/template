@@ -79,7 +79,7 @@ The template includes example scripts:
 
 ```bash
 # Generate basic example figure
-python3 scripts/example_figure.py
+python3 project/scripts/example_figure.py
 
 # Generate research-quality figures
 python3 scripts/generate_research_figures.py

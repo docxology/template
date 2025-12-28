@@ -123,7 +123,7 @@ The `scripts/run_all.py` orchestrator automatically:
 
 ### 2. **Testability**
 - Comprehensive test coverage of core functionality
-- Scripts can be tested by mocking src/ imports
+- Scripts can be tested by using real src/ imports with test data
 - Integration testing validates the entire pipeline
 
 ### 3. **Reusability**
