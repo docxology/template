@@ -27,16 +27,27 @@ This note summarizes current module boundaries in `project/src/` and highlights 
 - **Logging helper**: Add a `get_logger(name)` helper with consistent format and module-aware prefixes; replace direct `print` in scripts with structured logging.
 - **Visualization presets**: Expose named presets from `VisualizationEngine` (`publication`, `slides`, `debug`) and ensure all script plotting routes through it (no ad-hoc `plt.subplots` sizing).
 
+*See [`.cursorrules/refactoring.md`](../../../.cursorrules/refactoring.md) for clean break refactoring standards, [`.cursorrules/api_design.md`](../../../.cursorrules/api_design.md) for API design patterns, and [`.cursorrules/type_hints_standards.md`](../../../.cursorrules/type_hints_standards.md) for type annotation requirements.*
+
 ## Suggested Safeguards
 - Add a lightweight import-smoke test to ensure intra-project imports work when `sys.path` does not contain the repo root (simulate downstream reuse).
 - Add property-based tests for generator functions (`data_generator`, `data_processing`) to guard against shape/NaN regressions.
 - Add performance baseline tests (micro-benchmarks) for `performance.analyze_convergence` to detect accidental O(n²) changes.
 
+## See Also
 
+**Development Standards:**
+- [`.cursorrules/refactoring.md`](../../../.cursorrules/refactoring.md) - Refactoring standards and clean break approach
+- [`.cursorrules/api_design.md`](../../../.cursorrules/api_design.md) - API design patterns and best practices
+- [`.cursorrules/type_hints_standards.md`](../../../.cursorrules/type_hints_standards.md) - Type annotation patterns and requirements
 
+**Project Documentation:**
+- [`AGENTS.md`](AGENTS.md) - Complete project documentation
+- [`README.md`](README.md) - Quick reference
+- [`refactor_playbook.md`](refactor_playbook.md) - Refactoring procedures and best practices
 
-
-
+**Template Documentation:**
+- [`../../docs/best-practices/BEST_PRACTICES.md`](../../docs/best-practices/BEST_PRACTICES.md) - Code quality and refactoring best practices
 
 
 

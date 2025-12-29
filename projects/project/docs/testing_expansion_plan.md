@@ -7,6 +7,8 @@ This plan outlines targeted additions to strengthen regression, property-based, 
 - Add pipeline-level checks that ensure figure/data artifacts remain valid for manuscript builds.
 - Keep tests deterministic and fast; mark heavier cases to allow opt-in.
 
+*See [`.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) for testing standards including no-mocks policy, [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) for infrastructure testing requirements, and [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) for error testing patterns.*
+
 ## Proposed Additions
 - **Property tests (Hypothesis-style)** for:
   - `data_generator.generate_synthetic_data` and `generate_correlated_data` (shape/finite checks, covariance match tolerance).
@@ -37,11 +39,20 @@ This plan outlines targeted additions to strengthen regression, property-based, 
 - Higher confidence in pipeline scripts via CLI smoke coverage.
 - Reduced flakiness through deterministic seeds and explicit RNG handling.
 
+## See Also
 
+**Development Standards:**
+- [`.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) - Testing patterns and coverage standards
+- [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) - Infrastructure module development standards
+- [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) - Error handling and exception patterns
 
+**Project Documentation:**
+- [`AGENTS.md`](AGENTS.md) - Complete project documentation
+- [`README.md`](README.md) - Quick reference
 
-
-
+**Template Documentation:**
+- [`../../tests/AGENTS.md`](../../tests/AGENTS.md) - Testing framework setup
+- [`../../docs/development/TESTING_GUIDE.md`](../../docs/development/TESTING_GUIDE.md) - Testing best practices
 
 
 

@@ -8,6 +8,8 @@ Concise guidance for refactoring or extending the scientific layer while keeping
 - Maintain public API docstrings + type hints on all exported functions/classes.
 - Add tests before or alongside changes; no mocks—use real data fixtures.
 
+*See [`.cursorrules/refactoring.md`](../../../.cursorrules/refactoring.md) for clean break refactoring standards, [`.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) for testing requirements including no-mocks policy, [`.cursorrules/python_logging.md`](../../../.cursorrules/python_logging.md) for logging patterns, and [`.cursorrules/type_hints_standards.md`](../../../.cursorrules/type_hints_standards.md) for type annotation requirements.*
+
 ## Safe-Change Checklist
 1) **Scope**: Identify module boundaries (see `project/docs/refactor_hotspots.md`).
 2) **API contract**: Confirm inputs/outputs and error semantics; add/adjust docstrings.
@@ -40,9 +42,21 @@ Concise guidance for refactoring or extending the scientific layer while keeping
 - Use `python3 project/scripts/analysis_pipeline.py --dry-run` to verify stage wiring quickly.
 - For figure generation: `python3 project/scripts/generate_scientific_figures.py --dry-run --only convergence scatter`.
 
+## See Also
 
+**Development Standards:**
+- [`.cursorrules/refactoring.md`](../../../.cursorrules/refactoring.md) - Refactoring standards and clean break approach
+- [`.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) - Testing patterns and coverage standards
+- [`.cursorrules/python_logging.md`](../../../.cursorrules/python_logging.md) - Logging standards and best practices
+- [`.cursorrules/type_hints_standards.md`](../../../.cursorrules/type_hints_standards.md) - Type annotation patterns
 
+**Project Documentation:**
+- [`AGENTS.md`](AGENTS.md) - Complete project documentation
+- [`README.md`](README.md) - Quick reference
+- [`refactor_hotspots.md`](refactor_hotspots.md) - Code areas needing improvement
 
+**Template Documentation:**
+- [`../../docs/best-practices/BEST_PRACTICES.md`](../../docs/best-practices/BEST_PRACTICES.md) - Code quality and refactoring best practices
 
 
 

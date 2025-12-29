@@ -32,15 +32,22 @@ This guide summarizes the validation pipeline and quality gates used in the proj
 - Fail on missing figures or bibliography blocks; warn on readability deltas.
 - Persist `project/output/reports/` artifacts for inspection (JSON/HTML/Markdown).
 
+*See [`.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) for testing patterns, [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) for error handling patterns, and [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) for infrastructure validation standards.*
 
+## See Also
 
+**Development Standards:**
+- [`.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) - Testing patterns and coverage standards
+- [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) - Error handling and exception patterns
+- [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) - Infrastructure module development standards
 
+**Project Documentation:**
+- [`AGENTS.md`](AGENTS.md) - Complete project documentation
+- [`README.md`](README.md) - Quick reference
 
-
-
-
-
-
+**Template Documentation:**
+- [`../../docs/operational/TROUBLESHOOTING_GUIDE.md`](../../docs/operational/TROUBLESHOOTING_GUIDE.md) - Comprehensive error handling guide
+- [`../../infrastructure/validation/AGENTS.md`](../../infrastructure/validation/AGENTS.md) - Validation infrastructure documentation
 
 
 

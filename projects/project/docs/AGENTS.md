@@ -10,6 +10,7 @@ The `project/docs/` directory contains project-specific documentation that compl
 project/docs/
 ├── AGENTS.md                       # This technical documentation
 ├── infrastructure_usage.md         # Infrastructure module usage guide
+├── manuscript_style_guide.md       # Manuscript style features and examples
 ├── refactor_hotspots.md            # Code refactoring analysis
 ├── refactor_playbook.md            # Refactoring procedures and best practices
 ├── testing_expansion_plan.md       # Test coverage improvement plan
@@ -47,6 +48,36 @@ validation_result = validate_pdf_rendering('output/manuscript.pdf')
 - Validation modules (PDF, Markdown, integrity)
 - Rendering capabilities (PDF, HTML, slides)
 - Publishing workflows (Zenodo, GitHub, arXiv)
+
+*See [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) for infrastructure development standards, [`.cursorrules/python_logging.md`](../../../.cursorrules/python_logging.md) for logging patterns, and [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) for exception handling.*
+
+### Manuscript Style Guide (`manuscript_style_guide.md`)
+
+**Comprehensive documentation of manuscript style features with real examples:**
+
+**Style Feature Documentation:**
+- Section numbering system (01-09, S01-S0N, 98-99)
+- Cross-referencing patterns (\ref{}, \eqref{}, \cite{})
+- Citation styles and bibliography management
+- Equation formatting (inline vs display, labels, numbering)
+- Figure and table integration (placement, sizing, captions)
+- Configuration and metadata management
+- LaTeX preamble customization
+
+**Implementation Examples:**
+- Real examples extracted from all manuscript files
+- Cross-reference patterns from `02_introduction.md`, `03_methodology.md`
+- Equation examples from `03_methodology.md`, `S01_supplemental_methods.md`
+- Figure/table examples from `04_experimental_results.md`
+- Configuration examples from `config.yaml` and `config.yaml.example`
+- Bibliography examples from `references.bib` and `99_references.md`
+
+**Best Practices:**
+- Common patterns used successfully in the manuscript
+- Consistency guidelines across sections
+- Common mistakes to avoid based on validation
+
+*See [`.cursorrules/manuscript_style.md`](../../../.cursorrules/manuscript_style.md) for formatting standards, [`../manuscript/AGENTS.md`](../manuscript/AGENTS.md) for manuscript structure, and [`validation_guide.md`](validation_guide.md) for quality assurance.*
 
 ### Refactoring Analysis (`refactor_hotspots.md`)
 
@@ -121,6 +152,8 @@ def process_data(data: List[float]) -> List[float]:
 - Remove code duplication
 - Improve error handling
 
+*See [`.cursorrules/refactoring.md`](../../../.cursorrules/refactoring.md) for clean break refactoring standards, [`.cursorrules/api_design.md`](../../../.cursorrules/api_design.md) for API design patterns, and [`.cursorrules/type_hints_standards.md`](../../../.cursorrules/type_hints_standards.md) for type annotation requirements.*
+
 **Safety Measures:**
 - Comprehensive test coverage before refactoring
 - Incremental changes with validation
@@ -177,6 +210,8 @@ class TestingExpansionPlan:
 - Phase 3: Performance and regression testing
 - Phase 4: User experience validation
 
+*See [`.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) for testing standards including no-mocks policy, [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) for infrastructure testing requirements, and [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) for error testing patterns.*
+
 ### Validation Guide (`validation_guide.md`)
 
 **Comprehensive validation procedures and standards:**
@@ -228,6 +263,8 @@ class ValidationStandards:
 - Process validation (workflow correctness, error handling)
 - Output validation (result quality, format standards)
 - Performance validation (efficiency, scalability)
+
+*See [`.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) for testing patterns, [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) for error handling patterns, and [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) for infrastructure validation standards.*
 
 ## Documentation Integration
 
@@ -427,6 +464,18 @@ documentation_checks:
 6. **Publish**: Integrate into documentation system
 
 ## See Also
+
+**Development Standards:**
+- [`.cursorrules/AGENTS.md`](../../../.cursorrules/AGENTS.md) - Development standards overview
+- [`.cursorrules/documentation_standards.md`](../../../.cursorrules/documentation_standards.md) - Documentation writing guide
+- [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) - Infrastructure module development standards
+- [`.cursorrules/testing_standards.md`](../../../.cursorrules/testing_standards.md) - Testing patterns and coverage standards
+- [`.cursorrules/refactoring.md`](../../../.cursorrules/refactoring.md) - Refactoring standards and clean break approach
+- [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) - Error handling and exception patterns
+- [`.cursorrules/python_logging.md`](../../../.cursorrules/python_logging.md) - Logging standards and best practices
+- [`.cursorrules/type_hints_standards.md`](../../../.cursorrules/type_hints_standards.md) - Type annotation patterns
+- [`.cursorrules/code_style.md`](../../../.cursorrules/code_style.md) - Code formatting and style standards
+- [`.cursorrules/api_design.md`](../../../.cursorrules/api_design.md) - API design and interface standards
 
 **Project Documentation:**
 - [`../src/AGENTS.md`](../src/AGENTS.md) - Project source code documentation

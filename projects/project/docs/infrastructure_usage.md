@@ -10,13 +10,16 @@ This project leverages the template's infrastructure layer (core, validation, do
 - **Reporting**: `from infrastructure.reporting import generate_pipeline_report, save_pipeline_report, get_error_aggregator` for structured outputs.
 - **Figures**: `from infrastructure.documentation import FigureManager` to register figures and maintain `figure_registry.json`.
 
+*See [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) for infrastructure development standards, [`.cursorrules/python_logging.md`](../../../.cursorrules/python_logging.md) for logging patterns, [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) for exception handling, and [`.cursorrules/reporting.md`](../../../.cursorrules/reporting.md) for reporting module standards.*
+
 ## Examples
 
 ```python
+from pathlib import Path
 from infrastructure.core.performance import PerformanceMonitor
 from infrastructure.reporting import generate_pipeline_report, save_pipeline_report
 
-perf = PerformanceMonitor()
+perf: PerformanceMonitor = PerformanceMonitor()
 perf.start()
 run_stage()
 perf.update_memory()
@@ -31,6 +34,7 @@ save_pipeline_report(report, Path("output/reports"))
 ```
 
 ```python
+from pathlib import Path
 from infrastructure.validation import validate_markdown, validate_figure_registry
 
 issues, _ = validate_markdown("project/manuscript", ".")
@@ -51,10 +55,21 @@ validate_figure_registry(Path("output/figures/figure_registry.json"))
 - Keep stages resumable via `--only/--resume/--dry-run` flags in scripts.
 - Treat output checks (`verify_output_integrity`) as gating steps before rendering.
 
+## See Also
 
+**Development Standards:**
+- [`.cursorrules/infrastructure_modules.md`](../../../.cursorrules/infrastructure_modules.md) - Infrastructure module development standards
+- [`.cursorrules/python_logging.md`](../../../.cursorrules/python_logging.md) - Logging standards and best practices
+- [`.cursorrules/error_handling.md`](../../../.cursorrules/error_handling.md) - Error handling and exception patterns
+- [`.cursorrules/reporting.md`](../../../.cursorrules/reporting.md) - Reporting module standards
 
+**Project Documentation:**
+- [`AGENTS.md`](AGENTS.md) - Complete project documentation
+- [`README.md`](README.md) - Quick reference
 
-
+**Template Documentation:**
+- [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure layer documentation
+- [`../../docs/modules/ADVANCED_MODULES_GUIDE.md`](../../docs/modules/ADVANCED_MODULES_GUIDE.md) - Complete infrastructure guide
 
 
 
