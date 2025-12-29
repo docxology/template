@@ -2,7 +2,7 @@
 
 > **Consolidated best practices** for the Research Project Template
 
-**Quick Reference:** [Getting Started](../guides/GETTING_STARTED.md) | [Advanced Usage](../guides/ADVANCED_USAGE.md) | [Workflow](WORKFLOW.md)
+**Quick Reference:** [Getting Started](../guides/GETTING_STARTED.md) | [Advanced Usage](../guides/ADVANCED_USAGE.md) | [Workflow](../core/WORKFLOW.md)
 
 This document consolidates best practices from across all documentation, providing a single reference for code organization, testing, documentation, build systems, collaboration, version control, and security.
 
@@ -509,8 +509,8 @@ Key best practices:
 10. **Quality** - High standards throughout
 
 For detailed guidance, see:
-- [Architecture](ARCHITECTURE.md) - System design
-- [Workflow](WORKFLOW.md) - Development process
+- [Architecture](../core/ARCHITECTURE.md) - System design
+- [Workflow](../core/WORKFLOW.md) - Development process
 - [Thin Orchestrator Summary](../architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
 - [Contributing](../development/CONTRIBUTING.md) - Contribution guidelines
 
@@ -519,7 +519,7 @@ For detailed guidance, see:
 **Related Documentation:**
 - [Getting Started](../guides/GETTING_STARTED.md) - Basic practices
 - [Advanced Usage](../guides/ADVANCED_USAGE.md) - Advanced practices
-- [Workflow](WORKFLOW.md) - Development workflow
+- [Workflow](../core/WORKFLOW.md) - Development workflow
 - [Contributing](../development/CONTRIBUTING.md) - Contribution practices
 
 

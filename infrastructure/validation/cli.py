@@ -10,6 +10,7 @@ from pathlib import Path
 from .pdf_validator import validate_pdf_rendering
 from .markdown_validator import validate_markdown
 from .integrity import verify_output_integrity
+from .link_validator import LinkValidator
 
 
 def validate_pdf_command(args):
@@ -99,6 +100,38 @@ def verify_integrity_command(args):
     sys.exit(0 if report.overall_integrity else 1)
 
 
+def validate_links_command(args):
+    """Handle link validation."""
+    repo_root = Path(args.repo_root) if args.repo_root else Path.cwd()
+
+    if not repo_root.exists():
+        print(f"Error: Repository root not found: {repo_root}", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"Validating links in repository: {repo_root}...")
+
+    validator = LinkValidator(repo_root)
+    results = validator.validate_all_markdown_files()
+    report = validator.generate_report(results)
+
+    # Count broken links
+    total_broken = sum(len(file_results['broken']) for file_results in results.values())
+
+    if args.output:
+        output_path = Path(args.output)
+        output_path.write_text(report, encoding='utf-8')
+        print(f"Report saved to: {output_path}")
+    else:
+        print(report)
+
+    if total_broken > 0:
+        print(f"\n❌ Found {total_broken} broken link(s)")
+        sys.exit(1)
+    else:
+        print("\n✅ All links valid!")
+        sys.exit(0)
+
+
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -132,6 +165,18 @@ def main():
     int_parser.add_argument("output_dir", help="Path to output directory")
     int_parser.add_argument("-v", "--verbose", action="store_true")
     int_parser.set_defaults(func=verify_integrity_command)
+
+    # Link validation
+    link_parser = subparsers.add_parser("links", help="Validate markdown links")
+    link_parser.add_argument(
+        "--repo-root",
+        help="Repository root directory (default: current directory)"
+    )
+    link_parser.add_argument(
+        "--output",
+        help="Output file for validation report"
+    )
+    link_parser.set_defaults(func=validate_links_command)
 
     args = parser.parse_args()
 

@@ -18,8 +18,13 @@ from infrastructure.core.exceptions import LLMConnectionError, LLMError
 class TestLLMClientInitialization:
     """Test LLMClient initialization with real configurations."""
 
+    @pytest.mark.no_patch_llm_client
     def test_client_with_default_config(self, clean_llm_env):
-        """Test client initializes with default config."""
+        """Test client initializes with real default config.
+
+        This test verifies the actual default configuration behavior,
+        so it opts out of the autouse fixture patching.
+        """
         client = LLMClient()
         assert client.config is not None
         assert client.config.base_url == "http://localhost:11434"

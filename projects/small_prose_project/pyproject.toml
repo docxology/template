@@ -6,6 +6,9 @@ authors = [
     {name = "Research Author", email = "author@example.com"}
 ]
 
+[tool.uv]
+# Inherits workspace settings from root pyproject.toml
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"

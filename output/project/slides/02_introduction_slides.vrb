@@ -1,0 +1,22 @@
+\frametitle{Cross-Referencing System}
+\protect\phantomsection\label{cross-referencing-system}
+The manuscript demonstrates comprehensive cross-referencing:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Section References}: Use the ref command with \texttt{sec:}
+  prefix for sections
+\item
+  \textbf{Equation References}: Use the eqref command with \texttt{eq:}
+  prefix for equations (see Section \ref{sec:methodology})
+\item
+  \textbf{Figure References}: Use the ref command with figure labels
+\item
+  \textbf{Table References}: Use the ref command with \texttt{tab:}
+  prefix for tables
+\end{itemize}
+
+All references are automatically numbered and updated when the document
+is regenerated. For example, the main objective function
+\eqref{eq:objective} is defined in the methodology section.

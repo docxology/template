@@ -76,18 +76,18 @@
 <body>
     <div class="header">
         <h1>Pipeline Execution Report</h1>
-        <p><strong>Generated:</strong> 2025-12-28T08:31:40.135549</p>
-        <p><strong>Total Duration:</strong> 0s</p>
+        <p><strong>Generated:</strong> 2025-12-29T12:48:36.223635</p>
+        <p><strong>Total Duration:</strong> 8m 43s</p>
     </div>
     
     <div class="summary">
         <div class="summary-card">
             <h3>Stages Executed</h3>
-            <div class="value">1</div>
+            <div class="value">6</div>
         </div>
         <div class="summary-card">
             <h3>Stages Passed</h3>
-            <div class="value" style="color: #28a745;">1</div>
+            <div class="value" style="color: #28a745;">6</div>
         </div>
         <div class="summary-card">
             <h3>Stages Failed</h3>
@@ -112,9 +112,39 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>quality_report</td>
+                    <td>setup</td>
                     <td class="status-passed">✅ Passed</td>
-                    <td>0s</td>
+                    <td>1s</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>tests</td>
+                    <td class="status-passed">✅ Passed</td>
+                    <td>10s</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>analysis</td>
+                    <td class="status-passed">✅ Passed</td>
+                    <td>5s</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>render</td>
+                    <td class="status-passed">✅ Passed</td>
+                    <td>15s</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>validate</td>
+                    <td class="status-passed">✅ Passed</td>
+                    <td>2s</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>copy</td>
+                    <td class="status-passed">✅ Passed</td>
+                    <td>1s</td>
                     <td>0</td>
                 </tr>
             </tbody>

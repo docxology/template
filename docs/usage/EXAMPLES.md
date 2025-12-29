@@ -2,9 +2,9 @@
 
 > **Step-by-step guide** for transforming the template into specific research projects
 
-**Quick Reference:** [Examples Showcase](../usage/EXAMPLES_SHOWCASE.md) | [Architecture](ARCHITECTURE.md) | [How To Use](HOW_TO_USE.md)
+**Quick Reference:** [Examples Showcase](../usage/EXAMPLES_SHOWCASE.md) | [Architecture](../core/ARCHITECTURE.md) | [How To Use](../core/HOW_TO_USE.md)
 
-This file shows examples of how to customize the template into specific research projects using configuration files and environment variables. For related information, see **[`EXAMPLES_SHOWCASE.md`](../usage/EXAMPLES_SHOWCASE.md)**, **[`CONFIGURATION.md`](../operational/CONFIGURATION.md)**, **[`README.md`](README.md)**, and **[`ARCHITECTURE.md`](ARCHITECTURE.md)**.
+This file shows examples of how to customize the template into specific research projects using configuration files and environment variables. For related information, see **[`EXAMPLES_SHOWCASE.md`](../usage/EXAMPLES_SHOWCASE.md)**, **[`CONFIGURATION.md`](../operational/CONFIGURATION.md)**, **[`README.md`](README.md)**, and **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)**.
 
 ## Example 1: Machine Learning Research Project
 

@@ -27,7 +27,47 @@ open output/pdf/project_combined.pdf
 open project/output/pdf/project_combined.pdf
 ```
 
-## Structure
+## Manuscript Structure
+
+This project includes the following sections:
+
+### Main Sections
+- `01_abstract.md` (~1.8 KB) - Research overview and key contributions
+- `02_introduction.md` (~3.2 KB) - Project structure and motivation
+- `03_methodology.md` (~5.4 KB) - Mathematical framework and algorithms
+- `04_experimental_results.md` (~8.7 KB) - Performance evaluation and validation
+- `05_discussion.md` (~4.3 KB) - Theoretical implications and comparisons
+- `06_conclusion.md` (~2.1 KB) - Summary and future work
+- `08_acknowledgments.md` (~0.8 KB) - Funding and acknowledgments
+- `09_appendix.md` (~3.6 KB) - Technical details and proofs
+
+### Supplemental Materials
+- `S01_supplemental_methods.md` (~6.2 KB) - Extended methodological details
+- `S02_supplemental_results.md` (~7.8 KB) - Additional experimental results
+- `S03_supplemental_analysis.md` (~5.9 KB) - Extended theoretical analysis and complexity
+- `S04_supplemental_applications.md` (~4.7 KB) - Additional application examples
+
+### Supporting Files
+- `references.bib` - Bibliography entries in BibTeX format
+- `99_references.md` (~1.4 KB) - References section (auto-generated from .bib)
+- `98_symbols_glossary.md` (~2.3 KB) - Notation and terminology (optional)
+
+### Configuration
+- `config.yaml` - Paper metadata (title, authors, DOI)
+- `preamble.md` - LaTeX preamble customizations
+
+## Rendering Process
+
+The manuscript is rendered through these stages:
+
+1. **Discovery**: All `.md` and `.tex` files are discovered and categorized
+2. **Individual Rendering**: Each section rendered to PDF separately
+3. **Combination**: All sections combined into single manuscript PDF
+4. **Output**: Generated files placed in `../output/pdf/`
+
+View detailed rendering logs to see which sections were included.
+
+## File Structure
 
 ### Main Sections (01-09)
 - `01_abstract.md` - Research overview

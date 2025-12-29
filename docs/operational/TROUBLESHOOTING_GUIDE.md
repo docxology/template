@@ -75,7 +75,7 @@ This section documents common environment-related issues and their solutions bas
 **Symptom:**
 ```
 NameError: name 'patch' is not defined
-tests/infrastructure/publishing/test_publishing.py::TestEdgeCases::test_extract_metadata_with_invalid_path FAILED
+tes../../infrastructure/publishing/test_publishing.py::TestEdgeCases::test_extract_metadata_with_invalid_path FAILED
 ```
 
 **Cause:**

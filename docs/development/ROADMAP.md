@@ -1,6 +1,6 @@
 # 🗺️ Development Roadmap
 
-This roadmap outlines the planned development and improvements for the Research Project Template. We welcome community input and contributions to help shape the future of this template. For current status and architecture, see **[`README.md`](README.md)**, **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, and **[`WORKFLOW.md`](WORKFLOW.md)**.
+This roadmap outlines the planned development and improvements for the Research Project Template. We welcome community input and contributions to help shape the future of this template. For current status and architecture, see **[`README.md`](README.md)**, **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)**, and **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)**.
 
 ## 🎯 **Vision Statement**
 

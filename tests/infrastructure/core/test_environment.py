@@ -4,6 +4,7 @@ Comprehensive tests for environment setup and validation utilities.
 """
 
 import os
+import subprocess
 import sys
 from pathlib import Path
 import pytest
@@ -18,6 +19,8 @@ from infrastructure.core.environment import (
     setup_directories,
     verify_source_structure,
     set_environment_variables,
+    check_uv_available,
+    get_python_command,
 )
 
 
@@ -378,4 +381,147 @@ class TestSetEnvironmentVariables:
                 del os.environ['MPLBACKEND']
             if 'PROJECT_ROOT' in os.environ:
                 del os.environ['PROJECT_ROOT']
+
+
+class TestUvIntegration:
+    """Test uv package manager integration and fallback behavior."""
+
+    def test_check_uv_available_success(self):
+        """Test check_uv_available when uv is installed and working."""
+        result = check_uv_available()
+
+        # Result depends on actual system state - just verify it's boolean
+        assert isinstance(result, bool)
+
+        # If uv is available, verify it actually works
+        if result:
+            cmd_result = subprocess.run(['uv', '--version'], capture_output=True)
+            assert cmd_result.returncode == 0
+
+    def test_check_uv_available_not_found(self):
+        """Test check_uv_available when uv is not installed."""
+        # Create isolated environment without uv in PATH
+        # This simulates uv not being installed
+        isolated_env = os.environ.copy()
+        isolated_env['PATH'] = '/usr/bin:/bin'  # Minimal PATH
+
+        # Calculate repo root from test file location
+        repo_root = Path(__file__).parent.parent.parent.parent
+
+        result = subprocess.run(
+            [sys.executable, '-c', f'''
+import os
+import subprocess
+import sys
+
+# Add infrastructure to path
+sys.path.insert(0, "{repo_root}")
+
+from infrastructure.core.environment import check_uv_available
+
+# Set minimal PATH that won't contain uv
+os.environ['PATH'] = '/usr/bin:/bin'
+
+# This will trigger FileNotFoundError
+result = check_uv_available()
+print("True" if result else "False")
+            '''],
+            capture_output=True,
+            text=True
+        )
+
+        assert result.returncode == 0
+        assert result.stdout.strip() == "False"
+
+    def test_check_uv_available_error(self):
+        """Test check_uv_available handles errors gracefully."""
+        # Test that the function always returns a boolean, even in edge cases
+        result = check_uv_available()
+        assert isinstance(result, bool)
+
+        # The function should handle any subprocess errors gracefully
+        # and return False rather than raising exceptions
+        # (This is tested by the subprocess_error test)
+
+    def test_check_uv_available_subprocess_error(self):
+        """Test check_uv_available when subprocess raises an error."""
+        # Create isolated environment without uv in PATH
+        # This will trigger FileNotFoundError which is caught and returns False
+        isolated_env = os.environ.copy()
+        isolated_env['PATH'] = '/usr/bin:/bin'  # Minimal PATH without uv
+
+        # Run the check in a subprocess with modified environment
+        # This creates a real scenario where 'uv' command is not found
+        # Calculate repo root from test file location
+        repo_root = Path(__file__).parent.parent.parent.parent
+
+        result = subprocess.run(
+            [sys.executable, '-c', f'''
+import os
+import subprocess
+import sys
+
+# Add infrastructure to path
+sys.path.insert(0, "{repo_root}")
+
+from infrastructure.core.environment import check_uv_available
+
+# Set minimal PATH that won't contain uv
+os.environ['PATH'] = '/usr/bin:/bin'
+
+# This will trigger FileNotFoundError since uv is not in PATH
+result = check_uv_available()
+print("True" if result else "False")
+            '''],
+            capture_output=True,
+            text=True
+        )
+
+        assert result.returncode == 0
+        assert result.stdout.strip() == "False"
+
+    @patch('infrastructure.core.environment.check_uv_available')
+    def test_get_python_command_with_uv(self, mock_check_uv):
+        """Test get_python_command returns uv command when uv is available."""
+        mock_check_uv.return_value = True
+        
+        cmd = get_python_command()
+        
+        assert cmd == ['uv', 'run', 'python']
+        mock_check_uv.assert_called_once()
+
+    @patch('infrastructure.core.environment.check_uv_available')
+    def test_get_python_command_without_uv(self, mock_check_uv):
+        """Test get_python_command returns python3 when uv is not available."""
+        mock_check_uv.return_value = False
+        
+        cmd = get_python_command()
+        
+        # Should return sys.executable (current Python interpreter)
+        assert cmd == [sys.executable]
+        mock_check_uv.assert_called_once()
+
+    @patch('infrastructure.core.environment.check_uv_available')
+    def test_get_python_command_consistency(self, mock_check_uv):
+        """Test get_python_command returns consistent results."""
+        mock_check_uv.return_value = True
+        
+        cmd1 = get_python_command()
+        cmd2 = get_python_command()
+        
+        assert cmd1 == cmd2
+        assert cmd1 == ['uv', 'run', 'python']
+
+    @patch('infrastructure.core.environment.check_uv_available')
+    def test_get_python_command_list_format(self, mock_check_uv):
+        """Test get_python_command returns list for subprocess usage."""
+        for uv_available in [True, False]:
+            mock_check_uv.return_value = uv_available
+            
+            cmd = get_python_command()
+            
+            # Must be a list for subprocess.run()
+            assert isinstance(cmd, list)
+            assert len(cmd) > 0
+            assert all(isinstance(part, str) for part in cmd)
 

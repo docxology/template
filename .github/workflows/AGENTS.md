@@ -411,8 +411,8 @@ on:
 
 **Related Documentation:**
 - [`../AGENTS.md`](../AGENTS.md) - GitHub integration overview
-- [`../../../docs/development/CONTRIBUTING.md`](../../../docs/development/CONTRIBUTING.md) - Contribution guidelines
-- [`../../../docs/operational/CI_CD_INTEGRATION.md`](../../../docs/operational/CI_CD_INTEGRATION.md) - CI/CD integration guide
+- [`../../docs/development/CONTRIBUTING.md`](../../docs/development/CONTRIBUTING.md) - Contribution guidelines
+- [`../../docs/operational/CI_CD_INTEGRATION.md`](../../docs/operational/CI_CD_INTEGRATION.md) - CI/CD integration guide
 
 **CI/CD Resources:**
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)

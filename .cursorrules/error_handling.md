@@ -357,7 +357,7 @@ def test_exception_chaining():
 
 ## See Also
 
-- [Error Handling Guide](../docs/ERROR_HANDLING_GUIDE.md) - Comprehensive error handling patterns
+- [Error Handling Guide](../docs/operational/ERROR_HANDLING_GUIDE.md) - Comprehensive error handling patterns
 - [Logging](python_logging.md) - Logging standards
 - [testing_standards.md](testing_standards.md) - Testing error conditions
 - [documentation_standards.md](documentation_standards.md) - Documenting exceptions

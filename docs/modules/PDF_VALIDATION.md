@@ -2,7 +2,7 @@
 
 > **Automated quality checking** for generated PDFs
 
-**Quick Reference:** [Build System](../operational/BUILD_SYSTEM.md) | [Common Workflows](COMMON_WORKFLOWS.md#generate-pdf-of-manuscript) | [FAQ](../reference/FAQ.md)
+**Quick Reference:** [Build System](../operational/BUILD_SYSTEM.md) | [Common Workflows](../reference/COMMON_WORKFLOWS.md#generate-pdf-of-manuscript) | [FAQ](../reference/FAQ.md)
 
 ## Overview
 
@@ -15,7 +15,7 @@ Following the **thin orchestrator pattern**, the implementation consists of:
 1. **Business Logic** (`infrastructure/validation/pdf_validator.py`): Core validation algorithms
 2. **CLI Interface** (`infrastructure/validation/cli.py`): Command-line interface
 3. **Orchestrator** (`scripts/04_validate_output.py`): Pipeline integration
-4. **Tests** (`tests/infrastructure/test_validation/`): Comprehensive coverage with real data
+4. **Tests** (`tes../../infrastructure/test_validation/`): Comprehensive coverage with real data
 5. **Integration** (`scripts/run_all.py`): Automated validation in build pipeline (Stage 04)
 
 ## Components
@@ -180,7 +180,7 @@ These are automatically managed by `uv` and defined in `pyproject.toml`.
 
 Following TDD principles:
 
-1. Write tests first in `tests/infrastructure/test_validation/`
+1. Write tests first in `tes../../infrastructure/test_validation/`
 2. Implement business logic in `infrastructure/validation/pdf_validator.py`
 3. Create CLI interface in `infrastructure/validation/cli.py`
 4. Integrate into build pipeline via `scripts/04_validate_output.py`
@@ -241,7 +241,7 @@ Check the compilation logs in `output/pdf/*_compile.log` for detailed LaTeX warn
 
 - [pypdf Documentation](https://pypdf.readthedocs.io/)
 - [Thin Orchestrator Pattern](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)
-- [Project Architecture](ARCHITECTURE.md)
-- [Development Workflow](WORKFLOW.md)
+- [Project Architecture](../core/ARCHITECTURE.md)
+- [Development Workflow](../core/WORKFLOW.md)
 
 

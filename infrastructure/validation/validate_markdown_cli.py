@@ -173,7 +173,7 @@ def validate_math(md_files: list, repo_root_str: str) -> list:
 
 def main() -> int:
     """Main function to run markdown validation.
-    
+
     Returns:
         0 on success, 1 on failure or validation issues
     """
@@ -181,13 +181,23 @@ def main() -> int:
     if import_error:
         print(import_error)
         return 1
-    
+
     strict = "--strict" in sys.argv
-    
+
+    # Check if manuscript directory is provided as argument
+    manuscript_dir_arg = None
+    args = [arg for arg in sys.argv[1:] if not arg.startswith("--")]
+    if args:
+        manuscript_dir_arg = args[0]
+
     try:
-        # Find manuscript directory
-        manuscript_dir = find_manuscript_directory(repo_root)
-        
+        if manuscript_dir_arg:
+            # Use provided manuscript directory
+            manuscript_dir = Path(manuscript_dir_arg)
+        else:
+            # Find manuscript directory automatically
+            manuscript_dir = find_manuscript_directory(repo_root)
+
         # Run validation
         problems, exit_code = validate_markdown(manuscript_dir, repo_root, strict=strict)
         

@@ -1,25 +1,52 @@
 import pytest
+import json
 import os
-from unittest.mock import MagicMock, patch
+from pytest_httpserver import HTTPServer
 from infrastructure.llm.core.config import LLMConfig
 from infrastructure.llm.core.client import LLMClient
 
 @pytest.fixture
-def mock_config():
-    config = LLMConfig()
-    config.base_url = "http://mock-ollama"
-    config.default_model = "test-model"
-    config.fallback_models = ["fallback-model"]
+def ollama_test_server():
+    """Local HTTP test server mimicking Ollama API endpoints."""
+    server = HTTPServer()
+    server.start()
+
+    # Mock /api/chat endpoint (what the client actually uses)
+    server.expect_request("/api/chat", method="POST").respond_with_data(
+        json.dumps({
+            "model": "gemma3:4b",
+            "created_at": "2024-01-01T00:00:00Z",
+            "message": {"role": "assistant", "content": "Test response"},
+            "done": True
+        }),
+        content_type="application/json"
+    )
+
+    # Mock /api/tags endpoint (model list)
+    server.expect_request("/api/tags").respond_with_json({
+        "models": [
+            {"name": "gemma3:4b", "size": "4.7GB"},
+            {"name": "llama3:8b", "size": "4.7GB"}
+        ]
+    })
+
+    yield server
+
+    server.stop()
+
+@pytest.fixture
+def test_config(ollama_test_server):
+    """Create a real LLMConfig pointing to test server."""
+    config = LLMConfig(auto_inject_system_prompt=False)
+    config.base_url = ollama_test_server.url_for("/")
+    config.default_model = "llama3:latest"
+    config.fallback_models = ["llama3:8b"]
     return config
 
 @pytest.fixture
-def mock_client(mock_config, mocker):
-    mocker.patch("requests.post")
-    return LLMClient(mock_config)
-
-@pytest.fixture
-def mock_requests_post(mocker):
-    return mocker.patch("requests.post")
+def test_client(test_config):
+    """Create a real LLMClient using test server."""
+    return LLMClient(test_config)
 
 @pytest.fixture
 def default_config():
@@ -54,3 +81,31 @@ def clean_llm_env(monkeypatch):
         monkeypatch.delenv(var, raising=False)
     yield
     # Cleanup happens automatically
+
+
+@pytest.fixture(autouse=True)
+def patch_llm_client_for_tests(request, ollama_test_server, monkeypatch):
+    """Patch LLMClient to use test server by default when no config provided.
+
+    Uses real HTTP server (pytest-httpserver) - compliant with no-mocks policy.
+    Skips patching if test is marked with 'no_patch_llm_client' to allow
+    testing real default configuration.
+    """
+    # Check if test needs real default behavior
+    if request.node.get_closest_marker("no_patch_llm_client"):
+        return  # Skip patching - test will use real default config
+
+    from infrastructure.llm import LLMClient, LLMConfig
+
+    original_init = LLMClient.__init__
+
+    def patched_init(self, config=None):
+        if config is None:
+            # Create config pointing to real HTTP test server
+            config = LLMConfig(auto_inject_system_prompt=False)
+            config.base_url = ollama_test_server.url_for("/")
+            config.default_model = "gemma3:4b"
+            config.fallback_models = ["llama3:8b"]
+        original_init(self, config)
+
+    monkeypatch.setattr(LLMClient, "__init__", patched_init)

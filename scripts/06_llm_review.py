@@ -1377,7 +1377,20 @@ def main(mode: ReviewMode = ReviewMode.ALL, project_name: str = "project") -> in
 
     repo_root = Path(__file__).parent.parent
     project_output = repo_root / "projects" / project_name / "output"
-    pdf_path = project_output / "pdf" / f"{project_name}_combined.pdf"
+
+    # Try project-specific filename first, then fallback to generic for backward compatibility
+    pdf_dir = project_output / "pdf"
+    project_specific_pdf = pdf_dir / f"{project_name}_combined.pdf"
+    generic_pdf = pdf_dir / "project_combined.pdf"
+
+    if project_specific_pdf.exists():
+        pdf_path = project_specific_pdf
+    elif generic_pdf.exists():
+        pdf_path = generic_pdf
+        logger.warning(f"Using legacy PDF filename: {generic_pdf.name}. Consider upgrading to project-specific naming.")
+    else:
+        pdf_path = project_specific_pdf  # Use expected filename in error message
+
     output_dir = project_output / "llm"
     
     # Initialize session metrics

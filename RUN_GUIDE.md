@@ -60,12 +60,13 @@ Core Pipeline Scripts (aligned with script numbering):
   2. Run Analysis (02_run_analysis.py)
   3. Render PDF (03_render_pdf.py)
   4. Validate Output (04_validate_output.py)
-  5. Copy Outputs (05_copy_outputs.py)
-  6. LLM Review (requires Ollama) (06_llm_review.py --reviews-only)
-  7. LLM Translations (requires Ollama) (06_llm_review.py --translations-only)
+  5. LLM Review (requires Ollama) (06_llm_review.py --reviews-only)
+  6. LLM Translations (requires Ollama) (06_llm_review.py --translations-only)
 
 Orchestration:
+  7. Run Core Pipeline (stages 0-7: no LLM)
   8. Run Full Pipeline (10 stages: 0-9)
+  9. Run Full Pipeline (skip infrastructure tests)
 ============================================================
 ```
 
@@ -80,7 +81,7 @@ Verifies the environment is ready for the pipeline.
 - Sets up environment variables
 
 #### Option 1: Run Tests
-Executes the complete test suite with coverage validation.
+Executes the test suite with coverage validation.
 - Runs infrastructure tests (`tests/infrastructure/`) with 60%+ coverage threshold
 - Runs project tests (`project/tests/`) with 90%+ coverage threshold
 - Generates HTML coverage reports for both suites
@@ -89,7 +90,7 @@ Executes the complete test suite with coverage validation.
 **Coverage Reports**: `htmlcov/index.html`
 
 #### Option 2: Run Analysis
-Executes project analysis scripts with enhanced progress tracking.
+Executes project analysis scripts with progress tracking.
 - Discovers scripts in `project/scripts/`
 - Executes each script in order with progress tracking
 - Collects outputs to `project/output/`
@@ -104,20 +105,47 @@ Generates manuscript PDFs with progress tracking.
 **Output**: `project/output/pdf/`
 
 #### Option 4: Validate Output
-Validates build quality with enhanced reporting.
+Validates build quality with reporting.
 - Checks generated PDFs for issues
 - Validates markdown references
 - Checks figure integrity
-- Generates enhanced validation reports (JSON, Markdown)
+- Generates validation reports (JSON, Markdown)
 
-#### Option 5: Copy Outputs
-Copies final deliverables to top-level output directory.
-- Cleans top-level `output/` directory
-- Copies combined PDF manuscript
-- Copies all presentation slides (PDF format)
-- Copies all web outputs (HTML format)
+#### Option 5: LLM Review
+Generates AI-powered manuscript reviews using local Ollama LLM.
+- Checks Ollama availability and selects best model
+- Extracts full text from combined PDF manuscript
+- Generates executive summary, quality review, methodology review, and improvement suggestions
+- Saves all reviews to `project/output/llm/`
 
-#### Option 6: LLM Review
+**Requires**: Running Ollama server with at least one model installed. Skips gracefully if unavailable.
+
+#### Option 6: LLM Translations
+Generates multi-language technical abstract translations.
+- Translates abstract to configured languages (see `project/manuscript/config.yaml`)
+- Uses local Ollama LLM for translation
+- Saves translations to `project/output/llm/`
+
+**Requires**: Running Ollama server and translation configuration in `config.yaml`.
+
+#### Option 7: Run Core Pipeline
+Executes the core pipeline (stages 0-6) without LLM features.
+- Runs all core stages: Setup → Tests → Analysis → PDF → Validate
+- Stops on first failure with clear error messages
+- Suitable for CI/CD environments
+
+#### Option 8: Run Full Pipeline
+Executes the complete 10-stage build pipeline (stages 0-9):
+- Includes all core stages plus LLM review and translations
+- Comprehensive manuscript generation with AI assistance
+- Automatic checkpointing and resume capability
+
+**Note**: Stage 0 (Clean) is a pre-pipeline cleanup step. The main pipeline stages (1-9) are tracked in the progress display, which shows [1/9] to [9/9] in logs.
+
+#### Option 9: Run Full Pipeline (skip infrastructure tests)
+Executes the full pipeline but skips infrastructure tests.
+- Useful for multi-project execution where infrastructure tests may have already passed
+- Runs project tests only to save time in development workflows
 Generates AI-powered manuscript reviews using local Ollama LLM.
 - Checks Ollama availability and selects best model
 - Extracts full text from combined PDF manuscript
@@ -135,7 +163,7 @@ Generates multi-language technical abstract translations.
 **Requires**: Running Ollama server and translation configuration in `config.yaml`.
 
 #### Option 8: Run Full Pipeline
-Executes the complete 10-stage build pipeline (stages 0-9):
+Executes the 10-stage build pipeline (stages 0-9):
 
 | Stage | Name | Purpose |
 |-------|------|---------|
@@ -166,7 +194,7 @@ Executes the complete 10-stage build pipeline (stages 0-9):
 
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Run full pipeline (10 stages: 0-9, includes LLM)
+./run.sh --pipeline          # Run pipeline (10 stages: 0-9, includes LLM)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 ./run.sh --infra-tests        # Run infrastructure tests only
 ./run.sh --project-tests      # Run project tests only
@@ -196,23 +224,24 @@ python3 scripts/run_all.py
 - Zero-padded stage numbering (Python convention)
 - Checkpoint/resume support: `python3 scripts/run_all.py --resume`
 
-### Core Pipeline Stages (00-05)
+### Core Pipeline Stages (00-05) + Executive Reporting (07)
 
 | Stage | Script | Purpose |
 |-------|--------|---------|
 | 00 | `00_setup_environment.py` | Environment setup & validation |
-| 01 | `01_run_tests.py` | Run complete test suite (infrastructure + project) |
+| 01 | `01_run_tests.py` | Run test suite (infrastructure + project) |
 | 02 | `02_run_analysis.py` | Discover & run `project/scripts/` |
 | 03 | `03_render_pdf.py` | PDF rendering orchestration |
 | 04 | `04_validate_output.py` | Output validation & reporting |
 | 05 | `05_copy_outputs.py` | Copy final deliverables to `output/` |
+| 07 | `07_generate_executive_report.py` | Executive summaries & dashboards (multi-project only) |
 
 ## Entry Point Comparison
 
 | Entry Point | Pipeline Stages | LLM Support | Use Case |
 |-------------|----------------|--------------|----------|
-| `./run.sh` | Main entry point | Optional | Interactive menu or full manuscript pipeline with LLM |
-| `./run.sh --pipeline` | 10 stages (0-9) | Optional | Full manuscript pipeline with LLM |
+| `./run.sh` | Main entry point | Optional | Interactive menu or manuscript pipeline with LLM |
+| `./run.sh --pipeline` | 10 stages (0-9) | Optional | Manuscript pipeline with LLM |
 | `python3 scripts/run_all.py` | 6 stages (00-05) | None | Core pipeline, CI/CD automation |
 
 ## Usage Examples
@@ -231,7 +260,7 @@ python3 scripts/run_all.py
 ### Non-Interactive Mode
 
 ```bash
-# Run full manuscript pipeline
+# Run manuscript pipeline
 ./run.sh --pipeline
 
 # Resume manuscript pipeline from checkpoint

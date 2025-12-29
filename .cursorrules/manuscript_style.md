@@ -1032,10 +1032,10 @@ the iterative algorithm described in Section \ref{sec:algorithm}.
 
 ## See Also
 
-- [project/manuscript/AGENTS.md](../project/manuscript/AGENTS.md) - Complete manuscript documentation
-- [project/manuscript/README.md](../project/manuscript/README.md) - Quick reference for manuscript
-- [docs/MARKDOWN_TEMPLATE_GUIDE.md](../docs/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown and cross-referencing guide
-- [docs/MANUSCRIPT_NUMBERING_SYSTEM.md](../docs/MANUSCRIPT_NUMBERING_SYSTEM.md) - Section numbering system
+- [project/manuscript/AGENTS.md](../projects/project/manuscript/AGENTS.md) - Complete manuscript documentation
+- [project/manuscript/README.md](../projects/project/manuscript/README.md) - Quick reference for manuscript
+- [docs/MARKDOWN_TEMPLATE_GUIDE.md](../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown and cross-referencing guide
+- [docs/MANUSCRIPT_NUMBERING_SYSTEM.md](../docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md) - Section numbering system
 - [code_style.md](code_style.md) - Code formatting standards
 - [documentation_standards.md](documentation_standards.md) - Documentation writing guide
 

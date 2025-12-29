@@ -148,8 +148,8 @@ python3 scripts/run_all.py
 
 ## 📚 **Resources**
 
-- **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System design overview
-- **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow guide
+- **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)** - System design overview
+- **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)** - Development workflow guide
 - **[`MARKDOWN_TEMPLATE_GUIDE.md`](../usage/MARKDOWN_TEMPLATE_GUIDE.md)** - Writing and formatting guide
 - **[`EXAMPLES.md`](../usage/EXAMPLES.md)** - Usage examples and customization
 - **[`README.md`](README.md)** - Project overview and quick start

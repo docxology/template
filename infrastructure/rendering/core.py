@@ -71,16 +71,17 @@ class RenderManager:
         """Render HTML."""
         return self.web_renderer.render(source_file)
 
-    def render_combined_pdf(self, source_files: List[Path], manuscript_dir: Path) -> Path:
+    def render_combined_pdf(self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project") -> Path:
         """Render combined PDF from multiple markdown files.
-        
+
         Args:
             source_files: List of markdown files in order to combine
             manuscript_dir: Directory containing manuscript files (for preamble/bib)
-            
+            project_name: Name of the project for filename generation
+
         Returns:
             Path to generated combined PDF file
         """
         logger.info(f"Rendering combined PDF from {len(source_files)} files...")
-        return self.pdf_renderer.render_combined(source_files, manuscript_dir)
+        return self.pdf_renderer.render_combined(source_files, manuscript_dir, project_name)
 

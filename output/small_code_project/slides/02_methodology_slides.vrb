@@ -1,0 +1,115 @@
+\frametitle{Methodology}
+\protect\phantomsection\label{methodology}
+This section describes the implementation methodology and experimental
+setup used in the optimization project.
+
+\begin{block}{Algorithm Implementation}
+\protect\phantomsection\label{algorithm-implementation}
+\begin{block}{Gradient Descent Algorithm}
+\protect\phantomsection\label{gradient-descent-algorithm}
+The core algorithm implements the following iterative procedure:
+
+\textbf{Input:} Initial point \(x_0\), step size \(\alpha\), tolerance
+\(\epsilon\), maximum iterations \(N\)
+
+\textbf{Output:} Approximate solution \(x^*\)
+
+\begin{verbatim}
+k = 0
+while k < N:
+    ∇f = compute_gradient(x_k)
+    if ||∇f|| < ε:
+        return x_k  # Converged
+    x_{k+1} = x_k - α ∇f
+    k = k + 1
+return x_k  # Maximum iterations reached
+\end{verbatim}
+\end{block}
+
+\begin{block}{Test Problem: Quadratic Minimization}
+\protect\phantomsection\label{test-problem-quadratic-minimization}
+We use quadratic functions of the form:
+
+\[f(x) = \frac{1}{2} x^T A x - b^T x\]
+
+where: - \(A\) is a positive definite matrix - \(b\) is the linear term
+vector - The gradient is: \(\nabla f(x) = A x - b\)
+
+For the simple case \(A = I\) and \(b = 1\), we have:
+
+\[f(x) = \frac{1}{2} x^2 - x\]
+
+with gradient:
+
+\[\nabla f(x) = x - 1\]
+
+The analytical minimum occurs at \(x = 1\) with \(f(1) = -\frac{1}{2}\).
+\end{block}
+\end{block}
+
+\begin{block}{Experimental Setup}
+\protect\phantomsection\label{experimental-setup}
+\begin{block}{Step Size Analysis}
+\protect\phantomsection\label{step-size-analysis}
+We investigate the effect of different step sizes on convergence:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\alpha = 0.01\) (conservative)
+\item
+  \(\alpha = 0.05\) (moderate)
+\item
+  \(\alpha = 0.10\) (aggressive)
+\item
+  \(\alpha = 0.20\) (very aggressive)
+\end{itemize}
+\end{block}
+
+\begin{block}{Convergence Criteria}
+\protect\phantomsection\label{convergence-criteria}
+The algorithm terminates when: - Gradient norm falls below tolerance:
+\(||\nabla f(x)|| < \epsilon\) - Maximum iterations reached: \(k = N\)
+\end{block}
+
+\begin{block}{Performance Metrics}
+\protect\phantomsection\label{performance-metrics}
+We track: - \textbf{Solution accuracy}: Distance to analytical optimum -
+\textbf{Convergence speed}: Number of iterations to convergence -
+\textbf{Objective value}: Function value at final solution
+\end{block}
+\end{block}
+
+\begin{block}{Implementation Details}
+\protect\phantomsection\label{implementation-details}
+\begin{block}{Numerical Stability}
+\protect\phantomsection\label{numerical-stability}
+The implementation uses NumPy for vectorized computations to ensure
+numerical stability and efficiency.
+\end{block}
+
+\begin{block}{Error Handling}
+\protect\phantomsection\label{error-handling}
+Input validation ensures: - Compatible matrix dimensions - Positive step
+sizes - Reasonable tolerance values
+\end{block}
+
+\begin{block}{Testing Strategy}
+\protect\phantomsection\label{testing-strategy}
+Comprehensive tests cover: - \textbf{Functional correctness} of gradient
+computations - \textbf{Convergence behavior} under different conditions
+- \textbf{Edge cases} (already converged, max iterations) -
+\textbf{Numerical accuracy} with known analytical solutions
+\end{block}
+\end{block}
+
+\begin{block}{Analysis Pipeline}
+\protect\phantomsection\label{analysis-pipeline}
+The analysis script automatically: 1. Runs optimization experiments with
+different parameters 2. Collects convergence trajectories 3. Generates
+publication-quality plots 4. Saves numerical results to CSV files 5.
+Registers figures for manuscript integration
+
+This automated approach ensures reproducible research and consistent
+result generation.
+\end{block}

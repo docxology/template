@@ -147,16 +147,29 @@ def save_optimization_results(results):
 def register_figure():
     """Register the generated figure for manuscript reference."""
     try:
-        # Try to import and use figure manager
-        sys.path.insert(0, str(Path(__file__).parent.parent.parent))  # Add template root
-        from infrastructure.figure_manager import FigureManager
-
-        fm = FigureManager()
-        fm.register_figure("convergence_plot.png", label="fig:convergence")
-
-        print("Registered figure with label: fig:convergence")
-    except ImportError:
-        print("Figure manager not available, skipping registration")
+        # Ensure repo root is on path for infrastructure imports
+        repo_root = Path(__file__).parent.parent.parent
+        sys.path.insert(0, str(repo_root))
+        
+        from infrastructure.documentation.figure_manager import FigureManager
+        
+        # Use project-specific registry path
+        registry_file = project_root / "output" / "figures" / "figure_registry.json"
+        fm = FigureManager(registry_file=str(registry_file))
+        
+        fm.register_figure(
+            filename="convergence_plot.png",
+            caption="Gradient descent convergence for different step sizes",
+            label="fig:convergence",
+            section="Results",
+            generated_by="optimization_analysis.py"
+        )
+        
+        print("✅ Registered figure with label: fig:convergence")
+    except ImportError as e:
+        print(f"⚠️  Figure manager not available: {e}")
+    except Exception as e:
+        print(f"⚠️  Failed to register figure: {e}")
 
 
 def main():

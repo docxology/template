@@ -2,6 +2,30 @@
 
 Academic prose with mathematical notation for professional PDF generation.
 
+## Manuscript Structure
+
+This project includes the following sections:
+
+### Main Sections
+- `01_introduction.md` (~2 KB) - Introduction and motivation
+- `02_methodology.md` (~3 KB) - Research methods and approach
+- `03_results.md` (~4 KB) - Experimental results and findings
+- `04_conclusion.md` (~2 KB) - Conclusions and future work
+
+### Supporting Files
+- `references.bib` - Bibliography entries in BibTeX format
+
+## Rendering Process
+
+The manuscript is rendered through these stages:
+
+1. **Discovery**: All `.md` files are discovered and categorized
+2. **Individual Rendering**: Each section rendered to PDF separately
+3. **Combination**: All sections combined into single manuscript PDF
+4. **Output**: Generated files placed in `../../output/pdf/`
+
+View detailed rendering logs to see which sections were included.
+
 ## Quick Start
 
 ```bash

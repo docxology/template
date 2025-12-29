@@ -37,14 +37,14 @@ docs/architecture/
 **Detailed implementation of the thin orchestrator architectural pattern:**
 
 **Pattern Principles:**
-- **Business Logic Location**: All computation in `project/src/` or `infrastructure/` modules
+- **Business Logic Location**: All computation in `projects/{name}/src/` or `infrastructure/` modules
 - **Orchestrator Role**: Scripts coordinate execution, handle I/O only
 - **Dependency Direction**: Scripts import from modules, not vice versa
 - **Violation Prevention**: Pattern enforced through code review and testing
 
 **Implementation Details:**
 - Root entry points (`scripts/`) discover and invoke `project/scripts/`
-- Project scripts import from `project/src/` for computation
+- Project scripts import from `projects/{name}/src/` for computation
 - Infrastructure scripts import from `infrastructure/` modules
 - All orchestration is thin: minimal logic, maximum delegation
 
@@ -83,7 +83,7 @@ docs/architecture/
 ### 2. Thin Orchestrator Pattern
 
 **Business Logic Placement:**
-- Core algorithms in `project/src/` modules
+- Core algorithms in `projects/{name}/src/` modules
 - Infrastructure tools in `infrastructure/` modules
 - Scripts contain only orchestration logic
 
@@ -152,8 +152,8 @@ project/
 ### Testing Architecture
 
 **Test Organization:**
-- `tests/infrastructure/` mirrors `infrastructure/` structure
-- `tests/project/` mirrors `project/` structure
+- `tes../../infrastructure/` mirrors `infrastructure/` structure
+- `tes../../projects/project/` mirrors `project/` structure
 - Integration tests in `tests/integration/`
 - 100% coverage requirement for project code
 - 60%+ coverage requirement for infrastructure
@@ -214,7 +214,7 @@ llm:
 
 ```bash
 # Start with system overview
-cat docs/core/ARCHITECTURE.md
+cat do../core/ARCHITECTURE.md
 
 # Understand layer separation
 cat docs/architecture/TWO_LAYER_ARCHITECTURE.md
@@ -233,7 +233,7 @@ cat docs/architecture/DECISION_TREE.md
 # Use DECISION_TREE.md to determine placement
 
 # 2. Implement business logic
-# Place in appropriate module (infrastructure/ or project/src/)
+# Place in appropriate module (infrastructure/ or projects/{name}/src/)
 
 # 3. Create orchestrator script
 # Thin script in scripts/ or project/scripts/
@@ -252,16 +252,16 @@ cat docs/architecture/DECISION_TREE.md
 1. **Create module directory**: `infrastructure/new_module/`
 2. **Implement core logic**: `infrastructure/new_module/core.py`
 3. **Add CLI interface**: `infrastructure/new_module/cli.py` (optional)
-4. **Write comprehensive tests**: `tests/infrastructure/test_new_module/`
+4. **Write comprehensive tests**: `tes../../infrastructure/test_new_module/`
 5. **Document functionality**: `infrastructure/new_module/AGENTS.md`
 6. **Update system docs**: Modify root `AGENTS.md` and architecture docs
 
 ### Adding Project Features
 
-1. **Implement algorithm**: `project/src/new_feature.py`
+1. **Implement algorithm**: `projects/{name}/src/new_feature.py`
 2. **Create analysis script**: `project/scripts/analyze_new_feature.py`
-3. **Add tests**: `project/tests/test_new_feature.py`
-4. **Update documentation**: `project/src/AGENTS.md`
+3. **Add tests**: `proje../../tests/test_new_feature.py`
+4. **Update documentation**: `projects/{name}/src/AGENTS.md`
 5. **Integrate with pipeline**: Modify `scripts/02_run_analysis.py` if needed
 
 ## Troubleshooting
@@ -327,7 +327,7 @@ cat docs/architecture/DECISION_TREE.md
 - [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - System architecture overview
 - [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
 - [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure implementation
-- [`../../project/src/AGENTS.md`](../../project/src/AGENTS.md) - Project implementation
+- [`../../projects/project/src/AGENTS.md`](../../projects/project/src/AGENTS.md) - Project implementation
 
 **System Documentation:**
 - [`../../AGENTS.md`](../../AGENTS.md) - Complete system overview

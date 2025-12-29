@@ -15,6 +15,8 @@ import re
 from pathlib import Path
 from typing import List, Set, Tuple
 
+from infrastructure.core.exceptions import FileNotFoundError, FileOperationError, NotADirectoryError
+
 # Regex patterns for validation
 IMG_PATTERN = re.compile(r"!\[[^\]]*\]\(([^\)]+)\)")
 EQ_LABEL_PATTERN = re.compile(r"\\label\{([^}]+)\}")
@@ -39,10 +41,16 @@ def find_markdown_files(markdown_dir: str | Path) -> List[str]:
     """
     markdown_dir = Path(markdown_dir)
     if not markdown_dir.exists():
-        raise FileNotFoundError(f"Markdown directory not found: {markdown_dir}")
-    
+        raise FileNotFoundError(
+            f"Markdown directory not found: {markdown_dir}",
+            context={"directory": str(markdown_dir)}
+        )
+
     if not markdown_dir.is_dir():
-        raise NotADirectoryError(f"Path is not a directory: {markdown_dir}")
+        raise NotADirectoryError(
+            f"Path is not a directory: {markdown_dir}",
+            context={"path": str(markdown_dir)}
+        )
     
     return [
         str(markdown_dir / f)

@@ -36,7 +36,7 @@ This document provides documentation for the Research Project Template system, e
 
 ### Thin Orchestrator Pattern
 
-**CRITICAL**: All business logic resides in `project/src/` modules. Scripts are **thin orchestrators** that:
+**CRITICAL**: All business logic resides in `projects/{name}/src/` modules. Scripts are **thin orchestrators** that:
 
 **Root Entry Points (Generic):**
 - Coordinate build pipeline stages
@@ -203,24 +203,25 @@ template/                           # Generic Template
 │   ├── AGENTS.md
 │   ├── README.md
 │   └── test_*.py
-├── project/                        # Example Research Project (Customizable)
-│   ├── src/                        # Project scientific code (Layer 2)
-│   │   ├── AGENTS.md               # Project documentation
-│   │   ├── README.md
-│   │   ├── example.py
-│   │   └── ...
-│   ├── tests/                      # Project Tests
-│   │   ├── AGENTS.md
-│   │   ├── README.md
-│   │   └── test_*.py
-│   ├── scripts/                    # Project Analysis Scripts
-│   │   ├── AGENTS.md               # Project scripts documentation
-│   │   ├── README.md
-│   │   ├── analysis_pipeline.py
-│   │   └── example_figure.py
-│   ├── manuscript/                 # Research Manuscript
-│   ├── output/                     # Generated Files (disposable)
-│   └── pyproject.toml              # Project configuration
+├── projects/                       # Multiple research projects directory
+│   ├── project/                    # Original full research template
+│   │   ├── src/                    # Project scientific code (Layer 2)
+│   │   │   ├── AGENTS.md           # Project documentation
+│   │   │   ├── README.md
+│   │   │   ├── example.py
+│   │   │   └── ...
+│   │   ├── tests/                  # Project Tests
+│   │   │   ├── AGENTS.md
+│   │   │   ├── README.md
+│   │   │   └── test_*.py
+│   │   ├── scripts/                # Project Analysis Scripts
+│   │   │   ├── AGENTS.md           # Project scripts documentation
+│   │   │   ├── README.md
+│   │   │   ├── analysis_pipeline.py
+│   │   │   └── example_figure.py
+│   │   ├── manuscript/             # Research Manuscript
+│   │   ├── output/                 # Generated Files (disposable)
+│   │   └── pyproject.toml          # Project configuration
 ├── docs/                           # Documentation
 │   ├── AGENTS.md
 │   └── README.md
@@ -388,13 +389,17 @@ python3 scripts/run_all.py
 5. **Output Validation** - Validate all generated outputs
 6. **Copy Outputs** - Copy final deliverables to root `output/` directory
 
+**Multi-Project Executive Reporting** (`--all-projects` mode only):
+
+10. **Executive Reporting** - Cross-project metrics, summaries, and visual dashboards
+
 **Extended Pipeline Stages** (`./run.sh --pipeline` only):
 
 8. **LLM Scientific Review** - AI-powered manuscript analysis (optional)
 9. **LLM Translations** - Multi-language technical abstract generation (optional)
 
 **Stage Numbering:**
-- `run_all.py`: Stages 00-05 (zero-padded, Python convention) - 6 core stages
+- `run_all.py`: Stages 00-05 (zero-padded, Python convention) - 6 core stages + Stage 10 (multi-project)
 - `./run.sh`: Stages 0-9 (10 total stages). Stage 0 is cleanup (not in STAGE_NAMES array), stages 1-9 are tracked and displayed as [1/9] to [9/9] in logs
 
 ### Manual Execution Options
@@ -483,7 +488,7 @@ python3 -m pytest projects/project/tests/ --cov=projects/project/src --cov-repor
 ```
 
 **Coverage Requirements**:
-- 90% minimum for project/src/ (currently achieving 100% - perfect coverage!)
+- 90% minimum for projects/{name}/src/ (currently achieving 100% - perfect coverage!)
 - 60% minimum for infrastructure/ (currently achieving 83.33% - exceeds stretch goal!)
 - All tests must pass before PDF generation
 - No mock methods (real data analysis only)
@@ -505,10 +510,89 @@ This policy ensures:
 - Code is tested in realistic conditions
 - No false confidence from mocked tests
 
+### No-Mocks Implementation Patterns
+
+**HTTP API Testing**: Use `pytest-httpserver` for local test servers
+```python
+# BEFORE (mocked)
+with patch('requests.post') as mock_post:
+    mock_post.return_value = MagicMock(status_code=200, json=lambda: {"result": "ok"})
+
+# AFTER (real HTTP)
+def test_api_call(ollama_test_server):
+    # ollama_test_server fixture provides real HTTP server
+    config = LLMConfig(base_url=ollama_test_server.url_for("/"))
+    client = LLMClient(config)
+    response = client.query("test")  # Real HTTP request
+    assert "response" in response.lower()
+```
+
+**CLI Testing**: Execute real subprocess commands instead of mocking sys.argv
+```python
+# BEFORE (mocked)
+with patch('sys.argv', ['cli.py', 'validate', 'file.pdf']):
+    cli.main()
+
+# AFTER (real subprocess)
+result = subprocess.run(
+    ['python', '-m', 'infrastructure.validation.cli', 'validate', 'file.pdf'],
+    capture_output=True, text=True
+)
+assert result.returncode == 0
+```
+
+**PDF Generation**: Create real PDFs with reportlab instead of mocking PDF libraries
+```python
+# BEFORE (mocked)
+with patch.dict('sys.modules', {'pdfplumber': mock_pdfplumber}):
+    result = extract_text(pdf_file)
+
+# AFTER (real PDF)
+from reportlab.pdfgen import canvas
+c = canvas.Canvas(str(pdf_file))
+c.drawString(100, 750, "Test content")
+c.save()
+
+result = extract_text(pdf_file)  # Real PDF processing
+assert "Test content" in result
+```
+
+**File System Operations**: Use real temp files and directories
+```python
+# BEFORE (mocked)
+with patch('builtins.open') as mock_open:
+    mock_open.return_value.__enter__.return_value.read.return_value = "content"
+
+# AFTER (real files)
+def test_file_operation(tmp_path):
+    test_file = tmp_path / "test.txt"
+    test_file.write_text("content")
+    result = read_file(test_file)  # Real file operation
+    assert result == "content"
+```
+
+**External Tool Testing**: Use `@pytest.mark.skipif` for optional dependencies
+```python
+# BEFORE (mocked subprocess)
+with patch('subprocess.run') as mock_run:
+    mock_run.return_value = MagicMock(returncode=0)
+
+# AFTER (real tool execution)
+@pytest.mark.skipif(not shutil.which('pandoc'), reason="pandoc not installed")
+def test_pandoc_conversion(tmp_path):
+    md_file = tmp_path / "test.md"
+    md_file.write_text("# Test")
+    pdf_file = tmp_path / "test.pdf"
+
+    result = subprocess.run(['pandoc', str(md_file), '-o', str(pdf_file)])
+    assert result.returncode == 0
+    assert pdf_file.exists()
+```
+
 ### Test Structure
 
 Tests follow the **thin orchestrator pattern** principles:
-- Import real methods from `project/src/` or `infrastructure/` modules
+- Import real methods from `projects/{name}/src/` or `infrastructure/` modules
 - Use real data and computation
 - Validate actual behavior (no mocks)
 - Ensure reproducible, deterministic results
@@ -937,7 +1021,7 @@ Key log files for debugging:
    python3 scripts/run_all.py --clean
 
    # Backup source files only
-   tar -czf project_backup.tar.gz project/src/ project/tests/ project/scripts/ project/manuscript/ docs/
+   tar -czf project_backup.tar.gz projects/{name}/src/ projects/{name}/tests/ projects/{name}/scripts/ projects/{name}/manuscript/ docs/
    ```
 
 ### Adding New Features

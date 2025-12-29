@@ -13,7 +13,7 @@ This research template implements a clear two-layer architecture separating gene
 | **Scope** | Works with any project | Specific to this research |
 | **Test Coverage** | 60% minimum (currently 83.33% - exceeds stretch goal!) | 90% minimum (currently 100% - perfect coverage!) |
 | **Scripts** | `scripts/` (root, generic orchestrators) | `project/scripts/` (project orchestrators) |
-| **Tests** | `tests/infrastructure/` (root level) | `project/tests/` (project-specific) |
+| **Tests** | `tes../../infrastructure/` (root level) | `projects/proje../../tests/` (project-specific) |
 | **Imports** | `from infrastructure.module import` | `from project.src.module import` |
 | **Dependencies** | No project dependencies | Can import from infrastructure |
 | **Examples** | PDF generation, validation, figure management | Algorithms, simulations, analysis |
@@ -308,7 +308,7 @@ tests/                         # Root level - infrastructure tests
     ├── test_integration_pipeline.py
     └── ...
 
-project/tests/                 # [LAYER 2] Project tests
+projects/proje../../tests/                 # [LAYER 2] Project tests
 ├── __init__.py
 ├── test_example.py
 ├── test_simulation.py
@@ -327,7 +327,7 @@ flowchart TD
     START([User runs:<br/>python3 scripts/run_all.py]) --> CLEAN[STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build]
     CLEAN --> STAGE00[STAGE 00: LAYER 1<br/>Setup Environment<br/>- Validate Python, dependencies<br/>- Check build tools]
     
-    STAGE00 --> PHASE1[PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tests/infrastructure/*.py<br/>- Run project/tests/*.py<br/>- Run tests/integration/*.py<br/>- Validate coverage requirements<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
+    STAGE00 --> PHASE1[PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tes../../infrastructure/*.py<br/>- Run projects/proje../../tests/*.py<br/>- Run tests/integration/*.py<br/>- Validate coverage requirements<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
     
     PHASE1 --> PHASE2[PHASE 2: LAYER 2<br/>Project Execution<br/>- Run project/scripts/*.py<br/>- Generate figures<br/>- Process data<br/>- Create outputs<br/>Report: [LAYER-2-PROJECT] Running]
     
@@ -436,7 +436,7 @@ flowchart TD
 
 3. **Write comprehensive tests:**
    ```bash
-   vim project/tests/test_new_algorithm.py
+   vim projects/proje../../tests/test_new_algorithm.py
    ```
 
 4. **Add to project/src/__init__.py:**
@@ -471,7 +471,7 @@ flowchart TD
 
 3. **Write comprehensive tests:**
    ```bash
-   vim tests/infrastructure/test_validation/test_new_validator.py
+   vim tes../../infrastructure/test_validation/test_new_validator.py
    ```
 
 4. **Document usage:**
@@ -486,7 +486,7 @@ flowchart TD
 
 ## Testing Strategy
 
-### Infrastructure Tests (tests/infrastructure/)
+### Infrastructure Tests (tes../../infrastructure/)
 
 - Verify build orchestration works
 - Test validation logic
@@ -496,10 +496,10 @@ flowchart TD
 
 **Command:**
 ```bash
-pytest tests/infrastructure/ --cov=infrastructure
+pytest tes../../infrastructure/ --cov=infrastructure
 ```
 
-### [LAYER 2] Project Tests (project/tests/)
+### [LAYER 2] Project Tests (projects/proje../../tests/)
 
 - Test algorithms correctness
 - Verify statistical computations
@@ -509,7 +509,7 @@ pytest tests/infrastructure/ --cov=infrastructure
 
 **Command:**
 ```bash
-pytest project/tests/ --cov=project/src
+pytest projects/proje../../tests/ --cov=project/src
 ```
 
 ### Integration Tests (tests/integration/)
@@ -528,10 +528,10 @@ pytest tests/integration/ --cov=project/src --cov=infrastructure
 
 ```bash
 # All tests with coverage
-pytest tests/ project/tests/ --cov=infrastructure --cov=project/src --cov-fail-under=70
+pytest tests/ projects/proje../../tests/ --cov=infrastructure --cov=project/src --cov-fail-under=70
 
 # Generate coverage report
-pytest tests/ project/tests/ --cov=infrastructure --cov=project/src --cov-report=html
+pytest tests/ projects/proje../../tests/ --cov=infrastructure --cov=project/src --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -608,13 +608,13 @@ If you have an old project with flat src/, migrating to the two-layer structure:
    - Build verification is handled by the validation module
 
 4. **Update tests:**
-   - Infrastructure tests → tests/infrastructure/
-   - Project tests → project/tests/
+   - Infrastructure tests → tes../../infrastructure/
+   - Project tests → projects/proje../../tests/
    - Update conftest.py if needed
 
 5. **Validate:**
    ```bash
-   pytest tests/ project/tests/ --cov=infrastructure --cov=project/src
+   pytest tests/ projects/proje../../tests/ --cov=infrastructure --cov=project/src
    python3 scripts/run_all.py
    ```
 
@@ -656,20 +656,20 @@ grep -r "import project.src" infrastructure/
 ## References
 
 ### Architecture Documentation
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Complete system architecture overview
+- [../core/ARCHITECTURE.md](../core/ARCHITECTURE.md) - Complete system architecture overview
 - [DECISION_TREE.md](../architecture/DECISION_TREE.md) - Code placement flowchart
 - [THIN_ORCHESTRATOR_SUMMARY.md](../architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Thin orchestrator pattern details
 
 ### Layer-Specific Documentation
-- [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) - Infrastructure layer documentation
-- [infrastructure/README.md](../infrastructure/README.md) - Infrastructure quick reference
-- [project/src/AGENTS.md](../project/src/AGENTS.md) - Project layer documentation
-- [project/src/README.md](../project/src/README.md) - Project quick reference
+- [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) - Infrastructure layer documentation
+- [infrastructure/README.md](../../infrastructure/README.md) - Infrastructure quick reference
+- [project/src/AGENTS.md](../../projects/project/src/AGENTS.md) - Project layer documentation
+- [project/src/README.md](../../projects/project/src/README.md) - Project quick reference
 
 ### System Documentation
 - [../AGENTS.md](../AGENTS.md) - Complete system documentation
 - [../README.md](../README.md) - Project overview
-- [HOW_TO_USE.md](HOW_TO_USE.md) - Complete usage guide
+- [../core/HOW_TO_USE.md](../core/HOW_TO_USE.md) - Complete usage guide
 
 ---
 

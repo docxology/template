@@ -32,6 +32,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from infrastructure.core.logging_utils import get_logger, log_operation, log_success, log_progress, format_error_with_suggestions
 from infrastructure.core.progress import SubStageProgress
 from infrastructure.core.exceptions import ScriptExecutionError, PipelineError
+from infrastructure.core.environment import get_python_command
 from infrastructure.core.script_discovery import (
     discover_analysis_scripts,
     verify_analysis_outputs,
@@ -57,7 +58,7 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
     """
     logger.info(f"\n  Running: {script_path.name}")
     
-    cmd = [sys.executable, str(script_path)]
+    cmd = get_python_command() + [str(script_path)]
     
     project_root = repo_root / "projects" / project_name
     

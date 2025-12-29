@@ -95,11 +95,36 @@ def run_render_pipeline(project_name: str = "project") -> int:
     
     # Discover files to render
     source_files = discover_manuscript_files(manuscript_dir)
-    
+
     if not source_files:
         logger.warning("No manuscript files found")
         return 0
-    
+
+    # Log manuscript composition summary with file sizes
+    logger.info("\n" + "="*60)
+    logger.info(f"MANUSCRIPT COMPOSITION - Project: {project_name}")
+    logger.info("="*60)
+
+    md_files = [f for f in source_files if f.suffix == '.md']
+    tex_files = [f for f in source_files if f.suffix == '.tex']
+
+    if md_files:
+        logger.info(f"Markdown sections ({len(md_files)}):")
+        for f in md_files:
+            size_kb = f.stat().st_size / 1024
+            logger.info(f"  • {f.name:<40} ({size_kb:>6.1f} KB)")
+
+        total_size_kb = sum(f.stat().st_size for f in md_files) / 1024
+        logger.info(f"  {'Total markdown:':<40} ({total_size_kb:>6.1f} KB)")
+
+    if tex_files:
+        logger.info(f"LaTeX files ({len(tex_files)}):")
+        for f in tex_files:
+            size_kb = f.stat().st_size / 1024
+            logger.info(f"  • {f.name:<40} ({size_kb:>6.1f} KB)")
+
+    logger.info("="*60 + "\n")
+
     # Initialize render manager with absolute paths
     try:
         config = RenderingConfig(
@@ -159,7 +184,7 @@ def run_render_pipeline(project_name: str = "project") -> int:
         try:
             logger.info("\n" + "="*60)
             logger.info("Generating combined PDF manuscript...")
-            combined_pdf = manager.render_combined_pdf(md_files, manuscript_dir)
+            combined_pdf = manager.render_combined_pdf(md_files, manuscript_dir, project_name)
             logger.info(f"✅ Generated combined PDF: {combined_pdf.name}")
             
         except RenderingError as re:
@@ -184,9 +209,110 @@ def run_render_pipeline(project_name: str = "project") -> int:
         logger.warning(f"  Failed: {len(failed_files)} file(s)")
         for fname in failed_files:
             logger.warning(f"    - {fname}")
-    
+
+    # NEW: Generate and log comprehensive summary
+    summary = generate_rendering_summary(project_name)
+    log_rendering_summary(summary)
+
     log_success("PDF rendering pipeline completed", logger)
     return 0
+
+
+def generate_rendering_summary(project_name: str = "project") -> dict:
+    """Generate comprehensive summary of rendering results.
+
+    Returns:
+        Dictionary with rendering statistics and file information
+    """
+    repo_root = Path(__file__).parent.parent
+    project_root = repo_root / "projects" / project_name
+    output_dir = project_root / "output"
+
+    summary = {
+        "project": project_name,
+        "individual_pdfs": [],
+        "combined_pdf": None,
+        "web_outputs": [],
+        "slides": [],
+        "total_size_kb": 0
+    }
+
+    # Collect individual PDFs
+    pdf_dir = output_dir / "pdf"
+    if pdf_dir.exists():
+        for pdf in sorted(pdf_dir.glob("*.pdf")):
+            if pdf.name != f"{project_name}_combined.pdf":
+                size_kb = pdf.stat().st_size / 1024
+                summary["individual_pdfs"].append({
+                    "name": pdf.name,
+                    "size_kb": size_kb
+                })
+                summary["total_size_kb"] += size_kb
+
+    # Check combined PDF
+    combined_pdf = pdf_dir / f"{project_name}_combined.pdf"
+    if combined_pdf.exists():
+        size_kb = combined_pdf.stat().st_size / 1024
+        summary["combined_pdf"] = {
+            "name": combined_pdf.name,
+            "size_kb": size_kb,
+            "path": str(combined_pdf)
+        }
+        summary["total_size_kb"] += size_kb
+
+    # Collect web outputs
+    web_dir = output_dir / "web"
+    if web_dir.exists():
+        for html in sorted(web_dir.glob("*.html")):
+            size_kb = html.stat().st_size / 1024
+            summary["web_outputs"].append({
+                "name": html.name,
+                "size_kb": size_kb
+            })
+
+    # Collect slides
+    slides_dir = output_dir / "slides"
+    if slides_dir.exists():
+        for slide in sorted(slides_dir.glob("*.pdf")):
+            size_kb = slide.stat().st_size / 1024
+            summary["slides"].append({
+                "name": slide.name,
+                "size_kb": size_kb
+            })
+
+    return summary
+
+
+def log_rendering_summary(summary: dict) -> None:
+    """Log comprehensive rendering summary with formatted output."""
+    logger.info("\n" + "="*60)
+    logger.info("RENDERING RESULTS SUMMARY")
+    logger.info("="*60)
+    logger.info(f"Project: {summary['project']}")
+
+    if summary['combined_pdf']:
+        pdf = summary['combined_pdf']
+        logger.info(f"\n📕 Combined Manuscript PDF:")
+        logger.info(f"   {pdf['name']:<40} {pdf['size_kb']:>8.1f} KB")
+        logger.info(f"   Location: {pdf['path']}")
+
+    if summary['individual_pdfs']:
+        logger.info(f"\n📄 Individual Section PDFs ({len(summary['individual_pdfs'])}):")
+        for pdf in summary['individual_pdfs']:
+            logger.info(f"   {pdf['name']:<40} {pdf['size_kb']:>8.1f} KB")
+
+    if summary['web_outputs']:
+        logger.info(f"\n🌐 Web Outputs ({len(summary['web_outputs'])}):")
+        for web in summary['web_outputs']:
+            logger.info(f"   {web['name']:<40} {web['size_kb']:>8.1f} KB")
+
+    if summary['slides']:
+        logger.info(f"\n📊 Presentation Slides ({len(summary['slides'])}):")
+        for slide in summary['slides']:
+            logger.info(f"   {slide['name']:<40} {slide['size_kb']:>8.1f} KB")
+
+    logger.info(f"\n📦 Total Output Size: {summary['total_size_kb']:.1f} KB ({summary['total_size_kb']/1024:.2f} MB)")
+    logger.info("="*60 + "\n")
 
 
 def verify_pdf_outputs(project_name: str = "project") -> bool:

@@ -37,7 +37,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Add tests for all command functions (search, library list, export, stats)
      - Test argument parsing and error handling
      - Test subprocess execution paths
-   - **Test File**: `tests/infrastructure/literature/test_literature_cli.py` (expanded)
+   - **Test File**: `tes../../infrastructure/literature/test_literature_cli.py` (expanded)
 
 2. **`infrastructure/literature/llm_operations.py` (13.21%)**
    - **Status**: Advanced LLM operations for literature analysis
@@ -47,7 +47,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Test comparative analysis functionality
      - Test research gap identification
      - Test citation network analysis
-   - **Test File**: `tests/infrastructure/literature/test_llm_operations.py` (created)
+   - **Test File**: `tes../../infrastructure/literature/test_llm_operations.py` (created)
 
 3. **`infrastructure/literature/paper_selector.py` (20.25%)**
    - **Status**: Paper selection and filtering functionality
@@ -56,7 +56,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Add tests for all selection criteria (years, sources, PDF, keywords)
      - Test configuration loading from YAML
      - Test multi-criteria filtering
-   - **Test File**: `tests/infrastructure/literature/test_paper_selector.py` (created)
+   - **Test File**: `tes../../infrastructure/literature/test_paper_selector.py` (created)
 
 
 #### Medium Priority (30-50%)
@@ -68,7 +68,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Add tests for retry_with_backoff decorator
      - Test exponential backoff timing
      - Test RetryableOperation context manager
-   - **Test File**: `tests/infrastructure/core/test_retry.py` (created)
+   - **Test File**: `tes../../infrastructure/core/test_retry.py` (created)
 
 6. **`infrastructure/core/progress.py` (18.09%)**
    - **Status**: Progress reporting utilities
@@ -77,7 +77,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Add tests for ProgressBar class
      - Test SubStageProgress tracking
      - Test ETA calculations
-   - **Test File**: `tests/infrastructure/core/test_progress.py` (created)
+   - **Test File**: `tes../../infrastructure/core/test_progress.py` (created)
 
 7. **`infrastructure/core/checkpoint.py` (39.24%)**
    - **Status**: Pipeline checkpoint system for resume capability
@@ -87,7 +87,7 @@ The following modules have coverage below 50% and are prioritized for improvemen
      - Test checkpoint validation
      - Test corruption detection
      - Test resume functionality
-   - **Test File**: `tests/infrastructure/core/test_checkpoint.py` (created)
+   - **Test File**: `tes../../infrastructure/core/test_checkpoint.py` (created)
 
 ## Coverage Improvement Strategy
 
@@ -106,14 +106,14 @@ The following modules have coverage below 50% and are prioritized for improvemen
 ### Phase 3: Missing Test Files (Completed - 2024)
 
 ✅ **New Test Files Created**
-- `tests/infrastructure/core/test_file_operations.py` - File and directory operation utilities
-- `tests/infrastructure/core/test_credentials.py` - Credential management with .env and YAML support
-- `tests/infrastructure/core/test_environment.py` - Environment setup and validation functions
-- `tests/infrastructure/core/test_script_discovery.py` - Script discovery and output verification
-- `tests/infrastructure/core/test_performance.py` - Performance monitoring and resource tracking
+- `tes../../infrastructure/core/test_file_operations.py` - File and directory operation utilities
+- `tes../../infrastructure/core/test_credentials.py` - Credential management with .env and YAML support
+- `tes../../infrastructure/core/test_environment.py` - Environment setup and validation functions
+- `tes../../infrastructure/core/test_script_discovery.py` - Script discovery and output verification
+- `tes../../infrastructure/core/test_performance.py` - Performance monitoring and resource tracking
 
 ✅ **Expanded Existing Tests**
-- `tests/infrastructure/literature/test_literature_cli.py` - Added tests for edge cases, multiple papers, environment variable handling
+- `tes../../infrastructure/literature/test_literature_cli.py` - Added tests for edge cases, multiple papers, environment variable handling
 
 ### Phase 4: Additional Coverage Improvements (Completed)
 
@@ -151,13 +151,13 @@ The following modules have coverage below 50% and are prioritized for improvemen
 
 ```bash
 # Infrastructure coverage
-python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing
+python3 -m pytest tes../../infrastructure/ --cov=infrastructure --cov-report=term-missing
 
 # View HTML report
 open htmlcov/index.html
 
 # Check specific module
-python3 -m pytest tests/infrastructure/core/ --cov=infrastructure.core.checkpoint --cov-report=term
+python3 -m pytest tes../../infrastructure/core/ --cov=infrastructure.core.checkpoint --cov-report=term
 ```
 
 ### Coverage Trends
@@ -186,8 +186,8 @@ Track coverage improvements over time:
 ## See Also
 
 - [`TESTING_GUIDE.md`](../development/TESTING_GUIDE.md) - Complete testing documentation
-- [`tests/infrastructure/README.md`](../tests/infrastructure/README.md) - Test organization
-- [`tests/infrastructure/AGENTS.md`](../tests/infrastructure/AGENTS.md) - Test architecture
+- [`tes../../infrastructure/README.md`](../../infrastructure/README.md) - Test organization
+- [`tes../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Test architecture
 
 
 

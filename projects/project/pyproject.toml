@@ -30,6 +30,9 @@ omit = ["*/tests/*", "*/test_*.py"]
 precision = 2
 show_missing = true
 
+[tool.uv]
+# Inherits workspace settings from root pyproject.toml
+
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
 

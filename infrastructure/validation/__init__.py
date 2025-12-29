@@ -33,6 +33,7 @@ from .output_validator import (
     validate_copied_outputs,
     validate_output_structure,
 )
+from .link_validator import LinkValidator
 
 __all__ = [
     "validate_pdf_rendering",
@@ -52,5 +53,6 @@ __all__ = [
     "validate_figure_registry",
     "validate_copied_outputs",
     "validate_output_structure",
+    "LinkValidator",
 ]
 

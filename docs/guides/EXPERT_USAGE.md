@@ -137,7 +137,7 @@ if __name__ == '__main__':
     main()
 ```
 
-**See [ARCHITECTURE.md](ARCHITECTURE.md) for architecture principles.**
+**See [../core/ARCHITECTURE.md](../core/ARCHITECTURE.md) for architecture principles.**
 
 ---
 
@@ -426,8 +426,8 @@ git push origin feature/new-algorithm
 
 ## Related Documentation
 
-- **[Architecture Guide](ARCHITECTURE.md)** - System design
-- **[Workflow Guide](WORKFLOW.md)** - Development process
+- **[Architecture Guide](../core/ARCHITECTURE.md)** - System design
+- **[Workflow Guide](../core/WORKFLOW.md)** - Development process
 - **[Build System](../operational/BUILD_SYSTEM.md)** - Performance and status
 - **[Contributing Guide](../development/CONTRIBUTING.md)** - Contribution process
 - **[Roadmap](../development/ROADMAP.md)** - Future plans

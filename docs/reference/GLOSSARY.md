@@ -2,7 +2,7 @@
 
 > **Definitions** of key concepts and terminology
 
-**Quick Reference:** [Cheatsheet](../reference/QUICK_START_CHEATSHEET.md) | [FAQ](../reference/FAQ.md) | [Complete Guide](HOW_TO_USE.md)
+**Quick Reference:** [Cheatsheet](../reference/QUICK_START_CHEATSHEET.md) | [FAQ](../reference/FAQ.md) | [Complete Guide](../core/HOW_TO_USE.md)
 
 ---
 
@@ -27,7 +27,7 @@ Comprehensive technical documentation files found in each directory. Contains de
 ### Architecture Pattern
 The overall system design that enforces separation of concerns between business logic (`src/`), tests, scripts, and documentation.
 
-**See**: [ARCHITECTURE.md](ARCHITECTURE.md) | [Thin Orchestrator Pattern](#thin-orchestrator-pattern)
+**See**: [../core/ARCHITECTURE.md](../core/ARCHITECTURE.md) | [Thin Orchestrator Pattern](#thin-orchestrator-pattern)
 
 ## B
 
@@ -165,7 +165,7 @@ Document setup and styling configuration loaded before content. Defines packages
 
 **File**: `manuscript/preamble.md`
 
-**Location**: [`project/manuscript/preamble.md`](../project/manuscript/preamble.md)
+**Location**: [`project/manuscript/preamble.md`](../../projects/project/manuscript/preamble.md)
 
 ## M
 
@@ -286,7 +286,7 @@ Ability to regenerate exact same results from source. Ensured through determinis
 
 **Tools**: Version locking, seed fixing, environment capture
 
-**See**: [infrastructure/validation/integrity.py](../infrastructure/validation/integrity.py)
+**See**: [infrastructure/validation/integrity.py](../../infrastructure/validation/integrity.py)
 
 ## S
 
@@ -319,7 +319,7 @@ Core business logic residing in `src/` directory. Must have comprehensive test c
 - No circular imports
 - Comprehensive test coverage
 
-**See**: [infrastructure/AGENTS.md](../infrastructure/AGENTS.md), [project/src/AGENTS.md](../project/src/AGENTS.md)
+**See**: [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md), [project/src/AGENTS.md](../../projects/project/src/AGENTS.md)
 
 ### Statement Coverage
 Testing metric ensuring every line of code is executed during tests. Required to be 100% for all `src/` code.
@@ -342,7 +342,7 @@ Development methodology where tests are written before implementation code.
 
 **Workflow**: Write test → Run (fails) → Implement → Run (passes) → Refactor
 
-**See**: [WORKFLOW.md](WORKFLOW.md) | [HOW_TO_USE.md](HOW_TO_USE.md)
+**See**: [../core/WORKFLOW.md](../core/WORKFLOW.md) | [../core/HOW_TO_USE.md](../core/HOW_TO_USE.md)
 
 ### Template Repository
 GitHub repository type that can be used to create new repositories with same structure. This template is a template repository.
@@ -367,7 +367,7 @@ Collection of all test files in `tests/` directory. Ensures all functionality wo
 
 **Run**: `pytest tests/`
 
-**See**: [tests/AGENTS.md](../tests/AGENTS.md)
+**See**: [tests/AGENTS.md](../../tests/AGENTS.md)
 
 ### Testing
 Process of validating code correctness through automated test cases. **ABSOLUTE PROHIBITION**: No mocks allowed - all tests must use real data and real computations only.
@@ -379,7 +379,6 @@ Process of validating code correctness through automated test cases. **ABSOLUTE 
 - Deterministic results
 - All tests must pass
 
-**See**: [TEST_IMPROVEMENTS_SUMMARY.md](../development/TEST_IMPROVEMENTS_SUMMARY.md)
 
 ### Thin Orchestrator Pattern
 Core architectural principle where scripts are lightweight wrappers that import and use `src/` methods.
@@ -467,8 +466,8 @@ LaTeX engine that supports Unicode and modern fonts. Used for PDF generation.
 - **[Quick Start Cheatsheet](../reference/QUICK_START_CHEATSHEET.md)** - Essential commands
 - **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
 - **[FAQ](../reference/FAQ.md)** - Frequently asked questions
-- **[Complete Guide](HOW_TO_USE.md)** - All skill levels
-- **[Architecture](ARCHITECTURE.md)** - System design
+- **[Complete Guide](../core/HOW_TO_USE.md)** - All skill levels
+- **[Architecture](../core/ARCHITECTURE.md)** - System design
 - **[Documentation Index](../DOCUMENTATION_INDEX.md)** - All documentation
 
 ---

@@ -179,13 +179,13 @@ Reference it: \ref{fig:my_figure}
 - **Just write documents** → [Getting Started Guide](../guides/GETTING_STARTED.md)
 - **Add figures** → [Intermediate Usage](../guides/INTERMEDIATE_USAGE.md)
 - **Write tests** → [Advanced Usage](../guides/ADVANCED_USAGE.md)
-- **Understand architecture** → [Architecture](ARCHITECTURE.md)
+- **Understand architecture** → [Architecture](../core/ARCHITECTURE.md)
 - **Contribute** → [Contributing](../development/CONTRIBUTING.md)
 - **Fix a problem** → [FAQ](../reference/FAQ.md)
 
 ## 🔗 Essential Links
 
-- **[Complete Guide](HOW_TO_USE.md)** - All 12 skill levels
+- **[Complete Guide](../core/HOW_TO_USE.md)** - All 12 skill levels
 - **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
 - **[FAQ](../reference/FAQ.md)** - Common questions
 - **[Glossary](../reference/GLOSSARY.md)** - Terms and definitions

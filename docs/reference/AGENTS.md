@@ -10,7 +10,7 @@ The `docs/reference/` directory contains reference materials, quick lookups, and
 docs/reference/
 ├── AGENTS.md                       # This technical documentation
 ├── API_REFERENCE.md                # Complete API documentation
-├── COMMON_WORKFLOWS.md             # Step-by-step workflow recipes
+├── ../reference/COMMON_WORKFLOWS.md             # Step-by-step workflow recipes
 ├── COPYPASTA.md                    # Reusable documentation snippets
 ├── FAQ.md                          # Frequently asked questions
 ├── GLOSSARY.md                     # Terms and definitions
@@ -36,7 +36,7 @@ docs/reference/
 - Visualization functions
 - Custom research workflows
 
-### Common Workflows (`COMMON_WORKFLOWS.md`)
+### Common Workflows (`../reference/COMMON_WORKFLOWS.md`)
 
 **Step-by-step recipes for frequent tasks:**
 
@@ -262,7 +262,7 @@ python3 validate_api_examples.py docs/reference/API_REFERENCE.md
 
 **Progressive Information Access:**
 ```
-QUICK_START_CHEATSHEET.md → COMMON_WORKFLOWS.md → FAQ.md
+QUICK_START_CHEATSHEET.md → ../reference/COMMON_WORKFLOWS.md → FAQ.md
           ↓                        ↓
     Immediate Actions       Step-by-Step Guides    Problem Solving
 ```
@@ -493,7 +493,7 @@ llm:
 
 **Reference Documentation:**
 - [`QUICK_START_CHEATSHEET.md`](QUICK_START_CHEATSHEET.md) - Essential commands
-- [`COMMON_WORKFLOWS.md`](COMMON_WORKFLOWS.md) - Step-by-step procedures
+- [`../reference/COMMON_WORKFLOWS.md`](../reference/COMMON_WORKFLOWS.md) - Step-by-step procedures
 - [`FAQ.md`](FAQ.md) - Problem-solving answers
 - [`API_REFERENCE.md`](API_REFERENCE.md) - Technical API details
 

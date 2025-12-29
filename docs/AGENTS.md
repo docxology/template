@@ -63,7 +63,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 | `reference/API_REFERENCE.md` | Complete API documentation | Developers |
 | `reference/GLOSSARY.md` | Terms and definitions | All users |
 | `reference/QUICK_START_CHEATSHEET.md` | Essential commands reference | All users |
-| `reference/COMMON_WORKFLOWS.md` | Step-by-step workflow recipes | All users |
+| `reference/../reference/COMMON_WORKFLOWS.md` | Step-by-step workflow recipes | All users |
 | `reference/COPYPASTA.md` | Reusable documentation snippets | Documentation writers |
 
 ### Advanced Modules (`modules/`)
@@ -188,7 +188,7 @@ def example():
 ### Links
 ```markdown
 # Internal links (relative paths)
-See [ARCHITECTURE.md](ARCHITECTURE.md) for details.
+See [../core/ARCHITECTURE.md](../core/ARCHITECTURE.md) for details.
 
 # External links (descriptive text)
 Check the [Pandoc Manual](https://pandoc.org/MANUAL.html).
@@ -267,13 +267,13 @@ usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
   - architecture/TWO_LAYER_ARCHITECTURE.md (complete architecture guide)
   - architecture/THIN_ORCHESTRATOR_SUMMARY.md (pattern details)
   - core/WORKFLOW.md (how to work with architecture)
-  - ../infrastructure/AGENTS.md (infrastructure implementation details)
-  - ../project/src/AGENTS.md (project implementation details)
+  - ../../infrastructure/AGENTS.md (infrastructure implementation details)
+  - ../../projects/project/src/AGENTS.md (project implementation details)
 
 - **core/WORKFLOW.md** references:
   - development/CONTRIBUTING.md (contribution process)
   - core/ARCHITECTURE.md (understanding structure)
-  - ../tests/AGENTS.md (testing approach)
+  - ../../tests/AGENTS.md (testing approach)
 
 ## Contributing to Documentation
 

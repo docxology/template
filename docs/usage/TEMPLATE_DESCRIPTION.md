@@ -2,7 +2,7 @@
 
 > **Complete foundation** for professional research projects with automated workflows
 
-**Quick Reference:** [How To Use](HOW_TO_USE.md) | [Examples](../usage/EXAMPLES.md) | [Architecture](ARCHITECTURE.md)
+**Quick Reference:** [How To Use](../core/HOW_TO_USE.md) | [Examples](../usage/EXAMPLES.md) | [Architecture](../core/ARCHITECTURE.md)
 
 ## 🎯 What You Get
 
@@ -53,9 +53,9 @@ This template provides a **complete foundation** for research projects with:
 
 ## 📖 **Documentation Included**
 
-- **[`HOW_TO_USE.md`](HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced
-- **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System design overview
-- **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow guide
+- **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced
+- **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)** - System design overview
+- **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)** - Development workflow guide
 - **[`MARKDOWN_TEMPLATE_GUIDE.md`](../usage/MARKDOWN_TEMPLATE_GUIDE.md)** - Writing and formatting guide
 - **[`EXAMPLES.md`](../usage/EXAMPLES.md)** - Usage examples and customization
 - **[`THIN_ORCHESTRATOR_SUMMARY.md`](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation details
@@ -74,4 +74,4 @@ This template provides a **complete foundation** for research projects with:
 
 **Transform your research workflow with this professional template! 🚀**
 
-For detailed setup and usage instructions, see **[`HOW_TO_USE.md`](HOW_TO_USE.md)** for comprehensive guidance, **[`README.md`](README.md)** for overview, and **[`WORKFLOW.md`](WORKFLOW.md)** for development process.
+For detailed setup and usage instructions, see **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** for comprehensive guidance, **[`README.md`](README.md)** for overview, and **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)** for development process.

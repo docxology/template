@@ -209,7 +209,7 @@ class PDFRenderer:
                 cwd=str(output_dir)
             )
 
-            if result.returncode != 0:
+            if result.returncode != 0 and result.stderr.strip():
                 logger.warning(f"Bibliography processing warning: {result.stderr[:200]}")
                 # Don't fail on warnings - bibtex often returns non-zero for minor issues
 
@@ -220,25 +220,40 @@ class PDFRenderer:
             logger.warning(f"Bibliography processing failed: {e}", exc_info=True)
             return False
 
-    def render_combined(self, source_files: List[Path], manuscript_dir: Path) -> Path:
+    def render_combined(self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project") -> Path:
         """Render multiple markdown files as a combined PDF.
-        
+
         Combines all source files, applies preamble, and generates a single PDF.
-        
+
         Args:
             source_files: List of markdown files in order
             manuscript_dir: Directory containing manuscript files
-            
+            project_name: Name of the project for filename generation
+
         Returns:
             Path to generated combined PDF
-            
+
         Raises:
             RenderingError: If combination or rendering fails
         """
+
+        # NEW: Log sections being combined
+        logger.info("\n" + "="*60)
+        logger.info("COMBINED MANUSCRIPT RENDERING")
+        logger.info("="*60)
+        logger.info(f"Combining {len(source_files)} section(s):")
+        for i, md_file in enumerate(source_files, 1):
+            size_kb = md_file.stat().st_size / 1024
+            logger.info(f"  [{i:>2}/{len(source_files)}] {md_file.name:<40} ({size_kb:>6.1f} KB)")
+
+        total_size_kb = sum(f.stat().st_size for f in source_files) / 1024
+        logger.info(f"  {'Total input size:':<48} ({total_size_kb:>6.1f} KB)")
+        logger.info("="*60 + "\n")
+
         output_dir = Path(self.config.pdf_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
-        
-        output_file = output_dir / "project_combined.pdf"
+
+        output_file = output_dir / f"{project_name}_combined.pdf"
         
         # Remove existing output file to ensure fresh compilation
         if output_file.exists():
@@ -528,12 +543,23 @@ class PDFRenderer:
             if temp_pdf.exists():
                 # Rename temporary PDF to final name
                 temp_pdf.rename(output_file)
-                logger.info(f"✅ Successfully generated: {output_file.name}")
+                # NEW: Log successful combination with output size
+                if output_file.exists():
+                    output_size_kb = output_file.stat().st_size / 1024
+                    logger.info(f"\n✅ Successfully combined {len(source_files)} sections")
+                    logger.info(f"   Output: {output_file.name}")
+                    logger.info(f"   Size: {output_size_kb:.1f} KB ({output_size_kb/1024:.2f} MB)")
+                    logger.info(f"   Location: {output_file.parent}")
                 # Note: Temporary files (_combined_manuscript.md, .tex, .log, .bbl, .aux)
                 # are preserved for debugging and reference purposes
                 return output_file
             elif output_file.exists():
-                logger.info(f"✅ Successfully generated: {output_file.name}")
+                # NEW: Log successful combination with output size
+                output_size_kb = output_file.stat().st_size / 1024
+                logger.info(f"\n✅ Successfully combined {len(source_files)} sections")
+                logger.info(f"   Output: {output_file.name}")
+                logger.info(f"   Size: {output_size_kb:.1f} KB ({output_size_kb/1024:.2f} MB)")
+                logger.info(f"   Location: {output_file.parent}")
                 # Note: Temporary files (_combined_manuscript.md, .tex, .log, .bbl, .aux)
                 # are preserved for debugging and reference purposes
                 return output_file

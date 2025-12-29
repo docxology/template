@@ -771,6 +771,466 @@ def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
     """
 ```
 
+### health_check.py
+
+#### SystemHealthChecker (class)
+```python
+class SystemHealthChecker:
+    """Check system health and component status."""
+
+    def __init__(self, check_interval: float = 30.0):
+        """Initialize health checker.
+
+        Args:
+            check_interval: How often to perform checks (seconds)
+        """
+```
+
+#### get_health_api (function)
+```python
+def get_health_api() -> HealthCheckAPI:
+    """Get health check API instance.
+
+    Returns:
+        HealthCheckAPI instance
+    """
+```
+
+#### quick_health_check (function)
+```python
+def quick_health_check() -> bool:
+    """Perform quick system health check.
+
+    Returns:
+        True if all critical systems are healthy
+    """
+```
+
+#### get_health_status (function)
+```python
+def get_health_status() -> Dict[str, Any]:
+    """Get detailed health status.
+
+    Returns:
+        Dictionary with health status information
+    """
+```
+
+#### get_health_metrics (function)
+```python
+def get_health_metrics() -> Dict[str, Any]:
+    """Get health metrics.
+
+    Returns:
+        Dictionary with health metrics
+    """
+```
+
+### security.py
+
+#### SecurityValidator (class)
+```python
+class SecurityValidator:
+    """Validate input for security threats."""
+
+    def __init__(self, max_length: int = 10000):
+        """Initialize security validator.
+
+        Args:
+            max_length: Maximum allowed input length
+        """
+```
+
+#### SecurityHeaders (class)
+```python
+class SecurityHeaders:
+    """Generate security headers for HTTP responses."""
+```
+
+#### RateLimiter (class)
+```python
+class RateLimiter:
+    """Rate limiting for API requests."""
+
+    def __init__(self, max_requests: int = 100, window_seconds: int = 60):
+        """Initialize rate limiter.
+
+        Args:
+            max_requests: Maximum requests per window
+            window_seconds: Time window in seconds
+        """
+```
+
+#### SecurityMonitor (class)
+```python
+class SecurityMonitor:
+    """Monitor security events and violations."""
+```
+
+#### SecurityViolation (class)
+```python
+class SecurityViolation(Exception):
+    """Raised when security violation is detected."""
+    pass
+```
+
+#### get_security_validator (function)
+```python
+def get_security_validator() -> SecurityValidator:
+    """Get security validator instance.
+
+    Returns:
+        SecurityValidator instance
+    """
+```
+
+#### get_security_headers (function)
+```python
+def get_security_headers() -> Dict[str, str]:
+    """Get security headers.
+
+    Returns:
+        Dictionary of security headers
+    """
+```
+
+#### get_rate_limiter (function)
+```python
+def get_rate_limiter() -> RateLimiter:
+    """Get rate limiter instance.
+
+    Returns:
+        RateLimiter instance
+    """
+```
+
+#### get_security_monitor (function)
+```python
+def get_security_monitor() -> SecurityMonitor:
+    """Get security monitor instance.
+
+    Returns:
+        SecurityMonitor instance
+    """
+```
+
+#### validate_llm_input (function)
+```python
+def validate_llm_input(prompt: str) -> str:
+    """Validate LLM input for security.
+
+    Args:
+        prompt: Input prompt to validate
+
+    Returns:
+        Sanitized prompt
+
+    Raises:
+        SecurityViolation: If input contains security threats
+    """
+```
+
+#### rate_limit (function)
+```python
+@rate_limit(max_requests=100, window_seconds=60)
+def rate_limit(max_requests: int = 100, window_seconds: int = 60):
+    """Rate limiting decorator.
+
+    Args:
+        max_requests: Maximum requests per window
+        window_seconds: Time window in seconds
+
+    Returns:
+        Decorator function
+    """
+```
+
+### logging_formatters.py
+
+#### JSONFormatter (class)
+```python
+class JSONFormatter(logging.Formatter):
+    """JSON formatter for structured logging."""
+
+    def __init__(self, fmt: Optional[str] = None, datefmt: Optional[str] = None):
+        """Initialize JSON formatter.
+
+        Args:
+            fmt: Format string
+            datefmt: Date format string
+        """
+```
+
+#### TemplateFormatter (class)
+```python
+class TemplateFormatter(logging.Formatter):
+    """Template-aware formatter for logging."""
+```
+
+### logging_progress.py
+
+#### calculate_eta (function)
+```python
+def calculate_eta(
+    current: int,
+    total: int,
+    start_time: float,
+    use_ema: bool = True,
+    alpha: float = 0.1
+) -> Optional[float]:
+    """Calculate estimated time remaining.
+
+    Args:
+        current: Current progress value
+        total: Total progress value
+        start_time: Start time
+        use_ema: Whether to use exponential moving average
+        alpha: EMA smoothing factor
+
+    Returns:
+        Estimated seconds remaining, or None if cannot calculate
+    """
+```
+
+#### calculate_eta_ema (function)
+```python
+def calculate_eta_ema(
+    current: int,
+    total: int,
+    start_time: float,
+    alpha: float = 0.1
+) -> Optional[float]:
+    """Calculate ETA using exponential moving average.
+
+    Args:
+        current: Current progress value
+        total: Total progress value
+        start_time: Start time
+        alpha: EMA smoothing factor
+
+    Returns:
+        Estimated seconds remaining
+    """
+```
+
+#### calculate_eta_with_confidence (function)
+```python
+def calculate_eta_with_confidence(
+    current: int,
+    total: int,
+    start_time: float,
+    alpha: float = 0.1
+) -> tuple[Optional[float], Optional[float], Optional[float]]:
+    """Calculate ETA with confidence intervals.
+
+    Args:
+        current: Current progress value
+        total: Total progress value
+        start_time: Start time
+        alpha: EMA smoothing factor
+
+    Returns:
+        Tuple of (realistic_eta, optimistic_eta, pessimistic_eta)
+    """
+```
+
+#### log_progress_bar (function)
+```python
+def log_progress_bar(
+    current: int,
+    total: int,
+    width: int = 30,
+    task: str = "",
+    logger: Optional[logging.Logger] = None
+) -> None:
+    """Log a progress bar.
+
+    Args:
+        current: Current progress value
+        total: Total progress value
+        width: Width of progress bar
+        task: Task description
+        logger: Logger instance
+    """
+```
+
+#### Spinner (class)
+```python
+class Spinner:
+    """Simple spinner for progress indication."""
+
+    def __init__(self, message: str = "Processing...", spinner_chars: str = "|/-\\"):
+        """Initialize spinner.
+
+        Args:
+            message: Spinner message
+            spinner_chars: Spinner character sequence
+        """
+```
+
+#### log_with_spinner (function)
+```python
+def log_with_spinner(
+    message: str,
+    logger: Optional[logging.Logger] = None,
+    spinner_chars: str = "|/-\\"
+) -> Iterator[None]:
+    """Context manager for logging with spinner.
+
+    Args:
+        message: Spinner message
+        logger: Logger instance
+        spinner_chars: Spinner characters
+
+    Yields:
+        None
+    """
+```
+
+#### StreamingProgress (class)
+```python
+class StreamingProgress:
+    """Progress tracker for streaming operations."""
+
+    def __init__(self, total: Optional[int] = None, task: str = "Streaming"):
+        """Initialize streaming progress tracker.
+
+        Args:
+            total: Total expected items
+            task: Task description
+        """
+```
+
+#### log_progress_streaming (function)
+```python
+def log_progress_streaming(
+    task: str = "Streaming",
+    logger: Optional[logging.Logger] = None
+) -> Iterator[StreamingProgress]:
+    """Context manager for streaming progress.
+
+    Args:
+        task: Task description
+        logger: Logger instance
+
+    Yields:
+        StreamingProgress instance
+    """
+```
+
+#### log_stage_with_eta (function)
+```python
+def log_stage_with_eta(
+    stage_num: int,
+    total_stages: int,
+    stage_name: str,
+    pipeline_start: Optional[float] = None,
+    logger: Optional[logging.Logger] = None
+) -> None:
+    """Log stage with ETA.
+
+    Args:
+        stage_num: Current stage number
+        total_stages: Total number of stages
+        stage_name: Stage name
+        pipeline_start: Pipeline start time
+        logger: Logger instance
+    """
+```
+
+### performance_monitor.py
+
+#### PerformanceMonitor (class)
+```python
+class PerformanceMonitor:
+    """Monitor performance metrics for operations."""
+
+    def __init__(self):
+        """Initialize performance monitor."""
+```
+
+#### monitor_performance (function)
+```python
+@contextmanager
+def monitor_performance(operation_name: str, track_memory: bool = True):
+    """Context manager for monitoring operation performance.
+
+    Args:
+        operation_name: Name of the operation being monitored
+        track_memory: Whether to track memory usage
+
+    Yields:
+        PerformanceMonitor instance
+    """
+```
+
+#### benchmark_llm_query (function)
+```python
+def benchmark_llm_query(client, prompt: str, iterations: int = 3) -> Dict[str, Union[float, List[float]]]:
+    """Benchmark LLM query performance.
+
+    Args:
+        client: LLM client instance
+        prompt: Query prompt
+        iterations: Number of benchmark iterations
+
+    Returns:
+        Dictionary with performance metrics
+    """
+```
+
+#### profile_memory_usage (function)
+```python
+def profile_memory_usage(func: Callable, *args, **kwargs) -> Dict[str, Any]:
+    """Profile memory usage of a function.
+
+    Args:
+        func: Function to profile
+        *args: Function arguments
+        **kwargs: Function keyword arguments
+
+    Returns:
+        Dictionary with memory usage data
+    """
+```
+
+#### main (function)
+```python
+def main():
+    """Main function for performance monitoring CLI."""
+```
+
+#### benchmark_function (function)
+```python
+def benchmark_function(
+    func: Callable,
+    *args,
+    iterations: int = 10,
+    warmup_iterations: int = 2,
+    **kwargs
+) -> Dict[str, Any]:
+    """Benchmark function performance.
+
+    Args:
+        func: Function to benchmark
+        *args: Function arguments
+        iterations: Number of benchmark iterations
+        warmup_iterations: Number of warmup iterations
+        **kwargs: Function keyword arguments
+
+    Returns:
+        Dictionary with benchmark results
+    """
+```
+
+### config_cli.py
+
+#### main (function)
+```python
+def main():
+    """Main function for config CLI."""
+```
+
 ### credentials.py
 
 #### CredentialManager (class)
@@ -795,6 +1255,55 @@ class CredentialManager:
 ```
 
 #### get_zenodo_credentials (method)
+```python
+def get_zenodo_credentials(self, use_sandbox: bool = True) -> Dict[str, str]:
+    """Get Zenodo API credentials.
+
+    Args:
+        use_sandbox: Whether to use sandbox environment (default: True)
+
+    Returns:
+        Dictionary with token and environment info
+    """
+```
+
+#### get_github_credentials (method)
+```python
+def get_github_credentials(self) -> Dict[str, str]:
+    """Get GitHub API credentials.
+
+    Returns:
+        Dictionary with token and repository info
+    """
+```
+
+#### get_arxiv_credentials (method)
+```python
+def get_arxiv_credentials(self) -> Dict[str, Optional[str]]:
+    """Get arXiv SWORD API credentials (optional).
+
+    Returns:
+        Dictionary with username and password (may be None)
+    """
+```
+
+#### has_zenodo_credentials (method)
+```python
+def has_zenodo_credentials(self, use_sandbox: bool = True) -> bool:
+    """Check if Zenodo credentials are available."""
+```
+
+#### has_github_credentials (method)
+```python
+def has_github_credentials(self) -> bool:
+    """Check if GitHub credentials are available."""
+```
+
+#### has_arxiv_credentials (method)
+```python
+def has_arxiv_credentials(self) -> bool:
+    """Check if arXiv credentials are available."""
+```
 ```python
 def get_zenodo_credentials(self, use_sandbox: bool = True) -> Dict[str, str]:
     """Get Zenodo API credentials.

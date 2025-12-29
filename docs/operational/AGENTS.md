@@ -308,7 +308,7 @@ tar -czf "data-$(date +%Y%m%d).tar.gz" \
     --exclude=".pytest_cache" \
     project/manuscript/ \
     project/src/ \
-    project/tests/ \
+    proje../../tests/ \
     project/scripts/
 ```
 

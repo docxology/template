@@ -2,7 +2,7 @@
 
 > **Essential documentation** for all users
 
-**Quick Reference:** [How To Use](HOW_TO_USE.md) | [Architecture](ARCHITECTURE.md) | [Workflow](WORKFLOW.md) | [Documentation Index](../DOCUMENTATION_INDEX.md)
+**Quick Reference:** [How To Use](../core/HOW_TO_USE.md) | [Architecture](../core/ARCHITECTURE.md) | [Workflow](../core/WORKFLOW.md) | [Documentation Index](../DOCUMENTATION_INDEX.md)
 
 ## Purpose
 
@@ -12,21 +12,21 @@ The `core/` directory contains the essential documentation that all users should
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`HOW_TO_USE.md`](HOW_TO_USE.md) | Complete usage guide from basic to advanced (all 12 levels) | New users, developers |
-| [`ARCHITECTURE.md`](ARCHITECTURE.md) | System design and structure overview | Developers, architects |
-| [`WORKFLOW.md`](WORKFLOW.md) | Development workflow and best practices | Developers |
+| [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) | Complete usage guide from basic to advanced (all 12 levels) | New users, developers |
+| [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) | System design and structure overview | Developers, architects |
+| [`../core/WORKFLOW.md`](../core/WORKFLOW.md) | Development workflow and best practices | Developers |
 
 ## Quick Navigation
 
 ### For New Users
-1. Start with [`HOW_TO_USE.md`](HOW_TO_USE.md) - Complete usage guide
-2. Review [`ARCHITECTURE.md`](ARCHITECTURE.md) - Understand system design
-3. Follow [`WORKFLOW.md`](WORKFLOW.md) - Learn development process
+1. Start with [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) - Complete usage guide
+2. Review [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Understand system design
+3. Follow [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Learn development process
 
 ### For Developers
-1. Read [`ARCHITECTURE.md`](ARCHITECTURE.md) - System design overview
-2. Study [`WORKFLOW.md`](WORKFLOW.md) - Development process
-3. Reference [`HOW_TO_USE.md`](HOW_TO_USE.md) - Usage patterns
+1. Read [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - System design overview
+2. Study [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development process
+3. Reference [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) - Usage patterns
 
 ## Related Documentation
 

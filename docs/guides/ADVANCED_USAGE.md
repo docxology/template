@@ -26,7 +26,7 @@ By the end of this guide, you'll be able to:
 - Understanding of software testing concepts
 - Familiarity with pytest framework
 
-**Development Standards:** See [Testing Standards](../.cursorrules/testing_standards.md) and [Type Hints Standards](../.cursorrules/type_hints_standards.md) for TDD and type safety guidelines.
+**Development Standards:** See [Testing Standards](../../.cursorrules/testing_standards.md) and [Type Hints Standards](../../.cursorrules/type_hints_standards.md) for TDD and type safety guidelines.
 
 ## 📖 Table of Contents
 
@@ -226,7 +226,6 @@ This template enforces:
 - ✅ **No mocks**: Real data only
 - ✅ **Deterministic**: Fixed seeds for reproducibility
 
-**See [TEST_IMPROVEMENTS_SUMMARY.md](../development/TEST_IMPROVEMENTS_SUMMARY.md) for details.**
 
 ---
 
@@ -615,7 +614,7 @@ with open('output/environment.json', 'w') as f:
     json.dump(env_info, f, indent=2)
 ```
 
-**See [infrastructure/validation/integrity.py](../infrastructure/validation/integrity.py) for integrity verification tools.**
+**See [infrastructure/validation/integrity.py](../../infrastructure/validation/integrity.py) for integrity verification tools.**
 
 ---
 
@@ -627,19 +626,18 @@ with open('output/environment.json', 'w') as f:
 → Read **[Expert Usage Guide](../guides/EXPERT_USAGE.md)** (Levels 10-12)
 
 **Understand complete architecture**
-→ Read **[Architecture Guide](ARCHITECTURE.md)**
+→ Read **[Architecture Guide](../core/ARCHITECTURE.md)**
 
 **See build system details**
 → Read **[Build System](../operational/BUILD_SYSTEM.md)**
 
 **Review testing standards**
-→ Read **[Test Improvements Summary](../development/TEST_IMPROVEMENTS_SUMMARY.md)**
 
 ### Related Documentation
 
 - **[Quick Start Cheatsheet](../reference/QUICK_START_CHEATSHEET.md)** - Essential commands
 - **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
-- **[Workflow Guide](WORKFLOW.md)** - Complete development process
+- **[Workflow Guide](../core/WORKFLOW.md)** - Complete development process
 - **[Glossary](../reference/GLOSSARY.md)** - Terms and definitions
 - **[Documentation Index](../DOCUMENTATION_INDEX.md)** - Complete reference
 

@@ -1,0 +1,418 @@
+{
+  "timestamp": "2025-12-29T13:00:47.383167",
+  "total_projects": 3,
+  "aggregate_metrics": {
+    "manuscript": {
+      "total_words": 17117,
+      "total_sections": 29,
+      "total_equations": 11,
+      "total_figures": 2,
+      "total_references": 71,
+      "words_stats": {
+        "min": 1729,
+        "max": 13447,
+        "median": 1941,
+        "avg": 5705.666666666667
+      }
+    },
+    "codebase": {
+      "total_source_lines": 2915,
+      "total_methods": 124,
+      "total_classes": 15,
+      "total_scripts": 8
+    },
+    "tests": {
+      "total_tests": 0,
+      "total_passed": 0,
+      "total_failed": 0,
+      "average_coverage": 0.0,
+      "coverage_stats": {
+        "min": 0.0,
+        "max": 0.0,
+        "median": 0.0,
+        "avg": 0.0
+      },
+      "total_execution_time": 0.0,
+      "projects_with_test_data": 0,
+      "total_projects": 3
+    },
+    "outputs": {
+      "total_pdfs": 3,
+      "total_size_mb": 2.543837547302246,
+      "total_figures": 23,
+      "total_slides": 22,
+      "total_web": 22
+    },
+    "pipeline": {
+      "total_duration": 1252.0,
+      "average_duration": 417.3333333333333,
+      "duration_stats": {
+        "min": 359.0,
+        "max": 523.0,
+        "median": 370.0,
+        "avg": 417.3333333333333
+      },
+      "total_stages_passed": 18,
+      "total_stages_failed": 0
+    }
+  },
+  "project_metrics": [
+    {
+      "name": "project",
+      "manuscript": {
+        "sections": 17,
+        "total_words": 13447,
+        "total_lines": 2837,
+        "markdown_files": [
+          "04_experimental_results.md",
+          "09_appendix.md",
+          "05_discussion.md",
+          "S01_supplemental_methods.md",
+          "99_references.md",
+          "S02_supplemental_results.md",
+          "98_symbols_glossary.md",
+          "03_methodology.md",
+          "06_conclusion.md",
+          "README.md",
+          "08_acknowledgments.md",
+          "preamble.md",
+          "AGENTS.md",
+          "S03_supplemental_analysis.md",
+          "01_abstract.md",
+          "S04_supplemental_applications.md",
+          "02_introduction.md"
+        ],
+        "equations": 0,
+        "figures": 0,
+        "references": 71
+      },
+      "codebase": {
+        "source_files": 13,
+        "source_lines": 2753,
+        "scripts": 7,
+        "script_lines": 1757,
+        "methods": 119,
+        "classes": 14
+      },
+      "tests": {
+        "test_files": 0,
+        "total_tests": -1,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "coverage_percent": 0.0,
+        "execution_time": 0.0
+      },
+      "outputs": {
+        "pdf_files": 1,
+        "pdf_size_mb": 2.2659435272216797,
+        "figures": 22,
+        "data_files": 5,
+        "slides": 14,
+        "web_outputs": 14,
+        "total_outputs": 56
+      },
+      "pipeline": {
+        "total_duration": 523.0,
+        "stages_passed": 6,
+        "stages_failed": 0,
+        "bottleneck_stage": "render",
+        "bottleneck_duration": 15.0,
+        "bottleneck_percent": 2.8680688336520075
+      }
+    },
+    {
+      "name": "small_code_project",
+      "manuscript": {
+        "sections": 6,
+        "total_words": 1941,
+        "total_lines": 504,
+        "markdown_files": [
+          "03_results.md",
+          "01_introduction.md",
+          "02_methodology.md",
+          "README.md",
+          "04_conclusion.md",
+          "AGENTS.md"
+        ],
+        "equations": 5,
+        "figures": 2,
+        "references": 0
+      },
+      "codebase": {
+        "source_files": 2,
+        "source_lines": 131,
+        "scripts": 1,
+        "script_lines": 132,
+        "methods": 3,
+        "classes": 1
+      },
+      "tests": {
+        "test_files": 0,
+        "total_tests": -1,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "coverage_percent": 0.0,
+        "execution_time": 0.0
+      },
+      "outputs": {
+        "pdf_files": 1,
+        "pdf_size_mb": 0.22573471069335938,
+        "figures": 1,
+        "data_files": 1,
+        "slides": 4,
+        "web_outputs": 4,
+        "total_outputs": 11
+      },
+      "pipeline": {
+        "total_duration": 370.0,
+        "stages_passed": 6,
+        "stages_failed": 0,
+        "bottleneck_stage": "render",
+        "bottleneck_duration": 15.0,
+        "bottleneck_percent": 4.054054054054054
+      }
+    },
+    {
+      "name": "small_prose_project",
+      "manuscript": {
+        "sections": 6,
+        "total_words": 1729,
+        "total_lines": 477,
+        "markdown_files": [
+          "03_results.md",
+          "01_introduction.md",
+          "02_methodology.md",
+          "README.md",
+          "04_conclusion.md",
+          "AGENTS.md"
+        ],
+        "equations": 6,
+        "figures": 0,
+        "references": 0
+      },
+      "codebase": {
+        "source_files": 2,
+        "source_lines": 31,
+        "scripts": 0,
+        "script_lines": 0,
+        "methods": 2,
+        "classes": 0
+      },
+      "tests": {
+        "test_files": 0,
+        "total_tests": -1,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "coverage_percent": 0.0,
+        "execution_time": 0.0
+      },
+      "outputs": {
+        "pdf_files": 1,
+        "pdf_size_mb": 0.05215930938720703,
+        "figures": 0,
+        "data_files": 0,
+        "slides": 4,
+        "web_outputs": 4,
+        "total_outputs": 9
+      },
+      "pipeline": {
+        "total_duration": 359.0,
+        "stages_passed": 6,
+        "stages_failed": 0,
+        "bottleneck_stage": "render",
+        "bottleneck_duration": 15.0,
+        "bottleneck_percent": 4.178272980501393
+      }
+    }
+  ],
+  "health_scores": {
+    "project": {
+      "score": 30,
+      "max_score": 100,
+      "percentage": 30.0,
+      "grade": "F",
+      "status": "Critical",
+      "factors": {
+        "test_coverage": {
+          "score": 0,
+          "grade": "F",
+          "reason": "Poor coverage <70%"
+        },
+        "test_failures": {
+          "score": 0,
+          "grade": "F",
+          "reason": "No tests found"
+        },
+        "manuscript_size": {
+          "score": 20,
+          "grade": "A",
+          "reason": "Comprehensive manuscript (13447 words)"
+        },
+        "outputs": {
+          "score": 10,
+          "grade": "A",
+          "reason": "Rich outputs (51 files)"
+        }
+      }
+    },
+    "small_code_project": {
+      "score": 25,
+      "max_score": 100,
+      "percentage": 25.0,
+      "grade": "F",
+      "status": "Critical",
+      "factors": {
+        "test_coverage": {
+          "score": 0,
+          "grade": "F",
+          "reason": "Poor coverage <70%"
+        },
+        "test_failures": {
+          "score": 0,
+          "grade": "F",
+          "reason": "No tests found"
+        },
+        "manuscript_size": {
+          "score": 15,
+          "grade": "B",
+          "reason": "Good manuscript (1941 words)"
+        },
+        "outputs": {
+          "score": 10,
+          "grade": "A",
+          "reason": "Rich outputs (10 files)"
+        }
+      }
+    },
+    "small_prose_project": {
+      "score": 22,
+      "max_score": 100,
+      "percentage": 22.0,
+      "grade": "F",
+      "status": "Critical",
+      "factors": {
+        "test_coverage": {
+          "score": 0,
+          "grade": "F",
+          "reason": "Poor coverage <70%"
+        },
+        "test_failures": {
+          "score": 0,
+          "grade": "F",
+          "reason": "No tests found"
+        },
+        "manuscript_size": {
+          "score": 15,
+          "grade": "B",
+          "reason": "Good manuscript (1729 words)"
+        },
+        "outputs": {
+          "score": 7,
+          "grade": "B",
+          "reason": "Good outputs (9 files)"
+        }
+      }
+    }
+  },
+  "comparative_tables": {
+    "manuscript_comparison": [
+      {
+        "project": "project",
+        "words": 13447,
+        "sections": 17,
+        "equations": 0,
+        "figures": 0
+      },
+      {
+        "project": "small_code_project",
+        "words": 1941,
+        "sections": 6,
+        "equations": 5,
+        "figures": 2
+      },
+      {
+        "project": "small_prose_project",
+        "words": 1729,
+        "sections": 6,
+        "equations": 6,
+        "figures": 0
+      }
+    ],
+    "test_comparison": [
+      {
+        "project": "project",
+        "tests": -1,
+        "passed": 0,
+        "coverage": "0.0%",
+        "time": "0.0s"
+      },
+      {
+        "project": "small_code_project",
+        "tests": -1,
+        "passed": 0,
+        "coverage": "0.0%",
+        "time": "0.0s"
+      },
+      {
+        "project": "small_prose_project",
+        "tests": -1,
+        "passed": 0,
+        "coverage": "0.0%",
+        "time": "0.0s"
+      }
+    ],
+    "output_comparison": [
+      {
+        "project": "project",
+        "pdfs": 1,
+        "size_mb": "2.3",
+        "figures": 22,
+        "slides": 14
+      },
+      {
+        "project": "small_code_project",
+        "pdfs": 1,
+        "size_mb": "0.2",
+        "figures": 1,
+        "slides": 4
+      },
+      {
+        "project": "small_prose_project",
+        "pdfs": 1,
+        "size_mb": "0.1",
+        "figures": 0,
+        "slides": 4
+      }
+    ],
+    "pipeline_comparison": [
+      {
+        "project": "project",
+        "duration": "523s",
+        "bottleneck": "render",
+        "bottleneck_pct": "3%"
+      },
+      {
+        "project": "small_code_project",
+        "duration": "370s",
+        "bottleneck": "render",
+        "bottleneck_pct": "4%"
+      },
+      {
+        "project": "small_prose_project",
+        "duration": "359s",
+        "bottleneck": "render",
+        "bottleneck_pct": "4%"
+      }
+    ]
+  },
+  "recommendations": [
+    "\u26a0\ufe0f **Portfolio Health**: Portfolio requires attention to improve overall health.",
+    "\ud83d\udea8 **Critical Issues**: project, small_code_project, small_prose_project require immediate attention. Review failing tests, missing manuscripts, and incomplete outputs.",
+    "\ud83d\udcca **Test Coverage**: project, small_code_project, small_prose_project below 90% threshold (lowest: 0.0%). Action: Add unit tests for uncovered functions, especially in `src/` modules. Target: Aim for 95%+ coverage for critical functionality.",
+    "\u2705 **Test Integrity**: All tests passing across all projects.",
+    "\ud83d\udcda **Comprehensive Research**: project has extensive manuscript (13,447 words). Consider if other projects could benefit from similar depth."
+  ]
+}

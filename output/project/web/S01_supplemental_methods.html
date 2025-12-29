@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>S01_supplemental_methods</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:supplemental_methods">Supplemental Methods</h1>
+<p>This section provides detailed methodological information that
+supplements Section <span
+class="math inline">\(\ref{sec:methodology}\)</span>.</p>
+<h2 id="s1.1-extended-algorithm-variants">S1.1 Extended Algorithm
+Variants</h2>
+<h3 id="s1.1.1-stochastic-variant">S1.1.1 Stochastic Variant</h3>
+<p>For large-scale problems, we developed a stochastic variant of our
+algorithm:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:stochastic_update}
+x_{k+1} = x_k - \alpha_k \nabla f_{i_k}(x_k) + \beta_k (x_k - x_{k-1})
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(i_k\)</span> is a randomly sampled
+index from <span class="math inline">\(\{1, \ldots, n\}\)</span> at
+iteration <span class="math inline">\(k\)</span>.</p>
+<p><strong>Convergence Analysis</strong>: Under appropriate sampling
+strategies, this variant achieves <span
+class="math inline">\(O(1/\sqrt{k})\)</span> convergence rate for
+non-strongly convex problems, following the analysis in .</p>
+<h3 id="s1.1.2-mini-batch-variant">S1.1.2 Mini-Batch Variant</h3>
+<p>To balance between computational efficiency and convergence
+speed:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:minibatch_update}
+x_{k+1} = x_k - \alpha_k \frac{1}{|B_k|} \sum_{i \in B_k} \nabla
+f_i(x_k) + \beta_k (x_k - x_{k-1})
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(B_k \subset \{1, \ldots,
+n\}\)</span> is a mini-batch of size <span class="math inline">\(|B_k| =
+b\)</span>.</p>
+<h2 id="s1.2-detailed-convergence-analysis">S1.2 Detailed Convergence
+Analysis</h2>
+<h3 id="s1.2.1-strong-convexity-assumptions">S1.2.1 Strong Convexity
+Assumptions</h3>
+<p>We assume the objective function <span
+class="math inline">\(f\)</span> satisfies:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:strong_convexity_detailed}
+f(y) \geq f(x) + \nabla f(x)^T (y - x) + \frac{\mu}{2} \|y - x\|^2,
+\quad \forall x, y \in \mathcal{X}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\mu &gt; 0\)</span> is the strong
+convexity parameter.</p>
+<h3 id="s1.2.2-lipschitz-continuity">S1.2.2 Lipschitz Continuity</h3>
+<p>The gradient is Lipschitz continuous:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:lipschitz_detailed}
+\|\nabla f(x) - \nabla f(y)\| \leq L \|x - y\|, \quad \forall x, y \in
+\mathcal{X}
+\end{equation}\]</span></p>
+<p>The condition number <span class="math inline">\(\kappa =
+L/\mu\)</span> determines the convergence rate: <span
+class="math inline">\(\rho = \sqrt{1 - 1/\kappa}\)</span>, as
+established in .</p>
+<h2 id="s1.3-additional-theoretical-results">S1.3 Additional Theoretical
+Results</h2>
+<h3 id="s1.3.1-worst-case-complexity-bounds">S1.3.1 Worst-Case
+Complexity Bounds</h3>
+<p><strong>Theorem S1</strong>: Under the assumptions of Lipschitz
+continuity and strong convexity, the algorithm requires at most <span
+class="math inline">\(O(\kappa \log(1/\epsilon))\)</span> iterations to
+achieve <span class="math inline">\(\epsilon\)</span>-accuracy.</p>
+<p><strong>Proof</strong>: From the convergence rate <span
+class="math inline">\(\eqref{eq:convergence}\)</span>, we have:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:iterations_bound}
+\|x_k - x^*\| \leq C \rho^k \leq \epsilon \Rightarrow k \geq
+\frac{\log(C/\epsilon)}{\log(1/\rho)} = O(\kappa \log(1/\epsilon))
+\end{equation}\]</span></p>
+<p>since <span class="math inline">\(\log(1/\rho) \approx
+1/\kappa\)</span> for small <span
+class="math inline">\(1/\kappa\)</span>. <span
+class="math inline">\(\square\)</span></p>
+<h3 id="s1.3.2-expected-convergence-for-stochastic-variants">S1.3.2
+Expected Convergence for Stochastic Variants</h3>
+<p>For the stochastic variant <span
+class="math inline">\(\eqref{eq:stochastic_update}\)</span>:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:stochastic_convergence}
+\mathbb{E}[\|x_k - x^*\|^2] \leq \frac{C}{k} + \sigma^2
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\sigma^2\)</span> is the variance
+of the stochastic gradient estimates.</p>
+<h2 id="s1.4-implementation-considerations">S1.4 Implementation
+Considerations</h2>
+<h3 id="s1.4.1-numerical-stability">S1.4.1 Numerical Stability</h3>
+<p>To ensure numerical stability, we implement the following
+safeguards:</p>
+<ol type="1">
+<li><strong>Gradient clipping</strong>: <span
+class="math inline">\(\nabla f(x_k) \leftarrow \min(1, \theta/\|\nabla
+f(x_k)\|) \nabla f(x_k)\)</span></li>
+<li><strong>Step size bounds</strong>: <span
+class="math inline">\(\alpha_{\min} \leq \alpha_k \leq
+\alpha_{\max}\)</span></li>
+<li><strong>Momentum bounds</strong>: <span class="math inline">\(0 \leq
+\beta_k \leq \beta_{\max} &lt; 1\)</span></li>
+</ol>
+<h3 id="s1.4.2-initialization-strategies">S1.4.2 Initialization
+Strategies</h3>
+<p>We tested three initialization strategies:</p>
+<ol type="1">
+<li><strong>Random</strong>: <span class="math inline">\(x_0 \sim
+\mathcal{N}(0, I)\)</span></li>
+<li><strong>Warm start</strong>: <span class="math inline">\(x_0 =
+\text{solution from simpler problem}\)</span></li>
+<li><strong>Problem-specific</strong>: <span class="math inline">\(x_0 =
+\text{domain knowledge-based initialization}\)</span></li>
+</ol>
+<p>Results show that warm start initialization reduces iterations by
+approximately 30% for related problem instances.</p>
+<h2 id="s1.5-extended-mathematical-framework">S1.5 Extended Mathematical
+Framework</h2>
+<h3 id="s1.5.1-generalized-objective-function">S1.5.1 Generalized
+Objective Function</h3>
+<p>The framework extends to more general objectives:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:general_objective}
+f(x) = \sum_{i=1}^{n} w_i \phi_i(x) + \sum_{j=1}^{m} \lambda_j R_j(x) +
+\sum_{k=1}^{p} \gamma_k C_k(x)
+\end{equation}\]</span></p>
+<p>where: - <span class="math inline">\(\phi_i(x)\)</span>: Data fitting
+terms - <span class="math inline">\(R_j(x)\)</span>: Regularization
+terms (e.g., <span class="math inline">\(\ell_1\)</span>, <span
+class="math inline">\(\ell_2\)</span>, elastic net) - <span
+class="math inline">\(C_k(x)\)</span>: Constraint terms (penalty or
+barrier functions)</p>
+<h3 id="s1.5.2-adaptive-weight-selection">S1.5.2 Adaptive Weight
+Selection</h3>
+<p>Weights <span class="math inline">\(w_i\)</span> can be adapted
+during optimization:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:adaptive_weights}
+w_i^{(k+1)} = w_i^{(k)} \cdot \exp\left(-\gamma
+\frac{|\phi_i(x_k)|}{|\phi(x_k)|}\right)
+\end{equation}\]</span></p>
+<p>This reweighting scheme gives more emphasis to terms that are harder
+to optimize.</p>
+<h2 id="s1.6-convergence-diagnostics">S1.6 Convergence Diagnostics</h2>
+<h3 id="s1.6.1-diagnostic-criteria">S1.6.1 Diagnostic Criteria</h3>
+<p>We monitor the following quantities for convergence:</p>
+<ol type="1">
+<li><strong>Gradient norm</strong>: <span class="math inline">\(\|\nabla
+f(x_k)\| &lt; \epsilon_g\)</span></li>
+<li><strong>Step size</strong>: <span class="math inline">\(\|x_{k+1} -
+x_k\| &lt; \epsilon_x\)</span></li>
+<li><strong>Function improvement</strong>: <span
+class="math inline">\(|f(x_{k+1}) - f(x_k)| &lt;
+\epsilon_f\)</span></li>
+<li><strong>Relative improvement</strong>: <span
+class="math inline">\(|f(x_{k+1}) - f(x_k)|/|f(x_k)| &lt;
+\epsilon_r\)</span></li>
+</ol>
+<p>All four criteria must be satisfied for declared convergence.</p>
+<h3 id="s1.6.2-failure-detection">S1.6.2 Failure Detection</h3>
+<p>Algorithm failure is detected if:</p>
+<ol type="1">
+<li>Maximum iterations exceeded</li>
+<li>Step size becomes too small (<span class="math inline">\(\alpha_k
+&lt; \alpha_{\min}\)</span>)</li>
+<li>NaN or Inf values encountered</li>
+<li>Objective function increases for consecutive iterations</li>
+</ol>
+<h2 id="s1.7-parameter-sensitivity">S1.7 Parameter Sensitivity</h2>
+<p>Detailed sensitivity analysis for each parameter:</p>
+<p>The learning rate <span class="math inline">\(\alpha_0\)</span> has
+the strongest impact on convergence speed, while regularization <span
+class="math inline">\(\lambda\)</span> primarily affects the final
+solution quality rather than convergence dynamics.</p>
+</body>
+</html>

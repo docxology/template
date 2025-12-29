@@ -250,8 +250,8 @@ python3 scripts/run_all.py
 
 ## See Also
 
-- [`infrastructure/core/checkpoint.py`](../infrastructure/core/checkpoint.py) - Implementation
-- [`scripts/run_all.py`](../scripts/run_all.py) - Resume integration
+- [`infrastructure/core/checkpoint.py`](../../infrastructure/core/checkpoint.py) - Implementation
+- [`../../scripts/run_all.py`](../../scripts/run_all.py) - Resume integration
 - [`TROUBLESHOOTING_GUIDE.md`](../operational/TROUBLESHOOTING_GUIDE.md) - Troubleshooting guide
 
 

@@ -474,9 +474,9 @@ Before merging a new infrastructure module:
 ## References
 
 - [Infrastructure AGENTS.md](../infrastructure/AGENTS.md) - Module organization
-- [Advanced Modules Guide](../docs/ADVANCED_MODULES_GUIDE.md) - Complete guide to all advanced modules
-- [API Reference](../docs/API_REFERENCE.md) - Complete API documentation for all modules
-- [Two-Layer Architecture](../docs/TWO_LAYER_ARCHITECTURE.md) - Architecture explanation
+- [Advanced Modules Guide](../docs/modules/ADVANCED_MODULES_GUIDE.md) - Complete guide to all advanced modules
+- [API Reference](../docs/reference/API_REFERENCE.md) - Complete API documentation for all modules
+- [Two-Layer Architecture](../docs/architecture/TWO_LAYER_ARCHITECTURE.md) - Architecture explanation
 - [Testing Guide](testing_standards.md) - Testing infrastructure code
 - [Error Handling Guide](error_handling.md) - Exception patterns
 - [Logging Guide](python_logging.md) - Logging standards

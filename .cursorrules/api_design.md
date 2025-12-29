@@ -731,5 +731,5 @@ def new_function_name(parameter: str) -> str:
 - [error_handling.md](error_handling.md) - Exception handling in APIs
 - [testing_standards.md](testing_standards.md) - Testing API contracts
 - [infrastructure_modules.md](infrastructure_modules.md) - Module API design
-- [../docs/API_REFERENCE.md](../docs/API_REFERENCE.md) - Complete API documentation
-- [../docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) - API architecture design
+- [../docs/reference/API_REFERENCE.md](../docs/reference/API_REFERENCE.md) - Complete API documentation
+- [../docs/core/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) - API architecture design

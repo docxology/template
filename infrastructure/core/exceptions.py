@@ -8,6 +8,7 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 from __future__ import annotations
 
+import builtins
 from pathlib import Path
 from typing import Any, Optional, Sequence
 
@@ -249,14 +250,15 @@ class FileOperationError(TemplateError):
     pass
 
 
-class FileNotFoundError(FileOperationError):
+class FileNotFoundError(FileOperationError, builtins.FileNotFoundError):
     """Raised when a required file is not found.
-    
-    Note: This shadows Python's built-in FileNotFoundError, but provides
+
+    Inherits from both custom FileOperationError and built-in FileNotFoundError
+    for compatibility with standard Python exception handling while providing
     better context for template-specific file errors.
-    
+
     Automatically generates recovery commands based on file path.
-    
+
     Example:
         >>> raise FileNotFoundError(
         ...     "Manuscript file not found",
@@ -302,6 +304,21 @@ class FileNotFoundError(FileOperationError):
                 recovery_commands.append(f"ls -la {context['searched_in']}")
         
         super().__init__(message, context, suggestions, recovery_commands)
+
+
+class NotADirectoryError(FileOperationError, builtins.NotADirectoryError):
+    """Raised when a path is not a directory when a directory is expected.
+
+    Inherits from both custom FileOperationError and built-in NotADirectoryError
+    for compatibility with standard Python exception handling while providing
+    better context for template-specific file errors.
+
+    Example:
+        >>> raise NotADirectoryError(
+        ...     "Expected directory, found file",
+        ...     context={"path": "/path/to/file.txt"}
+        ... )
+    """
 
 
 class InvalidFileFormatError(FileOperationError):

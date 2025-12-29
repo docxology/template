@@ -424,7 +424,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 - Branch coverage: 100%
 - No mocks: Use real data
 
-**See Also**: [Testing Guide](../tests/AGENTS.md) | [Workflow](WORKFLOW.md)
+**See Also**: [Testing Guide](../../tests/AGENTS.md) | [Workflow](../core/WORKFLOW.md)
 
 ---
 
@@ -525,7 +525,6 @@ def test_process_negative():
 
 **Expected Result**: Coverage requirements achieved (90% project, 60% infra)
 
-**See Also**: [Test Improvements](../development/TEST_IMPROVEMENTS_SUMMARY.md)
 
 ---
 
@@ -749,7 +748,7 @@ def test_process_negative():
 - **[Getting Started](../guides/GETTING_STARTED.md)** - Comprehensive beginner guide
 - **[FAQ](../reference/FAQ.md)** - Common questions
 - **[Glossary](../reference/GLOSSARY.md)** - Terms and definitions
-- **[Complete Guide](HOW_TO_USE.md)** - All 12 skill levels
+- **[Complete Guide](../core/HOW_TO_USE.md)** - All 12 skill levels
 
 ---
 

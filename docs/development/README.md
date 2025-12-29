@@ -18,7 +18,6 @@ The `development/` directory contains documentation for contributing to the proj
 | [`ROADMAP.md`](ROADMAP.md) | Development roadmap and future plans | Maintainers, contributors |
 | [`TESTING_GUIDE.md`](TESTING_GUIDE.md) | Testing framework guide | Developers |
 | [`TESTING_WITH_CREDENTIALS.md`](TESTING_WITH_CREDENTIALS.md) | Testing with external service credentials | Developers |
-| [`TEST_IMPROVEMENTS_SUMMARY.md`](TEST_IMPROVEMENTS_SUMMARY.md) | Test suite enhancements documentation | Developers |
 | [`COVERAGE_GAPS.md`](COVERAGE_GAPS.md) | Test coverage gap analysis | Developers |
 
 ## Quick Navigation

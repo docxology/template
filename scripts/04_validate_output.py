@@ -153,7 +153,7 @@ def generate_validation_report(
     output_statistics: dict,
     project_name: str = "project"
 ) -> dict:
-    """Generate enhanced validation report with structured output.
+    """Generate validation report with structured output.
     
     Args:
         check_results: List of (check_name, result) tuples
@@ -307,7 +307,7 @@ def main() -> int:
                 'size_mb': size_mb,
             }
     
-    # Generate enhanced validation report
+    # Generate validation report
     validation_results = generate_validation_report(results, figure_issues, output_statistics, args.project)
     
     # Summary

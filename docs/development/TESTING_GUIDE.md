@@ -5,25 +5,83 @@
 **Quick Reference:** [Logging Guide](../operational/LOGGING_GUIDE.md) | [Error Handling Guide](../operational/ERROR_HANDLING_GUIDE.md)
 
 **For detailed testing standards and patterns, see:**
-- **[Testing Standards](../.cursorrules/testing_standards.md)** - Complete testing patterns, coverage requirements, and best practices
-- **[Test Improvements Summary](../development/TEST_IMPROVEMENTS_SUMMARY.md)** - Recent test suite enhancements and coverage improvements
+- **[Testing Standards](../../.cursorrules/testing_standards.md)** - Complete testing patterns, coverage requirements, and best practices
 - **[Advanced Usage](../guides/ADVANCED_USAGE.md)** - Test-driven development (TDD) workflow guide
 
 ## Quick Start
 
 ```bash
-# Run all tests with coverage (quiet mode by default)
+# Run all tests with coverage (quiet mode by default, skips slow tests)
 python3 scripts/01_run_tests.py
 
 # Run tests with verbose output (shows all test names)
 python3 scripts/01_run_tests.py --verbose
+
+# Run including slow tests (LLM integration tests)
+python3 scripts/01_run_tests.py --include-slow
 
 # Run specific test suite
 pytest tests/infrastructure/ -v
 
 # Run with coverage report
 pytest tests/ --cov=src --cov-report=html
+
+# Run only slow tests (requires Ollama for LLM tests)
+pytest -m slow
 ```
+
+## Slow Test Handling
+
+### Overview
+
+Tests are categorized by execution speed:
+- **Fast tests**: Unit tests, configuration tests, validation tests (< 1 second)
+- **Slow tests**: Integration tests using `ollama_test_server` (network calls, LLM queries)
+
+### Automatic Slow Test Skipping
+
+By default, slow tests are **automatically skipped** to ensure fast test runs:
+
+```bash
+# Normal test run (skips slow tests)
+python3 scripts/01_run_tests.py
+
+# pytest directly (also skips slow tests due to addopts)
+pytest tests/
+```
+
+### Running Slow Tests
+
+To include slow tests when needed:
+
+```bash
+# Include slow tests in orchestrator
+python3 scripts/01_run_tests.py --include-slow
+
+# Run only slow tests (useful for LLM testing)
+pytest -m slow
+
+# Run slow tests with verbose output
+pytest -m slow -v
+```
+
+### Test Timeout Protection
+
+All tests are protected by a **10-second timeout** to prevent hanging:
+
+```python
+# pytest-timeout plugin automatically kills tests after 10 seconds
+@pytest.mark.timeout(10)  # Applied globally via pyproject.toml
+
+def test_llm_query(ollama_test_server):
+    """Test that times out after 10 seconds if it hangs."""
+    # Test implementation
+```
+
+**Timeout Behavior:**
+- Tests that exceed 10 seconds are automatically terminated
+- Prevents infinite hangs from network issues or bugs
+- Can be adjusted per-test with `@pytest.mark.timeout(seconds)`
 
 ## Test Reporting
 

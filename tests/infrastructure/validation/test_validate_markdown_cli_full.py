@@ -164,30 +164,32 @@ class TestValidateMarkdownMain:
         from infrastructure.validation import validate_markdown_cli
         
         with patch.object(validate_markdown_cli, 'import_error', None):
-            with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
-                mock_find.return_value = str(tmp_path)
-                
-                with patch('infrastructure.validation.validate_markdown_cli.validate_markdown') as mock_validate:
-                    mock_validate.return_value = ([], 0)
+            with patch('sys.argv', ['validate_markdown_cli.py']):
+                with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
+                    mock_find.return_value = str(tmp_path)
                     
-                    exit_code = validate_markdown_cli.main()
-                    
-                    assert exit_code == 0
+                    with patch('infrastructure.validation.validate_markdown_cli.validate_markdown') as mock_validate:
+                        mock_validate.return_value = ([], 0)
+                        
+                        exit_code = validate_markdown_cli.main()
+                        
+                        assert exit_code == 0
     
     def test_main_with_issues(self, tmp_path, capsys):
         """Test main with validation issues."""
         from infrastructure.validation import validate_markdown_cli
         
         with patch.object(validate_markdown_cli, 'import_error', None):
-            with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
-                mock_find.return_value = str(tmp_path)
-                
-                with patch('infrastructure.validation.validate_markdown_cli.validate_markdown') as mock_validate:
-                    mock_validate.return_value = (["Issue 1", "Issue 2"], 1)
+            with patch('sys.argv', ['validate_markdown_cli.py']):
+                with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
+                    mock_find.return_value = str(tmp_path)
                     
-                    exit_code = validate_markdown_cli.main()
-                    
-                    assert exit_code == 1
+                    with patch('infrastructure.validation.validate_markdown_cli.validate_markdown') as mock_validate:
+                        mock_validate.return_value = (["Issue 1", "Issue 2"], 1)
+                        
+                        exit_code = validate_markdown_cli.main()
+                        
+                        assert exit_code == 1
     
     def test_main_import_error(self, capsys):
         """Test main with import error."""
@@ -205,24 +207,26 @@ class TestValidateMarkdownMain:
         from infrastructure.validation import validate_markdown_cli
         
         with patch.object(validate_markdown_cli, 'import_error', None):
-            with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
-                mock_find.side_effect = FileNotFoundError("Not found")
-                
-                exit_code = validate_markdown_cli.main()
-                
-                assert exit_code == 1
+            with patch('sys.argv', ['validate_markdown_cli.py']):
+                with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
+                    mock_find.side_effect = FileNotFoundError("Not found")
+                    
+                    exit_code = validate_markdown_cli.main()
+                    
+                    assert exit_code == 1
     
     def test_main_unexpected_error(self, capsys):
         """Test main with unexpected error."""
         from infrastructure.validation import validate_markdown_cli
         
         with patch.object(validate_markdown_cli, 'import_error', None):
-            with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
-                mock_find.side_effect = Exception("Unexpected")
-                
-                exit_code = validate_markdown_cli.main()
-                
-                assert exit_code == 1
+            with patch('sys.argv', ['validate_markdown_cli.py']):
+                with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
+                    mock_find.side_effect = Exception("Unexpected")
+                    
+                    exit_code = validate_markdown_cli.main()
+                    
+                    assert exit_code == 1
 
 
 class TestValidateMarkdownIntegration:

@@ -32,15 +32,24 @@ def _ensure_glossary_file(path: str) -> None:
 
 def main() -> int:
     """Main function to generate and update the API glossary.
-    
+
     Returns:
         0 on success, 1 on failure
     """
-    repo = _repo_root()
-    project_dir = os.path.join(repo, "project")
-    src_dir = os.path.join(project_dir, "src")
-    # Write directly to project/manuscript/98_symbols_glossary.md
-    glossary_md = os.path.join(project_dir, "manuscript", "98_symbols_glossary.md")
+    # Parse command line arguments
+    args = sys.argv[1:]
+    if len(args) >= 2:
+        src_dir = args[0]
+        glossary_md = args[1]
+        # For command-line usage, assume repo is the parent of src_dir's parent
+        repo = os.path.dirname(os.path.dirname(src_dir))
+    else:
+        # Default behavior
+        repo = _repo_root()
+        project_dir = os.path.join(repo, "project")
+        src_dir = os.path.join(project_dir, "src")
+        # Write directly to project/manuscript/98_symbols_glossary.md
+        glossary_md = os.path.join(project_dir, "manuscript", "98_symbols_glossary.md")
 
     # Ensure file exists with markers
     _ensure_glossary_file(glossary_md)

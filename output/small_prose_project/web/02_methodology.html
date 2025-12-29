@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_methodology</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="methodology">Methodology</h1>
+<p>This section presents the methodological approach used in this
+research project, demonstrating various mathematical concepts and
+notation.</p>
+<h2 id="mathematical-framework">Mathematical Framework</h2>
+<p>We employ standard mathematical notation throughout our analysis.
+Consider the following optimization problem:</p>
+<p><span class="math display">\[\min_{x \in \mathbb{R}^n}
+f(x)\]</span></p>
+<p>subject to:</p>
+<p><span class="math display">\[g_i(x) \leq 0, \quad i = 1, \dots,
+m\]</span> <span class="math display">\[h_j(x) = 0, \quad j = 1, \dots,
+p\]</span></p>
+<p>where <span class="math inline">\(f: \mathbb{R}^n \rightarrow
+\mathbb{R}\)</span> is the objective function.</p>
+<h2 id="algorithm-development">Algorithm Development</h2>
+<p>The proposed algorithm follows these steps:</p>
+<ol type="1">
+<li><strong>Initialization</strong>
+<ul>
+<li>Set initial point <span class="math inline">\(x_0 \in
+\mathbb{R}^n\)</span></li>
+<li>Choose parameters <span class="math inline">\(\alpha, \beta, \gamma
+&gt; 0\)</span></li>
+</ul></li>
+<li><strong>Iteration Process</strong>
+<ul>
+<li>Compute gradient: <span class="math inline">\(\nabla
+f(x_k)\)</span></li>
+<li>Update direction: <span class="math inline">\(d_k = -\nabla
+f(x_k)\)</span></li>
+<li>Line search for step size <span
+class="math inline">\(\alpha_k\)</span></li>
+<li>Update: <span class="math inline">\(x_{k+1} = x_k + \alpha_k
+d_k\)</span></li>
+</ul></li>
+<li><strong>Convergence Check</strong>
+<ul>
+<li>Test stopping criteria: <span class="math inline">\(\|\nabla
+f(x_k)\| &lt; \epsilon\)</span></li>
+<li>If converged, return <span class="math inline">\(x_k\)</span></li>
+<li>Otherwise, increment <span class="math inline">\(k\)</span> and
+repeat</li>
+</ul></li>
+</ol>
+<h2 id="convergence-analysis">Convergence Analysis</h2>
+<p>The algorithm’s convergence properties are analyzed using the
+following theorem:</p>
+<p><strong>Theorem 1.</strong> If <span class="math inline">\(f\)</span>
+is convex and continuously differentiable, and the step sizes satisfy
+the Wolfe conditions, then the algorithm converges to a stationary
+point.</p>
+<p><strong>Proof sketch:</strong> - By convexity: <span
+class="math inline">\(f(y) \geq f(x) + \nabla f(x)^T (y - x)\)</span> -
+Line search ensures sufficient decrease - Gradient descent property
+guarantees convergence to critical points</p>
+<h2 id="implementation-considerations">Implementation
+Considerations</h2>
+<p>Key implementation aspects include:</p>
+<ul>
+<li><strong>Numerical stability</strong>: Using appropriate
+floating-point precision</li>
+<li><strong>Termination criteria</strong>: Multiple stopping
+conditions</li>
+<li><strong>Performance optimization</strong>: Efficient gradient
+computation</li>
+<li><strong>Error handling</strong>: Robust exception management</li>
+</ul>
+<h2 id="validation-strategy">Validation Strategy</h2>
+<p>The methodology is validated through:</p>
+<ul>
+<li><strong>Mathematical correctness</strong>: Verification of
+derivations</li>
+<li><strong>Numerical accuracy</strong>: Comparison with known
+solutions</li>
+<li><strong>Computational efficiency</strong>: Performance
+benchmarking</li>
+<li><strong>Robustness testing</strong>: Edge case analysis</li>
+</ul>
+<p>This approach ensures both theoretical soundness and practical
+applicability of the proposed methods.</p>
+</body>
+</html>

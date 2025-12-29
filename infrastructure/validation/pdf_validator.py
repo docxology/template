@@ -16,11 +16,7 @@ import re
 import io
 import contextlib
 from infrastructure.core.logging_utils import get_logger
-
-
-class PDFValidationError(Exception):
-    """Raised when PDF validation encounters an error."""
-    pass
+from infrastructure.core.exceptions import PDFValidationError
 
 
 def extract_text_from_pdf(pdf_path: Path) -> str:

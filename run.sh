@@ -63,6 +63,9 @@ source "$SCRIPT_DIR/scripts/bash_utils.sh"
 # Check bash compatibility (non-fatal warning)
 check_bash_compatibility || true
 
+# Log uv availability status
+log_uv_status
+
 # Stage tracking for full pipeline
 # Note: Stage 0 (Clean Output Directories) is not in this array as it's a pre-pipeline step.
 # This array tracks stages 1-9, which are displayed as [1/9] to [9/9] in progress logs.
@@ -73,9 +76,9 @@ declare -a STAGE_NAMES=(
     "Project Analysis"         # Stage 4
     "PDF Rendering"            # Stage 5
     "Output Validation"        # Stage 6
-    "Copy Outputs"            # Stage 7
-    "LLM Scientific Review"   # Stage 8 (optional)
-    "LLM Translations"        # Stage 9 (optional)
+    "LLM Scientific Review"   # Stage 7 (optional)
+    "LLM Translations"        # Stage 8 (optional)
+    "Copy Outputs"            # Stage 9
 )
 
 declare -a STAGE_RESULTS=()
@@ -222,11 +225,11 @@ display_menu() {
     echo "  8. Run Full Pipeline (10 stages: 0-9)"
     echo "  9. Run Full Pipeline (skip infrastructure tests)"
     echo
-    echo -e "${BOLD}Multi-Project Operations:${NC}"
-    echo "  a. Run all projects - Full pipeline (with infra, with LLM)"
-    echo "  b. Run all projects - Full pipeline (no infra, with LLM)"
-    echo "  c. Run all projects - Core pipeline (with infra, no LLM)"
-    echo "  d. Run all projects - Core pipeline (no infra, no LLM)"
+echo -e "${BOLD}Multi-Project Operations:${NC}"
+echo "  a. Run all projects - Full pipeline (with infra, with LLM) + Executive Report"
+echo "  b. Run all projects - Full pipeline (no infra, with LLM) + Executive Report"
+echo "  c. Run all projects - Core pipeline (with infra, no LLM) + Executive Report"
+echo "  d. Run all projects - Core pipeline (no infra, no LLM) + Executive Report"
     echo
     echo -e "${BOLD}Project Management:${NC}"
     echo "  p. Change Project"
@@ -234,7 +237,7 @@ display_menu() {
     echo
     echo -e "${BLUE}============================================================${NC}"
     echo -e "  Repository: ${CYAN}$REPO_ROOT${NC}"
-    echo -e "  Python: ${CYAN}$(python3 --version 2>&1)${NC}"
+    echo -e "  Python: ${CYAN}$($(get_python_cmd) --version 2>&1)${NC}"
     echo -e "${BLUE}============================================================${NC}"
     echo
     echo -e "${CYAN}Tip:${NC} Enter multiple digits to chain steps (e.g., 345 for analysis → render → validate). Comma forms like 3,4,5 work too."
@@ -256,7 +259,7 @@ clean_output_directories() {
     echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
     # Use Python function that handles multi-project structure correctly
-    python3 -c "
+    $(get_python_cmd) -c "
 from infrastructure.core.file_operations import clean_output_directories
 from pathlib import Path
 import sys
@@ -286,7 +289,7 @@ run_pytest_infrastructure() {
     log_info "Running infrastructure module tests..."
     log_info "(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)"
     
-    python3 -m pytest tests/infrastructure/ \
+    $(get_pytest_cmd) tests/infrastructure/ \
         --ignore=tests/integration/test_module_interoperability.py \
         -m "not requires_ollama" \
         --cov=infrastructure \
@@ -307,7 +310,7 @@ run_pytest_project() {
 
     log_info "Running project tests for '$project_name'..."
 
-    python3 -m pytest "projects/$project_name/tests/" \
+    $(get_pytest_cmd) "projects/$project_name/tests/" \
         --ignore="projects/$project_name/tests/integration" \
         --cov="projects/$project_name/src" \
         --cov-report=term-missing \
@@ -327,7 +330,7 @@ run_setup_environment() {
     log_header "SETUP ENVIRONMENT (00_setup_environment.py) - Project: $project_name"
 
     cd "$REPO_ROOT"
-    if python3 scripts/00_setup_environment.py --project "$project_name"; then
+    if $(get_python_cmd) scripts/00_setup_environment.py --project "$project_name"; then
         log_success "Environment setup complete"
         return 0
     else
@@ -343,7 +346,7 @@ run_all_tests() {
     log_header "RUN TESTS (01_run_tests.py) - Project: $project_name"
 
     cd "$REPO_ROOT"
-    if python3 scripts/01_run_tests.py --project "$project_name"; then
+    if $(get_python_cmd) scripts/01_run_tests.py --project "$project_name"; then
         log_success "All tests passed"
         return 0
     else
@@ -388,7 +391,7 @@ run_analysis() {
 
     cd "$REPO_ROOT"
 
-    if python3 scripts/02_run_analysis.py --project "$project_name"; then
+    if $(get_python_cmd) scripts/02_run_analysis.py --project "$project_name"; then
         log_success "Project analysis complete"
         return 0
     else
@@ -403,7 +406,7 @@ run_analysis_standalone() {
     
     cd "$REPO_ROOT"
     
-    if python3 scripts/02_run_analysis.py; then
+    if $(get_python_cmd) scripts/02_run_analysis.py; then
         log_success "Analysis complete"
         return 0
     else
@@ -420,13 +423,13 @@ run_pdf_rendering() {
     cd "$REPO_ROOT"
 
     log_info "Running analysis scripts..."
-    if ! python3 scripts/02_run_analysis.py --project "$project_name"; then
+    if ! $(get_python_cmd) scripts/02_run_analysis.py --project "$project_name"; then
         log_error "Analysis failed"
         return 1
     fi
 
     log_info "Rendering PDF manuscript..."
-    if python3 scripts/03_render_pdf.py --project "$project_name"; then
+    if $(get_python_cmd) scripts/03_render_pdf.py --project "$project_name"; then
         log_success "PDF rendering complete"
         return 0
     else
@@ -442,7 +445,7 @@ run_validation() {
 
     cd "$REPO_ROOT"
 
-    if python3 scripts/04_validate_output.py --project "$project_name"; then
+    if $(get_python_cmd) scripts/04_validate_output.py --project "$project_name"; then
         log_success "Output validation complete"
         return 0
     else
@@ -457,7 +460,7 @@ run_validation_standalone() {
     
     cd "$REPO_ROOT"
     
-    if python3 scripts/04_validate_output.py; then
+    if $(get_python_cmd) scripts/04_validate_output.py; then
         log_success "Validation complete"
         return 0
     else
@@ -473,7 +476,7 @@ run_copy_outputs() {
 
     cd "$REPO_ROOT"
 
-    if python3 scripts/05_copy_outputs.py --project "$project_name"; then
+    if $(get_python_cmd) scripts/05_copy_outputs.py --project "$project_name"; then
         log_success "Output copying complete"
         return 0
     else
@@ -488,7 +491,7 @@ run_copy_outputs_standalone() {
     
     cd "$REPO_ROOT"
     
-    if python3 scripts/05_copy_outputs.py; then
+    if $(get_python_cmd) scripts/05_copy_outputs.py; then
         log_success "Output copying complete"
         return 0
     else
@@ -508,7 +511,7 @@ run_llm_scientific_review() {
     log_info "Generating: executive summary, quality review, methodology review, improvements"
 
     local exit_code
-    python3 scripts/06_llm_review.py --reviews-only --project "$project_name"
+    $(get_python_cmd) scripts/06_llm_review.py --reviews-only --project "$project_name"
     exit_code=$?
     
     if [[ $exit_code -eq 0 ]]; then
@@ -535,7 +538,7 @@ run_llm_translations() {
     log_info "Generating translations for configured languages (see config.yaml)"
 
     local exit_code
-    python3 scripts/06_llm_review.py --translations-only --project "$project_name"
+    $(get_python_cmd) scripts/06_llm_review.py --translations-only --project "$project_name"
     exit_code=$?
     
     if [[ $exit_code -eq 0 ]]; then
@@ -561,7 +564,7 @@ run_llm_review() {
     log_info "This will run both reviews and translations"
     
     local exit_code
-    python3 scripts/06_llm_review.py
+    $(get_python_cmd) scripts/06_llm_review.py
     exit_code=$?
     
     if [[ $exit_code -eq 0 ]]; then
@@ -580,6 +583,22 @@ run_llm_review() {
 # ============================================================================
 # Full Pipeline Execution
 # ============================================================================
+
+generate_pipeline_reports() {
+    local project_name="${1:-$CURRENT_PROJECT}"
+    local total_duration="${2:-0}"
+
+    log_info "Generating pipeline reports..."
+
+    # Run the dedicated Python script
+    if $(get_python_cmd) "$REPO_ROOT/scripts/generate_pipeline_reports.py" --project "$project_name" --total-duration "$total_duration"; then
+        log_success "Pipeline reports generated successfully"
+        return 0
+    else
+        log_warning "Failed to generate pipeline reports"
+        return 1
+    fi
+}
 
 run_full_pipeline() {
     local resume_flag="${1:-}"
@@ -619,7 +638,7 @@ run_full_pipeline() {
         
         # Save checkpoint if possible
         if [[ -n "$pipeline_start" ]] && [[ "$pipeline_start" -gt 0 ]]; then
-            if python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); cm.save_checkpoint(pipeline_start_time=$pipeline_start, last_stage_completed=$current_stage, stage_results=[], total_stages=9)" 2>/dev/null; then
+            if $(get_python_cmd) -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); cm.save_checkpoint(pipeline_start_time=$pipeline_start, last_stage_completed=$current_stage, stage_results=[], total_stages=9)" 2>/dev/null; then
                 log_success "Checkpoint saved"
                 echo "✓ Checkpoint saved" >> "$log_file_path" 2>/dev/null || true
             fi
@@ -645,7 +664,7 @@ run_full_pipeline() {
     pipeline_start=$(date +%s)
     
     log_info_to_file "Repository: $REPO_ROOT"
-    log_info_to_file "Python: $(python3 --version)"
+    log_info_to_file "Python: $($(get_python_cmd) --version)"
     log_info_to_file "Log file: $log_file"
     echo
     
@@ -656,7 +675,7 @@ run_full_pipeline() {
         echo "============================================================"
         echo ""
         echo "Repository: $REPO_ROOT"
-        echo "Python: $(python3 --version)"
+        echo "Python: $($(get_python_cmd) --version)"
         echo "Log file: $log_file"
         echo "Pipeline started: $(date)"
         echo ""
@@ -665,7 +684,7 @@ run_full_pipeline() {
     # Check for checkpoint if resuming
     if [[ "$resume_flag" == "--resume" ]]; then
         log_info_to_file "Checking for checkpoint..."
-        if python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); valid, msg = cm.validate_checkpoint(); exit(0 if valid else 1)" 2>/dev/null; then
+        if $(get_python_cmd) -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); valid, msg = cm.validate_checkpoint(); exit(0 if valid else 1)" 2>/dev/null; then
             log_success_to_file "Checkpoint found - resuming pipeline"
         else
             log_warning_to_file "No valid checkpoint found - starting fresh pipeline"
@@ -687,7 +706,7 @@ run_full_pipeline() {
     # For resume, use Python script with --resume flag
     if [[ "$resume_flag" == "--resume" ]]; then
         cd "$REPO_ROOT"
-        if python3 scripts/run_all.py --resume; then
+        if $(get_python_cmd) scripts/run_all.py --resume; then
             log_success "Pipeline resumed and completed"
             return 0
         else
@@ -699,25 +718,25 @@ run_full_pipeline() {
     # Stage 1: Setup Environment
     current_stage=1
     local stage_start=$(date +%s)
-    log_stage 1 "Setup Environment" 9 "$pipeline_start"
+    log_stage_progress 1 "Setup Environment" 9 "$pipeline_start" "$stage_start"
     run_setup_environment "$project_name" 2>&1 | tee -a "$log_file"
     local exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -ne 0 ]]; then
-        log_error "Pipeline failed at Stage 1 (Setup Environment)"
-        log_info "  Troubleshooting:"
-        log_info "    - Check Python version: python3 --version (requires >=3.10)"
-        log_info "    - Verify dependencies: pip list | grep -E '(numpy|matplotlib|pytest)'"
-        log_info "    - Check script: python3 scripts/00_setup_environment.py"
+        log_pipeline_error "Setup Environment" "Environment setup failed" "$exit_code" \
+            "Check Python version: python3 --version (requires >=3.10)" \
+            "Verify dependencies: pip list | grep -E '(numpy|matplotlib|pytest)'" \
+            "Check script: python3 scripts/00_setup_environment.py"
         return 1
     fi
     local stage_end=$(date +%s)
     STAGE_RESULTS[0]=0
     STAGE_DURATIONS[0]=$(get_elapsed_time "$stage_start" "$stage_end")
-    
+    log_resource_usage "Setup Environment" "${STAGE_DURATIONS[0]}"
+
     # Stage 2: Infrastructure Tests
     current_stage=2
     stage_start=$(date +%s)
-    log_stage 2 "Infrastructure Tests" 9 "$pipeline_start"
+    log_stage_progress 2 "Infrastructure Tests" 9 "$pipeline_start" "$stage_start"
     {
         echo ""
         echo "[2/9] Infrastructure Tests (22% complete)"
@@ -725,22 +744,22 @@ run_full_pipeline() {
     run_infrastructure_tests 2>&1 | tee -a "$log_file"
     local exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -ne 0 ]]; then
-        log_error_to_file "Pipeline failed at Stage 2 (Infrastructure Tests)"
-        log_info_to_file "  Troubleshooting:"
-        log_info_to_file "    - Run tests manually: python3 -m pytest tests/infrastructure/ -v"
-        log_info_to_file "    - Check coverage: python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=term"
-        log_info_to_file "    - View HTML report: open htmlcov/index.html"
+        log_pipeline_error "Infrastructure Tests" "Infrastructure tests failed" "$exit_code" \
+            "Run tests manually: python3 -m pytest tests/infrastructure/ -v" \
+            "Check coverage: python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=term" \
+            "View HTML report: open htmlcov/index.html"
         return 1
     fi
     log_success_to_file "Infrastructure tests passed"
     stage_end=$(date +%s)
     STAGE_RESULTS[1]=0
     STAGE_DURATIONS[1]=$(get_elapsed_time "$stage_start" "$stage_end")
-    
+    log_resource_usage "Infrastructure Tests" "${STAGE_DURATIONS[1]}"
+
     # Stage 3: Project Tests
     current_stage=3
     stage_start=$(date +%s)
-    log_stage 3 "Project Tests" 9 "$pipeline_start"
+    log_stage_progress 3 "Project Tests" 9 "$pipeline_start" "$stage_start"
     {
         echo ""
         echo "[3/9] Project Tests (33% complete)"
@@ -748,42 +767,42 @@ run_full_pipeline() {
     run_project_tests "$project_name" 2>&1 | tee -a "$log_file"
     local exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -ne 0 ]]; then
-        log_error_to_file "Pipeline failed at Stage 3 (Project Tests)"
-        log_info_to_file "  Troubleshooting:"
-        log_info_to_file "    - Run tests manually: python3 -m pytest project/tests/ -v"
-        log_info_to_file "    - Check specific test: python3 -m pytest project/tests/test_example.py -v"
-        log_info_to_file "    - View coverage: python3 -m pytest project/tests/ --cov=project/src --cov-report=term"
+        log_pipeline_error "Project Tests" "Project tests failed" "$exit_code" \
+            "Run tests manually: python3 -m pytest project/tests/ -v" \
+            "Check specific test: python3 -m pytest project/tests/test_example.py -v" \
+            "View coverage: python3 -m pytest project/tests/ --cov=project/src --cov-report=term"
         return 1
     fi
     log_success_to_file "Project tests passed"
     stage_end=$(date +%s)
     STAGE_RESULTS[2]=0
     STAGE_DURATIONS[2]=$(get_elapsed_time "$stage_start" "$stage_end")
-    
+    log_resource_usage "Project Tests" "${STAGE_DURATIONS[2]}"
+
     # Stage 4: Analysis
     current_stage=4
     stage_start=$(date +%s)
     run_analysis "$project_name" 2>&1 | tee -a "$log_file"
     local exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -ne 0 ]]; then
-        log_error "Pipeline failed at Stage 4 (Project Analysis)"
-        log_info "  Troubleshooting:"
-        log_info "    - Check analysis scripts: ls project/scripts/*.py"
-        log_info "    - Run script manually: python3 project/scripts/analysis_pipeline.py"
-        log_info "    - Verify outputs: ls projects/$CURRENT_PROJECT/output/figures/ projects/$CURRENT_PROJECT/output/data/"
-        log_info "    - Check logs for specific script errors above"
+        log_pipeline_error "Project Analysis" "Analysis scripts failed" "$exit_code" \
+            "Check analysis scripts: ls project/scripts/*.py" \
+            "Run script manually: python3 project/scripts/analysis_pipeline.py" \
+            "Verify outputs: ls projects/$CURRENT_PROJECT/output/figures/ projects/$CURRENT_PROJECT/output/data/" \
+            "Check logs above for specific script errors"
         return 1
     fi
     stage_end=$(date +%s)
     STAGE_RESULTS[3]=0
     STAGE_DURATIONS[3]=$(get_elapsed_time "$stage_start" "$stage_end")
-    
+    log_resource_usage "Project Analysis" "${STAGE_DURATIONS[3]}"
+
     # Stage 5: PDF Rendering
     current_stage=5
     stage_start=$(date +%s)
-    log_stage 5 "PDF Rendering" 9 "$pipeline_start"
+    log_stage_progress 5 "PDF Rendering" 9 "$pipeline_start" "$stage_start"
     cd "$REPO_ROOT"
-    python3 scripts/03_render_pdf.py --project "$project_name" 2>&1 | tee -a "$log_file"
+    $(get_python_cmd) scripts/03_render_pdf.py --project "$project_name" 2>&1 | tee -a "$log_file"
     local exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -ne 0 ]]; then
         log_error "Pipeline failed at Stage 5 (PDF Rendering)"
@@ -792,14 +811,15 @@ run_full_pipeline() {
         log_info "    - Verify manuscript files: ls project/manuscript/*.md"
         log_info "    - Check figure paths: ls projects/$CURRENT_PROJECT/output/figures/"
         log_info "    - View compilation logs: ls projects/$CURRENT_PROJECT/output/pdf/*.log"
-        log_info "    - Run manually: python3 scripts/03_render_pdf.py"
+        log_info "    - Run manually: $(get_python_cmd) scripts/03_render_pdf.py"
         return 1
     fi
     log_success "PDF rendering complete"
     stage_end=$(date +%s)
     STAGE_RESULTS[4]=0
     STAGE_DURATIONS[4]=$(get_elapsed_time "$stage_start" "$stage_end")
-    
+    log_resource_usage "PDF Rendering" "${STAGE_DURATIONS[4]}"
+
     # Stage 6: Validation
     current_stage=6
     stage_start=$(date +%s)
@@ -816,57 +836,48 @@ run_full_pipeline() {
     stage_end=$(date +%s)
     STAGE_RESULTS[5]=0
     STAGE_DURATIONS[5]=$(get_elapsed_time "$stage_start" "$stage_end")
-    
-    # Stage 7: Copy Outputs
+    log_resource_usage "Output Validation" "${STAGE_DURATIONS[5]}"
+
+    # Stage 7: LLM Scientific Review (optional - graceful degradation)
     current_stage=7
     stage_start=$(date +%s)
-    run_copy_outputs "$project_name" 2>&1 | tee -a "$log_file"
-    local exit_code=${PIPESTATUS[0]}
-    if [[ $exit_code -ne 0 ]]; then
-        log_error "Pipeline failed at Stage 7 (Copy Outputs)"
-        log_info "  Troubleshooting:"
-        log_info "    - Check source directory: ls projects/$CURRENT_PROJECT/output/"
-        log_info "    - Check destination: ls output/"
-        log_info "    - Verify permissions: ls -la projects/$CURRENT_PROJECT/output/"
-        log_info "    - Run manually: python3 scripts/05_copy_outputs.py"
-        return 1
-    fi
-    stage_end=$(date +%s)
-    STAGE_RESULTS[6]=0
-    STAGE_DURATIONS[6]=$(get_elapsed_time "$stage_start" "$stage_end")
-    
-    # Stage 8: LLM Scientific Review (optional - graceful degradation)
-    current_stage=8
-    stage_start=$(date +%s)
-    log_stage 8 "LLM Scientific Review" 9 "$pipeline_start"
+    log_stage_progress 7 "LLM Scientific Review" 9 "$pipeline_start" "$stage_start"
+    {
+        echo ""
+        echo "[7/9] LLM Scientific Review (78% complete)"
+    } >> "$log_file" 2>/dev/null || true
     cd "$REPO_ROOT"
     log_info "Running LLM scientific review (requires Ollama)..."
     log_info "Note: This stage is optional - pipeline will continue even if it fails"
     local exit_code
-    python3 scripts/06_llm_review.py --reviews-only --project "$project_name" 2>&1 | tee -a "$log_file" || true
+    $(get_python_cmd) scripts/06_llm_review.py --reviews-only --project "$project_name" 2>&1 | tee -a "$log_file" || true
     exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -eq 0 ]]; then
         log_success "LLM scientific review complete"
-        STAGE_RESULTS[7]=0
+        STAGE_RESULTS[6]=0
     elif [[ $exit_code -eq 2 ]]; then
         log_warning "LLM scientific review skipped (Ollama not available)"
         log_info "  To enable: start Ollama with 'ollama serve' and install a model"
         log_info "  Recommended: ollama pull llama3-gradient"
-        STAGE_RESULTS[7]=2  # Mark as skipped
+        STAGE_RESULTS[6]=2  # Mark as skipped
     else
         log_warning "LLM scientific review failed (exit code: $exit_code)"
         log_info "  This is an optional stage - pipeline will continue"
         log_info "  Check Ollama status: ollama ps"
         log_info "  Check logs: projects/$CURRENT_PROJECT/output/llm/"
-        STAGE_RESULTS[7]=1  # Mark as failed but don't stop pipeline
+        STAGE_RESULTS[6]=1  # Mark as failed but don't stop pipeline
     fi
     stage_end=$(date +%s)
-    STAGE_DURATIONS[7]=$(get_elapsed_time "$stage_start" "$stage_end")
-    
-    # Stage 9: LLM Translations (optional - graceful degradation)
-    current_stage=9
+    STAGE_DURATIONS[6]=$(get_elapsed_time "$stage_start" "$stage_end")
+
+    # Stage 8: LLM Translations (optional - graceful degradation)
+    current_stage=8
     stage_start=$(date +%s)
-    log_stage 9 "LLM Translations" 9 "$pipeline_start"
+    log_stage_progress 8 "LLM Translations" 9 "$pipeline_start" "$stage_start"
+    {
+        echo ""
+        echo "[8/9] LLM Translations (89% complete)"
+    } >> "$log_file" 2>/dev/null || true
     cd "$REPO_ROOT"
 
     # Get timeout configuration for logging
@@ -875,11 +886,25 @@ run_full_pipeline() {
     log_info "  Timeout: ${LLM_TIMEOUT}s per translation"
     log_info "  Expected duration: 1-5 minutes per language (depending on model)"
     log_info "Note: This stage is optional - pipeline will continue even if it fails"
-    python3 scripts/06_llm_review.py --translations-only --project "$project_name" 2>&1 | tee -a "$log_file" || true
+    current_stage=9
+    stage_start=$(date +%s)
+    log_stage_progress 9 "LLM Translations" 9 "$pipeline_start" "$stage_start"
+    cd "$REPO_ROOT"
+
+    # Get timeout configuration for logging
+    LLM_TIMEOUT=${LLM_REVIEW_TIMEOUT:-300}
+    log_info "Running LLM translations (requires Ollama)..."
+    log_info "  Timeout: ${LLM_TIMEOUT}s per translation"
+    log_info "  Expected duration: 1-5 minutes per language (depending on model)"
+    log_info "Note: This stage is optional - pipeline will continue even if it fails"
+    $(get_python_cmd) scripts/06_llm_review.py --translations-only --project "$project_name" 2>&1 | tee -a "$log_file" || true
     exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -eq 0 ]]; then
         log_success "LLM translations complete"
         STAGE_RESULTS[8]=0
+        stage_end=$(date +%s)
+        STAGE_DURATIONS[8]=$(get_elapsed_time "$stage_start" "$stage_end")
+        log_resource_usage "LLM Translations" "${STAGE_DURATIONS[8]}"
     elif [[ $exit_code -eq 2 ]]; then
         log_warning "LLM translations skipped (Ollama not available or no languages configured)"
         log_info "  To enable: configure translations in project/manuscript/config.yaml"
@@ -907,9 +932,33 @@ run_full_pipeline() {
         log_info "    - Check configuration: project/manuscript/config.yaml"
         log_info "    - For timeout issues: export LLM_REVIEW_TIMEOUT=600"
         log_info "    - For slow models: consider gemma2:2b instead of larger models"
-        STAGE_RESULTS[8]=1  # Mark as failed but don't stop pipeline
+        STAGE_RESULTS[7]=1  # Mark as failed but don't stop pipeline
     fi
-    
+
+    # Stage 9: Copy Outputs
+    current_stage=9
+    stage_start=$(date +%s)
+    log_stage_progress 9 "Copy Outputs" 9 "$pipeline_start" "$stage_start"
+    {
+        echo ""
+        echo "[9/9] Copy Outputs (100% complete)"
+    } >> "$log_file" 2>/dev/null || true
+    run_copy_outputs "$project_name" 2>&1 | tee -a "$log_file"
+    local exit_code=${PIPESTATUS[0]}
+    if [[ $exit_code -ne 0 ]]; then
+        log_error "Pipeline failed at Stage 9 (Copy Outputs)"
+        log_info "  Troubleshooting:"
+        log_info "    - Check source directory: ls projects/$CURRENT_PROJECT/output/"
+        log_info "    - Check destination: ls output/"
+        log_info "    - Verify permissions: ls -la projects/$CURRENT_PROJECT/output/"
+        log_info "    - Run manually: python3 scripts/05_copy_outputs.py"
+        return 1
+    fi
+    stage_end=$(date +%s)
+    STAGE_RESULTS[8]=0
+    STAGE_DURATIONS[8]=$(get_elapsed_time "$stage_start" "$stage_end")
+    log_resource_usage "Copy Outputs" "${STAGE_DURATIONS[8]}"
+
     # Success - print summary
     local pipeline_end=$(date +%s)
     local total_duration=$(get_elapsed_time "$pipeline_start" "$pipeline_end")
@@ -926,10 +975,13 @@ run_full_pipeline() {
         echo "  (Will be copied to output/logs/ during copy stage)"
         echo "============================================================"
     } >> "$log_file"
-    
+
+    # Generate pipeline reports
+    generate_pipeline_reports "$project_name" "$total_duration"
+
     # Clear trap
     trap - INT TERM
-    
+
     return 0
 }
 
@@ -970,7 +1022,7 @@ run_full_pipeline_no_infra() {
         
         # Save checkpoint if possible
         if [[ -n "$pipeline_start" ]] && [[ "$pipeline_start" -gt 0 ]]; then
-            if python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); cm.save_checkpoint(pipeline_start_time=$pipeline_start, last_stage_completed=$current_stage, stage_results=[], total_stages=8)" 2>/dev/null; then
+            if $(get_python_cmd) -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); cm.save_checkpoint(pipeline_start_time=$pipeline_start, last_stage_completed=$current_stage, stage_results=[], total_stages=8)" 2>/dev/null; then
                 log_success "Checkpoint saved"
                 echo "✓ Checkpoint saved" >> "$log_file_path" 2>/dev/null || true
             fi
@@ -996,7 +1048,7 @@ run_full_pipeline_no_infra() {
     pipeline_start=$(date +%s)
     
     log_info_to_file "Repository: $REPO_ROOT"
-    log_info_to_file "Python: $(python3 --version)"
+    log_info_to_file "Python: $($(get_python_cmd) --version)"
     log_info_to_file "Log file: $log_file"
     log_info_to_file "Note: Infrastructure tests are skipped in this pipeline"
     echo
@@ -1008,7 +1060,7 @@ run_full_pipeline_no_infra() {
         echo "============================================================"
         echo ""
         echo "Repository: $REPO_ROOT"
-        echo "Python: $(python3 --version)"
+        echo "Python: $($(get_python_cmd) --version)"
         echo "Log file: $log_file"
         echo "Pipeline started: $(date)"
         echo "Note: Infrastructure tests are skipped in this pipeline"
@@ -1018,7 +1070,7 @@ run_full_pipeline_no_infra() {
     # Check for checkpoint if resuming
     if [[ "$resume_flag" == "--resume" ]]; then
         log_info_to_file "Checking for checkpoint..."
-        if python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); valid, msg = cm.validate_checkpoint(); exit(0 if valid else 1)" 2>/dev/null; then
+        if $(get_python_cmd) -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); valid, msg = cm.validate_checkpoint(); exit(0 if valid else 1)" 2>/dev/null; then
             log_success_to_file "Checkpoint found - resuming pipeline"
         else
             log_warning_to_file "No valid checkpoint found - starting fresh pipeline"
@@ -1040,7 +1092,7 @@ run_full_pipeline_no_infra() {
     # For resume, use Python script with --resume flag
     if [[ "$resume_flag" == "--resume" ]]; then
         cd "$REPO_ROOT"
-        if python3 scripts/run_all.py --resume; then
+        if $(get_python_cmd) scripts/run_all.py --resume; then
             log_success "Pipeline resumed and completed"
             return 0
         else
@@ -1126,7 +1178,7 @@ run_full_pipeline_no_infra() {
         echo "[4/8] PDF Rendering (50% complete)"
     } >> "$log_file" 2>/dev/null || true
     cd "$REPO_ROOT"
-    python3 scripts/03_render_pdf.py --project "$project_name" 2>&1 | tee -a "$log_file"
+    $(get_python_cmd) scripts/03_render_pdf.py --project "$project_name" 2>&1 | tee -a "$log_file"
     exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -ne 0 ]]; then
         log_error "Pipeline failed at Stage 4 (PDF Rendering)"
@@ -1135,7 +1187,7 @@ run_full_pipeline_no_infra() {
         log_info "    - Verify manuscript files: ls project/manuscript/*.md"
         log_info "    - Check figure paths: ls projects/$CURRENT_PROJECT/output/figures/"
         log_info "    - View compilation logs: ls projects/$CURRENT_PROJECT/output/pdf/*.log"
-        log_info "    - Run manually: python3 scripts/03_render_pdf.py"
+        log_info "    - Run manually: $(get_python_cmd) scripts/03_render_pdf.py"
         return 1
     fi
     log_success "PDF rendering complete"
@@ -1201,11 +1253,12 @@ run_full_pipeline_no_infra() {
     log_info "Note: This stage is optional - pipeline will continue even if it fails"
     log_info "Auto-start: Ollama will be started automatically if not running"
 
-    python3 scripts/06_llm_review.py --reviews-only --project "$project_name" 2>&1 | tee -a "$log_file" || true
+    $(get_python_cmd) scripts/06_llm_review.py --reviews-only --project "$project_name" 2>&1 | tee -a "$log_file" || true
     exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -eq 0 ]]; then
         log_success "LLM scientific review complete"
         STAGE_RESULTS[6]=0
+        log_resource_usage "LLM Scientific Review" "${STAGE_DURATIONS[6]}"
     elif [[ $exit_code -eq 2 ]]; then
         log_warning "LLM scientific review skipped (Ollama not available)"
         log_info "  Auto-start may have been attempted - check logs above"
@@ -1240,7 +1293,7 @@ run_full_pipeline_no_infra() {
     log_info "Note: This stage is optional - pipeline will continue even if it fails"
     log_info "Auto-start: Ollama will be started automatically if not running"
 
-    python3 scripts/06_llm_review.py --translations-only --project "$project_name" 2>&1 | tee -a "$log_file" || true
+    $(get_python_cmd) scripts/06_llm_review.py --translations-only --project "$project_name" 2>&1 | tee -a "$log_file" || true
     exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -eq 0 ]]; then
         log_success "LLM translations complete"
@@ -1338,7 +1391,7 @@ run_core_pipeline_no_llm() {
 
         # Save checkpoint if possible
         if [[ -n "$pipeline_start" ]] && [[ "$pipeline_start" -gt 0 ]]; then
-            if python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); cm.save_checkpoint(pipeline_start_time=$pipeline_start, last_stage_completed=$current_stage, stage_results=[], total_stages=8)" 2>/dev/null; then
+            if $(get_python_cmd) -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); cm.save_checkpoint(pipeline_start_time=$pipeline_start, last_stage_completed=$current_stage, stage_results=[], total_stages=8)" 2>/dev/null; then
                 log_success "Checkpoint saved"
                 echo "✓ Checkpoint saved" >> "$log_file_path" 2>/dev/null || true
             fi
@@ -1364,7 +1417,7 @@ run_core_pipeline_no_llm() {
     pipeline_start=$(date +%s)
 
     log_info_to_file "Repository: $REPO_ROOT"
-    log_info_to_file "Python: $(python3 --version)"
+    log_info_to_file "Python: $($(get_python_cmd) --version)"
     log_info_to_file "Log file: $log_file"
     log_info_to_file "Core pipeline: stages 0-7 (no LLM)"
     echo
@@ -1376,7 +1429,7 @@ run_core_pipeline_no_llm() {
         echo "============================================================"
         echo ""
         echo "Repository: $REPO_ROOT"
-        echo "Python: $(python3 --version)"
+        echo "Python: $($(get_python_cmd) --version)"
         echo "Log file: $log_file"
         echo "Pipeline started: $(date)"
         echo "Core pipeline: stages 0-7 (no LLM)"
@@ -1386,7 +1439,7 @@ run_core_pipeline_no_llm() {
     # Check for checkpoint if resuming
     if [[ "$resume_flag" == "--resume" ]]; then
         log_info_to_file "Checking for checkpoint..."
-        if python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); valid, msg = cm.validate_checkpoint(); exit(0 if valid else 1)" 2>/dev/null; then
+        if $(get_python_cmd) -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); valid, msg = cm.validate_checkpoint(); exit(0 if valid else 1)" 2>/dev/null; then
             log_success_to_file "Checkpoint found - resuming pipeline"
         else
             log_warning_to_file "No valid checkpoint found - starting fresh pipeline"
@@ -1408,7 +1461,7 @@ run_core_pipeline_no_llm() {
     # For resume, use Python script with --resume flag
     if [[ "$resume_flag" == "--resume" ]]; then
         cd "$REPO_ROOT"
-        if python3 scripts/run_all.py --resume --core-only; then
+        if $(get_python_cmd) scripts/run_all.py --resume --core-only; then
             log_success "Pipeline resumed and completed"
             return 0
         else
@@ -1504,16 +1557,15 @@ run_core_pipeline_no_llm() {
     stage_start=$(date +%s)
     log_stage 5 "PDF Rendering" 7 "$pipeline_start"
     cd "$REPO_ROOT"
-    python3 scripts/03_render_pdf.py --project "$project_name" 2>&1 | tee -a "$log_file"
+    $(get_python_cmd) scripts/03_render_pdf.py --project "$project_name" 2>&1 | tee -a "$log_file"
     exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -ne 0 ]]; then
-        log_error "Pipeline failed at Stage 5 (PDF Rendering)"
-        log_info "  Troubleshooting:"
-        log_info "    - Check LaTeX installation: which xelatex"
-        log_info "    - Verify manuscript files: ls project/manuscript/*.md"
-        log_info "    - Check figure paths: ls projects/$CURRENT_PROJECT/output/figures/"
-        log_info "    - View compilation logs: ls projects/$CURRENT_PROJECT/output/pdf/*.log"
-        log_info "    - Run manually: python3 scripts/03_render_pdf.py"
+        log_pipeline_error "PDF Rendering" "PDF generation failed" "$exit_code" \
+            "Check LaTeX installation: which xelatex" \
+            "Verify manuscript files: ls project/manuscript/*.md" \
+            "Check figure paths: ls projects/$CURRENT_PROJECT/output/figures/" \
+            "View compilation logs: ls projects/$CURRENT_PROJECT/output/pdf/*.log" \
+            "Run manually: $(get_python_cmd) scripts/03_render_pdf.py"
         return 1
     fi
     log_success "PDF rendering complete"
@@ -1527,11 +1579,10 @@ run_core_pipeline_no_llm() {
     run_validation "$project_name" 2>&1 | tee -a "$log_file"
     exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -ne 0 ]]; then
-        log_error "Pipeline failed at Stage 6 (Output Validation)"
-        log_info "  Troubleshooting:"
-        log_info "    - Validate PDFs: python3 -m infrastructure.validation.cli pdf projects/$CURRENT_PROJECT/output/pdf/"
-        log_info "    - Validate markdown: python3 -m infrastructure.validation.cli markdown project/manuscript/"
-        log_info "    - Check validation report: cat projects/$CURRENT_PROJECT/output/validation_report.md"
+        log_pipeline_error "Output Validation" "Validation checks failed" "$exit_code" \
+            "Validate PDFs: python3 -m infrastructure.validation.cli pdf projects/$CURRENT_PROJECT/output/pdf/" \
+            "Validate markdown: python3 -m infrastructure.validation.cli markdown project/manuscript/" \
+            "Check validation report: cat projects/$CURRENT_PROJECT/output/validation_report.md"
         return 1
     fi
     stage_end=$(date +%s)
@@ -1544,12 +1595,11 @@ run_core_pipeline_no_llm() {
     run_copy_outputs "$project_name" 2>&1 | tee -a "$log_file"
     exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -ne 0 ]]; then
-        log_error "Pipeline failed at Stage 7 (Copy Outputs)"
-        log_info "  Troubleshooting:"
-        log_info "    - Check source directory: ls projects/$CURRENT_PROJECT/output/"
-        log_info "    - Check destination: ls output/"
-        log_info "    - Verify permissions: ls -la projects/$CURRENT_PROJECT/output/"
-        log_info "    - Run manually: python3 scripts/05_copy_outputs.py"
+        log_pipeline_error "Copy Outputs" "Output copying failed" "$exit_code" \
+            "Check source directory: ls projects/$CURRENT_PROJECT/output/" \
+            "Check destination: ls output/" \
+            "Verify permissions: ls -la projects/$CURRENT_PROJECT/output/" \
+            "Run manually: python3 scripts/05_copy_outputs.py"
         return 1
     fi
     stage_end=$(date +%s)
@@ -1616,7 +1666,7 @@ run_core_pipeline_no_llm_no_infra() {
 
         # Save checkpoint if possible
         if [[ -n "$pipeline_start" ]] && [[ "$pipeline_start" -gt 0 ]]; then
-            if python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); cm.save_checkpoint(pipeline_start_time=$pipeline_start, last_stage_completed=$current_stage, stage_results=[], total_stages=7)" 2>/dev/null; then
+            if $(get_python_cmd) -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); cm.save_checkpoint(pipeline_start_time=$pipeline_start, last_stage_completed=$current_stage, stage_results=[], total_stages=7)" 2>/dev/null; then
                 log_success "Checkpoint saved"
                 echo "✓ Checkpoint saved" >> "$log_file_path" 2>/dev/null || true
             fi
@@ -1642,7 +1692,7 @@ run_core_pipeline_no_llm_no_infra() {
     pipeline_start=$(date +%s)
 
     log_info_to_file "Repository: $REPO_ROOT"
-    log_info_to_file "Python: $(python3 --version)"
+    log_info_to_file "Python: $($(get_python_cmd) --version)"
     log_info_to_file "Log file: $log_file"
     log_info_to_file "Core pipeline: stages 0-7 (no LLM, no infrastructure tests)"
     echo
@@ -1654,7 +1704,7 @@ run_core_pipeline_no_llm_no_infra() {
         echo "============================================================"
         echo ""
         echo "Repository: $REPO_ROOT"
-        echo "Python: $(python3 --version)"
+        echo "Python: $($(get_python_cmd) --version)"
         echo "Log file: $log_file"
         echo "Pipeline started: $(date)"
         echo "Core pipeline: stages 0-7 (no LLM, no infrastructure tests)"
@@ -1664,7 +1714,7 @@ run_core_pipeline_no_llm_no_infra() {
     # Check for checkpoint if resuming
     if [[ "$resume_flag" == "--resume" ]]; then
         log_info_to_file "Checking for checkpoint..."
-        if python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); valid, msg = cm.validate_checkpoint(); exit(0 if valid else 1)" 2>/dev/null; then
+        if $(get_python_cmd) -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); valid, msg = cm.validate_checkpoint(); exit(0 if valid else 1)" 2>/dev/null; then
             log_success_to_file "Checkpoint found - resuming pipeline"
         else
             log_warning_to_file "No valid checkpoint found - starting fresh pipeline"
@@ -1686,7 +1736,7 @@ run_core_pipeline_no_llm_no_infra() {
     # For resume, use Python script with --resume flag
     if [[ "$resume_flag" == "--resume" ]]; then
         cd "$REPO_ROOT"
-        if python3 scripts/run_all.py --resume --core-only; then
+        if $(get_python_cmd) scripts/run_all.py --resume --core-only; then
             log_success "Pipeline resumed and completed"
             return 0
         else
@@ -1772,7 +1822,7 @@ run_core_pipeline_no_llm_no_infra() {
         echo "[4/7] PDF Rendering (57% complete)"
     } >> "$log_file" 2>/dev/null || true
     cd "$REPO_ROOT"
-    python3 scripts/03_render_pdf.py --project "$project_name" 2>&1 | tee -a "$log_file"
+    $(get_python_cmd) scripts/03_render_pdf.py --project "$project_name" 2>&1 | tee -a "$log_file"
     exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -ne 0 ]]; then
         log_error "Pipeline failed at Stage 4 (PDF Rendering)"
@@ -1781,7 +1831,7 @@ run_core_pipeline_no_llm_no_infra() {
         log_info "    - Verify manuscript files: ls project/manuscript/*.md"
         log_info "    - Check figure paths: ls projects/$CURRENT_PROJECT/output/figures/"
         log_info "    - View compilation logs: ls projects/$CURRENT_PROJECT/output/pdf/*.log"
-        log_info "    - Run manually: python3 scripts/03_render_pdf.py"
+        log_info "    - Run manually: $(get_python_cmd) scripts/03_render_pdf.py"
         return 1
     fi
     log_success "PDF rendering complete"
@@ -2469,6 +2519,39 @@ run_all_projects() {
     return 0
 }
 
+# ============================================================================
+# Executive Reporting Integration
+# ============================================================================
+
+run_executive_reporting() {
+    local total_projects=$1
+
+    # Only run if multiple projects
+    if [[ $total_projects -lt 2 ]]; then
+        log_info "Skipping executive reporting (requires 2+ projects)"
+        return 0
+    fi
+
+    log_header "EXECUTIVE REPORTING - CROSS-PROJECT ANALYSIS"
+
+    cd "$REPO_ROOT"
+
+    local exit_code
+    $(get_python_cmd) scripts/07_generate_executive_report.py 2>&1
+    exit_code=$?
+
+    if [[ $exit_code -eq 0 ]]; then
+        log_success "Executive reporting complete"
+        log_info "Reports saved to: output/executive_summary/"
+        log_info "  • consolidated_report.{json,html,md}"
+        log_info "  • dashboard.{png,pdf,html}"
+        return 0
+    else
+        log_warning "Executive reporting had issues (non-critical)"
+        return 0  # Don't fail pipeline
+    fi
+}
+
 run_all_projects_full() {
     log_header "RUNNING ALL PROJECTS - FULL PIPELINE (WITH INFRASTRUCTURE TESTS, WITH LLM)"
 
@@ -2502,6 +2585,10 @@ run_all_projects_full() {
 
     if [[ ${#failed_projects[@]} -eq 0 ]]; then
         log_success "🎉 All $total_projects projects completed successfully (full pipeline)!"
+
+        # Generate executive report (multi-project only)
+        run_executive_reporting $total_projects
+
     else
         log_error "❌ ${#failed_projects[@]} out of $total_projects projects failed:"
         for project in "${failed_projects[@]}"; do
@@ -2546,6 +2633,10 @@ run_all_projects_full_no_infra() {
 
     if [[ ${#failed_projects[@]} -eq 0 ]]; then
         log_success "🎉 All $total_projects projects completed successfully (full pipeline, no infra)!"
+
+        # Generate executive report (multi-project only)
+        run_executive_reporting $total_projects
+
     else
         log_error "❌ ${#failed_projects[@]} out of $total_projects projects failed:"
         for project in "${failed_projects[@]}"; do
@@ -2590,6 +2681,10 @@ run_all_projects_core() {
 
     if [[ ${#failed_projects[@]} -eq 0 ]]; then
         log_success "🎉 All $total_projects projects completed successfully (core pipeline)!"
+
+        # Generate executive report (multi-project only)
+        run_executive_reporting $total_projects
+
     else
         log_error "❌ ${#failed_projects[@]} out of $total_projects projects failed:"
         for project in "${failed_projects[@]}"; do
@@ -2634,6 +2729,10 @@ run_all_projects_core_no_infra() {
 
     if [[ ${#failed_projects[@]} -eq 0 ]]; then
         log_success "🎉 All $total_projects projects completed successfully (core pipeline, no infra)!"
+
+        # Generate executive report (multi-project only)
+        run_executive_reporting $total_projects
+
     else
         log_error "❌ ${#failed_projects[@]} out of $total_projects projects failed:"
         for project in "${failed_projects[@]}"; do
@@ -2704,11 +2803,11 @@ show_help() {
     echo "  8  Run Full Pipeline (10 stages: 0-9)"
     echo "  9  Run Full Pipeline (skip infrastructure tests)"
     echo
-    echo "Multi-Project Operations:"
-    echo "  a  Run all projects - Full pipeline (with infra, with LLM)"
-    echo "  b  Run all projects - Full pipeline (no infra, with LLM)"
-    echo "  c  Run all projects - Core pipeline (with infra, no LLM)"
-    echo "  d  Run all projects - Core pipeline (no infra, no LLM)"
+echo "Multi-Project Operations:"
+echo "  a  Run all projects - Full pipeline (with infra, with LLM) + Executive Report"
+echo "  b  Run all projects - Full pipeline (no infra, with LLM) + Executive Report"
+echo "  c  Run all projects - Core pipeline (with infra, no LLM) + Executive Report"
+echo "  d  Run all projects - Core pipeline (no infra, no LLM) + Executive Report"
     echo
     echo "Examples:"
     echo "  $0                      # Interactive menu mode"

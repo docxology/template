@@ -301,9 +301,18 @@ def copy_final_deliverables(
             logger.info(f"  {subdir_name}/: {file_count} file(s)")
     
     # Copy combined PDF to root for convenient access
-    combined_pdf_src = output_dir / "pdf" / "project_combined.pdf"
-    combined_pdf_dst = output_dir / "project_combined.pdf"
-    
+    # First try project-specific name, then fall back to legacy name
+    combined_pdf_src = output_dir / "pdf" / f"{project_name}_combined.pdf"
+    combined_pdf_dst = output_dir / f"{project_name}_combined.pdf"
+
+    if combined_pdf_src.exists():
+        # Use project-specific name
+        pass
+    else:
+        # Fall back to legacy name
+        combined_pdf_src = output_dir / "pdf" / "project_combined.pdf"
+        combined_pdf_dst = output_dir / "project_combined.pdf"
+
     if combined_pdf_src.exists():
         try:
             shutil.copy2(combined_pdf_src, combined_pdf_dst)
@@ -311,7 +320,7 @@ def copy_final_deliverables(
             file_size_mb = file_size / (1024 * 1024)
             log_success(f"Copied combined PDF to root ({file_size_mb:.2f} MB)", logger)
             stats["combined_pdf"] = 1
-            
+
             # Add to files list
             files_list.append({
                 "path": str(combined_pdf_dst.resolve()),

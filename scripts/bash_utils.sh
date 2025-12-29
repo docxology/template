@@ -184,6 +184,143 @@ log_warning_to_file() {
 }
 
 # ============================================================================
+# Structured Logging Functions
+# ============================================================================
+
+log_with_context() {
+    # Log message with timestamp and optional context.
+    # Args:
+    #   $1: Log level (INFO, WARN, ERROR, SUCCESS)
+    #   $2: Message
+    #   $3: Optional context (function name, stage, etc.)
+    local level="$1"
+    local message="$2"
+    local context="${3:-}"
+    local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+
+    # Format: [TIMESTAMP] [LEVEL] [CONTEXT] message
+    local formatted_msg="[$timestamp] [$level]"
+    if [[ -n "$context" ]]; then
+        formatted_msg="$formatted_msg [$context]"
+    fi
+    formatted_msg="$formatted_msg $message"
+
+    echo "$formatted_msg"
+}
+
+log_error_with_context() {
+    # Log error with context information (function name and line number).
+    # Args:
+    #   $1: Error message
+    #   $2: Optional context override
+    local message="$1"
+    local context_override="${2:-}"
+
+    if [[ -n "$context_override" ]]; then
+        local context="$context_override"
+    else
+        local function="${FUNCNAME[1]:-unknown}"
+        local line="${BASH_LINENO[0]:-?}"
+        local context="$function:$line"
+    fi
+
+    log_error "$message (in $context)"
+}
+
+log_troubleshooting() {
+    # Log troubleshooting information for common errors.
+    # Args:
+    #   $1: Error type/category
+    #   $2: Primary error message
+    #   $3+: Troubleshooting steps (variable arguments)
+    local error_type="$1"
+    local primary_message="$2"
+    shift 2
+
+    log_error "$primary_message"
+
+    if [[ $# -gt 0 ]]; then
+        log_info "Troubleshooting steps:"
+        local step_num=1
+        for step in "$@"; do
+            log_info "  $step_num. $step"
+            ((step_num++))
+        done
+    fi
+}
+
+log_pipeline_error() {
+    # Log pipeline stage errors with structured troubleshooting.
+    # Args:
+    #   $1: Stage name
+    #   $2: Error message
+    #   $3: Exit code
+    #   $4+: Troubleshooting steps
+    local stage_name="$1"
+    local error_message="$2"
+    local exit_code="$3"
+    shift 3
+
+    log_error "Pipeline failed at Stage: $stage_name (exit code: $exit_code)"
+    log_info "Error: $error_message"
+
+    if [[ $# -gt 0 ]]; then
+        log_info "Troubleshooting:"
+        local step_num=1
+        for step in "$@"; do
+            log_info "  $step_num. $step"
+            ((step_num++))
+        done
+    fi
+}
+
+log_resource_usage() {
+    # Log resource usage information for monitoring.
+    # Args:
+    #   $1: Stage name
+    #   $2: Duration in seconds
+    #   $3: Optional additional metrics
+    local stage_name="$1"
+    local duration="$2"
+    local additional="${3:-}"
+
+    local formatted_duration=$(format_duration "$duration")
+    local message="Stage '$stage_name' completed in $formatted_duration"
+
+    if [[ -n "$additional" ]]; then
+        message="$message ($additional)"
+    fi
+
+    log_with_context "INFO" "$message" "resource-monitor"
+}
+
+log_stage_progress() {
+    # Enhanced log_stage with resource monitoring.
+    # Args:
+    #   $1: Stage number (1-indexed)
+    #   $2: Stage name
+    #   $3: Total number of stages
+    #   $4: Pipeline start time (optional, for ETA calculation)
+    #   $5: Current stage start time (optional, for resource tracking)
+    local stage_num="$1"
+    local stage_name="$2"
+    local total_stages="$3"
+    local pipeline_start="${4:-}"
+    local stage_start="${5:-}"
+
+    # Call original log_stage function
+    log_stage "$stage_num" "$stage_name" "$total_stages" "$pipeline_start"
+
+    # Add resource tracking if stage start time provided
+    if [[ -n "$stage_start" ]]; then
+        local current_time=$(date +%s)
+        local stage_elapsed=$((current_time - stage_start))
+        local formatted_elapsed=$(format_duration "$stage_elapsed")
+        echo -e "${CYAN}  Stage elapsed: ${formatted_elapsed}${NC}"
+    fi
+}
+
+# ============================================================================
 # Utility Functions
 # ============================================================================
 
@@ -208,6 +345,20 @@ press_enter_to_continue() {
     echo
     echo -e "${CYAN}Press Enter to return to menu...${NC}"
     read -r
+}
+
+format_file_size() {
+    # Convert bytes to human-readable format
+    local bytes="$1"
+    if (( bytes < 1024 )); then
+        echo "${bytes}B"
+    elif (( bytes < 1048576 )); then
+        echo "$((bytes / 1024))KB"
+    elif (( bytes < 1073741824 )); then
+        echo "$((bytes / 1048576))MB"
+    else
+        echo "$((bytes / 1073741824))GB"
+    fi
 }
 
 # Parsed shorthand choices holder (for sequences like "0123" or "345")
@@ -246,6 +397,54 @@ parse_choice_sequence() {
     done
 
     [[ ${#SHORTHAND_CHOICES[@]} -gt 0 ]]
+}
+
+# ============================================================================
+# UV Package Manager Support
+# ============================================================================
+
+# Check if uv is available and working
+check_uv() {
+    # Returns 0 if uv is available, 1 otherwise
+    if command -v uv >/dev/null 2>&1; then
+        # Test that uv is actually functional
+        if uv --version >/dev/null 2>&1; then
+            return 0
+        fi
+    fi
+    return 1
+}
+
+# Get Python command with uv fallback
+get_python_cmd() {
+    # Returns the command array to use for Python execution
+    # Prefers "uv run python" if uv is available, falls back to "python3"
+    if check_uv; then
+        echo "uv run python"
+    else
+        echo "python3"
+    fi
+}
+
+# Get pytest command with uv fallback
+get_pytest_cmd() {
+    # Returns the command array to use for pytest execution
+    # Prefers "uv run python -m pytest" if uv is available, falls back to "python3 -m pytest"
+    if check_uv; then
+        echo "uv run python -m pytest"
+    else
+        echo "python3 -m pytest"
+    fi
+}
+
+# Log uv availability status
+log_uv_status() {
+    if check_uv; then
+        log_info "uv package manager detected - using uv run for consistent environments"
+    else
+        log_warning "uv package manager not found - falling back to direct python3 execution"
+        log_info "For better dependency management, install uv: https://github.com/astral-sh/uv"
+    fi
 }
 
 

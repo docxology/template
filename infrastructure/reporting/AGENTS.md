@@ -14,6 +14,8 @@ infrastructure/reporting/
 ├── pipeline_reporter.py     # Pipeline report generation
 ├── error_aggregator.py      # Error collection and categorization
 ├── html_templates.py        # HTML report templates
+├── executive_reporter.py    # Cross-project metrics and summaries
+├── dashboard_generator.py   # Visual dashboard generation
 ├── README.md                # Quick reference
 └── AGENTS.md                # This file
 ```
@@ -155,6 +157,113 @@ Common error types:
 - `build_error` - Build process errors
 - `configuration_error` - Configuration issues
 
+### Executive Reporter (`executive_reporter.py`)
+
+Generates comprehensive cross-project metrics and executive summaries.
+
+#### Key Functions
+
+**`collect_manuscript_metrics(manuscript_dir: Path) -> ManuscriptMetrics`**
+- Parses markdown files for word counts, sections, equations
+- Detects figures, citations, and references
+- Returns structured manuscript metrics
+
+**`collect_codebase_metrics(src_dir: Path, scripts_dir: Optional[Path]) -> CodebaseMetrics`**
+- Analyzes Python files for lines of code, methods, classes
+- Separates source code from scripts
+- Uses AST parsing for accurate code metrics
+
+**`collect_test_metrics(reports_dir: Path) -> TestMetrics`**
+- Loads test results from JSON reports
+- Extracts pass/fail counts, coverage percentages
+- Calculates execution times and test files
+
+**`collect_output_metrics(output_dir: Path) -> OutputMetrics`**
+- Counts PDFs, figures, data files, slides
+- Calculates file sizes and totals
+- Enumerates web outputs and other artifacts
+
+**`collect_pipeline_metrics(reports_dir: Path) -> PipelineMetrics`**
+- Analyzes pipeline execution reports
+- Identifies bottleneck stages and durations
+- Counts passed/failed stages
+
+**`generate_executive_summary(repo_root: Path, project_names: List[str]) -> ExecutiveSummary`**
+- Orchestrates metrics collection across all projects
+- Generates aggregate statistics and comparisons
+- Creates recommendations based on metrics
+- Returns complete ExecutiveSummary dataclass
+
+**`save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> Dict[str, Path]`**
+- Saves reports in JSON, HTML, and Markdown formats
+- Returns dictionary mapping format to file path
+- Creates output directory if needed
+
+#### Usage Example
+
+```python
+from infrastructure.reporting import generate_executive_summary, save_executive_summary
+from pathlib import Path
+
+repo_root = Path(".")
+project_names = ["project", "small_code_project", "small_prose_project"]
+
+# Generate comprehensive summary
+summary = generate_executive_summary(repo_root, project_names)
+
+print(f"Total projects: {summary.total_projects}")
+print(f"Total manuscript words: {summary.aggregate_metrics['manuscript']['total_words']:,}")
+print(f"Average test coverage: {summary.aggregate_metrics['tests']['average_coverage']:.1f}%")
+
+# Save reports
+saved_files = save_executive_summary(summary, Path("output/executive_summary"))
+# Returns: {'json': Path(...), 'html': Path(...), 'markdown': Path(...)}
+```
+
+### Dashboard Generator (`dashboard_generator.py`)
+
+Creates visual dashboards and charts for executive reporting.
+
+#### Chart Functions
+
+**Matplotlib Charts** (PNG/PDF)
+- `create_test_count_chart()` - Bar chart of test counts by project
+- `create_coverage_chart()` - Coverage percentages with threshold line
+- `create_pipeline_duration_chart()` - Stacked bars of stage durations
+- `create_output_distribution_chart()` - Pie chart of output types
+- `create_manuscript_size_chart()` - Bar chart of word counts
+- `create_summary_table()` - Professional table with key metrics
+
+**Interactive Charts** (Plotly HTML)
+- `generate_plotly_dashboard()` - Multi-tab interactive dashboard
+- Hover tooltips with detailed metrics
+- Zoom and pan functionality
+- Responsive design
+
+#### Usage Example
+
+```python
+from infrastructure.reporting import generate_all_dashboards, generate_executive_summary
+from pathlib import Path
+
+# Generate executive summary
+summary = generate_executive_summary(Path("."), ["project1", "project2"])
+
+# Create all dashboard formats
+dashboard_files = generate_all_dashboards(summary, Path("output/executive_summary"))
+# Returns: {'png': Path(...), 'pdf': Path(...), 'html': Path(...)}
+
+print(f"Generated {len(dashboard_files)} dashboard files")
+for fmt, path in dashboard_files.items():
+    print(f"  {fmt.upper()}: {path.name}")
+```
+
+#### Output Formats
+
+- **PNG**: High-resolution static images (300 DPI)
+- **PDF**: Vector graphics for printing and archival
+- **HTML**: Interactive dashboards with Plotly (requires plotly package)
+
 ### HTML Templates (`html_templates.py`)
 
 Reusable HTML templates for report generation.
@@ -178,7 +287,9 @@ Reusable HTML templates for report generation.
 
 ### Pipeline Integration
 
-The reporting module is integrated into:
+The reporting module is integrated into multiple pipeline entry points:
+
+#### Single Project Reporting
 
 1. **`scripts/run_all.py`**
    - Generates consolidated pipeline report at end
@@ -191,9 +302,22 @@ The reporting module is integrated into:
    - Saves to `project/output/reports/test_results.{json,md}`
 
 3. **`scripts/04_validate_output.py`**
-   - Generates enhanced validation reports
+   - Generates validation reports
    - Includes actionable recommendations
    - Saves to `project/output/reports/validation_report.{json,md}`
+
+#### Multi-Project Executive Reporting
+
+4. **`run.sh` Multi-Project Options (a, b, c, d)**
+   - Automatically triggers executive reporting for 2+ projects
+   - Generates comprehensive cross-project analysis
+   - Saves to `output/executive_summary/` directory
+   - Includes consolidated reports, dashboards, and CSV data exports
+
+5. **`scripts/07_generate_executive_report.py`**
+   - Standalone executive reporting script
+   - Can be run manually for any set of completed projects
+   - Orchestrates full executive reporting workflow
 
 ### Error Aggregation Integration
 
@@ -214,6 +338,83 @@ except Exception as e:
         suggestions=['Check stage logs', 'Verify inputs'],
     )
 ```
+
+## Multi-Project Executive Reporting
+
+The reporting module now includes comprehensive multi-project executive reporting capabilities:
+
+### Features
+
+- **Cross-Project Metrics Aggregation**: Collects and compares metrics across multiple projects
+- **Health Score Calculation**: Automated project health assessment based on test coverage, manuscript quality, and output completeness
+- **Visual Dashboards**: Multiple chart types showing comparative analysis, trends, and performance metrics
+- **CSV Data Export**: Machine-readable data tables for further analysis
+- **Actionable Recommendations**: Intelligent suggestions based on project metrics and cross-project comparisons
+
+### Automatic Integration
+
+Multi-project executive reporting is automatically triggered when:
+
+1. Using `run.sh` multi-project options (a, b, c, d) with 2+ projects
+2. All projects complete successfully
+3. Executive reporting runs as a final stage (non-blocking)
+
+### Manual Execution
+
+Executive reporting can also be run manually:
+
+```bash
+# From any directory
+python3 scripts/07_generate_executive_report.py
+
+# Or programmatically
+from infrastructure.reporting import generate_multi_project_report
+from pathlib import Path
+
+files = generate_multi_project_report(
+    Path("."), ["project1", "project2"], Path("output/executive_summary")
+)
+```
+
+### Output Structure
+
+```
+output/executive_summary/
+├── consolidated_report.json      # Machine-readable metrics & health scores
+├── consolidated_report.html       # Styled HTML report with recommendations
+├── consolidated_report.md         # Human-readable markdown summary
+├── dashboard.png                  # Comprehensive matplotlib dashboard (9 charts)
+├── dashboard.pdf                  # Vector graphics dashboard for printing
+├── dashboard.html                 # Interactive Plotly dashboard (optional)
+├── project_metrics.csv           # Detailed project metrics table
+├── aggregate_metrics.csv         # Cross-project aggregate statistics
+└── health_scores.csv             # Project health scores breakdown
+```
+
+### Health Score Calculation
+
+Projects are automatically scored on four key dimensions:
+
+- **Test Coverage** (40% weight): Coverage percentage with quality thresholds
+- **Test Integrity** (30% weight): Test failure rates and reliability
+- **Manuscript Quality** (20% weight): Content completeness and academic standards
+- **Output Richness** (10% weight): Generated artifacts and deliverables
+
+Each dimension receives a letter grade (A-F) and contributes to an overall health percentage.
+
+### Enhanced Dashboards
+
+The executive dashboard includes 9 comprehensive charts:
+
+1. **Test Results**: Total, passed, and failed test counts by project
+2. **Coverage Analysis**: Test coverage percentages with quality thresholds
+3. **Pipeline Performance**: Execution times and bottleneck analysis
+4. **Manuscript Complexity**: Word count vs equations scatter plot
+5. **Output Distribution**: Pie chart of generated file types
+6. **Efficiency Metrics**: PDFs generated per second of pipeline time
+7. **Health Scores**: Overall project health percentages
+8. **Test Efficiency**: Coverage vs execution time matrix
+9. **Executive Summary**: Enhanced metrics table with aggregates
 
 ## Report Structure
 

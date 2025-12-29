@@ -175,6 +175,5 @@ def test_[feature]_integration(tmp_path):
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - Detailed test documentation
-- [../unit/](../unit/) - Unit tests for individual functions
 - [../../src/](../../src/) - Source code being tested
-- [../../../tests/infrastructure/](../../../tests/infrastructure/) - Infrastructure tests
+- [../../../../tests/infrastructure/](../../../../tests/infrastructure/) - Infrastructure tests

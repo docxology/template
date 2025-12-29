@@ -2,7 +2,7 @@
 
 > **Specialized troubleshooting** for LLM manuscript review and translation features
 
-**Quick Reference:** [Troubleshooting Guide](../operational/TROUBLESHOOTING_GUIDE.md) | [LLM Integration](../infrastructure/llm/AGENTS.md) | [Run Guide](../RUN_GUIDE.md) | [Configuration](../operational/CONFIGURATION.md)
+**Quick Reference:** [Troubleshooting Guide](../operational/TROUBLESHOOTING_GUIDE.md) | [LLM Integration](../../infrastructure/llm/AGENTS.md) | [Run Guide](../../RUN_GUIDE.md) | [Configuration](../operational/CONFIGURATION.md)
 
 This guide provides specialized troubleshooting for LLM-powered manuscript review and translation features. For general troubleshooting, see [TROUBLESHOOTING_GUIDE.md](../operational/TROUBLESHOOTING_GUIDE.md).
 
@@ -682,10 +682,10 @@ cat project/output/llm/quality_review.md
 ## See Also
 
 - [Troubleshooting Guide](../operational/TROUBLESHOOTING_GUIDE.md) - General troubleshooting
-- [LLM Integration](../infrastructure/llm/AGENTS.md) - LLM system documentation
-- [Run Guide](../RUN_GUIDE.md) - Pipeline orchestration
+- [LLM Integration](../../infrastructure/llm/AGENTS.md) - LLM system documentation
+- [Run Guide](../../RUN_GUIDE.md) - Pipeline orchestration
 - [Configuration](../operational/CONFIGURATION.md) - Configuration system
-- [LLM Standards](../.cursorrules/llm_standards.md) - LLM development standards
+- [LLM Standards](../../.cursorrules/llm_standards.md) - LLM development standards
 
 ---
 

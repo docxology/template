@@ -164,5 +164,4 @@ graph TD
 ## See Also
 
 - [AGENTS.md](AGENTS.md) - Complete technical documentation
-- [../documentation/README.md](../documentation/README.md) - Documentation module overview
-- [../../scripts/AGENTS.md](../../scripts/AGENTS.md) - Build pipeline integration
+- [../../../scripts/AGENTS.md](../../../scripts/AGENTS.md) - Build pipeline integration

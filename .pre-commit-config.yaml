@@ -14,6 +14,15 @@ repos:
       - id: check-yaml
       - id: check-ast
 
+  - repo: local
+    hooks:
+      - id: no-mocks
+        name: No Mock Usage Check
+        entry: bash -c 'grep -r "MagicMock\|unittest\.mock\|mocker\." tests/ && exit 1 || exit 0'
+        language: system
+        pass_filenames: false
+        always_run: true
+
 
 
 

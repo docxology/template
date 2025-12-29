@@ -140,7 +140,6 @@ def risky_operation():
 
 ### Literature Search
 
-See [Literature Search Configuration](../infrastructure/literature/AGENTS.md#configuration) for complete options.
 
 **Key Variables:**
 - `LITERATURE_DEFAULT_LIMIT` - Results per source (default: 25)
@@ -149,7 +148,7 @@ See [Literature Search Configuration](../infrastructure/literature/AGENTS.md#con
 
 ### LLM Integration
 
-See [LLM Configuration](../infrastructure/llm/README.md) for complete options.
+See [LLM Configuration](../../infrastructure/llm/README.md) for complete options.
 
 **Key Variables:**
 - `OLLAMA_HOST` - Ollama server URL (default: `http://localhost:11434`)

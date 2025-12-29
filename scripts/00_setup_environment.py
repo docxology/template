@@ -11,6 +11,7 @@ Stage 1 of the pipeline orchestration.
 """
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
@@ -49,11 +50,28 @@ def main() -> int:
     repo_root = Path(__file__).parent.parent
     
     def check_and_install_dependencies() -> bool:
-        """Check dependencies and install missing ones if needed."""
-        all_present, missing = check_dependencies()
-        if not all_present and missing:
-            return install_missing_packages(missing)
-        return all_present
+        """Check dependencies and install missing ones using workspace sync."""
+        # For workspace-enabled projects, use uv sync instead of individual package installation
+        logger.info("Syncing workspace dependencies...")
+        try:
+            result = subprocess.run(['uv', 'sync'], cwd=str(repo_root), capture_output=True, text=True, check=False)
+            if result.returncode == 0:
+                log_success("Workspace dependencies synced successfully", logger)
+                return True
+            else:
+                logger.warning(f"uv sync failed: {result.stderr}")
+                # Fall back to checking individual dependencies
+                all_present, missing = check_dependencies()
+                if not all_present and missing:
+                    return install_missing_packages(missing)
+                return all_present
+        except (FileNotFoundError, subprocess.SubprocessError):
+            logger.warning("uv not available, falling back to individual dependency checking")
+            # Fall back to checking individual dependencies
+            all_present, missing = check_dependencies()
+            if not all_present and missing:
+                return install_missing_packages(missing)
+            return all_present
     
     checks = [
         ("Python version", lambda: check_python_version()),

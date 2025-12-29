@@ -563,8 +563,8 @@ Before committing code:
 - [documentation_standards.md](documentation_standards.md) - Document types in docstrings
 - [testing_standards.md](testing_standards.md) - Test type hints
 - [error_handling.md](error_handling.md) - Exception type hints
-- [../docs/API_REFERENCE.md](../docs/API_REFERENCE.md) - Type examples in API documentation
-- [../docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) - Type system design
+- [../docs/reference/API_REFERENCE.md](../docs/reference/API_REFERENCE.md) - Type examples in API documentation
+- [../docs/core/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) - Type system design
 - [Python Type Hints Documentation](https://docs.python.org/3/library/typing.html)
 - [mypy Documentation](https://mypy.readthedocs.io/)
 

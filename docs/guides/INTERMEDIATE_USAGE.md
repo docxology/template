@@ -42,11 +42,11 @@ By the end of this guide, you'll be able to:
 
 ### Understanding the Thin Orchestrator Pattern
 
-**Core Principle**: Scripts orchestrate, `project/src/` implements.
+**Core Principle**: Scripts orchestrate, `projects/{name}/src/` implements.
 
 ```
 ┌─────────────────┐
-│  project/src/   │  ← ALL business logic here
+│  projects/{name}/src/   │  ← ALL business logic here
 │  example.py     │  ← Mathematical functions
 │  analysis.py    │  ← Algorithms
 └────────┬────────┘
@@ -86,7 +86,7 @@ python3 scripts/generate_research_figures.py
 ```
 
 **What they demonstrate**:
-- Importing from `project/src/` modules
+- Importing from `projects/{name}/src/` modules
 - Using tested methods for computation
 - Handling only visualization and I/O
 - Printing output paths for build system
@@ -102,15 +102,15 @@ import matplotlib
 matplotlib.use('Agg')  # Headless backend
 import matplotlib.pyplot as plt
 
-# IMPORT from project/src/ - never implement algorithms here
+# IMPORT from projects/{name}/src/ - never implement algorithms here
 from example import calculate_average, find_maximum, find_minimum
 
 def main():
     # Sample data
     data = [1.2, 2.3, 1.8, 3.4, 2.1]
     
-    # USE project/src/ methods for computation - NEVER implement here
-    avg = calculate_average(data)  # From project/src/example.py
+    # USE projects/{name}/src/ methods for computation - NEVER implement here
+    avg = calculate_average(data)  # From projects/{name}/src/example.py
     max_val = find_maximum(data)   # From project/src/example.py
     min_val = find_minimum(data)   # From project/src/example.py
     
@@ -549,7 +549,7 @@ output/
 vim project/src/my_module.py
 
 # 2. Write tests
-vim project/tests/test_my_module.py
+vim proje../../tests/test_my_module.py
 
 # 3. Run tests
 pytest tests/test_my_module.py --cov=src.my_module
@@ -711,7 +711,7 @@ with Pool() as pool:
 → Read **[Expert Usage Guide](../guides/EXPERT_USAGE.md)** (Levels 10-12)
 
 **Understand the architecture deeply**
-→ Read **[Architecture Guide](ARCHITECTURE.md)**
+→ Read **[Architecture Guide](../core/ARCHITECTURE.md)**
 
 **See the thin orchestrator pattern in detail**
 → Read **[Thin Orchestrator Summary](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)**

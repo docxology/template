@@ -2,7 +2,7 @@
 
 > **Common questions** and answers about the Research Project Template
 
-**Quick Reference:** [Getting Started](../guides/GETTING_STARTED.md) | [Troubleshooting](../operational/TROUBLESHOOTING_GUIDE.md) | [How To Use](HOW_TO_USE.md)
+**Quick Reference:** [Getting Started](../guides/GETTING_STARTED.md) | [Troubleshooting](../operational/TROUBLESHOOTING_GUIDE.md) | [How To Use](../core/HOW_TO_USE.md)
 
 ## 🚀 **Getting Started**
 
@@ -145,7 +145,7 @@
 3. Review the examples and workflow guides
 4. Join the community discussions
 
-For detailed documentation, see **[`README.md`](README.md)**, **[`ARCHITECTURE.md`](ARCHITECTURE.md)**, and **[`WORKFLOW.md`](WORKFLOW.md)**.
+For detailed documentation, see **[`README.md`](README.md)**, **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)**, and **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)**.
 
 ### **Q: Can I request new features?**
 **A:** Yes! Use the feature request issue template to suggest improvements. We welcome all suggestions that would benefit the broader community.

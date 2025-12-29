@@ -2,6 +2,52 @@
 
 This directory contains multiple research projects, each with independent source code, tests, analysis scripts, and manuscripts.
 
+```mermaid
+graph TD
+    subgraph projects["projects/ - Multi-Project Container"]
+        PROJECT[project/<br/>Default template<br/>Complete example]
+        MYRESEARCH[myresearch/<br/>Custom project 1<br/>Your research]
+        EXPERIMENT[experiment2/<br/>Custom project 2<br/>Another research]
+
+        PROJECT --> SRC[src/<br/>Algorithms & analysis]
+        PROJECT --> TESTS[tests/<br/>Unit & integration tests]
+        PROJECT --> SCRIPTS[scripts/<br/>Analysis workflows]
+        PROJECT --> MANUSCRIPT[manuscript/<br/>Research content]
+        PROJECT --> OUTPUT[output/<br/>Generated outputs]
+        PROJECT --> CONFIG[pyproject.toml<br/>Project configuration]
+    end
+
+    subgraph Infrastructure["🔧 Shared Infrastructure"]
+        INFRA[infrastructure/<br/>Generic tools<br/>Reusable across projects]
+        SCRIPTS_ROOT[scripts/<br/>Entry points<br/>Orchestrate pipeline]
+    end
+
+    subgraph FinalOutputs["📤 Final Deliverables"]
+        OUTPUT_ROOT[output/<br/>Project deliverables<br/>Organized by project]
+    end
+
+    PROJECT -->|Discovered by| SCRIPTS_ROOT
+    MYRESEARCH -->|Discovered by| SCRIPTS_ROOT
+    EXPERIMENT -->|Discovered by| SCRIPTS_ROOT
+
+    SRC -->|Imports| INFRA
+    SCRIPTS -->|Imports| INFRA
+    SCRIPTS -->|Executes| SCRIPTS_ROOT
+
+    SCRIPTS -->|Generates| OUTPUT
+    MANUSCRIPT -->|Rendered to| OUTPUT
+
+    OUTPUT -->|Copied to| OUTPUT_ROOT
+
+    classDef project fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef infra fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class PROJECT,MYRESEARCH,EXPERIMENT,CONFIG project
+    class INFRA,SCRIPTS_ROOT infra
+    class OUTPUT_ROOT output
+```
+
 ## Directory Structure
 
 Each project follows this structure:
@@ -75,6 +121,33 @@ touch projects/myresearch/tests/test_mymodule.py
 # Add manuscript files
 touch projects/myresearch/manuscript/01_introduction.md
 ```
+
+## Workspace Management
+
+This template uses uv workspaces for unified dependency management across projects. All projects share common dependencies while maintaining project-specific packages.
+
+### Workspace Commands
+
+```bash
+# Sync all workspace dependencies
+uv sync
+
+# Add dependency to specific project
+uv run python scripts/manage_workspace.py add numpy --project project
+
+# Show workspace status
+uv run python scripts/manage_workspace.py status
+
+# Update all dependencies
+uv run python scripts/manage_workspace.py update
+```
+
+### Workspace Benefits
+
+- **Unified Dependencies**: Shared packages managed centrally
+- **Faster Builds**: Single dependency resolution
+- **Consistent Environments**: Same versions across projects
+- **Simplified Maintenance**: Update once, benefit all projects
 
 ## Running the Pipeline
 

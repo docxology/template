@@ -368,9 +368,9 @@ security:
 ## See Also
 
 **Related Documentation:**
-- [`../../docs/development/CONTRIBUTING.md`](../../docs/development/CONTRIBUTING.md) - Contribution guidelines
-- [`../../docs/operational/CI_CD_INTEGRATION.md`](../../docs/operational/CI_CD_INTEGRATION.md) - CI/CD integration guide
-- [`../../AGENTS.md`](../../AGENTS.md) - System overview
+- [`../docs/development/CONTRIBUTING.md`](../docs/development/CONTRIBUTING.md) - Contribution guidelines
+- [`../docs/operational/CI_CD_INTEGRATION.md`](../docs/operational/CI_CD_INTEGRATION.md) - CI/CD integration guide
+- [`../AGENTS.md`](../AGENTS.md) - System overview
 
 **CI/CD Resources:**
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)

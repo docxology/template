@@ -535,7 +535,7 @@ pytest tests/infrastructure/ -m "not requires_latex"
    pytest tests/infrastructure/
    ```
 
-See [docs/TESTING_WITH_CREDENTIALS.md](../../docs/TESTING_WITH_CREDENTIALS.md) for detailed setup.
+See [docs/TESTING_WITH_CREDENTIALS.md](../../docs/development/TESTING_WITH_CREDENTIALS.md) for detailed setup.
 
 ### Test Cleanup
 

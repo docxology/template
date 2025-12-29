@@ -39,22 +39,7 @@ def validate_figure_registry(
     
     issues: List[str] = []
     
-    # Load registry
-    registered_figures = set()
-    if registry_path.exists():
-        try:
-            with open(registry_path) as f:
-                registry = json.load(f)
-                registered_figures = set(registry.keys())
-                log_success(f"Figure registry loaded: {len(registered_figures)} figure(s)", logger)
-        except Exception as e:
-            issues.append(f"Failed to load figure registry: {e}")
-            return False, issues
-    else:
-        logger.warning("Figure registry not found")
-        return True, []  # Not an error if registry doesn't exist
-    
-    # Find figure references in markdown (only in numbered section files, not AGENTS.md/README.md)
+    # Find figure references FIRST (only in numbered section files, not AGENTS.md/README.md)
     referenced_figures = set()
     figure_ref_pattern = re.compile(r'\\(?:ref|label)\{(fig:[^}]+)\}')
     
@@ -70,6 +55,32 @@ def validate_figure_registry(
                 referenced_figures.update(refs)
             except Exception as e:
                 logger.warning(f"Could not read {md_file.name}: {e}")
+    
+    # Check registry validity before early return
+    # If registry file exists, validate it's valid JSON even if no figures are referenced
+    if registry_path.exists():
+        try:
+            with open(registry_path) as f:
+                registry = json.load(f)
+                registered_figures = set(registry.keys())
+                log_success(f"Figure registry loaded: {len(registered_figures)} figure(s)", logger)
+        except Exception as e:
+            issues.append(f"Failed to load figure registry: {e}")
+            return False, issues
+    else:
+        registered_figures = set()
+
+    # Only check registry if figures are referenced
+    if not referenced_figures:
+        # No figures referenced - registry not needed (but if registry exists, it's still valid)
+        return True, []
+
+    # If figures are referenced but registry doesn't exist, this is a problem
+    if not registry_path.exists():
+        issues.append(f"Figure registry not found but {len(referenced_figures)} figure reference(s) found in manuscript")
+        logger.warning(f"Figure registry not found at {registry_path}")
+        logger.warning(f"  Found {len(referenced_figures)} figure reference(s) in manuscript")
+        return False, issues
     
     # Find unregistered references
     unregistered = referenced_figures - registered_figures

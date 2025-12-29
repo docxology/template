@@ -508,5 +508,5 @@ client.query("How do these assumptions affect the validity of results?")
 - [`../review/AGENTS.md`](../review/AGENTS.md) - Review system
 
 **System Documentation:**
-- [`../../../core/AGENTS.md`](../../../core/AGENTS.md) - Core infrastructure
-- [`../../../../docs/development/TESTING_GUIDE.md`](../../../../docs/development/TESTING_GUIDE.md) - Testing guide
+- [`../../../infrastructure/core/AGENTS.md`](../../../infrastructure/core/AGENTS.md) - Core infrastructure
+- [`../../../docs/development/TESTING_GUIDE.md`](../../../docs/development/TESTING_GUIDE.md) - Testing guide

@@ -9,15 +9,15 @@ The `docs/core/` directory contains the fundamental documentation that explains 
 ```
 docs/core/
 ├── AGENTS.md                   # This technical documentation
-├── ARCHITECTURE.md             # System design and structure
-├── HOW_TO_USE.md               # Complete usage guide
+├── ../core/ARCHITECTURE.md             # System design and structure
+├── ../core/HOW_TO_USE.md               # Complete usage guide
 ├── README.md                   # Quick reference
-└── WORKFLOW.md                 # Development workflow
+└── ../core/WORKFLOW.md                 # Development workflow
 ```
 
 ## Key Documentation Files
 
-### How To Use (`HOW_TO_USE.md`)
+### How To Use (`../core/HOW_TO_USE.md`)
 
 **Comprehensive, step-by-step guide for using the Research Project Template:**
 
@@ -45,7 +45,7 @@ docs/core/
 - Log analysis techniques
 - Recovery from failures
 
-### Architecture (`ARCHITECTURE.md`)
+### Architecture (`../core/ARCHITECTURE.md`)
 
 **System design and structural overview:**
 
@@ -67,7 +67,7 @@ docs/core/
 - Configuration management
 - Error handling architecture
 
-### Workflow (`WORKFLOW.md`)
+### Workflow (`../core/WORKFLOW.md`)
 
 **Development and operational workflows:**
 
@@ -94,13 +94,13 @@ docs/core/
 ### Layered Information Architecture
 
 **Progressive Disclosure:**
-- **HOW_TO_USE.md**: Practical, step-by-step instructions
-- **ARCHITECTURE.md**: Design principles and system structure
-- **WORKFLOW.md**: Operational procedures and best practices
+- **../core/HOW_TO_USE.md**: Practical, step-by-step instructions
+- **../core/ARCHITECTURE.md**: Design principles and system structure
+- **../core/WORKFLOW.md**: Operational procedures and best practices
 
 **Information Flow:**
 ```
-HOW_TO_USE.md → ARCHITECTURE.md → WORKFLOW.md
+../core/HOW_TO_USE.md → ../core/ARCHITECTURE.md → ../core/WORKFLOW.md
    ↓               ↓                   ↓
 Practical       Design             Operational
 Usage         Understanding       Excellence
@@ -377,7 +377,7 @@ tlmgr list --only-installed | grep multirow
 **Test Failures:**
 ```bash
 # Run specific failing test
-pytest project/tests/test_analysis.py::TestAnalysis::test_algorithm -v
+pytest proje../../tests/test_analysis.py::TestAnalysis::test_algorithm -v
 
 # Check test data integrity
 python3 -c "

@@ -2,7 +2,7 @@
 
 > **Step-by-step guide** for migrating from other templates and projects
 
-**Quick Reference:** [Getting Started](../guides/GETTING_STARTED.md) | [Architecture](ARCHITECTURE.md) | [Common Workflows](../reference/COMMON_WORKFLOWS.md)
+**Quick Reference:** [Getting Started](../guides/GETTING_STARTED.md) | [Architecture](../core/ARCHITECTURE.md) | [Common Workflows](../reference/COMMON_WORKFLOWS.md)
 
 This guide provides comprehensive instructions for migrating existing projects to the Research Project Template structure, ensuring a smooth transition while preserving your work.
 
@@ -589,14 +589,14 @@ Migration checklist:
 
 For detailed guidance, see:
 - [Getting Started](../guides/GETTING_STARTED.md) - Template basics
-- [Architecture](ARCHITECTURE.md) - System structure
-- [Workflow](WORKFLOW.md) - Development process
+- [Architecture](../core/ARCHITECTURE.md) - System structure
+- [Workflow](../core/WORKFLOW.md) - Development process
 
 ---
 
 **Related Documentation:**
 - [Getting Started](../guides/GETTING_STARTED.md) - Template basics
-- [Architecture](ARCHITECTURE.md) - Understanding structure
+- [Architecture](../core/ARCHITECTURE.md) - Understanding structure
 - [Common Workflows](../reference/COMMON_WORKFLOWS.md) - Step-by-step guides
 
 

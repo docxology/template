@@ -1,6 +1,6 @@
 # Markdown Template Guide
 
-This document explains the comprehensive markdown template structure and cross-referencing system implemented in this project. For related information, see **[`docs/core/HOW_TO_USE.md`](core/HOW_TO_USE.md)** for complete usage guidance, **[`docs/core/ARCHITECTURE.md`](core/ARCHITECTURE.md)**, **[`docs/core/WORKFLOW.md`](core/WORKFLOW.md)**, and **[`README.md`](../README.md)**.
+This document explains the comprehensive markdown template structure and cross-referencing system implemented in this project. For related information, see **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** for complete usage guidance, **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)**, **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)**, and **[`../README.md`](../README.md)**.
 
 ## Template Structure
 
@@ -15,7 +15,7 @@ The template demonstrates a complete academic paper structure with the following
 5. **`manuscript/04_experimental_results.md`** - Results with figure and equation references
 6. **`manuscript/05_discussion.md`** - Discussion with cross-references to previous sections
 7. **`manuscript/06_conclusion.md`** - Conclusion summarizing all contributions
-8. **`manuscript/98_symbols_glossary.md`** - Auto-generated API reference from `project/src/`
+8. **`manuscript/98_symbols_glossary.md`** - Auto-generated API reference from `projects/{name}/src/`
 
 ## Cross-Referencing System
 
@@ -134,14 +134,14 @@ Demonstrates various cross-reference patterns:
 
 The template includes two figure generation scripts that demonstrate the **thin orchestrator pattern**:
 
-1. **`example_figure.py`** - Basic example figure using `project/src/` methods
-2. **`generate_research_figures.py`** - Comprehensive research figures using `project/src/` methods
+1. **`example_figure.py`** - Basic example figure using `projects/{name}/src/` methods
+2. **`generate_research_figures.py`** - Comprehensive research figures using `projects/{name}/src/` methods
 
 ### Thin Orchestrator Pattern
 
 Scripts in the `scripts/` directory are **thin orchestrators** that:
 
-- **Import** mathematical functions from `project/src/` modules
+- **Import** mathematical functions from `projects/{name}/src/` modules
 - **Use** tested methods for all computation (never implement algorithms)
 - **Handle** visualization, I/O, and orchestration
 - **Generate** figures and data outputs
@@ -205,7 +205,7 @@ python3 -m infrastructure.documentation.generate_glossary_cli
 ```
 
 This:
-- Scans `project/src/` for public APIs
+- Scans `projects/{name}/src/` for public APIs
 - Generates markdown table
 - Updates `98_symbols_glossary.md` automatically
 
@@ -216,7 +216,7 @@ This:
 The pipeline orchestrator (`scripts/run_all.py`):
 
 1. **Runs tests** with coverage requirements (90% project, 60% infra)
-2. **Executes scripts** to generate figures and data (validating project/src/ integration)
+2. **Executes scripts** to generate figures and data (validating projects/{name}/src/ integration)
 3. **Validates manuscript** for references and images
 4. **Generates glossary** from source code
 5. **Builds individual PDFs** for each manuscript file
@@ -250,7 +250,7 @@ Generated outputs include:
 ### Creating Figures
 
 1. **Generate with scripts**: Use scripts in `project/scripts/` directory
-2. **Use project/src/ methods**: Import and use tested methods from `project/src/` modules
+2. **Use projects/{name}/src/ methods**: Import and use tested methods from `projects/{name}/src/` modules
 3. **Save to output**: Place in `output/figures/`
 4. **Reference properly**: Use `\ref{fig:name}` in markdown
 5. **Include data**: Save both figures and data files
@@ -273,16 +273,16 @@ Generated outputs include:
 ### Extending Figures
 
 1. **Add new figure generation functions** to existing scripts or create new ones
-2. **Import from project/src/**: Ensure scripts use `project/src/` methods for computation
+2. **Import from projects/{name}/src/**: Ensure scripts use `projects/{name}/src/` methods for computation
 3. **Update scripts** to generate new figures
 4. **Add figure references** in markdown
 5. **Ensure proper file paths** and naming
 
 ### Adding New Source Code
 
-1. **Create new modules** in `project/src/` directory
-2. **Add comprehensive tests** in `project/tests/` directory (coverage requirements apply)
-3. **Update scripts** to import and use new `project/src/` methods
+1. **Create new modules** in `projects/{name}/src/` directory
+2. **Add comprehensive tests** in `proje../../tests/` directory (coverage requirements apply)
+3. **Update scripts** to import and use new `projects/{name}/src/` methods
 4. **Validate integration** through the build pipeline
 
 ## Troubleshooting
@@ -293,7 +293,7 @@ Generated outputs include:
 2. **Figure not found**: Verify figure file exists in `output/figures/`
 3. **Equation numbering**: Ensure unique labels across all files
 4. **Build failures**: Check markdown validation output
-5. **Script import errors**: Ensure `project/src/` modules exist and are properly tested
+5. **Script import errors**: Ensure `projects/{name}/src/` modules exist and are properly tested
 
 ### Validation Errors
 
@@ -309,7 +309,7 @@ The validation system will report:
 2. **Broken references**: Check label spelling and existence
 3. **Validation errors**: Address each reported issue
 4. **Build failures**: Fix all validation issues before rebuilding
-5. **Import errors**: Ensure `project/src/` modules meet coverage requirements
+5. **Import errors**: Ensure `projects/{name}/src/` modules meet coverage requirements
 
 ## Architecture Compliance
 
@@ -317,16 +317,16 @@ The validation system will report:
 
 This template enforces the **thin orchestrator pattern** where:
 
-- **`project/src/`** contains ALL business logic, algorithms, and mathematical implementations
-- **`project/scripts/`** are lightweight wrappers that import and use `project/src/` methods
-- **`project/tests/`** ensures comprehensive coverage of `project/src/` functionality
+- **`projects/{name}/src/`** contains ALL business logic, algorithms, and mathematical implementations
+- **`projects/{name}/scripts/`** are lightweight wrappers that import and use `projects/{name}/src/` methods
+- **`projects/{name}/tests/`** ensures comprehensive coverage of `projects/{name}/src/` functionality
 - **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
 
 ### Script Requirements
 
 Scripts in `project/scripts/` MUST:
-- Import methods from `project/src/` modules
-- Use `project/src/` methods for all computation
+- Import methods from `projects/{name}/src/` modules
+- Use `projects/{name}/src/` methods for all computation
 - Handle only I/O, visualization, and orchestration
 - Include proper error handling for imports
 - Print output paths for render system
@@ -334,7 +334,7 @@ Scripts in `project/scripts/` MUST:
 
 Scripts MUST NOT:
 - Implement mathematical algorithms
-- Duplicate business logic from `project/src/`
+- Duplicate business logic from `projects/{name}/src/`
 - Contain complex computations
 - Define new data structures
 
@@ -344,7 +344,7 @@ This template provides a complete framework for academic writing with:
 
 - **Structured organization** of content into logical sections
 - **Comprehensive cross-referencing** system for equations, figures, and sections
-- **Automated figure generation** with proper integration using `project/src/` methods
+- **Automated figure generation** with proper integration using `projects/{name}/src/` methods
 - **Validation system** ensuring document integrity
 - **Build pipeline** generating both individual and combined PDFs
 - **LaTeX export** for further customization
@@ -353,9 +353,9 @@ This template provides a complete framework for academic writing with:
 The system demonstrates best practices for academic writing while maintaining the flexibility to adapt to different research domains and writing styles, all while enforcing the architectural principles of the generic project template.
 
 For more details on architecture and workflow, see:
-- **[`ARCHITECTURE.md`](ARCHITECTURE.md)** - System design overview
-- **[`TWO_LAYER_ARCHITECTURE.md`](ARCHITECTURE.md)** - Complete two-layer architecture guide
-- **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow
+- **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)** - System design overview
+- **[`TWO_LAYER_ARCHITECTURE.md`](../core/ARCHITECTURE.md)** - Complete two-layer architecture guide
+- **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)** - Development workflow
 
 For comprehensive manuscript formatting standards, see:
-- **[`.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md)** - Complete manuscript formatting and style guide (equations, figures, tables, citations, lists, cross-references)
+- **[`.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md)** - Complete manuscript formatting and style guide (equations, figures, tables, citations, lists, cross-references)

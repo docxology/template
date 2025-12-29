@@ -105,10 +105,19 @@ def install_missing_packages(packages: List[str]) -> bool:
         return False
     
     try:
-        # Install all missing packages at once
-        cmd = ['uv', 'pip', 'install'] + packages
-        logger.info(f"Running: {' '.join(cmd)}")
-        
+        # Use uv add to properly manage dependencies through pyproject.toml
+        # First add to pyproject.toml, then sync
+        for package in packages:
+            add_cmd = ['uv', 'add', package]
+            logger.info(f"Adding to pyproject.toml: {' '.join(add_cmd)}")
+            add_result = subprocess.run(add_cmd, check=False, capture_output=True, text=True)
+            if add_result.returncode != 0:
+                logger.warning(f"Failed to add {package} to pyproject.toml: {add_result.stderr}")
+
+        # Then sync to install all dependencies
+        cmd = ['uv', 'sync']
+        logger.info(f"Syncing dependencies: {' '.join(cmd)}")
+
         result = subprocess.run(cmd, check=False)
         
         if result.returncode == 0:
@@ -211,6 +220,31 @@ def setup_directories(repo_root: Path, project_name: str = "project", directorie
     except Exception as e:
         logger.error(f"Failed to create directories: {e}", exc_info=True)
         return False
+
+
+def check_uv_available() -> bool:
+    """Check if uv package manager is available and working.
+
+    Returns:
+        True if uv is available and functional, False otherwise
+    """
+    try:
+        result = subprocess.run(['uv', '--version'], capture_output=True, text=True, check=False)
+        return result.returncode == 0
+    except (FileNotFoundError, subprocess.SubprocessError):
+        return False
+
+
+def get_python_command() -> list[str]:
+    """Get the appropriate Python command for subprocess execution.
+
+    Returns:
+        ['uv', 'run', 'python'] if uv is available, ['python3'] otherwise
+    """
+    if check_uv_available():
+        return ['uv', 'run', 'python']
+    else:
+        return [sys.executable]
 
 
 def verify_source_structure(repo_root: Path, project_name: str = "project") -> bool:

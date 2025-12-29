@@ -480,10 +480,991 @@ def verify_integrity_command(args):
     """
 ```
 
+#### validate_links_command (function)
+```python
+def validate_links_command(args):
+    """CLI command for link validation.
+
+    Args:
+        args: Parsed command line arguments
+    """
+```
+
 #### main (function)
 ```python
 def main():
     """Main CLI entry point for validation tools."""
+```
+
+### validate_pdf_cli.py
+
+#### print_validation_report (function)
+```python
+def print_validation_report(report: dict, verbose: bool = False) -> None:
+    """Print PDF validation report to console.
+
+    Args:
+        report: Validation report dictionary
+        verbose: Enable verbose output
+    """
+```
+
+#### main (function)
+```python
+def main(pdf_path: Optional[Path] = None, n_words: int = 200, verbose: bool = False) -> int:
+    """Main function for PDF validation CLI.
+
+    Args:
+        pdf_path: Path to PDF file to validate
+        n_words: Number of words to extract for preview
+        verbose: Enable verbose output
+
+    Returns:
+        Exit code (0 for success, non-zero for errors)
+    """
+```
+
+### validate_markdown_cli.py
+
+#### _repo_root (function)
+```python
+def _repo_root() -> str:
+    """Get repository root directory.
+
+    Returns:
+        Repository root path as string
+    """
+```
+
+#### find_markdown_files (function)
+```python
+def find_markdown_files(directory: str) -> list:
+    """Find all markdown files in directory.
+
+    Args:
+        directory: Directory to search
+
+    Returns:
+        List of markdown file paths
+    """
+```
+
+#### collect_symbols (function)
+```python
+def collect_symbols(md_files: list) -> tuple:
+    """Collect symbols from markdown files.
+
+    Args:
+        md_files: List of markdown file paths
+
+    Returns:
+        Tuple of (labels, anchors) sets
+    """
+```
+
+#### validate_images (function)
+```python
+def validate_images(md_files: list, repo_root_str: str) -> list:
+    """Validate image references in markdown files.
+
+    Args:
+        md_files: List of markdown file paths
+        repo_root_str: Repository root directory
+
+    Returns:
+        List of validation error messages
+    """
+```
+
+#### validate_refs (function)
+```python
+def validate_refs(md_files: list, labels: dict, anchors: dict, repo_root_str: str) -> list:
+    """Validate cross-references in markdown files.
+
+    Args:
+        md_files: List of markdown file paths
+        labels: Dictionary of available labels
+        anchors: Dictionary of available anchors
+        repo_root_str: Repository root directory
+
+    Returns:
+        List of validation error messages
+    """
+```
+
+#### validate_math (function)
+```python
+def validate_math(md_files: list, repo_root_str: str) -> list:
+    """Validate mathematical equations in markdown files.
+
+    Args:
+        md_files: List of markdown file paths
+        repo_root_str: Repository root directory
+
+    Returns:
+        List of validation error messages
+    """
+```
+
+#### main (function)
+```python
+def main() -> int:
+    """Main function for markdown validation CLI.
+
+    Returns:
+        Exit code (0 for success, non-zero for errors)
+    """
+```
+
+### output_validator.py
+
+#### validate_copied_outputs (function)
+```python
+def validate_copied_outputs(output_dir: Path) -> bool:
+    """Validate that outputs were copied correctly.
+
+    Args:
+        output_dir: Output directory to validate
+
+    Returns:
+        True if validation passes, False otherwise
+    """
+```
+
+#### validate_root_output_structure (function)
+```python
+def validate_root_output_structure(repo_root: Path) -> Dict[str, Any]:
+    """Validate the root output directory structure.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        Validation results dictionary
+    """
+```
+
+#### validate_output_structure (function)
+```python
+def validate_output_structure(output_dir: Path) -> Dict:
+    """Validate output directory structure and contents.
+
+    Args:
+        output_dir: Output directory to validate
+
+    Returns:
+        Validation results dictionary
+    """
+```
+
+### figure_validator.py
+
+#### validate_figure_registry (function)
+```python
+def validate_figure_registry(registry_path: Path) -> Dict[str, Any]:
+    """Validate figure registry integrity.
+
+    Args:
+        registry_path: Path to figure registry file
+
+    Returns:
+        Validation results dictionary
+    """
+```
+
+### link_validator.py
+
+#### LinkValidator (class)
+```python
+class LinkValidator:
+    """Validate links and references in documentation."""
+
+    def __init__(self, repo_root: Path):
+        """Initialize link validator.
+
+        Args:
+            repo_root: Repository root directory
+        """
+```
+
+#### main (function)
+```python
+def main() -> int:
+    """Main function for link validation CLI.
+
+    Returns:
+        Exit code (0 for success, non-zero for errors)
+    """
+```
+
+### repo_scanner.py
+
+#### AccuracyIssue (class)
+```python
+@dataclass
+class AccuracyIssue:
+    """Represents an accuracy issue found during scanning."""
+    file: Path
+    line: int
+    issue_type: str
+    description: str
+    severity: str = "medium"
+```
+
+#### CompletenessGap (class)
+```python
+@dataclass
+class CompletenessGap:
+    """Represents a completeness gap found during scanning."""
+    category: str
+    description: str
+    severity: str
+    affected_files: List[Path] = field(default_factory=list)
+```
+
+#### ScanResults (class)
+```python
+@dataclass
+class ScanResults:
+    """Results of repository scanning."""
+    accuracy_issues: List[AccuracyIssue] = field(default_factory=list)
+    completeness_gaps: List[CompletenessGap] = field(default_factory=list)
+    scanned_files: int = 0
+    scan_duration: float = 0.0
+```
+
+#### RepositoryScanner (class)
+```python
+class RepositoryScanner:
+    """Scan repository for documentation quality issues."""
+
+    def __init__(self, repo_root: Path):
+        """Initialize repository scanner.
+
+        Args:
+            repo_root: Repository root directory
+        """
+```
+
+#### main (function)
+```python
+def main():
+    """Main function for repository scanning CLI."""
+```
+
+### doc_scanner_refactored.py
+
+#### DocumentationFile (class)
+```python
+@dataclass
+class DocumentationFile:
+    """Represents a documentation file."""
+    path: Path
+    content: str
+    headings: Set[str]
+    links: List[str]
+```
+
+#### LinkIssue (class)
+```python
+@dataclass
+class LinkIssue:
+    """Represents a link validation issue."""
+    source_file: Path
+    target: str
+    line: int
+    issue_type: str
+```
+
+#### AccuracyIssue (class)
+```python
+@dataclass
+class AccuracyIssue:
+    """Represents an accuracy issue."""
+    file: Path
+    issue_type: str
+    description: str
+    severity: str
+```
+
+#### CompletenessGap (class)
+```python
+@dataclass
+class CompletenessGap:
+    """Represents a completeness gap."""
+    category: str
+    description: str
+    severity: str
+```
+
+#### QualityIssue (class)
+```python
+@dataclass
+class QualityIssue:
+    """Represents a quality issue."""
+    file: Path
+    line: int
+    issue_type: str
+    description: str
+    severity: str
+```
+
+#### ScanResults (class)
+```python
+@dataclass
+class ScanResults:
+    """Documentation scan results."""
+    accuracy_issues: List[AccuracyIssue] = field(default_factory=list)
+    completeness_gaps: List[CompletenessGap] = field(default_factory=list)
+    quality_issues: List[QualityIssue] = field(default_factory=list)
+```
+
+#### DocumentationScanner (class)
+```python
+class DocumentationScanner:
+    """Comprehensive documentation scanner."""
+
+    def __init__(self, repo_root: Path):
+        """Initialize documentation scanner.
+
+        Args:
+            repo_root: Repository root directory
+        """
+```
+
+#### main (function)
+```python
+def main():
+    """Main function for documentation scanning CLI."""
+```
+
+### doc_scanner.py
+
+#### DocumentationScanner (class)
+```python
+class DocumentationScanner:
+    """Documentation quality scanner."""
+
+    def __init__(self, repo_root: Path):
+        """Initialize documentation scanner.
+
+        Args:
+            repo_root: Repository root directory
+        """
+```
+
+#### main (function)
+```python
+def main():
+    """Main function for documentation scanning CLI."""
+```
+
+### doc_quality.py
+
+#### assess_clarity (function)
+```python
+def assess_clarity(content: str, md_file: Path, lines: List[str], repo_root: Path) -> List[QualityIssue]:
+    """Assess documentation clarity.
+
+    Args:
+        content: File content
+        md_file: Markdown file path
+        lines: File lines
+        repo_root: Repository root
+
+    Returns:
+        List of quality issues
+    """
+```
+
+#### assess_actionability (function)
+```python
+def assess_actionability(content: str, md_file: Path, lines: List[str], repo_root: Path) -> List[QualityIssue]:
+    """Assess documentation actionability.
+
+    Args:
+        content: File content
+        md_file: Markdown file path
+        lines: File lines
+        repo_root: Repository root
+
+    Returns:
+        List of quality issues
+    """
+```
+
+#### assess_maintainability (function)
+```python
+def assess_maintainability(content: str, md_file: Path, lines: List[str], repo_root: Path) -> List[QualityIssue]:
+    """Assess documentation maintainability.
+
+    Args:
+        content: File content
+        md_file: Markdown file path
+        lines: File lines
+        repo_root: Repository root
+
+    Returns:
+        List of quality issues
+    """
+```
+
+#### check_formatting (function)
+```python
+def check_formatting(content: str, md_file: Path, lines: List[str], repo_root: Path) -> List[QualityIssue]:
+    """Check documentation formatting.
+
+    Args:
+        content: File content
+        md_file: Markdown file path
+        lines: File lines
+        repo_root: Repository root
+
+    Returns:
+        List of quality issues
+    """
+```
+
+#### group_quality_by_type (function)
+```python
+def group_quality_by_type(issues: List[QualityIssue]) -> Dict[str, int]:
+    """Group quality issues by type.
+
+    Args:
+        issues: List of quality issues
+
+    Returns:
+        Dictionary of issue counts by type
+    """
+```
+
+#### group_quality_by_severity (function)
+```python
+def group_quality_by_severity(issues: List[QualityIssue]) -> Dict[str, int]:
+    """Group quality issues by severity.
+
+    Args:
+        issues: List of quality issues
+
+    Returns:
+        Dictionary of issue counts by severity
+    """
+```
+
+#### run_quality_phase (function)
+```python
+def run_quality_phase(md_files: List[Path], repo_root: Path) -> Tuple[Dict, List[QualityIssue]]:
+    """Run quality assessment phase.
+
+    Args:
+        md_files: List of markdown files
+        repo_root: Repository root
+
+    Returns:
+        Tuple of (summary_dict, issues_list)
+    """
+```
+
+### doc_models.py
+
+#### DocumentationFile (class)
+```python
+@dataclass
+class DocumentationFile:
+    """Represents a documentation file."""
+    path: Path
+    content: str
+    headings: Set[str]
+    links: List[str]
+```
+
+#### LinkIssue (class)
+```python
+@dataclass
+class LinkIssue:
+    """Represents a link validation issue."""
+    source_file: Path
+    target: str
+    line: int
+    issue_type: str
+```
+
+#### AccuracyIssue (class)
+```python
+@dataclass
+class AccuracyIssue:
+    """Represents an accuracy issue."""
+    file: Path
+    issue_type: str
+    description: str
+    severity: str
+```
+
+#### CompletenessGap (class)
+```python
+@dataclass
+class CompletenessGap:
+    """Represents a completeness gap."""
+    category: str
+    description: str
+    severity: str
+```
+
+#### QualityIssue (class)
+```python
+@dataclass
+class QualityIssue:
+    """Represents a quality issue."""
+    file: Path
+    line: int
+    issue_type: str
+    description: str
+    severity: str
+```
+
+### doc_discovery.py
+
+#### find_markdown_files (function)
+```python
+def find_markdown_files(repo_root: Path) -> List[Path]:
+    """Find all markdown files in repository.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        List of markdown file paths
+    """
+```
+
+#### catalog_agents_readme (function)
+```python
+def catalog_agents_readme(md_files: List[Path], repo_root: Path) -> List[str]:
+    """Catalog AGENTS.md and README.md files.
+
+    Args:
+        md_files: List of markdown files
+        repo_root: Repository root
+
+    Returns:
+        List of AGENTS.md/README.md files
+    """
+```
+
+#### find_config_files (function)
+```python
+def find_config_files(repo_root: Path) -> Dict[str, Path]:
+    """Find configuration files in repository.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        Dictionary of config file types to paths
+    """
+```
+
+#### find_script_files (function)
+```python
+def find_script_files(repo_root: Path) -> List[Path]:
+    """Find script files in repository.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        List of script file paths
+    """
+```
+
+#### create_hierarchy (function)
+```python
+def create_hierarchy(md_files: List[Path], repo_root: Path) -> Dict[str, List[str]]:
+    """Create documentation hierarchy.
+
+    Args:
+        md_files: List of markdown files
+        repo_root: Repository root
+
+    Returns:
+        Dictionary of hierarchy information
+    """
+```
+
+#### identify_cross_references (function)
+```python
+def identify_cross_references(md_files: List[Path]) -> Set[str]:
+    """Identify cross-references between files.
+
+    Args:
+        md_files: List of markdown files
+
+    Returns:
+        Set of cross-reference identifiers
+    """
+```
+
+#### categorize_documentation (function)
+```python
+def categorize_documentation(md_files: List[Path], repo_root: Path) -> Dict[str, List[str]]:
+    """Categorize documentation files.
+
+    Args:
+        md_files: List of markdown files
+        repo_root: Repository root
+
+    Returns:
+        Dictionary of categories to file lists
+    """
+```
+
+#### analyze_documentation_file (function)
+```python
+def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationFile:
+    """Analyze individual documentation file.
+
+    Args:
+        md_file: Markdown file path
+        repo_root: Repository root
+
+    Returns:
+        DocumentationFile object
+    """
+```
+
+#### run_discovery_phase (function)
+```python
+def run_discovery_phase(repo_root: Path) -> Dict:
+    """Run documentation discovery phase.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        Discovery results dictionary
+    """
+```
+
+### doc_completeness.py
+
+#### check_feature_documentation (function)
+```python
+def check_feature_documentation(repo_root: Path, documentation_files: List[DocumentationFile]) -> List[CompletenessGap]:
+    """Check feature documentation completeness.
+
+    Args:
+        repo_root: Repository root directory
+        documentation_files: List of documentation files
+
+    Returns:
+        List of completeness gaps
+    """
+```
+
+#### check_script_documentation (function)
+```python
+def check_script_documentation(repo_root: Path) -> List[CompletenessGap]:
+    """Check script documentation completeness.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        List of completeness gaps
+    """
+```
+
+#### check_config_documentation (function)
+```python
+def check_config_documentation(config_files: Dict[str, Path]) -> List[CompletenessGap]:
+    """Check configuration documentation completeness.
+
+    Args:
+        config_files: Dictionary of config files
+
+    Returns:
+        List of completeness gaps
+    """
+```
+
+#### check_troubleshooting (function)
+```python
+def check_troubleshooting(documentation_files: List[DocumentationFile]) -> List[CompletenessGap]:
+    """Check troubleshooting documentation completeness.
+
+    Args:
+        documentation_files: List of documentation files
+
+    Returns:
+        List of completeness gaps
+    """
+```
+
+#### check_workflow_documentation (function)
+```python
+def check_workflow_documentation(documentation_files: List[DocumentationFile]) -> List[CompletenessGap]:
+    """Check workflow documentation completeness.
+
+    Args:
+        documentation_files: List of documentation files
+
+    Returns:
+        List of completeness gaps
+    """
+```
+
+#### check_onboarding (function)
+```python
+def check_onboarding(documentation_files: List[DocumentationFile]) -> List[CompletenessGap]:
+    """Check onboarding documentation completeness.
+
+    Args:
+        documentation_files: List of documentation files
+
+    Returns:
+        List of completeness gaps
+    """
+```
+
+#### check_cross_reference_completeness (function)
+```python
+def check_cross_reference_completeness() -> List[CompletenessGap]:
+    """Check cross-reference completeness.
+
+    Returns:
+        List of completeness gaps
+    """
+```
+
+#### group_gaps_by_category (function)
+```python
+def group_gaps_by_category(gaps: List[CompletenessGap]) -> Dict[str, int]:
+    """Group completeness gaps by category.
+
+    Args:
+        gaps: List of completeness gaps
+
+    Returns:
+        Dictionary of gap counts by category
+    """
+```
+
+#### group_gaps_by_severity (function)
+```python
+def group_gaps_by_severity(gaps: List[CompletenessGap]) -> Dict[str, int]:
+    """Group completeness gaps by severity.
+
+    Args:
+        gaps: List of completeness gaps
+
+    Returns:
+        Dictionary of gap counts by severity
+    """
+```
+
+#### run_completeness_phase (function)
+```python
+def run_completeness_phase(repo_root: Path, documentation_files: List[DocumentationFile]) -> Tuple[Dict, List[CompletenessGap]]:
+    """Run completeness assessment phase.
+
+    Args:
+        repo_root: Repository root directory
+        documentation_files: List of documentation files
+
+    Returns:
+        Tuple of (summary_dict, gaps_list)
+    """
+```
+
+### doc_accuracy.py
+
+#### extract_headings (function)
+```python
+def extract_headings(content: str) -> Set[str]:
+    """Extract headings from markdown content.
+
+    Args:
+        content: Markdown content
+
+    Returns:
+        Set of heading texts
+    """
+```
+
+#### resolve_file_path (function)
+```python
+def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> Tuple[bool, str]:
+    """Resolve file path relative to source.
+
+    Args:
+        target: Target file path
+        source_file: Source file path
+        repo_root: Repository root
+
+    Returns:
+        Tuple of (exists, resolved_path)
+    """
+```
+
+#### check_links (function)
+```python
+def check_links(md_files: List[Path], repo_root: Path, all_headings: Dict[str, Set[str]]) -> List[LinkIssue]:
+    """Check links in markdown files.
+
+    Args:
+        md_files: List of markdown files
+        repo_root: Repository root
+        all_headings: Dictionary of headings by file
+
+    Returns:
+        List of link issues
+    """
+```
+
+#### extract_script_name (function)
+```python
+def extract_script_name(command: str) -> Optional[str]:
+    """Extract script name from command.
+
+    Args:
+        command: Command string
+
+    Returns:
+        Script name if found, None otherwise
+    """
+```
+
+#### verify_commands (function)
+```python
+def verify_commands(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue]:
+    """Verify commands in documentation.
+
+    Args:
+        md_files: List of markdown files
+        repo_root: Repository root
+
+    Returns:
+        List of accuracy issues
+    """
+```
+
+#### check_file_paths (function)
+```python
+def check_file_paths(md_files: List[Path], repo_root: Path) -> List[AccuracyIssue]:
+    """Check file paths in documentation.
+
+    Args:
+        md_files: List of markdown files
+        repo_root: Repository root
+
+    Returns:
+        List of accuracy issues
+    """
+```
+
+#### validate_config_options (function)
+```python
+def validate_config_options(md_files: List[Path], config_files: Dict[str, Path]) -> List[AccuracyIssue]:
+    """Validate configuration options in documentation.
+
+    Args:
+        md_files: List of markdown files
+        config_files: Dictionary of config files
+
+    Returns:
+        List of accuracy issues
+    """
+```
+
+#### check_terminology (function)
+```python
+def check_terminology(md_files: List[Path]) -> List[AccuracyIssue]:
+    """Check terminology consistency.
+
+    Args:
+        md_files: List of markdown files
+
+    Returns:
+        List of accuracy issues
+    """
+```
+
+#### run_accuracy_phase (function)
+```python
+def run_accuracy_phase(md_files: List[Path], repo_root: Path, config_files: Dict[str, Path]) -> Tuple[Dict, List[AccuracyIssue]]:
+    """Run accuracy assessment phase.
+
+    Args:
+        md_files: List of markdown files
+        repo_root: Repository root
+        config_files: Dictionary of config files
+
+    Returns:
+        Tuple of (summary_dict, issues_list)
+    """
+```
+
+### check_links.py
+
+#### find_all_markdown_files (function)
+```python
+def find_all_markdown_files(repo_root: str) -> List[Path]:
+    """Find all markdown files in repository.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        List of markdown file paths
+    """
+```
+
+#### extract_links (function)
+```python
+def extract_links(content: str, file_path: Path) -> Tuple[List[Dict], List[Dict], List[Dict]]:
+    """Extract links from markdown content.
+
+    Args:
+        content: Markdown content
+        file_path: Source file path
+
+    Returns:
+        Tuple of (file_links, heading_links, external_links)
+    """
+```
+
+#### check_file_reference (function)
+```python
+def check_file_reference(target: str, source_file: Path, repo_root: Path) -> Tuple[bool, str]:
+    """Check if file reference exists.
+
+    Args:
+        target: Target file path
+        source_file: Source file path
+        repo_root: Repository root
+
+    Returns:
+        Tuple of (exists, resolved_path)
+    """
+```
+
+#### extract_headings (function)
+```python
+def extract_headings(content: str) -> Set[str]:
+    """Extract headings from markdown content.
+
+    Args:
+        content: Markdown content
+
+    Returns:
+        Set of headings
+    """
+```
+
+#### main (function)
+```python
+def main():
+    """Main function for link checking CLI."""
 ```
 
 ## Key Features

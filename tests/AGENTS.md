@@ -8,7 +8,7 @@ The `tests/` directory ensures **comprehensive test coverage** for all modules (
 
 ### Test-Driven Development (TDD)
 1. Write tests first
-2. Implement functionality in `project/src/` (project-specific) or `infrastructure/` (reusable)
+2. Implement functionality in `projects/{name}/src/` (project-specific) or `infrastructure/` (reusable)
 3. Run tests until they pass
 4. Refactor with confidence
 
@@ -28,10 +28,64 @@ This is a fundamental testing principle that ensures:
 - Mocking external services or APIs
 - Creating fake test data instead of real data
 
-- **Always use real data** and real computations
+**ALWAYS USE REAL OPERATIONS:**
+- Real data and real computations
 - Create temporary directories/files for testing
 - Use deterministic seeds for reproducibility
 - Test real integration between components
+
+### Implementation Examples
+
+**LLM Testing with pytest-httpserver:**
+```python
+@pytest.fixture(scope="session")
+def ollama_test_server():
+    """Local HTTP test server mimicking Ollama API."""
+    server = HTTPServer()
+    server.expect_request("/api/chat").respond_with_json({
+        "message": {"content": "Test response"}
+    })
+    yield server
+    server.stop()
+
+def test_llm_query(ollama_test_server):
+    config = LLMConfig(base_url=ollama_test_server.url_for("/"))
+    client = LLMClient(config)
+    response = client.query("test")  # Real HTTP request
+    assert "Test response" in response
+```
+
+**CLI Testing with Real Subprocess:**
+```python
+def test_cli_validation(tmp_path):
+    # Create real test file
+    pdf_file = tmp_path / "test.pdf"
+    from reportlab.pdfgen import canvas
+    c = canvas.Canvas(str(pdf_file))
+    c.drawString(100, 750, "Test")
+    c.save()
+
+    # Execute real CLI command
+    result = subprocess.run([
+        'python', '-m', 'infrastructure.validation.cli',
+        'pdf', str(pdf_file)
+    ], capture_output=True, text=True)
+    assert result.returncode == 0
+```
+
+**PDF Processing with Real Files:**
+```python
+def test_pdf_extraction(tmp_path):
+    # Create real PDF
+    pdf_file = tmp_path / "test.pdf"
+    c = canvas.Canvas(str(pdf_file))
+    c.drawString(100, 750, "Extracted content")
+    c.save()
+
+    # Test real PDF extraction
+    text = extract_manuscript_text(str(pdf_file))
+    assert "Extracted content" in text
+```
 
 ### Network-Dependent Modules
 For modules requiring external services (LLM, Literature, Publishing):
@@ -42,7 +96,7 @@ For modules requiring external services (LLM, Literature, Publishing):
 - Skip integration tests with: `pytest -m "not requires_ollama"`
 
 ### Coverage Requirements
-- All project/src/ modules must meet 90% minimum coverage (currently 100% - perfect coverage!)
+- All projects/{name}/src/ modules must meet 90% minimum coverage (currently 100% - perfect coverage!)
 - Infrastructure modules must meet 60% minimum coverage (currently 83.33% - exceeds stretch goal!)
 - Tests must pass before PDF generation proceeds
 - Coverage validated by `pyproject.toml` configuration (`[tool.coverage.*]` sections)
@@ -179,7 +233,7 @@ Test individual infrastructure modules in `tests/infrastructure/`:
 
 ### Project Module Tests
 Test project-specific code in `project/tests/`:
-- Unit tests for `project/src/` modules (see `project/tests/AGENTS.md`)
+- Unit tests for `projects/{name}/src/` modules (see `projects/{name}/tests/AGENTS.md`)
 - Integration tests in `project/tests/integration/`
   - `test_integration_pipeline.py` - Full analysis pipeline
   - `test_example_figure.py` - Figure generation integration
@@ -269,7 +323,7 @@ pytest tests/ -m requires_zenodo
 pytest tests/ -m requires_github
 ```
 
-**See [docs/TESTING_WITH_CREDENTIALS.md](../docs/TESTING_WITH_CREDENTIALS.md) for credential setup.**
+**See [docs/TESTING_WITH_CREDENTIALS.md](../docs/development/TESTING_WITH_CREDENTIALS.md) for credential setup.**
 
 ## Writing Tests
 
@@ -527,7 +581,7 @@ def test_publish_to_zenodo(zenodo_credentials, tmp_path):
 - Tests automatically clean up artifacts (depositions, releases)
 - Tokens should have minimum required scopes
 
-See **[docs/TESTING_WITH_CREDENTIALS.md](../docs/TESTING_WITH_CREDENTIALS.md)** for complete setup guide.
+See **[docs/TESTING_WITH_CREDENTIALS.md](../docs/development/TESTING_WITH_CREDENTIALS.md)** for complete setup guide.
 
 ## See Also
 
@@ -536,7 +590,7 @@ See **[docs/TESTING_WITH_CREDENTIALS.md](../docs/TESTING_WITH_CREDENTIALS.md)** 
 - [`../project/src/AGENTS.md`](../project/src/AGENTS.md) - Project module documentation
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 - [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow
-- [`../docs/TESTING_WITH_CREDENTIALS.md`](../docs/TESTING_WITH_CREDENTIALS.md) - Credential configuration guide
+- [`../docs/development/TESTING_WITH_CREDENTIALS.md`](../docs/development/TESTING_WITH_CREDENTIALS.md) - Credential configuration guide
 
 
 

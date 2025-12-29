@@ -233,4 +233,4 @@ figure = create_figure(results, "publication_quality")
 - [AGENTS.md](AGENTS.md) - Technical documentation
 - [../tests/](../tests/) - Test suite
 - [../scripts/](../scripts/) - Analysis scripts
-- [../../infrastructure/](../../infrastructure/) - Reusable infrastructure
+- [../../../infrastructure/](../../../infrastructure/) - Reusable infrastructure

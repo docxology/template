@@ -390,7 +390,7 @@ For issues or questions:
 
 ## See Also
 
-- [tests/AGENTS.md](../tests/AGENTS.md) - Test suite documentation
-- [tests/infrastructure/AGENTS.md](../tests/infrastructure/AGENTS.md) - Infrastructure test details
+- [tests/AGENTS.md](../../tests/AGENTS.md) - Test suite documentation
+- [tes../../infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) - Infrastructure test details
 - [AGENTS.md](../AGENTS.md) - System documentation
 

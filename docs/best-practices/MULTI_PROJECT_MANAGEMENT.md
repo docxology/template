@@ -2,7 +2,7 @@
 
 > **Strategies for managing multiple projects** using the template
 
-**Quick Reference:** [Getting Started](../guides/GETTING_STARTED.md) | [Architecture](ARCHITECTURE.md) | [Best Practices](../best-practices/BEST_PRACTICES.md)
+**Quick Reference:** [Getting Started](../guides/GETTING_STARTED.md) | [Architecture](../core/ARCHITECTURE.md) | [Best Practices](../best-practices/BEST_PRACTICES.md)
 
 This guide provides strategies and best practices for managing multiple research projects that all use the Research Project Template, enabling efficient workflows and maintaining consistency across projects.
 
@@ -129,7 +129,7 @@ cd template-repo
 git pull origin main
 
 # 2. For each project
-for project in ../projects/*/; do
+for project in ../../projects/*/; do
     cd "$project"
     
     # Copy updated files
@@ -486,14 +486,14 @@ Multi-project management strategies:
 
 For more information, see:
 - [Getting Started](../guides/GETTING_STARTED.md) - Project setup
-- [Architecture](ARCHITECTURE.md) - Understanding structure
+- [Architecture](../core/ARCHITECTURE.md) - Understanding structure
 - [Best Practices](../best-practices/BEST_PRACTICES.md) - General practices
 
 ---
 
 **Related Documentation:**
 - [Getting Started](../guides/GETTING_STARTED.md) - Setting up projects
-- [Architecture](ARCHITECTURE.md) - Project structure
+- [Architecture](../core/ARCHITECTURE.md) - Project structure
 - [Best Practices](../best-practices/BEST_PRACTICES.md) - Management practices
 
 

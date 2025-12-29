@@ -128,5 +128,5 @@ python3 ../../scripts/03_render_pdf.py --section 02_methodology
 ## See Also
 
 - [README.md](README.md) - Quick reference
-- [../../scripts/03_render_pdf.py](../../scripts/03_render_pdf.py) - PDF rendering
-- [../../infrastructure/validation/](../../infrastructure/validation/) - Quality validation
+- [../../../scripts/03_render_pdf.py](../../../scripts/03_render_pdf.py) - PDF rendering
+- [../../../infrastructure/validation/](../../../infrastructure/validation/) - Quality validation

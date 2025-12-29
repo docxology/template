@@ -2,7 +2,7 @@
 
 > **Complete reference** for the build pipeline, performance, and system status
 
-**Quick Reference:** [Common Workflows](COMMON_WORKFLOWS.md#generate-pdf-of-manuscript) | [FAQ](../reference/FAQ.md) | [Architecture](ARCHITECTURE.md)
+**Quick Reference:** [Common Workflows](../reference/COMMON_WORKFLOWS.md#generate-pdf-of-manuscript) | [FAQ](../reference/FAQ.md) | [Architecture](../core/ARCHITECTURE.md)
 
 This document consolidates all build system information: current status, performance metrics, and historical fixes.
 
@@ -485,7 +485,7 @@ python3 scripts/05_copy_outputs.py       # Stage 05
 3. Add tests for uncovered code paths
 4. Verify improvement
 
-**See [Common Workflows](COMMON_WORKFLOWS.md#fix-coverage-below-100) for detailed steps.**
+**See [Common Workflows](../reference/COMMON_WORKFLOWS.md#fix-coverage-below-100) for detailed steps.**
 
 ---
 
@@ -543,8 +543,8 @@ open output/project_combined.pdf
 ## 🔗 Related Documentation
 
 - **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step build recipes
-- **[Architecture](ARCHITECTURE.md)** - System design overview
-- **[Workflow](WORKFLOW.md)** - Development process
+- **[Architecture](../core/ARCHITECTURE.md)** - System design overview
+- **[Workflow](../core/WORKFLOW.md)** - Development process
 - **[PDF Validation](../modules/PDF_VALIDATION.md)** - Quality checks
 - **[FAQ](../reference/FAQ.md)** - Common questions
 - **[Documentation Index](../DOCUMENTATION_INDEX.md)** - Complete reference

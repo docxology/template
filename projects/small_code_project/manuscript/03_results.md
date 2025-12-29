@@ -6,7 +6,7 @@ This section presents the experimental results from the gradient descent optimiz
 
 Figure 1 shows the convergence behavior of gradient descent for different step sizes, starting from the initial point $x_0 = 0$.
 
-![Gradient Descent Convergence](figures/convergence_plot.png){#fig:convergence}
+![Gradient Descent Convergence](../output/figures/convergence_plot.png){#fig:convergence}
 
 The plot demonstrates several key observations:
 

@@ -435,7 +435,7 @@ def generate_validation_report(
     validation_results: Dict[str, Any],
     output_dir: Path
 ) -> Dict[str, Path]:
-    """Generate enhanced validation report.
+    """Generate validation report.
     
     Args:
         validation_results: Validation results dictionary

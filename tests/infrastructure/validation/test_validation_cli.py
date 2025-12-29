@@ -7,7 +7,6 @@ and integrity validation commands.
 import argparse
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
 
 from infrastructure.validation import cli
@@ -215,38 +214,54 @@ class TestMainCli:
         c.showPage()
         c.save()
         
-        with patch('sys.argv', ['cli.py', 'pdf', str(pdf_file)]):
-            with pytest.raises(SystemExit) as exc_info:
-                cli.main()
-            assert exc_info.value.code == 0
+        # Run real CLI command via subprocess
+        import subprocess
+        result = subprocess.run(
+            ['python', '-m', 'infrastructure.validation.cli', 'pdf', str(pdf_file)],
+            capture_output=True,
+            text=True
+        )
+        assert result.returncode == 0
     
     def test_main_with_markdown_command(self, tmp_path):
         """Test main with markdown subcommand using real validation."""
         md_file = tmp_path / "test.md"
         md_file.write_text("# Test\n\nValid content.")
         
-        with patch('sys.argv', ['cli.py', 'markdown', str(tmp_path)]):
-            with pytest.raises(SystemExit) as exc_info:
-                cli.main()
-            assert exc_info.value.code == 0
+        # Run real CLI command via subprocess
+        import subprocess
+        result = subprocess.run(
+            ['python', '-m', 'infrastructure.validation.cli', 'markdown', str(tmp_path)],
+            capture_output=True,
+            text=True
+        )
+        assert result.returncode == 0
     
     def test_main_with_integrity_command(self, tmp_path):
         """Test main with integrity subcommand using real verification."""
         # Create some files for integrity check
         (tmp_path / "test.txt").write_text("content")
         
-        with patch('sys.argv', ['cli.py', 'integrity', str(tmp_path)]):
-            with pytest.raises(SystemExit) as exc_info:
-                cli.main()
-            # Accept either pass or fail since integrity depends on actual state
-            assert exc_info.value.code in [0, 1]
+        # Run real CLI command via subprocess
+        import subprocess
+        result = subprocess.run(
+            ['python', '-m', 'infrastructure.validation.cli', 'integrity', str(tmp_path)],
+            capture_output=True,
+            text=True
+        )
+        # Accept either pass or fail since integrity depends on actual state
+        assert result.returncode in [0, 1]
     
     def test_main_without_command(self, capsys):
         """Test main without any subcommand."""
-        with patch('sys.argv', ['cli.py']):
-            with pytest.raises(SystemExit) as exc_info:
-                cli.main()
-            assert exc_info.value.code == 1
+        # Run CLI without arguments
+        import subprocess
+        result = subprocess.run(
+            ['python', '-m', 'infrastructure.validation.cli'],
+            capture_output=True,
+            text=True
+        )
+        assert result.returncode == 1
     
     def test_main_with_invalid_pdf(self, tmp_path, capsys):
         """Test main when PDF is invalid and cannot be read."""
@@ -254,15 +269,18 @@ class TestMainCli:
         pdf_file = tmp_path / "invalid.pdf"
         pdf_file.write_bytes(b"not a real pdf")
         
-        with patch('sys.argv', ['cli.py', 'pdf', str(pdf_file)]):
-            with pytest.raises(SystemExit) as exc_info:
-                cli.main()
-            # Invalid PDF should fail
-            assert exc_info.value.code == 1
-        
-        captured = capsys.readouterr()
+        # Run CLI with invalid PDF
+        import subprocess
+        result = subprocess.run(
+            ['python', '-m', 'infrastructure.validation.cli', 'pdf', str(pdf_file)],
+            capture_output=True,
+            text=True
+        )
+        # Invalid PDF should fail
+        assert result.returncode == 1
+
         # Should have some error output
-        assert len(captured.err) > 0 or len(captured.out) > 0
+        assert len(result.stderr) > 0 or len(result.stdout) > 0
 
 
 class TestCliArgumentParsing:
@@ -280,11 +298,15 @@ class TestCliArgumentParsing:
         c.showPage()
         c.save()
         
-        with patch('sys.argv', ['cli.py', 'pdf', str(pdf_file)]):
-            with pytest.raises(SystemExit) as exc_info:
-                cli.main()
-            # Should run successfully
-            assert exc_info.value.code == 0
+        # Run CLI with real PDF
+        import subprocess
+        result = subprocess.run(
+            ['python', '-m', 'infrastructure.validation.cli', 'pdf', str(pdf_file)],
+            capture_output=True,
+            text=True
+        )
+        # Should run successfully
+        assert result.returncode == 0
     
     def test_pdf_parser_verbose_flag(self, tmp_path, capsys):
         """Test PDF parser verbose flag works with real PDF."""
@@ -299,11 +321,16 @@ class TestCliArgumentParsing:
         c.showPage()
         c.save()
         
-        with patch('sys.argv', ['cli.py', 'pdf', str(pdf_file), '-v']):
-            with pytest.raises(SystemExit):
-                cli.main()
-        
-        captured = capsys.readouterr()
-        # Verbose output should show validation info
-        assert 'Validating' in captured.out or 'issues' in captured.out.lower()
+        # Run CLI with verbose flag
+        import subprocess
+        result = subprocess.run(
+            ['python', '-m', 'infrastructure.validation.cli', 'pdf', str(pdf_file), '-v'],
+            capture_output=True,
+            text=True
+        )
+        # Should complete (exit code may vary based on validation results)
+        assert result.returncode in [0, 1]
+
+        # Verbose output should show validation info in subprocess output
+        assert 'Validating' in result.stdout or 'issues' in result.stdout.lower()
 

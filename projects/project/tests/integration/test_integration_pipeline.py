@@ -11,6 +11,18 @@ import pytest
 import numpy as np
 
 
+def _get_infrastructure_paths():
+    """Get paths to infrastructure scripts and PYTHONPATH for testing.
+
+    Returns:
+        tuple: (repo_root, cli_script_path, glossary_script_path)
+    """
+    repo_root = Path(__file__).parent.parent.parent.parent.parent  # template/ (one more parent)
+    cli_script = repo_root / "infrastructure" / "validation" / "validate_markdown_cli.py"
+    glossary_script = repo_root / "infrastructure" / "documentation" / "generate_glossary_cli.py"
+    return repo_root, cli_script, glossary_script
+
+
 def _setup_test_project_structure(tmp_path: Path, test_name: str) -> Path:
     """Setup proper test project structure with infrastructure and project directories.
     
@@ -65,6 +77,7 @@ class TestFullPipelineIntegration:
         """Test the complete pipeline from scripts to validation to glossary generation."""
         test_root = _setup_test_project_structure(tmp_path, "complete_pipeline")
         project_dir = test_root / "project"
+        repo_root, cli_script, glossary_script = _get_infrastructure_paths()
 
         # Create a basic markdown file that references outputs
         (project_dir / "manuscript" / "01_test.md").write_text(r"""
@@ -117,20 +130,20 @@ More content here.
         # Step 3: Run markdown validation using infrastructure module
         manuscript_dir = project_dir / "manuscript"
         result3 = subprocess.run([
-            sys.executable, "-m", "infrastructure.validation.validate_markdown_cli",
+            sys.executable, str(cli_script),
             str(manuscript_dir)
-        ], cwd=str(test_root), capture_output=True, text=True,
-        env={**os.environ, "PYTHONPATH": str(test_root)})
+        ], cwd=str(project_dir), capture_output=True, text=True,
+        env={**os.environ, "PYTHONPATH": str(repo_root)})
 
         # Should pass validation (all references exist) - exit code 0 means success
         assert result3.returncode == 0 or "validation passed" in result3.stdout.lower()
 
         # Step 4: Run glossary generation using infrastructure module
         result4 = subprocess.run([
-            sys.executable, "-m", "infrastructure.documentation.generate_glossary_cli",
+            sys.executable, str(glossary_script),
             str(project_dir / "src"), str(manuscript_dir / "98_symbols_glossary.md")
-        ], cwd=str(test_root), capture_output=True, text=True,
-        env={**os.environ, "PYTHONPATH": str(test_root)})
+        ], cwd=str(project_dir), capture_output=True, text=True,
+        env={**os.environ, "PYTHONPATH": str(repo_root)})
 
         # Should succeed and generate glossary
         assert result4.returncode == 0 or "Generated" in result4.stdout or "glossary" in result4.stdout.lower()
@@ -148,10 +161,10 @@ More content here.
 
         # Step 5: Run markdown validation again to ensure everything still works
         result5 = subprocess.run([
-            sys.executable, "-m", "infrastructure.validation.validate_markdown_cli",
+            sys.executable, str(cli_script),
             str(manuscript_dir)
-        ], cwd=str(test_root), capture_output=True, text=True,
-        env={**os.environ, "PYTHONPATH": str(test_root)})
+        ], cwd=str(project_dir), capture_output=True, text=True,
+        env={**os.environ, "PYTHONPATH": str(repo_root)})
 
         # Should still pass validation
         assert result5.returncode == 0 or "validation passed" in result5.stdout.lower()
@@ -161,6 +174,7 @@ More content here.
         test_root = _setup_test_project_structure(tmp_path, "manuscript_pipeline")
         project_dir = test_root / "project"
         manuscript_dir = project_dir / "manuscript"
+        repo_root, cli_script, glossary_script = _get_infrastructure_paths()
 
         # Create realistic manuscript sections
         sections = {
@@ -251,10 +265,10 @@ accuracy = \frac{TP}{TP + FP}
 
         # Run validation on manuscript using infrastructure module
         result2 = subprocess.run([
-            sys.executable, "-m", "infrastructure.validation.validate_markdown_cli",
+            sys.executable, str(cli_script),
             str(project_dir / "manuscript")
-        ], cwd=str(test_root), capture_output=True, text=True,
-        env={**os.environ, "PYTHONPATH": str(test_root)})
+        ], cwd=str(project_dir), capture_output=True, text=True,
+        env={**os.environ, "PYTHONPATH": str(repo_root)})
 
         # Should pass validation in non-strict mode
         assert result2.returncode == 0 or "validation" in result2.stdout.lower()
@@ -263,6 +277,7 @@ accuracy = \frac{TP}{TP + FP}
         """Test that pipeline components handle errors gracefully and continue."""
         test_root = _setup_test_project_structure(tmp_path, "error_recovery")
         project_dir = test_root / "project"
+        repo_root, cli_script, glossary_script = _get_infrastructure_paths()
 
         # Create markdown with some issues
         (project_dir / "manuscript" / "01_test.md").write_text(r"""
@@ -291,24 +306,25 @@ This is fine.
 
         # Run validation in non-strict mode (should pass despite issues)
         result3 = subprocess.run([
-            sys.executable, "-m", "infrastructure.validation.validate_markdown_cli",
+            sys.executable, str(cli_script),
             str(project_dir / "manuscript")
-        ], cwd=str(test_root), capture_output=True, text=True,
-        env={**os.environ, "PYTHONPATH": str(test_root)})
+        ], cwd=str(project_dir), capture_output=True, text=True,
+        env={**os.environ, "PYTHONPATH": str(repo_root)})
         assert result3.returncode == 0 or "validation" in result3.stdout.lower()
 
         # Run glossary generation (should succeed)
         result4 = subprocess.run([
-            sys.executable, "-m", "infrastructure.documentation.generate_glossary_cli",
+            sys.executable, str(glossary_script),
             str(project_dir / "src"), str(project_dir / "manuscript" / "98_symbols_glossary.md")
-        ], cwd=str(test_root), capture_output=True, text=True,
-        env={**os.environ, "PYTHONPATH": str(test_root)})
+        ], cwd=str(project_dir), capture_output=True, text=True,
+        env={**os.environ, "PYTHONPATH": str(repo_root)})
         assert result4.returncode == 0 or "Generated" in result4.stdout
 
     def test_pipeline_deterministic_behavior(self, tmp_path):
         """Test that the complete pipeline produces deterministic results."""
         test_root = _setup_test_project_structure(tmp_path, "deterministic_pipeline")
         project_dir = test_root / "project"
+        repo_root, cli_script, glossary_script = _get_infrastructure_paths()
 
         # Create basic markdown
         (project_dir / "manuscript" / "01_test.md").write_text(r"""
@@ -338,18 +354,18 @@ x^2 + y^2 = z^2
 
             # Run validation using infrastructure module
             result3 = subprocess.run([
-                sys.executable, "-m", "infrastructure.validation.validate_markdown_cli",
+                sys.executable, str(cli_script),
                 str(project_dir / "manuscript")
-            ], cwd=str(test_root), capture_output=True, text=True,
-            env={**os.environ, "PYTHONPATH": str(test_root)})
+            ], cwd=str(project_dir), capture_output=True, text=True,
+            env={**os.environ, "PYTHONPATH": str(repo_root)})
             assert result3.returncode == 0 or "validation" in result3.stdout.lower()
 
             # Run glossary generation using infrastructure module
             result4 = subprocess.run([
-                sys.executable, "-m", "infrastructure.documentation.generate_glossary_cli",
+                sys.executable, str(glossary_script),
                 str(project_dir / "src"), str(project_dir / "manuscript" / "98_symbols_glossary.md")
-            ], cwd=str(test_root), capture_output=True, text=True,
-            env={**os.environ, "PYTHONPATH": str(test_root)})
+            ], cwd=str(project_dir), capture_output=True, text=True,
+            env={**os.environ, "PYTHONPATH": str(repo_root)})
             assert result4.returncode == 0 or "Generated" in result4.stdout
 
         # Verify that data files are identical across runs
@@ -374,6 +390,8 @@ x^2 + y^2 = z^2
         infrastructure_src = repo_root / "infrastructure"
         if infrastructure_src.exists():
             shutil.copytree(infrastructure_src, test_root / "infrastructure")
+
+        test_repo_root, cli_script, glossary_script = _get_infrastructure_paths()
 
         # Create minimal structure without full src/
         (test_root / "src").mkdir()
@@ -420,10 +438,10 @@ x^2 + y^2 = z^2
 
         # Run validation using infrastructure module - should detect missing images
         result = subprocess.run([
-            sys.executable, "-m", "infrastructure.validation.validate_markdown_cli",
+            sys.executable, str(cli_script),
             str(test_root / "manuscript")
         ], cwd=str(test_root), capture_output=True, text=True,
-        env={**os.environ, "PYTHONPATH": str(test_root)})
+        env={**os.environ, "PYTHONPATH": str(test_repo_root)})
 
         # Should handle missing dependencies gracefully (validation still runs)
         # Either it passes with issues reported, or fails with validation errors
@@ -433,6 +451,7 @@ x^2 + y^2 = z^2
         """Test that different components properly integrate with each other."""
         test_root = _setup_test_project_structure(tmp_path, "cross_integration")
         project_dir = test_root / "project"
+        repo_root, cli_script, glossary_script = _get_infrastructure_paths()
 
         # Create markdown that references outputs from multiple scripts
         (project_dir / "manuscript" / "01_integration_test.md").write_text(r"""
@@ -481,18 +500,18 @@ This demonstrates that all components work together properly.
 
         # Run validation using infrastructure module
         result3 = subprocess.run([
-            sys.executable, "-m", "infrastructure.validation.validate_markdown_cli",
+            sys.executable, str(cli_script),
             str(project_dir / "manuscript")
-        ], cwd=str(test_root), capture_output=True, text=True,
-        env={**os.environ, "PYTHONPATH": str(test_root)})
+        ], cwd=str(project_dir), capture_output=True, text=True,
+        env={**os.environ, "PYTHONPATH": str(repo_root)})
         assert result3.returncode == 0 or "validation" in result3.stdout.lower()
 
         # Run glossary generation using infrastructure module
         result4 = subprocess.run([
-            sys.executable, "-m", "infrastructure.documentation.generate_glossary_cli",
+            sys.executable, str(glossary_script),
             str(project_dir / "src"), str(project_dir / "manuscript" / "98_symbols_glossary.md")
-        ], cwd=str(test_root), capture_output=True, text=True,
-        env={**os.environ, "PYTHONPATH": str(test_root)})
+        ], cwd=str(project_dir), capture_output=True, text=True,
+        env={**os.environ, "PYTHONPATH": str(repo_root)})
         assert result4.returncode == 0 or "Generated" in result4.stdout
 
         # Verify all outputs exist
@@ -519,6 +538,7 @@ This demonstrates that all components work together properly.
         """Test pipeline performance with larger datasets."""
         test_root = _setup_test_project_structure(tmp_path, "performance_test")
         project_dir = test_root / "project"
+        repo_root, cli_script, glossary_script = _get_infrastructure_paths()
 
         # Create larger markdown files to test scalability
         large_content = ""
@@ -549,9 +569,9 @@ Reference to equation \eqref{{eq:section_{i}}}.
 
         # Run validation (should handle large files) using infrastructure module
         result2 = subprocess.run([
-            sys.executable, "-m", "infrastructure.validation.validate_markdown_cli",
+            sys.executable, str(cli_script),
             str(project_dir / "manuscript")
-        ], cwd=str(test_root), capture_output=True, text=True, timeout=60,
+        ], cwd=str(project_dir), capture_output=True, text=True, timeout=60,
         env={**os.environ, "PYTHONPATH": str(test_root)})
 
         # Should complete successfully
@@ -559,10 +579,10 @@ Reference to equation \eqref{{eq:section_{i}}}.
 
         # Run glossary generation using infrastructure module
         result3 = subprocess.run([
-            sys.executable, "-m", "infrastructure.documentation.generate_glossary_cli",
+            sys.executable, str(glossary_script),
             str(project_dir / "src"), str(project_dir / "manuscript" / "98_symbols_glossary.md")
-        ], cwd=str(test_root), capture_output=True, text=True, timeout=60,
-        env={**os.environ, "PYTHONPATH": str(test_root)})
+        ], cwd=str(project_dir), capture_output=True, text=True, timeout=60,
+        env={**os.environ, "PYTHONPATH": str(repo_root)})
 
         assert result3.returncode == 0 or "Generated" in result3.stdout
 

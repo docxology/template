@@ -2,7 +2,7 @@
 
 > **Git workflows and best practices** for the Research Project Template
 
-**Quick Reference:** [Contributing](../development/CONTRIBUTING.md) | [Workflow](WORKFLOW.md) | [Best Practices](../best-practices/BEST_PRACTICES.md)
+**Quick Reference:** [Contributing](../development/CONTRIBUTING.md) | [Workflow](../core/WORKFLOW.md) | [Best Practices](../best-practices/BEST_PRACTICES.md)
 
 This guide provides comprehensive best practices for using Git version control with the Research Project Template, including workflows, branching strategies, commit guidelines, and collaboration patterns.
 
@@ -529,14 +529,14 @@ Version control best practices:
 
 For more information, see:
 - [Contributing Guide](../development/CONTRIBUTING.md) - Contribution workflow
-- [Workflow](WORKFLOW.md) - Development process
+- [Workflow](../core/WORKFLOW.md) - Development process
 - [Best Practices](../best-practices/BEST_PRACTICES.md) - General best practices
 
 ---
 
 **Related Documentation:**
 - [Contributing](../development/CONTRIBUTING.md) - Contribution process
-- [Workflow](WORKFLOW.md) - Development workflow
+- [Workflow](../core/WORKFLOW.md) - Development workflow
 - [Best Practices](../best-practices/BEST_PRACTICES.md) - Code quality practices
 
 

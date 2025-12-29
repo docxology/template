@@ -131,51 +131,41 @@ def discover_manuscript_files(manuscript_dir: Path) -> List[Path]:
     # References must always be last
     ordered_files = main_sections + supplemental + glossary + other + references
     
-    # Log discovery with details
+    # Log discovery with full details - ALWAYS show filenames
     logger.info(f"Discovered {len(ordered_files)} manuscript file(s):")
-    logger.info(f"  Main sections: {len(main_sections)}")
+
     if main_sections:
+        logger.info(f"  Main sections ({len(main_sections)}):")
         for f in main_sections:
-            logger.info(f"    - {f.name}")
-    
+            logger.info(f"    • {f.name}")
+
     if supplemental:
-        logger.info(f"  Supplemental: {len(supplemental)}")
+        logger.info(f"  Supplemental ({len(supplemental)}):")
         for f in supplemental:
-            logger.info(f"    - {f.name}")
-    
+            logger.info(f"    • {f.name}")
+
     if glossary:
-        logger.info(f"  Glossary: {len(glossary)}")
+        logger.info(f"  Glossary ({len(glossary)}):")
         for f in glossary:
-            logger.info(f"    - {f.name}")
-    
+            logger.info(f"    • {f.name}")
+
     if references:
-        logger.info(f"  References: {len(references)}")
+        logger.info(f"  References ({len(references)}):")
         for f in references:
-            logger.info(f"    - {f.name}")
-    
-    # Validate expected structure
-    expected_main = {"01_abstract.md", "02_introduction.md", "03_methodology.md", 
-                     "04_experimental_results.md", "05_discussion.md", "06_conclusion.md",
-                     "08_acknowledgments.md", "09_appendix.md"}
-    found_main = {f.name for f in main_sections}
-    missing_main = expected_main - found_main
-    
-    if missing_main:
-        logger.warning(f"  ⚠️  Missing expected main sections: {', '.join(sorted(missing_main))}")
-    
-    # Verify references is last
-    if ordered_files and references:
-        last_ref = ordered_files[-1]
-        if last_ref not in references:
-            logger.warning("  ⚠️  References section is not at the end of the document")
-    elif ordered_files and not references:
-        logger.warning("  ⚠️  No references section found (99_references.md)")
-    
-    # Also find LaTeX files for direct compilation
+            logger.info(f"    • {f.name}")
+
+    if other:
+        logger.info(f"  Other ({len(other)}):")
+        for f in other:
+            logger.info(f"    • {f.name}")
+
+    # Find LaTeX files for direct compilation
     tex_files = sorted(manuscript_dir.glob("*.tex"))
     if tex_files:
-        logger.info(f"  LaTeX files: {len(tex_files)}")
-    
+        logger.info(f"  LaTeX files ({len(tex_files)}):")
+        for f in tex_files:
+            logger.info(f"    • {f.name}")
+
     return ordered_files + tex_files
 
 

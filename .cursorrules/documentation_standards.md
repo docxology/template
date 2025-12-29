@@ -524,14 +524,14 @@ Before committing documentation:
 ### Good AGENTS.md References
 
 - [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) - Complete module docs
-- [project/src/AGENTS.md](../project/src/AGENTS.md) - Project code docs
+- [project/src/AGENTS.md](../projects/project/src/AGENTS.md) - Project code docs
 - [tests/AGENTS.md](../tests/AGENTS.md) - Test framework docs
 
 ### Good README.md References
 
 - [infrastructure/README.md](../infrastructure/README.md) - Quick patterns
 - [scripts/README.md](../scripts/README.md) - Quick commands
-- [project/README.md](../project/README.md) - Project quick start
+- [project/README.md](../projects/project/README.md) - Project quick start
 
 ## See Also
 
@@ -540,7 +540,7 @@ Before committing documentation:
 - [../docs/DOCUMENTATION_INDEX.md](../docs/DOCUMENTATION_INDEX.md) - Complete documentation index
 - [../docs/AGENTS.md](../docs/AGENTS.md) - Main project documentation
 - [../AGENTS.md](../AGENTS.md) - Root documentation
-- [../docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) - System architecture
+- [../docs/core/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) - System architecture
 
 
 

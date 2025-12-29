@@ -37,7 +37,172 @@ logger.debug("Variable value: {value}")
 
 ### Shell Scripts
 
-For shell scripts, use the `run.sh` orchestrator which includes integrated logging, or call Python scripts that use the logging system above.
+The template includes comprehensive bash script logging through `scripts/bash_utils.sh` and the `run.sh` orchestrator. Bash scripts use structured logging functions for consistent output and error handling.
+
+#### Basic Logging Functions
+
+```bash
+# Source the logging utilities
+source scripts/bash_utils.sh
+
+# Basic logging functions
+log_success "Operation completed successfully"
+log_error "An error occurred"
+log_info "General information"
+log_warning "Warning about potential issue"
+
+# Example output:
+# ✓ Operation completed successfully
+# ✗ An error occurred
+#   General information
+# ⚠ Warning about potential issue
+```
+
+#### Structured Logging with Context
+
+```bash
+# Log with timestamp and context
+log_with_context "INFO" "Processing started" "pipeline-stage-1"
+log_with_context "ERROR" "File not found" "file-loader"
+
+# Example output:
+# [2025-12-28 13:48:33] [INFO] [pipeline-stage-1] Processing started
+# [2025-12-28 13:48:33] [ERROR] [file-loader] File not found
+```
+
+#### Error Context and Troubleshooting
+
+```bash
+# Log errors with context and troubleshooting steps
+log_error_with_context "Configuration file missing"
+
+# Or with custom context
+log_error_with_context "Database connection failed" "db-connection"
+
+# Structured pipeline error logging
+log_pipeline_error "PDF Rendering" "LaTeX compilation failed" 1 \
+    "Check LaTeX installation: which xelatex" \
+    "Verify manuscript files: ls project/manuscript/*.md" \
+    "Check figure paths: ls projects/project/output/figures/"
+```
+
+#### Resource Usage Logging
+
+```bash
+# Log stage completion with timing
+log_resource_usage "Setup Environment" 45
+log_resource_usage "PDF Rendering" 125 "memory: 2.1GB"
+
+# Example output:
+# Stage 'Setup Environment' completed in 45s
+# Stage 'PDF Rendering' completed in 2m 5s (memory: 2.1GB)
+```
+
+#### Pipeline Progress Logging
+
+```bash
+# Enhanced stage logging with ETA and resource monitoring
+log_stage_progress 2 "Project Tests" 9 "$pipeline_start" "$stage_start"
+
+# Shows progress percentage, elapsed time, and ETA
+# [2/9] Project Tests (22% complete)
+#   Elapsed: 1m 30s | ETA: 5m 45s
+#   Stage elapsed: 45s
+```
+
+#### File Logging
+
+Bash scripts automatically log to files when `PIPELINE_LOG_FILE` is set:
+
+```bash
+# Enable file logging
+export PIPELINE_LOG_FILE="output/logs/pipeline.log"
+
+# All logging functions write to both terminal and file
+# ANSI color codes are automatically stripped for log files
+log_info "This appears in both terminal and log file"
+```
+
+#### Error Handling Patterns
+
+```bash
+# Standard error handling with troubleshooting
+if ! python3 scripts/03_render_pdf.py; then
+    log_pipeline_error "PDF Rendering" "PDF generation failed" $? \
+        "Check LaTeX installation" \
+        "Verify manuscript files exist" \
+        "Check figure references"
+    return 1
+fi
+
+# Success logging with resource tracking
+local stage_end=$(date +%s)
+local duration=$((stage_end - stage_start))
+log_resource_usage "PDF Rendering" "$duration"
+```
+
+#### Log File Format
+
+Pipeline logs include comprehensive information:
+
+```
+===========================================================
+  COMPLETE RESEARCH PROJECT PIPELINE
+===========================================================
+
+Repository: /Users/user/research-project
+Python: Python 3.13.11
+Log file: output/logs/pipeline_20251228_134833.log
+Pipeline started: Sat Dec 28 13:48:33 PST 2025
+
+[1/9] Setup Environment (11% complete)
+  Elapsed: 0m 5s | ETA: 0m 40s
+✓ Environment setup complete
+
+[2/9] Infrastructure Tests (22% complete)
+  Elapsed: 0m 25s | ETA: 1m 25s
+✓ Infrastructure tests passed
+
+[... continues for all stages ...]
+
+Pipeline completed successfully
+Total duration: 5m 42s
+```
+
+#### Testing Bash Script Logging
+
+Bash script logging is tested in `tests/integration/test_logging.py` and `tests/integration/test_bash_utils.sh`:
+
+```bash
+# Run bash logging tests
+bash tests/integration/test_bash_utils.sh
+
+# Run Python logging integration tests
+python -m pytest tests/integration/test_logging.py -v
+```
+
+#### Best Practices
+
+**Use Appropriate Log Levels:**
+- `log_success`: Successful operations
+- `log_info`: General progress information
+- `log_warning`: Non-critical issues
+- `log_error`: Failures requiring attention
+
+**Include Context:**
+- Use `log_with_context` for operations with specific context
+- Include function names and line numbers in errors
+- Add troubleshooting steps for common failures
+
+**Resource Monitoring:**
+- Use `log_resource_usage` for long-running operations
+- Include relevant metrics (memory, time, etc.)
+- Enable automatic resource tracking in pipelines
+
+**Error Recovery:**
+- Use `log_pipeline_error` for structured error reporting
+- Provide actionable troubleshooting steps
+- Include relevant file paths and commands
 
 ## Python Logging System
 

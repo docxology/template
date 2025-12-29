@@ -44,21 +44,85 @@ Dependencies are defined in `pyproject.toml`:
 ```toml
 [project]
 name = "research-project-template"
-version = "0.1.0"
+version = "2.0.0"
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.22",
     "matplotlib>=3.7",
     "pypdf>=5.0",
-    "reportlab>=4.0",
+    "pyyaml>=6.0",
 ]
 
-[project.optional-dependencies]
+[project.scripts]
+# Development workflow scripts (run with: uv run <script-name>)
+test = "pytest tests/ --cov=infrastructure --cov=projects/project/src --cov-report=html"
+test-infra = "pytest tests/infrastructure/ --cov=infrastructure --cov-report=html"
+test-project = "pytest projects/project/tests/ --cov=projects/project/src --cov-report=html"
+
+[dependency-groups]
+# Development dependencies
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
+    "mypy>=1.17.1",
+]
+
+[tool.uv]
+# uv-specific configuration
+managed = true  # Use uv's virtual environment management
+package = false  # This is not a distributable package
+
+[tool.uv.workspace]
+# Workspace configuration for multi-project support
+members = [
+    "projects/project",
+    "projects/small_prose_project",
+    "projects/small_code_project"
 ]
 ```
+
+### Using uv with Scripts
+
+The template provides convenient scripts via `[project.scripts]` that can be run with `uv run`:
+
+```bash
+# Run test suite
+uv run test
+
+# Run infrastructure tests only
+uv run test-infra
+
+# Run project tests only
+uv run test-project
+
+# Run type checking
+uv run type-check
+
+# Run security checks
+uv run security
+```
+
+Alternatively, execute Python scripts directly with `uv run python`:
+
+```bash
+# Run pipeline scripts
+uv run python scripts/00_setup_environment.py
+uv run python scripts/01_run_tests.py
+uv run python scripts/02_run_analysis.py
+uv run python scripts/03_render_pdf.py
+
+# Scripts automatically use uv if available, fall back to python3 if not
+```
+
+### Automatic Fallback
+
+All Python scripts in the template automatically detect uv availability and fall back to `python3` if uv is not installed:
+
+- **With uv**: Scripts use `uv run python` for consistent environments
+- **Without uv**: Scripts use `python3` directly
+- No configuration required - fallback is automatic
+
+This ensures the template works in all environments.
 
 ### Lock File
 
@@ -472,19 +536,94 @@ uv sync
 uv run python -c "import numpy; print(numpy.__version__)"
 ```
 
+## Workspace Management
+
+The template now supports uv workspaces for multi-project dependency management. This enables unified dependency management across multiple research projects.
+
+### Workspace Configuration
+
+The root `pyproject.toml` defines the workspace:
+
+```toml
+[tool.uv.workspace]
+members = [
+    "projects/project",
+    "projects/small_prose_project",
+    "projects/small_code_project"
+]
+exclude = [
+    "projects/*/output",
+    "output"
+]
+```
+
+### Workspace Commands
+
+#### Sync Workspace Dependencies
+```bash
+# Sync all workspace dependencies
+uv sync
+
+# Or use the workspace management script
+uv run python scripts/manage_workspace.py sync
+```
+
+#### Add Dependencies to Projects
+```bash
+# Add dependency to specific project
+uv run python scripts/manage_workspace.py add numpy --project project
+
+# Or manually change to project directory
+cd projects/project
+uv add scipy
+```
+
+#### Update Workspace Dependencies
+```bash
+# Update all workspace dependencies
+uv run python scripts/manage_workspace.py update
+```
+
+#### Show Workspace Status
+```bash
+# Show workspace configuration and status
+uv run python scripts/manage_workspace.py status
+
+# Show dependency tree
+uv run python scripts/manage_workspace.py tree
+```
+
+### Workspace Benefits
+
+- **Unified Dependencies**: Shared dependencies managed centrally
+- **Faster Resolution**: Single resolution pass for all projects
+- **Consistent Environments**: All projects use same dependency versions
+- **Simplified CI/CD**: Single sync command for entire workspace
+
+### Workspace vs Project Dependencies
+
+| Aspect | Workspace Root | Project-Specific |
+|--------|---------------|------------------|
+| **Scope** | All projects | Single project |
+| **Use Case** | Shared tools (pytest, numpy) | Project-specific packages |
+| **Management** | `uv sync` | `uv add` in project dir |
+| **CI/CD** | Always synced | Synced per project |
+
 ## Summary
 
-The `uv` package manager provides fast and reliable dependency management:
+The `uv` package manager provides fast and reliable dependency management with workspace support for multi-project templates:
 
 - **Fast resolution** - Quick dependency solving
 - **Lock file** - Reproducible builds
 - **Python management** - Version handling
+- **Workspace support** - Multi-project dependency management
 - **Integration** - Works with existing tools
 
 For more information, see:
 - [uv Documentation](https://docs.astral.sh/uv/)
 - [Common Workflows](../reference/COMMON_WORKFLOWS.md)
 - [Troubleshooting Guide](../operational/TROUBLESHOOTING_GUIDE.md)
+- [Workspace Management Script](../../scripts/manage_workspace.py)
 
 ---
 

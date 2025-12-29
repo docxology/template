@@ -382,7 +382,7 @@ def test_error_logging(caplog):
 
 ## See Also
 
-- [Logging Guide](../docs/LOGGING_GUIDE.md) - Comprehensive logging documentation
+- [Logging Guide](../docs/operational/LOGGING_GUIDE.md) - Comprehensive logging documentation
 - [Error Handling](error_handling.md) - Error handling patterns
 - [testing_standards.md](testing_standards.md) - Testing logging
 - [documentation_standards.md](documentation_standards.md) - Documenting logging

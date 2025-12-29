@@ -15,8 +15,10 @@ provides an interactive menu with options 1 (infrastructure) and 2 (project).
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 from typing import Tuple
 
@@ -25,6 +27,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from infrastructure.core.logging_utils import (
     get_logger, log_success, log_header, log_substep
+)
+from infrastructure.core.logging_progress import (
+    log_with_spinner, StreamingProgress
 )
 from infrastructure.core.config_loader import get_testing_config
 from infrastructure.reporting.test_reporter import (
@@ -39,7 +44,7 @@ logger = get_logger(__name__)
 
 def _run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) -> Tuple[int, str, str]:
     """Run pytest streaming output to console while capturing logs for reporting."""
-    keywords = ['passed', 'failed', 'skipped', 'warnings', 'ERROR', 'FAILED', 'PASSED', 'coverage']
+    keywords = ['passed', 'failed', 'skipped', 'warnings', 'ERROR', 'FAILED', 'PASSED', 'coverage', '=']
     stdout_buf: list[str] = []
 
     process = subprocess.Popen(
@@ -53,13 +58,25 @@ def _run_pytest_stream(cmd: list[str], repo_root: Path, env: dict, quiet: bool) 
     )
 
     assert process.stdout is not None
+    recent_lines = []  # Keep track of recent lines for summary detection
     for line in process.stdout:
         stdout_buf.append(line)
+        recent_lines.append(line)
+        if len(recent_lines) > 10:  # Keep only last 10 lines
+            recent_lines.pop(0)
+
         if not quiet:
             print(line, end='')
         else:
-            if any(k in line for k in keywords):
+            # Always print summary lines (pytest final summary with ===) and lines with keywords
+            if any(k in line for k in keywords) or line.count('=') >= 10:
                 print(line, end='')
+
+    # After process completes, ensure the final summary is captured
+    # Check the last few lines for summary information
+    for line in recent_lines[-3:]:  # Check last 3 lines
+        if ('passed' in line or 'failed' in line or 'skipped' in line) and not any(k in line for k in keywords):
+            print(line, end='')
 
     process.wait()
     return process.returncode, "".join(stdout_buf), ""
@@ -128,7 +145,7 @@ def check_test_failures(
         return True, f"{test_suite}: {failed_count} failure(s) exceeds tolerance (max: {max_failures})"
 
 
-def run_infrastructure_tests(repo_root: Path, project_name: str = "project", quiet: bool = True) -> tuple[int, dict]:
+def run_infrastructure_tests(repo_root: Path, project_name: str = "project", quiet: bool = True, include_slow: bool = False) -> tuple[int, dict]:
     """Execute infrastructure test suite with coverage.
 
     Args:
@@ -139,18 +156,28 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
     Returns:
         Tuple of (exit_code, test_results_dict)
     """
+    start_time = time.time()
     project_root = repo_root / "projects" / project_name
     log_substep("Running infrastructure tests (60% coverage threshold)...")
     log_substep("(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)")
-    
-    # Build pytest command for infrastructure tests
+    logger.info(f"Infrastructure tests started at {time.strftime('%H:%M:%S', time.localtime(start_time))}")
+
+    # Log test discovery and configuration
+    test_path = repo_root / "tests" / "infrastructure"
+    logger.info(f"Test path: {test_path}")
+    logger.info(f"Coverage target: infrastructure (60% minimum)")
+    logger.info(f"Filters applied: -m 'not requires_ollama', exclude integration tests")
+
+    # Build pytest command for infrastructure tests using uv run pytest
     # Skip requires_ollama tests - they are slow and require external Ollama service
+    # Include infrastructure tests and integration tests (excluding network-dependent ones)
     # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
     cmd = [
-        sys.executable,
-        "-m",
+        "uv",
+        "run",
         "pytest",
         str(repo_root / "tests" / "infrastructure"),
+        str(repo_root / "tests" / "integration"),
         # test_coverage_completion.py removed - coverage completion is now handled by test runners
         "--ignore=" + str(repo_root / "tests" / "integration" / "test_module_interoperability.py"),
         "-m", "not requires_ollama",
@@ -161,28 +188,93 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
         "--cov-fail-under=60",
         "--tb=short",
     ]
-    
+
+    # Add slow test filtering unless explicitly requested
+    if not include_slow:
+        cmd.extend(["-m", "not slow"])
+
     # Add verbosity based on quiet mode
-    if quiet:
-        cmd.append("-q")  # Quiet mode - only show summary
-    else:
-        cmd.append("-v")  # Verbose - show all test names
-    
+    # Infrastructure tests run in quiet mode to avoid overwhelming output
+    # but with enhanced keyword filtering to capture summary
+    cmd.append("-q")  # Quiet mode - only show summary
+
+    # Set up environment with correct Python paths (needed for discovery and execution)
+    env = os.environ.copy()
+    pythonpath = os.pathsep.join([
+        str(repo_root),
+        str(repo_root / "infrastructure"),
+        str(project_root / "src"),
+    ])
+    env["PYTHONPATH"] = pythonpath
+
+    # Ensure uv is in PATH if available
+    import shutil
+    if shutil.which("uv"):
+        uv_path = os.path.dirname(shutil.which("uv"))
+        env["PATH"] = f"{uv_path}:{env.get('PATH', '')}"
+
+    # Phase 1: Test discovery - collect test count before execution
+    discovery_start = time.time()
+    discovery_cmd = cmd.copy()
+    discovery_cmd.insert(-1, "--collect-only")  # Insert before verbosity flag
+
+    log_substep("Discovering infrastructure tests...")
     try:
-        # Set up environment with correct Python paths
-        env = os.environ.copy()
-        pythonpath = os.pathsep.join([
-            str(repo_root),
-            str(repo_root / "infrastructure"),
-            str(project_root / "src"),
-        ])
-        env["PYTHONPATH"] = pythonpath
-        
-        exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, repo_root, env, quiet)
-        
+        discovery_result = subprocess.run(
+            discovery_cmd,
+            cwd=str(repo_root),
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30  # 30 second timeout for discovery
+        )
+
+        # Parse test count from discovery output
+        test_count_match = re.search(r'(\d+)\s+tests?\s+collected', discovery_result.stdout)
+        if test_count_match:
+            test_count = int(test_count_match.group(1))
+            discovery_time = time.time() - discovery_start
+            log_success(f"Discovered {test_count} infrastructure tests in {discovery_time:.1f}s")
+        else:
+            logger.warning("Could not parse test count from infrastructure test discovery")
+
+    except (subprocess.TimeoutExpired, subprocess.SubprocessError) as e:
+        logger.warning(f"Infrastructure test discovery failed: {e}")
+
+    try:
+        log_substep("Executing infrastructure tests...")
+
+        # Phase 2: Test execution
+        execution_start = time.time()
+        logger.info("Phase 2: Executing infrastructure tests...")
+        with log_with_spinner("Running infrastructure tests", logger):
+            exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, repo_root, env, quiet)
+        execution_time = time.time() - execution_start
+        logger.info(f"✓ Infrastructure test execution completed in {execution_time:.1f}s")
+
+        # Debug: Check if we captured the summary
+        if 'passed' in stdout_text.lower():
+            logger.info(f"✓ Captured test summary in stdout")
+            # Check for coverage
+            coverage_match = re.search(r'(\d+\.\d+)%', stdout_text)
+            if coverage_match:
+                logger.info(f"✓ Found coverage: {coverage_match.group(1)}%")
+            else:
+                logger.warning(f"✗ No coverage percentage found in stdout")
+                # Show lines that might contain coverage
+                coverage_lines = [line for line in stdout_text.split('\n') if '%' in line]
+                if coverage_lines:
+                    logger.info(f"Lines with %: {coverage_lines[:3]}")
+        else:
+            logger.warning(f"✗ No test summary found in stdout (length: {len(stdout_text)})")
+
+        # Phase 3: Result parsing and validation
+        logger.info("Phase 3: Parsing test results and validating coverage...")
+        parse_start = time.time()
+
         # Parse test results from output
         test_results = parse_pytest_output(stdout_text, stderr_text, exit_code)
-        
+
         # Check for warnings in output
         warning_count = stdout_text.count(" warning") + stderr_text.count(" warning")
         if warning_count > 0:
@@ -193,7 +285,13 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
         should_halt, message = check_test_failures(
             failed_count, "Infrastructure", repo_root, "MAX_INFRA_TEST_FAILURES", "max_infra_test_failures"
         )
-        
+
+        parse_time = time.time() - parse_start
+        logger.info(f"✓ Test result parsing completed in {parse_time:.1f}s")
+
+        duration = time.time() - start_time
+        logger.info(f"✓ Infrastructure test suite completed in {duration:.1f}s")
+
         if exit_code == 0:
             log_success("Infrastructure tests passed", logger)
         elif should_halt:
@@ -202,36 +300,44 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
             logger.warning(message)
             # Return 0 if within tolerance to allow pipeline to continue
             exit_code = 0
-        
+
         return exit_code, test_results
     except Exception as e:
-        logger.error(f"Failed to run infrastructure tests: {e}", exc_info=True)
+        duration = time.time() - start_time
+        logger.error(f"Failed to run infrastructure tests after {duration:.1f}s: {e}", exc_info=True)
         return 1, {}
 
 
-def run_project_tests(repo_root: Path, project_name: str = "project", quiet: bool = True) -> tuple[int, dict]:
+def run_project_tests(repo_root: Path, project_name: str = "project", quiet: bool = True, include_slow: bool = False) -> tuple[int, dict]:
     """Execute project test suite with coverage.
-    
+
     Args:
         repo_root: Repository root path
         project_name: Name of project in projects/ directory (default: "project")
         quiet: If True, suppress individual test names (show only summary)
-        
+
     Returns:
         Tuple of (exit_code, test_results_dict)
     """
+    start_time = time.time()
     log_substep(f"Running project tests for '{project_name}' (90% coverage threshold)...")
-    
+    logger.info(f"Project tests started at {time.strftime('%H:%M:%S', time.localtime(start_time))}")
+
     project_root = repo_root / "projects" / project_name
-    
-    # Build pytest command for project tests
+
+    # Log test discovery and configuration
+    test_path = project_root / "tests"
+    logger.info(f"Test path: {test_path}")
+    logger.info(f"Coverage target: projects/{project_name}/src (90% minimum)")
+    logger.info(f"Filters applied: exclude integration tests")
+
+    # Build pytest command for project tests using uv run pytest
     # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
     cmd = [
-        sys.executable,
-        "-m",
+        "uv",
+        "run",
         "pytest",
         str(project_root / "tests"),
-        "--ignore=" + str(project_root / "tests" / "integration"),
         f"--cov=projects/{project_name}/src",
         "--cov-report=term-missing",
         "--cov-report=html",
@@ -239,39 +345,94 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
         "--cov-fail-under=90",
         "--tb=short",
     ]
-    
+
+    # Add slow test filtering unless explicitly requested
+    if not include_slow:
+        cmd.extend(["-m", "not slow"])
+
     # Add verbosity based on quiet mode
-    if quiet:
-        cmd.append("-q")  # Quiet mode - only show summary
-    else:
-        cmd.append("-v")  # Verbose - show all test names
-    
+    # Infrastructure tests run in quiet mode to avoid overwhelming output
+    # but with enhanced keyword filtering to capture summary
+    cmd.append("-q")  # Quiet mode - only show summary
+
+    # Set up environment with correct Python paths (needed for discovery and execution)
+    env = os.environ.copy()
+    pythonpath = os.pathsep.join([
+        str(repo_root),
+        str(repo_root / "infrastructure"),
+        str(project_root / "src"),
+    ])
+    env["PYTHONPATH"] = pythonpath
+
+    # Ensure uv is in PATH if available
+    import shutil
+    if shutil.which("uv"):
+        uv_path = os.path.dirname(shutil.which("uv"))
+        env["PATH"] = f"{uv_path}:{env.get('PATH', '')}"
+
+    # Phase 1: Test discovery - collect test count before execution
+    discovery_start = time.time()
+    discovery_cmd = cmd.copy()
+    discovery_cmd.insert(-1, "--collect-only")  # Insert before verbosity flag
+
+    log_substep(f"Discovering project tests for '{project_name}'...")
     try:
-        # Set up environment with correct Python paths
-        env = os.environ.copy()
-        pythonpath = os.pathsep.join([
-            str(repo_root),
-            str(repo_root / "infrastructure"),
-            str(project_root / "src"),
-        ])
-        env["PYTHONPATH"] = pythonpath
-        
-        exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, repo_root, env, quiet)
-        
+        discovery_result = subprocess.run(
+            discovery_cmd,
+            cwd=str(repo_root),
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=30  # 30 second timeout for discovery
+        )
+
+        # Parse test count from discovery output
+        test_count_match = re.search(r'(\d+)\s+tests?\s+collected', discovery_result.stdout)
+        if test_count_match:
+            test_count = int(test_count_match.group(1))
+            discovery_time = time.time() - discovery_start
+            log_success(f"Discovered {test_count} project tests for '{project_name}' in {discovery_time:.1f}s")
+        else:
+            logger.warning(f"Could not parse test count from project test discovery for '{project_name}'")
+
+    except (subprocess.TimeoutExpired, subprocess.SubprocessError) as e:
+        logger.warning(f"Project test discovery failed for '{project_name}': {e}")
+
+    try:
+        log_substep(f"Executing project tests for '{project_name}'...")
+
+        # Phase 2: Test execution
+        execution_start = time.time()
+        logger.info(f"Phase 2: Executing project tests for '{project_name}'...")
+        with log_with_spinner(f"Running project tests for '{project_name}'", logger):
+            exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, repo_root, env, quiet)
+        execution_time = time.time() - execution_start
+        logger.info(f"✓ Project test execution completed in {execution_time:.1f}s")
+
+        # Phase 3: Result parsing and validation
+        logger.info(f"Phase 3: Parsing project test results and validating coverage...")
+        parse_start = time.time()
+
         # Parse test results from output
         test_results = parse_pytest_output(stdout_text, stderr_text, exit_code)
-        
+
         # Check for warnings in output
         warning_count = stdout_text.count(" warning") + stderr_text.count(" warning")
         if warning_count > 0:
             logger.warning(f"Project tests completed with {warning_count} warning(s)")
-        
+
         # Check if failures are within tolerance
         failed_count = test_results.get('failed', 0)
         should_halt, message = check_test_failures(
             failed_count, "Project", repo_root, "MAX_PROJECT_TEST_FAILURES", "max_project_test_failures"
         )
-        
+
+        parse_time = time.time() - parse_start
+        logger.info(f"✓ Project test result parsing completed in {parse_time:.1f}s")
+
+        duration = time.time() - start_time
+        logger.info(f"✓ Project test suite completed in {duration:.1f}s")
+
         if exit_code == 0:
             log_success("Project tests passed", logger)
         elif should_halt:
@@ -280,10 +441,11 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
             logger.warning(message)
             # Return 0 if within tolerance to allow pipeline to continue
             exit_code = 0
-        
+
         return exit_code, test_results
     except Exception as e:
-        logger.error(f"Failed to run project tests: {e}", exc_info=True)
+        duration = time.time() - start_time
+        logger.error(f"Failed to run project tests after {duration:.1f}s: {e}", exc_info=True)
         return 1, {}
 
 
@@ -293,51 +455,130 @@ def report_results(
     infra_exit: int,
     project_exit: int,
     infra_results: dict,
-    project_results: dict
+    project_results: dict,
+    report: dict
 ) -> None:
-    """Report test execution results.
-    
+    """Report comprehensive test execution results with detailed breakdowns.
+
     Args:
         infra_exit: Infrastructure test exit code
         project_exit: Project test exit code
         infra_results: Infrastructure test results
         project_results: Project test results
+        report: Complete test report with detailed metrics
     """
+    def format_coverage_status(coverage_pct: float, threshold: float) -> str:
+        """Format coverage with visual indicators."""
+        if coverage_pct >= threshold:
+            return f"✓ {coverage_pct:.1f}% (exceeds {threshold}% threshold)"
+        elif coverage_pct >= threshold * 0.8:  # 80% of threshold
+            return f"⚠ {coverage_pct:.1f}% (below {threshold}% threshold)"
+        else:
+            return f"✗ {coverage_pct:.1f}% (below {threshold}% threshold)"
+
+    def format_duration(seconds: float) -> str:
+        """Format duration in human-readable format."""
+        if seconds < 60:
+            return f"{seconds:.1f}s"
+        else:
+            minutes = int(seconds // 60)
+            remaining_seconds = seconds % 60
+            return f"{minutes}m {remaining_seconds:.1f}s"
+
     log_header("Test Execution Summary", logger)
-    
+
     # Infrastructure summary
+    print()  # Add spacing
     if infra_exit == 0:
         passed = infra_results.get('passed', 0)
+        failed = infra_results.get('failed', 0)
+        skipped = infra_results.get('skipped', 0)
         total = infra_results.get('total', 0)
         coverage = infra_results.get('coverage_percent', 0)
-        log_success(
-            f"Infrastructure tests: PASSED ({passed}/{total} tests, {coverage:.1f}% coverage)",
-            logger
-        )
+
+        print("Infrastructure Results:")
+        print(f"  ✓ Passed: {passed}")
+        if skipped > 0:
+            print(f"  ⚠ Skipped: {skipped}")
+        print(f"  📊 Coverage: {format_coverage_status(coverage, 60.0)}")
+
+        # Show execution phases if available
+        phases = infra_results.get('execution_phases', {})
+        if phases:
+            total_exec_time = sum(phases.values())
+            print(f"  ⏱ Duration: {format_duration(total_exec_time)}")
     else:
         failed = infra_results.get('failed', 0)
-        logger.error(f"Infrastructure tests: FAILED ({failed} test(s) failed)")
-    
+        print("Infrastructure Results:")
+        print(f"  ✗ Failed: {failed} test(s) failed")
+
     # Project summary
+    print()  # Add spacing
     if project_exit == 0:
         passed = project_results.get('passed', 0)
+        failed = project_results.get('failed', 0)
+        skipped = project_results.get('skipped', 0)
         total = project_results.get('total', 0)
         coverage = project_results.get('coverage_percent', 0)
-        log_success(
-            f"Project tests: PASSED ({passed}/{total} tests, {coverage:.1f}% coverage)",
-            logger
-        )
+
+        print("Project Results:")
+        print(f"  ✓ Passed: {passed}")
+        if skipped > 0:
+            print(f"  ⚠ Skipped: {skipped}")
+        print(f"  📊 Coverage: {format_coverage_status(coverage, 90.0)}")
+
+        # Show execution phases if available
+        phases = project_results.get('execution_phases', {})
+        if phases:
+            total_exec_time = sum(phases.values())
+            print(f"  ⏱ Duration: {format_duration(total_exec_time)}")
     else:
         failed = project_results.get('failed', 0)
-        logger.error(f"Project tests: FAILED ({failed} test(s) failed)")
-    
+        print("Project Results:")
+        print(f"  ✗ Failed: {failed} test(s) failed")
+
     # Overall summary
+    print()  # Add spacing
+    print("=" * 64)
+
+    infra_passed = infra_results.get('passed', 0)
+    infra_total = infra_results.get('total', 0)
+    infra_coverage = infra_results.get('coverage_percent', 0)
+
+    project_passed = project_results.get('passed', 0)
+    project_total = project_results.get('total', 0)
+    project_coverage = project_results.get('coverage_percent', 0)
+
+    total_passed = infra_passed + project_passed
+    total_tests = infra_total + project_total
+
     if infra_exit == 0 and project_exit == 0:
-        total_passed = infra_results.get('passed', 0) + project_results.get('passed', 0)
-        total_tests = infra_results.get('total', 0) + project_results.get('total', 0)
-        log_success(f"All tests passed ({total_passed}/{total_tests}) - ready for analysis", logger)
+        print("Infrastructure: ✓ PASSED "
+              f"({infra_passed}/{infra_total} tests, {infra_coverage:.1f}% coverage)")
+        print(f"Project:       ✓ PASSED "
+              f"({project_passed}/{project_total} tests, {project_coverage:.1f}% coverage)")
+        print("-" * 64)
+        print(f"Total:         ✓ PASSED ({total_passed}/{total_tests} tests)")
+        print(f"Coverage:      Infrastructure: {infra_coverage:.1f}% | Project: {project_coverage:.1f}%")
+
+        # Calculate total duration
+        infra_duration = sum(infra_results.get('execution_phases', {}).values())
+        project_duration = sum(project_results.get('execution_phases', {}).values())
+        total_duration = infra_duration + project_duration
+        if total_duration > 0:
+            print(f"Duration:      {format_duration(total_duration)}")
+
+        print("=" * 64)
+        log_success("All tests passed - ready for analysis", logger)
     else:
+        print("Infrastructure: ✗ FAILED "
+              f"({infra_results.get('failed', 0)} test(s) failed)")
+        print(f"Project:       ✗ FAILED "
+              f"({project_results.get('failed', 0)} test(s) failed)")
+        print("-" * 64)
+        print("Total:         ✗ FAILED (some tests failed)")
         logger.error("Some tests failed - fix issues and try again")
+        logger.info("Check the detailed output above for specific failure information")
 
 
 def main() -> int:
@@ -361,6 +602,11 @@ def main() -> int:
         default='project',
         help='Project name in projects/ directory (default: project)'
     )
+    parser.add_argument(
+        '--include-slow',
+        action='store_true',
+        help='Include slow tests (normally skipped for faster execution)'
+    )
     args = parser.parse_args()
     
     quiet = not args.verbose
@@ -373,19 +619,25 @@ def main() -> int:
     
     repo_root = Path(__file__).parent.parent
     
+    # Phase 1: Infrastructure Tests
+    log_header("Phase 1/2: Infrastructure Tests")
+
     # Run infrastructure tests first
-    infra_exit, infra_results = run_infrastructure_tests(repo_root, args.project, quiet=quiet)
-    
+    infra_exit, infra_results = run_infrastructure_tests(repo_root, args.project, quiet=quiet, include_slow=args.include_slow)
+
+    # Phase 2: Project Tests
+    log_header(f"Phase 2/2: Project Tests ({args.project})")
+
     # Run project tests (even if infrastructure tests fail, for complete reporting)
-    project_exit, project_results = run_project_tests(repo_root, args.project, quiet=quiet)
+    project_exit, project_results = run_project_tests(repo_root, args.project, quiet=quiet, include_slow=args.include_slow)
     
-    # Generate and save test report
-    report = generate_test_report(infra_results, project_results, repo_root)
+    # Generate and save test report with detailed coverage information
+    report = generate_test_report(infra_results, project_results, repo_root, include_coverage_details=True)
     output_dir = repo_root / "projects" / args.project / "output" / "reports"
     save_test_report_to_files(report, output_dir)
     
-    # Report combined results
-    report_results(infra_exit, project_exit, infra_results, project_results)
+    # Report combined results with detailed breakdowns
+    report_results(infra_exit, project_exit, infra_results, project_results, report)
     
     # Log resource usage at end
     log_resource_usage("Test stage end", logger)

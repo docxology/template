@@ -2,13 +2,13 @@
 
 > **Complete development workflow** ensuring source code, tests, and documentation coherence
 
-**Quick Reference:** [How To Use](HOW_TO_USE.md) | [Architecture](ARCHITECTURE.md) | [Common Workflows](../reference/COMMON_WORKFLOWS.md)
+**Quick Reference:** [How To Use](../core/HOW_TO_USE.md) | [Architecture](../core/ARCHITECTURE.md) | [Common Workflows](../reference/COMMON_WORKFLOWS.md)
 
 This document explains the complete development workflow that ensures source code, tests, and documentation remain in perfect coherence.
 
 **For related information:**
-- **[How To Use](HOW_TO_USE.md)** - Complete usage guide from basic to advanced
-- **[Architecture](ARCHITECTURE.md)** - System design overview
+- **[How To Use](../core/HOW_TO_USE.md)** - Complete usage guide from basic to advanced
+- **[Architecture](../core/ARCHITECTURE.md)** - System design overview
 - **[Thin Orchestrator Summary](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation details
 - **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes for common tasks
 
@@ -357,4 +357,4 @@ This ensures:
 
 This workflow ensures that the generic project template maintains the highest standards of code quality, documentation coherence, and maintainability while providing a clear, scalable structure for development and collaboration.
 
-For more details on architecture and implementation, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** and **[`THIN_ORCHESTRATOR_SUMMARY.md`](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)**.
+For more details on architecture and implementation, see **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)** and **[`THIN_ORCHESTRATOR_SUMMARY.md`](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)**.

@@ -111,11 +111,24 @@ The template provides multiple entry points organized by function:
 
 **Generic:** Works for any project with rendered outputs
 
-### 7. Run All (`run_all.py`)
+### 7. Generate Executive Report (`07_generate_executive_report.py`)
+
+**Purpose:** Generate cross-project executive summaries and dashboards
+
+- Discovers all projects in repository
+- Collects comprehensive metrics across all projects
+- Generates comparative analysis and recommendations
+- Creates visual dashboards (PNG, PDF, HTML)
+- Saves reports to `output/executive_summary/`
+
+**Generic:** Works with any number of projects (2+ required)
+
+### 8. Run All (`run_all.py`)
 
 **Purpose:** Execute complete pipeline
 
 - Orchestrates all 6 stages sequentially
+- Adds Stage 10 for multi-project executive reporting
 - Stops on first failure
 - Provides summary report
 - Generic pipeline
@@ -134,7 +147,7 @@ projects/{name}/scripts/
 ```
 
 These scripts:
-- Import from `project/src/` for scientific computation
+- Import from `projects/{name}/src/` for scientific computation
 - Import from `infrastructure/` for document management
 - Use the **thin orchestrator pattern**
 - Are discovered and executed by root `02_run_analysis.py`
@@ -207,7 +220,7 @@ fm.register_figure("results.png")
 ```
 
 **Key Points:**
-- Imports from `project/src/` (computation)
+- Imports from `projects/{name}/src/` (computation)
 - Imports from `infrastructure/` (utilities)
 - Orchestrates workflow
 - Handles I/O and visualization
@@ -238,6 +251,7 @@ Stages:
 4. **03_render_pdf.py** - PDFs generated?
 5. **04_validate_output.py** - Output valid?
 6. **05_copy_outputs.py** - Final deliverables copied?
+10. **07_generate_executive_report.py** - Executive summaries (multi-project only)
 
 Each stage is **generic** and works with any project structure in `projects/{name}/`.
 
@@ -313,6 +327,83 @@ Root entry points work with **ANY** project that follows this structure.
 - [`projects/project/scripts/AGENTS.md`](../projects/project/scripts/AGENTS.md) - Project scripts
 - [`../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern explanation
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
+
+## Testing and Logging Standards
+
+### Testing Approach
+
+Root scripts (`run.sh`, `scripts/bash_utils.sh`) are tested using Python subprocess calls in `tests/integration/`:
+
+**Test Infrastructure:**
+- **`test_run_sh.py`** - Tests `run.sh` command-line interface, argument parsing, project discovery
+- **`test_bash_utils.sh`** - Tests individual bash utility functions using bash test framework
+- **`test_logging.py`** - Tests logging functions and structured output
+
+**Coverage Requirements:**
+- **100% coverage** for `bash_utils.sh` utility functions
+- **90%+ coverage** for core `run.sh` orchestration functions
+- **80%+ coverage** for helper functions (menu display, etc.)
+
+**Test Categories:**
+- ✅ **Unit Tests** - Individual function testing
+- ✅ **Integration Tests** - Full workflow testing
+- ✅ **Error Path Tests** - Edge cases and failure modes
+
+**Testing Philosophy:**
+- Use real subprocess calls (no mocks for bash functions)
+- Test command-line interfaces as users would use them
+- Verify error handling and graceful degradation
+- Ensure compatibility across different environments
+
+### Logging Standards
+
+**Structured Logging Functions:**
+```bash
+# Context-aware logging with timestamps
+log_with_context "INFO" "message" "context"
+
+# Error logging with troubleshooting
+log_pipeline_error "stage_name" "error_msg" "exit_code" "step1" "step2"
+
+# Resource usage tracking
+log_resource_usage "stage_name" "duration" "additional_metrics"
+```
+
+**Error Handling Patterns:**
+```bash
+# Before: Manual error logging
+log_error "Pipeline failed at Stage X"
+log_info "  Troubleshooting:"
+log_info "    - Check this"
+log_info "    - Check that"
+
+# After: Structured error logging
+log_pipeline_error "Stage X" "failure reason" "$exit_code" \
+    "Check this" \
+    "Check that"
+```
+
+**Progress Tracking:**
+- `log_stage_progress` - Enhanced stage logging with ETA and resource monitoring
+- `STAGE_RESULTS[]` and `STAGE_DURATIONS[]` - Track pipeline execution metrics
+- Resource usage logging for performance monitoring
+
+**Log File Format:**
+- ANSI color codes stripped for log files
+- Consistent timestamp and context formatting
+- Structured output for programmatic parsing
+
+### Error Context and Troubleshooting
+
+**Standardized Error Messages:**
+- All pipeline errors include exit codes and troubleshooting steps
+- Function names and line numbers included in error context
+- Actionable guidance provided for common failure scenarios
+
+**Graceful Degradation:**
+- Optional stages (LLM review) fail gracefully without stopping pipeline
+- Clear messaging when features are unavailable
+- Fallback behavior documented and tested
 
 ## Key Takeaway
 

@@ -33,6 +33,17 @@ classDiagram
     RenderManager --> PDFRenderer
     RenderManager --> SlidesRenderer
     RenderManager --> WebRenderer
+
+    PDFRenderer --> LaTeXUtils : uses
+    LaTeXUtils --> PackageValidator : validates
+
+    class LaTeXUtils {
+        +compile_latex()
+    }
+    class PackageValidator {
+        +validate_packages()
+        +check_latex_package()
+    }
 ```
 
 ## Usage
@@ -133,6 +144,434 @@ The PDFRenderer splits title page generation into two phases:
 % Document body (after \begin{document})
 \maketitle
 \thispagestyle{empty}
+```
+
+## Function Signatures
+
+### core.py
+
+#### RenderManager (class)
+```python
+class RenderManager:
+    """Manages multi-format rendering from a single source."""
+
+    def __init__(self, config: Optional[RenderingConfig] = None):
+        """Initialize render manager.
+
+        Args:
+            config: Rendering configuration (optional)
+        """
+
+    def render_all(self, source_path: Path) -> Dict[str, Path]:
+        """Render to all supported formats.
+
+        Args:
+            source_path: Path to source manuscript
+
+        Returns:
+            Dictionary mapping format names to output paths
+        """
+
+    def render_pdf(self, source_path: Path) -> Path:
+        """Render to PDF format.
+
+        Args:
+            source_path: Path to source manuscript
+
+        Returns:
+            Path to generated PDF
+        """
+
+    def render_slides(self, source_path: Path, format: str = "beamer") -> Path:
+        """Render presentation slides.
+
+        Args:
+            source_path: Path to source manuscript
+            format: Slide format ("beamer" or "revealjs")
+
+        Returns:
+            Path to generated slides
+        """
+
+    def render_web(self, source_path: Path) -> Path:
+        """Render to web HTML format.
+
+        Args:
+            source_path: Path to source manuscript
+
+        Returns:
+            Path to generated HTML
+        """
+
+    def render_poster(self, source_path: Path) -> Path:
+        """Render to poster format.
+
+        Args:
+            source_path: Path to source manuscript
+
+        Returns:
+            Path to generated poster
+        """
+```
+
+### pdf_renderer.py
+
+#### _parse_missing_package_error (function)
+```python
+def _parse_missing_package_error(log_file: Path) -> Optional[str]:
+    """Parse LaTeX log for missing package errors.
+
+    Args:
+        log_file: Path to LaTeX compilation log
+
+    Returns:
+        Missing package name if found, None otherwise
+    """
+```
+
+#### PDFRenderer (class)
+```python
+class PDFRenderer:
+    """Handles PDF rendering via LaTeX compilation."""
+
+    def __init__(self, config: Optional[RenderingConfig] = None):
+        """Initialize PDF renderer.
+
+        Args:
+            config: Rendering configuration
+        """
+
+    def render(self, source_path: Path) -> Path:
+        """Render manuscript to PDF.
+
+        Args:
+            source_path: Path to source manuscript
+
+        Returns:
+            Path to generated PDF
+        """
+
+    def render_combined_pdf(self, manuscript_files: List[Path], manuscript_dir: Path) -> Path:
+        """Render combined manuscript PDF.
+
+        Args:
+            manuscript_files: List of manuscript files to combine
+            manuscript_dir: Directory containing manuscript files
+
+        Returns:
+            Path to generated combined PDF
+        """
+```
+
+### manuscript_discovery.py
+
+#### verify_figures_exist (function)
+```python
+def verify_figures_exist(project_root: Path, manuscript_dir: Path) -> Dict[str, Any]:
+    """Verify that all figures referenced in manuscript exist.
+
+    Args:
+        project_root: Project root directory
+        manuscript_dir: Manuscript directory
+
+    Returns:
+        Dictionary with verification results
+    """
+```
+
+#### discover_manuscript_files (function)
+```python
+def discover_manuscript_files(manuscript_dir: Path) -> List[Path]:
+    """Discover all manuscript files in directory.
+
+    Args:
+        manuscript_dir: Manuscript directory
+
+    Returns:
+        List of manuscript file paths
+    """
+```
+
+### web_renderer.py
+
+#### WebRenderer (class)
+```python
+class WebRenderer:
+    """Handles web HTML rendering with MathJax."""
+
+    def __init__(self, config: Optional[RenderingConfig] = None):
+        """Initialize web renderer.
+
+        Args:
+            config: Rendering configuration
+        """
+
+    def render(self, source_path: Path) -> Path:
+        """Render manuscript to web HTML.
+
+        Args:
+            source_path: Path to source manuscript
+
+        Returns:
+            Path to generated HTML
+        """
+```
+
+### slides_renderer.py
+
+#### SlidesRenderer (class)
+```python
+class SlidesRenderer:
+    """Handles presentation slide rendering."""
+
+    def __init__(self, config: Optional[RenderingConfig] = None):
+        """Initialize slides renderer.
+
+        Args:
+            config: Rendering configuration
+        """
+
+    def render(self, source_path: Path, format: str = "beamer") -> Path:
+        """Render manuscript to presentation slides.
+
+        Args:
+            source_path: Path to source manuscript
+            format: Slide format ("beamer" or "revealjs")
+
+        Returns:
+            Path to generated slides
+        """
+```
+
+### poster_renderer.py
+
+#### PosterRenderer (class)
+```python
+class PosterRenderer:
+    """Handles large-format poster rendering."""
+
+    def __init__(self, config: Optional[RenderingConfig] = None):
+        """Initialize poster renderer.
+
+        Args:
+            config: Rendering configuration
+        """
+
+    def render(self, source_path: Path) -> Path:
+        """Render manuscript to poster format.
+
+        Args:
+            source_path: Path to source manuscript
+
+        Returns:
+            Path to generated poster
+        """
+```
+
+### latex_utils.py
+
+#### compile_latex (function)
+```python
+def compile_latex(
+    tex_file: Path,
+    output_dir: Path,
+    compiler: str = "xelatex",
+    max_passes: int = 4
+) -> Tuple[bool, Optional[Path]]:
+    """Compile LaTeX document with multiple passes.
+
+    Args:
+        tex_file: Path to LaTeX source file
+        output_dir: Directory for output files
+        compiler: LaTeX compiler to use
+        max_passes: Maximum number of compilation passes
+
+    Returns:
+        Tuple of (success, pdf_path)
+    """
+```
+
+### latex_package_validator.py
+
+#### PackageStatus (class)
+```python
+class PackageStatus(NamedTuple):
+    """Status of a LaTeX package check."""
+    package: str
+    available: bool
+    version: Optional[str] = None
+    error: Optional[str] = None
+```
+
+#### ValidationReport (class)
+```python
+class ValidationReport:
+    """Report of LaTeX package validation."""
+    checked_packages: List[str]
+    available_packages: List[str]
+    missing_packages: List[str]
+    errors: List[str]
+
+    def summary(self) -> str:
+        """Generate validation summary."""
+
+    def install_commands(self) -> str:
+        """Generate installation commands for missing packages."""
+```
+
+#### find_kpsewhich (function)
+```python
+def find_kpsewhich() -> Optional[Path]:
+    """Find kpsewhich executable.
+
+    Returns:
+        Path to kpsewhich if found, None otherwise
+    """
+```
+
+#### check_latex_package (function)
+```python
+def check_latex_package(package_name: str, kpsewhich_path: Optional[Path] = None) -> PackageStatus:
+    """Check if LaTeX package is available.
+
+    Args:
+        package_name: Name of LaTeX package to check
+        kpsewhich_path: Path to kpsewhich executable
+
+    Returns:
+        PackageStatus with availability information
+    """
+```
+
+#### validate_packages (function)
+```python
+def validate_packages(
+    required_packages: Optional[List[str]] = None,
+    kpsewhich_path: Optional[Path] = None
+) -> ValidationReport:
+    """Validate all required LaTeX packages.
+
+    Args:
+        required_packages: List of packages to check (uses defaults if None)
+        kpsewhich_path: Path to kpsewhich executable
+
+    Returns:
+        ValidationReport with results
+    """
+```
+
+#### get_missing_packages_command (function)
+```python
+def get_missing_packages_command(missing: List[str]) -> str:
+    """Generate command to install missing packages.
+
+    Args:
+        missing: List of missing package names
+
+    Returns:
+        Installation command string
+    """
+```
+
+#### validate_preamble_packages (function)
+```python
+def validate_preamble_packages(strict: bool = False) -> ValidationReport:
+    """Validate packages required by manuscript preamble.
+
+    Args:
+        strict: Enable strict validation mode
+
+    Returns:
+        ValidationReport for preamble packages
+    """
+```
+
+#### main (function)
+```python
+def main():
+    """Main function for LaTeX package validation CLI."""
+```
+
+### config.py
+
+#### RenderingConfig (class)
+```python
+class RenderingConfig:
+    """Configuration for rendering operations."""
+
+    def __init__(
+        self,
+        latex_compiler: str = "xelatex",
+        pandoc_path: str = "pandoc",
+        output_dir: Path = Path("output"),
+        max_compilation_passes: int = 4,
+        validate_packages: bool = True
+    ):
+        """Initialize rendering configuration.
+
+        Args:
+            latex_compiler: LaTeX compiler command
+            pandoc_path: Path to pandoc executable
+            output_dir: Root output directory
+            max_compilation_passes: Maximum LaTeX compilation passes
+            validate_packages: Whether to validate LaTeX packages
+        """
+```
+
+### cli.py
+
+#### render_pdf_command (function)
+```python
+def render_pdf_command(args):
+    """CLI command for PDF rendering.
+
+    Args:
+        args: Parsed command line arguments
+    """
+```
+
+#### render_all_command (function)
+```python
+def render_all_command(args):
+    """CLI command for rendering all formats.
+
+    Args:
+        args: Parsed command line arguments
+    """
+```
+
+#### render_slides_command (function)
+```python
+def render_slides_command(args):
+    """CLI command for slide rendering.
+
+    Args:
+        args: Parsed command line arguments
+    """
+```
+
+#### render_web_command (function)
+```python
+def render_web_command(args):
+    """CLI command for web rendering.
+
+    Args:
+        args: Parsed command line arguments
+    """
+```
+
+#### main (function)
+```python
+def main():
+    """Main CLI entry point for rendering tools."""
+```
+
+### render_all_cli.py
+
+#### main (function)
+```python
+def main():
+    """Main function for render all CLI."""
 ```
 
 ## Bibliography and Citation Processing

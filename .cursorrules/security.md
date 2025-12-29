@@ -520,11 +520,11 @@ pytest -m integration  # Slower integration tests
 
 ## See Also
 
-- [docs/SECURITY.md](../docs/SECURITY.md) - Security policy and vulnerability reporting
-- [docs/BEST_PRACTICES.md](../docs/BEST_PRACTICES.md) - Security best practices section
+- [docs/SECURITY.md](../docs/development/SECURITY.md) - Security policy and vulnerability reporting
+- [docs/BEST_PRACTICES.md](../docs/best-practices/BEST_PRACTICES.md) - Security best practices section
 - [error_handling.md](error_handling.md) - Secure error handling patterns
 - [testing_standards.md](testing_standards.md) - Security testing patterns
 
 ---
 
-**Note**: This document focuses on development security practices. For security policy, vulnerability reporting, and security updates, see [docs/SECURITY.md](../docs/SECURITY.md).
+**Note**: This document focuses on development security practices. For security policy, vulnerability reporting, and security updates, see [docs/SECURITY.md](../docs/development/SECURITY.md).

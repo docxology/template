@@ -2,23 +2,23 @@
 
 > **Comprehensive overview** of the template's design, components, and build pipeline
 
-**Quick Reference:** [How To Use](HOW_TO_USE.md) | [Two-Layer Architecture](../architecture/TWO_LAYER_ARCHITECTURE.md) | [Workflow](WORKFLOW.md) | [Thin Orchestrator Summary](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)
+**Quick Reference:** [How To Use](../core/HOW_TO_USE.md) | [Two-Layer Architecture](../architecture/TWO_LAYER_ARCHITECTURE.md) | [Workflow](../core/WORKFLOW.md) | [Thin Orchestrator Summary](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)
 
 This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline.
 
 **For detailed information on specific topics:**
 - **[Two-Layer Architecture](../architecture/TWO_LAYER_ARCHITECTURE.md)** - Complete guide to Layer 1 (Infrastructure) vs Layer 2 (Project) separation
 - **[Thin Orchestrator Pattern](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Detailed implementation of the thin orchestrator pattern
-- **[Workflow](WORKFLOW.md)** - Complete development workflow and pipeline orchestration
-- **[How To Use](HOW_TO_USE.md)** - Complete usage guide from basic to advanced
+- **[Workflow](../core/WORKFLOW.md)** - Complete development workflow and pipeline orchestration
+- **[How To Use](../core/HOW_TO_USE.md)** - Complete usage guide from basic to advanced
 
 ## Development Rules
 
 For specific architectural rules and standards during development, see:
 
-- **[`.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md)** - Complete development standards and guidelines
-- **[`.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md)** - Infrastructure module development
-- **[`.cursorrules/README.md`](../.cursorrules/README.md)** - Quick reference and patterns
+- **[`.cursorrules/AGENTS.md`](../../.cursorrules/AGENTS.md)** - Complete development standards and guidelines
+- **[`.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md)** - Infrastructure module development
+- **[`.cursorrules/README.md`](../../.cursorrules/README.md)** - Quick reference and patterns
 - **[`THIN_ORCHESTRATOR_SUMMARY.md`](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
 
 ## System Architecture Overview
@@ -29,7 +29,7 @@ graph TB
         subgraph "Core Components"
             INFRA[Infrastructure<br/>infrastructure/]
             PROJECT[Project Code<br/>project/src/]
-            TESTS[Tests<br/>tests/ & project/tests/]
+            TESTS[Tests<br/>tests/ & proje../../tests/]
             SCRIPTS[Scripts<br/>scripts/ & project/scripts/]
             MD[Documentation<br/>docs/]
             MANUSCRIPT[Manuscript<br/>project/manuscript/]
@@ -449,7 +449,7 @@ The architecture enforces a **thin orchestrator pattern** where:
 
 - **`project/src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`project/scripts/`** are lightweight wrappers that import and use `project/src/` methods
-- **`project/tests/`** ensures comprehensive coverage of `project/src/` functionality
+- **`proje../../tests/`** ensures comprehensive coverage of `project/src/` functionality
 - **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
 
 This ensures:
@@ -464,4 +464,4 @@ This architecture ensures that the generic project template maintains the highes
 For more details on implementation, see:
 - **[`TWO_LAYER_ARCHITECTURE.md`](../architecture/TWO_LAYER_ARCHITECTURE.md)** - Complete two-layer architecture guide
 - **[`THIN_ORCHESTRATOR_SUMMARY.md`](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern details
-- **[`WORKFLOW.md`](WORKFLOW.md)** - Development workflow
+- **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)** - Development workflow

@@ -322,6 +322,6 @@ grep "Completed in" project/output/*.log | awk '{print $NF}'
 
 ## See Also
 
-- [`scripts/run_all.py`](../scripts/run_all.py) - Performance tracking implementation
-- [`infrastructure/core/performance.py`](../infrastructure/core/performance.py) - Performance utilities
+- [`../../scripts/run_all.py`](../../scripts/run_all.py) - Performance tracking implementation
+- [`infrastructure/core/performance.py`](../../infrastructure/core/performance.py) - Performance utilities
 - [`TROUBLESHOOTING_GUIDE.md`](../operational/TROUBLESHOOTING_GUIDE.md) - Performance troubleshooting

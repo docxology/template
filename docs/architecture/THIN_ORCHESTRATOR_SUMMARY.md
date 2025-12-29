@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document summarizes the implementation of the **thin orchestrator pattern** in the project template, where scripts in `scripts/` are lightweight wrappers that import and use fully-tested methods from `infrastructure/` modules (for root scripts) or `project/src/` modules (for project scripts). For related information, see **[`docs/core/HOW_TO_USE.md`](core/HOW_TO_USE.md)** for complete usage guidance, **[`docs/core/ARCHITECTURE.md`](core/ARCHITECTURE.md)**, **[`docs/core/WORKFLOW.md`](core/WORKFLOW.md)**, and **[`README.md`](../README.md)**.
+This document summarizes the implementation of the **thin orchestrator pattern** in the project template, where scripts in `scripts/` are lightweight wrappers that import and use fully-tested methods from `infrastructure/` modules (for root scripts) or `projects/{name}/src/` modules (for project scripts). For related information, see **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** for complete usage guidance, **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)**, **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)**, and **[`../README.md`](../README.md)**.
 
 ## Architecture
 
@@ -14,9 +14,9 @@ This document summarizes the implementation of the **thin orchestrator pattern**
 - `tests/` - Infrastructure tests
 
 **Layer 2: Project (Project-Specific - Customizable)**
-- `project/src/` - Research algorithms and analysis (domain-specific)
+- `projects/{name}/src/` - Research algorithms and analysis (domain-specific)
 - `project/scripts/` - Project analysis scripts (thin orchestrators)
-- `project/tests/` - Project test suite
+- `proje../../tests/` - Project test suite
 
 ### Root Scripts (scripts/)
 
@@ -31,12 +31,12 @@ Root-level scripts in `scripts/` are **maximally thin orchestrators** that:
 ### Project Scripts (project/scripts/)
 
 Project-specific scripts in `project/scripts/` are thin orchestrators that:
-- Import computation from `project/src/` modules
+- Import computation from `projects/{name}/src/` modules
 - Import utilities from `infrastructure/` modules
 - Orchestrate domain-specific workflows
 - Handle I/O and visualization
 
-**Example**: `project/scripts/example_figure.py` imports `add_numbers()` from `project/src/example.py` for computation.
+**Example**: `projects/{name}/scripts/example_figure.py` imports `add_numbers()` from `projects/{name}/src/example.py` for computation.
 
 ### 2. **Comprehensive Documentation**
 
@@ -59,13 +59,13 @@ Project-specific scripts in `project/scripts/` are thin orchestrators that:
 - **MUST**: Coordinate pipeline stages only
 - **MUST**: Handle I/O and orchestration only
 - **MUST NOT**: Implement business logic (parsing, validation, discovery, etc.)
-- **MUST NOT**: Import from `project/src/` (root scripts are generic)
+- **MUST NOT**: Import from `projects/{name}/src/` (root scripts are generic)
 
 **Project Scripts (project/scripts/):**
-- **MUST**: Import computation from `project/src/` modules
+- **MUST**: Import computation from `projects/{name}/src/` modules
 - **MUST**: Import utilities from `infrastructure/` modules
 - **MUST**: Handle I/O, visualization, and orchestration
-- **MUST NOT**: Implement algorithms (should be in `project/src/`)
+- **MUST NOT**: Implement algorithms (should be in `projects/{name}/src/`)
 - **MUST NOT**: Duplicate business logic
 
 **Infrastructure Modules:**
@@ -92,13 +92,13 @@ save_test_report(report, output_dir)
 
 ### 2. **Project Script Import Pattern (project/scripts/)**
 ```python
-# project/scripts/example_figure.py - Project orchestrator
-from example import add_numbers, calculate_average  # From project/src/
+# projects/{name}/scripts/example_figure.py - Project orchestrator
+from example import add_numbers, calculate_average  # From projects/{name}/src/
 from infrastructure.documentation.figure_manager import FigureManager  # From infrastructure/
 
-# Use project/src/ methods for computation
+# Use projects/{name}/src/ methods for computation
 data = [1, 2, 3, 4, 5]
-avg = calculate_average(data)  # From project/src/example.py
+avg = calculate_average(data)  # From projects/{name}/src/example.py
 
 # Script handles visualization and output
 fig, ax = plt.subplots()
@@ -109,8 +109,8 @@ ax.set_title(f"Average: {avg}")
 ### 3. **Integration with Build System**
 The `scripts/run_all.py` orchestrator automatically:
 1. **Runs tests** with coverage requirements (ensuring infrastructure and project code work)
-2. **Executes project scripts** (validating project/src/ integration)
-3. **Generates figures** (using tested project/src/ methods)
+2. **Executes project scripts** (validating projects/{name}/src/ integration)
+3. **Generates figures** (using tested projects/{name}/src/ methods)
 4. **Builds PDFs** (using infrastructure rendering modules)
 5. **Validates outputs** (using infrastructure validation modules)
 
@@ -152,12 +152,12 @@ from infrastructure.reporting.test_reporter import parse_pytest_output
 test_results = parse_pytest_output(stdout, stderr, exit_code)
 ```
 
-### ✅ **Correct: Project Script Using project/src/**
+### ✅ **Correct: Project Script Using projects/{name}/src/**
 ```python
-# project/scripts/example_figure.py - Project orchestrator
-from example import add_numbers, calculate_average  # From project/src/
+# projects/{name}/scripts/example_figure.py - Project orchestrator
+from example import add_numbers, calculate_average  # From projects/{name}/src/
 
-# Use project/src/ methods for computation
+# Use projects/{name}/src/ methods for computation
 result = add_numbers(5, 3)
 avg = calculate_average([1, 2, 3, 4, 5])
 ```
@@ -179,19 +179,19 @@ from infrastructure.reporting.test_reporter import parse_pytest_output
 
 ### ✅ **Implemented**
 - [x] Root scripts import business logic from infrastructure/ modules
-- [x] Project scripts import computation from project/src/ modules
+- [x] Project scripts import computation from projects/{name}/src/ modules
 - [x] All business logic moved to infrastructure/ (test parsing, report generation, manuscript discovery, figure validation)
 - [x] Comprehensive documentation of the pattern
 - [x] Examples demonstrating proper integration
 - [x] Build system validation
-- [x] Figure generation with project/src/ integration
+- [x] Figure generation with projects/{name}/src/ integration
 - [x] PDF generation with infrastructure rendering modules
 
 ### 🔄 **Working Pipeline**
-1. **Tests**: Ensure comprehensive coverage of infrastructure and project/src/ methods
+1. **Tests**: Ensure comprehensive coverage of infrastructure and projects/{name}/src/ methods
 2. **Root Scripts**: Import and use tested infrastructure/ methods
-3. **Project Scripts**: Import and use tested project/src/ methods
-4. **Figures**: Generated using project/src/ methods
+3. **Project Scripts**: Import and use tested projects/{name}/src/ methods
+4. **Figures**: Generated using projects/{name}/src/ methods
 5. **PDFs**: Generated using infrastructure rendering modules
 6. **Validation**: Complete pipeline validation using infrastructure validation modules
 
@@ -220,15 +220,15 @@ The thin orchestrator pattern has been successfully implemented, establishing a 
 - **`tests/`** validates all infrastructure/ functionality
 
 **Layer 2: Project (Project-Specific - Customizable)**
-- **`project/src/`** contains project-specific algorithms and analysis
-- **`project/scripts/`** are thin orchestrators that import from project/src/ and infrastructure/
-- **`project/tests/`** validates all project/src/ functionality
+- **`projects/{name}/src/`** contains project-specific algorithms and analysis
+- **`projects/{name}/scripts/`** are thin orchestrators that import from projects/{name}/src/ and infrastructure/
+- **`projects/{name}/tests/`** validates all projects/{name}/src/ functionality
 
 **Master Orchestrator:**
 - **`scripts/run_all.py`** orchestrates the complete 6-stage pipeline
 
 This architecture ensures:
-- **Maintainability**: Single source of truth for business logic (infrastructure/ for generic, project/src/ for project-specific)
+- **Maintainability**: Single source of truth for business logic (infrastructure/ for generic, projects/{name}/src/ for project-specific)
 - **Testability**: Fully tested core functionality in both layers
 - **Reusability**: Infrastructure modules work with any project; project scripts can use any project/src/ method
 - **Clarity**: Clear separation of concerns between generic infrastructure and project-specific code
@@ -236,4 +236,4 @@ This architecture ensures:
 
 The template now serves as a **comprehensive demonstration** of how to create maintainable, testable, and well-architected research projects using the thin orchestrator pattern with proper separation between generic infrastructure and project-specific code.
 
-For more details on architecture and workflow, see **[`ARCHITECTURE.md`](ARCHITECTURE.md)** and **[`WORKFLOW.md`](WORKFLOW.md)**.
+For more details on architecture and workflow, see **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)** and **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)**.

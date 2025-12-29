@@ -56,6 +56,60 @@ python3 scripts/03_render_pdf.py
 - **Documented** - Comprehensive documentation and docstrings
 - **Portable** - Complete project in one folder, copy to use elsewhere
 
+## Project Architecture
+
+```mermaid
+graph TB
+    subgraph ProjectStructure["Project Structure"]
+        SRC[src/<br/>Scientific Algorithms<br/>Data Processing<br/>Analysis & Visualization]
+        TESTS[tests/<br/>Unit Tests<br/>Integration Tests<br/>100% Coverage]
+        SCRIPTS[scripts/<br/>Analysis Scripts<br/>Thin Orchestrators<br/>Figure Generation]
+        MANUSCRIPT[manuscript/<br/>Research Content<br/>Markdown Sections<br/>LaTeX Preamble]
+        OUTPUT[output/<br/>Generated Files<br/>PDFs, Figures, Data<br/>Disposable]
+        DOCS[docs/<br/>Project Documentation<br/>Architecture Notes<br/>Development Guides]
+    end
+
+    subgraph Workflow["Development Workflow"]
+        DEVELOP[1. Develop<br/>src/ modules<br/>with tests]
+        ORCHESTRATE[2. Create<br/>scripts/<br/>orchestrators]
+        DOCUMENT[3. Write<br/>manuscript/<br/>content]
+        BUILD[4. Run<br/>pipeline<br/>generate outputs]
+    end
+
+    subgraph Pipeline["Build Pipeline"]
+        TEST_RUN[Test<br/>Coverage 100%]
+        ANALYSIS_RUN[Analysis<br/>Execute scripts/]
+        RENDER_RUN[Render<br/>PDF generation]
+        VALIDATE_RUN[Validate<br/>Quality checks]
+        COPY_RUN[Copy<br/>Final deliverables]
+    end
+
+    SRC --> TESTS
+    SRC --> SCRIPTS
+    SCRIPTS --> OUTPUT
+    MANUSCRIPT --> OUTPUT
+    DOCS -.-> SRC
+    DOCS -.-> SCRIPTS
+
+    DEVELOP --> ORCHESTRATE
+    ORCHESTRATE --> DOCUMENT
+    DOCUMENT --> BUILD
+
+    BUILD --> TEST_RUN
+    TEST_RUN --> ANALYSIS_RUN
+    ANALYSIS_RUN --> RENDER_RUN
+    RENDER_RUN --> VALIDATE_RUN
+    VALIDATE_RUN --> COPY_RUN
+
+    classDef primary fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef workflow fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef pipeline fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class SRC,TESTS,SCRIPTS,MANUSCRIPT,OUTPUT,DOCS primary
+    class DEVELOP,ORCHESTRATE,DOCUMENT,BUILD workflow
+    class TEST_RUN,ANALYSIS_RUN,RENDER_RUN,VALIDATE_RUN,COPY_RUN pipeline
+```
+
 ## Project Layout
 
 ### src/

@@ -183,4 +183,3 @@ logging.basicConfig(level=logging.DEBUG)
 
 - [README.md](README.md) - Quick reference
 - [../src/optimizer.py](../src/optimizer.py) - Core algorithms used by scripts
-- [../tests/integration/test_generate_research_figures.py](../tests/integration/test_generate_research_figures.py) - Integration tests

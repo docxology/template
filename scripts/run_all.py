@@ -9,7 +9,11 @@ This master orchestrator coordinates the core build pipeline (6 stages):
 5. STAGE 04: Validate Output - Validate all generated outputs
 6. STAGE 05: Copy Outputs - Copy final deliverables to root output/
 
-Note: This is the CORE pipeline (6 stages) for manuscript building. 
+Multi-project mode (--all-projects) adds:
+10. STAGE 10: Executive Reporting - Cross-project metrics and dashboards (optional)
+
+Note: This is the CORE pipeline (6 stages) for single-project builds.
+For multi-project execution with executive reporting, use --all-projects flag.
 For the full pipeline with optional LLM review and translations (10 stages: 0-9), use ./run.sh --pipeline.
 
 One-line execution for complete end-to-end build.
@@ -39,6 +43,7 @@ from infrastructure.core.checkpoint import CheckpointManager, StageResult
 from infrastructure.core.performance import PerformanceMonitor, get_system_resources
 from infrastructure.core.script_discovery import discover_orchestrators
 from infrastructure.core.file_operations import clean_output_directories
+from infrastructure.core.environment import get_python_command
 from infrastructure.reporting import (
     generate_pipeline_report,
     save_pipeline_report,
@@ -98,8 +103,8 @@ def run_pipeline_for_project(project_name: str, resume: bool = False, skip_infra
 
             logger.info(f"[STAGE {stage_num}/{total_stages}] {stage_name}")
 
-            # Execute stage script with project parameter
-            cmd = [sys.executable, str(stage_script), '--project', project_name]
+            # Execute stage script with project parameter using appropriate Python command
+            cmd = get_python_command() + [str(stage_script), '--project', project_name]
             result = subprocess.run(cmd, cwd=str(repo_root), capture_output=False)
 
             if result.returncode != 0:
@@ -172,7 +177,7 @@ def run_stage(
         logger.info(f"\n[{stage_num}/{total_stages}] {stage_name}")
         logger.info("-" * 70)
     
-    cmd = [sys.executable, str(stage_script)]
+    cmd = get_python_command() + [str(stage_script)]
     
     try:
         with log_timing(f"Stage {stage_num}", logger):
@@ -499,12 +504,36 @@ def main() -> int:
         action="store_true",
         help="Run pipeline for all projects sequentially"
     )
+    parser.add_argument(
+        "--workspace-sync",
+        action="store_true",
+        default=True,
+        help="Sync workspace dependencies before pipeline execution (default: True)"
+    )
+    parser.add_argument(
+        "--no-workspace-sync",
+        action="store_false",
+        dest="workspace_sync",
+        help="Skip workspace dependency sync"
+    )
     args = parser.parse_args()
 
     # Import project discovery
     from infrastructure.project import discover_projects
 
     repo_root = Path(__file__).parent.parent
+
+    # Sync workspace dependencies if requested
+    if args.workspace_sync:
+        logger.info("Syncing workspace dependencies...")
+        try:
+            result = subprocess.run(['uv', 'sync'], cwd=str(repo_root), capture_output=False, check=False)
+            if result.returncode == 0:
+                log_success("Workspace dependencies synced", logger)
+            else:
+                logger.warning("Workspace sync failed, continuing with existing dependencies")
+        except (FileNotFoundError, subprocess.SubprocessError):
+            logger.warning("uv not available, skipping workspace sync")
 
     # Handle multi-project execution
     if args.all_projects:
@@ -535,6 +564,34 @@ def main() -> int:
             return 1
         else:
             logger.info(f"\n✅ Pipeline completed successfully for all {len(projects)} projects!")
+            
+            # Stage 10: Generate Executive Report (multi-project only)
+            if len(projects) > 1:
+                logger.info(f"\n{'='*60}")
+                logger.info("STAGE 10: EXECUTIVE REPORTING")
+                logger.info(f"{'='*60}")
+                logger.info("Generating cross-project executive summary...")
+                
+                executive_script = repo_root / "scripts" / "07_generate_executive_report.py"
+                if executive_script.exists():
+                    try:
+                        result = subprocess.run(
+                            get_python_command() + [str(executive_script)],
+                            cwd=str(repo_root),
+                            check=False
+                        )
+                        
+                        if result.returncode == 0:
+                            log_success("Executive reporting completed", logger)
+                        else:
+                            logger.warning("Executive reporting stage had issues (non-critical)")
+                    except Exception as e:
+                        logger.warning(f"Could not generate executive report: {e}")
+                else:
+                    logger.warning("Executive reporting script not found")
+            else:
+                logger.info("\nSkipping executive reporting (only 1 project - designed for multi-project comparisons)")
+            
             return 0
 
     # Single project execution

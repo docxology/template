@@ -230,9 +230,9 @@ Level 10-12: Expert Usage (1-2 months)
 
 ### Core Documentation
 - **[AGENTS.md](../AGENTS.md)** - Complete system reference
-- **[Architecture](ARCHITECTURE.md)** - System design
+- **[Architecture](../core/ARCHITECTURE.md)** - System design
 - **[Thin Orchestrator Pattern](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Core pattern
-- **[Workflow](WORKFLOW.md)** - Development process
+- **[Workflow](../core/WORKFLOW.md)** - Development process
 
 ### Build System
 - **[Build System](../operational/BUILD_SYSTEM.md)** - Complete reference (status, performance, fixes)
@@ -241,7 +241,7 @@ Level 10-12: Expert Usage (1-2 months)
 ### Writing & Formatting
 - **[Markdown Template Guide](../usage/MARKDOWN_TEMPLATE_GUIDE.md)** - Complete formatting reference
 - **[Manuscript Numbering](../usage/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization
-- **[LaTeX Preamble](../project/manuscript/preamble.md)** - Styling configuration
+- **[LaTeX Preamble](../../projects/project/manuscript/preamble.md)** - Styling configuration
 
 ### Examples & Help
 - **[Examples](../usage/EXAMPLES.md)** - Usage patterns
@@ -257,7 +257,6 @@ Level 10-12: Expert Usage (1-2 months)
 
 ### Reference
 - **[Documentation Index](../DOCUMENTATION_INDEX.md)** - Complete index
-- **[Test Improvements](../development/TEST_IMPROVEMENTS_SUMMARY.md)** - Testing details
 - **[Copypasta](../reference/COPYPASTA.md)** - Shareable content
 - **[API Reference](../reference/API_REFERENCE.md)** - Complete API documentation
 - **[Best Practices](../best-practices/BEST_PRACTICES.md)** - Consolidated best practices
