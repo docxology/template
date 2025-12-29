@@ -53,6 +53,7 @@ graph TD
         MODULES[modules/ADVANCED_MODULES_GUIDE.md<br/>7 Advanced Modules]
         ARCH_DOCS[architecture/TWO_LAYER_ARCHITECTURE.md<br/>System Architecture]
         BEST_PRACTICES[best-practices/BEST_PRACTICES.md<br/>Best Practices]
+        PROMPTS[prompts/README.md<br/>AI Prompt Templates<br/>10 Expert Prompts]
     end
 
     README --> DOC_INDEX
@@ -116,6 +117,7 @@ Documentation is organized into modular subdirectories:
 | [`modules/`](modules/) | Advanced modules | ADVANCED_MODULES_GUIDE.md, SCIENTIFIC_SIMULATION_GUIDE.md |
 | [`development/`](development/) | Development & contribution | CONTRIBUTING.md, TESTING_GUIDE.md, CODE_OF_CONDUCT.md |
 | [`best-practices/`](best-practices/) | Best practices | BEST_PRACTICES.md, VERSION_CONTROL.md, MIGRATION_GUIDE.md |
+| [`prompts/`](prompts/) | AI prompt templates | manuscript_creation.md, code_development.md, test_creation.md |
 
 ## Quick Navigation
 
@@ -156,5 +158,6 @@ Development standards are defined in the `.cursorrules/` directory. Start with:
 
 - [`AGENTS.md`](AGENTS.md) - Detailed documentation guide
 - [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) - Complete index
+- [`prompts/README.md`](prompts/README.md) - AI prompt templates for development
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 

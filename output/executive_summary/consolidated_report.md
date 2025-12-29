@@ -1,6 +1,6 @@
 # Executive Summary - All Projects
 
-**Generated**: 2025-12-29T13:00:47.383167
+**Generated**: 2025-12-29T14:54:19.979242
 **Total Projects**: 3
 
 ## Executive Overview
@@ -45,18 +45,18 @@
 - **Web Pages**: 22
 
 ### Pipeline
-- **Total Duration**: 1252s
-- **Average Duration**: 417s
+- **Total Duration**: 1321s
+- **Average Duration**: 440s
 - **Stages Passed**: 18
 
 ## Project Comparison
 
 | Project | Words | Tests | Coverage | Duration | PDF Size |
 |---------|-------|-------|----------|----------|----------|
-| project | 13,447 | -1 | 0.0% | 523s | 2.3 MB |
-| small_code_project | 1,941 | -1 | 0.0% | 370s | 0.2 MB |
-| small_prose_project | 1,729 | -1 | 0.0% | 359s | 0.1 MB |
-| **TOTAL** | **17,117** | **0** | **0.0%** | **1252s** | **2.5 MB** |
+| project | 13,447 | -1 | 0.0% | 530s | 2.2 MB |
+| small_code_project | 1,941 | -1 | 0.0% | 412s | 0.2 MB |
+| small_prose_project | 1,729 | -1 | 0.0% | 379s | 0.1 MB |
+| **TOTAL** | **17,117** | **0** | **0.0%** | **1321s** | **2.5 MB** |
 
 ## Actionable Recommendations
 

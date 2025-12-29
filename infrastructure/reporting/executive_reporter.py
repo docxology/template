@@ -220,16 +220,32 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
     metrics = TestMetrics()
 
     test_report_path = reports_dir / "test_results.json"
+
+    # Enhanced logging for debugging
+    logger.debug(f"Checking for test results at: {test_report_path}")
+    logger.debug(f"Reports directory exists: {reports_dir.exists()}")
+    if reports_dir.exists():
+        logger.debug(f"Reports directory contents: {list(reports_dir.iterdir())}")
+    else:
+        logger.warning(f"Reports directory does not exist: {reports_dir}")
+
     if not test_report_path.exists():
         logger.warning(f"Test report not found: {test_report_path} - test metrics will show as unavailable")
+        logger.info(f"Expected test report location: {test_report_path}")
         # Set a flag to indicate data is unavailable (using negative values to distinguish from actual 0s)
         metrics.total_tests = -1  # Special value to indicate "unavailable"
         return metrics
     
     try:
+        # Log successful file discovery
+        file_size = test_report_path.stat().st_size
+        logger.debug(f"Found test report: {test_report_path} ({file_size} bytes)")
+
         with open(test_report_path) as f:
             report = json.load(f)
-        
+
+        logger.debug(f"Successfully loaded test report JSON")
+
         # Extract project test metrics
         project_tests = report.get('project', {})
         metrics.total_tests = project_tests.get('total', 0)
@@ -237,17 +253,20 @@ def collect_test_metrics(reports_dir: Path) -> TestMetrics:
         metrics.failed = project_tests.get('failed', 0)
         metrics.skipped = project_tests.get('skipped', 0)
         metrics.coverage_percent = project_tests.get('coverage_percent', 0.0)
-        
+
         # Execution time from summary
         summary = report.get('summary', {})
         metrics.execution_time = summary.get('total_execution_time', 0.0)
-        
+
         # Count test files (estimate from tests/total ratio)
         if metrics.total_tests > 0:
             metrics.test_files = max(1, metrics.total_tests // 10)  # Rough estimate
-            
+
+        logger.debug(f"Successfully extracted test metrics: {metrics.total_tests} tests, {metrics.coverage_percent:.1f}% coverage")
+
     except Exception as e:
         logger.warning(f"Error loading test report: {e}")
+        logger.debug(f"Exception details", exc_info=True)
     
     return metrics
 

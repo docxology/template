@@ -1,6 +1,6 @@
 {
-  "timestamp": "2025-12-29T12:54:46.655324",
-  "total_duration": 370.0,
+  "timestamp": "2025-12-29T14:47:59.403562",
+  "total_duration": 412.0,
   "stages": [
     {
       "name": "setup",
@@ -60,7 +60,7 @@
   "test_results": null,
   "validation_results": null,
   "performance_metrics": {
-    "total_duration": 370.0,
+    "total_duration": 412.0,
     "average_stage_duration": 5.666666666666667
   },
   "error_summary": null,

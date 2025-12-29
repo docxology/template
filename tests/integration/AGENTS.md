@@ -19,11 +19,15 @@ Integration tests complement unit tests by validating:
 
 ```
 tests/integration/
-├── conftest.py                    # Integration test configuration
-├── test_edge_cases_and_error_paths.py # Edge cases and error handling
-├── test_figure_equation_citation.py # Figure/equation/citation handling
-├── test_module_interoperability.py # Cross-module interaction validation
-└── test_output_copying.py        # Output file handling and copying
+├── conftest.py                          # Integration test configuration
+├── test_07_generate_executive_report.py # Executive report generation tests
+├── test_bash_utils.sh                   # Bash utility function tests
+├── test_edge_cases_and_error_paths.py   # Edge cases and error handling
+├── test_figure_equation_citation.py     # Figure/equation/citation handling
+├── test_logging.py                      # Bash logging integration tests
+├── test_module_interoperability.py      # Cross-module interaction validation
+├── test_output_copying.py               # Output file handling and copying
+└── test_run_sh.py                       # Script orchestration tests
 ```
 
 ## Test Categories
@@ -79,6 +83,85 @@ def test_output_directory_structure(tmp_path):
     assert (base_dir / "output" / "figures").exists()
     assert (base_dir / "output" / "data").exists()
     assert (base_dir / "output" / "pdf").exists()
+```
+
+### Executive Reporting (`test_07_generate_executive_report.py`)
+
+**Purpose:** Test the executive report generation pipeline (Stage 10)
+
+**Test Coverage:**
+- Cross-project metrics collection and aggregation
+- Executive dashboard generation with visual summaries
+- Report validation and integrity checking
+- Multi-project output organization
+
+**Example Test:**
+```python
+def test_executive_report_generation():
+    """Test complete executive report generation workflow."""
+    from scripts.generate_executive_report import generate_executive_report
+
+    # Generate report for all projects
+    report_dir = generate_executive_report(["project1", "project2"])
+
+    # Verify report components exist
+    assert (report_dir / "executive_summary.pdf").exists()
+    assert (report_dir / "manuscript_overview_project1.png").exists()
+    assert (report_dir / "manuscript_overview_project2.png").exists()
+```
+
+### Script Orchestration (`test_run_sh.py`)
+
+**Purpose:** Test bash script orchestration and command-line interface
+
+**Test Coverage:**
+- `run.sh` script argument parsing and validation
+- Project discovery and selection logic
+- Pipeline stage execution coordination
+- Error handling and exit code management
+- Interactive vs non-interactive modes
+
+**Example Test:**
+```python
+def test_run_sh_project_selection():
+    """Test project selection and validation in run.sh."""
+    # Test with valid project
+    result = run_script("./run.sh --project valid_project --dry-run")
+    assert result.returncode == 0
+
+    # Test with invalid project
+    result = run_script("./run.sh --project invalid_project --dry-run")
+    assert result.returncode != 0
+    assert "Project not found" in result.stderr
+```
+
+### Bash Integration (`test_logging.py`, `test_bash_utils.sh`)
+
+**Purpose:** Test bash script utilities and logging integration
+
+**Test Coverage:**
+- ANSI color output and formatting
+- Log level filtering and display
+- Bash utility function validation
+- Cross-platform compatibility
+- Error message formatting
+
+**Example Test:**
+```bash
+# Test bash logging functions
+test_log_success_format() {
+    source scripts/bash_utils.sh
+    local output=$(log_success "Test message")
+    assert_contains "$output" "✓"
+    assert_contains "$output" "Test message"
+}
+
+test_ansi_color_handling() {
+    source scripts/bash_utils.sh
+    local output=$(log_error "Error message")
+    # Verify ANSI color codes are present/absent based on TTY
+    assert_valid_ansi_handling "$output"
+}
 ```
 
 ## Integration Test Principles

@@ -21,6 +21,7 @@ import csv
 
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.reporting.executive_reporter import ExecutiveSummary, ProjectMetrics
+from infrastructure.reporting.manuscript_overview import generate_all_manuscript_overviews
 
 logger = get_logger(__name__)
 
@@ -2457,6 +2458,13 @@ def generate_all_dashboards(summary: ExecutiveSummary, output_dir: Path) -> Dict
 
     except Exception as e:
         logger.warning(f"Could not generate CSV data tables: {e}")
+
+    # Generate manuscript overviews for each project
+    try:
+        manuscript_overview_files = generate_all_manuscript_overviews(summary, output_dir, Path("."))
+        all_files.update(manuscript_overview_files)
+    except Exception as e:
+        logger.warning(f"Could not generate manuscript overviews: {e}")
 
     logger.info(f"Generated {len(all_files)} dashboard and data file(s)")
     return all_files

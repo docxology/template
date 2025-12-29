@@ -1,0 +1,37 @@
+{
+  "timestamp": "2025-12-29T15:02:45.077431",
+  "infrastructure": {
+    "passed": 0,
+    "failed": 0,
+    "skipped": 0,
+    "total": 0,
+    "warnings": 0,
+    "exit_code": 1,
+    "discovery_count": 2059,
+    "execution_phases": {},
+    "test_categories": {}
+  },
+  "project": {
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "total": 4,
+    "warnings": 0,
+    "exit_code": 0,
+    "discovery_count": 4,
+    "execution_phases": {
+      "setup": 0.03,
+      "execution": 0.03
+    },
+    "test_categories": {},
+    "coverage_percent": 100.0
+  },
+  "summary": {
+    "total_passed": 4,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "total_tests": 4,
+    "all_passed": false,
+    "project_coverage": 100.0
+  }
+}

@@ -199,6 +199,24 @@ Reports are saved to `project/output/reports/` by default.
 - **CSV Data Export**: Machine-readable data tables for further analysis
 - **Complete Workflow Orchestration**: `generate_multi_project_report()` handles the entire reporting pipeline
 
+### Manuscript Overview Generation (NEW)
+
+**Visual manuscript previews** for executive reporting. Automatically extracts all pages from each project's manuscript PDF and arranges them as thumbnails in a 4-column grid layout.
+
+```python
+from infrastructure.reporting import generate_all_manuscript_overviews
+
+# Generate manuscript overviews for all projects
+overview_files = generate_all_manuscript_overviews(summary, output_dir, repo_root)
+# Creates: manuscript_overview_{project_name}.png/pdf for each project
+```
+
+**Features:**
+- **Page Thumbnails**: High-quality page previews with page numbers
+- **Grid Layout**: 4-column arrangement with automatic row calculation
+- **Dual Output**: Both PNG (raster) and PDF (vector) formats
+- **Error Resilience**: Gracefully handles missing PDFs or rendering failures
+
 ### Output Structure
 
 Executive reports are saved to `output/executive_summary/`:
@@ -211,6 +229,10 @@ output/executive_summary/
 ├── dashboard.png                  # Comprehensive 9-chart dashboard
 ├── dashboard.pdf                  # Vector graphics for printing
 ├── dashboard.html                 # Interactive charts (Plotly)
+├── manuscript_overview_project.png           # Manuscript page grid (PNG)
+├── manuscript_overview_project.pdf           # Manuscript page grid (PDF)
+├── manuscript_overview_small_prose_project.png  # Additional projects...
+├── manuscript_overview_small_code_project.png
 ├── project_metrics.csv           # Detailed project data
 ├── aggregate_metrics.csv         # Cross-project statistics
 └── health_scores.csv             # Health score breakdowns

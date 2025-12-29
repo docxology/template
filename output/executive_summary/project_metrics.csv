@@ -1,4 +1,4 @@
 Project,Health_Score,Health_Grade,Manuscript_Words,Manuscript_Sections,Manuscript_Equations,Manuscript_Figures,Test_Total,Test_Passed,Test_Failed,Test_Coverage_Pct,Test_Execution_Time,Pipeline_Duration,Pipeline_Stages_Passed,Pipeline_Bottleneck_Stage,Pipeline_Bottleneck_Duration,Output_PDFs,Output_PDF_Size_MB,Output_Figures,Output_Slides,Output_Web,Output_Total
-project,30.0,F,13447,17,0,0,-1,0,0,0.0,0.0,523.0,6,render,15.0,1,2.2659435272216797,22,14,14,56
-small_code_project,25.0,F,1941,6,5,2,-1,0,0,0.0,0.0,370.0,6,render,15.0,1,0.22573471069335938,1,4,4,11
-small_prose_project,22.0,F,1729,6,6,0,-1,0,0,0.0,0.0,359.0,6,render,15.0,1,0.05215930938720703,0,4,4,9
+project,30.0,F,13447,17,0,0,-1,0,0,0.0,0.0,530.0,6,render,15.0,1,2.2336654663085938,22,14,14,56
+small_code_project,25.0,F,1941,6,5,2,-1,0,0,0.0,0.0,412.0,6,render,15.0,1,0.2257404327392578,1,4,4,11
+small_prose_project,22.0,F,1729,6,6,0,-1,0,0,0.0,0.0,379.0,6,render,15.0,1,0.05216026306152344,0,4,4,9

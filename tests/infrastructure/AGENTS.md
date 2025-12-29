@@ -13,6 +13,7 @@ The `tests/infrastructure/` directory contains comprehensive tests for the reusa
 ```
 tests/infrastructure/
 ├── conftest.py                      # Shared test configuration
+├── test_project_discovery.py        # Project discovery and validation (284 lines)
 ├── build/                          # Build system tests
 │   ├── test_build_additional.py    # Additional build tests
 │   ├── test_build_complete.py      # Comprehensive build tests
@@ -174,6 +175,12 @@ tests/infrastructure/
   - Retry logic with backoff
   - Retry condition handling
   - Retry state tracking
+
+- **`test_project_discovery.py`** (284 lines) - Project discovery and validation
+  - Project structure validation (src/, tests/ directories)
+  - Project metadata extraction and parsing
+  - Multi-project discovery from projects/ directory
+  - Project structure integrity checking
 
 ### Build System (`build/`)
 

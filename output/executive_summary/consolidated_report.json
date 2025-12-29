@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-29T13:00:47.383167",
+  "timestamp": "2025-12-29T14:54:19.979242",
   "total_projects": 3,
   "aggregate_metrics": {
     "manuscript": {
@@ -38,19 +38,19 @@
     },
     "outputs": {
       "total_pdfs": 3,
-      "total_size_mb": 2.543837547302246,
+      "total_size_mb": 2.511566162109375,
       "total_figures": 23,
       "total_slides": 22,
       "total_web": 22
     },
     "pipeline": {
-      "total_duration": 1252.0,
-      "average_duration": 417.3333333333333,
+      "total_duration": 1321.0,
+      "average_duration": 440.3333333333333,
       "duration_stats": {
-        "min": 359.0,
-        "max": 523.0,
-        "median": 370.0,
-        "avg": 417.3333333333333
+        "min": 379.0,
+        "max": 530.0,
+        "median": 412.0,
+        "avg": 440.3333333333333
       },
       "total_stages_passed": 18,
       "total_stages_failed": 0
@@ -105,7 +105,7 @@
       },
       "outputs": {
         "pdf_files": 1,
-        "pdf_size_mb": 2.2659435272216797,
+        "pdf_size_mb": 2.2336654663085938,
         "figures": 22,
         "data_files": 5,
         "slides": 14,
@@ -113,12 +113,12 @@
         "total_outputs": 56
       },
       "pipeline": {
-        "total_duration": 523.0,
+        "total_duration": 530.0,
         "stages_passed": 6,
         "stages_failed": 0,
         "bottleneck_stage": "render",
         "bottleneck_duration": 15.0,
-        "bottleneck_percent": 2.8680688336520075
+        "bottleneck_percent": 2.8301886792452833
       }
     },
     {
@@ -158,7 +158,7 @@
       },
       "outputs": {
         "pdf_files": 1,
-        "pdf_size_mb": 0.22573471069335938,
+        "pdf_size_mb": 0.2257404327392578,
         "figures": 1,
         "data_files": 1,
         "slides": 4,
@@ -166,12 +166,12 @@
         "total_outputs": 11
       },
       "pipeline": {
-        "total_duration": 370.0,
+        "total_duration": 412.0,
         "stages_passed": 6,
         "stages_failed": 0,
         "bottleneck_stage": "render",
         "bottleneck_duration": 15.0,
-        "bottleneck_percent": 4.054054054054054
+        "bottleneck_percent": 3.640776699029126
       }
     },
     {
@@ -211,7 +211,7 @@
       },
       "outputs": {
         "pdf_files": 1,
-        "pdf_size_mb": 0.05215930938720703,
+        "pdf_size_mb": 0.05216026306152344,
         "figures": 0,
         "data_files": 0,
         "slides": 4,
@@ -219,12 +219,12 @@
         "total_outputs": 9
       },
       "pipeline": {
-        "total_duration": 359.0,
+        "total_duration": 379.0,
         "stages_passed": 6,
         "stages_failed": 0,
         "bottleneck_stage": "render",
         "bottleneck_duration": 15.0,
-        "bottleneck_percent": 4.178272980501393
+        "bottleneck_percent": 3.95778364116095
       }
     }
   ],
@@ -368,7 +368,7 @@
       {
         "project": "project",
         "pdfs": 1,
-        "size_mb": "2.3",
+        "size_mb": "2.2",
         "figures": 22,
         "slides": 14
       },
@@ -390,19 +390,19 @@
     "pipeline_comparison": [
       {
         "project": "project",
-        "duration": "523s",
+        "duration": "530s",
         "bottleneck": "render",
         "bottleneck_pct": "3%"
       },
       {
         "project": "small_code_project",
-        "duration": "370s",
+        "duration": "412s",
         "bottleneck": "render",
         "bottleneck_pct": "4%"
       },
       {
         "project": "small_prose_project",
-        "duration": "359s",
+        "duration": "379s",
         "bottleneck": "render",
         "bottleneck_pct": "4%"
       }

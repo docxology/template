@@ -104,64 +104,112 @@ For modules requiring external services (LLM, Literature, Publishing):
 
 ## Test Organization
 
-Tests are organized to mirror `infrastructure/` module structure:
+Tests are organized to mirror `infrastructure/` module structure. Note: Multiple test files with suffixes like `_coverage`, `_full`, `_comprehensive` exist to achieve comprehensive test coverage across different scenarios and edge cases. These files are intentionally split rather than consolidated to ensure thorough validation of complex functionality:
 
 ```
 tests/
-├── conftest.py              # Test configuration (adds infrastructure to path)
-├── infrastructure/          # Infrastructure module tests
-│   ├── conftest.py
-│   ├── build/               # Build module tests
-│   │   ├── test_build_verifier.py
-│   │   ├── test_quality_checker.py
-│   │   └── test_reproducibility.py
-│   ├── core/                # Core module tests
-│   │   ├── test_config_loader.py
-│   │   ├── test_exceptions.py
-│   │   └── test_logging_utils.py
-│   ├── documentation/       # Documentation module tests
-│   │   ├── test_figure_manager.py
-│   │   ├── test_image_manager.py
-│   │   ├── test_glossary_gen.py
-│   │   └── test_markdown_integration.py
-│   ├── literature/          # Literature module tests
-│   │   ├── test_core.py
-│   │   ├── test_api.py
-│   │   ├── test_config.py
-│   │   ├── test_cli.py
-│   │   └── test_integration.py
-│   ├── llm/                 # LLM module tests
-│   │   ├── test_core.py
-│   │   ├── test_context.py
-│   │   ├── test_templates.py
-│   │   ├── test_config.py
-│   │   └── test_validation.py
-│   ├── publishing/          # Publishing module tests
-│   │   ├── test_publishing.py
-│   │   ├── test_api.py
-│   │   └── test_cli.py
-│   ├── rendering/           # Rendering module tests
-│   │   ├── test_core.py
-│   │   ├── test_latex_utils.py
-│   │   ├── test_renderers.py
-│   │   ├── test_config.py
-│   │   ├── test_poster_renderer.py
-│   │   └── test_cli.py
-│   ├── scientific/          # Scientific module tests
-│   │   └── test_scientific_dev.py
-│   └── validation/          # Validation module tests
-│       ├── test_markdown_validator.py
-│       ├── test_pdf_validator.py
-│       ├── test_integrity.py
-│       ├── test_check_links.py
-│       ├── test_doc_scanner.py
-│       ├── test_repo_scanner.py
-│       └── test_cli.py
-└── integration/             # Integration tests
-    ├── test_module_interoperability.py
-    ├── test_figure_equation_citation.py
-    ├── test_output_copying.py
-    └── test_edge_cases_and_error_paths.py
+├── conftest.py                          # Root test configuration and fixtures
+├── infrastructure/                      # Infrastructure module tests
+│   ├── conftest.py                      # Infrastructure test configuration
+│   ├── test_project_discovery.py        # Project discovery and validation (284 lines)
+│   ├── build/                           # Build system tests
+│   │   ├── test_build_verifier.py       # Build verification (400 lines)
+│   │   ├── test_build_verifier_*.py     # Additional build verifier tests
+│   │   ├── test_quality_checker.py      # Document quality analysis (463 lines)
+│   │   └── test_quality_checker_*.py    # Additional quality checker tests
+│   │   └── test_reproducibility.py      # Environment tracking (427 lines)
+│   │   └── test_reproducibility_*.py    # Additional reproducibility tests
+│   ├── core/                            # Core utilities tests
+│   │   ├── test_checkpoint.py           # Checkpoint/resume functionality
+│   │   ├── test_config_cli_coverage.py  # Config CLI coverage
+│   │   ├── test_config_loader.py        # Configuration loading
+│   │   ├── test_credentials.py          # Credential management
+│   │   ├── test_environment.py          # Environment handling
+│   │   ├── test_exceptions.py           # Exception handling
+│   │   ├── test_file_operations.py      # File operations
+│   │   ├── test_logging_*.py            # Logging system tests
+│   │   ├── test_performance.py          # Performance monitoring
+│   │   ├── test_progress.py             # Progress tracking
+│   │   ├── test_retry.py                # Retry mechanisms
+│   │   └── test_script_discovery.py     # Script discovery
+│   ├── documentation/                   # Documentation tools tests
+│   │   ├── test_figure_manager.py       # Figure management and registration
+│   │   ├── test_generate_glossary_cli.py # Glossary generation CLI
+│   │   ├── test_glossary_gen.py         # API documentation generation (189 lines)
+│   │   ├── test_image_manager.py        # Image handling in markdown
+│   │   └── test_markdown_integration.py # Markdown processing integration
+│   ├── llm/                             # LLM integration tests
+│   │   ├── conftest.py                  # LLM test configuration
+│   │   ├── test_cli.py                  # CLI interface
+│   │   ├── test_config.py               # Configuration management
+│   │   ├── test_context.py              # Conversation context
+│   │   ├── test_context_engineering.py  # Context engineering
+│   │   ├── test_core.py                 # Core LLM functionality
+│   │   ├── test_llm_core_*.py           # Additional core tests (coverage/full)
+│   │   ├── test_llm_review.py           # LLM manuscript review
+│   │   ├── test_logging.py              # LLM logging
+│   │   ├── test_ollama_utils.py         # Ollama client utilities
+│   │   ├── test_prompts_*.py            # Prompt management
+│   │   ├── test_response_saving.py      # Response saving
+│   │   ├── test_review_generators.py    # Review generation
+│   │   ├── test_streaming.py            # Streaming responses
+│   │   ├── test_templates.py            # Research prompt templates
+│   │   └── test_validation.py           # Input validation
+│   ├── publishing/                      # Publishing tools tests
+│   │   ├── test_api.py                  # Platform API clients
+│   │   ├── test_cli.py                  # CLI interface
+│   │   ├── test_publish_cli.py          # Publishing CLI
+│   │   ├── test_publishing.py           # Publishing metadata (427 lines)
+│   │   └── test_publishing_*             # Additional publishing tests (coverage/full/edge_cases)
+│   ├── rendering/                       # Rendering pipeline tests
+│   │   ├── conftest.py                  # Rendering test configuration
+│   │   ├── test_cli.py                  # CLI interface
+│   │   ├── test_config.py               # Rendering configuration
+│   │   ├── test_core.py                 # Core rendering functionality
+│   │   ├── test_latex_*.py              # LaTeX utilities and validation
+│   │   ├── test_manuscript_*.py         # Manuscript handling
+│   │   ├── test_pdf_renderer_*.py       # PDF rendering (core/coverage/full/additional)
+│   │   ├── test_poster_renderer.py      # Scientific poster rendering
+│   │   ├── test_render_*.py             # Render CLI and utilities
+│   │   ├── test_renderers.py            # General rendering tests
+│   │   ├── test_rendering_cli*.py       # CLI functionality (core/full)
+│   │   ├── test_slides_renderer_*.py    # Presentation slides (core/coverage)
+│   │   └── test_web_renderer_*.py       # Web/HTML rendering
+│   ├── reporting/                       # Reporting and dashboard tests
+│   │   ├── test_dashboard_generator.py  # Dashboard generation
+│   │   ├── test_error_aggregator.py     # Error aggregation
+│   │   ├── test_executive_reporter.py   # Executive reporting
+│   │   ├── test_html_templates.py       # HTML template rendering
+│   │   ├── test_manuscript_overview.py  # Manuscript overview generation
+│   │   ├── test_output_reporter.py      # Output reporting
+│   │   ├── test_pipeline_reporter.py    # Pipeline reporting
+│   │   └── test_test_reporter.py        # Test result reporting
+│   ├── scientific/                      # Scientific tools tests
+│   │   ├── test_scientific_dev.py       # Scientific development utilities
+│   │   └── test_scientific_dev_edge_cases.py # Edge case handling
+│   └── validation/                      # Validation system tests
+│       ├── test_check_links*.py         # Link validation (core/coverage/full/edge_cases)
+│       ├── test_cli.py                  # CLI interface
+│       ├── test_doc_scanner*.py         # Document scanning (core/coverage/full/phases)
+│       ├── test_figure_validator.py     # Figure validation
+│       ├── test_integrity*.py           # Integrity verification (core/edge_cases)
+│       ├── test_markdown_validator.py   # Markdown validation
+│       ├── test_output_validator.py     # Output validation
+│       ├── test_pdf_validator.py        # PDF validation (328 lines)
+│       ├── test_repo_scanner*.py        # Repository scanning (core/coverage/full/comprehensive/additional)
+│       ├── test_validate_markdown_cli*.py # Markdown CLI (core/coverage/full/comprehensive)
+│       ├── test_validate_pdf_cli*.py    # PDF CLI (core/coverage/full/comprehensive)
+│       └── test_validation_cli.py       # General validation CLI
+└── integration/                         # Integration tests
+    ├── conftest.py                      # Integration test configuration
+    ├── test_07_generate_executive_report.py # Executive report generation
+    ├── test_bash_utils.sh               # Bash utility function tests
+    ├── test_edge_cases_and_error_paths.py # Edge cases and error handling
+    ├── test_figure_equation_citation.py # Figure/equation/citation handling
+    ├── test_logging.py                  # Bash logging integration tests
+    ├── test_module_interoperability.py  # Cross-module interaction validation
+    ├── test_output_copying.py           # Output file handling and copying
+    └── test_run_sh.py                   # Script orchestration tests
 ```
 
 ## conftest.py

@@ -886,35 +886,26 @@ run_full_pipeline() {
     log_info "  Timeout: ${LLM_TIMEOUT}s per translation"
     log_info "  Expected duration: 1-5 minutes per language (depending on model)"
     log_info "Note: This stage is optional - pipeline will continue even if it fails"
-    current_stage=9
-    stage_start=$(date +%s)
-    log_stage_progress 9 "LLM Translations" 9 "$pipeline_start" "$stage_start"
-    cd "$REPO_ROOT"
-
-    # Get timeout configuration for logging
-    LLM_TIMEOUT=${LLM_REVIEW_TIMEOUT:-300}
-    log_info "Running LLM translations (requires Ollama)..."
-    log_info "  Timeout: ${LLM_TIMEOUT}s per translation"
-    log_info "  Expected duration: 1-5 minutes per language (depending on model)"
-    log_info "Note: This stage is optional - pipeline will continue even if it fails"
     $(get_python_cmd) scripts/06_llm_review.py --translations-only --project "$project_name" 2>&1 | tee -a "$log_file" || true
     exit_code=${PIPESTATUS[0]}
     if [[ $exit_code -eq 0 ]]; then
         log_success "LLM translations complete"
-        STAGE_RESULTS[8]=0
+        STAGE_RESULTS[7]=0
         stage_end=$(date +%s)
-        STAGE_DURATIONS[8]=$(get_elapsed_time "$stage_start" "$stage_end")
-        log_resource_usage "LLM Translations" "${STAGE_DURATIONS[8]}"
+        STAGE_DURATIONS[7]=$(get_elapsed_time "$stage_start" "$stage_end")
+        log_resource_usage "LLM Translations" "${STAGE_DURATIONS[7]}"
     elif [[ $exit_code -eq 2 ]]; then
+        stage_end=$(date +%s)
+        STAGE_DURATIONS[7]=$(get_elapsed_time "$stage_start" "$stage_end")
         log_warning "LLM translations skipped (Ollama not available or no languages configured)"
         log_info "  To enable: configure translations in project/manuscript/config.yaml"
         log_info "  Example: llm.translations.enabled: true, languages: [zh, hi, ru]"
-        STAGE_RESULTS[8]=2  # Mark as skipped
+        STAGE_RESULTS[7]=2  # Mark as skipped
     else
         # Calculate stage duration for better error reporting
         stage_end=$(date +%s)
         stage_duration=$(get_elapsed_time "$stage_start" "$stage_end")
-        STAGE_DURATIONS[8]=$(get_elapsed_time "$stage_start" "$stage_end")
+        STAGE_DURATIONS[7]=$(get_elapsed_time "$stage_start" "$stage_end")
 
         log_warning "LLM translations failed (exit code: $exit_code, duration: ${stage_duration})"
 
@@ -2216,20 +2207,19 @@ print_pipeline_summary() {
     # Build mapping of stage names to durations, handling skipped stages
     declare -a stage_duration_map=()
     local duration_idx=0
-    
+
     for ((i=0; i<num_stages; i++)); do
         local stage_name="${STAGE_NAMES[$i]}"
         local duration=0
         local is_skipped=false
-        
+
         # Check if this stage was skipped (Infrastructure Tests when skip_infra=true)
         if [[ "$skip_infra" == "true" ]] && [[ "$stage_name" == "Infrastructure Tests" ]]; then
             is_skipped=true
             stage_duration_map[$i]="SKIPPED"
-        elif [[ -n "${STAGE_DURATIONS[$duration_idx]:-}" ]]; then
-            duration="${STAGE_DURATIONS[$duration_idx]}"
+        elif [[ -n "${STAGE_DURATIONS[$i]:-}" ]]; then
+            duration="${STAGE_DURATIONS[$i]}"
             stage_duration_map[$i]="$duration"
-            duration_idx=$((duration_idx + 1))
             executed_stage_count=$((executed_stage_count + 1))
         else
             # Stage duration not found - mark as skipped

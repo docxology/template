@@ -170,6 +170,23 @@ Development standards are documented in the `.cursorrules/` directory:
 
 ### **Changelog**
 
+## 🤖 **AI Prompt Templates**
+### **Prompt Categories**
+
+#### **Core Development Prompts**
+- **[`docs/prompts/README.md`](prompts/README.md)** - Navigation guide for all prompt templates
+- **[`docs/prompts/AGENTS.md`](prompts/AGENTS.md)** - Technical documentation for prompt templates
+- **[`docs/prompts/manuscript_creation.md`](prompts/manuscript_creation.md)** - Complete manuscript creation from research description
+- **[`docs/prompts/code_development.md`](prompts/code_development.md)** - Standards-compliant code development
+- **[`docs/prompts/test_creation.md`](prompts/test_creation.md)** - Comprehensive test creation (no mocks policy)
+- **[`docs/prompts/feature_addition.md`](prompts/feature_addition.md)** - New feature development with architecture compliance
+
+#### **Advanced Development Prompts**
+- **[`docs/prompts/refactoring.md`](prompts/refactoring.md)** - Clean break code refactoring
+- **[`docs/prompts/documentation_creation.md`](prompts/documentation_creation.md)** - AGENTS.md and README.md creation
+- **[`docs/prompts/infrastructure_module.md`](prompts/infrastructure_module.md)** - Generic infrastructure module development
+- **[`docs/prompts/validation_quality.md`](prompts/validation_quality.md)** - Quality assurance and validation procedures
+
 ## 📁 **File Organization**
 
 ### **Directory Structure**

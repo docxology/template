@@ -14,11 +14,11 @@ project,Testing,Total_Tests,-1,tests,Total test cases (-1 = unavailable),High,10
 project,Testing,Coverage_Percent,0.0,percent,Code coverage percentage,High,90-100%
 project,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
 project,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
-project,Outputs,PDF_Size_MB,2.27,MB,Total PDF file size,Low,0.1-10 MB
+project,Outputs,PDF_Size_MB,2.23,MB,Total PDF file size,Low,0.1-10 MB
 project,Outputs,Figures,22,files,Generated figure files,Medium,0-50 figures
 project,Outputs,Slides,14,files,Generated slide files,Medium,0-20 slide sets
 project,Outputs,Web_Outputs,14,files,Generated web files,Medium,0-20 web files
-project,Pipeline,Total_Duration,523.0,seconds,Total pipeline execution time,Medium,60-600 seconds
+project,Pipeline,Total_Duration,530.0,seconds,Total pipeline execution time,Medium,60-600 seconds
 project,Pipeline,Stages_Passed,6,stages,Pipeline stages completed successfully,High,6 stages
 project,Pipeline,Bottleneck_Stage,render,stage_name,Slowest pipeline stage,Medium,Varies by project
 project,Pipeline,Bottleneck_Duration,15.0,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
@@ -41,7 +41,7 @@ small_code_project,Outputs,PDF_Size_MB,0.23,MB,Total PDF file size,Low,0.1-10 MB
 small_code_project,Outputs,Figures,1,files,Generated figure files,Medium,0-50 figures
 small_code_project,Outputs,Slides,4,files,Generated slide files,Medium,0-20 slide sets
 small_code_project,Outputs,Web_Outputs,4,files,Generated web files,Medium,0-20 web files
-small_code_project,Pipeline,Total_Duration,370.0,seconds,Total pipeline execution time,Medium,60-600 seconds
+small_code_project,Pipeline,Total_Duration,412.0,seconds,Total pipeline execution time,Medium,60-600 seconds
 small_code_project,Pipeline,Stages_Passed,6,stages,Pipeline stages completed successfully,High,6 stages
 small_code_project,Pipeline,Bottleneck_Stage,render,stage_name,Slowest pipeline stage,Medium,Varies by project
 small_code_project,Pipeline,Bottleneck_Duration,15.0,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
@@ -64,7 +64,7 @@ small_prose_project,Outputs,PDF_Size_MB,0.05,MB,Total PDF file size,Low,0.1-10 M
 small_prose_project,Outputs,Figures,0,files,Generated figure files,Medium,0-50 figures
 small_prose_project,Outputs,Slides,4,files,Generated slide files,Medium,0-20 slide sets
 small_prose_project,Outputs,Web_Outputs,4,files,Generated web files,Medium,0-20 web files
-small_prose_project,Pipeline,Total_Duration,359.0,seconds,Total pipeline execution time,Medium,60-600 seconds
+small_prose_project,Pipeline,Total_Duration,379.0,seconds,Total pipeline execution time,Medium,60-600 seconds
 small_prose_project,Pipeline,Stages_Passed,6,stages,Pipeline stages completed successfully,High,6 stages
 small_prose_project,Pipeline,Bottleneck_Stage,render,stage_name,Slowest pipeline stage,Medium,Varies by project
 small_prose_project,Pipeline,Bottleneck_Duration,15.0,seconds,Time spent in bottleneck stage,Medium,10-300 seconds

@@ -16,6 +16,7 @@ infrastructure/reporting/
 ├── html_templates.py        # HTML report templates
 ├── executive_reporter.py    # Cross-project metrics and summaries
 ├── dashboard_generator.py   # Visual dashboard generation
+├── manuscript_overview.py   # Manuscript PDF page overview generation
 ├── README.md                # Quick reference
 └── AGENTS.md                # This file
 ```
@@ -257,6 +258,92 @@ print(f"Generated {len(dashboard_files)} dashboard files")
 for fmt, path in dashboard_files.items():
     print(f"  {fmt.upper()}: {path.name}")
 ```
+
+### Manuscript Overview Generator (`manuscript_overview.py`)
+
+Generates visual overviews of manuscript PDFs by extracting and arranging all pages as thumbnails in a grid layout.
+
+#### Key Functions
+
+**`extract_pdf_pages_as_images(pdf_path: Path, dpi: int = 150) -> List[PIL.Image]`**
+- Extracts each PDF page as a PIL Image object
+- Uses pypdf for PDF reading and PIL for image rendering
+- Supports fallback rendering if advanced libraries unavailable
+- Returns list of PIL Images, one per page
+
+**`create_page_grid(images: List[PIL.Image], cols: int = 4, padding: int = 10, max_thumb_size: Tuple[int, int] = (600, 800)) -> PIL.Image`**
+- Arranges page images in a 4-column grid layout
+- Automatically calculates rows based on number of pages
+- Maintains aspect ratio and scales images appropriately
+- Adds page numbers as labels on each thumbnail
+- Returns single PIL Image containing the complete grid
+
+**`generate_manuscript_overview(pdf_path: Path, output_dir: Path, project_name: str, dpi: int = 150) -> Dict[str, Path]`**
+- Main orchestration function for manuscript overview generation
+- Extracts pages, creates grid, saves both PNG and PDF outputs
+- Returns dictionary mapping filename to output file path
+- Handles errors gracefully and provides informative logging
+
+**`generate_all_manuscript_overviews(summary: ExecutiveSummary, output_dir: Path, repo_root: Path) -> Dict[str, Path]`**
+- Generates manuscript overviews for all projects in executive summary
+- Searches multiple possible locations for manuscript PDFs
+- Returns dictionary of all generated files (PNG and PDF for each project)
+- Automatically integrated into `generate_all_dashboards()`
+
+#### Implementation Details
+
+**PDF Processing Strategy:**
+1. **Primary**: Uses pypdf to read PDF pages, then renders text content using PIL drawing
+2. **Advanced Fallback**: Attempts reportlab-based rendering for higher quality (if available)
+3. **Simple Fallback**: Basic text extraction and PIL rendering if advanced rendering fails
+
+**Grid Layout Algorithm:**
+- Fixed 4-column layout with automatic row calculation
+- Thumbnail sizing: Maintains aspect ratio, fits within max_thumb_size bounds (600x800 default)
+- Page numbering: Sequential labels ("Page 1", "Page 2", etc.) on each thumbnail
+- Spacing: Configurable padding between thumbnails
+
+**Error Handling:**
+- Missing PDF files: Logged as warning, project skipped
+- Corrupted PDFs: Logged as error, project skipped
+- Rendering failures: Graceful fallback to simpler rendering methods
+- Missing dependencies: Clear error messages with installation guidance
+
+#### Usage Example
+
+```python
+from infrastructure.reporting.manuscript_overview import generate_manuscript_overview
+from pathlib import Path
+
+# Generate overview for single project
+pdf_path = Path("output/project/pdf/project_combined.pdf")
+output_dir = Path("output/executive_summary")
+result = generate_manuscript_overview(pdf_path, output_dir, "my_project")
+
+# Result contains: {'manuscript_overview_my_project.png': Path(...), 'manuscript_overview_my_project.pdf': Path(...)}
+
+# Generate for all projects (integrated into dashboard generation)
+from infrastructure.reporting import generate_all_dashboards
+dashboard_files = generate_all_dashboards(summary, output_dir)
+# Automatically includes manuscript overviews
+```
+
+#### Output Formats
+
+- **PNG**: High-resolution raster image (300 DPI default, print quality)
+- **PDF**: Vector format preserving quality (using reportlab, if available)
+- **Grid Layout**: 4-column arrangement with automatic rows
+- **Page Labels**: Sequential numbering on each thumbnail
+- **File Naming**: `manuscript_overview_{project_name}.png/pdf`
+
+#### Dependencies
+
+**Required:**
+- `pypdf>=5.0`: PDF reading and page extraction
+- `pillow>=10.0.0`: Image processing and rendering
+
+**Optional:**
+- `reportlab>=4.0.0`: Enhanced PDF rendering and output (recommended)
 
 #### Output Formats
 

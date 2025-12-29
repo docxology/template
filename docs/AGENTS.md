@@ -93,6 +93,21 @@ Documentation is organized into modular subdirectories by purpose and audience:
 | `best-practices/MIGRATION_GUIDE.md` | Migration from other templates | Developers |
 | `best-practices/BACKUP_RECOVERY.md` | Backup strategies and recovery | All users |
 
+### AI Prompt Templates (`prompts/`)
+
+| File | Purpose | Audience |
+|------|---------|----------|
+| `prompts/README.md` | Quick reference guide for all prompts | All users |
+| `prompts/AGENTS.md` | Technical documentation for prompt templates | Developers |
+| `prompts/manuscript_creation.md` | Complete manuscript creation from research description | Researchers |
+| `prompts/code_development.md` | Standards-compliant code development | Developers |
+| `prompts/test_creation.md` | Comprehensive test creation (no mocks) | Developers |
+| `prompts/refactoring.md` | Clean break code refactoring | Developers |
+| `prompts/feature_addition.md` | New feature development with architecture compliance | Developers |
+| `prompts/documentation_creation.md` | AGENTS.md and README.md creation | Technical writers |
+| `prompts/infrastructure_module.md` | Generic infrastructure module development | Architects |
+| `prompts/validation_quality.md` | Quality assurance and validation | QA engineers |
+
 ## Development Rules
 
 The `.cursorrules/` directory contains modular development rules that complement this documentation. Each rule file covers specific development standards:

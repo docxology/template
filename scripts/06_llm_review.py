@@ -42,6 +42,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 import threading
 import time
@@ -520,6 +521,7 @@ def check_ollama_availability() -> Tuple[bool, Optional[str]]:
     """Check if Ollama is running and select best model.
 
     Attempts to start Ollama automatically if not running (unless disabled).
+    Includes retry logic with exponential backoff for robustness.
 
     Returns:
         Tuple of (is_available, model_name)
@@ -529,33 +531,65 @@ def check_ollama_availability() -> Tuple[bool, Optional[str]]:
     # Check if auto-start is enabled (default: True)
     auto_start = os.environ.get("OLLAMA_AUTO_START", "true").lower() == "true"
 
+    # First check if Ollama is installed
+    try:
+        result = subprocess.run(
+            ["which", "ollama"],
+            capture_output=True,
+            timeout=2.0
+        )
+        if result.returncode != 0:
+            logger.error("❌ Ollama command not found. Install Ollama: https://ollama.ai")
+            logger.info("  macOS: brew install ollama")
+            logger.info("  Linux: curl -fsSL https://ollama.ai/install.sh | sh")
+            logger.info("  Windows: Download from https://ollama.ai/download")
+            return False, None
+    except (subprocess.SubprocessError, FileNotFoundError):
+        logger.error("❌ Unable to check if Ollama is installed")
+        logger.info("  Install Ollama from: https://ollama.ai")
+        return False, None
+
     # Step 1: Check if Ollama server is responding, auto-start if needed
     logger.info("    Checking Ollama server status...")
 
-    if not is_ollama_running():
-        if auto_start:
-            logger.info("    Ollama not running, attempting to start automatically...")
-            if ensure_ollama_ready(auto_start=True):
-                log_success("Ollama server started and ready", logger)
+    # Retry logic with exponential backoff
+    max_retries = 3
+    for attempt in range(max_retries):
+        if attempt > 0:
+            wait_time = min(2 ** attempt, 10)  # Exponential backoff, max 10s
+            logger.info(f"    Retry {attempt}/{max_retries - 1} in {wait_time}s...")
+            time.sleep(wait_time)
+
+        if not is_ollama_running():
+            if auto_start:
+                logger.info("    Ollama not running, attempting to start automatically...")
+                if ensure_ollama_ready(auto_start=True):
+                    log_success("Ollama server started and ready", logger)
+                    break  # Success, exit retry loop
+                else:
+                    if attempt == max_retries - 1:  # Last attempt failed
+                        logger.warning("❌ Failed to start Ollama server automatically after retries")
+                        logger.info("  To start manually:")
+                        logger.info("    1. Open a terminal: ollama serve")
+                        logger.info("    2. Or start Ollama app if installed")
+                        logger.info("  To disable auto-start: export OLLAMA_AUTO_START=false")
+                        logger.info("  To install a model: ollama pull llama3-gradient")
+                        return False, None
+                    else:
+                        logger.warning(f"    Attempt {attempt + 1} failed, retrying...")
+                        continue
             else:
-                logger.warning("❌ Failed to start Ollama server automatically")
-                logger.info("  To start manually:")
+                logger.warning("❌ Ollama server is not running")
+                logger.info("  Auto-start is disabled (OLLAMA_AUTO_START=false)")
+                logger.info("  To start Ollama:")
                 logger.info("    1. Open a terminal: ollama serve")
                 logger.info("    2. Or start Ollama app if installed")
-                logger.info("  To disable auto-start: export OLLAMA_AUTO_START=false")
+                logger.info("  To enable auto-start: export OLLAMA_AUTO_START=true")
                 logger.info("  To install a model: ollama pull llama3-gradient")
                 return False, None
         else:
-            logger.warning("❌ Ollama server is not running")
-            logger.info("  Auto-start is disabled (OLLAMA_AUTO_START=false)")
-            logger.info("  To start Ollama:")
-            logger.info("    1. Open a terminal: ollama serve")
-            logger.info("    2. Or start Ollama app if installed")
-            logger.info("  To enable auto-start: export OLLAMA_AUTO_START=true")
-            logger.info("  To install a model: ollama pull llama3-gradient")
-            return False, None
-    else:
-        log_success("Ollama server is running", logger)
+            log_success("Ollama server is running", logger)
+            break  # Server is running, exit retry loop
     
     # Step 2: List available models
     logger.info("    Discovering available models...")

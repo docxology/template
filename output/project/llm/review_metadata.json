@@ -1,6 +1,6 @@
 {
   "model": "gemma3:4b",
-  "timestamp": "2025-12-29T12:48:27.973152",
+  "timestamp": "2025-12-29T15:12:16.857069",
   "source_pdf": "/Users/4d/Documents/GitHub/template/projects/project/output/pdf/project_combined.pdf",
   "reviews_generated": [
     "executive_summary",
@@ -21,37 +21,37 @@
       "input_chars": 79795,
       "input_words": 14922,
       "input_tokens_est": 19948,
-      "output_chars": 1761,
-      "output_words": 221,
-      "output_tokens_est": 440,
-      "generation_time_seconds": 37.51
+      "output_chars": 3101,
+      "output_words": 397,
+      "output_tokens_est": 775,
+      "generation_time_seconds": 44.57
     },
     "quality_review": {
       "input_chars": 79795,
       "input_words": 14922,
       "input_tokens_est": 19948,
-      "output_chars": 5044,
-      "output_words": 692,
-      "output_tokens_est": 1261,
-      "generation_time_seconds": 49.59
+      "output_chars": 5252,
+      "output_words": 736,
+      "output_tokens_est": 1313,
+      "generation_time_seconds": 54.38
     },
     "methodology_review": {
       "input_chars": 79795,
       "input_words": 14922,
       "input_tokens_est": 19948,
-      "output_chars": 5284,
-      "output_words": 701,
-      "output_tokens_est": 1321,
-      "generation_time_seconds": 48.36
+      "output_chars": 4984,
+      "output_words": 644,
+      "output_tokens_est": 1246,
+      "generation_time_seconds": 51.72
     },
     "improvement_suggestions": {
       "input_chars": 79795,
       "input_words": 14922,
       "input_tokens_est": 19948,
-      "output_chars": 5321,
-      "output_words": 734,
-      "output_tokens_est": 1330,
-      "generation_time_seconds": 48.29
+      "output_chars": 5843,
+      "output_words": 790,
+      "output_tokens_est": 1460,
+      "generation_time_seconds": 56.28
     }
   },
   "format_compliance": {
@@ -81,7 +81,7 @@
       }
     }
   },
-  "total_generation_time_seconds": 183.77,
+  "total_generation_time_seconds": 206.96,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,
