@@ -116,7 +116,7 @@ filterwarnings = [
 [tool.coverage.run]
 # Coverage configuration (consolidated from .coveragerc)
 branch = true
-source = ["infrastructure", "project/src"]
+source = ["infrastructure", "projects/project/src"]
 omit = [
     "*/tests/*",
     "*/test_*",

@@ -2,8 +2,8 @@
 
 This configuration enables:
 1. Infrastructure module imports (infrastructure/)
-2. Project source imports (project/src/)
-3. Project test imports (project/tests/)
+2. Project source imports (projects/{name}/src/)
+3. Project test imports (projects/{name}/tests/)
 4. Headless matplotlib rendering
 
 Path configuration is CRITICAL and must happen before any test imports.
