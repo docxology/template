@@ -77,7 +77,7 @@ uv sync
 
 ```bash
 # Generate everything (runs all 6 pipeline stages)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
@@ -173,7 +173,7 @@ manuscript/
 1. **Run complete pipeline**
    ```bash
    # Runs all 6 stages including cleanup
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    
    # Or use unified interactive menu
    ./run.sh
@@ -354,7 +354,7 @@ export PROJECT_TITLE="Impact of Machine Learning on Climate Prediction"
 export DOI="10.5281/zenodo.12345678"
 
 # Generate with your metadata
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 #### Method 2: Create .env File
@@ -381,7 +381,7 @@ python3 scripts/run_all.py
 4. **Source and build**
    ```bash
    source .env
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 **What Gets Updated**:
@@ -467,7 +467,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 
 4. **Rebuild to see citations**
    ```bash
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 ---
@@ -490,7 +490,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 | **Reference shows ??** | Check label spelling matches |
 | **Equation not numbered** | Use `\begin{equation}...\end{equation}` |
 | **Figure not found** | Check path is `../output/figures/` |
-| **PDF won't build** | Run `python3 scripts/run_all.py` (includes cleanup) |
+| **PDF won't build** | Run `python3 scripts/execute_pipeline.py --core-only` (includes cleanup) |
 
 ### Keyboard Shortcuts
 
@@ -517,7 +517,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 2. Check xelatex installed: `xelatex --version`
 3. Clean and rebuild:
    ```bash
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 ### References Show ??
@@ -529,7 +529,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 2. Check spelling matches exactly
 3. Rebuild (references need multiple passes):
    ```bash
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 ### Math Not Rendering
@@ -549,7 +549,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 **Solutions**:
 1. Check relative path: `../output/figures/name.png`
 2. Verify file exists: `ls project/output/figures/`
-3. Run complete pipeline (includes script execution): `python3 scripts/run_all.py`
+3. Run complete pipeline (includes script execution): `python3 scripts/execute_pipeline.py --core-only`
 
 ---
 

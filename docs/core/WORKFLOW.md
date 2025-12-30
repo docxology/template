@@ -20,7 +20,7 @@ The generic project template implements a **unified test-driven development para
 - **Tests** validate all functionality with comprehensive coverage (60% infra, 90% project minimum)
 - **Scripts** are **thin orchestrators** that import and use `src/` methods
 - **Documentation** references code and displays generated outputs
-- **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the entire 6-stage pipeline
 
 ## Complete Workflow Diagram
 
@@ -41,7 +41,7 @@ graph TB
     end
     
     subgraph "Build Pipeline"
-        RENDER[run_all.py<br/>Pipeline Orchestrator]
+        RENDER[execute_pipeline.py<br/>Pipeline Orchestrator]
         PDFS[PDF Generation<br/>Individual + Combined]
         LATEX[LaTeX Export<br/>For further processing]
     end
@@ -75,7 +75,7 @@ graph TB
 
 ## How the Pipeline Orchestrator Works with Markdown and Code
 
-The `scripts/run_all.py` orchestrator (or `./run.sh --pipeline`) executes 6 stages sequentially, ensuring complete coherence between all components:
+The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes 6 stages sequentially, ensuring complete coherence between all components:
 
 ### 1. Code Validation Phase
 - **Runs all generation scripts** - This validates that `src/` code works correctly
@@ -132,7 +132,7 @@ flowchart TD
 2. **Implement functionality** - Write code to pass tests
 3. **Validate integration** - Ensure scripts can use the code
 4. **Update documentation** - Reflect changes in markdown
-5. **Run complete pipeline** - Use `python3 scripts/run_all.py` to validate coherence
+5. **Run complete pipeline** - Use `python3 scripts/execute_pipeline.py --core-only` to validate coherence
 
 ## Step-by-Step Workflow
 
@@ -168,7 +168,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 ```bash
 # Run the complete pipeline (all 6 stages)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
@@ -257,7 +257,7 @@ uv run python scripts/generate_research_figures.py
 python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 # Build complete PDF pipeline
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Clean all generated outputs (regeneratable)
 # Pipeline automatically handles cleanup
@@ -346,7 +346,7 @@ The workflow enforces a **thin orchestrator pattern** where:
 - **`src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods
 - **`tests/`** ensures comprehensive coverage of all functionality
-- **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the entire 6-stage pipeline
 
 This ensures:
 - **Maintainability**: Single source of truth for business logic

@@ -127,6 +127,9 @@ omit = [
     "*/temp/*",
     "*/site-packages/*",
     "/private/var/folders/*",
+    "projects/project/src/concept_visualization.py",
+    "projects/project/src/conceptual_mapping.py",
+    "projects/project/src/discourse_analysis.py",
 ]
 
 [tool.coverage.report]

@@ -14,7 +14,22 @@ The `tests/` directory ensures **comprehensive test coverage** for all modules (
 
 ### ABSOLUTE PROHIBITION: No Mocks Policy
 
+**🔄 CURRENT STATUS: PHASE 1 COMPLETE** - Core infrastructure tests now fully compliant with No Mocks Policy.
+
+**✅ COMPLETED:**
+- `test_pipeline.py` - 19+ patch decorators eliminated ✅
+- `test_multi_project.py` - 12+ patch decorators eliminated ✅
+- `test_cli.py` - Patch decorators eliminated ✅
+- `test_pipeline_summary.py` - 2+ patch decorators eliminated ✅
+
+**⏳ REMAINING PHASES:**
+- Phase 2: LLM & Publishing (HTTP testing with pytest-httpserver)
+- Phase 3: Validation & Rendering (CLI and file operations)
+- Phase 4: Supporting Infrastructure & QA
+
 **NON-NEGOTIABLE REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **real data** and **real computations only**.
+
+**See `MOCK_ELIMINATION_GUIDE.md`** for systematic elimination plan.
 
 This is a fundamental testing principle that ensures:
 - Tests validate actual behavior, not mocked behavior

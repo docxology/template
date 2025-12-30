@@ -125,7 +125,7 @@ cd project
 uv sync
 
 # Rebuild outputs
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 **From backup archive:**
@@ -137,7 +137,7 @@ tar -xzf backup_20250101.tar.gz
 uv sync
 
 # Rebuild outputs
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### Partial Recovery
@@ -203,7 +203,7 @@ git checkout <good-commit-hash> -- corrupted-file.py
 1. **Restore from backup** - Latest backup archive
 2. **Clone from Git** - Latest repository state
 3. **Restore dependencies** - `uv sync`
-4. **Rebuild outputs** - `python3 scripts/run_all.py`
+4. **Rebuild outputs** - `python3 scripts/execute_pipeline.py --core-only`
 5. **Validate** - Run tests, check outputs
 
 ### Partial Data Loss
@@ -279,7 +279,7 @@ mkdir test_restore
 cd test_restore
 tar -xzf ../backup.tar.gz
 uv sync
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ## Recovery Checklists

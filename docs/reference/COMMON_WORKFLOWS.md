@@ -45,7 +45,7 @@
 3. **Generate the PDF**
    ```bash
    # Run complete pipeline (all 6 stages)
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 4. **View the result**
@@ -88,7 +88,7 @@
 
 4. **Rebuild manuscript**
    ```bash
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 5. **Reference from other sections**
@@ -230,7 +230,7 @@
 
 4. **Rebuild**
    ```bash
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 **Expected Result**: Numbered equations with clickable references
@@ -537,12 +537,12 @@ def test_process_negative():
 1. **Run complete pipeline (recommended)**
    ```bash
    # Standard build - executes all 6 stages (00-05)
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    
    # Or use unified interactive menu
    ./run.sh
    
-   # Run individual stages if needed (run_all.py numbering: 00-05)
+   # Run individual stages if needed (execute_pipeline.py numbering: 00-05)
    python3 scripts/00_setup_environment.py  # Stage 00: Setup Environment
    python3 scripts/01_run_tests.py          # Stage 01: Run Tests
    python3 scripts/02_run_analysis.py       # Stage 02: Run Analysis
@@ -623,7 +623,7 @@ def test_process_negative():
 
 4. **Generate with custom metadata**
    ```bash
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 **Applied To**:
@@ -663,7 +663,7 @@ def test_process_negative():
 
 4. **Rebuild**
    ```bash
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 **Naming Convention**:
@@ -712,7 +712,7 @@ def test_process_negative():
 5. **Run complete build**
    ```bash
    # Standard build - executes all 6 stages
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    
    # Or use unified interactive menu
    ./run.sh

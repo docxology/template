@@ -760,7 +760,7 @@ Detailed sensitivity analysis for all hyperparameters shows robust performance a
 - **Quality**: `analyze_document_quality` reports readability and structure metrics used in the quality report; `quality_report.py` aggregates markdown, integrity, and reproducibility signals.
 - **Reproducibility**: `generate_reproducibility_report` captures environment, dependency, and artifact snapshots for each run.
 - **Reporting**: Pipeline reports (`output/reports/pipeline_report.*`) summarize stage outcomes, errors, and validation findings for auditability.
-- **Commands**: `python3 project/scripts/manuscript_preflight.py --strict` for gating, `python3 project/scripts/quality_report.py` for consolidated metrics, and `python3 scripts/run_all.py` for full pipeline execution with validation gates.
+- **Commands**: `python3 project/scripts/manuscript_preflight.py --strict` for gating, `python3 project/scripts/quality_report.py` for consolidated metrics, and `python3 scripts/execute_pipeline.py --core-only` for full pipeline execution with validation gates.
 
 ## D. Implementation Details
 

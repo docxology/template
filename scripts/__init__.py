@@ -3,11 +3,9 @@
 This package contains thin orchestrators that coordinate the template's 
 build pipeline stages. All business logic is in infrastructure/ modules.
 
-Exports from 06_llm_review.py for testing:
-- ReviewMetrics, ManuscriptMetrics, SessionMetrics: Metrics dataclasses
-- estimate_tokens: Token estimation function
-- get_max_input_length: Environment configuration
-- Review generation and saving functions
+This package intentionally re-exports a small set of functions for integration
+tests (notably the LLM review helpers), while keeping orchestration logic in
+thin entry points under `scripts/` and business logic in `infrastructure/`.
 """
 from __future__ import annotations
 
@@ -15,9 +13,8 @@ import importlib.util
 import sys
 from pathlib import Path
 
-# Menu option to script mapping (for run.sh interactive menu)
-# This documents the relationship between menu options and Python scripts
-# Menu numbering now aligns with script numbering (0-7 for scripts, 8 for pipeline, 9+ for sub-ops)
+# Menu option to script mapping (for run.sh interactive menu).
+# This documents the relationship between menu choices and underlying entry points.
 MENU_SCRIPT_MAPPING = {
     0: {
         "script": "00_setup_environment.py",
@@ -41,7 +38,7 @@ MENU_SCRIPT_MAPPING = {
         "script": "03_render_pdf.py",
         "function": "run_pdf_rendering",
         "requires_ollama": False,
-        "note": "Also runs 02_run_analysis.py",
+        "note": "Requires analysis outputs to be available",
         "description": "Render PDF"
     },
     4: {
@@ -51,22 +48,28 @@ MENU_SCRIPT_MAPPING = {
         "description": "Validate Output"
     },
     5: {
+        "script": "06_llm_review.py",
+        "function": "run_llm_review",
+        "requires_ollama": True,
+        "description": "LLM Review (reviews-only from run.sh)"
+    },
+    6: {
+        "script": "06_llm_review.py",
+        "function": "run_llm_translations",
+        "requires_ollama": True,
+        "description": "LLM Translations (translations-only from run.sh)"
+    },
+    7: {
         "script": "05_copy_outputs.py",
         "function": "run_copy_outputs_standalone",
         "requires_ollama": False,
         "description": "Copy Outputs"
     },
-    6: {
-        "script": "06_llm_review.py",
-        "function": "run_llm_review",
-        "requires_ollama": True,
-        "description": "LLM Review (reviews and translations)"
-    },
     8: {
-        "script": "run_all.py",
+        "script": "execute_pipeline.py",
         "function": "run_full_pipeline",
         "requires_ollama": False,
-        "description": "Run Full Pipeline (10 stages: 0-9, via run.sh)"
+        "description": "Run Full Pipeline (via execute_pipeline.py)"
     },
 }
 
@@ -126,6 +129,14 @@ except ImportError:
     # Infrastructure may not be available in all contexts
     pass
 
+# Re-export pipeline orchestrators (preferred entry points)
+try:
+    from scripts.execute_pipeline import execute_pipeline, execute_single_stage
+    from scripts.execute_multi_project import execute_multi_project
+except Exception:
+    # Avoid hard import failures if scripts are executed in constrained contexts.
+    pass
+
 __all__ = [
     "MENU_SCRIPT_MAPPING",
     "DEFAULT_MAX_INPUT_LENGTH",
@@ -149,4 +160,7 @@ __all__ = [
     "check_format_compliance",
     "main",
     "ReviewMode",
+    "execute_pipeline",
+    "execute_single_stage",
+    "execute_multi_project",
 ]

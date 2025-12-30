@@ -92,7 +92,7 @@ graph TB
         PYPROJECT[pyproject.toml<br/>Project config]
         README[README.md<br/>Project docs]
         CURSORRULES[.cursorrules<br/>Development rules]
-        RENDER[run_all.py<br/>Pipeline Orchestrator]
+        RENDER[execute_pipeline.py<br/>Pipeline Orchestrator]
     end
     
     ROOT --> SRC
@@ -160,7 +160,7 @@ export DOI="10.5281/zenodo.12345678"  # Optional
 Validate that everything works:
 ```bash
 # Pipeline automatically handles cleanup
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### 5. Customize Further

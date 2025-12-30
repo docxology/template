@@ -35,7 +35,13 @@ def load_config(config_path: Path | str) -> Optional[Dict[str, Any]]:
     try:
         with open(config_path, 'r', encoding='utf-8') as f:
             return yaml.safe_load(f)
+    except (FileNotFoundError, PermissionError, yaml.YAMLError):
+        return None
     except Exception:
+        # Log unexpected errors but don't fail
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.warning(f"Unexpected error loading config from {config_path}")
         return None
 
 

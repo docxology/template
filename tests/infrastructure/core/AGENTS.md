@@ -14,7 +14,7 @@ tests/infrastructure/core/
 ├── test_config_cli_coverage.py         # Configuration CLI coverage tests
 ├── test_config_loader.py               # Configuration loading tests
 ├── test_credentials.py                 # Credential handling tests
-├── test_environment.py                 # Environment setup tests
+├── test_environment.py                 # (Moved to integration tests)
 ├── test_exceptions.py                  # Exception hierarchy tests
 ├── test_file_operations.py             # File operation tests
 ├── test_logging_helpers.py             # Logging helper tests
@@ -36,11 +36,10 @@ tests/infrastructure/core/
 - Default value handling
 - Configuration validation and error cases
 
-**Environment Setup (`test_environment.py`)**
-- Dependency checking and validation
-- Build tool verification
-- Directory structure setup
-- Environment variable processing
+**Environment Setup (Moved to Integration Tests)**
+- Environment tests moved to `tests/integration/test_environment_setup.py`
+- Real subprocess execution, filesystem operations, and system integration
+- No mocks - uses actual `uv sync`, `shutil.which()`, directory creation
 
 **Credentials Management (`test_credentials.py`)**
 - Secure credential storage and retrieval

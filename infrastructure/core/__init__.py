@@ -126,6 +126,28 @@ from .file_operations import (
     clean_output_directories,
     copy_final_deliverables,
 )
+from .pipeline import (
+    PipelineConfig,
+    PipelineStageResult,
+    PipelineExecutor,
+)
+from .multi_project import (
+    MultiProjectConfig,
+    MultiProjectResult,
+    MultiProjectOrchestrator,
+)
+from .file_inventory import (
+    FileInventoryEntry,
+    FileInventoryManager,
+    collect_output_files,
+    generate_inventory_report,
+    format_file_size,
+)
+from .pipeline_summary import (
+    PipelineSummary,
+    PipelineSummaryGenerator,
+    generate_pipeline_summary,
+)
 
 __all__ = [
     # Exceptions
@@ -236,5 +258,23 @@ __all__ = [
     "clean_output_directory",
     "clean_output_directories",
     "copy_final_deliverables",
+    # Pipeline
+    "PipelineConfig",
+    "PipelineStageResult",
+    "PipelineExecutor",
+    # Multi-Project
+    "MultiProjectConfig",
+    "MultiProjectResult",
+    "MultiProjectOrchestrator",
+    # File Inventory
+    "FileInventoryEntry",
+    "FileInventoryManager",
+    "collect_output_files",
+    "generate_inventory_report",
+    "format_file_size",
+    # Pipeline Summary
+    "PipelineSummary",
+    "PipelineSummaryGenerator",
+    "generate_pipeline_summary",
 ]
 

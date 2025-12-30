@@ -98,7 +98,7 @@ pytest
 pytest --cov=src --cov-report=html
 
 # Test the build pipeline
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### 4. **Submit a Pull Request**

@@ -34,37 +34,37 @@ This is a **GitHub Template Repository** that gives you:
 
 ```mermaid
 flowchart TD
-    START[👋 Welcome!<br/>What do you need?]
-    
-    START -->|New to the template| NEW_USER[📚 New User Path]
-    START -->|Adding code/figures| DEVELOPER[💻 Developer Path]
-    START -->|Contributing code| CONTRIBUTOR[🤝 Contributor Path]
-    START -->|Deep technical dive| ADVANCED[🔬 Advanced Path]
-    
-    NEW_USER --> NS1[📖 docs/guides/GETTING_STARTED.md<br/>Levels 1-3: Write Documents]
-    NEW_USER --> NS2[📋 docs/reference/QUICK_START_CHEATSHEET.md<br/>One-Page Commands]
-    NEW_USER --> NS3[📝 docs/reference/COMMON_WORKFLOWS.md<br/>Step-by-Step Recipes]
-    NEW_USER --> NS4[❓ docs/reference/FAQ.md<br/>Common Questions]
-    
-    DEVELOPER --> DS1[🏗️ docs/core/ARCHITECTURE.md<br/>System Design]
-    DEVELOPER --> DS2[📐 docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md<br/>Core Pattern]
-    DEVELOPER --> DS3[⚙️ docs/core/WORKFLOW.md<br/>Development Process]
-    DEVELOPER --> DS4[📝 docs/usage/MARKDOWN_TEMPLATE_GUIDE.md<br/>Writing Guide]
-    
-    CONTRIBUTOR --> CS1[🤝 docs/development/CONTRIBUTING.md<br/>How to Contribute]
-    CONTRIBUTOR --> CS2[📋 docs/development/CODE_OF_CONDUCT.md<br/>Community Standards]
-    CONTRIBUTOR --> CS3[🗺️ docs/development/ROADMAP.md<br/>Future Plans]
-    CONTRIBUTOR --> CS4[🧪 docs/development/TESTING_GUIDE.md<br/>Testing Framework]
-    
-    ADVANCED --> AS1[📚 AGENTS.md<br/>Complete System Reference]
-    ADVANCED --> AS2[🔧 docs/operational/BUILD_SYSTEM.md<br/>Build System Details]
-    ADVANCED --> AS3[📑 docs/DOCUMENTATION_INDEX.md<br/>All 50+ Files]
-    ADVANCED --> AS4[🔬 docs/modules/ADVANCED_MODULES_GUIDE.md<br/>All 7 Advanced Modules]
-    
+    START["👋 Welcome!\nWhat do you need?"]
+
+    START -->|"New to the template"| NEW_USER["📚 New User Path"]
+    START -->|"Adding code/figures"| DEVELOPER["💻 Developer Path"]
+    START -->|"Contributing code"| CONTRIBUTOR["🤝 Contributor Path"]
+    START -->|"Deep technical dive"| ADVANCED["🔬 Advanced Path"]
+
+    NEW_USER --> NS1["📖 docs/guides/GETTING_STARTED.md\nLevels 1-3: Write Documents"]
+    NEW_USER --> NS2["📋 docs/reference/QUICK_START_CHEATSHEET.md\nOne-Page Commands"]
+    NEW_USER --> NS3["📝 docs/reference/COMMON_WORKFLOWS.md\nStep-by-Step Recipes"]
+    NEW_USER --> NS4["❓ docs/reference/FAQ.md\nCommon Questions"]
+
+    DEVELOPER --> DS1["🏗️ docs/core/ARCHITECTURE.md\nSystem Design"]
+    DEVELOPER --> DS2["📐 docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md\nCore Pattern"]
+    DEVELOPER --> DS3["⚙️ docs/core/WORKFLOW.md\nDevelopment Process"]
+    DEVELOPER --> DS4["📝 docs/usage/MARKDOWN_TEMPLATE_GUIDE.md\nWriting Guide"]
+
+    CONTRIBUTOR --> CS1["🤝 docs/development/CONTRIBUTING.md\nHow to Contribute"]
+    CONTRIBUTOR --> CS2["📋 docs/development/CODE_OF_CONDUCT.md\nCommunity Standards"]
+    CONTRIBUTOR --> CS3["🗺️ docs/development/ROADMAP.md\nFuture Plans"]
+    CONTRIBUTOR --> CS4["🧪 docs/development/TESTING_GUIDE.md\nTesting Framework"]
+
+    ADVANCED --> AS1["📚 AGENTS.md\nComplete System Reference"]
+    ADVANCED --> AS2["🔧 docs/operational/BUILD_SYSTEM.md\nBuild System Details"]
+    ADVANCED --> AS3["📑 docs/DOCUMENTATION_INDEX.md\nAll 50+ Files"]
+    ADVANCED --> AS4["🔬 docs/modules/ADVANCED_MODULES_GUIDE.md\nAll 7 Advanced Modules"]
+
     classDef start fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
     classDef path fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef doc fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    
+
     class START start
     class NEW_USER,DEVELOPER,CONTRIBUTOR,ADVANCED path
     class NS1,NS2,NS3,NS4,DS1,DS2,DS3,DS4,CS1,CS2,CS3,CS4,AS1,AS2,AS3,AS4 doc
@@ -110,7 +110,7 @@ flowchart TD
 | 2 | **[docs/development/CODE_OF_CONDUCT.md](docs/development/CODE_OF_CONDUCT.md)** | Community standards |
 | 3 | **[docs/development/ROADMAP.md](docs/development/ROADMAP.md)** | Future plans |
 | 4 | **[docs/development/SECURITY.md](docs/development/SECURITY.md)** | Security practices |
-| 5 | **[.cursorrules/AGENTS.md](.cursorrules/AGENTS.md)** | Development standards |
+| 5 | **[docs/development/CONTRIBUTING.md](docs/development/CONTRIBUTING.md)** | How to contribute |
 
 **Recent improvements:** See **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)**
 
@@ -136,63 +136,63 @@ The template includes **89 documentation files** organized in the `docs/` direct
 
 ```mermaid
 graph TB
-    README[README.md<br/>You Are Here ⭐]
+    README[README.md\nYou Are Here ⭐]
     
     subgraph DocsHub["📚 docs/ - Documentation Hub"]
-        DOC_INDEX[DOCUMENTATION_INDEX.md<br/>📋 Master Index<br/>All 50+ files]
-        DOC_AGENTS[AGENTS.md<br/>📖 Documentation Guide]
-        DOC_README[README.md<br/>🔍 Quick Reference]
+        DOC_INDEX[DOCUMENTATION_INDEX.md\n📋 Master Index\nAll 50+ files]
+        DOC_AGENTS[AGENTS.md\n📖 Documentation Guide]
+        DOC_README[README.md\n🔍 Quick Reference]
     end
     
     subgraph Core["📖 docs/core/ - Essential"]
-        HOW_TO[HOW_TO_USE.md<br/>Complete Usage Guide<br/>12 Skill Levels]
-        ARCH[ARCHITECTURE.md<br/>System Design]
-        WORKFLOW[WORKFLOW.md<br/>Development Process]
+        HOW_TO[HOW_TO_USE.md\nComplete Usage Guide\n12 Skill Levels]
+        ARCH[ARCHITECTURE.md\nSystem Design]
+        WORKFLOW[WORKFLOW.md\nDevelopment Process]
     end
     
     subgraph Guides["🎓 docs/guides/ - By Skill Level"]
-        GETTING_STARTED[GETTING_STARTED.md<br/>Levels 1-3: Beginner]
-        INTERMEDIATE[INTERMEDIATE_USAGE.md<br/>Levels 4-6: Intermediate]
-        ADVANCED[ADVANCED_USAGE.md<br/>Levels 7-9: Advanced]
-        EXPERT[EXPERT_USAGE.md<br/>Levels 10-12: Expert]
+        GETTING_STARTED[GETTING_STARTED.md\nLevels 1-3: Beginner]
+        INTERMEDIATE[INTERMEDIATE_USAGE.md\nLevels 4-6: Intermediate]
+        ADVANCED[ADVANCED_USAGE.md\nLevels 7-9: Advanced]
+        EXPERT[EXPERT_USAGE.md\nLevels 10-12: Expert]
     end
     
     subgraph Operational["⚙️ docs/operational/ - Operations"]
-        BUILD_SYS[BUILD_SYSTEM.md<br/>Build System Reference]
-        TROUBLESHOOTING[TROUBLESHOOTING_GUIDE.md<br/>Fix Issues]
-        CONFIG[CONFIGURATION.md<br/>Setup & Config]
-        PERF[PERFORMANCE_OPTIMIZATION.md<br/>Optimization]
+        BUILD_SYS[BUILD_SYSTEM.md\nBuild System Reference]
+        TROUBLESHOOTING[TROUBLESHOOTING_GUIDE.md\nFix Issues]
+        CONFIG[CONFIGURATION.md\nSetup & Config]
+        PERF[PERFORMANCE_OPTIMIZATION.md\nOptimization]
     end
     
     subgraph Reference["📑 docs/reference/ - Quick Lookup"]
-        FAQ[FAQ.md<br/>Common Questions]
-        CHEATSHEET[QUICK_START_CHEATSHEET.md<br/>One-Page Commands]
-        WORKFLOWS[COMMON_WORKFLOWS.md<br/>Step-by-Step Recipes]
-        API[API_REFERENCE.md<br/>Complete API Docs]
+        FAQ[FAQ.md\nCommon Questions]
+        CHEATSHEET[QUICK_START_CHEATSHEET.md\nOne-Page Commands]
+        WORKFLOWS[COMMON_WORKFLOWS.md\nStep-by-Step Recipes]
+        API[API_REFERENCE.md\nComplete API Docs]
     end
     
     subgraph Architecture["🏗️ docs/architecture/ - Design"]
-        TWO_LAYER[TWO_LAYER_ARCHITECTURE.md<br/>Complete Architecture]
-        THIN_ORCH[THIN_ORCHESTRATOR_SUMMARY.md<br/>Core Pattern]
-        DECISION[DECISION_TREE.md<br/>Code Placement]
+        TWO_LAYER[TWO_LAYER_ARCHITECTURE.md\nComplete Architecture]
+        THIN_ORCH[THIN_ORCHESTRATOR_SUMMARY.md\nCore Pattern]
+        DECISION[DECISION_TREE.md\nCode Placement]
     end
     
     subgraph Usage["📝 docs/usage/ - Examples"]
-        EXAMPLES[EXAMPLES.md<br/>Usage Patterns]
-        SHOWCASE[EXAMPLES_SHOWCASE.md<br/>Real-World Apps]
-        MARKDOWN[MARKDOWN_TEMPLATE_GUIDE.md<br/>Writing Guide]
+        EXAMPLES[EXAMPLES.md\nUsage Patterns]
+        SHOWCASE[EXAMPLES_SHOWCASE.md\nReal-World Apps]
+        MARKDOWN[MARKDOWN_TEMPLATE_GUIDE.md\nWriting Guide]
     end
     
     subgraph Modules["🔬 docs/modules/ - Advanced"]
-        ADV_MODULES[ADVANCED_MODULES_GUIDE.md<br/>All 7 Modules]
-        PDF_VAL[PDF_VALIDATION.md<br/>Quality Checks]
-        SCI_SIM[SCIENTIFIC_SIMULATION_GUIDE.md<br/>Simulation System]
+        ADV_MODULES[ADVANCED_MODULES_GUIDE.md\nAll 7 Modules]
+        PDF_VAL[PDF_VALIDATION.md\nQuality Checks]
+        SCI_SIM[SCIENTIFIC_SIMULATION_GUIDE.md\nSimulation System]
     end
     
     subgraph Development["💻 docs/development/ - Contributing"]
-        CONTRIB[CONTRIBUTING.md<br/>How to Contribute]
-        TESTING[TESTING_GUIDE.md<br/>Testing Framework]
-        ROADMAP[ROADMAP.md<br/>Future Plans]
+        CONTRIB[CONTRIBUTING.md\nHow to Contribute]
+        TESTING[TESTING_GUIDE.md\nTesting Framework]
+        ROADMAP[ROADMAP.md\nFuture Plans]
     end
     
     README --> DocsHub
@@ -229,6 +229,54 @@ This template now supports **multiple research projects** in a single repository
 - Source code (`src/`), tests (`tests/`), manuscript (`manuscript/`), and scripts (`scripts/`)
 - Working outputs (`projects/{name}/output/`)
 - Final deliverables (`output/{name}/...`)
+
+```mermaid
+graph TB
+    subgraph Repository["📁 Repository"]
+        subgraph Projects["projects/"]
+            P1[project/<br/>Full-featured research]
+            P2[small_prose_project/<br/>Manuscript-focused]
+            P3[small_code_project/<br/>Code-focused]
+            PN[your_project/<br/>Your research]
+        end
+
+        subgraph Shared["🔧 Shared Infrastructure"]
+            INFRA[infrastructure/<br/>Generic tools]
+            SCRIPTS[scripts/<br/>Entry points]
+            TESTS[tests/<br/>Test suite]
+        end
+
+        subgraph Output["📤 Final Deliverables"]
+            OUT1[output/project/<br/>Project PDFs, data]
+            OUT2[output/small_prose_project/<br/>Prose outputs]
+            OUT3[output/small_code_project/<br/>Code outputs]
+            OUTN[output/your_project/<br/>Your deliverables]
+        end
+    end
+
+    P1 -->|generates| OUT1
+    P2 -->|generates| OUT2
+    P3 -->|generates| OUT3
+    PN -->|generates| OUTN
+
+    INFRA -.->|supports| P1
+    INFRA -.->|supports| P2
+    INFRA -.->|supports| P3
+    INFRA -.->|supports| PN
+
+    SCRIPTS -.->|orchestrates| P1
+    SCRIPTS -.->|orchestrates| P2
+    SCRIPTS -.->|orchestrates| P3
+    SCRIPTS -.->|orchestrates| PN
+
+    classDef project fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef shared fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class P1,P2,P3,PN project
+    class INFRA,SCRIPTS,TESTS shared
+    class OUT1,OUT2,OUT3,OUTN output
+```
 
 ### Example Projects
 
@@ -281,7 +329,7 @@ mkdir -p projects/my_research/{src,tests,manuscript,scripts}
 ./run.sh --pipeline
 
 # Alternative: Core 6-stage pipeline (no LLM dependencies)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Run tests with coverage (infrastructure + project)
 python3 scripts/01_run_tests.py
@@ -297,19 +345,19 @@ open output/pdf/project_combined.pdf
 ```mermaid
 graph LR
     subgraph Status["✅ System Status"]
-        TESTS[Tests: 2235/2247 passing<br/>1887 infra [3 skipped] + 360 project<br/>99.6% success rate]
-        COV[Coverage: 100% project<br/>83.33% infra<br/>Exceeds requirements]
-        BUILD[Build Time: 53s<br/>Optimal performance<br/>(without LLM review)]
-        PDFS[PDFs: 14/14 generated<br/>All sections complete]
+        TESTS[Tests: 2235/2247 passing\n1887 infra [3 skipped] + 360 project\n99.6% success rate]
+        COV[Coverage: 92.2% project\n73.3% infra\nMeets requirements]
+        BUILD[Build Time: 53s\nOptimal performance\n(without LLM review)]
+        PDFS[PDFs: 14/14 generated\nAll sections complete]
     end
     
     subgraph Documentation["📚 Documentation"]
-        DOCS[89 documentation files<br/>Comprehensive coverage]
-        CROSS[Complete cross-referencing<br/>All links validated]
-        EXAMPLES[Real-world examples<br/>Multiple use cases]
+        DOCS[89 documentation files\nComprehensive coverage]
+        CROSS[Complete cross-referencing\nAll links validated]
+        EXAMPLES[Real-world examples\nMultiple use cases]
     end
     
-    TESTS --> VERIFIED[✅ System Fully<br/>Operational]
+    TESTS --> VERIFIED[✅ System Fully\nOperational]
     COV --> VERIFIED
     BUILD --> VERIFIED
     PDFS --> VERIFIED
@@ -325,9 +373,9 @@ graph LR
 ```
 
 **Key Metrics:**
-- **Test Coverage**: 98.03% project, 83.33% infrastructure (exceeds requirements!) - [Details](docs/operational/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
-- **Build Time**: 152 seconds (comprehensive, with full test suite) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#stage-breakdown)
-- **Tests Passing**: 2235 tests (1887 infrastructure [3 skipped] + 360 project) - [Test Report](docs/operational/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+- **Test Coverage**: 92.2% project, 73.3% infrastructure (meets requirements) - [Details](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
+- **Build Time**: 152 seconds (comprehensive, with full test suite) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
+- **Tests Passing**: 2235 tests (1887 infrastructure [3 skipped] + 360 project) - [Test Report](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
 - **PDFs Generated**: 14 (all sections) - [Output Summary](docs/operational/BUILD_SYSTEM.md#generated-files)
 - **Documentation**: 89 files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 
@@ -338,10 +386,10 @@ graph LR
 ```mermaid
 flowchart LR
     subgraph Levels["📊 Skill Levels"]
-        L1[Levels 1-3<br/>Beginner]
-        L2[Levels 4-6<br/>Intermediate]
-        L3[Levels 7-9<br/>Advanced]
-        L4[Levels 10-12<br/>Expert]
+        L1[Levels 1-3\nBeginner]
+        L2[Levels 4-6\nIntermediate]
+        L3[Levels 7-9\nAdvanced]
+        L4[Levels 10-12\nExpert]
     end
     
     L1 -->|Progress| L2
@@ -353,7 +401,7 @@ flowchart LR
     L3 --> DOC3[docs/guides/ADVANCED_USAGE.md]
     L4 --> DOC4[docs/guides/EXPERT_USAGE.md]
     
-    DOC1 --> MASTER[docs/core/HOW_TO_USE.md<br/>Complete Guide: All 12 Levels]
+    DOC1 --> MASTER[docs/core/HOW_TO_USE.md\nComplete Guide: All 12 Levels]
     DOC2 --> MASTER
     DOC3 --> MASTER
     DOC4 --> MASTER
@@ -396,24 +444,24 @@ The project follows a **two-layer architecture** with clear separation of concer
 ```mermaid
 graph TB
     subgraph L1["🔧 Layer 1: Infrastructure (Generic, Reusable)"]
-        INFRA[infrastructure/<br/>Generic tools<br/>Build and validation<br/>📖 infrastructure/AGENTS.md]
-        INFRA_SCRIPTS[scripts/<br/>Entry point orchestrators<br/>6-stage core or 10-stage extended<br/>📖 scripts/AGENTS.md]
-        TESTS[tests/<br/>Test suite<br/>Comprehensive coverage<br/>📖 tests/AGENTS.md]
+        INFRA[infrastructure/\nGeneric tools\nBuild and validation\n📖 infrastructure/AGENTS.md]
+        INFRA_SCRIPTS[scripts/\nEntry point orchestrators\n6-stage core or 10-stage extended\n📖 scripts/AGENTS.md]
+        TESTS[tests/\nTest suite\nComprehensive coverage\n📖 tests/AGENTS.md]
     end
     
     subgraph L2["🔬 Layer 2: Project-Specific (Customizable)"]
-        SRC[projects/project/src/<br/>Scientific algorithms<br/>100% tested<br/>📖 projects/project/src/AGENTS.md]
-        SCRIPTS[projects/project/scripts/<br/>Analysis scripts<br/>Thin orchestrators<br/>📖 projects/project/scripts/AGENTS.md]
-        PROJECT_TESTS[projects/project/tests/<br/>Project test suite<br/>📖 projects/project/tests/AGENTS.md]
+        SRC[projects/project/src/\nScientific algorithms\n100% tested\n📖 projects/project/src/AGENTS.md]
+        SCRIPTS[projects/project/scripts/\nAnalysis scripts\nThin orchestrators\n📖 projects/project/scripts/AGENTS.md]
+        PROJECT_TESTS[projects/project/tests/\nProject test suite\n📖 projects/project/tests/AGENTS.md]
     end
     
     subgraph DOCS["📚 Documentation Hub"]
-        DOCS_DIR[docs/<br/>50+ comprehensive guides<br/>📖 docs/DOCUMENTATION_INDEX.md]
+        DOCS_DIR[docs/\n50+ comprehensive guides\n📖 docs/DOCUMENTATION_INDEX.md]
     end
     
     subgraph CONTENT["📝 Content & Output"]
-        MANUSCRIPT[projects/project/manuscript/<br/>Research sections<br/>Generate PDFs<br/>📖 projects/project/manuscript/AGENTS.md]
-        OUTPUT[output/<br/>Generated files<br/>PDFs, figures, data<br/>All files disposable]
+        MANUSCRIPT[projects/project/manuscript/\nResearch sections\nGenerate PDFs\n📖 projects/project/manuscript/AGENTS.md]
+        OUTPUT[output/\nGenerated files\nPDFs, figures, data\nAll files disposable]
     end
     
     SRC -->|import and use| SCRIPTS
@@ -444,36 +492,36 @@ graph TB
 ```mermaid
 graph TB
     subgraph Entry["🚀 Entry Points"]
-        RUNSH[./run.sh<br/>Interactive menu<br/>Full pipeline control]
-        RUNALL[python3 scripts/run_all.py<br/>Programmatic<br/>Core pipeline]
-        INDIVIDUAL[Individual Scripts<br/>scripts/00-05_*.py<br/>Stage-specific execution]
+        RUNSH[./run.sh\nInteractive menu\nFull pipeline control]
+        RUNALL[python3 scripts/execute_pipeline.py --core-only\nProgrammatic\nCore pipeline]
+        INDIVIDUAL[Individual Scripts\nscripts/00-05_*.py\nStage-specific execution]
     end
 
     subgraph Orchestration["⚙️ Orchestration Layer"]
-        SETUP[Environment Setup<br/>Dependencies & validation]
-        TESTING[Test Execution<br/>Coverage requirements]
-        ANALYSIS[Script Discovery<br/>Project analysis execution]
-        RENDERING[PDF Generation<br/>Manuscript compilation]
-        VALIDATION[Quality Assurance<br/>Content validation]
-        DELIVERY[Output Distribution<br/>Final deliverables]
+        SETUP[Environment Setup\nDependencies & validation]
+        TESTING[Test Execution\nCoverage requirements]
+        ANALYSIS[Script Discovery\nProject analysis execution]
+        RENDERING[PDF Generation\nManuscript compilation]
+        VALIDATION[Quality Assurance\nContent validation]
+        DELIVERY[Output Distribution\nFinal deliverables]
     end
 
     subgraph Core["🧠 Core Systems"]
-        INFRASTRUCTURE[Infrastructure Modules<br/>9 specialized modules<br/>Validation, rendering, LLM]
-        BUSINESS_LOGIC[Business Logic<br/>Project algorithms<br/>100% test coverage]
-        CONFIGURATION[Configuration System<br/>YAML + environment<br/>Runtime flexibility]
+        INFRASTRUCTURE[Infrastructure Modules\n9 specialized modules\nValidation, rendering, LLM]
+        BUSINESS_LOGIC[Business Logic\nProject algorithms\n100% test coverage]
+        CONFIGURATION[Configuration System\nYAML + environment\nRuntime flexibility]
     end
 
     subgraph Data["📊 Data Flow"]
-        SOURCE_CODE[Source Code<br/>Python modules<br/>Algorithm implementation]
-        MANUSCRIPT_CONTENT[Manuscript Content<br/>Markdown sections<br/>Research writing]
-        GENERATED_OUTPUTS[Generated Outputs<br/>PDFs, figures, data<br/>Research deliverables]
+        SOURCE_CODE[Source Code\nPython modules\nAlgorithm implementation]
+        MANUSCRIPT_CONTENT[Manuscript Content\nMarkdown sections\nResearch writing]
+        GENERATED_OUTPUTS[Generated Outputs\nPDFs, figures, data\nResearch deliverables]
     end
 
     subgraph Quality["✅ Quality Assurance"]
-        UNIT_TESTS[Unit Tests<br/>Function validation<br/>Real data, no mocks]
-        INTEGRATION_TESTS[Integration Tests<br/>System validation<br/>End-to-end workflows]
-        VALIDATION_CHECKS[Content Validation<br/>Quality assurance<br/>Academic standards]
+        UNIT_TESTS[Unit Tests\nFunction validation\nReal data, no mocks]
+        INTEGRATION_TESTS[Integration Tests\nSystem validation\nEnd-to-end workflows]
+        VALIDATION_CHECKS[Content Validation\nQuality assurance\nAcademic standards]
     end
 
     RUNSH --> Orchestration
@@ -504,25 +552,25 @@ graph TB
 ```mermaid
 graph TD
     subgraph CoreDeps["Core Dependencies"]
-        EXCEPTIONS[exceptions.py<br/>Exception hierarchy<br/>Context preservation]
-        LOGGING[logging_utils.py<br/>Unified logging<br/>Environment configuration]
-        CONFIG[config_loader.py<br/>Configuration loading<br/>YAML + environment]
+        EXCEPTIONS[exceptions.py\nException hierarchy\nContext preservation]
+        LOGGING[logging_utils.py\nUnified logging\nEnvironment configuration]
+        CONFIG[config_loader.py\nConfiguration loading\nYAML + environment]
     end
 
     subgraph InfrastructureModules["Infrastructure Modules"]
-        VALIDATION[validation/<br/>Quality assurance<br/>PDF, markdown validation]
-        RENDERING[rendering/<br/>Multi-format output<br/>PDF, HTML, slides]
-        LLM[llm/<br/>AI assistance<br/>Ollama integration]
-        PUBLISHING[publishing/<br/>Academic dissemination<br/>Zenodo, arXiv, GitHub]
-        DOCUMENTATION[documentation/<br/>Figure management<br/>API documentation]
-        SCIENTIFIC[scientific/<br/>Research utilities<br/>Benchmarking, validation]
-        REPORTING[reporting/<br/>Pipeline reporting<br/>Error aggregation]
+        VALIDATION[validation/\nQuality assurance\nPDF, markdown validation]
+        RENDERING[rendering/\nMulti-format output\nPDF, HTML, slides]
+        LLM[llm/\nAI assistance\nOllama integration]
+        PUBLISHING[publishing/\nAcademic dissemination\nZenodo, arXiv, GitHub]
+        DOCUMENTATION[documentation/\nFigure management\nAPI documentation]
+        SCIENTIFIC[scientific/\nResearch utilities\nBenchmarking, validation]
+        REPORTING[reporting/\nPipeline reporting\nError aggregation]
     end
 
     subgraph ProjectLayer["Project Layer"]
-        PROJECT_SRC[projects/project/src/<br/>Research algorithms<br/>Domain-specific logic]
-        PROJECT_SCRIPTS[projects/project/scripts/<br/>Analysis workflows<br/>Thin orchestrators]
-        PROJECT_MANUSCRIPT[projects/project/manuscript/<br/>Research content<br/>Markdown sections]
+        PROJECT_SRC[projects/project/src/\nResearch algorithms\nDomain-specific logic]
+        PROJECT_SCRIPTS[projects/project/scripts/\nAnalysis workflows\nThin orchestrators]
+        PROJECT_MANUSCRIPT[projects/project/manuscript/\nResearch content\nMarkdown sections]
     end
 
     EXCEPTIONS --> InfrastructureModules
@@ -549,28 +597,28 @@ graph TD
 ```mermaid
 flowchart TD
     subgraph Input["📥 Input Data"]
-        SOURCE_CODE[Source Code<br/>projects/project/src/*.py<br/>Algorithm implementations]
-        ANALYSIS_SCRIPTS[Analysis Scripts<br/>projects/project/scripts/*.py<br/>Workflow orchestrators]
-        MANUSCRIPT_FILES[Manuscript Files<br/>projects/project/manuscript/*.md<br/>Research content]
-        CONFIG_FILES[Configuration<br/>config.yaml<br/>Runtime parameters]
+        SOURCE_CODE[Source Code\nprojects/project/src/*.py\nAlgorithm implementations]
+        ANALYSIS_SCRIPTS[Analysis Scripts\nprojects/project/scripts/*.py\nWorkflow orchestrators]
+        MANUSCRIPT_FILES[Manuscript Files\nprojects/project/manuscript/*.md\nResearch content]
+        CONFIG_FILES[Configuration\nconfig.yaml\nRuntime parameters]
     end
 
     subgraph Processing["⚙️ Processing Pipeline"]
-        STAGE0[Stage 0<br/>Clean<br/>Remove old outputs]
-        STAGE1[Stage 1<br/>Setup<br/>Environment validation]
-        STAGE2[Stage 2<br/>Test<br/>Coverage verification]
-        STAGE3[Stage 3<br/>Analysis<br/>Script execution]
-        STAGE4[Stage 4<br/>Render<br/>PDF generation]
-        STAGE5[Stage 5<br/>Validate<br/>Quality checks]
-        STAGE6[Stage 6<br/>Copy<br/>Output distribution]
+        STAGE0[Stage 0\nClean\nRemove old outputs]
+        STAGE1[Stage 1\nSetup\nEnvironment validation]
+        STAGE2[Stage 2\nTest\nCoverage verification]
+        STAGE3[Stage 3\nAnalysis\nScript execution]
+        STAGE4[Stage 4\nRender\nPDF generation]
+        STAGE5[Stage 5\nValidate\nQuality checks]
+        STAGE6[Stage 6\nCopy\nOutput distribution]
     end
 
     subgraph Output["📤 Generated Outputs"]
-        PDF_DOCS[PDF Documents<br/>output/pdf/*.pdf<br/>Professional manuscripts]
-        FIGURES[Figures<br/>output/figures/*.png<br/>Publication-quality plots]
-        DATA_FILES[Data Files<br/>output/data/*.csv<br/>Analysis results]
-        REPORTS[Reports<br/>output/reports/*.md<br/>Validation summaries]
-        HTML_OUTPUT[HTML Output<br/>output/web/*.html<br/>Web-compatible versions]
+        PDF_DOCS[PDF Documents\noutput/pdf/*.pdf\nProfessional manuscripts]
+        FIGURES[Figures\noutput/figures/*.png\nPublication-quality plots]
+        DATA_FILES[Data Files\noutput/data/*.csv\nAnalysis results]
+        REPORTS[Reports\noutput/reports/*.md\nValidation summaries]
+        HTML_OUTPUT[HTML Output\noutput/web/*.html\nWeb-compatible versions]
     end
 
     SOURCE_CODE --> STAGE2
@@ -600,23 +648,23 @@ flowchart TD
 ```mermaid
 flowchart TD
     subgraph Sources["Configuration Sources"]
-        YAML_FILE[config.yaml<br/>projects/project/manuscript/config.yaml<br/>Version-controlled settings]
-        ENV_VARS[Environment Variables<br/>AUTHOR_NAME, PROJECT_TITLE<br/>Runtime overrides]
-        DEFAULTS[Default Values<br/>Template defaults<br/>Fallback values]
+        YAML_FILE[config.yaml\nprojects/project/manuscript/config.yaml\nVersion-controlled settings]
+        ENV_VARS[Environment Variables\nAUTHOR_NAME, PROJECT_TITLE\nRuntime overrides]
+        DEFAULTS[Default Values\nTemplate defaults\nFallback values]
     end
 
     subgraph Processing["Configuration Processing"]
-        LOAD_YAML[Load YAML<br/>Parse config.yaml<br/>Validate structure]
-        MERGE_ENV[Merge Environment<br/>Override with env vars<br/>Priority: env > yaml > defaults]
-        VALIDATE_CONFIG[Validate Configuration<br/>Check required fields<br/>Type validation]
-        FORMAT_DATA[Format Data<br/>Author formatting<br/>Metadata preparation]
+        LOAD_YAML[Load YAML\nParse config.yaml\nValidate structure]
+        MERGE_ENV[Merge Environment\nOverride with env vars\nPriority: env > yaml > defaults]
+        VALIDATE_CONFIG[Validate Configuration\nCheck required fields\nType validation]
+        FORMAT_DATA[Format Data\nAuthor formatting\nMetadata preparation]
     end
 
     subgraph Usage["Configuration Usage"]
-        PDF_METADATA[PDF Metadata<br/>Title, author, date<br/>Document properties]
-        LATEX_VARS[LaTeX Variables<br/>Preamble settings<br/>Styling options]
-        FIGURE_LABELS[Figure Labels<br/>Automatic numbering<br/>Cross-references]
-        VALIDATION_RULES[Validation Rules<br/>Quality thresholds<br/>Format requirements]
+        PDF_METADATA[PDF Metadata\nTitle, author, date\nDocument properties]
+        LATEX_VARS[LaTeX Variables\nPreamble settings\nStyling options]
+        FIGURE_LABELS[Figure Labels\nAutomatic numbering\nCross-references]
+        VALIDATION_RULES[Validation Rules\nQuality thresholds\nFormat requirements]
     end
 
     YAML_FILE --> LOAD_YAML
@@ -697,7 +745,7 @@ Scripts in `projects/project/scripts/` demonstrate proper integration with `proj
 
 All source code must meet **test coverage requirements** (90% project, 60% infrastructure) before PDF generation proceeds. This ensures that the methods used by scripts are fully validated.
 
-**Current Coverage**: 100% project, 83.33% infrastructure (exceeds requirements by 39%!) - [Test Report](docs/operational/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+**Current Coverage**: 100% project, 83.33% infrastructure (exceeds requirements by 39%!) - [Test Report](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
 
 ### Automated Script Execution
 **[Script guide](scripts/AGENTS.md)** | **[Examples](docs/usage/EXAMPLES_SHOWCASE.md)**
@@ -709,7 +757,7 @@ Project-specific scripts in the `projects/project/scripts/` directory are automa
 
 Manuscript sections are converted to individual PDFs with proper figure integration, and a combined manuscript document is generated with cross-referencing.
 
-**Build Performance**: 53 seconds for complete regeneration (without optional LLM review) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#stage-breakdown)
+**Build Performance**: 53 seconds for complete regeneration (without optional LLM review) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
 
 ### Build System Validation
 **[Build System](docs/operational/BUILD_SYSTEM.md)** - Complete reference (status, performance, fixes)
@@ -789,7 +837,7 @@ pip install -e .
 ./run.sh --pipeline
 
 # Alternative: Core 6-stage pipeline (stages 00-05, no LLM dependencies)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Or run stages individually (using generic entry point orchestrators)
 python3 scripts/00_setup_environment.py      # Setup environment
@@ -803,7 +851,7 @@ python3 scripts/05_copy_outputs.py           # Copy final deliverables
 **Pipeline Entry Points:**
 - **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages: 0-9) with optional LLM review and translations
 - **`./run.sh --pipeline`**: 10 stages (0-9) - Extended pipeline with optional LLM review and translations
-- **`python3 scripts/run_all.py`**: 6 stages (00-05) - Core pipeline only, no LLM dependencies
+- **`python3 scripts/execute_pipeline.py --core-only`**: 6 stages (00-05) - Core pipeline only, no LLM dependencies
 
 **See [How To Use Guide](docs/core/HOW_TO_USE.md) for setup instructions at all skill levels.**
 
@@ -969,7 +1017,7 @@ pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 - **Real data testing**: Use actual domain data, not synthetic test data
 - **Reproducible**: Fixed seeds and deterministic computation
 
-**Current Status**: 2235 tests passing (1887 infra [3 skipped] + 360 project), 98.03% project coverage - [Full Analysis](docs/operational/BUILD_SYSTEM.md#stage-1-test-suite-27-seconds)
+**Current Status**: 2235 tests passing (1887 infra [3 skipped] + 360 project), 98.03% project coverage - [Full Analysis](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
 
 ## 📤 Output
 
@@ -979,11 +1027,11 @@ Generated outputs are organized in the `output/` directory:
 
 ```mermaid
 graph TD
-    OUTPUT[output/] --> EXEC[executive_summary/<br/>Cross-project reports<br/>JSON, HTML, MD, PNG, PDF, HTML]
-    OUTPUT --> PDFS[pdf/<br/>Individual + Combined PDFs<br/>14 files generated]
-    OUTPUT --> FIGS[figures/<br/>PNG files from scripts<br/>23 figures]
-    OUTPUT --> DATA[data/<br/>CSV, NPZ files<br/>5 datasets]
-    OUTPUT --> TEX[tex/<br/>LaTeX source files<br/>For further processing]
+    OUTPUT[output/] --> EXEC[executive_summary/\nCross-project reports\nJSON, HTML, MD, PNG, PDF, HTML]
+    OUTPUT --> PDFS[pdf/\nIndividual + Combined PDFs\n14 files generated]
+    OUTPUT --> FIGS[figures/\nPNG files from scripts\n23 figures]
+    OUTPUT --> DATA[data/\nCSV, NPZ files\n5 datasets]
+    OUTPUT --> TEX[tex/\nLaTeX source files\nFor further processing]
 
     classDef dir fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef files fill:#fff3e0,stroke:#e65100,stroke-width:2px
@@ -1002,7 +1050,7 @@ graph TD
 
 **All files in `output/` are disposable and regenerated by the build pipeline.**
 
-**Generation Time**: 53 seconds for complete rebuild (without optional LLM review) - [Performance Details](docs/operational/BUILD_SYSTEM.md#stage-breakdown)
+**Generation Time**: 53 seconds for complete rebuild (without optional LLM review) - [Performance Details](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
 
 ## 🔍 How It Works
 
@@ -1026,15 +1074,15 @@ The template provides **two main entry points** for pipeline operations:
 flowchart TD
     START([./run.sh --pipeline]) --> STAGE0[Stage 0: Clean Output Directories]
     STAGE0 --> STAGE1[Stage 1: Setup Environment]
-    STAGE1 --> STAGE2[Stage 2: Infrastructure Tests<br/>60%+ coverage required]
-    STAGE2 --> STAGE3[Stage 3: Project Tests<br/>90%+ coverage required]
-    STAGE3 --> STAGE4[Stage 4: Project Analysis<br/>Execute projects/project/scripts/]
-    STAGE4 --> STAGE5[Stage 5: PDF Rendering<br/>Generate manuscript PDFs]
-    STAGE5 --> STAGE6[Stage 6: Output Validation<br/>Quality checks]
-    STAGE6 --> STAGE7[Stage 7: Copy Outputs<br/>Final deliverables]
-    STAGE7 --> STAGE8[Stage 8: LLM Scientific Review<br/>Optional, requires Ollama]
-    STAGE8 --> STAGE9[Stage 9: LLM Translations<br/>Optional, requires Ollama]
-    STAGE9 --> SUCCESS[✅ Build Complete<br/>~84s core + LLM time]
+    STAGE1 --> STAGE2[Stage 2: Infrastructure Tests\n60%+ coverage required]
+    STAGE2 --> STAGE3[Stage 3: Project Tests\n90%+ coverage required]
+    STAGE3 --> STAGE4[Stage 4: Project Analysis\nExecute projects/project/scripts/]
+    STAGE4 --> STAGE5[Stage 5: PDF Rendering\nGenerate manuscript PDFs]
+    STAGE5 --> STAGE6[Stage 6: Output Validation\nQuality checks]
+    STAGE6 --> STAGE7[Stage 7: Copy Outputs\nFinal deliverables]
+    STAGE7 --> STAGE8[Stage 8: LLM Scientific Review\nOptional, requires Ollama]
+    STAGE8 --> STAGE9[Stage 9: LLM Translations\nOptional, requires Ollama]
+    STAGE9 --> SUCCESS[✅ Build Complete\n~84s core + LLM time]
     
     STAGE2 -->|Fail| FAIL[❌ Pipeline Failed]
     STAGE3 -->|Fail| FAIL
@@ -1059,7 +1107,7 @@ flowchart TD
     class STAGE8,STAGE9 optional
 ```
 
-### Entry Point 2: Core Pipeline (`python3 scripts/run_all.py`)
+### Entry Point 2: Core Pipeline (`python3 scripts/execute_pipeline.py --core-only`)
 
 **6-stage core pipeline** (stages 00-05) without LLM dependencies:
 
@@ -1074,7 +1122,7 @@ flowchart TD
 
 **Stage Numbering:**
 - `./run.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
-- `run_all.py`: Stages 00-05 (zero-padded Python convention, 6 core stages)
+- `execute_pipeline.py --core-only`: Stages 0-5 (6 core stages)
 
 **See [RUN_GUIDE.md](RUN_GUIDE.md) for complete pipeline documentation.**
 
@@ -1273,14 +1321,14 @@ The thin orchestrator pattern provides:
 graph TB
     TASK[What do you want to do?]
     
-    TASK -->|Write documents| WRITE[docs/guides/GETTING_STARTED.md<br/>docs/usage/MARKDOWN_TEMPLATE_GUIDE.md]
-    TASK -->|Add figures| FIGURES[docs/guides/INTERMEDIATE_USAGE.md<br/>docs/usage/VISUALIZATION_GUIDE.md]
-    TASK -->|Fix issues| FIX[docs/operational/TROUBLESHOOTING_GUIDE.md<br/>docs/reference/FAQ.md]
-    TASK -->|Understand architecture| ARCH[docs/core/ARCHITECTURE.md<br/>docs/architecture/TWO_LAYER_ARCHITECTURE.md]
-    TASK -->|Configure system| CONFIG[docs/operational/CONFIGURATION.md<br/>AGENTS.md#configuration-system]
-    TASK -->|Run pipeline| PIPELINE[RUN_GUIDE.md<br/>docs/operational/BUILD_SYSTEM.md]
-    TASK -->|Contribute code| CONTRIB[docs/development/CONTRIBUTING.md<br/>.cursorrules/AGENTS.md]
-    TASK -->|Find all docs| INDEX[docs/DOCUMENTATION_INDEX.md<br/>docs/AGENTS.md]
+    TASK -->|Write documents| WRITE[docs/guides/GETTING_STARTED.md\ndocs/usage/MARKDOWN_TEMPLATE_GUIDE.md]
+    TASK -->|Add figures| FIGURES[docs/guides/INTERMEDIATE_USAGE.md\ndocs/usage/VISUALIZATION_GUIDE.md]
+    TASK -->|Fix issues| FIX[docs/operational/TROUBLESHOOTING_GUIDE.md\ndocs/reference/FAQ.md]
+    TASK -->|Understand architecture| ARCH[docs/core/ARCHITECTURE.md\ndocs/architecture/TWO_LAYER_ARCHITECTURE.md]
+    TASK -->|Configure system| CONFIG[docs/operational/CONFIGURATION.md\nAGENTS.md#configuration-system]
+    TASK -->|Run pipeline| PIPELINE[RUN_GUIDE.md\ndocs/operational/BUILD_SYSTEM.md]
+    TASK -->|Contribute code| CONTRIB[docs/development/CONTRIBUTING.md\n.cursorrules/AGENTS.md]
+    TASK -->|Find all docs| INDEX[docs/DOCUMENTATION_INDEX.md\ndocs/AGENTS.md]
     
     classDef task fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef doc fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
@@ -1297,12 +1345,12 @@ graph TB
 flowchart TD
     START[📚 Need Documentation?]
     
-    START -->|Quick answer| QUICK[docs/reference/<br/>FAQ, Cheatsheet,<br/>Common Workflows]
-    START -->|Learn step-by-step| LEARN[docs/guides/<br/>By Skill Level<br/>1-3, 4-6, 7-9, 10-12]
-    START -->|Understand system| UNDERSTAND[docs/core/<br/>Architecture, Workflow,<br/>How To Use]
-    START -->|Fix problems| FIX_PROB[docs/operational/<br/>Troubleshooting,<br/>Build System]
-    START -->|Advanced features| ADVANCED[docs/modules/<br/>Advanced Modules,<br/>PDF Validation]
-    START -->|Everything| EVERYTHING[docs/DOCUMENTATION_INDEX.md<br/>Complete Index<br/>All 50+ Files]
+    START -->|Quick answer| QUICK[docs/reference/\nFAQ, Cheatsheet,\nCommon Workflows]
+    START -->|Learn step-by-step| LEARN[docs/guides/\nBy Skill Level\n1-3, 4-6, 7-9, 10-12]
+    START -->|Understand system| UNDERSTAND[docs/core/\nArchitecture, Workflow,\nHow To Use]
+    START -->|Fix problems| FIX_PROB[docs/operational/\nTroubleshooting,\nBuild System]
+    START -->|Advanced features| ADVANCED[docs/modules/\nAdvanced Modules,\nPDF Validation]
+    START -->|Everything| EVERYTHING[docs/DOCUMENTATION_INDEX.md\nComplete Index\nAll 50+ Files]
     
     QUICK --> FOUND[✅ Found!]
     LEARN --> FOUND

@@ -151,7 +151,7 @@ fm.register_figure(
 graph TB
     subgraph L1["LAYER 1: INFRASTRUCTURE<br/>(Build orchestration, validation, document management)"]
         subgraph SCRIPTS["Pipeline Orchestrators"]
-            RUN_ALL[run_all.py<br/>6-stage pipeline]
+            RUN_ALL[execute_pipeline.py<br/>6-stage pipeline]
             SCRIPT_LIST[scripts/*.py<br/>- 00_setup_environment.py<br/>- 01_run_tests.py<br/>- 02_run_analysis.py<br/>- 03_render_pdf.py<br/>- 04_validate_output.py<br/>- 05_copy_outputs.py]
         end
         
@@ -324,7 +324,7 @@ projects/proje../../tests/                 # [LAYER 2] Project tests
 
 ```mermaid
 flowchart TD
-    START([User runs:<br/>python3 scripts/run_all.py]) --> CLEAN[STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build]
+    START([User runs:<br/>python3 scripts/execute_pipeline.py --core-only]) --> CLEAN[STAGE 0: Clean Output Directories<br/>- Remove old outputs<br/>- Prepare fresh build]
     CLEAN --> STAGE00[STAGE 00: LAYER 1<br/>Setup Environment<br/>- Validate Python, dependencies<br/>- Check build tools]
     
     STAGE00 --> PHASE1[PHASE 1: LAYER 1<br/>Test Validation<br/>- Run tes../../infrastructure/*.py<br/>- Run projects/proje../../tests/*.py<br/>- Run tests/integration/*.py<br/>- Validate coverage requirements<br/>Report: [LAYER-1-INFRASTRUCTURE] Running]
@@ -479,7 +479,7 @@ flowchart TD
    - Include usage examples
 
 5. **Integrate with build pipeline:**
-   - Update scripts/run_all.py if needed
+   - Update scripts/execute_pipeline.py if needed
    - Update infrastructure modules if applicable
 
 ---
@@ -615,7 +615,7 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 5. **Validate:**
    ```bash
    pytest tests/ projects/proje../../tests/ --cov=infrastructure --cov=project/src
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 ---

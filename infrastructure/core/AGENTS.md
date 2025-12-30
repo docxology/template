@@ -73,6 +73,30 @@ The Core module provides fundamental foundation utilities used across the entire
 - Output directory cleanup
 - Final deliverable copying
 
+**file_inventory.py**
+- File inventory generation and management
+- Directory scanning and categorization
+- File size calculation and formatting
+- Inventory reporting for pipeline summaries
+
+**pipeline.py**
+- PipelineExecutor class for single project execution
+- Pipeline configuration management
+- Stage execution orchestration
+- Checkpoint and logging integration
+
+**multi_project.py**
+- MultiProjectOrchestrator class for cross-project execution
+- Infrastructure test consolidation
+- Parallel project pipeline execution
+- Executive reporting integration
+
+**pipeline_summary.py**
+- Pipeline summary generation and reporting
+- Performance metrics calculation
+- File inventory integration
+- Executive reporting for multi-project runs
+
 ## Function Signatures
 
 ### exceptions.py
@@ -1892,8 +1916,15 @@ def get_summary(self) -> dict[str, Any]:
 def check_python_version() -> bool:
     """Verify Python 3.8+ is available.
 
+    Checks the current Python version against the minimum requirement (3.8+)
+    for the research template. Uses sys.version_info for reliable version detection.
+
     Returns:
         True if Python version is 3.8 or higher, False otherwise
+
+    Example:
+        >>> result = check_python_version()
+        >>> assert result is True  # Requires Python 3.8+
     """
 ```
 
@@ -1902,24 +1933,47 @@ def check_python_version() -> bool:
 def check_dependencies(required_packages: List[str] | None = None) -> Tuple[bool, List[str]]:
     """Verify required packages are installed.
 
+    Attempts to import each package to verify availability. Distinguishes between
+    required packages (must be present) and optional packages (warns but doesn't fail).
+
     Args:
-        required_packages: List of package names to check. If None, uses default list.
+        required_packages: List of package names to check. If None, uses default list
+                          of core packages (numpy, matplotlib, pytest, requests).
 
     Returns:
-        Tuple of (all_present, missing_packages)
+        Tuple of (all_present: bool, missing_packages: List[str])
+
+    Example:
+        >>> all_present, missing = check_dependencies(['numpy', 'matplotlib'])
+        >>> if not all_present:
+        ...     print(f"Missing packages: {missing}")
     """
 ```
 
 #### install_missing_packages (function)
 ```python
 def install_missing_packages(packages: List[str]) -> bool:
-    """Install missing packages using uv.
+    """Install missing packages using uv with fallback to pip.
+
+    Attempts to install packages using uv package manager for speed and reliability.
+    If uv is not available, provides guidance for manual installation.
+
+    The function uses 'uv add' to properly manage dependencies through pyproject.toml,
+    then runs 'uv sync' to install all dependencies. This ensures consistent
+    dependency resolution and lock file generation.
 
     Args:
         packages: List of package names to install
 
     Returns:
         True if installation successful, False otherwise
+
+    Example:
+        >>> success = install_missing_packages(['numpy', 'matplotlib'])
+        >>> if success:
+        ...     print("Packages installed successfully")
+        ... else:
+        ...     print("Installation failed - check uv availability")
     """
 ```
 
@@ -1928,44 +1982,109 @@ def install_missing_packages(packages: List[str]) -> bool:
 def check_build_tools(required_tools: dict[str, str] | None = None) -> bool:
     """Verify build tools are available.
 
+    Uses shutil.which() to check if each tool is available in the system PATH.
+    Provides descriptive error messages indicating the purpose of each tool.
+
     Args:
         required_tools: Dictionary mapping tool names to descriptions.
-                       If None, uses default tools.
+                       If None, uses default tools (pandoc, xelatex).
 
     Returns:
         True if all tools are available, False otherwise
+
+    Example:
+        >>> tools = {'pandoc': 'Document conversion', 'xelatex': 'LaTeX compilation'}
+        >>> available = check_build_tools(tools)
+        >>> assert available is True
     """
 ```
 
 #### setup_directories (function)
 ```python
-def setup_directories(repo_root: Path, directories: List[str] | None = None) -> bool:
-    """Create required directory structure.
+def setup_directories(repo_root: Path, project_name: str = "project", directories: List[str] | None = None) -> bool:
+    """Create required directory structure for multi-project workflow.
+
+    Creates both repository-level and project-specific output directories.
+    Handles multi-project structure where each project has its own output area
+    alongside a shared repository-level output structure.
 
     Args:
         repo_root: Repository root directory
+        project_name: Name of project in projects/ directory (default: "project")
         directories: List of directory paths to create (relative to repo_root).
-                    If None, uses default directories.
+                    If None, uses default multi-project directories.
 
     Returns:
         True if all directories created successfully, False otherwise
+
+    Example:
+        >>> success = setup_directories(Path("."), "my_project")
+        >>> assert success is True
+    """
+```
+
+#### check_uv_available (function)
+```python
+def check_uv_available() -> bool:
+    """Check if uv package manager is available and working.
+
+    Tests uv availability by running 'uv --version' command. uv is a fast
+    Python package manager that provides reliable dependency resolution and
+    virtual environment management.
+
+    Returns:
+        True if uv is available and functional, False otherwise
+
+    Example:
+        >>> if check_uv_available():
+        ...     print("Using uv for fast dependency management")
+        ... else:
+        ...     print("Falling back to pip - consider installing uv")
+    """
+```
+
+#### get_python_command (function)
+```python
+def get_python_command() -> list[str]:
+    """Get the appropriate Python command for subprocess execution.
+
+    Returns the optimal Python command based on available tools:
+    - ['uv', 'run', 'python'] if uv is available (preferred for managed environments)
+    - [sys.executable] otherwise (uses current Python interpreter)
+
+    This ensures consistent Python execution across different environments and
+    respects uv-managed virtual environments when available.
+
+    Returns:
+        List of command arguments suitable for subprocess.run()
+
+    Example:
+        >>> cmd = get_python_command()
+        >>> result = subprocess.run(cmd + ['-c', 'print("hello")'], ...)
     """
 ```
 
 #### verify_source_structure (function)
 ```python
-def verify_source_structure(repo_root: Path) -> bool:
-    """Verify source code structure exists.
+def verify_source_structure(repo_root: Path, project_name: str = "project") -> bool:
+    """Verify source code structure exists for multi-project template.
 
-    Checks for the core components of the repository architecture:
+    For multi-project template, checks:
     - infrastructure/ - Generic reusable build tools
-    - project/ - Standalone research project
+    - projects/{name}/ - Specified project structure
+    - projects/{name}/src/ - Source code
+    - projects/{name}/tests/ - Tests
 
     Args:
         repo_root: Repository root directory
+        project_name: Name of project in projects/ directory (default: "project")
 
     Returns:
         True if required directories exist, False otherwise
+
+    Example:
+        >>> valid = verify_source_structure(Path("."), "my_project")
+        >>> assert valid is True
     """
 ```
 
@@ -1974,11 +2093,70 @@ def verify_source_structure(repo_root: Path) -> bool:
 def set_environment_variables(repo_root: Path) -> bool:
     """Configure environment variables for pipeline.
 
+    Sets critical environment variables needed for the research template pipeline:
+    - MPLBACKEND=Agg: Ensures matplotlib runs in headless mode for server environments
+    - PYTHONIOENCODING=utf-8: Ensures consistent text encoding across platforms
+    - PROJECT_ROOT: Points to repository root for relative path calculations
+
     Args:
         repo_root: Repository root directory
 
     Returns:
         True if environment variables set successfully, False otherwise
+
+    Example:
+        >>> from pathlib import Path
+        >>> repo_root = Path("/path/to/template")
+        >>> success = set_environment_variables(repo_root)
+        >>> assert success is True
+    """
+```
+
+#### validate_uv_sync_result (function)
+```python
+def validate_uv_sync_result(repo_root: Path) -> tuple[bool, str]:
+    """Validate that uv sync completed successfully.
+
+    Checks for the presence of expected artifacts after a uv sync operation:
+    - .venv/ directory: Virtual environment created
+    - uv.lock file: Dependency lock file generated
+
+    Args:
+        repo_root: Repository root directory where uv sync was run
+
+    Returns:
+        Tuple of (success: bool, message: str) describing validation result
+
+    Example:
+        >>> success, msg = validate_uv_sync_result(Path("."))
+        >>> if success:
+        ...     print("uv sync completed successfully")
+        ... else:
+        ...     print(f"uv sync validation failed: {msg}")
+    """
+```
+
+#### validate_directory_structure (function)
+```python
+def validate_directory_structure(repo_root: Path, project_name: str = "project") -> list[str]:
+    """Validate that required directory structure exists.
+
+    Checks for the presence of all directories created by setup_directories().
+    This is useful for post-setup validation to ensure the environment is ready.
+
+    Args:
+        repo_root: Repository root directory
+        project_name: Name of project in projects/ directory (default: "project")
+
+    Returns:
+        List of missing directory paths (empty list if all directories exist)
+
+    Example:
+        >>> missing = validate_directory_structure(Path("."), "my_project")
+        >>> if missing:
+        ...     print(f"Missing directories: {missing}")
+        ... else:
+        ...     print("All directories present")
     """
 ```
 
@@ -2082,6 +2260,155 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> Dict:
 
     Returns:
         Dictionary with copy statistics
+    """
+```
+
+### file_inventory.py
+
+#### FileInventoryManager (class)
+```python
+class FileInventoryManager:
+    """Manages file inventory generation and reporting for pipeline outputs."""
+
+    def __init__(self, base_dir: Path):
+        """Initialize file inventory manager.
+
+        Args:
+            base_dir: Base directory to scan for files
+        """
+
+    def collect_files(self) -> bool:
+        """Collect all files from the base directory.
+
+        Returns:
+            True if files were found, False otherwise
+        """
+
+    def generate_inventory_output(self, log_file: Optional[Path | str] = None) -> None:
+        """Generate and display file inventory.
+
+        Args:
+            log_file: Optional log file to append inventory to
+        """
+```
+
+### pipeline.py
+
+#### PipelineConfig (class)
+```python
+@dataclass
+class PipelineConfig:
+    """Configuration for pipeline execution."""
+
+    project_name: str
+    repo_root: Path
+    skip_infra: bool = False
+    skip_llm: bool = False
+    resume: bool = False
+    run_core_only: bool = False
+```
+
+#### PipelineExecutor (class)
+```python
+class PipelineExecutor:
+    """Executes pipeline stages for a single project."""
+
+    def __init__(self, config: PipelineConfig):
+        """Initialize pipeline executor.
+
+        Args:
+            config: Pipeline configuration
+        """
+
+    def execute_full_pipeline(self) -> List[StageResult]:
+        """Execute complete pipeline with all stages.
+
+        Returns:
+            List of stage results
+        """
+
+    def execute_core_pipeline(self) -> List[StageResult]:
+        """Execute core pipeline without LLM stages.
+
+        Returns:
+            List of stage results
+        """
+```
+
+### multi_project.py
+
+#### MultiProjectConfig (class)
+```python
+@dataclass
+class MultiProjectConfig:
+    """Configuration for multi-project execution."""
+
+    repo_root: Path
+    projects: List[Project]
+    run_infra_tests: bool = True
+    run_llm: bool = False
+    run_executive_report: bool = True
+```
+
+#### MultiProjectResult (class)
+```python
+@dataclass
+class MultiProjectResult:
+    """Result of multi-project execution."""
+
+    successful_projects: int
+    failed_projects: int
+    total_duration: float
+    infra_test_duration: float = 0.0
+```
+
+#### MultiProjectOrchestrator (class)
+```python
+class MultiProjectOrchestrator:
+    """Orchestrates pipeline execution across multiple projects."""
+
+    def __init__(self, config: MultiProjectConfig):
+        """Initialize multi-project orchestrator.
+
+        Args:
+            config: Multi-project configuration
+        """
+
+    def execute_all_projects_full(self) -> MultiProjectResult:
+        """Execute full pipeline for all projects.
+
+        Returns:
+            Multi-project execution result
+        """
+
+    def execute_all_projects_core(self) -> MultiProjectResult:
+        """Execute core pipeline for all projects.
+
+        Returns:
+            Multi-project execution result
+        """
+```
+
+### pipeline_summary.py
+
+#### generate_pipeline_summary (function)
+```python
+def generate_pipeline_summary(
+    stage_results: List[StageResult],
+    total_duration: float,
+    output_dir: Path,
+    format: str = "text"
+) -> str:
+    """Generate pipeline execution summary.
+
+    Args:
+        stage_results: List of stage execution results
+        total_duration: Total pipeline duration in seconds
+        output_dir: Output directory path
+        format: Output format ('text' or 'json')
+
+    Returns:
+        Formatted summary string
     """
 ```
 
@@ -2216,6 +2543,65 @@ from infrastructure.core import clean_output_directory, copy_final_deliverables
 
 clean_output_directory(Path("output"))
 copy_final_deliverables(Path("projects/project/output"), Path("output/project"))
+```
+
+### File Inventory
+```python
+from infrastructure.core import FileInventoryManager
+
+manager = FileInventoryManager(Path("projects/project/output"))
+if manager.collect_files():
+    manager.generate_inventory_output()
+```
+
+### Pipeline Execution
+```python
+from infrastructure.core import PipelineExecutor, PipelineConfig
+
+config = PipelineConfig(
+    project_name="my_project",
+    repo_root=Path("."),
+    skip_infra=False,
+    skip_llm=True
+)
+
+executor = PipelineExecutor(config)
+results = executor.execute_core_pipeline()
+
+for result in results:
+    print(f"{result.name}: {result.exit_code} ({result.duration:.1f}s)")
+```
+
+### Multi-Project Orchestration
+```python
+from infrastructure.core import MultiProjectOrchestrator, MultiProjectConfig
+from infrastructure.project.discovery import discover_projects
+
+projects = discover_projects(Path("."))
+config = MultiProjectConfig(
+    repo_root=Path("."),
+    projects=projects,
+    run_infra_tests=True,
+    run_llm=False
+)
+
+orchestrator = MultiProjectOrchestrator(config)
+result = orchestrator.execute_all_projects_core()
+
+print(f"Successful: {result.successful_projects}, Failed: {result.failed_projects}")
+```
+
+### Pipeline Summary
+```python
+from infrastructure.core import generate_pipeline_summary
+
+summary = generate_pipeline_summary(
+    stage_results=results,
+    total_duration=123.45,
+    output_dir=Path("output"),
+    format="text"
+)
+print(summary)
 ```
 
 ## Testing

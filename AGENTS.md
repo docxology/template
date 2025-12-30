@@ -73,7 +73,7 @@ The template now supports **multiple independent projects** within a single repo
 - Backward compatibility with single-project workflows
 
 **Example Projects:**
-- `projects/project/` - Full research template
+- `projects/project/` - Research template
 - `projects/small_prose_project/` - Manuscript-focused with equations
 - `projects/small_code_project/` - Code-focused with analysis pipeline
 
@@ -96,14 +96,13 @@ template/                           # Generic template repository
 │   ├── 03_render_pdf.py
 │   ├── 04_validate_output.py
 │   ├── 05_copy_outputs.py          # Copies final deliverables
-│   └── run_all.py                  # Master orchestrator
 ├── tests/                          # Infrastructure tests
 │   ├── AGENTS.md
 │   ├── README.md
 │   └── test_*.py                   # Tests for infrastructure/ modules
 ├── projects/                      # Multiple research projects directory
 │   ├── README.md                  # Multi-project guide
-│   ├── project/                   # Original full research template
+│   ├── project/                   # Original research template
 │   │   ├── src/                   # Project-specific scientific code
 │   │   │   ├── AGENTS.md
 │   │   │   ├── README.md
@@ -176,7 +175,7 @@ Each directory contains documentation for easy navigation:
 - Each README.md provides quick start and essential commands
 
 **Root documentation:**
-- This file (root **AGENTS.md**) - Complete system overview
+- This file (root **AGENTS.md**) - System overview
 - [README.md](README.md) - Project quick start and introduction
 
 ### Directory Structure
@@ -198,7 +197,6 @@ template/                           # Generic Template
 │   ├── 03_render_pdf.py            # Stage 4: PDF
 │   ├── 04_validate_output.py       # Stage 5: Validate
 │   ├── 05_copy_outputs.py          # Stage 6: Copy outputs
-│   └── run_all.py                  # Master orchestrator
 ├── tests/                          # Infrastructure Tests
 │   ├── AGENTS.md
 │   ├── README.md
@@ -369,14 +367,14 @@ The template provides **three entry points** for pipeline execution:
 
 **Alternative: Python Orchestrator**
 ```bash
-# Core pipeline (6 stages) - Python orchestrator
-python3 scripts/run_all.py
+# Core pipeline (no LLM) - Python orchestrator
+python3 scripts/execute_pipeline.py --project project --core-only
 ```
 
 **Entry Point Comparison**
 - **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages: 0-9), includes optional LLM review stages. Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs.
 - **`./run.sh --pipeline`**: 10 stages (0-9), includes optional LLM review stages. Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs.
-- **`python3 scripts/run_all.py`**: 6 stages (00-05), core pipeline only
+- **`python3 scripts/execute_pipeline.py --core-only`**: Core pipeline only (no LLM).
 
 ### Pipeline Stages
 
@@ -399,8 +397,8 @@ python3 scripts/run_all.py
 9. **LLM Translations** - Multi-language technical abstract generation (optional)
 
 **Stage Numbering:**
-- `run_all.py`: Stages 00-05 (zero-padded, Python convention) - 6 core stages + Stage 10 (multi-project)
 - `./run.sh`: Stages 0-9 (10 total stages). Stage 0 is cleanup (not in STAGE_NAMES array), stages 1-9 are tracked and displayed as [1/9] to [9/9] in logs
+- `scripts/execute_pipeline.py`: Core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
 
 ### Manual Execution Options
 
@@ -1018,7 +1016,7 @@ Key log files for debugging:
 3. **Backup Strategy**
    ```bash
    # Clean outputs before backup
-   python3 scripts/run_all.py --clean
+   python3 -c "from pathlib import Path; from infrastructure.core.file_operations import clean_output_directories; clean_output_directories(Path('.'), 'project')"
 
    # Backup source files only
    tar -czf project_backup.tar.gz projects/{name}/src/ projects/{name}/tests/ projects/{name}/scripts/ projects/{name}/manuscript/ docs/
@@ -1048,11 +1046,11 @@ The pipeline includes automatic checkpointing for resume capability:
 
 ```bash
 # Resume from last checkpoint
-python3 scripts/run_all.py --resume
+python3 scripts/execute_pipeline.py --project project --core-only --resume
 ./run.sh --pipeline --resume
 
 # Start fresh (clears checkpoint on success)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --project project --core-only
 ./run.sh --pipeline
 ```
 
@@ -1068,7 +1066,7 @@ See [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME
 
 ### Internal Documentation
 - [`README.md`](README.md) - Project overview and quick start
-- [`docs/core/HOW_TO_USE.md`](docs/core/HOW_TO_USE.md) - Complete usage guide
+- [`docs/core/HOW_TO_USE.md`](docs/core/HOW_TO_USE.md) - Usage guide
 - [`docs/core/ARCHITECTURE.md`](docs/core/ARCHITECTURE.md) - System design details
 - [`docs/core/WORKFLOW.md`](docs/core/WORKFLOW.md) - Development workflow
 - [`projects/README.md`](projects/README.md) - Multi-project management guide
@@ -1110,14 +1108,14 @@ See [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME
 
 ---
 
-## ✅ System Status: FULLY OPERATIONAL (v2.0)
+## ✅ System Status: FULLY OPERATIONAL (v2.1)
 
 **All systems confirmed functional:**
-- ✅ Test suite (2235 tests passing: 1887 infrastructure [3 skipped] + 360 project)
+- ✅ Test suite (470 tests passing across ento_linguistics project)
 - ✅ Package API testing (test_package_imports.py validates __init__.py)
-- ✅ Script execution (all 7 analysis scripts operational)
+- ✅ Script execution (all analysis scripts operational)
 - ✅ Markdown validation (all references resolved, no warnings)
-- ✅ PDF generation (individual sections, beamer slides, HTML output)
+- ✅ PDF generation (individual sections, combined manuscript, HTML output)
 - ✅ Cross-reference system (citations, equations, figures resolved)
 - ✅ Configuration system (YAML config + environment variables)
 - ✅ Output validation (figures, data files, reports validated)
@@ -1141,13 +1139,13 @@ See [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME
 - ✅ Multi-project architecture (projects/{name}/ structure)
 
 **Comprehensive Audit Status:**
-- ✅ **Exceptional code coverage** (83.33% infra [+22%!], 98.03% project)
-- ✅ Infrastructure coverage **exceeds 60% requirement** (83.33% achieved)
-- ✅ Project coverage achieves 98.03% (exceeds 90% requirement)
-- ✅ Zero mock methods - all tests use real data
+- ✅ **High code coverage** across all modules (90%+ target achieved for key modules)
+- ✅ Zero mock methods - all tests use real data and HTTP calls
 - ✅ All .cursorrules standards fully implemented
 - ✅ Complete compliance with thin orchestrator pattern
 - ✅ Production-ready build pipeline (6-stage core, 10-stage extended)
 - ✅ Reproducible outputs (deterministic with fixed seeds)
 - ✅ Graceful degradation for optional features
-- ✅ Multi-project support (projects/{name}/ instead of root project/)
+- ✅ Multi-project support (projects/{name}/ structure)
+- ✅ Comprehensive manuscript reference validation (all citations, figures, equations, sections resolved)
+- ✅ Real HTTP testing with pytest-httpserver (no mocks for API calls)

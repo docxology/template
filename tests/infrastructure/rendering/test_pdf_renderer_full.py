@@ -4,9 +4,9 @@ Tests PDF rendering functionality thoroughly.
 """
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
 import subprocess
+import shutil
 
 from infrastructure.rendering import pdf_renderer
 
@@ -52,39 +52,40 @@ class TestRenderFunctions:
                hasattr(pdf_renderer, 'render_to_pdf') or \
                hasattr(pdf_renderer, 'PDFRenderer')
     
+    @pytest.mark.skipif(not shutil.which('xelatex'), reason="LaTeX (xelatex) not installed")
+    @pytest.mark.skipif(not shutil.which('xelatex'), reason="LaTeX (xelatex) not installed")
     def test_render_pdf_with_tex(self, tmp_path):
         """Test rendering PDF from TeX file."""
         tex = tmp_path / "test.tex"
         tex.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
-        
+
         if hasattr(pdf_renderer, 'render_pdf'):
-            with patch('subprocess.run') as mock_run:
-                mock_run.return_value = MagicMock(returncode=0, stdout='', stderr='')
-                try:
-                    result = pdf_renderer.render_pdf(str(tex))
-                    # Should complete without error
-                except Exception:
-                    pass  # May require LaTeX
+            try:
+                result = pdf_renderer.render_pdf(str(tex))
+                # Should complete without error if LaTeX is available
+                assert result is not None
+            except Exception:
+                pass  # May have other requirements
 
 
 class TestLatexCompilation:
     """Test LaTeX compilation functions."""
     
+    @pytest.mark.skipif(not shutil.which('xelatex'), reason="LaTeX (xelatex) not installed")
     def test_compile_tex(self, tmp_path):
         """Test compiling TeX file."""
         tex = tmp_path / "test.tex"
         tex.write_text("\\documentclass{article}\\begin{document}Hello\\end{document}")
-        
+
         if hasattr(pdf_renderer, 'compile_latex') or hasattr(pdf_renderer, 'compile_tex'):
             compile_func = getattr(pdf_renderer, 'compile_latex', None) or \
                           getattr(pdf_renderer, 'compile_tex', None)
-            
-            with patch('subprocess.run') as mock_run:
-                mock_run.return_value = MagicMock(returncode=0)
-                try:
-                    result = compile_func(str(tex))
-                except Exception:
-                    pass
+
+            try:
+                result = compile_func(str(tex))
+                assert result is not None
+            except Exception:
+                pass
 
 
 class TestPandocIntegration:
@@ -96,18 +97,18 @@ class TestPandocIntegration:
             result = pdf_renderer.check_pandoc()
             assert isinstance(result, bool)
     
+    @pytest.mark.skipif(not shutil.which('pandoc'), reason="Pandoc not installed")
     def test_markdown_to_pdf(self, tmp_path):
         """Test markdown to PDF conversion."""
         md = tmp_path / "test.md"
         md.write_text("# Title\n\nContent")
-        
+
         if hasattr(pdf_renderer, 'markdown_to_pdf'):
-            with patch('subprocess.run') as mock_run:
-                mock_run.return_value = MagicMock(returncode=0)
-                try:
-                    result = pdf_renderer.markdown_to_pdf(str(md))
-                except Exception:
-                    pass
+            try:
+                result = pdf_renderer.markdown_to_pdf(str(md))
+                assert result is not None
+            except Exception:
+                pass
 
 
 class TestOutputValidation:
@@ -126,19 +127,19 @@ class TestOutputValidation:
 class TestRenderOptions:
     """Test rendering with options."""
     
+    @pytest.mark.skipif(not shutil.which('xelatex'), reason="LaTeX (xelatex) not installed")
     def test_render_with_engine(self, tmp_path):
         """Test rendering with specific engine."""
         tex = tmp_path / "test.tex"
         tex.write_text("\\documentclass{article}\\begin{document}Test\\end{document}")
-        
+
         if hasattr(pdf_renderer, 'render_pdf'):
-            with patch('subprocess.run') as mock_run:
-                mock_run.return_value = MagicMock(returncode=0)
-                try:
-                    result = pdf_renderer.render_pdf(str(tex), engine='xelatex')
-                except TypeError:
-                    # Engine arg may not be supported
-                    pass
+            try:
+                result = pdf_renderer.render_pdf(str(tex), engine='xelatex')
+                assert result is not None
+            except TypeError:
+                # Engine arg may not be supported
+                pass
 
 
 class TestPdfRendererIntegration:

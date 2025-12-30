@@ -131,7 +131,7 @@ Monitor memory consumption:
 
 ```bash
 # Check memory usage during pipeline
-/usr/bin/time -v python3 scripts/run_all.py
+/usr/bin/time -v python3 scripts/execute_pipeline.py --core-only
 
 # Monitor continuously
 watch -n 1 'ps aux | grep python'
@@ -191,7 +191,7 @@ Typical pipeline execution times:
 
 ```bash
 # Profile entire pipeline
-python3 -m cProfile -o pipeline.prof scripts/run_all.py
+python3 -m cProfile -o pipeline.prof scripts/execute_pipeline.py --core-only
 
 # Analyze profile
 python3 -m pstats pipeline.prof
@@ -208,7 +208,7 @@ python3 -m cProfile -o stage.prof scripts/03_render_pdf.py
 
 ```bash
 # Memory profiler
-python3 -m memory_profiler scripts/run_all.py
+python3 -m memory_profiler scripts/execute_pipeline.py --core-only
 ```
 
 ## Caching Strategies
@@ -322,6 +322,6 @@ grep "Completed in" project/output/*.log | awk '{print $NF}'
 
 ## See Also
 
-- [`../../scripts/run_all.py`](../../scripts/run_all.py) - Performance tracking implementation
+- [`../../scripts/execute_pipeline.py`](../../scripts/execute_pipeline.py) - Performance tracking implementation
 - [`infrastructure/core/performance.py`](../../infrastructure/core/performance.py) - Performance utilities
 - [`TROUBLESHOOTING_GUIDE.md`](../operational/TROUBLESHOOTING_GUIDE.md) - Performance troubleshooting

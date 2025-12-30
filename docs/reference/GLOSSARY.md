@@ -37,7 +37,7 @@ Testing metric ensuring all conditional branches (if/else, switch cases) are exe
 **See**: [Test Coverage](#test-coverage)
 
 ### Build Pipeline
-Automated sequence of operations that validates tests, runs scripts, generates documentation, and builds PDFs. Orchestrated by `scripts/run_all.py` (6-stage pipeline).
+Automated sequence of operations that validates tests, runs scripts, generates documentation, and builds PDFs. Orchestrated by `scripts/execute_pipeline.py` (6-stage pipeline).
 
 **Stages**: Tests → Scripts → Validation → Glossary → Individual PDFs → Combined PDF
 
@@ -279,7 +279,7 @@ LaTeX-based cross-referencing that automatically numbers and links sections, equ
 ### Render Pipeline
 Another name for [Build Pipeline](#build-pipeline). The complete sequence from tests to final PDF.
 
-**Script**: `python3 scripts/run_all.py`
+**Script**: `python3 scripts/execute_pipeline.py --core-only`
 
 ### Reproducibility
 Ability to regenerate exact same results from source. Ensured through deterministic RNG seeds, fixed dependencies, and comprehensive testing.

@@ -260,8 +260,10 @@ class PDFRenderer:
             output_file.unlink()
             logger.debug(f"Removed existing output file: {output_file.name}")
         
-        # Check if bibliography exists
+        # Check if bibliography exists (prefer references.bib, fallback to 99_references.bib)
         bib_file = manuscript_dir / "references.bib"
+        if not bib_file.exists():
+            bib_file = manuscript_dir / "99_references.bib"
         bib_exists = bib_file.exists()
         
         # Create temporary combined LaTeX file from combined markdown
@@ -374,7 +376,21 @@ class PDFRenderer:
                         tex_content[end_of_begin_doc:]
                     )
                     logger.info(r"✓ Inserted title page (\maketitle) after \begin{document}")
-        
+
+        # Insert bibliography commands before \end{document} if bibliography exists
+        if bib_exists:
+            end_doc_idx = tex_content.rfind("\\end{document}")
+            if end_doc_idx > 0:
+                bibliography_commands = "\n\n\\bibliographystyle{unsrt}\n\\bibliography{references}\n"
+                tex_content = (
+                    tex_content[:end_doc_idx] +
+                    bibliography_commands +
+                    tex_content[end_doc_idx:]
+                )
+                logger.info("✓ Inserted bibliography commands before \\end{document}")
+            else:
+                logger.warning("⚠️  Could not find \\end{document} to insert bibliography commands")
+
         combined_tex.write_text(tex_content)
         
         # Verify figure files exist before compilation
@@ -435,10 +451,16 @@ class PDFRenderer:
             combined_tex.name  # Just the filename, since we set cwd to output_dir
         ]
         
+        import time
+        start_time = time.time()
+
         logger.info(f"Rendering combined manuscript to PDF: {output_file.name}")
         logger.info(f"  Source files: {len(source_files)}")
         if bib_exists:
             logger.info(f"  Bibliography: {bib_file.name}")
+        logger.debug(f"  Output directory: {output_dir}")
+        logger.debug(f"  Combined TeX file: {combined_tex.name}")
+        logger.debug(f"  Combined MD file: {combined_md.name}")
         
         try:
             # Run xelatex with bibliography processing for proper cross-references, TOC, and bibliography
@@ -472,21 +494,64 @@ class PDFRenderer:
             
             # Additional passes for reference resolution (especially after bibtex)
             max_passes = 4
+            consecutive_failures = 0
+            max_consecutive_failures = 2
+
             for run in range(1, max_passes):
                 log_progress_bar(run+1, max_passes, "LaTeX compilation", bar_width=20)
                 result = subprocess.run(cmd, check=False, capture_output=True, text=True, cwd=str(output_dir))
-                
+
                 # Check for critical errors
                 if "Fatal error occurred" in result.stdout or result.returncode > 1:
+                    consecutive_failures += 1
+
                     if output_file.exists():
                         logger.warning(f"⚠️  PDF generated but with warnings (run {run+1})")
+                        # Reset failure count if we have a PDF
+                        consecutive_failures = 0
                         break
                     else:
-                        # Only fail on critical errors after first pass
-                        if "!" in result.stdout:
-                            # Check if this is a missing package error
-                            log_file = output_dir / "_combined_manuscript.log"
+                        # Check for recoverable errors
+                        log_file = output_dir / "_combined_manuscript.log"
+                        if log_file.exists():
+                            log_content = log_file.read_text()
+
+                            # Check for missing package errors
                             missing_pkg = _parse_missing_package_error(log_file)
+                            if missing_pkg:
+                                raise RenderingError(
+                                    f"Missing LaTeX package: {missing_pkg}",
+                                    context={
+                                        "package": missing_pkg,
+                                        "source": str(combined_tex),
+                                        "log_file": str(log_file)
+                                    },
+                                    suggestions=[
+                                        f"Install package: sudo tlmgr install {missing_pkg}",
+                                        "Verify LaTeX packages: python3 -m infrastructure.rendering.latex_package_validator",
+                                        "Update TeX Live: sudo tlmgr update --self",
+                                        f"Check log file for details: {log_file}"
+                                    ]
+                                )
+
+                            # Check for other recoverable errors
+                            if consecutive_failures >= max_consecutive_failures:
+                                raise RenderingError(
+                                    f"LaTeX compilation failed after {consecutive_failures} consecutive attempts",
+                                    context={
+                                        "source": str(combined_tex),
+                                        "log_file": str(log_file),
+                                        "last_error": result.stderr[:500] if result.stderr else "No stderr"
+                                    },
+                                    suggestions=[
+                                        "Check LaTeX syntax in manuscript files",
+                                        "Verify all figures exist and paths are correct",
+                                        "Ensure bibliography file is properly formatted",
+                                        f"Review compilation log: {log_file}"
+                                    ]
+                                )
+                        else:
+                            logger.warning(f"⚠️  LaTeX compilation failed (run {run+1}), continuing...")
                             
                             if missing_pkg:
                                 raise RenderingError(
@@ -550,6 +615,12 @@ class PDFRenderer:
                     logger.info(f"   Output: {output_file.name}")
                     logger.info(f"   Size: {output_size_kb:.1f} KB ({output_size_kb/1024:.2f} MB)")
                     logger.info(f"   Location: {output_file.parent}")
+
+                    # Log performance metrics
+                    end_time = time.time()
+                    total_duration = end_time - start_time
+                    logger.info(f"   Duration: {total_duration:.2f} seconds")
+
                 # Note: Temporary files (_combined_manuscript.md, .tex, .log, .bbl, .aux)
                 # are preserved for debugging and reference purposes
                 return output_file
@@ -560,6 +631,12 @@ class PDFRenderer:
                 logger.info(f"   Output: {output_file.name}")
                 logger.info(f"   Size: {output_size_kb:.1f} KB ({output_size_kb/1024:.2f} MB)")
                 logger.info(f"   Location: {output_file.parent}")
+
+                # Log performance metrics
+                end_time = time.time()
+                total_duration = end_time - start_time
+                logger.info(f"   Duration: {total_duration:.2f} seconds")
+
                 # Note: Temporary files (_combined_manuscript.md, .tex, .log, .bbl, .aux)
                 # are preserved for debugging and reference purposes
                 return output_file

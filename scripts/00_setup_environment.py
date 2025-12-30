@@ -51,22 +51,34 @@ def main() -> int:
     
     def check_and_install_dependencies() -> bool:
         """Check dependencies and install missing ones using workspace sync."""
-        # For workspace-enabled projects, use uv sync instead of individual package installation
-        logger.info("Syncing workspace dependencies...")
+        logger.info("Checking for uv package manager...")
+
         try:
-            result = subprocess.run(['uv', 'sync'], cwd=str(repo_root), capture_output=True, text=True, check=False)
+            result = subprocess.run(['uv', 'sync'], cwd=str(repo_root),
+                                  capture_output=True, text=True, check=False)
             if result.returncode == 0:
-                log_success("Workspace dependencies synced successfully", logger)
+                log_success("Workspace dependencies synced successfully with uv", logger)
+                logger.debug(f"uv output: {result.stdout}")
                 return True
             else:
-                logger.warning(f"uv sync failed: {result.stderr}")
+                logger.warning(f"uv sync failed (exit code {result.returncode}): {result.stderr}")
+                logger.info("Falling back to individual dependency checking...")
                 # Fall back to checking individual dependencies
                 all_present, missing = check_dependencies()
                 if not all_present and missing:
                     return install_missing_packages(missing)
                 return all_present
-        except (FileNotFoundError, subprocess.SubprocessError):
-            logger.warning("uv not available, falling back to individual dependency checking")
+        except FileNotFoundError:
+            logger.info("uv not found in PATH, using fallback dependency checking")
+            logger.info("Install uv with: pip install uv (recommended for faster dependency management)")
+            # Fall back to checking individual dependencies
+            all_present, missing = check_dependencies()
+            if not all_present and missing:
+                return install_missing_packages(missing)
+            return all_present
+        except subprocess.SubprocessError as e:
+            logger.error(f"Subprocess error during uv sync: {e}", exc_info=True)
+            logger.info("Falling back to individual dependency checking...")
             # Fall back to checking individual dependencies
             all_present, missing = check_dependencies()
             if not all_present and missing:

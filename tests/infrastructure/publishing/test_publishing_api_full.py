@@ -4,7 +4,7 @@ Tests publishing API functionality comprehensively.
 """
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+# No mock imports needed - using real HTTP server
 import pytest
 
 from infrastructure.publishing import api
@@ -30,12 +30,12 @@ class TestZenodoConfig:
     def test_sandbox_url(self):
         """Test sandbox URL."""
         config = ZenodoConfig(access_token="test", sandbox=True)
-        assert "sandbox" in config.base_url
-    
+        assert "sandbox" in config.api_base_url
+
     def test_production_url(self):
         """Test production URL."""
         config = ZenodoConfig(access_token="test", sandbox=False)
-        assert "sandbox" not in config.base_url
+        assert "sandbox" not in config.api_base_url
     
     def test_access_token(self):
         """Test access token is stored."""
@@ -54,51 +54,43 @@ class TestZenodoClient:
         assert client.config == config
         assert "Bearer test" in client.headers["Authorization"]
     
-    def test_create_deposition_success(self):
+    def test_create_deposition_success(self, zenodo_test_server, monkeypatch):
         """Test successful deposition creation."""
         config = ZenodoConfig(access_token="test")
+
+        # Override the base_url property for testing
+        monkeypatch.setattr(config, 'base_url', zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
-        
-        with patch('requests.post') as mock_post:
-            mock_response = MagicMock()
-            mock_response.json.return_value = {'id': 12345}
-            mock_response.raise_for_status = MagicMock()
-            mock_post.return_value = mock_response
-            
-            result = client.create_deposition({'title': 'Test'})
-            
-            assert result == '12345'
+
+        result = client.create_deposition({'title': 'Test'})
+
+        assert result == '12345'
     
     def test_create_deposition_failure(self):
         """Test deposition creation failure."""
         from infrastructure.core.exceptions import PublishingError
-        import requests
-        
-        config = ZenodoConfig(access_token="test")
+
+        # Use invalid URL to simulate network error
+        config = ZenodoConfig(access_token="test", base_url="http://invalid-host:9999/")
         client = ZenodoClient(config)
-        
-        with patch('requests.post') as mock_post:
-            mock_post.side_effect = requests.exceptions.RequestException("Network error")
-            
-            with pytest.raises(PublishingError):
-                client.create_deposition({'title': 'Test'})
+
+        with pytest.raises(PublishingError):
+            client.create_deposition({'title': 'Test'})
     
-    def test_upload_file_success(self, tmp_path):
+    def test_upload_file_success(self, tmp_path, zenodo_test_server, monkeypatch):
         """Test successful file upload."""
         config = ZenodoConfig(access_token="test")
+
+        # Override the base_url property for testing
+        monkeypatch.setattr(config, 'base_url', zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
-        
+
         # Create test file
         test_file = tmp_path / "test.pdf"
         test_file.write_bytes(b"%PDF content")
-        
-        with patch('requests.post') as mock_post:
-            mock_response = MagicMock()
-            mock_response.raise_for_status = MagicMock()
-            mock_post.return_value = mock_response
-            
-            # Should not raise
-            client.upload_file("123", str(test_file))
+
+        # Should not raise
+        client.upload_file("bucket123", str(test_file))
     
     def test_upload_file_not_found(self, tmp_path):
         """Test upload with missing file."""
@@ -110,34 +102,26 @@ class TestZenodoClient:
         with pytest.raises(UploadError):
             client.upload_file("123", str(tmp_path / "missing.pdf"))
     
-    def test_publish_success(self):
+    def test_publish_success(self, zenodo_test_server):
         """Test successful publication."""
-        config = ZenodoConfig(access_token="test")
+        config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
-        
-        with patch('requests.post') as mock_post:
-            mock_response = MagicMock()
-            mock_response.json.return_value = {'doi': '10.5281/zenodo.12345'}
-            mock_response.raise_for_status = MagicMock()
-            mock_post.return_value = mock_response
-            
-            result = client.publish("123")
-            
-            assert result == '10.5281/zenodo.12345'
+
+        # Use real HTTP request to test server
+        result = client.publish("12345")
+
+        assert result == '10.5281/zenodo.12345'
     
     def test_publish_failure(self):
         """Test publication failure."""
         from infrastructure.core.exceptions import PublishingError
-        import requests
-        
-        config = ZenodoConfig(access_token="test")
+
+        # Use invalid URL to simulate network error
+        config = ZenodoConfig(access_token="test", base_url="http://invalid-host:9999/")
         client = ZenodoClient(config)
-        
-        with patch('requests.post') as mock_post:
-            mock_post.side_effect = requests.exceptions.RequestException("Publish failed")
-            
-            with pytest.raises(PublishingError):
-                client.publish("123")
+
+        with pytest.raises(PublishingError):
+            client.publish("12345")
 
 
 class TestPublishingApiIntegration:
@@ -149,34 +133,20 @@ class TestPublishingApiIntegration:
         assert hasattr(api, 'ZenodoClient')
         assert hasattr(api, 'ZenodoConfig')
     
-    def test_full_workflow(self, tmp_path):
+    def test_full_workflow(self, tmp_path, zenodo_test_server):
         """Test complete publishing workflow."""
-        config = ZenodoConfig(access_token="test")
+        config = ZenodoConfig(access_token="test", base_url=zenodo_test_server.url_for(""))
         client = ZenodoClient(config)
-        
+
         # Create test file
         test_file = tmp_path / "paper.pdf"
         test_file.write_bytes(b"%PDF content")
-        
-        with patch('requests.post') as mock_post:
-            # Create mock responses for each call
-            create_response = MagicMock()
-            create_response.json.return_value = {'id': 123}
-            create_response.raise_for_status = MagicMock()
-            
-            upload_response = MagicMock()
-            upload_response.raise_for_status = MagicMock()
-            
-            publish_response = MagicMock()
-            publish_response.json.return_value = {'doi': '10.5281/zenodo.123'}
-            publish_response.raise_for_status = MagicMock()
-            
-            mock_post.side_effect = [create_response, upload_response, publish_response]
-            
-            dep_id = client.create_deposition({'title': 'Test'})
-            client.upload_file(dep_id, str(test_file))
-            doi = client.publish(dep_id)
-            
-            assert dep_id == '123'
-            assert '10.5281' in doi
+
+        # Use real HTTP requests to test server
+        dep_id = client.create_deposition({'title': 'Test'})
+        client.upload_file("bucket123", str(test_file))
+        doi = client.publish(dep_id)
+
+        assert dep_id == '12345'
+        assert '10.5281' in doi
 

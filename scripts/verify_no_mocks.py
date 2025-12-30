@@ -21,20 +21,58 @@ def main():
     print("🔍 Verifying No Mocks Policy compliance...")
     print("=" * 60)
 
-    # Run grep to find mock usage
-    result = subprocess.run(
-        ['grep', '-r', r'MagicMock|unittest\.mock|mocker\.', 'tests/'],
-        cwd=repo_root,
-        capture_output=True,
-        text=True
-    )
+    # Run grep to find mock usage - comprehensive patterns
+    mock_patterns = [
+        r'MagicMock',
+        r'unittest\.mock',
+        r'mocker\.',
+        r'from unittest\.mock import',
+        r'@patch',
+        r'patch\(',
+        r'with patch',
+        r'\.patch',
+        r'pytest\.mock',
+        r'mock\.',
+        r'Mock\(',
+        r'pytest\.mark\.requires_ollama',  # Skip this - it's a marker, not mock usage
+        r'pytest\.mark\.requires_.*'  # Skip pytest markers
+    ]
 
-    if result.returncode == 0:
+    all_output = []
+    for pattern in mock_patterns:
+        # Skip pytest markers as they're not mock usage
+        if 'pytest.mark' in pattern:
+            continue
+
+        result = subprocess.run(
+            ['grep', '-r', pattern, 'tests/'],
+            cwd=repo_root,
+            capture_output=True,
+            text=True
+        )
+        if result.returncode == 0:
+            all_output.append(f"Pattern '{pattern}':")
+            # Filter out false positives
+            lines = result.stdout.strip().split('\n')
+            filtered_lines = []
+            for line in lines:
+                # Skip lines that are just imports of pytest markers or other non-mock usage
+                if not any(skip_pattern in line for skip_pattern in [
+                    'pytest.mark', 'requires_ollama', 'requires_zenodo', 'requires_github'
+                ]):
+                    filtered_lines.append(line)
+            if filtered_lines:
+                all_output.extend(filtered_lines)
+                all_output.append("")
+
+    combined_output = '\n'.join(all_output)
+
+    if combined_output.strip():
         # Mock usage found
         print("❌ FAILURE: Mock usage detected in test files!")
         print("=" * 60)
         print("Found the following mock usage:")
-        print(result.stdout)
+        print(combined_output)
         print()
         print("🚫 No Mocks Policy Violation")
         print("All tests must use real data and real computations.")

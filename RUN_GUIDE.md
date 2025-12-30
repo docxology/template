@@ -5,7 +5,7 @@
 The Research Project Template provides **two main entry points** for pipeline operations:
 
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (10 stages: 0-9)
-2. **`python3 scripts/run_all.py`** - Alternative core 6-stage pipeline without LLM features
+2. **`python3 scripts/execute_pipeline.py --core-only`** - Core 6-stage pipeline without LLM features
 
 ## 🔀 Multi-Project Support
 
@@ -36,7 +36,7 @@ The template includes three example projects:
 ./run.sh --all-projects --pipeline
 
 # Alternative orchestrator (all projects)
-python3 scripts/run_all.py --all-projects
+python3 scripts/execute_multi_project.py
 ```
 
 ## Entry Point 1: Manuscript Operations (`run.sh`)
@@ -208,13 +208,13 @@ Executes the 10-stage build pipeline (stages 0-9):
 ./run.sh --help
 ```
 
-## Entry Point 2: Python Orchestrator (`scripts/run_all.py`)
+## Entry Point 2: Python Orchestrator (`scripts/execute_pipeline.py`)
 
 For programmatic access or CI/CD integration, use the Python orchestrator:
 
 ```bash
 # Core pipeline (6 stages) - Python orchestrator
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 **Features**:
@@ -222,7 +222,7 @@ python3 scripts/run_all.py
 - No LLM dependencies required
 - Suitable for automated environments
 - Zero-padded stage numbering (Python convention)
-- Checkpoint/resume support: `python3 scripts/run_all.py --resume`
+- Checkpoint/resume support: `python3 scripts/execute_pipeline.py --core-only --resume`
 
 ### Core Pipeline Stages (00-05) + Executive Reporting (07)
 
@@ -242,7 +242,7 @@ python3 scripts/run_all.py
 |-------------|----------------|--------------|----------|
 | `./run.sh` | Main entry point | Optional | Interactive menu or manuscript pipeline with LLM |
 | `./run.sh --pipeline` | 10 stages (0-9) | Optional | Manuscript pipeline with LLM |
-| `python3 scripts/run_all.py` | 6 stages (00-05) | None | Core pipeline, CI/CD automation |
+| `python3 scripts/execute_pipeline.py --core-only` | 6 stages (00-05) | None | Core pipeline, CI/CD automation |
 
 ## Usage Examples
 
@@ -268,7 +268,7 @@ python3 scripts/run_all.py
 
 
 # Run core pipeline (Python)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### Individual Stage Execution

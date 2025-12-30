@@ -637,7 +637,7 @@ This ensures:
 - Verify bibliography file exists: `manuscript/references.bib`
 - Check citation keys match exactly (case-sensitive)
 - Ensure BibTeX entries are properly formatted
-- Run full build: `python3 scripts/run_all.py`
+- Run full build: `python3 scripts/execute_pipeline.py --core-only`
 
 **Missing bibliography entries**:
 - Check LaTeX log for BibTeX warnings

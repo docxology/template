@@ -238,7 +238,7 @@ def calculate_statistics(data: List[float]) -> Dict[str, float]:
 **Automation:**
 ```bash
 # Automated validation
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Or validate outputs directly
 python3 scripts/04_validate_output.py

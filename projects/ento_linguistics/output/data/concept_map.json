@@ -1,0 +1,211 @@
+{
+  "concepts": {
+    "biological_individuality": {
+      "name": "biological_individuality",
+      "description": "Concepts related to what constitutes a biological individual",
+      "terms": [
+        "superorganism",
+        "holobiont",
+        "colony",
+        "individual",
+        "organism"
+      ],
+      "domains": [
+        "unit_of_individuality"
+      ],
+      "parent_concepts": [],
+      "child_concepts": [],
+      "confidence": 0.0
+    },
+    "social_organization": {
+      "name": "social_organization",
+      "description": "Principles of social organization and structure",
+      "terms": [
+        "foraging",
+        "division of labor",
+        "behavioral",
+        "specialization",
+        "hierarchy",
+        "caste",
+        "behavior"
+      ],
+      "domains": [
+        "power_and_labor",
+        "behavior_and_identity"
+      ],
+      "parent_concepts": [],
+      "child_concepts": [],
+      "confidence": 0.0
+    },
+    "reproductive_biology": {
+      "name": "reproductive_biology",
+      "description": "Reproductive systems and sex determination",
+      "terms": [
+        "haplodiploidy",
+        "parthenogenesis",
+        "reproduction",
+        "sex determination",
+        "mating"
+      ],
+      "domains": [
+        "sex_and_reproduction"
+      ],
+      "parent_concepts": [],
+      "child_concepts": [],
+      "confidence": 0.0
+    },
+    "kinship_systems": {
+      "name": "kinship_systems",
+      "description": "Genetic and social relatedness structures",
+      "terms": [
+        "relatedness",
+        "decision-making",
+        "inclusive fitness",
+        "altruism",
+        "kin selection"
+      ],
+      "domains": [
+        "kin_and_relatedness"
+      ],
+      "parent_concepts": [],
+      "child_concepts": [],
+      "confidence": 0.0
+    },
+    "resource_economics": {
+      "name": "resource_economics",
+      "description": "Resource allocation and economic principles",
+      "terms": [
+        "trade",
+        "cost-benefit",
+        "resource allocation",
+        "foraging efficiency",
+        "trade-off",
+        "cost-effective"
+      ],
+      "domains": [
+        "economics"
+      ],
+      "parent_concepts": [],
+      "child_concepts": [],
+      "confidence": 0.0
+    },
+    "behavioral_ecology": {
+      "name": "behavioral_ecology",
+      "description": "Behavioral adaptations and ecological contexts",
+      "terms": [
+        "cost-effective",
+        "optimization",
+        "foraging",
+        "behavioral",
+        "fitness",
+        "reaction-diffusion",
+        "trade-off",
+        "behavior",
+        "adaptation"
+      ],
+      "domains": [
+        "economics",
+        "behavior_and_identity"
+      ],
+      "parent_concepts": [],
+      "child_concepts": [],
+      "confidence": 0.0
+    }
+  },
+  "term_mappings": {
+    "superorganism": [
+      "biological_individuality"
+    ],
+    "holobiont": [
+      "biological_individuality"
+    ],
+    "colony": [
+      "biological_individuality"
+    ],
+    "individual": [
+      "biological_individuality"
+    ],
+    "organism": [
+      "biological_individuality"
+    ],
+    "specialization": [
+      "social_organization"
+    ],
+    "caste": [
+      "social_organization"
+    ],
+    "hierarchy": [
+      "social_organization"
+    ],
+    "division of labor": [
+      "social_organization"
+    ],
+    "haplodiploidy": [
+      "reproductive_biology"
+    ],
+    "parthenogenesis": [
+      "reproductive_biology"
+    ],
+    "sex determination": [
+      "reproductive_biology"
+    ],
+    "mating": [
+      "reproductive_biology"
+    ],
+    "inclusive fitness": [
+      "kinship_systems"
+    ],
+    "relatedness": [
+      "kinship_systems"
+    ],
+    "altruism": [
+      "kinship_systems"
+    ],
+    "kin selection": [
+      "kinship_systems"
+    ],
+    "foraging efficiency": [
+      "resource_economics"
+    ],
+    "trade": [
+      "resource_economics"
+    ],
+    "cost-benefit": [
+      "resource_economics"
+    ],
+    "resource allocation": [
+      "resource_economics"
+    ],
+    "optimization": [
+      "behavioral_ecology"
+    ],
+    "foraging": [
+      "behavioral_ecology"
+    ],
+    "fitness": [
+      "behavioral_ecology"
+    ],
+    "behavior": [
+      "behavioral_ecology"
+    ],
+    "adaptation": [
+      "behavioral_ecology"
+    ]
+  },
+  "relationships": [
+    {
+      "concepts": [
+        "behavioral_ecology",
+        "social_organization"
+      ],
+      "weight": 0.42857142857142855
+    },
+    {
+      "concepts": [
+        "behavioral_ecology",
+        "resource_economics"
+      ],
+      "weight": 0.3333333333333333
+    }
+  ]
+}

@@ -434,7 +434,7 @@ if resources['memory']['percent'] > 80:
 df -h .
 
 # Clean up generated files
-python3 scripts/run_all.py --clean
+python3 scripts/execute_pipeline.py --clean
 
 # Archive old outputs
 find output/ -name "*.pdf" -mtime +30 -exec mv {} archives/ \;

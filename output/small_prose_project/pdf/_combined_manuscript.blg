@@ -2,11 +2,15 @@ This is BibTeX, Version 0.99d (TeX Live 2025)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: _combined_manuscript.aux
 The style file: plainnat.bst
+Illegal, another \bibstyle command---line 61 of file _combined_manuscript.aux
+ : \bibstyle
+ :          {unsrt}
+I'm skipping whatever remains of this command
 I found no \citation commands---while reading file _combined_manuscript.aux
-I found no \bibdata command---while reading file _combined_manuscript.aux
+Database file #1: references.bib
 You've used 0 entries,
             2773 wiz_defined-function locations,
-            591 strings with 4852 characters,
+            592 strings with 4862 characters,
 and the built_in function-call counts, 33 in all, are:
 = -- 0
 > -- 0

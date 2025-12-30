@@ -172,6 +172,254 @@ except (ImportError, ModuleNotFoundError):
 - `project/scripts/manuscript_preflight.py`
 - `project/scripts/quality_report.py`
 
+### Environment Setup Troubleshooting
+
+**Purpose:** Systematic troubleshooting for environment setup failures in `scripts/00_setup_environment.py`
+
+#### uv sync Failures
+
+**Symptom:**
+```
+uv sync failed (exit code 1): error: Failed to download and build Python 3.12.11
+error: command `cargo build --release --manifest-path /tmp/uv-python-build-*/Cargo.toml` failed
+```
+
+**Cause:**
+- uv trying to build Python from source when system Python is incompatible
+- Missing system build tools (gcc, cargo, etc.)
+- Network connectivity issues during package downloads
+
+**Solution:**
+```bash
+# Check uv version and capabilities
+uv --version
+
+# Use system Python instead of building
+export UV_PYTHON_PREFERENCE=system
+
+# Install system build tools if needed
+# Ubuntu/Debian:
+sudo apt-get install -y build-essential cargo pkg-config
+
+# macOS:
+xcode-select --install  # Install command line tools
+
+# Check network connectivity
+curl -I https://pypi.org/
+
+# Clean uv cache and retry
+uv cache clean
+uv sync
+```
+
+#### uv Not Found in PATH
+
+**Symptom:**
+```
+uv not found in PATH, using fallback dependency checking
+```
+
+**Cause:**
+- uv package manager not installed
+- uv not in system PATH
+
+**Impact:**
+System falls back to pip-based dependency checking, which may be slower but still functional.
+
+**Solution:**
+```bash
+# Install uv (recommended for faster dependency management)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Add to PATH (usually ~/.cargo/bin or ~/.local/bin)
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# Verify installation
+uv --version
+
+# Test uv sync
+uv sync
+```
+
+**What Works Without uv:**
+- All core functionality remains operational
+- Dependency checking via pip
+- Environment variable configuration
+- Directory structure creation
+
+#### Build Tool Availability Issues
+
+**Symptom:**
+```
+'pandoc' not found (Document conversion)
+'xelatex' not found (LaTeX compilation)
+```
+
+**Cause:**
+- Missing system build tools required for PDF generation
+- Tools not installed or not in PATH
+
+**Solution:**
+```bash
+# Ubuntu/Debian:
+sudo apt-get update
+sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended fonts-dejavu
+
+# macOS (BasicTeX - minimal):
+brew install pandoc
+brew install --cask basictex
+sudo tlmgr update --self
+sudo tlmgr install multirow cleveref doi newunicodechar
+
+# macOS (MacTeX - complete):
+brew install pandoc
+brew install --cask mactex
+
+# Verify installations
+which pandoc xelatex
+pandoc --version
+xelatex --version
+```
+
+#### Directory Creation Failures
+
+**Symptom:**
+```
+Failed to create directories: [Errno 13] Permission denied: '/output'
+```
+
+**Cause:**
+- Insufficient permissions to create output directories
+- Filesystem is read-only or full
+
+**Solution:**
+```bash
+# Check permissions
+ls -la .
+
+# Check disk space
+df -h .
+
+# Create directories manually if needed
+mkdir -p output/project/{figures,data,tex,pdf,logs,reports,simulations,slides,web,llm}
+mkdir -p projects/project/output/{figures,data,pdf,tex,logs,reports,simulations,slides,web,llm}
+
+# Fix permissions
+chmod 755 output/
+chmod 755 projects/project/output/
+```
+
+#### Dependency Import Failures
+
+**Symptom:**
+```
+Package 'numpy' not found
+Package 'matplotlib' not found
+```
+
+**Cause:**
+- Python packages not installed in current environment
+- uv sync failed silently
+- Using wrong Python environment
+
+**Solution:**
+```bash
+# Check current Python environment
+which python3
+python3 -c "import sys; print(sys.executable)"
+
+# Install dependencies manually
+pip install numpy matplotlib pytest requests
+
+# Or with uv if available
+uv add numpy matplotlib pytest requests
+
+# Verify imports
+python3 -c "import numpy, matplotlib, pytest, requests; print('All imports successful')"
+```
+
+#### Environment Variable Issues
+
+**Symptom:**
+```
+Environment setup completed - ready to proceed
+# But subsequent scripts fail with matplotlib/Qt issues
+```
+
+**Cause:**
+- Environment variables not properly set for headless operation
+- MPLBACKEND not set to 'Agg' for server environments
+
+**Solution:**
+```bash
+# Set environment variables manually
+export MPLBACKEND=Agg
+export PYTHONIOENCODING=utf-8
+export PROJECT_ROOT="$(pwd)"
+
+# Verify settings
+env | grep -E "(MPL|PYTHON|PROJECT)"
+
+# Run setup again to verify
+python3 scripts/00_setup_environment.py
+```
+
+#### Validation Function Errors
+
+**Symptom:**
+```
+AttributeError: module 'infrastructure.core.environment' has no attribute 'validate_uv_sync_result'
+```
+
+**Cause:**
+- Using older version of environment.py that doesn't have new validation functions
+- Import path issues
+
+**Solution:**
+```bash
+# Check file exists and has functions
+ls -la infrastructure/core/environment.py
+
+# Verify function exists
+python3 -c "from infrastructure.core.environment import validate_uv_sync_result; print('Function available')"
+
+# Update if needed
+git pull origin main  # or your branch
+```
+
+#### Real Subprocess Execution Testing Issues
+
+**Symptom (in test environment):**
+```
+pytest fails with subprocess errors in test_environment_setup.py
+```
+
+**Cause:**
+- Integration tests running in environments without uv or build tools
+- Tests not properly skipping when dependencies unavailable
+
+**Solution:**
+Tests include proper skip logic:
+```python
+@pytest.mark.integration
+def test_uv_sync_when_available(tmp_path):
+    if not shutil.which('uv'):
+        pytest.skip("uv not installed - skipping integration test")
+    # Real uv sync execution...
+```
+
+**Run Tests Selectively:**
+```bash
+# Skip integration tests
+pytest tests/ -m "not integration"
+
+# Run only integration tests
+pytest tests/ -m integration
+
+# Run specific environment tests
+pytest tests/integration/test_environment_setup.py -v
+```
+
 ### Matplotlib Configuration Issues
 
 **Symptom:**
@@ -316,7 +564,7 @@ python3 scripts/01_run_tests.py
 
 # Or with full pipeline
 export MAX_TEST_FAILURES=5
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 **Behavior:**
@@ -748,7 +996,7 @@ grep -i "undefined.*includegraphics\|file.*not found" project/output/pdf/_combin
 
 6. **Run full rebuild**:
    ```bash
-   python3 scripts/run_all.py --clean
+   python3 scripts/execute_pipeline.py --core-only --clean
    ```
 
 7. **For Unicode filenames**, ensure proper encoding:
@@ -944,7 +1192,7 @@ git diff uv.lock
 **Diagnostic:**
 ```bash
 # Run complete pipeline with all stages
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
@@ -952,7 +1200,7 @@ python3 scripts/run_all.py
 # Check each stage individually
 uv run pytest tests/ --cov=src
 # Run complete pipeline (includes script execution)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### Build Takes Too Long
@@ -1177,7 +1425,7 @@ cat project/output/.checkpoints/pipeline_checkpoint.json | python3 -m json.tool
 rm -f project/output/.checkpoints/pipeline_checkpoint.json
 
 # Restart pipeline
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### Retry Logic
@@ -1242,7 +1490,7 @@ uv sync
 uv run pytest tests/
 
 # Rebuild complete pipeline
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### Recover from Backup

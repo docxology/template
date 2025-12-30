@@ -29,26 +29,73 @@ class RenderManager:
 
     def render_all(self, source_file: Path) -> List[Path]:
         """Render all supported formats for a source file.
-        
+
         For markdown files, generates:
         - Beamer slides (presentation format)
         - HTML web version
+
+        Args:
+            source_file: Path to source file to render
+
+        Returns:
+            List of paths to generated output files
+
+        Raises:
+            TemplateError: If rendering fails or source file doesn't exist
         """
+        from infrastructure.core.exceptions import TemplateError
+
+        if not source_file.exists():
+            raise TemplateError(f"Source file does not exist: {source_file}")
+
         outputs = []
-        
-        # Determine what to render based on extension/type
-        if source_file.suffix == '.tex':
-            # LaTeX usually means PDF or Poster
-            outputs.append(self.pdf_renderer.render(source_file))
-            
-        elif source_file.suffix == '.md':
-            # Markdown supports slides and web formats
-            # 1. Beamer slides for presentation
-            outputs.append(self.render_slides(source_file, format="beamer"))
-            # 2. HTML web version
-            outputs.append(self.web_renderer.render(source_file))
-            
-        return outputs
+
+        # Validate file format
+        supported_formats = ['.tex', '.md']
+        if source_file.suffix not in supported_formats:
+            raise TemplateError(f"Unsupported file format: {source_file.suffix}. Supported: {supported_formats}")
+
+        try:
+            # Determine what to render based on extension/type
+            if source_file.suffix == '.tex':
+                # LaTeX usually means PDF or Poster
+                logger.info(f"Rendering LaTeX file: {source_file.name}")
+                outputs.append(self.pdf_renderer.render(source_file))
+
+            elif source_file.suffix == '.md':
+                # Markdown supports slides and web formats
+                logger.info(f"Rendering Markdown file: {source_file.name}")
+
+                # 1. Beamer slides for presentation
+                try:
+                    logger.debug("Rendering Beamer slides...")
+                    outputs.append(self.render_slides(source_file, format="beamer"))
+                    logger.debug("Beamer slides rendered successfully")
+                except Exception as e:
+                    logger.warning(f"Failed to render Beamer slides: {e}")
+                    # Continue with other formats
+
+                # 2. HTML web version
+                try:
+                    logger.debug("Rendering HTML web version...")
+                    outputs.append(self.web_renderer.render(source_file))
+                    logger.debug("HTML web version rendered successfully")
+                except Exception as e:
+                    logger.warning(f"Failed to render HTML: {e}")
+                    # Continue - some formats may still succeed
+
+            if not outputs:
+                raise TemplateError(f"No outputs generated for {source_file.name}")
+
+            logger.info(f"Successfully rendered {len(outputs)} format(s) for {source_file.name}")
+            return outputs
+
+        except TemplateError:
+            # Re-raise TemplateError as-is
+            raise
+        except Exception as e:
+            logger.error(f"Unexpected error during rendering of {source_file.name}: {e}")
+            raise TemplateError(f"Rendering failed: {e}") from e
 
     def render_markdown_pdf(self, source_file: Path) -> Path:
         """Render individual markdown file to PDF."""

@@ -4,7 +4,6 @@ Tests link checking and reference validation functionality.
 """
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
 
 from infrastructure.validation import check_links
@@ -41,14 +40,13 @@ class TestLinkValidation:
             result = check_links.check_internal_link("nonexistent.md", tmp_path)
             assert result is not None
     
-    def test_check_external_link(self):
+    def test_check_external_link(self, http_test_server):
         """Test external link checking."""
         if hasattr(check_links, 'check_external_link'):
-            # Mock network call
-            with patch('requests.head') as mock_head:
-                mock_head.return_value = MagicMock(status_code=200)
-                result = check_links.check_external_link("https://example.com")
-                assert result is not None
+            # Use real HTTP call to test server
+            test_url = http_test_server.url_for("/")
+            result = check_links.check_external_link(test_url)
+            assert result is not None
 
 
 class TestFileReferenceValidation:

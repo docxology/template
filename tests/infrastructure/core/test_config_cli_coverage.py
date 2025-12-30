@@ -4,8 +4,10 @@ Tests configuration CLI functionality.
 """
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
+import subprocess
+import sys
+import os
 
 
 class TestConfigCli:
@@ -23,14 +25,21 @@ class TestConfigCli:
     
     def test_main_execution(self):
         """Test main function execution."""
-        from infrastructure.core import config_cli
-        
-        if hasattr(config_cli, 'main'):
-            with patch('sys.argv', ['config_cli.py', '--help']):
-                try:
-                    config_cli.main()
-                except SystemExit:
-                    pass
+        # Test real CLI execution with subprocess
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        script_path = repo_root / "infrastructure" / "core" / "config_cli.py"
+
+        if script_path.exists():
+            env = os.environ.copy()
+            env["PYTHONPATH"] = str(repo_root) + os.pathsep + env.get("PYTHONPATH", "")
+
+            # Test --help option (should succeed)
+            result = subprocess.run([
+                sys.executable, str(script_path), "--help"
+            ], capture_output=True, text=True, env=env)
+
+            # Should execute without error (help returns 0 or 2)
+            assert result.returncode in [0, 2]
 
 
 

@@ -4,7 +4,7 @@
     "status": "skipped",
     "reason": "infrastructure.build not available"
   },
-  "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x106894110>",
+  "integrity_summary": "<infrastructure.validation.integrity.IntegrityReport object at 0x109091e50>",
   "reproducibility": {
     "status": "skipped",
     "reason": "infrastructure.build not available"

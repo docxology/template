@@ -112,7 +112,7 @@ metadata:
 ```bash
 # Resume from checkpoint
 export PIPELINE_RESUME=1
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Disable checkpoints
 export CHECKPOINT_ENABLED=false
@@ -173,7 +173,7 @@ export AUTHOR_EMAIL="jane@example.edu"
 export PROJECT_TITLE="My Research Project"
 
 # Run pipeline
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### Verbose Debugging
@@ -183,7 +183,7 @@ python3 scripts/run_all.py
 export LOG_LEVEL=0
 
 # Run with detailed output
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### Resume from Checkpoint
@@ -193,7 +193,7 @@ python3 scripts/run_all.py
 export PIPELINE_RESUME=1
 
 # Pipeline will resume from last successful stage
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### Performance Monitoring
@@ -204,7 +204,7 @@ export ENABLE_PERFORMANCE_MONITORING=1
 export PERFORMANCE_LOG_FILE="output/performance.log"
 
 # Run with monitoring
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ## Configuration Validation

@@ -119,14 +119,79 @@ def test_save_test_report_no_coverage(tmp_path: Path) -> None:
         "project": {"passed": 2, "failed": 0, "skipped": 0, "total": 2},
         "summary": {"total_passed": 3, "total_failed": 0, "total_tests": 3, "all_passed": True},
     }
-    
+
     json_path, md_path = save_test_report(report, tmp_path)
-    
+
     assert json_path.exists()
     assert md_path.exists()
-    
+
     md_content = md_path.read_text()
     assert "Coverage:" not in md_content  # Should not mention coverage
+
+
+def test_parse_pytest_collection_error() -> None:
+    """Test parsing pytest output with collection errors."""
+    stdout = '''
+============================= test session starts ==============================
+collected 1544 items / 1 error
+
+==================================== ERRORS ====================================
+ERROR tests/infrastructure/llm - ModuleNotFoundError: No module named 'pytest_httpserver'
+==================== 1544 tests collected, 1 error in 0.48s ====================
+'''
+    result = parse_pytest_output(stdout, "", exit_code=2)
+
+    assert result['collection_errors'] == 1
+    assert result['failed'] == 0  # Collection errors != test failures
+    assert result['discovery_count'] == 1544
+    assert result['total'] == 0  # No tests actually ran
+    assert result['exit_code'] == 2
+
+
+def test_parse_pytest_collection_errors_multiple() -> None:
+    """Test parsing pytest output with multiple collection errors."""
+    stdout = '''
+============================= test session starts ==============================
+collected 100 items / 3 errors
+
+==================================== ERRORS ====================================
+ERROR tests/infrastructure/llm - ModuleNotFoundError: No module named 'pytest_httpserver'
+ERROR tests/infrastructure/rendering - ModuleNotFoundError: No module named 'reportlab'
+ERROR tests/infrastructure/publishing - ModuleNotFoundError: No module named 'zenodo_api'
+==================== 100 tests collected, 3 errors in 0.25s ====================
+'''
+    result = parse_pytest_output(stdout, "", exit_code=2)
+
+    assert result['collection_errors'] == 3
+    assert result['failed'] == 0  # Collection errors != test failures
+    assert result['discovery_count'] == 100
+    assert result['total'] == 0  # No tests actually ran
+
+
+def test_parse_pytest_normal_test_failures_vs_collection_errors() -> None:
+    """Test that normal test failures are distinguished from collection errors."""
+    # Normal test failure (not collection error)
+    stdout_failure = "5 passed, 2 failed, 1 skipped in 1.00s"
+    result_failure = parse_pytest_output(stdout_failure, "", exit_code=1)
+
+    assert result_failure['collection_errors'] == 0  # No collection errors
+    assert result_failure['failed'] == 2  # Actual test failures
+    assert result_failure['total'] == 8  # 5+2+1
+
+    # Collection error (not test failure)
+    stdout_collection = '''
+============================= test session starts ==============================
+collected 10 items / 1 error
+
+==================================== ERRORS ====================================
+ERROR tests/infrastructure/llm - ModuleNotFoundError: No module named 'pytest_httpserver'
+==================== 10 tests collected, 1 error in 0.10s ====================
+'''
+    result_collection = parse_pytest_output(stdout_collection, "", exit_code=2)
+
+    assert result_collection['collection_errors'] == 1
+    assert result_collection['failed'] == 0  # No test failures, only collection error
+    assert result_collection['total'] == 0  # No tests ran due to collection error
 
 
 

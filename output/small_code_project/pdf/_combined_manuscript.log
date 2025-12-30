@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  29 DEC 2025 14:45
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  30 DEC 2025 15:56
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -896,7 +896,11 @@ ex-text;!
 
 [8]
 
-[9]
+[9] (./_combined_manuscript.bbl
+
+Package natbib Warning: Empty `thebibliography' environment on input line 8.
+
+)
 
 [10] (./_combined_manuscript.aux)
  ***********
@@ -905,10 +909,10 @@ L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 18845 strings out of 473832
- 344963 string characters out of 5729482
+ 18854 strings out of 473832
+ 345191 string characters out of 5729482
  916005 words of memory out of 5000000
- 41661 multiletter control sequences out of 15000+600000
+ 41667 multiletter control sequences out of 15000+600000
  565264 words of font info for 86 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  90i,7n,114p,1017b,449s stack positions out of 10000i,1000n,20000p,200000b,200000s

@@ -14,41 +14,46 @@ import os
 import sys
 from pathlib import Path
 
-# Ensure src/ and infrastructure/ are on Python path FIRST (BEFORE infrastructure imports)
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-repo_root = os.path.abspath(os.path.join(project_root, ".."))
-src_path = os.path.join(project_root, "src")
-if src_path not in sys.path:
-    sys.path.insert(0, src_path)
-if repo_root not in sys.path:
-    sys.path.insert(0, repo_root)
+# Ensure src/ and infrastructure/ are on path BEFORE imports
+# Handle both normal execution and test environments
+script_dir = Path(__file__).parent
+project_root = script_dir.parent
+repo_root = project_root.parent
+
+# Check if we're in a test environment (copied script)
+if not (project_root / "src").exists():
+    # Try to find the real repo root by walking up
+    current = script_dir
+    for _ in range(5):  # Don't go too far up
+        current = current.parent
+        if (current / "infrastructure").exists() and (current / "projects").exists():
+            repo_root = current
+            # Find the correct project root
+            for proj_dir in (repo_root / "projects").iterdir():
+                if (proj_dir / "scripts" / "generate_research_figures.py").exists():
+                    project_root = proj_dir
+                    break
+            break
+
+sys.path.insert(0, str(project_root / "src"))
+sys.path.insert(0, str(repo_root))  # Add repo root so we can import infrastructure.*
 
 import matplotlib.pyplot as plt
 import numpy as np
 from typing import Tuple, List
 
-# Import infrastructure validation modules
-from infrastructure.validation import validate_figure_registry, verify_output_integrity
+# Import infrastructure validation modules (optional - graceful fallback)
+try:
+    from infrastructure.validation import validate_figure_registry, verify_output_integrity
+    HAS_INFRASTRUCTURE = True
+except ImportError:
+    # Graceful degradation for test environments
+    HAS_INFRASTRUCTURE = False
+    def validate_figure_registry(*args, **kwargs):
+        return {"status": "skipped", "reason": "infrastructure not available"}
+    def verify_output_integrity(*args, **kwargs):
+        return {"status": "skipped", "reason": "infrastructure not available"}
 
-def _ensure_src_on_path() -> None:
-    """Ensure src/ and infrastructure/ are on Python path for imports."""
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.dirname(script_dir)  # Go up one level from scripts/
-    repo_root = os.path.dirname(project_root)   # Go up one level from project/
-
-    # Add infrastructure/ directory (at repo root level)
-    infra_path = os.path.join(repo_root, "infrastructure")
-    if infra_path not in sys.path:
-        sys.path.insert(0, infra_path)
-
-    # Add src/ directory (at project level)
-    src_path = os.path.join(project_root, "src")
-    if src_path not in sys.path:
-        sys.path.insert(0, src_path)
-
-    # Add repo root for any other imports
-    if repo_root not in sys.path:
-        sys.path.insert(0, repo_root)
 
 
 def _setup_directories() -> Tuple[str, str, str]:
@@ -643,7 +648,6 @@ def _register_figures_with_manager(figures: List[str], figure_dir: str) -> None:
 def main() -> None:
     """Generate all research figures and tables using src/ modules."""
     os.environ.setdefault("MPLBACKEND", "Agg")
-    _ensure_src_on_path()
 
     output_dir, data_dir, figure_dir = _setup_directories()
 

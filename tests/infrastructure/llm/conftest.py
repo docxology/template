@@ -12,15 +12,41 @@ def ollama_test_server():
     server.start()
 
     # Mock /api/chat endpoint (what the client actually uses)
-    server.expect_request("/api/chat", method="POST").respond_with_data(
-        json.dumps({
-            "model": "gemma3:4b",
-            "created_at": "2024-01-01T00:00:00Z",
-            "message": {"role": "assistant", "content": "Test response"},
-            "done": True
-        }),
-        content_type="application/json"
-    )
+    def handle_chat_request(request):
+        """Handle chat requests, supporting both streaming and non-streaming."""
+        import json
+
+        # Parse the request JSON
+        try:
+            request_data = json.loads(request.body)
+            is_stream = request_data.get("stream", False)
+        except:
+            is_stream = False
+
+        if is_stream:
+            # Return streaming response (SSE format)
+            streaming_chunks = [
+                {"model": "gemma3:4b", "created_at": "2024-01-01T00:00:00Z", "message": {"role": "assistant", "content": "Test"}, "done": False},
+                {"model": "gemma3:4b", "created_at": "2024-01-01T00:00:01Z", "message": {"role": "assistant", "content": " response"}, "done": False},
+                {"model": "gemma3:4b", "created_at": "2024-01-01T00:00:02Z", "message": {"role": "assistant", "content": ""}, "done": True}
+            ]
+
+            response_lines = []
+            for chunk in streaming_chunks:
+                response_lines.append(f"data: {json.dumps(chunk)}")
+                response_lines.append("")  # Empty line between SSE events
+
+            return "\n".join(response_lines)
+        else:
+            # Return regular response
+            return json.dumps({
+                "model": "gemma3:4b",
+                "created_at": "2024-01-01T00:00:00Z",
+                "message": {"role": "assistant", "content": "Test response"},
+                "done": True
+            })
+
+    server.expect_request("/api/chat", method="POST").respond_with_handler(handle_chat_request)
 
     # Mock /api/tags endpoint (model list)
     server.expect_request("/api/tags").respond_with_json({

@@ -31,8 +31,14 @@ def clean_output_directory(output_dir: Path) -> bool:
             output_dir.mkdir(parents=True, exist_ok=True)
             log_success(f"Created output directory", logger)
             return True
+        except PermissionError as e:
+            logger.error(f"Permission denied creating output directory {output_dir}: {e}")
+            return False
+        except OSError as e:
+            logger.error(f"OS error creating output directory {output_dir}: {e}")
+            return False
         except Exception as e:
-            logger.error(f"Failed to create output directory: {e}")
+            logger.error(f"Unexpected error creating output directory {output_dir}: {e}")
             return False
     
     # Remove existing contents
@@ -44,11 +50,17 @@ def clean_output_directory(output_dir: Path) -> bool:
             else:
                 item.unlink()
                 logger.debug(f"  Removed file: {item.name}")
-        
+
         log_success("Output directory cleaned", logger)
         return True
+    except PermissionError as e:
+        logger.error(f"Permission denied cleaning output directory {output_dir}: {e}")
+        return False
+    except OSError as e:
+        logger.error(f"OS error cleaning output directory {output_dir}: {e}")
+        return False
     except Exception as e:
-        logger.error(f"Failed to clean output directory: {e}")
+        logger.error(f"Unexpected error cleaning output directory {output_dir}: {e}")
         return False
 
 
@@ -92,10 +104,14 @@ def clean_output_directories(
 
         if output_dir.exists():
             logger.info(f"  Cleaning {relative_path}/...")
-            # Remove all contents
+            # Remove all contents except .checkpoints directory (preserve for pipeline resume)
             for item in output_dir.iterdir():
                 if item.is_dir():
-                    shutil.rmtree(item)
+                    # Preserve .checkpoints directory to maintain pipeline resume capability
+                    if item.name != ".checkpoints":
+                        shutil.rmtree(item)
+                    else:
+                        logger.debug(f"  Preserving {item.name}/ directory for checkpoint resume")
                 else:
                     item.unlink()
         else:

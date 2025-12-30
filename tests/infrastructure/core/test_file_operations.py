@@ -81,13 +81,54 @@ class TestCleanOutputDirectory:
         output_dir = tmp_path / "output"
         output_dir.mkdir()
         (output_dir / "file.txt").write_text("content")
-        
+
         original_path = output_dir
         result = clean_output_directory(output_dir)
-        
+
         assert result is True
         assert output_dir == original_path
         assert output_dir.exists()
+
+    def test_clean_directory_with_readonly_files(self, tmp_path):
+        """Test cleaning directory with read-only files."""
+        import os
+        import stat
+
+        output_dir = tmp_path / "output"
+        output_dir.mkdir()
+
+        # Create a read-only file
+        readonly_file = output_dir / "readonly.txt"
+        readonly_file.write_text("readonly content")
+        readonly_file.chmod(stat.S_IRUSR)  # Read-only for owner
+
+        result = clean_output_directory(output_dir)
+
+        # Should still succeed even with read-only files
+        assert result is True
+        assert output_dir.exists()
+        # File should be gone (or at least we tried)
+        assert not readonly_file.exists() or len(list(output_dir.iterdir())) == 0
+
+    def test_clean_directory_with_symlinks(self, tmp_path):
+        """Test cleaning directory with symbolic links."""
+        import os
+
+        output_dir = tmp_path / "output"
+        output_dir.mkdir()
+
+        # Create a regular file and a symlink to it
+        real_file = output_dir / "real.txt"
+        real_file.write_text("real content")
+
+        symlink_file = output_dir / "link.txt"
+        os.symlink(str(real_file), str(symlink_file))
+
+        result = clean_output_directory(output_dir)
+
+        assert result is True
+        assert output_dir.exists()
+        assert len(list(output_dir.iterdir())) == 0
 
 
 class TestCleanOutputDirectories:

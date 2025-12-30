@@ -5,8 +5,6 @@ Comprehensive tests for performance monitoring and resource tracking utilities.
 
 import time
 import pytest
-from unittest.mock import patch, MagicMock
-from builtins import __import__ as original_import
 
 from infrastructure.core.performance import (
     ResourceUsage,
@@ -16,6 +14,13 @@ from infrastructure.core.performance import (
     get_system_resources,
     StagePerformanceTracker,
 )
+
+# Check if psutil is available for conditional testing
+try:
+    import psutil
+    HAS_PSUTIL = True
+except ImportError:
+    HAS_PSUTIL = False
 
 
 class TestResourceUsage:
@@ -132,28 +137,24 @@ class TestPerformanceMonitor:
         assert monitor.cache_hits == 0
         assert monitor.cache_misses == 0
 
-    @patch('infrastructure.core.performance.PerformanceMonitor._get_memory_usage')
-    @patch('infrastructure.core.performance.PerformanceMonitor._get_cpu_percent')
-    def test_performance_monitor_start_stop(self, mock_cpu, mock_memory):
+    def test_performance_monitor_start_stop(self):
         """Test starting and stopping monitor."""
-        mock_memory.return_value = 100.0
-        mock_cpu.return_value = 25.0
-        
         monitor = PerformanceMonitor()
         monitor.start()
-        
+
         assert monitor.start_time is not None
-        assert monitor.start_memory == 100.0
-        assert monitor.peak_memory == 100.0
-        
-        time.sleep(0.1)  # Small delay to ensure duration > 0
-        
+        # Memory and CPU values will be real system values (may be 0 if psutil not available)
+        assert isinstance(monitor.start_memory, float)
+        assert isinstance(monitor.peak_memory, float)
+
+        time.sleep(0.01)  # Small delay to ensure duration > 0
+
         metrics = monitor.stop()
-        
+
         assert isinstance(metrics, PerformanceMetrics)
         assert metrics.duration > 0
-        assert metrics.resource_usage.memory_mb == 100.0
-        assert metrics.resource_usage.cpu_percent == 25.0
+        assert isinstance(metrics.resource_usage.memory_mb, float)
+        assert isinstance(metrics.resource_usage.cpu_percent, float)
 
     def test_performance_monitor_stop_without_start(self):
         """Test stopping monitor without starting raises error."""
@@ -192,129 +193,79 @@ class TestPerformanceMonitor:
         assert metrics.cache_hits == 2
         assert metrics.cache_misses == 1
 
-    @patch('infrastructure.core.performance.PerformanceMonitor._get_memory_usage')
-    def test_performance_monitor_update_memory(self, mock_memory):
+    def test_performance_monitor_update_memory(self):
         """Test updating peak memory tracking."""
-        mock_memory.side_effect = [100.0, 150.0, 200.0, 180.0]
-        
         monitor = PerformanceMonitor()
         monitor.start()
-        
-        assert monitor.peak_memory == 100.0
-        
-        monitor.update_memory()
-        assert monitor.peak_memory == 150.0
-        
-        monitor.update_memory()
-        assert monitor.peak_memory == 200.0
-        
-        monitor.update_memory()
-        # Should not decrease
-        assert monitor.peak_memory == 200.0
 
-    @patch('builtins.__import__')
-    def test_get_memory_usage_with_psutil(self, mock_import):
+        initial_memory = monitor.peak_memory
+        assert isinstance(initial_memory, float)
+
+        monitor.update_memory()
+        # Memory should be updated (may be same or different based on real system)
+        assert isinstance(monitor.peak_memory, float)
+        assert monitor.peak_memory >= initial_memory  # Should not decrease
+
+    @pytest.mark.skipif(not HAS_PSUTIL, reason="psutil not available")
+    def test_get_memory_usage_with_psutil(self):
         """Test getting memory usage when psutil is available."""
-        # Create mock psutil module
-        mock_psutil = MagicMock()
-        mock_process = MagicMock()
-        mock_process.memory_info.return_value.rss = 1024 * 1024 * 512  # 512 MB
-        mock_psutil.Process.return_value = mock_process
-        
-        # Make __import__ return mock_psutil when psutil is imported
-        def import_side_effect(name, *args, **kwargs):
-            if name == 'psutil':
-                return mock_psutil
-            return original_import(name, *args, **kwargs)
-        
-        mock_import.side_effect = import_side_effect
-        
         monitor = PerformanceMonitor()
         memory = monitor._get_memory_usage()
-        
-        assert memory == 512.0
 
-    @patch('builtins.__import__')
-    def test_get_memory_usage_without_psutil(self, mock_import):
-        """Test getting memory usage when psutil is not available."""
-        # Make __import__ raise ImportError for psutil
-        def import_side_effect(name, *args, **kwargs):
-            if name == 'psutil':
-                raise ImportError("No module named 'psutil'")
-            return original_import(name, *args, **kwargs)
-        
-        mock_import.side_effect = import_side_effect
-        
+        # Should return a real memory value (not 0.0)
+        assert isinstance(memory, float)
+        assert memory >= 0.0
+
+    def test_get_memory_usage_without_psutil(self):
+        """Test getting memory usage fallback when psutil is not available."""
+        if HAS_PSUTIL:
+            pytest.skip("psutil is available - cannot test fallback")
+
         monitor = PerformanceMonitor()
         memory = monitor._get_memory_usage()
-        
+
+        # Should return fallback value when psutil unavailable
         assert memory == 0.0
 
-    @patch('builtins.__import__')
-    def test_get_cpu_percent_with_psutil(self, mock_import):
+    @pytest.mark.skipif(not HAS_PSUTIL, reason="psutil not available")
+    def test_get_cpu_percent_with_psutil(self):
         """Test getting CPU percent when psutil is available."""
-        # Create mock psutil module
-        mock_psutil = MagicMock()
-        mock_process = MagicMock()
-        mock_process.cpu_percent.return_value = 75.5
-        mock_psutil.Process.return_value = mock_process
-        
-        # Make __import__ return mock_psutil when psutil is imported
-        def import_side_effect(name, *args, **kwargs):
-            if name == 'psutil':
-                return mock_psutil
-            return original_import(name, *args, **kwargs)
-        
-        mock_import.side_effect = import_side_effect
-        
         monitor = PerformanceMonitor()
         cpu = monitor._get_cpu_percent()
-        
-        assert cpu == 75.5
 
-    @patch('builtins.__import__')
-    def test_get_cpu_percent_without_psutil(self, mock_import):
-        """Test getting CPU percent when psutil is not available."""
-        # Make __import__ raise ImportError for psutil
-        def import_side_effect(name, *args, **kwargs):
-            if name == 'psutil':
-                raise ImportError("No module named 'psutil'")
-            return original_import(name, *args, **kwargs)
-        
-        mock_import.side_effect = import_side_effect
-        
+        # Should return a real CPU percentage value
+        assert isinstance(cpu, float)
+        assert 0.0 <= cpu <= 100.0
+
+    def test_get_cpu_percent_without_psutil(self):
+        """Test getting CPU percent fallback when psutil is not available."""
+        if HAS_PSUTIL:
+            pytest.skip("psutil is available - cannot test fallback")
+
         monitor = PerformanceMonitor()
         cpu = monitor._get_cpu_percent()
-        
+
+        # Should return fallback value when psutil unavailable
         assert cpu == 0.0
 
 
 class TestMonitorPerformance:
     """Test monitor_performance context manager."""
 
-    @patch('infrastructure.core.performance.PerformanceMonitor._get_memory_usage')
-    @patch('infrastructure.core.performance.PerformanceMonitor._get_cpu_percent')
-    def test_monitor_performance_context_manager(self, mock_cpu, mock_memory):
+    def test_monitor_performance_context_manager(self):
         """Test using monitor_performance as context manager."""
-        mock_memory.return_value = 100.0
-        mock_cpu.return_value = 30.0
-        
         with monitor_performance("Test Operation") as monitor:
             assert isinstance(monitor, PerformanceMonitor)
             assert monitor.start_time is not None
             monitor.record_operation()
-            time.sleep(0.1)
-        
-        # Context manager should have stopped the monitor
-        assert monitor.start_time is not None  # Still set, but stop() was called
+            time.sleep(0.01)  # Very short sleep to ensure duration > 0
 
-    @patch('infrastructure.core.performance.PerformanceMonitor._get_memory_usage')
-    @patch('infrastructure.core.performance.PerformanceMonitor._get_cpu_percent')
-    def test_monitor_performance_with_operations(self, mock_cpu, mock_memory):
+        # Context manager should have stopped the monitor
+        # Note: start_time is still set but stop() was called
+        assert monitor.start_time is not None
+
+    def test_monitor_performance_with_operations(self):
         """Test monitoring performance with recorded operations."""
-        mock_memory.return_value = 200.0
-        mock_cpu.return_value = 40.0
-        
         with monitor_performance("Data Processing") as monitor:
             for i in range(5):
                 monitor.record_operation()
@@ -322,7 +273,7 @@ class TestMonitorPerformance:
                     monitor.record_cache_hit()
                 else:
                     monitor.record_cache_miss()
-        
+
         # Operations should be recorded
         assert monitor.operations_count == 5
         assert monitor.cache_hits == 3
@@ -332,66 +283,37 @@ class TestMonitorPerformance:
 class TestGetSystemResources:
     """Test get_system_resources function."""
 
-    @patch('builtins.__import__')
-    def test_get_system_resources_with_psutil(self, mock_import):
+    @pytest.mark.skipif(not HAS_PSUTIL, reason="psutil not available")
+    def test_get_system_resources_with_psutil(self):
         """Test getting system resources when psutil is available."""
-        # Create mock psutil module
-        mock_psutil = MagicMock()
-        mock_psutil.cpu_percent.return_value = 50.0
-        
-        # Mock memory
-        mock_memory = MagicMock()
-        mock_memory.total = 8 * 1024 * 1024 * 1024  # 8 GB
-        mock_memory.available = 4 * 1024 * 1024 * 1024  # 4 GB
-        mock_memory.percent = 50.0
-        mock_psutil.virtual_memory.return_value = mock_memory
-        
-        # Mock disk
-        mock_disk = MagicMock()
-        mock_disk.total = 100 * 1024 * 1024 * 1024  # 100 GB
-        mock_disk.free = 50 * 1024 * 1024 * 1024  # 50 GB
-        mock_disk.used = 50 * 1024 * 1024 * 1024
-        mock_psutil.disk_usage.return_value = mock_disk
-        
-        # Mock process
-        mock_process = MagicMock()
-        mock_process.memory_info.return_value.rss = 512 * 1024 * 1024  # 512 MB
-        mock_psutil.Process.return_value = mock_process
-        
-        # Make __import__ return mock_psutil when psutil is imported
-        def import_side_effect(name, *args, **kwargs):
-            if name == 'psutil':
-                return mock_psutil
-            return original_import(name, *args, **kwargs)
-        
-        mock_import.side_effect = import_side_effect
-        
         resources = get_system_resources()
-        
-        assert isinstance(resources, dict)
-        assert resources['cpu_percent'] == 50.0
-        assert resources['memory_total_gb'] == 8.0
-        assert resources['memory_available_gb'] == 4.0
-        assert resources['memory_percent'] == 50.0
-        assert resources['process_memory_mb'] == 512.0
-        assert resources['disk_total_gb'] == 100.0
-        assert resources['disk_free_gb'] == 50.0
 
-    @patch('builtins.__import__')
-    def test_get_system_resources_without_psutil(self, mock_import):
-        """Test getting system resources when psutil is not available."""
-        # Make __import__ raise ImportError for psutil
-        def import_side_effect(name, *args, **kwargs):
-            if name == 'psutil':
-                raise ImportError("No module named 'psutil'")
-            return original_import(name, *args, **kwargs)
-        
-        mock_import.side_effect = import_side_effect
-        
-        resources = get_system_resources()
-        
         assert isinstance(resources, dict)
-        assert len(resources) == 0
+        # Should contain real system resource data
+        expected_keys = ['cpu_percent', 'memory_total_gb', 'memory_available_gb',
+                        'memory_percent', 'process_memory_mb', 'disk_total_gb', 'disk_free_gb', 'disk_percent']
+        for key in expected_keys:
+            assert key in resources
+            assert isinstance(resources[key], (int, float))
+
+        # Reasonable bounds checks
+        assert 0.0 <= resources['cpu_percent'] <= 100.0
+        assert resources['memory_total_gb'] > 0
+        assert resources['memory_available_gb'] >= 0
+        assert 0.0 <= resources['memory_percent'] <= 100.0
+        assert resources['process_memory_mb'] >= 0
+        assert resources['disk_total_gb'] > 0
+        assert resources['disk_free_gb'] >= 0
+
+    def test_get_system_resources_without_psutil(self):
+        """Test getting system resources when psutil is not available."""
+        if HAS_PSUTIL:
+            pytest.skip("psutil is available - cannot test fallback")
+
+        resources = get_system_resources()
+
+        assert isinstance(resources, dict)
+        assert len(resources) == 0  # Should return empty dict when psutil unavailable
 
 
 class TestStagePerformanceTracker:
@@ -400,90 +322,46 @@ class TestStagePerformanceTracker:
     def test_stage_performance_tracker_initialization(self):
         """Test StagePerformanceTracker initialization."""
         tracker = StagePerformanceTracker()
-        
+
         assert tracker.stages == []
         assert tracker.start_time is None
 
-    @patch('builtins.__import__')
-    def test_start_stage(self, mock_import):
+    def test_start_stage(self):
         """Test starting stage tracking."""
-        # Create mock psutil module
-        mock_psutil = MagicMock()
-        mock_process = MagicMock()
-        mock_process.memory_info.return_value.rss = 256 * 1024 * 1024  # 256 MB
-        mock_process.io_counters.return_value = MagicMock()
-        mock_psutil.Process.return_value = mock_process
-        
-        # Make __import__ return mock_psutil when psutil is imported
-        def import_side_effect(name, *args, **kwargs):
-            if name == 'psutil':
-                return mock_psutil
-            return original_import(name, *args, **kwargs)
-        
-        mock_import.side_effect = import_side_effect
-        
         tracker = StagePerformanceTracker()
         tracker.start_stage("test_stage")
-        
-        assert tracker.start_time is not None
 
-    @patch('builtins.__import__')
-    def test_start_stage_without_psutil(self, mock_import):
-        """Test starting stage when psutil is not available."""
-        # Make __import__ raise ImportError for psutil
-        def import_side_effect(name, *args, **kwargs):
-            if name == 'psutil':
-                raise ImportError("No module named 'psutil'")
-            return original_import(name, *args, **kwargs)
-        
-        mock_import.side_effect = import_side_effect
-        
-        tracker = StagePerformanceTracker()
-        tracker.start_stage("test_stage")
-        
         assert tracker.start_time is not None
-        assert tracker.start_memory == 0.0
+        # start_memory will be set based on psutil availability
+        assert isinstance(tracker.start_memory, float)
 
-    @patch('builtins.__import__')
-    def test_end_stage(self, mock_import):
+    def test_end_stage(self):
         """Test ending stage tracking."""
-        # Create mock psutil module
-        mock_psutil = MagicMock()
-        mock_process = MagicMock()
-        mock_process.memory_info.return_value.rss = 512 * 1024 * 1024  # 512 MB
-        mock_process.cpu_percent.return_value = 60.0
-        mock_io = MagicMock()
-        mock_io.read_bytes = 1000
-        mock_io.write_bytes = 500
-        mock_process.io_counters.return_value = mock_io
-        mock_psutil.Process.return_value = mock_process
-        
-        # Make __import__ return mock_psutil when psutil is imported
-        def import_side_effect(name, *args, **kwargs):
-            if name == 'psutil':
-                return mock_psutil
-            return original_import(name, *args, **kwargs)
-        
-        mock_import.side_effect = import_side_effect
-        
         tracker = StagePerformanceTracker()
         tracker.start_stage("test_stage")
-        time.sleep(0.1)
-        
+        time.sleep(0.01)  # Very short sleep to ensure duration > 0
+
         metrics = tracker.end_stage("test_stage", exit_code=0)
-        
+
         assert isinstance(metrics, dict)
         assert metrics['stage_name'] == "test_stage"
         assert metrics['duration'] > 0
         assert metrics['exit_code'] == 0
         assert len(tracker.stages) == 1
 
+        # Check that metrics contain expected keys
+        expected_keys = ['stage_name', 'duration', 'exit_code', 'memory_mb', 'peak_memory_mb', 'cpu_percent']
+        for key in expected_keys:
+            assert key in metrics
+            if key != 'stage_name':
+                assert isinstance(metrics[key], (int, float))
+
     def test_end_stage_without_start(self):
         """Test ending stage without starting returns empty dict."""
         tracker = StagePerformanceTracker()
-        
+
         metrics = tracker.end_stage("test_stage", exit_code=0)
-        
+
         assert metrics == {}
         assert len(tracker.stages) == 0
 

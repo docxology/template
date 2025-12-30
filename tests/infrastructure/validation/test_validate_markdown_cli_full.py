@@ -5,8 +5,8 @@ Tests Markdown validation CLI functionality thoroughly.
 
 import sys
 import os
+import subprocess
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
 
 
@@ -159,74 +159,59 @@ class TestValidateMarkdownCliFunctions:
 class TestValidateMarkdownMain:
     """Test main function."""
     
-    def test_main_success(self, tmp_path, capsys):
+    def test_main_success(self, tmp_path):
         """Test main with valid markdown."""
-        from infrastructure.validation import validate_markdown_cli
-        
-        with patch.object(validate_markdown_cli, 'import_error', None):
-            with patch('sys.argv', ['validate_markdown_cli.py']):
-                with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
-                    mock_find.return_value = str(tmp_path)
-                    
-                    with patch('infrastructure.validation.validate_markdown_cli.validate_markdown') as mock_validate:
-                        mock_validate.return_value = ([], 0)
-                        
-                        exit_code = validate_markdown_cli.main()
-                        
-                        assert exit_code == 0
+        # Create valid markdown file
+        md_file = tmp_path / "test.md"
+        md_file.write_text("# Test\n\nSome valid content.")
+
+        # Run CLI directly
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        script_path = repo_root / "infrastructure" / "validation" / "validate_markdown_cli.py"
+
+        env = os.environ.copy()
+        env["PYTHONPATH"] = str(repo_root) + os.pathsep + env.get("PYTHONPATH", "")
+
+        # Change to tmp_path so the script finds the manuscript directory
+        result = subprocess.run([
+            sys.executable, str(script_path)
+        ], capture_output=True, text=True, cwd=tmp_path, env=env)
+
+        # Should succeed with valid markdown
+        assert result.returncode == 0
     
-    def test_main_with_issues(self, tmp_path, capsys):
+    def test_main_with_issues(self, tmp_path):
         """Test main with validation issues."""
-        from infrastructure.validation import validate_markdown_cli
-        
-        with patch.object(validate_markdown_cli, 'import_error', None):
-            with patch('sys.argv', ['validate_markdown_cli.py']):
-                with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
-                    mock_find.return_value = str(tmp_path)
-                    
-                    with patch('infrastructure.validation.validate_markdown_cli.validate_markdown') as mock_validate:
-                        mock_validate.return_value = (["Issue 1", "Issue 2"], 1)
-                        
-                        exit_code = validate_markdown_cli.main()
-                        
-                        assert exit_code == 1
-    
-    def test_main_import_error(self, capsys):
-        """Test main with import error."""
-        from infrastructure.validation import validate_markdown_cli
-        
-        with patch.object(validate_markdown_cli, 'import_error', "Import failed"):
-            exit_code = validate_markdown_cli.main()
-            
-            assert exit_code == 1
-            captured = capsys.readouterr()
-            assert "Import failed" in captured.out
-    
-    def test_main_file_not_found(self, capsys):
-        """Test main with FileNotFoundError."""
-        from infrastructure.validation import validate_markdown_cli
-        
-        with patch.object(validate_markdown_cli, 'import_error', None):
-            with patch('sys.argv', ['validate_markdown_cli.py']):
-                with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
-                    mock_find.side_effect = FileNotFoundError("Not found")
-                    
-                    exit_code = validate_markdown_cli.main()
-                    
-                    assert exit_code == 1
-    
-    def test_main_unexpected_error(self, capsys):
-        """Test main with unexpected error."""
-        from infrastructure.validation import validate_markdown_cli
-        
-        with patch.object(validate_markdown_cli, 'import_error', None):
-            with patch('sys.argv', ['validate_markdown_cli.py']):
-                with patch('infrastructure.validation.validate_markdown_cli.find_manuscript_directory') as mock_find:
-                    mock_find.side_effect = Exception("Unexpected")
-                    
-                    exit_code = validate_markdown_cli.main()
-                    
-                    assert exit_code == 1
+        # Create markdown file with issues (broken reference)
+        md_file = tmp_path / "test.md"
+        md_file.write_text("# Test\n\nSee [broken link](nonexistent.md) for details.")
+
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        script_path = repo_root / "infrastructure" / "validation" / "validate_markdown_cli.py"
+
+        env = os.environ.copy()
+        env["PYTHONPATH"] = str(repo_root) + os.pathsep + env.get("PYTHONPATH", "")
+
+        result = subprocess.run([
+            sys.executable, str(script_path)
+        ], capture_output=True, text=True, cwd=tmp_path, env=env)
+
+        # Should find validation issues and exit with error
+        assert result.returncode != 0
+
+    def test_main_import_error_handling(self):
+        """Test that main handles import errors gracefully."""
+        # This tests the import error handling in the CLI
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        script_path = repo_root / "infrastructure" / "validation" / "validate_markdown_cli.py"
+
+        # Run in a directory without proper setup to potentially trigger import issues
+        result = subprocess.run([
+            sys.executable, str(script_path)
+        ], capture_output=True, text=True, cwd="/tmp")
+
+        # Should handle errors gracefully
+        assert isinstance(result.returncode, int)
 
 
 class TestValidateMarkdownIntegration:

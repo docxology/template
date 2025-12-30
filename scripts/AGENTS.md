@@ -45,14 +45,55 @@ The template provides multiple entry points organized by function:
 
 ### 1. Setup Environment (`00_setup_environment.py`)
 
-**Purpose:** Verify environment is ready
+**Purpose:** Verify environment is ready for research template execution
 
-- Checks Python version
-- Verifies dependencies
-- Confirms build tools (pandoc, xelatex)
-- Validates directory structure
+**Core Functionality:**
+- Checks Python version (3.8+ required)
+- Verifies dependencies with uv package manager integration
+- Confirms build tools availability (pandoc, xelatex)
+- Validates and creates directory structure
+- Sets environment variables for pipeline execution
 
-**Generic:** Works for any project
+**uv Integration Strategy:**
+The setup prioritizes uv for dependency management due to its speed and reliability:
+1. **Primary:** `uv sync` - Fast workspace dependency resolution
+2. **Fallback:** Individual package checking/installation
+3. **Guidance:** Clear messages for manual installation when uv unavailable
+
+**Dependency Resolution Flow:**
+```bash
+Check uv availability
+├── uv available? → uv sync (fast, preferred)
+│   ├── Success → Continue
+│   └── Failed → Individual package check/install
+└── uv unavailable → Individual package check/install
+    ├── All present → Continue
+    └── Missing → Install packages → Verify
+```
+
+**Directory Structure Setup:**
+Creates multi-project directory structure:
+- `output/{project}/` - Project-specific outputs
+- `projects/{project}/output/` - Working outputs
+- Build artifacts, logs, reports, figures, data, tex, pdf, slides, web, llm directories
+
+**Environment Variables:**
+- `MPLBACKEND=Agg` - Headless matplotlib for server environments
+- `PYTHONIOENCODING=utf-8` - Consistent text encoding
+- `PROJECT_ROOT` - Repository root path for relative operations
+
+**Error Handling:**
+- Graceful fallback from uv to pip-based installation
+- Clear error messages with actionable recovery steps
+- Comprehensive logging with debug-level subprocess details
+
+**Generic:** Works for any project in the multi-project template structure
+
+**Troubleshooting:**
+- **uv sync fails:** Check network, pyproject.toml validity, uv version
+- **Missing packages:** Verify pip installation, check Python version compatibility
+- **Build tools missing:** Install pandoc/xelatex, verify PATH configuration
+- **Directory creation fails:** Check filesystem permissions, disk space
 
 ### 2. Run Tests (`01_run_tests.py`)
 
@@ -109,6 +150,10 @@ The template provides multiple entry points organized by function:
 - Copies all web outputs (HTML format)
 - Validates all files copied successfully
 
+**Notes:**
+- Typically invoked as the final stage of the pipeline (via `execute_pipeline.py` / `run.sh --pipeline`).
+- Can also be run directly when you only want to refresh `output/{project}/` from `projects/{project}/output/`.
+
 **Generic:** Works for any project with rendered outputs
 
 ### 7. Generate Executive Report (`07_generate_executive_report.py`)
@@ -123,17 +168,24 @@ The template provides multiple entry points organized by function:
 
 **Generic:** Works with any number of projects (2+ required)
 
-### 8. Run All (`run_all.py`)
+### 8. Pipeline Orchestrators
 
-**Purpose:** Execute complete pipeline
+#### Single Project (`execute_pipeline.py`)
 
-- Orchestrates all 6 stages sequentially
-- Adds Stage 10 for multi-project executive reporting
-- Stops on first failure
-- Provides summary report
-- Generic pipeline
+**Purpose:** Execute pipeline stages for a single project via `infrastructure.core.pipeline.PipelineExecutor`.
 
-**Generic:** Works for any project
+- Supports full pipeline and core-only pipeline
+- Supports checkpoint resume
+- Supports single-stage execution via `--stage`
+
+#### Multi-Project (`execute_multi_project.py`)
+
+**Purpose:** Execute pipelines across all discovered projects via `infrastructure.core.multi_project.MultiProjectOrchestrator`.
+
+- Runs infrastructure tests once (optional)
+- Runs each project pipeline with infra tests skipped per-project
+- Optionally generates executive reporting
+
 
 ## Project-Specific Scripts
 
@@ -238,10 +290,10 @@ from scientific.data_generator import generate_synthetic_data
 
 ## Integration with Build Pipeline
 
-Complete pipeline execution:
+Complete pipeline execution (single project):
 
 ```bash
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --project project --core-only
 ```
 
 Stages:
@@ -291,7 +343,8 @@ scripts/
 ├── 04_validate_output.py       # Entry: Validation
 ├── 05_copy_outputs.py          # Entry: Copy outputs
 ├── 06_llm_review.py            # Entry: LLM review (optional)
-├── run_all.py                  # Entry: Complete pipeline
+├── execute_pipeline.py          # Entry: Single-project pipeline
+├── execute_multi_project.py     # Entry: Multi-project pipeline
 ├── bash_utils.sh               # Shared utilities
 ├── AGENTS.md                   # This file
 └── README.md                   # Quick reference
@@ -309,7 +362,7 @@ projects/{name}/scripts/
 
 ```bash
 cd /path/to/template
-python3 scripts/run_all.py --project project  # Executes projects/project/scripts/
+python3 scripts/execute_pipeline.py --project project --core-only
 ```
 
 ### Using with Different Project

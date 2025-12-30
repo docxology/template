@@ -5,7 +5,6 @@ Comprehensive tests for retry decorators and retryable operations.
 
 import time
 import pytest
-from unittest.mock import patch
 
 from infrastructure.core.retry import (
     retry_with_backoff,

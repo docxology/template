@@ -63,12 +63,13 @@ pytest tests/infrastructure/core/test_exceptions.py -v
 - Error chaining
 - Exception formatting
 
-### Environment Tests (`test_environment.py`)
+### Environment Tests (Moved to Integration)
 
-Environment setup and validation:
+Environment setup and validation moved to integration tests:
 
 ```bash
-pytest tests/infrastructure/core/test_environment.py -v
+pytest tests/integration/test_environment_setup.py -v
+pytest tests/integration/test_environment_setup.py -m integration
 ```
 
 **Test Coverage:**

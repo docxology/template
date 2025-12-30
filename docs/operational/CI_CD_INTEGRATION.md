@@ -152,7 +152,7 @@ jobs:
       run: uv sync
     
     - name: Run build pipeline
-      run: python3 scripts/run_all.py
+      run: python3 scripts/execute_pipeline.py --core-only
     
     - name: Validate PDFs
       run: |
@@ -296,7 +296,7 @@ jobs:
         AUTHOR_ORCID: ${{ secrets.AUTHOR_ORCID }}
         PROJECT_TITLE: ${{ secrets.PROJECT_TITLE }}
       run: |
-        python3 scripts/run_all.py
+        python3 scripts/execute_pipeline.py --core-only
     
     - name: Upload PDFs
       uses: actions/upload-artifact@v3
@@ -351,7 +351,7 @@ jobs:
         uv sync
     
     - name: Generate PDFs
-      run: python3 scripts/run_all.py
+      run: python3 scripts/execute_pipeline.py --core-only
     
     - name: Create release package
       run: |

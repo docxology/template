@@ -44,13 +44,19 @@ def compile_latex(
         f"-output-directory={output_dir}",
         str(tex_file)
     ]
-    
+
     logger.info(f"Compiling {tex_file} with {compiler}")
-    
+
     try:
-        # Run twice for references
-        for i in range(2):
-            logger.debug(f"Pass {i+1}...")
+        import time
+        start_time = time.time()
+
+        # Run twice for references (first pass generates aux, second resolves references)
+        max_passes = 2
+        for i in range(max_passes):
+            pass_start = time.time()
+            logger.debug(f"Pass {i+1}/{max_passes}...")
+
             result = subprocess.run(
                 cmd,
                 capture_output=True,
@@ -58,6 +64,9 @@ def compile_latex(
                 timeout=timeout,
                 cwd=tex_file.parent # Run in file directory for imports
             )
+
+            pass_duration = time.time() - pass_start
+            logger.debug(f"Pass {i+1} completed in {pass_duration:.2f}s")
             
             # Note: xelatex may return non-zero exit code even when PDF is generated (due to warnings)
             # So we check for PDF existence rather than just exit code
@@ -85,7 +94,10 @@ def compile_latex(
         pdf_file = output_dir / f"{tex_file.stem}.pdf"
         if not pdf_file.exists():
             raise CompilationError("PDF not generated", context={"expected": str(pdf_file)})
-            
+
+        total_duration = time.time() - start_time
+        logger.info(f"LaTeX compilation completed in {total_duration:.2f}s")
+
         return pdf_file
         
     except subprocess.TimeoutExpired:

@@ -231,7 +231,7 @@ For machine-readable logs, enable structured logging:
 ```bash
 # Enable JSON logging
 export STRUCTURED_LOGGING=true
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 This outputs logs in JSON format for programmatic parsing:
@@ -320,7 +320,7 @@ export LOG_LEVEL=2  # WARN
 export LOG_LEVEL=3  # ERROR (least verbose)
 
 # Run scripts with specific level
-LOG_LEVEL=0 python3 scripts/run_all.py
+LOG_LEVEL=0 python3 scripts/execute_pipeline.py --core-only
 ```
 
 **In Code:**
@@ -413,7 +413,7 @@ For plain text environments:
 export NO_EMOJI=1
 
 # Or in CI/CD
-NO_EMOJI=1 python3 scripts/run_all.py
+NO_EMOJI=1 python3 scripts/execute_pipeline.py --core-only
 ```
 
 ## Integration with Infrastructure

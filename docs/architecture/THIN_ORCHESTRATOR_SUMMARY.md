@@ -107,7 +107,7 @@ ax.set_title(f"Average: {avg}")
 ```
 
 ### 3. **Integration with Build System**
-The `scripts/run_all.py` orchestrator automatically:
+The `scripts/execute_pipeline.py` orchestrator automatically:
 1. **Runs tests** with coverage requirements (ensuring infrastructure and project code work)
 2. **Executes project scripts** (validating projects/{name}/src/ integration)
 3. **Generates figures** (using tested projects/{name}/src/ methods)
@@ -225,7 +225,7 @@ The thin orchestrator pattern has been successfully implemented, establishing a 
 - **`projects/{name}/tests/`** validates all projects/{name}/src/ functionality
 
 **Master Orchestrator:**
-- **`scripts/run_all.py`** orchestrates the complete 6-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the complete 6-stage pipeline
 
 This architecture ensures:
 - **Maintainability**: Single source of truth for business logic (infrastructure/ for generic, projects/{name}/src/ for project-specific)

@@ -56,7 +56,7 @@ def run_analysis_script(script_path: Path, repo_root: Path, project_name: str = 
     Raises:
         ScriptExecutionError: If script execution fails critically
     """
-    logger.info(f"\n  Running: {script_path.name}")
+    logger.info(f"\n  Running: {project_name}/{script_path.name}")
     
     cmd = get_python_command() + [str(script_path)]
     
@@ -130,7 +130,7 @@ def run_analysis_pipeline(scripts: list[Path], project_name: str = "project") ->
     )
     
     for i, script in enumerate(scripts, 1):
-        progress.start_substage(i, script.name)
+        progress.start_substage(i, f"{project_name}/{script.name}")
         exit_code = run_analysis_script(script, repo_root, project_name)
         progress.complete_substage()
         
@@ -145,8 +145,8 @@ def run_analysis_pipeline(scripts: list[Path], project_name: str = "project") ->
 
     # Consolidated success message
     if successful_scripts:
-        script_list = ", ".join(successful_scripts)
-        log_success(f"Analysis scripts completed: {len(successful_scripts)}/{len(scripts)} ({script_list})", logger)
+        script_list_with_project = ", ".join([f"{project_name}/{name}" for name in successful_scripts])
+        log_success(f"Analysis scripts completed: {len(successful_scripts)}/{len(scripts)} ({script_list_with_project})", logger)
 
     if failed_scripts:
         logger.error(f"\n{len(failed_scripts)} script(s) failed:")

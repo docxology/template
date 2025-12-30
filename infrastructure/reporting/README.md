@@ -178,7 +178,7 @@ All reports are generated in multiple formats:
 ## Integration
 
 The reporting module is automatically integrated into:
-- `scripts/run_all.py` - Generates pipeline report at end
+- `scripts/execute_pipeline.py` - Generates pipeline report at end
 - `scripts/01_run_tests.py` - Generates test reports
 - `scripts/04_validate_output.py` - Generates validation reports
 

@@ -378,7 +378,7 @@ The reporting module is integrated into multiple pipeline entry points:
 
 #### Single Project Reporting
 
-1. **`scripts/run_all.py`**
+1. **`scripts/execute_pipeline.py`**
    - Generates consolidated pipeline report at end
    - Includes all stage results, test results, validation results
    - Saves to `project/output/reports/pipeline_report.{json,html,md}`
@@ -582,7 +582,7 @@ pytest tests/infrastructure/reporting/ --cov=infrastructure.reporting
 - [`README.md`](README.md) - Quick reference guide
 - [`../README.md`](../README.md) - Infrastructure layer overview
 - [`../AGENTS.md`](../AGENTS.md) - Complete infrastructure documentation
-- [`../../docs/ADVANCED_MODULES_GUIDE.md`](../../docs/ADVANCED_MODULES_GUIDE.md) - Advanced modules guide
+- [`../../docs/modules/ADVANCED_MODULES_GUIDE.md`](../../docs/modules/ADVANCED_MODULES_GUIDE.md) - Advanced modules guide
 
 
 

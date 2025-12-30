@@ -16,7 +16,7 @@ Following the **thin orchestrator pattern**, the implementation consists of:
 2. **CLI Interface** (`infrastructure/validation/cli.py`): Command-line interface
 3. **Orchestrator** (`scripts/04_validate_output.py`): Pipeline integration
 4. **Tests** (`tes../../infrastructure/test_validation/`): Comprehensive coverage with real data
-5. **Integration** (`scripts/run_all.py`): Automated validation in build pipeline (Stage 04)
+5. **Integration** (`scripts/execute_pipeline.py`): Automated validation in build pipeline (Stage 04)
 
 ## Components
 
@@ -69,7 +69,7 @@ The validation is automatically integrated into the pipeline (Stage 4):
 
 ```bash
 # Standard usage (includes validation)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
@@ -215,17 +215,17 @@ python3 -m infrastructure.validation.cli pdf output/pdf/project_combined.pdf
 Generate PDFs first:
 
 ```bash
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 Or run the complete pipeline:
 
 ```bash
 # Standard build with validation
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # With options
-python3 scripts/run_all.py --verbose --log-file build.log
+python3 scripts/execute_pipeline.py --core-only --verbose --log-file build.log
 ```
 
 ### High number of ?? issues

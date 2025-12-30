@@ -1,0 +1,43 @@
+{
+  "pipeline_metadata": {
+    "start_time": "2025-12-30T15:55:14.696141",
+    "max_publications": 10,
+    "output_directory": "/Users/4d/Documents/GitHub/template/projects/ento_linguistics/output",
+    "end_time": "2025-12-30T15:55:17.305537",
+    "duration_seconds": 2.609396,
+    "status": "completed"
+  },
+  "stages": {
+    "literature_collection": {
+      "publications_found": 416,
+      "corpus_file": "/Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/data/literature_corpus.json"
+    },
+    "text_processing": {
+      "texts_processed": 416,
+      "total_tokens": 30760
+    },
+    "terminology_extraction": {
+      "terms_extracted": 109,
+      "terms_file": "/Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/data/terminology.json",
+      "csv_export": "/Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/data/terminology.csv"
+    },
+    "conceptual_mapping": {
+      "concepts_mapped": 6,
+      "relationships_found": 2,
+      "concept_map_file": "/Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/data/concept_map.json"
+    },
+    "domain_analysis": {
+      "domains_analyzed": 5,
+      "domain_report_file": "/Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/reports/domain_analysis_report.md"
+    },
+    "discourse_analysis": {
+      "patterns_identified": 2,
+      "structures_found": 0,
+      "discourse_file": "/Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/data/discourse_analysis.json"
+    },
+    "visualization": {
+      "figures_generated": 3,
+      "visualization_metadata": "/Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/data/visualization_metadata.json"
+    }
+  }
+}

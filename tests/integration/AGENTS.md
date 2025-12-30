@@ -23,6 +23,7 @@ tests/integration/
 ├── test_07_generate_executive_report.py # Executive report generation tests
 ├── test_bash_utils.sh                   # Bash utility function tests
 ├── test_edge_cases_and_error_paths.py   # Edge cases and error handling
+├── test_environment_setup.py            # Environment setup integration tests
 ├── test_figure_equation_citation.py     # Figure/equation/citation handling
 ├── test_logging.py                      # Bash logging integration tests
 ├── test_module_interoperability.py      # Cross-module interaction validation
@@ -31,6 +32,58 @@ tests/integration/
 ```
 
 ## Test Categories
+
+### Environment Setup (`test_environment_setup.py`)
+
+**Purpose:** Validate complete environment setup workflow with real system operations
+
+**Test Coverage:**
+- uv package manager integration and fallback behavior
+- Real dependency checking without mocks
+- Directory structure creation and validation
+- Build tool availability testing with `shutil.which()`
+- Environment variable setting and isolation
+- Subprocess execution patterns for external tools
+- Filesystem operations integration
+- Python version validation without version mocking
+
+**Real Operations Testing:**
+All tests use actual system calls and filesystem operations:
+- Real `uv sync` subprocess execution
+- Real `shutil.which()` for tool detection
+- Real `importlib.import_module()` for dependency checking
+- Real `os.environ` manipulation and restoration
+- Real directory creation and validation
+- Real subprocess execution with error handling
+
+**Skip Patterns:**
+Tests use `@pytest.mark.integration` and skip gracefully when dependencies unavailable:
+```python
+@pytest.mark.integration
+def test_uv_sync_when_available(tmp_path):
+    if not shutil.which('uv'):
+        pytest.skip("uv not installed - skipping integration test")
+    # Real uv sync execution...
+```
+
+**Example Test:**
+```python
+def test_complete_setup_with_uv(tmp_path):
+    """Test complete setup when uv is available."""
+    if not shutil.which('uv'):
+        pytest.skip("uv not installed")
+
+    # Create real pyproject.toml
+    pyproject = tmp_path / "pyproject.toml"
+    pyproject.write_text('[project]\nname="test"\n')
+
+    # Real subprocess call
+    result = subprocess.run(['uv', 'sync'], cwd=str(tmp_path))
+
+    # Validate real results
+    assert result.returncode == 0
+    assert (tmp_path / ".venv").exists()
+```
 
 ### Module Interoperability (`test_module_interoperability.py`)
 
@@ -293,6 +346,90 @@ def temp_project_dir():
 ```
 
 ## Integration Test Development
+
+### Environment Setup Testing Patterns
+
+**Real Subprocess Testing:**
+```python
+def test_real_subprocess_execution():
+    """Test subprocess execution with real commands."""
+    result = subprocess.run(
+        [sys.executable, '-c', 'print("test")'],
+        capture_output=True, text=True, check=False
+    )
+    assert result.returncode == 0
+    assert result.stdout.strip() == "test"
+```
+
+**Real System Integration:**
+```python
+@pytest.mark.integration
+def test_uv_sync_integration(tmp_path):
+    """Test real uv sync subprocess execution."""
+    if not shutil.which('uv'):
+        pytest.skip("uv not installed")
+
+    # Create real pyproject.toml
+    pyproject = tmp_path / "pyproject.toml"
+    pyproject.write_text('[project]\nname="test"\n')
+
+    # Execute real subprocess
+    result = subprocess.run(['uv', 'sync'], cwd=str(tmp_path))
+    assert result.returncode == 0
+
+    # Validate real filesystem changes
+    assert (tmp_path / ".venv").exists()
+    assert (tmp_path / "uv.lock").exists()
+```
+
+**Filesystem Integration:**
+```python
+def test_filesystem_operations_integration(tmp_path):
+    """Test integration of filesystem operations."""
+    # Create complex directory structure
+    test_structure = {
+        'projects/test/src': ['module1.py', 'module2.py'],
+        'output/test/figures': ['fig1.png', 'fig2.png'],
+    }
+
+    # Create directories and files
+    for dir_path, files in test_structure.items():
+        full_dir = tmp_path / dir_path
+        full_dir.mkdir(parents=True)
+
+        for filename in files:
+            (full_dir / filename).write_text(f"# Test {filename}")
+
+    # Verify structure exists
+    for dir_path, files in test_structure.items():
+        full_dir = tmp_path / dir_path
+        assert full_dir.exists()
+
+        for filename in files:
+            file_path = full_dir / filename
+            assert file_path.exists()
+```
+
+**Environment Isolation:**
+```python
+def test_environment_isolation(tmp_path):
+    """Test that environment setup doesn't affect global state."""
+    # Save original environment
+    original_env = dict(os.environ)
+
+    try:
+        # Run environment setup
+        result = set_environment_variables(tmp_path)
+        assert result is True
+
+        # Check that variables are set
+        assert os.environ.get('MPLBACKEND') == 'Agg'
+
+    finally:
+        # Restore original environment
+        os.environ.clear()
+        os.environ.update(original_env)
+```
 
 ### Test Structure
 

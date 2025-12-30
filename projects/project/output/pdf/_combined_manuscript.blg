@@ -2,6 +2,14 @@ This is BibTeX, Version 0.99d (TeX Live 2025)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: _combined_manuscript.aux
 The style file: plainnat.bst
+Illegal, another \bibstyle command---line 766 of file _combined_manuscript.aux
+ : \bibstyle
+ :          {unsrt}
+I'm skipping whatever remains of this command
+Illegal, another \bibdata command---line 767 of file _combined_manuscript.aux
+ : \bibdata
+ :         {references}
+I'm skipping whatever remains of this command
 Database file #1: references.bib
 You've used 16 entries,
             2773 wiz_defined-function locations,
@@ -44,3 +52,4 @@ warning$ -- 0
 while$ -- 60
 width$ -- 0
 write$ -- 237
+(There were 2 error messages)

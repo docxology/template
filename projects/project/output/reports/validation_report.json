@@ -10,15 +10,15 @@
   "output_statistics": {
     "pdf": {
       "files": 9,
-      "size_mb": 2.588237762451172
+      "size_mb": 2.5836286544799805
     },
     "figures": {
-      "files": 23,
-      "size_mb": 2.499180793762207
+      "files": 27,
+      "size_mb": 3.5262880325317383
     },
     "data": {
-      "files": 5,
-      "size_mb": 0.0102996826171875
+      "files": 12,
+      "size_mb": 0.5464897155761719
     }
   },
   "summary": {

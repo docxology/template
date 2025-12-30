@@ -227,7 +227,7 @@ python3 scripts/03_render_pdf.py
    python3 scripts/03_render_pdf.py
    
    # Or run full pipeline up to PDF stage
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 2. **Verify PDF location:**

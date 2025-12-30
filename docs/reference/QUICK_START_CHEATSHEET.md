@@ -15,7 +15,7 @@ git clone https://github.com/docxology/template.git
 uv sync
 
 # Run complete build
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### Daily Workflow Commands
@@ -36,7 +36,7 @@ open output/project_combined.pdf  # Top-level output
 ### Build Pipeline Commands
 ```bash
 # Complete pipeline execution
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # With specific stage
 python3 scripts/00_setup_environment.py      # Setup
@@ -74,7 +74,7 @@ vim project/manuscript/07_new_section.md
 echo "# New Section {#sec:new_section}" > project/manuscript/07_new_section.md
 
 # 3. Rebuild
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### Add a New Figure
@@ -196,7 +196,7 @@ Reference it: \ref{fig:my_figure}
 1. **Always run tests first**: `pytest tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `src/`
 3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
-4. **Run complete pipeline**: `python3 scripts/run_all.py` executes all stages
+4. **Run complete pipeline**: `python3 scripts/execute_pipeline.py --core-only` executes all stages
 5. **Pipeline stages**: 6 stages (00-05) from setup to final deliverables
 6. **Read build logs**: Check `project/output/pdf/*_compile.log` for errors
 7. **Individual stages**: Run `python3 scripts/XX_stage_name.py` for specific stages

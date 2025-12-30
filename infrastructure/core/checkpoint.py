@@ -11,7 +11,7 @@ import json
 import time
 from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
 
 from infrastructure.core.logging_utils import get_logger
 
@@ -74,11 +74,14 @@ class CheckpointManager:
             # Default to projects/{project_name}/output/.checkpoints
             repo_root = Path(__file__).parent.parent.parent
             checkpoint_dir = repo_root / "projects" / project_name / "output" / ".checkpoints"
-        
+
         self.checkpoint_dir = Path(checkpoint_dir)
-        self.checkpoint_dir.mkdir(parents=True, exist_ok=True)
         self.checkpoint_file = self.checkpoint_dir / "pipeline_checkpoint.json"
-    
+
+    def _ensure_checkpoint_dir(self) -> None:
+        """Ensure checkpoint directory exists."""
+        self.checkpoint_dir.mkdir(parents=True, exist_ok=True)
+
     def save_checkpoint(
         self,
         pipeline_start_time: float,
@@ -103,11 +106,14 @@ class CheckpointManager:
         )
         
         try:
+            # Ensure checkpoint directory exists
+            self._ensure_checkpoint_dir()
             with open(self.checkpoint_file, 'w') as f:
                 json.dump(checkpoint.to_dict(), f, indent=2)
             logger.debug(f"Checkpoint saved: stage {last_stage_completed}/{total_stages}")
         except Exception as e:
             logger.warning(f"Failed to save checkpoint: {e}")
+            logger.info("Checkpoint save failed - pipeline resume will not be available for this run")
     
     def load_checkpoint(self) -> Optional[PipelineCheckpoint]:
         """Load pipeline checkpoint.
@@ -126,6 +132,7 @@ class CheckpointManager:
             return checkpoint
         except Exception as e:
             logger.warning(f"Failed to load checkpoint: {e}")
+            logger.info("Invalid checkpoint file detected - starting fresh pipeline run")
             return None
     
     def clear_checkpoint(self) -> None:
@@ -161,7 +168,7 @@ class CheckpointManager:
             error_message: None if valid, error description if invalid
         """
         if not self.checkpoint_file.exists():
-            return False, "Checkpoint file does not exist"
+            return False, "Checkpoint file does not exist - no previous pipeline run to resume"
         
         try:
             checkpoint = self.load_checkpoint()
@@ -170,17 +177,17 @@ class CheckpointManager:
             
             # Validate checkpoint structure
             if checkpoint.last_stage_completed < 0:
-                return False, f"Invalid last_stage_completed: {checkpoint.last_stage_completed}"
-            
+                return False, f"Invalid checkpoint: last_stage_completed ({checkpoint.last_stage_completed}) cannot be negative - checkpoint corrupted"
+
             if checkpoint.total_stages <= 0:
-                return False, f"Invalid total_stages: {checkpoint.total_stages}"
-            
+                return False, f"Invalid checkpoint: total_stages ({checkpoint.total_stages}) must be positive - checkpoint corrupted"
+
             if checkpoint.last_stage_completed >= checkpoint.total_stages:
-                return False, f"last_stage_completed ({checkpoint.last_stage_completed}) >= total_stages ({checkpoint.total_stages})"
-            
+                return False, f"Invalid checkpoint: last_stage_completed ({checkpoint.last_stage_completed}) >= total_stages ({checkpoint.total_stages}) - checkpoint corrupted"
+
             # Validate stage results consistency
             if len(checkpoint.stage_results) != checkpoint.last_stage_completed + 1:
-                return False, f"Stage results count ({len(checkpoint.stage_results)}) doesn't match last_stage_completed ({checkpoint.last_stage_completed})"
+                return False, f"Checkpoint inconsistency: {len(checkpoint.stage_results)} stage results but last_stage_completed={checkpoint.last_stage_completed} - checkpoint corrupted"
             
             # Check that all completed stages have exit_code 0
             for i, result in enumerate(checkpoint.stage_results):
@@ -190,5 +197,5 @@ class CheckpointManager:
             return True, None
             
         except Exception as e:
-            return False, f"Checkpoint validation error: {e}"
+            return False, f"Checkpoint validation failed: {e} - checkpoint file may be corrupted, starting fresh pipeline run"
 

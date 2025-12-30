@@ -321,6 +321,71 @@ log_stage_progress() {
 }
 
 # ============================================================================
+# Enhanced Project Context Logging Functions
+# ============================================================================
+
+log_project_context() {
+    # Display current project context with paths
+    # Args:
+    #   $1: Project name
+    #   $2: Stage or operation name (optional)
+    local project_name="$1"
+    local operation="${2:-}"
+
+    if [[ -n "$operation" ]]; then
+        log_info "Project: $project_name | Operation: $operation"
+    else
+        log_info "Project: $project_name"
+    fi
+    log_info "  Manuscript: $REPO_ROOT/projects/$project_name/manuscript/"
+    log_info "  Output: $REPO_ROOT/projects/$project_name/output/"
+}
+
+log_stage_with_project() {
+    # Enhanced log_stage that includes project context
+    # Args:
+    #   $1: Stage number (1-indexed)
+    #   $2: Stage name
+    #   $3: Total number of stages
+    #   $4: Project name
+    #   $5: Pipeline start time (optional)
+    local stage_num="$1"
+    local stage_name="$2"
+    local total_stages="$3"
+    local project_name="$4"
+    local pipeline_start="${5:-}"
+
+    echo
+    local percentage=$((stage_num * 100 / total_stages))
+    echo -e "${YELLOW}[${stage_num}/${total_stages}] ${stage_name} (${percentage}% complete)${NC}"
+    echo -e "${CYAN}  Project: ${project_name}${NC}"
+
+    # ETA calculation (existing logic)
+    if [[ -n "$pipeline_start" ]]; then
+        local current_time=$(date +%s)
+        local elapsed=$((current_time - pipeline_start))
+        if [[ $elapsed -gt 0 ]] && [[ $stage_num -gt 0 ]]; then
+            local avg_time_per_stage=$((elapsed / stage_num))
+            local remaining_stages=$((total_stages - stage_num))
+            local eta=$((avg_time_per_stage * remaining_stages))
+            echo -e "${CYAN}  Elapsed: $(format_duration "$elapsed") | ETA: $(format_duration "$eta")${NC}"
+        fi
+    fi
+
+    echo -e "${YELLOW}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+}
+
+log_output_path() {
+    # Log where outputs are being written
+    # Args:
+    #   $1: Description (e.g., "PDF", "Figures")
+    #   $2: Path to output directory or file
+    local description="$1"
+    local output_path="$2"
+    log_info "$description → $output_path"
+}
+
+# ============================================================================
 # Utility Functions
 # ============================================================================
 

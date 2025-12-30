@@ -45,7 +45,7 @@ Get started immediately with this **[research project template](https://github.c
 ### **🚀 Running the Build Pipeline**
 ```bash
 # Clean all outputs and regenerate everything
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### **🧪 Running Tests**
@@ -74,10 +74,10 @@ export PROJECT_TITLE="Your Project Title"
 uv sync
 
 # Run complete pipeline
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Run complete pipeline (includes cleanup)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ### **📊 Development Workflow**
@@ -91,7 +91,7 @@ uv run python project/scripts/example_figure.py
 python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 # 4. Build complete pipeline
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 ## 📱 **Social Media Posts**
@@ -139,7 +139,7 @@ cd template
 uv sync
 
 # Generate everything
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 The template automatically handles LaTeX compilation, figure integration, and generates publication-ready PDFs. Perfect for academic papers and research documentation. Check the **[how to use guide](../core/HOW_TO_USE.md)** for comprehensive step-by-step instructions and the **[architecture guide](../core/ARCHITECTURE.md)** for detailed system design.
@@ -269,7 +269,7 @@ graph TB
     end
     
     subgraph "Build Pipeline"
-        RENDER[🚀 run_all.py<br/>Pipeline Orchestrator]
+        RENDER[🚀 execute_pipeline.py<br/>Pipeline Orchestrator]
         RENDER -->|"runs tests"| TESTS
         RENDER -->|"executes scripts"| SCRIPTS
         RENDER -->|"builds PDFs"| OUTPUT
@@ -418,7 +418,7 @@ graph LR
 - [ ] Click **[Use this template](https://github.com/docxology/template)** on GitHub
 - [ ] Clone your new repository
 - [ ] Run `uv sync` to install dependencies
-- [ ] Execute `python3 scripts/run_all.py` to test the pipeline
+- [ ] Execute `python3 scripts/execute_pipeline.py --core-only` to test the pipeline
 
 ### **🔧 Customization Steps**
 - [ ] Edit `repo_utilities/rename_project.sh` with your project details

@@ -822,7 +822,7 @@ For complete function signatures and API documentation, see [`AGENTS.md`](AGENTS
      year={2024}
    }
    ```
-4. Run full build: `python3 scripts/run_all.py`
+4. Run full build: `python3 scripts/execute_pipeline.py --core-only`
 
 ### Figures not appearing in PDF
 

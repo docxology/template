@@ -30,10 +30,10 @@ def extract_metadata_command(args):
     metadata = extract_publication_metadata(md_files)
 
     print(f"\nMetadata:")
-    print(f"Title: {metadata.get('title', 'N/A')}")
-    print(f"Authors: {', '.join(metadata.get('authors', []))}")
-    print(f"Abstract: {metadata.get('abstract', 'N/A')[:200]}...")
-    print(f"Keywords: {', '.join(metadata.get('keywords', []))}")
+    print(f"Title: {metadata.title}")
+    print(f"Authors: {', '.join(metadata.authors)}")
+    print(f"Abstract: {metadata.abstract[:200]}..." if metadata.abstract else "Abstract: N/A")
+    print(f"Keywords: {', '.join(metadata.keywords)}")
 
 
 def generate_citation_command(args):

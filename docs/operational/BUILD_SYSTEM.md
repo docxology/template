@@ -36,13 +36,13 @@ This document consolidates all build system information: current status, perform
 
 The template provides **two pipeline orchestrators** with different scope and stage structures.
 
-### Core Pipeline: Python Orchestrator (`run_all.py`)
+### Core Pipeline: Python Orchestrator (`execute_pipeline.py`)
 
 **6 stages, no LLM dependencies required:**
 
 ```mermaid
 flowchart TD
-    START([Start run_all.py]) --> STAGE0[Stage 00: Setup Environment]
+    START([Start execute_pipeline.py]) --> STAGE0[Stage 00: Setup Environment]
     STAGE0 --> STAGE1[Stage 01: Run Tests]
     STAGE1 --> STAGE2[Stage 02: Run Analysis]
     STAGE2 --> STAGE3[Stage 03: Render PDF]
@@ -107,7 +107,7 @@ flowchart TD
 
 ### Stage Breakdown Comparison
 
-#### Core Pipeline (run_all.py) - 84 seconds
+#### Core Pipeline (execute_pipeline.py) - 84 seconds
 
 | Stage | Time | Percentage | Description |
 |-------|------|------------|-------------|
@@ -136,7 +136,7 @@ flowchart TD
 | **Total** | **~21m** | **100%** | Extended pipeline complete |
 
 **Notes:**
-- Core pipeline (`run_all.py`): Fast, no LLM dependencies, programmatic use
+- Core pipeline (`execute_pipeline.py`): Fast, no LLM dependencies, programmatic use
 - Extended pipeline (`./run.sh --pipeline`): Comprehensive, includes AI features
 - LLM stages (8-9) are optional and add ~20.5 minutes to execution time
 
@@ -406,7 +406,7 @@ build_combined() {
 **Usage:**
 ```bash
 # Run complete pipeline (all 6 stages)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
@@ -438,7 +438,7 @@ python3 scripts/05_copy_outputs.py       # Stage 05
 3. Run complete pipeline:
    ```bash
    # Run all stages
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    
    # Or use unified interactive menu
    ./run.sh
@@ -472,7 +472,7 @@ python3 scripts/05_copy_outputs.py       # Stage 05
 3. Rebuild (references need multiple passes):
    ```bash
    # Run complete pipeline (includes multiple LaTeX passes)
-   python3 scripts/run_all.py
+   python3 scripts/execute_pipeline.py --core-only
    ```
 
 ### Coverage Below 100%
@@ -495,7 +495,7 @@ To verify everything works on your system:
 
 ```bash
 # 1. Run complete pipeline (all 6 stages)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh

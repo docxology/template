@@ -49,7 +49,7 @@ def discover_analysis_scripts(repo_root: Path, project_name: str = "project") ->
     ])
     
     for script in scripts:
-        log_success(f"Found: {script.name}", logger)
+        log_success(f"Found: {script.name} (project: {project_name})", logger)
     
     return scripts
 

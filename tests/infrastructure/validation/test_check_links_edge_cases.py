@@ -152,17 +152,13 @@ class TestMainFunction:
 [Broken Link](#nonexistent-anchor)
 """)
         
-        # Patch the repo root to use our temp directory
-        with patch.object(check_links, 'find_all_markdown_files', return_value=[md_file]):
-            with patch.object(check_links.Path, '__new__', return_value=tmp_path):
-                # The main function should detect the broken anchor
-                # We can't easily test main() directly, but we can verify the logic
-                content = md_file.read_text()
-                internal, external, file_refs = check_links.extract_links(content, md_file)
-                
-                # Should find the internal link
-                assert len(internal) == 1
-                assert internal[0]['target'] == '#nonexistent-anchor'
+        # Use real file operations instead of mocks
+        content = md_file.read_text()
+        internal, external, file_refs = check_links.extract_links(content, md_file)
+
+        # Should find the internal link
+        assert len(internal) == 1
+        assert internal[0]['target'] == '#nonexistent-anchor'
     
     def test_main_with_broken_file_refs(self, tmp_path):
         """Test detection of broken file references."""

@@ -45,7 +45,7 @@ graph TB
         
         subgraph "Build Pipeline"
             REPO_UTILS[Repo Utilities<br/>repo_utilities/]
-            RENDER[run_all.py<br/>Pipeline Orchestrator]
+            RENDER[execute_pipeline.py<br/>Pipeline Orchestrator]
         end
         
         subgraph "Outputs"
@@ -206,7 +206,7 @@ graph LR
 
 ```mermaid
 flowchart TD
-    START([Start run_all.py]) --> STAGE0[Stage 00: Setup Environment]
+    START([Start execute_pipeline.py]) --> STAGE0[Stage 00: Setup Environment]
     STAGE0 --> STAGE1[Stage 01: Run Tests]
     STAGE1 --> STAGE2[Stage 02: Run Analysis]
     STAGE2 --> STAGE3[Stage 03: Render PDF]
@@ -415,7 +415,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 ### 3. Integration
 ```bash
 # Run complete pipeline
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Or individual stages
 python3 scripts/03_render_pdf.py  # PDF generation
@@ -440,7 +440,7 @@ python3 scripts/03_render_pdf.py  # PDF generation
 2. **Test-Driven Development**: Tests validate functionality before implementation
 3. **Automated Validation**: All components are automatically checked for coherence
 4. **Reproducible Outputs**: All results are deterministic and verifiable
-5. **Integrated Workflow**: One command (`python3 scripts/run_all.py`) validates the entire system
+5. **Integrated Workflow**: One command (`python3 scripts/execute_pipeline.py --core-only`) validates the entire system
 6. **Thin Orchestrator Pattern**: Scripts import and use project/src/ methods, never implement algorithms
 
 ## Thin Orchestrator Pattern
@@ -450,7 +450,7 @@ The architecture enforces a **thin orchestrator pattern** where:
 - **`project/src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`project/scripts/`** are lightweight wrappers that import and use `project/src/` methods
 - **`proje../../tests/`** ensures comprehensive coverage of `project/src/` functionality
-- **`scripts/run_all.py`** orchestrates the entire 6-stage pipeline
+- **`scripts/execute_pipeline.py`** orchestrates the entire 6-stage pipeline
 
 This ensures:
 - **Maintainability**: Single source of truth for business logic

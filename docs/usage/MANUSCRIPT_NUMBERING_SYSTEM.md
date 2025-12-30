@@ -118,7 +118,7 @@ S02_supplemental_results.md
 
 ## 🛠️ Build System Changes
 
-### 1. **Pipeline Orchestrator (scripts/run_all.py)**
+### 1. **Pipeline Orchestrator (scripts/execute_pipeline.py)**
 
 #### Updated `discover_markdown_modules()` function:
 ```bash
@@ -233,7 +233,7 @@ vim manuscript/07_limitations.md
 # Content here...
 
 # Build and verify
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 **Result:** Section appears between 06_conclusion.md and 08_acknowledgments.md.
@@ -253,7 +253,7 @@ vim manuscript/S03_supplemental_figures.md
 # See \ref{sec:supplemental_figures} for additional figures.
 
 # Build and verify
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 **Result:** Section appears after S02 and before glossary (98).

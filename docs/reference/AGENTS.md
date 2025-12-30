@@ -93,7 +93,7 @@ docs/reference/
 **Command Reference:**
 ```bash
 # Complete pipeline execution
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Individual stage execution
 python3 scripts/00_setup_environment.py  # Environment check

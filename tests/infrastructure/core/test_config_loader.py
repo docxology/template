@@ -19,6 +19,7 @@ from infrastructure.core.config_loader import (
     find_config_file,
     get_translation_languages,
     YAML_AVAILABLE,
+    get_testing_config,
 )
 
 
@@ -403,3 +404,70 @@ class TestGetTranslationLanguages:
         result = get_translation_languages(tmp_path)
         assert result == []
     
+
+
+class TestYAMLUnavailable:
+    """Test behavior when YAML is not available."""
+    
+    def test_yaml_not_available_flag(self):
+        """Test YAML_AVAILABLE flag is set correctly."""
+        # This tests the YAML_AVAILABLE global flag
+        assert isinstance(YAML_AVAILABLE, bool)
+
+
+class TestErrorHandling:
+    """Test error handling in config loading."""
+    
+    def test_load_config_corrupted_yaml(self, tmp_path):
+        """Test load_config with corrupted YAML."""
+        config_path = tmp_path / "corrupted.yaml"
+        config_path.write_text("invalid: yaml: content: [unclosed")
+        
+        result = load_config(config_path)
+        assert result is None  # Should handle YAML errors gracefully
+    
+    def test_load_config_permission_denied(self, tmp_path, monkeypatch):
+        """Test load_config with permission denied."""
+        config_path = tmp_path / "config.yaml"
+        config_path.write_text("test: value")
+        
+        # Mock open to raise PermissionError
+        original_open = open
+        def mock_open(*args, **kwargs):
+            if str(config_path) in str(args[0]):
+                raise PermissionError("Permission denied")
+            return original_open(*args, **kwargs)
+        
+        monkeypatch.setattr('builtins.open', mock_open)
+        
+        result = load_config(config_path)
+        assert result is None  # Should handle permission errors gracefully
+
+
+class TestTestingConfig:
+    """Test testing configuration functions."""
+    
+    def test_get_testing_config_no_config(self, tmp_path):
+        """Test get_testing_config with no config file."""
+        # Should return empty dict when no config exists
+        result = get_testing_config(tmp_path)
+        assert result == {}
+    
+    def test_get_testing_config_with_testing_section(self, tmp_path):
+        """Test get_testing_config with testing section."""
+        config_path = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_path.parent.mkdir(parents=True)
+        config_path.write_text("""
+testing:
+  max_test_failures: 5
+  max_infra_test_failures: 2
+  max_project_test_failures: 1
+""")
+
+        result = get_testing_config(tmp_path)
+        expected = {
+            'max_test_failures': 5,
+            'max_infra_test_failures': 2,
+            'max_project_test_failures': 1
+        }
+        assert result == expected

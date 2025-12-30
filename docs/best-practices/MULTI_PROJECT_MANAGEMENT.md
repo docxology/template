@@ -222,7 +222,7 @@ done
 ./run-all-projects.sh "uv run pytest tests/"
 
 # Build all projects
-./run-all-projects.sh "python3 scripts/run_all.py"
+./run-all-projects.sh "python3 scripts/execute_multi_project.py"
 
 # Update dependencies
 ./run-all-projects.sh "uv sync --upgrade"
@@ -358,7 +358,7 @@ done
 # Ensure all projects build
 for project in */; do
     cd "$project"
-    python3 scripts/run_all.py || echo "$project failed"
+    python3 scripts/execute_pipeline.py --project "$project" --core-only || echo "$project failed"
     cd ..
 done
 ```
@@ -462,7 +462,7 @@ for project in */; do
     cp -r "$TEMPLATE_DIR/scripts/" scripts/
     
     # Test
-    python3 scripts/run_all.py || echo "Failed: $project"
+    python3 scripts/execute_pipeline.py --project "$project" --core-only || echo "Failed: $project"
     
     cd ..
 done

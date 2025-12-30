@@ -1,0 +1,404 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\section{Methodology}\label{sec:methodology}
+
+\begin{frame}{Mixed-Methodology Framework for Ento-Linguistic Analysis}
+\protect\phantomsection\label{mixed-methodology-framework-for-ento-linguistic-analysis}
+Our research employs a comprehensive mixed-methodology framework that
+integrates computational text analysis with theoretical discourse
+examination to systematically investigate how language shapes scientific
+understanding in entomology. This approach combines quantitative pattern
+detection with qualitative conceptual analysis, ensuring both empirical
+rigor and theoretical depth.
+\end{frame}
+
+\begin{frame}{Computational Text Analysis Pipeline}
+\protect\phantomsection\label{computational-text-analysis-pipeline}
+\begin{block}{Text Processing and Preprocessing}
+\protect\phantomsection\label{text-processing-and-preprocessing}
+The computational component begins with systematic text processing of
+scientific literature on ant biology and behavior. We implement a
+multi-stage preprocessing pipeline:
+
+\begin{equation}\label{eq:text_processing}
+T \rightarrow T_{\text{normalized}} \rightarrow T_{\text{tokenized}} \rightarrow T_{\text{lemmatized}}
+\end{equation}
+
+where \(T\) represents raw text, and each transformation step
+standardizes linguistic variation while preserving semantic content.
+This preprocessing enables reliable pattern detection across diverse
+scientific writing styles.
+\end{block}
+
+\begin{block}{Terminology Extraction Framework}
+\protect\phantomsection\label{terminology-extraction-framework}
+We develop domain-specific terminology extraction algorithms that
+identify and categorize Ento-Linguistic terms across our six analytical
+domains:
+
+\begin{equation}\label{eq:term_extraction}
+\mathcal{T}_d = \{t \in T \mid \text{domain}(t) = d \wedge \text{relevance}(t) > \theta\}
+\end{equation}
+
+where \(\mathcal{T}_d\) represents the set of terms in domain \(d\), and
+\(\theta\) is a relevance threshold determined through validation
+against expert-curated term lists. This approach ensures systematic
+identification of domain-relevant terminology while minimizing false
+positives.
+\end{block}
+
+\begin{block}{Network Construction and Analysis}
+\protect\phantomsection\label{network-construction-and-analysis}
+Terminology relationships are modeled as networks where nodes represent
+terms and edges represent co-occurrence or semantic relationships:
+
+\begin{equation}\label{eq:network_construction}
+G = (V, E), \quad V = \bigcup_{d=1}^{6} \mathcal{T}_d, \quad E = \{(u,v) \mid \text{relationship}(u,v) > \phi\}
+\end{equation}
+
+where \(\phi\) represents the relationship threshold. Network analysis
+reveals structural patterns in scientific terminology, including
+clustering around conceptual domains and bridging terms that connect
+different analytical frameworks.
+\end{block}
+\end{frame}
+
+\begin{frame}{Theoretical Discourse Analysis Framework}
+\protect\phantomsection\label{theoretical-discourse-analysis-framework}
+\begin{block}{Conceptual Mapping Methodology}
+\protect\phantomsection\label{conceptual-mapping-methodology}
+The theoretical component employs systematic conceptual mapping to
+examine how terminology shapes scientific understanding. We develop a
+framework for analyzing the constitutive role of language in scientific
+practice:
+
+\textbf{Term-to-Concept Mapping}: Each identified term is mapped to its
+conceptual implications, revealing how linguistic choices influence
+research questions and methodological approaches.
+
+\textbf{Context Analysis}: Terms are analyzed across different usage
+contexts to identify context-dependent meanings and potential
+ambiguities.
+
+\textbf{Framing Analysis}: We examine how terminology imposes implicit
+frameworks on ant biology, particularly where human social concepts are
+applied to insect societies.
+\end{block}
+
+\begin{block}{Domain-Specific Analytical Frameworks}
+\protect\phantomsection\label{domain-specific-analytical-frameworks}
+Each Ento-Linguistic domain receives specialized analytical treatment:
+
+\textbf{Unit of Individuality}: Multi-scale analysis examining how terms
+like ``individual,'' ``colony,'' and ``superorganism'' create different
+levels of biological analysis.
+
+\textbf{Behavior and Identity}: Identity construction analysis
+investigating how behavioral descriptions create categorical identities
+that may not reflect biological fluidity.
+
+\textbf{Power \& Labor}: Structural analysis of hierarchical terminology
+and its implications for understanding ant social organization.
+
+\textbf{Sex \& Reproduction}: Conceptual mapping of sex/gender
+terminology and its alignment with ant reproductive biology.
+
+\textbf{Kin and Relatedness}: Network analysis of relatedness concepts
+and their influence on social structure understanding.
+
+\textbf{Economics}: Framework analysis of economic terminology applied
+to resource allocation in ant societies.
+\end{block}
+\end{frame}
+
+\begin{frame}{Integration of Computational and Theoretical Methods}
+\protect\phantomsection\label{integration-of-computational-and-theoretical-methods}
+\begin{block}{Mixed-Method Validation Framework}
+\protect\phantomsection\label{mixed-method-validation-framework}
+Results from computational analysis inform theoretical examination,
+while theoretical insights guide computational refinement:
+
+\begin{equation}\label{eq:mixed_validation}
+V(\text{computational}, \text{theoretical}) = \alpha \cdot V_c + (1-\alpha) \cdot V_t + \beta \cdot V_{c,t}
+\end{equation}
+
+where \(V_c\) represents computational validation metrics, \(V_t\)
+represents theoretical validation criteria, \(V_{c,t}\) represents
+cross-method validation, and \(\alpha, \beta\) are weighting parameters.
+\end{block}
+
+\begin{block}{Iterative Refinement Process}
+\protect\phantomsection\label{iterative-refinement-process}
+The methodology employs iterative refinement between computational
+findings and theoretical analysis:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Initial Computational Analysis}: Broad pattern detection
+  across literature corpus
+\item
+  \textbf{Theoretical Examination}: Deep analysis of identified patterns
+  and their implications
+\item
+  \textbf{Refined Computational Analysis}: Targeted analysis informed by
+  theoretical insights
+\item
+  \textbf{Integrated Synthesis}: Combined computational and theoretical
+  understanding
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Implementation Framework}
+\protect\phantomsection\label{implementation-framework}
+\begin{block}{Computational Infrastructure}
+\protect\phantomsection\label{computational-infrastructure}
+The analysis framework is implemented using modular components that
+ensure reproducibility and extensibility:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\textwidth]{../output/figures/analysis_pipeline_diagram.png}
+\caption{Ento-Linguistic analysis pipeline integrating computational and theoretical methods}
+\label{fig:analysis_pipeline}
+\end{figure}
+
+Figure \ref{fig:analysis_pipeline} illustrates the complete analytical
+pipeline, showing how computational text processing feeds into
+terminology extraction, network construction, and theoretical analysis,
+with iterative refinement between quantitative and qualitative
+components.
+\end{block}
+
+\begin{block}{Data Management and Curation}
+\protect\phantomsection\label{data-management-and-curation}
+We implement systematic data management for both literature corpora and
+analytical results:
+
+\textbf{Literature Corpus}: Curated collection of scientific
+publications with metadata and full-text access where available.
+
+\textbf{Terminology Database}: Structured database of identified terms
+with domain classifications, usage contexts, and analytical annotations.
+
+\textbf{Analysis Results}: Versioned storage of computational outputs,
+network analyses, and theoretical examinations.
+\end{block}
+
+\begin{block}{Quality Assurance Framework}
+\protect\phantomsection\label{quality-assurance-framework}
+All analytical components include comprehensive validation:
+
+\textbf{Computational Validation}: Statistical reliability of pattern
+detection, network construction accuracy, and terminology extraction
+precision.
+
+\textbf{Theoretical Validation}: Conceptual coherence, alignment with
+existing literature, and logical consistency of analytical frameworks.
+
+\textbf{Cross-Method Validation}: Consistency between computational
+findings and theoretical interpretations.
+\end{block}
+\end{frame}
+
+\begin{frame}{Reproducibility and Documentation Infrastructure}
+\protect\phantomsection\label{reproducibility-and-documentation-infrastructure}
+\begin{block}{Automated Quality Gates}
+\protect\phantomsection\label{automated-quality-gates}
+Following the research template's infrastructure, all methodological
+steps include automated validation:
+
+\textbf{Text Processing Validation}: Ensures preprocessing maintains
+semantic integrity while standardizing linguistic variation.
+
+\textbf{Terminology Validation}: Cross-references extracted terms
+against expert-curated lists and literature usage patterns.
+
+\textbf{Network Validation}: Ensures network construction reflects
+meaningful relationships rather than artifacts.
+
+\textbf{Theoretical Validation}: Documents analytical frameworks and
+ensures conceptual coherence.
+\end{block}
+
+\begin{block}{Documentation and Reporting Framework}
+\protect\phantomsection\label{documentation-and-reporting-framework}
+The methodology integrates with the template's documentation
+infrastructure:
+
+\textbf{Automated Reporting}: Generates comprehensive reports of
+analytical findings with integrated visualizations.
+
+\textbf{Cross-Reference Management}: Ensures all analytical components
+are properly linked and referenced.
+
+\textbf{Version Control}: Maintains complete provenance of analytical
+decisions and parameter choices.
+\end{block}
+\end{frame}
+
+\begin{frame}{Performance and Scalability Analysis}
+\protect\phantomsection\label{performance-and-scalability-analysis}
+\begin{block}{Computational Complexity}
+\protect\phantomsection\label{computational-complexity}
+The computational components are designed for scalability across large
+literature corpora:
+
+\begin{equation}\label{eq:computational_complexity}
+C(n,m) = O(n \log n + m \cdot d)
+\end{equation}
+
+where: - \(n\) represents the corpus size (total words or documents) -
+\(m\) is the number of identified terms after extraction and filtering -
+\(d\) is the number of Ento-Linguistic domains being analyzed (fixed at
+6)
+
+The \(n \log n\) term accounts for text preprocessing and tokenization
+operations, while \(m \cdot d\) represents the domain classification and
+analysis phase. This complexity ensures efficient processing of large
+scientific literature collections while maintaining detailed analytical
+depth.
+\end{block}
+
+\begin{block}{Memory and Resource Management}
+\protect\phantomsection\label{memory-and-resource-management}
+The framework includes efficient resource management for large-scale
+analysis:
+
+\textbf{Streaming Processing}: Text processing designed for
+memory-efficient handling of large corpora.
+
+\textbf{Incremental Analysis}: Network construction that scales with
+corpus size through incremental updates.
+
+\textbf{Parallel Processing}: Components designed for parallel execution
+across computational resources.
+\end{block}
+\end{frame}
+
+\begin{frame}{Validation and Reliability Framework}
+\protect\phantomsection\label{validation-and-reliability-framework}
+\begin{block}{Multi-Method Triangulation}
+\protect\phantomsection\label{multi-method-triangulation}
+Results are validated through multiple analytical approaches:
+
+\textbf{Internal Validation}: Consistency checks within computational
+and theoretical methods.
+
+\textbf{Cross-Method Validation}: Agreement between computational
+findings and theoretical analysis.
+
+\textbf{External Validation}: Comparison with existing literature and
+expert review.
+\end{block}
+
+\begin{block}{Error Analysis and Uncertainty Quantification}
+\protect\phantomsection\label{error-analysis-and-uncertainty-quantification}
+The framework includes systematic error analysis:
+
+\textbf{Computational Uncertainty}: Quantification of pattern detection
+reliability and network construction confidence.
+
+\textbf{Theoretical Uncertainty}: Documentation of analytical
+assumptions and alternative interpretations.
+
+\textbf{Integrated Uncertainty}: Combined uncertainty estimates across
+methodological components.
+
+This comprehensive methodological framework ensures rigorous,
+reproducible analysis of Ento-Linguistic domains while maintaining the
+flexibility to adapt to new findings and refine analytical approaches.
+\end{block}
+\end{frame}
+
+\end{document}

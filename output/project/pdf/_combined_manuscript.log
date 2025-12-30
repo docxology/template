@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  29 DEC 2025 15:08
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  30 DEC 2025 15:55
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -669,7 +669,56 @@ Package: listings 2024/09/23 1.10c (Carsten Heinz)
 (/usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 )
-(./_combined_manuscript.aux)
+(./_combined_manuscript.aux
+
+Package natbib Warning: Citation `beck2009' multiply defined.
+
+
+Package natbib Warning: Citation `bertsekas2015' multiply defined.
+
+
+Package natbib Warning: Citation `boyd2004' multiply defined.
+
+
+Package natbib Warning: Citation `optimization2022' multiply defined.
+
+
+Package natbib Warning: Citation `duchi2011' multiply defined.
+
+
+Package natbib Warning: Citation `kingma2014' multiply defined.
+
+
+Package natbib Warning: Citation `nesterov2018' multiply defined.
+
+
+Package natbib Warning: Citation `pandoc2024' multiply defined.
+
+
+Package natbib Warning: Citation `parikh2014' multiply defined.
+
+
+Package natbib Warning: Citation `polak1997' multiply defined.
+
+
+Package natbib Warning: Citation `reddi2018' multiply defined.
+
+
+Package natbib Warning: Citation `ruder2016' multiply defined.
+
+
+Package natbib Warning: Citation `schmidt2017' multiply defined.
+
+
+Package natbib Warning: Citation `example2023' multiply defined.
+
+
+Package natbib Warning: Citation `template2024' multiply defined.
+
+
+Package natbib Warning: Citation `wright2010' multiply defined.
+
+)
 \openout1 = `_combined_manuscript.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 341.
@@ -1217,13 +1266,13 @@ Missing character: There is no − ("2212) in font ec-lmr7!
 Missing character: There is no − ("2212) in font ec-lmr7!
 Missing character: There is no − ("2212) in font ec-lmr7!
 
-Underfull \hbox (badness 10000) in paragraph at lines 1580--1585
+Underfull \hbox (badness 10000) in paragraph at lines 1580--1586
 []\T1/lmr/bx/n/10 Commands\T1/latinmodern-math.otf(1)/m/n/10 : [][][][][][] for
  gat-ing,
  []
 
 
-Overfull \hbox (46.66148pt too wide) in paragraph at lines 1580--1585
+Overfull \hbox (156.91116pt too wide) in paragraph at lines 1580--1586
 [][][][][][] \T1/latinmodern-math.otf(1)/m/n/10 for con-sol-i-dated met-rics, a
 nd [][][][][][]
  []
@@ -1235,7 +1284,7 @@ See the keyval package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1592 \begin{Highlighting}[]
+l.1593 \begin{Highlighting}[]
                              
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -1247,7 +1296,7 @@ See the keyval package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.1592 \begin{Highlighting}[]
+l.1593 \begin{Highlighting}[]
                              
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -1487,95 +1536,101 @@ Missing character: There is no ≤ ("2264) in font ec-lmr10!
 [44]
 
 [45]
-Overfull \hbox (60.31078pt too wide) in paragraph at lines 2861--2861
+Overfull \hbox (60.31078pt too wide) in paragraph at lines 2862--2862
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (23.56088pt too wide) in paragraph at lines 2863--2863
+Overfull \hbox (23.56088pt too wide) in paragraph at lines 2864--2864
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (18.3109pt too wide) in paragraph at lines 2865--2865
+Overfull \hbox (18.3109pt too wide) in paragraph at lines 2866--2866
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (2.56094pt too wide) in paragraph at lines 2867--2867
+Overfull \hbox (2.56094pt too wide) in paragraph at lines 2868--2868
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (34.06085pt too wide) in paragraph at lines 2875--2875
+Overfull \hbox (34.06085pt too wide) in paragraph at lines 2876--2876
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (7.81093pt too wide) in paragraph at lines 2907--2907
+Overfull \hbox (7.81093pt too wide) in paragraph at lines 2908--2908
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (49.8108pt too wide) in paragraph at lines 2909--2909
+Overfull \hbox (49.8108pt too wide) in paragraph at lines 2910--2910
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (7.81093pt too wide) in paragraph at lines 2911--2911
+Overfull \hbox (7.81093pt too wide) in paragraph at lines 2912--2912
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (60.31078pt too wide) in paragraph at lines 2913--2913
+Overfull \hbox (60.31078pt too wide) in paragraph at lines 2914--2914
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (49.8108pt too wide) in paragraph at lines 2915--2915
+Overfull \hbox (49.8108pt too wide) in paragraph at lines 2916--2916
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (2.56094pt too wide) in paragraph at lines 2937--2937
+Overfull \hbox (2.56094pt too wide) in paragraph at lines 2938--2938
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (2.56094pt too wide) in paragraph at lines 2939--2939
+Overfull \hbox (2.56094pt too wide) in paragraph at lines 2940--2940
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (55.06079pt too wide) in paragraph at lines 2943--2943
+Overfull \hbox (55.06079pt too wide) in paragraph at lines 2944--2944
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (49.8108pt too wide) in paragraph at lines 2971--2971
+Overfull \hbox (49.8108pt too wide) in paragraph at lines 2972--2972
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (7.81093pt too wide) in paragraph at lines 2973--2973
+Overfull \hbox (7.81093pt too wide) in paragraph at lines 2974--2974
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (39.31084pt too wide) in paragraph at lines 2975--2975
+Overfull \hbox (39.31084pt too wide) in paragraph at lines 2976--2976
 []|[][][][][][]|  
  []
 
 
-Overfull \hbox (28.81087pt too wide) in paragraph at lines 2986--2986
+Overfull \hbox (28.81087pt too wide) in paragraph at lines 2987--2987
 []|[][][][][][]|  
  []
 
 [46] [47] [48]
 
-[49] (./_combined_manuscript.bbl)
+[49] (./_combined_manuscript.bbl) (./_combined_manuscript.bbl
 
-[50] (./_combined_manuscript.aux)
+[50])
+
+Package natbib Warning: There were multiply defined citations.
+
+
+
+[51] (./_combined_manuscript.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -1586,12 +1641,12 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 25289 strings out of 473832
- 470343 string characters out of 5729482
+ 25291 strings out of 473832
+ 470393 string characters out of 5729482
  1158229 words of memory out of 5000000
  48005 multiletter control sequences out of 15000+600000
  632198 words of font info for 105 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  90i,10n,113p,1017b,553s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on _combined_manuscript.pdf (50 pages).
+Output written on _combined_manuscript.pdf (51 pages).

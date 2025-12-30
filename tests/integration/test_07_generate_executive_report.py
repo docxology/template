@@ -73,13 +73,16 @@ class TestExecutiveReportScript:
     
     def test_script_exists(self):
         """Test that the script file exists."""
-        script_path = Path(__file__).parent.parent.parent.parent / "scripts" / "07_generate_executive_report.py"
+        # Resolve path relative to repository root
+        repo_root = Path(__file__).parent.parent.parent
+        script_path = repo_root / "scripts" / "07_generate_executive_report.py"
         assert script_path.exists()
     
     def test_script_imports(self):
         """Test that the script can be imported."""
         # Add scripts to path
-        scripts_path = Path(__file__).parent.parent.parent.parent / "scripts"
+        repo_root = Path(__file__).parent.parent.parent
+        scripts_path = repo_root / "scripts"
         sys.path.insert(0, str(scripts_path))
         
         try:
@@ -104,7 +107,8 @@ class TestExecutiveReportScript:
     def test_verify_project_completion(self, mock_project_structure):
         """Test project completion verification."""
         # Import verify function
-        scripts_path = Path(__file__).parent.parent.parent.parent / "scripts"
+        repo_root = Path(__file__).parent.parent.parent
+        scripts_path = repo_root / "scripts"
         sys.path.insert(0, str(scripts_path))
         
         try:
@@ -133,7 +137,8 @@ class TestScriptIntegration:
     
     def test_script_execution_help(self):
         """Test script execution with --help flag."""
-        script_path = Path(__file__).parent.parent.parent.parent / "scripts" / "07_generate_executive_report.py"
+        repo_root = Path(__file__).parent.parent.parent
+        script_path = repo_root / "scripts" / "07_generate_executive_report.py"
         
         result = subprocess.run(
             [sys.executable, str(script_path), "--help"],
@@ -154,7 +159,8 @@ class TestErrorHandling:
         # Create empty projects directory
         (tmp_path / "projects").mkdir()
         
-        scripts_path = Path(__file__).parent.parent.parent.parent / "scripts"
+        repo_root = Path(__file__).parent.parent.parent
+        scripts_path = repo_root / "scripts"
         sys.path.insert(0, str(scripts_path))
         
         try:

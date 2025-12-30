@@ -197,10 +197,9 @@ class TestDiscoverProjects:
         dot_dir = projects_dir / ".hidden"
         dot_dir.mkdir()
 
-        with patch('infrastructure.project.discovery.Path') as mock_path:
-            mock_path.return_value = projects_dir
-            # This test would need more complex mocking, skipping for now
-            pass
+        # Test discovery with real file system
+        projects = discover_projects(tmp_path)
+        assert len(projects) == 2  # Only valid projects, not dot directory
 
     def test_empty_projects_directory(self, tmp_path):
         """Test discovery when projects directory is empty."""

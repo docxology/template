@@ -278,7 +278,7 @@ uv lock --no-install
 The build pipeline uses uv automatically:
 
 ```bash
-# In scripts/run_all.py
+# In scripts/execute_pipeline.py
 uv sync                    # Install dependencies
 uv run pytest tests/      # Run tests
 uv run python scripts/    # Run scripts

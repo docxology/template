@@ -1,0 +1,67 @@
+# Ento-Linguistic Research Paper Configuration
+# This file contains metadata for the Ento-Linguistic analysis of scientific terminology in entomology
+
+paper:
+  title: "Ento-Linguistic Domains: Language, Ambiguity, and Scientific Communication in Entomology"
+  subtitle: "How Terminology Networks Shape Understanding of Ant Biology"  # Optional subtitle
+  version: "1.0"  # Paper version
+  date: ""  # Auto-generated if empty (uses current date)
+
+# Author information
+authors:
+  - name: "Ento-Linguistic Research Collective"
+    orcid: "0000-0000-0000-0000"
+    email: "entolinguistic.research@university.edu"
+    affiliation: "Department of Philosophy, University of Science"  # Research institution
+    corresponding: true  # Mark corresponding author
+
+# Optional: Additional authors
+# Uncomment and modify as needed:
+#  - name: "Dr. Entomologist"
+#    orcid: "0000-0000-0000-0001"
+#    email: "entomologist@university.edu"
+#    affiliation: "Department of Biology, University of Science"
+#    corresponding: false
+
+# Publication information (optional)
+publication:
+  doi: "10.5281/zenodo.00000000"  # Digital Object Identifier, to be assigned
+  journal: ""  # Journal name if published
+  volume: ""  # Journal volume
+  pages: ""  # Page numbers
+  year: ""  # Publication year (auto-generated if empty)
+
+# Keywords for metadata
+keywords:
+  - "entomology"
+  - "scientific terminology"
+  - "language analysis"
+  - "discourse analysis"
+  - "ant biology"
+  - "eusociality"
+  - "conceptual frameworks"
+
+# Additional metadata
+metadata:
+  abstract: ""  # Can reference abstract section or leave empty
+  acknowledgments: ""  # Funding info, etc. (can reference acknowledgments section)
+  license: "Apache-2.0"  # License for the work
+  language: "en"  # Paper language code
+
+# LLM Review Settings
+llm:
+  translations:
+    enabled: true  # Set to false to disable translation generation
+    languages:
+      - zh  # Chinese (Simplified)
+      - hi  # Hindi
+      - ru  # Russian
+
+# Testing Configuration
+# Maximum acceptable test failures before halting pipeline
+# Priority: Environment variables > Config file > Default (0)
+testing:
+  max_test_failures: 0  # General maximum (default: 0 = strict, no failures allowed)
+  max_infra_test_failures: 0  # Infrastructure test suite maximum (default: 0)
+  max_project_test_failures: 0  # Project test suite maximum (default: 0)
+

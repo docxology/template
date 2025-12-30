@@ -497,10 +497,10 @@ print('output/data/analysis_data.csv')
 
 ### Understanding the Build Pipeline
 
-The pipeline orchestrator (`scripts/run_all.py`) orchestrates everything:
+The pipeline orchestrator (`scripts/execute_pipeline.py`) orchestrates everything:
 
 ```bash
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 **What happens**:
@@ -558,7 +558,7 @@ pytest tests/test_my_module.py --cov=src.my_module
 vim scripts/my_figure.py
 
 # 5. Run complete build
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # 6. View result (top-level output after stage 5)
 open output/project_combined.pdf
@@ -567,14 +567,14 @@ open output/project_combined.pdf
 **Advanced workflow with validation**:
 ```bash
 # 1. Full rebuild with validation (recommended - all 6 stages)
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
 ./run.sh
 
 # Alternative: Manual steps
 # # Pipeline automatically handles cleanup
-# python3 scripts/run_all.py
+# python3 scripts/execute_pipeline.py --core-only
 # python3 scripts/04_validate_output.py
 ```
 

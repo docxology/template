@@ -4,6 +4,7 @@ from __future__ import annotations
 import os
 import json
 import requests
+from pathlib import Path
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
 
@@ -17,9 +18,12 @@ logger = get_logger(__name__)
 class ZenodoConfig:
     access_token: str
     sandbox: bool = True
-    
+    base_url: Optional[str] = None
+
     @property
-    def base_url(self) -> str:
+    def api_base_url(self) -> str:
+        if self.base_url:
+            return self.base_url
         return "https://sandbox.zenodo.org/api" if self.sandbox else "https://zenodo.org/api"
 
 
@@ -32,13 +36,13 @@ class ZenodoClient:
 
     def create_deposition(self, metadata: Dict[str, Any]) -> str:
         """Create a new deposition.
-        
+
         Returns:
             Deposition ID
         """
-        url = f"{self.config.base_url}/deposit/depositions"
+        url = f"{self.config.api_base_url}/api/deposit/depositions"
         payload = {"metadata": metadata}
-        
+
         try:
             response = requests.post(url, json=payload, headers=self.headers)
             response.raise_for_status()
@@ -46,14 +50,14 @@ class ZenodoClient:
         except requests.exceptions.RequestException as e:
             raise PublishingError(f"Failed to create deposition: {e}")
 
-    def upload_file(self, deposition_id: str, file_path: str) -> None:
-        """Upload file to deposition."""
-        url = f"{self.config.base_url}/deposit/depositions/{deposition_id}/files"
-        
+    def upload_file(self, bucket: str, file_path: str) -> None:
+        """Upload file to bucket."""
+        filename = Path(file_path).name
+        url = f"{self.config.api_base_url}/api/files/{bucket}/{filename}"
+
         try:
             with open(file_path, "rb") as f:
-                files = {"file": f}
-                response = requests.post(url, files=files, headers=self.headers)
+                response = requests.put(url, data=f, headers=self.headers)
                 response.raise_for_status()
         except OSError as e:
             raise UploadError(f"File access failed: {e}")
@@ -66,7 +70,7 @@ class ZenodoClient:
         Returns:
             DOI
         """
-        url = f"{self.config.base_url}/deposit/depositions/{deposition_id}/actions/publish"
+        url = f"{self.config.api_base_url}/api/deposit/depositions/{deposition_id}/actions/publish"
         
         try:
             response = requests.post(url, headers=self.headers)

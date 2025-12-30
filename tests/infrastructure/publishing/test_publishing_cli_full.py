@@ -4,8 +4,9 @@ Tests publishing CLI functionality.
 """
 
 import sys
+import subprocess
+import os
 from pathlib import Path
-from unittest.mock import MagicMock, patch, ANY
 import pytest
 
 
@@ -68,12 +69,22 @@ class TestPublishCliParsing:
     
     def test_parse_args_basic(self):
         """Test basic argument parsing."""
-        from infrastructure.publishing import publish_cli
-        
-        if hasattr(publish_cli, 'parse_args'):
-            with patch('sys.argv', ['publish_cli.py', 'zenodo', 'upload']):
-                args = publish_cli.parse_args()
-                assert args is not None
+        # Test by running the CLI script with arguments
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        script_path = repo_root / "infrastructure" / "publishing" / "publish_cli.py"
+
+        # Set PYTHONPATH to include repo root
+        env = os.environ.copy()
+        env["PYTHONPATH"] = str(repo_root) + os.pathsep + env.get("PYTHONPATH", "")
+
+        # Run with --help to test argument parsing works
+        result = subprocess.run([
+            sys.executable, str(script_path), "--help"
+        ], capture_output=True, text=True, cwd=repo_root, env=env)
+
+        # Should exit with code 0 (help) or 2 (error but parsed correctly)
+        assert result.returncode in [0, 2]
+        assert "Publish release" in result.stdout or "Publish release" in result.stderr
 
 
 class TestPublishCliMain:
@@ -81,22 +92,39 @@ class TestPublishCliMain:
     
     def test_main_without_args(self):
         """Test main without arguments shows error."""
-        from infrastructure.publishing import publish_cli
-        
-        if hasattr(publish_cli, 'main'):
-            with patch('sys.argv', ['publish_cli.py']):
-                # Should exit with error since required args missing
-                with pytest.raises(SystemExit):
-                    publish_cli.main()
-    
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        script_path = repo_root / "infrastructure" / "publishing" / "publish_cli.py"
+
+        # Set PYTHONPATH to include repo root
+        env = os.environ.copy()
+        env["PYTHONPATH"] = str(repo_root) + os.pathsep + env.get("PYTHONPATH", "")
+
+        # Run without required arguments - should fail
+        result = subprocess.run([
+            sys.executable, str(script_path)
+        ], capture_output=True, text=True, cwd=repo_root, env=env)
+
+        # Should exit with error code due to missing required arguments
+        assert result.returncode != 0
+        assert "required" in result.stderr.lower() or "required" in result.stdout.lower()
+
     def test_main_with_help(self):
         """Test main with help flag."""
-        from infrastructure.publishing import publish_cli
-        
-        if hasattr(publish_cli, 'main'):
-            with patch('sys.argv', ['publish_cli.py', '--help']):
-                with pytest.raises(SystemExit):
-                    publish_cli.main()
+        repo_root = Path(__file__).resolve().parent.parent.parent.parent
+        script_path = repo_root / "infrastructure" / "publishing" / "publish_cli.py"
+
+        # Set PYTHONPATH to include repo root
+        env = os.environ.copy()
+        env["PYTHONPATH"] = str(repo_root) + os.pathsep + env.get("PYTHONPATH", "")
+
+        # Run with --help
+        result = subprocess.run([
+            sys.executable, str(script_path), "--help"
+        ], capture_output=True, text=True, cwd=repo_root, env=env)
+
+        # Should show help and exit
+        assert result.returncode in [0, 2]  # argparse uses 2 for help
+        assert "--token" in result.stdout or "--token" in result.stderr
 
 
 class TestPublishCliIntegration:

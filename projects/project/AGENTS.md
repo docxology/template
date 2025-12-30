@@ -192,7 +192,7 @@ python3 scripts/03_render_pdf.py
 
 Or use the full pipeline:
 ```bash
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 This:
@@ -348,7 +348,7 @@ python3 scripts/03_render_pdf.py
 
 Or use the full pipeline:
 ```bash
-python3 scripts/run_all.py
+python3 scripts/execute_pipeline.py --core-only
 ```
 
 This uses the template's build system while your project code remains in `project/`.

@@ -213,7 +213,7 @@ jobs:
     
     - name: Run build pipeline
       run: |
-        python3 scripts/run_all.py
+        python3 scripts/execute_pipeline.py --core-only
     
     - name: Upload PDFs
       uses: actions/upload-artifact@v3

@@ -165,8 +165,9 @@ predictions from Section \ref{sec:methodology}.
   \textbf{Commands}:
   \texttt{python3\ project/scripts/manuscript\_preflight.py\ -\/-strict}
   for gating, \texttt{python3\ project/scripts/quality\_report.py} for
-  consolidated metrics, and \texttt{python3\ scripts/run\_all.py} for
-  full pipeline execution with validation gates.
+  consolidated metrics, and
+  \texttt{python3\ scripts/execute\_pipeline.py\ -\/-core-only} for full
+  pipeline execution with validation gates.
 \end{itemize}
 \end{block}
 

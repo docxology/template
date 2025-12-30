@@ -653,7 +653,7 @@ saved_files = generate_validation_report(validation_results, Path("output/report
 ### Integration
 
 The reporting module is automatically integrated into:
-- `scripts/run_all.py` - Generates consolidated pipeline report at end
+- `scripts/execute_pipeline.py` - Generates consolidated pipeline report at end
 - `scripts/01_run_tests.py` - Generates structured test reports
 - `scripts/04_validate_output.py` - Generates enhanced validation reports
 
