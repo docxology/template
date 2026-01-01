@@ -40,50 +40,52 @@ def validate_copied_outputs(output_dir: Path) -> bool:
 
     combined_pdf_found = False
 
+    # Look for combined PDF in root directory first (after copy outputs stage)
+    # Then check pdf/ directory for backward compatibility
+    pdf_dir = output_dir / "pdf"
+
     if project_name:
-        # Try project-specific filename first
-        project_pdf_root = output_dir / f"{project_name}_combined.pdf"
-        project_pdf_in_pdf_dir = output_dir / "pdf" / f"{project_name}_combined.pdf"
+        # Try project-specific filename in root directory (copied location)
+        project_pdf_in_root = output_dir / f"{project_name}_combined.pdf"
 
-        if project_pdf_root.exists() and project_pdf_root.stat().st_size > 0:
-            size_mb = project_pdf_root.stat().st_size / (1024 * 1024)
-            log_success(f"Combined PDF at root valid ({size_mb:.2f} MB)", logger)
-            combined_pdf_found = True
-        elif project_pdf_in_pdf_dir.exists() and project_pdf_in_pdf_dir.stat().st_size > 0:
-            size_mb = project_pdf_in_pdf_dir.stat().st_size / (1024 * 1024)
-            logger.warning(f"Combined PDF found in pdf/ directory but not at root ({size_mb:.2f} MB)")
-            logger.warning("  Consider copying it to root for easier access")
+        if project_pdf_in_root.exists() and project_pdf_in_root.stat().st_size > 0:
+            size_mb = project_pdf_in_root.stat().st_size / (1024 * 1024)
+            log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
             combined_pdf_found = True
 
-    # Fallback to legacy filename for backward compatibility
-    if not combined_pdf_found:
-        combined_pdf_root = output_dir / "project_combined.pdf"
-        combined_pdf_in_pdf_dir = output_dir / "pdf" / "project_combined.pdf"
-
-        if combined_pdf_root.exists() and combined_pdf_root.stat().st_size > 0:
-            size_mb = combined_pdf_root.stat().st_size / (1024 * 1024)
-            log_success(f"Combined PDF at root valid ({size_mb:.2f} MB)", logger)
-            combined_pdf_found = True
-            if project_name:
-                logger.warning(f"Using legacy PDF filename. Consider upgrading to project-specific naming.")
-        elif combined_pdf_in_pdf_dir.exists() and combined_pdf_in_pdf_dir.stat().st_size > 0:
-            size_mb = combined_pdf_in_pdf_dir.stat().st_size / (1024 * 1024)
-            logger.warning(f"Combined PDF found in pdf/ directory but not at root ({size_mb:.2f} MB)")
-            logger.warning("  Consider copying it to root for easier access")
-            combined_pdf_found = True
-            if project_name:
-                logger.warning(f"Using legacy PDF filename. Consider upgrading to project-specific naming.")
-
-    if not combined_pdf_found:
-        logger.error("Combined PDF missing or empty")
+    # Fallback: check pdf/ directory (original generation location)
+    if not combined_pdf_found and pdf_dir.exists():
         if project_name:
-            logger.error(f"  Expected location: output/{project_name}_combined.pdf")
-            logger.error(f"  Alternative location: output/pdf/{project_name}_combined.pdf")
-            logger.error(f"  Legacy fallback: output/project_combined.pdf")
+            # Try project-specific filename in pdf/ directory
+            project_pdf_in_pdf_dir = pdf_dir / f"{project_name}_combined.pdf"
+
+            if project_pdf_in_pdf_dir.exists() and project_pdf_in_pdf_dir.stat().st_size > 0:
+                size_mb = project_pdf_in_pdf_dir.stat().st_size / (1024 * 1024)
+                log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
+                combined_pdf_found = True
+
+        # Fallback to legacy filename for backward compatibility
+        if not combined_pdf_found:
+            combined_pdf_in_pdf_dir = pdf_dir / "project_combined.pdf"
+
+            if combined_pdf_in_pdf_dir.exists() and combined_pdf_in_pdf_dir.stat().st_size > 0:
+                size_mb = combined_pdf_in_pdf_dir.stat().st_size / (1024 * 1024)
+                log_success(f"Combined PDF valid ({size_mb:.2f} MB)", logger)
+                combined_pdf_found = True
+                if project_name:
+                    logger.warning(f"Using legacy PDF filename. Consider upgrading to project-specific naming.")
+
+    if not combined_pdf_found:
+        logger.error("Combined manuscript PDF missing or empty")
+        if project_name:
+            logger.error(f"  Expected: output/{project_name}/{project_name}_combined.pdf")
+            logger.error(f"  Or in: output/{project_name}/pdf/{project_name}_combined.pdf")
         else:
-            logger.error("  Expected location: output/project_combined.pdf")
-            logger.error("  Alternative location: output/pdf/project_combined.pdf")
-        logger.error("  This may indicate PDF generation failed in Stage 3")
+            logger.error("  Expected: output/project_combined.pdf")
+            logger.error("  Or in: output/pdf/project_combined.pdf")
+        logger.error("  → PDF rendering stage (Stage 3) may have failed")
+        logger.error("  → Or copy outputs stage (Stage 5) may have failed")
+        logger.error("  → Check project output/ directory for the combined PDF")
         validation_passed = False
     
     # Check all expected subdirectories
@@ -206,19 +208,113 @@ def validate_root_output_structure(repo_root: Path) -> Dict[str, Any]:
     return report
 
 
-def validate_output_structure(output_dir: Path) -> Dict:
-    """Validate complete output directory structure.
+def collect_detailed_validation_results(output_dir: Path) -> Dict[str, Any]:
+    """Collect detailed validation results for reporting.
     
+    Provides comprehensive validation data including file counts, sizes,
+    issue categorization, and recommendations.
+    
+    Args:
+        output_dir: Path to output directory
+        
+    Returns:
+        Dictionary with detailed validation results:
+        - structure: Output structure validation results
+        - directories: Per-directory validation details
+        - file_counts: File counts by type
+        - total_size_mb: Total output size
+        - issues_by_severity: Categorized issues
+        - recommendations: Actionable recommendations
+    """
+    validation_results = {
+        'structure': validate_output_structure(output_dir),
+        'directories': {},
+        'file_counts': {},
+        'total_size_mb': 0.0,
+        'issues_by_severity': {'critical': [], 'warning': [], 'info': []},
+        'recommendations': []
+    }
+    
+    # Collect per-directory details
+    for subdir_name in ['pdf', 'web', 'slides', 'figures', 'data', 'reports', 'simulations', 'llm', 'logs']:
+        subdir = output_dir / subdir_name
+        if subdir.exists() and subdir.is_dir():
+            files = list(subdir.rglob('*'))
+            files = [f for f in files if f.is_file()]
+            size_mb = sum(f.stat().st_size for f in files) / (1024 * 1024)
+            
+            validation_results['directories'][subdir_name] = {
+                'exists': True,
+                'file_count': len(files),
+                'size_mb': f"{size_mb:.2f}",
+                'largest_file': max((f.stat().st_size, f.name) for f in files)[1] if files else None
+            }
+            validation_results['file_counts'][subdir_name] = len(files)
+            validation_results['total_size_mb'] += size_mb
+        else:
+            validation_results['directories'][subdir_name] = {
+                'exists': False,
+                'file_count': 0,
+                'size_mb': "0.00"
+            }
+            validation_results['issues_by_severity']['warning'].append(
+                f"Directory '{subdir_name}/' missing or empty"
+            )
+    
+    # Add issues from structure validation
+    if not validation_results['structure']['valid']:
+        for issue in validation_results['structure']['issues']:
+            validation_results['issues_by_severity']['critical'].append(issue)
+    
+    # Add missing file issues
+    for missing_file in validation_results['structure'].get('missing_files', []):
+        validation_results['issues_by_severity']['critical'].append(
+            f"Missing expected file: {missing_file}"
+        )
+    
+    # Add suspicious size issues
+    for size_issue in validation_results['structure'].get('suspicious_sizes', []):
+        validation_results['issues_by_severity']['warning'].append(size_issue)
+    
+    # Generate recommendations based on issues
+    if validation_results['issues_by_severity']['critical']:
+        validation_results['recommendations'].append({
+            'priority': 'high',
+            'action': 'Review critical issues in output generation',
+            'details': 'Check PDF rendering and copy stages for errors'
+        })
+    
+    if not validation_results['directories']['figures']['exists']:
+        validation_results['recommendations'].append({
+            'priority': 'medium',
+            'action': 'Ensure analysis scripts generate figures',
+            'details': 'Check projects/{name}/scripts/analysis_pipeline.py execution'
+        })
+    
+    if not validation_results['directories']['reports']['exists']:
+        validation_results['recommendations'].append({
+            'priority': 'low',
+            'action': 'Generate analysis reports',
+            'details': 'Enable report generation in analysis pipeline'
+        })
+    
+    return validation_results
+
+
+
+def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
+    """Validate complete output directory structure.
+
     Checks:
     - Output directory exists
     - Combined PDF exists and is > 100KB (should be substantial)
     - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations, llm, logs)
     - Each subdirectory contains files
     - All files are readable
-    
+
     Args:
         output_dir: Path to top-level output directory
-        
+
     Returns:
         Dictionary with structure validation results
     """
@@ -246,9 +342,11 @@ def validate_output_structure(output_dir: Path) -> Dict:
     pdf_file = None
     pdf_size_mb = 0.0
 
+    pdf_dir = output_dir / "pdf"
+
     if project_name:
-        # Try project-specific filename first
-        project_pdf = output_dir / f"{project_name}_combined.pdf"
+        # Try project-specific filename first in pdf/ directory
+        project_pdf = pdf_dir / f"{project_name}_combined.pdf"
         if project_pdf.exists():
             size_bytes = project_pdf.stat().st_size
             pdf_size_mb = size_bytes / (1024 * 1024)
@@ -261,37 +359,38 @@ def validate_output_structure(output_dir: Path) -> Dict:
                     f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB"
                 )
         else:
-            result["missing_files"].append(f"{project_name}_combined.pdf (project-specific)")
-
-    # Fallback to legacy filename for backward compatibility
-    if not combined_pdf_found:
-        combined_pdf = output_dir / "project_combined.pdf"
-        if combined_pdf.exists():
-            size_bytes = combined_pdf.stat().st_size
+            result["missing_files"].append(f"{project_name}_combined.pdf")
+    else:
+        # Fallback: check for generic project_combined.pdf in pdf/ directory when no project name detected
+        generic_pdf = pdf_dir / "project_combined.pdf"
+        if generic_pdf.exists():
+            size_bytes = generic_pdf.stat().st_size
             pdf_size_mb = size_bytes / (1024 * 1024)
             combined_pdf_found = True
-            pdf_file = combined_pdf
+            pdf_file = generic_pdf
 
             # PDF should typically be > 100KB
             if size_bytes < 100 * 1024:
                 result["suspicious_sizes"].append(
                     f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB"
                 )
-            if project_name:
-                result["warnings"].append(f"Using legacy PDF filename. Consider upgrading to project-specific naming.")
         else:
-            result["missing_files"].append("project_combined.pdf (legacy fallback)")
+            result["missing_files"].append("project_combined.pdf")
+
+    # Legacy filename check removed - modern projects use project-specific naming
+    # All projects should use {project_name}_combined.pdf format
 
     # Populate directory structure metadata
+    pdf_key = "project_combined_pdf"  # Default key for backward compatibility
     if combined_pdf_found and pdf_file:
-        result["directory_structure"]["project_combined_pdf"] = {
+        result["directory_structure"][pdf_key] = {
             "exists": True,
             "size_mb": round(pdf_size_mb, 2),
             "readable": pdf_file.is_file()
         }
     else:
         result["valid"] = False
-        result["directory_structure"]["project_combined_pdf"] = {
+        result["directory_structure"][pdf_key] = {
             "exists": False,
             "size_mb": 0.0,
             "readable": False

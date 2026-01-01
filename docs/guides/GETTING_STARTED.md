@@ -558,10 +558,10 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 ### If you're ready to...
 
 **Add your own figures and data**
-→ Read **[Intermediate Usage Guide](../guides/INTERMEDIATE_USAGE.md)** (Levels 4-6)
+→ Read **[Figures and Analysis Guide](../guides/FIGURES_AND_ANALYSIS.md)** (Levels 4-6)
 
 **Learn test-driven development**
-→ Read **[Advanced Usage Guide](../guides/ADVANCED_USAGE.md)** (Levels 7-9)
+→ Read **[Testing and Reproducibility Guide](../guides/TESTING_AND_REPRODUCIBILITY.md)** (Levels 7-9)
 
 **Understand the system architecture**
 → Read **[Architecture Guide](../core/ARCHITECTURE.md)**
@@ -594,7 +594,7 @@ After completing this guide, you should be able to:
 - [x] Customize project metadata
 - [x] Add bibliography entries
 
-**Congratulations!** You've mastered the basics. Ready for more? Check out **[Intermediate Usage](../guides/INTERMEDIATE_USAGE.md)**.
+**Congratulations!** You've mastered the basics. Ready for more? Check out **[Figures and Analysis](../guides/FIGURES_AND_ANALYSIS.md)**.
 
 ---
 

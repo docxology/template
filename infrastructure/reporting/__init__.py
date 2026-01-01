@@ -8,6 +8,9 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 from __future__ import annotations
 
+from pathlib import Path
+from typing import Dict, List
+
 from infrastructure.reporting.pipeline_reporter import (
     generate_pipeline_report,
     generate_test_report,

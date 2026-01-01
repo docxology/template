@@ -2,7 +2,7 @@
 
 > **Advanced infrastructure modules** documentation
 
-**Quick Reference:** [Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md) | [Scientific Simulation](SCIENTIFIC_SIMULATION_GUIDE.md) | [PDF Validation](PDF_VALIDATION.md)
+**Quick Reference:** [Modules Guide](MODULES_GUIDE.md) | [Scientific Simulation](SCIENTIFIC_SIMULATION_GUIDE.md) | [PDF Validation](PDF_VALIDATION.md)
 
 ## Purpose
 
@@ -12,14 +12,14 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`ADVANCED_MODULES_GUIDE.md`](ADVANCED_MODULES_GUIDE.md) | Comprehensive guide for all 7 advanced modules | Developers |
+| [`MODULES_GUIDE.md`](MODULES_GUIDE.md) | Guide for all 7 modules | Developers |
 | [`SCIENTIFIC_SIMULATION_GUIDE.md`](SCIENTIFIC_SIMULATION_GUIDE.md) | Scientific simulation and analysis system | Researchers |
 | [`PDF_VALIDATION.md`](PDF_VALIDATION.md) | PDF validation system documentation | Developers |
 
 ## Quick Navigation
 
 ### Understanding Advanced Modules
-→ Read **[Advanced Modules Guide](ADVANCED_MODULES_GUIDE.md)** - Complete modules guide
+→ Read **[Modules Guide](MODULES_GUIDE.md)** - Modules guide
 
 ### Scientific Computing
 → Study **[Scientific Simulation Guide](SCIENTIFIC_SIMULATION_GUIDE.md)** - Simulation system

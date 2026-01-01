@@ -1,0 +1,386 @@
+\frametitle{Supplemental Methods}
+\protect\phantomsection\label{sec:supplemental_methods}
+This supplemental section provides extended methodological details,
+including complete generative model specifications, mathematical
+derivations, and implementation algorithms.
+
+\begin{block}{Complete Generative Model Specifications}
+\protect\phantomsection\label{sec:complete_generative_models}
+\begin{block}{Matrix A: Observation Likelihoods}
+\protect\phantomsection\label{matrix-a-observation-likelihoods}
+The observation likelihood matrix defines the probabilistic mapping from
+hidden states to observations:
+
+{[}A =
+
+\begin{pmatrix}
+P(o_1|s_1) & P(o_1|s_2) & \cdots & P(o_1|s_n) \\
+P(o_2|s_1) & P(o_2|s_2) & \cdots & P(o_2|s_n) \\
+\vdots & \vdots & \ddots & \vdots \\
+P(o_m|s_1) & P(o_m|s_2) & \cdots & P(o_m|s_n)
+\end{pmatrix}
+
+{]}
+
+\textbf{Normalization:} Each column sums to 1, representing a valid
+probability distribution over observations for each state.
+
+\textbf{Interpretation:} - Rows correspond to observation modalities -
+Columns correspond to hidden state conditions - Entry A{[}i,j{]}
+represents the probability of observing o\_i given state s\_j
+\end{block}
+
+\begin{block}{Matrix B: State Transition Dynamics}
+\protect\phantomsection\label{matrix-b-state-transition-dynamics}
+The transition matrix defines how actions influence state changes:
+
+{[}B(a) =
+
+\begin{pmatrix}
+P(s_1'|s_1,a) & P(s_2'|s_1,a) & \cdots & P(s_n'|s_1,a) \\
+P(s_1'|s_2,a) & P(s_2'|s_2,a) & \cdots & P(s_n'|s_2,a) \\
+\vdots & \vdots & \ddots & \vdots \\
+P(s_1'|s_n,a) & P(s_2'|s_n,a) & \cdots & P(s_n'|s_n,a) \\
+\end{pmatrix}
+
+{]}
+
+\textbf{Structure:} 3D tensor with dimensions {[}n\_states, n\_states,
+n\_actions{]}
+
+\textbf{Properties:} - Each B{[}:,:,a{]} is a stochastic matrix (rows
+sum to 1) - Enables modeling of controllable state transitions -
+Different actions can implement different transition dynamics
+\end{block}
+
+\begin{block}{Matrix C: Preference Landscape}
+\protect\phantomsection\label{matrix-c-preference-landscape}
+The preference matrix defines the desirability of different
+observations:
+
+{[}C =
+
+\begin{pmatrix} c_1 \\ c_2 \\ \vdots \\ c_m \end{pmatrix}
+
+{]}
+
+\textbf{Interpretation:} - Positive values indicate preferred
+observations - Negative values indicate avoided observations - Magnitude
+indicates strength of preference/aversion - Used in softmax
+normalization: P(o) ∝ exp(C)
+\end{block}
+
+\begin{block}{Matrix D: Prior State Distribution}
+\protect\phantomsection\label{matrix-d-prior-state-distribution}
+The prior beliefs over hidden states:
+
+{[}D =
+
+\begin{pmatrix} d_1 \\ d_2 \\ \vdots \\ d_n \end{pmatrix}
+
+{]}
+
+\textbf{Properties:} - Sums to 1 (valid probability distribution) -
+Represents initial beliefs before observation - Can encode innate biases
+or learned priors
+\end{block}
+\end{block}
+
+\begin{block}{Extended EFE Derivation}
+\protect\phantomsection\label{sec:extended_efe_derivation}
+\begin{block}{Complete EFE Formulation}
+\protect\phantomsection\label{complete-efe-formulation}
+The Expected Free Energy combines epistemic and pragmatic components:
+
+{[}\mathcal{F}(\pi) =
+\overbrace{\mathbb{E}_{q(s_\tau|\pi)}[\log q(s_\tau|\pi) - \log p(s_\tau|\pi)]}\^{}\{\text{Epistemic Affordance}\}
++
+\overbrace{\mathbb{E}_{q(o_\tau,s_\tau|\pi)}[\log p(o_\tau,s_\tau) - \log q(s_\tau,o_\tau|\pi)]}\^{}\{\text{Pragmatic Value}\}{]}
+\end{block}
+
+\begin{block}{Epistemic Component Expansion}
+\protect\phantomsection\label{epistemic-component-expansion}
+The epistemic affordance measures information gain:
+
+{[}H{[}Q(\pi){]} =
+\mathbb{E}\emph{\{q(s}\tau\textbar{}\pi)\}{[}\log q(s\_\tau\textbar{}\pi){]}
+-
+\mathbb{E}\emph{\{q(s}\tau\textbar{}\pi)\}{[}\log p(s\_\tau\textbar{}\pi){]}{]}
+
+This can be rewritten using KL divergence:
+
+{[}H{[}Q(\pi){]} =
+KL{[}q(s\_\tau\textbar{}\pi)\textbar\textbar p(s\_\tau\textbar{}\pi){]}{]}
+\end{block}
+
+\begin{block}{Pragmatic Component Expansion}
+\protect\phantomsection\label{pragmatic-component-expansion}
+The pragmatic value measures goal achievement:
+
+{[}G(\pi) =
+\mathbb{E}\emph{\{q(o}\tau,s\_\tau\textbar{}\pi)\}{[}\log p(o\_\tau,s\_\tau)
+- \log q(s\_\tau,o\_\tau\textbar{}\pi){]}{]}
+
+Using the generative model decomposition:
+
+{[}G(\pi) =
+\mathbb{E}\emph{\{q(o}\tau,s\_\tau\textbar{}\pi)\}{[}\log p(o\_\tau\textbar s\_\tau)
++ \log p(s\_\tau) - \log q(s\_\tau\textbar{}\pi) -
+\log p(o\_\tau\textbar{}\pi){]}{]}
+
+The pragmatic value becomes:
+
+{[}G(\pi) =
+\mathbb{E}\emph{\{q(o}\tau,s\_\tau\textbar{}\pi)\}{[}\log \tilde{A}(o\_\tau,s\_\tau)
++ \log p(s\_\tau) - \log q(s\_\tau\textbar{}\pi){]}{]}
+
+Where (\tilde{A}) includes the preference weighting.
+\end{block}
+\end{block}
+
+\begin{block}{Meta-Data Integration Methods}
+\protect\phantomsection\label{sec:meta_data_integration}
+\begin{block}{Confidence-Weighted Inference}
+\protect\phantomsection\label{confidence-weighted-inference}
+Incorporate observation confidence into belief updating:
+
+{[}q(s\textbar o,c) \propto q(s) \cdot A(o\textbar s) \cdot w(c){]}
+
+Where w(c) is a confidence-dependent weighting function:
+
+{[}w(c) =
+
+\begin{cases}
+c & \text{if } c > \theta \\
+\frac{\theta}{2} & \text{if } c \leq \theta
+\end{cases}
+
+{]}
+\end{block}
+
+\begin{block}{Temporal Meta-Data Processing}
+\protect\phantomsection\label{temporal-meta-data-processing}
+Incorporate temporal consistency information:
+
+{[}q(s\_t\textbar o\_\{1:t\}, m\_t) \propto q(s\_t\textbar o\_t)
+\cdot \phi(m\_t\textbar s\_\{t-1\}){]}
+
+Where ϕ represents temporal meta-data likelihood.
+\end{block}
+
+\begin{block}{Multi-Source Meta-Data Fusion}
+\protect\phantomsection\label{multi-source-meta-data-fusion}
+Combine multiple meta-data sources:
+
+{[}w\_\{combined\} = \prod\_\{k=1\}\^{}K w\_k(m\_k){]}
+
+Where each w\_k represents a different meta-data weighting function.
+\end{block}
+\end{block}
+
+\begin{block}{Meta-Cognitive Control Algorithms}
+\protect\phantomsection\label{sec:meta_cognitive_algorithms}
+\begin{block}{Confidence Assessment Algorithm}
+\protect\phantomsection\label{confidence-assessment-algorithm}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ assess\_confidence(posterior\_beliefs, observation\_uncertainty):}
+    \CommentTok{\# Calculate entropy}
+\NormalTok{    entropy }\OperatorTok{=} \OperatorTok{{-}}\NormalTok{np.}\BuiltInTok{sum}\NormalTok{(posterior\_beliefs }\OperatorTok{*}\NormalTok{ np.log(posterior\_beliefs }\OperatorTok{+} \FloatTok{1e{-}10}\NormalTok{))}
+
+    \CommentTok{\# Calculate max belief strength}
+\NormalTok{    max\_belief }\OperatorTok{=}\NormalTok{ np.}\BuiltInTok{max}\NormalTok{(posterior\_beliefs)}
+
+    \CommentTok{\# Composite confidence score}
+\NormalTok{    normalized\_entropy }\OperatorTok{=} \FloatTok{1.0} \OperatorTok{{-}}\NormalTok{ entropy }\OperatorTok{/}\NormalTok{ np.log(}\BuiltInTok{len}\NormalTok{(posterior\_beliefs))}
+\NormalTok{    confidence }\OperatorTok{=}\NormalTok{ (}\FloatTok{0.4} \OperatorTok{*}\NormalTok{ max\_belief }\OperatorTok{+}
+                 \FloatTok{0.3} \OperatorTok{*}\NormalTok{ normalized\_entropy }\OperatorTok{+}
+                 \FloatTok{0.2} \OperatorTok{*}\NormalTok{ (}\FloatTok{1.0} \OperatorTok{{-}}\NormalTok{ np.std(posterior\_beliefs)) }\OperatorTok{+}
+                 \FloatTok{0.1} \OperatorTok{*}\NormalTok{ (}\FloatTok{1.0} \OperatorTok{{-}}\NormalTok{ observation\_uncertainty))}
+
+    \ControlFlowTok{return} \BuiltInTok{min}\NormalTok{(}\BuiltInTok{max}\NormalTok{(confidence, }\FloatTok{0.0}\NormalTok{), }\FloatTok{1.0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+
+\begin{block}{Adaptive Attention Allocation}
+\protect\phantomsection\label{adaptive-attention-allocation}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ allocate\_attention(confidence\_level, available\_resources):}
+    \CommentTok{\# Base allocation}
+\NormalTok{    base\_allocation }\OperatorTok{=}\NormalTok{ \{k: }\FloatTok{1.0} \OperatorTok{/} \BuiltInTok{len}\NormalTok{(available\_resources)}
+                      \ControlFlowTok{for}\NormalTok{ k }\KeywordTok{in}\NormalTok{ available\_resources.keys()\}}
+
+    \ControlFlowTok{if}\NormalTok{ confidence\_level }\OperatorTok{\textless{}} \FloatTok{0.7}\NormalTok{:}
+        \CommentTok{\# Low confidence: increase monitoring}
+\NormalTok{        adjustments }\OperatorTok{=}\NormalTok{ \{}
+            \StringTok{\textquotesingle{}inference\_monitoring\textquotesingle{}}\NormalTok{: }\FloatTok{1.5}\NormalTok{,}
+            \StringTok{\textquotesingle{}basic\_processing\textquotesingle{}}\NormalTok{: }\FloatTok{0.8}\NormalTok{,}
+            \StringTok{\textquotesingle{}strategy\_evaluation\textquotesingle{}}\NormalTok{: }\FloatTok{1.2}
+\NormalTok{        \}}
+    \ControlFlowTok{else}\NormalTok{:}
+        \CommentTok{\# High confidence: efficient allocation}
+\NormalTok{        adjustments }\OperatorTok{=}\NormalTok{ \{k: }\FloatTok{1.0} \ControlFlowTok{for}\NormalTok{ k }\KeywordTok{in}\NormalTok{ available\_resources.keys()\}}
+
+    \CommentTok{\# Apply adjustments}
+\NormalTok{    allocation }\OperatorTok{=}\NormalTok{ \{k: base }\OperatorTok{*}\NormalTok{ adjustments.get(k, }\FloatTok{1.0}\NormalTok{)}
+                 \ControlFlowTok{for}\NormalTok{ k, base }\KeywordTok{in}\NormalTok{ base\_allocation.items()\}}
+
+    \CommentTok{\# Normalize}
+\NormalTok{    total }\OperatorTok{=} \BuiltInTok{sum}\NormalTok{(allocation.values())}
+    \ControlFlowTok{return}\NormalTok{ \{k: v }\OperatorTok{/}\NormalTok{ total }\ControlFlowTok{for}\NormalTok{ k, v }\KeywordTok{in}\NormalTok{ allocation.items()\}}
+\end{Highlighting}
+\end{Shaded}
+\end{block}
+\end{block}
+
+\begin{block}{Framework Optimization Methods}
+\protect\phantomsection\label{sec:framework_optimization}
+\begin{block}{Meta-Parameter Learning}
+\protect\phantomsection\label{meta-parameter-learning}
+Optimize framework parameters using performance feedback:
+
+{[}\Theta\^{}* = \arg\max\emph{\{\Theta\} \mathbb{E}}\{data\}
+{[}\log p(data\textbar{}\Theta) - \lambda \cdot complexity(\Theta){]}{]}
+
+Where Θ includes: - Confidence thresholds - Adaptation rates - Strategy
+selection parameters - Meta-data weighting functions
+\end{block}
+
+\begin{block}{Hierarchical Optimization}
+\protect\phantomsection\label{hierarchical-optimization}
+Multi-level optimization for complex systems:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Level 1:} Optimize EFE for immediate action selection
+\item
+  \textbf{Level 2:} Optimize meta-cognitive parameters for attention
+  allocation
+\item
+  \textbf{Level 3:} Optimize framework parameters for long-term
+  adaptation
+\end{enumerate}
+\end{block}
+
+\begin{block}{Gradient-Based Meta-Learning}
+\protect\phantomsection\label{gradient-based-meta-learning}
+Use gradient information for framework adaptation:
+
+{[}\frac{d\Theta}{dt} = -\eta \cdot \nabla\_\{\Theta\}
+\mathcal{L}(performance, \Theta){]}
+
+Where (\mathcal{L}) measures performance degradation due to suboptimal
+framework parameters.
+\end{block}
+\end{block}
+
+\begin{block}{Implementation Validation}
+\protect\phantomsection\label{sec:implementation_validation}
+\begin{block}{Numerical Stability Tests}
+\protect\phantomsection\label{numerical-stability-tests}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Gradient Bounds:} Ensure gradients remain within reasonable
+  bounds
+\item
+  \textbf{Probability Normalization:} Verify distributions stay
+  normalized
+\item
+  \textbf{Convergence Criteria:} Check optimization converges reliably
+\item
+  \textbf{Edge Case Handling:} Test behavior with extreme inputs
+\end{itemize}
+\end{block}
+
+\begin{block}{Theoretical Correctness Validation}
+\protect\phantomsection\label{theoretical-correctness-validation}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{EFE Equivalence:} Verify EFE matches mathematical definition
+\item
+  \textbf{Free Energy Minimization:} Confirm free energy decreases over
+  time
+\item
+  \textbf{Bayesian Consistency:} Ensure inference follows Bayesian
+  principles
+\item
+  \textbf{Meta-Level Consistency:} Validate meta-cognitive operations
+\end{itemize}
+\end{block}
+
+\begin{block}{Performance Benchmarks}
+\protect\phantomsection\label{performance-benchmarks}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Scalability:} Test with increasing state/observation spaces
+\item
+  \textbf{Computational Efficiency:} Measure time complexity
+\item
+  \textbf{Memory Usage:} Monitor memory consumption
+\item
+  \textbf{Accuracy:} Validate against known analytical solutions
+\end{itemize}
+\end{block}
+\end{block}
+
+\begin{block}{Algorithm Complexity Analysis}
+\protect\phantomsection\label{sec:complexity_analysis}
+\begin{block}{Time Complexity}
+\protect\phantomsection\label{time-complexity}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{EFE Calculation:} O(n\_states × n\_actions × horizon)
+\item
+  \textbf{Inference:} O(n\_states × n\_observations)
+\item
+  \textbf{Meta-Cognitive Assessment:} O(n\_beliefs)
+\item
+  \textbf{Framework Optimization:} O(iterations × parameters)
+\end{itemize}
+\end{block}
+
+\begin{block}{Space Complexity}
+\protect\phantomsection\label{space-complexity}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Generative Model:} O(n\_states × n\_observations + n\_states²
+  × n\_actions)
+\item
+  \textbf{Belief States:} O(n\_states)
+\item
+  \textbf{Meta-Cognitive History:} O(history\_length × n\_beliefs)
+\item
+  \textbf{Optimization State:} O(n\_parameters)
+\end{itemize}
+\end{block}
+
+\begin{block}{Optimizations}
+\protect\phantomsection\label{optimizations}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Sparse Representations:} Use sparse matrices for large state
+  spaces
+\item
+  \textbf{Approximate Inference:} Implement variational approximations
+\item
+  \textbf{Hierarchical Models:} Reduce complexity through hierarchical
+  structure
+\item
+  \textbf{Parallel Computation:} Distribute computation across
+  processing units
+\end{itemize}
+
+This supplemental methods section provides the technical foundation for
+implementing and validating the Active Inference meta-pragmatic
+framework across all four quadrants of the 2×2 matrix.
+\end{block}
+\end{block}

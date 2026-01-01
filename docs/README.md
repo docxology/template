@@ -26,9 +26,9 @@ graph TD
 
     subgraph SkillLevels["🎓 Skill-Based Learning"]
         L1[guides/GETTING_STARTED.md<br/>Levels 1-3: Beginner]
-        L2[guides/INTERMEDIATE_USAGE.md<br/>Levels 4-6: Intermediate]
-        L3[guides/ADVANCED_USAGE.md<br/>Levels 7-9: Advanced]
-        L4[guides/EXPERT_USAGE.md<br/>Levels 10-12: Expert]
+        L2[guides/FIGURES_AND_ANALYSIS.md<br/>Levels 4-6: Intermediate]
+        L3[guides/TESTING_AND_REPRODUCIBILITY.md<br/>Levels 7-9: Advanced]
+        L4[guides/EXTENDING_AND_AUTOMATION.md<br/>Levels 10-12: Expert]
     end
 
     subgraph Operational["⚙️ Operational"]
@@ -50,7 +50,7 @@ graph TD
     end
 
     subgraph Advanced["🔬 Advanced Topics"]
-        MODULES[modules/ADVANCED_MODULES_GUIDE.md<br/>7 Advanced Modules]
+        MODULES[modules/MODULES_GUIDE.md<br/>7 Modules]
         ARCH_DOCS[architecture/TWO_LAYER_ARCHITECTURE.md<br/>System Architecture]
         BEST_PRACTICES[best-practices/BEST_PRACTICES.md<br/>Best Practices]
         PROMPTS[prompts/README.md<br/>AI Prompt Templates<br/>10 Expert Prompts]
@@ -109,12 +109,12 @@ Documentation is organized into modular subdirectories:
 | Directory | Purpose | Key Files |
 |-----------|---------|-----------|
 | [`core/`](core/) | Essential documentation | ../core/HOW_TO_USE.md, ../core/ARCHITECTURE.md, ../core/WORKFLOW.md |
-| [`guides/`](guides/) | Usage guides by skill level | GETTING_STARTED.md, INTERMEDIATE_USAGE.md, ADVANCED_USAGE.md, EXPERT_USAGE.md |
+| [`guides/`](guides/) | Usage guides by skill level | GETTING_STARTED.md, FIGURES_AND_ANALYSIS.md, TESTING_AND_REPRODUCIBILITY.md, EXTENDING_AND_AUTOMATION.md |
 | [`architecture/`](architecture/) | Architecture documentation | TWO_LAYER_ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md |
 | [`usage/`](usage/) | Usage examples and patterns | EXAMPLES.md, MARKDOWN_TEMPLATE_GUIDE.md, VISUALIZATION_GUIDE.md |
 | [`operational/`](operational/) | Operational workflows | BUILD_SYSTEM.md, TROUBLESHOOTING_GUIDE.md, CONFIGURATION.md |
 | [`reference/`](reference/) | Reference materials | API_REFERENCE.md, FAQ.md, GLOSSARY.md, QUICK_START_CHEATSHEET.md |
-| [`modules/`](modules/) | Advanced modules | ADVANCED_MODULES_GUIDE.md, SCIENTIFIC_SIMULATION_GUIDE.md |
+| [`modules/`](modules/) | Modules | MODULES_GUIDE.md, SCIENTIFIC_SIMULATION_GUIDE.md |
 | [`development/`](development/) | Development & contribution | CONTRIBUTING.md, TESTING_GUIDE.md, CODE_OF_CONDUCT.md |
 | [`best-practices/`](best-practices/) | Best practices | BEST_PRACTICES.md, VERSION_CONTROL.md, MIGRATION_GUIDE.md |
 | [`prompts/`](prompts/) | AI prompt templates | manuscript_creation.md, code_development.md, test_creation.md |

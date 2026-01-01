@@ -34,7 +34,7 @@ INFRASTRUCTURE REQUIREMENTS:
 - Abstract interfaces for domain-specific implementations
 
 **Reusability Requirements:**
-- Usable by `project`, `small_code_project`, `small_prose_project`, and future projects
+- Usable by `project`, `code_project`, `prose_project`, and future projects
 - Clear separation of generic logic from domain-specific logic
 - Extensible design for domain-specific extensions
 - Stable APIs that don't break between versions

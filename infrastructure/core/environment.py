@@ -311,6 +311,30 @@ def get_python_command() -> list[str]:
         return [sys.executable]
 
 
+def get_subprocess_env(base_env: dict = None) -> dict:
+    """Get environment dict for subprocess with uv compatibility.
+
+    Creates a clean environment dictionary for subprocess execution that handles
+    VIRTUAL_ENV warnings when using uv. When uv is available and VIRTUAL_ENV is set,
+    it removes VIRTUAL_ENV from the environment to prevent uv warnings about absolute paths.
+
+    Args:
+        base_env: Base environment dictionary (defaults to os.environ if None)
+
+    Returns:
+        Environment dictionary suitable for subprocess.run(env=...)
+
+    Example:
+        >>> env = get_subprocess_env()
+        >>> result = subprocess.run(cmd, env=env, ...)
+    """
+    env = dict(base_env or os.environ)
+    # Unset VIRTUAL_ENV when using uv to avoid warnings about absolute paths
+    if check_uv_available() and 'VIRTUAL_ENV' in env:
+        env.pop('VIRTUAL_ENV', None)
+    return env
+
+
 def verify_source_structure(repo_root: Path, project_name: str = "project") -> bool:
     """Verify source code structure exists.
 

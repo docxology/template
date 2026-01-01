@@ -467,7 +467,7 @@ The .cursorrules standards align with and support the main documentation:
 | Code Style | [code_style.md](code_style.md) | [docs/BEST_PRACTICES.md](../docs/best-practices/BEST_PRACTICES.md) |
 | Git Workflow | [git_workflow.md](git_workflow.md) | [docs/VERSION_CONTROL.md](../docs/best-practices/VERSION_CONTROL.md) |
 | API Design | [api_design.md](api_design.md) | [docs/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) |
-| Reporting | [reporting.md](reporting.md) | [docs/ADVANCED_MODULES_GUIDE.md](../docs/modules/ADVANCED_MODULES_GUIDE.md) |
+| Reporting | [reporting.md](reporting.md) | [docs/MODULES_GUIDE.md](../docs/modules/MODULES_GUIDE.md) |
 | Documentation | [documentation_standards.md](documentation_standards.md) | [docs/WORKFLOW.md](../docs/core/WORKFLOW.md) |
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) |
@@ -511,7 +511,7 @@ The .cursorrules standards align with and support the main documentation:
 | Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [project/manuscript/AGENTS.md](../projects/project/manuscript/AGENTS.md) for manuscript structure |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
 | Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
-| Generating reports | [reporting.md](reporting.md) | [docs/ADVANCED_MODULES_GUIDE.md](../docs/modules/ADVANCED_MODULES_GUIDE.md) for module details |
+| Generating reports | [reporting.md](reporting.md) | [docs/MODULES_GUIDE.md](../docs/modules/MODULES_GUIDE.md) for module details |
 
 ### By File Size & Detail Level
 

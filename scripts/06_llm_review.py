@@ -1497,7 +1497,7 @@ def main(mode: ReviewMode = ReviewMode.ALL, project_name: str = "project") -> in
         
         # Step 4b: Generate translations (if not reviews-only)
         if mode != ReviewMode.REVIEWS_ONLY:
-            translation_languages = get_translation_languages(repo_root)
+            translation_languages = get_translation_languages(repo_root, project_name)
             if translation_languages:
                 logger.info(f"\n  Generating translations for {len(translation_languages)} language(s)...")
 

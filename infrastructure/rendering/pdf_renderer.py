@@ -165,11 +165,11 @@ class PDFRenderer:
         # Check if bibliography file exists with fallback logging
         try:
             if not bib_file.exists():
-                logger.warning(f"Bibliography file not found: {bib_file}")
+                logger.warning(f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)")
                 return False
         except UnboundLocalError:
             if not bib_file.exists():
-                logger.warning(f"Bibliography file not found: {bib_file}")
+                logger.warning(f"Bibliography file not found: {bib_file} (bibliography processing will be skipped)")
                 return False
 
         # Determine which bibliography processor to use

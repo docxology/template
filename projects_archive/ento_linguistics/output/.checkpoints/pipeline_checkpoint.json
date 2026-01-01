@@ -1,0 +1,22 @@
+{
+  "pipeline_start_time": 1767209442.305894,
+  "last_stage_completed": 2,
+  "stage_results": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.012037038803100586,
+      "timestamp": "2025-12-31 11:30:42",
+      "completed": true
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 0.6155221462249756,
+      "timestamp": "2025-12-31 11:30:42",
+      "completed": true
+    }
+  ],
+  "total_stages": 7,
+  "checkpoint_time": 1767209442.933693
+}

@@ -28,11 +28,11 @@ PROJECT_SRC = os.path.join(ROOT, "projects", "project", "src")
 if PROJECT_SRC not in sys.path:
     sys.path.insert(1, PROJECT_SRC)
 
-SMALL_CODE_SRC = os.path.join(ROOT, "projects", "small_code_project", "src")
+SMALL_CODE_SRC = os.path.join(ROOT, "projects", "code_project", "src")
 if SMALL_CODE_SRC not in sys.path:
     sys.path.insert(1, SMALL_CODE_SRC)
 
-SMALL_PROSE_SRC = os.path.join(ROOT, "projects", "small_prose_project", "src")
+SMALL_PROSE_SRC = os.path.join(ROOT, "projects", "prose_project", "src")
 if SMALL_PROSE_SRC not in sys.path:
     sys.path.insert(1, SMALL_PROSE_SRC)
 

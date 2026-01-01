@@ -264,8 +264,8 @@ class TestPipelineSummaryGenerator:
         """Test getting final log file path."""
         generator = PipelineSummaryGenerator()
 
-        # Test project log path
-        log_file = Path("projects/test/output/logs/pipeline.log")
+        # Test project log path - use explicit test path that won't resolve to real filesystem
+        log_file = Path("/test/projects/myproject/output/logs/pipeline.log")
         final_path = generator._get_final_log_path(log_file)
         assert str(final_path) == "output/logs/pipeline.log"
 

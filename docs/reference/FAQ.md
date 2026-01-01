@@ -104,10 +104,10 @@
 ## 🧪 **Advanced Modules**
 
 ### **Q: What are the advanced modules?**
-**A:** The template includes 7 advanced modules: integrity (output verification), publishing (academic workflows), scientific_dev (scientific computing), literature search (academic literature management), LLM integration (local LLM assistance), rendering system (multi-format output), and reporting (pipeline reporting and error aggregation). See [Advanced Modules Guide](../modules/ADVANCED_MODULES_GUIDE.md) for complete documentation.
+**A:** The template includes 7 modules: integrity (output verification), publishing (academic workflows), scientific_dev (scientific computing), literature search (academic literature management), LLM integration (local LLM assistance), rendering system (multi-format output), and reporting (pipeline reporting and error aggregation). See [Modules Guide](../modules/MODULES_GUIDE.md) for documentation.
 
 ### **Q: How do I use the advanced modules?**
-**A:** See the [Advanced Modules Guide](../modules/ADVANCED_MODULES_GUIDE.md) for comprehensive usage examples and integration patterns. Each module includes API documentation and best practices.
+**A:** See the [Modules Guide](../modules/MODULES_GUIDE.md) for usage examples and integration patterns. Each module includes API documentation and best practices.
 
 ### **Q: Where can I find API documentation?**
 **A:** Complete API reference for all modules is available in [API Reference](../reference/API_REFERENCE.md), including function signatures, parameters, return values, and examples.

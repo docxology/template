@@ -59,7 +59,7 @@ flowchart TD
     ADVANCED --> AS1["📚 AGENTS.md\nComplete System Reference"]
     ADVANCED --> AS2["🔧 docs/operational/BUILD_SYSTEM.md\nBuild System Details"]
     ADVANCED --> AS3["📑 docs/DOCUMENTATION_INDEX.md\nAll 50+ Files"]
-    ADVANCED --> AS4["🔬 docs/modules/ADVANCED_MODULES_GUIDE.md\nAll 7 Advanced Modules"]
+    ADVANCED --> AS4["🔬 docs/modules/MODULES_GUIDE.md\nAll 7 Modules"]
 
     classDef start fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
     classDef path fill:#fff3e0,stroke:#e65100,stroke-width:2px
@@ -96,7 +96,7 @@ flowchart TD
 | 2 | **[docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md](docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md)** | Core architecture pattern |
 | 3 | **[docs/core/WORKFLOW.md](docs/core/WORKFLOW.md)** | Complete development process |
 | 4 | **[docs/usage/MARKDOWN_TEMPLATE_GUIDE.md](docs/usage/MARKDOWN_TEMPLATE_GUIDE.md)** | Writing and formatting guide |
-| 5 | **[docs/guides/INTERMEDIATE_USAGE.md](docs/guides/INTERMEDIATE_USAGE.md)** | Add figures and automation (Levels 4-6) |
+| 5 | **[docs/guides/FIGURES_AND_ANALYSIS.md](docs/guides/FIGURES_AND_ANALYSIS.md)** | Add figures and automation (Levels 4-6) |
 
 **Advanced topics:** Check **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)** and **[docs/modules/PDF_VALIDATION.md](docs/modules/PDF_VALIDATION.md)**
 
@@ -124,7 +124,7 @@ flowchart TD
 | 2 | **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)** | Complete build system reference |
 | 3 | **[docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md](docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md)** | Section organization |
 | 4 | **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** | Complete documentation index |
-| 5 | **[docs/modules/ADVANCED_MODULES_GUIDE.md](docs/modules/ADVANCED_MODULES_GUIDE.md)** | All 7 additional modules |
+| 5 | **[docs/modules/MODULES_GUIDE.md](docs/modules/MODULES_GUIDE.md)** | All 7 modules |
 
 **Technical resources:** See **[projects/project/manuscript/preamble.md](projects/project/manuscript/preamble.md)** and **[docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md)**
 
@@ -152,9 +152,9 @@ graph TB
     
     subgraph Guides["🎓 docs/guides/ - By Skill Level"]
         GETTING_STARTED[GETTING_STARTED.md\nLevels 1-3: Beginner]
-        INTERMEDIATE[INTERMEDIATE_USAGE.md\nLevels 4-6: Intermediate]
-        ADVANCED[ADVANCED_USAGE.md\nLevels 7-9: Advanced]
-        EXPERT[EXPERT_USAGE.md\nLevels 10-12: Expert]
+        FIGURES[FIGURES_AND_ANALYSIS.md\nLevels 4-6: Figures & Analysis]
+        TESTING[TESTING_AND_REPRODUCIBILITY.md\nLevels 7-9: Testing & Reproducibility]
+        EXTENDING[EXTENDING_AND_AUTOMATION.md\nLevels 10-12: Extending & Automation]
     end
     
     subgraph Operational["⚙️ docs/operational/ - Operations"]
@@ -184,7 +184,7 @@ graph TB
     end
     
     subgraph Modules["🔬 docs/modules/ - Advanced"]
-        ADV_MODULES[ADVANCED_MODULES_GUIDE.md\nAll 7 Modules]
+        ADV_MODULES[MODULES_GUIDE.md\nAll 7 Modules]
         PDF_VAL[PDF_VALIDATION.md\nQuality Checks]
         SCI_SIM[SCIENTIFIC_SIMULATION_GUIDE.md\nSimulation System]
     end
@@ -235,8 +235,8 @@ graph TB
     subgraph Repository["📁 Repository"]
         subgraph Projects["projects/"]
             P1[project/<br/>Full-featured research]
-            P2[small_prose_project/<br/>Manuscript-focused]
-            P3[small_code_project/<br/>Code-focused]
+            P2[prose_project/<br/>Manuscript-focused]
+            P3[code_project/<br/>Code-focused]
             PN[your_project/<br/>Your research]
         end
 
@@ -248,8 +248,8 @@ graph TB
 
         subgraph Output["📤 Final Deliverables"]
             OUT1[output/project/<br/>Project PDFs, data]
-            OUT2[output/small_prose_project/<br/>Prose outputs]
-            OUT3[output/small_code_project/<br/>Code outputs]
+            OUT2[output/prose_project/<br/>Prose outputs]
+            OUT3[output/code_project/<br/>Code outputs]
             OUTN[output/your_project/<br/>Your deliverables]
         end
     end
@@ -283,8 +283,8 @@ graph TB
 The template includes three example projects:
 
 - **`projects/project/`** - Full-featured research template (original)
-- **`projects/small_prose_project/`** - Manuscript-focused with equations
-- **`projects/small_code_project/`** - Code-focused with analysis pipeline
+- **`projects/prose_project/`** - Manuscript-focused with equations
+- **`projects/code_project/`** - Code-focused with analysis pipeline
 
 ### Usage
 
@@ -293,7 +293,7 @@ The template includes three example projects:
 ./run.sh
 
 # Run specific project
-./run.sh --project small_code_project --pipeline
+./run.sh --project code_project --pipeline
 
 # Run all projects sequentially
 ./run.sh --all-projects --pipeline
@@ -307,6 +307,31 @@ Create a new directory under `projects/` with the required structure:
 mkdir -p projects/my_research/{src,tests,manuscript,scripts}
 # Add __init__.py files, write code, manuscripts, tests...
 ```
+
+### 📂 Project Organization: Active vs Archived
+
+The template distinguishes between **active projects** and **archived projects**:
+
+#### ✅ **Active Projects (`projects/`)**
+Projects in `projects/` are **actively discovered and executed**:
+- **Discovered** by `run.sh` and infrastructure discovery
+- **Executed** by all pipeline scripts
+- **Listed** in interactive menus
+- **Outputs** generated and organized in `output/{name}/`
+
+#### 📦 **Archived Projects (`projects_archive/`)**
+Projects in `projects_archive/` are **preserved but not executed**:
+- **NOT discovered** by infrastructure
+- **NOT executed** by pipeline scripts
+- **NOT listed** in menus
+- **Available** for historical reference
+
+**Current Active Projects:**
+- `code_project/` - Optimization algorithms research
+- `prose_project/` - Prose-focused manuscript with equations
+
+**To archive a project:** `mv projects/{name}/ projects_archive/{name}/`  
+**To reactivate:** `mv projects_archive/{name}/ projects/{name}/`
 
 ## 🚀 Quick Start {#quick-start}
 
@@ -397,9 +422,9 @@ flowchart LR
     L3 -->|Progress| L4
     
     L1 --> DOC1[docs/guides/GETTING_STARTED.md]
-    L2 --> DOC2[docs/guides/INTERMEDIATE_USAGE.md]
-    L3 --> DOC3[docs/guides/ADVANCED_USAGE.md]
-    L4 --> DOC4[docs/guides/EXPERT_USAGE.md]
+    L2 --> DOC2[docs/guides/FIGURES_AND_ANALYSIS.md]
+    L3 --> DOC3[docs/guides/TESTING_AND_REPRODUCIBILITY.md]
+    L4 --> DOC4[docs/guides/EXTENDING_AND_AUTOMATION.md]
     
     DOC1 --> MASTER[docs/core/HOW_TO_USE.md\nComplete Guide: All 12 Levels]
     DOC2 --> MASTER
@@ -423,17 +448,17 @@ flowchart LR
 ### 🔧 Path 2: Figures & Automation (Levels 4-6)
 **Goal:** Generate figures and automate workflows
 
-→ **[docs/guides/INTERMEDIATE_USAGE.md](docs/guides/INTERMEDIATE_USAGE.md)** | **[docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md](docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md)** | **[docs/usage/EXAMPLES_SHOWCASE.md](docs/usage/EXAMPLES_SHOWCASE.md)**
+→ **[docs/guides/FIGURES_AND_ANALYSIS.md](docs/guides/FIGURES_AND_ANALYSIS.md)** | **[docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md](docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md)** | **[docs/usage/EXAMPLES_SHOWCASE.md](docs/usage/EXAMPLES_SHOWCASE.md)**
 
 ### 🧪 Path 3: Test-Driven Development (Levels 7-9)
 **Goal:** Build with test coverage and automation
 
-→ **[docs/guides/ADVANCED_USAGE.md](docs/guides/ADVANCED_USAGE.md)** | **[docs/core/ARCHITECTURE.md](docs/core/ARCHITECTURE.md)** | **[docs/core/WORKFLOW.md](docs/core/WORKFLOW.md)** | **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)**
+→ **[docs/guides/TESTING_AND_REPRODUCIBILITY.md](docs/guides/TESTING_AND_REPRODUCIBILITY.md)** | **[docs/core/ARCHITECTURE.md](docs/core/ARCHITECTURE.md)** | **[docs/core/WORKFLOW.md](docs/core/WORKFLOW.md)** | **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)**
 
 ### 🏗️ Path 4: System Architecture (Levels 10-12)
 **Goal:** Deep dive into architecture and advanced features
 
-→ **[docs/guides/EXPERT_USAGE.md](docs/guides/EXPERT_USAGE.md)** | **[AGENTS.md](AGENTS.md)** | **[docs/architecture/TWO_LAYER_ARCHITECTURE.md](docs/architecture/TWO_LAYER_ARCHITECTURE.md)** | **[docs/modules/ADVANCED_MODULES_GUIDE.md](docs/modules/ADVANCED_MODULES_GUIDE.md)**
+→ **[docs/guides/EXTENDING_AND_AUTOMATION.md](docs/guides/EXTENDING_AND_AUTOMATION.md)** | **[AGENTS.md](AGENTS.md)** | **[docs/architecture/TWO_LAYER_ARCHITECTURE.md](docs/architecture/TWO_LAYER_ARCHITECTURE.md)** | **[docs/modules/MODULES_GUIDE.md](docs/modules/MODULES_GUIDE.md)**
 
 **📖 Complete Guide:** **[docs/core/HOW_TO_USE.md](docs/core/HOW_TO_USE.md)** covers all 12 skill levels from basic to expert
 
@@ -1181,7 +1206,7 @@ flowchart TD
 - **[docs/README.md](docs/README.md)** - Documentation quick reference
 
 ### Advanced Modules
-- **[docs/modules/ADVANCED_MODULES_GUIDE.md](docs/modules/ADVANCED_MODULES_GUIDE.md)** - Guide for all additional modules
+- **[docs/modules/MODULES_GUIDE.md](docs/modules/MODULES_GUIDE.md)** - Guide for all modules
 - **[docs/reference/API_REFERENCE.md](docs/reference/API_REFERENCE.md)** - Complete API documentation for all modules
 - **[infrastructure/validation/integrity.py](infrastructure/validation/integrity.py)** - File integrity and cross-reference validation
 - **[infrastructure/publishing/core.py](infrastructure/publishing/core.py)** - Academic publishing workflow tools
@@ -1322,7 +1347,7 @@ graph TB
     TASK[What do you want to do?]
     
     TASK -->|Write documents| WRITE[docs/guides/GETTING_STARTED.md\ndocs/usage/MARKDOWN_TEMPLATE_GUIDE.md]
-    TASK -->|Add figures| FIGURES[docs/guides/INTERMEDIATE_USAGE.md\ndocs/usage/VISUALIZATION_GUIDE.md]
+    TASK -->|Add figures| FIGURES[docs/guides/FIGURES_AND_ANALYSIS.md\ndocs/usage/VISUALIZATION_GUIDE.md]
     TASK -->|Fix issues| FIX[docs/operational/TROUBLESHOOTING_GUIDE.md\ndocs/reference/FAQ.md]
     TASK -->|Understand architecture| ARCH[docs/core/ARCHITECTURE.md\ndocs/architecture/TWO_LAYER_ARCHITECTURE.md]
     TASK -->|Configure system| CONFIG[docs/operational/CONFIGURATION.md\nAGENTS.md#configuration-system]

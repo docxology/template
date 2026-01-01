@@ -31,6 +31,20 @@ The Validation module provides comprehensive quality assurance and validation to
 - Build artifact verification
 - Completeness validation
 
+**audit_orchestrator.py**
+- Comprehensive audit coordination across all validation modules
+- Unified audit interface with structured results
+- Project-aware discovery and categorization
+- Multi-format report generation (markdown, JSON)
+- Configurable validation options
+
+**issue_categorizer.py**
+- Intelligent issue categorization by type and severity
+- False positive filtering for common artifacts
+- Issue prioritization and grouping
+- Severity level assignment
+- Statistical analysis of audit results
+
 ## Function Signatures
 
 ### pdf_validator.py
@@ -1497,6 +1511,140 @@ from infrastructure.validation import verify_output_integrity
 
 report = verify_output_integrity(Path("output/"))
 # Comprehensive file, cross-ref, data, and academic standards checks
+```
+
+### Audit Orchestrator
+
+#### run_comprehensive_audit (function)
+```python
+def run_comprehensive_audit(
+    repo_root: Path,
+    verbose: bool = False,
+    include_code_validation: bool = True,
+    include_directory_validation: bool = True,
+    include_import_validation: bool = True,
+    include_placeholder_validation: bool = True
+) -> ScanResults:
+    """Run comprehensive audit across all validation modules.
+
+    Args:
+        repo_root: Repository root directory
+        verbose: Enable verbose logging
+        include_code_validation: Include code block path validation
+        include_directory_validation: Include directory structure validation
+        include_import_validation: Include Python import validation
+        include_placeholder_validation: Include placeholder consistency validation
+
+    Returns:
+        Complete scan results with all issues categorized
+    """
+```
+
+#### generate_audit_report (function)
+```python
+def generate_audit_report(scan_results: ScanResults, output_format: str = 'markdown') -> str:
+    """Generate a formatted audit report.
+
+    Args:
+        scan_results: Complete scan results
+        output_format: Output format ('markdown' or 'json')
+
+    Returns:
+        Formatted report string
+    """
+```
+
+### Issue Categorizer
+
+#### categorize_by_type (function)
+```python
+def categorize_by_type(issues: List[Issue]) -> Dict[str, List[Issue]]:
+    """Categorize issues by their type and severity.
+
+    Args:
+        issues: List of issues from any validation module
+
+    Returns:
+        Dictionary mapping category names to lists of issues
+    """
+```
+
+#### assign_severity (function)
+```python
+def assign_severity(issue: Issue) -> str:
+    """Assign severity level to an issue.
+
+    Args:
+        issue: Issue to evaluate
+
+    Returns:
+        Severity level: 'critical', 'error', 'warning', or 'info'
+    """
+```
+
+#### is_false_positive (function)
+```python
+def is_false_positive(issue: Issue) -> bool:
+    """Determine if an issue is likely a false positive.
+
+    Args:
+        issue: Issue to evaluate
+
+    Returns:
+        True if issue appears to be a false positive
+    """
+```
+
+#### filter_false_positives (function)
+```python
+def filter_false_positives(issues: List[Issue]) -> List[Issue]:
+    """Filter out false positive issues from the list.
+
+    Args:
+        issues: List of issues to filter
+
+    Returns:
+        List with false positives removed
+    """
+```
+
+#### group_related_issues (function)
+```python
+def group_related_issues(issues: List[Issue]) -> List[List[Issue]]:
+    """Group related issues together for better analysis.
+
+    Args:
+        issues: List of issues to group
+
+    Returns:
+        List of issue groups (each group is a list of related issues)
+    """
+```
+
+#### prioritize_issues (function)
+```python
+def prioritize_issues(issues: List[Issue]) -> List[Issue]:
+    """Sort issues by priority (severity, then type).
+
+    Args:
+        issues: List of issues to prioritize
+
+    Returns:
+        Sorted list with highest priority issues first
+    """
+```
+
+#### generate_issue_summary (function)
+```python
+def generate_issue_summary(issues: List[Issue]) -> Dict[str, int]:
+    """Generate a summary of issues by category and severity.
+
+    Args:
+        issues: List of issues to summarize
+
+    Returns:
+        Dictionary with summary statistics
+    """
 ```
 
 ## Testing

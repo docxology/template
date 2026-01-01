@@ -138,7 +138,32 @@ def arxiv_credentials(credential_manager):
 def skip_if_no_latex():
     """Skip test if LaTeX is not installed."""
     import shutil
-    
+
     if not shutil.which("pdflatex") and not shutil.which("xelatex"):
         pytest.skip("LaTeX not installed (pdflatex or xelatex required)")
+
+
+# ============================================================================
+# Test Project Cleanup Fixtures
+# ============================================================================
+
+@pytest.fixture(scope="session", autouse=True)
+def cleanup_test_projects():
+    """Clean up any test projects created during test execution.
+
+    This fixture runs after all tests complete and removes any test projects
+    that may have been accidentally created in the real projects/ directory.
+    """
+    yield  # Run tests first
+
+    # Cleanup after all tests
+    test_project_names = ['project1', 'project2', 'test', 'test_project']
+    projects_dir = Path(__file__).parent.parent / "projects"
+
+    for project_name in test_project_names:
+        project_path = projects_dir / project_name
+        if project_path.exists():
+            print(f"🧹 Removing test project: {project_name}")
+            import shutil
+            shutil.rmtree(project_path, ignore_errors=True)
 

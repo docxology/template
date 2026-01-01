@@ -156,6 +156,47 @@ Creates multi-project directory structure:
 
 **Generic:** Works for any project with rendered outputs
 
+### 6. Audit Filepaths (`audit_filepaths.py`)
+
+**Purpose:** Comprehensive audit of filepaths, references, and documentation accuracy using modular infrastructure validation.
+
+**Core Functionality:**
+- Thin orchestrator that coordinates `infrastructure.validation.audit_orchestrator`
+- Discovers all markdown files in repository
+- Validates internal/external links and file references
+- Checks code block paths and directory structures
+- Validates Python imports and placeholder consistency
+- Generates structured reports (markdown/JSON formats)
+- Categorizes issues by type and severity
+- Filters false positives (Mermaid diagrams, LaTeX refs, templates)
+
+**Function Signatures:**
+```python
+def main():
+    """Main entry point for the audit script."""
+    # Parse command line arguments
+    # Run comprehensive audit via audit_orchestrator
+    # Generate and save report
+    # Exit with appropriate code based on issues found
+```
+
+**Usage Examples:**
+```bash
+# Basic audit with markdown report
+python scripts/audit_filepaths.py
+
+# JSON format output
+python scripts/audit_filepaths.py --format json --output audit.json
+
+# Verbose mode with custom output path
+python scripts/audit_filepaths.py --verbose --output docs/audit/my_audit.md
+
+# Audit specific project only
+python scripts/audit_filepaths.py --project myproject
+```
+
+**Generic:** Works across entire repository or specific projects
+
 ### 7. Generate Executive Report (`07_generate_executive_report.py`)
 
 **Purpose:** Generate cross-project executive summaries and dashboards
@@ -165,6 +206,33 @@ Creates multi-project directory structure:
 - Generates comparative analysis and recommendations
 - Creates visual dashboards (PNG, PDF, HTML)
 - Saves reports to `output/executive_summary/`
+
+**Function Signatures:**
+```python
+def discover_projects(repo_root: Path) -> list[ProjectInfo]:
+    \"\"\"Discover all valid projects in the repository.\"\"\"
+    pass
+
+def collect_project_metrics(repo_root: Path, project_names: list[str]) -> dict:
+    \"\"\"Collect metrics from all specified projects.\"\"\"
+    pass
+
+def generate_executive_dashboard(
+    metrics: dict,
+    output_dir: Path,
+    formats: list[str] = None
+) -> list[Path]:
+    \"\"\"Generate executive dashboard in multiple formats.\"\"\"
+    pass
+
+def create_comparative_analysis(metrics: dict) -> dict:
+    \"\"\"Create comparative analysis across projects.\"\"\"
+    pass
+
+def main():
+    \"\"\"Main entry point for executive report generation.\"\"\"
+    pass
+```
 
 **Generic:** Works with any number of projects (2+ required)
 
@@ -178,6 +246,27 @@ Creates multi-project directory structure:
 - Supports checkpoint resume
 - Supports single-stage execution via `--stage`
 
+**Function Signatures:**
+```python
+def execute_single_stage(stage: str, project_name: str, repo_root: Path) -> int:
+    \"\"\"Execute a single pipeline stage.\"\"\"
+    pass
+
+def execute_pipeline(
+    project_name: str,
+    repo_root: Path,
+    core_only: bool = False,
+    resume: bool = False,
+    start_stage: str = None
+) -> int:
+    \"\"\"Execute complete pipeline for a project.\"\"\"
+    pass
+
+def main():
+    \"\"\"Main entry point with argument parsing.\"\"\"
+    pass
+```
+
 #### Multi-Project (`execute_multi_project.py`)
 
 **Purpose:** Execute pipelines across all discovered projects via `infrastructure.core.multi_project.MultiProjectOrchestrator`.
@@ -186,10 +275,36 @@ Creates multi-project directory structure:
 - Runs each project pipeline with infra tests skipped per-project
 - Optionally generates executive reporting
 
+**Function Signatures:**
+```python
+def execute_multi_project(
+    repo_root: Path,
+    all_projects: bool = False,
+    project_names: list[str] = None,
+    core_only: bool = True,
+    resume: bool = False
+) -> int:
+    \"\"\"Execute pipelines across multiple projects.\"\"\"
+    pass
+
+def main():
+    \"\"\"Main entry point with argument parsing.\"\"\"
+    pass
+```
+
 
 ## Project-Specific Scripts
 
 Analysis scripts specific to a project belong in `projects/{name}/scripts/`:
+
+**Important:** Scripts in this directory operate **only on active projects** in the `projects/` directory. Projects in `projects_archive/` are **not discovered or executed** by any root-level scripts.
+
+### Active vs Archived Projects
+
+- **Active Projects (`projects/`):** Discovered and executed by all pipeline scripts
+- **Archived Projects (`projects_archive/`):** Preserved but not executed
+
+This separation ensures infrastructure focuses on current, active research while maintaining historical projects for reference.
 
 ```
 projects/{name}/scripts/

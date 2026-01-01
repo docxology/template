@@ -18,7 +18,7 @@
 ## 📋 Repository Metadata
 
 **Projects Found:** 10
-- test, small_code_project, project1, small_prose_project, ento_linguistics, project, active_inference_meta_pragmatic, test_project, infrastructure, project2
+- test, code_project, project1, small_prose_project, ento_linguistics, project, active_inference_meta_pragmatic, test_project, infrastructure, project2
 
 **Documentation Distribution:**
 - **.cursorrules/:** 17 files

@@ -175,8 +175,9 @@ class TestCheckpointManager:
     def test_manager_initialization_default(self):
         """Test CheckpointManager with default directory."""
         manager = CheckpointManager()
-        
-        assert manager.checkpoint_dir.exists()
+
+        # Directory is created lazily on first save, not on initialization
+        assert not manager.checkpoint_dir.exists()
         assert manager.checkpoint_dir.name == ".checkpoints"
         assert manager.checkpoint_file.name == "pipeline_checkpoint.json"
 
@@ -185,9 +186,10 @@ class TestCheckpointManager:
         with tempfile.TemporaryDirectory() as tmpdir:
             custom_dir = Path(tmpdir) / "custom_checkpoints"
             manager = CheckpointManager(checkpoint_dir=custom_dir)
-            
+
             assert manager.checkpoint_dir == custom_dir
-            assert manager.checkpoint_dir.exists()
+            # Directory doesn't exist until save_checkpoint is called
+            assert not manager.checkpoint_dir.exists()
             assert manager.checkpoint_file == custom_dir / "pipeline_checkpoint.json"
 
     def test_save_checkpoint(self):
@@ -410,8 +412,9 @@ class TestCheckpointManager:
         with tempfile.TemporaryDirectory() as tmpdir:
             checkpoint_dir = Path(tmpdir) / "checkpoints"
             manager = CheckpointManager(checkpoint_dir=checkpoint_dir)
-            
-            # Make directory read-only to cause save failure
+
+            # Create directory first, then make it read-only to cause save failure
+            manager._ensure_checkpoint_dir()
             checkpoint_dir.chmod(0o444)
             
             try:

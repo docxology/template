@@ -155,11 +155,14 @@ The PDFRenderer splits title page generation into two phases:
 class RenderManager:
     """Manages multi-format rendering from a single source."""
 
-    def __init__(self, config: Optional[RenderingConfig] = None):
+    def __init__(self, config: Optional[RenderingConfig] = None,
+                 manuscript_dir: Optional[Path] = None, figures_dir: Optional[Path] = None):
         """Initialize render manager.
 
         Args:
             config: Rendering configuration (optional)
+            manuscript_dir: Manuscript directory path (optional)
+            figures_dir: Figures directory path (optional)
         """
 
     def render_all(self, source_path: Path) -> Dict[str, Path]:
@@ -340,6 +343,29 @@ class SlidesRenderer:
 
         Returns:
             Path to generated slides
+        """
+
+    def _render_beamer_with_paths(self, source_file: Path, output_file: Path,
+                                   manuscript_dir: Optional[Path], figures_dir: Optional[Path]) -> Path:
+        """Render beamer slides with enhanced error reporting.
+
+        Enhanced error handling includes:
+        - LaTeX log file path and last 20 lines for context
+        - Specific error type detection (missing \end, undefined commands, missing files)
+        - Actionable suggestions for common LaTeX compilation issues
+        - Better context for debugging compilation failures
+
+        Args:
+            source_file: Markdown source file
+            output_file: Desired PDF output path
+            manuscript_dir: Manuscript directory for resource paths
+            figures_dir: Figures directory for image paths
+
+        Returns:
+            Path to generated PDF
+
+        Raises:
+            RenderingError: With enhanced error context and suggestions
         """
 ```
 

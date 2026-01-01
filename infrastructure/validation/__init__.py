@@ -8,6 +8,8 @@ Modules:
     markdown_validator: Markdown file validation
     integrity: File integrity and cross-reference validation
     check_links: Documentation link verification
+    audit_orchestrator: Comprehensive audit coordination
+    issue_categorizer: Issue categorization and filtering
     doc_scanner: Comprehensive documentation scanning
     repo_scanner: Repository-wide accuracy and completeness scanning
 """
@@ -34,6 +36,19 @@ from .output_validator import (
     validate_output_structure,
 )
 from .link_validator import LinkValidator
+from .audit_orchestrator import (
+    run_comprehensive_audit,
+    generate_audit_report,
+)
+from .issue_categorizer import (
+    categorize_by_type,
+    assign_severity,
+    is_false_positive,
+    filter_false_positives,
+    group_related_issues,
+    prioritize_issues,
+    generate_issue_summary,
+)
 
 __all__ = [
     "validate_pdf_rendering",
@@ -54,5 +69,16 @@ __all__ = [
     "validate_copied_outputs",
     "validate_output_structure",
     "LinkValidator",
+    # Audit orchestrator functions
+    "run_comprehensive_audit",
+    "generate_audit_report",
+    # Issue categorization functions
+    "categorize_by_type",
+    "assign_severity",
+    "is_false_positive",
+    "filter_false_positives",
+    "group_related_issues",
+    "prioritize_issues",
+    "generate_issue_summary",
 ]
 

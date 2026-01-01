@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Dict, List, Set
 
 from infrastructure.validation.doc_models import DocumentationFile
+from infrastructure.project.discovery import discover_projects, ProjectInfo
 
 
 def find_markdown_files(repo_root: Path) -> List[Path]:
@@ -98,10 +99,20 @@ def identify_cross_references(md_files: List[Path]) -> Set[str]:
 def categorize_documentation(md_files: List[Path], repo_root: Path) -> Dict[str, List[str]]:
     """Categorize documentation files."""
     categories = defaultdict(list)
-    
+
+    # Get project information for better categorization
+    projects = discover_projects(repo_root)
+    project_names = {p.name for p in projects}
+
     for md_file in md_files:
         rel_path = str(md_file.relative_to(repo_root))
-        
+
+        # Check if this file belongs to a specific project
+        project_category = _get_project_category(rel_path, project_names)
+        if project_category:
+            categories[project_category].append(rel_path)
+            continue
+
         if 'docs/' in rel_path:
             if 'AGENTS' in md_file.name or 'README' in md_file.name:
                 categories['directory_docs'].append(rel_path)
@@ -119,8 +130,30 @@ def categorize_documentation(md_files: List[Path], repo_root: Path) -> Dict[str,
             categories['directory_docs'].append(rel_path)
         else:
             categories['other'].append(rel_path)
-    
+
     return dict(categories)
+
+
+def _get_project_category(rel_path: str, project_names: set) -> str | None:
+    """Determine if a file belongs to a specific project and return category."""
+    # Check if path contains projects/{name}/
+    if rel_path.startswith('projects/'):
+        parts = rel_path.split('/')
+        if len(parts) >= 2 and parts[1] in project_names:
+            project_name = parts[1]
+            # Determine sub-category within project
+            if 'manuscript/' in rel_path:
+                return f'project_manuscript_{project_name}'
+            elif 'scripts/' in rel_path:
+                return f'project_scripts_{project_name}'
+            elif 'tests/' in rel_path:
+                return f'project_tests_{project_name}'
+            elif 'src/' in rel_path:
+                return f'project_src_{project_name}'
+            else:
+                return f'project_{project_name}'
+
+    return None
 
 
 def analyze_documentation_file(md_file: Path, repo_root: Path) -> DocumentationFile:
@@ -230,4 +263,155 @@ def run_discovery_phase(repo_root: Path) -> Dict:
     }
     
     return inventory
+
+
+def discover_project_documentation(repo_root: Path) -> Dict[str, Dict]:
+    """Discover documentation organized by project.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        Dictionary mapping project names to their documentation metadata
+    """
+    projects = discover_projects(repo_root)
+    md_files = find_markdown_files(repo_root)
+
+    project_docs = {}
+
+    for project in projects:
+        project_docs[project.name] = {
+            'project_info': {
+                'name': project.name,
+                'path': str(project.path),
+                'has_src': project.has_src,
+                'has_tests': project.has_tests,
+                'has_scripts': project.has_scripts,
+                'has_manuscript': project.has_manuscript,
+                'is_valid': project.is_valid,
+                'metadata': project.metadata
+            },
+            'documentation_files': [],
+            'manuscript_files': [],
+            'script_docs': [],
+            'test_docs': [],
+            'statistics': {}
+        }
+
+        # Find files belonging to this project
+        project_prefix = f'projects/{project.name}/'
+        for md_file in md_files:
+            rel_path = str(md_file.relative_to(repo_root))
+            if rel_path.startswith(project_prefix):
+                doc_info = analyze_documentation_file(md_file, repo_root)
+                project_docs[project.name]['documentation_files'].append(doc_info)
+
+                # Categorize within project
+                if 'manuscript/' in rel_path:
+                    project_docs[project.name]['manuscript_files'].append(doc_info)
+                elif 'scripts/' in rel_path:
+                    project_docs[project.name]['script_docs'].append(doc_info)
+                elif 'tests/' in rel_path:
+                    project_docs[project.name]['test_docs'].append(doc_info)
+
+        # Calculate statistics
+        project_docs[project.name]['statistics'] = _calculate_project_stats(
+            project_docs[project.name]
+        )
+
+    return project_docs
+
+
+def _calculate_project_stats(project_data: Dict) -> Dict[str, int]:
+    """Calculate documentation statistics for a project."""
+    all_docs = (
+        project_data['documentation_files'] +
+        project_data['manuscript_files'] +
+        project_data['script_docs'] +
+        project_data['test_docs']
+    )
+
+    total_words = sum(doc.word_count for doc in all_docs if hasattr(doc, 'word_count'))
+    total_lines = sum(doc.line_count for doc in all_docs if hasattr(doc, 'line_count'))
+    has_links = sum(1 for doc in all_docs if hasattr(doc, 'has_links') and doc.has_links)
+    has_code_blocks = sum(1 for doc in all_docs if hasattr(doc, 'has_code_blocks') and doc.has_code_blocks)
+
+    return {
+        'total_files': len(all_docs),
+        'manuscript_files': len(project_data['manuscript_files']),
+        'script_docs': len(project_data['script_docs']),
+        'test_docs': len(project_data['test_docs']),
+        'total_words': total_words,
+        'total_lines': total_lines,
+        'files_with_links': has_links,
+        'files_with_code': has_code_blocks
+    }
+
+
+def validate_project_documentation_integrity(repo_root: Path) -> Dict[str, List[str]]:
+    """Validate documentation integrity across projects.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        Dictionary mapping project names to lists of integrity issues
+    """
+    projects = discover_projects(repo_root)
+    issues = {}
+
+    for project in projects:
+        project_issues = []
+
+        # Check for required documentation
+        if project.has_manuscript and not project.has_manuscript:
+            project_issues.append("Project has manuscript directory but no AGENTS.md")
+
+        if project.has_scripts and not any((project.path / "scripts").glob("*.md")):
+            project_issues.append("Project has scripts directory but no documentation")
+
+        # Check for README files in key directories
+        required_readmes = ["README.md"]
+        if project.has_src:
+            required_readmes.append("src/README.md")
+        if project.has_tests:
+            required_readmes.append("tests/README.md")
+
+        for readme_path in required_readmes:
+            if not (project.path / readme_path).exists():
+                project_issues.append(f"Missing required documentation: {readme_path}")
+
+        issues[project.name] = project_issues
+
+    return issues
+
+
+def get_audit_context(repo_root: Path) -> Dict:
+    """Get comprehensive context for audit operations.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        Dictionary with audit context including projects, configs, and hierarchy
+    """
+    projects = discover_projects(repo_root)
+    md_files = find_markdown_files(repo_root)
+    config_files = find_config_files(repo_root)
+    hierarchy = create_hierarchy(md_files, repo_root)
+    categories = categorize_documentation(md_files, repo_root)
+    project_docs = discover_project_documentation(repo_root)
+
+    return {
+        'projects': [{'name': p.name, 'path': str(p.path), 'metadata': p.metadata}
+                     for p in projects],
+        'total_projects': len(projects),
+        'total_markdown_files': len(md_files),
+        'config_files': list(config_files.keys()),
+        'documentation_hierarchy': hierarchy,
+        'documentation_categories': categories,
+        'project_documentation': project_docs,
+        'cross_references': list(identify_cross_references(md_files)),
+        'directory_docs': catalog_agents_readme(md_files, repo_root)
+    }
 

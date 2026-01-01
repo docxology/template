@@ -27,6 +27,7 @@ from infrastructure.core.environment import (
     set_environment_variables,
     check_uv_available,
     get_python_command,
+    get_subprocess_env,
     validate_uv_sync_result,
     validate_directory_structure,
 )
@@ -405,3 +406,68 @@ dependencies = []
             # Restore original environment
             os.environ.clear()
             os.environ.update(original_env)
+
+    def test_get_subprocess_env_basic(self):
+        """Test get_subprocess_env returns a clean environment dict."""
+        # Save original environment
+        original_env = dict(os.environ)
+
+        try:
+            # Set a test variable
+            os.environ['TEST_VAR'] = 'test_value'
+
+            # Get subprocess environment
+            env = get_subprocess_env()
+
+            # Verify it's a dict and contains expected variables
+            assert isinstance(env, dict)
+            assert 'TEST_VAR' in env
+            assert env['TEST_VAR'] == 'test_value'
+
+            # Verify it's a copy, not the original
+            assert env is not os.environ
+
+        finally:
+            # Restore original environment
+            os.environ.clear()
+            os.environ.update(original_env)
+
+    def test_get_subprocess_env_with_uv_virtual_env_removed(self):
+        """Test get_subprocess_env removes VIRTUAL_ENV when uv is available."""
+        # Save original environment
+        original_env = dict(os.environ)
+
+        try:
+            # Set VIRTUAL_ENV to simulate environment
+            os.environ['VIRTUAL_ENV'] = '/some/absolute/path/to/venv'
+
+            # Mock uv availability (if not available, should not remove VIRTUAL_ENV)
+            if check_uv_available():
+                env = get_subprocess_env()
+                assert 'VIRTUAL_ENV' not in env
+            else:
+                env = get_subprocess_env()
+                assert 'VIRTUAL_ENV' in env  # Should be preserved when uv not available
+
+        finally:
+            # Restore original environment
+            os.environ.clear()
+            os.environ.update(original_env)
+
+    def test_get_subprocess_env_with_base_env(self):
+        """Test get_subprocess_env with custom base environment."""
+        base_env = {'CUSTOM_VAR': 'custom_value', 'PATH': '/custom/path'}
+        env = get_subprocess_env(base_env)
+
+        assert env['CUSTOM_VAR'] == 'custom_value'
+        assert env['PATH'] == '/custom/path'
+
+        # Test VIRTUAL_ENV handling with custom base
+        base_env_with_venv = {'VIRTUAL_ENV': '/test/venv', 'OTHER_VAR': 'other'}
+        if check_uv_available():
+            env = get_subprocess_env(base_env_with_venv)
+            assert 'VIRTUAL_ENV' not in env
+            assert env['OTHER_VAR'] == 'other'
+        else:
+            env = get_subprocess_env(base_env_with_venv)
+            assert env['VIRTUAL_ENV'] == '/test/venv'

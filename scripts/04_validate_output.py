@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import sys
+from datetime import datetime
 from pathlib import Path
 
 # Add root to path for infrastructure imports
@@ -116,22 +117,45 @@ def validate_markdown(project_name: str = "project") -> bool:
         return True  # Non-critical
 
 
-def verify_outputs_exist(project_name: str = "project") -> bool:
+def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict]:
     """Verify all expected output files exist.
     
     Args:
         project_name: Name of project in projects/ directory (default: "project")
+        
+    Returns:
+        Tuple of (validation_passed, detailed_validation_results)
     """
     log_substep("Verifying output structure...", logger)
     
     repo_root = Path(__file__).parent.parent
     project_root = repo_root / "projects" / project_name
+    output_dir = project_root / "output"
     
-    required_dirs = [
-        project_root / "output" / "pdf",
-        project_root / "output" / "figures",
-        project_root / "output" / "data",
-    ]
+    # Use comprehensive validation from infrastructure
+    from infrastructure.validation.output_validator import collect_detailed_validation_results
+    
+    detailed_validation = collect_detailed_validation_results(output_dir)
+    structure_valid = detailed_validation['structure']['valid']
+    
+    if structure_valid:
+        log_success("Output structure is valid", logger)
+        # Log detailed directory information
+        for dir_name, dir_info in detailed_validation['directories'].items():
+            if dir_info['exists'] and dir_info['file_count'] > 0:
+                logger.info(f"  • {dir_name}/: {dir_info['file_count']} files ({dir_info['size_mb']} MB)")
+    else:
+        logger.warning("Output structure validation has issues:")
+        for severity in ['critical', 'warning']:
+            issues = detailed_validation['issues_by_severity'].get(severity, [])
+            if issues:
+                logger.warning(f"  {severity.upper()} issues:")
+                for issue in issues[:3]:  # Show first 3
+                    logger.warning(f"    • {issue}")
+                if len(issues) > 3:
+                    logger.warning(f"    ... and {len(issues) - 3} more")
+    
+    return structure_valid, detailed_validation
     
     all_exist = True
     for dir_path in required_dirs:
@@ -200,14 +224,14 @@ def generate_validation_report(
                     'priority': 'medium',
                     'issue': 'Markdown validation issues found',
                     'action': 'Review markdown validation output for formatting issues',
-                    'file': f'projects/{args.project}/manuscript/',
+                    'file': f'projects/{project_name}/manuscript/',
                 })
             elif check_name == "Output structure":
                 recommendations.append({
                     'priority': 'high',
                     'issue': 'Missing output directories',
                     'action': 'Ensure all analysis scripts completed successfully',
-                    'file': f'projects/{args.project}/output/',
+                    'file': f'projects/{project_name}/output/',
                 })
     
     if figure_issues:
@@ -215,34 +239,30 @@ def generate_validation_report(
             'priority': 'medium',
             'issue': f'{len(figure_issues)} figure reference issue(s)',
             'action': 'Register missing figures or remove unused references',
-            'file': f'projects/{args.project}/output/figures/figure_registry.json',
+            'file': f'projects/{project_name}/output/figures/figure_registry.json',
         })
     
     validation_results['recommendations'] = recommendations
     
     # Generate structured reports using reporting module
     try:
-        saved_files = generate_validation_report_structured(validation_results, output_dir)
+        from infrastructure.reporting import generate_validation_report as gen_validation_report
+        saved_files = gen_validation_report(validation_results, output_dir)
         logger.info(f"Validation reports saved: {', '.join(str(p) for p in saved_files.values())}")
     except Exception as e:
         logger.warning(f"Failed to generate structured validation report: {e}")
-        # Fallback to simple text report
-        report_lines = [
-            "Validation Report",
-            "=================",
-            "",
-            f"Generated at: {output_dir.absolute()}",
-            "",
-        ]
+        # Fallback to simple JSON report
+        import json
+        report_file = output_dir / "validation_report.json"
+        output_dir.mkdir(parents=True, exist_ok=True)
         
-        for subdir in ["pdf", "figures", "data"]:
-            if subdir in output_statistics:
-                stats = output_statistics[subdir]
-                report_lines.append(f"{subdir.upper()}: {stats.get('files', 0)} file(s), {stats.get('size_mb', 0):.2f} MB")
+        # Add timestamp
+        from datetime import datetime
+        validation_results['timestamp'] = datetime.now().isoformat()
         
-        report_lines.extend(["", "Validation Complete", ""])
-        report_text = "\n".join(report_lines)
-        logger.info(f"\n{report_text}")
+        with open(report_file, 'w') as f:
+            json.dump(validation_results, f, indent=2)
+        logger.info(f"Validation report saved: {report_file}")
     
     return validation_results
 
@@ -264,19 +284,30 @@ def main() -> int:
     checks = [
         ("PDF validation", lambda: validate_pdfs(args.project)),
         ("Markdown validation", lambda: validate_markdown(args.project)),
-        ("Output structure", lambda: verify_outputs_exist(args.project)),
     ]
     
     results = []
     figure_issues = []
+    detailed_validation = None
     
-    for check_name, check_fn in checks:
+    for i, (check_name, check_fn) in enumerate(checks, 1):
         try:
+            logger.info(f"  [{i}/{len(checks)}] Running {check_name}...")
             result = check_fn()
+            status = "✅ PASSED" if result else "⚠️  ISSUES"
+            logger.info(f"  [{i}/{len(checks)}] {check_name}: {status}")
             results.append((check_name, result))
         except Exception as e:
-            logger.error(f"Error during {check_name}: {e}", exc_info=True)
+            logger.error(f"  [{i}/{len(checks)}] {check_name}: ❌ FAILED - {e}", exc_info=True)
             results.append((check_name, False))
+    
+    # Handle output structure check separately (returns tuple)
+    try:
+        structure_result, detailed_validation = verify_outputs_exist(args.project)
+        results.append(("Output structure", structure_result))
+    except Exception as e:
+        logger.error(f"Error during output structure validation: {e}", exc_info=True)
+        results.append(("Output structure", False))
     
     # Validate figure registry separately (returns tuple)
     try:
@@ -295,6 +326,10 @@ def main() -> int:
     output_dir = project_root / "output"
     output_statistics = {}
     
+    # Add detailed validation to output statistics if available
+    if detailed_validation:
+        output_statistics['detailed_validation'] = detailed_validation
+    
     for subdir in ["pdf", "figures", "data"]:
         subdir_path = output_dir / subdir
         if subdir_path.exists():
@@ -310,41 +345,76 @@ def main() -> int:
     # Generate validation report
     validation_results = generate_validation_report(results, figure_issues, output_statistics, args.project)
     
-    # Summary
+    # Comprehensive validation summary
     logger.info("\n" + "="*60)
-    logger.info("Validation Summary")
+    logger.info("VALIDATION SUMMARY")
     logger.info("="*60)
-    
+    logger.info(f"Project: {args.project}")
+    logger.info(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    logger.info("")
+
     all_passed = True
     warning_count = 0
-    
+    critical_count = 0
+
+    logger.info("Individual Check Results:")
     for check_name, result in results:
         if result:
             status = "✅ PASS"
+            logger.info(f"  {status}: {check_name}")
         else:
-            status = "⚠️  WARN"
-            warning_count += 1
-        logger.info(f"{status}: {check_name}")
-        if not result and check_name == "PDF validation":
-            # PDF validation failure is critical
-            all_passed = False
-    
+            if check_name == "PDF validation":
+                status = "❌ FAIL"
+                critical_count += 1
+                all_passed = False
+            else:
+                status = "⚠️  WARN"
+                warning_count += 1
+            logger.info(f"  {status}: {check_name}")
+
     # Show figure issues prominently if any
     if figure_issues:
         logger.info("")
         logger.info("Figure Reference Issues:")
         for issue in figure_issues:
             logger.warning(f"  • {issue}")
-    
-    if all_passed and warning_count == 0:
-        log_success("\n✅ Validation complete - all checks passed!", logger)
+
+    # Show output structure summary if available
+    if detailed_validation:
+        structure = detailed_validation.get('structure', {})
+        if structure.get('valid'):
+            logger.info("")
+            logger.info("Output Structure Status:")
+            logger.info("  ✅ Output directory structure is valid")
+
+            # Show file counts
+            directories = detailed_validation.get('directories', {})
+            for dir_name, dir_info in directories.items():
+                if dir_info.get('exists') and dir_info.get('file_count', 0) > 0:
+                    size_mb = dir_info.get('size_mb', '0.00')
+                    logger.info(f"  📁 {dir_name}/: {dir_info['file_count']} files ({size_mb} MB)")
+        else:
+            logger.warning("")
+            logger.warning("Output Structure Issues:")
+            issues = structure.get('issues', [])
+            for issue in issues[:5]:  # Show first 5 issues
+                logger.warning(f"  • {issue}")
+
+    logger.info("")
+    logger.info("="*60)
+
+    if all_passed and warning_count == 0 and critical_count == 0:
+        log_success("✅ VALIDATION COMPLETE - All checks passed!", logger)
+        logger.info("  → Pipeline can proceed to next stage")
         return 0
-    elif all_passed:
-        logger.info(f"\n⚠️  Validation complete with {warning_count} warning(s)")
-        log_success("Pipeline can continue - warnings are non-critical", logger)
+    elif all_passed and critical_count == 0:
+        logger.info(f"⚠️  VALIDATION COMPLETE - {warning_count} warning(s), no critical issues")
+        logger.info("  → Pipeline can continue - warnings are non-critical")
         return 0
     else:
-        logger.error("\n❌ Validation failed - review issues above")
+        logger.error(f"❌ VALIDATION FAILED - {critical_count} critical issue(s)")
+        logger.error("  → Pipeline halted - review issues above")
+        logger.error("  → Check project output and manuscript for errors")
         return 1
 
 

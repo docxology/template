@@ -2,7 +2,7 @@
 
 > **Progressive learning guides** from beginner to expert
 
-**Quick Reference:** [Getting Started](GETTING_STARTED.md) | [Intermediate Usage](INTERMEDIATE_USAGE.md) | [Advanced Usage](ADVANCED_USAGE.md) | [Expert Usage](EXPERT_USAGE.md)
+**Quick Reference:** [Getting Started](GETTING_STARTED.md) | [Figures and Analysis](FIGURES_AND_ANALYSIS.md) | [Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md) | [Extending and Automation](EXTENDING_AND_AUTOMATION.md)
 
 ## Purpose
 
@@ -13,17 +13,17 @@ The `guides/` directory contains skill-level specific usage guides that progress
 | File | Purpose | Skill Level |
 |------|---------|-------------|
 | [`GETTING_STARTED.md`](GETTING_STARTED.md) | Basic usage guide (Levels 1-3) | Beginner |
-| [`INTERMEDIATE_USAGE.md`](INTERMEDIATE_USAGE.md) | Intermediate usage guide (Levels 4-6) | Intermediate |
-| [`ADVANCED_USAGE.md`](ADVANCED_USAGE.md) | Advanced usage guide (Levels 7-9) | Advanced |
-| [`EXPERT_USAGE.md`](EXPERT_USAGE.md) | Expert usage guide (Levels 10-12) | Expert |
+| [`FIGURES_AND_ANALYSIS.md`](FIGURES_AND_ANALYSIS.md) | Figures and analysis guide (Levels 4-6) | Intermediate |
+| [`TESTING_AND_REPRODUCIBILITY.md`](TESTING_AND_REPRODUCIBILITY.md) | Testing and reproducibility guide (Levels 7-9) | Advanced |
+| [`EXTENDING_AND_AUTOMATION.md`](EXTENDING_AND_AUTOMATION.md) | Extending and automation guide (Levels 10-12) | Expert |
 
 ## Learning Path
 
 ### Complete Learning Journey
 1. **[Getting Started](GETTING_STARTED.md)** - Write your first document (Levels 1-3)
-2. **[Intermediate Usage](INTERMEDIATE_USAGE.md)** - Add figures and automation (Levels 4-6)
-3. **[Advanced Usage](ADVANCED_USAGE.md)** - Test-driven development (Levels 7-9)
-4. **[Expert Usage](EXPERT_USAGE.md)** - Custom architectures (Levels 10-12)
+2. **[Figures and Analysis](FIGURES_AND_ANALYSIS.md)** - Add figures and automation (Levels 4-6)
+3. **[Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md)** - Test-driven development and reproducibility (Levels 7-9)
+4. **[Extending and Automation](EXTENDING_AND_AUTOMATION.md)** - Extending and automation (Levels 10-12)
 
 ## Quick Navigation
 
@@ -31,13 +31,13 @@ The `guides/` directory contains skill-level specific usage guides that progress
 → Start with **[Getting Started](GETTING_STARTED.md)**
 
 ### Ready for Automation?
-→ Read **[Intermediate Usage](INTERMEDIATE_USAGE.md)**
+→ Read **[Figures and Analysis](FIGURES_AND_ANALYSIS.md)**
 
 ### Want Test-Driven Development?
-→ Study **[Advanced Usage](ADVANCED_USAGE.md)**
+→ Study **[Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md)**
 
 ### Building Custom Systems?
-→ Master **[Expert Usage](EXPERT_USAGE.md)**
+→ Master **[Extending and Automation](EXTENDING_AND_AUTOMATION.md)**
 
 ## Related Documentation
 

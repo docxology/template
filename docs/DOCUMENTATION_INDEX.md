@@ -17,7 +17,7 @@ This index provides an overview of all documentation files in the Research Proje
 **Goal:** Add figures, data analysis, and automation
 
 1. **[core/HOW_TO_USE.md](core/HOW_TO_USE.md)** - Complete usage guide (all 12 levels)
-2. **[guides/INTERMEDIATE_USAGE.md](guides/INTERMEDIATE_USAGE.md)** - Add figures and automation (Levels 4-6)
+2. **[guides/FIGURES_AND_ANALYSIS.md](guides/FIGURES_AND_ANALYSIS.md)** - Add figures and automation (Levels 4-6)
 3. **[core/ARCHITECTURE.md](core/ARCHITECTURE.md)** - Understand system design
 4. **[architecture/THIN_ORCHESTRATOR_SUMMARY.md](architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Learn the pattern
 5. **[core/WORKFLOW.md](core/WORKFLOW.md)** - Development process
@@ -27,7 +27,7 @@ This index provides an overview of all documentation files in the Research Proje
 
 1. **[development/CONTRIBUTING.md](development/CONTRIBUTING.md)** - Contribution guidelines
 2. **[.cursorrules/AGENTS.md](../.cursorrules/AGENTS.md)** - Development standards
-3. **[guides/ADVANCED_USAGE.md](guides/ADVANCED_USAGE.md)** - TDD workflow (Levels 7-9)
+3. **[guides/TESTING_AND_REPRODUCIBILITY.md](guides/TESTING_AND_REPRODUCIBILITY.md)** - TDD workflow (Levels 7-9)
 4. **[development/TESTING_GUIDE.md](development/TESTING_GUIDE.md)** - Testing requirements
 5. **[development/CODE_OF_CONDUCT.md](development/CODE_OF_CONDUCT.md)** - Community standards
 
@@ -101,9 +101,9 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/usage/TEMPLATE_DESCRIPTION.md`](usage/TEMPLATE_DESCRIPTION.md)** - Template overview and features
 
 ### **Skill-Level Guides**
-- **[`docs/guides/INTERMEDIATE_USAGE.md`](guides/INTERMEDIATE_USAGE.md)** - Intermediate usage guide (Levels 4-6)
-- **[`docs/guides/ADVANCED_USAGE.md`](guides/ADVANCED_USAGE.md)** - Advanced usage guide (Levels 7-9)
-- **[`docs/guides/EXPERT_USAGE.md`](guides/EXPERT_USAGE.md)** - Expert usage guide (Levels 10-12)
+- **[`docs/guides/FIGURES_AND_ANALYSIS.md`](guides/FIGURES_AND_ANALYSIS.md)** - Intermediate usage guide (Levels 4-6)
+- **[`docs/guides/TESTING_AND_REPRODUCIBILITY.md`](guides/TESTING_AND_REPRODUCIBILITY.md)** - Advanced usage guide (Levels 7-9)
+- **[`docs/guides/EXTENDING_AND_AUTOMATION.md`](guides/EXTENDING_AND_AUTOMATION.md)** - Expert usage guide (Levels 10-12)
 
 ### **Advanced Usage**
 - **[`docs/usage/MARKDOWN_TEMPLATE_GUIDE.md`](usage/MARKDOWN_TEMPLATE_GUIDE.md)** - Markdown and cross-referencing guide
@@ -129,7 +129,7 @@ Development standards are documented in the `.cursorrules/` directory:
 ## 🧪 **Advanced Modules**
 
 ### **Module Guides**
-- **[`docs/modules/ADVANCED_MODULES_GUIDE.md`](modules/ADVANCED_MODULES_GUIDE.md)** - Comprehensive guide for all 7 advanced modules
+- **[`docs/modules/MODULES_GUIDE.md`](modules/MODULES_GUIDE.md)** - Guide for all 7 modules
 - **[`docs/reference/API_REFERENCE.md`](reference/API_REFERENCE.md)** - Complete API documentation for all src/ modules
 
 ## ⚙️ **Operational Guides**
@@ -205,9 +205,9 @@ docs/
 ├── guides/                             # Usage guides by skill level
 │   ├── README.md                       # Guides overview
 │   ├── GETTING_STARTED.md              # Levels 1-3
-│   ├── INTERMEDIATE_USAGE.md           # Levels 4-6
-│   ├── ADVANCED_USAGE.md               # Levels 7-9
-│   └── EXPERT_USAGE.md                 # Levels 10-12
+│   ├── FIGURES_AND_ANALYSIS.md           # Levels 4-6
+│   ├── TESTING_AND_REPRODUCIBILITY.md               # Levels 7-9
+│   └── EXTENDING_AND_AUTOMATION.md                 # Levels 10-12
 │
 ├── architecture/                       # Architecture documentation
 │   ├── README.md                       # Architecture overview
@@ -249,7 +249,7 @@ docs/
 │
 ├── modules/                            # Advanced modules
 │   ├── README.md                       # Modules overview
-│   ├── ADVANCED_MODULES_GUIDE.md       # Complete modules guide
+│   ├── MODULES_GUIDE.md       # Modules guide
 │   ├── SCIENTIFIC_SIMULATION_GUIDE.md  # Simulation system
 │   └── PDF_VALIDATION.md               # PDF validation
 │
@@ -277,12 +277,12 @@ docs/
 | Category | Directory | Purpose |
 |----------|-----------|---------|
 | **Core** | `core/` | Essential documentation for all users (../core/HOW_TO_USE.md, ../core/ARCHITECTURE.md, ../core/WORKFLOW.md) |
-| **Guides** | `guides/` | Usage guides by skill level (GETTING_STARTED.md, INTERMEDIATE_USAGE.md, ADVANCED_USAGE.md, EXPERT_USAGE.md) |
+| **Guides** | `guides/` | Usage guides by skill level (GETTING_STARTED.md, FIGURES_AND_ANALYSIS.md, TESTING_AND_REPRODUCIBILITY.md, EXTENDING_AND_AUTOMATION.md) |
 | **Architecture** | `architecture/` | System design and implementation (TWO_LAYER_ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md, DECISION_TREE.md) |
 | **Usage** | `usage/` | Usage examples and patterns (EXAMPLES.md, MARKDOWN_TEMPLATE_GUIDE.md, VISUALIZATION_GUIDE.md) |
 | **Development** | `development/` | Contributing and future development (CONTRIBUTING.md, CODE_OF_CONDUCT.md, ROADMAP.md, TESTING_GUIDE.md) |
 | **Reference** | `reference/` | Quick reference and sharing content (FAQ.md, API_REFERENCE.md, GLOSSARY.md, QUICK_START_CHEATSHEET.md) |
-| **Modules** | `modules/` | Advanced module documentation (ADVANCED_MODULES_GUIDE.md, SCIENTIFIC_SIMULATION_GUIDE.md, PDF_VALIDATION.md) |
+| **Modules** | `modules/` | Module documentation (MODULES_GUIDE.md, SCIENTIFIC_SIMULATION_GUIDE.md, PDF_VALIDATION.md) |
 | **Operational** | `operational/` | Operational workflows and guides (BUILD_SYSTEM.md, TROUBLESHOOTING_GUIDE.md, CONFIGURATION.md) |
 | **Best Practices** | `best-practices/` | Best practices and project management (BEST_PRACTICES.md, VERSION_CONTROL.md, MIGRATION_GUIDE.md) |
 
@@ -309,12 +309,12 @@ All documentation files include comprehensive cross-references:
 2. **[architecture/TWO_LAYER_ARCHITECTURE.md](architecture/TWO_LAYER_ARCHITECTURE.md)** - Complete architecture guide (30 min)
 3. **[architecture/THIN_ORCHESTRATOR_SUMMARY.md](architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation (20 min)
 4. **[core/WORKFLOW.md](core/WORKFLOW.md)** - Development process (20 min)
-5. **[guides/INTERMEDIATE_USAGE.md](guides/INTERMEDIATE_USAGE.md)** - Add figures and automation
+5. **[guides/FIGURES_AND_ANALYSIS.md](guides/FIGURES_AND_ANALYSIS.md)** - Add figures and automation
 
 ### **Contributors - Standards & Process**
 1. **[development/CONTRIBUTING.md](development/CONTRIBUTING.md)** - Contribution guidelines (10 min)
 2. **[.cursorrules/AGENTS.md](../.cursorrules/AGENTS.md)** - Development standards (30 min)
-3. **[guides/ADVANCED_USAGE.md](guides/ADVANCED_USAGE.md)** - TDD workflow (45 min)
+3. **[guides/TESTING_AND_REPRODUCIBILITY.md](guides/TESTING_AND_REPRODUCIBILITY.md)** - TDD workflow (45 min)
 4. **[development/TESTING_GUIDE.md](development/TESTING_GUIDE.md)** - Testing requirements (20 min)
 5. **[development/CODE_OF_CONDUCT.md](development/CODE_OF_CONDUCT.md)** - Community standards (5 min)
 

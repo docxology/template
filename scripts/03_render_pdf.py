@@ -315,6 +315,46 @@ def log_rendering_summary(summary: dict) -> None:
     logger.info("="*60 + "\n")
 
 
+def _check_citations_used(manuscript_dir: Path) -> bool:
+    """Check if any manuscript files contain citation commands.
+
+    Args:
+        manuscript_dir: Directory containing manuscript files
+
+    Returns:
+        True if citations are found, False otherwise
+    """
+    import re
+
+    # Common citation patterns in markdown/LaTeX
+    citation_patterns = [
+        r'\\cite\{[^}]+\}',     # \cite{key}
+        r'\\citep\{[^}]+\}',    # \citep{key}
+        r'\\citet\{[^}]+\}',    # \citet{key}
+        r'\\citeauthor\{[^}]+\}', # \citeauthor{key}
+        r'\\citeyear\{[^}]+\}', # \citeyear{key}
+        r'@[^@\s]+\s',          # Pandoc citation syntax @key
+    ]
+
+    # Find all markdown files in manuscript directory
+    manuscript_files = list(manuscript_dir.glob("*.md"))
+    supplemental_dir = manuscript_dir / "supplemental"
+    if supplemental_dir.exists():
+        manuscript_files.extend(list(supplemental_dir.glob("*.md")))
+
+    for md_file in manuscript_files:
+        try:
+            content = md_file.read_text(encoding='utf-8')
+            for pattern in citation_patterns:
+                if re.search(pattern, content):
+                    return True
+        except Exception as e:
+            logger.debug(f"Could not read {md_file}: {e}")
+            continue
+
+    return False
+
+
 def verify_pdf_outputs(project_name: str = "project") -> bool:
     """Verify that PDFs were generated with quality checks.
     
@@ -346,37 +386,77 @@ def verify_pdf_outputs(project_name: str = "project") -> bool:
         
         # Check file sizes and validity
         valid_pdfs = 0
+        failed_compilations = []
+
         for pdf_file in sorted(pdf_files):
             size_mb = pdf_file.stat().st_size / (1024 * 1024)
-            
+            size_kb = pdf_file.stat().st_size / 1024
+
             # Validate PDF is not empty
             if size_mb > 0.01:  # At least 10KB
                 valid_pdfs += 1
                 marker = "📕" if pdf_file == combined_pdf else "  "
                 logger.info(f"  {marker} {pdf_file.name} ({size_mb:.2f} MB) ✓")
             else:
-                logger.warning(f"  ✗ {pdf_file.name} - file too small ({size_mb:.2f} MB)")
+                # Enhanced detection of failed compilations
+                marker = "📕" if pdf_file == combined_pdf else "  "
+                status_msg = f"  {marker} {pdf_file.name}"
+
+                if size_kb < 0.1:  # Less than 100 bytes - likely failed compilation
+                    status_msg += f" - FAILED COMPILATION ({size_kb:.1f} KB)"
+                    failed_compilations.append(pdf_file)
+
+                    # Try to find and link to corresponding log file
+                    log_file = pdf_file.parent / f"{pdf_file.stem}.log"
+                    if log_file.exists():
+                        status_msg += f" - Check log: {log_file.name}"
+                    else:
+                        # Try alternative log file patterns
+                        alt_log = pdf_file.parent / f"_{pdf_file.stem}.log"
+                        if alt_log.exists():
+                            status_msg += f" - Check log: {alt_log.name}"
+
+                    logger.error(status_msg)
+                else:
+                    # Small but not empty - might be a minimal document
+                    status_msg += f" - file too small ({size_kb:.1f} KB)"
+                    logger.warning(status_msg)
         
-        # Check bibliography
+        # Check bibliography (only warn if citations are actually used)
         bib_file = manuscript_dir / "references.bib"
+        citations_used = _check_citations_used(manuscript_dir)
+
         if bib_file.exists():
             logger.info("\n✅ Bibliography file found and will be processed")
+        elif citations_used:
+            logger.warning("\n⚠️  Bibliography file not found (citations detected in manuscript - bibliography processing will be skipped)")
         else:
-            logger.warning("\n⚠️  Bibliography file not found")
+            logger.info("\nℹ️  Bibliography file not found (no citations detected in manuscript - this is fine)")
         
+        # Report failed compilations if any
+        if failed_compilations:
+            logger.error(f"\n❌ {len(failed_compilations)} PDF compilation(s) failed:")
+            for pdf_file in failed_compilations:
+                logger.error(f"  - {pdf_file.name} (0.0 KB - compilation failed)")
+
         # Check combined PDF specifically
         if combined_pdf.exists():
             size_mb = combined_pdf.stat().st_size / (1024 * 1024)
             if size_mb > 0.01:
-                logger.info(f"\n✅ Combined manuscript PDF successfully generated!")
+                if failed_compilations:
+                    logger.warning(f"\n⚠️  Combined manuscript PDF generated but {len(failed_compilations)} other PDF(s) failed to compile")
+                else:
+                    logger.info(f"\n✅ Combined manuscript PDF successfully generated!")
                 logger.info(f"  File size: {size_mb:.2f} MB")
                 logger.info(f"  Valid PDFs: {valid_pdfs}/{len(pdf_files)}")
             else:
-                logger.warning(f"\n⚠️  Combined manuscript PDF exists but is too small ({size_mb:.2f} MB)")
+                logger.error(f"\n❌ Combined manuscript PDF compilation failed ({size_mb:.3f} MB)")
+                return False
         else:
-            logger.warning("\n⚠️  Combined manuscript PDF not found")
-        
-        return valid_pdfs > 0
+            logger.error("\n❌ Combined manuscript PDF not found")
+            return False
+
+        return valid_pdfs > 0 and not failed_compilations
     else:
         logger.error("No PDF files found in output directory")
         return False

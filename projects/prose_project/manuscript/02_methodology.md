@@ -1,0 +1,243 @@
+# Methodology
+
+This section presents the methodological approach used in this research project, demonstrating various mathematical concepts and notation.
+
+## Mathematical Framework
+
+We establish a rigorous mathematical foundation for our analysis. Consider the general optimization problem:
+
+\begin{equation}
+\min_{x \in \mathbb{R}^n} f(x)
+\label{eq:optimization_problem}
+\end{equation}
+
+subject to the inequality constraints:
+
+\begin{equation}
+g_i(x) \leq 0, \quad i = 1, \dots, m
+\label{eq:inequality_constraints}
+\end{equation}
+
+and equality constraints:
+
+\begin{equation}
+h_j(x) = 0, \quad j = 1, \dots, p
+\label{eq:equality_constraints}
+\end{equation}
+
+where $f: \mathbb{R}^n \rightarrow \mathbb{R}$ denotes the objective function, and $g_i, h_j: \mathbb{R}^n \rightarrow \mathbb{R}$ represent the constraint functions.
+
+### Fundamental Mathematical Concepts
+
+The derivative of a composite function follows the chain rule:
+
+\begin{equation}
+\frac{d}{dx} [f(g(x))] = f'(g(x)) \cdot g'(x)
+\label{eq:chain_rule}
+\end{equation}
+
+For multivariable functions, the gradient is defined as the vector of partial derivatives:
+
+\begin{equation}
+\nabla f(x) = \begin{pmatrix}
+\frac{\partial f}{\partial x_1} \\
+\frac{\partial f}{\partial x_2} \\
+\vdots \\
+\frac{\partial f}{\partial x_n}
+\end{pmatrix}
+\label{eq:gradient_definition}
+\end{equation}
+
+The directional derivative in direction $d$ is given by:
+
+\begin{equation}
+D_d f(x) = \nabla f(x) \cdot d
+\label{eq:directional_derivative}
+\end{equation}
+
+### Matrix Operations and Linear Algebra
+
+Matrix multiplication follows the standard row-column rule:
+
+\begin{equation}
+(AB)_{ij} = \sum_{k=1}^{n} A_{ik} B_{kj}
+\label{eq:matrix_multiplication}
+\end{equation}
+
+The determinant of a 2×2 matrix is computed as:
+
+\begin{equation}
+\det\begin{pmatrix} a & b \\ c & d \end{pmatrix} = ad - bc
+\label{eq:determinant_2x2}
+\end{equation}
+
+For a general square matrix $A$, the matrix inverse satisfies:
+
+\begin{equation}
+A A^{-1} = A^{-1} A = I
+\label{eq:matrix_inverse}
+\end{equation}
+
+where $I$ denotes the identity matrix.
+
+### Series and Limits
+
+The Taylor series expansion around $x_0$ provides a polynomial approximation:
+
+\begin{equation}
+f(x) = f(x_0) + f'(x_0)(x - x_0) + \frac{f''(x_0)}{2!}(x - x_0)^2 + \frac{f'''(x_0)}{3!}(x - x_0)^3 + \cdots
+\label{eq:taylor_series}
+\end{equation}
+
+The fundamental limit relationship connects differentiation and integration through the Fundamental Theorem of Calculus:
+
+\begin{equation}
+\frac{d}{dx} \int_a^x f(t) \, dt = f(x)
+\label{eq:fundamental_theorem}
+\end{equation}
+
+For definite integrals, we have:
+
+\begin{equation}
+\int_a^b f(x) \, dx = F(b) - F(a)
+\label{eq:definite_integral}
+\end{equation}
+
+where $F$ is the antiderivative of $f$.
+
+### Probability and Statistics
+
+The normal (Gaussian) distribution is characterized by its probability density function:
+
+\begin{equation}
+\phi(x) = \frac{1}{\sqrt{2\pi}\sigma} \exp\left(-\frac{(x - \mu)^2}{2\sigma^2}\right)
+\label{eq:normal_pdf}
+\end{equation}
+
+where $\mu$ is the mean and $\sigma^2$ is the variance.
+
+For large samples, the central limit theorem establishes asymptotic normality of sample means:
+
+\begin{equation}
+\sqrt{n} \left( \bar{X}_n - \mu \right) \xrightarrow{d} \mathcal{N}(0, \sigma^2)
+\label{eq:central_limit_theorem}
+\end{equation}
+
+The expected value and variance of a random variable $X$ are defined as:
+
+\begin{equation}
+\mathbb{E}[X] = \int_{-\infty}^{\infty} x f_X(x) \, dx
+\label{eq:expectation}
+\end{equation}
+
+\begin{equation}
+\mathbb{V}[X] = \mathbb{E}[(X - \mathbb{E}[X])^2] = \mathbb{E}[X^2] - (\mathbb{E}[X])^2
+\label{eq:variance}
+\end{equation}
+
+### Advanced Calculus Theorems
+
+**Theorem 1 (Mean Value Theorem).** If $f$ is continuous on $[a,b]$ and differentiable on $(a,b)$, then there exists $c \in (a,b)$ such that:
+
+\begin{equation}
+f'(c) = \frac{f(b) - f(a)}{b - a}
+\label{eq:mean_value_theorem}
+\end{equation}
+
+**Theorem 2 (Integration by Parts).** For differentiable functions $u$ and $v$:
+
+\begin{equation}
+\int u \, dv = uv - \int v \, du
+\label{eq:integration_by_parts}
+\end{equation}
+
+**Theorem 3 (Taylor's Theorem with Remainder).** If $f$ has $n+1$ continuous derivatives on $[a, x]$, then:
+
+\begin{equation}
+f(x) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \cdots + \frac{f^{(n)}(a)}{n!}(x-a)^n + R_n(x)
+\label{eq:taylors_theorem}
+\end{equation}
+
+where the remainder term $R_n(x) = \frac{f^{(n+1)}(c)}{(n+1)!}(x-a)^{n+1}$ for some $c \in (a,x)$.
+
+## Algorithm Development
+
+The proposed optimization algorithm follows a systematic approach with the following steps:
+
+**Algorithm 1: Gradient-Based Optimization**
+\begin{enumerate}
+\item \textbf{Initialization:}
+   \begin{itemize}
+   \item Set initial point $x_0 \in \mathbb{R}^n$
+   \item Choose parameters $\alpha, \beta, \gamma > 0$
+   \item Set iteration counter $k \leftarrow 0$
+   \end{itemize}
+
+\item \textbf{Iteration Process:}
+   \begin{itemize}
+   \item Compute gradient: $\nabla f(x_k)$
+   \item Update direction: $d_k = -\nabla f(x_k)$
+   \item Perform line search to find step size $\alpha_k$
+   \item Update solution: $x_{k+1} = x_k + \alpha_k d_k$
+   \end{itemize}
+
+\item \textbf{Convergence Check:}
+   \begin{itemize}
+   \item Test stopping criteria: $\|\nabla f(x_k)\| < \epsilon$
+   \item If converged, return $x_k$ as solution
+   \item Otherwise, set $k \leftarrow k + 1$ and repeat from step 2
+   \end{itemize}
+\end{enumerate}
+
+The line search procedure ensures sufficient decrease in the objective function:
+
+\begin{equation}
+f(x_k + \alpha_k d_k) \leq f(x_k) + c_1 \alpha_k \nabla f(x_k)^T d_k
+\label{eq:armijo_condition}
+\end{equation}
+
+where $c_1 \in (0,1)$ is a constant controlling the required decrease.
+
+## Convergence Analysis
+
+The algorithm's convergence properties are established through rigorous mathematical analysis.
+
+**Theorem 4 (Global Convergence).** If $f$ is convex and continuously differentiable, and the step sizes satisfy the Wolfe conditions \eqref{eq:armijo_condition}, then the algorithm converges to a stationary point, i.e., $\lim_{k \to \infty} \nabla f(x_k) = 0$.
+
+**Proof sketch:**
+\begin{enumerate}
+\item By convexity of $f$: $f(y) \geq f(x) + \nabla f(x)^T (y - x)$ for all $x, y \in \mathbb{R}^n$
+\item The line search ensures sufficient decrease: $f(x_{k+1}) \leq f(x_k) + c_1 \alpha_k \nabla f(x_k)^T d_k$
+\item Since $d_k = -\nabla f(x_k)$, this implies $f(x_{k+1}) \leq f(x_k) - c_1 \alpha_k \|\nabla f(x_k)\|^2$
+\item The descent property guarantees convergence of $\{f(x_k)\}$ to a limit point
+\item Gradient descent on convex functions converges to critical points
+\end{enumerate}
+
+**Theorem 5 (Local Convergence Rate).** If $f$ is strongly convex with parameter $m > 0$ and the step sizes are constant and appropriate, then the algorithm converges linearly:
+
+\begin{equation}
+\|x_{k+1} - x^*\| \leq \rho \|x_k - x^*\|
+\label{eq:linear_convergence}
+\end{equation}
+
+where $\rho = \max\{|\lambda_i - \alpha|, |\lambda_i + \alpha|\} < 1$ for eigenvalues $\lambda_i$ of the Hessian, and $x^*$ is the unique minimizer.
+
+## Implementation Considerations
+
+Key implementation aspects include:
+
+- **Numerical stability**: Using appropriate floating-point precision
+- **Termination criteria**: Multiple stopping conditions
+- **Performance optimization**: Efficient gradient computation
+- **Error handling**: Robust exception management
+
+## Validation Strategy
+
+The methodology is validated through:
+
+- **Mathematical correctness**: Verification of derivations
+- **Numerical accuracy**: Comparison with known solutions
+- **Computational efficiency**: Performance benchmarking
+- **Robustness testing**: Edge case analysis
+
+This approach ensures both theoretical soundness and practical applicability of the proposed methods.

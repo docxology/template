@@ -35,6 +35,32 @@ tests/infrastructure/core/
 - Environment variable integration
 - Default value handling
 - Configuration validation and error cases
+- Translation language configuration testing
+
+**Configuration Test Patterns:**
+```python
+def test_config_loading(project_config_file):
+    """Test config loading with real file structure"""
+    config = load_config(project_config_file)
+    assert config['paper']['title'] == 'Test Research Paper'
+
+def test_translation_languages(tmp_path, sample_project_config):
+    """Test translation language extraction from config"""
+    # Create config at projects/project/manuscript/config.yaml
+    config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+    config_file.parent.mkdir(parents=True)
+
+    with open(config_file, 'w') as f:
+        yaml.dump(sample_project_config, f)
+
+    languages = get_translation_languages(tmp_path)
+    assert languages == ['zh', 'hi', 'ru']  # From sample config
+```
+
+**Test File Structure Requirements:**
+- Config files must be at: `repo_root/projects/{project_name}/manuscript/config.yaml`
+- Translation tests create realistic multi-level directory structures
+- All tests use real YAML files, no mocks for file operations
 
 **Environment Setup (Moved to Integration Tests)**
 - Environment tests moved to `tests/integration/test_environment_setup.py`

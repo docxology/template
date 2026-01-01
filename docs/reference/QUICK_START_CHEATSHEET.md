@@ -177,8 +177,8 @@ Reference it: \ref{fig:my_figure}
 **I want to...**
 
 - **Just write documents** → [Getting Started Guide](../guides/GETTING_STARTED.md)
-- **Add figures** → [Intermediate Usage](../guides/INTERMEDIATE_USAGE.md)
-- **Write tests** → [Advanced Usage](../guides/ADVANCED_USAGE.md)
+- **Add figures** → [Figures and Analysis](../guides/FIGURES_AND_ANALYSIS.md)
+- **Write tests** → [Testing and Reproducibility](../guides/TESTING_AND_REPRODUCIBILITY.md)
 - **Understand architecture** → [Architecture](../core/ARCHITECTURE.md)
 - **Contribute** → [Contributing](../development/CONTRIBUTING.md)
 - **Fix a problem** → [FAQ](../reference/FAQ.md)

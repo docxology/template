@@ -9,7 +9,7 @@ The `docs/modules/` directory contains detailed documentation for the advanced m
 ```
 docs/modules/
 ├── AGENTS.md                       # This technical documentation
-├── ADVANCED_MODULES_GUIDE.md       # Comprehensive guide to all 7 advanced modules
+├── MODULES_GUIDE.md       # Guide to all 7 modules
 ├── PDF_VALIDATION.md               # PDF validation system documentation
 ├── README.md                       # Quick reference for modules
 └── SCIENTIFIC_SIMULATION_GUIDE.md  # Scientific simulation system guide
@@ -17,7 +17,7 @@ docs/modules/
 
 ## Key Documentation Files
 
-### Advanced Modules Guide (`ADVANCED_MODULES_GUIDE.md`)
+### Modules Guide (`MODULES_GUIDE.md`)
 
 **Comprehensive guide covering all seven advanced modules:**
 
@@ -529,7 +529,7 @@ print(f'Keys: {list(config.keys())}')
 ## See Also
 
 **Module Documentation:**
-- [`ADVANCED_MODULES_GUIDE.md`](ADVANCED_MODULES_GUIDE.md) - Comprehensive module guide
+- [`MODULES_GUIDE.md`](MODULES_GUIDE.md) - Module guide
 - [`PDF_VALIDATION.md`](PDF_VALIDATION.md) - PDF validation system
 - [`SCIENTIFIC_SIMULATION_GUIDE.md`](SCIENTIFIC_SIMULATION_GUIDE.md) - Scientific simulation guide
 

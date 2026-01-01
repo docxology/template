@@ -1,0 +1,384 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Discussion}
+\protect\phantomsection\label{sec:discussion}
+The 2×2 matrix framework reveals Active Inference as a fundamentally
+meta-level methodology with profound implications for cognitive science,
+artificial intelligence, and our understanding of intelligence itself.
+This section explores the theoretical implications of viewing Active
+Inference through the lens of meta-pragmatic and meta-epistemic
+operation.
+
+\begin{block}{Meta-Pragmatic Implications}
+\protect\phantomsection\label{sec:meta_pragmatic_implications}
+Active Inference's meta-pragmatic nature transcends traditional
+approaches to goal-directed behavior by enabling modelers to specify
+entire pragmatic frameworks rather than simple reward functions.
+
+\begin{block}{Beyond Reward Functions}
+\protect\phantomsection\label{beyond-reward-functions}
+Traditional reinforcement learning specifies rewards as scalar values:
+{[}R(s,a) \in \mathbb{R}\label{eq:traditional_reward}{]}
+
+Active Inference, however, allows specification of complete preference
+landscapes through matrix C: {[}C(o)
+\in \mathbb{R}\^{}\{\textbar{}\mathcal{O}\textbar\}\label{eq:active_inference_preferences}{]}
+
+This enables modeling of: - \textbf{Complex Value Structures:}
+Multi-dimensional preferences with trade-offs - \textbf{Ethical
+Considerations:} Incorporation of moral and social values -
+\textbf{Contextual Goals:} Situation-dependent value hierarchies -
+\textbf{Meta-Preferences:} Preferences about preference structures
+themselves
+\end{block}
+
+\begin{block}{Pragmatic Framework Design}
+\protect\phantomsection\label{pragmatic-framework-design}
+The meta-pragmatic power enables researchers to explore: - How different
+societies develop different value systems - How individual development
+shapes personal pragmatic frameworks - How cultural evolution influences
+collective goal structures - How artificial agents might develop their
+own pragmatic frameworks
+\end{block}
+\end{block}
+
+\begin{block}{Meta-Epistemic Implications}
+\protect\phantomsection\label{sec:meta_epistemic_implications}
+Active Inference enables specification of epistemic frameworks, allowing
+modelers to define not just what agents believe, but how they come to
+know the world.
+
+\begin{block}{Epistemological Pluralism}
+\protect\phantomsection\label{epistemological-pluralism}
+Different epistemic frameworks can be specified through generative model
+parameters:
+
+\textbf{Empirical Framework:} {[}A\_\{empirical\} =
+
+\begin{pmatrix} 0.95 & 0.05 \\ 0.05 & 0.95 \end{pmatrix}
+
+\label{eq:empirical_framework}{]} High confidence in sensory
+observations, low uncertainty.
+
+\textbf{Skeptical Framework:} {[}A\_\{skeptical\} =
+
+\begin{pmatrix} 0.6 & 0.4 \\ 0.4 & 0.6 \end{pmatrix}
+
+\label{eq:skeptical_framework}{]} Lower confidence, higher epistemic
+caution.
+
+\textbf{Dogmatic Framework:} {[}A\_\{dogmatic\} =
+
+\begin{pmatrix} 1.0 & 0.0 \\ 0.0 & 1.0 \end{pmatrix}
+
+\label{eq:dogmatic_framework}{]} Absolute certainty, no epistemic doubt.
+\end{block}
+
+\begin{block}{Knowledge Architecture Design}
+\protect\phantomsection\label{knowledge-architecture-design}
+Active Inference enables design of knowledge acquisition systems:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Learning Mechanisms:} How beliefs update over time
+\item
+  \textbf{Uncertainty Handling:} Approaches to ambiguous information
+\item
+  \textbf{Evidence Integration:} How multiple sources combine
+\item
+  \textbf{Hypothesis Testing:} Frameworks for belief validation
+\end{itemize}
+\end{block}
+\end{block}
+
+\begin{block}{The Modeler's Dual Role}
+\protect\phantomsection\label{sec:modeler_dual_role}
+The framework reveals the recursive relationship between modeler and
+modeled system.
+
+\begin{block}{As Architect}
+\protect\phantomsection\label{as-architect}
+The modeler specifies the boundaries of cognition: - \textbf{Epistemic
+Boundaries:} What can be known (matrix A) - \textbf{Pragmatic
+Landscape:} What matters (matrix C) - \textbf{Causal Structure:} What
+can be controlled (matrix B) - \textbf{Initial Assumptions:} What is
+taken for granted (matrix D)
+\end{block}
+
+\begin{block}{As Subject}
+\protect\phantomsection\label{as-subject}
+The modeler applies Active Inference to their own cognition: - Uses
+meta-epistemic principles to design research methodologies - Employs
+meta-pragmatic frameworks for scientific decision-making - Engages in
+recursive self-modeling of cognitive processes
+\end{block}
+
+\begin{block}{Recursive Self-Understanding}
+\protect\phantomsection\label{recursive-self-understanding}
+This creates a recursive loop of understanding: 1. Modeler uses Active
+Inference to model cognitive systems 2. Insights from modeling improve
+understanding of modeler's own cognition 3. Improved self-understanding
+leads to better models 4. Cycle continues with increasing sophistication
+\end{block}
+\end{block}
+
+\begin{block}{Cognitive Security Implications}
+\protect\phantomsection\label{sec:cognitive_security_implications}
+The meta-level framework has significant implications for cognitive
+security and the robustness of belief systems.
+
+\begin{block}{Meta-Cognitive Vulnerabilities}
+\protect\phantomsection\label{meta-cognitive-vulnerabilities}
+Understanding meta-cognitive processing reveals potential
+vulnerabilities:
+
+\textbf{Quadrant 3 Attacks:} Manipulation of confidence assessment
+mechanisms - False confidence calibration - Induced
+over/under-confidence - Meta-cognitive hijacking
+
+\textbf{Quadrant 4 Attacks:} Framework-level manipulation - Epistemic
+framework subversion - Pragmatic landscape alteration - Higher-order
+reasoning corruption
+\end{block}
+
+\begin{block}{Defense Strategies}
+\protect\phantomsection\label{defense-strategies}
+The framework suggests defense approaches:
+
+\textbf{Meta-Cognitive Monitoring:} Continuous validation of confidence
+assessments \textbf{Framework Integrity Checks:} Verification of
+epistemic and pragmatic consistency \textbf{Recursive Validation:}
+Higher-order checking of meta-level processes
+\end{block}
+
+\begin{block}{Societal Implications}
+\protect\phantomsection\label{societal-implications}
+These insights extend to societal cognitive security:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Information Warfare:} Meta-level manipulation of public belief
+  systems
+\item
+  \textbf{AI Safety:} Ensuring artificial agents maintain robust
+  meta-cognitive frameworks
+\item
+  \textbf{Educational Systems:} Developing curricula that build
+  meta-cognitive resilience
+\end{itemize}
+\end{block}
+\end{block}
+
+\begin{block}{Free Energy Principle Integration}
+\protect\phantomsection\label{sec:fep_integration}
+The framework integrates seamlessly with the Free Energy Principle,
+providing a concrete realization of FEP's abstract principles.
+
+\begin{block}{What Is a Thing?}
+\protect\phantomsection\label{what-is-a-thing}
+The FEP defines a ``thing'' as a system that maintains its structure
+over time through free energy minimization. Our framework shows how this
+operates across multiple levels:
+
+\textbf{Physical Level:} Boundary maintenance through Markov blankets
+\textbf{Cognitive Level:} Belief updating through EFE minimization
+\textbf{Meta-Cognitive Level:} Framework adaptation through higher-order
+reasoning \textbf{Meta-Theoretical Level:} Scientific understanding
+through recursive modeling
+\end{block}
+
+\begin{block}{Unification Across Domains}
+\protect\phantomsection\label{unification-across-domains}
+The framework provides a unified approach to diverse phenomena:
+
+\textbf{Biological Systems:} Organisms maintaining homeostasis
+\textbf{Artificial Agents:} AI systems with meta-learning capabilities
+\textbf{Social Systems:} Groups maintaining collective identity
+\textbf{Scientific Communities:} Knowledge accumulation through paradigm
+shifts
+\end{block}
+\end{block}
+
+\begin{block}{Methodological Contributions}
+\protect\phantomsection\label{sec:methodological_contributions}
+The framework advances Active Inference methodology in several ways:
+
+\begin{block}{Systematic Analysis Framework}
+\protect\phantomsection\label{systematic-analysis-framework}
+Provides a systematic way to analyze meta-level phenomena: - Clear
+distinctions between processing levels - Hierarchical organization of
+cognitive processes - Integration of multiple abstraction levels
+\end{block}
+
+\begin{block}{Research Design Tool}
+\protect\phantomsection\label{research-design-tool}
+Enables researchers to: - Design experiments targeting specific
+quadrants - Compare interventions across processing levels - Develop
+targeted cognitive enhancement strategies
+\end{block}
+
+\begin{block}{Theoretical Integration}
+\protect\phantomsection\label{theoretical-integration}
+Bridges multiple theoretical traditions: - Active Inference with
+meta-cognition research - Free Energy Principle with cognitive
+architectures - Pragmatic reasoning with epistemic logic
+\end{block}
+\end{block}
+
+\begin{block}{Limitations and Future Directions}
+\protect\phantomsection\label{sec:limitations_future}
+\begin{block}{Current Limitations}
+\protect\phantomsection\label{current-limitations}
+\textbf{Empirical Validation:} Framework is primarily theoretical;
+empirical validation needed \textbf{Computational Complexity:} Higher
+quadrants involve complex optimization \textbf{Measurement Challenges:}
+Meta-level processes are difficult to measure directly \textbf{Scale
+Issues:} Framework scaling to complex real-world systems
+\end{block}
+
+\begin{block}{Future Research Directions}
+\protect\phantomsection\label{future-research-directions}
+\textbf{Empirical Studies:} Develop experimental paradigms for each
+quadrant \textbf{Computational Methods:} Efficient algorithms for
+meta-level optimization \textbf{Measurement Techniques:} Novel
+approaches to meta-cognitive process measurement \textbf{Applications:}
+Real-world deployment in AI systems and cognitive enhancement
+\end{block}
+
+\begin{block}{Extension Possibilities}
+\protect\phantomsection\label{extension-possibilities}
+\textbf{Multi-Agent Systems:} Framework extension to social cognition
+\textbf{Developmental Psychology:} Application to cognitive development
+\textbf{Clinical Applications:} Therapeutic interventions targeting
+specific quadrants \textbf{Educational Technology:} Meta-cognitive
+training systems
+\end{block}
+\end{block}
+
+\begin{block}{Broader Philosophical Implications}
+\protect\phantomsection\label{sec:philosophical_implications}
+The framework touches on fundamental questions about cognition and
+reality.
+
+\begin{block}{Nature of Intelligence}
+\protect\phantomsection\label{nature-of-intelligence}
+Active Inference suggests intelligence emerges from: - \textbf{Epistemic
+Competence:} Ability to construct accurate world models -
+\textbf{Pragmatic Wisdom:} Capacity for effective goal-directed behavior
+- \textbf{Meta-Level Reflection:} Self-awareness and adaptive control -
+\textbf{Framework Flexibility:} Ability to modify fundamental cognitive
+structures
+\end{block}
+
+\begin{block}{Reality and Representation}
+\protect\phantomsection\label{reality-and-representation}
+The meta-epistemic aspect raises questions about: - \textbf{Multiple
+Realities:} Different epistemic frameworks construct different worlds -
+\textbf{Framework Relativity:} Cognitive adequacy depends on framework
+appropriateness - \textbf{Reality Construction:} Cognition as active
+construction, not passive reception
+\end{block}
+
+\begin{block}{Consciousness and Self-Awareness}
+\protect\phantomsection\label{consciousness-and-self-awareness}
+The recursive nature of meta-cognition suggests: -
+\textbf{Self-Modeling:} Consciousness as modeling one's own cognitive
+processes - \textbf{Hierarchical Self-Awareness:} Multiple levels of
+self-reflection - \textbf{Emergent Properties:} Consciousness emerging
+from meta-level cognitive organization
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

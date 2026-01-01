@@ -76,19 +76,55 @@ def compile_latex(
                 log_file = output_dir / f"{tex_file.stem}.log"
                 log_content = log_file.read_text() if log_file.exists() else "No log file"
                 
+                # Enhanced error analysis for better troubleshooting
+                error_hints = []
+
+                # Detect specific LaTeX error patterns
+                if "*** (job aborted, no legal \\end found)" in log_content:
+                    error_hints.append("Document structure error: missing \\end{document} or unmatched \\begin{}/\\end{} pairs")
+                if "Undefined control sequence" in log_content:
+                    error_hints.append("Undefined LaTeX command - check for typos or missing packages")
+                if "File `" in log_content and "not found" in log_content:
+                    error_hints.append("Missing file reference - check figure paths and bibliography files")
+                if "LaTeX Error: File" in log_content and "not found" in log_content:
+                    error_hints.append("Missing LaTeX package - install required packages")
+                if "Missing \\begin{document}" in log_content:
+                    error_hints.append("Missing \\begin{document} command - check document structure")
+                if "Division by 0" in log_content and "graphics" in log_content.lower():
+                    error_hints.append("Graphics error - ensure PNG files are valid and -shell-escape flag is used")
+
+                # Extract the most recent error messages for context
+                error_lines = []
+                for line in reversed(log_content.split('\n')):
+                    line = line.strip()
+                    if line and ('Error' in line or '!' in line or '***' in line):
+                        error_lines.append(line)
+                        if len(error_lines) >= 5:  # Get last 5 error lines
+                            break
+                recent_errors = '\n'.join(reversed(error_lines)) if error_lines else "No specific errors found in log"
+
+                enhanced_suggestions = [
+                    f"Check full log file: {log_file}",
+                    "Verify LaTeX syntax in source file",
+                    "Ensure all required packages are available",
+                    "Check for missing figure files or incorrect paths",
+                    "Verify document has proper \\begin{document} and \\end{document} structure"
+                ]
+
+                if error_hints:
+                    enhanced_suggestions.extend([f"Common issue: {hint}" for hint in error_hints])
+
                 raise CompilationError(
-                    "LaTeX compilation failed",
+                    f"LaTeX compilation failed (exit code: {result.returncode})",
                     context={
                         "exit_code": result.returncode,
-                        "stderr": result.stderr[:200],
-                        "log_tail": log_content[-500:] if len(log_content) > 500 else log_content
+                        "stderr": result.stderr[:300] if result.stderr else "",
+                        "log_file": str(log_file),
+                        "log_tail": log_content[-800:] if len(log_content) > 800 else log_content,
+                        "recent_errors": recent_errors,
+                        "detected_issues": error_hints
                     },
-                    suggestions=[
-                        f"Check log file: {log_file}",
-                        "Verify LaTeX syntax in source file",
-                        "Ensure all required packages are available",
-                        "Check for missing figure files or incorrect paths"
-                    ]
+                    suggestions=enhanced_suggestions
                 )
                 
         pdf_file = output_dir / f"{tex_file.stem}.pdf"

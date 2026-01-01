@@ -27,7 +27,7 @@ graph TD
         SCIENTIFIC[scientific/<br/>Scientific utilities<br/>Benchmarking, validation]
     end
 
-    subgraph "📊 Build & Quality"
+    subgraph "📊 Reporting & Quality"
         REPORTING[reporting/<br/>Pipeline reporting<br/>Error aggregation]
     end
 
@@ -50,6 +50,59 @@ graph TD
     classDef doc fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef integration fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef build fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class CORE,EXCEPTIONS core
+    class DOC,RENDER,VALIDATION doc
+    class LLM,PUBLISHING,SCIENTIFIC integration
+    class REPORTING build
+```
+
+## Infrastructure Dependencies
+
+```mermaid
+flowchart TD
+    subgraph "📋 Project Scripts"
+        ANALYSIS[analysis_pipeline.py<br/>Data processing & figures]
+        FIGURES[example_figure.py<br/>Visualization scripts]
+    end
+
+    subgraph "🏗️ Infrastructure Layer"
+        CORE_MOD[core/<br/>Foundation utilities]
+        VALIDATION_MOD[validation/<br/>Quality checks]
+        DOCUMENTATION_MOD[documentation/<br/>Figure management]
+        RENDERING_MOD[rendering/<br/>Output generation]
+        LLM_MOD[llm/<br/>AI assistance]
+        PUBLISHING_MOD[publishing/<br/>Academic dissemination]
+        REPORTING_MOD[reporting/<br/>Pipeline reporting]
+    end
+
+    subgraph "📊 Data Flow"
+        SCRIPTS -->|import| INFRASTRUCTURE
+        SCRIPTS -->|generate| OUTPUTS[Generated outputs<br/>figures, data, PDFs]
+    end
+
+    ANALYSIS --> CORE_MOD
+    ANALYSIS --> DOCUMENTATION_MOD
+    ANALYSIS --> VALIDATION_MOD
+
+    FIGURES --> DOCUMENTATION_MOD
+    FIGURES --> RENDERING_MOD
+
+    CORE_MOD --> VALIDATION_MOD
+    CORE_MOD --> DOCUMENTATION_MOD
+    CORE_MOD --> RENDERING_MOD
+    CORE_MOD --> LLM_MOD
+    CORE_MOD --> PUBLISHING_MOD
+    CORE_MOD --> REPORTING_MOD
+
+    classDef scripts fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef infra fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class ANALYSIS,FIGURES scripts
+    class CORE_MOD,VALIDATION_MOD,DOCUMENTATION_MOD,RENDERING_MOD,LLM_MOD,PUBLISHING_MOD,REPORTING_MOD infra
+    class OUTPUTS output
+```
     classDef orchestrator fill:#fce4ec,stroke:#c2185b,stroke-width:3px
 
     class CORE,EXCEPTIONS core
@@ -199,7 +252,7 @@ flowchart LR
 - **[publishing/](publishing/)** - Academic publishing workflows
 - **[scientific/](scientific/)** - Scientific computing utilities
 
-### Build & Quality
+### Reporting & Quality
 - **[reporting/](reporting/)** - Pipeline reporting and error aggregation
 
 ## Usage in Projects
@@ -215,6 +268,43 @@ from infrastructure.llm.core import LLMClient
 # Use infrastructure components
 renderer = RenderManager()
 client = LLMClient()
+```
+
+### Usage Patterns
+
+```mermaid
+flowchart TD
+    subgraph "🚀 Project Script Lifecycle"
+        INIT[Initialize<br/>Import infrastructure]
+        CONFIG[Load Configuration<br/>config_loader]
+        PROCESS[Process Data<br/>core utilities]
+        VALIDATE[Validate Output<br/>validation module]
+        RENDER[Generate Outputs<br/>rendering module]
+        REPORT[Report Results<br/>reporting module]
+    end
+
+    subgraph "🔧 Infrastructure Integration"
+        CORE[core/<br/>logging, progress]
+        DOC[documentation/<br/>figures, markdown]
+        LLM[llm/<br/>AI assistance]
+        PUBLISH[publishing/<br/>academic platforms]
+    end
+
+    INIT --> CORE
+    CONFIG --> CORE
+    PROCESS --> DOC
+    VALIDATE --> DOC
+    RENDER --> DOC
+    REPORT --> CORE
+
+    PROCESS --> LLM
+    RENDER --> PUBLISH
+
+    classDef script fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef infra fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+
+    class INIT,CONFIG,PROCESS,VALIDATE,RENDER,REPORT script
+    class CORE,DOC,LLM,PUBLISH infra
 ```
 
 ## Testing

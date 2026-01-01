@@ -39,33 +39,43 @@ logger = get_logger(__name__)
 
 def verify_project_completion(repo_root: Path, project_name: str) -> bool:
     """Verify that a project has completed the pipeline successfully.
-    
+
     Args:
         repo_root: Repository root path
         project_name: Name of the project
-        
+
     Returns:
         True if project completed successfully, False otherwise
     """
     project_root = repo_root / "projects" / project_name
-    
-    # Check for pipeline report
-    pipeline_report = project_root / "output" / "reports" / "pipeline_report.json"
-    if not pipeline_report.exists():
-        logger.warning(f"Project '{project_name}' missing pipeline report")
-        return False
-    
-    # Check for test results (optional - warn if missing but continue)
-    test_results = project_root / "output" / "reports" / "test_results.json"
-    if not test_results.exists():
-        logger.warning(f"Project '{project_name}' missing test results - will use limited data")
-    
-    # Check for output directory
     output_dir = repo_root / "output" / project_name
+
+    # Check for output directory (primary requirement)
     if not output_dir.exists():
         logger.warning(f"Project '{project_name}' missing output directory")
         return False
-    
+
+    # Check for pipeline report (optional - executive report can work without it)
+    pipeline_report = project_root / "output" / "reports" / "pipeline_report.json"
+    if not pipeline_report.exists():
+        logger.debug(f"Project '{project_name}' missing pipeline report - executive report will use alternative data sources")
+    else:
+        logger.debug(f"Project '{project_name}' has pipeline report")
+
+    # Check for test results (optional - warn if missing but continue)
+    test_results = project_root / "output" / "reports" / "test_results.json"
+    if not test_results.exists():
+        logger.debug(f"Project '{project_name}' missing test results - executive report will use limited data")
+    else:
+        logger.debug(f"Project '{project_name}' has test results")
+
+    # Check for manuscript PDF (indicates PDF generation completed)
+    manuscript_pdf = output_dir / "pdf" / f"{project_name}_combined.pdf"
+    if not manuscript_pdf.exists():
+        logger.warning(f"Project '{project_name}' missing combined PDF - may indicate incomplete pipeline")
+        return False
+
+    logger.debug(f"Project '{project_name}' verification passed")
     return True
 
 

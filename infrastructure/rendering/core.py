@@ -72,7 +72,31 @@ class RenderManager:
                     outputs.append(self.render_slides(source_file, format="beamer"))
                     logger.debug("Beamer slides rendered successfully")
                 except Exception as e:
-                    logger.warning(f"Failed to render Beamer slides: {e}")
+                    # Enhanced error reporting for Beamer slide failures
+                    error_msg = f"Failed to render Beamer slides: {str(e)}"
+
+                    # Check if PDF was created but is empty (0.0 KB)
+                    try:
+                        beamer_pdf = self.slides_renderer.render(source_file, format="beamer")
+                        if beamer_pdf.exists():
+                            size_mb = beamer_pdf.stat().st_size / (1024 * 1024)
+                            if size_mb < 0.001:  # Less than 1KB
+                                error_msg += f" (PDF created but empty: {size_mb:.3f} MB)"
+                                error_msg += f" - Check LaTeX compilation log: {beamer_pdf.parent / beamer_pdf.stem}.log"
+                            else:
+                                error_msg += f" (PDF created: {size_mb:.2f} MB)"
+                    except:
+                        pass  # Ignore errors when checking PDF status
+
+                    logger.warning(error_msg)
+
+                    # Provide additional context if available
+                    if hasattr(e, 'context') and e.context:
+                        log_file = e.context.get('log_file')
+                        if log_file:
+                            logger.warning(f"  LaTeX log file: {log_file}")
+
+                    logger.warning("  Continuing with other formats...")
                     # Continue with other formats
 
                 # 2. HTML web version

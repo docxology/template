@@ -32,6 +32,7 @@ from infrastructure.core.logging_progress import (
     log_with_spinner, StreamingProgress
 )
 from infrastructure.core.config_loader import get_testing_config
+from infrastructure.core.file_operations import clean_coverage_files
 from infrastructure.reporting.test_reporter import (
     parse_pytest_output,
     generate_test_report,
@@ -40,6 +41,23 @@ from infrastructure.reporting.test_reporter import (
 
 # Set up logger for this module
 logger = get_logger(__name__)
+
+
+def _check_cov_datafile_support() -> bool:
+    """Check if pytest-cov supports the --cov-datafile flag.
+
+    Returns:
+        True if --cov-datafile is supported, False otherwise
+    """
+    try:
+        result = subprocess.run(
+            ["uv", "run", "pytest", "--help"],
+            capture_output=True, text=True, timeout=10
+        )
+        return "--cov-datafile" in result.stdout
+    except (subprocess.TimeoutExpired, subprocess.CalledProcessError, FileNotFoundError):
+        # If we can't check, assume it's not supported to be safe
+        return False
 
 
 def extract_failed_tests(stdout: str, stderr: str) -> list[dict]:
@@ -421,6 +439,10 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
     """
     start_time = time.time()
     project_root = repo_root / "projects" / project_name
+
+    # Clean coverage files to prevent database corruption
+    clean_coverage_files(repo_root)
+
     log_substep("Running infrastructure tests (60% coverage threshold)...")
     log_substep("(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)")
     logger.info(f"Infrastructure tests started at {time.strftime('%H:%M:%S', time.localtime(start_time))}")
@@ -445,12 +467,25 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
         "--ignore=" + str(repo_root / "tests" / "integration" / "test_module_interoperability.py"),
         "-m", "not requires_ollama",
         "--cov=infrastructure",
+    ]
+
+    # Set up environment with correct Python paths (needed for discovery and execution)
+    env = os.environ.copy()
+
+    # Add cov-datafile flag if supported, otherwise use environment variable
+    cov_datafile_supported = _check_cov_datafile_support()
+    if cov_datafile_supported:
+        cmd.append("--cov-datafile=.coverage.infra")
+    else:
+        env["COVERAGE_FILE"] = ".coverage.infra"
+
+    cmd.extend([
         "--cov-report=term-missing",
         "--cov-report=html",
         "--cov-report=json:coverage_infra.json",
         "--cov-fail-under=0",
         "--tb=short",
-    ]
+    ])
 
     # Add slow test filtering unless explicitly requested
     if not include_slow:
@@ -460,9 +495,6 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
     # Infrastructure tests run in quiet mode to avoid overwhelming output
     # but with enhanced keyword filtering to capture summary
     cmd.extend(["-q", "--tb=short"])  # Quiet mode with short traceback for failure extraction
-
-    # Set up environment with correct Python paths (needed for discovery and execution)
-    env = os.environ.copy()
     pythonpath_parts = [
         str(repo_root),
         str(repo_root / "infrastructure"),
@@ -495,14 +527,33 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
             timeout=30  # 30 second timeout for discovery
         )
 
-        # Parse test count from discovery output
-        test_count_match = re.search(r'(\d+)\s+tests?\s+collected', discovery_result.stdout)
-        if test_count_match:
-            test_count = int(test_count_match.group(1))
+        # Parse test count from discovery output with multiple fallback patterns
+        test_count = None
+        combined_output = discovery_result.stdout + "\n" + discovery_result.stderr
+
+        # Try multiple patterns for different pytest output formats
+        patterns = [
+            r'(\d+)\s+tests?\s+collected',  # "123 tests collected"
+            r'collected\s+(\d+)\s+items?',  # "collected 123 items"
+            r'found\s+(\d+)\s+tests?',      # "found 123 tests"
+            r'(\d+)\s+tests?\s+found',      # "123 tests found"
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, combined_output, re.IGNORECASE)
+            if match:
+                try:
+                    test_count = int(match.group(1))
+                    break
+                except (ValueError, IndexError):
+                    continue
+
+        if test_count is not None:
             discovery_time = time.time() - discovery_start
             log_success(f"Discovered {test_count} infrastructure tests in {discovery_time:.1f}s")
         else:
             logger.warning("Could not parse test count from infrastructure test discovery")
+            logger.debug(f"Discovery output: {combined_output[:500]}...")
 
     except (subprocess.TimeoutExpired, subprocess.SubprocessError) as e:
         logger.warning(f"Infrastructure test discovery failed: {e}")
@@ -513,8 +564,34 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
         # Phase 2: Test execution
         execution_start = time.time()
         logger.info("Phase 2: Executing infrastructure tests...")
-        with log_with_spinner("Running infrastructure tests", logger):
-            exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, repo_root, env, quiet)
+
+        # Execute tests with coverage error handling and retry
+        max_retries = 1  # One retry after cleanup
+        retry_count = 0
+
+        while retry_count <= max_retries:
+            try:
+                with log_with_spinner("Running infrastructure tests", logger):
+                    exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, repo_root, env, quiet)
+                break  # Success, exit retry loop
+
+            except subprocess.SubprocessError as e:
+                # Check if this is a coverage database corruption error
+                error_msg = str(e)
+                if "coverage.exceptions.DataError" in error_msg or "no such table: file" in error_msg:
+                    retry_count += 1
+                    if retry_count <= max_retries:
+                        logger.warning(f"Coverage database corruption detected, cleaning and retrying ({retry_count}/{max_retries})...")
+                        clean_coverage_files(repo_root)
+                        logger.info("Retrying infrastructure test execution...")
+                        continue
+                    else:
+                        logger.error("Coverage database corruption persisted after cleanup attempts")
+                        raise e
+                else:
+                    # Not a coverage error, re-raise
+                    raise e
+
         execution_time = time.time() - execution_start
         logger.info(f"✓ Infrastructure test execution completed in {execution_time:.1f}s")
 
@@ -683,6 +760,10 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
         Tuple of (exit_code, test_results_dict)
     """
     start_time = time.time()
+
+    # Clean coverage files to prevent database corruption
+    clean_coverage_files(repo_root)
+
     log_substep(f"Running project tests for '{project_name}' (90% coverage threshold)...")
     logger.info(f"Project tests started at {time.strftime('%H:%M:%S', time.localtime(start_time))}")
 
@@ -694,39 +775,46 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
     logger.info(f"Coverage target: projects/{project_name}/src (90% minimum)")
     logger.info(f"Filters applied: exclude integration tests")
 
-    # Build pytest command for project tests using uv run pytest
+    # Build pytest command for project tests using uv run pytest from project directory
+    # This ensures the project's pyproject.toml pytest configuration is used
     # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
     cmd = [
         "uv",
         "run",
+        "--project=" + str(project_root),
         "pytest",
-        str(project_root / "tests"),
-        f"--cov=projects/{project_name}/src",
+        "tests",
+        f"--cov=src",
+    ]
+
+    # Set up environment - running from project directory so paths are relative
+    env = os.environ.copy()
+
+    # Add cov-datafile flag if supported, otherwise use environment variable
+    cov_datafile_supported = _check_cov_datafile_support()
+    if cov_datafile_supported:
+        cmd.append("--cov-datafile=.coverage.project")
+    else:
+        env["COVERAGE_FILE"] = ".coverage.project"
+
+    cmd.extend([
         "--cov-report=term-missing",
         "--cov-report=html",
         "--cov-report=json:coverage_project.json",
         "--cov-fail-under=70",
         "--tb=short",
-    ]
+    ])
 
     # Add slow test filtering unless explicitly requested
     if not include_slow:
         cmd.extend(["-m", "not slow"])
 
     # Add verbosity based on quiet mode
-    # Infrastructure tests run in quiet mode to avoid overwhelming output
-    # but with enhanced keyword filtering to capture summary
-    cmd.extend(["-q", "--tb=short"])  # Quiet mode with short traceback for failure extraction
-
-    # Set up environment with correct Python paths (needed for discovery and execution)
-    env = os.environ.copy()
-    pythonpath_parts = [
-        str(repo_root),
-        str(repo_root / "infrastructure"),
-        str(project_root / "src"),
-    ]
-    pythonpath = os.pathsep.join(pythonpath_parts)
-    env["PYTHONPATH"] = pythonpath
+    # Project tests need full output for proper result parsing
+    if quiet:
+        cmd.extend(["-q", "--tb=short"])  # Quiet mode with short traceback for failure extraction
+    else:
+        cmd.extend(["--tb=short"])  # Short traceback but allow summary output
 
     # Ensure uv is in PATH if available
     import shutil
@@ -750,14 +838,33 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
             timeout=30  # 30 second timeout for discovery
         )
 
-        # Parse test count from discovery output
-        test_count_match = re.search(r'(\d+)\s+tests?\s+collected', discovery_result.stdout)
-        if test_count_match:
-            test_count = int(test_count_match.group(1))
+        # Parse test count from discovery output with multiple fallback patterns
+        test_count = None
+        combined_output = discovery_result.stdout + "\n" + discovery_result.stderr
+
+        # Try multiple patterns for different pytest output formats
+        patterns = [
+            r'(\d+)\s+tests?\s+collected',  # "123 tests collected"
+            r'collected\s+(\d+)\s+items?',  # "collected 123 items"
+            r'found\s+(\d+)\s+tests?',      # "found 123 tests"
+            r'(\d+)\s+tests?\s+found',      # "123 tests found"
+        ]
+
+        for pattern in patterns:
+            match = re.search(pattern, combined_output, re.IGNORECASE)
+            if match:
+                try:
+                    test_count = int(match.group(1))
+                    break
+                except (ValueError, IndexError):
+                    continue
+
+        if test_count is not None:
             discovery_time = time.time() - discovery_start
             log_success(f"Discovered {test_count} project tests for '{project_name}' in {discovery_time:.1f}s")
         else:
             logger.warning(f"Could not parse test count from project test discovery for '{project_name}'")
+            logger.debug(f"Discovery output: {combined_output[:500]}...")
 
     except (subprocess.TimeoutExpired, subprocess.SubprocessError) as e:
         logger.warning(f"Project test discovery failed for '{project_name}': {e}")
@@ -768,8 +875,34 @@ def run_project_tests(repo_root: Path, project_name: str = "project", quiet: boo
         # Phase 2: Test execution
         execution_start = time.time()
         logger.info(f"Phase 2: Executing project tests for '{project_name}'...")
-        with log_with_spinner(f"Running project tests for '{project_name}'", logger):
-            exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, repo_root, env, quiet)
+
+        # Execute tests with coverage error handling and retry
+        max_retries = 1  # One retry after cleanup
+        retry_count = 0
+
+        while retry_count <= max_retries:
+            try:
+                with log_with_spinner(f"Running project tests for '{project_name}'", logger):
+                    exit_code, stdout_text, stderr_text = _run_pytest_stream(cmd, project_root, env, quiet)
+                break  # Success, exit retry loop
+
+            except subprocess.SubprocessError as e:
+                # Check if this is a coverage database corruption error
+                error_msg = str(e)
+                if "coverage.exceptions.DataError" in error_msg or "no such table: file" in error_msg:
+                    retry_count += 1
+                    if retry_count <= max_retries:
+                        logger.warning(f"Coverage database corruption detected for project '{project_name}', cleaning and retrying ({retry_count}/{max_retries})...")
+                        clean_coverage_files(repo_root)
+                        logger.info(f"Retrying project test execution for '{project_name}'...")
+                        continue
+                    else:
+                        logger.error(f"Coverage database corruption persisted after cleanup attempts for project '{project_name}'")
+                        raise e
+                else:
+                    # Not a coverage error, re-raise
+                    raise e
+
         execution_time = time.time() - execution_start
         logger.info(f"✓ Project test execution completed in {execution_time:.1f}s")
 
@@ -1086,15 +1219,32 @@ def report_results(
         # Always show debug commands
         print()
         print("  🔧 Quick Fix Suggestions:")
-        if any('import' in str(f) or 'module' in str(f).lower() for f in failed_tests):
-            print("    - Check for missing dependencies: pip install pytest-httpserver")
-        if any('coverage' in str(f).lower() for f in failed_tests):
-            print("    - Coverage issues: run with --no-cov to skip coverage")
-        if any('timeout' in str(f).lower() for f in failed_tests):
-            print("    - Timeout issues: increase timeout with --timeout=60")
+
+        # Check for specific error types and provide targeted solutions
+        has_import_errors = any('import' in str(f) or 'module' in str(f).lower() for f in failed_tests)
+        has_coverage_errors = any('coverage' in str(f).lower() or 'dataerror' in str(f).lower() or 'no such table' in str(f).lower() for f in failed_tests)
+        has_timeout_errors = any('timeout' in str(f).lower() for f in failed_tests)
+
+        if has_import_errors:
+            print("    - Missing dependencies: pip install pytest-httpserver pytest-timeout")
+            print("    - Import path issues: check PYTHONPATH includes repository root")
+
+        if has_coverage_errors:
+            print("    - Coverage database corruption: files automatically cleaned and retried")
+            print("    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests")
+            print("    - To skip coverage temporarily: pytest --no-cov tests/infrastructure/")
+            print("    - Coverage isolation: infrastructure and project tests use separate data files")
+
+        if has_timeout_errors:
+            print("    - Timeout issues: increase with --timeout=60 or PYTEST_TIMEOUT=60")
+            print("    - Identify slow tests: pytest --durations=10 tests/infrastructure/")
+            print("    - Skip slow tests: pytest -m 'not slow' tests/infrastructure/")
+
+        # General debugging suggestions
         print("    - Run individual failing tests: pytest tests/infrastructure/<test_file> -v")
         print("    - Debug with full traceback: pytest tests/infrastructure/<test_file> -s --tb=long")
         print("    - Run infrastructure tests only: python3 scripts/01_run_tests.py --infrastructure-only")
+        print("    - Check test environment: python3 scripts/00_setup_environment.py")
 
     # Project summary
     print()  # Add spacing
@@ -1161,15 +1311,36 @@ def report_results(
         # Always show debug commands
         print()
         print("  🔧 Quick Fix Suggestions:")
-        if any('import' in str(f) or 'module' in str(f).lower() for f in failed_tests):
-            print("    - Check for missing project dependencies")
-        if any('assertion' in str(f).lower() for f in failed_tests):
+
+        # Check for specific error types and provide targeted solutions
+        has_import_errors = any('import' in str(f) or 'module' in str(f).lower() for f in failed_tests)
+        has_assertion_errors = any('assertion' in str(f).lower() for f in failed_tests)
+        has_coverage_errors = any('coverage' in str(f).lower() or 'dataerror' in str(f).lower() or 'no such table' in str(f).lower() for f in failed_tests)
+        has_timeout_errors = any('timeout' in str(f).lower() for f in failed_tests)
+
+        if has_import_errors:
+            print("    - Missing project dependencies: check pyproject.toml and uv sync")
+            print("    - Import path issues: verify project src/ directory structure")
+
+        if has_assertion_errors:
             print("    - Review test assertions and expected values")
-        if any('timeout' in str(f).lower() for f in failed_tests):
-            print("    - Timeout issues: increase timeout with --timeout=60")
+            print("    - Check test data generation and reproducibility")
+
+        if has_coverage_errors:
+            print("    - Coverage database corruption: files automatically cleaned and retried")
+            print("    - If errors persist: rm -f .coverage* coverage_*.json && rerun tests")
+            print("    - Coverage isolation: project tests use separate data file (.coverage.project)")
+
+        if has_timeout_errors:
+            print("    - Timeout issues: increase with --timeout=60 or PYTEST_TIMEOUT=60")
+            print(f"    - Identify slow tests: pytest --durations=10 projects/{project_name}/tests/")
+            print("    - Skip slow tests: pytest -m 'not slow' projects/{project_name}/tests/")
+
+        # General debugging suggestions
         print(f"    - Run individual failing tests: pytest projects/{project_name}/tests/<test_file> -v")
         print(f"    - Debug with full traceback: pytest projects/{project_name}/tests/<test_file> -s --tb=long")
         print(f"    - Run project tests only: python3 scripts/01_run_tests.py --project {project_name} --project-only")
+        print(f"    - Check project structure: verify projects/{project_name}/src/ and tests/ exist")
 
     # Overall summary
     print()  # Add spacing
@@ -1193,7 +1364,7 @@ def report_results(
     if overall_success:
         # Report infrastructure status separately
         if not infra_was_run:
-            print("Infrastructure: ⏭ SKIPPED (not run in this execution)")
+            print("Infrastructure: ⏭ SKIPPED (intentionally skipped - use --infra-only to run infrastructure tests)")
         elif infra_exit == 0:
             print("Infrastructure: ✓ PASSED "
                   f"({infra_passed}/{infra_total} tests, {infra_coverage:.1f}% coverage)")

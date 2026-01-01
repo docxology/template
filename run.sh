@@ -20,7 +20,32 @@
 #
 # Non-interactive mode: Use dedicated flags (--pipeline, --infra-tests, etc.)
 #
+# PROJECT DISCOVERY: This script discovers and operates only on active projects
+# in the projects/ directory. Projects in projects_archive/ are preserved but
+# not discovered or executed by infrastructure.
+#
 # Exit codes: 0 = success, 1 = failure, 2 = skipped (for optional stages)
+#
+# ARCHITECTURE: Thin Orchestration Pattern
+# =========================================
+# This script follows the thin orchestrator pattern where all business logic
+# resides in infrastructure/ and projects/{name}/src/ modules. This script acts
+# as a lightweight coordinator that:
+#
+# 1. Provides user interface (interactive menu)
+# 2. Delegates to Python orchestrators (execute_pipeline.py, execute_multi_project.py)
+# 3. Handles high-level coordination and error reporting
+# 4. Does NOT implement any scientific algorithms or business logic
+#
+# Business logic is implemented in:
+# - infrastructure/ : Generic, reusable modules (rendering, validation, etc.)
+# - projects/{name}/src/ : Project-specific scientific code and analysis
+#
+# This separation enables:
+# - Reusability across projects
+# - Thorough testing of business logic
+# - Clean separation of concerns
+# - Maintainable and extensible architecture
 ################################################################################
 
 set -euo pipefail
@@ -336,6 +361,46 @@ run_setup_environment() {
     log_stage_with_project 1 "Environment Setup" 9 "$project_name"
     log_project_context "$project_name" "Environment Setup"
 
+    # Discover and display available projects
+    log_info "Discovering available projects..."
+    if ! discover_projects; then
+        log_error "Failed to discover projects"
+        return 1
+    fi
+
+    # Display discovered projects summary
+    log_info "Discovered ${#PROJECT_LIST[@]} project(s):"
+    for proj in "${PROJECT_LIST[@]}"; do
+        local marker=""
+        if [[ "$proj" == "$project_name" ]]; then
+            marker="→ "
+        else
+            marker="  "
+        fi
+
+        # Check project structure
+        local has_src=""
+        local has_tests=""
+        local has_scripts=""
+        local has_manuscript=""
+
+        [[ -d "$REPO_ROOT/projects/$proj/src" ]] && has_src="src"
+        [[ -d "$REPO_ROOT/projects/$proj/tests" ]] && has_tests="tests"
+        [[ -d "$REPO_ROOT/projects/$proj/scripts" ]] && has_scripts="scripts"
+        [[ -d "$REPO_ROOT/projects/$proj/manuscript" ]] && has_manuscript="manuscript"
+
+        local structure_parts=()
+        [[ -n "$has_src" ]] && structure_parts+=("src")
+        [[ -n "$has_tests" ]] && structure_parts+=("tests")
+        [[ -n "$has_scripts" ]] && structure_parts+=("scripts")
+        [[ -n "$has_manuscript" ]] && structure_parts+=("manuscript")
+
+        local structure_str="${structure_parts[*]}"
+        echo -e "${marker}${BOLD}${proj}${NC}: ${structure_str}"
+    done
+    echo
+
+    # Execute Python setup script
     $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" --project "$project_name" --stage setup
     return $?
 }
@@ -545,7 +610,8 @@ run_full_pipeline() {
     local project_name="${2:-$CURRENT_PROJECT}"
     local skip_infra="${3:-false}"
 
-    # Use Python orchestrator script for pipeline execution
+    # THIN ORCHESTRATOR: Delegate to Python orchestrator script for pipeline execution
+    # This follows the thin orchestration pattern - all pipeline logic is in Python infrastructure
     local args="--project $project_name"
     if [[ "$skip_infra" == "true" ]]; then
         args="$args --skip-infra"
@@ -745,6 +811,9 @@ run_option_sequence() {
 }
 
 handle_menu_choice() {
+    # THIN ORCHESTRATOR: Menu handler delegates to Python infrastructure modules
+    # This function coordinates user choices but all actual work is done by
+    # infrastructure/ modules (PipelineExecutor, MultiProjectOrchestrator, etc.)
     local choice="$1"
     local start_time end_time duration
     local exit_code=0

@@ -28,9 +28,10 @@ def test_collect_output_statistics_counts_files(tmp_path: Path) -> None:
 
     stats = collect_output_statistics(repo_root, "project")
 
-    assert stats["pdf_files"] == 1
-    assert stats["figures"] == 2
-    assert stats["data_files"] == 1
+    # Check directory-level file counts
+    assert stats["directories"]["pdf"]["file_count"] == 1
+    assert stats["directories"]["figures"]["file_count"] == 2
+    assert stats["directories"]["data"]["file_count"] == 1
     assert stats["total_size_mb"] > 0
 
 
@@ -103,9 +104,9 @@ def test_generate_output_summary_with_errors(tmp_path: Path) -> None:
 def test_collect_output_statistics_no_output_dir(tmp_path: Path) -> None:
     """Test collect_output_statistics when output directory doesn't exist."""
     stats = collect_output_statistics(tmp_path, "project")
-    assert stats["pdf_files"] == 0
-    assert stats["figures"] == 0
-    assert stats["data_files"] == 0
+    assert stats["directories"]["pdf"]["file_count"] == 0
+    assert stats["directories"]["figures"]["file_count"] == 0
+    assert stats["directories"]["data"]["file_count"] == 0
     assert stats["total_size_mb"] == 0.0
 
 
@@ -117,9 +118,9 @@ def test_collect_output_statistics_empty_directories(tmp_path: Path) -> None:
     (repo_root / "project" / "output" / "data").mkdir(parents=True, exist_ok=True)
     
     stats = collect_output_statistics(repo_root, "project")
-    assert stats["pdf_files"] == 0
-    assert stats["figures"] == 0
-    assert stats["data_files"] == 0
+    assert stats["directories"]["pdf"]["file_count"] == 0
+    assert stats["directories"]["figures"]["file_count"] == 0
+    assert stats["directories"]["data"]["file_count"] == 0
     assert stats["total_size_mb"] == 0.0
 
 
@@ -134,6 +135,6 @@ def test_collect_output_statistics_size_calculation(tmp_path: Path) -> None:
     large_file.write_bytes(b"x" * (1024 * 1024))
 
     stats = collect_output_statistics(repo_root, "project")
-    assert stats["pdf_files"] == 1
+    assert stats["directories"]["pdf"]["file_count"] == 1
     assert stats["total_size_mb"] >= 1.0
 

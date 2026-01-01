@@ -227,12 +227,14 @@ class TestValidateCopiedOutputs:
     def test_validate_partial_outputs(self, temp_project_structure):
         """Test validation with partial outputs (e.g., only PDF, no slides/web)."""
         repo_root, output_dir = temp_project_structure
-        
-        # Copy only combined PDF
-        (output_dir / "project_combined.pdf").write_text("mock pdf")
-        
+
+        # Copy only combined PDF to pdf/ directory (where it actually gets copied)
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir(exist_ok=True)
+        (pdf_dir / "project_combined.pdf").write_text("mock pdf")
+
         result = validate_copied_outputs(output_dir)
-        
+
         # Should still pass if combined PDF exists
         assert result is True
 
@@ -319,15 +321,17 @@ class TestValidateOutputStructure:
         result = validate_output_structure(output_dir)
         
         assert result["valid"] is False
-        assert "project_combined.pdf (root)" in result["missing_files"]
+        assert "project_combined.pdf" in result["missing_files"]
     
     def test_structure_empty_directories(self, tmp_path):
         """Test structure validation with empty subdirectories."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
-        # Create PDF but leave slides/web empty
-        (output_dir / "project_combined.pdf").write_text("x" * 1024 * 100)  # > 100KB
+
+        # Create PDF in pdf/ directory but leave slides/web empty
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+        (pdf_dir / "project_combined.pdf").write_text("x" * 1024 * 100)  # > 100KB
         (output_dir / "slides").mkdir()
         (output_dir / "web").mkdir()
         
@@ -340,9 +344,11 @@ class TestValidateOutputStructure:
         """Test structure validation detects unusually small PDF."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
-        # Create very small PDF (< 100KB)
-        (output_dir / "project_combined.pdf").write_text("tiny")
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+
+        # Create very small PDF (< 100KB) in pdf/ directory
+        (pdf_dir / "project_combined.pdf").write_text("tiny")
         
         result = validate_output_structure(output_dir)
         

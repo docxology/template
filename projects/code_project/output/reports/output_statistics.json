@@ -1,0 +1,309 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 9,
+      "size_mb": "0.92",
+      "total_size_bytes": 969136,
+      "largest_files": [
+        {
+          "name": "code_project_combined.pdf",
+          "size_mb": "0.83",
+          "path": "pdf/code_project_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.log",
+          "size_mb": "0.04",
+          "path": "pdf/_combined_manuscript.log"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.02",
+          "path": "pdf/_combined_manuscript.tex"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 1,
+        ".aux": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".pdf": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 4,
+      "size_mb": "0.04",
+      "total_size_bytes": 40337,
+      "largest_files": [
+        {
+          "name": "03_results.html",
+          "size_mb": "0.01",
+          "path": "web/03_results.html"
+        },
+        {
+          "name": "02_methodology.html",
+          "size_mb": "0.01",
+          "path": "web/02_methodology.html"
+        },
+        {
+          "name": "04_conclusion.html",
+          "size_mb": "0.01",
+          "path": "web/04_conclusion.html"
+        }
+      ],
+      "extensions": {
+        ".html": 4
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 29,
+      "size_mb": "0.34",
+      "total_size_bytes": 351581,
+      "largest_files": [
+        {
+          "name": "03_results_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/03_results_slides.log"
+        },
+        {
+          "name": "02_methodology_slides.log",
+          "size_mb": "0.05",
+          "path": "slides/02_methodology_slides.log"
+        },
+        {
+          "name": "01_introduction_slides.log",
+          "size_mb": "0.05",
+          "path": "slides/01_introduction_slides.log"
+        }
+      ],
+      "extensions": {
+        ".pdf": 4,
+        ".log": 4,
+        ".snm": 4,
+        ".aux": 4,
+        ".nav": 4,
+        ".toc": 4,
+        ".tex": 4,
+        ".vrb": 1
+      }
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 7,
+      "size_mb": "0.90",
+      "total_size_bytes": 944158,
+      "largest_files": [
+        {
+          "name": "algorithm_complexity.png",
+          "size_mb": "0.25",
+          "path": "figures/algorithm_complexity.png"
+        },
+        {
+          "name": "convergence_rate_comparison.png",
+          "size_mb": "0.17",
+          "path": "figures/convergence_rate_comparison.png"
+        },
+        {
+          "name": "convergence_plot.png",
+          "size_mb": "0.17",
+          "path": "figures/convergence_plot.png"
+        }
+      ],
+      "extensions": {
+        ".png": 6,
+        ".json": 1
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 238,
+      "largest_files": [
+        {
+          "name": "optimization_results.csv",
+          "size_mb": "0.00",
+          "path": "data/optimization_results.csv"
+        }
+      ],
+      "extensions": {
+        ".csv": 1
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 8,
+      "size_mb": "0.01",
+      "total_size_bytes": 6891,
+      "largest_files": [
+        {
+          "name": "validation_report.json",
+          "size_mb": "0.00",
+          "path": "reports/validation_report.json"
+        },
+        {
+          "name": "test_results.json",
+          "size_mb": "0.00",
+          "path": "reports/test_results.json"
+        },
+        {
+          "name": "test_results.md",
+          "size_mb": "0.00",
+          "path": "reports/test_results.md"
+        }
+      ],
+      "extensions": {
+        ".json": 6,
+        ".md": 2
+      }
+    },
+    "simulations": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "llm": {
+      "exists": true,
+      "file_count": 9,
+      "size_mb": "0.06",
+      "total_size_bytes": 66660,
+      "largest_files": [
+        {
+          "name": "combined_review.md",
+          "size_mb": "0.02",
+          "path": "llm/combined_review.md"
+        },
+        {
+          "name": "translation_hi.md",
+          "size_mb": "0.01",
+          "path": "llm/translation_hi.md"
+        },
+        {
+          "name": "translation_ru.md",
+          "size_mb": "0.01",
+          "path": "llm/translation_ru.md"
+        }
+      ],
+      "extensions": {
+        ".md": 8,
+        ".json": 1
+      }
+    },
+    "logs": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    }
+  },
+  "total_files": 67,
+  "total_size_mb": 2.268792152404785,
+  "largest_files": [
+    {
+      "name": "code_project_combined.pdf",
+      "size_mb": "0.83",
+      "category": "pdf",
+      "path": "pdf/code_project_combined.pdf"
+    },
+    {
+      "name": "algorithm_complexity.png",
+      "size_mb": "0.25",
+      "category": "figures",
+      "path": "figures/algorithm_complexity.png"
+    },
+    {
+      "name": "convergence_rate_comparison.png",
+      "size_mb": "0.17",
+      "category": "figures",
+      "path": "figures/convergence_rate_comparison.png"
+    },
+    {
+      "name": "convergence_plot.png",
+      "size_mb": "0.17",
+      "category": "figures",
+      "path": "figures/convergence_plot.png"
+    },
+    {
+      "name": "03_results_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/03_results_slides.log"
+    },
+    {
+      "name": "02_methodology_slides.log",
+      "size_mb": "0.05",
+      "category": "slides",
+      "path": "slides/02_methodology_slides.log"
+    },
+    {
+      "name": "01_introduction_slides.log",
+      "size_mb": "0.05",
+      "category": "slides",
+      "path": "slides/01_introduction_slides.log"
+    },
+    {
+      "name": "_combined_manuscript.log",
+      "size_mb": "0.04",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.log"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.02",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "combined_review.md",
+      "size_mb": "0.02",
+      "category": "llm",
+      "path": "llm/combined_review.md"
+    }
+  ],
+  "missing_expected_files": [
+    "code_project_combined.pdf or project_combined.pdf"
+  ],
+  "file_counts_by_type": {
+    ".md": 11,
+    ".log": 5,
+    ".aux": 5,
+    ".blg": 1,
+    ".bib": 1,
+    ".pdf": 5,
+    ".tex": 5,
+    ".toc": 5,
+    ".bbl": 1,
+    ".html": 4,
+    ".snm": 4,
+    ".nav": 4,
+    ".vrb": 1,
+    ".png": 6,
+    ".json": 8,
+    ".csv": 1
+  },
+  "sizes_by_category": {
+    "pdf": 0.9242401123046875,
+    "web": 0.038468360900878906,
+    "slides": 0.3352937698364258,
+    "figures": 0.9004192352294922,
+    "data": 0.0002269744873046875,
+    "reports": 0.006571769714355469,
+    "simulations": 0.0,
+    "llm": 0.06357192993164062,
+    "logs": 0.0
+  },
+  "pdf_files": 9,
+  "figures": 7,
+  "data_files": 1
+}

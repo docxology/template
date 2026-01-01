@@ -32,8 +32,9 @@ class TestEdgeCasesAndErrorPaths:
         # These should not crash - integrity module handles invalid paths gracefully
         # Note: calculate_file_hash may not exist, so we test verify_file_integrity instead
         result = integrity.verify_file_integrity([invalid])
-        # Should return a list (may be empty or contain error info)
-        assert isinstance(result, list)
+        # Should return a dict mapping paths to integrity status
+        assert isinstance(result, dict)
+        assert str(invalid) in result
 
     def test_malformed_data_handling(self, tmp_path):
         """Test handling of malformed data files."""
@@ -42,8 +43,9 @@ class TestEdgeCasesAndErrorPaths:
         
         # Should handle gracefully - verify_file_integrity handles invalid files
         result = integrity.verify_file_integrity([bad_json])
-        # Result should be a list, may be empty or contain error info
-        assert isinstance(result, list)
+        # Result should be a dict mapping paths to integrity status
+        assert isinstance(result, dict)
+        assert str(bad_json) in result
 
 
 

@@ -1,0 +1,24 @@
+\contentsline {section}{\numberline {1}Abstract}{3}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}The Traditional View: Active Inference as Free Energy Minimization}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Beyond the Traditional View: Active Inference as Meta-Methodology}{4}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Meta-Epistemic Aspect}{4}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Meta-Pragmatic Aspect}{5}{subsubsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.3}The 2×2 Framework: Data/Meta-Data × Cognitive/Meta-Cognitive}{5}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Contributions and Implications}{5}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Paper Structure}{6}{subsection.2.5}%
+\contentsline {section}{\numberline {3}Methodology}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}The 2×2 Matrix Framework}{7}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Framework Dimensions}{7}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Quadrant Definitions}{7}{subsubsection.3.1.2}%
+\contentsline {paragraph}{\numberline {3.1.2.1}Quadrant 1: Data Processing (Cognitive)}{7}{paragraph.3.1.2.1}%
+\contentsline {paragraph}{\numberline {3.1.2.2}Quadrant 2: Meta-Data Organization (Cognitive)}{7}{paragraph.3.1.2.2}%
+\contentsline {paragraph}{\numberline {3.1.2.3}Quadrant 3: Reflective Processing (Meta-Cognitive)}{8}{paragraph.3.1.2.3}%
+\contentsline {paragraph}{\numberline {3.1.2.4}Quadrant 4: Higher-Order Reasoning (Meta-Cognitive)}{8}{paragraph.3.1.2.4}%
+\contentsline {subsection}{\numberline {3.2}Active Inference as Meta-Epistemic}{8}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Epistemic Framework Specification}{8}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Meta-Epistemic Implications}{9}{subsubsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.3}Active Inference as Meta-Pragmatic}{9}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Pragmatic Framework Specification}{9}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Meta-Pragmatic Implications}{9}{subsubsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.4}Integration Across Quadrants}{9}{subsection.3.4}%

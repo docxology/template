@@ -98,16 +98,70 @@ def execute_pipeline(
         else:
             results = executor.execute_full_pipeline()
 
-        # Generate and display summary
+        # Generate comprehensive pipeline report
         output_dir = repo_root / 'projects' / project_name / 'output'
-        summary = generate_pipeline_summary(
-            project_name=project_name,
+        reports_dir = output_dir / 'reports'
+        reports_dir.mkdir(parents=True, exist_ok=True)
+        
+        total_duration = sum(r.duration for r in results)
+        
+        # Generate text summary for display
+        text_summary = generate_pipeline_summary(
             stage_results=results,
-            total_duration=sum(r.duration for r in results),
+            total_duration=total_duration,
             output_dir=output_dir,
+            skip_infra=skip_infra,
             format='text'
         )
-        print(summary)
+        print(text_summary)
+        
+        # Generate JSON and HTML reports for programmatic access
+        try:
+            from infrastructure.reporting import generate_pipeline_report, save_pipeline_report, collect_output_statistics
+            from infrastructure.core.logging_utils import generate_log_summary
+            
+            # Collect output statistics
+            output_stats = collect_output_statistics(repo_root, project_name)
+            
+            # Generate log summary if log file exists
+            log_summary = None
+            log_file = output_dir / "logs" / "pipeline.log"
+            if log_file.exists():
+                try:
+                    log_summary_file = reports_dir / "log_summary.txt"
+                    log_summary_text = generate_log_summary(log_file, log_summary_file)
+                    logger.info("Log summary generated")
+                    log_summary = {
+                        'summary_file': str(log_summary_file),
+                        'preview': log_summary_text[:500]  # First 500 chars
+                    }
+                except Exception as e:
+                    logger.warning(f"Failed to generate log summary: {e}")
+            
+            # Generate comprehensive pipeline report
+            pipeline_report = generate_pipeline_report(
+                stage_results=[{
+                    'name': r.stage_name,
+                    'exit_code': r.exit_code,
+                    'duration': r.duration,
+                    'error_message': r.error_message
+                } for r in results],
+                total_duration=total_duration,
+                repo_root=repo_root,
+                output_statistics=output_stats
+            )
+            
+            # Save report in multiple formats
+            saved_files = save_pipeline_report(pipeline_report, reports_dir, formats=['json', 'html', 'markdown'])
+            logger.info(f"Pipeline reports saved to {reports_dir}")
+            for fmt, path in saved_files.items():
+                logger.info(f"  • {fmt.upper()}: {path.name}")
+            
+            if log_summary:
+                logger.info(f"  • LOG SUMMARY: log_summary.txt")
+                
+        except Exception as e:
+            logger.warning(f"Failed to generate comprehensive pipeline report: {e}")
 
         # Return appropriate exit code
         success = all(r.success for r in results)

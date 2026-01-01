@@ -6,7 +6,7 @@
 
 **For detailed testing standards and patterns, see:**
 - **[Testing Standards](../../.cursorrules/testing_standards.md)** - Complete testing patterns, coverage requirements, and best practices
-- **[Advanced Usage](../guides/ADVANCED_USAGE.md)** - Test-driven development (TDD) workflow guide
+- **[Testing and Reproducibility](../guides/TESTING_AND_REPRODUCIBILITY.md)** - Test-driven development (TDD) workflow guide
 
 ## Quick Start
 

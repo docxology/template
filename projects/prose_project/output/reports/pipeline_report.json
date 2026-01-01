@@ -1,0 +1,193 @@
+{
+  "timestamp": "2026-01-01T14:48:47.221764",
+  "total_duration": 332.8798749446869,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.007370948791503906,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 0.5603652000427246,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Infrastructure Tests",
+      "exit_code": 0,
+      "duration": 325.1042597293854,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 5.987184047698975,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 1,
+      "duration": 1.2206950187683105,
+      "status": "failed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "web": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "data": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 6,
+        "size_mb": "0.01",
+        "total_size_bytes": 13897,
+        "largest_files": [
+          {
+            "name": "manuscript_validation.json",
+            "size_mb": "0.01",
+            "path": "reports/manuscript_validation.json"
+          },
+          {
+            "name": "manuscript_validation.md",
+            "size_mb": "0.00",
+            "path": "reports/manuscript_validation.md"
+          },
+          {
+            "name": "test_results.json",
+            "size_mb": "0.00",
+            "path": "reports/test_results.json"
+          }
+        ],
+        "extensions": {
+          ".md": 3,
+          ".json": 3
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      }
+    },
+    "total_files": 6,
+    "total_size_mb": 0.013253211975097656,
+    "largest_files": [
+      {
+        "name": "manuscript_validation.json",
+        "size_mb": "0.01",
+        "category": "reports",
+        "path": "reports/manuscript_validation.json"
+      },
+      {
+        "name": "manuscript_validation.md",
+        "size_mb": "0.00",
+        "category": "reports",
+        "path": "reports/manuscript_validation.md"
+      },
+      {
+        "name": "test_results.json",
+        "size_mb": "0.00",
+        "category": "reports",
+        "path": "reports/test_results.json"
+      }
+    ],
+    "missing_expected_files": [
+      "prose_project_combined.pdf or project_combined.pdf"
+    ],
+    "file_counts_by_type": {
+      ".md": 3,
+      ".json": 3
+    },
+    "sizes_by_category": {
+      "pdf": 0.0,
+      "web": 0.0,
+      "slides": 0.0,
+      "figures": 0.0,
+      "data": 0.0,
+      "reports": 0.013253211975097656,
+      "simulations": 0.0,
+      "llm": 0.0,
+      "logs": 0.0
+    },
+    "pdf_files": 0,
+    "figures": 0,
+    "data_files": 0
+  }
+}

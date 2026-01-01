@@ -40,6 +40,53 @@ pytest tests/ -x
 - `requires_ollama`: marks tests that need a running Ollama service. Skip with `-m "not requires_ollama"`.
 ```
 
+## Recent Test Fixes
+
+### ✅ Infrastructure Test Fixes Completed
+
+**Project Test Imports:**
+- Fixed `test_reporting.py` and `test_validation.py` collection errors
+- Updated `projects/project/tests/conftest.py` to add repository root to Python path
+- Resolved infrastructure module import issues in project tests
+
+**Core Infrastructure Tests:**
+- **Checkpoint Tests**: Fixed directory existence expectations and macOS permission testing
+- **CLI Tests**: Updated subprocess assertions to match actual output format
+- **Logging Tests**: Removed syntax error and eliminated Mock/patch imports
+- **Validation Tests**: Fixed CLI test manuscript directory argument handling
+- **Integration Tests**: Corrected type assertions for integrity verification functions
+
+**LLM Tests (Partial):**
+- Migrated `test_query_fallback_on_connection_error` to real HTTP calls
+- Enhanced `ollama_test_server` fixture for model-specific responses
+- Established pattern for no-mocks LLM testing
+
+**Output & Bash Tests:**
+- Fixed ANSI color code handling in bash logging tests
+- Updated output copying test assertions for current implementation
+
+### Test Execution Commands
+
+```bash
+# Full test suite with coverage
+python3 scripts/01_run_tests.py --project project
+
+# Infrastructure tests only
+python3 scripts/01_run_tests.py --infrastructure-only
+
+# Project tests only
+python3 scripts/01_run_tests.py --project-only --project project
+
+# Check for mock usage (should return no violations)
+python3 scripts/verify_no_mocks.py
+
+# Run with verbose output
+pytest tests/ -v --tb=short
+
+# Run failing tests only
+pytest tests/ --lf
+```
+
 ## Coverage Requirements (pipeline enforced)
 
 - **Project** (`project/src/`): 90% minimum (currently 100% - perfect coverage!)

@@ -12,7 +12,8 @@ The `tests/infrastructure/` directory contains comprehensive tests for the reusa
 
 ```
 tests/infrastructure/
-├── conftest.py                      # Shared test configuration
+├── conftest.py                      # Shared test configuration and fixtures
+├── test_utils.py                    # Test utility functions and helpers
 ├── test_project_discovery.py        # Project discovery and validation (284 lines)
 ├── build/                          # Build system tests
 │   ├── test_build_additional.py    # Additional build tests
@@ -137,6 +138,117 @@ tests/infrastructure/
 │   ├── test_validate_pdf_cli_coverage.py # Coverage PDF CLI
 │   ├── test_validate_pdf_cli_full.py # Full PDF CLI
 │   └── test_validation_cli.py      # General validation CLI
+```
+
+## Shared Test Infrastructure
+
+### Test Fixtures (`conftest.py`)
+
+The `conftest.py` file provides shared pytest fixtures for common test setup patterns:
+
+#### Project Configuration Fixtures
+```python
+@pytest.fixture
+def project_config_structure(tmp_path):
+    """Create standard project config structure: tmp_path/projects/project/manuscript/config.yaml"""
+
+@pytest.fixture
+def sample_project_config():
+    """Return sample project configuration data with paper, authors, publication info"""
+
+@pytest.fixture
+def project_config_file(project_config_structure, sample_project_config):
+    """Create config.yaml file with sample data"""
+```
+
+#### Output Structure Fixtures
+```python
+@pytest.fixture
+def output_directory_structure(tmp_path):
+    """Create standard output directory structure with all subdirectories"""
+
+@pytest.fixture
+def pdf_file_fixture(tmp_path):
+    """Create real PDF file using reportlab (or fallback if not available)"""
+
+@pytest.fixture
+def output_with_pdf(output_directory_structure, pdf_file_fixture):
+    """Create output directory with PDF in correct pdf/ subdirectory location"""
+```
+
+### Test Utilities (`test_utils.py`)
+
+The `test_utils.py` module provides helper functions for creating test data:
+
+#### Configuration Helpers
+```python
+def create_project_config_structure(repo_root: Path, project_name: str = "project") -> Path:
+    """Create projects/{project_name}/manuscript/config.yaml structure"""
+
+def create_sample_config_data() -> Dict[str, Any]:
+    """Return sample config data with realistic values"""
+
+def write_config_file(config_file: Path, config_data: Dict[str, Any]) -> None:
+    """Write config data to YAML file"""
+```
+
+#### Output Structure Helpers
+```python
+def create_output_directory_structure(output_dir: Path) -> None:
+    """Create pdf/, web/, slides/, figures/, data/, etc. subdirectories"""
+
+def create_pdf_file(pdf_path: Path, content: str = "Test PDF", size_kb: int = 100) -> None:
+    """Create real PDF file with specified content and size"""
+
+def create_output_with_pdf(output_dir: Path, pdf_name: str = "project_combined.pdf") -> Path:
+    """Create output structure with PDF in correct location"""
+```
+
+#### Content Creation Helpers
+```python
+def create_test_manuscript_files(manuscript_dir: Path) -> Dict[str, Path]:
+    """Create sample 01_abstract.md, 02_introduction.md, etc."""
+
+def create_test_figure_files(figures_dir: Path) -> Dict[str, Path]:
+    """Create sample PNG figure files"""
+
+def cleanup_test_directory(test_dir: Path) -> None:
+    """Clean up test directory and contents"""
+```
+
+### Usage Examples
+
+#### Testing Configuration Loading
+```python
+def test_config_loading(project_config_file):
+    """Test config loading with real file structure"""
+    config = load_config(project_config_file)
+    assert config['paper']['title'] == 'Test Research Paper'
+```
+
+#### Testing Output Validation
+```python
+def test_output_validation(output_with_pdf):
+    """Test output validation with proper PDF location"""
+    result = validate_copied_outputs(output_with_pdf)
+    assert result is True
+```
+
+#### Testing with Custom Config
+```python
+def test_custom_config(tmp_path):
+    """Test with custom configuration"""
+    from tests.infrastructure.test_utils import create_project_config_structure, write_config_file
+
+    config_file = create_project_config_structure(tmp_path, "myproject")
+    custom_config = {
+        'paper': {'title': 'My Custom Paper'},
+        'llm': {'translations': {'enabled': True, 'languages': ['es']}}
+    }
+    write_config_file(config_file, custom_config)
+
+    languages = get_translation_languages(tmp_path, "myproject")
+    assert languages == ['es']
 ```
 
 ## Test Organization by Module

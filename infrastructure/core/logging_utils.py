@@ -52,6 +52,200 @@ LOG_LEVEL_MAP = {
 }
 
 
+# =============================================================================
+# STANDARDIZED PROJECT LOGGING INTERFACE
+# =============================================================================
+
+"""
+Standardized Logging Interface for Research Projects
+
+This module provides a unified logging interface that works across both
+infrastructure and project layers. Projects can use the simple ProjectLogger
+class for consistent logging throughout their codebase.
+
+USAGE PATTERNS:
+
+1. Basic Project Logging:
+   ```python
+   from utils.logging import get_logger
+   log = get_logger(__name__)
+   log.info("Starting analysis")
+   log.success("Completed successfully")
+   ```
+
+2. Context Managers:
+   ```python
+   with log.operation("Running simulation"):
+       # Your code here
+       pass
+   ```
+
+3. Progress Tracking:
+   ```python
+   log.progress(50, 100, "Processing data")
+   log.stage(2, 5, "Data Analysis")
+   ```
+
+4. File Logging:
+   ```python
+   from infrastructure.core.logging_utils import setup_project_logging
+   log = setup_project_logging(__name__, log_file="analysis.log")
+   ```
+
+ENVIRONMENT VARIABLES:
+- LOG_LEVEL: 0=DEBUG, 1=INFO, 2=WARNING, 3=ERROR
+- NO_EMOJI: Disable emoji in output (for CI/CD)
+- STRUCTURED_LOGGING: Enable JSON structured logging
+
+LOGGING LEVELS:
+- DEBUG: Detailed diagnostic information
+- INFO: General information about program execution
+- WARNING: Warning messages for potential issues
+- ERROR: Error messages for failures
+- SUCCESS: Success confirmations with emoji
+- HEADER: Section headers with formatting
+- PROGRESS: Progress indicators with percentages
+- STAGE: Pipeline stage indicators
+- SUBSTEP: Sub-operation indicators
+
+BEST PRACTICES:
+1. Use __name__ as logger name for proper hierarchy
+2. Use context managers for operations that have clear start/end
+3. Use appropriate log levels (don't spam INFO with DEBUG details)
+4. Use progress/stage logging for long-running operations
+5. Test logging in your code (don't assume it works)
+"""
+
+class ProjectLogger:
+    """Standardized logging interface for research projects.
+
+    This class provides a simple, consistent logging interface that all projects
+    can use. It wraps the infrastructure logging utilities with a clean API.
+
+    Example:
+        >>> from infrastructure.core.logging_utils import ProjectLogger
+        >>> log = ProjectLogger(__name__)
+        >>> log.info("Starting analysis...")
+        >>> log.success("Analysis completed!")
+        >>> log.progress(50, 100, "Processing data")
+    """
+
+    def __init__(self, name: str, level: Optional[int] = None):
+        """Initialize project logger.
+
+        Args:
+            name: Logger name (usually __name__)
+            level: Optional logging level override
+        """
+        self.name = name
+        self._logger = get_logger(name)
+        if level is not None:
+            self._logger.setLevel(level)
+
+    def debug(self, message: str, *args, **kwargs) -> None:
+        """Log debug message."""
+        self._logger.debug(message, *args, **kwargs)
+
+    def info(self, message: str, *args, **kwargs) -> None:
+        """Log info message."""
+        self._logger.info(message, *args, **kwargs)
+
+    def warning(self, message: str, *args, **kwargs) -> None:
+        """Log warning message."""
+        self._logger.warning(message, *args, **kwargs)
+
+    def error(self, message: str, *args, **kwargs) -> None:
+        """Log error message."""
+        self._logger.error(message, *args, **kwargs)
+
+    def critical(self, message: str, *args, **kwargs) -> None:
+        """Log critical message."""
+        self._logger.critical(message, *args, **kwargs)
+
+    def success(self, message: str) -> None:
+        """Log success message with emoji."""
+        log_success(message, self._logger)
+
+    def header(self, message: str) -> None:
+        """Log section header."""
+        log_header(message, self._logger)
+
+    def progress(self, current: int, total: int, task: str = "") -> None:
+        """Log progress with percentage."""
+        log_progress(current, total, task, self._logger)
+
+    def stage(self, stage_num: int, total_stages: int, stage_name: str) -> None:
+        """Log pipeline stage header."""
+        log_stage(stage_num, total_stages, stage_name, self._logger)
+
+    def substep(self, message: str) -> None:
+        """Log substep with indentation."""
+        log_substep(message, self._logger)
+
+    @contextmanager
+    def operation(self, operation: str, level: int = logging.INFO):
+        """Context manager for logging operation start/completion."""
+        with log_operation(operation, self._logger, level):
+            yield
+
+    @contextmanager
+    def timing(self, label: str):
+        """Context manager for timing operations."""
+        with log_timing(label, self._logger):
+            yield
+
+    def resource_usage(self, stage_name: str = "") -> None:
+        """Log current resource usage."""
+        log_resource_usage(stage_name, self._logger)
+
+
+# =============================================================================
+# CONVENIENCE FUNCTIONS FOR PROJECTS
+# =============================================================================
+
+def get_project_logger(name: str, level: Optional[int] = None) -> ProjectLogger:
+    """Get a standardized project logger.
+
+    This is the recommended way for projects to get logging functionality.
+    It provides a clean, consistent interface that works across all projects.
+
+    Args:
+        name: Logger name (usually __name__)
+        level: Optional logging level override
+
+    Returns:
+        ProjectLogger instance
+
+    Example:
+        >>> from infrastructure.core.logging_utils import get_project_logger
+        >>> log = get_project_logger(__name__)
+        >>> log.info("Starting analysis")
+        >>> log.success("Analysis completed!")
+    """
+    return ProjectLogger(name, level)
+
+
+def setup_project_logging(name: str, level: Optional[int] = None,
+                         log_file: Optional[Path | str] = None) -> ProjectLogger:
+    """Set up project logging with optional file output.
+
+    Args:
+        name: Logger name (usually __name__)
+        level: Optional logging level override
+        log_file: Optional file to write logs to
+
+    Returns:
+        Configured ProjectLogger instance
+
+    Example:
+        >>> log = setup_project_logging(__name__, log_file="analysis.log")
+        >>> log.info("Analysis started")
+    """
+    if log_file:
+        setup_logger(name, level, log_file)
+    return get_project_logger(name, level)
+
+
 def get_log_level_from_env() -> int:
     """Get log level from LOG_LEVEL environment variable.
     
@@ -674,3 +868,222 @@ def log_resource_usage(
     except Exception as e:
         # Any other error - log at debug level
         logger.debug(f"Failed to get resource usage: {e}")
+
+
+# =============================================================================
+# LOG AGGREGATION AND ANALYSIS
+# =============================================================================
+
+class LogAggregator:
+    """Aggregate and analyze log messages for summary reporting."""
+    
+    def __init__(self):
+        """Initialize log aggregator."""
+        self.messages = {
+            'debug': [],
+            'info': [],
+            'warning': [],
+            'error': [],
+            'success': [],
+        }
+        self.start_time = None
+        self.end_time = None
+        
+    def add_message(self, level: str, message: str, timestamp: Optional[float] = None):
+        """Add a log message to the aggregator.
+        
+        Args:
+            level: Log level (debug, info, warning, error, success)
+            message: Log message text
+            timestamp: Message timestamp (default: current time)
+        """
+        import time
+        if timestamp is None:
+            timestamp = time.time()
+            
+        if level.lower() in self.messages:
+            self.messages[level.lower()].append({
+                'message': message,
+                'timestamp': timestamp
+            })
+    
+    def get_summary(self) -> Dict[str, Any]:
+        """Get summary of aggregated logs.
+        
+        Returns:
+            Dictionary with log statistics and key messages
+        """
+        summary = {
+            'counts': {level: len(msgs) for level, msgs in self.messages.items()},
+            'total_messages': sum(len(msgs) for msgs in self.messages.values()),
+            'recent_errors': [m['message'] for m in self.messages['error'][-5:]],
+            'recent_warnings': [m['message'] for m in self.messages['warning'][-5:]],
+            'has_errors': len(self.messages['error']) > 0,
+            'has_warnings': len(self.messages['warning']) > 0,
+        }
+        return summary
+    
+    def generate_report(self) -> str:
+        """Generate human-readable log summary report.
+        
+        Returns:
+            Formatted summary report string
+        """
+        summary = self.get_summary()
+        
+        lines = [
+            "",
+            "LOG SUMMARY",
+            "=" * 60,
+            "",
+            "Message Counts:",
+        ]
+        
+        for level, count in summary['counts'].items():
+            if count > 0:
+                lines.append(f"  {level.upper()}: {count}")
+        
+        lines.append(f"  TOTAL: {summary['total_messages']}")
+        lines.append("")
+        
+        if summary['recent_errors']:
+            lines.append("Recent Errors:")
+            for err in summary['recent_errors']:
+                lines.append(f"  • {err}")
+            lines.append("")
+        
+        if summary['recent_warnings']:
+            lines.append("Recent Warnings:")
+            for warn in summary['recent_warnings']:
+                lines.append(f"  • {warn}")
+            lines.append("")
+        
+        return "\n".join(lines)
+    
+    def save_to_file(self, output_path: Path):
+        """Save aggregated logs to file.
+        
+        Args:
+            output_path: Path to save log summary
+        """
+        import json
+        
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        summary = self.get_summary()
+        summary['all_messages'] = self.messages
+        
+        with open(output_path, 'w') as f:
+            json.dump(summary, f, indent=2)
+
+
+def collect_log_statistics(log_file: Path) -> Dict[str, Any]:
+    """Collect statistics from a log file.
+    
+    Args:
+        log_file: Path to log file
+        
+    Returns:
+        Dictionary with log statistics
+    """
+    if not log_file.exists():
+        return {
+            'error': 'Log file not found',
+            'counts': {},
+            'total_lines': 0
+        }
+    
+    stats = {
+        'counts': {
+            'debug': 0,
+            'info': 0,
+            'warning': 0,
+            'error': 0,
+            'critical': 0
+        },
+        'total_lines': 0,
+        'errors': [],
+        'warnings': []
+    }
+    
+    try:
+        with open(log_file, 'r') as f:
+            for line in f:
+                stats['total_lines'] += 1
+                line_lower = line.lower()
+                
+                if 'debug' in line_lower:
+                    stats['counts']['debug'] += 1
+                elif 'info' in line_lower:
+                    stats['counts']['info'] += 1
+                elif 'warning' in line_lower or 'warn' in line_lower:
+                    stats['counts']['warning'] += 1
+                    if len(stats['warnings']) < 10:  # Keep last 10
+                        stats['warnings'].append(line.strip())
+                elif 'error' in line_lower:
+                    stats['counts']['error'] += 1
+                    if len(stats['errors']) < 10:  # Keep last 10
+                        stats['errors'].append(line.strip())
+                elif 'critical' in line_lower:
+                    stats['counts']['critical'] += 1
+                    if len(stats['errors']) < 10:
+                        stats['errors'].append(line.strip())
+    
+    except Exception as e:
+        stats['error'] = f"Failed to parse log file: {e}"
+    
+    return stats
+
+
+def generate_log_summary(log_file: Path, output_file: Optional[Path] = None) -> str:
+    """Generate summary report from log file.
+    
+    Args:
+        log_file: Path to log file to analyze
+        output_file: Optional path to save summary (default: None)
+        
+    Returns:
+        Formatted summary string
+    """
+    stats = collect_log_statistics(log_file)
+    
+    if 'error' in stats and stats.get('total_lines', 0) == 0:
+        return f"Error: {stats['error']}"
+    
+    lines = [
+        "",
+        f"LOG ANALYSIS: {log_file.name}",
+        "=" * 60,
+        "",
+        f"Total Lines: {stats['total_lines']}",
+        "",
+        "Message Breakdown:",
+    ]
+    
+    for level, count in stats['counts'].items():
+        if count > 0:
+            lines.append(f"  {level.upper()}: {count}")
+    
+    if stats.get('errors'):
+        lines.append("")
+        lines.append(f"Recent Errors ({len(stats['errors'])}):")
+        for err in stats['errors'][:5]:
+            lines.append(f"  • {err[:100]}")  # Truncate long lines
+    
+    if stats.get('warnings'):
+        lines.append("")
+        lines.append(f"Recent Warnings ({len(stats['warnings'])}):")
+        for warn in stats['warnings'][:5]:
+            lines.append(f"  • {warn[:100]}")  # Truncate long lines
+    
+    lines.append("")
+    
+    summary_text = "\n".join(lines)
+    
+    if output_file:
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_file, 'w') as f:
+            f.write(summary_text)
+    
+    return summary_text
+

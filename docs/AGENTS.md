@@ -25,9 +25,9 @@ Documentation is organized into modular subdirectories by purpose and audience:
 | File | Purpose | Audience |
 |------|---------|----------|
 | `guides/GETTING_STARTED.md` | Basic usage guide (Levels 1-3) | Beginners |
-| `guides/INTERMEDIATE_USAGE.md` | Intermediate usage (Levels 4-6) | Intermediate users |
-| `guides/ADVANCED_USAGE.md` | Advanced usage (Levels 7-9) | Advanced users |
-| `guides/EXPERT_USAGE.md` | Expert usage (Levels 10-12) | Expert users |
+| `guides/FIGURES_AND_ANALYSIS.md` | Intermediate usage (Levels 4-6) | Intermediate users |
+| `guides/TESTING_AND_REPRODUCIBILITY.md` | Advanced usage (Levels 7-9) | Advanced users |
+| `guides/EXTENDING_AND_AUTOMATION.md` | Expert usage (Levels 10-12) | Expert users |
 
 ### Architecture Documentation (`architecture/`)
 
@@ -70,7 +70,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| `modules/ADVANCED_MODULES_GUIDE.md` | Comprehensive guide for all 7 advanced modules | Developers |
+| `modules/MODULES_GUIDE.md` | Guide for all 7 modules | Developers |
 | `modules/PDF_VALIDATION.md` | PDF validation documentation | Developers |
 | `modules/SCIENTIFIC_SIMULATION_GUIDE.md` | Scientific simulation system | Researchers |
 

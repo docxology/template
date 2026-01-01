@@ -9,10 +9,10 @@ The `docs/guides/` directory contains progressive usage guides organized by skil
 ```
 docs/guides/
 ├── AGENTS.md                   # This technical documentation
-├── ADVANCED_USAGE.md           # Advanced usage patterns (Levels 7-9)
-├── EXPERT_USAGE.md             # Expert usage techniques (Levels 10-12)
+├── TESTING_AND_REPRODUCIBILITY.md           # Testing and reproducibility patterns (Levels 7-9)
+├── EXTENDING_AND_AUTOMATION.md             # Extending and automation techniques (Levels 10-12)
 ├── GETTING_STARTED.md          # Basic usage guide (Levels 1-3)
-├── INTERMEDIATE_USAGE.md       # Intermediate usage (Levels 4-6)
+├── FIGURES_AND_ANALYSIS.md       # Figures and analysis (Levels 4-6)
 ├── README.md                   # Quick reference for guides
 ```
 
@@ -112,7 +112,7 @@ print(f"Author: {config.get('author_name', 'Researcher')}")
 
 **Command Sequences:**
 ```bash
-# Complete workflow from INTERMEDIATE_USAGE.md
+# Complete workflow from FIGURES_AND_ANALYSIS.md
 # 1. Set up environment
 python3 scripts/00_setup_environment.py
 
@@ -419,7 +419,7 @@ project/
 
 **Guide Hierarchy:**
 ```
-GETTING_STARTED.md → INTERMEDIATE_USAGE.md → ADVANCED_USAGE.md → EXPERT_USAGE.md
+GETTING_STARTED.md → FIGURES_AND_ANALYSIS.md → TESTING_AND_REPRODUCIBILITY.md → EXTENDING_AND_AUTOMATION.md
        ↓                      ↓                       ↓                      ↓
    core/HOW_TO_USE.md → operational/ guides → development/ guides → architecture/
 ```
@@ -448,9 +448,9 @@ GETTING_STARTED.md → INTERMEDIATE_USAGE.md → ADVANCED_USAGE.md → EXPERT_US
 
 **Guide Navigation:**
 - [`GETTING_STARTED.md`](GETTING_STARTED.md) - Basic usage guide
-- [`INTERMEDIATE_USAGE.md`](INTERMEDIATE_USAGE.md) - Intermediate features
-- [`ADVANCED_USAGE.md`](ADVANCED_USAGE.md) - Advanced techniques
-- [`EXPERT_USAGE.md`](EXPERT_USAGE.md) - Expert-level usage
+- [`FIGURES_AND_ANALYSIS.md`](FIGURES_AND_ANALYSIS.md) - Intermediate features
+- [`TESTING_AND_REPRODUCIBILITY.md`](TESTING_AND_REPRODUCIBILITY.md) - Advanced techniques
+- [`EXTENDING_AND_AUTOMATION.md`](EXTENDING_AND_AUTOMATION.md) - Expert-level usage
 
 **System Documentation:**
 - [`../AGENTS.md`](../AGENTS.md) - Complete system overview

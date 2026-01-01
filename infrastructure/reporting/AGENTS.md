@@ -207,7 +207,7 @@ from infrastructure.reporting import generate_executive_summary, save_executive_
 from pathlib import Path
 
 repo_root = Path(".")
-project_names = ["project", "small_code_project", "small_prose_project"]
+project_names = ["project", "code_project", "prose_project"]
 
 # Generate comprehensive summary
 summary = generate_executive_summary(repo_root, project_names)
@@ -582,7 +582,7 @@ pytest tests/infrastructure/reporting/ --cov=infrastructure.reporting
 - [`README.md`](README.md) - Quick reference guide
 - [`../README.md`](../README.md) - Infrastructure layer overview
 - [`../AGENTS.md`](../AGENTS.md) - Complete infrastructure documentation
-- [`../../docs/modules/ADVANCED_MODULES_GUIDE.md`](../../docs/modules/ADVANCED_MODULES_GUIDE.md) - Advanced modules guide
+- [`../../docs/modules/MODULES_GUIDE.md`](../../docs/modules/MODULES_GUIDE.md) - Modules guide
 
 
 

@@ -77,9 +77,8 @@ package = false  # This is not a distributable package
 [tool.uv.workspace]
 # Workspace configuration for multi-project support
 members = [
-    "projects/project",
-    "projects/small_prose_project",
-    "projects/small_code_project"
+    "projects/prose_project",
+    "projects/code_project"
 ]
 exclude = [
     "projects/*/output",
@@ -88,8 +87,8 @@ exclude = [
 
 [tool.pytest.ini_options]
 # Pytest configuration (consolidated from pytest.ini)
-pythonpath = [".", "infrastructure", "projects/project/src", "projects/small_code_project/src", "projects/small_prose_project/src"]
-testpaths = ["tests", "projects/project/tests", "projects/small_code_project/tests", "projects/small_prose_project/tests"]
+pythonpath = [".", "infrastructure", "projects/code_project/src", "projects/prose_project/src"]
+testpaths = ["tests", "projects/code_project/tests", "projects/prose_project/tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
@@ -117,6 +116,9 @@ filterwarnings = [
 
 [tool.coverage.run]
 # Coverage configuration (consolidated from .coveragerc)
+# Note: Test runners use --cov-datafile flags for isolation:
+#   - Infrastructure tests: --cov-datafile=.coverage.infra
+#   - Project tests: --cov-datafile=.coverage.project
 branch = true
 source = ["infrastructure", "projects/project/src"]
 omit = [

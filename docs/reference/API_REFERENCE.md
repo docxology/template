@@ -2,7 +2,7 @@
 
 > **Complete API documentation** for all infrastructure modules
 
-**Quick Reference:** [Advanced Modules Guide](../modules/ADVANCED_MODULES_GUIDE.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md) | [Getting Started](../guides/GETTING_STARTED.md)
+**Quick Reference:** [Modules Guide](../modules/MODULES_GUIDE.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md) | [Getting Started](../guides/GETTING_STARTED.md)
 
 This document provides comprehensive API reference for all public functions and classes in the `infrastructure/` modules. All modules follow the thin orchestrator pattern with comprehensive test coverage.
 
@@ -742,14 +742,14 @@ This API reference covers all public functions and classes in the `infrastructur
 - Include comprehensive type hints
 - Provide detailed docstrings
 
-For usage examples, see [Advanced Modules Guide](../modules/ADVANCED_MODULES_GUIDE.md).
+For usage examples, see [Modules Guide](../modules/MODULES_GUIDE.md).
 
 For implementation details, see [Infrastructure Documentation](../../infrastructure/AGENTS.md) and [Project Source Documentation](../../projects/project/src/AGENTS.md).
 
 ---
 
 **Related Documentation:**
-- [Advanced Modules Guide](../modules/ADVANCED_MODULES_GUIDE.md) - Usage examples
+- [Modules Guide](../modules/MODULES_GUIDE.md) - Usage examples
 - [Infrastructure Docs](../../infrastructure/AGENTS.md) - Infrastructure module implementation
 - [Project Source Docs](../../projects/project/src/AGENTS.md) - Project module implementation
 - [Best Practices](../best-practices/BEST_PRACTICES.md) - Usage recommendations

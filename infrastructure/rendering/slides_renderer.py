@@ -131,9 +131,42 @@ class SlidesRenderer:
                 )
             
         except subprocess.CalledProcessError as e:
+            # Enhanced error reporting for LaTeX compilation failures
+            error_msg = f"Failed to render beamer slides: {e.stderr}"
+
+            # Check for LaTeX log file and extract useful error information
+            log_file = output_dir / f"{temp_tex.stem}.log"
+            if log_file.exists():
+                try:
+                    log_content = log_file.read_text(encoding='utf-8', errors='ignore')
+
+                    # Extract last 20 lines for context
+                    log_lines = log_content.split('\n')
+                    last_lines = log_lines[-20:] if len(log_lines) > 20 else log_lines
+                    recent_errors = '\n'.join(line for line in last_lines if line.strip())
+
+                    # Detect specific error types
+                    error_hints = []
+                    if "*** (job aborted, no legal \\end found)" in log_content:
+                        error_hints.append("LaTeX document structure error: missing \\end{document} or unmatched \\begin{}/\\end{} pairs")
+                    if "Undefined control sequence" in log_content:
+                        error_hints.append("Undefined LaTeX command - check for typos in LaTeX syntax")
+                    if "File `" in log_content and "not found" in log_content:
+                        error_hints.append("Missing file reference - check figure paths and bibliography files")
+
+                    error_msg += f"\n\nLaTeX Compilation Log ({log_file}):\n{recent_errors}"
+
+                    if error_hints:
+                        error_msg += f"\n\nPossible Issues:\n" + "\n".join(f"- {hint}" for hint in error_hints)
+
+                    error_msg += f"\n\nSuggestions:\n- Check LaTeX log file: {log_file}\n- Verify LaTeX syntax in generated .tex file: {temp_tex}\n- Ensure all referenced figures exist\n- Check for missing LaTeX packages"
+
+                except Exception as log_error:
+                    error_msg += f"\n\nCould not read LaTeX log file: {log_error}"
+
             raise RenderingError(
-                f"Failed to render beamer slides: {e.stderr}",
-                context={"source": str(source_file), "format": "beamer"}
+                error_msg,
+                context={"source": str(source_file), "format": "beamer", "log_file": str(log_file) if log_file.exists() else None}
             )
 
     def _fix_figure_paths(self, tex_content: str, output_dir: Path, figures_dir: Path) -> str:

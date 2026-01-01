@@ -28,6 +28,7 @@ from infrastructure.core.environment import (
     verify_source_structure,
     set_environment_variables,
 )
+from infrastructure.core.file_operations import clean_coverage_files
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -48,7 +49,10 @@ def main() -> int:
     log_header(f"STAGE 00: Environment Setup (Project: {args.project})", logger)
     
     repo_root = Path(__file__).parent.parent
-    
+
+    # Clean coverage files to ensure clean state for subsequent test runs
+    clean_coverage_files(repo_root)
+
     def check_and_install_dependencies() -> bool:
         """Check dependencies and install missing ones using workspace sync."""
         logger.info("Checking for uv package manager...")
@@ -84,6 +88,42 @@ def main() -> int:
             if not all_present and missing:
                 return install_missing_packages(missing)
             return all_present
+
+    def check_project_discovery() -> bool:
+        """Discover and validate available projects."""
+        from infrastructure.project.discovery import discover_projects
+
+        logger.info("Discovering available projects...")
+        try:
+            projects = discover_projects(repo_root)
+
+            if not projects:
+                logger.warning("No valid projects found in projects/ directory")
+                return False
+
+            logger.info(f"Discovered {len(projects)} valid project(s):")
+            for project in projects:
+                marker = "→" if project.name == args.project else " "
+                structure = []
+                if project.has_src:
+                    structure.append("src")
+                if project.has_tests:
+                    structure.append("tests")
+                if project.has_scripts:
+                    structure.append("scripts")
+                if project.has_manuscript:
+                    structure.append("manuscript")
+
+                structure_str = ", ".join(structure) if structure else "minimal"
+                logger.info(f"  {marker} {project.name}: {structure_str}")
+
+                if project.name == args.project:
+                    logger.info(f"    Setting up: {project.name}")
+
+            return True
+        except Exception as e:
+            logger.error(f"Project discovery failed: {e}")
+            return False
     
     checks = [
         ("Python version", lambda: check_python_version()),
@@ -91,6 +131,7 @@ def main() -> int:
         ("Build tools", lambda: check_build_tools()),
         ("Directory structure", lambda: setup_directories(repo_root, args.project)),
         ("Source structure", lambda: verify_source_structure(repo_root, args.project)),
+        ("Project discovery", check_project_discovery),
         ("Environment variables", lambda: set_environment_variables(repo_root)),
     ]
     

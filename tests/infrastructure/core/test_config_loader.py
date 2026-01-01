@@ -325,11 +325,11 @@ class TestGetTranslationLanguages:
                 }
             }
         }
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, 'w') as f:
             yaml.dump(config, f)
-        
+
         result = get_translation_languages(tmp_path)
         assert result == []
     
@@ -339,11 +339,11 @@ class TestGetTranslationLanguages:
         config = {
             'paper': {'title': 'Test'}
         }
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, 'w') as f:
             yaml.dump(config, f)
-        
+
         result = get_translation_languages(tmp_path)
         assert result == []
     
@@ -358,11 +358,11 @@ class TestGetTranslationLanguages:
                 }
             }
         }
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, 'w') as f:
             yaml.dump(config, f)
-        
+
         result = get_translation_languages(tmp_path)
         assert result == ['zh', 'hi', 'ru']
     
@@ -377,11 +377,11 @@ class TestGetTranslationLanguages:
                 }
             }
         }
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, 'w') as f:
             yaml.dump(config, f)
-        
+
         result = get_translation_languages(tmp_path)
         assert result == ['zh']
     
@@ -396,11 +396,11 @@ class TestGetTranslationLanguages:
                 }
             }
         }
-        config_file = tmp_path / "project" / "manuscript" / "config.yaml"
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
         config_file.parent.mkdir(parents=True)
         with open(config_file, 'w') as f:
             yaml.dump(config, f)
-        
+
         result = get_translation_languages(tmp_path)
         assert result == []
     
@@ -426,22 +426,28 @@ class TestErrorHandling:
         result = load_config(config_path)
         assert result is None  # Should handle YAML errors gracefully
     
-    def test_load_config_permission_denied(self, tmp_path, monkeypatch):
+    def test_load_config_permission_denied(self, tmp_path):
         """Test load_config with permission denied."""
         config_path = tmp_path / "config.yaml"
         config_path.write_text("test: value")
-        
-        # Mock open to raise PermissionError
-        original_open = open
-        def mock_open(*args, **kwargs):
-            if str(config_path) in str(args[0]):
-                raise PermissionError("Permission denied")
-            return original_open(*args, **kwargs)
-        
-        monkeypatch.setattr('builtins.open', mock_open)
-        
-        result = load_config(config_path)
-        assert result is None  # Should handle permission errors gracefully
+
+        # Make file unreadable (real permission testing)
+        import os
+        import stat
+        try:
+            # Remove read permission for owner
+            current_mode = config_path.stat().st_mode
+            config_path.chmod(current_mode & ~stat.S_IRUSR)
+
+            result = load_config(config_path)
+            assert result is None  # Should handle permission errors gracefully
+        finally:
+            # Restore permissions for cleanup
+            try:
+                config_path.chmod(current_mode)
+            except (OSError, PermissionError):
+                # If we can't restore permissions, that's okay for test cleanup
+                pass
 
 
 class TestTestingConfig:

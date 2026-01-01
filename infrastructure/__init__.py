@@ -7,7 +7,6 @@ Modules:
     core: Foundation utilities (config, logging, exceptions, progress, checkpoint)
     validation: Quality & validation tools (PDF, Markdown, integrity)
     documentation: Documentation & figure management
-    build: Build & reproducibility verification
     scientific: Scientific computing utilities
     llm: Local LLM integration for research assistance
     rendering: Multi-format output generation
@@ -23,6 +22,7 @@ try:
     # Core
     from .core import (
         get_logger, setup_logger, log_operation, log_timing,
+        get_project_logger, setup_project_logging, ProjectLogger,
         TemplateError, ConfigurationError, ValidationError, BuildError,
         load_config
     )
@@ -37,12 +37,6 @@ try:
         FigureManager,
         ImageManager,
         MarkdownIntegration
-    )
-    # Build
-    from .build import (
-        verify_build_artifacts,
-        analyze_document_quality,
-        generate_reproducibility_report
     )
     # Publishing
     from .publishing import (
@@ -64,7 +58,6 @@ __all__ = [
     "core",
     "validation",
     "documentation",
-    "build",
     "scientific",
     "llm",
     "rendering",
@@ -73,6 +66,9 @@ __all__ = [
     # Core conveniences
     "get_logger",
     "setup_logger",
+    "get_project_logger",
+    "setup_project_logging",
+    "ProjectLogger",
     "log_operation",
     "log_timing",
     "TemplateError",
@@ -88,10 +84,6 @@ __all__ = [
     "FigureManager",
     "ImageManager",
     "MarkdownIntegration",
-    # Build conveniences
-    "verify_build_artifacts",
-    "analyze_document_quality",
-    "generate_reproducibility_report",
     # Publishing conveniences
     "extract_publication_metadata",
     "generate_citation_bibtex",

@@ -63,7 +63,7 @@ def mock_project_structure(tmp_path):
         
         pdf_dir = output_dir / "pdf"
         pdf_dir.mkdir()
-        (pdf_dir / "test.pdf").write_text("PDF content")
+        (pdf_dir / f"{project_name}_combined.pdf").write_text("PDF content")
     
     return tmp_path
 

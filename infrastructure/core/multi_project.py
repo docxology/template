@@ -250,15 +250,28 @@ class MultiProjectOrchestrator:
 
         try:
             # Import executive report generator
-            from infrastructure.reporting import generate_executive_report
+            from infrastructure.reporting import generate_multi_project_report
 
-            # Generate report
-            report = generate_executive_report(results)
+            # Extract project names from results
+            project_names = list(results.keys())
+            
+            # Generate comprehensive multi-project report
+            output_dir = self.config.repo_root / "output" / "executive_summary"
+            report_files = generate_multi_project_report(
+                self.config.repo_root,
+                project_names,
+                output_dir
+            )
+            
             logger.info("✅ Executive report generated successfully")
-            logger.info(f"Reports saved to: {report.get('output_dir', 'output/executive_summary')}")
+            logger.info(f"  Generated {len(report_files)} report files:")
+            for file_type, path in report_files.items():
+                logger.info(f"    • {file_type.upper()}: {path.name}")
+            logger.info(f"  Reports saved to: {output_dir}")
 
-        except ImportError:
-            logger.warning("Executive reporting not available (infrastructure.reporting module not found)")
+        except ImportError as e:
+            logger.warning(f"Executive reporting not available: {e}")
+            logger.debug("  infrastructure.reporting module may not be properly configured")
         except Exception as e:
-            logger.warning(f"Executive reporting failed: {e}")
-            logger.info("Continuing without executive report (non-critical)")
+            logger.error(f"Executive reporting failed: {e}", exc_info=True)
+            logger.info("  Continuing without executive report (non-critical)")

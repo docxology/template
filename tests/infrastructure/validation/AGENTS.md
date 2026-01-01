@@ -518,6 +518,81 @@ def validate_academic_standards(document, standards):
     assert valid_formats / len(citations) > 0.8, f"Too many invalid citations: {valid_formats}/{len(citations)}"
 ```
 
+### Output Validator Test Patterns
+
+**Output Validation Tests (`test_output_validator.py`)**
+- Copied outputs validation with correct PDF locations
+- Output structure validation with proper directory hierarchies
+- File readability and permission testing
+- Directory completeness assessment
+
+**PDF Location Requirements:**
+- PDFs must be located in `output_dir/pdf/project_combined.pdf` (or `{project_name}_combined.pdf`)
+- Tests create realistic output directory structures
+- Validation functions expect PDFs in `pdf/` subdirectory, not root level
+
+**Test Structure Patterns:**
+```python
+def test_validate_complete_structure(output_directory_structure):
+    """Test validation with complete output structure."""
+    output_dir = output_directory_structure
+
+    # Create PDF in pdf/ directory (where it's actually expected)
+    pdf_dir = output_dir / "pdf"
+    pdf_dir.mkdir(exist_ok=True)  # Already exists from fixture
+    (pdf_dir / "project_combined.pdf").write_bytes(b"PDF" * 1000)
+
+    # Create subdirectories with files (skip pdf/ since already handled)
+    for subdir in ["web", "slides", "figures", "data", "reports", "simulations"]:
+        subdir_path = output_dir / subdir
+        (subdir_path / f"{subdir}_file.txt").write_text("content")
+
+    result = validate_copied_outputs(output_dir)
+    assert result is True
+
+def test_validate_small_pdf(tmp_path):
+    """Test validation with suspiciously small PDF."""
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+    pdf_dir = output_dir / "pdf"
+    pdf_dir.mkdir()
+
+    # Create very small PDF (< 100KB) in pdf/ directory
+    (pdf_dir / "project_combined.pdf").write_bytes(b"PDF" * 100)
+
+    result = validate_output_structure(output_dir)
+    # Small PDF is still valid but flagged as suspicious
+    assert result["valid"] is True
+    assert any("unusually small" in s for s in result["suspicious_sizes"])
+```
+
+**Common Test Fixtures:**
+```python
+@pytest.fixture
+def output_directory_structure(tmp_path):
+    """Create standard output directory structure."""
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+
+    # Create all expected subdirectories
+    subdirs = ["pdf", "web", "slides", "figures", "data", "reports", "simulations", "llm", "logs"]
+    for subdir in subdirs:
+        (output_dir / subdir).mkdir()
+
+    return output_dir
+
+@pytest.fixture
+def output_with_pdf(output_directory_structure, pdf_file_fixture):
+    """Create output directory with PDF in correct location."""
+    output_dir = output_directory_structure
+
+    # Copy PDF to correct location
+    pdf_dest = output_dir / "pdf" / "project_combined.pdf"
+    pdf_dest.write_bytes(pdf_file_fixture.read_bytes())
+
+    return output_dir
+```
+
 ## Running Tests
 
 ### Test Execution

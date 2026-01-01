@@ -18,31 +18,81 @@ def ollama_test_server():
 
         # Parse the request JSON
         try:
-            request_data = json.loads(request.body)
+            # Try different ways to access request data
+            if hasattr(request, 'body') and request.body:
+                request_data = json.loads(request.body)
+            elif hasattr(request, 'get_data') and callable(request.get_data):
+                request_data = json.loads(request.get_data())
+            elif hasattr(request, 'data') and request.data:
+                request_data = json.loads(request.data)
+            else:
+                raise ValueError("Cannot access request body")
+
             is_stream = request_data.get("stream", False)
-        except:
+            model = request_data.get("model", "gemma3:4b")
+            messages = request_data.get("messages", [])
+            format_type = request_data.get("format")  # Check for JSON format
+            options = request_data.get("options", {})  # Extract options for streaming
+        except Exception as e:
+            # Fallback for debugging
             is_stream = False
+            model = "gemma3:4b"
+            messages = []
+            format_type = None
+            options = {}
+
+        # Handle model-specific responses for fallback testing
+        if model == "primary-model":
+            # Simulate connection failure for primary model
+            return "", 500  # Return empty response with 500 status
+        elif model == "fallback1":
+            # Simulate connection failure for first fallback
+            return "", 500
+        elif model == "fallback2":
+            # Success for second fallback
+            pass  # Continue with normal response
+
+        # Check for special test cases based on prompt content
+        prompt_text = ""
+        if messages and len(messages) > 0:
+            # Get the last user message
+            for msg in reversed(messages):
+                if msg.get("role") == "user":
+                    prompt_text = msg.get("content", "")
+                    break
+
+        # Handle structured JSON test cases
+        if "invalid json content" in prompt_text:
+            # Return invalid JSON wrapped in text
+            response_content = 'Some text { invalid json content } more text'
+        elif "no json response" in prompt_text:
+            # Return response with no JSON
+            response_content = "This is just plain text with no JSON structure"
+        elif format_type == "json" or "test structured" in prompt_text.lower():
+            # Return valid JSON for structured tests (check format field or prompt content)
+            response_content = '{"key": "value", "number": 42}'
+        else:
+            response_content = "Test response"
 
         if is_stream:
-            # Return streaming response (SSE format)
+            # Return streaming response as JSON lines (one JSON object per line)
             streaming_chunks = [
-                {"model": "gemma3:4b", "created_at": "2024-01-01T00:00:00Z", "message": {"role": "assistant", "content": "Test"}, "done": False},
-                {"model": "gemma3:4b", "created_at": "2024-01-01T00:00:01Z", "message": {"role": "assistant", "content": " response"}, "done": False},
-                {"model": "gemma3:4b", "created_at": "2024-01-01T00:00:02Z", "message": {"role": "assistant", "content": ""}, "done": True}
+                {"model": model, "created_at": "2024-01-01T00:00:00Z", "message": {"role": "assistant", "content": response_content[:10]}, "done": False},
+                {"model": model, "created_at": "2024-01-01T00:00:01Z", "message": {"role": "assistant", "content": response_content[10:]}, "done": False},
+                {"model": model, "created_at": "2024-01-01T00:00:02Z", "message": {"role": "assistant", "content": ""}, "done": True}
             ]
 
             response_lines = []
             for chunk in streaming_chunks:
-                response_lines.append(f"data: {json.dumps(chunk)}")
-                response_lines.append("")  # Empty line between SSE events
+                response_lines.append(json.dumps(chunk))
 
             return "\n".join(response_lines)
         else:
             # Return regular response
             return json.dumps({
-                "model": "gemma3:4b",
+                "model": model,
                 "created_at": "2024-01-01T00:00:00Z",
-                "message": {"role": "assistant", "content": "Test response"},
+                "message": {"role": "assistant", "content": response_content},
                 "done": True
             })
 

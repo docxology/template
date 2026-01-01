@@ -2,7 +2,7 @@
 
 > **Consolidated best practices** for the Research Project Template
 
-**Quick Reference:** [Getting Started](../guides/GETTING_STARTED.md) | [Advanced Usage](../guides/ADVANCED_USAGE.md) | [Workflow](../core/WORKFLOW.md)
+**Quick Reference:** [Getting Started](../guides/GETTING_STARTED.md) | [Testing and Reproducibility](../guides/TESTING_AND_REPRODUCIBILITY.md) | [Workflow](../core/WORKFLOW.md)
 
 This document consolidates best practices from across all documentation, providing a single reference for code organization, testing, documentation, build systems, collaboration, version control, and security.
 
@@ -518,7 +518,7 @@ For detailed guidance, see:
 
 **Related Documentation:**
 - [Getting Started](../guides/GETTING_STARTED.md) - Basic practices
-- [Advanced Usage](../guides/ADVANCED_USAGE.md) - Advanced practices
+- [Testing and Reproducibility](../guides/TESTING_AND_REPRODUCIBILITY.md) - Advanced practices
 - [Workflow](../core/WORKFLOW.md) - Development workflow
 - [Contributing](../development/CONTRIBUTING.md) - Contribution practices
 

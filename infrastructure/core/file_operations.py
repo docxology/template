@@ -199,13 +199,83 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
         return False
 
 
+def clean_coverage_files(repo_root: Path, patterns: list[str] | None = None) -> bool:
+    """Clean coverage database files to prevent corruption.
+
+    Removes coverage database files that can become corrupted during parallel
+    test execution or when tests are interrupted.
+
+    Args:
+        repo_root: Repository root directory
+        patterns: List of file patterns to clean (default: coverage-related files)
+
+    Returns:
+        True if cleanup successful, False otherwise
+    """
+    if patterns is None:
+        patterns = [
+            "**/.coverage",  # Main coverage database (recursive)
+            "**/.coverage.*",  # Lock files and temporary coverage files (recursive)
+            "**/coverage_*.json",  # JSON coverage reports (recursive)
+        ]
+
+    logger.info("Cleaning coverage database files...")
+
+    try:
+        removed_files = []
+        locked_files = []
+
+        # Clean each pattern
+        for pattern in patterns:
+            if "*" in pattern:
+                # Glob pattern - search for matching files recursively
+                glob_pattern = f"**/{pattern}" if not pattern.startswith("**/") else pattern
+                for file_path in repo_root.glob(glob_pattern):
+                    try:
+                        file_path.unlink()
+                        removed_files.append(str(file_path.relative_to(repo_root)))
+                        logger.debug(f"  Removed: {file_path.relative_to(repo_root)}")
+                    except PermissionError:
+                        locked_files.append(str(file_path.relative_to(repo_root)))
+                        logger.debug(f"  Skipped (locked): {file_path.relative_to(repo_root)}")
+                    except OSError as e:
+                        logger.debug(f"  Failed to remove {file_path.relative_to(repo_root)}: {e}")
+            else:
+                # Exact filename
+                file_path = repo_root / pattern
+                if file_path.exists():
+                    try:
+                        file_path.unlink()
+                        removed_files.append(str(file_path.name))
+                        logger.debug(f"  Removed: {file_path.name}")
+                    except PermissionError:
+                        locked_files.append(str(file_path.name))
+                        logger.debug(f"  Skipped (locked): {file_path.name}")
+                    except OSError as e:
+                        logger.debug(f"  Failed to remove {file_path.name}: {e}")
+
+        # Log results
+        if removed_files:
+            logger.info(f"Removed coverage files: {', '.join(removed_files)}")
+        if locked_files:
+            logger.warning(f"Skipped locked coverage files: {', '.join(locked_files)}")
+            logger.info("Locked files will be cleaned on next successful test run")
+
+        log_success("Coverage database cleanup completed", logger)
+        return True
+
+    except Exception as e:
+        logger.error(f"Failed to clean coverage database files: {e}", exc_info=True)
+        return False
+
+
 def copy_final_deliverables(
     project_root: Path,
     output_dir: Path,
     project_name: str = "project"
 ) -> Dict:
     """Copy all project outputs to top-level output directory.
-    
+
     Recursively copies entire projects/{project_name}/output/ directory structure, preserving:
     - pdf/ - Complete PDF directory with manuscript and metadata
     - web/ - HTML web outputs
@@ -216,14 +286,14 @@ def copy_final_deliverables(
     - simulations/ - Simulation outputs and checkpoints
     - llm/ - LLM-generated manuscript reviews
     - logs/ - Pipeline execution logs
-    
+
     Also copies combined PDF to root of project output directory for convenient access.
-    
+
     Args:
         project_root: Path to repository root
         output_dir: Path to top-level output directory (should be output/{project_name}/)
         project_name: Name of project in projects/ directory (default: "project")
-        
+
     Returns:
         Dictionary with copy statistics:
         {

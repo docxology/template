@@ -7,6 +7,106 @@ The Research Project Template provides **two main entry points** for pipeline op
 1. **`run.sh`** - Main entry point for manuscript pipeline operations (10 stages: 0-9)
 2. **`python3 scripts/execute_pipeline.py --core-only`** - Core 6-stage pipeline without LLM features
 
+## 🏗️ Thin Orchestration Architecture
+
+The Research Project Template follows a **thin orchestrator pattern** where all business logic resides in `infrastructure/` and `projects/{name}/src/` modules, while entry points and scripts act as lightweight coordinators.
+
+### Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    User Interface                            │
+│  run.sh → execute_pipeline.py → PipelineExecutor            │
+└─────────────────────┬───────────────────────────────────────┘
+                      │ delegates to
+                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│                 Orchestration Layer                         │
+│  scripts/00-07_*.py → infrastructure/ modules               │
+│  projects/{name}/scripts/*.py → projects/{name}/src/        │
+└─────────────────────┬───────────────────────────────────────┘
+                      │ implements
+                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  Business Logic                             │
+│  infrastructure/ (reusable) + projects/{name}/src/ (custom) │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Key Principles
+
+**Layer 1: Entry Points (Thin Orchestrators)**
+- **`run.sh`**: Bash menu system that delegates to Python orchestrators
+- **`execute_pipeline.py`**: Python pipeline coordinator using `PipelineExecutor`
+- **`execute_multi_project.py`**: Multi-project orchestration using `MultiProjectOrchestrator`
+- **Purpose**: User interface and high-level coordination only
+
+**Layer 2: Stage Scripts (Thin Orchestrators)**
+- **`scripts/00-07_*.py`**: Import from `infrastructure/` for business logic
+- **`projects/{name}/scripts/*.py`**: Import from `projects/{name}/src/` for business logic
+- **Purpose**: Stage-specific coordination and I/O handling
+
+**Layer 3: Business Logic (Actual Implementation)**
+- **`infrastructure/`**: Generic, reusable algorithms and utilities
+- **`projects/{name}/src/`**: Project-specific scientific code and analysis
+- **Purpose**: All computational logic and algorithms
+
+### Orchestration Flow
+
+```mermaid
+graph TD
+    A[User] --> B[run.sh]
+    B --> C[execute_pipeline.py]
+    C --> D[PipelineExecutor]
+    D --> E[scripts/00_setup_environment.py]
+    D --> F[scripts/01_run_tests.py]
+    D --> G[scripts/02_run_analysis.py]
+    D --> H[scripts/03_render_pdf.py]
+
+    E --> I[infrastructure.core.environment]
+    F --> J[infrastructure.reporting.test_reporter]
+    G --> K[infrastructure.core.script_discovery]
+    H --> L[infrastructure.rendering.RenderManager]
+
+    K --> M[projects/{name}/scripts/*.py]
+    M --> N[projects/{name}/src/]
+```
+
+### Benefits
+
+✅ **Separation of Concerns**: Clear boundaries between orchestration and computation
+✅ **Reusability**: Infrastructure modules work across all projects
+✅ **Testability**: Business logic isolated and thoroughly tested
+✅ **Maintainability**: Changes to algorithms don't affect orchestration
+✅ **Extensibility**: New projects inherit complete infrastructure
+
+### Examples
+
+**✅ CORRECT: Thin Orchestrator Pattern**
+```python
+# scripts/03_render_pdf.py (orchestrator)
+from infrastructure.rendering import RenderManager
+
+def run_render_pipeline():
+    renderer = RenderManager()  # Import business logic
+    pdf = renderer.render_pdf("manuscript.tex")  # Delegate computation
+    return validate_output(pdf)  # Orchestrate validation
+```
+
+**❌ INCORRECT: Violates Architecture**
+```python
+# scripts/03_render_pdf.py (WRONG - implements logic)
+def render_pdf_to_tex(content):
+    # Business logic in orchestrator - WRONG!
+    lines = content.split('\n')
+    tex_lines = []
+    for line in lines:
+        if line.startswith('# '):
+            tex_lines.append(f'\\section{{{line[2:]}}}')
+        # ... complex rendering logic ...
+    return '\n'.join(tex_lines)
+```
+
 ## 🔀 Multi-Project Support
 
 The template now supports **multiple research projects** in a single repository. You can:
@@ -20,8 +120,8 @@ The template now supports **multiple research projects** in a single repository.
 The template includes three example projects:
 
 - **`project`** - Full-featured research template (default, backward compatible)
-- **`small_prose_project`** - Manuscript-focused with equations and prose
-- **`small_code_project`** - Code-focused with analysis pipeline and figures
+- **`prose_project`** - Manuscript-focused with equations and prose
+- **`code_project`** - Code-focused with analysis pipeline and figures
 
 ### Multi-Project Commands
 
@@ -30,7 +130,7 @@ The template includes three example projects:
 ./run.sh
 
 # Run specific project
-./run.sh --project small_code_project --pipeline
+./run.sh --project code_project --pipeline
 
 # Run all projects sequentially
 ./run.sh --all-projects --pipeline

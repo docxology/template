@@ -14,11 +14,6 @@ infrastructure/
 │   ├── exceptions.py       # Exception hierarchy with context
 │   ├── logging_utils.py    # Unified Python logging
 │   └── config_loader.py    # Configuration management
-├── build/          # Build verification & reproducibility
-│   ├── build_verifier.py    # Build process verification
-│   ├── reproducibility.py  # Reproducibility tracking
-│   ├── quality_checker.py   # Document quality analysis
-│   └── AGENTS.md, README.md # Documentation
 ├── validation/     # Quality & validation tools
 │   ├── pdf_validator.py      # PDF rendering validation
 │   ├── markdown_validator.py # Markdown structure validation
@@ -53,6 +48,185 @@ infrastructure/
     ├── html_templates.py     # HTML report templates
     └── AGENTS.md, README.md   # Documentation
 ```
+
+## Function Signatures
+
+### Core Module
+
+#### exceptions.py
+- `class TemplateError(Exception):`
+- `class LLMError(TemplateError):`
+- `class RenderingError(TemplateError):`
+- `class PublishingError(TemplateError):`
+- `class ValidationError(TemplateError):`
+- `class ConfigurationError(TemplateError):`
+- `class EnvironmentError(TemplateError):`
+- `def format_exception_chain(exc: Exception) -> str:`
+- `def preserve_context(func: Callable) -> Callable:`
+
+#### logging_utils.py
+- `class ProjectLogger:`
+- `def get_project_logger(name: str, level: Optional[int] = None) -> ProjectLogger:`
+- `def setup_project_logging(name: str, level: Optional[int] = None, ...):`
+- `def get_log_level_from_env() -> int:`
+- `def setup_logger(name: str, level: Optional[int] = None, ...) -> logging.Logger:`
+- `def get_logger(name: str) -> logging.Logger:`
+- `def log_operation(func: Callable, logger: Optional[logging.Logger] = None) -> Callable:`
+- `def log_operation_silent(func: Callable, logger: Optional[logging.Logger] = None) -> Callable:`
+- `def log_timing(func: Callable, logger: Optional[logging.Logger] = None) -> Callable:`
+- `def log_function_call(logger: Optional[logging.Logger] = None) -> Callable:`
+- `def log_success(message: str, logger: Optional[logging.Logger] = None) -> None:`
+- `def log_header(message: str, logger: Optional[logging.Logger] = None) -> None:`
+- `def log_progress(current: int, total: int, message: str = "", ...) -> None:`
+- `def log_stage(stage_name: str, stage_num: Optional[int] = None, ...) -> None:`
+- `def log_substep(message: str, logger: Optional[logging.Logger] = None) -> None:`
+- `def set_global_log_level(level: int) -> None:`
+- `def log_stage_with_eta(stage_name: str, current: int, total: int, ...) -> None:`
+- `def log_resource_usage(logger: Optional[logging.Logger] = None) -> None:`
+
+#### config_loader.py
+- `def load_config_from_yaml(yaml_path: Path) -> Dict[str, Any]:`
+- `def load_config_from_env() -> Dict[str, Any]:`
+- `def merge_configs(yaml_config: Dict, env_config: Dict) -> Dict[str, Any]:`
+- `def load_project_config(project_dir: Path) -> Dict[str, Any]:`
+- `def format_author_name(author_data: Dict[str, Any]) -> str:`
+- `def format_author_affiliation(author_data: Dict[str, Any]) -> str:`
+- `def get_formatted_authors(config: Dict[str, Any]) -> List[str]:`
+
+#### checkpoint.py
+- `class PipelineCheckpoint:`
+- `class CheckpointManager:`
+- `def create_checkpoint_dir(base_dir: Path) -> Path:`
+- `def save_checkpoint(checkpoint: PipelineCheckpoint, checkpoint_dir: Path) -> None:`
+- `def load_checkpoint(checkpoint_dir: Path) -> Optional[PipelineCheckpoint]:`
+- `def validate_checkpoint(checkpoint: PipelineCheckpoint) -> bool:`
+
+#### file_operations.py
+- `def clean_output_directory(output_dir: Path, project_name: str) -> None:`
+- `def copy_final_deliverables(output_dir: Path, final_dir: Path, project_name: str) -> None:`
+- `def ensure_directory_exists(directory: Path) -> None:`
+- `def get_file_size_mb(file_path: Path) -> float:`
+- `def calculate_directory_size(directory: Path) -> int:`
+
+#### performance.py
+- `class PerformanceMonitor:`
+- `def get_system_resources() -> Dict[str, Any]:`
+- `def monitor_performance(func: Callable) -> Callable:`
+- `def log_performance_stats(stats: Dict[str, Any], logger: Optional[logging.Logger] = None) -> None:`
+- `def format_performance_report(stats: Dict[str, Any]) -> str:`
+
+### Validation Module
+
+#### pdf_validator.py
+- `def validate_pdf_content(pdf_path: Path) -> ValidationReport:`
+- `def extract_text_from_pdf(pdf_path: Path) -> str:`
+- `def check_unresolved_references(text: str) -> List[str]:`
+- `def check_latex_warnings(text: str) -> List[str]:`
+- `def validate_document_structure(pdf_path: Path) -> bool:`
+
+#### markdown_validator.py
+- `def validate_markdown_file(file_path: Path) -> ValidationReport:`
+- `def validate_image_references(content: str, base_dir: Path) -> List[str]:`
+- `def validate_cross_references(content: str) -> List[str]:`
+- `def validate_equation_labels(content: str) -> List[str]:`
+- `def validate_link_formats(content: str) -> List[str]:`
+
+#### integrity.py
+- `def verify_output_integrity(output_dir: Path) -> IntegrityReport:`
+- `def check_file_integrity(file_path: Path) -> bool:`
+- `def validate_cross_references(content: str) -> List[str]:`
+- `def generate_integrity_report(report: IntegrityReport) -> str:`
+
+### Rendering Module
+
+#### pdf_renderer.py
+- `def render_pdf_manuscript(manuscript_dir: Path, output_dir: Path, ...) -> Path:`
+- `def render_individual_sections(manuscript_dir: Path, output_dir: Path) -> List[Path]:`
+- `def combine_sections_to_pdf(section_files: List[Path], output_file: Path) -> None:`
+- `def render_ide_friendly_pdf(source_file: Path, output_file: Path) -> None:`
+
+#### latex_utils.py
+- `def compile_latex_to_pdf(tex_file: Path, output_dir: Path, ...) -> Path:`
+- `def extract_latex_errors(log_content: str) -> List[str]:`
+- `def clean_latex_auxiliary_files(output_dir: Path) -> None:`
+
+#### core.py
+- `class RenderManager:`
+- `def render_pdf(self, manuscript_dir: Path, output_dir: Path, ...) -> Path:`
+- `def render_html(self, manuscript_dir: Path, output_dir: Path) -> Path:`
+- `def render_all(self, manuscript_dir: Path, output_dir: Path) -> Dict[str, Path]:`
+
+### LLM Module
+
+#### core.py
+- `class LLMConfig:`
+- `class LLMClient:`
+- `def query(self, prompt: str, options: Optional[GenerationOptions] = None) -> str:`
+- `def apply_template(self, template_name: str, **kwargs) -> str:`
+
+#### templates.py
+- `def get_template(template_name: str) -> str:`
+- `def list_available_templates() -> List[str]:`
+- `def apply_template_with_context(template_name: str, context: Dict[str, Any]) -> str:`
+
+### Publishing Module
+
+#### core.py
+- `def extract_publication_metadata(markdown_files: List[Path]) -> Dict[str, Any]:`
+- `def validate_metadata(metadata: Dict[str, Any]) -> List[str]:`
+- `def format_publication_metadata(metadata: Dict[str, Any]) -> str:`
+
+#### api.py
+- `def publish_to_zenodo(metadata: Dict[str, Any], files: List[Path], ...) -> str:`
+- `def create_github_release(metadata: Dict[str, Any], files: List[Path], ...) -> str:`
+- `def prepare_arxiv_submission(metadata: Dict[str, Any], files: List[Path]) -> Path:`
+
+#### citations.py
+- `def generate_citation_bibtex(metadata: Dict[str, Any]) -> str:`
+- `def generate_citation_apa(metadata: Dict[str, Any]) -> str:`
+- `def validate_doi(doi: str) -> bool:`
+
+### Scientific Module
+
+#### benchmarking.py
+- `def benchmark_function(func: Callable, test_inputs: List[Any], ...) -> BenchmarkReport:`
+- `def compare_implementations(functions: Dict[str, Callable], ...) -> ComparisonReport:`
+
+#### stability.py
+- `def check_numerical_stability(func: Callable, test_inputs: List[Any], ...) -> StabilityReport:`
+- `def assess_algorithm_stability(func: Callable, input_ranges: Dict[str, Tuple[float, float]]) -> Dict[str, Any]:`
+
+#### validation.py
+- `def validate_scientific_code(file_path: Path) -> ValidationReport:`
+- `def check_best_practices(code_content: str) -> List[str]:`
+
+### Reporting Module
+
+#### pipeline_reporter.py
+- `def generate_pipeline_report(checkpoint_dir: Path, output_dir: Path) -> Path:`
+- `def generate_stage_report(stage_name: str, duration: float, ...) -> str:`
+
+#### error_aggregator.py
+- `def aggregate_errors(log_files: List[Path]) -> ErrorSummary:`
+- `def categorize_errors(error_messages: List[str]) -> Dict[str, List[str]]:`
+- `def generate_error_report(errors: ErrorSummary, output_dir: Path) -> Path:`
+
+#### executive_reporter.py
+- `def generate_executive_report(project_dirs: List[Path], output_dir: Path) -> Path:`
+- `def aggregate_project_metrics(project_dirs: List[Path]) -> Dict[str, Any]:`
+
+### Documentation Module
+
+#### figure_manager.py
+- `class FigureManager:`
+- `def register_figure(self, figure_path: Path, caption: str, label: str) -> str:`
+- `def get_figure_reference(self, label: str) -> str:`
+- `def validate_figure_references(self, content: str) -> List[str]:`
+
+#### markdown_integration.py
+- `def integrate_figures_into_markdown(content: str, figure_manager: FigureManager) -> str:`
+- `def integrate_tables_into_markdown(content: str) -> str:`
+- `def validate_markdown_integrity(content: str) -> List[str]:`
 
 ## Key Design Principles
 
@@ -134,38 +308,6 @@ infrastructure/
 from infrastructure.core import (
     get_logger, TemplateError, load_config,
     CheckpointManager, ProgressBar, PerformanceMonitor
-)
-```
-
-### Build Module (`build/`)
-
-**Build verification, reproducibility, and quality analysis.**
-
-- `build_verifier.py` - Build process verification
-  - Build command execution and monitoring
-  - Build artifact verification
-  - Build reproducibility validation
-  - Environment dependency checking
-
-- `reproducibility.py` - Reproducibility tracking
-  - Environment state capture (OS, Python, dependencies)
-  - Build environment snapshot creation
-  - Reproducibility comparison and verification
-  - Build manifest generation
-
-- `quality_checker.py` - Document quality analysis
-  - Readability analysis (Flesch score, Gunning Fog)
-  - Academic standards compliance checking
-  - Structural integrity analysis
-  - Formatting quality assessment
-
-**Usage:**
-```python
-from infrastructure.build import (
-    verify_build_artifacts,
-    run_build_command,
-    generate_reproducibility_report,
-    analyze_document_quality
 )
 ```
 
@@ -299,7 +441,8 @@ from infrastructure.reporting import (
     save_pipeline_report,
     get_error_aggregator,
     generate_test_report,
-    generate_validation_report
+    generate_validation_report,
+    generate_multi_project_report
 )
 
 # Generate pipeline report
@@ -309,6 +452,13 @@ report = generate_pipeline_report(
     repo_root=Path("."),
 )
 saved_files = save_pipeline_report(report, Path("output/reports"))
+
+# Generate multi-project executive report
+exec_report = generate_multi_project_report(
+    repo_root=Path("."),
+    project_names=["project", "ento_linguistics"],
+    output_dir=Path("output/executive_summary")
+)
 
 # Aggregate errors
 aggregator = get_error_aggregator()
@@ -338,6 +488,7 @@ Features:
 python3 -m infrastructure.publishing.cli extract-metadata manuscript/
 python3 -m infrastructure.publishing.cli generate-citation manuscript/ --format bibtex
 python3 -m infrastructure.publishing.cli publish-zenodo output/ --title "My Research"
+python3 -m infrastructure.publishing.cli create-release v1.0 output/ $GITHUB_TOKEN
 ```
 
 ## Design Principles

@@ -1,0 +1,377 @@
+{
+  "project": "prose_project",
+  "timestamp": "2026-01-01T14:48:46.860897",
+  "manuscript_validation": {
+    "errors": [
+      "Missing image: ../output/figures/mathematical_visualization.png referenced from manuscript/03_results.md",
+      "Missing image: ../output/figures/theoretical_analysis.png referenced from manuscript/03_results.md",
+      "Use equation environment instead of $$ in manuscript/01_introduction.md",
+      "Use equation environment instead of $$ in manuscript/03_results.md"
+    ],
+    "exit_code": 0,
+    "manuscript_dir": "/Users/4d/Documents/GitHub/template/projects/prose_project/manuscript"
+  },
+  "cross_references": {
+    "equations": true,
+    "figures": true,
+    "tables": true,
+    "sections": true,
+    "citations": true
+  },
+  "academic_standards": {
+    "has_abstract": false,
+    "has_introduction": true,
+    "has_methodology": true,
+    "has_results": true,
+    "has_discussion": true,
+    "has_conclusion": true,
+    "has_references": true,
+    "proper_citations": false,
+    "equation_labels": true,
+    "figure_captions": true
+  },
+  "link_validation": [
+    {
+      "text": "Comprehensive mathematical visualization showing function comparisons, convergence analysis, statistical distributions, growth rates, and theoretical convergence patterns",
+      "target": "../output/figures/mathematical_visualization.png",
+      "line": "119",
+      "type": "broken",
+      "file": "/Users/4d/Documents/GitHub/template/projects/prose_project/manuscript/03_results.md"
+    },
+    {
+      "text": "Theoretical convergence analysis comparing linear, quadratic, and superlinear convergence rates",
+      "target": "../output/figures/theoretical_analysis.png",
+      "line": "130",
+      "type": "broken",
+      "file": "/Users/4d/Documents/GitHub/template/projects/prose_project/manuscript/03_results.md"
+    },
+    {
+      "text": "../../../scripts/03_render_pdf.py",
+      "target": "../../../scripts/03_render_pdf.py",
+      "line": "154",
+      "type": "broken",
+      "file": "/Users/4d/Documents/GitHub/template/projects/prose_project/manuscript/AGENTS.md"
+    },
+    {
+      "text": "../../../infrastructure/validation/",
+      "target": "../../../infrastructure/validation/",
+      "line": "155",
+      "type": "broken",
+      "file": "/Users/4d/Documents/GitHub/template/projects/prose_project/manuscript/AGENTS.md"
+    }
+  ],
+  "output_integrity": {
+    "errors": [
+      "Data consistency issues found"
+    ],
+    "warnings": [
+      "Missing academic standards: has_abstract, has_introduction, has_methodology, has_results, has_discussion, has_conclusion, has_references"
+    ],
+    "recommendations": [
+      "Fix integrity issues before proceeding",
+      "Check file permissions and paths",
+      "Verify all cross-references are properly defined",
+      "Consider addressing academic standard warnings"
+    ]
+  },
+  "comprehensive_audit": {
+    "scan_date": "2026-01-01 14:48:46",
+    "total_files": 0,
+    "documentation_files": [
+      {
+        "path": "AGENTS.md",
+        "relative_path": "AGENTS.md",
+        "directory": ".",
+        "name": "AGENTS.md",
+        "category": "",
+        "word_count": 1709,
+        "line_count": 518,
+        "has_links": true,
+        "has_code_blocks": true,
+        "last_modified": null
+      },
+      {
+        "path": "README.md",
+        "relative_path": "README.md",
+        "directory": ".",
+        "name": "README.md",
+        "category": "",
+        "word_count": 296,
+        "line_count": 105,
+        "has_links": true,
+        "has_code_blocks": true,
+        "last_modified": null
+      },
+      {
+        "path": "manuscript/01_introduction.md",
+        "relative_path": "manuscript/01_introduction.md",
+        "directory": "manuscript",
+        "name": "01_introduction.md",
+        "category": "",
+        "word_count": 230,
+        "line_count": 53,
+        "has_links": false,
+        "has_code_blocks": false,
+        "last_modified": null
+      },
+      {
+        "path": "manuscript/02_methodology.md",
+        "relative_path": "manuscript/02_methodology.md",
+        "directory": "manuscript",
+        "name": "02_methodology.md",
+        "category": "",
+        "word_count": 941,
+        "line_count": 243,
+        "has_links": true,
+        "has_code_blocks": false,
+        "last_modified": null
+      },
+      {
+        "path": "manuscript/03_results.md",
+        "relative_path": "manuscript/03_results.md",
+        "directory": "manuscript",
+        "name": "03_results.md",
+        "category": "",
+        "word_count": 672,
+        "line_count": 149,
+        "has_links": true,
+        "has_code_blocks": false,
+        "last_modified": null
+      },
+      {
+        "path": "manuscript/04_conclusion.md",
+        "relative_path": "manuscript/04_conclusion.md",
+        "directory": "manuscript",
+        "name": "04_conclusion.md",
+        "category": "",
+        "word_count": 242,
+        "line_count": 45,
+        "has_links": false,
+        "has_code_blocks": false,
+        "last_modified": null
+      },
+      {
+        "path": "manuscript/AGENTS.md",
+        "relative_path": "manuscript/AGENTS.md",
+        "directory": "manuscript",
+        "name": "AGENTS.md",
+        "category": "",
+        "word_count": 473,
+        "line_count": 155,
+        "has_links": true,
+        "has_code_blocks": true,
+        "last_modified": null
+      },
+      {
+        "path": "manuscript/README.md",
+        "relative_path": "manuscript/README.md",
+        "directory": "manuscript",
+        "name": "README.md",
+        "category": "",
+        "word_count": 264,
+        "line_count": 85,
+        "has_links": true,
+        "has_code_blocks": true,
+        "last_modified": null
+      },
+      {
+        "path": "scripts/AGENTS.md",
+        "relative_path": "scripts/AGENTS.md",
+        "directory": "scripts",
+        "name": "AGENTS.md",
+        "category": "",
+        "word_count": 1678,
+        "line_count": 516,
+        "has_links": true,
+        "has_code_blocks": true,
+        "last_modified": null
+      },
+      {
+        "path": "src/AGENTS.md",
+        "relative_path": "src/AGENTS.md",
+        "directory": "src",
+        "name": "AGENTS.md",
+        "category": "",
+        "word_count": 365,
+        "line_count": 124,
+        "has_links": true,
+        "has_code_blocks": true,
+        "last_modified": null
+      },
+      {
+        "path": "src/README.md",
+        "relative_path": "src/README.md",
+        "directory": "src",
+        "name": "README.md",
+        "category": "",
+        "word_count": 121,
+        "line_count": 46,
+        "has_links": true,
+        "has_code_blocks": true,
+        "last_modified": null
+      },
+      {
+        "path": "tests/AGENTS.md",
+        "relative_path": "tests/AGENTS.md",
+        "directory": "tests",
+        "name": "AGENTS.md",
+        "category": "",
+        "word_count": 589,
+        "line_count": 185,
+        "has_links": true,
+        "has_code_blocks": true,
+        "last_modified": null
+      },
+      {
+        "path": "tests/README.md",
+        "relative_path": "tests/README.md",
+        "directory": "tests",
+        "name": "README.md",
+        "category": "",
+        "word_count": 142,
+        "line_count": 56,
+        "has_links": true,
+        "has_code_blocks": true,
+        "last_modified": null
+      }
+    ],
+    "link_issues": [],
+    "accuracy_issues": [],
+    "completeness_gaps": [],
+    "quality_issues": [
+      {
+        "file": "AGENTS.md",
+        "line": 180,
+        "issue_type": "code_block_path",
+        "issue_message": "File path in code block does not exist: scripts/run_analysis.py",
+        "severity": "warning"
+      },
+      {
+        "file": "AGENTS.md",
+        "line": 256,
+        "issue_type": "code_block_path",
+        "issue_message": "File path in code block does not exist: scripts/03_render_pdf.py",
+        "severity": "warning"
+      },
+      {
+        "file": "AGENTS.md",
+        "line": 406,
+        "issue_type": "python_import",
+        "issue_message": "Python import not found: infrastructure.core.performance",
+        "severity": "warning"
+      },
+      {
+        "file": "AGENTS.md",
+        "line": 431,
+        "issue_type": "python_import",
+        "issue_message": "Python import not found: infrastructure.core.progress",
+        "severity": "warning"
+      },
+      {
+        "file": "AGENTS.md",
+        "line": 453,
+        "issue_type": "python_import",
+        "issue_message": "Python import not found: infrastructure.scientific",
+        "severity": "warning"
+      },
+      {
+        "file": "AGENTS.md",
+        "line": 497,
+        "issue_type": "python_import",
+        "issue_message": "Python import not found: infrastructure.core.logging_utils",
+        "severity": "warning"
+      },
+      {
+        "file": "README.md",
+        "line": 119,
+        "issue_type": "code_block_path",
+        "issue_message": "File path in code block does not exist: scripts/03_render_pdf.py",
+        "severity": "warning"
+      },
+      {
+        "file": "README.md",
+        "line": 68,
+        "issue_type": "code_block_path",
+        "issue_message": "File path in code block does not exist: scripts/03_render_pdf.py",
+        "severity": "warning"
+      },
+      {
+        "file": "README.md",
+        "line": 184,
+        "issue_type": "code_block_path",
+        "issue_message": "File path in code block does not exist: scripts/]",
+        "severity": "warning"
+      },
+      {
+        "file": "manuscript/AGENTS.md",
+        "line": 157,
+        "issue_type": "code_block_path",
+        "issue_message": "File path in code block does not exist: scripts/03_render_pdf.py",
+        "severity": "warning"
+      },
+      {
+        "file": "manuscript/AGENTS.md",
+        "line": 197,
+        "issue_type": "code_block_path",
+        "issue_message": "File path in code block does not exist: scripts/04_validate_output.py",
+        "severity": "warning"
+      },
+      {
+        "file": "manuscript/AGENTS.md",
+        "line": 178,
+        "issue_type": "code_block_path",
+        "issue_message": "File path in code block does not exist: scripts/03_render_pdf.py",
+        "severity": "warning"
+      },
+      {
+        "file": "manuscript/README.md",
+        "line": 122,
+        "issue_type": "code_block_path",
+        "issue_message": "File path in code block does not exist: scripts/03_render_pdf.py",
+        "severity": "warning"
+      },
+      {
+        "file": "manuscript/README.md",
+        "line": 75,
+        "issue_type": "code_block_path",
+        "issue_message": "File path in code block does not exist: scripts/03_render_pdf.py",
+        "severity": "warning"
+      },
+      {
+        "file": "scripts/AGENTS.md",
+        "line": 423,
+        "issue_type": "python_import",
+        "issue_message": "Python import not found: infrastructure.publishing",
+        "severity": "warning"
+      },
+      {
+        "file": "scripts/AGENTS.md",
+        "line": 437,
+        "issue_type": "python_import",
+        "issue_message": "Python import not found: infrastructure.core.performance",
+        "severity": "warning"
+      },
+      {
+        "file": "scripts/AGENTS.md",
+        "line": 453,
+        "issue_type": "python_import",
+        "issue_message": "Python import not found: infrastructure.core.progress",
+        "severity": "warning"
+      },
+      {
+        "file": "scripts/AGENTS.md",
+        "line": 469,
+        "issue_type": "python_import",
+        "issue_message": "Python import not found: infrastructure.scientific",
+        "severity": "warning"
+      }
+    ],
+    "improvements_made": [],
+    "statistics": {
+      "link_issues": 0,
+      "accuracy_issues": 0,
+      "completeness_gaps": 0,
+      "quality_issues": 18
+    }
+  }
+}

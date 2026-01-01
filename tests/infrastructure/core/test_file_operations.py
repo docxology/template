@@ -433,7 +433,7 @@ class TestCopyFinalDeliverables:
         """Test error handling during copy operation."""
         project_root = tmp_path / "repo"
         project_root.mkdir()
-        
+
         project_output = project_root / "projects" / "project" / "output"
         project_output.mkdir(parents=True)
         (project_output / "file.txt").write_text("content")
@@ -447,7 +447,123 @@ class TestCopyFinalDeliverables:
 
         # Normal case should work
         stats = copy_final_deliverables(project_root, output_dir, project_name="project")
-        
+
         # Should complete successfully
         assert len(stats["errors"]) == 0 or all("not found" not in err.lower() for err in stats["errors"])
+
+
+class TestCleanCoverageFiles:
+    """Test clean_coverage_files function."""
+
+    def test_clean_coverage_files_basic(self, tmp_path):
+        """Test cleaning basic coverage files."""
+        # Create test coverage files
+        (tmp_path / ".coverage").write_text("coverage data")
+        (tmp_path / ".coverage.infra").write_text("infra coverage")
+        (tmp_path / ".coverage.project").write_text("project coverage")
+        (tmp_path / "coverage_infra.json").write_text('{"coverage": "infra"}')
+        (tmp_path / "coverage_project.json").write_text('{"coverage": "project"}')
+
+        # Import and call function
+        from infrastructure.core.file_operations import clean_coverage_files
+        result = clean_coverage_files(tmp_path)
+
+        assert result is True
+
+        # Verify files were removed
+        assert not (tmp_path / ".coverage").exists()
+        assert not (tmp_path / ".coverage.infra").exists()
+        assert not (tmp_path / ".coverage.project").exists()
+        assert not (tmp_path / "coverage_infra.json").exists()
+        assert not (tmp_path / "coverage_project.json").exists()
+
+    def test_clean_coverage_files_custom_patterns(self, tmp_path):
+        """Test cleaning with custom file patterns."""
+        # Create test files
+        (tmp_path / "custom_coverage.db").write_text("custom data")
+        (tmp_path / "other_file.txt").write_text("other data")
+
+        from infrastructure.core.file_operations import clean_coverage_files
+        result = clean_coverage_files(tmp_path, patterns=["custom_coverage.db"])
+
+        assert result is True
+
+        # Verify only custom pattern was removed
+        assert not (tmp_path / "custom_coverage.db").exists()
+        assert (tmp_path / "other_file.txt").exists()
+
+    def test_clean_coverage_files_locked_file(self, tmp_path):
+        """Test cleaning when a coverage file is locked."""
+        import os
+
+        # Create a regular file (can't really lock on all systems)
+        coverage_file = tmp_path / ".coverage"
+        coverage_file.write_text("coverage data")
+
+        # Make it read-only to simulate lock
+        coverage_file.chmod(0o444)  # Read-only
+
+        from infrastructure.core.file_operations import clean_coverage_files
+        result = clean_coverage_files(tmp_path)
+
+        # Should still succeed even with locked file
+        assert result is True
+
+        # File might still exist if it was locked
+        # (behavior depends on system permissions)
+
+    def test_clean_coverage_files_no_files(self, tmp_path):
+        """Test cleaning when no coverage files exist."""
+        from infrastructure.core.file_operations import clean_coverage_files
+        result = clean_coverage_files(tmp_path)
+
+        assert result is True
+
+    def test_clean_coverage_files_glob_patterns(self, tmp_path):
+        """Test cleaning with glob patterns."""
+        # Create files with glob patterns
+        (tmp_path / ".coverage").write_text("main")
+        (tmp_path / ".coverage.lock").write_text("lock")
+        (tmp_path / ".coverage.temp").write_text("temp")
+        (tmp_path / "coverage_001.json").write_text("json1")
+        (tmp_path / "coverage_002.json").write_text("json2")
+
+        from infrastructure.core.file_operations import clean_coverage_files
+        result = clean_coverage_files(tmp_path, patterns=[".coverage*", "coverage_*.json"])
+
+        assert result is True
+
+        # Verify globbed files were removed
+        assert not (tmp_path / ".coverage").exists()
+        assert not (tmp_path / ".coverage.lock").exists()
+        assert not (tmp_path / ".coverage.temp").exists()
+        assert not (tmp_path / "coverage_001.json").exists()
+        assert not (tmp_path / "coverage_002.json").exists()
+
+    def test_clean_coverage_files_empty_patterns(self, tmp_path):
+        """Test cleaning with empty patterns list."""
+        (tmp_path / ".coverage").write_text("data")
+
+        from infrastructure.core.file_operations import clean_coverage_files
+        result = clean_coverage_files(tmp_path, patterns=[])
+
+        assert result is True
+
+        # No files should be removed since patterns is empty
+        assert (tmp_path / ".coverage").exists()
+
+    def test_clean_coverage_files_subdirectory(self, tmp_path):
+        """Test that coverage files in subdirectories are also cleaned."""
+        # Create coverage files in subdirectory
+        subdir = tmp_path / "subdir"
+        subdir.mkdir()
+        (subdir / ".coverage").write_text("subdir coverage")
+
+        from infrastructure.core.file_operations import clean_coverage_files
+        result = clean_coverage_files(tmp_path)
+
+        assert result is True
+
+        # File in subdirectory should be removed
+        assert not (subdir / ".coverage").exists()
 

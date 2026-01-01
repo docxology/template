@@ -1,0 +1,206 @@
+{
+  "timestamp": null,
+  "checks": {
+    "PDF validation": true,
+    "Markdown validation": true,
+    "Output structure": false,
+    "Figure registry": true
+  },
+  "figure_issues": [],
+  "output_statistics": {
+    "detailed_validation": {
+      "structure": {
+        "valid": false,
+        "issues": [],
+        "missing_files": [
+          "project_combined.pdf"
+        ],
+        "suspicious_sizes": [
+          "simulations/ directory is empty"
+        ],
+        "warnings": [],
+        "directory_structure": {
+          "project_combined_pdf": {
+            "exists": false,
+            "size_mb": 0.0,
+            "readable": false
+          },
+          "pdf": {
+            "exists": true,
+            "files": 9,
+            "size_mb": 0.92,
+            "readable": true,
+            "optional": false
+          },
+          "web": {
+            "exists": true,
+            "files": 4,
+            "size_mb": 0.04,
+            "readable": true,
+            "optional": false
+          },
+          "slides": {
+            "exists": true,
+            "files": 29,
+            "size_mb": 0.34,
+            "readable": true,
+            "optional": false
+          },
+          "figures": {
+            "exists": true,
+            "files": 7,
+            "size_mb": 0.9,
+            "readable": true,
+            "optional": false
+          },
+          "data": {
+            "exists": true,
+            "files": 1,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": false
+          },
+          "reports": {
+            "exists": true,
+            "files": 6,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": false
+          },
+          "simulations": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": false
+          },
+          "llm": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          },
+          "logs": {
+            "exists": true,
+            "files": 0,
+            "size_mb": 0.0,
+            "readable": true,
+            "optional": true
+          }
+        }
+      },
+      "directories": {
+        "pdf": {
+          "exists": true,
+          "file_count": 9,
+          "size_mb": "0.92",
+          "largest_file": "code_project_combined.pdf"
+        },
+        "web": {
+          "exists": true,
+          "file_count": 4,
+          "size_mb": "0.04",
+          "largest_file": "03_results.html"
+        },
+        "slides": {
+          "exists": true,
+          "file_count": 29,
+          "size_mb": "0.34",
+          "largest_file": "03_results_slides.log"
+        },
+        "figures": {
+          "exists": true,
+          "file_count": 7,
+          "size_mb": "0.90",
+          "largest_file": "algorithm_complexity.png"
+        },
+        "data": {
+          "exists": true,
+          "file_count": 1,
+          "size_mb": "0.00",
+          "largest_file": "optimization_results.csv"
+        },
+        "reports": {
+          "exists": true,
+          "file_count": 6,
+          "size_mb": "0.00",
+          "largest_file": "test_results.json"
+        },
+        "simulations": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "llm": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        },
+        "logs": {
+          "exists": true,
+          "file_count": 0,
+          "size_mb": "0.00",
+          "largest_file": null
+        }
+      },
+      "file_counts": {
+        "pdf": 9,
+        "web": 4,
+        "slides": 29,
+        "figures": 7,
+        "data": 1,
+        "reports": 6,
+        "simulations": 0,
+        "llm": 0,
+        "logs": 0
+      },
+      "total_size_mb": 2.200277328491211,
+      "issues_by_severity": {
+        "critical": [
+          "Missing expected file: project_combined.pdf"
+        ],
+        "warning": [
+          "simulations/ directory is empty"
+        ],
+        "info": []
+      },
+      "recommendations": [
+        {
+          "priority": "high",
+          "action": "Review critical issues in output generation",
+          "details": "Check PDF rendering and copy stages for errors"
+        }
+      ]
+    },
+    "pdf": {
+      "files": 9,
+      "size_mb": 0.9242401123046875
+    },
+    "figures": {
+      "files": 7,
+      "size_mb": 0.9004192352294922
+    },
+    "data": {
+      "files": 1,
+      "size_mb": 0.0002269744873046875
+    }
+  },
+  "summary": {
+    "total_checks": 4,
+    "passed": 3,
+    "failed": 1,
+    "figure_issues_count": 0,
+    "all_passed": false
+  },
+  "recommendations": [
+    {
+      "priority": "high",
+      "issue": "Missing output directories",
+      "action": "Ensure all analysis scripts completed successfully",
+      "file": "projects/code_project/output/"
+    }
+  ]
+}

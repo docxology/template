@@ -78,7 +78,7 @@ That's it! You now have a complete research project structure.
 
 **Perfect for**: Users ready to add custom figures and automation
 
-**[📗 Read Intermediate Usage Guide](../guides/INTERMEDIATE_USAGE.md)**
+**[📗 Read Figures and Analysis Guide](../guides/FIGURES_AND_ANALYSIS.md)**
 
 **What you'll learn**:
 - Generate figures from data using scripts
@@ -99,7 +99,7 @@ That's it! You now have a complete research project structure.
 
 **Perfect for**: Developers ready for test-driven development
 
-**[📕 Read Advanced Usage Guide](../guides/ADVANCED_USAGE.md)**
+**[📕 Read Testing and Reproducibility Guide](../guides/TESTING_AND_REPRODUCIBILITY.md)**
 
 **What you'll learn**:
 - Practice test-driven development (TDD)
@@ -112,7 +112,7 @@ That's it! You now have a complete research project structure.
 
 **Skills required**: Strong Python, testing knowledge
 
-**Prerequisites**: Complete [Intermediate Usage Guide](../guides/INTERMEDIATE_USAGE.md)
+**Prerequisites**: Complete [Figures and Analysis Guide](../guides/FIGURES_AND_ANALYSIS.md)
 
 ---
 
@@ -120,7 +120,7 @@ That's it! You now have a complete research project structure.
 
 **Perfect for**: Expert developers building custom systems
 
-**[📙 Read Expert Usage Guide](../guides/EXPERT_USAGE.md)**
+**[📙 Read Extending and Automation Guide](../guides/EXTENDING_AND_AUTOMATION.md)**
 
 **What you'll learn**:
 - Extend the template architecture
@@ -134,7 +134,7 @@ That's it! You now have a complete research project structure.
 
 **Skills required**: Expert Python, DevOps, system design
 
-**Prerequisites**: Complete [Advanced Usage Guide](../guides/ADVANCED_USAGE.md)
+**Prerequisites**: Complete [Testing and Reproducibility Guide](../guides/TESTING_AND_REPRODUCIBILITY.md)
 
 ---
 
@@ -211,18 +211,18 @@ Level 10-12: Expert Usage (1-2 months)
 
 ### For Academic Researchers
 1. **[Getting Started](../guides/GETTING_STARTED.md)** - Write your paper
-2. **[Intermediate Usage](../guides/INTERMEDIATE_USAGE.md)** - Add figures and analysis
-3. **[Advanced Usage](../guides/ADVANCED_USAGE.md)** - Ensure reproducibility
+2. **[Figures and Analysis](../guides/FIGURES_AND_ANALYSIS.md)** - Add figures and analysis
+3. **[Testing and Reproducibility](../guides/TESTING_AND_REPRODUCIBILITY.md)** - Ensure reproducibility
 
 ### For Software Developers
 1. **[Quick Start Cheatsheet](../reference/QUICK_START_CHEATSHEET.md)** - Get oriented fast
-2. **[Intermediate Usage](../guides/INTERMEDIATE_USAGE.md)** - Understand the pattern
-3. **[Advanced Usage](../guides/ADVANCED_USAGE.md)** - Master TDD approach
-4. **[Expert Usage](../guides/EXPERT_USAGE.md)** - Build custom systems
+2. **[Figures and Analysis](../guides/FIGURES_AND_ANALYSIS.md)** - Understand the pattern
+3. **[Testing and Reproducibility](../guides/TESTING_AND_REPRODUCIBILITY.md)** - Master TDD approach
+4. **[Extending and Automation](../guides/EXTENDING_AND_AUTOMATION.md)** - Build custom systems
 
 ### For Contributors
 1. **[Getting Started](../guides/GETTING_STARTED.md)** - Understand basics
-2. **[Advanced Usage](../guides/ADVANCED_USAGE.md)** - Learn TDD workflow
+2. **[Testing and Reproducibility](../guides/TESTING_AND_REPRODUCIBILITY.md)** - Learn TDD workflow
 3. **[Contributing Guide](../development/CONTRIBUTING.md)** - Contribution process
 4. **[Code of Conduct](../development/CODE_OF_CONDUCT.md)** - Community standards
 
@@ -263,7 +263,7 @@ Level 10-12: Expert Usage (1-2 months)
 
 ### Advanced Topics
 - **[Two-Layer Architecture](../architecture/TWO_LAYER_ARCHITECTURE.md)** - Complete architecture guide
-- **[Advanced Modules Guide](../modules/ADVANCED_MODULES_GUIDE.md)** - Using all 7 advanced modules
+- **[Modules Guide](../modules/MODULES_GUIDE.md)** - Using all 7 modules
 - **[Dependency Management](../operational/DEPENDENCY_MANAGEMENT.md)** - uv package manager guide
 - **[CI/CD Integration](../operational/CI_CD_INTEGRATION.md)** - GitHub Actions setup
 - **[Performance Optimization](../operational/PERFORMANCE_OPTIMIZATION.md)** - Build time optimization
@@ -281,19 +281,19 @@ Having issues? Here's where to look:
 6. **[Build System](../operational/BUILD_SYSTEM.md)** - Build system details
 
 **Common Issues**:
-- Tests fail → [Advanced Usage Guide](../guides/ADVANCED_USAGE.md#level-7-test-driven-development)
+- Tests fail → [Testing and Reproducibility Guide](../guides/TESTING_AND_REPRODUCIBILITY.md#level-7-test-driven-development)
 - Coverage below requirements → [Common Workflows](../reference/COMMON_WORKFLOWS.md#fix-coverage-below-requirements)
 - PDF generation fails → [FAQ](../reference/FAQ.md#q-my-pdfs-arent-generating-correctly)
-- Figures not appearing → [Intermediate Usage](../guides/INTERMEDIATE_USAGE.md#level-4-add-basic-figures)
+- Figures not appearing → [Figures and Analysis](../guides/FIGURES_AND_ANALYSIS.md#level-4-add-basic-figures)
 
 ## 🎯 Your Next Steps
 
 **Choose your path**:
 
 - 📘 **New to template** → [Getting Started Guide](../guides/GETTING_STARTED.md)
-- 📗 **Ready for figures** → [Intermediate Usage Guide](../guides/INTERMEDIATE_USAGE.md)
-- 📕 **Want to test properly** → [Advanced Usage Guide](../guides/ADVANCED_USAGE.md)
-- 📙 **Building custom systems** → [Expert Usage Guide](../guides/EXPERT_USAGE.md)
+- 📗 **Ready for figures** → [Figures and Analysis Guide](../guides/FIGURES_AND_ANALYSIS.md)
+- 📕 **Want to test properly** → [Testing and Reproducibility Guide](../guides/TESTING_AND_REPRODUCIBILITY.md)
+- 📙 **Building custom systems** → [Extending and Automation Guide](../guides/EXTENDING_AND_AUTOMATION.md)
 
 **Need quick help**:
 

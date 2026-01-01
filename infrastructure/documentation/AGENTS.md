@@ -60,11 +60,11 @@ class FigureMetadata:
 class FigureManager:
     """Manages figure registration and cross-reference generation."""
 
-    def __init__(self, registry_file: Optional[Path] = None):
+    def __init__(self, registry_file: Optional[str] = None):
         """Initialize figure manager.
 
         Args:
-            registry_file: Path to figure registry JSON file
+            registry_file: Path to figure registry file
         """
 ```
 

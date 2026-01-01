@@ -309,9 +309,11 @@ class TestBashLogging:
         result = self.run_bash_command(command)
 
         assert result.returncode == 0
+        # Strip ANSI codes before comparison since log output includes color codes
+        stripped_output = result.stdout.replace('\x1b[0;32m', '').replace('\x1b[0m', '')
         # The current implementation doesn't include timestamps, but we can test
         # that the basic format works
-        assert "✓ Test message" in result.stdout
+        assert "✓ Test message" in stripped_output
 
     def test_log_with_context_function(self, bash_utils_path):
         """Test log_with_context function with timestamp and context."""

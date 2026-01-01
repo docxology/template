@@ -17,16 +17,18 @@ class TestValidateCopiedOutputs:
     """Test validate_copied_outputs function."""
 
     def test_validate_pdf_at_root(self, tmp_path):
-        """Test validation when PDF exists at root."""
+        """Test validation when PDF exists in pdf/ directory."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
-        # Create PDF at root
-        pdf_file = output_dir / "project_combined.pdf"
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+
+        # Create PDF in pdf/ directory (where it's actually expected)
+        pdf_file = pdf_dir / "project_combined.pdf"
         pdf_file.write_bytes(b"PDF content" * 1000)  # Make it substantial
-        
+
         result = validate_copied_outputs(output_dir)
-        
+
         assert result is True
 
     def test_validate_pdf_in_pdf_directory(self, tmp_path):
@@ -70,12 +72,14 @@ class TestValidateCopiedOutputs:
         """Test validation with complete output structure."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
-        # Create PDF at root
-        (output_dir / "project_combined.pdf").write_bytes(b"PDF" * 1000)
-        
-        # Create all expected subdirectories with files
-        for subdir in ["pdf", "web", "slides", "figures", "data", "reports", "simulations"]:
+
+        # Create PDF in pdf/ directory (where it's actually expected)
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+        (pdf_dir / "project_combined.pdf").write_bytes(b"PDF" * 1000)
+
+        # Create all expected subdirectories with files (skip pdf since already created)
+        for subdir in ["web", "slides", "figures", "data", "reports", "simulations"]:
             subdir_path = output_dir / subdir
             subdir_path.mkdir()
             (subdir_path / f"{subdir}_file.txt").write_text("content")
@@ -88,14 +92,17 @@ class TestValidateCopiedOutputs:
         """Test that optional directories don't cause validation failure."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
-        # Create PDF at root
-        (output_dir / "project_combined.pdf").write_bytes(b"PDF" * 1000)
-        
-        # Create required directories
-        for subdir in ["pdf", "figures", "data"]:
-            (output_dir / subdir).mkdir()
-            ((output_dir / subdir) / "file.txt").write_text("content")
+
+        # Create PDF in pdf/ directory (where it's actually expected)
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+        (pdf_dir / "project_combined.pdf").write_bytes(b"PDF" * 1000)
+
+        # Create required directories (skip pdf since already created)
+        for subdir in ["figures", "data"]:
+            subdir_path = output_dir / subdir
+            subdir_path.mkdir()
+            (subdir_path / "file.txt").write_text("content")
         
         # Don't create optional directories (llm, logs)
         
@@ -108,12 +115,14 @@ class TestValidateCopiedOutputs:
         """Test validation with empty subdirectories."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
-        # Create PDF at root
-        (output_dir / "project_combined.pdf").write_bytes(b"PDF" * 1000)
-        
-        # Create empty subdirectories
-        for subdir in ["pdf", "figures"]:
+
+        # Create PDF in pdf/ directory (where it's actually expected)
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+        (pdf_dir / "project_combined.pdf").write_bytes(b"PDF" * 1000)
+
+        # Create empty subdirectories (skip pdf since already created)
+        for subdir in ["figures"]:
             (output_dir / subdir).mkdir()
         
         result = validate_copied_outputs(output_dir)
@@ -129,12 +138,14 @@ class TestValidateOutputStructure:
         """Test validation with complete structure."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
+
+        # Create PDF in pdf/ directory (where it's actually expected)
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+        (pdf_dir / "project_combined.pdf").write_bytes(b"PDF content" * 10000)
         
-        # Create PDF at root
-        (output_dir / "project_combined.pdf").write_bytes(b"PDF content" * 10000)
-        
-        # Create all subdirectories with files
-        for subdir in ["pdf", "web", "slides", "figures", "data", "reports", "simulations"]:
+        # Create all subdirectories with files (skip pdf since already created)
+        for subdir in ["web", "slides", "figures", "data", "reports", "simulations"]:
             subdir_path = output_dir / subdir
             subdir_path.mkdir()
             (subdir_path / "file.txt").write_text("content")
@@ -170,9 +181,11 @@ class TestValidateOutputStructure:
         """Test validation with suspiciously small PDF."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
-        # Create very small PDF (< 100KB)
-        (output_dir / "project_combined.pdf").write_bytes(b"PDF" * 100)
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+
+        # Create very small PDF (< 100KB) in pdf/ directory
+        (pdf_dir / "project_combined.pdf").write_bytes(b"PDF" * 100)
         
         result = validate_output_structure(output_dir)
         
@@ -184,12 +197,14 @@ class TestValidateOutputStructure:
         """Test validation with empty subdirectories."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
+
+        # Create PDF in pdf/ directory
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+        (pdf_dir / "project_combined.pdf").write_bytes(b"PDF" * 10000)
         
-        # Create PDF
-        (output_dir / "project_combined.pdf").write_bytes(b"PDF" * 10000)
-        
-        # Create empty subdirectories
-        for subdir in ["pdf", "figures"]:
+        # Create empty subdirectories (skip pdf since already created)
+        for subdir in ["figures"]:
             (output_dir / subdir).mkdir()
         
         result = validate_output_structure(output_dir)
@@ -202,12 +217,14 @@ class TestValidateOutputStructure:
         """Test that optional directories don't cause validation failure."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
+
+        # Create PDF in pdf/ directory
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+        (pdf_dir / "project_combined.pdf").write_bytes(b"PDF" * 10000)
         
-        # Create PDF
-        (output_dir / "project_combined.pdf").write_bytes(b"PDF" * 10000)
-        
-        # Create required directories
-        for subdir in ["pdf", "figures", "data"]:
+        # Create required directories (skip pdf since already created)
+        for subdir in ["figures", "data"]:
             subdir_path = output_dir / subdir
             subdir_path.mkdir()
             (subdir_path / "file.txt").write_text("content")
@@ -225,9 +242,11 @@ class TestValidateOutputStructure:
         """Test that directory structure metadata is correct."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
-        # Create PDF
-        pdf_file = output_dir / "project_combined.pdf"
+
+        # Create PDF in pdf/ directory
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+        pdf_file = pdf_dir / "project_combined.pdf"
         pdf_file.write_bytes(b"PDF" * 10000)
         
         # Create subdirectory with files
@@ -267,9 +286,11 @@ class TestValidateOutputStructure:
         """Test that file readability is checked."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
-        # Create PDF
-        pdf_file = output_dir / "project_combined.pdf"
+
+        # Create PDF in pdf/ directory
+        pdf_dir = output_dir / "pdf"
+        pdf_dir.mkdir()
+        pdf_file = pdf_dir / "project_combined.pdf"
         pdf_file.write_bytes(b"PDF" * 10000)
         
         result = validate_output_structure(output_dir)

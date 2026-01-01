@@ -1,0 +1,32 @@
+{
+  "timestamp": null,
+  "checks": {
+    "PDF validation": true,
+    "Markdown validation": true,
+    "Output structure": true,
+    "Figure registry": true
+  },
+  "figure_issues": [],
+  "output_statistics": {
+    "pdf": {
+      "files": 9,
+      "size_mb": 0.3586568832397461
+    },
+    "figures": {
+      "files": 35,
+      "size_mb": 5.110113143920898
+    },
+    "data": {
+      "files": 2,
+      "size_mb": 0.04398536682128906
+    }
+  },
+  "summary": {
+    "total_checks": 4,
+    "passed": 4,
+    "failed": 0,
+    "figure_issues_count": 0,
+    "all_passed": true
+  },
+  "recommendations": []
+}

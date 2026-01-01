@@ -1,0 +1,17 @@
+\beamer@slide {methodology}{1}
+\beamer@slide {algorithm-implementation}{1}
+\beamer@slide {gradient-descent-algorithm}{1}
+\beamer@slide {test-problem-quadratic-minimization}{1}
+\beamer@slide {convergence-analysis}{1}
+\beamer@slide {convergence-rate-theory}{1}
+\beamer@slide {step-size-selection-criteria}{1}
+\beamer@slide {complexity-analysis}{1}
+\beamer@slide {experimental-setup}{1}
+\beamer@slide {step-size-analysis}{1}
+\beamer@slide {convergence-criteria}{1}
+\beamer@slide {performance-metrics}{1}
+\beamer@slide {implementation-details}{1}
+\beamer@slide {numerical-stability-considerations}{1}
+\beamer@slide {error-handling-and-robustness}{1}
+\beamer@slide {testing-strategy-and-validation}{1}
+\beamer@slide {analysis-pipeline}{1}

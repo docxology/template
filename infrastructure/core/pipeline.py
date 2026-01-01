@@ -16,7 +16,7 @@ from typing import Any, Callable, Optional
 
 from infrastructure.core.logging_utils import get_logger, log_operation, log_stage_with_eta
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
-from infrastructure.core.environment import get_python_command
+from infrastructure.core.environment import get_python_command, get_subprocess_env
 
 logger = get_logger(__name__)
 
@@ -296,6 +296,16 @@ class PipelineExecutor:
 
             executed_stage_num += 1
             result = self._execute_stage(executed_stage_num, stage_name, stage_func, pipeline_start)
+            # Handle exit code 2 (skip) as success for LLM stages
+            if hasattr(result, 'exit_code') and result.exit_code == 2:
+                # Exit code 2 means "skipped successfully" (e.g., no LLM languages configured)
+                result = PipelineStageResult(
+                    stage_num=result.stage_num,
+                    stage_name=result.stage_name,
+                    success=True,  # Treat skip as success
+                    duration=result.duration,
+                    exit_code=2  # Preserve original exit code for reporting
+                )
             resumed_results.append(result)
             if not result.success:
                 logger.error(f"Pipeline failed at stage {executed_stage_num}: {stage_name}")
@@ -409,7 +419,8 @@ class PipelineExecutor:
         cmd = get_python_command() + [str(script_path)] + list(args)
         logger.debug(f"Running: {' '.join(cmd)}")
 
-        env = dict(**os.environ)
+        # Get clean environment dict with uv compatibility (handles VIRTUAL_ENV warnings)
+        env = get_subprocess_env()
         env.setdefault("MPLBACKEND", "Agg")
         env.setdefault("PYTHONIOENCODING", "utf-8")
         env.setdefault("PROJECT_ROOT", str(self.config.repo_root))

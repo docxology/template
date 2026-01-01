@@ -791,7 +791,802 @@ def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
         - max_test_failures: Maximum acceptable test failures (default: 0)
         - max_infra_test_failures: Maximum acceptable infrastructure test failures (default: 0)
         - max_project_test_failures: Maximum acceptable project test failures (default: 0)
-        Returns empty dict if config file not found or testing section missing
+        Returns empty dict if config file not found or invalid
+    """
+```
+
+### credentials.py
+
+#### load_credentials (function)
+```python
+def load_credentials(
+    config_path: Optional[Path] = None,
+    env_file: Optional[str] = None,
+    required_keys: Optional[List[str]] = None
+) -> Dict[str, Any]:
+    """Load credentials from environment variables and config files.
+
+    Args:
+        config_path: Path to YAML config file (optional)
+        env_file: Path to .env file (optional)
+        required_keys: List of required credential keys
+
+    Returns:
+        Dictionary of loaded credentials
+
+    Raises:
+        MissingCredentialsError: If required credentials are missing
+        InvalidCredentialsError: If credentials are invalid
+    """
+```
+
+#### get_credential (function)
+```python
+def get_credential(key: str, default: Optional[str] = None) -> Optional[str]:
+    """Get a single credential by key.
+
+    Args:
+        key: Credential key to retrieve
+        default: Default value if key not found
+
+    Returns:
+        Credential value or default
+    """
+```
+
+#### validate_credentials (function)
+```python
+def validate_credentials(
+    credentials: Dict[str, Any],
+    required_keys: List[str]
+) -> bool:
+    """Validate that required credentials are present.
+
+    Args:
+        credentials: Credentials dictionary to validate
+        required_keys: List of required credential keys
+
+    Returns:
+        True if all required credentials are present
+    """
+```
+
+### progress.py
+
+#### ProgressBar (class)
+```python
+class ProgressBar:
+    """Visual progress indicator for long-running operations.
+
+    Provides a progress bar with percentage completion, ETA, and customizable formatting.
+    """
+
+    def __init__(
+        self,
+        total: int,
+        description: str = "",
+        width: int = 50,
+        show_eta: bool = True,
+        logger: Optional[logging.Logger] = None
+    ) -> None:
+        """Initialize progress bar.
+
+        Args:
+            total: Total number of items to process
+            description: Description of the operation
+            width: Width of the progress bar in characters
+            show_eta: Whether to show estimated time of arrival
+            logger: Logger instance for output
+        """
+
+    def update(self, increment: int = 1) -> None:
+        """Update progress by specified increment.
+
+        Args:
+            increment: Number of items completed
+        """
+
+    def finish(self) -> None:
+        """Mark progress as complete and finalize display."""
+```
+
+#### SubStageProgress (class)
+```python
+class SubStageProgress:
+    """Progress tracking for nested operations with substages.
+
+    Manages progress through multiple substages within a larger operation.
+    """
+
+    def __init__(
+        self,
+        total_stages: int,
+        stage_names: List[str],
+        logger: Optional[logging.Logger] = None
+    ) -> None:
+        """Initialize substage progress tracker.
+
+        Args:
+            total_stages: Total number of substages
+            stage_names: Names of each substage
+            logger: Logger instance for output
+        """
+
+    def start_stage(self, stage_index: int) -> None:
+        """Start a specific substage.
+
+        Args:
+            stage_index: Index of the stage to start (0-based)
+        """
+
+    def update_progress(self, completed: int, total: int) -> None:
+        """Update progress within current substage.
+
+        Args:
+            completed: Number of items completed in current stage
+            total: Total number of items in current stage
+        """
+
+    def finish_stage(self) -> None:
+        """Mark current substage as complete."""
+```
+
+### checkpoint.py
+
+#### PipelineCheckpoint (class)
+```python
+class PipelineCheckpoint:
+    """Data structure for pipeline checkpoint state.
+
+    Contains information about completed stages, timing, and pipeline state.
+    """
+
+    def __init__(
+        self,
+        pipeline_name: str,
+        start_time: float,
+        completed_stages: List[str],
+        stage_results: Dict[str, Any],
+        current_stage: Optional[str] = None
+    ) -> None:
+        """Initialize pipeline checkpoint.
+
+        Args:
+            pipeline_name: Name of the pipeline
+            start_time: Pipeline start timestamp
+            completed_stages: List of completed stage names
+            stage_results: Results from completed stages
+            current_stage: Currently executing stage (if any)
+        """
+```
+
+#### CheckpointManager (class)
+```python
+class CheckpointManager:
+    """Manages pipeline checkpoint save/load operations.
+
+    Provides functionality to save and restore pipeline execution state.
+    """
+
+    def __init__(self, checkpoint_dir: Path) -> None:
+        """Initialize checkpoint manager.
+
+        Args:
+            checkpoint_dir: Directory to store checkpoint files
+        """
+
+    def save_checkpoint(self, checkpoint: PipelineCheckpoint) -> Path:
+        """Save pipeline checkpoint to file.
+
+        Args:
+            checkpoint: Checkpoint data to save
+
+        Returns:
+            Path to saved checkpoint file
+        """
+
+    def load_checkpoint(self, pipeline_name: str) -> Optional[PipelineCheckpoint]:
+        """Load most recent checkpoint for pipeline.
+
+        Args:
+            pipeline_name: Name of the pipeline
+
+        Returns:
+            Most recent checkpoint or None if not found
+        """
+
+    def list_checkpoints(self, pipeline_name: str) -> List[Path]:
+        """List all checkpoint files for a pipeline.
+
+        Args:
+            pipeline_name: Name of the pipeline
+
+        Returns:
+            List of checkpoint file paths
+        """
+
+    def cleanup_old_checkpoints(
+        self,
+        pipeline_name: str,
+        keep_recent: int = 5
+    ) -> None:
+        """Clean up old checkpoint files, keeping only recent ones.
+
+        Args:
+            pipeline_name: Name of the pipeline
+            keep_recent: Number of recent checkpoints to keep
+        """
+```
+
+### retry.py
+
+#### retry_with_backoff (function)
+```python
+def retry_with_backoff(
+    func: Callable,
+    max_attempts: int = 3,
+    initial_delay: float = 1.0,
+    backoff_factor: float = 2.0,
+    max_delay: float = 60.0,
+    exceptions_to_retry: Tuple[type, ...] = (Exception,),
+    logger: Optional[logging.Logger] = None
+) -> Any:
+    """Execute function with exponential backoff retry logic.
+
+    Args:
+        func: Function to execute
+        max_attempts: Maximum number of retry attempts
+        initial_delay: Initial delay between retries (seconds)
+        backoff_factor: Factor by which delay increases each retry
+        max_delay: Maximum delay between retries (seconds)
+        exceptions_to_retry: Tuple of exception types to retry on
+        logger: Logger instance for retry messages
+
+    Returns:
+        Result of successful function execution
+
+    Raises:
+        Last exception encountered if all retries exhausted
+    """
+```
+
+#### RetryableOperation (class)
+```python
+class RetryableOperation:
+    """Wrapper for operations that should be retried with backoff.
+
+    Provides a class-based interface for retryable operations.
+    """
+
+    def __init__(
+        self,
+        operation: Callable,
+        max_attempts: int = 3,
+        initial_delay: float = 1.0,
+        backoff_factor: float = 2.0,
+        max_delay: float = 60.0,
+        exceptions_to_retry: Tuple[type, ...] = (Exception,),
+        logger: Optional[logging.Logger] = None
+    ) -> None:
+        """Initialize retryable operation.
+
+        Args:
+            operation: Operation function to wrap
+            max_attempts: Maximum number of retry attempts
+            initial_delay: Initial delay between retries (seconds)
+            backoff_factor: Factor by which delay increases each retry
+            max_delay: Maximum delay between retries (seconds)
+            exceptions_to_retry: Tuple of exception types to retry on
+            logger: Logger instance for retry messages
+        """
+
+    def execute(self, *args, **kwargs) -> Any:
+        """Execute the operation with retry logic.
+
+        Args:
+            *args: Positional arguments for operation
+            **kwargs: Keyword arguments for operation
+
+        Returns:
+            Result of successful operation execution
+        """
+```
+
+### performance.py
+
+#### PerformanceMonitor (class)
+```python
+class PerformanceMonitor:
+    """Monitor system performance during operations.
+
+    Tracks CPU usage, memory usage, and other system metrics.
+    """
+
+    def __init__(self, logger: Optional[logging.Logger] = None) -> None:
+        """Initialize performance monitor.
+
+        Args:
+            logger: Logger instance for performance messages
+        """
+
+    def start_monitoring(self) -> None:
+        """Start performance monitoring."""
+
+    def stop_monitoring(self) -> Dict[str, Any]:
+        """Stop monitoring and return performance statistics.
+
+        Returns:
+            Dictionary with performance metrics
+        """
+
+    def get_current_stats(self) -> Dict[str, Any]:
+        """Get current performance statistics.
+
+        Returns:
+            Dictionary with current performance metrics
+        """
+```
+
+#### get_system_resources (function)
+```python
+def get_system_resources() -> Dict[str, Any]:
+    """Get current system resource usage.
+
+    Returns:
+        Dictionary with system resource information:
+        - cpu_percent: CPU usage percentage
+        - memory_percent: Memory usage percentage
+        - memory_used: Memory used in bytes
+        - memory_available: Available memory in bytes
+        - disk_usage: Disk usage information
+    """
+```
+
+### environment.py
+
+#### check_python_version (function)
+```python
+def check_python_version(min_version: Tuple[int, int] = (3, 8)) -> bool:
+    """Check if current Python version meets minimum requirements.
+
+    Args:
+        min_version: Minimum required Python version as (major, minor) tuple
+
+    Returns:
+        True if version requirement is met
+    """
+```
+
+#### check_dependencies (function)
+```python
+def check_dependencies(requirements: List[str]) -> Dict[str, bool]:
+    """Check if required Python packages are installed.
+
+    Args:
+        requirements: List of package names to check
+
+    Returns:
+        Dictionary mapping package names to installation status
+    """
+```
+
+#### check_build_tools (function)
+```python
+def check_build_tools(tools: List[str]) -> Dict[str, bool]:
+    """Check if required build tools are available in PATH.
+
+    Args:
+        tools: List of tool names to check (e.g., ['pandoc', 'xelatex'])
+
+    Returns:
+        Dictionary mapping tool names to availability status
+    """
+```
+
+#### setup_environment (function)
+```python
+def setup_environment(
+    repo_root: Path,
+    check_python: bool = True,
+    check_deps: bool = True,
+    check_tools: bool = True,
+    create_dirs: bool = True
+) -> Dict[str, Any]:
+    """Perform complete environment setup and validation.
+
+    Args:
+        repo_root: Repository root directory
+        check_python: Whether to check Python version
+        check_deps: Whether to check dependencies
+        check_tools: Whether to check build tools
+        create_dirs: Whether to create required directories
+
+    Returns:
+        Dictionary with setup results and status
+    """
+```
+
+### script_discovery.py
+
+#### discover_analysis_scripts (function)
+```python
+def discover_analysis_scripts(project_dir: Path) -> List[Path]:
+    """Discover analysis scripts in project scripts directory.
+
+    Args:
+        project_dir: Project directory to search
+
+    Returns:
+        List of script file paths
+    """
+```
+
+#### discover_orchestrators (function)
+```python
+def discover_orchestrators(repo_root: Path) -> List[Path]:
+    """Discover orchestrator scripts in repository.
+
+    Args:
+        repo_root: Repository root directory
+
+    Returns:
+        List of orchestrator script paths
+    """
+```
+
+#### validate_script (function)
+```python
+def validate_script(script_path: Path) -> Dict[str, Any]:
+    """Validate that a script file is executable and properly structured.
+
+    Args:
+        script_path: Path to script file
+
+    Returns:
+        Dictionary with validation results
+    """
+```
+
+### file_operations.py
+
+#### clean_output_directory (function)
+```python
+def clean_output_directory(output_dir: Path) -> bool:
+    """Clean an output directory by removing all files and subdirectories.
+
+    Args:
+        output_dir: Directory to clean
+
+    Returns:
+        True if cleaning was successful
+    """
+```
+
+#### clean_output_directories (function)
+```python
+def clean_output_directories(
+    repo_root: Path,
+    project_names: List[str]
+) -> Dict[str, bool]:
+    """Clean output directories for multiple projects.
+
+    Args:
+        repo_root: Repository root directory
+        project_names: List of project names
+
+    Returns:
+        Dictionary mapping project names to cleaning success status
+    """
+```
+
+#### copy_final_deliverables (function)
+```python
+def copy_final_deliverables(
+    repo_root: Path,
+    project_name: str,
+    output_dir: Optional[Path] = None
+) -> List[Path]:
+    """Copy final deliverables from project output to main output directory.
+
+    Args:
+        repo_root: Repository root directory
+        project_name: Name of the project
+        output_dir: Target output directory (default: repo_root/output/project_name)
+
+    Returns:
+        List of copied file paths
+    """
+```
+
+### file_inventory.py
+
+#### generate_file_inventory (function)
+```python
+def generate_file_inventory(directory: Path) -> Dict[str, Any]:
+    """Generate comprehensive file inventory for a directory.
+
+    Args:
+        directory: Directory to inventory
+
+    Returns:
+        Dictionary with file inventory information
+    """
+```
+
+#### calculate_directory_size (function)
+```python
+def calculate_directory_size(directory: Path) -> Dict[str, Any]:
+    """Calculate total size and file counts for a directory.
+
+    Args:
+        directory: Directory to analyze
+
+    Returns:
+        Dictionary with size and count information
+    """
+```
+
+#### format_file_size (function)
+```python
+def format_file_size(size_bytes: int) -> str:
+    """Format file size in human-readable format.
+
+    Args:
+        size_bytes: Size in bytes
+
+    Returns:
+        Formatted size string (e.g., '1.5 MB')
+    """
+```
+
+### pipeline.py
+
+#### PipelineExecutor (class)
+```python
+class PipelineExecutor:
+    """Execute pipeline stages for a single project.
+
+    Orchestrates the execution of pipeline stages with checkpointing and logging.
+    """
+
+    def __init__(
+        self,
+        repo_root: Path,
+        project_name: str,
+        logger: Optional[logging.Logger] = None
+    ) -> None:
+        """Initialize pipeline executor.
+
+        Args:
+            repo_root: Repository root directory
+            project_name: Name of the project to execute
+            logger: Logger instance for pipeline messages
+        """
+
+    def execute_stage(self, stage_name: str) -> Tuple[bool, Dict[str, Any]]:
+        """Execute a specific pipeline stage.
+
+        Args:
+            stage_name: Name of the stage to execute
+
+        Returns:
+            Tuple of (success, result_dict)
+        """
+
+    def execute_pipeline(
+        self,
+        start_stage: Optional[str] = None,
+        resume: bool = False
+    ) -> Dict[str, Any]:
+        """Execute complete pipeline with optional resume capability.
+
+        Args:
+            start_stage: Stage to start execution from
+            resume: Whether to resume from checkpoint
+
+        Returns:
+            Dictionary with pipeline execution results
+        """
+
+    def save_checkpoint(self) -> Path:
+        """Save current pipeline state to checkpoint.
+
+        Returns:
+            Path to saved checkpoint file
+        """
+
+    def load_checkpoint(self) -> Optional[PipelineCheckpoint]:
+        """Load pipeline checkpoint if available.
+
+        Returns:
+            Checkpoint data or None if not found
+        """
+```
+
+### multi_project.py
+
+#### MultiProjectOrchestrator (class)
+```python
+class MultiProjectOrchestrator:
+    """Orchestrate pipeline execution across multiple projects.
+
+    Manages execution of multiple projects with shared infrastructure testing.
+    """
+
+    def __init__(
+        self,
+        repo_root: Path,
+        project_names: List[str],
+        logger: Optional[logging.Logger] = None
+    ) -> None:
+        """Initialize multi-project orchestrator.
+
+        Args:
+            repo_root: Repository root directory
+            project_names: List of project names to execute
+            logger: Logger instance for orchestration messages
+        """
+
+    def execute_all_projects(
+        self,
+        core_only: bool = False,
+        resume: bool = False
+    ) -> Dict[str, Any]:
+        """Execute pipelines for all specified projects.
+
+        Args:
+            core_only: Whether to run core pipeline only
+            resume: Whether to resume from checkpoints
+
+        Returns:
+            Dictionary with execution results for all projects
+        """
+
+    def execute_infrastructure_tests(self) -> Tuple[bool, Dict[str, Any]]:
+        """Execute infrastructure tests once for all projects.
+
+        Returns:
+            Tuple of (success, test_results)
+        """
+
+    def generate_executive_report(
+        self,
+        output_dir: Path
+    ) -> List[Path]:
+        """Generate executive report across all projects.
+
+        Args:
+            output_dir: Directory to save executive reports
+
+        Returns:
+            List of generated report files
+        """
+```
+
+### pipeline_summary.py
+
+#### generate_pipeline_summary (function)
+```python
+def generate_pipeline_summary(
+    pipeline_results: Dict[str, Any],
+    repo_root: Path
+) -> Dict[str, Any]:
+    """Generate comprehensive pipeline summary with metrics.
+
+    Args:
+        pipeline_results: Results from pipeline execution
+        repo_root: Repository root directory
+
+    Returns:
+        Dictionary with pipeline summary information
+    """
+```
+
+#### calculate_performance_metrics (function)
+```python
+def calculate_performance_metrics(
+    stage_durations: Dict[str, float],
+    total_duration: float
+) -> Dict[str, Any]:
+    """Calculate performance metrics from stage timing data.
+
+    Args:
+        stage_durations: Dictionary mapping stage names to durations
+        total_duration: Total pipeline duration
+
+    Returns:
+        Dictionary with performance metrics
+    """
+```
+
+#### generate_executive_summary (function)
+```python
+def generate_executive_summary(
+    multi_project_results: Dict[str, Any],
+    repo_root: Path
+) -> Dict[str, Any]:
+    """Generate executive summary across multiple projects.
+
+    Args:
+        multi_project_results: Results from multi-project execution
+        repo_root: Repository root directory
+
+    Returns:
+        Dictionary with executive summary information
+    """
+```
+
+## Usage Examples
+
+### Basic Logging Setup
+```python
+from infrastructure.core import get_logger, setup_logger
+
+# Get default logger
+logger = get_logger(__name__)
+logger.info("Starting operation")
+
+# Setup custom logger with file output
+logger = setup_logger("my_module", log_file="logs/my_module.log")
+logger.debug("Debug message")
+```
+
+### Exception Handling
+```python
+from infrastructure.core import raise_with_context, TemplateError
+
+try:
+    # Some operation
+    result = risky_operation()
+except Exception as e:
+    # Raise with context
+    raise_with_context(
+        TemplateError,
+        "Operation failed",
+        operation="risky_operation",
+        input_data=data
+    )
+```
+
+### Configuration Management
+```python
+from infrastructure.core import load_config, get_config_as_env_vars
+
+# Load from file
+config = load_config("config.yaml")
+
+# Get as environment variables
+env_vars = get_config_as_env_vars(Path("."))
+for key, value in env_vars.items():
+    os.environ[key] = value
+```
+
+### Pipeline Execution
+```python
+from infrastructure.core import PipelineExecutor
+
+# Execute single project pipeline
+executor = PipelineExecutor(Path("."), "my_project")
+results = executor.execute_pipeline()
+
+# Execute with resume capability
+results = executor.execute_pipeline(resume=True)
+```
+
+### Multi-Project Orchestration
+```python
+from infrastructure.core import MultiProjectOrchestrator
+
+# Execute multiple projects
+orchestrator = MultiProjectOrchestrator(
+    Path("."),
+    ["project1", "project2", "project3"]
+)
+results = orchestrator.execute_all_projects(core_only=True)
+
+# Generate executive report
+reports = orchestrator.generate_executive_report(Path("output/executive"))
+```le not found or testing section missing
     """
 ```
 
@@ -2061,6 +2856,27 @@ def get_python_command() -> list[str]:
     Example:
         >>> cmd = get_python_command()
         >>> result = subprocess.run(cmd + ['-c', 'print("hello")'], ...)
+    """
+```
+
+#### get_subprocess_env (function)
+```python
+def get_subprocess_env(base_env: dict = None) -> dict:
+    """Get environment dict for subprocess with uv compatibility.
+
+    Creates a clean environment dictionary for subprocess execution that handles
+    VIRTUAL_ENV warnings when using uv. When uv is available and VIRTUAL_ENV is set,
+    it removes VIRTUAL_ENV from the environment to prevent uv warnings about absolute paths.
+
+    Args:
+        base_env: Base environment dictionary (defaults to os.environ if None)
+
+    Returns:
+        Environment dictionary suitable for subprocess.run(env=...)
+
+    Example:
+        >>> env = get_subprocess_env()
+        >>> result = subprocess.run(cmd, env=env, ...)
     """
 ```
 

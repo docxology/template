@@ -1,0 +1,39 @@
+{
+  "timestamp": "2025-12-31T11:31:24.879096",
+  "infrastructure": {},
+  "project": {
+    "passed": 523,
+    "failed": 2,
+    "skipped": 7,
+    "total": 532,
+    "warnings": 0,
+    "exit_code": 1,
+    "discovery_count": 0,
+    "collection_errors": 0,
+    "execution_phases": {
+      "execution": 36.58
+    },
+    "test_categories": {},
+    "coverage_percent": 68.99,
+    "failed_tests": [
+      {
+        "test": "tests/integration/test_integration_pipeline.py::TestFullPipelineIntegration::test_complete_pipeline_execution",
+        "error_type": "Unknown",
+        "error_message": "Run with -v for details"
+      },
+      {
+        "test": "tests/test_validation.py::TestValidationFramework::test_validate_markdown_dir",
+        "error_type": "Unknown",
+        "error_message": "Run with -v for details"
+      }
+    ]
+  },
+  "summary": {
+    "total_passed": 523,
+    "total_failed": 2,
+    "total_skipped": 7,
+    "total_tests": 532,
+    "all_passed": false,
+    "project_coverage": 68.99
+  }
+}

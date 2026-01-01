@@ -69,6 +69,39 @@ projects/
     └── pyproject.toml
 ```
 
+## Discovery Scope and Project Organization
+
+### Active vs Archived Projects
+
+The infrastructure distinguishes between **active projects** and **archived projects**:
+
+#### ✅ **Active Projects (`projects/`)**
+- **Scanned** by `discover_projects()` function
+- **Validated** for structure requirements
+- **Listed** in `run.sh` interactive menu
+- **Executed** by pipeline scripts
+
+#### ❌ **Archived Projects (`projects_archive/`)**
+- **NOT scanned** by `discover_projects()` function
+- **NOT validated** by infrastructure
+- **NOT listed** in `run.sh` menu
+- **NOT executed** by pipeline scripts
+- **Preserved** for historical reference
+
+### Discovery Behavior
+
+```python
+# discover_projects() only scans projects/ directory
+def discover_projects(repo_root: Path | str) -> list[ProjectInfo]:
+    """Discover all valid projects in projects/ directory.
+
+    This function intentionally excludes projects_archive/ directory.
+    Only projects in projects/ are discovered and executed by infrastructure.
+    """
+    projects_dir = repo_root / "projects"  # Only this directory is scanned
+    # projects_archive/ is intentionally excluded
+```
+
 ## Usage
 
 ### Discovering All Projects

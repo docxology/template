@@ -95,7 +95,31 @@ def main() -> int:
         # Step 3b: Validate directory structure
         structure_validation = validate_output_structure(output_dir)
         
-        # Step 4: Generate summary
+        # Step 4: Collect comprehensive output statistics
+        from infrastructure.reporting.output_reporter import collect_output_statistics, generate_detailed_output_report
+        
+        output_stats = collect_output_statistics(repo_root, args.project)
+        detailed_report = generate_detailed_output_report(output_dir, output_stats)
+        
+        # Log detailed report
+        logger.info(detailed_report)
+        
+        # Save detailed report to file
+        reports_dir = repo_root / "projects" / args.project / "output" / "reports"
+        reports_dir.mkdir(parents=True, exist_ok=True)
+        report_file = reports_dir / "output_statistics.txt"
+        with open(report_file, 'w') as f:
+            f.write(detailed_report)
+        logger.info(f"Detailed output statistics saved to: {report_file}")
+        
+        # Also save JSON version
+        import json
+        json_file = reports_dir / "output_statistics.json"
+        with open(json_file, 'w') as f:
+            json.dump(output_stats, f, indent=2)
+        logger.info(f"Output statistics JSON saved to: {json_file}")
+        
+        # Step 5: Generate original summary (for backward compatibility)
         generate_output_summary(output_dir, stats, structure_validation)
         
         # Determine success/failure

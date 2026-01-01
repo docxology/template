@@ -4,6 +4,57 @@
 
 Comprehensive test suite for the LLM module with **88%+ coverage** following the **No Mocks Policy**. All tests use real data and real computations.
 
+## Test Migration Progress
+
+### ✅ Completed Migrations
+
+**Real HTTP Testing Pattern:**
+```python
+def test_query_fallback_on_connection_error(ollama_test_server):
+    """Test fallback models on primary connection error."""
+    # Configure test server to return failures for specific models
+    config = LLMConfig(
+        default_model="primary-model",
+        fallback_models=["fallback1", "fallback2"],
+        auto_inject_system_prompt=False
+    )
+    config.base_url = ollama_test_server.url_for("/")
+    client = LLMClient(config)
+
+    # Server returns 500 for "primary-model" and "fallback1", success for "fallback2"
+    result = client.query("Test prompt")
+    assert result == "Test response"  # Success from fallback2
+```
+
+**Key Patterns:**
+- Use `ollama_test_server` fixture for real HTTP server
+- Configure server responses based on model parameter in request
+- Test JSON format handling via `format: "json"` field in request payload
+- Test actual fallback logic with real network calls
+- No mocks, no patches - real integration testing
+
+### 🔄 Migration Status
+
+**✅ COMPLETED (1/33 tests):**
+- `test_query_fallback_on_connection_error` - Real HTTP fallback testing
+
+**⏳ REMAINING (32 tests in test_llm_core_additional.py):**
+- Structured JSON parsing edge cases
+- Streaming response handling
+- Model discovery and availability
+- Connection error scenarios
+- Response format validation
+- Context and token management
+- Template application
+- Error recovery mechanisms
+
+**Migration Strategy:**
+1. **Server Enhancement**: Extend `ollama_test_server` fixture to handle model-specific responses and JSON format requests
+2. **JSON Format Support**: Test server checks `format: "json"` field and returns valid JSON for structured queries
+3. **Test-by-Test Migration**: Convert individual tests to use real HTTP calls
+4. **Edge Case Handling**: Configure server for various error conditions and response formats
+5. **Validation**: Ensure all tests pass with real network interactions
+
 ## Test Organization
 
 ```

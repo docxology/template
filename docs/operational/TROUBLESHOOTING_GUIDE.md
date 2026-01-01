@@ -364,6 +364,99 @@ env | grep -E "(MPL|PYTHON|PROJECT)"
 python3 scripts/00_setup_environment.py
 ```
 
+#### VIRTUAL_ENV Warning Messages
+
+**Symptom:**
+```
+warning: `VIRTUAL_ENV=/absolute/path/to/venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+```
+
+**Cause:**
+- uv package manager detects absolute VIRTUAL_ENV path but expects relative path
+- This is a harmless warning from uv's environment management
+- The pipeline will still work correctly
+
+**Solution:**
+This warning is harmless and can be safely ignored. The system automatically handles VIRTUAL_ENV compatibility when using uv. If you want to suppress these warnings:
+
+```bash
+# The system now automatically handles VIRTUAL_ENV when using uv
+# No manual intervention needed - warnings are cosmetic only
+python3 scripts/00_setup_environment.py
+```
+
+**Technical Details:**
+- uv expects relative paths for virtual environment detection
+- Absolute paths trigger warnings but don't affect functionality
+- The pipeline automatically cleans VIRTUAL_ENV for uv subprocess calls
+
+#### LaTeX Compilation Errors
+
+**Symptom:**
+```
+LaTeX compilation failed (exit code: 1)
+Failed to render beamer slides: LaTeX Error: File `*.sty' not found
+*** (job aborted, no legal \end found)
+```
+
+**Cause:**
+- Missing LaTeX packages
+- Malformed LaTeX documents
+- Figure path issues
+- Document structure problems
+
+**Common Solutions:**
+
+**Missing LaTeX Packages:**
+```bash
+# Check which packages are missing
+python3 scripts/03_render_pdf.py --project project 2>&1 | grep "File.*not found"
+
+# Install common missing packages (BasicTeX)
+sudo tlmgr update --self
+sudo tlmgr install multirow cleveref doi newunicodechar bm subcaption
+
+# Or install full MacTeX
+brew install --cask mactex
+```
+
+**Document Structure Errors:**
+```bash
+# Check LaTeX log for "no legal \end found"
+tail -20 output/pdf/_combined_manuscript.log
+
+# Common causes:
+# - Missing \end{document}
+# - Unmatched \begin{}/\end{} pairs
+# - Malformed figure environments
+
+# Check generated LaTeX file
+head -50 output/pdf/_combined_manuscript.tex
+tail -20 output/pdf/_combined_manuscript.tex
+```
+
+**Figure Path Issues:**
+```bash
+# Verify figures exist
+ls -la projects/project/output/figures/
+
+# Check for path conversion issues in LaTeX log
+grep "includegraphics" output/pdf/_combined_manuscript.log
+
+# Ensure graphicx package is available
+kpsewhich graphicx.sty
+```
+
+**Empty PDF Generation:**
+```bash
+# Check for 0.0 KB PDFs (compilation failures)
+ls -lh output/pdf/*.pdf | grep "0.0"
+
+# Examine compilation log for errors
+grep "Fatal error" output/pdf/_combined_manuscript.log
+grep "Emergency stop" output/pdf/_combined_manuscript.log
+```
+
 #### Validation Function Errors
 
 **Symptom:**

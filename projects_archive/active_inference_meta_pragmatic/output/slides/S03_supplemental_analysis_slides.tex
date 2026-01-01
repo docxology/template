@@ -1,0 +1,158 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Supplemental Analysis}
+\protect\phantomsection\label{sec:supplemental_analysis}
+This section provides extended theoretical analysis of meta-cognitive
+frameworks and their implications.
+
+\begin{block}{Meta-Cognitive Framework Analysis}
+\protect\phantomsection\label{sec:meta_cognitive_frameworks}
+\begin{block}{Hierarchical Meta-Cognition}
+\protect\phantomsection\label{hierarchical-meta-cognition}
+\textbf{Level 1 Meta-Cognition:} Monitoring basic inference processes
+\textbf{Level 2 Meta-Cognition:} Monitoring meta-cognitive processes
+themselves \textbf{Level 3 Meta-Cognition:} Framework-level monitoring
+and adaptation
+\end{block}
+
+\begin{block}{Self-Modeling Requirements}
+\protect\phantomsection\label{self-modeling-requirements}
+Active Inference requires systems to model themselves within the same
+formalism used to model the world, creating recursive self-reference.
+\end{block}
+
+\begin{block}{Framework Coherence}
+\protect\phantomsection\label{framework-coherence}
+Meta-cognitive frameworks must maintain internal consistency while
+adapting to changing circumstances.
+\end{block}
+\end{block}
+
+\begin{block}{Theoretical Extensions}
+\protect\phantomsection\label{sec:theoretical_extensions}
+\begin{block}{Multi-Agent Active Inference}
+\protect\phantomsection\label{multi-agent-active-inference}
+Extension of the framework to social cognition and multi-agent systems.
+\end{block}
+
+\begin{block}{Temporal Meta-Cognition}
+\protect\phantomsection\label{temporal-meta-cognition}
+Incorporation of temporal dynamics into meta-cognitive processing.
+\end{block}
+
+\begin{block}{Cultural Cognitive Frameworks}
+\protect\phantomsection\label{cultural-cognitive-frameworks}
+Analysis of how cultural contexts shape meta-cognitive frameworks.
+\end{block}
+\end{block}
+
+\begin{block}{Implementation Considerations}
+\protect\phantomsection\label{sec:implementation_considerations}
+\begin{block}{Computational Constraints}
+\protect\phantomsection\label{computational-constraints}
+Practical limitations and optimization strategies for meta-level
+processing.
+\end{block}
+
+\begin{block}{Learning Dynamics}
+\protect\phantomsection\label{learning-dynamics}
+How meta-cognitive frameworks develop and evolve over time.
+\end{block}
+
+\begin{block}{Robustness Properties}
+\protect\phantomsection\label{robustness-properties}
+Ensuring meta-cognitive systems remain stable under perturbation.
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

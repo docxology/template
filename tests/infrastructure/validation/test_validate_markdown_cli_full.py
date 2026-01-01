@@ -161,8 +161,12 @@ class TestValidateMarkdownMain:
     
     def test_main_success(self, tmp_path):
         """Test main with valid markdown."""
-        # Create valid markdown file
-        md_file = tmp_path / "test.md"
+        # Create the expected directory structure: projects/project/manuscript
+        manuscript_dir = tmp_path / "projects" / "project" / "manuscript"
+        manuscript_dir.mkdir(parents=True)
+
+        # Create valid markdown file in manuscript directory
+        md_file = manuscript_dir / "test.md"
         md_file.write_text("# Test\n\nSome valid content.")
 
         # Run CLI directly
@@ -172,10 +176,10 @@ class TestValidateMarkdownMain:
         env = os.environ.copy()
         env["PYTHONPATH"] = str(repo_root) + os.pathsep + env.get("PYTHONPATH", "")
 
-        # Change to tmp_path so the script finds the manuscript directory
+        # Pass the manuscript directory as an argument to the script
         result = subprocess.run([
-            sys.executable, str(script_path)
-        ], capture_output=True, text=True, cwd=tmp_path, env=env)
+            sys.executable, str(script_path), str(manuscript_dir)
+        ], capture_output=True, text=True, env=env)
 
         # Should succeed with valid markdown
         assert result.returncode == 0

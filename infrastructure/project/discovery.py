@@ -44,21 +44,28 @@ class ProjectInfo:
 
 def discover_projects(repo_root: Path | str) -> list[ProjectInfo]:
     """Discover all valid projects in projects/ directory.
-    
+
+    This function only scans the projects/ directory and intentionally excludes
+    the projects_archive/ directory. Only active projects in projects/ are
+    discovered and executed by infrastructure.
+
     A valid project must have:
     - src/ directory with Python modules
     - tests/ directory
-    
+
     Optional directories:
     - scripts/ directory (analysis scripts)
     - manuscript/ directory (research manuscript)
-    
+
     Args:
         repo_root: Repository root directory
-        
+
     Returns:
-        List of ProjectInfo objects for valid projects
-        
+        List of ProjectInfo objects for valid projects in projects/ only
+
+    Note:
+        Projects in projects_archive/ are preserved but not discovered or executed.
+
     Examples:
         >>> projects = discover_projects(Path("/path/to/template"))
         >>> for project in projects:

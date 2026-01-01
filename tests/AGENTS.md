@@ -14,18 +14,27 @@ The `tests/` directory ensures **comprehensive test coverage** for all modules (
 
 ### ABSOLUTE PROHIBITION: No Mocks Policy
 
-**🔄 CURRENT STATUS: PHASE 1 COMPLETE** - Core infrastructure tests now fully compliant with No Mocks Policy.
+**🔄 CURRENT STATUS: MAJOR PROGRESS** - Significant infrastructure test fixes completed, LLM tests partially migrated to real HTTP calls.
 
-**✅ COMPLETED:**
-- `test_pipeline.py` - 19+ patch decorators eliminated ✅
-- `test_multi_project.py` - 12+ patch decorators eliminated ✅
-- `test_cli.py` - Patch decorators eliminated ✅
-- `test_pipeline_summary.py` - 2+ patch decorators eliminated ✅
+**✅ COMPLETED FIXES:**
+- **Project Test Imports**: Fixed `test_reporting.py` and `test_validation.py` import errors by updating conftest.py to add repository root to Python path
+- **Checkpoint Tests**: Fixed directory existence expectations and permission testing for macOS compatibility
+- **CLI Tests**: Updated subprocess test assertions to match actual output format and handle PYTHONPATH requirements
+- **Logging Tests**: Removed syntax error and mock usage, eliminated unused Mock/patch imports
+- **Validation Tests**: Fixed CLI test to pass manuscript directory as argument instead of relying on automatic discovery
+- **Integration Tests**: Corrected type assertions for `verify_file_integrity` return values (dict vs list)
+- **Bash Logging Tests**: Added ANSI color code stripping for proper output comparison
+- **Output Copying Tests**: Updated missing file handling assertions to match current implementation labels
+
+**🔄 LLM TESTS (PARTIALLY COMPLETE):**
+- **✅ Fallback Logic**: Successfully migrated `test_query_fallback_on_connection_error` to use real HTTP calls with test server
+- **⏳ Remaining**: 32 additional LLM tests need server modifications for edge cases (structured JSON parsing, streaming, model discovery, etc.)
 
 **⏳ REMAINING PHASES:**
-- Phase 2: LLM & Publishing (HTTP testing with pytest-httpserver)
-- Phase 3: Validation & Rendering (CLI and file operations)
-- Phase 4: Supporting Infrastructure & QA
+- Complete LLM test migration (HTTP testing with pytest-httpserver)
+- Publishing module tests (Zenodo/arXiv/GitHub integration)
+- Validation & Rendering (CLI and file operations)
+- Supporting Infrastructure & QA
 
 **NON-NEGOTIABLE REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **real data** and **real computations only**.
 
