@@ -92,9 +92,11 @@ def test_extract_text_from_pdf_nonexistent():
 def test_extract_text_from_pdf_invalid_file():
     """Test extraction from invalid PDF file."""
     with tempfile.NamedTemporaryFile(mode='w', suffix='.pdf', delete=False) as f:
-        f.write("This is not a PDF file")
+        # Create a larger invalid file (> 1000 bytes) so it passes size validation
+        invalid_content = "This is not a PDF file. " * 100  # Creates ~2500 bytes
+        f.write(invalid_content)
         temp_path = Path(f.name)
-    
+
     try:
         with pytest.raises(PDFValidationError, match="Failed to extract text"):
             extract_text_from_pdf(temp_path)

@@ -39,6 +39,8 @@ The optimization results for different step sizes are summarized in the followin
 
 ### Theoretical vs Empirical Convergence
 
+Modern convergence analysis builds on foundational work in gradient methods \cite{nesterov2013gradient}.
+
 Figure \ref{fig:convergence_rate} provides a comparative analysis of convergence rates across different step sizes, validating theoretical predictions against empirical results.
 
 ![Comparative analysis of convergence rates for different step sizes, showing the relationship between theoretical bounds and observed performance.](../output/figures/convergence_rate_comparison.png){#fig:convergence_rate}
@@ -67,7 +69,7 @@ where $\kappa = 1$ for our problem, giving linear convergence with rate approach
 
 $$k \geq \frac{\log(\epsilon)}{\log(\rho)}$$
 
-where $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}$ is the convergence factor.
+where $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}$ is the convergence factor \cite{polyak1964some}.
 
 For our results, the convergence factors are:
 - $\alpha = 0.01$: $\rho \approx 0.99$, requiring ~458 iterations for $\epsilon = 10^{-6}$
@@ -116,6 +118,18 @@ The algorithm demonstrates efficient performance for small-scale optimization pr
 - **Space complexity**: $O(d)$ for storing variables and gradients
 - **Convergence**: Typically $< 20$ iterations for this quadratic problem
 - **Scalability**: Memory-efficient implementation suitable for high-dimensional problems
+
+### Performance Benchmarking
+
+Figure \ref{fig:benchmark} provides detailed performance benchmarking across different problem configurations and step size parameters.
+
+![Performance benchmarking results showing execution times and convergence metrics across different optimization scenarios.](../output/figures/performance_benchmark.png){#fig:benchmark}
+
+### Numerical Stability Analysis
+
+Figure \ref{fig:stability} demonstrates the numerical stability characteristics of the gradient descent implementation across various input conditions and parameter settings.
+
+![Numerical stability analysis showing algorithm robustness under different computational conditions and input parameter ranges.](../output/figures/stability_analysis.png){#fig:stability}
 
 ### Performance Metrics Summary
 

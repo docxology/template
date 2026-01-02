@@ -99,13 +99,15 @@ This small code project demonstrates a fully-tested numerical
 optimization implementation with comprehensive analysis and
 visualization capabilities. The project showcases the complete research
 pipeline from algorithm implementation through testing to result
-visualization.
+visualization, including automatic title page generation from metadata
+configuration.
 
 \subsection{Research Context}\label{research-context}
 
 Numerical optimization forms the foundation of many scientific and
-engineering applications. This project implements and analyzes gradient
-descent methods for solving optimization problems of the form:
+engineering applications \cite{nocedal2006numerical}. This project
+implements and analyzes gradient descent methods for solving
+optimization problems of the form:
 
 \[\min_{x \in \mathbb{R}^n} f(x)\]
 
@@ -131,6 +133,14 @@ The implementation includes:
   performance data
 \item
   \textbf{Manuscript integration} with automatically generated figures
+\item
+  \textbf{Multi-format rendering} supporting PDF, HTML, and presentation
+  slides
+\item
+  \textbf{LLM-powered scientific review} with automated manuscript
+  analysis
+\item
+  \textbf{Executive reporting} for cross-project metrics and comparisons
 \end{itemize}
 
 \subsection{Algorithm Overview}\label{algorithm-overview}
@@ -199,7 +209,8 @@ Return x_k (maximum iterations reached)
 
 The algorithm follows the fundamental principle of steepest descent,
 moving in the direction of the negative gradient to minimize the
-objective function \(f: \mathbb{R}^d \rightarrow \mathbb{R}\).
+objective function \(f: \mathbb{R}^d \rightarrow \mathbb{R}\)
+\cite{cauchy1847methode}.
 
 \subsubsection{Test Problem: Quadratic
 Minimization}\label{test-problem-quadratic-minimization}
@@ -224,6 +235,10 @@ The analytical minimum occurs at \(x = 1\) with \(f(1) = -\frac{1}{2}\).
 \subsection{Convergence Analysis}\label{convergence-analysis}
 
 \subsubsection{Convergence Rate Theory}\label{convergence-rate-theory}
+
+The theoretical foundations of convergence analysis for gradient descent
+methods are well-established in the optimization literature
+\cite{bertsekas1999nonlinear, boyd2004convex}.
 
 For strongly convex functions with condition number
 \(\kappa = \frac{\lambda_{\max}}{\lambda_{\min}}\), the convergence rate
@@ -358,6 +373,18 @@ Comprehensive test suite covers multiple dimensions:
   limits
 \end{itemize}
 
+\subsection{LaTeX Customization and
+Rendering}\label{latex-customization-and-rendering}
+
+The research template supports advanced LaTeX customization through
+optional preamble configuration. An optional \texttt{preamble.md} file
+can contain custom LaTeX packages and commands that are automatically
+inserted before document compilation. The rendering system ensures
+required packages (such as \texttt{graphicx} for figure inclusion) are
+loaded automatically, while allowing researchers to add specialized
+packages for mathematical notation, bibliography styles, or document
+formatting.
+
 \subsection{Analysis Pipeline}\label{analysis-pipeline}
 
 The analysis script automatically: 1. Runs optimization experiments with
@@ -468,6 +495,9 @@ convergence speed for different step sizes.
 \subsubsection{Theoretical vs Empirical
 Convergence}\label{theoretical-vs-empirical-convergence}
 
+Modern convergence analysis builds on foundational work in gradient
+methods \cite{nesterov2013gradient}.
+
 Figure \ref{fig:convergence_rate} provides a comparative analysis of
 convergence rates across different step sizes, validating theoretical
 predictions against empirical results.
@@ -508,7 +538,7 @@ achieve accuracy \(\epsilon\) is:
 \[k \geq \frac{\log(\epsilon)}{\log(\rho)}\]
 
 where \(\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}\) is the convergence
-factor.
+factor \cite{polyak1964some}.
 
 For our results, the convergence factors are: - \(\alpha = 0.01\):
 \(\rho \approx 0.99\), requiring \textasciitilde458 iterations for
@@ -590,6 +620,34 @@ iteration for gradient computation - \textbf{Space complexity}: \(O(d)\)
 for storing variables and gradients - \textbf{Convergence}: Typically
 \(< 20\) iterations for this quadratic problem - \textbf{Scalability}:
 Memory-efficient implementation suitable for high-dimensional problems
+
+\subsubsection{Performance Benchmarking}\label{performance-benchmarking}
+
+Figure \ref{fig:benchmark} provides detailed performance benchmarking
+across different problem configurations and step size parameters.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Performance benchmarking results showing execution times and convergence metrics across different optimization scenarios.}]{../figures/performance_benchmark.png}}
+\caption{Performance benchmarking results showing execution times and
+convergence metrics across different optimization
+scenarios.}\label{fig:benchmark}
+\end{figure}
+
+\subsubsection{Numerical Stability
+Analysis}\label{numerical-stability-analysis}
+
+Figure \ref{fig:stability} demonstrates the numerical stability
+characteristics of the gradient descent implementation across various
+input conditions and parameter settings.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Numerical stability analysis showing algorithm robustness under different computational conditions and input parameter ranges.}]{../figures/stability_analysis.png}}
+\caption{Numerical stability analysis showing algorithm robustness under
+different computational conditions and input parameter
+ranges.}\label{fig:stability}
+\end{figure}
 
 \subsubsection{Performance Metrics
 Summary}\label{performance-metrics-summary}
@@ -713,6 +771,17 @@ The project validates the research template's ability to handle:
   \textbf{Figure integration}: Seamless manuscript-visualization linkage
 \item
   \textbf{Testing requirements}: Maintaining quality standards
+\item
+  \textbf{Multi-project support}: Running multiple independent research
+  projects
+\item
+  \textbf{LLM integration}: Automated scientific review and manuscript
+  analysis
+\item
+  \textbf{Executive reporting}: Cross-project metrics and comprehensive
+  dashboards
+\item
+  \textbf{Multi-format output}: PDF, HTML, and presentation generation
 \end{itemize}
 
 \subsection{Key Insights}\label{key-insights}
@@ -744,7 +813,9 @@ This foundation could be extended to:
 \item
   \textbf{Constrained optimization}: Handling inequality constraints
 \item
-  \textbf{Stochastic methods}: Mini-batch and online learning variants
+  \textbf{Stochastic methods}: Mini-batch and online learning variants,
+  including adaptive optimization algorithms such as Adam
+  \cite{kingma2014adam}
 \item
   \textbf{Parallel computing}: Distributed optimization algorithms
 \end{itemize}

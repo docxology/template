@@ -77,7 +77,7 @@ This project uses standard Python with minimal dependencies. The manuscript focu
 vim manuscript/02_methodology.md
 
 # Run pipeline (minimal computation)
-python3 scripts/run_analysis.py  # If scripts existed
+python3 ../../scripts/02_run_analysis.py  # If scripts existed
 
 # Generate PDF
 python3 ../../scripts/03_render_pdf.py

@@ -1,0 +1,39 @@
+
+OUTPUT STATISTICS REPORT
+============================================================
+
+Output Directory: /Users/4d/Documents/GitHub/template/output/prose_project
+
+Total Files: 67
+Total Size: 1.28 MB
+
+Files by Category:
+  • pdf: 9 files (0.19 MB)
+  • web: 4 files (0.04 MB)
+  • slides: 29 files (0.38 MB)
+  • figures: 3 files (0.57 MB)
+  • data: 1 files (0.00 MB)
+  • reports: 11 files (0.02 MB)
+  • llm: 10 files (0.08 MB)
+
+Largest Files:
+  • mathematical_visualization.png: 0.38 MB (figures)
+  • theoretical_analysis.png: 0.19 MB (figures)
+  • prose_project_combined.pdf: 0.09 MB (pdf)
+  • 03_results_slides.log: 0.05 MB (slides)
+  • 02_methodology_slides.log: 0.05 MB (slides)
+
+Missing Expected Files:
+  ⚠  prose_project_combined.pdf or project_combined.pdf
+
+File Types:
+  • .md: 15 file(s)
+  • .json: 9 file(s)
+  • .log: 5 file(s)
+  • .aux: 5 file(s)
+  • .tex: 5 file(s)
+  • .toc: 5 file(s)
+  • .pdf: 5 file(s)
+  • .html: 4 file(s)
+  • .snm: 4 file(s)
+  • .nav: 4 file(s)

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  1 JAN 2026 14:29
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 JAN 2026 11:24
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -885,14 +885,14 @@ Missing character: There is no ∇ (U+2207) in font [lmmono10-regular]:!
 [4]
 
 [5]
-Underfull \hbox (badness 2617) in paragraph at lines 354--357
+
+[6]
+Underfull \hbox (badness 2617) in paragraph at lines 369--372
 []\TU/lmr/bx/n/10 Numerical accuracy\TU/lmr/m/n/10 : Comparison with analytical
  solutions for
  []
 
 
-
-[6]
 
 [7]
 File: ../figures/convergence_plot.png Graphic file (type bmp)
@@ -916,31 +916,43 @@ File: ../figures/convergence_rate_comparison.png Graphic file (type bmp)
 [11]
 File: ../figures/algorithm_complexity.png Graphic file (type bmp)
 <../figures/algorithm_complexity.png>
+File: ../figures/performance_benchmark.png Graphic file (type bmp)
+<../figures/performance_benchmark.png>
+File: ../figures/stability_analysis.png Graphic file (type bmp)
+<../figures/stability_analysis.png>
 
 
 [12]
 
 [13]
 
-[14] (./_combined_manuscript.bbl
+[14]
 
-Package natbib Warning: Empty `thebibliography' environment on input line 8.
+[15]
 
-)
+[16]
+Underfull \hbox (badness 2698) in paragraph at lines 775--778
+[]\TU/lmr/bx/n/10 Multi-project support\TU/lmr/m/n/10 : Running multiple indepe
+ndent research
+ []
 
-[15] (./_combined_manuscript.aux)
+(./_combined_manuscript.bbl
+
+[17])
+
+[18] (./_combined_manuscript.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 18908 strings out of 473832
- 346819 string characters out of 5729482
- 917506 words of memory out of 5000000
- 41718 multiletter control sequences out of 15000+600000
- 565264 words of font info for 86 fonts, out of 8000000 for 9000
+ 18966 strings out of 473832
+ 348363 string characters out of 5729482
+ 918202 words of memory out of 5000000
+ 41769 multiletter control sequences out of 15000+600000
+ 565272 words of font info for 87 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 90i,7n,114p,1017b,423s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,7n,114p,1017b,540s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on _combined_manuscript.pdf (15 pages).
+Output written on _combined_manuscript.pdf (18 pages).

@@ -25,6 +25,74 @@ src/
 
 No special setup required. Uses standard Python with no external dependencies.
 
+## Infrastructure Integration
+
+Despite minimal functionality, this module demonstrates comprehensive infrastructure integration for research projects.
+
+### Available Infrastructure Capabilities
+
+- **Logging**: `infrastructure.core.logging_utils` - Structured logging with context
+- **Validation**: `infrastructure.validation` - Output integrity and quality checks
+- **Rendering**: `infrastructure.rendering` - Multi-format output generation
+- **Scientific Analysis**: `infrastructure.scientific` - Numerical analysis tools
+- **Publishing**: `infrastructure.publishing` - Academic publishing workflows
+
+### Integration Examples
+
+#### Comprehensive Pipeline Integration
+
+```python
+from prose_smoke import identity, constant_value
+from infrastructure.core.logging_utils import get_logger
+from infrastructure.scientific import check_numerical_stability
+from infrastructure.validation import verify_output_integrity
+from pathlib import Path
+
+logger = get_logger(__name__)
+
+# Run basic functions
+result1 = identity("test_input")
+result2 = constant_value()
+
+logger.info(f"Identity result: {result1}")
+logger.info(f"Constant result: {result2}")
+
+# Demonstrate scientific analysis integration
+def test_func(x):
+    return identity(x)  # Simple function for analysis
+
+# Analyze numerical stability
+stability = check_numerical_stability(
+    func=test_func,
+    test_inputs=["input1", "input2", "input3"]
+)
+logger.info(f"Function stability: {stability['overall_stable']}")
+
+# Validate outputs
+output_dir = Path("output")
+integrity_report = verify_output_integrity(output_dir)
+if integrity_report.issues:
+    logger.warning(f"Found {len(integrity_report.issues)} integrity issues")
+else:
+    logger.info("Output integrity validation passed")
+```
+
+#### Error Handling with Infrastructure
+
+```python
+from infrastructure.core.exceptions import ValidationError, TemplateError
+
+try:
+    # Run functions with potential validation
+    result = identity("input")
+    if not isinstance(result, str):
+        raise ValidationError("Identity function must return string")
+except ValidationError as e:
+    logger.error(f"Validation error: {e}")
+except Exception as e:
+    logger.error(f"Unexpected error: {e}")
+```
+
 ## Usage Examples
 
 ### Basic Function Usage

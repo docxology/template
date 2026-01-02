@@ -137,70 +137,70 @@ The template includes **89 documentation files** organized in the `docs/` direct
 ```mermaid
 graph TB
     README[README.md\nYou Are Here ⭐]
-    
+
     subgraph DocsHub["📚 docs/ - Documentation Hub"]
         DOC_INDEX[DOCUMENTATION_INDEX.md\n📋 Master Index\nAll 50+ files]
         DOC_AGENTS[AGENTS.md\n📖 Documentation Guide]
         DOC_README[README.md\n🔍 Quick Reference]
     end
-    
+
     subgraph Core["📖 docs/core/ - Essential"]
         HOW_TO[HOW_TO_USE.md\nComplete Usage Guide\n12 Skill Levels]
         ARCH[ARCHITECTURE.md\nSystem Design]
         WORKFLOW[WORKFLOW.md\nDevelopment Process]
     end
-    
+
     subgraph Guides["🎓 docs/guides/ - By Skill Level"]
         GETTING_STARTED[GETTING_STARTED.md\nLevels 1-3: Beginner]
         FIGURES[FIGURES_AND_ANALYSIS.md\nLevels 4-6: Figures & Analysis]
         TESTING[TESTING_AND_REPRODUCIBILITY.md\nLevels 7-9: Testing & Reproducibility]
         EXTENDING[EXTENDING_AND_AUTOMATION.md\nLevels 10-12: Extending & Automation]
     end
-    
+
     subgraph Operational["⚙️ docs/operational/ - Operations"]
         BUILD_SYS[BUILD_SYSTEM.md\nBuild System Reference]
         TROUBLESHOOTING[TROUBLESHOOTING_GUIDE.md\nFix Issues]
         CONFIG[CONFIGURATION.md\nSetup & Config]
         PERF[PERFORMANCE_OPTIMIZATION.md\nOptimization]
     end
-    
+
     subgraph Reference["📑 docs/reference/ - Quick Lookup"]
         FAQ[FAQ.md\nCommon Questions]
         CHEATSHEET[QUICK_START_CHEATSHEET.md\nOne-Page Commands]
         WORKFLOWS[COMMON_WORKFLOWS.md\nStep-by-Step Recipes]
         API[API_REFERENCE.md\nComplete API Docs]
     end
-    
+
     subgraph Architecture["🏗️ docs/architecture/ - Design"]
         TWO_LAYER[TWO_LAYER_ARCHITECTURE.md\nComplete Architecture]
         THIN_ORCH[THIN_ORCHESTRATOR_SUMMARY.md\nCore Pattern]
         DECISION[DECISION_TREE.md\nCode Placement]
     end
-    
+
     subgraph Usage["📝 docs/usage/ - Examples"]
         EXAMPLES[EXAMPLES.md\nUsage Patterns]
         SHOWCASE[EXAMPLES_SHOWCASE.md\nReal-World Apps]
         MARKDOWN[MARKDOWN_TEMPLATE_GUIDE.md\nWriting Guide]
     end
-    
+
     subgraph Modules["🔬 docs/modules/ - Advanced"]
         ADV_MODULES[MODULES_GUIDE.md\nAll 7 Modules]
         PDF_VAL[PDF_VALIDATION.md\nQuality Checks]
         SCI_SIM[SCIENTIFIC_SIMULATION_GUIDE.md\nSimulation System]
     end
-    
+
     subgraph Development["💻 docs/development/ - Contributing"]
         CONTRIB[CONTRIBUTING.md\nHow to Contribute]
         TESTING[TESTING_GUIDE.md\nTesting Framework]
         ROADMAP[ROADMAP.md\nFuture Plans]
     end
-    
+
     README --> DocsHub
     README --> Core
     README --> Guides
     README --> Operational
     README --> Reference
-    
+
     DocsHub --> DOC_INDEX
     DOC_INDEX --> Core
     DOC_INDEX --> Guides
@@ -210,12 +210,12 @@ graph TB
     DOC_INDEX --> Usage
     DOC_INDEX --> Modules
     DOC_INDEX --> Development
-    
+
     classDef hub fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
     classDef essential fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef operational fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef reference fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    
+
     class README,DocsHub hub
     class Core,Guides essential
     class Operational,Modules operational
@@ -330,7 +330,7 @@ Projects in `projects_archive/` are **preserved but not executed**:
 - `code_project/` - Optimization algorithms research
 - `prose_project/` - Prose-focused manuscript with equations
 
-**To archive a project:** `mv projects/{name}/ projects_archive/{name}/`  
+**To archive a project:** `mv projects/{name}/ projects_archive/{name}/`
 **To reactivate:** `mv projects_archive/{name}/ projects/{name}/`
 
 ## 🚀 Quick Start {#quick-start}
@@ -375,13 +375,13 @@ graph LR
         BUILD[Build Time: 53s\nOptimal performance\n(without LLM review)]
         PDFS[PDFs: 14/14 generated\nAll sections complete]
     end
-    
+
     subgraph Documentation["📚 Documentation"]
         DOCS[89 documentation files\nComprehensive coverage]
         CROSS[Complete cross-referencing\nAll links validated]
         EXAMPLES[Real-world examples\nMultiple use cases]
     end
-    
+
     TESTS --> VERIFIED[✅ System Fully\nOperational]
     COV --> VERIFIED
     BUILD --> VERIFIED
@@ -389,10 +389,10 @@ graph LR
     DOCS --> VERIFIED
     CROSS --> VERIFIED
     EXAMPLES --> VERIFIED
-    
+
     classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
     classDef metrics fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    
+
     class VERIFIED success
     class Status,Documentation metrics
 ```
@@ -416,25 +416,25 @@ flowchart LR
         L3[Levels 7-9\nAdvanced]
         L4[Levels 10-12\nExpert]
     end
-    
+
     L1 -->|Progress| L2
     L2 -->|Progress| L3
     L3 -->|Progress| L4
-    
+
     L1 --> DOC1[docs/guides/GETTING_STARTED.md]
     L2 --> DOC2[docs/guides/FIGURES_AND_ANALYSIS.md]
     L3 --> DOC3[docs/guides/TESTING_AND_REPRODUCIBILITY.md]
     L4 --> DOC4[docs/guides/EXTENDING_AND_AUTOMATION.md]
-    
+
     DOC1 --> MASTER[docs/core/HOW_TO_USE.md\nComplete Guide: All 12 Levels]
     DOC2 --> MASTER
     DOC3 --> MASTER
     DOC4 --> MASTER
-    
+
     classDef level fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef doc fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef master fill:#fff3e0,stroke:#e65100,stroke-width:3px
-    
+
     class L1,L2,L3,L4 level
     class DOC1,DOC2,DOC3,DOC4 doc
     class MASTER master
@@ -473,22 +473,22 @@ graph TB
         INFRA_SCRIPTS[scripts/\nEntry point orchestrators\n6-stage core or 10-stage extended\n📖 scripts/AGENTS.md]
         TESTS[tests/\nTest suite\nComprehensive coverage\n📖 tests/AGENTS.md]
     end
-    
+
     subgraph L2["🔬 Layer 2: Project-Specific (Customizable)"]
         SRC[projects/project/src/\nScientific algorithms\n100% tested\n📖 projects/project/src/AGENTS.md]
         SCRIPTS[projects/project/scripts/\nAnalysis scripts\nThin orchestrators\n📖 projects/project/scripts/AGENTS.md]
         PROJECT_TESTS[projects/project/tests/\nProject test suite\n📖 projects/project/tests/AGENTS.md]
     end
-    
+
     subgraph DOCS["📚 Documentation Hub"]
         DOCS_DIR[docs/\n50+ comprehensive guides\n📖 docs/DOCUMENTATION_INDEX.md]
     end
-    
+
     subgraph CONTENT["📝 Content & Output"]
         MANUSCRIPT[projects/project/manuscript/\nResearch sections\nGenerate PDFs\n📖 projects/project/manuscript/AGENTS.md]
         OUTPUT[output/\nGenerated files\nPDFs, figures, data\nAll files disposable]
     end
-    
+
     SRC -->|import and use| SCRIPTS
     SRC -->|import and use| INFRA_SCRIPTS
     INFRA -->|provide utilities| SCRIPTS
@@ -500,12 +500,12 @@ graph TB
     PROJECT_TESTS -->|validate| SRC
     DOCS_DIR -.->|documents| INFRA
     DOCS_DIR -.->|documents| SRC
-    
+
     classDef layer1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef layer2 fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef docs fill:#fff3e0,stroke:#e65100,stroke-width:3px
     classDef content fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    
+
     class INFRA,INFRA_SCRIPTS,TESTS layer1
     class SRC,SCRIPTS,PROJECT_TESTS layer2
     class DOCS_DIR docs
@@ -986,10 +986,10 @@ def main():
     # Use src/ methods for computation
     data = [1, 2, 3, 4, 5]
     avg = calculate_average(data)  # From projects/project/src/example.py
-    
+
     # Script handles visualization and output
     # ... visualization code ...
-    
+
     # Print paths for the system to capture
     print("projects/project/output/generated/file.png")
 
@@ -1108,7 +1108,7 @@ flowchart TD
     STAGE7 --> STAGE8[Stage 8: LLM Scientific Review\nOptional, requires Ollama]
     STAGE8 --> STAGE9[Stage 9: LLM Translations\nOptional, requires Ollama]
     STAGE9 --> SUCCESS[✅ Build Complete\n~84s core + LLM time]
-    
+
     STAGE2 -->|Fail| FAIL[❌ Pipeline Failed]
     STAGE3 -->|Fail| FAIL
     STAGE4 -->|Fail| FAIL
@@ -1117,15 +1117,15 @@ flowchart TD
     STAGE7 -->|Fail| FAIL
     STAGE8 -->|Skip| STAGE9[Graceful degradation]
     STAGE9 -->|Skip| SUCCESS[Optional stages skipped]
-    
+
     FAIL --> END([Exit with error])
     SUCCESS --> END
-    
+
     classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef failure fill:#ffebee,stroke:#c62828,stroke-width:2px
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef optional fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class SUCCESS success
     class FAIL failure
     class STAGE0,STAGE1,STAGE2,STAGE3,STAGE4,STAGE5,STAGE6,STAGE7 process
@@ -1345,7 +1345,7 @@ The thin orchestrator pattern provides:
 ```mermaid
 graph TB
     TASK[What do you want to do?]
-    
+
     TASK -->|Write documents| WRITE[docs/guides/GETTING_STARTED.md\ndocs/usage/MARKDOWN_TEMPLATE_GUIDE.md]
     TASK -->|Add figures| FIGURES[docs/guides/FIGURES_AND_ANALYSIS.md\ndocs/usage/VISUALIZATION_GUIDE.md]
     TASK -->|Fix issues| FIX[docs/operational/TROUBLESHOOTING_GUIDE.md\ndocs/reference/FAQ.md]
@@ -1354,10 +1354,10 @@ graph TB
     TASK -->|Run pipeline| PIPELINE[RUN_GUIDE.md\ndocs/operational/BUILD_SYSTEM.md]
     TASK -->|Contribute code| CONTRIB[docs/development/CONTRIBUTING.md\n.cursorrules/AGENTS.md]
     TASK -->|Find all docs| INDEX[docs/DOCUMENTATION_INDEX.md\ndocs/AGENTS.md]
-    
+
     classDef task fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef doc fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    
+
     class TASK task
     class WRITE,FIGURES,FIX,ARCH,CONFIG,PIPELINE,CONTRIB,INDEX doc
 ```
@@ -1369,25 +1369,25 @@ graph TB
 ```mermaid
 flowchart TD
     START[📚 Need Documentation?]
-    
+
     START -->|Quick answer| QUICK[docs/reference/\nFAQ, Cheatsheet,\nCommon Workflows]
     START -->|Learn step-by-step| LEARN[docs/guides/\nBy Skill Level\n1-3, 4-6, 7-9, 10-12]
     START -->|Understand system| UNDERSTAND[docs/core/\nArchitecture, Workflow,\nHow To Use]
     START -->|Fix problems| FIX_PROB[docs/operational/\nTroubleshooting,\nBuild System]
     START -->|Advanced features| ADVANCED[docs/modules/\nAdvanced Modules,\nPDF Validation]
     START -->|Everything| EVERYTHING[docs/DOCUMENTATION_INDEX.md\nComplete Index\nAll 50+ Files]
-    
+
     QUICK --> FOUND[✅ Found!]
     LEARN --> FOUND
     UNDERSTAND --> FOUND
     FIX_PROB --> FOUND
     ADVANCED --> FOUND
     EVERYTHING --> FOUND
-    
+
     classDef start fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
     classDef category fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef found fill:#e8f5e8,stroke:#2e7d32,stroke-width:3px
-    
+
     class START start
     class QUICK,LEARN,UNDERSTAND,FIX_PROB,ADVANCED,EVERYTHING category
     class FOUND found

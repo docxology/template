@@ -130,7 +130,7 @@ def verify_outputs_exist(project_name: str = "project") -> tuple[bool, dict]:
     
     repo_root = Path(__file__).parent.parent
     project_root = repo_root / "projects" / project_name
-    output_dir = project_root / "output"
+    output_dir = repo_root / "output" / project_name  # Use final output directory
     
     # Use comprehensive validation from infrastructure
     from infrastructure.validation.output_validator import collect_detailed_validation_results

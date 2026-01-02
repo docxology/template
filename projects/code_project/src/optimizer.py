@@ -1,12 +1,53 @@
 """Numerical optimization utilities.
 
 This module implements basic optimization algorithms for testing and demonstration.
+Integrates with infrastructure modules for comprehensive analysis:
+
+- **Logging**: Uses infrastructure.core.logging_utils for structured logging
+- **Stability Analysis**: Compatible with infrastructure.scientific.check_numerical_stability
+- **Benchmarking**: Compatible with infrastructure.scientific.benchmark_function
+- **Validation**: Results can be validated using infrastructure.validation modules
+
+Example infrastructure integration:
+    ```python
+    from infrastructure.scientific import check_numerical_stability, benchmark_function
+    from infrastructure.core.logging_utils import get_logger
+
+    # Create logger for structured output
+    logger = get_logger(__name__)
+
+    # Run optimization
+    result = gradient_descent(initial_point, objective_func, gradient_func)
+
+    # Analyze numerical stability
+    stability = check_numerical_stability(
+        func=objective_func,
+        test_inputs=[initial_point, result.solution]
+    )
+
+    # Benchmark performance
+    benchmark = benchmark_function(
+        func=lambda x: gradient_descent(x, objective_func, gradient_func).iterations,
+        test_inputs=[initial_point]
+    )
+
+    logger.info(f"Stability score: {stability['overall_stable']}")
+    logger.info(f"Benchmark: {benchmark['mean_time']:.4f}s avg")
+    ```
 """
 from __future__ import annotations
 
 import numpy as np
 from dataclasses import dataclass
 from typing import Callable, Optional
+
+# Add logging support
+try:
+    from infrastructure.core.logging_utils import get_logger
+    logger = get_logger(__name__)
+    LOGGING_AVAILABLE = True
+except ImportError:
+    LOGGING_AVAILABLE = False
 
 
 @dataclass
@@ -177,6 +218,27 @@ def gradient_descent(
         >>> def grad(x): return np.array([2*(x[0] - 1), 2*(x[1] - 2)])
         >>> result = gradient_descent(np.array([0.0, 0.0]), f, grad, step_size=0.1)
         >>> print(f"Converged: {result.converged}, Solution: {result.solution}")
+
+    Infrastructure Integration:
+        This function integrates seamlessly with infrastructure modules:
+
+        >>> from infrastructure.scientific import check_numerical_stability, benchmark_function
+        >>> from infrastructure.core.logging_utils import get_logger
+        >>>
+        >>> # Enable structured logging
+        >>> logger = get_logger(__name__)
+        >>>
+        >>> # Run optimization
+        >>> result = gradient_descent(np.array([0.0, 0.0]), f, grad, step_size=0.1)
+        >>>
+        >>> # Analyze numerical stability
+        >>> stability = check_numerical_stability(f, [np.array([0.0, 0.0]), result.solution])
+        >>> logger.info(f"Stability score: {stability['overall_stable']}")
+        >>>
+        >>> # Benchmark performance
+        >>> benchmark = benchmark_function(lambda x: gradient_descent(x, f, grad).iterations,
+        ...                               [np.array([0.0, 0.0])])
+        >>> logger.info(f"Avg iterations: {benchmark['mean_time']:.1f}")
     """
     # Input validation
     if step_size <= 0:
@@ -196,16 +258,22 @@ def gradient_descent(
     converged = False
     objective_history = [objective_func(x)]  # Track initial objective value
 
+    if LOGGING_AVAILABLE and logger:
+        logger.debug(f"Starting gradient descent with x0={x}, step_size={step_size}")
+
     while iteration < max_iterations:
         grad = gradient_func(x)
         grad_norm = np.linalg.norm(grad)
 
         if verbose and iteration % 100 == 0:
             obj_val = objective_func(x)
-            print(f"Iteration {iteration}: x={x}, f(x)={obj_val:.6f}, ||∇f||={grad_norm:.6f}")
+            if LOGGING_AVAILABLE and logger:
+                logger.info(f"Iteration {iteration}: x={x}, f(x)={obj_val:.6f}, ||∇f||={grad_norm:.6f}")
 
         if grad_norm < tolerance:
             converged = True
+            if LOGGING_AVAILABLE and logger:
+                logger.debug(f"Converged at iteration {iteration} with ||∇f||={grad_norm:.2e}")
             break
 
         # Update: x = x - step_size * ∇f(x)
@@ -217,6 +285,12 @@ def gradient_descent(
 
     final_obj_value = objective_func(x)
     final_grad_norm = np.linalg.norm(gradient_func(x))
+
+    if LOGGING_AVAILABLE and logger:
+        if converged:
+            logger.info(f"Gradient descent converged in {iteration} iterations, final f(x)={final_obj_value:.6f}")
+        else:
+            logger.warning(f"Gradient descent did not converge within {max_iterations} iterations, final f(x)={final_obj_value:.6f}")
 
     return OptimizationResult(
         solution=x,

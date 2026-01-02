@@ -1,10 +1,10 @@
 # Introduction
 
-This small code project demonstrates a fully-tested numerical optimization implementation with comprehensive analysis and visualization capabilities. The project showcases the complete research pipeline from algorithm implementation through testing to result visualization.
+This small code project demonstrates a fully-tested numerical optimization implementation with comprehensive analysis and visualization capabilities. The project showcases the complete research pipeline from algorithm implementation through testing to result visualization, including automatic title page generation from metadata configuration.
 
 ## Research Context
 
-Numerical optimization forms the foundation of many scientific and engineering applications. This project implements and analyzes gradient descent methods for solving optimization problems of the form:
+Numerical optimization forms the foundation of many scientific and engineering applications \cite{nocedal2006numerical}. This project implements and analyzes gradient descent methods for solving optimization problems of the form:
 
 $$\min_{x \in \mathbb{R}^n} f(x)$$
 
@@ -19,6 +19,9 @@ The implementation includes:
 - **Comprehensive test suite** covering functionality and edge cases
 - **Analysis scripts** that generate convergence plots and performance data
 - **Manuscript integration** with automatically generated figures
+- **Multi-format rendering** supporting PDF, HTML, and presentation slides
+- **LLM-powered scientific review** with automated manuscript analysis
+- **Executive reporting** for cross-project metrics and comparisons
 
 ## Algorithm Overview
 
@@ -68,7 +71,7 @@ While k < N_max do:
 Return x_k (maximum iterations reached)
 ```
 
-The algorithm follows the fundamental principle of steepest descent, moving in the direction of the negative gradient to minimize the objective function $f: \mathbb{R}^d \rightarrow \mathbb{R}$.
+The algorithm follows the fundamental principle of steepest descent, moving in the direction of the negative gradient to minimize the objective function $f: \mathbb{R}^d \rightarrow \mathbb{R}$ \cite{cauchy1847methode}.
 
 ### Test Problem: Quadratic Minimization
 
@@ -94,6 +97,8 @@ The analytical minimum occurs at $x = 1$ with $f(1) = -\frac{1}{2}$.
 ## Convergence Analysis
 
 ### Convergence Rate Theory
+
+The theoretical foundations of convergence analysis for gradient descent methods are well-established in the optimization literature \cite{bertsekas1999nonlinear, boyd2004convex}.
 
 For strongly convex functions with condition number $\kappa = \frac{\lambda_{\max}}{\lambda_{\min}}$, the convergence rate of gradient descent satisfies:
 
@@ -177,6 +182,10 @@ Comprehensive test suite covers multiple dimensions:
 - **Numerical accuracy**: Comparison with analytical solutions for quadratic functions
 - **Robustness**: Ill-conditioned problems and numerical precision limits
 
+## LaTeX Customization and Rendering
+
+The research template supports advanced LaTeX customization through optional preamble configuration. An optional `preamble.md` file can contain custom LaTeX packages and commands that are automatically inserted before document compilation. The rendering system ensures required packages (such as `graphicx` for figure inclusion) are loaded automatically, while allowing researchers to add specialized packages for mathematical notation, bibliography styles, or document formatting.
+
 ## Analysis Pipeline
 
 The analysis script automatically:
@@ -231,6 +240,8 @@ The optimization results for different step sizes are summarized in the followin
 
 ### Theoretical vs Empirical Convergence
 
+Modern convergence analysis builds on foundational work in gradient methods \cite{nesterov2013gradient}.
+
 Figure \ref{fig:convergence_rate} provides a comparative analysis of convergence rates across different step sizes, validating theoretical predictions against empirical results.
 
 ![Comparative analysis of convergence rates for different step sizes, showing the relationship between theoretical bounds and observed performance.](../output/figures/convergence_rate_comparison.png){#fig:convergence_rate}
@@ -259,7 +270,7 @@ where $\kappa = 1$ for our problem, giving linear convergence with rate approach
 
 $$k \geq \frac{\log(\epsilon)}{\log(\rho)}$$
 
-where $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}$ is the convergence factor.
+where $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}$ is the convergence factor \cite{polyak1964some}.
 
 For our results, the convergence factors are:
 - $\alpha = 0.01$: $\rho \approx 0.99$, requiring ~458 iterations for $\epsilon = 10^{-6}$
@@ -308,6 +319,18 @@ The algorithm demonstrates efficient performance for small-scale optimization pr
 - **Space complexity**: $O(d)$ for storing variables and gradients
 - **Convergence**: Typically $< 20$ iterations for this quadratic problem
 - **Scalability**: Memory-efficient implementation suitable for high-dimensional problems
+
+### Performance Benchmarking
+
+Figure \ref{fig:benchmark} provides detailed performance benchmarking across different problem configurations and step size parameters.
+
+![Performance benchmarking results showing execution times and convergence metrics across different optimization scenarios.](../output/figures/performance_benchmark.png){#fig:benchmark}
+
+### Numerical Stability Analysis
+
+Figure \ref{fig:stability} demonstrates the numerical stability characteristics of the gradient descent implementation across various input conditions and parameter settings.
+
+![Numerical stability analysis showing algorithm robustness under different computational conditions and input parameter ranges.](../output/figures/stability_analysis.png){#fig:stability}
 
 ### Performance Metrics Summary
 
@@ -384,6 +407,10 @@ The project validates the research template's ability to handle:
 - **Automated analysis**: Reproducible result generation
 - **Figure integration**: Seamless manuscript-visualization linkage
 - **Testing requirements**: Maintaining quality standards
+- **Multi-project support**: Running multiple independent research projects
+- **LLM integration**: Automated scientific review and manuscript analysis
+- **Executive reporting**: Cross-project metrics and comprehensive dashboards
+- **Multi-format output**: PDF, HTML, and presentation generation
 
 ## Key Insights
 
@@ -398,7 +425,7 @@ This foundation could be extended to:
 
 - **Advanced algorithms**: Newton methods, quasi-Newton approaches
 - **Constrained optimization**: Handling inequality constraints
-- **Stochastic methods**: Mini-batch and online learning variants
+- **Stochastic methods**: Mini-batch and online learning variants, including adaptive optimization algorithms such as Adam \cite{kingma2014adam}
 - **Parallel computing**: Distributed optimization algorithms
 
 ## Final Assessment

@@ -34,35 +34,30 @@ class TestValidatePdfCommand:
     
     def test_pdf_validation_non_verbose(self, tmp_path, capsys):
         """Test validate_pdf_command in non-verbose mode (covers branch 31->35)."""
-        # Create a minimal PDF file
+        from reportlab.pdfgen import canvas
+        from reportlab.lib.pagesizes import letter
+
+        # Create a proper PDF file using reportlab
         pdf_path = tmp_path / "test.pdf"
-        # Create a basic PDF structure (minimal valid PDF)
-        pdf_content = b"""%PDF-1.4
-1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
-2 0 obj << /Type /Pages /Kids [] /Count 0 >> endobj
-xref
-0 3
-0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-trailer << /Size 3 /Root 1 0 R >>
-startxref
-111
-%%EOF"""
-        pdf_path.write_bytes(pdf_content)
-        
+        c = canvas.Canvas(str(pdf_path), pagesize=letter)
+        c.drawString(100, 750, "Test document for validation")
+        c.drawString(100, 730, "This is a simple test PDF")
+        c.drawString(100, 710, "With multiple lines of content")
+        c.showPage()
+        c.save()
+
         args = argparse.Namespace(
             pdf_path=str(pdf_path),
             preview_words=200,
             verbose=False  # Non-verbose mode to cover branch 31->35
         )
-        
+
         # The function may exit depending on issues found
         try:
             validate_pdf_command(args)
         except SystemExit:
             pass  # Expected behavior
-        
+
         captured = capsys.readouterr()
         assert "Validating PDF" in captured.out
 

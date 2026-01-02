@@ -1,0 +1,18 @@
+{
+  "title": "Optimization Algorithm Performance Analysis",
+  "description": "Comparative analysis of gradient descent optimization with step sizes [0.01, 0.05, 0.1, 0.2]",
+  "algorithm": "Gradient Descent",
+  "objective_function": "Quadratic Function f(x) = x\u00b2",
+  "step_sizes_tested": [
+    0.01,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "best_step_size": 0.2,
+  "final_objective": -0.49999999999999994,
+  "iterations_to_convergence": 84,
+  "convergence_rate": 0.005952380952380952,
+  "analysis_type": "Numerical Optimization",
+  "methodology": "Gradient descent with fixed step sizes"
+}

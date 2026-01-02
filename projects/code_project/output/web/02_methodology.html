@@ -200,7 +200,7 @@ Return x_k (maximum iterations reached)</code></pre>
 <p>The algorithm follows the fundamental principle of steepest descent,
 moving in the direction of the negative gradient to minimize the
 objective function <span class="math inline">\(f: \mathbb{R}^d
-\rightarrow \mathbb{R}\)</span>.</p>
+\rightarrow \mathbb{R}\)</span> .</p>
 <h3 id="test-problem-quadratic-minimization">Test Problem: Quadratic
 Minimization</h3>
 <p>We use quadratic functions of the form:</p>
@@ -220,6 +220,9 @@ A x - b\)</span></p>
 -\frac{1}{2}\)</span>.</p>
 <h2 id="convergence-analysis">Convergence Analysis</h2>
 <h3 id="convergence-rate-theory">Convergence Rate Theory</h3>
+<p>The theoretical foundations of convergence analysis for gradient
+descent methods are well-established in the optimization literature
+.</p>
 <p>For strongly convex functions with condition number <span
 class="math inline">\(\kappa =
 \frac{\lambda_{\max}}{\lambda_{\min}}\)</span>, the convergence rate of
@@ -322,6 +325,16 @@ solutions for quadratic functions</li>
 <li><strong>Robustness</strong>: Ill-conditioned problems and numerical
 precision limits</li>
 </ul>
+<h2 id="latex-customization-and-rendering">LaTeX Customization and
+Rendering</h2>
+<p>The research template supports advanced LaTeX customization through
+optional preamble configuration. An optional <code>preamble.md</code>
+file can contain custom LaTeX packages and commands that are
+automatically inserted before document compilation. The rendering system
+ensures required packages (such as <code>graphicx</code> for figure
+inclusion) are loaded automatically, while allowing researchers to add
+specialized packages for mathematical notation, bibliography styles, or
+document formatting.</p>
 <h2 id="analysis-pipeline">Analysis Pipeline</h2>
 <p>The analysis script automatically: 1. Runs optimization experiments
 with different parameters 2. Collects convergence trajectories 3.

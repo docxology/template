@@ -34,7 +34,7 @@ graph TB
             MD[Documentation<br/>docs/]
             MANUSCRIPT[Manuscript<br/>project/manuscript/]
         end
-        
+
         subgraph "Thin Orchestrator Pattern"
             PROJECT -->|"100% tested<br/>methods"| SCRIPTS
             SCRIPTS -->|"import & use"| PROJECT
@@ -42,12 +42,12 @@ graph TB
             SCRIPTS -->|"generate"| OUTPUTS
             MANUSCRIPT -->|"reference"| OUTPUTS
         end
-        
+
         subgraph "Build Pipeline"
             REPO_UTILS[Repo Utilities<br/>repo_utilities/]
             RENDER[execute_pipeline.py<br/>Pipeline Orchestrator]
         end
-        
+
         subgraph "Outputs"
             OUTPUTS[Generated Outputs<br/>output/]
             PDFS[PDFs<br/>output/pdf/]
@@ -55,7 +55,7 @@ graph TB
             DATA[Data<br/>output/data/]
             TEX[LaTeX<br/>output/tex/]
         end
-        
+
         TESTS -->|"validate"| SRC
         SCRIPTS -->|"create"| FIGS
         SCRIPTS -->|"create"| DATA
@@ -63,12 +63,12 @@ graph TB
         RENDER -->|"orchestrates"| ALL[All Components]
         REPO_UTILS -->|"support"| RENDER
     end
-    
+
     classDef core fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef pattern fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef pipeline fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
     classDef outputs fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class SRC,TESTS,SCRIPTS,MD core
     class SRC,SCRIPTS pattern
     class REPO_UTILS,RENDER pipeline
@@ -150,13 +150,13 @@ graph LR
         VISUALIZE[Handle visualization]
         OUTPUT[Save outputs]
     end
-    
+
     subgraph "Project Source (project/src/)"
         FUNC1[add_numbers]
         FUNC2[calculate_average]
         FUNC3[find_maximum]
     end
-    
+
     SCRIPT --> IMPORT
     IMPORT --> USE
     USE --> FUNC1
@@ -164,10 +164,10 @@ graph LR
     USE --> FUNC3
     USE --> VISUALIZE
     VISUALIZE --> OUTPUT
-    
+
     classDef script fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef src fill:#f1f8e9,stroke:#33691e,stroke-width:2px
-    
+
     class SCRIPT,IMPORT,USE,VISUALIZE,OUTPUT script
     class FUNC1,FUNC2,FUNC3 src
 ```
@@ -220,20 +220,20 @@ flowchart TD
     STAGE3 -->|Fail| FAIL3[PDF build failed]
     STAGE4 -->|Fail| FAIL4[Validation failed]
     STAGE5 -->|Fail| FAIL5[Copy failed]
-    
+
     FAIL0 --> END([Exit with error])
     FAIL1 --> END
     FAIL2 --> END
     FAIL3 --> END
     FAIL4 --> END
     FAIL5 --> END
-    
+
     SUCCESS --> END
-    
+
     classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef failure fill:#ffebee,stroke:#c62828,stroke-width:2px
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    
+
     class SUCCESS success
     class FAIL0,FAIL1,FAIL2,FAIL3,FAIL4,FAIL5 failure
     class STAGE0,STAGE1,STAGE2,STAGE3,STAGE4,STAGE5 process
@@ -296,21 +296,21 @@ graph LR
         MANUSCRIPT[manuscript/ files]
         PREAMBLE[LaTeX preamble]
     end
-    
+
     subgraph "Processing"
         TESTS[Test validation]
         SCRIPTS[Script execution]
         VALIDATION[Markdown validation]
         GLOSSARY[Glossary generation]
     end
-    
+
     subgraph "Output"
         FIGS[Figures]
         DATA[Data files]
         PDFS[PDFs]
         TEX[LaTeX exports]
     end
-    
+
     SRC --> TESTS
     SRC --> SCRIPTS
     MD --> VALIDATION
@@ -322,11 +322,11 @@ graph LR
     MANUSCRIPT --> PDFS
     MD --> TEX
     MANUSCRIPT --> TEX
-    
+
     classDef input fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef output fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class SRC,MD,MANUSCRIPT,PREAMBLE input
     class TESTS,SCRIPTS,VALIDATION,GLOSSARY process
     class FIGS,DATA,PDFS,TEX output

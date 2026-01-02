@@ -278,6 +278,8 @@ accuracy and convergence speed for different step sizes.</p>
 <h2 id="convergence-rate-analysis">Convergence Rate Analysis</h2>
 <h3 id="theoretical-vs-empirical-convergence">Theoretical vs Empirical
 Convergence</h3>
+<p>Modern convergence analysis builds on foundational work in gradient
+methods .</p>
 <p>Figure <span
 class="math inline">\(\ref{fig:convergence_rate}\)</span> provides a
 comparative analysis of convergence rates across different step sizes,
@@ -315,7 +317,7 @@ class="math inline">\(\epsilon\)</span> is:</p>
 <p><span class="math display">\[k \geq
 \frac{\log(\epsilon)}{\log(\rho)}\]</span></p>
 <p>where <span class="math inline">\(\rho = \sqrt{\frac{\kappa -
-1}{\kappa + 1}}\)</span> is the convergence factor.</p>
+1}{\kappa + 1}}\)</span> is the convergence factor .</p>
 <p>For our results, the convergence factors are: - <span
 class="math inline">\(\alpha = 0.01\)</span>: <span
 class="math inline">\(\rho \approx 0.99\)</span>, requiring ~458
@@ -384,6 +386,29 @@ class="math inline">\(O(d)\)</span> for storing variables and gradients
 class="math inline">\(&lt; 20\)</span> iterations for this quadratic
 problem - <strong>Scalability</strong>: Memory-efficient implementation
 suitable for high-dimensional problems</p>
+<h3 id="performance-benchmarking">Performance Benchmarking</h3>
+<p>Figure <span class="math inline">\(\ref{fig:benchmark}\)</span>
+provides detailed performance benchmarking across different problem
+configurations and step size parameters.</p>
+<figure id="fig:benchmark">
+<img src="../output/figures/performance_benchmark.png"
+alt="Performance benchmarking results showing execution times and convergence metrics across different optimization scenarios." />
+<figcaption aria-hidden="true">Performance benchmarking results showing
+execution times and convergence metrics across different optimization
+scenarios.</figcaption>
+</figure>
+<h3 id="numerical-stability-analysis">Numerical Stability Analysis</h3>
+<p>Figure <span class="math inline">\(\ref{fig:stability}\)</span>
+demonstrates the numerical stability characteristics of the gradient
+descent implementation across various input conditions and parameter
+settings.</p>
+<figure id="fig:stability">
+<img src="../output/figures/stability_analysis.png"
+alt="Numerical stability analysis showing algorithm robustness under different computational conditions and input parameter ranges." />
+<figcaption aria-hidden="true">Numerical stability analysis showing
+algorithm robustness under different computational conditions and input
+parameter ranges.</figcaption>
+</figure>
 <h3 id="performance-metrics-summary">Performance Metrics Summary</h3>
 <p><strong>Iteration Statistics:</strong> - Minimum iterations: 9 (for
 <span class="math inline">\(\alpha = 0.2\)</span>) - Maximum iterations:

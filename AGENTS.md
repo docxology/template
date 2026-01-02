@@ -98,7 +98,7 @@ Projects in the `projects_archive/` directory are **preserved but not executed**
 
 ### Project Lifecycle
 
-**Archiving:** Move `projects/{name}/` → `projects_archive/{name}/`  
+**Archiving:** Move `projects/{name}/` → `projects_archive/{name}/`
 **Reactivation:** Move `projects_archive/{name}/` → `projects/{name}/`
 
 Projects are automatically discovered when moved to the `projects/` directory.
@@ -263,7 +263,7 @@ template/                           # Generic Template
 
 The system supports configuration through a YAML file, providing a centralized, version-controllable way to manage all paper metadata.
 
-**Location**: `projects/{name}/manuscript/config.yaml`  
+**Location**: `projects/{name}/manuscript/config.yaml`
 **Template**: `projects/{name}/manuscript/config.yaml.example`
 
 **Example configuration**:

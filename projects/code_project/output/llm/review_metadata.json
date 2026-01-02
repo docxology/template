@@ -1,6 +1,6 @@
 {
   "model": "gemma3:4b",
-  "timestamp": "2026-01-01T14:32:24.271803",
+  "timestamp": "2026-01-02T11:27:52.415796",
   "source_pdf": "/Users/4d/Documents/GitHub/template/projects/code_project/output/pdf/code_project_combined.pdf",
   "reviews_generated": [
     "translation_zh",
@@ -9,39 +9,39 @@
   ],
   "max_input_length": 500000,
   "manuscript_metrics": {
-    "total_chars": 18657,
-    "total_words": 3592,
-    "total_tokens_est": 4664,
+    "total_chars": 22054,
+    "total_words": 4058,
+    "total_tokens_est": 5513,
     "truncated": false,
-    "truncated_chars": 18657
+    "truncated_chars": 22054
   },
   "review_metrics": {
     "translation_zh": {
-      "input_chars": 18657,
-      "input_words": 3592,
-      "input_tokens_est": 4664,
-      "output_chars": 3250,
-      "output_words": 342,
-      "output_tokens_est": 812,
-      "generation_time_seconds": 19.52
+      "input_chars": 22054,
+      "input_words": 4058,
+      "input_tokens_est": 5513,
+      "output_chars": 3554,
+      "output_words": 371,
+      "output_tokens_est": 888,
+      "generation_time_seconds": 23.59
     },
     "translation_hi": {
-      "input_chars": 18657,
-      "input_words": 3592,
-      "input_tokens_est": 4664,
-      "output_chars": 4467,
-      "output_words": 656,
-      "output_tokens_est": 1116,
-      "generation_time_seconds": 20.1
+      "input_chars": 22054,
+      "input_words": 4058,
+      "input_tokens_est": 5513,
+      "output_chars": 4958,
+      "output_words": 749,
+      "output_tokens_est": 1239,
+      "generation_time_seconds": 25.74
     },
     "translation_ru": {
-      "input_chars": 18657,
-      "input_words": 3592,
-      "input_tokens_est": 4664,
-      "output_chars": 5168,
-      "output_words": 647,
-      "output_tokens_est": 1292,
-      "generation_time_seconds": 22.28
+      "input_chars": 22054,
+      "input_words": 4058,
+      "input_tokens_est": 5513,
+      "output_chars": 4929,
+      "output_words": 579,
+      "output_tokens_est": 1232,
+      "generation_time_seconds": 24.46
     }
   },
   "format_compliance": {
@@ -66,7 +66,7 @@
       }
     }
   },
-  "total_generation_time_seconds": 61.91,
+  "total_generation_time_seconds": 73.8,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,

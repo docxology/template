@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  1 JAN 2026 14:29
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 JAN 2026 11:24
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1290,8 +1290,19 @@ Missing character: There is no ∇ (U+2207) in font [lmmono10-regular]:!
 Missing character: There is no ε (U+03B5) in font [lmmono10-regular]:!
 Missing character: There is no α (U+03B1) in font [lmmono10-regular]:!
 Missing character: There is no ∇ (U+2207) in font [lmmono10-regular]:!
+
+LaTeX Warning: Citation `cauchy1847methode' on page 1 undefined on input line 3
+5.
+
+
+LaTeX Warning: Citation `bertsekas1999nonlinear' on page 1 undefined on input l
+ine 65.
+
+
+LaTeX Warning: Citation `boyd2004convex' on page 1 undefined on input line 65.
+
 )
-Overfull \vbox (1546.1679pt too high) detected at line 304
+Overfull \vbox (1717.61252pt too high) detected at line 321
  []
 
 
@@ -1315,12 +1326,16 @@ hodology_slides.aux)
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 29411 strings out of 473832
- 596119 string characters out of 5729482
- 1185782 words of memory out of 5000000
- 51934 multiletter control sequences out of 15000+600000
+ 29412 strings out of 473832
+ 596154 string characters out of 5729482
+ 1191829 words of memory out of 5000000
+ 51935 multiletter control sequences out of 15000+600000
  562372 words of font info for 68 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1090b,905s stack positions out of 10000i,1000n,20000p,200000b,200000s

@@ -31,7 +31,8 @@ Return x_k (maximum iterations reached)
 
 The algorithm follows the fundamental principle of steepest descent,
 moving in the direction of the negative gradient to minimize the
-objective function \(f: \mathbb{R}^d \rightarrow \mathbb{R}\).
+objective function \(f: \mathbb{R}^d \rightarrow \mathbb{R}\)
+\cite{cauchy1847methode}.
 \end{block}
 
 \begin{block}{Test Problem: Quadratic Minimization}
@@ -59,6 +60,10 @@ The analytical minimum occurs at \(x = 1\) with \(f(1) = -\frac{1}{2}\).
 \protect\phantomsection\label{convergence-analysis}
 \begin{block}{Convergence Rate Theory}
 \protect\phantomsection\label{convergence-rate-theory}
+The theoretical foundations of convergence analysis for gradient descent
+methods are well-established in the optimization literature
+\cite{bertsekas1999nonlinear, boyd2004convex}.
+
 For strongly convex functions with condition number
 \(\kappa = \frac{\lambda_{\max}}{\lambda_{\min}}\), the convergence rate
 of gradient descent satisfies:
@@ -198,6 +203,18 @@ Comprehensive test suite covers multiple dimensions:
   limits
 \end{itemize}
 \end{block}
+\end{block}
+
+\begin{block}{LaTeX Customization and Rendering}
+\protect\phantomsection\label{latex-customization-and-rendering}
+The research template supports advanced LaTeX customization through
+optional preamble configuration. An optional \texttt{preamble.md} file
+can contain custom LaTeX packages and commands that are automatically
+inserted before document compilation. The rendering system ensures
+required packages (such as \texttt{graphicx} for figure inclusion) are
+loaded automatically, while allowing researchers to add specialized
+packages for mathematical notation, bibliography styles, or document
+formatting.
 \end{block}
 
 \begin{block}{Analysis Pipeline}

@@ -426,7 +426,7 @@ def check_test_failures(
         return True, f"{test_suite}: {failed_count} failure(s) exceeds tolerance (max: {max_failures})"
 
 
-def run_infrastructure_tests(repo_root: Path, project_name: str = "project", quiet: bool = True, include_slow: bool = False) -> tuple[int, dict]:
+def run_infrastructure_tests(repo_root: Path, project_name: str = "project", quiet: bool = True, include_slow: bool = False, include_ollama_tests: bool = False) -> tuple[int, dict]:
     """Execute infrastructure test suite with coverage.
 
     Args:
@@ -444,17 +444,21 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
     clean_coverage_files(repo_root)
 
     log_substep("Running infrastructure tests (60% coverage threshold)...")
-    log_substep("(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)")
+    if not include_ollama_tests:
+        log_substep("(Skipping LLM integration tests - run separately with: pytest -m requires_ollama)")
     logger.info(f"Infrastructure tests started at {time.strftime('%H:%M:%S', time.localtime(start_time))}")
 
     # Log test discovery and configuration
     test_path = repo_root / "tests" / "infrastructure"
     logger.info(f"Test path: {test_path}")
     logger.info(f"Coverage target: infrastructure (60% minimum)")
-    logger.info(f"Filters applied: -m 'not requires_ollama', exclude integration tests")
+    if not include_ollama_tests:
+        logger.info(f"Filters applied: -m 'not requires_ollama', exclude integration tests")
+    else:
+        logger.info(f"Filters applied: include all tests (including Ollama-dependent), exclude integration tests")
 
     # Build pytest command for infrastructure tests using uv run pytest
-    # Skip requires_ollama tests - they are slow and require external Ollama service
+    # Conditionally skip requires_ollama tests based on include_ollama_tests parameter
     # Include infrastructure tests and integration tests (excluding network-dependent ones)
     # Warnings are controlled by pyproject.toml (--disable-warnings + filterwarnings)
     cmd = [
@@ -465,9 +469,12 @@ def run_infrastructure_tests(repo_root: Path, project_name: str = "project", qui
         str(repo_root / "tests" / "integration"),
         # test_coverage_completion.py removed - coverage completion is now handled by test runners
         "--ignore=" + str(repo_root / "tests" / "integration" / "test_module_interoperability.py"),
-        "-m", "not requires_ollama",
         "--cov=infrastructure",
     ]
+
+    # Add Ollama filter if not including Ollama tests
+    if not include_ollama_tests:
+        cmd.extend(["-m", "not requires_ollama"])
 
     # Set up environment with correct Python paths (needed for discovery and execution)
     env = os.environ.copy()
@@ -1447,6 +1454,11 @@ def main() -> int:
         action='store_true',
         help='Run only project tests (skip infrastructure tests)'
     )
+    parser.add_argument(
+        '--include-ollama-tests',
+        action='store_true',
+        help='Include Ollama-dependent tests (requires Ollama server running)'
+    )
     args = parser.parse_args()
 
     # Validate mutually exclusive flags
@@ -1477,7 +1489,7 @@ def main() -> int:
         log_header(f"Phase 1/{1 + int(run_project)}: {phase_title}")
 
         # Run infrastructure tests first (but don't fail the whole pipeline if they fail)
-        infra_exit, infra_results = run_infrastructure_tests(repo_root, args.project, quiet=quiet, include_slow=args.include_slow)
+        infra_exit, infra_results = run_infrastructure_tests(repo_root, args.project, quiet=quiet, include_slow=args.include_slow, include_ollama_tests=args.include_ollama_tests)
 
     # Phase 2: Project Tests (run unless --infra-only specified)
     if run_project:

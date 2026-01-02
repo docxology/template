@@ -32,20 +32,20 @@ graph TB
         SCRIPTS[Scripts<br/>scripts/]
         MANUSCRIPT[Manuscript<br/>manuscript/]
     end
-    
+
     subgraph "Validation & Generation"
         VALIDATION[Test Validation<br/>100% Coverage]
         FIGURES[Figure Generation<br/>Using src/ methods]
         DATA[Data Generation<br/>Using src/ methods]
         MARKDOWN_VAL[Markdown Validation<br/>Images & References]
     end
-    
+
     subgraph "Build Pipeline"
         RENDER[execute_pipeline.py<br/>Pipeline Orchestrator]
         PDFS[PDF Generation<br/>Individual + Combined]
         LATEX[LaTeX Export<br/>For further processing]
     end
-    
+
     SRC --> VALIDATION
     TESTS --> VALIDATION
     SRC --> FIGURES
@@ -55,19 +55,19 @@ graph TB
     MD --> MARKDOWN_VAL
     FIGURES --> MARKDOWN_VAL
     DATA --> MARKDOWN_VAL
-    
+
     VALIDATION --> RENDER
     FIGURES --> RENDER
     DATA --> RENDER
     MARKDOWN_VAL --> RENDER
-    
+
     RENDER --> PDFS
     RENDER --> LATEX
-    
+
     classDef component fill:#e1f5fe,stroke:#01579b,stroke-width:2px
     classDef validation fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
     classDef pipeline fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    
+
     class SRC,TESTS,SCRIPTS,MD component
     class VALIDATION,FIGURES,DATA,MARKDOWN_VAL validation
     class RENDER,PDFS,LATEX pipeline
@@ -119,11 +119,11 @@ flowchart TD
     INTEGRATION --> DOCS[Update Documentation]
     DOCS --> PIPELINE[Run Complete Pipeline]
     PIPELINE --> SUCCESS[Development Complete]
-    
+
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px
     classDef success fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
-    
+
     class TESTS,IMPLEMENT,VALIDATE,ADD_TESTS,INTEGRATION,DOCS,PIPELINE process
     class START,SUCCESS success
 ```
@@ -287,10 +287,10 @@ graph TD
     OUTPUT --> DATA[data/<br/>CSV/NPZ files]
     OUTPUT --> PDFS[pdf/<br/>Individual + Combined PDFs]
     OUTPUT --> TEX[tex/<br/>Exported LaTeX files]
-    
+
     classDef dir fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef files fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    
+
     class OUTPUT dir
     class FIGS,DATA,PDFS,TEX files
 ```

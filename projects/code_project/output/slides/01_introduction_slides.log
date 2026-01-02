@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  1 JAN 2026 14:29
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 JAN 2026 11:24
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1236,29 +1236,32 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 (/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/01_int
 roduction_slides.nav)
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 164.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 164.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-64.
 
+LaTeX Warning: Citation `nocedal2006numerical' on page 1 undefined on input lin
+e 174.
+
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 7.8961pt on input line 174.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 5.64008pt on input line 174.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
+74.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 164.
+(Font)              scaled to size 11.28131pt on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 164.
+(Font)              scaled to size 7.89691pt on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 164.
+(Font)              scaled to size 5.64066pt on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 164.
+(Font)              scaled to size 11.27914pt on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 164.
+(Font)              scaled to size 7.8954pt on input line 174.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 164.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 164
+(Font)              scaled to size 5.63957pt on input line 174.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 174
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1267,7 +1270,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 164
+LaTeX Font Info:    Trying to load font information for U+msb on input line 174
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1280,7 +1283,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
 )
-Overfull \vbox (336.47964pt too high) detected at line 164
+Overfull \vbox (431.54828pt too high) detected at line 174
  []
 
 
@@ -1304,15 +1307,19 @@ roduction_slides.aux)
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
  29394 strings out of 473832
  595615 string characters out of 5729482
- 1139303 words of memory out of 5000000
+ 1142303 words of memory out of 5000000
  51922 multiletter control sequences out of 15000+600000
  562364 words of font info for 67 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1091b,704s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1091b,705s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/code_project/out
 put/slides/01_introduction_slides.pdf (1 page).

@@ -80,6 +80,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
         if project_name:
             logger.error(f"  Expected: output/{project_name}/{project_name}_combined.pdf")
             logger.error(f"  Or in: output/{project_name}/pdf/{project_name}_combined.pdf")
+            logger.error(f"  Fallback: output/{project_name}/pdf/project_combined.pdf (legacy)")
         else:
             logger.error("  Expected: output/project_combined.pdf")
             logger.error("  Or in: output/pdf/project_combined.pdf")
@@ -268,9 +269,19 @@ def collect_detailed_validation_results(output_dir: Path) -> Dict[str, Any]:
     
     # Add missing file issues
     for missing_file in validation_results['structure'].get('missing_files', []):
-        validation_results['issues_by_severity']['critical'].append(
-            f"Missing expected file: {missing_file}"
-        )
+        if missing_file == "project_combined.pdf":
+            validation_results['issues_by_severity']['critical'].append(
+                f"Missing expected file: {missing_file} (legacy filename - consider using project-specific naming)"
+            )
+        elif "_combined.pdf" in missing_file:
+            project_name = missing_file.replace("_combined.pdf", "")
+            validation_results['issues_by_severity']['critical'].append(
+                f"Missing expected file: {missing_file} (project-specific combined PDF for {project_name})"
+            )
+        else:
+            validation_results['issues_by_severity']['critical'].append(
+                f"Missing expected file: {missing_file}"
+            )
     
     # Add suspicious size issues
     for size_issue in validation_results['structure'].get('suspicious_sizes', []):
@@ -399,7 +410,7 @@ def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
     # Check all expected subdirectories
     expected_dirs = ["pdf", "web", "slides", "figures", "data", "reports", "simulations", "llm", "logs"]
     # Directories that are optional or populated later in the pipeline
-    optional_dirs = {"llm", "logs"}  # LLM stage and logs may be generated during pipeline
+    optional_dirs = {"llm", "logs", "simulations"}  # LLM stage, logs, and simulations may be generated during pipeline
     
     for subdir_name in expected_dirs:
         subdir = output_dir / subdir_name

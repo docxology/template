@@ -43,13 +43,22 @@ try:
             def __exit__(self, *args): pass
     INFRASTRUCTURE_AVAILABLE = True
 except ImportError as e:
-    print(f"⚠️  Infrastructure modules not available: {e}")
+    # Initialize logger after potential import failure
+    try:
+        logger = get_logger(__name__) if 'get_logger' in globals() else None
+        if logger:
+            logger.warning(f"Infrastructure modules not available: {e}")
+    except:
+        pass  # Silent fallback if logging also fails
     INFRASTRUCTURE_AVAILABLE = False
 
 
 def generate_api_documentation():
     """Generate comprehensive API documentation for the code project."""
-    print("Generating API documentation...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Generating API documentation...")
 
     try:
         # Output directory for documentation
@@ -59,7 +68,8 @@ def generate_api_documentation():
         # Generate glossary if available
         glossary_path = None
         if generate_glossary:
-            print("Generating API glossary...")
+            if logger:
+                logger.info("Generating API glossary...")
             try:
                 glossary_path = generate_glossary(
                     source_dirs=[project_root / "src"],
@@ -67,10 +77,12 @@ def generate_api_documentation():
                     min_frequency=2
                 )
             except Exception as e:
-                print(f"⚠️  Glossary generation failed: {e}")
+                if logger:
+                    logger.warning(f"Glossary generation failed: {e}")
 
         # Create a simple API reference manually
-        print("Creating API reference...")
+        if logger:
+            logger.info("Creating API reference...")
         api_ref_path = output_dir / "api_reference.md"
 
         # Get functions from optimizer module
@@ -156,11 +168,13 @@ initial_point = np.array([0.0, 0.0])
 result = gradient_descent(initial_point, obj_func, grad_func, step_size=0.1)
 
 if result.converged:
-    print(f"Converged in {{result.iterations}} iterations")
-    print(f"Solution: {{result.solution}}")
-    print(f"Objective: {{result.objective_value:.6f}}")
+    if logger:
+        logger.debug(f"Converged in {result.iterations} iterations")
+        logger.debug(f"Solution: {result.solution}")
+        logger.debug(f"Objective: {result.objective_value:.6f}")
 else:
-    print(f"Did not converge within {{result.iterations}} iterations")
+    if logger:
+        logger.warning(f"Did not converge within {result.iterations} iterations")
 ```
 """
 
@@ -172,20 +186,25 @@ else:
             'glossary': str(glossary_path) if glossary_path else None,
         }
 
-        print("✅ API documentation generation completed")
+        if logger:
+            logger.info("API documentation generation completed")
         return documentation_files
 
     except Exception as e:
-        print(f"⚠️  API documentation generation failed: {e}")
+        if logger:
+            logger.warning(f"API documentation generation failed: {e}")
         return None
 
 
 def generate_code_quality_report():
     """Generate code quality and documentation completeness report."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
     if not INFRASTRUCTURE_AVAILABLE:
         return None
 
-    print("Generating code quality report...")
+    if logger:
+        logger.info("Generating code quality report...")
 
     try:
         from infrastructure.documentation import analyze_code_quality
@@ -200,37 +219,46 @@ def generate_code_quality_report():
             include_coverage=True
         )
 
-        print("✅ Code quality analysis completed")
+        if logger:
+            logger.info("Code quality analysis completed")
         return quality_report
 
     except Exception as e:
-        print(f"⚠️  Code quality analysis failed: {e}")
+        if logger:
+            logger.warning(f"Code quality analysis failed: {e}")
         return None
 
 
 def main():
     """Main API documentation generation function."""
-    print("Starting API documentation generation...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Starting API documentation generation...")
 
     try:
         # Generate API documentation
         docs_files = generate_api_documentation()
 
         # Summary
-        print("\nAPI Documentation Generation Complete!")
+        if logger:
+            logger.info("API Documentation Generation Complete!")
         if docs_files:
-            print("Generated documentation files:")
-            for doc_type, file_path in docs_files.items():
-                if file_path:
-                    print(f"  - {doc_type}: {file_path}")
-            print("✅ API documentation generation completed successfully!")
+            if logger:
+                logger.info("Generated documentation files:")
+                for doc_type, file_path in docs_files.items():
+                    if file_path:
+                        logger.info(f"  - {doc_type}: {file_path}")
+                logger.info("API documentation generation completed successfully!")
         else:
-            print("❌ API documentation generation failed - check error messages above")
+            if logger:
+                logger.error("API documentation generation failed - check error messages above")
             return 1  # Exit with error code
 
     except Exception as e:
         error_msg = f"API documentation generation failed: {e}"
-        print(f"\n❌ {error_msg}")
+        if logger:
+            logger.error(error_msg)
         raise
 
 

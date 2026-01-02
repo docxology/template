@@ -1,0 +1,3 @@
+Project,Health_Score,Health_Grade,Manuscript_Words,Manuscript_Sections,Manuscript_Equations,Manuscript_Figures,Test_Total,Test_Passed,Test_Failed,Test_Coverage_Pct,Test_Execution_Time,Pipeline_Duration,Pipeline_Stages_Passed,Pipeline_Bottleneck_Stage,Pipeline_Bottleneck_Duration,Output_PDFs,Output_PDF_Size_MB,Output_Figures,Output_Slides,Output_Web,Output_Total
+code_project,100.0,A,3031,6,12,7,28,28,0,94.12,0.0,0.0,0,,0.0,1,0.9841842651367188,6,4,4,16
+prose_project,100.0,A,3271,6,0,0,48,47,0,91.54,0.0,0.0,0,,0.0,1,0.09094905853271484,2,4,4,12

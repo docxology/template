@@ -11,7 +11,6 @@
 
 ### Recommendations
 
-- Consider adding citations to related work
 - Consider adding figures to illustrate key concepts
 - Address missing elements before publication
 

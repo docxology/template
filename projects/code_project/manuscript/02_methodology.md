@@ -24,7 +24,7 @@ While k < N_max do:
 Return x_k (maximum iterations reached)
 ```
 
-The algorithm follows the fundamental principle of steepest descent, moving in the direction of the negative gradient to minimize the objective function $f: \mathbb{R}^d \rightarrow \mathbb{R}$.
+The algorithm follows the fundamental principle of steepest descent, moving in the direction of the negative gradient to minimize the objective function $f: \mathbb{R}^d \rightarrow \mathbb{R}$ \cite{cauchy1847methode}.
 
 ### Test Problem: Quadratic Minimization
 
@@ -50,6 +50,8 @@ The analytical minimum occurs at $x = 1$ with $f(1) = -\frac{1}{2}$.
 ## Convergence Analysis
 
 ### Convergence Rate Theory
+
+The theoretical foundations of convergence analysis for gradient descent methods are well-established in the optimization literature \cite{bertsekas1999nonlinear, boyd2004convex}.
 
 For strongly convex functions with condition number $\kappa = \frac{\lambda_{\max}}{\lambda_{\min}}$, the convergence rate of gradient descent satisfies:
 
@@ -132,6 +134,10 @@ Comprehensive test suite covers multiple dimensions:
 - **Edge cases**: Pre-converged solutions, maximum iteration limits
 - **Numerical accuracy**: Comparison with analytical solutions for quadratic functions
 - **Robustness**: Ill-conditioned problems and numerical precision limits
+
+## LaTeX Customization and Rendering
+
+The research template supports advanced LaTeX customization through optional preamble configuration. An optional `preamble.md` file can contain custom LaTeX packages and commands that are automatically inserted before document compilation. The rendering system ensures required packages (such as `graphicx` for figure inclusion) are loaded automatically, while allowing researchers to add specialized packages for mathematical notation, bibliography styles, or document formatting.
 
 ## Analysis Pipeline
 

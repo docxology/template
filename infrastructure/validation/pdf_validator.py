@@ -21,10 +21,10 @@ from infrastructure.core.exceptions import PDFValidationError
 
 def extract_text_from_pdf(pdf_path: Path) -> str:
     """
-    Extract all text content from a PDF file.
+    Extract all text content from a PDF file with robust error handling and fallbacks.
 
-    Suppresses harmless pypdf warnings (e.g., "Ignoring wrong pointing object")
-    that occur during PDF parsing of malformed objects.
+    Performs comprehensive validation and uses multiple PDF libraries as fallbacks
+    for maximum compatibility with different PDF formats and corruption levels.
 
     Args:
         pdf_path: Path to the PDF file
@@ -33,36 +33,126 @@ def extract_text_from_pdf(pdf_path: Path) -> str:
         Extracted text as a single string
 
     Raises:
-        PDFValidationError: If file doesn't exist or text extraction fails
+        PDFValidationError: If file doesn't exist, is corrupted, or text extraction fails
     """
     if not pdf_path.exists():
         raise PDFValidationError(f"PDF file not found: {pdf_path}")
 
     logger = get_logger(__name__)
 
+    # Validate PDF file size and basic integrity
+    file_size = pdf_path.stat().st_size
+    logger.debug(f"PDF file size: {file_size} bytes ({file_size/1024:.1f} KB)")
+
+    if file_size < 1000:  # Less than 1KB
+        raise PDFValidationError(
+            f"PDF file is too small ({file_size} bytes) - likely corrupted or empty"
+        )
+
+    if file_size > 100 * 1024 * 1024:  # More than 100MB
+        raise PDFValidationError(
+            f"PDF file is too large ({file_size/1024/1024:.1f} MB) - exceeds safety limit"
+        )
+
+    # Try extraction with multiple libraries in order of preference
+    extraction_methods = [
+        ("pypdf", _extract_with_pypdf),
+        ("pdfplumber", _extract_with_pdfplumber),
+        ("PyPDF2", _extract_with_pypdf2),
+    ]
+
+    last_error = None
+    for method_name, extract_func in extraction_methods:
+        try:
+            logger.debug(f"Attempting PDF text extraction with {method_name}")
+            text = extract_func(pdf_path)
+            if text and text.strip():
+                logger.debug(f"Successfully extracted {len(text)} characters with {method_name}")
+                return text
+            else:
+                logger.debug(f"{method_name} returned empty text, trying next method")
+                continue
+        except ImportError:
+            logger.debug(f"{method_name} library not available, skipping")
+            continue
+        except Exception as e:
+            error_msg = f"{method_name} extraction failed: {e}"
+            logger.debug(error_msg)
+            last_error = e
+            continue
+
+    # All methods failed
+    error_details = []
+    if last_error:
+        error_details.append(f"Last error: {last_error}")
+
+    # Try to provide additional diagnostics
     try:
-        from pypdf import PdfReader
+        with open(pdf_path, 'rb') as f:
+            header = f.read(8)
+            if not header.startswith(b'%PDF-'):
+                error_details.append("File does not have valid PDF header")
+            else:
+                error_details.append(f"PDF header detected: {header[:8]}")
+    except Exception as diag_error:
+        error_details.append(f"Could not read PDF header: {diag_error}")
 
-        with open(pdf_path, 'rb') as file:
-            # Capture stderr to suppress pypdf warnings (e.g., "Ignoring wrong pointing object")
-            # These are harmless and indicate pypdf is gracefully handling malformed PDF objects
-            stderr_capture = io.StringIO()
-            with contextlib.redirect_stderr(stderr_capture):
-                pdf_reader = PdfReader(file)
-                text_parts = []
+    error_details.append(f"File size: {file_size} bytes")
+    error_details.append("Tried extraction methods: pypdf, pdfplumber, PyPDF2")
 
-                for page in pdf_reader.pages:
-                    text_parts.append(page.extract_text())
+    raise PDFValidationError(
+        f"Failed to extract text from PDF after trying all available methods. "
+        f"PDF may be corrupted, password-protected, or contain only images. "
+        f"Details: {'; '.join(error_details)}"
+    )
 
-            # Log suppressed warnings at DEBUG level for troubleshooting
-            captured_warnings = stderr_capture.getvalue().strip()
-            if captured_warnings:
-                logger.debug(f"Suppressed pypdf warnings for {pdf_path.name}: {captured_warnings}")
 
-            return '\n'.join(text_parts)
+def _extract_with_pypdf(pdf_path: Path) -> str:
+    """Extract text using pypdf library."""
+    from pypdf import PdfReader
+    import io
+    import contextlib
 
-    except Exception as e:
-        raise PDFValidationError(f"Failed to extract text from PDF: {e}")
+    with open(pdf_path, 'rb') as file:
+        # Capture stderr to suppress pypdf warnings
+        stderr_capture = io.StringIO()
+        with contextlib.redirect_stderr(stderr_capture):
+            pdf_reader = PdfReader(file)
+            text_parts = []
+
+            for page in pdf_reader.pages:
+                text_parts.append(page.extract_text())
+
+        return '\n'.join(text_parts)
+
+
+def _extract_with_pdfplumber(pdf_path: Path) -> str:
+    """Extract text using pdfplumber library."""
+    import pdfplumber
+
+    text_parts = []
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            page_text = page.extract_text()
+            if page_text:
+                text_parts.append(page_text)
+
+    return '\n\n'.join(text_parts)
+
+
+def _extract_with_pypdf2(pdf_path: Path) -> str:
+    """Extract text using PyPDF2 library."""
+    import PyPDF2
+
+    text_parts = []
+    with open(pdf_path, 'rb') as file:
+        pdf_reader = PyPDF2.PdfReader(file)
+        for page in pdf_reader.pages:
+            page_text = page.extract_text()
+            if page_text:
+                text_parts.append(page_text)
+
+    return '\n\n'.join(text_parts)
 
 
 def scan_for_issues(text: str) -> Dict[str, int]:

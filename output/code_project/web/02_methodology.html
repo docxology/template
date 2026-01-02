@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_methodology</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="methodology">Methodology</h1>
+<p>This section describes the implementation methodology and
+experimental setup used in the optimization project.</p>
+<h2 id="algorithm-implementation">Algorithm Implementation</h2>
+<h3 id="gradient-descent-algorithm">Gradient Descent Algorithm</h3>
+<p>The core algorithm implements the following iterative procedure for
+unconstrained optimization:</p>
+<p><strong>Input:</strong> Initial point <span class="math inline">\(x_0
+\in \mathbb{R}^d\)</span>, step size <span class="math inline">\(\alpha
+&gt; 0\)</span>, tolerance <span class="math inline">\(\epsilon &gt;
+0\)</span>, maximum iterations <span class="math inline">\(N_{\max} \in
+\mathbb{N}\)</span></p>
+<p><strong>Output:</strong> Approximate solution <span
+class="math inline">\(x^* \approx \arg\min f(x)\)</span></p>
+<p><strong>Algorithm 1: Gradient Descent</strong></p>
+<pre><code>Initialize: k ← 0, x_0 ∈ ℝ^d
+While k &lt; N_max do:
+    Compute gradient: ∇f(x_k)
+    Check convergence: if ||∇f(x_k)||_2 &lt; ε then
+        Return x_k as approximate solution
+    Update: x_{k+1} ← x_k - α ∇f(x_k)
+    Increment: k ← k + 1
+Return x_k (maximum iterations reached)</code></pre>
+<p>The algorithm follows the fundamental principle of steepest descent,
+moving in the direction of the negative gradient to minimize the
+objective function <span class="math inline">\(f: \mathbb{R}^d
+\rightarrow \mathbb{R}\)</span> .</p>
+<h3 id="test-problem-quadratic-minimization">Test Problem: Quadratic
+Minimization</h3>
+<p>We use quadratic functions of the form:</p>
+<p><span class="math display">\[f(x) = \frac{1}{2} x^T A x - b^T
+x\]</span></p>
+<p>where: - <span class="math inline">\(A\)</span> is a positive
+definite matrix - <span class="math inline">\(b\)</span> is the linear
+term vector - The gradient is: <span class="math inline">\(\nabla f(x) =
+A x - b\)</span></p>
+<p>For the simple case <span class="math inline">\(A = I\)</span> and
+<span class="math inline">\(b = 1\)</span>, we have:</p>
+<p><span class="math display">\[f(x) = \frac{1}{2} x^2 - x\]</span></p>
+<p>with gradient:</p>
+<p><span class="math display">\[\nabla f(x) = x - 1\]</span></p>
+<p>The analytical minimum occurs at <span class="math inline">\(x =
+1\)</span> with <span class="math inline">\(f(1) =
+-\frac{1}{2}\)</span>.</p>
+<h2 id="convergence-analysis">Convergence Analysis</h2>
+<h3 id="convergence-rate-theory">Convergence Rate Theory</h3>
+<p>The theoretical foundations of convergence analysis for gradient
+descent methods are well-established in the optimization literature
+.</p>
+<p>For strongly convex functions with condition number <span
+class="math inline">\(\kappa =
+\frac{\lambda_{\max}}{\lambda_{\min}}\)</span>, the convergence rate of
+gradient descent satisfies:</p>
+<p><span class="math display">\[\frac{\|x_{k+1} - x^*\|}{\|x_k - x^*\|}
+\leq \sqrt{\frac{\kappa - 1}{\kappa + 1}}\]</span></p>
+<p>where <span class="math inline">\(x^*\)</span> denotes the optimal
+solution. This bound shows linear convergence with rate <span
+class="math inline">\(\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}} &lt;
+1\)</span>.</p>
+<p>For quadratic functions <span class="math inline">\(f(x) =
+\frac{1}{2}x^T A x - b^T x\)</span> where <span
+class="math inline">\(A\)</span> is positive definite, the convergence
+factor becomes:</p>
+<p><span class="math display">\[\rho = \frac{|\lambda_{\max} -
+\alpha\lambda_{\min}|}{|\lambda_{\min} +
+\alpha\lambda_{\max}|}\]</span></p>
+<p>where <span class="math inline">\(\alpha\)</span> is the step size.
+Optimal convergence occurs when <span class="math inline">\(\alpha =
+\frac{2}{\lambda_{\min} + \lambda_{\max}}\)</span>, yielding <span
+class="math inline">\(\rho = \frac{\kappa - 1}{\kappa + 1}\)</span>.</p>
+<h3 id="step-size-selection-criteria">Step Size Selection Criteria</h3>
+<p>The optimal constant step size for quadratic functions is:</p>
+<p><span class="math display">\[\alpha = \frac{2}{\lambda_{\min} +
+\lambda_{\max}}\]</span></p>
+<p>For our test problem with <span class="math inline">\(\lambda_{\min}
+= \lambda_{\max} = 1\)</span>, this gives <span
+class="math inline">\(\alpha = 1\)</span>.</p>
+<h3 id="complexity-analysis">Complexity Analysis</h3>
+<p>The computational complexity per iteration is: - <strong>Time
+complexity</strong>: <span class="math inline">\(O(n)\)</span> for
+gradient computation - <strong>Space complexity</strong>: <span
+class="math inline">\(O(n)\)</span> for storing variables</p>
+<p>Total complexity for convergence: <span
+class="math inline">\(O\left(n \cdot
+\log\left(\frac{1}{\epsilon}\right)\right)\)</span></p>
+<h2 id="experimental-setup">Experimental Setup</h2>
+<h3 id="step-size-analysis">Step Size Analysis</h3>
+<p>We investigate the effect of different step sizes on convergence:</p>
+<ul>
+<li><span class="math inline">\(\alpha = 0.01\)</span>
+(conservative)</li>
+<li><span class="math inline">\(\alpha = 0.05\)</span> (moderate)</li>
+<li><span class="math inline">\(\alpha = 0.10\)</span> (aggressive)</li>
+<li><span class="math inline">\(\alpha = 0.20\)</span> (very
+aggressive)</li>
+</ul>
+<h3 id="convergence-criteria">Convergence Criteria</h3>
+<p>The algorithm terminates when: - Gradient norm falls below tolerance:
+<span class="math inline">\(||\nabla f(x)|| &lt; \epsilon\)</span> -
+Maximum iterations reached: <span class="math inline">\(k =
+N\)</span></p>
+<h3 id="performance-metrics">Performance Metrics</h3>
+<p>We track: - <strong>Solution accuracy</strong>: Distance to
+analytical optimum - <strong>Convergence speed</strong>: Number of
+iterations to convergence - <strong>Objective value</strong>: Function
+value at final solution</p>
+<h2 id="implementation-details">Implementation Details</h2>
+<h3 id="numerical-stability-considerations">Numerical Stability
+Considerations</h3>
+<p>The implementation uses NumPy’s vectorized operations for efficient
+computation. Numerical stability is ensured through:</p>
+<ul>
+<li><strong>Gradient computation</strong>: Analytical gradients computed
+using matrix operations</li>
+<li><strong>Convergence checking</strong>: Relative gradient norms to
+handle different scales</li>
+<li><strong>Step size validation</strong>: Bounds checking to prevent
+divergence</li>
+<li><strong>Iteration limits</strong>: Maximum iteration caps to prevent
+infinite loops</li>
+</ul>
+<h3 id="error-handling-and-robustness">Error Handling and
+Robustness</h3>
+<p>Input validation ensures algorithmic reliability:</p>
+<ul>
+<li><strong>Matrix dimensions</strong>: Compatible shapes for quadratic
+terms and linear coefficients</li>
+<li><strong>Step size bounds</strong>: <span
+class="math inline">\(\alpha &gt; 0\)</span> with upper bounds to
+prevent oscillation</li>
+<li><strong>Tolerance validation</strong>: <span
+class="math inline">\(\epsilon &gt; 0\)</span> with machine precision
+considerations</li>
+<li><strong>Initial point validation</strong>: Finite, non-NaN starting
+values</li>
+</ul>
+<h3 id="testing-strategy-and-validation">Testing Strategy and
+Validation</h3>
+<p>Comprehensive test suite covers multiple dimensions:</p>
+<ul>
+<li><strong>Functional correctness</strong>: Analytical gradient
+verification against finite differences</li>
+<li><strong>Convergence behavior</strong>: Multiple step sizes and
+tolerance levels</li>
+<li><strong>Edge cases</strong>: Pre-converged solutions, maximum
+iteration limits</li>
+<li><strong>Numerical accuracy</strong>: Comparison with analytical
+solutions for quadratic functions</li>
+<li><strong>Robustness</strong>: Ill-conditioned problems and numerical
+precision limits</li>
+</ul>
+<h2 id="latex-customization-and-rendering">LaTeX Customization and
+Rendering</h2>
+<p>The research template supports advanced LaTeX customization through
+optional preamble configuration. An optional <code>preamble.md</code>
+file can contain custom LaTeX packages and commands that are
+automatically inserted before document compilation. The rendering system
+ensures required packages (such as <code>graphicx</code> for figure
+inclusion) are loaded automatically, while allowing researchers to add
+specialized packages for mathematical notation, bibliography styles, or
+document formatting.</p>
+<h2 id="analysis-pipeline">Analysis Pipeline</h2>
+<p>The analysis script automatically: 1. Runs optimization experiments
+with different parameters 2. Collects convergence trajectories 3.
+Generates publication-quality plots 4. Saves numerical results to CSV
+files 5. Registers figures for manuscript integration</p>
+<p>This automated approach ensures reproducible research and consistent
+result generation.</p>
+</body>
+</html>

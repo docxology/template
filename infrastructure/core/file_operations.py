@@ -162,7 +162,13 @@ def clean_root_output_directory(repo_root: Path, project_names: list[str]) -> bo
                     continue
 
                 # Keep special directories that might be needed
-                if item_name in ['.gitkeep', '.gitignore']:
+                special_dirs = {
+                    '.gitkeep',
+                    '.gitignore',
+                    'multi_project_summary',  # Multi-project summary reports
+                    'executive_summary',       # Executive reporting outputs
+                }
+                if item_name in special_dirs:
                     kept_items.append(item_name)
                     continue
 

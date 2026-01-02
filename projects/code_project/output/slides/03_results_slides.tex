@@ -210,6 +210,9 @@ convergence speed for different step sizes.
 \protect\phantomsection\label{convergence-rate-analysis}
 \begin{block}{Theoretical vs Empirical Convergence}
 \protect\phantomsection\label{theoretical-vs-empirical-convergence}
+Modern convergence analysis builds on foundational work in gradient
+methods \cite{nesterov2013gradient}.
+
 Figure \ref{fig:convergence_rate} provides a comparative analysis of
 convergence rates across different step sizes, validating theoretical
 predictions against empirical results.
@@ -252,7 +255,7 @@ achieve accuracy \(\epsilon\) is:
 \[k \geq \frac{\log(\epsilon)}{\log(\rho)}\]
 
 where \(\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}\) is the convergence
-factor.
+factor \cite{polyak1964some}.
 
 For our results, the convergence factors are: - \(\alpha = 0.01\):
 \(\rho \approx 0.99\), requiring \textasciitilde458 iterations for
@@ -341,6 +344,35 @@ iteration for gradient computation - \textbf{Space complexity}: \(O(d)\)
 for storing variables and gradients - \textbf{Convergence}: Typically
 \(< 20\) iterations for this quadratic problem - \textbf{Scalability}:
 Memory-efficient implementation suitable for high-dimensional problems
+\end{block}
+
+\begin{block}{Performance Benchmarking}
+\protect\phantomsection\label{performance-benchmarking}
+Figure \ref{fig:benchmark} provides detailed performance benchmarking
+across different problem configurations and step size parameters.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Performance benchmarking results showing execution times and convergence metrics across different optimization scenarios.}]{../output/figures/performance_benchmark.png}}
+\caption{Performance benchmarking results showing execution times and
+convergence metrics across different optimization
+scenarios.}\label{fig:benchmark}
+\end{figure}
+\end{block}
+
+\begin{block}{Numerical Stability Analysis}
+\protect\phantomsection\label{numerical-stability-analysis}
+Figure \ref{fig:stability} demonstrates the numerical stability
+characteristics of the gradient descent implementation across various
+input conditions and parameter settings.
+
+\begin{figure}
+\centering
+\pandocbounded{\includegraphics[keepaspectratio,alt={Numerical stability analysis showing algorithm robustness under different computational conditions and input parameter ranges.}]{../output/figures/stability_analysis.png}}
+\caption{Numerical stability analysis showing algorithm robustness under
+different computational conditions and input parameter
+ranges.}\label{fig:stability}
+\end{figure}
 \end{block}
 
 \begin{block}{Performance Metrics Summary}

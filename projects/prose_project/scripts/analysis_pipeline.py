@@ -28,8 +28,27 @@ try:
         ProgressBar,
         get_logger,
         TemplateError,
+        CheckpointManager,
+        retry_with_backoff,
+        SystemHealthChecker,
+        log_operation,
+        log_success,
+        log_stage,
     )
-    from infrastructure.core.exceptions import ScriptExecutionError
+    from infrastructure.core.exceptions import (
+        ScriptExecutionError,
+        ValidationError,
+        BuildError,
+        TemplateError,
+    )
+    from infrastructure.rendering import (
+        RenderManager,
+        get_render_manager,
+    )
+    from infrastructure.publishing import (
+        extract_publication_metadata,
+        generate_citation_bibtex,
+    )
     from infrastructure.core.logging_utils import (
         log_operation,
         log_success,
@@ -50,7 +69,10 @@ except ImportError:
 
 def run_scientific_analysis():
     """Run scientific analysis demonstrating infrastructure capabilities."""
-    print("Running scientific analysis...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Running scientific analysis...")
 
     try:
         # Define test functions for analysis
@@ -72,7 +94,8 @@ def run_scientific_analysis():
         analysis_results = {}
 
         for func_name, func in test_functions:
-            print(f"Analyzing {func_name} function...")
+            if logger:
+                logger.info(f"Analyzing {func_name} function...")
 
             # Test numerical stability
             stability_result = check_numerical_stability(
@@ -80,7 +103,8 @@ def run_scientific_analysis():
                 input_range=(-5, 5),
                 num_points=100
             )
-            print(f"  Stability: {stability_result['overall_stable']}")
+            if logger:
+                logger.info(f"  Stability: {stability_result['overall_stable']}")
 
             # Benchmark performance
             benchmark_result = benchmark_function(
@@ -88,7 +112,8 @@ def run_scientific_analysis():
                 test_inputs=[np.array([i]) for i in np.linspace(-5, 5, 20)],
                 num_runs=10
             )
-            print(f"  Benchmark: {benchmark_result['mean_time']:.4f}s avg")
+            if logger:
+                logger.info(f"  Benchmark: {benchmark_result['mean_time']:.4f}s avg")
 
             analysis_results[func_name] = {
                 'stability': stability_result,
@@ -122,17 +147,26 @@ def run_scientific_analysis():
         with open(analysis_path, 'w') as f:
             json.dump(serializable_results, f, indent=2)
 
-        print(f"Saved scientific analysis to: {analysis_path}")
+        if logger:
+            logger.info(f"Saved scientific analysis to: {analysis_path}")
         return analysis_path
 
+    except ValidationError as e:
+        if logger:
+            logger.warning(f"Scientific analysis validation failed: {e}")
+        return None
     except Exception as e:
-        print(f"⚠️  Scientific analysis failed: {e}")
+        if logger:
+            logger.warning(f"Unexpected error in scientific analysis: {e}")
         return None
 
 
 def generate_mathematical_visualization():
     """Generate mathematical visualization for manuscript."""
-    print("Generating mathematical visualization...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Generating mathematical visualization...")
 
     # Create sample mathematical data
     x = np.linspace(-2, 2, 100)
@@ -207,12 +241,14 @@ def generate_mathematical_visualization():
     plt.savefig(plot_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-    print(f"Saved mathematical visualization to: {plot_path}")
+    if logger:
+        logger.info(f"Saved mathematical visualization to: {plot_path}")
     return plot_path
 
 
 def generate_mathematical_visualization_with_progress():
     """Generate mathematical visualization for manuscript with progress tracking."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
     print("Generating mathematical visualization...")
 
     # Create sample mathematical data
@@ -294,7 +330,10 @@ def generate_mathematical_visualization_with_progress():
 
 def generate_theoretical_analysis():
     """Generate theoretical analysis visualization."""
-    print("Generating theoretical analysis visualization...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Generating theoretical analysis visualization...")
 
     # Create data for theoretical analysis
     x = np.linspace(0.01, 2, 100)
@@ -329,6 +368,7 @@ def generate_theoretical_analysis():
 
 def generate_theoretical_analysis_with_progress():
     """Generate theoretical analysis visualization with progress tracking."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
     print("Generating theoretical analysis visualization...")
 
     # Create data for theoretical analysis
@@ -373,13 +413,15 @@ def run_mathematical_demonstration():
     for value in test_values:
         identity_result = identity(value)
         constant_result = constant_value()
-        print(f"  identity({value}) = {identity_result}, constant_value() = {constant_result}")
+        if logger:
+            logger.info(f"  identity({value}) = {identity_result}, constant_value() = {constant_result}")
 
     return {"test_values": test_values, "identity_results": [identity(v) for v in test_values]}
 
 
 def run_mathematical_demonstration_with_progress(progress_bar):
     """Run mathematical function demonstration with progress tracking."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
     # Demonstrate functions from src/
     test_values = [0, 1, 2, 3, 5]
 
@@ -392,13 +434,15 @@ def run_mathematical_demonstration_with_progress(progress_bar):
 
     print("Mathematical function demonstration:")
     for value, identity_result, constant_result in results:
-        print(f"  identity({value}) = {identity_result}, constant_value() = {constant_result}")
+        if logger:
+            logger.info(f"  identity({value}) = {identity_result}, constant_value() = {constant_result}")
 
     return {"test_values": test_values, "identity_results": [identity(v) for v in test_values]}
 
 
 def save_analysis_data(analysis_results):
     """Save analysis data to file."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
     print("Saving analysis data...")
 
     output_dir = project_root / "output" / "data"
@@ -410,12 +454,14 @@ def save_analysis_data(analysis_results):
     with open(data_path, 'w') as f:
         json.dump(analysis_results, f, indent=2)
 
-    print(f"Saved analysis data to: {data_path}")
+    if logger:
+        logger.info(f"Saved analysis data to: {data_path}")
     return data_path
 
 
 def save_analysis_data_with_progress(analysis_results, progress_bar):
     """Save analysis data to file with progress tracking."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
     output_dir = project_root / "output" / "data"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -426,12 +472,14 @@ def save_analysis_data_with_progress(analysis_results, progress_bar):
         json.dump(analysis_results, f, indent=2)
 
     progress_bar.update(1)
-    print(f"Saved analysis data to: {data_path}")
+    if logger:
+        logger.info(f"Saved analysis data to: {data_path}")
     return data_path
 
 
 def register_figure():
     """Register generated figures for manuscript reference."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
     try:
         # Ensure repo root is on path for infrastructure imports
         repo_root = Path(__file__).parent.parent.parent
@@ -457,12 +505,15 @@ def register_figure():
                 section="Results",
                 generated_by="analysis_pipeline.py"
             )
-            print(f"✅ Registered figure with label: {label}")
+            if logger:
+                logger.info(f"Registered figure with label: {label}")
 
     except ImportError as e:
-        print(f"⚠️  Figure manager not available: {e}")
+        if logger:
+            logger.warning(f"Figure manager not available: {e}")
     except Exception as e:
-        print(f"⚠️  Failed to register figures: {e}")
+        if logger:
+            logger.warning(f"Failed to register figures: {e}")
 
 
 def main():
@@ -470,8 +521,9 @@ def main():
     # Initialize logger for performance monitoring
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
-    print("Starting prose project analysis pipeline...")
-    print(f"Project root: {project_root}")
+    if logger:
+        logger.info("Starting prose project analysis pipeline...")
+        logger.info(f"Project root: {project_root}")
 
     # Initialize output variables
     math_viz = None
@@ -483,6 +535,30 @@ def main():
         logger.info("Starting prose project analysis pipeline")
 
     try:
+        # System health check
+        if INFRASTRUCTURE_AVAILABLE:
+            health_checker = SystemHealthChecker()
+            if logger:
+                logger.info("Running system health check...")
+            health_status = health_checker.get_health_status()
+            if health_status.get('overall_status') != 'healthy':
+                if logger:
+                    logger.warning("System health check failed:")
+                    for check_name, check_result in health_status.get('checks', {}).items():
+                        if check_result.get('status') != 'healthy':
+                            logger.warning(f"  - {check_name}: {check_result.get('error', 'unknown error')}")
+            else:
+                if logger:
+                    logger.info("System health check passed")
+
+        # Initialize checkpoint manager
+        checkpoint_manager = None
+        if INFRASTRUCTURE_AVAILABLE:
+            checkpoint_dir = project_root / "output" / "checkpoints"
+            checkpoint_manager = CheckpointManager(checkpoint_dir)
+            if logger:
+                logger.info("Checkpoint manager initialized")
+
         # Performance monitoring setup (if available)
         monitor = None
         if INFRASTRUCTURE_AVAILABLE:
@@ -493,7 +569,8 @@ def main():
                 logger.info("Performance monitoring enabled")
 
             # Run mathematical demonstration with progress tracking
-            print("Running mathematical demonstration...")
+            if logger:
+                logger.info("Running mathematical demonstration...")
             if INFRASTRUCTURE_AVAILABLE:
                 progress = ProgressBar(total=5, task="Mathematical tests")
                 demo_results = run_mathematical_demonstration_with_progress(progress)
@@ -510,20 +587,23 @@ def main():
                 scientific_analysis_path = run_scientific_analysis()
 
             # Generate figures with progress tracking
-            print("Generating mathematical visualization...")
+            if logger:
+                logger.info("Generating mathematical visualization...")
             if INFRASTRUCTURE_AVAILABLE:
                 math_viz = generate_mathematical_visualization_with_progress()
             else:
                 math_viz = generate_mathematical_visualization()
 
-            print("Generating theoretical analysis...")
+            if logger:
+                logger.info("Generating theoretical analysis...")
             if INFRASTRUCTURE_AVAILABLE:
                 theory_viz = generate_theoretical_analysis_with_progress()
             else:
                 theory_viz = generate_theoretical_analysis()
 
             # Save analysis data with progress tracking
-            print("Saving analysis data...")
+            if logger:
+                logger.info("Saving analysis data...")
             if INFRASTRUCTURE_AVAILABLE:
                 progress = ProgressBar(total=1, task="Saving data")
                 data_path = save_analysis_data_with_progress(demo_results, progress)
@@ -536,7 +616,8 @@ def main():
             benchmark_report = None
 
             if INFRASTRUCTURE_AVAILABLE:
-                print("Running scientific validation...")
+                if logger:
+                    logger.info("Running scientific validation...")
 
                 # Validate numerical stability of mathematical functions
                 stability_report = validate_mathematical_functions()
@@ -548,15 +629,52 @@ def main():
                 save_scientific_validation_reports(stability_report, benchmark_report)
 
             # Register figures if possible
-            print("Registering figures...")
+            if logger:
+                logger.info("Registering figures...")
             register_figure()
+
+            # Multi-format rendering (if available)
+            if INFRASTRUCTURE_AVAILABLE:
+                with log_operation("Rendering outputs in multiple formats", logger=logger):
+                    try:
+                        render_manager = get_render_manager()
+                        # Render HTML version of analysis
+                        html_output = render_manager.render_web(
+                            content=f"# Mathematical Analysis Results\n\nAnalysis completed with mathematical demonstrations.",
+                            output_dir=project_root / "output" / "html",
+                            title="Mathematical Analysis"
+                        )
+                        if html_output and logger:
+                            logger.info(f"Rendered HTML output: {html_output}")
+                    except Exception as e:
+                        if logger:
+                            logger.warning(f"Rendering failed: {e}")
+
+            # Publishing integration demonstration
+            if INFRASTRUCTURE_AVAILABLE:
+                with log_operation("Publishing integration demonstration", logger=logger):
+                    try:
+                        # Extract publication metadata from manuscript
+                        manuscript_dir = project_root / "manuscript"
+                        if manuscript_dir.exists():
+                            metadata = extract_publication_metadata([manuscript_dir])
+                            if metadata and logger:
+                                logger.info("Publication metadata extracted")
+                                # Generate sample citations
+                                bibtex = generate_citation_bibtex(metadata)
+                                if bibtex:
+                                    logger.info("BibTeX citation generated")
+                    except Exception as e:
+                        if logger:
+                            logger.warning(f"Publishing demonstration failed: {e}")
 
         # Log performance metrics
         if monitor and INFRASTRUCTURE_AVAILABLE:
             performance_metrics = monitor.stop()
-            print(f"\nPerformance Summary:")
-            print(".2f")
-            print(".1f")
+            if logger:
+                logger.info("Performance Summary:")
+                logger.info(f"Duration: {performance_metrics.duration:.2f}s")
+                logger.info(f"Memory: {performance_metrics.resource_usage.memory_mb:.1f}MB")
 
             # Save performance data
             output_dir = project_root / "output" / "reports"
@@ -571,18 +689,19 @@ def main():
             if logger:
                 logger.info(f"Performance data saved to: {perf_path}")
 
-        print("\nAnalysis pipeline complete!")
-        print(f"Generated mathematical visualization: {math_viz}")
-        print(f"Generated theoretical analysis: {theory_viz}")
-        print(f"Generated analysis data: {data_path}")
-        print(f"Generated scientific analysis: {scientific_analysis_path}")
+        if logger:
+            logger.info("Analysis pipeline complete!")
+            logger.info(f"Generated mathematical visualization: {math_viz}")
+            logger.info(f"Generated theoretical analysis: {theory_viz}")
+            logger.info(f"Generated analysis data: {data_path}")
+            logger.info(f"Generated scientific analysis: {scientific_analysis_path}")
 
-        if INFRASTRUCTURE_AVAILABLE and (stability_report or benchmark_report):
-            print("Generated scientific validation reports:")
-            if stability_report:
-                print("  - Numerical stability analysis")
-            if benchmark_report:
-                print("  - Performance benchmarking results")
+            if INFRASTRUCTURE_AVAILABLE and (stability_report or benchmark_report):
+                logger.info("Generated scientific validation reports:")
+                if stability_report:
+                    logger.info("  - Numerical stability analysis")
+                if benchmark_report:
+                    logger.info("  - Performance benchmarking results")
 
         if logger:
             logger.info(f"Generated scientific analysis: {scientific_analysis_path}")
@@ -601,31 +720,34 @@ def main():
 
     except TemplateError as e:
         # Handle infrastructure template errors
-        print(f"\n❌ Infrastructure error: {e}")
-        if e.suggestions:
-            print("Suggestions:")
-            for suggestion in e.suggestions:
-                print(f"  • {suggestion}")
+        if logger:
+            logger.error(f"Infrastructure error: {e}")
+            if e.suggestions:
+                logger.error("Suggestions:")
+                for suggestion in e.suggestions:
+                    logger.error(f"  • {suggestion}")
         if logger:
             logger.error(f"Infrastructure error: {e}", exc_info=True)
         raise
 
     except ImportError as e:
         # Handle missing dependencies
-        print(f"\n❌ Import error: {e}")
-        print("Suggestions:")
-        print("  • Install missing dependencies: pip install -r requirements.txt")
-        print("  • Check infrastructure module availability")
+        if logger:
+            logger.error(f"Import error: {e}")
+            logger.error("Suggestions:")
+            logger.error("  • Install missing dependencies: pip install -r requirements.txt")
+            logger.error("  • Check infrastructure module availability")
         if logger:
             logger.error(f"Import error: {e}", exc_info=True)
         raise
 
     except FileNotFoundError as e:
         # Handle missing files
-        print(f"\n❌ File not found: {e}")
-        print("Suggestions:")
-        print("  • Ensure project structure is correct")
-        print("  • Check that source code exists in src/ directory")
+        if logger:
+            logger.error(f"File not found: {e}")
+            logger.error("Suggestions:")
+            logger.error("  • Ensure project structure is correct")
+            logger.error("  • Check that source code exists in src/ directory")
         if logger:
             logger.error(f"File not found error: {e}", exc_info=True)
         raise
@@ -633,11 +755,12 @@ def main():
     except Exception as e:
         # Handle unexpected errors with context
         error_msg = f"Unexpected error during prose project analysis: {e}"
-        print(f"\n❌ {error_msg}")
-        print("Suggestions:")
-        print("  • Check system requirements and dependencies")
-        print("  • Review error logs for detailed information")
-        print("  • Ensure sufficient disk space and memory")
+        if logger:
+            logger.error(error_msg)
+            logger.error("Suggestions:")
+            logger.error("  • Check system requirements and dependencies")
+            logger.error("  • Review error logs for detailed information")
+            logger.error("  • Ensure sufficient disk space and memory")
         if logger:
             logger.error(error_msg, exc_info=True)
         raise

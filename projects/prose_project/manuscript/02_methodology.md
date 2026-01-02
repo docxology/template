@@ -29,7 +29,7 @@ where $f: \mathbb{R}^n \rightarrow \mathbb{R}$ denotes the objective function, a
 
 ### Fundamental Mathematical Concepts
 
-The derivative of a composite function follows the chain rule:
+The derivative of a composite function follows the chain rule \cite{rudin1976principles, folland1999real}:
 
 \begin{equation}
 \frac{d}{dx} [f(g(x))] = f'(g(x)) \cdot g'(x)
@@ -89,11 +89,11 @@ f(x) = f(x_0) + f'(x_0)(x - x_0) + \frac{f''(x_0)}{2!}(x - x_0)^2 + \frac{f'''(x
 \label{eq:taylor_series}
 \end{equation}
 
-The fundamental limit relationship connects differentiation and integration through the Fundamental Theorem of Calculus:
+The fundamental limit relationship connects differentiation and integration through the Fundamental Theorem of Calculus \cite{cauchy1821cours}:
 
 \begin{equation}
 \frac{d}{dx} \int_a^x f(t) \, dt = f(x)
-\label{eq:fundamental_theorem}
+\label{eq:fundamental_theorem_calculus}
 \end{equation}
 
 For definite integrals, we have:
@@ -151,7 +151,7 @@ f'(c) = \frac{f(b) - f(a)}{b - a}
 \label{eq:integration_by_parts}
 \end{equation}
 
-**Theorem 3 (Taylor's Theorem with Remainder).** If $f$ has $n+1$ continuous derivatives on $[a, x]$, then:
+**Theorem 3 (Taylor's Theorem with Remainder).** If $f$ has $n+1$ continuous derivatives on $[a, x]$, then (generalizing \eqref{eq:taylor_series}):
 
 \begin{equation}
 f(x) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + \cdots + \frac{f^{(n)}(a)}{n!}(x-a)^n + R_n(x)
@@ -175,7 +175,7 @@ The proposed optimization algorithm follows a systematic approach with the follo
 
 \item \textbf{Iteration Process:}
    \begin{itemize}
-   \item Compute gradient: $\nabla f(x_k)$
+   \item Compute gradient: $\nabla f(x_k)$ (see \eqref{eq:gradient_definition})
    \item Update direction: $d_k = -\nabla f(x_k)$
    \item Perform line search to find step size $\alpha_k$
    \item Update solution: $x_{k+1} = x_k + \alpha_k d_k$
@@ -230,6 +230,10 @@ Key implementation aspects include:
 - **Termination criteria**: Multiple stopping conditions
 - **Performance optimization**: Efficient gradient computation
 - **Error handling**: Robust exception management
+
+## LaTeX Customization and Rendering
+
+The research template supports advanced LaTeX customization through optional preamble configuration. An optional `preamble.md` file can contain custom LaTeX packages and commands that are automatically inserted before document compilation. The rendering system ensures required packages (such as `graphicx` for figure inclusion) are loaded automatically, while allowing researchers to add specialized packages for mathematical notation, bibliography styles, or document formatting. LaTeX code blocks in the preamble file are extracted and integrated into the document compilation process.
 
 ## Validation Strategy
 

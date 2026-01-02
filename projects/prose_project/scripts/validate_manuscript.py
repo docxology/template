@@ -194,8 +194,12 @@ def validate_links():
         if link_issues:
             print(f"❌ Found {len(link_issues)} link issues:")
             for issue in link_issues[:5]:  # Show first 5 issues
-                issue_type = issue.get('type', 'unknown') if isinstance(issue, dict) else 'unknown'
-                description = issue.get('description', str(issue)) if isinstance(issue, dict) else str(issue)
+                if hasattr(issue, 'issue_type') and hasattr(issue, 'issue_message'):
+                    issue_type = issue.issue_type
+                    description = issue.issue_message
+                else:
+                    issue_type = 'unknown'
+                    description = str(issue)
                 print(f"   • {issue_type}: {description}")
             if len(link_issues) > 5:
                 print(f"   ... and {len(link_issues) - 5} more issues")

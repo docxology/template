@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 9,
-      "size_mb": "0.92",
-      "total_size_bytes": 969136,
+      "size_mb": "1.09",
+      "total_size_bytes": 1144002,
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
-          "size_mb": "0.83",
+          "size_mb": "0.98",
           "path": "pdf/code_project_combined.pdf"
         },
         {
@@ -18,7 +18,7 @@
         },
         {
           "name": "_combined_manuscript.tex",
-          "size_mb": "0.02",
+          "size_mb": "0.03",
           "path": "pdf/_combined_manuscript.tex"
         }
       ],
@@ -38,11 +38,11 @@
       "exists": true,
       "file_count": 4,
       "size_mb": "0.04",
-      "total_size_bytes": 40337,
+      "total_size_bytes": 43260,
       "largest_files": [
         {
           "name": "03_results.html",
-          "size_mb": "0.01",
+          "size_mb": "0.02",
           "path": "web/03_results.html"
         },
         {
@@ -63,8 +63,8 @@
     "slides": {
       "exists": true,
       "file_count": 29,
-      "size_mb": "0.34",
-      "total_size_bytes": 351581,
+      "size_mb": "0.35",
+      "total_size_bytes": 363567,
       "largest_files": [
         {
           "name": "03_results_slides.log",
@@ -97,7 +97,7 @@
       "exists": true,
       "file_count": 7,
       "size_mb": "0.90",
-      "total_size_bytes": 944158,
+      "total_size_bytes": 943427,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -138,28 +138,29 @@
     },
     "reports": {
       "exists": true,
-      "file_count": 8,
+      "file_count": 9,
       "size_mb": "0.01",
-      "total_size_bytes": 6891,
+      "total_size_bytes": 8750,
       "largest_files": [
         {
           "name": "validation_report.json",
-          "size_mb": "0.00",
+          "size_mb": "0.01",
           "path": "reports/validation_report.json"
+        },
+        {
+          "name": "analysis_dashboard.html",
+          "size_mb": "0.00",
+          "path": "reports/analysis_dashboard.html"
         },
         {
           "name": "test_results.json",
           "size_mb": "0.00",
           "path": "reports/test_results.json"
-        },
-        {
-          "name": "test_results.md",
-          "size_mb": "0.00",
-          "path": "reports/test_results.md"
         }
       ],
       "extensions": {
         ".json": 6,
+        ".html": 1,
         ".md": 2
       }
     },
@@ -174,8 +175,8 @@
     "llm": {
       "exists": true,
       "file_count": 9,
-      "size_mb": "0.06",
-      "total_size_bytes": 66660,
+      "size_mb": "0.07",
+      "total_size_bytes": 68763,
       "largest_files": [
         {
           "name": "combined_review.md",
@@ -207,12 +208,12 @@
       "extensions": {}
     }
   },
-  "total_files": 67,
-  "total_size_mb": 2.268792152404785,
+  "total_files": 68,
+  "total_size_mb": 2.45285701751709,
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
-      "size_mb": "0.83",
+      "size_mb": "0.98",
       "category": "pdf",
       "path": "pdf/code_project_combined.pdf"
     },
@@ -260,15 +261,15 @@
     },
     {
       "name": "_combined_manuscript.tex",
-      "size_mb": "0.02",
+      "size_mb": "0.03",
       "category": "pdf",
       "path": "pdf/_combined_manuscript.tex"
     },
     {
-      "name": "combined_review.md",
+      "name": "03_results.html",
       "size_mb": "0.02",
-      "category": "llm",
-      "path": "llm/combined_review.md"
+      "category": "web",
+      "path": "web/03_results.html"
     }
   ],
   "missing_expected_files": [
@@ -284,7 +285,7 @@
     ".tex": 5,
     ".toc": 5,
     ".bbl": 1,
-    ".html": 4,
+    ".html": 5,
     ".snm": 4,
     ".nav": 4,
     ".vrb": 1,
@@ -293,14 +294,14 @@
     ".csv": 1
   },
   "sizes_by_category": {
-    "pdf": 0.9242401123046875,
-    "web": 0.038468360900878906,
-    "slides": 0.3352937698364258,
-    "figures": 0.9004192352294922,
+    "pdf": 1.0910053253173828,
+    "web": 0.041255950927734375,
+    "slides": 0.3467245101928711,
+    "figures": 0.8997220993041992,
     "data": 0.0002269744873046875,
-    "reports": 0.006571769714355469,
+    "reports": 0.008344650268554688,
     "simulations": 0.0,
-    "llm": 0.06357192993164062,
+    "llm": 0.06557750701904297,
     "logs": 0.0
   },
   "pdf_files": 9,

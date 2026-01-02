@@ -17,11 +17,56 @@ All functions follow academic plotting standards with:
 - Proper axis labeling and legends
 - Grid lines for readability
 - Support for multiple subplots and complex layouts
+
+Infrastructure Integration:
+This module integrates with infrastructure modules for enhanced functionality:
+
+- **Logging**: Uses infrastructure.core.logging_utils for structured error reporting
+- **Figure Management**: Compatible with infrastructure.documentation.figure_manager for automatic numbering
+- **Rendering**: Works with infrastructure.rendering for multi-format output generation
+- **Validation**: Figures can be validated using infrastructure.validation modules
+
+Example infrastructure integration:
+    ```python
+    from infrastructure.documentation.figure_manager import FigureManager
+    from infrastructure.core.logging_utils import get_logger
+
+    # Create logger for error reporting
+    logger = get_logger(__name__)
+
+    # Initialize figure manager
+    fm = FigureManager()
+
+    # Generate visualization
+    try:
+        plot_path = plot_function_comparison(functions, x_range=(-2, 2))
+
+        # Register figure for manuscript
+        fig_ref = fm.register_figure(
+            filename=plot_path.name,
+            caption="Function comparison visualization",
+            label="fig:function_comparison",
+            section="Results"
+        )
+
+        logger.info(f"Generated and registered figure: {fig_ref}")
+
+    except Exception as e:
+        logger.warning(f"Visualization failed: {e}")
+    ```
 """
 import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+
+# Add logging support
+try:
+    from infrastructure.core.logging_utils import get_logger
+    logger = get_logger(__name__)
+    LOGGING_AVAILABLE = True
+except ImportError:
+    LOGGING_AVAILABLE = False
 
 
 def plot_function_comparison(
@@ -69,6 +114,35 @@ def plot_function_comparison(
         >>> fig = plot_function_comparison(functions, x_range=(-3, 3))
         >>> # Save with: fig.savefig('comparison.png', dpi=300, bbox_inches='tight')
 
+    Infrastructure Integration:
+        This function integrates with infrastructure modules for enhanced manuscript preparation:
+
+        >>> from infrastructure.documentation.figure_manager import FigureManager
+        >>> from infrastructure.core.logging_utils import get_logger
+        >>> from pathlib import Path
+        >>>
+        >>> logger = get_logger(__name__)
+        >>> fm = FigureManager()
+        >>>
+        >>> try:
+        ...     # Generate visualization
+        ...     fig = plot_function_comparison(functions, x_range=(-3, 3))
+        ...     plot_path = Path('output/figures/function_comparison.png')
+        ...     fig.savefig(plot_path, dpi=300, bbox_inches='tight')
+        ...
+        ...     # Register with figure manager
+        ...     fig_ref = fm.register_figure(
+        ...         filename=plot_path.name,
+        ...         caption="Comparison of mathematical functions over domain [-3, 3]",
+        ...         label="fig:function_comparison",
+        ...         section="Analysis"
+        ...     )
+        ...
+        ...     logger.info(f"Generated and registered figure: {fig_ref}")
+        ...
+        ... except Exception as e:
+        ...     logger.warning(f"Visualization failed: {e}")
+
     Note:
         The function uses a predefined color cycle. For more than 8 functions,
         colors will repeat. Consider using subplots for large numbers of functions.
@@ -84,7 +158,8 @@ def plot_function_comparison(
             color = colors[i % len(colors)]
             ax.plot(x, y, color=color, linewidth=2, label=name)
         except Exception as e:
-            print(f"Warning: Could not plot function {name}: {e}")
+            if LOGGING_AVAILABLE and logger:
+                logger.warning(f"Could not plot function {name}: {e}")
             continue
 
     ax.set_xlabel(xlabel)
@@ -209,7 +284,8 @@ def plot_growth_rates(
             color = colors[i % len(colors)]
             ax.plot(x, y, color=color, linewidth=2, label=name)
         except Exception as e:
-            print(f"Warning: Could not plot growth function {name}: {e}")
+            if LOGGING_AVAILABLE and logger:
+                logger.warning(f"Could not plot growth function {name}: {e}")
             continue
 
     ax.set_xlabel(xlabel)
@@ -253,7 +329,8 @@ def plot_theoretical_convergence(
             color = colors[i % len(colors)]
             ax.plot(x, y, color=color, linewidth=2, label=name)
         except Exception as e:
-            print(f"Warning: Could not plot convergence function {name}: {e}")
+            if LOGGING_AVAILABLE and logger:
+                logger.warning(f"Could not plot convergence function {name}: {e}")
             continue
 
     ax.set_xlabel(xlabel)

@@ -151,16 +151,16 @@ def _validate_single_file(
 
     # Link validation using doc_accuracy
     try:
-        link_issues = check_links(md_file, repo_root, all_headings)
+        link_issues = check_links([md_file], repo_root, all_headings)
         for issue in link_issues:
             results['link_issues'].append(LinkIssue(
-                source_file=file_key,
-                target=issue.get('target', ''),
-                line=issue.get('line', 0),
-                link_text=issue.get('text', ''),
-                issue_type=issue.get('issue_type', 'link_issue'),
-                issue_message=issue.get('issue', 'Link validation failed'),
-                severity='error'
+                file=file_key,
+                target=issue.target,
+                line=issue.line,
+                link_text=issue.link_text,
+                issue_type=issue.issue_type,
+                issue_message=issue.issue_message,
+                severity=issue.severity
             ))
     except Exception as e:
         logger.warning(f"Link validation failed for {md_file}: {e}")
@@ -310,7 +310,7 @@ def generate_audit_report(scan_results: ScanResults, output_format: str = 'markd
         ])
         for issue in scan_results.link_issues[:10]:  # Show first 10
             report_lines.extend([
-                f"**{issue.source_file}:{issue.line}**",
+                f"**{issue.file}:{issue.line}**",
                 f"- **Target:** `{issue.target}`",
                 f"- **Issue:** {issue.issue_message}",
                 ""

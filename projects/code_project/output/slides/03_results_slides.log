@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  1 JAN 2026 14:29
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  2 JAN 2026 11:24
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1322,27 +1322,27 @@ Package caption Info: End \AtBeginDocument code.
 (/Users/4d/Documents/GitHub/template/projects/code_project/output/slides/03_res
 ults_slides.nav)
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 380.
+(Font)              scaled to size 7.8961pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 380.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 3
-80.
+(Font)              scaled to size 5.64008pt on input line 412.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 4
+12.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 380.
+(Font)              scaled to size 11.28131pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 380.
+(Font)              scaled to size 7.89691pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 380.
+(Font)              scaled to size 5.64066pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 380.
+(Font)              scaled to size 11.27914pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 380.
+(Font)              scaled to size 7.8954pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 380.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 380
+(Font)              scaled to size 5.63957pt on input line 412.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 412
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1351,7 +1351,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 380
+LaTeX Font Info:    Trying to load font information for U+msb on input line 412
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1362,12 +1362,12 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 
 LaTeX Warning: File `../output/figures/convergence_plot.png' not found on input
- line 380.
+ line 412.
 
 ! Unable to load picture or PDF file '../output/figures/convergence_plot.png'.
 <to be read again> 
                    }
-l.380 \end{frame}
+l.412 \end{frame}
                  
 The requested image couldn't be read because
 it was not a recognized image format.
@@ -1381,7 +1381,7 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.380 \end{frame}
+l.412 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -1394,39 +1394,39 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.380 \end{frame}
+l.412 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.30151pt on input line 380.
+(Font)              scaled to size 10.30151pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.21106pt on input line 380.
+(Font)              scaled to size 7.21106pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.15076pt on input line 380.
+(Font)              scaled to size 5.15076pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.30258pt on input line 380.
+(Font)              scaled to size 10.30258pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.2118pt on input line 380.
+(Font)              scaled to size 7.2118pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.15129pt on input line 380.
+(Font)              scaled to size 5.15129pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.3006pt on input line 380.
+(Font)              scaled to size 10.3006pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.21042pt on input line 380.
+(Font)              scaled to size 7.21042pt on input line 412.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.1503pt on input line 380.
+(Font)              scaled to size 5.1503pt on input line 412.
 
 LaTeX Warning: File `../output/figures/step_size_sensitivity.png' not found on 
-input line 380.
+input line 412.
 
 ! Unable to load picture or PDF file '../output/figures/step_size_sensitivity.p
 ng'.
 <to be read again> 
                    }
-l.380 \end{frame}
+l.412 \end{frame}
                  
 The requested image couldn't be read because
 it was not a recognized image format.
@@ -1440,7 +1440,7 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.380 \end{frame}
+l.412 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -1453,7 +1453,7 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.380 \end{frame}
+l.412 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -1462,19 +1462,23 @@ or  <return>  to continue without it.
 Missing character: There is no α (U+03B1) in font [lmsans10-regular]:mapping=te
 x-text;!
 
-Overfull \hbox (7.61992pt too wide) in paragraph at lines 380--380
+Overfull \hbox (7.61992pt too wide) in paragraph at lines 412--412
 []\TU/lmss/m/n/10.95 Converged  
  []
 
 
+LaTeX Warning: Citation `nesterov2013gradient' on page 1 undefined on input lin
+e 412.
+
+
 LaTeX Warning: File `../output/figures/convergence_rate_comparison.png' not fou
-nd on input line 380.
+nd on input line 412.
 
 ! Unable to load picture or PDF file '../output/figures/convergence_rate_compar
 ison.png'.
 <to be read again> 
                    }
-l.380 \end{frame}
+l.412 \end{frame}
                  
 The requested image couldn't be read because
 it was not a recognized image format.
@@ -1489,7 +1493,7 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.380 \end{frame}
+l.412 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -1502,7 +1506,7 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.380 \end{frame}
+l.412 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -1514,14 +1518,18 @@ File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
 )
 
+LaTeX Warning: Citation `polyak1964some' on page 1 undefined on input line 412.
+
+
+
 LaTeX Warning: File `../output/figures/algorithm_complexity.png' not found on i
-nput line 380.
+nput line 412.
 
 ! Unable to load picture or PDF file '../output/figures/algorithm_complexity.pn
 g'.
 <to be read again> 
                    }
-l.380 \end{frame}
+l.412 \end{frame}
                  
 The requested image couldn't be read because
 it was not a recognized image format.
@@ -1535,7 +1543,7 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.380 \end{frame}
+l.412 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
@@ -1548,14 +1556,96 @@ See the graphics package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.380 \end{frame}
+l.412 \end{frame}
                  
 Your command was ignored.
 Type  I <command> <return>  to replace it with another command,
 or  <return>  to continue without it.
 
 
-Overfull \vbox (1966.79594pt too high) detected at line 380
+LaTeX Warning: File `../output/figures/performance_benchmark.png' not found on 
+input line 412.
+
+! Unable to load picture or PDF file '../output/figures/performance_benchmark.p
+ng'.
+<to be read again> 
+                   }
+l.412 \end{frame}
+                 
+The requested image couldn't be read because
+it was not a recognized image format.
+
+File: ../output/figures/performance_benchmark.png Graphic file (type bmp)
+<../output/figures/performance_benchmark.png>
+
+! Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.412 \end{frame}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.412 \end{frame}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: File `../output/figures/stability_analysis.png' not found on inp
+ut line 412.
+
+! Unable to load picture or PDF file '../output/figures/stability_analysis.png'
+.
+<to be read again> 
+                   }
+l.412 \end{frame}
+                 
+The requested image couldn't be read because
+it was not a recognized image format.
+
+File: ../output/figures/stability_analysis.png Graphic file (type bmp)
+<../output/figures/stability_analysis.png>
+
+! Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.412 \end{frame}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.412 \end{frame}
+                 
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+Overfull \vbox (2214.87311pt too high) detected at line 412
  []
 
 
@@ -1579,12 +1669,16 @@ ults_slides.aux)
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 31359 strings out of 473832
- 640324 string characters out of 5729482
- 1278346 words of memory out of 5000000
- 53848 multiletter control sequences out of 15000+600000
+ 31467 strings out of 473832
+ 645632 string characters out of 5729482
+ 1298368 words of memory out of 5000000
+ 53954 multiletter control sequences out of 15000+600000
  565274 words of font info for 86 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1086b,993s stack positions out of 10000i,1000n,20000p,200000b,200000s

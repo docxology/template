@@ -57,10 +57,24 @@ try:
         log_operation,
         log_success,
         log_stage,
+        CheckpointManager,
+        retry_with_backoff,
+        SystemHealthChecker,
     )
     from infrastructure.core.exceptions import (
         TemplateError,
         ScriptExecutionError,
+        ValidationError,
+        BuildError,
+    )
+    from infrastructure.rendering import (
+        RenderManager,
+        get_render_manager,
+    )
+    from infrastructure.publishing import (
+        publish_to_zenodo,
+        prepare_arxiv_submission,
+        create_github_release,
     )
     INFRASTRUCTURE_AVAILABLE = True
 except ImportError as e:
@@ -70,7 +84,10 @@ except ImportError as e:
 
 def run_convergence_experiment():
     """Run gradient descent with different step sizes and track convergence."""
-    print("Running convergence experiments...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Running convergence experiments...")
 
     # Define test problem: f(x) = (1/2) x^2 - x, optimum at x = 1
     def obj_func(x):
@@ -86,7 +103,8 @@ def run_convergence_experiment():
     results = {}
 
     for step_size in step_sizes:
-        print(f"Testing step size: {step_size}")
+        if logger:
+            logger.info(f"Testing step size: {step_size}")
 
         result = gradient_descent(
             initial_point=initial_point,
@@ -99,7 +117,8 @@ def run_convergence_experiment():
         )
 
         results[step_size] = result
-        print(f"  Converged: {result.converged}, Final value: {result.objective_value:.4f}")
+        if logger:
+            logger.info(f"  Converged: {result.converged}, Final value: {result.objective_value:.4f}")
     return results
 
 
@@ -145,7 +164,10 @@ def run_convergence_experiment_with_progress(progress_bar):
 
 def generate_convergence_plot(results):
     """Generate convergence plot showing objective value vs iteration."""
-    print("Generating convergence plot...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Generating convergence plot...")
 
     plt.figure(figsize=(10, 6))
 
@@ -175,7 +197,8 @@ def generate_convergence_plot(results):
     plt.savefig(plot_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-    print(f"Saved convergence plot to: {plot_path}")
+    if logger:
+        logger.info(f"Saved convergence plot to: {plot_path}")
     return plot_path
 
 
@@ -210,7 +233,10 @@ def simulate_trajectory(step_size, max_iter=50):
 
 def save_optimization_results(results):
     """Save optimization results to CSV file."""
-    print("Saving optimization results...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Saving optimization results...")
 
     output_dir = project_root / "output" / "data"
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -224,13 +250,17 @@ def save_optimization_results(results):
             f.write(f"{step_size},{result.solution[0]:.6f},{result.objective_value:.6f},"
                    f"{result.iterations},{result.converged},{result.gradient_norm:.2e}\n")
 
-    print(f"Saved results to: {data_path}")
+    if logger:
+        logger.info(f"Saved results to: {data_path}")
     return data_path
 
 
 def generate_step_size_sensitivity_plot(results):
     """Generate plot showing step size sensitivity analysis."""
-    print("Generating step size sensitivity plot...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Generating step size sensitivity plot...")
 
     step_sizes = list(results.keys())
     iterations = [results[step_size].iterations for step_size in step_sizes]
@@ -264,13 +294,17 @@ def generate_step_size_sensitivity_plot(results):
     plt.savefig(plot_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-    print(f"Saved step size sensitivity plot to: {plot_path}")
+    if logger:
+        logger.info(f"Saved step size sensitivity plot to: {plot_path}")
     return plot_path
 
 
 def generate_convergence_rate_plot(results):
     """Generate convergence rate comparison plot."""
-    print("Generating convergence rate comparison plot...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Generating convergence rate comparison plot...")
 
     plt.figure(figsize=(10, 6))
 
@@ -307,13 +341,17 @@ def generate_convergence_rate_plot(results):
     plt.savefig(plot_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-    print(f"Saved convergence rate comparison plot to: {plot_path}")
+    if logger:
+        logger.info(f"Saved convergence rate comparison plot to: {plot_path}")
     return plot_path
 
 
 def generate_complexity_visualization(results):
     """Generate algorithm complexity visualization."""
-    print("Generating algorithm complexity visualization...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Generating algorithm complexity visualization...")
 
     step_sizes = list(results.keys())
     iterations = [results[step_size].iterations for step_size in step_sizes]
@@ -384,17 +422,22 @@ def generate_complexity_visualization(results):
     plt.savefig(plot_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-    print(f"Saved algorithm complexity visualization to: {plot_path}")
+    if logger:
+        logger.info(f"Saved algorithm complexity visualization to: {plot_path}")
     return plot_path
 
 
 def run_stability_analysis():
     """Assess numerical stability of optimization algorithms."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
     if not INFRASTRUCTURE_AVAILABLE:
-        print("⚠️  Skipping stability analysis - infrastructure not available")
+        if logger:
+            logger.warning("Skipping stability analysis - infrastructure not available")
         return None
 
-    print("Running numerical stability analysis...")
+    if logger:
+        logger.info("Running numerical stability analysis...")
 
     # Define test function for stability analysis
     def test_func(x):
@@ -432,19 +475,24 @@ def run_stability_analysis():
     with open(stability_path, 'w') as f:
         json.dump(stability_data, f, indent=2)
 
-    print(f"Stability analysis complete - Score: {stability_report.stability_score:.2f}")
-    print(f"Saved stability report to: {stability_path}")
+    if logger:
+        logger.info(f"Stability analysis complete - Score: {stability_report.stability_score:.2f}")
+        logger.info(f"Saved stability report to: {stability_path}")
 
     return stability_path
 
 
 def run_performance_benchmarking():
     """Benchmark gradient descent performance."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
     if not INFRASTRUCTURE_AVAILABLE:
-        print("⚠️  Skipping performance benchmarking - infrastructure not available")
+        if logger:
+            logger.warning("Skipping performance benchmarking - infrastructure not available")
         return None
 
-    print("Running performance benchmarking...")
+    if logger:
+        logger.info("Running performance benchmarking...")
 
     # Define test function
     def test_func(x):
@@ -482,18 +530,22 @@ def run_performance_benchmarking():
     with open(benchmark_path, 'w') as f:
         json.dump(benchmark_data, f, indent=2, default=str)
 
-    print(f"Performance benchmarking complete - Avg time: {benchmark_report.execution_time:.6f}s")
-    print(f"Saved benchmark report to: {benchmark_path}")
+    if logger:
+        logger.info(f"Performance benchmarking complete - Avg time: {benchmark_report.execution_time:.6f}s")
+        logger.info(f"Saved benchmark report to: {benchmark_path}")
 
     return benchmark_path
 
 
 def generate_stability_visualization(stability_path):
     """Generate visualization of stability analysis results."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
     if not stability_path or not INFRASTRUCTURE_AVAILABLE:
         return None
 
-    print("Generating stability visualization...")
+    if logger:
+        logger.info("Generating stability visualization...")
 
     # Load stability data
     import json
@@ -533,16 +585,20 @@ def generate_stability_visualization(stability_path):
     plt.savefig(plot_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-    print(f"Saved stability visualization to: {plot_path}")
+    if logger:
+        logger.info(f"Saved stability visualization to: {plot_path}")
     return plot_path
 
 
 def generate_benchmark_visualization(benchmark_path):
     """Generate visualization of benchmark results."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
     if not benchmark_path or not INFRASTRUCTURE_AVAILABLE:
         return None
 
-    print("Generating benchmark visualization...")
+    if logger:
+        logger.info("Generating benchmark visualization...")
 
     # Load benchmark data
     import json
@@ -580,25 +636,29 @@ def generate_benchmark_visualization(benchmark_path):
     plt.savefig(plot_path, dpi=300, bbox_inches='tight')
     plt.close()
 
-    print(f"Saved benchmark visualization to: {plot_path}")
+    if logger:
+        logger.info(f"Saved benchmark visualization to: {plot_path}")
     return plot_path
 
 
 def generate_analysis_dashboard(results, stability_path=None, benchmark_path=None):
     """Generate comprehensive analysis dashboard."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
     if not INFRASTRUCTURE_AVAILABLE:
-        print("⚠️  Skipping dashboard generation - infrastructure not available")
+        if logger:
+            logger.warning("Skipping dashboard generation - infrastructure not available")
         return None
 
-    print("Generating analysis dashboard...")
+    if logger:
+        logger.info("Generating analysis dashboard...")
 
     try:
         from infrastructure.reporting import generate_output_summary
 
         # Collect output summary
-        output_dir = project_root / "output"
-        output_statistics = collect_output_statistics(output_dir)
-        generate_output_summary(output_dir, stats=output_statistics)  # Logging function, returns None
+        output_statistics = collect_output_statistics(project_root, project_name="code_project")
+        # Skip generate_output_summary() - it's for copy stage, not dashboard generation
 
         # Create dashboard HTML
         html_content = f"""
@@ -643,10 +703,10 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
             </div>
             """
 
-        # Use output_statistics for dashboard content
-        figures_count = output_statistics.get('figures', {}).get('files', 0)
-        data_count = output_statistics.get('data', {}).get('files', 0)
-        reports_count = output_statistics.get('reports', {}).get('files', 0)
+        # Use output_statistics for dashboard content with proper key checking
+        figures_count = output_statistics.get('figures', {}).get('file_count', 0) if isinstance(output_statistics.get('figures'), dict) else 0
+        data_count = output_statistics.get('data', {}).get('file_count', 0) if isinstance(output_statistics.get('data'), dict) else 0
+        reports_count = output_statistics.get('reports', {}).get('file_count', 0) if isinstance(output_statistics.get('reports'), dict) else 0
 
         html_content += f"""
         <div class="metric">
@@ -668,17 +728,26 @@ def generate_analysis_dashboard(results, stability_path=None, benchmark_path=Non
         with open(dashboard_path, 'w') as f:
             f.write(html_content)
 
-        print(f"Saved analysis dashboard to: {dashboard_path}")
+        if logger:
+            logger.info(f"Saved analysis dashboard to: {dashboard_path}")
         return dashboard_path
 
+    except (ValidationError, BuildError) as e:
+        if logger:
+            logger.warning(f"Failed to generate dashboard: {e}")
+        return None
     except Exception as e:
-        print(f"⚠️  Failed to generate dashboard: {e}")
+        if logger:
+            logger.warning(f"Unexpected error generating dashboard: {e}")
         return None
 
 
 def validate_generated_outputs():
     """Validate integrity of generated analysis outputs."""
-    print("Validating generated outputs...")
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
+    if logger:
+        logger.info("Validating generated outputs...")
 
     try:
         output_dir = project_root / "output"
@@ -698,21 +767,30 @@ def validate_generated_outputs():
         }
 
         if integrity_report.issues:
-            print(f"⚠️  Found {len(integrity_report.issues)} integrity issues")
-            for issue in integrity_report.issues[:3]:  # Show first 3
-                print(f"   • {issue}")
+            if logger:
+                logger.warning(f"Found {len(integrity_report.issues)} integrity issues")
+                for issue in integrity_report.issues[:3]:  # Show first 3
+                    logger.warning(f"   • {issue}")
         else:
-            print("✅ Output integrity validation passed")
+            if logger:
+                logger.info("Output integrity validation passed")
 
         return validation_summary
 
+    except ValidationError as e:
+        if logger:
+            logger.warning(f"Output validation failed: {e}")
+        return None
     except Exception as e:
-        print(f"⚠️  Output validation failed: {e}")
+        if logger:
+            logger.warning(f"Unexpected error during output validation: {e}")
         return None
 
 
 def save_validation_report(validation_report):
     """Save validation report to file."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
     if not validation_report:
         return None
 
@@ -725,16 +803,20 @@ def save_validation_report(validation_report):
         with open(report_path, 'w') as f:
             json.dump(validation_report, f, indent=2, default=str)
 
-        print(f"Saved validation report to: {report_path}")
+        if logger:
+            logger.info(f"Saved validation report to: {report_path}")
         return report_path
 
     except Exception as e:
-        print(f"⚠️  Failed to save validation report: {e}")
+        if logger:
+            logger.warning(f"Failed to save validation report: {e}")
         return None
 
 
 def register_figure():
     """Register the generated figures for manuscript reference."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+
     try:
         # Ensure repo root is on path for infrastructure imports
         repo_root = Path(__file__).parent.parent.parent
@@ -769,12 +851,15 @@ def register_figure():
                 section="Results",
                 generated_by="optimization_analysis.py"
             )
-            print(f"✅ Registered figure with label: {label}")
+            if logger:
+                logger.info(f"Registered figure with label: {label}")
 
     except ImportError as e:
-        print(f"⚠️  Figure manager not available: {e}")
+        if logger:
+            logger.warning(f"Figure manager not available: {e}")
     except Exception as e:
-        print(f"⚠️  Failed to register figures: {e}")
+        if logger:
+            logger.warning(f"Failed to register figures: {e}")
 
 
 def main():
@@ -782,11 +867,35 @@ def main():
     # Initialize logger and performance monitoring
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
 
-    print("Starting optimization analysis...")
     if logger:
+        logger.info("Starting optimization analysis...")
         logger.info(f"Project root: {project_root}")
 
     try:
+        # System health check
+        if INFRASTRUCTURE_AVAILABLE:
+            health_checker = SystemHealthChecker()
+            if logger:
+                logger.info("Running system health check...")
+            health_status = health_checker.get_health_status()
+            if health_status.get('overall_status') != 'healthy':
+                if logger:
+                    logger.warning("System health check failed:")
+                    for check_name, check_result in health_status.get('checks', {}).items():
+                        if check_result.get('status') != 'healthy':
+                            logger.warning(f"  - {check_name}: {check_result.get('error', 'unknown error')}")
+            else:
+                if logger:
+                    logger.info("System health check passed")
+
+        # Initialize checkpoint manager
+        checkpoint_manager = None
+        if INFRASTRUCTURE_AVAILABLE:
+            checkpoint_dir = project_root / "output" / "checkpoints"
+            checkpoint_manager = CheckpointManager(checkpoint_dir)
+            if logger:
+                logger.info("Checkpoint manager initialized")
+
         # Performance monitoring context
         with monitor_performance("Optimization analysis pipeline") as monitor:
             if logger:
@@ -853,13 +962,29 @@ def main():
                     citations = generate_citations_from_metadata(publishing_metadata)
                     save_publishing_materials(publishing_metadata, citations)
 
+            # HTML dashboard is already created and saved above
+
+            # Publishing integration (demonstrate capabilities)
+            if INFRASTRUCTURE_AVAILABLE:
+                with log_operation("Publishing integration demonstration", logger=logger):
+                    try:
+                        # Demonstrate Zenodo publishing preparation
+                        if publishing_metadata:
+                            # This would normally require API tokens, but we demonstrate the interface
+                            if logger:
+                                logger.info("Publishing interfaces available: Zenodo, arXiv, GitHub releases")
+                                logger.info("Publication metadata extracted and formatted")
+                    except Exception as e:
+                        if logger:
+                            logger.warning(f"Publishing demonstration failed: {e}")
+
         # Log final performance metrics
         if monitor and INFRASTRUCTURE_AVAILABLE:
             performance_metrics = monitor.stop()
             if logger:
                 logger.info("Performance Summary:")
-                logger.info(".2f")
-                logger.info(".1f")
+                logger.info(f"Duration: {performance_metrics.duration:.2f}s")
+                logger.info(f"Memory: {performance_metrics.resource_usage.memory_mb:.1f}MB")
 
             # Save performance data
             output_dir = project_root / "output" / "reports"
@@ -894,56 +1019,51 @@ def main():
 
     except ScriptExecutionError as e:
         # Handle script-specific errors with recovery suggestions
-        print(f"\n❌ Script execution failed: {e}")
-        if e.recovery_commands:
-            print("Suggested recovery commands:")
-            for cmd in e.recovery_commands:
-                print(f"  {cmd}")
         if logger:
-            logger.error(f"Script execution error: {e}", exc_info=True)
+            logger.error(f"Script execution failed: {e}", exc_info=True)
+            if e.recovery_commands:
+                logger.error("Suggested recovery commands:")
+                for cmd in e.recovery_commands:
+                    logger.error(f"  {cmd}")
         raise
 
     except TemplateError as e:
         # Handle infrastructure template errors
-        print(f"\n❌ Infrastructure error: {e}")
-        if e.suggestions:
-            print("Suggestions:")
-            for suggestion in e.suggestions:
-                print(f"  • {suggestion}")
         if logger:
             logger.error(f"Infrastructure error: {e}", exc_info=True)
+            if e.suggestions:
+                logger.error("Suggestions:")
+                for suggestion in e.suggestions:
+                    logger.error(f"  • {suggestion}")
         raise
 
     except ImportError as e:
         # Handle missing dependencies
-        print(f"\n❌ Import error: {e}")
-        print("Suggestions:")
-        print("  • Install missing dependencies: pip install -r requirements.txt")
-        print("  • Check infrastructure module availability")
         if logger:
             logger.error(f"Import error: {e}", exc_info=True)
+            logger.error("Suggestions:")
+            logger.error("  • Install missing dependencies: pip install -r requirements.txt")
+            logger.error("  • Check infrastructure module availability")
         raise
 
     except FileNotFoundError as e:
         # Handle missing files
-        print(f"\n❌ File not found: {e}")
-        print("Suggestions:")
-        print("  • Ensure project structure is correct")
-        print("  • Check that source code exists in src/ directory")
         if logger:
-            logger.error(f"File not found error: {e}", exc_info=True)
+            logger.error(f"File not found: {e}", exc_info=True)
+            logger.error("Suggestions:")
+            logger.error("  • Ensure project structure is correct")
+            logger.error("  • Check that source code exists in src/ directory")
         raise
 
     except Exception as e:
         # Handle unexpected errors with context
         error_msg = f"Unexpected error during optimization analysis: {e}"
-        print(f"\n❌ {error_msg}")
-        print("Suggestions:")
-        print("  • Check system requirements and dependencies")
-        print("  • Review error logs for detailed information")
-        print("  • Ensure sufficient disk space and memory")
         if logger:
             logger.error(error_msg, exc_info=True)
+            logger.error("Suggestions:")
+            logger.error("  • Check system requirements and dependencies")
+            logger.error("  • Review error logs for detailed information")
+            logger.error("  • Ensure sufficient disk space and memory")
         raise
 
 

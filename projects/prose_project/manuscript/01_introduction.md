@@ -1,6 +1,6 @@
 # Introduction
 
-This small prose project demonstrates manuscript-focused research with mathematical equations, structured prose, and bullet-point organization. The project contains minimal source code to satisfy pipeline requirements but focuses on demonstrating the manuscript rendering pipeline.
+This small prose project demonstrates manuscript-focused research with mathematical equations, structured prose, and bullet-point organization. The project contains minimal source code to satisfy pipeline requirements but focuses on demonstrating the manuscript rendering pipeline, including automatic title page generation from metadata configuration.
 
 ## Research Context
 
@@ -13,11 +13,24 @@ Mathematical research often involves complex equations and structured argumentat
 
 ## Key Concepts
 
-The following equation demonstrates a fundamental mathematical relationship:
+The following equation demonstrates a fundamental mathematical relationship \cite{stewart2015calculus, apostol1974mathematical}:
 
-$$\frac{d}{dx} \int_a^x f(t) \, dt = f(x)$$
+\begin{equation}
+\label{eq:fundamental_theorem}
+\frac{d}{dx} \int_a^x f(t) \, dt = f(x)
+\end{equation}
 
 This is the Fundamental Theorem of Calculus, which connects differentiation and integration.
+
+## Template Capabilities Demonstrated
+
+This project showcases the research template's comprehensive capabilities for mathematical exposition:
+
+- **Multi-format rendering**: Automatic generation of PDF manuscripts with professional formatting
+- **LLM-powered analysis**: Automated scientific review and technical validation
+- **Executive reporting**: Cross-project metrics and comparative analysis
+- **Comprehensive validation**: Automated checking of mathematical notation and references
+- **Flexible project types**: Support for both code-intensive and prose-focused research
 
 ## Methodology
 

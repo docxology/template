@@ -73,9 +73,11 @@ initial_point = np.array([0.0, 0.0])
 result = gradient_descent(initial_point, obj_func, grad_func, step_size=0.1)
 
 if result.converged:
-    print(f"Converged in {{result.iterations}} iterations")
-    print(f"Solution: {{result.solution}}")
-    print(f"Objective: {{result.objective_value:.6f}}")
+    if logger:
+        logger.debug(f"Converged in {result.iterations} iterations")
+        logger.debug(f"Solution: {result.solution}")
+        logger.debug(f"Objective: {result.objective_value:.6f}")
 else:
-    print(f"Did not converge within {{result.iterations}} iterations")
+    if logger:
+        logger.warning(f"Did not converge within {result.iterations} iterations")
 ```

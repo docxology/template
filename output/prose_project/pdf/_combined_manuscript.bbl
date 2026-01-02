@@ -1,0 +1,63 @@
+\begin{thebibliography}{9}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Apostol(1974)]{apostol1974mathematical}
+Tom~M Apostol.
+\newblock \emph{Mathematical analysis}.
+\newblock Addison-Wesley, 2nd edition, 1974.
+\newblock ISBN 978-0-201-00288-1.
+
+\bibitem[Bertsekas(1999)]{bertsekas1999nonlinear}
+Dimitri~P Bertsekas.
+\newblock \emph{Nonlinear programming}.
+\newblock Athena Scientific, 2nd edition, 1999.
+\newblock ISBN 978-1-886529-14-6.
+
+\bibitem[Boyd and Vandenberghe(2004)]{boyd2004convex}
+Stephen Boyd and Lieven Vandenberghe.
+\newblock \emph{Convex optimization}.
+\newblock Cambridge University Press, 2004.
+\newblock ISBN 978-0-521-83378-3.
+\newblock \doi{10.1017/CBO9780511804441}.
+
+\bibitem[Cauchy(1821)]{cauchy1821cours}
+Augustin-Louis Cauchy.
+\newblock Cours d'analyse de l'École royale polytechnique.
+\newblock \emph{Analyse algébrique}, 1821.
+
+\bibitem[Folland(1999)]{folland1999real}
+Gerald~B Folland.
+\newblock \emph{Real analysis: modern techniques and their applications}.
+\newblock John Wiley \& Sons, 2nd edition, 1999.
+\newblock ISBN 978-0-471-31716-6.
+
+\bibitem[Luenberger(1984)]{luenberger1984linear}
+David~G Luenberger.
+\newblock \emph{Linear and nonlinear programming}.
+\newblock Addison-Wesley, 2nd edition, 1984.
+\newblock ISBN 978-0-201-15797-0.
+
+\bibitem[Nesterov and Nemirovskii(1994)]{nesterov1994interior}
+Yurii Nesterov and Arkadii Nemirovskii.
+\newblock Interior-point polynomial algorithms in convex programming.
+\newblock \emph{SIAM Journal on Optimization}, 4\penalty0 (1):\penalty0 1--11,
+  1994.
+\newblock \doi{10.1137/0804002}.
+
+\bibitem[Rudin(1976)]{rudin1976principles}
+Walter Rudin.
+\newblock \emph{Principles of mathematical analysis}.
+\newblock McGraw-Hill, 3rd edition, 1976.
+\newblock ISBN 978-0-07-054235-8.
+
+\bibitem[Stewart(2015)]{stewart2015calculus}
+James Stewart.
+\newblock \emph{Calculus: Early Transcendentals}.
+\newblock Cengage Learning, 8th edition, 2015.
+\newblock ISBN 978-1-285-74155-0.
+
+\end{thebibliography}

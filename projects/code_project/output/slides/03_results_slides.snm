@@ -19,6 +19,10 @@
 \beamer@slide {computational-performance}{1}
 \beamer@slide {algorithm-complexity-visualization}{1}
 \beamer@slide {fig:complexity}{1}
+\beamer@slide {performance-benchmarking}{1}
+\beamer@slide {fig:benchmark}{1}
+\beamer@slide {numerical-stability-analysis}{1}
+\beamer@slide {fig:stability}{1}
 \beamer@slide {performance-metrics-summary}{1}
 \beamer@slide {validation}{1}
 \beamer@slide {discussion}{1}

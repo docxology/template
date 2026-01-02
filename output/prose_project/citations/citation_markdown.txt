@@ -1,0 +1,31 @@
+# Citation
+
+If you use this template in your research, please cite:
+
+## BibTeX
+
+```bibtex
+@software{templateauthor2024,
+  author = {Template Author},
+  title = {Results},
+  year = {2024},
+  publisher = {Self-published},
+  url = {},
+  license = {Apache-2.0},
+  abstract = {A comprehensive template for research projects with test-driven development and automated PDF generation.},
+  keywords = {research, template, academic, scientific}
+}
+
+
+## APA Style
+
+Template Author (2024). Results.
+
+## MLA Style
+
+Template Author. "Results." 2024.
+
+## Plain Text
+
+Template Author. (2024). Results. Self-published.
+

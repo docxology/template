@@ -42,6 +42,7 @@ TRANSLATION_LANGUAGES = {
     "zh": "Chinese (Simplified)",
     "hi": "Hindi",
     "ru": "Russian",
+    "de": "German",
 }
 
 
@@ -55,13 +56,6 @@ REVIEW_MIN_WORDS = {
     "methodology_review": 300,
     "improvement_suggestions": 200,  # Lower threshold for focused actionable output
     "translation": 400,  # English abstract + translation (~200 words each)
-}
-
-# Supported translation languages with full names for prompts
-TRANSLATION_LANGUAGES = {
-    "zh": "Chinese (Simplified)",
-    "hi": "Hindi",
-    "ru": "Russian",
 }
 
 
