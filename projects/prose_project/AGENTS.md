@@ -514,5 +514,5 @@ logger.info("Completed theoretical analysis generation")
 ## See Also
 
 - [Root AGENTS.md](../../AGENTS.md) - Complete template documentation
-- [projects/code_project/](../code_project/AGENTS.md) - Computational example project
-- [infrastructure/rendering/](../../infrastructure/rendering/AGENTS.md) - PDF rendering system
+- [Code Project](../code_project/AGENTS.md) - Computational example project
+- [Rendering System](../../infrastructure/rendering/AGENTS.md) - PDF rendering system

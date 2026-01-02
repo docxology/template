@@ -1174,8 +1174,12 @@ def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> 
 
             # Pipeline metrics
             ax4 = axes[1, 1]
-            stages = ['Setup', 'Tests', 'Analysis', 'Render', 'Validate', 'Copy']
-            durations = [1.0, project.pipeline.total_duration * 0.1, 5.0, 15.0, 2.0, 1.0]  # Estimated
+            # All possible pipeline stages (9 stages total)
+            stages = [
+                'Clean', 'Setup', 'Infra Tests', 'Project Tests', 'Analysis', 
+                'Render', 'Validate', 'LLM Review', 'LLM Translations', 'Copy'
+            ]
+            durations = [1.0, 1.0, 5.0, project.pipeline.total_duration * 0.1, 5.0, 15.0, 2.0, 10.0, 10.0, 1.0]  # Estimated
 
             bars = ax4.bar(stages, durations, color=COLORS['warning'], alpha=0.8)
             ax4.set_title('Pipeline Stages', fontweight='bold')
@@ -1184,8 +1188,46 @@ def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> 
             ax4.set_xticklabels(stages, rotation=45, ha='right')
             ax4.grid(axis='y', alpha=0.3)
 
-            # Highlight bottleneck stage
-            bottleneck_idx = stages.index(project.pipeline.bottleneck_stage.capitalize()) if project.pipeline.bottleneck_stage else -1
+            # Highlight bottleneck stage with flexible matching
+            bottleneck_idx = -1
+            if project.pipeline.bottleneck_stage:
+                bottleneck_name = project.pipeline.bottleneck_stage.lower()
+                # Create mapping for flexible stage name matching
+                stage_mapping = {
+                    'clean output': 'Clean',
+                    'environment setup': 'Setup',
+                    'setup': 'Setup',
+                    'infrastructure tests': 'Infra Tests',
+                    'infra tests': 'Infra Tests',
+                    'project tests': 'Project Tests',
+                    'tests': 'Project Tests',
+                    'project analysis': 'Analysis',
+                    'analysis': 'Analysis',
+                    'pdf rendering': 'Render',
+                    'render': 'Render',
+                    'output validation': 'Validate',
+                    'validate': 'Validate',
+                    'llm scientific review': 'LLM Review',
+                    'llm review': 'LLM Review',
+                    'llm translations': 'LLM Translations',
+                    'translations': 'LLM Translations',
+                    'copy outputs': 'Copy',
+                    'copy': 'Copy',
+                }
+                # Try to find matching stage
+                matched_stage = stage_mapping.get(bottleneck_name)
+                if matched_stage and matched_stage in stages:
+                    try:
+                        bottleneck_idx = stages.index(matched_stage)
+                    except ValueError:
+                        bottleneck_idx = -1
+                else:
+                    # Fallback: try case-insensitive partial match
+                    for i, stage in enumerate(stages):
+                        if bottleneck_name in stage.lower() or stage.lower() in bottleneck_name:
+                            bottleneck_idx = i
+                            break
+            
             if bottleneck_idx >= 0:
                 bars[bottleneck_idx].set_color(COLORS['danger'])
                 bars[bottleneck_idx].set_alpha(1.0)

@@ -512,5 +512,5 @@ except TemplateError as e:
 ## See Also
 
 - [README.md](README.md) - Quick reference guide
-- [../src/](../src/) - Source code documented by scripts
-- [../manuscript/](../manuscript/) - Manuscript files processed by scripts
+- [Source code](../src/AGENTS.md) - Source code documented by scripts
+- [Manuscript](../manuscript/AGENTS.md) - Manuscript files processed by scripts

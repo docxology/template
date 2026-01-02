@@ -40,13 +40,22 @@ metadata:
 
 # LLM Review Settings (comprehensive for mathematical content)
 llm:
+  reviews:
+    enabled: true
+    types:
+      - executive_summary  # Default: single review
+      # Uncomment to enable additional reviews:
+      # - quality_review
+      # - methodology_review
+      # - improvement_suggestions
   translations:
     enabled: true  # Enable for international mathematical audience
     languages:
-      - zh  # Chinese (Simplified) - mathematics community
-      - hi  # Hindi - growing research community
-      - ru  # Russian - strong mathematical tradition
-      - de  # German - mathematical publishing
+      - zh  # Default: single translation (Chinese Simplified)
+      # Uncomment to enable additional languages:
+      # - hi  # Hindi - growing research community
+      # - ru  # Russian - strong mathematical tradition
+      # - de  # German - mathematical publishing
 
 # Testing Configuration (rigorous for visualization accuracy)
 testing:

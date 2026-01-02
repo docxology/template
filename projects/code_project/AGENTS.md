@@ -447,5 +447,5 @@ Step sizes: 100%|██████████████████| 4/4 [00
 ## See Also
 
 - [Root AGENTS.md](../../AGENTS.md) - Complete template documentation
-- [projects/project/](../project/AGENTS.md) - Full research project example
+- [projects/prose_project/](../prose_project/AGENTS.md) - Mathematical exposition example project
 - [infrastructure/scientific/](../../infrastructure/scientific/AGENTS.md) - Scientific utilities

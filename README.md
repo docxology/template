@@ -126,7 +126,7 @@ flowchart TD
 | 4 | **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** | Complete documentation index |
 | 5 | **[docs/modules/MODULES_GUIDE.md](docs/modules/MODULES_GUIDE.md)** | All 7 modules |
 
-**Technical resources:** See **[projects/project/manuscript/preamble.md](projects/project/manuscript/preamble.md)** and **[docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md)**
+**Technical resources:** See **[projects_archive/ento_linguistics/manuscript/preamble.md](projects_archive/ento_linguistics/manuscript/preamble.md)** and **[docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md)**
 
 ## 🧭 Documentation Hub
 
@@ -280,11 +280,10 @@ graph TB
 
 ### Example Projects
 
-The template includes three example projects:
+The template includes two example projects:
 
-- **`projects/project/`** - Full-featured research template (original)
-- **`projects/prose_project/`** - Manuscript-focused with equations
 - **`projects/code_project/`** - Code-focused with analysis pipeline
+- **`projects/prose_project/`** - Manuscript-focused with equations
 
 ### Usage
 
@@ -475,9 +474,9 @@ graph TB
     end
 
     subgraph L2["🔬 Layer 2: Project-Specific (Customizable)"]
-        SRC[projects/project/src/\nScientific algorithms\n100% tested\n📖 projects/project/src/AGENTS.md]
-        SCRIPTS[projects/project/scripts/\nAnalysis scripts\nThin orchestrators\n📖 projects/project/scripts/AGENTS.md]
-        PROJECT_TESTS[projects/project/tests/\nProject test suite\n📖 projects/project/tests/AGENTS.md]
+        SRC[projects/code_project/src/\nScientific algorithms\n100% tested\n📖 projects/code_project/src/AGENTS.md]
+        SCRIPTS[projects/code_project/scripts/\nAnalysis scripts\nThin orchestrators\n📖 projects/code_project/scripts/AGENTS.md]
+        PROJECT_TESTS[projects/code_project/tests/\nProject test suite\n📖 projects/code_project/tests/AGENTS.md]
     end
 
     subgraph DOCS["📚 Documentation Hub"]
@@ -485,7 +484,7 @@ graph TB
     end
 
     subgraph CONTENT["📝 Content & Output"]
-        MANUSCRIPT[projects/project/manuscript/\nResearch sections\nGenerate PDFs\n📖 projects/project/manuscript/AGENTS.md]
+        MANUSCRIPT[projects/code_project/manuscript/\nResearch sections\nGenerate PDFs\n📖 projects/code_project/manuscript/AGENTS.md]
         OUTPUT[output/\nGenerated files\nPDFs, figures, data\nAll files disposable]
     end
 
@@ -593,9 +592,9 @@ graph TD
     end
 
     subgraph ProjectLayer["Project Layer"]
-        PROJECT_SRC[projects/project/src/\nResearch algorithms\nDomain-specific logic]
-        PROJECT_SCRIPTS[projects/project/scripts/\nAnalysis workflows\nThin orchestrators]
-        PROJECT_MANUSCRIPT[projects/project/manuscript/\nResearch content\nMarkdown sections]
+        PROJECT_SRC[projects/code_project/src/\nResearch algorithms\nDomain-specific logic]
+        PROJECT_SCRIPTS[projects/code_project/scripts/\nAnalysis workflows\nThin orchestrators]
+        PROJECT_MANUSCRIPT[projects/code_project/manuscript/\nResearch content\nMarkdown sections]
     end
 
     EXCEPTIONS --> InfrastructureModules
@@ -622,9 +621,9 @@ graph TD
 ```mermaid
 flowchart TD
     subgraph Input["📥 Input Data"]
-        SOURCE_CODE[Source Code\nprojects/project/src/*.py\nAlgorithm implementations]
-        ANALYSIS_SCRIPTS[Analysis Scripts\nprojects/project/scripts/*.py\nWorkflow orchestrators]
-        MANUSCRIPT_FILES[Manuscript Files\nprojects/project/manuscript/*.md\nResearch content]
+        SOURCE_CODE[Source Code\nprojects/{name}/src/*.py\nAlgorithm implementations]
+        ANALYSIS_SCRIPTS[Analysis Scripts\nprojects/code_project/scripts/*.py\nWorkflow orchestrators]
+        MANUSCRIPT_FILES[Manuscript Files\nprojects/code_project/manuscript/*.md\nResearch content]
         CONFIG_FILES[Configuration\nconfig.yaml\nRuntime parameters]
     end
 
@@ -673,7 +672,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     subgraph Sources["Configuration Sources"]
-        YAML_FILE[config.yaml\nprojects/project/manuscript/config.yaml\nVersion-controlled settings]
+        YAML_FILE[config.yaml\nprojects/code_project/manuscript/config.yaml\nVersion-controlled settings]
         ENV_VARS[Environment Variables\nAUTHOR_NAME, PROJECT_TITLE\nRuntime overrides]
         DEFAULTS[Default Values\nTemplate defaults\nFallback values]
     end
@@ -719,11 +718,11 @@ flowchart TD
 | **`infrastructure/`** | Generic build/validation tools (Layer 1) | [infrastructure/AGENTS.md](infrastructure/AGENTS.md) |
 | **`scripts/`** | Entry point orchestrators | [scripts/AGENTS.md](scripts/AGENTS.md) |
 | **`tests/`** | Infrastructure test suite | [tests/AGENTS.md](tests/AGENTS.md) |
-| **`projects/project/src/`** | Project-specific scientific code (Layer 2) | [projects/project/src/AGENTS.md](projects/project/src/AGENTS.md) |
-| **`projects/project/scripts/`** | Project-specific analysis scripts | [projects/project/scripts/AGENTS.md](projects/project/scripts/AGENTS.md) |
-| **`projects/project/tests/`** | Project test suite | [projects/project/tests/AGENTS.md](projects/project/tests/AGENTS.md) |
+| **`projects/code_project/src/`** | Project-specific scientific code (Layer 2) | [projects/code_project/src/AGENTS.md](projects/code_project/src/AGENTS.md) |
+| **`projects/code_project/scripts/`** | Project-specific analysis scripts | [projects/code_project/scripts/AGENTS.md](projects/code_project/scripts/AGENTS.md) |
+| **`projects/code_project/tests/`** | Project test suite | [projects/code_project/tests/AGENTS.md](projects/code_project/tests/AGENTS.md) |
 | **`docs/`** | **Documentation hub (89 guides)** | **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** |
-| **`projects/project/manuscript/`** | Research manuscript sections | [projects/project/manuscript/AGENTS.md](projects/project/manuscript/AGENTS.md) |
+| **`projects/code_project/manuscript/`** | Research manuscript sections | [projects/code_project/manuscript/AGENTS.md](projects/code_project/manuscript/AGENTS.md) |
 | **`output/`** | Generated outputs (disposable) | Regenerated by build pipeline |
 
 **📚 Explore Documentation:** See **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** for complete documentation structure
@@ -736,7 +735,7 @@ flowchart TD
 
 The project follows a **thin orchestrator pattern** where:
 
-- **`infrastructure/`** and **`projects/project/src/`** contain **ALL** business logic, algorithms, and implementations
+- **`infrastructure/`** and **`projects/{name}/src/`** contain **ALL** business logic, algorithms, and implementations
 - **`scripts/`** are **lightweight wrappers** that coordinate pipeline stages
 - **`tests/`** ensure coverage of all functionality
 - **`run.sh`** provides the main entry point for manuscript operations (interactive menu and pipeline orchestration)
@@ -753,15 +752,15 @@ The project follows a **thin orchestrator pattern** where:
 
 **[Complete guide](scripts/AGENTS.md)** | **[Writing Guide](docs/usage/MARKDOWN_TEMPLATE_GUIDE.md)**
 
-Scripts in `projects/project/scripts/` demonstrate proper integration with `projects/project/src/` modules:
+Scripts in `projects/{name}/scripts/` demonstrate proper integration with `projects/{name}/src/` modules:
 
-- **Import** scientific functions from `projects/project/src/` modules
+- **Import** scientific functions from `projects/{name}/src/` modules
 - **Use** tested methods for all computation
 - **Handle** visualization, I/O, and orchestration
 - **Generate** figures and data outputs
 - **Validate** that module integration works correctly
 
-**Example**: `example_figure.py` imports `add_numbers()`, `calculate_average()`, etc. from `projects/project/src/example.py` and uses them to process data before visualization.
+**Example**: Analysis scripts import algorithms from project `src/` modules and use them to process data before visualization.
 
 ## ✨ Key Features
 
@@ -775,7 +774,7 @@ All source code must meet **test coverage requirements** (90% project, 60% infra
 ### Automated Script Execution
 **[Script guide](scripts/AGENTS.md)** | **[Examples](docs/usage/EXAMPLES_SHOWCASE.md)**
 
-Project-specific scripts in the `projects/project/scripts/` directory are automatically executed to generate figures and data. These scripts **import and use** the tested methods from `projects/project/src/`, demonstrating proper integration patterns.
+Project-specific scripts in the `projects/{name}/scripts/` directory are automatically executed to generate figures and data. These scripts **import and use** the tested methods from `projects/{name}/src/`, demonstrating proper integration patterns.
 
 ### Markdown to PDF Pipeline
 **[Markdown guide](docs/usage/MARKDOWN_TEMPLATE_GUIDE.md)** | **[PDF validation](docs/modules/PDF_VALIDATION.md)**
@@ -858,7 +857,7 @@ pip install -e .
 # Interactive menu (recommended) - routes to manuscript operations
 ./run.sh
 
-# Or run full 10-stage manuscript pipeline directly (stages 0-9, includes optional LLM)
+# Or run full 9-stage manuscript pipeline directly (displayed as [1/9] to [9/9], includes optional LLM)
 ./run.sh --pipeline
 
 # Alternative: Core 6-stage pipeline (stages 00-05, no LLM dependencies)
@@ -867,24 +866,24 @@ python3 scripts/execute_pipeline.py --core-only
 # Or run stages individually (using generic entry point orchestrators)
 python3 scripts/00_setup_environment.py      # Setup environment
 python3 scripts/01_run_tests.py              # Run tests (infrastructure + project)
-python3 scripts/02_run_analysis.py           # Execute projects/project/scripts/
+python3 scripts/02_run_analysis.py           # Execute projects/{name}/scripts/
 python3 scripts/03_render_pdf.py             # Render PDFs
 python3 scripts/04_validate_output.py        # Validate output
 python3 scripts/05_copy_outputs.py           # Copy final deliverables
 ```
 
 **Pipeline Entry Points:**
-- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages: 0-9) with optional LLM review and translations
-- **`./run.sh --pipeline`**: 10 stages (0-9) - Extended pipeline with optional LLM review and translations
+- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (9 stages displayed as [1/9] to [9/9]) with optional LLM review and translations
+- **`./run.sh --pipeline`**: 9 stages displayed as [1/9] to [9/9] - Extended pipeline with optional LLM review and translations
 - **`python3 scripts/execute_pipeline.py --core-only`**: 6 stages (00-05) - Core pipeline only, no LLM dependencies
 
 **See [How To Use Guide](docs/core/HOW_TO_USE.md) for setup instructions at all skill levels.**
 
 **Architecture Note:** The project uses a **two-layer architecture**:
 - **Layer 1 (infrastructure/)**: Generic, reusable tools
-- **Layer 2 (projects/project/)**: Project-specific scientific code
+- **Layer 2 (projects/{name}/)**: Project-specific scientific code
 
-The root-level `scripts/` directory contains generic entry point orchestrators that discover and coordinate project-specific code in `projects/project/scripts/`.
+The root-level `scripts/` directory contains generic entry point orchestrators that discover and coordinate project-specific code in `projects/{name}/scripts/`.
 
 ## 🐳 Docker Support
 
@@ -918,7 +917,7 @@ The system supports **two configuration methods**:
 
 #### Method 1: Configuration File (Recommended)
 
-Edit `projects/project/manuscript/config.yaml` with your paper metadata:
+Edit `projects/{name}/manuscript/config.yaml` with your paper metadata:
 
 ```yaml
 paper:
@@ -935,7 +934,7 @@ publication:
   doi: "10.5281/zenodo.12345678"  # Optional
 ```
 
-See `projects/project/manuscript/config.yaml.example` for all available options.
+See `projects/{name}/manuscript/config.yaml.example` for all available options.
 
 #### Method 2: Environment Variables (Alternative)
 
@@ -957,7 +956,7 @@ python3 scripts/03_render_pdf.py
 
 **Configuration is applied to:**
 - PDF metadata (title, author, creation date)
-- LaTeX document properties - [Preamble details](projects/project/manuscript/preamble.md)
+- LaTeX document properties - [Preamble details](../../projects_archive/ento_linguistics/manuscript/preamble.md)
 - Generated file headers
 - Cross-reference systems
 
@@ -965,10 +964,10 @@ python3 scripts/03_render_pdf.py
 
 **[Script architecture guide](scripts/AGENTS.md)** | **[Thin orchestrator pattern](docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md)**
 
-Place Python scripts in the `projects/project/scripts/` directory. They should:
+Place Python scripts in the `projects/{name}/scripts/` directory. They should:
 
-- **Import methods from `projects/project/src/` modules** (thin orchestrator pattern)
-- **Use `projects/project/src/` methods for all computation** (never implement algorithms)
+- **Import methods from `projects/{name}/src/` modules** (thin orchestrator pattern)
+- **Use `projects/{name}/src/` methods for all computation** (never implement algorithms)
 - **Generate figures/data** using tested methods
 - **Print file paths to stdout**
 - **Handle errors gracefully**
@@ -985,13 +984,13 @@ from project.src.example import add_numbers, calculate_average  # Import from sr
 def main():
     # Use src/ methods for computation
     data = [1, 2, 3, 4, 5]
-    avg = calculate_average(data)  # From projects/project/src/example.py
+    avg = calculate_average(data)  # From projects/{name}/src/algorithms.py
 
     # Script handles visualization and output
     # ... visualization code ...
 
     # Print paths for the system to capture
-    print("projects/project/output/generated/file.png")
+    print("projects/{name}/output/generated/file.png")
 
 if __name__ == "__main__":
     main()
@@ -999,9 +998,9 @@ if __name__ == "__main__":
 
 ### Manuscript Structure
 
-**[Manuscript guide](projects/project/manuscript/AGENTS.md)** | **[Numbering system](docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md)**
+**[Manuscript guide](projects/code_project/manuscript/AGENTS.md)** | **[Numbering system](docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md)**
 
-- `preamble.md` - LaTeX preamble and styling - [Details](projects/project/manuscript/preamble.md)
+- `preamble.md` - LaTeX preamble and styling (see archived projects for examples)
 - `01_abstract.md` through `06_conclusion.md` - Main sections
 - `S01_supplemental_methods.md` - Supplemental sections
 - `98_symbols_glossary.md` - Auto-generated API reference
@@ -1021,11 +1020,11 @@ python3 scripts/01_run_tests.py
 
 # Or run manually with coverage reports
 pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
-pytest projects/project/tests/ --cov=projects/project/src --cov-report=html
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
 
 # Generate detailed coverage report with missing lines
 pytest tests/infrastructure/ --cov=infrastructure --cov-report=term-missing
-pytest projects/project/tests/ --cov=projects/project/src --cov-report=term-missing
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=term-missing
 
 # Verify coverage requirements (infrastructure modules)
 pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
@@ -1093,21 +1092,21 @@ The template provides **two main entry points** for pipeline operations:
 
 ### Entry Point 2: Extended Pipeline (`./run.sh --pipeline`)
 
-**10-stage pipeline** (stages 0-9) with optional LLM review:
+**9-stage pipeline** (displayed as [1/9] to [9/9]) with optional LLM review:
 
 ```mermaid
 flowchart TD
-    START([./run.sh --pipeline]) --> STAGE0[Stage 0: Clean Output Directories]
-    STAGE0 --> STAGE1[Stage 1: Setup Environment]
-    STAGE1 --> STAGE2[Stage 2: Infrastructure Tests\n60%+ coverage required]
-    STAGE2 --> STAGE3[Stage 3: Project Tests\n90%+ coverage required]
-    STAGE3 --> STAGE4[Stage 4: Project Analysis\nExecute projects/project/scripts/]
-    STAGE4 --> STAGE5[Stage 5: PDF Rendering\nGenerate manuscript PDFs]
-    STAGE5 --> STAGE6[Stage 6: Output Validation\nQuality checks]
-    STAGE6 --> STAGE7[Stage 7: Copy Outputs\nFinal deliverables]
-    STAGE7 --> STAGE8[Stage 8: LLM Scientific Review\nOptional, requires Ollama]
-    STAGE8 --> STAGE9[Stage 9: LLM Translations\nOptional, requires Ollama]
-    STAGE9 --> SUCCESS[✅ Build Complete\n~84s core + LLM time]
+    START([./run.sh --pipeline]) --> STAGE1[Stage 1: Clean Output Directories\n[1/9]]
+    STAGE1 --> STAGE2[Stage 2: Environment Setup\n[2/9]]
+    STAGE2 --> STAGE3[Stage 3: Infrastructure Tests\n[3/9]\n60%+ coverage required]
+    STAGE3 --> STAGE4[Stage 4: Project Tests\n[4/9]\n90%+ coverage required]
+    STAGE4 --> STAGE5[Stage 5: Project Analysis\n[5/9]\nExecute projects/{name}/scripts/]
+    STAGE5 --> STAGE6[Stage 6: PDF Rendering\n[6/9]\nGenerate manuscript PDFs]
+    STAGE6 --> STAGE7[Stage 7: Output Validation\n[7/9]\nQuality checks]
+    STAGE7 --> STAGE8[Stage 8: LLM Scientific Review\n[8/9]\nOptional, requires Ollama]
+    STAGE8 --> STAGE9[Stage 9: LLM Translations\n[9/9]\nOptional, requires Ollama]
+    STAGE9 --> STAGE10[Stage 10: Copy Outputs\nFinal deliverables]
+    STAGE10 --> SUCCESS[✅ Build Complete\n~84s core + LLM time]
 
     STAGE2 -->|Fail| FAIL[❌ Pipeline Failed]
     STAGE3 -->|Fail| FAIL
@@ -1128,7 +1127,7 @@ flowchart TD
 
     class SUCCESS success
     class FAIL failure
-    class STAGE0,STAGE1,STAGE2,STAGE3,STAGE4,STAGE5,STAGE6,STAGE7 process
+    class STAGE1,STAGE2,STAGE3,STAGE4,STAGE5,STAGE6,STAGE7,STAGE8,STAGE9,STAGE10 process
     class STAGE8,STAGE9 optional
 ```
 
@@ -1140,14 +1139,14 @@ flowchart TD
 |-------|--------|---------|
 | 00 | `00_setup_environment.py` | Environment setup & validation |
 | 01 | `01_run_tests.py` | Run complete test suite (infrastructure + project) |
-| 02 | `02_run_analysis.py` | Discover & run `projects/project/scripts/` |
+| 02 | `02_run_analysis.py` | Discover & run `projects/{name}/scripts/` |
 | 03 | `03_render_pdf.py` | PDF rendering orchestration |
 | 04 | `04_validate_output.py` | Output validation & reporting |
 | 05 | `05_copy_outputs.py` | Copy final deliverables to `output/` |
 
 **Stage Numbering:**
-- `./run.sh`: Stages 0-9 (10 total). Stage 0 is cleanup (not tracked in progress), stages 1-9 are displayed as [1/9] to [9/9] in logs
-- `execute_pipeline.py --core-only`: Stages 0-5 (6 core stages)
+- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in logs (Clean Output Directories through Copy Outputs)
+- `execute_pipeline.py --core-only`: Core pipeline stages (no LLM stages)
 
 **See [RUN_GUIDE.md](RUN_GUIDE.md) for complete pipeline documentation.**
 
@@ -1187,7 +1186,7 @@ flowchart TD
 
 ### Reference & Resources
 - **[docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md)** - Shareable content for promoting the template
-- **[projects/project/manuscript/preamble.md](projects/project/manuscript/preamble.md)** - LaTeX preamble and styling configuration
+- **[projects_archive/ento_linguistics/manuscript/preamble.md](projects_archive/ento_linguistics/manuscript/preamble.md)** - LaTeX preamble and styling configuration
 
 ### Directory-Specific Documentation
 - **[infrastructure/AGENTS.md](infrastructure/AGENTS.md)** - Infrastructure layer documentation
@@ -1196,12 +1195,12 @@ flowchart TD
 - **[tests/README.md](tests/README.md)** - Testing quick reference
 - **[scripts/AGENTS.md](scripts/AGENTS.md)** - Entry point orchestrators documentation
 - **[scripts/README.md](scripts/README.md)** - Entry points quick reference
-- **[projects/project/src/AGENTS.md](projects/project/src/AGENTS.md)** - Project code documentation
-- **[projects/project/src/README.md](projects/project/src/README.md)** - Project code quick reference
-- **[projects/project/scripts/AGENTS.md](projects/project/scripts/AGENTS.md)** - Project scripts documentation
-- **[projects/project/scripts/README.md](projects/project/scripts/README.md)** - Project scripts quick reference
-- **[projects/project/manuscript/AGENTS.md](projects/project/manuscript/AGENTS.md)** - Manuscript structure guide
-- **[projects/project/manuscript/README.md](projects/project/manuscript/README.md)** - Manuscript quick reference
+- **[projects/code_project/src/AGENTS.md](projects/code_project/src/AGENTS.md)** - Project code documentation
+- **[projects/code_project/src/README.md](projects/code_project/src/README.md)** - Project code quick reference
+- **[projects/code_project/scripts/AGENTS.md](projects/code_project/scripts/AGENTS.md)** - Project scripts documentation
+- **[projects/code_project/scripts/README.md](projects/code_project/scripts/README.md)** - Project scripts quick reference
+- **[projects/code_project/manuscript/AGENTS.md](projects/code_project/manuscript/AGENTS.md)** - Manuscript structure guide
+- **[projects/code_project/manuscript/README.md](projects/code_project/manuscript/README.md)** - Manuscript quick reference
 - **[docs/AGENTS.md](docs/AGENTS.md)** - Documentation organization guide
 - **[docs/README.md](docs/README.md)** - Documentation quick reference
 
@@ -1217,9 +1216,9 @@ flowchart TD
 - **[docs/modules/SCIENTIFIC_SIMULATION_GUIDE.md](docs/modules/SCIENTIFIC_SIMULATION_GUIDE.md)** - Scientific simulation and analysis system guide
 - **[docs/usage/VISUALIZATION_GUIDE.md](docs/usage/VISUALIZATION_GUIDE.md)** - Visualization system for publication-quality figures
 - **[docs/usage/IMAGE_MANAGEMENT.md](docs/usage/IMAGE_MANAGEMENT.md)** - Image insertion, captioning, and cross-referencing guide
-- **Data Processing** (`projects/project/src/`): `data_generator.py`, `data_processing.py`, `statistics.py`, `metrics.py`, `validation.py`
-- **Visualization** (`projects/project/src/` + `infrastructure/documentation/`): `visualization.py`, `plots.py`, `figure_manager.py`, `image_manager.py`, `markdown_integration.py`
-- **Simulation** (`projects/project/src/`): `simulation.py`, `parameters.py`, `performance.py`, `reporting.py`
+- **Data Processing** (`projects/{name}/src/`): `data_generator.py`, `data_processing.py`, `statistics.py`, `metrics.py`, `validation.py`
+- **Visualization** (`projects/{name}/src/` + `infrastructure/documentation/`): `visualization.py`, `plots.py`, `figure_manager.py`, `image_manager.py`, `markdown_integration.py`
+- **Simulation** (`projects/{name}/src/`): `simulation.py`, `parameters.py`, `performance.py`, `reporting.py`
 
 ### Operational Guides
 - **[docs/operational/DEPENDENCY_MANAGEMENT.md](docs/operational/DEPENDENCY_MANAGEMENT.md)** - Complete guide for uv package manager
@@ -1313,7 +1312,7 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 To adapt this template for your existing project:
 
 1. Copy the `infrastructure/` and `scripts/` directories to your project
-2. Adapt the `projects/project/src/`, `projects/project/tests/`, and `projects/project/scripts/` structure
+2. Adapt the `projects/{name}/src/`, `projects/{name}/tests/`, and `projects/{name}/scripts/` structure
 3. Update manuscript markdown files to match the expected format - [Markdown Guide](docs/usage/MARKDOWN_TEMPLATE_GUIDE.md)
 4. Set appropriate environment variables for your project - [Configuration](AGENTS.md#configuration-system)
 5. Run the entry points to validate the setup - [Scripts Guide](scripts/AGENTS.md)

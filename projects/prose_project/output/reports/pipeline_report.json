@@ -1,0 +1,406 @@
+{
+  "timestamp": "2026-01-02T14:34:35.094842",
+  "total_duration": 84.8178505897522,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.1974318027496338,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 0.7367339134216309,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 11.577747106552124,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 4.894617080688477,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 16.45634627342224,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 0.3550841808319092,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "LLM Scientific Review",
+      "exit_code": 0,
+      "duration": 23.793269157409668,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "LLM Translations",
+      "exit_code": 0,
+      "duration": 26.30696201324463,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.49965906143188477,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 9,
+        "size_mb": "0.19",
+        "total_size_bytes": 200857,
+        "largest_files": [
+          {
+            "name": "prose_project_combined.pdf",
+            "size_mb": "0.09",
+            "path": "pdf/prose_project_combined.pdf"
+          },
+          {
+            "name": "_combined_manuscript.log",
+            "size_mb": "0.04",
+            "path": "pdf/_combined_manuscript.log"
+          },
+          {
+            "name": "_combined_manuscript.tex",
+            "size_mb": "0.02",
+            "path": "pdf/_combined_manuscript.tex"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".log": 1,
+          ".aux": 1,
+          ".blg": 1,
+          ".bib": 1,
+          ".tex": 1,
+          ".toc": 1,
+          ".bbl": 1,
+          ".pdf": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 5,
+        "size_mb": "0.04",
+        "total_size_bytes": 44134,
+        "largest_files": [
+          {
+            "name": "02_methodology.html",
+            "size_mb": "0.01",
+            "path": "web/02_methodology.html"
+          },
+          {
+            "name": "03_results.html",
+            "size_mb": "0.01",
+            "path": "web/03_results.html"
+          },
+          {
+            "name": "01_introduction.html",
+            "size_mb": "0.01",
+            "path": "web/01_introduction.html"
+          }
+        ],
+        "extensions": {
+          ".html": 5
+        }
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 29,
+        "size_mb": "0.38",
+        "total_size_bytes": 400157,
+        "largest_files": [
+          {
+            "name": "03_results_slides.log",
+            "size_mb": "0.05",
+            "path": "slides/03_results_slides.log"
+          },
+          {
+            "name": "02_methodology_slides.log",
+            "size_mb": "0.05",
+            "path": "slides/02_methodology_slides.log"
+          },
+          {
+            "name": "01_introduction_slides.log",
+            "size_mb": "0.05",
+            "path": "slides/01_introduction_slides.log"
+          }
+        ],
+        "extensions": {
+          ".pdf": 4,
+          ".log": 4,
+          ".snm": 4,
+          ".aux": 4,
+          ".nav": 4,
+          ".toc": 4,
+          ".tex": 4,
+          ".vrb": 1
+        }
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 3,
+        "size_mb": "0.57",
+        "total_size_bytes": 601344,
+        "largest_files": [
+          {
+            "name": "mathematical_visualization.png",
+            "size_mb": "0.38",
+            "path": "figures/mathematical_visualization.png"
+          },
+          {
+            "name": "theoretical_analysis.png",
+            "size_mb": "0.19",
+            "path": "figures/theoretical_analysis.png"
+          },
+          {
+            "name": "figure_registry.json",
+            "size_mb": "0.00",
+            "path": "figures/figure_registry.json"
+          }
+        ],
+        "extensions": {
+          ".png": 2,
+          ".json": 1
+        }
+      },
+      "data": {
+        "exists": true,
+        "file_count": 2,
+        "size_mb": "0.00",
+        "total_size_bytes": 2138,
+        "largest_files": [
+          {
+            "name": "scientific_analysis.json",
+            "size_mb": "0.00",
+            "path": "data/scientific_analysis.json"
+          },
+          {
+            "name": "mathematical_analysis.json",
+            "size_mb": "0.00",
+            "path": "data/mathematical_analysis.json"
+          }
+        ],
+        "extensions": {
+          ".json": 2
+        }
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 13,
+        "size_mb": "0.03",
+        "total_size_bytes": 30560,
+        "largest_files": [
+          {
+            "name": "manuscript_validation.json",
+            "size_mb": "0.01",
+            "path": "reports/manuscript_validation.json"
+          },
+          {
+            "name": "output_statistics.json",
+            "size_mb": "0.01",
+            "path": "reports/output_statistics.json"
+          },
+          {
+            "name": "validation_report.json",
+            "size_mb": "0.00",
+            "path": "reports/validation_report.json"
+          }
+        ],
+        "extensions": {
+          ".json": 7,
+          ".md": 5,
+          ".txt": 1
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 4,
+        "size_mb": "0.01",
+        "total_size_bytes": 15614,
+        "largest_files": [
+          {
+            "name": "combined_review.md",
+            "size_mb": "0.01",
+            "path": "llm/combined_review.md"
+          },
+          {
+            "name": "translation_zh.md",
+            "size_mb": "0.00",
+            "path": "llm/translation_zh.md"
+          },
+          {
+            "name": "executive_summary.md",
+            "size_mb": "0.00",
+            "path": "llm/executive_summary.md"
+          }
+        ],
+        "extensions": {
+          ".md": 3,
+          ".json": 1
+        }
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      }
+    },
+    "total_files": 65,
+    "total_size_mb": 1.2348213195800781,
+    "largest_files": [
+      {
+        "name": "mathematical_visualization.png",
+        "size_mb": "0.38",
+        "category": "figures",
+        "path": "figures/mathematical_visualization.png"
+      },
+      {
+        "name": "theoretical_analysis.png",
+        "size_mb": "0.19",
+        "category": "figures",
+        "path": "figures/theoretical_analysis.png"
+      },
+      {
+        "name": "prose_project_combined.pdf",
+        "size_mb": "0.09",
+        "category": "pdf",
+        "path": "pdf/prose_project_combined.pdf"
+      },
+      {
+        "name": "03_results_slides.log",
+        "size_mb": "0.05",
+        "category": "slides",
+        "path": "slides/03_results_slides.log"
+      },
+      {
+        "name": "02_methodology_slides.log",
+        "size_mb": "0.05",
+        "category": "slides",
+        "path": "slides/02_methodology_slides.log"
+      },
+      {
+        "name": "01_introduction_slides.log",
+        "size_mb": "0.05",
+        "category": "slides",
+        "path": "slides/01_introduction_slides.log"
+      },
+      {
+        "name": "_combined_manuscript.log",
+        "size_mb": "0.04",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.log"
+      },
+      {
+        "name": "_combined_manuscript.tex",
+        "size_mb": "0.02",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.tex"
+      },
+      {
+        "name": "02_methodology.html",
+        "size_mb": "0.01",
+        "category": "web",
+        "path": "web/02_methodology.html"
+      },
+      {
+        "name": "03_results.html",
+        "size_mb": "0.01",
+        "category": "web",
+        "path": "web/03_results.html"
+      }
+    ],
+    "missing_expected_files": [
+      "prose_project_combined.pdf or project_combined.pdf"
+    ],
+    "file_counts_by_type": {
+      ".md": 9,
+      ".log": 5,
+      ".aux": 5,
+      ".blg": 1,
+      ".bib": 1,
+      ".tex": 5,
+      ".toc": 5,
+      ".bbl": 1,
+      ".pdf": 5,
+      ".html": 5,
+      ".snm": 4,
+      ".nav": 4,
+      ".vrb": 1,
+      ".png": 2,
+      ".json": 11,
+      ".txt": 1
+    },
+    "sizes_by_category": {
+      "pdf": 0.19155216217041016,
+      "web": 0.04208946228027344,
+      "slides": 0.3816194534301758,
+      "figures": 0.573486328125,
+      "data": 0.0020389556884765625,
+      "reports": 0.029144287109375,
+      "simulations": 0.0,
+      "llm": 0.014890670776367188,
+      "logs": 0.0
+    },
+    "pdf_files": 9,
+    "figures": 3,
+    "data_files": 2
+  }
+}

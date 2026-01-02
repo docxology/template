@@ -4,31 +4,31 @@ OUTPUT STATISTICS REPORT
 
 Output Directory: /Users/4d/Documents/GitHub/template/output/code_project
 
-Total Files: 68
-Total Size: 2.45 MB
+Total Files: 63
+Total Size: 3.32 MB
 
 Files by Category:
   • pdf: 9 files (1.09 MB)
   • web: 4 files (0.04 MB)
-  • slides: 29 files (0.35 MB)
+  • slides: 29 files (1.27 MB)
   • figures: 7 files (0.90 MB)
   • data: 1 files (0.00 MB)
   • reports: 9 files (0.01 MB)
-  • llm: 9 files (0.07 MB)
+  • llm: 4 files (0.02 MB)
 
 Largest Files:
   • code_project_combined.pdf: 0.98 MB (pdf)
+  • 03_results_slides.pdf: 0.93 MB (slides)
   • algorithm_complexity.png: 0.25 MB (figures)
   • convergence_rate_comparison.png: 0.17 MB (figures)
   • convergence_plot.png: 0.17 MB (figures)
-  • 03_results_slides.log: 0.06 MB (slides)
 
 Missing Expected Files:
   ⚠  code_project_combined.pdf or project_combined.pdf
 
 File Types:
-  • .md: 11 file(s)
   • .json: 8 file(s)
+  • .md: 6 file(s)
   • .png: 6 file(s)
   • .log: 5 file(s)
   • .aux: 5 file(s)

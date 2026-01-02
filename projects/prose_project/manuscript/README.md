@@ -7,6 +7,7 @@ Academic prose with mathematical notation for professional PDF generation.
 This project includes the following sections:
 
 ### Main Sections
+- `00_abstract.md` (~1 KB) - Research abstract and summary
 - `01_introduction.md` (~2 KB) - Introduction and motivation
 - `02_methodology.md` (~3 KB) - Research methods and approach
 - `03_results.md` (~4 KB) - Experimental results and findings
@@ -71,13 +72,14 @@ python3 -m infrastructure.validation.cli markdown .
 
 ```mermaid
 graph TD
-    A[01_introduction.md] --> B[Research Context]
-    C[02_methodology.md] --> D[Mathematical Framework]
-    E[03_results.md] --> F[Analysis & Findings]
-    G[04_conclusion.md] --> H[Summary & Future Work]
+    A[00_abstract.md] --> B[Research Summary]
+    C[01_introduction.md] --> D[Research Context]
+    E[02_methodology.md] --> F[Mathematical Framework]
+    G[03_results.md] --> H[Analysis & Findings]
+    I[04_conclusion.md] --> J[Summary & Future Work]
 
-    I[references.bib] --> J[Citation Management]
-    K[LaTeX Equations] --> L[Mathematical Notation]
+    K[references.bib] --> L[Citation Management]
+    M[LaTeX Equations] --> N[Mathematical Notation]
 ```
 
 ## More Information

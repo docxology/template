@@ -114,7 +114,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
         else:
             logger.error("  Expected: output/project_combined.pdf")
             logger.error("  Or in: output/pdf/project_combined.pdf")
-        logger.error("  → PDF rendering stage (Stage 3) may have failed")
+        logger.error("  → PDF rendering stage (Stage 5) may have failed")
         logger.error("  → Check project output/ directory for the combined PDF")
         validation_passed = False
     
@@ -384,6 +384,7 @@ def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
 
     pdf_dir = output_dir / "pdf"
 
+    # Check for PDF in output directory first, then source directory as fallback
     if project_name:
         # Try project-specific filename first in pdf/ directory
         project_pdf = pdf_dir / f"{project_name}_combined.pdf"
@@ -399,7 +400,53 @@ def validate_output_structure(output_dir: Path) -> Dict[str, Any]:
                     f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB"
                 )
         else:
-            result["missing_files"].append(f"{project_name}_combined.pdf")
+            # PDF not found in output directory, check source directory (for validation before copy stage)
+            repo_root = output_dir.parent.parent  # output/ -> repo_root/
+            source_project_dir = repo_root / "projects" / project_name
+            source_output_dir = source_project_dir / "output"
+            source_pdf_dir = source_output_dir / "pdf"
+
+            logger.debug(f"PDF not found in output directory, checking source: {source_output_dir}")
+
+            if source_pdf_dir.exists():
+                # Try project-specific filename in source pdf/ directory
+                source_project_pdf = source_pdf_dir / f"{project_name}_combined.pdf"
+
+                if source_project_pdf.exists() and source_project_pdf.stat().st_size > 0:
+                    size_bytes = source_project_pdf.stat().st_size
+                    pdf_size_mb = size_bytes / (1024 * 1024)
+                    combined_pdf_found = True
+                    pdf_file = source_project_pdf
+
+                    # PDF should typically be > 100KB
+                    if size_bytes < 100 * 1024:
+                        result["suspicious_sizes"].append(
+                            f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB"
+                        )
+
+                    logger.debug(f"Combined PDF found in source directory ({pdf_size_mb:.2f} MB) - validation before copy stage")
+
+                # Fallback to legacy filename in source
+                if not combined_pdf_found:
+                    source_legacy_pdf = source_pdf_dir / "project_combined.pdf"
+
+                    if source_legacy_pdf.exists() and source_legacy_pdf.stat().st_size > 0:
+                        size_bytes = source_legacy_pdf.stat().st_size
+                        pdf_size_mb = size_bytes / (1024 * 1024)
+                        combined_pdf_found = True
+                        pdf_file = source_legacy_pdf
+
+                        # PDF should typically be > 100KB
+                        if size_bytes < 100 * 1024:
+                            result["suspicious_sizes"].append(
+                                f"Combined PDF is unusually small: {pdf_size_mb:.2f} MB"
+                            )
+
+                        logger.debug(f"Combined PDF found in source directory ({pdf_size_mb:.2f} MB) - validation before copy stage")
+
+            # If not found anywhere, add to missing files
+            if not combined_pdf_found:
+                result["missing_files"].append(f"{project_name}_combined.pdf")
     else:
         # Fallback: check for generic project_combined.pdf in pdf/ directory when no project name detected
         generic_pdf = pdf_dir / "project_combined.pdf"

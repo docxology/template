@@ -266,16 +266,54 @@ class TestValidateOutputStructure:
         assert result["directory_structure"]["figures"]["files"] == 2
         assert result["directory_structure"]["figures"]["size_mb"] > 0
 
+    def test_validate_before_copy_stage(self, tmp_path):
+        """Test validation passes when PDF exists in source but not output directory.
+
+        This simulates Stage 6 validation before Stage 9 copy - the PDF should be
+        generated in projects/{name}/output/pdf/ but not yet copied to output/{name}/pdf/.
+        """
+        # Create repository structure
+        repo_root = tmp_path
+        projects_dir = repo_root / "projects"
+        projects_dir.mkdir()
+        output_dir = repo_root / "output" / "prose_project"
+        output_dir.mkdir(parents=True)
+
+        # Create project directory structure
+        project_dir = projects_dir / "prose_project"
+        project_dir.mkdir()
+        project_output_dir = project_dir / "output"
+        project_output_dir.mkdir()
+        project_pdf_dir = project_output_dir / "pdf"
+        project_pdf_dir.mkdir()
+
+        # Create PDF in source directory (where it gets generated before copy)
+        pdf_file = project_pdf_dir / "prose_project_combined.pdf"
+        pdf_file.write_bytes(b"PDF" * 10000)  # Valid PDF content
+
+        # Don't create PDF in output directory (simulates before copy stage)
+        # Create some other directories to ensure structure validation works
+        (output_dir / "pdf").mkdir()
+        (output_dir / "figures").mkdir()
+        (output_dir / "data").mkdir()
+
+        # Validation should pass by checking source directory
+        result = validate_output_structure(output_dir)
+
+        # Should be valid because PDF exists in source directory
+        assert result["valid"] is True
+        assert len(result["missing_files"]) == 0
+
     def test_validate_multiple_issues(self, tmp_path):
         """Test validation with multiple issues."""
         output_dir = tmp_path / "output"
         output_dir.mkdir()
-        
+
         # Missing PDF
         # Missing required directories
         # Only create one directory
         (output_dir / "pdf").mkdir()
-        
+
         result = validate_output_structure(output_dir)
         
         assert result["valid"] is False

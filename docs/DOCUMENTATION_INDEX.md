@@ -75,7 +75,7 @@ Development standards are documented in the `.cursorrules/` directory:
 - **[`docs/reference/COPYPASTA.md`](reference/COPYPASTA.md)** - Ready-to-use content for sharing the template
 - **[`docs/reference/FAQ.md`](reference/FAQ.md)** - Frequently asked questions and common issues
 - **[`docs/reference/QUICK_START_CHEATSHEET.md`](reference/QUICK_START_CHEATSHEET.md)** - One-page essential commands reference
-- **[`do../reference/COMMON_WORKFLOWS.md`](reference/../reference/COMMON_WORKFLOWS.md)** - Step-by-step workflow recipes
+- **[`docs/reference/COMMON_WORKFLOWS.md`](reference/COMMON_WORKFLOWS.md)** - Step-by-step workflow recipes
 - **[`docs/reference/GLOSSARY.md`](reference/GLOSSARY.md)** - Comprehensive glossary of terms
 - **[`scripts/README.md`](../scripts/README.md)** - Detailed utility documentation
 - **[`tests/README.md`](../tests/README.md)** - Test suite guide and commands
@@ -198,9 +198,9 @@ docs/
 │
 ├── core/                               # Essential documentation
 │   ├── README.md                       # Core docs overview
-│   ├── ../core/HOW_TO_USE.md                   # Complete usage guide
-│   ├── ../core/ARCHITECTURE.md                 # System design
-│   └── ../core/WORKFLOW.md                     # Development workflow
+│   ├── HOW_TO_USE.md                   # Complete usage guide
+│   ├── ARCHITECTURE.md                 # System design
+│   └── WORKFLOW.md                     # Development workflow
 │
 ├── guides/                             # Usage guides by skill level
 │   ├── README.md                       # Guides overview
@@ -244,7 +244,7 @@ docs/
 │   ├── GLOSSARY.md                     # Terms and definitions
 │   ├── FAQ.md                          # Common questions
 │   ├── QUICK_START_CHEATSHEET.md       # Quick reference
-│   ├── ../reference/COMMON_WORKFLOWS.md             # Step-by-step recipes
+│   ├── COMMON_WORKFLOWS.md             # Step-by-step recipes
 │   └── COPYPASTA.md                    # Sharing content
 │
 ├── modules/                            # Advanced modules
@@ -276,7 +276,7 @@ docs/
 
 | Category | Directory | Purpose |
 |----------|-----------|---------|
-| **Core** | `core/` | Essential documentation for all users (../core/HOW_TO_USE.md, ../core/ARCHITECTURE.md, ../core/WORKFLOW.md) |
+| **Core** | `core/` | Essential documentation for all users (HOW_TO_USE.md, ARCHITECTURE.md, WORKFLOW.md) |
 | **Guides** | `guides/` | Usage guides by skill level (GETTING_STARTED.md, FIGURES_AND_ANALYSIS.md, TESTING_AND_REPRODUCIBILITY.md, EXTENDING_AND_AUTOMATION.md) |
 | **Architecture** | `architecture/` | System design and implementation (TWO_LAYER_ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md, DECISION_TREE.md) |
 | **Usage** | `usage/` | Usage examples and patterns (EXAMPLES.md, MARKDOWN_TEMPLATE_GUIDE.md, VISUALIZATION_GUIDE.md) |
@@ -301,7 +301,7 @@ All documentation files include comprehensive cross-references:
 1. **[README.md](../README.md)** - Project overview (5 min)
 2. **[guides/GETTING_STARTED.md](guides/GETTING_STARTED.md)** - Write first document (30 min)
 3. **[reference/QUICK_START_CHEATSHEET.md](reference/QUICK_START_CHEATSHEET.md)** - Essential commands reference
-4. **[reference/../reference/COMMON_WORKFLOWS.md](reference/../reference/COMMON_WORKFLOWS.md)** - Common tasks step-by-step
+4. **[reference/COMMON_WORKFLOWS.md](reference/COMMON_WORKFLOWS.md)** - Common tasks step-by-step
 5. **[usage/EXAMPLES_SHOWCASE.md](usage/EXAMPLES_SHOWCASE.md)** - See real-world usage
 
 ### **Developers - Architecture & Patterns**

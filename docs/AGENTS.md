@@ -283,7 +283,7 @@ usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
   - architecture/THIN_ORCHESTRATOR_SUMMARY.md (pattern details)
   - core/WORKFLOW.md (how to work with architecture)
   - ../../infrastructure/AGENTS.md (infrastructure implementation details)
-  - ../../projects/project/src/AGENTS.md (project implementation details)
+  - ../../projects/code_project/src/AGENTS.md (project implementation details)
 
 - **core/WORKFLOW.md** references:
   - development/CONTRIBUTING.md (contribution process)

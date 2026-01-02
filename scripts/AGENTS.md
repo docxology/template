@@ -29,7 +29,7 @@ The template provides multiple entry points organized by function:
 
 **Main Entry Point** (`run.sh`):
 - Interactive menu with manuscript pipeline operations (0-9)
-- Full pipeline execution (10 stages: 0-9)
+- Full pipeline execution (9 stages displayed as [1/9] to [9/9])
 - Non-interactive: `./run.sh [options]` for direct pipeline operations
 - Non-interactive flags: `--pipeline`, `--infra-tests`, `--project-tests`, `--render-pdf`, `--reviews`, `--translations`
 - Sources shared utilities from `scripts/bash_utils.sh`
@@ -492,7 +492,7 @@ Root entry points work with **ANY** project that follows this structure.
 ## See Also
 
 - [`../README.md`](../README.md) - Quick reference
-- [`../projects/project/scripts/AGENTS.md`](../projects/project/scripts/AGENTS.md) - Project scripts
+- [`../projects/code_project/scripts/AGENTS.md`](../projects/code_project/scripts/AGENTS.md) - Project scripts example
 - [`../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern explanation
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
 

@@ -241,7 +241,7 @@ Level 10-12: Expert Usage (1-2 months)
 ### Writing & Formatting
 - **[Markdown Template Guide](../usage/MARKDOWN_TEMPLATE_GUIDE.md)** - Complete formatting reference
 - **[Manuscript Numbering](../usage/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization
-- **[LaTeX Preamble](../../projects/project/manuscript/preamble.md)** - Styling configuration
+- **[LaTeX Preamble](../../projects_archive/ento_linguistics/manuscript/preamble.md)** - Styling configuration example
 
 ### Examples & Help
 - **[Examples](../usage/EXAMPLES.md)** - Usage patterns

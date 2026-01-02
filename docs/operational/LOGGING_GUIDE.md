@@ -155,13 +155,17 @@ Python: Python 3.13.11
 Log file: output/logs/pipeline_20251228_134833.log
 Pipeline started: Sat Dec 28 13:48:33 PST 2025
 
-[1/9] Setup Environment (11% complete)
+[1/9] Clean Output Directories (11% complete)
+  Elapsed: 0m 0s | ETA: 0m 0s
+✓ Output directories cleaned
+
+[2/9] Environment Setup (22% complete)
   Elapsed: 0m 5s | ETA: 0m 40s
 ✓ Environment setup complete
 
-[2/9] Infrastructure Tests (22% complete)
-  Elapsed: 0m 25s | ETA: 1m 25s
-✓ Infrastructure tests passed
+[3/9] Project Tests (33% complete)
+  Elapsed: 0m 25s | ETA: 0m 50s
+✓ Project tests passed
 
 [... continues for all stages ...]
 

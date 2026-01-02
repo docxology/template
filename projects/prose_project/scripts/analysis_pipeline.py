@@ -70,9 +70,12 @@ except ImportError:
 def run_scientific_analysis():
     """Run scientific analysis demonstrating infrastructure capabilities."""
     logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    import time
+    start_time = time.time()
 
     if logger:
         logger.info("Running scientific analysis...")
+        logger.info("Starting numerical stability and performance benchmarking")
 
     try:
         # Define test functions for analysis
@@ -94,27 +97,55 @@ def run_scientific_analysis():
         analysis_results = {}
 
         for func_name, func in test_functions:
+            func_start_time = time.time()
             if logger:
                 logger.info(f"Analyzing {func_name} function...")
 
             # Test numerical stability
-            test_inputs = np.linspace(-5, 5, 100).tolist()
-            stability_result = check_numerical_stability(
-                func,
-                test_inputs=test_inputs,
-                tolerance=1e-12
-            )
-            if logger:
-                logger.info(f"  Stability: {stability_result.stability_score > 0.8}")
+            try:
+                test_inputs = np.linspace(-5, 5, 100).tolist()
+                if logger:
+                    logger.debug(f"  Testing numerical stability with {len(test_inputs)} inputs")
+                stability_result = check_numerical_stability(
+                    func,
+                    test_inputs=test_inputs,
+                    tolerance=1e-12
+                )
+                stability_duration = time.time() - func_start_time
+                if logger:
+                    is_stable = stability_result.stability_score > 0.8
+                    logger.info(f"  Stability: {'✅ Stable' if is_stable else '⚠️ Unstable'} (score: {stability_result.stability_score:.4f}, {stability_duration:.3f}s)")
+            except Exception as e:
+                if logger:
+                    logger.error(f"  Stability check failed for {func_name}: {e}")
+                    logger.error(f"    Function: {func.__name__}")
+                    logger.error(f"    Error type: {type(e).__name__}")
+                raise
 
             # Benchmark performance
-            benchmark_result = benchmark_function(
-                func,
-                test_inputs=[np.array([i]) for i in np.linspace(-5, 5, 20)],
-                num_runs=10
-            )
-            if logger:
-                logger.info(f"  Benchmark: {benchmark_result['mean_time']:.4f}s avg")
+            try:
+                benchmark_result = benchmark_function(
+                    func,
+                    test_inputs=[np.array([i]) for i in np.linspace(-5, 5, 20)],
+                    iterations=10
+                )
+                if logger:
+                    logger.info(f"  Benchmark: {benchmark_result.execution_time:.6f}s avg")
+            except TypeError as e:
+                if logger:
+                    logger.error(f"  Benchmark failed for {func_name}: {e}")
+                    logger.error(f"    Function: {func.__name__}")
+                    logger.error(f"    Expected parameter: iterations (not num_runs)")
+                raise
+            except AttributeError as e:
+                if logger:
+                    logger.error(f"  Benchmark result access failed for {func_name}: {e}")
+                    logger.error(f"    BenchmarkResult is a dataclass, use .execution_time attribute (not dict access)")
+                raise
+            except Exception as e:
+                if logger:
+                    logger.error(f"  Unexpected benchmark error for {func_name}: {e}")
+                raise
 
             analysis_results[func_name] = {
                 'stability': stability_result,
@@ -131,34 +162,89 @@ def run_scientific_analysis():
         # Convert results to serializable format
         serializable_results = {}
         for func_name, results in analysis_results.items():
-            serializable_results[func_name] = {
-                'stability': {
-                    'overall_stable': results['stability']['overall_stable'],
-                    'max_gradient': float(results['stability']['max_gradient']),
-                    'condition_number': float(results['stability']['condition_number']),
-                },
-                'benchmark': {
-                    'mean_time': float(results['benchmark']['mean_time']),
-                    'std_time': float(results['benchmark']['std_time']),
-                    'min_time': float(results['benchmark']['min_time']),
-                    'max_time': float(results['benchmark']['max_time']),
+            # Handle StabilityTest dataclass
+            stability_data = results['stability']
+            if hasattr(stability_data, 'stability_score'):
+                # StabilityTest dataclass
+                stability_dict = {
+                    'overall_stable': bool(stability_data.stability_score > 0.8),  # Convert numpy bool to Python bool
+                    'stability_score': float(stability_data.stability_score),
+                    'function_name': str(stability_data.function_name),
+                    'test_name': str(stability_data.test_name),
+                    'input_range': [float(stability_data.input_range[0]), float(stability_data.input_range[1])],
+                    'actual_behavior': str(stability_data.actual_behavior),
+                    'recommendations': [str(r) for r in stability_data.recommendations],  # Ensure all items are strings
                 }
+            else:
+                # Legacy dict format (for backward compatibility)
+                stability_dict = {
+                    'overall_stable': bool(stability_data.get('overall_stable', False)),  # Ensure Python bool
+                    'max_gradient': float(stability_data.get('max_gradient', 0.0)),
+                    'condition_number': float(stability_data.get('condition_number', 0.0)),
+                }
+            
+            # Handle BenchmarkResult dataclass
+            benchmark_data = results['benchmark']
+            if hasattr(benchmark_data, 'execution_time'):
+                # BenchmarkResult dataclass - ensure all values are JSON serializable
+                benchmark_dict = {
+                    'execution_time': float(benchmark_data.execution_time),
+                    'iterations': int(benchmark_data.iterations) if hasattr(benchmark_data, 'iterations') else 0,
+                    'memory_usage': float(benchmark_data.memory_usage) if hasattr(benchmark_data, 'memory_usage') and benchmark_data.memory_usage is not None else None,
+                    'function_name': str(benchmark_data.function_name) if hasattr(benchmark_data, 'function_name') else '',
+                    'result_summary': str(benchmark_data.result_summary) if hasattr(benchmark_data, 'result_summary') else '',
+                    'timestamp': str(benchmark_data.timestamp) if hasattr(benchmark_data, 'timestamp') else '',
+                    'parameters': {str(k): (bool(v) if isinstance(v, (bool, np.bool_)) else (float(v) if isinstance(v, (int, float, np.number)) else str(v))) for k, v in benchmark_data.parameters.items()} if hasattr(benchmark_data, 'parameters') and benchmark_data.parameters else {},
+                }
+            else:
+                # Legacy dict format
+                benchmark_dict = {
+                    'execution_time': float(benchmark_data.get('execution_time', 0.0)),
+                    'iterations': int(benchmark_data.get('iterations', 0)),
+                    'memory_usage': float(benchmark_data.get('memory_usage', 0.0)) if benchmark_data.get('memory_usage') is not None else None,
+                }
+            
+            serializable_results[func_name] = {
+                'stability': stability_dict,
+                'benchmark': benchmark_dict,
             }
 
         with open(analysis_path, 'w') as f:
             json.dump(serializable_results, f, indent=2)
 
+        total_duration = time.time() - start_time
         if logger:
             logger.info(f"Saved scientific analysis to: {analysis_path}")
+            logger.info(f"Scientific analysis completed in {total_duration:.2f}s")
         return analysis_path
 
     except ValidationError as e:
+        total_duration = time.time() - start_time
         if logger:
-            logger.warning(f"Scientific analysis validation failed: {e}")
+            logger.warning(f"Scientific analysis validation failed after {total_duration:.2f}s: {e}")
+            logger.warning(f"  Error type: ValidationError")
+            logger.warning(f"  Suggestion: Check input data validity and function implementations")
+        return None
+    except TypeError as e:
+        total_duration = time.time() - start_time
+        if logger:
+            logger.error(f"Scientific analysis parameter error after {total_duration:.2f}s: {e}")
+            logger.error(f"  Error type: TypeError (likely parameter mismatch)")
+            logger.error(f"  Suggestion: Verify function signatures match expected parameters")
+        return None
+    except AttributeError as e:
+        total_duration = time.time() - start_time
+        if logger:
+            logger.error(f"Scientific analysis attribute error after {total_duration:.2f}s: {e}")
+            logger.error(f"  Error type: AttributeError (likely accessing wrong object type)")
+            logger.error(f"  Suggestion: Check if result objects are dataclasses vs dicts")
         return None
     except Exception as e:
+        total_duration = time.time() - start_time
         if logger:
-            logger.warning(f"Unexpected error in scientific analysis: {e}")
+            logger.error(f"Unexpected error in scientific analysis after {total_duration:.2f}s: {e}")
+            logger.error(f"  Error type: {type(e).__name__}")
+            logger.error(f"  Suggestion: Review error details and check system requirements")
         return None
 
 
@@ -405,6 +491,7 @@ def generate_theoretical_analysis_with_progress():
 
 def run_mathematical_demonstration():
     """Run mathematical function demonstration."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
     print("Running mathematical demonstration...")
 
     # Demonstrate functions from src/
@@ -619,15 +706,30 @@ def main():
             if INFRASTRUCTURE_AVAILABLE:
                 if logger:
                     logger.info("Running scientific validation...")
+                import time
+                validation_start = time.time()
 
                 # Validate numerical stability of mathematical functions
+                if logger:
+                    logger.info("  [1/2] Validating numerical stability...")
                 stability_report = validate_mathematical_functions()
+                if logger:
+                    logger.info(f"  ✅ Stability validation completed")
 
                 # Benchmark mathematical operations
+                if logger:
+                    logger.info("  [2/2] Benchmarking performance...")
                 benchmark_report = benchmark_mathematical_operations()
+                if logger:
+                    logger.info(f"  ✅ Performance benchmarking completed")
 
                 # Generate validation reports
+                if logger:
+                    logger.info("  Generating validation reports...")
                 save_scientific_validation_reports(stability_report, benchmark_report)
+                validation_duration = time.time() - validation_start
+                if logger:
+                    logger.info(f"Scientific validation completed in {validation_duration:.2f}s")
 
             # Register figures if possible
             if logger:
@@ -876,25 +978,47 @@ def benchmark_mathematical_operations():
 
 def save_scientific_validation_reports(stability_report, benchmark_report):
     """Save scientific validation reports to output directory."""
+    logger = get_logger(__name__) if INFRASTRUCTURE_AVAILABLE else None
+    import time
+    start_time = time.time()
+    
     try:
         output_dir = project_root / "output" / "reports"
         output_dir.mkdir(parents=True, exist_ok=True)
+        
+        if logger:
+            logger.info("Saving scientific validation reports...")
+            logger.info(f"  Output directory: {output_dir}")
 
         import json
 
         # Save stability report
         if stability_report:
             stability_path = output_dir / "mathematical_stability.json"
+            if logger:
+                logger.info(f"  Saving stability report to: {stability_path}")
             with open(stability_path, 'w') as f:
                 json.dump(stability_report, f, indent=2, default=str)
+            if logger:
+                logger.info(f"  ✅ Saved stability report ({len(stability_report)} functions)")
             print(f"Saved stability report to: {stability_path}")
+        else:
+            if logger:
+                logger.warning("  ⚠️ No stability report to save")
 
         # Save benchmark report
         if benchmark_report:
             benchmark_path = output_dir / "mathematical_benchmark.json"
+            if logger:
+                logger.info(f"  Saving benchmark report to: {benchmark_path}")
             with open(benchmark_path, 'w') as f:
                 json.dump(benchmark_report, f, indent=2, default=str)
+            if logger:
+                logger.info(f"  ✅ Saved benchmark report ({len(benchmark_report)} functions)")
             print(f"Saved benchmark report to: {benchmark_path}")
+        else:
+            if logger:
+                logger.warning("  ⚠️ No benchmark report to save")
 
         # Create validation summary
         summary_path = output_dir / "scientific_validation_summary.md"
@@ -916,13 +1040,45 @@ def save_scientific_validation_reports(stability_report, benchmark_report):
                 f.write("### Performance Benchmarking\n\n")
                 for func_name, benchmark in benchmark_report.items():
                     f.write(f"**{func_name}:**\n")
-                    avg_time = benchmark.get('mean_time', 'N/A')
-                    f.write(f"- Average execution time: {avg_time}\n")
+                    # Handle both dataclass and dict formats for backward compatibility
+                    if hasattr(benchmark, 'execution_time'):
+                        # BenchmarkResult dataclass
+                        avg_time = f"{benchmark.execution_time:.6f}s"
+                        iterations = benchmark.iterations
+                        memory = f"{benchmark.memory_usage:.1f}MB" if benchmark.memory_usage is not None else "N/A"
+                        f.write(f"- Average execution time: {avg_time}\n")
+                        f.write(f"- Iterations: {iterations}\n")
+                        f.write(f"- Memory usage: {memory}\n")
+                    elif isinstance(benchmark, dict):
+                        # Legacy dict format
+                        avg_time = benchmark.get('mean_time', benchmark.get('execution_time', 'N/A'))
+                        f.write(f"- Average execution time: {avg_time}\n")
+                    else:
+                        f.write(f"- Average execution time: N/A (unknown format)\n")
                     f.write("\n")
 
+        duration = time.time() - start_time
+        if logger:
+            logger.info(f"  ✅ Saved validation summary to: {summary_path}")
+            logger.info(f"Report generation completed in {duration:.2f}s")
         print(f"Saved validation summary to: {summary_path}")
 
+    except AttributeError as e:
+        duration = time.time() - start_time
+        if logger:
+            logger.error(f"Failed to save validation reports after {duration:.2f}s: {e}")
+            logger.error(f"  Error type: AttributeError")
+            logger.error(f"  Issue: Attempting to access attribute on wrong object type")
+            logger.error(f"  Suggestion: BenchmarkResult is a dataclass - use .execution_time not .get('mean_time')")
+        if INFRASTRUCTURE_AVAILABLE:
+            logger = get_logger(__name__)
+            logger.warning(f"Failed to save validation reports: {e}")
     except Exception as e:
+        duration = time.time() - start_time
+        if logger:
+            logger.error(f"Failed to save validation reports after {duration:.2f}s: {e}")
+            logger.error(f"  Error type: {type(e).__name__}")
+            logger.error(f"  Suggestion: Check file permissions and disk space")
         if INFRASTRUCTURE_AVAILABLE:
             logger = get_logger(__name__)
             logger.warning(f"Failed to save validation reports: {e}")

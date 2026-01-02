@@ -1,6 +1,6 @@
 {
   "fig:math_viz": {
-    "figure_id": "figure_000",
+    "figure_id": "figure_006",
     "filename": "mathematical_visualization.png",
     "caption": "Comprehensive mathematical visualization with multiple plots",
     "label": "fig:math_viz",
@@ -11,7 +11,7 @@
     "metadata": {}
   },
   "fig:theory_analysis": {
-    "figure_id": "figure_001",
+    "figure_id": "figure_007",
     "filename": "theoretical_analysis.png",
     "caption": "Theoretical convergence analysis visualization",
     "label": "fig:theory_analysis",

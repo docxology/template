@@ -168,6 +168,39 @@ class MultiProjectOrchestrator:
 
                     project_results[project_name] = results
 
+                    # Generate pipeline report for this project
+                    try:
+                        from infrastructure.reporting import generate_pipeline_report, save_pipeline_report, collect_output_statistics
+                        
+                        output_dir = self.config.repo_root / 'projects' / project_name / 'output'
+                        reports_dir = output_dir / 'reports'
+                        reports_dir.mkdir(parents=True, exist_ok=True)
+                        
+                        total_duration = sum(r.duration for r in results)
+                        output_stats = collect_output_statistics(self.config.repo_root, project_name)
+                        
+                        # Generate comprehensive pipeline report
+                        pipeline_report = generate_pipeline_report(
+                            stage_results=[{
+                                'name': r.stage_name,
+                                'exit_code': r.exit_code if hasattr(r, 'exit_code') else (0 if r.success else 1),
+                                'duration': r.duration,
+                                'error_message': r.error_message if hasattr(r, 'error_message') else ''
+                            } for r in results],
+                            total_duration=total_duration,
+                            repo_root=self.config.repo_root,
+                            output_statistics=output_stats
+                        )
+                        
+                        # Save report in multiple formats
+                        saved_files = save_pipeline_report(pipeline_report, reports_dir, formats=['json', 'html', 'markdown'])
+                        logger.info(f"Pipeline reports saved to {reports_dir}")
+                        for fmt, path in saved_files.items():
+                            logger.info(f"  • {fmt.upper()}: {path.name}")
+                            
+                    except Exception as e:
+                        logger.warning(f"Failed to generate pipeline report for {project_name}: {e}")
+
                     # Check if all stages succeeded
                     all_success = all(r.success for r in results)
                     if all_success:

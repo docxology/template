@@ -943,7 +943,11 @@ def _generate_markdown_report(summary: ExecutiveSummary) -> str:
             grade = health.get('grade', 'Unknown')
             lines.append(f"- **{project}**: {grade} health grade")
     else:
-        lines.append("\n### Health Status\n✅ **All projects** are in good health")
+        lines.extend([
+            "",
+            "### Health Status",
+            "✅ **All projects** are in good health"
+        ])
 
     lines.extend([
         "",

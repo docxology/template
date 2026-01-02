@@ -1,4 +1,4 @@
 {
-  "identity_function": "BenchmarkResult(function_name='identity_wrapper', execution_time=np.float64(2.953817602247e-08), memory_usage=np.float64(203.609375), iterations=1000, parameters={'input_count': 12}, result_summary='Avg time: 0.000000s, Avg memory: 203.6MB', timestamp='2026-01-02 11:28:08')",
-  "constant_function": "BenchmarkResult(function_name='constant_wrapper', execution_time=np.float64(2.749640649805467e-08), memory_usage=np.float64(203.609375), iterations=1000, parameters={'input_count': 12}, result_summary='Avg time: 0.000000s, Avg memory: 203.6MB', timestamp='2026-01-02 11:28:08')"
+  "identity_function": "BenchmarkResult(function_name='identity_wrapper', execution_time=np.float64(3.056256294560929e-08), memory_usage=np.float64(199.0625), iterations=1000, parameters={'input_count': 12}, result_summary='Avg time: 0.000000s, Avg memory: 199.1MB', timestamp='2026-01-02 14:36:20')",
+  "constant_function": "BenchmarkResult(function_name='constant_wrapper', execution_time=np.float64(2.92603411556532e-08), memory_usage=np.float64(199.0625), iterations=1000, parameters={'input_count': 12}, result_summary='Avg time: 0.000000s, Avg memory: 199.1MB', timestamp='2026-01-02 14:36:20')"
 }

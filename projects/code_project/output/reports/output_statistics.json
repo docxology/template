@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 9,
       "size_mb": "1.09",
-      "total_size_bytes": 1144002,
+      "total_size_bytes": 1145291,
       "largest_files": [
         {
           "name": "code_project_combined.pdf",
@@ -63,23 +63,23 @@
     "slides": {
       "exists": true,
       "file_count": 29,
-      "size_mb": "0.35",
-      "total_size_bytes": 363567,
+      "size_mb": "1.27",
+      "total_size_bytes": 1328330,
       "largest_files": [
         {
+          "name": "03_results_slides.pdf",
+          "size_mb": "0.93",
+          "path": "slides/03_results_slides.pdf"
+        },
+        {
           "name": "03_results_slides.log",
-          "size_mb": "0.06",
+          "size_mb": "0.05",
           "path": "slides/03_results_slides.log"
         },
         {
           "name": "02_methodology_slides.log",
           "size_mb": "0.05",
           "path": "slides/02_methodology_slides.log"
-        },
-        {
-          "name": "01_introduction_slides.log",
-          "size_mb": "0.05",
-          "path": "slides/01_introduction_slides.log"
         }
       ],
       "extensions": {
@@ -97,7 +97,7 @@
       "exists": true,
       "file_count": 7,
       "size_mb": "0.90",
-      "total_size_bytes": 943427,
+      "total_size_bytes": 943824,
       "largest_files": [
         {
           "name": "algorithm_complexity.png",
@@ -140,11 +140,11 @@
       "exists": true,
       "file_count": 9,
       "size_mb": "0.01",
-      "total_size_bytes": 8750,
+      "total_size_bytes": 8183,
       "largest_files": [
         {
           "name": "validation_report.json",
-          "size_mb": "0.01",
+          "size_mb": "0.00",
           "path": "reports/validation_report.json"
         },
         {
@@ -174,28 +174,28 @@
     },
     "llm": {
       "exists": true,
-      "file_count": 9,
-      "size_mb": "0.07",
-      "total_size_bytes": 68763,
+      "file_count": 4,
+      "size_mb": "0.02",
+      "total_size_bytes": 16750,
       "largest_files": [
         {
           "name": "combined_review.md",
-          "size_mb": "0.02",
+          "size_mb": "0.01",
           "path": "llm/combined_review.md"
         },
         {
-          "name": "translation_hi.md",
-          "size_mb": "0.01",
-          "path": "llm/translation_hi.md"
+          "name": "translation_zh.md",
+          "size_mb": "0.00",
+          "path": "llm/translation_zh.md"
         },
         {
-          "name": "translation_ru.md",
-          "size_mb": "0.01",
-          "path": "llm/translation_ru.md"
+          "name": "executive_summary.md",
+          "size_mb": "0.00",
+          "path": "llm/executive_summary.md"
         }
       ],
       "extensions": {
-        ".md": 8,
+        ".md": 3,
         ".json": 1
       }
     },
@@ -208,14 +208,20 @@
       "extensions": {}
     }
   },
-  "total_files": 68,
-  "total_size_mb": 2.45285701751709,
+  "total_files": 63,
+  "total_size_mb": 3.324390411376953,
   "largest_files": [
     {
       "name": "code_project_combined.pdf",
       "size_mb": "0.98",
       "category": "pdf",
       "path": "pdf/code_project_combined.pdf"
+    },
+    {
+      "name": "03_results_slides.pdf",
+      "size_mb": "0.93",
+      "category": "slides",
+      "path": "slides/03_results_slides.pdf"
     },
     {
       "name": "algorithm_complexity.png",
@@ -237,7 +243,7 @@
     },
     {
       "name": "03_results_slides.log",
-      "size_mb": "0.06",
+      "size_mb": "0.05",
       "category": "slides",
       "path": "slides/03_results_slides.log"
     },
@@ -246,12 +252,6 @@
       "size_mb": "0.05",
       "category": "slides",
       "path": "slides/02_methodology_slides.log"
-    },
-    {
-      "name": "01_introduction_slides.log",
-      "size_mb": "0.05",
-      "category": "slides",
-      "path": "slides/01_introduction_slides.log"
     },
     {
       "name": "_combined_manuscript.log",
@@ -276,7 +276,7 @@
     "code_project_combined.pdf or project_combined.pdf"
   ],
   "file_counts_by_type": {
-    ".md": 11,
+    ".md": 6,
     ".log": 5,
     ".aux": 5,
     ".blg": 1,
@@ -294,14 +294,14 @@
     ".csv": 1
   },
   "sizes_by_category": {
-    "pdf": 1.0910053253173828,
+    "pdf": 1.0922346115112305,
     "web": 0.041255950927734375,
-    "slides": 0.3467245101928711,
-    "figures": 0.8997220993041992,
+    "slides": 1.266794204711914,
+    "figures": 0.9001007080078125,
     "data": 0.0002269744873046875,
-    "reports": 0.008344650268554688,
+    "reports": 0.007803916931152344,
     "simulations": 0.0,
-    "llm": 0.06557750701904297,
+    "llm": 0.015974044799804688,
     "logs": 0.0
   },
   "pdf_files": 9,

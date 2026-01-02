@@ -152,8 +152,8 @@ project/
 ### Testing Architecture
 
 **Test Organization:**
-- `tes../../infrastructure/` mirrors `infrastructure/` structure
-- `tes../../projects/project/` mirrors `project/` structure
+- `tests/infrastructure/` mirrors `infrastructure/` structure
+- `projects/{name}/tests/` mirrors `projects/{name}/src/` structure
 - Integration tests in `tests/integration/`
 - 100% coverage requirement for project code
 - 60%+ coverage requirement for infrastructure
@@ -214,7 +214,7 @@ llm:
 
 ```bash
 # Start with system overview
-cat do../core/ARCHITECTURE.md
+cat docs/core/ARCHITECTURE.md
 
 # Understand layer separation
 cat docs/architecture/TWO_LAYER_ARCHITECTURE.md
@@ -252,7 +252,7 @@ cat docs/architecture/DECISION_TREE.md
 1. **Create module directory**: `infrastructure/new_module/`
 2. **Implement core logic**: `infrastructure/new_module/core.py`
 3. **Add CLI interface**: `infrastructure/new_module/cli.py` (optional)
-4. **Write comprehensive tests**: `tes../../infrastructure/test_new_module/`
+4. **Write comprehensive tests**: `tests/infrastructure/test_new_module/`
 5. **Document functionality**: `infrastructure/new_module/AGENTS.md`
 6. **Update system docs**: Modify root `AGENTS.md` and architecture docs
 
@@ -260,7 +260,7 @@ cat docs/architecture/DECISION_TREE.md
 
 1. **Implement algorithm**: `projects/{name}/src/new_feature.py`
 2. **Create analysis script**: `project/scripts/analyze_new_feature.py`
-3. **Add tests**: `proje../../tests/test_new_feature.py`
+3. **Add tests**: `projects/{name}/tests/test_new_feature.py`
 4. **Update documentation**: `projects/{name}/src/AGENTS.md`
 5. **Integrate with pipeline**: Modify `scripts/02_run_analysis.py` if needed
 

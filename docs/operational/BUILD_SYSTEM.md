@@ -77,9 +77,17 @@ flowchart TD
 
 ### Extended Pipeline: Interactive Orchestrator (`./run.sh --pipeline`)
 
-**10 stages (0-9), includes optional LLM features:**
-- Stage 0: Cleanup (not tracked in progress display)
-- Stages 1-9: Main pipeline (displayed as [1/9] to [9/9])
+**9 stages displayed as [1/9] to [9/9], includes optional LLM features:**
+- Stage 1: Clean Output Directories
+- Stage 2: Environment Setup
+- Stage 3: Infrastructure Tests (may be skipped)
+- Stage 4: Project Tests
+- Stage 5: Project Analysis
+- Stage 6: PDF Rendering
+- Stage 7: Output Validation
+- Stage 8: LLM Scientific Review (optional, requires Ollama)
+- Stage 9: LLM Translations (optional, requires Ollama)
+- Stage 10: Copy Outputs
 
 ```mermaid
 flowchart TD

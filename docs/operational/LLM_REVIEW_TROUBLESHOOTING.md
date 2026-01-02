@@ -398,6 +398,54 @@ env | grep TRANSLATION
    python3 scripts/06_llm_review.py --translations-only
    ```
 
+### Issue: "Review types not configured" or "Want to customize which reviews are generated"
+
+**Symptoms:**
+```
+All 4 review types are generated (executive_summary, quality_review, methodology_review, improvement_suggestions)
+Want to generate only specific review types
+```
+
+**Solutions:**
+
+1. **Configure review types in config.yaml:**
+   ```yaml
+   # project/manuscript/config.yaml
+   llm:
+     reviews:
+       enabled: true
+       types:
+         - executive_summary  # Default: single review
+         # Uncomment to enable additional reviews:
+         # - quality_review
+         # - methodology_review
+         # - improvement_suggestions
+   ```
+
+2. **Disable reviews entirely:**
+   ```yaml
+   # project/manuscript/config.yaml
+   llm:
+     reviews:
+       enabled: false
+   ```
+
+3. **Generate multiple review types:**
+   ```yaml
+   # project/manuscript/config.yaml
+   llm:
+     reviews:
+       enabled: true
+       types:
+         - executive_summary
+         - quality_review
+         - methodology_review
+   ```
+
+4. **Default behavior (no config):**
+   - If `llm.reviews` section is missing, defaults to `['executive_summary']` (single review)
+   - This provides a lightweight default for quick reviews
+
 **Prevention:**
 - Document translation configuration in setup
 - Add translation config validation

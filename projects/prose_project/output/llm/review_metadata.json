@@ -1,87 +1,42 @@
 {
   "model": "gemma3:4b",
-  "timestamp": "2026-01-02T11:31:51.846752",
+  "timestamp": "2026-01-02T14:34:34.553943",
   "source_pdf": "/Users/4d/Documents/GitHub/template/projects/prose_project/output/pdf/prose_project_combined.pdf",
   "reviews_generated": [
-    "translation_zh",
-    "translation_hi",
-    "translation_ru",
-    "translation_de"
+    "translation_zh"
   ],
   "max_input_length": 500000,
   "manuscript_metrics": {
-    "total_chars": 19461,
-    "total_words": 3601,
-    "total_tokens_est": 4865,
+    "total_chars": 20210,
+    "total_words": 3979,
+    "total_tokens_est": 5052,
     "truncated": false,
-    "truncated_chars": 19461
+    "truncated_chars": 20210
   },
   "review_metrics": {
     "translation_zh": {
-      "input_chars": 19461,
-      "input_words": 3601,
-      "input_tokens_est": 4865,
-      "output_chars": 2934,
+      "input_chars": 20210,
+      "input_words": 3979,
+      "input_tokens_est": 5052,
+      "output_chars": 3030,
       "output_words": 300,
-      "output_tokens_est": 733,
-      "generation_time_seconds": 19.55
-    },
-    "translation_hi": {
-      "input_chars": 19461,
-      "input_words": 3601,
-      "input_tokens_est": 4865,
-      "output_chars": 4692,
-      "output_words": 671,
-      "output_tokens_est": 1173,
-      "generation_time_seconds": 23.0
-    },
-    "translation_ru": {
-      "input_chars": 19461,
-      "input_words": 3601,
-      "input_tokens_est": 4865,
-      "output_chars": 5192,
-      "output_words": 601,
-      "output_tokens_est": 1298,
-      "generation_time_seconds": 24.38
-    },
-    "translation_de": {
-      "input_chars": 19461,
-      "input_words": 3601,
-      "input_tokens_est": 4865,
-      "output_chars": 6523,
-      "output_words": 756,
-      "output_tokens_est": 1630,
-      "generation_time_seconds": 28.15
+      "output_tokens_est": 757,
+      "generation_time_seconds": 19.65
     }
   },
   "format_compliance": {
     "overall_rate": 100.0,
-    "compliant_reviews": 4,
-    "total_reviews": 4,
+    "compliant_reviews": 1,
+    "total_reviews": 1,
     "per_review": {
       "translation_zh": {
-        "compliant": true,
-        "issues": [],
-        "conversational_phrases": 0
-      },
-      "translation_hi": {
-        "compliant": true,
-        "issues": [],
-        "conversational_phrases": 0
-      },
-      "translation_ru": {
-        "compliant": true,
-        "issues": [],
-        "conversational_phrases": 0
-      },
-      "translation_de": {
         "compliant": true,
         "issues": [],
         "conversational_phrases": 0
       }
     }
   },
-  "total_generation_time_seconds": 95.1,
+  "total_generation_time_seconds": 19.66,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,

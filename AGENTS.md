@@ -296,12 +296,21 @@ metadata:
 
 # LLM Review Settings (optional)
 llm:
+  reviews:
+    enabled: true
+    types:
+      - executive_summary  # Default: single review
+      # Uncomment to enable additional reviews:
+      # - quality_review
+      # - methodology_review
+      # - improvement_suggestions
   translations:
     enabled: true  # Set to false to disable translation generation
     languages:
-      - zh  # Chinese (Simplified)
-      - hi  # Hindi
-      - ru  # Russian
+      - zh  # Default: single translation (Chinese Simplified)
+      # Uncomment to enable additional languages:
+      # - hi  # Hindi
+      # - ru  # Russian
 ```
 
 **Benefits**:
@@ -383,7 +392,7 @@ The template provides **three entry points** for pipeline execution:
 # Interactive menu with manuscript operations
 ./run.sh
 
-# Non-interactive: Extended pipeline (10 stages: 0-9) with optional LLM review
+# Non-interactive: Extended pipeline (9 stages displayed as [1/9] to [9/9]) with optional LLM review
 ./run.sh --pipeline
 ```
 
@@ -394,37 +403,35 @@ python3 scripts/execute_pipeline.py --project project --core-only
 ```
 
 **Entry Point Comparison**
-- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (10 stages: 0-9), includes optional LLM review stages. Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs.
-- **`./run.sh --pipeline`**: 10 stages (0-9), includes optional LLM review stages. Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs.
+- **`./run.sh`**: Main entry point - Interactive menu or extended pipeline (9 stages), includes optional LLM review stages. Stages are displayed as [1/9] to [9/9] in logs.
+- **`./run.sh --pipeline`**: 9 stages, includes optional LLM review stages. Stages are displayed as [1/9] to [9/9] in logs.
 - **`python3 scripts/execute_pipeline.py --core-only`**: Core pipeline only (no LLM).
 
 ### Pipeline Stages
 
-**Core Pipeline Stages** (both entry points):
+**Full Pipeline Stages** (displayed as [1/9] to [9/9] in logs):
 
-1. **Environment Setup** - Verify system requirements and dependencies (not shown in progress)
-2. **Infrastructure Tests** - Run infrastructure test suite (60% coverage minimum, may be skipped)
-3. **Project Tests** - Run project test suite (90% coverage minimum)
-4. **Project Analysis** - Execute `project/scripts/` analysis workflows
-5. **PDF Rendering** - Generate manuscript PDFs and figures
-6. **Output Validation** - Validate all generated outputs
-7. **Copy Outputs** - Copy final deliverables to root `output/` directory
+1. **Clean Output Directories** - Clean working and final output directories
+2. **Environment Setup** - Verify system requirements and dependencies
+3. **Infrastructure Tests** - Run infrastructure test suite (60% coverage minimum, may be skipped)
+4. **Project Tests** - Run project test suite (90% coverage minimum)
+5. **Project Analysis** - Execute `projects/{name}/scripts/` analysis workflows
+6. **PDF Rendering** - Generate manuscript PDFs and figures
+7. **Output Validation** - Validate all generated outputs
+8. **LLM Scientific Review** - AI-powered manuscript analysis (optional, requires Ollama)
+9. **LLM Translations** - Multi-language technical abstract generation (optional, requires Ollama)
+10. **Copy Outputs** - Copy final deliverables to root `output/` directory
+
+**Infrastructure Tests Behavior:**
+- **Single project mode**: Infrastructure tests run as stage 3 (may be skipped with `--skip-infra`)
+- **Multi-project mode** (`--all-projects`): Infrastructure tests run **once** for all projects at the start, then are **skipped** for individual project executions to avoid redundant testing. This is shown in logs as "Running infrastructure tests once for all projects..." followed by "Skipping stage: Infrastructure Tests" for each project.
 
 **Multi-Project Executive Reporting** (`--all-projects` mode only):
-
-8. **Executive Reporting** - Cross-project metrics, summaries, and visual dashboards
-
-**Extended Pipeline Stages** (`./run.sh --pipeline` only):
-
-9. **LLM Scientific Review** - AI-powered manuscript analysis (optional)
-10. **LLM Translations** - Multi-language technical abstract generation (optional)
+- **Executive Reporting** - Cross-project metrics, summaries, and visual dashboards (generated after all projects complete, not as a numbered stage)
 
 **Stage Numbering:**
-- `./run.sh`: Stages 1-10 (11 total stages). Stages 1-2 are not shown in progress counter [3/10] to [10/10]. Stage 0 is cleanup (not tracked).
+- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in progress logs
 - `scripts/execute_pipeline.py`: Core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
-
-**Multi-Project Executive Reporting** (`--all-projects` mode only):
-- Stage 11: **Executive Reporting** - Cross-project metrics, summaries, and visual dashboards
 
 ### Manual Execution Options
 
@@ -458,7 +465,7 @@ python3 scripts/07_generate_executive_report.py --project project
 **Validation Tools:**
 ```bash
 # Validate markdown files
-python3 -m infrastructure.validation.cli markdown projects/project/manuscript/
+python3 -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 
 # Validate PDF outputs
 python3 -m infrastructure.validation.cli pdf output/project/pdf/
@@ -931,7 +938,7 @@ python3 -m pytest project/tests/ --cov=project/src --cov-fail-under=70
 #### Scripts Failing
 ```bash
 # Run scripts individually to debug
-python3 projects/project/scripts/example_figure.py
+python3 projects/code_project/scripts/optimization_analysis.py
 
 # Check import errors
 python3 -c "import sys; sys.path.insert(0, 'projects/code_project/src'); import optimizer; print('Import successful')"

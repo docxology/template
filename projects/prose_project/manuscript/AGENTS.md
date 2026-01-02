@@ -15,6 +15,7 @@ The `manuscript/` directory contains academic prose demonstrating the template's
 
 ```
 manuscript/
+├── 00_abstract.md             # Research abstract and summary
 ├── 01_introduction.md         # Project motivation and context
 ├── 02_methodology.md          # Mathematical framework and methods
 ├── 03_results.md               # Analysis and findings
@@ -78,6 +79,15 @@ python3 ../../scripts/04_validate_output.py
 ## API Reference
 
 ### Manuscript Sections
+
+#### 00_abstract.md
+Research abstract providing a concise summary of the mathematical framework, methodology, key results, and contributions.
+
+**Content Structure:**
+- Research focus and scope
+- Key theoretical contributions
+- Brief methodology overview
+- Main findings and implications
 
 #### 01_introduction.md
 Project introduction with research context and motivation.
@@ -151,5 +161,5 @@ pandoc 02_methodology.md -t latex | head -50
 ## See Also
 
 - [README.md](README.md) - Quick reference
-- [../../../scripts/03_render_pdf.py](https://github.com/user/template/blob/main/scripts/03_render_pdf.py) - PDF generation
-- [../../../infrastructure/validation/](https://github.com/user/template/tree/main/infrastructure/validation) - Content validation
+- [PDF generation script](../../../scripts/03_render_pdf.py) - PDF generation
+- [Validation module](../../../infrastructure/validation/) - Content validation

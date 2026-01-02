@@ -13,7 +13,7 @@ This is a research project template with a test-driven development workflow, aut
 # Interactive menu (recommended)
 ./run.sh
 
-# Full pipeline (10 stages: setup, tests, analysis, render, validate, copy, LLM review, LLM translations)
+# Full pipeline (9 stages displayed as [1/9] to [9/9]: clean, setup, tests, analysis, render, validate, LLM review, LLM translations, copy)
 ./run.sh --pipeline
 
 # Core pipeline only (6 stages: no LLM)

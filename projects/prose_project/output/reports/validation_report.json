@@ -3,19 +3,18 @@
   "checks": {
     "PDF validation": true,
     "Markdown validation": true,
-    "Output structure": false,
+    "Output structure": true,
     "Figure registry": true
   },
   "figure_issues": [],
   "output_statistics": {
     "detailed_validation": {
       "structure": {
-        "valid": false,
+        "valid": true,
         "issues": [],
-        "missing_files": [
-          "prose_project_combined.pdf"
-        ],
+        "missing_files": [],
         "suspicious_sizes": [
+          "Combined PDF is unusually small: 0.09 MB",
           "pdf/ directory is empty",
           "web/ directory is empty",
           "slides/ directory is empty",
@@ -26,9 +25,9 @@
         "warnings": [],
         "directory_structure": {
           "project_combined_pdf": {
-            "exists": false,
-            "size_mb": 0.0,
-            "readable": false
+            "exists": true,
+            "size_mb": 0.09,
+            "readable": true
           },
           "pdf": {
             "exists": true,
@@ -164,10 +163,9 @@
       },
       "total_size_mb": 0.0,
       "issues_by_severity": {
-        "critical": [
-          "Missing expected file: prose_project_combined.pdf (project-specific combined PDF for prose_project)"
-        ],
+        "critical": [],
         "warning": [
+          "Combined PDF is unusually small: 0.09 MB",
           "pdf/ directory is empty",
           "web/ directory is empty",
           "slides/ directory is empty",
@@ -177,40 +175,27 @@
         ],
         "info": []
       },
-      "recommendations": [
-        {
-          "priority": "high",
-          "action": "Review critical issues in output generation",
-          "details": "Check PDF rendering and copy stages for errors"
-        }
-      ]
+      "recommendations": []
     },
     "pdf": {
       "files": 9,
-      "size_mb": 0.19038867950439453
+      "size_mb": 0.19155216217041016
     },
     "figures": {
       "files": 3,
       "size_mb": 0.573486328125
     },
     "data": {
-      "files": 1,
-      "size_mb": 0.00011730194091796875
+      "files": 2,
+      "size_mb": 0.0020389556884765625
     }
   },
   "summary": {
     "total_checks": 4,
-    "passed": 3,
-    "failed": 1,
+    "passed": 4,
+    "failed": 0,
     "figure_issues_count": 0,
-    "all_passed": false
+    "all_passed": true
   },
-  "recommendations": [
-    {
-      "priority": "high",
-      "issue": "Missing output directories",
-      "action": "Ensure all analysis scripts completed successfully",
-      "file": "projects/prose_project/output/"
-    }
-  ]
+  "recommendations": []
 }

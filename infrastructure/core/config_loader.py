@@ -221,6 +221,77 @@ def get_translation_languages(repo_root: Path | str, project_name: str = "projec
     return languages if isinstance(languages, list) else []
 
 
+def get_review_types(repo_root: Path | str, project_name: str = "project") -> List[str]:
+    """Get list of enabled review types from config.
+
+    Reads the llm.reviews section from config.yaml and returns
+    the list of enabled review type codes.
+
+    Args:
+        repo_root: Root directory of the repository
+        project_name: Name of the project (default: "project")
+
+    Returns:
+        List of review type codes (e.g., ['executive_summary']) if reviews
+        are enabled, empty list if disabled, or ['executive_summary'] as default
+        if no config found.
+    """
+    repo_root = Path(repo_root)
+
+    # Valid review types that can be configured
+    VALID_REVIEW_TYPES = [
+        'executive_summary',
+        'quality_review',
+        'methodology_review',
+        'improvement_suggestions',
+    ]
+
+    # Look for config in the project-specific directory
+    config_path = repo_root / 'projects' / project_name / 'manuscript' / 'config.yaml'
+
+    if not config_path.exists():
+        # Default to single review if no config found
+        return ['executive_summary']
+
+    config = load_config(config_path)
+    if not config:
+        # Default to single review if config can't be loaded
+        return ['executive_summary']
+
+    llm_config = config.get('llm', {})
+    reviews_config = llm_config.get('reviews', {})
+
+    # Check if reviews are explicitly disabled
+    if reviews_config.get('enabled', True) is False:
+        return []
+
+    # Get the list of review types
+    review_types = reviews_config.get('types', [])
+    
+    # If types is not a list, default to single review
+    if not isinstance(review_types, list):
+        return ['executive_summary']
+    
+    # If types list is empty, default to single review
+    if not review_types:
+        return ['executive_summary']
+    
+    # Filter out invalid review types and log warnings
+    valid_types = [rt for rt in review_types if rt in VALID_REVIEW_TYPES]
+    invalid_types = [rt for rt in review_types if rt not in VALID_REVIEW_TYPES]
+    
+    if invalid_types:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.warning(f"Invalid review types ignored: {invalid_types}")
+    
+    # If no valid types after filtering, default to single review
+    if not valid_types:
+        return ['executive_summary']
+    
+    return valid_types
+
+
 def get_testing_config(repo_root: Path | str) -> Dict[str, Any]:
     """Get testing configuration from config.yaml.
     

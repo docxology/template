@@ -108,7 +108,7 @@ Documentation is organized into modular subdirectories:
 
 | Directory | Purpose | Key Files |
 |-----------|---------|-----------|
-| [`core/`](core/) | Essential documentation | ../core/HOW_TO_USE.md, ../core/ARCHITECTURE.md, ../core/WORKFLOW.md |
+| [`core/`](core/) | Essential documentation | core/HOW_TO_USE.md, core/ARCHITECTURE.md, core/WORKFLOW.md |
 | [`guides/`](guides/) | Usage guides by skill level | GETTING_STARTED.md, FIGURES_AND_ANALYSIS.md, TESTING_AND_REPRODUCIBILITY.md, EXTENDING_AND_AUTOMATION.md |
 | [`architecture/`](architecture/) | Architecture documentation | TWO_LAYER_ARCHITECTURE.md, THIN_ORCHESTRATOR_SUMMARY.md |
 | [`usage/`](usage/) | Usage examples and patterns | EXAMPLES.md, MARKDOWN_TEMPLATE_GUIDE.md, VISUALIZATION_GUIDE.md |

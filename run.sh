@@ -16,7 +16,7 @@
 #
 # Orchestration:
 #   7. Run Core Pipeline (stages 0-7: no LLM)
-#   8. Run Full Pipeline (10 stages: 0-9)
+#   8. Run Full Pipeline (9 stages: [1/9] to [9/9])
 #
 # Non-interactive mode: Use dedicated flags (--pipeline, --infra-tests, etc.)
 #
@@ -254,7 +254,7 @@ display_menu() {
     echo
     echo -e "${BOLD}Orchestration:${NC}"
     echo "  7. Run Core Pipeline (stages 0-7: no LLM)"
-    echo "  8. Run Full Pipeline (10 stages: 0-9)"
+    echo "  8. Run Full Pipeline (9 stages: [1/9] to [9/9])"
     echo "  9. Run Full Pipeline (skip infrastructure tests)"
     echo
 echo -e "${BOLD}Multi-Project Operations:${NC}"
@@ -721,7 +721,7 @@ show_help() {
     echo
     echo "Orchestration:"
     echo "  7  Run Core Pipeline (stages 0-7: no LLM)"
-    echo "  8  Run Full Pipeline (10 stages: 0-9)"
+    echo "  8  Run Full Pipeline (9 stages: [1/9] to [9/9])"
     echo "  9  Run Full Pipeline (skip infrastructure tests)"
     echo
 echo "Multi-Project Operations:"

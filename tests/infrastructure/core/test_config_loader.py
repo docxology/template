@@ -406,6 +406,241 @@ class TestGetTranslationLanguages:
     
 
 
+class TestGetReviewTypes:
+    """Test get_review_types function."""
+    
+    def test_returns_default_when_no_config(self, tmp_path):
+        """Test returns default review type when config file doesn't exist."""
+        from infrastructure.core.config_loader import get_review_types
+        result = get_review_types(tmp_path)
+        assert result == ['executive_summary']
+    
+    def test_returns_default_when_config_cant_load(self, tmp_path):
+        """Test returns default review type when config can't be loaded."""
+        from infrastructure.core.config_loader import get_review_types
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        config_file.write_text("invalid: yaml: [unclosed")
+        
+        result = get_review_types(tmp_path)
+        assert result == ['executive_summary']
+    
+    def test_returns_empty_when_reviews_disabled(self, tmp_path):
+        """Test returns empty list when reviews are disabled."""
+        import yaml
+        from infrastructure.core.config_loader import get_review_types
+        config = {
+            'llm': {
+                'reviews': {
+                    'enabled': False,
+                    'types': ['executive_summary', 'quality_review']
+                }
+            }
+        }
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+
+        result = get_review_types(tmp_path)
+        assert result == []
+    
+    def test_returns_default_when_no_llm_section(self, tmp_path):
+        """Test returns default review type when no llm section in config."""
+        import yaml
+        from infrastructure.core.config_loader import get_review_types
+        config = {
+            'paper': {'title': 'Test'}
+        }
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+
+        result = get_review_types(tmp_path)
+        assert result == ['executive_summary']
+    
+    def test_returns_default_when_no_reviews_section(self, tmp_path):
+        """Test returns default review type when no reviews section in config."""
+        import yaml
+        from infrastructure.core.config_loader import get_review_types
+        config = {
+            'llm': {
+                'translations': {
+                    'enabled': True,
+                    'languages': ['zh']
+                }
+            }
+        }
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+
+        result = get_review_types(tmp_path)
+        assert result == ['executive_summary']
+    
+    def test_returns_review_types_when_enabled(self, tmp_path):
+        """Test returns review type list when reviews are enabled."""
+        import yaml
+        from infrastructure.core.config_loader import get_review_types
+        config = {
+            'llm': {
+                'reviews': {
+                    'enabled': True,
+                    'types': ['executive_summary', 'quality_review']
+                }
+            }
+        }
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+
+        result = get_review_types(tmp_path)
+        assert result == ['executive_summary', 'quality_review']
+    
+    def test_returns_single_review_type(self, tmp_path):
+        """Test returns single review type when only one configured."""
+        import yaml
+        from infrastructure.core.config_loader import get_review_types
+        config = {
+            'llm': {
+                'reviews': {
+                    'enabled': True,
+                    'types': ['executive_summary']
+                }
+            }
+        }
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+
+        result = get_review_types(tmp_path)
+        assert result == ['executive_summary']
+    
+    def test_returns_default_for_empty_types_list(self, tmp_path):
+        """Test returns default review type when types list is empty."""
+        import yaml
+        from infrastructure.core.config_loader import get_review_types
+        config = {
+            'llm': {
+                'reviews': {
+                    'enabled': True,
+                    'types': []
+                }
+            }
+        }
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+
+        result = get_review_types(tmp_path)
+        assert result == ['executive_summary']
+    
+    def test_filters_invalid_review_types(self, tmp_path):
+        """Test filters out invalid review types and returns valid ones."""
+        import yaml
+        import logging
+        from infrastructure.core.config_loader import get_review_types
+        
+        # Capture warnings
+        with tmp_path.joinpath("test.log").open('w') as log_file:
+            handler = logging.StreamHandler(log_file)
+            logger = logging.getLogger('infrastructure.core.config_loader')
+            logger.addHandler(handler)
+            logger.setLevel(logging.WARNING)
+            
+            config = {
+                'llm': {
+                    'reviews': {
+                        'enabled': True,
+                        'types': ['executive_summary', 'invalid_type', 'quality_review', 'another_invalid']
+                    }
+                }
+            }
+            config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+            config_file.parent.mkdir(parents=True)
+            with open(config_file, 'w') as f:
+                yaml.dump(config, f)
+
+            result = get_review_types(tmp_path)
+            assert result == ['executive_summary', 'quality_review']
+            assert 'invalid_type' not in result
+            assert 'another_invalid' not in result
+    
+    def test_returns_default_when_all_types_invalid(self, tmp_path):
+        """Test returns default review type when all configured types are invalid."""
+        import yaml
+        from infrastructure.core.config_loader import get_review_types
+        config = {
+            'llm': {
+                'reviews': {
+                    'enabled': True,
+                    'types': ['invalid_type1', 'invalid_type2']
+                }
+            }
+        }
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+
+        result = get_review_types(tmp_path)
+        assert result == ['executive_summary']
+    
+    def test_returns_default_for_invalid_types_type(self, tmp_path):
+        """Test returns default review type when types is not a list."""
+        import yaml
+        from infrastructure.core.config_loader import get_review_types
+        config = {
+            'llm': {
+                'reviews': {
+                    'enabled': True,
+                    'types': 'executive_summary'  # String instead of list
+                }
+            }
+        }
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+
+        result = get_review_types(tmp_path)
+        assert result == ['executive_summary']
+    
+    def test_returns_all_valid_review_types(self, tmp_path):
+        """Test returns all valid review types when all are configured."""
+        import yaml
+        from infrastructure.core.config_loader import get_review_types
+        config = {
+            'llm': {
+                'reviews': {
+                    'enabled': True,
+                    'types': [
+                        'executive_summary',
+                        'quality_review',
+                        'methodology_review',
+                        'improvement_suggestions'
+                    ]
+                }
+            }
+        }
+        config_file = tmp_path / "projects" / "project" / "manuscript" / "config.yaml"
+        config_file.parent.mkdir(parents=True)
+        with open(config_file, 'w') as f:
+            yaml.dump(config, f)
+
+        result = get_review_types(tmp_path)
+        assert len(result) == 4
+        assert 'executive_summary' in result
+        assert 'quality_review' in result
+        assert 'methodology_review' in result
+        assert 'improvement_suggestions' in result
+
+
 class TestYAMLUnavailable:
     """Test behavior when YAML is not available."""
     

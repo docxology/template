@@ -407,6 +407,8 @@ python3 scripts/04_validate_output.py --project myresearch
 ./run.sh --all-projects --tests
 ```
 
+**Note**: In multi-project mode (`--all-projects`), infrastructure tests run **once** for all projects at the start, then are **skipped** for individual project executions. This avoids redundant testing while ensuring infrastructure quality across all projects.
+
 ### Default Project
 
 When no `--project` is specified, the default template project is used:

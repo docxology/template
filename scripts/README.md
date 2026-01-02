@@ -57,14 +57,14 @@ Core Pipeline Scripts:
   6. LLM Translations (requires Ollama)
 
 Orchestration:
-  8. Run Full Pipeline (10 stages: 0-9)
+  8. Run Full Pipeline (9 stages: [1/9] to [9/9])
 ============================================================
 ```
 
 **Non-Interactive Mode:**
 ```bash
 # Core Build Operations
-./run.sh --pipeline          # Extended pipeline (10 stages, includes LLM)
+./run.sh --pipeline          # Extended pipeline (9 stages displayed as [1/9] to [9/9], includes LLM)
 ./run.sh --pipeline --resume # Resume from last checkpoint
 ./run.sh --infra-tests       # Run infrastructure tests only
 ./run.sh --project-tests     # Run project tests only
@@ -117,7 +117,7 @@ Additional stages available in the interactive orchestrator:
 | 9 | `06_llm_review.py` | LLM Translations (optional, requires Ollama) |
 
 **Stage Numbering:**
-- `./run.sh`: Stages 0-9 (10 total). Stage 0 is cleanup; stages 1-9 are displayed as [1/9] to [9/9] in logs
+- `./run.sh`: 9 stages displayed as [1/9] to [9/9] in logs (Clean Output Directories, Environment Setup, Infrastructure Tests, Project Tests, Project Analysis, PDF Rendering, Output Validation, LLM Scientific Review, LLM Translations, Copy Outputs)
 - `scripts/execute_pipeline.py`: core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
 
 ## Running Individual Stages
@@ -199,7 +199,7 @@ The pipeline automatically generates reports in `projects/{name}/output/reports/
 - Copies all web outputs (HTML)
 - Validates all files copied
 
-### Stage 10: Generate Executive Report (Multi-Project Only)
+### Executive Report Generation (Multi-Project Only)
 - Discovers all projects in repository
 - Collects comprehensive metrics across all projects
 - Generates cross-project comparisons and recommendations

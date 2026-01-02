@@ -175,6 +175,8 @@ class SlidesRenderer:
         Converts paths like ../output/figures/file.png to relative paths
         that work from the LaTeX compilation directory (output/slides).
         
+        Handles multiple path formats and preserves optional parameters.
+        
         Args:
             tex_content: LaTeX content to process
             output_dir: Directory where LaTeX compilation happens (output/slides)
@@ -183,22 +185,50 @@ class SlidesRenderer:
         Returns:
             LaTeX content with corrected figure paths
         """
-        # Pattern to match \includegraphics{...}
-        pattern = r'\\includegraphics\{([^}]+)\}'
+        # Pattern to match \includegraphics with or without options
+        # Handles both \includegraphics{path} and \includegraphics[options]{path}
+        pattern = r'\\includegraphics(?:\[([^\]]*)\])?\{([^}]+)\}'
+        
+        def extract_filename(path_str: str) -> str:
+            """Extract filename from various path formats."""
+            # Handle various path formats
+            path_variations = [
+                '../output/figures/',
+                'output/figures/',
+                '../figures/',
+                './figures/',
+            ]
+            
+            for prefix in path_variations:
+                if prefix in path_str:
+                    return path_str.split(prefix)[-1]
+            
+            # If no prefix matched, extract filename from path
+            if '/' in path_str or '\\' in path_str:
+                return re.split(r'[/\\]', path_str)[-1]
+            else:
+                return path_str
         
         def fix_path(match):
-            old_path = match.group(1)
+            options = match.group(1)  # Optional [options] parameter
+            old_path = match.group(2)  # Path in braces
             
-            # If path contains ../output/figures/, resolve it
-            if '../output/figures/' in old_path:
-                # Extract just the filename
-                filename = old_path.split('../output/figures/')[-1]
-                # Since we're compiling in output_dir (output/slides), figures are in ../figures/
-                new_path = f'../figures/{filename}'
+            # Check if already in correct format
+            if old_path.startswith('../figures/'):
+                return match.group(0)
+            
+            # Extract filename from various path formats
+            filename = extract_filename(old_path)
+            
+            # Build new path relative to compilation directory
+            # Since we're compiling in output_dir (output/slides), figures are in ../figures/
+            new_path = f'../figures/{filename}'
+            
+            # Reconstruct command with optional parameters preserved
+            if options:
+                return f'\\includegraphics[{options}]{{{new_path}}}'
+            else:
                 return f'\\includegraphics{{{new_path}}}'
-            
-            # If path is already correct, return as-is
-            return match.group(0)
         
         # Apply path fixes
         tex_content = re.sub(pattern, fix_path, tex_content)

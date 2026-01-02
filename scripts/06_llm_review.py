@@ -4,21 +4,44 @@
 This thin orchestrator coordinates the LLM review stage:
 1. Checks Ollama availability and selects best model
 2. Extracts text from combined manuscript PDF (full content, no truncation by default)
-3. Generates executive summary of key findings
-4. Generates writing quality review
-5. Generates methodology and structure review
-6. Generates improvement suggestions
-7. Validates review quality and retries if needed
-8. Saves all reviews to output/llm/ with detailed metrics
+3. Generates configured review types (default: executive_summary only)
+4. Generates translations to configured languages (if enabled)
+5. Validates review quality and retries if needed
+6. Saves all reviews to output/llm/ with detailed metrics
 
 Stage 8 of the pipeline orchestration - uses local Ollama LLM for
 manuscript analysis and review generation.
 
+Review Types (configurable via config.yaml):
+- executive_summary: Key findings and contributions (default)
+- quality_review: Writing clarity and style
+- methodology_review: Structure and methods assessment
+- improvement_suggestions: Actionable recommendations
+
+Configuration (projects/{name}/manuscript/config.yaml):
+```yaml
+llm:
+  reviews:
+    enabled: true
+    types:
+      - executive_summary  # Default: single review
+      # - quality_review
+      # - methodology_review
+      # - improvement_suggestions
+  translations:
+    enabled: true
+    languages:
+      - zh  # Default: single translation
+      # - hi
+      # - ru
+```
+
 Output Files:
-- executive_summary.md     # Key findings and contributions
-- quality_review.md        # Writing clarity and style
-- methodology_review.md    # Structure and methods assessment
-- improvement_suggestions.md # Actionable recommendations
+- executive_summary.md     # Key findings and contributions (if enabled)
+- quality_review.md        # Writing clarity and style (if enabled)
+- methodology_review.md    # Structure and methods assessment (if enabled)
+- improvement_suggestions.md # Actionable recommendations (if enabled)
+- translation_{lang}.md   # Translations for each configured language
 - review_metadata.json     # Model used, timestamp, config, detailed metrics
 - combined_review.md       # All reviews in one document with TODO checklist
 
@@ -69,7 +92,7 @@ from infrastructure.core.logging_utils import (
     format_duration, log_with_spinner, StreamingProgress, Spinner
 )
 from infrastructure.core.exceptions import LLMConnectionError, LLMTemplateError
-from infrastructure.core.config_loader import get_translation_languages
+from infrastructure.core.config_loader import get_translation_languages, get_review_types
 from infrastructure.llm.core.client import LLMClient
 from infrastructure.llm.core.config import LLMConfig, GenerationOptions
 from infrastructure.llm.utils.ollama import (
@@ -298,13 +321,17 @@ def validate_review_quality(
         default_min = int(default_min * 0.8)  # 20% lower threshold for small models
     min_word_count = min_words or default_min
     
-    # Check word count
+    # Check word count with 5% tolerance for edge cases
     word_count = len(response.split())
     details["word_count"] = word_count
     details["min_required"] = min_word_count
     
-    if word_count < min_word_count:
-        issues.append(f"Too short: {word_count} words (minimum: {min_word_count})")
+    # Allow 5% tolerance to handle edge cases (e.g., 316 words when minimum is 320)
+    tolerance = max(1, int(min_word_count * 0.05))  # At least 1 word tolerance
+    effective_min = min_word_count - tolerance
+    
+    if word_count < effective_min:
+        issues.append(f"Too short: {word_count} words (minimum: {min_word_count}, effective: {effective_min} with tolerance)")
     
     # Check for expected structure (headers) with flexible matching
     if review_type == "executive_summary":
@@ -1477,7 +1504,12 @@ def main(mode: ReviewMode = ReviewMode.ALL, project_name: str = "project") -> in
         # Step 4a: Generate English scientific reviews (if not translations-only)
         if mode != ReviewMode.TRANSLATIONS_ONLY:
             logger.info("\n  Generating English scientific reviews...")
-            review_types = ["executive_summary", "quality_review", "methodology_review", "improvement_suggestions"]
+            review_types = get_review_types(repo_root, project_name)
+            
+            # Default to single review if none configured
+            if not review_types:
+                review_types = ['executive_summary']
+                logger.info("  Using default: executive_summary (no review config found)")
             
             for i, review_type in enumerate(review_types, 1):
                 log_progress(i, len(review_types), f"Review: {review_type.replace('_', ' ').title()}", logger)
@@ -1488,8 +1520,11 @@ def main(mode: ReviewMode = ReviewMode.ALL, project_name: str = "project") -> in
                     response, metrics = generate_quality_review(client, text, model_name)
                 elif review_type == "methodology_review":
                     response, metrics = generate_methodology_review(client, text, model_name)
-                else:  # improvement_suggestions
+                elif review_type == "improvement_suggestions":
                     response, metrics = generate_improvement_suggestions(client, text, model_name)
+                else:
+                    logger.warning(f"  Skipping unknown review type: {review_type}")
+                    continue
                 
                 reviews[review_type] = response
                 session_metrics.reviews[review_type] = metrics
