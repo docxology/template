@@ -11,6 +11,7 @@ The reporting module provides comprehensive reporting capabilities for pipeline 
 ```
 infrastructure/reporting/
 ├── __init__.py              # Public API exports
+├── output_organizer.py      # Unified file organization system
 ├── pipeline_reporter.py     # Pipeline report generation
 ├── error_aggregator.py      # Error collection and categorization
 ├── html_templates.py        # HTML report templates
@@ -28,6 +29,117 @@ infrastructure/reporting/
 3. **Actionable Insights**: Reports include recommendations and fixes
 4. **Integration**: Seamlessly integrated into pipeline stages
 5. **Error Categorization**: Intelligent error grouping and prioritization
+6. **Unified Organization**: Consistent file organization across all reporting modules
+
+## Output Organization System
+
+### Output Organizer (`output_organizer.py`)
+
+The Output Organizer provides unified file organization for executive summary and multi-project outputs. It ensures consistent directory structure and file placement across all reporting modules.
+
+#### FileType Enum
+
+```python
+class FileType(Enum):
+    """Supported file types for output organization."""
+    PNG = ("png", "png")
+    PDF = ("pdf", "pdf")
+    CSV = ("csv", "csv")
+    HTML = ("html", "html")
+    JSON = ("json", "json")
+    MARKDOWN = ("md", "md")
+```
+
+#### OutputOrganizer Class
+
+**Key Methods:**
+
+**`detect_file_type(file_path: Path) -> Optional[FileType]`**
+- Detects file type from extension
+- Returns None for unsupported extensions
+
+**`get_output_path(file_path: Path, output_dir: Path, file_type: FileType) -> Path`**
+- Resolves organized output path: `output_dir/{type_subdirectory}/filename`
+- Used by all reporting modules for consistent file placement
+
+**`ensure_directory_structure(output_dir: Path) -> None`**
+- Creates all required subdirectories: `png/`, `pdf/`, `csv/`, `html/`, `json/`, `md/`, `combined_pdfs/`
+- Idempotent operation
+
+**`organize_existing_files(directory: Path) -> OrganizationResult`**
+- Moves existing files to appropriate subdirectories based on type
+- Handles files already in correct locations
+- Returns statistics on operations performed
+
+**`copy_combined_pdfs(repo_root: Path, target_dir: Path) -> int`**
+- Discovers `{project}_combined.pdf` files from all project output directories
+- Copies them to `target_dir/combined_pdfs/`
+- Returns number of PDFs copied
+
+#### Usage Example
+
+```python
+from infrastructure.reporting.output_organizer import OutputOrganizer, FileType
+
+organizer = OutputOrganizer()
+
+# Get organized path for a PNG file
+png_path = organizer.get_output_path("chart.png", output_dir, FileType.PNG)
+# Result: output_dir/png/chart.png
+
+# Organize existing files
+result = organizer.organize_existing_files(output_dir)
+print(f"Moved {result.moved_files} files")
+
+# Copy combined PDFs from all projects
+copied = organizer.copy_combined_pdfs(repo_root, executive_dir)
+print(f"Copied {copied} combined PDFs")
+```
+
+#### Target Directory Structure
+
+```
+output/executive_summary/
+├── png/              # All PNG visualizations
+├── pdf/              # All PDF visualizations
+├── csv/              # All CSV data exports
+├── html/             # All HTML dashboards
+├── json/             # All JSON reports
+├── md/               # All Markdown reports
+└── combined_pdfs/    # All project combined PDFs
+    ├── project1_combined.pdf
+    └── project2_combined.pdf
+
+output/multi_project_summary/
+├── json/
+│   └── multi_project_summary.json
+└── md/
+    └── multi_project_summary.md
+```
+
+#### Integration
+
+All reporting modules use OutputOrganizer for consistent file organization:
+
+- **Dashboard Generator**: All chart outputs use organized paths
+- **Executive Reporter**: Summary reports saved in type-specific subdirectories
+- **Multi-Project Generator**: Reports organized by type
+- **Executive Report Script**: Automatically copies combined PDFs
+
+#### Reorganization Script
+
+The `scripts/organize_executive_outputs.py` script reorganizes existing outputs:
+
+```bash
+# Dry run to see what would be done
+python3 scripts/organize_executive_outputs.py --dry-run
+
+# Organize all outputs
+python3 scripts/organize_executive_outputs.py
+
+# Organize only executive summary
+python3 scripts/organize_executive_outputs.py --executive-only
+```
 
 ## Core Components
 

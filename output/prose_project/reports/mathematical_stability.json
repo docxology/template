@@ -1,4 +1,0 @@
-{
-  "identity_function": "StabilityTest(function_name='test_identity', test_name='numerical_stability', input_range=(-1.0, 1000000.0), expected_behavior='Stable numerical behavior across input range', actual_behavior='Stability score: 1.00', stability_score=np.float64(1.0), recommendations=[])",
-  "constant_function": "StabilityTest(function_name='<lambda>', test_name='numerical_stability', input_range=(-1.0, 1000000.0), expected_behavior='Stable numerical behavior across input range', actual_behavior='Stability score: 1.00', stability_score=np.float64(1.0), recommendations=[])"
-}

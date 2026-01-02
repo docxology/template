@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from infrastructure.core.logging_utils import get_logger
+from infrastructure.reporting.output_organizer import OutputOrganizer, FileType
 
 logger = get_logger(__name__)
 
@@ -858,25 +859,26 @@ def save_executive_summary(summary: ExecutiveSummary, output_dir: Path) -> Dict[
     Returns:
         Dictionary mapping format to saved file path
     """
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     saved_files = {}
-    
+
     # Save JSON (machine-readable)
-    json_path = output_dir / "consolidated_report.json"
+    json_path = organizer.get_output_path("consolidated_report.json", output_dir, FileType.JSON)
     with open(json_path, 'w') as f:
         json.dump(asdict(summary), f, indent=2, default=str)
     saved_files['json'] = json_path
     logger.info(f"Saved JSON report: {json_path}")
-    
+
     # Save Markdown (human-readable)
-    md_path = output_dir / "consolidated_report.md"
+    md_path = organizer.get_output_path("consolidated_report.md", output_dir, FileType.MARKDOWN)
     md_content = _generate_markdown_report(summary)
     md_path.write_text(md_content)
     saved_files['markdown'] = md_path
     logger.info(f"Saved Markdown report: {md_path}")
-    
+
     # Save HTML (styled)
-    html_path = output_dir / "consolidated_report.html"
+    html_path = organizer.get_output_path("consolidated_report.html", output_dir, FileType.HTML)
     html_content = _generate_html_report(summary)
     html_path.write_text(html_content)
     saved_files['html'] = html_path

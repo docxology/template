@@ -98,13 +98,14 @@ def run_scientific_analysis():
                 logger.info(f"Analyzing {func_name} function...")
 
             # Test numerical stability
+            test_inputs = np.linspace(-5, 5, 100).tolist()
             stability_result = check_numerical_stability(
                 func,
-                input_range=(-5, 5),
-                num_points=100
+                test_inputs=test_inputs,
+                tolerance=1e-12
             )
             if logger:
-                logger.info(f"  Stability: {stability_result['overall_stable']}")
+                logger.info(f"  Stability: {stability_result.stability_score > 0.8}")
 
             # Benchmark performance
             benchmark_result = benchmark_function(
@@ -639,11 +640,15 @@ def main():
                     try:
                         render_manager = get_render_manager()
                         # Render HTML version of analysis
-                        html_output = render_manager.render_web(
-                            content=f"# Mathematical Analysis Results\n\nAnalysis completed with mathematical demonstrations.",
-                            output_dir=project_root / "output" / "html",
-                            title="Mathematical Analysis"
-                        )
+                        # Create temporary markdown file for rendering
+                        temp_md = project_root / "output" / "temp_analysis.md"
+                        temp_md.parent.mkdir(parents=True, exist_ok=True)
+                        with open(temp_md, 'w') as f:
+                            f.write(f"# Mathematical Analysis Results\n\nAnalysis completed with mathematical demonstrations.")
+                        html_output = render_manager.render_web(temp_md)
+                        # Clean up temp file
+                        if temp_md.exists():
+                            temp_md.unlink()
                         if html_output and logger:
                             logger.info(f"Rendered HTML output: {html_output}")
                     except Exception as e:
@@ -901,10 +906,10 @@ def save_scientific_validation_reports(stability_report, benchmark_report):
                 f.write("### Numerical Stability\n\n")
                 for func_name, stability in stability_report.items():
                     f.write(f"**{func_name}:**\n")
-                    if stability.get('stable', False):
-                        f.write(f"- ✅ Stable (max error: {stability.get('max_error', 'N/A')})\n")
+                    if stability.stability_score > 0.8:
+                        f.write(f"- ✅ Stable (score: {stability.stability_score:.2f})\n")
                     else:
-                        f.write(f"- ❌ Unstable (max error: {stability.get('max_error', 'N/A')})\n")
+                        f.write(f"- ❌ Unstable (score: {stability.stability_score:.2f})\n")
                     f.write("\n")
 
             if benchmark_report:

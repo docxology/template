@@ -435,7 +435,7 @@ except ImportError as e:
 Resource usage tracking during mathematical analysis:
 
 ```python
-from infrastructure.core.performance import monitor_performance
+from infrastructure.core import monitor_performance
 
 with monitor_performance("Prose project analysis pipeline") as monitor:
     # Main analysis execution
@@ -451,7 +451,7 @@ performance_metrics = monitor.stop()
 Visual progress indicators for multi-step operations:
 
 ```python
-from infrastructure.core.progress import ProgressBar
+from infrastructure.core import ProgressBar
 
 # Progress tracking for mathematical tests
 with ProgressBar(total=5, desc="Mathematical tests") as progress:

@@ -347,7 +347,7 @@ aws s3 cp "backup_$DATE.tar.gz" s3://research-backups/
 **System Monitoring:**
 ```python
 # Performance monitoring
-from infrastructure.core.performance import PerformanceMonitor
+from infrastructure.core import PerformanceMonitor
 
 monitor = PerformanceMonitor()
 with monitor.track('analysis_pipeline'):

@@ -131,5 +131,7 @@ __all__ = [
     'generate_matplotlib_dashboard',
     'generate_plotly_dashboard',
     'generate_multi_project_report',
+    'OutputOrganizer',
+    'FileType',
 ]
 

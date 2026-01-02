@@ -18,6 +18,7 @@ def validate_copied_outputs(output_dir: Path) -> bool:
 
     Checks:
     - Combined PDF exists at root (preferred) or in pdf/ directory (fallback)
+    - Also checks source directory if copy hasn't happened yet (Stage 6 validation)
     - All expected subdirectories exist (pdf, web, slides, figures, data, reports, simulations, llm, logs)
     - Each directory contains files
     - All files are readable
@@ -29,9 +30,9 @@ def validate_copied_outputs(output_dir: Path) -> bool:
         True if validation successful, False if critical files missing
     """
     logger.info("Validating copied outputs...")
-    
+
     validation_passed = True
-    
+
     # Check combined PDF - try project-specific first, then fallback to generic
     # First check if this looks like a project-specific output directory
     project_name = None
@@ -75,17 +76,45 @@ def validate_copied_outputs(output_dir: Path) -> bool:
                 if project_name:
                     logger.warning(f"Using legacy PDF filename. Consider upgrading to project-specific naming.")
 
+    # If PDF not found in output directory, check source directory (for Stage 6 validation before copy)
+    if not combined_pdf_found and project_name:
+        # Check if we're running validation before copy stage (Stage 6)
+        repo_root = output_dir.parent.parent  # output/ -> repo_root/
+        source_project_dir = repo_root / "projects" / project_name
+        source_output_dir = source_project_dir / "output"
+        source_pdf_dir = source_output_dir / "pdf"
+
+        logger.debug(f"PDF not found in output directory, checking source: {source_output_dir}")
+
+        if source_pdf_dir.exists():
+            # Try project-specific filename in source pdf/ directory
+            source_project_pdf = source_pdf_dir / f"{project_name}_combined.pdf"
+
+            if source_project_pdf.exists() and source_project_pdf.stat().st_size > 0:
+                size_mb = source_project_pdf.stat().st_size / (1024 * 1024)
+                logger.info(f"Combined PDF found in source directory ({size_mb:.2f} MB) - validation before copy stage")
+                combined_pdf_found = True
+
+            # Fallback to legacy filename in source
+            if not combined_pdf_found:
+                source_legacy_pdf = source_pdf_dir / "project_combined.pdf"
+
+                if source_legacy_pdf.exists() and source_legacy_pdf.stat().st_size > 0:
+                    size_mb = source_legacy_pdf.stat().st_size / (1024 * 1024)
+                    logger.info(f"Combined PDF found in source directory ({size_mb:.2f} MB) - validation before copy stage")
+                    combined_pdf_found = True
+
     if not combined_pdf_found:
         logger.error("Combined manuscript PDF missing or empty")
         if project_name:
             logger.error(f"  Expected: output/{project_name}/{project_name}_combined.pdf")
             logger.error(f"  Or in: output/{project_name}/pdf/{project_name}_combined.pdf")
             logger.error(f"  Fallback: output/{project_name}/pdf/project_combined.pdf (legacy)")
+            logger.error(f"  Or in source: projects/{project_name}/output/pdf/{project_name}_combined.pdf")
         else:
             logger.error("  Expected: output/project_combined.pdf")
             logger.error("  Or in: output/pdf/project_combined.pdf")
         logger.error("  → PDF rendering stage (Stage 3) may have failed")
-        logger.error("  → Or copy outputs stage (Stage 5) may have failed")
         logger.error("  → Check project output/ directory for the combined PDF")
         validation_passed = False
     

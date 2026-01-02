@@ -151,5 +151,5 @@ pandoc 02_methodology.md -t latex | head -50
 ## See Also
 
 - [README.md](README.md) - Quick reference
-- [../../../scripts/03_render_pdf.py](../../../scripts/03_render_pdf.py) - PDF generation
-- [../../../infrastructure/validation/](../../../infrastructure/validation/) - Content validation
+- [../../../scripts/03_render_pdf.py](https://github.com/user/template/blob/main/scripts/03_render_pdf.py) - PDF generation
+- [../../../infrastructure/validation/](https://github.com/user/template/tree/main/infrastructure/validation) - Content validation

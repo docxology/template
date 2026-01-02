@@ -404,7 +404,7 @@ find . -name "*.py" -exec grep -L '"""' {} \;
 Resource usage tracking during mathematical analysis:
 
 ```python
-from infrastructure.core.performance import monitor_performance
+from infrastructure.core import monitor_performance
 
 with monitor_performance("Prose project analysis pipeline") as monitor:
     # Generate mathematical visualizations
@@ -429,7 +429,7 @@ Memory: 32.1MB
 Visual progress indicators for multi-step operations:
 
 ```python
-from infrastructure.core.progress import ProgressBar
+from infrastructure.core import ProgressBar
 
 # Progress tracking for mathematical demonstration
 with ProgressBar(total=5, desc="Mathematical tests") as progress:

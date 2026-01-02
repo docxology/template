@@ -11,6 +11,53 @@ The reporting module provides comprehensive reporting capabilities for pipeline 
 - Performance metrics and analysis
 - Error aggregation and categorization
 - **Executive cross-project summaries and visual dashboards**
+- **Unified output organization system**
+
+## Output Organization
+
+The reporting module includes a unified output organization system that ensures consistent file placement across all reporting operations.
+
+### File Organization
+
+```python
+from infrastructure.reporting.output_organizer import OutputOrganizer, FileType
+
+organizer = OutputOrganizer()
+
+# Get organized path for any file type
+png_path = organizer.get_output_path("chart.png", output_dir, FileType.PNG)
+# Result: output_dir/png/chart.png
+
+csv_path = organizer.get_output_path("data.csv", output_dir, FileType.CSV)
+# Result: output_dir/csv/data.csv
+```
+
+### Directory Structure
+
+All executive reports are organized by file type:
+
+```
+output/executive_summary/
+├── png/              # Visualizations
+├── pdf/              # Charts and reports
+├── csv/              # Data exports
+├── html/             # Interactive dashboards
+├── json/             # Machine-readable reports
+├── md/               # Human-readable reports
+└── combined_pdfs/    # All project manuscripts
+```
+
+### Reorganization
+
+Reorganize existing outputs with the provided script:
+
+```bash
+# Preview changes
+python3 scripts/organize_executive_outputs.py --dry-run
+
+# Apply organization
+python3 scripts/organize_executive_outputs.py
+```
 
 ## Quick Start
 

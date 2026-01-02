@@ -237,7 +237,7 @@ def main() -> None:
 The script uses infrastructure-backed performance monitoring:
 
 ```python
-from infrastructure.core.performance import monitor_performance
+from infrastructure.core import monitor_performance
 
 with monitor_performance("Optimization analysis pipeline") as monitor:
     # Main analysis execution
@@ -274,7 +274,7 @@ except TemplateError as e:
 Visual progress indicators for long-running operations:
 
 ```python
-from infrastructure.core.progress import ProgressBar
+from infrastructure.core import ProgressBar
 
 # Progress tracking for experiments
 with ProgressBar(total=4, desc="Step sizes") as progress:

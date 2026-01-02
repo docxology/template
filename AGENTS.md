@@ -402,28 +402,29 @@ python3 scripts/execute_pipeline.py --project project --core-only
 
 **Core Pipeline Stages** (both entry points):
 
-1. **Environment Setup** - Verify system requirements and dependencies
-2. **Test Validation** (coverage: 90% project, 60% infra) - Run test suites
-3. **Project Analysis** - Execute `project/scripts/` analysis workflows
-4. **PDF Rendering** - Generate manuscript PDFs and figures
-5. **Output Validation** - Validate all generated outputs
-6. **Copy Outputs** - Copy final deliverables to root `output/` directory
+1. **Environment Setup** - Verify system requirements and dependencies (not shown in progress)
+2. **Infrastructure Tests** - Run infrastructure test suite (60% coverage minimum, may be skipped)
+3. **Project Tests** - Run project test suite (90% coverage minimum)
+4. **Project Analysis** - Execute `project/scripts/` analysis workflows
+5. **PDF Rendering** - Generate manuscript PDFs and figures
+6. **Output Validation** - Validate all generated outputs
+7. **Copy Outputs** - Copy final deliverables to root `output/` directory
 
 **Multi-Project Executive Reporting** (`--all-projects` mode only):
 
-7. **Executive Reporting** - Cross-project metrics, summaries, and visual dashboards
+8. **Executive Reporting** - Cross-project metrics, summaries, and visual dashboards
 
 **Extended Pipeline Stages** (`./run.sh --pipeline` only):
 
-8. **LLM Scientific Review** - AI-powered manuscript analysis (optional)
-9. **LLM Translations** - Multi-language technical abstract generation (optional)
+9. **LLM Scientific Review** - AI-powered manuscript analysis (optional)
+10. **LLM Translations** - Multi-language technical abstract generation (optional)
 
 **Stage Numbering:**
-- `./run.sh`: Stages 0-9 (10 total stages). Stage 0 is cleanup (not tracked in progress), main stages 1-9 are displayed as [1/9] to [9/9] in logs
+- `./run.sh`: Stages 1-10 (11 total stages). Stages 1-2 are not shown in progress counter [3/10] to [10/10]. Stage 0 is cleanup (not tracked).
 - `scripts/execute_pipeline.py`: Core vs full pipeline is selected by flags (no fixed stage numbering in filenames)
 
 **Multi-Project Executive Reporting** (`--all-projects` mode only):
-- Stage 10: **Executive Reporting** - Cross-project metrics, summaries, and visual dashboards
+- Stage 11: **Executive Reporting** - Cross-project metrics, summaries, and visual dashboards
 
 ### Manual Execution Options
 

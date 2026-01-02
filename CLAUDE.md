@@ -165,18 +165,19 @@ output/
 
 ## Pipeline Stages
 
-### Core Pipeline (Stages 0-5)
-1. **Setup Environment** - Validate dependencies, discover projects
-2. **Run Tests** - Infrastructure (60% min) + Project (90% min) tests
-3. **Run Analysis** - Execute `projects/<name>/scripts/` to generate figures/data
-4. **Render PDF** - Convert markdown to professional PDFs
-5. **Validate Output** - Quality checks on PDFs and content
-6. **Copy Outputs** - Copy final deliverables to `output/<name>/`
+### Core Pipeline (Stages 1-7)
+1. **Setup Environment** - Validate dependencies, discover projects (not shown in progress)
+2. **Infrastructure Tests** - Run infrastructure test suite (may be skipped, not shown in progress)
+3. **Run Tests** - Project test suite (90% coverage minimum)
+4. **Run Analysis** - Execute `projects/<name>/scripts/` to generate figures/data
+5. **Render PDF** - Convert markdown to professional PDFs
+6. **Validate Output** - Quality checks on PDFs and content
+7. **Copy Outputs** - Copy final deliverables to `output/<name>/`
 
-### Extended Pipeline (Stages 6-8, Optional)
-7. **LLM Scientific Review** - Requires Ollama (executive summary, quality review, methodology review, improvement suggestions)
-8. **LLM Translations** - Multi-language abstract translations (configure in `config.yaml`)
-9. **Executive Report** - Cross-project metrics and dashboards (multi-project mode only)
+### Extended Pipeline (Stages 8-10, Optional)
+8. **LLM Scientific Review** - Requires Ollama (executive summary, quality review, methodology review, improvement suggestions)
+9. **LLM Translations** - Multi-language abstract translations (configure in `config.yaml`)
+10. **Executive Report** - Cross-project metrics and dashboards (multi-project mode only)
 
 ## Testing Requirements
 

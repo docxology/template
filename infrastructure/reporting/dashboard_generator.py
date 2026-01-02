@@ -22,6 +22,7 @@ import csv
 from infrastructure.core.logging_utils import get_logger
 from infrastructure.reporting.executive_reporter import ExecutiveSummary, ProjectMetrics
 from infrastructure.reporting.manuscript_overview import generate_all_manuscript_overviews
+from infrastructure.reporting.output_organizer import OutputOrganizer, FileType
 
 logger = get_logger(__name__)
 
@@ -517,7 +518,8 @@ def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -
     """
     logger.info("Generating matplotlib dashboard...")
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     saved_files = {}
 
     try:
@@ -726,13 +728,14 @@ def generate_matplotlib_dashboard(summary: ExecutiveSummary, output_dir: Path) -
         plt.tight_layout()
 
         # Save as PNG (high resolution)
-        png_path = output_dir / "dashboard.png"
+        organizer = OutputOrganizer()
+        png_path = organizer.get_output_path("dashboard.png", output_dir, FileType.PNG)
         plt.savefig(png_path, dpi=300, bbox_inches='tight', facecolor='white')
         saved_files['png'] = png_path
         logger.info(f"Saved PNG dashboard: {png_path}")
 
         # Save as PDF (vector graphics)
-        pdf_path = output_dir / "dashboard.pdf"
+        pdf_path = organizer.get_output_path("dashboard.pdf", output_dir, FileType.PDF)
         plt.savefig(pdf_path, format='pdf', bbox_inches='tight', facecolor='white')
         saved_files['pdf'] = pdf_path
         logger.info(f"Saved PDF dashboard: {pdf_path}")
@@ -886,7 +889,8 @@ def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> 
     """
     logger.info("Generating health score radar chart...")
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     saved_files = {}
 
     try:
@@ -954,13 +958,14 @@ def generate_health_radar_chart(summary: ExecutiveSummary, output_dir: Path) -> 
         plt.tight_layout()
 
         # Save PNG
-        png_path = output_dir / "health_scores_radar.png"
+        organizer = OutputOrganizer()
+        png_path = organizer.get_output_path("health_scores_radar.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches='tight')
         saved_files['png'] = png_path
         logger.info(f"Health radar chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = output_dir / "health_scores_radar.pdf"
+        pdf_path = organizer.get_output_path("health_scores_radar.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches='tight')
         saved_files['pdf'] = pdf_path
         logger.info(f"Health radar chart (PDF) saved: {pdf_path}")
@@ -985,7 +990,8 @@ def generate_health_comparison_chart(summary: ExecutiveSummary, output_dir: Path
     """
     logger.info("Generating health score comparison chart...")
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     saved_files = {}
 
     try:
@@ -1052,13 +1058,14 @@ def generate_health_comparison_chart(summary: ExecutiveSummary, output_dir: Path
         plt.tight_layout()
 
         # Save PNG
-        png_path = output_dir / "health_scores_comparison.png"
+        organizer = OutputOrganizer()
+        png_path = organizer.get_output_path("health_scores_comparison.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches='tight')
         saved_files['png'] = png_path
         logger.info(f"Health comparison chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = output_dir / "health_scores_comparison.pdf"
+        pdf_path = organizer.get_output_path("health_scores_comparison.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches='tight')
         saved_files['pdf'] = pdf_path
         logger.info(f"Health comparison chart (PDF) saved: {pdf_path}")
@@ -1083,7 +1090,8 @@ def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> 
     """
     logger.info("Generating individual project dashboards...")
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     saved_files = {}
 
     try:
@@ -1185,14 +1193,17 @@ def generate_project_breakdowns(summary: ExecutiveSummary, output_dir: Path) -> 
             plt.tight_layout()
 
             # Save PNG
+            organizer = OutputOrganizer()
             safe_name = project.name.replace('_', '').replace('-', '').lower()
-            png_path = output_dir / f"project_dashboard_{safe_name}.png"
+            png_filename = f"project_dashboard_{safe_name}.png"
+            png_path = organizer.get_output_path(png_filename, output_dir, FileType.PNG)
             fig.savefig(png_path, dpi=300, bbox_inches='tight')
             saved_files[f'{safe_name}_png'] = png_path
             logger.info(f"Project dashboard ({project.name} PNG) saved: {png_path}")
 
             # Save PDF
-            pdf_path = output_dir / f"project_dashboard_{safe_name}.pdf"
+            pdf_filename = f"project_dashboard_{safe_name}.pdf"
+            pdf_path = organizer.get_output_path(pdf_filename, output_dir, FileType.PDF)
             fig.savefig(pdf_path, bbox_inches='tight')
             saved_files[f'{safe_name}_pdf'] = pdf_path
             logger.info(f"Project dashboard ({project.name} PDF) saved: {pdf_path}")
@@ -1217,7 +1228,8 @@ def generate_pipeline_efficiency_chart(summary: ExecutiveSummary, output_dir: Pa
     """
     logger.info("Generating pipeline efficiency analysis chart...")
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     saved_files = {}
 
     try:
@@ -1307,13 +1319,14 @@ def generate_pipeline_efficiency_chart(summary: ExecutiveSummary, output_dir: Pa
         plt.tight_layout()
 
         # Save PNG
-        png_path = output_dir / "pipeline_efficiency.png"
+        organizer = OutputOrganizer()
+        png_path = organizer.get_output_path("pipeline_efficiency.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches='tight')
         saved_files['png'] = png_path
         logger.info(f"Pipeline efficiency chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = output_dir / "pipeline_efficiency.pdf"
+        pdf_path = organizer.get_output_path("pipeline_efficiency.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches='tight')
         saved_files['pdf'] = pdf_path
         logger.info(f"Pipeline efficiency chart (PDF) saved: {pdf_path}")
@@ -1338,7 +1351,8 @@ def generate_pipeline_bottlenecks_chart(summary: ExecutiveSummary, output_dir: P
     """
     logger.info("Generating pipeline bottlenecks chart...")
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     saved_files = {}
 
     try:
@@ -1398,13 +1412,14 @@ def generate_pipeline_bottlenecks_chart(summary: ExecutiveSummary, output_dir: P
         plt.tight_layout()
 
         # Save PNG
-        png_path = output_dir / "pipeline_bottlenecks.png"
+        organizer = OutputOrganizer()
+        png_path = organizer.get_output_path("pipeline_bottlenecks.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches='tight')
         saved_files['png'] = png_path
         logger.info(f"Pipeline bottlenecks chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = output_dir / "pipeline_bottlenecks.pdf"
+        pdf_path = organizer.get_output_path("pipeline_bottlenecks.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches='tight')
         saved_files['pdf'] = pdf_path
         logger.info(f"Pipeline bottlenecks chart (PDF) saved: {pdf_path}")
@@ -1429,7 +1444,8 @@ def generate_output_distribution_charts(summary: ExecutiveSummary, output_dir: P
     """
     logger.info("Generating output distribution charts...")
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     saved_files = {}
 
     try:
@@ -1536,13 +1552,14 @@ def generate_output_distribution_charts(summary: ExecutiveSummary, output_dir: P
         plt.tight_layout()
 
         # Save PNG
-        png_path = output_dir / "output_distribution.png"
+        organizer = OutputOrganizer()
+        png_path = organizer.get_output_path("output_distribution.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches='tight')
         saved_files['png'] = png_path
         logger.info(f"Output distribution chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = output_dir / "output_distribution.pdf"
+        pdf_path = organizer.get_output_path("output_distribution.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches='tight')
         saved_files['pdf'] = pdf_path
         logger.info(f"Output distribution chart (PDF) saved: {pdf_path}")
@@ -1567,7 +1584,8 @@ def generate_output_comparison_chart(summary: ExecutiveSummary, output_dir: Path
     """
     logger.info("Generating output comparison chart...")
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     saved_files = {}
 
     try:
@@ -1619,13 +1637,14 @@ def generate_output_comparison_chart(summary: ExecutiveSummary, output_dir: Path
         plt.tight_layout()
 
         # Save PNG
-        png_path = output_dir / "output_comparison.png"
+        organizer = OutputOrganizer()
+        png_path = organizer.get_output_path("output_comparison.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches='tight')
         saved_files['png'] = png_path
         logger.info(f"Output comparison chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = output_dir / "output_comparison.pdf"
+        pdf_path = organizer.get_output_path("output_comparison.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches='tight')
         saved_files['pdf'] = pdf_path
         logger.info(f"Output comparison chart (PDF) saved: {pdf_path}")
@@ -1650,7 +1669,8 @@ def generate_codebase_complexity_chart(summary: ExecutiveSummary, output_dir: Pa
     """
     logger.info("Generating codebase complexity chart...")
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     saved_files = {}
 
     try:
@@ -1743,13 +1763,14 @@ def generate_codebase_complexity_chart(summary: ExecutiveSummary, output_dir: Pa
         plt.tight_layout()
 
         # Save PNG
-        png_path = output_dir / "codebase_complexity.png"
+        organizer = OutputOrganizer()
+        png_path = organizer.get_output_path("codebase_complexity.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches='tight')
         saved_files['png'] = png_path
         logger.info(f"Codebase complexity chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = output_dir / "codebase_complexity.pdf"
+        pdf_path = organizer.get_output_path("codebase_complexity.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches='tight')
         saved_files['pdf'] = pdf_path
         logger.info(f"Codebase complexity chart (PDF) saved: {pdf_path}")
@@ -1774,7 +1795,8 @@ def generate_codebase_comparison_chart(summary: ExecutiveSummary, output_dir: Pa
     """
     logger.info("Generating codebase comparison chart...")
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     saved_files = {}
 
     try:
@@ -1832,13 +1854,14 @@ def generate_codebase_comparison_chart(summary: ExecutiveSummary, output_dir: Pa
         plt.tight_layout()
 
         # Save PNG
-        png_path = output_dir / "codebase_comparison.png"
+        organizer = OutputOrganizer()
+        png_path = organizer.get_output_path("codebase_comparison.png", output_dir, FileType.PNG)
         fig.savefig(png_path, dpi=300, bbox_inches='tight')
         saved_files['png'] = png_path
         logger.info(f"Codebase comparison chart (PNG) saved: {png_path}")
 
         # Save PDF
-        pdf_path = output_dir / "codebase_comparison.pdf"
+        pdf_path = organizer.get_output_path("codebase_comparison.pdf", output_dir, FileType.PDF)
         fig.savefig(pdf_path, bbox_inches='tight')
         saved_files['pdf'] = pdf_path
         logger.info(f"Codebase comparison chart (PDF) saved: {pdf_path}")
@@ -1853,8 +1876,9 @@ def generate_codebase_comparison_chart(summary: ExecutiveSummary, output_dir: Pa
 
 def generate_detailed_project_breakdown_csv(summary: ExecutiveSummary, output_dir: Path) -> Path:
     """Generate detailed project breakdown CSV with all metrics and explanations."""
-    output_dir.mkdir(parents=True, exist_ok=True)
-    csv_path = output_dir / "detailed_project_breakdown.csv"
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
+    csv_path = organizer.get_output_path("detailed_project_breakdown.csv", output_dir, FileType.CSV)
 
     with open(csv_path, 'w', newline='') as f:
         writer = csv.writer(f)
@@ -1997,8 +2021,9 @@ def generate_detailed_project_breakdown_csv(summary: ExecutiveSummary, output_di
 
 def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Path) -> Path:
     """Generate comparative analysis CSV with rankings and percentiles."""
-    output_dir.mkdir(parents=True, exist_ok=True)
-    csv_path = output_dir / "comparative_analysis.csv"
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
+    csv_path = organizer.get_output_path("comparative_analysis.csv", output_dir, FileType.CSV)
 
     with open(csv_path, 'w', newline='') as f:
         writer = csv.writer(f)
@@ -2132,8 +2157,9 @@ def generate_comparative_analysis_csv(summary: ExecutiveSummary, output_dir: Pat
 
 def generate_prioritized_recommendations_csv(summary: ExecutiveSummary, output_dir: Path) -> Path:
     """Generate prioritized recommendations CSV with impact and effort estimates."""
-    output_dir.mkdir(parents=True, exist_ok=True)
-    csv_path = output_dir / "recommendations_prioritized.csv"
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
+    csv_path = organizer.get_output_path("recommendations_prioritized.csv", output_dir, FileType.CSV)
 
     with open(csv_path, 'w', newline='') as f:
         writer = csv.writer(f)
@@ -2232,11 +2258,13 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> Dic
     """
     import csv
     from infrastructure.reporting.executive_reporter import calculate_project_health_score
-    output_dir.mkdir(parents=True, exist_ok=True)
+    organizer = OutputOrganizer()
+    organizer.ensure_directory_structure(output_dir)
     csv_files = {}
 
     # Project metrics CSV
-    metrics_csv = output_dir / "project_metrics.csv"
+    organizer = OutputOrganizer()
+    metrics_csv = organizer.get_output_path("project_metrics.csv", output_dir, FileType.CSV)
     with open(metrics_csv, 'w', newline='') as f:
         writer = csv.writer(f)
 
@@ -2281,7 +2309,7 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> Dic
     logger.info(f"Generated CSV metrics table: {metrics_csv}")
 
     # Aggregate metrics CSV
-    aggregate_csv = output_dir / "aggregate_metrics.csv"
+    aggregate_csv = organizer.get_output_path("aggregate_metrics.csv", output_dir, FileType.CSV)
     with open(aggregate_csv, 'w', newline='') as f:
         writer = csv.writer(f)
 
@@ -2324,7 +2352,7 @@ def generate_csv_data_tables(summary: ExecutiveSummary, output_dir: Path) -> Dic
     logger.info(f"Generated CSV aggregates table: {aggregate_csv}")
 
     # Health scores CSV
-    health_csv = output_dir / "health_scores.csv"
+    health_csv = organizer.get_output_path("health_scores.csv", output_dir, FileType.CSV)
     with open(health_csv, 'w', newline='') as f:
         writer = csv.writer(f)
 

@@ -336,7 +336,7 @@ The project uses infrastructure-backed performance monitoring with automatic res
 
 ```python
 # Performance monitoring context manager
-from infrastructure.core.performance import monitor_performance
+from infrastructure.core import monitor_performance
 
 with monitor_performance("Optimization analysis pipeline") as monitor:
     # Run optimization experiments
@@ -423,7 +423,7 @@ print(citations['mla'])     # MLA format
 Visual progress indicators for long-running operations:
 
 ```python
-from infrastructure.core.progress import ProgressBar
+from infrastructure.core import ProgressBar
 
 # Progress tracking for step size experiments
 with ProgressBar(total=4, desc="Step sizes") as progress:

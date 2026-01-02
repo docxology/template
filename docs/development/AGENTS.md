@@ -442,7 +442,7 @@ def test_path_traversal_prevention():
 **Performance Testing:**
 ```python
 import time
-from infrastructure.core.performance import PerformanceMonitor
+from infrastructure.core import PerformanceMonitor
 
 def benchmark_analysis_algorithm():
     """Benchmark analysis algorithm performance."""

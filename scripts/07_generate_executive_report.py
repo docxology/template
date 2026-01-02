@@ -32,6 +32,7 @@ from infrastructure.reporting.executive_reporter import (
     save_executive_summary
 )
 from infrastructure.reporting.dashboard_generator import generate_all_dashboards
+from infrastructure.reporting.output_organizer import OutputOrganizer
 
 # Set up logger for this module
 logger = get_logger(__name__)
@@ -158,10 +159,16 @@ def main() -> int:
         # Generate dashboards
         log_substep("Generating visual dashboards...", logger)
         dashboard_files = generate_all_dashboards(summary, output_dir)
-        
+
         for format_name, file_path in dashboard_files.items():
             logger.info(f"  {format_name.upper()}: {file_path.name}")
-        
+
+        # Copy combined PDFs from all projects
+        log_substep("Copying combined PDFs from all projects...", logger)
+        organizer = OutputOrganizer()
+        copied_count = organizer.copy_combined_pdfs(repo_root, output_dir)
+        logger.info(f"  Copied {copied_count} combined PDF files")
+
         # Log high-level summary
         logger.info("\n" + "="*60)
         logger.info("EXECUTIVE SUMMARY")

@@ -491,9 +491,9 @@ Root entry points work with **ANY** project that follows this structure.
 
 ## See Also
 
-- [`README.md`](README.md) - Quick reference
-- [`projects/project/scripts/AGENTS.md`](../projects/project/scripts/AGENTS.md) - Project scripts
-- [`../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern explanation
+- [`../README.md`](../README.md) - Quick reference
+- [`../projects/project/scripts/AGENTS.md`](../projects/project/scripts/AGENTS.md) - Project scripts
+- [`../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern explanation
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
 
 ## Testing and Logging Standards
