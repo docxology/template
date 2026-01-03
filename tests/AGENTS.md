@@ -266,16 +266,19 @@ SRC = os.path.join(ROOT, "src")
 if os.path.exists(SRC) and SRC not in sys.path:
     sys.path.insert(0, SRC)
 
-# Add project/src/ to path for project modules
-PROJECT_SRC = os.path.join(ROOT, "project", "src")
-if os.path.exists(PROJECT_SRC) and PROJECT_SRC not in sys.path:
+# Add project src/ directories to path for project modules
+# Projects are discovered dynamically, so we add both known projects
+for project_name in ["code_project", "prose_project"]:
+    project_src = os.path.join(ROOT, "projects", project_name, "src")
+    if os.path.exists(project_src) and project_src not in sys.path:
     sys.path.insert(0, PROJECT_SRC)
 ```
 
 This allows tests to import directly:
 ```python
 from infrastructure.core.config_loader import load_config  # Infrastructure imports
-from project.src.example import add_numbers  # Project imports
+from projects.code_project.src.optimizer import optimize  # code_project imports
+from projects.prose_project.src.visualization import plot_function  # prose_project imports
 ```
 
 ## Test Categories
@@ -304,12 +307,11 @@ Test individual infrastructure modules in `tests/infrastructure/`:
   - `test_repo_scanner.py` - Repository scanning and validation
 
 ### Project Module Tests
-Test project-specific code in `project/tests/`:
+Test project-specific code in `projects/{name}/tests/`:
 - Unit tests for `projects/{name}/src/` modules (see `projects/{name}/tests/AGENTS.md`)
-- Integration tests in `project/tests/integration/`
-  - `test_integration_pipeline.py` - Full analysis pipeline
-  - `test_example_figure.py` - Figure generation integration
-  - `test_generate_research_figures.py` - Research figure pipeline
+- Each project has independent test suite with 90%+ coverage requirement
+- code_project: 28 tests, 94.1% coverage
+- prose_project: 47 tests, 91.5% coverage
 
 ### Integration Tests
 Test cross-module interactions in `tests/integration/`:
@@ -323,14 +325,15 @@ Test cross-module interactions in `tests/integration/`:
 ### All Tests with Coverage
 ```bash
 # Using pytest directly (both infrastructure and project)
-pytest tests/ --cov=infrastructure --cov=project/src --cov-report=term-missing --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=term-missing --cov-report=html
 
 # Using uv
-uv run pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=html
 
 # Verify coverage requirements
 pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
-pytest project/tests/ --cov=project/src --cov-fail-under=90
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
+pytest projects/prose_project/tests/ --cov=projects/prose_project/src --cov-fail-under=90
 ```
 
 ### Specific Tests
@@ -339,7 +342,8 @@ pytest project/tests/ --cov=project/src --cov-fail-under=90
 pytest tests/infrastructure/core/test_config_loader.py -v
 
 # Project tests
-pytest project/tests/test_example.py -v
+pytest projects/code_project/tests/ -v
+pytest projects/prose_project/tests/ -v
 
 # Integration tests
 pytest tests/integration/test_module_interoperability.py -v
@@ -351,19 +355,21 @@ pytest tests/ -k "test_config" -v
 ### Coverage Reports
 ```bash
 # Terminal report with missing lines
-pytest tests/ --cov=infrastructure --cov=project/src --cov-report=term-missing
+pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=term-missing
 
 # HTML report (opens in browser)
-pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=html
 open htmlcov/index.html
 
 # Separate reports
 pytest tests/infrastructure/ --cov=infrastructure --cov-report=html --cov-fail-under=60
-pytest project/tests/ --cov=project/src --cov-report=html --cov-fail-under=90
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html --cov-fail-under=90
+pytest projects/prose_project/tests/ --cov=projects/prose_project/src --cov-report=html --cov-fail-under=90
 ```
 
 ### Coverage Snapshot (latest)
-- Project: **100%** (exceeds 90% target!)
+- code_project: **94.1%** (exceeds 90% target!)
+- prose_project: **91.5%** (exceeds 90% target!)
 - Infrastructure: **83.33%** (exceeds 60% target by 39%!)
 - Total tests: **2118** (1796 infrastructure [2 skipped], 320 project)
 
@@ -401,11 +407,13 @@ pytest tests/ -m requires_github
 
 ### Test Structure
 ```python
-"""Tests for infrastructure/module_name.py or project/src/module_name.py"""
+"""Tests for infrastructure/module_name.py or projects/{name}/src/module_name.py"""
 import pytest
 from infrastructure.module_name import function_to_test
 # or
-from project.src.module_name import function_to_test
+from projects.code_project.src.module_name import function_to_test
+# or
+from projects.prose_project.src.module_name import function_to_test
 
 class TestFunctionName:
     """Test suite for function_to_test."""
@@ -456,8 +464,9 @@ def test_double(input, expected):
 
 ### Current Coverage Status
 
-**Project Modules** (`project/src/`): **100%** (Target: 90%+)
-- Perfect coverage achieved - all project-specific modules fully tested
+**Project Modules** (`projects/{name}/src/`):
+- **code_project**: **94.1%** (Target: 90%+) ✅ Exceeds requirement!
+- **prose_project**: **91.5%** (Target: 90%+) ✅ Exceeds requirement!
 - Comprehensive test coverage ensures research code reliability
 
 **Infrastructure Modules** (`infrastructure/`): **83.33%** (Target: 60%+)
@@ -471,7 +480,7 @@ def test_double(input, expected):
 ```toml
 [tool.coverage.run]
 branch = true
-source = ["infrastructure", "project/src"]
+source = ["infrastructure", "projects/code_project/src", "projects/prose_project/src"]
 
 [tool.coverage.report]
 fail_under = 70  # Global fallback; individual runs use 60% (infra) and 90% (project)
@@ -544,13 +553,14 @@ def test_something():
 Before committing code:
 ```bash
 # Run all tests with coverage
-pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=html
 
 # Verify infrastructure coverage (60% minimum)
 pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 
 # Verify project coverage (90% minimum)
-pytest project/tests/ --cov=project/src --cov-fail-under=90
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
+pytest projects/prose_project/tests/ --cov=projects/prose_project/src --cov-fail-under=90
 
 # Check coverage report
 open htmlcov/index.html
@@ -559,8 +569,8 @@ open htmlcov/index.html
 ## Adding New Tests
 
 ### Checklist
-1. Determine if code is project-specific (`project/src/`) or infrastructure (`infrastructure/`)
-2. Create test file in appropriate location (`project/tests/` or `tests/infrastructure/`)
+1. Determine if code is project-specific (`projects/{name}/src/`) or infrastructure (`infrastructure/`)
+2. Create test file in appropriate location (`projects/{name}/tests/` or `tests/infrastructure/`)
 3. Import functions to test from correct module path
 4. Write comprehensive test cases using real data (no mocks)
 5. Ensure coverage requirements met (90% project, 60% infrastructure)
@@ -569,11 +579,13 @@ open htmlcov/index.html
 
 ### Template
 ```python
-"""Tests for infrastructure/new_module.py or project/src/new_module.py"""
+"""Tests for infrastructure/new_module.py or projects/{name}/src/new_module.py"""
 import pytest
 from infrastructure.new_module import new_function
 # or
-from project.src.new_module import new_function
+from projects.code_project.src.new_module import new_function
+# or
+from projects.prose_project.src.new_module import new_function
 
 
 class TestNewFunction:
@@ -659,7 +671,8 @@ See **[docs/TESTING_WITH_CREDENTIALS.md](../docs/development/TESTING_WITH_CREDEN
 
 - [`conftest.py`](conftest.py) - Test configuration and fixtures
 - [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure module documentation
-- [`../project/src/AGENTS.md`](../project/src/AGENTS.md) - Project module documentation
+- [`../projects/code_project/src/AGENTS.md`](../projects/code_project/src/AGENTS.md) - code_project module documentation
+- [`../projects/prose_project/src/AGENTS.md`](../projects/prose_project/src/AGENTS.md) - prose_project module documentation
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 - [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow
 - [`../docs/development/TESTING_WITH_CREDENTIALS.md`](../docs/development/TESTING_WITH_CREDENTIALS.md) - Credential configuration guide

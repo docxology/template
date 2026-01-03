@@ -15,7 +15,7 @@ from infrastructure.project.discovery import discover_projects, ProjectInfo
 def find_markdown_files(repo_root: Path) -> List[Path]:
     """Find all markdown files excluding output/htmlcov and virtual environments."""
     exclude_dirs = {'output', 'htmlcov', '.venv', 'venv', '__pycache__', '.pytest_cache', 
-                   '.git', 'node_modules', '.tox', 'dist', 'build', '.mypy_cache'}
+                   '.git', 'node_modules', '.tox', 'dist', 'build', '.mypy_cache', 'projects_archive'}
     md_files = []
     for md_file in repo_root.rglob("*.md"):
         # Skip if any part of the path is in exclude list

@@ -1,10 +1,10 @@
 """Comprehensive tests for infrastructure/rendering/web_renderer.py.
 
-Tests web/HTML rendering functionality.
+Tests web/HTML rendering functionality using real implementations.
+Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
 
 from infrastructure.rendering import web_renderer

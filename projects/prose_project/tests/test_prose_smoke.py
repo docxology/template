@@ -164,6 +164,7 @@ class TestMathematicalVisualization:
 
     def test_visualization_error_handling(self):
         """Test error handling in visualization functions."""
+        import warnings
         # Test with invalid function
         functions = {
             'Valid': lambda x: x,
@@ -171,7 +172,9 @@ class TestMathematicalVisualization:
         }
 
         # Should handle errors gracefully (plot valid functions, skip invalid ones)
-        fig = plot_function_comparison(functions, x_range=(-1, 1))
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", RuntimeWarning)
+            fig = plot_function_comparison(functions, x_range=(-1, 1))
 
         assert isinstance(fig, plt.Figure)
         # Should still have plotted the valid function

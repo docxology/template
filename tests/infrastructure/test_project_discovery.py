@@ -1,11 +1,11 @@
-"""Tests for project discovery functionality.
+"""Tests for project discovery functionality using real implementations.
 
 Tests the infrastructure.project module for discovering, validating,
 and extracting metadata from projects in the projects/ directory.
+Follows No Mocks Policy - all tests use real data and real execution.
 """
 import pytest
 from pathlib import Path
-from unittest.mock import patch
 
 from infrastructure.project.discovery import (
     discover_projects,

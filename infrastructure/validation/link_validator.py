@@ -154,16 +154,31 @@ class LinkValidator:
             except (ValueError, RuntimeError):
                 return None, False
         elif link_target.endswith('/'):
-            # Directory reference - try relative to repo root first, then relative to source
-            candidate1 = (repo_root_abs / link_target).resolve()
-            if candidate1.exists() and candidate1.is_relative_to(repo_root_abs):
-                return candidate1.relative_to(repo_root_abs), False
+            # Directory reference - check for common index files (AGENTS.md, README.md, index.md)
+            index_files = ['AGENTS.md', 'README.md', 'index.md']
+            
+            # Try relative to repo root first
+            candidate_dir = (repo_root_abs / link_target).resolve()
+            if candidate_dir.exists() and candidate_dir.is_relative_to(repo_root_abs):
+                # Check for index files in this directory
+                for index_file in index_files:
+                    index_path = candidate_dir / index_file
+                    if index_path.exists() and index_path.is_relative_to(repo_root_abs):
+                        return index_path.relative_to(repo_root_abs), False
+                # Directory exists but no index file found - return directory itself
+                return candidate_dir.relative_to(repo_root_abs), False
 
             # Fallback: relative to source file directory
             source_dir = source_file.parent
-            candidate2 = (source_dir / link_target).resolve()
-            if candidate2.exists() and candidate2.is_relative_to(repo_root_abs):
-                return candidate2.relative_to(repo_root_abs), False
+            candidate_dir = (source_dir / link_target).resolve()
+            if candidate_dir.exists() and candidate_dir.is_relative_to(repo_root_abs):
+                # Check for index files in this directory
+                for index_file in index_files:
+                    index_path = candidate_dir / index_file
+                    if index_path.exists() and index_path.is_relative_to(repo_root_abs):
+                        return index_path.relative_to(repo_root_abs), False
+                # Directory exists but no index file found - return directory itself
+                return candidate_dir.relative_to(repo_root_abs), False
 
             return None, False
         else:
@@ -238,13 +253,32 @@ class LinkValidator:
                     })
             elif resolved_path:
                 # Check if it's a directory reference (ends with /)
-                if link_target.endswith('/') and resolved_path in self.all_dirs:
-                    valid_links.append({
-                        'text': link_text,
-                        'target': link_target,
-                        'line': str(line_num),
-                        'type': 'directory'
-                    })
+                # If resolved_path is a file (index file), treat it as valid
+                if link_target.endswith('/'):
+                    if resolved_path in self.all_files:
+                        # Directory link resolved to an index file (AGENTS.md, README.md, etc.)
+                        valid_links.append({
+                            'text': link_text,
+                            'target': link_target,
+                            'line': str(line_num),
+                            'type': 'directory_index'
+                        })
+                    elif resolved_path in self.all_dirs:
+                        # Directory exists but no index file found
+                        valid_links.append({
+                            'text': link_text,
+                            'target': link_target,
+                            'line': str(line_num),
+                            'type': 'directory'
+                        })
+                    else:
+                        broken_links.append({
+                            'text': link_text,
+                            'target': link_target,
+                            'line': str(line_num),
+                            'type': 'broken',
+                            'file': str(file_path)
+                        })
                 elif resolved_path in self.all_files:
                     valid_links.append({
                         'text': link_text,

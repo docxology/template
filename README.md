@@ -126,7 +126,7 @@ flowchart TD
 | 4 | **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** | Complete documentation index |
 | 5 | **[docs/modules/MODULES_GUIDE.md](docs/modules/MODULES_GUIDE.md)** | All 7 modules |
 
-**Technical resources:** See **[projects_archive/ento_linguistics/manuscript/preamble.md](projects_archive/ento_linguistics/manuscript/preamble.md)** and **[docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md)**
+**Technical resources:** See **[docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md)** for LaTeX preamble examples
 
 ## 🧭 Documentation Hub
 
@@ -247,7 +247,7 @@ graph TB
         end
 
         subgraph Output["📤 Final Deliverables"]
-            OUT1[output/project/<br/>Project PDFs, data]
+            OUT1[output/code_project/<br/>Project PDFs, data]
             OUT2[output/prose_project/<br/>Prose outputs]
             OUT3[output/code_project/<br/>Code outputs]
             OUTN[output/your_project/<br/>Your deliverables]
@@ -956,7 +956,7 @@ python3 scripts/03_render_pdf.py
 
 **Configuration is applied to:**
 - PDF metadata (title, author, creation date)
-- LaTeX document properties - [Preamble details](../../projects_archive/ento_linguistics/manuscript/preamble.md)
+- LaTeX document properties (see [docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md) for preamble examples)
 - Generated file headers
 - Cross-reference systems
 
@@ -1185,8 +1185,7 @@ flowchart TD
 - **[docs/development/ROADMAP.md](docs/development/ROADMAP.md)** - Development roadmap and future plans
 
 ### Reference & Resources
-- **[docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md)** - Shareable content for promoting the template
-- **[projects_archive/ento_linguistics/manuscript/preamble.md](projects_archive/ento_linguistics/manuscript/preamble.md)** - LaTeX preamble and styling configuration
+- **[docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md)** - Shareable content for promoting the template and LaTeX preamble examples
 
 ### Directory-Specific Documentation
 - **[infrastructure/AGENTS.md](infrastructure/AGENTS.md)** - Infrastructure layer documentation

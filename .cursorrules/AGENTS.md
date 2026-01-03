@@ -216,7 +216,7 @@ As shown in \eqref{eq:objective}, the objective function...
 
 **Related Documentation:**
 - [manuscript_style.md](manuscript_style.md) - Complete manuscript formatting guide
-- [../projects/project/manuscript/AGENTS.md](../projects/project/manuscript/AGENTS.md) - Manuscript documentation
+- [../projects/code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) - Manuscript documentation
 - [../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md](../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown guide
 
 ## Testing Standards
@@ -418,8 +418,8 @@ template/
 
 - [Root AGENTS.md](../AGENTS.md) - System overview
 - [Infrastructure AGENTS.md](../infrastructure/AGENTS.md) - Infrastructure layer
-- [Project AGENTS.md](../projects/project/AGENTS.md) - Project layer
-- [docs/](../docs/) - Comprehensive guides
+- [Projects AGENTS.md](../projects/AGENTS.md) - Projects layer
+- [Documentation Hub](../docs/AGENTS.md) - Comprehensive guides
 
 ### External Resources
 
@@ -471,7 +471,7 @@ The .cursorrules standards align with and support the main documentation:
 | Documentation | [documentation_standards.md](documentation_standards.md) | [docs/WORKFLOW.md](../docs/core/WORKFLOW.md) |
 | Type Safety | [type_hints_standards.md](type_hints_standards.md) | [docs/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) |
 | LLM Integration | [llm_standards.md](llm_standards.md) | [infrastructure/llm/AGENTS.md](../infrastructure/llm/AGENTS.md) |
-| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [project/manuscript/AGENTS.md](../projects/project/manuscript/AGENTS.md) |
+| Manuscript Writing | [manuscript_style.md](manuscript_style.md) | [code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) |
 | Refactoring | [refactoring.md](refactoring.md) | [docs/BEST_PRACTICES.md](../docs/best-practices/BEST_PRACTICES.md) |
 
 ## Cross-Reference Guide
@@ -508,7 +508,7 @@ The .cursorrules standards align with and support the main documentation:
 | Writing tests | [testing_standards.md](testing_standards.md) | [error_handling.md](error_handling.md) for error testing |
 | Creating modules | [infrastructure_modules.md](infrastructure_modules.md) | All of the above standards |
 | Writing docs | [documentation_standards.md](documentation_standards.md) | Specific guide for your doc type |
-| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [project/manuscript/AGENTS.md](../projects/project/manuscript/AGENTS.md) for manuscript structure |
+| Writing manuscripts | [manuscript_style.md](manuscript_style.md) | [code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) for manuscript structure |
 | Adding type hints | [type_hints_standards.md](type_hints_standards.md) | [documentation_standards.md](documentation_standards.md) for docstrings |
 | Using LLM/Ollama | [llm_standards.md](llm_standards.md) | [infrastructure_modules.md](infrastructure_modules.md) for module patterns |
 | Generating reports | [reporting.md](reporting.md) | [docs/MODULES_GUIDE.md](../docs/modules/MODULES_GUIDE.md) for module details |
@@ -565,7 +565,7 @@ When creating a new .cursorrules file:
 - [`README.md`](README.md) - Quick reference guide
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
 - [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure layer documentation
-- [`../projects/project/AGENTS.md`](../projects/project/AGENTS.md) - Project layer documentation
+- [`../projects/AGENTS.md`](../projects/AGENTS.md) - Projects layer documentation
 
 **Related Documentation:**
 - [`../docs/core/ARCHITECTURE.md`](../docs/core/ARCHITECTURE.md) - System architecture overview

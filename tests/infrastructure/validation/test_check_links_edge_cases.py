@@ -1,15 +1,16 @@
 """Edge case tests for infrastructure/validation/check_links.py.
 
-Tests specific edge cases for improved coverage:
+Tests specific edge cases for improved coverage using real implementations:
 - Path resolution errors
 - Broken anchor detection
 - Reporting functions
 - Main function return codes
+
+Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 import os
 from pathlib import Path
-from unittest.mock import patch, MagicMock
 import pytest
 
 from infrastructure.validation import check_links
@@ -268,7 +269,7 @@ class TestMainFunctionReporting:
 [Broken](#nonexistent-section)
 """)
         
-        # Run main with patched repo root
+        # Run main with custom repo root
         original_main = check_links.main
         
         def patched_main():

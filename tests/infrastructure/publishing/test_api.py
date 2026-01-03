@@ -1,6 +1,8 @@
-"""Tests for infrastructure.publishing.api module."""
+"""Tests for infrastructure.publishing.api module using real implementations.
+
+Follows No Mocks Policy - all tests use real data and real execution.
+"""
 import pytest
-from unittest.mock import Mock, patch
 
 from infrastructure.publishing import api
 

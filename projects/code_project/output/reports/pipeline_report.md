@@ -1,7 +1,7 @@
 # Pipeline Execution Report
 
-**Generated:** 2026-01-02T14:33:10.223799
-**Total Duration:** 1m 33s
+**Generated:** 2026-01-03T14:48:13.140319
+**Total Duration:** 1m 36s
 
 ## Summary
 
@@ -16,12 +16,12 @@
 |-------|--------|----------|-----------|
 | Clean Output Directories | ✅ passed | 0s | 0 |
 | Environment Setup | ✅ passed | 0s | 0 |
-| Project Tests | ✅ passed | 6s | 0 |
-| Project Analysis | ✅ passed | 5s | 0 |
-| PDF Rendering | ✅ passed | 25s | 0 |
+| Project Tests | ✅ passed | 5s | 0 |
+| Project Analysis | ✅ passed | 3s | 0 |
+| PDF Rendering | ✅ passed | 26s | 0 |
 | Output Validation | ✅ passed | 0s | 0 |
-| LLM Scientific Review | ✅ passed | 26s | 0 |
-| LLM Translations | ✅ passed | 29s | 0 |
+| LLM Scientific Review | ✅ passed | 27s | 0 |
+| LLM Translations | ✅ passed | 31s | 0 |
 | Copy Outputs | ✅ passed | 0s | 0 |
 
 ## Output Statistics

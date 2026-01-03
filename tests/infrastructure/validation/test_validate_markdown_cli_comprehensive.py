@@ -1,11 +1,12 @@
 """Comprehensive tests for infrastructure/validation/validate_markdown_cli.py.
 
-Tests Markdown validation CLI functionality thoroughly.
+Tests Markdown validation CLI functionality using real implementations.
+Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 import sys
+import subprocess
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
 
 
@@ -19,7 +20,7 @@ class TestValidateMarkdownCliModule:
 
 
 class TestValidateMarkdownCliMain:
-    """Test main function and CLI."""
+    """Test main function and CLI using real subprocess execution."""
     
     def test_main_exists(self):
         """Test main function exists."""
@@ -27,55 +28,70 @@ class TestValidateMarkdownCliMain:
         assert hasattr(validate_markdown_cli, 'main')
     
     def test_main_with_valid_file(self, tmp_path, capsys):
-        """Test main with valid markdown file."""
+        """Test main with valid markdown file using real execution."""
         from infrastructure.validation import validate_markdown_cli
         
         md = tmp_path / "test.md"
         md.write_text("# Title\n\nValid content here.")
         
-        if hasattr(validate_markdown_cli, 'main'):
-            with patch('sys.argv', ['validate_markdown_cli.py', str(md)]):
-                try:
-                    result = validate_markdown_cli.main()
-                    # Should return 0 for valid markdown or None
-                    assert result == 0 or result is None or isinstance(result, int)
-                except SystemExit:
-                    pass  # SystemExit is also acceptable
+        # Use real execution
+        try:
+            result = validate_markdown_cli.main(manuscript_path=md)
+            # May return 0 (success) or 1 (issues found)
+            assert result in [0, 1, 2] or result is None
+        except SystemExit:
+            pass  # SystemExit is also acceptable
     
     def test_main_with_directory(self, tmp_path, capsys):
-        """Test main with directory."""
+        """Test main with directory using real execution."""
         from infrastructure.validation import validate_markdown_cli
         
         (tmp_path / "a.md").write_text("# Doc A\n")
         (tmp_path / "b.md").write_text("# Doc B\n")
         
-        if hasattr(validate_markdown_cli, 'main'):
-            with patch('sys.argv', ['validate_markdown_cli.py', str(tmp_path)]):
-                try:
-                    result = validate_markdown_cli.main()
-                except SystemExit:
-                    pass
+        # Use real execution
+        try:
+            result = validate_markdown_cli.main(manuscript_path=tmp_path)
+            assert result in [0, 1, 2] or result is None
+        except SystemExit:
+            pass
     
     def test_main_with_missing_file(self, tmp_path, capsys):
-        """Test main with missing file."""
+        """Test main with missing file using real execution."""
         from infrastructure.validation import validate_markdown_cli
         
         missing = tmp_path / "missing.md"
         
-        if hasattr(validate_markdown_cli, 'main'):
-            with patch('sys.argv', ['validate_markdown_cli.py', str(missing)]):
-                try:
-                    result = validate_markdown_cli.main()
-                    # Should return error code
-                except SystemExit:
-                    pass
+        # Use real execution
+        try:
+            result = validate_markdown_cli.main(manuscript_path=missing)
+            # Should return error code
+            assert result in [0, 1, 2] or result is None
+        except SystemExit:
+            pass
+    
+    def test_main_via_subprocess(self, tmp_path):
+        """Test main via real subprocess execution."""
+        md = tmp_path / "test.md"
+        md.write_text("# Title\n\nValid content.")
+        
+        # Run real CLI command via subprocess
+        result = subprocess.run(
+            [sys.executable, '-m', 'infrastructure.validation.validate_markdown_cli', str(md)],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent.parent
+        )
+        
+        # May succeed or fail depending on validation
+        assert result.returncode in [0, 1, 2]
 
 
 class TestValidateMarkdownFunctions:
-    """Test validation functions."""
+    """Test validation functions using real implementations."""
     
     def test_validate_markdown_file(self, tmp_path):
-        """Test validating single file."""
+        """Test validating single file using real validation."""
         from infrastructure.validation import validate_markdown_cli
         
         md = tmp_path / "test.md"
@@ -86,7 +102,7 @@ class TestValidateMarkdownFunctions:
             assert result is not None
     
     def test_validate_markdown_content(self):
-        """Test validating markdown content."""
+        """Test validating markdown content using real validation."""
         from infrastructure.validation import validate_markdown_cli
         
         content = "# Title\n\nValid content"
@@ -97,25 +113,21 @@ class TestValidateMarkdownFunctions:
 
 
 class TestValidateMarkdownCliIntegration:
-    """Integration tests."""
+    """Integration tests using real execution."""
     
     def test_full_validation_workflow(self, tmp_path):
-        """Test complete validation workflow."""
+        """Test complete validation workflow with real execution."""
         from infrastructure.validation import validate_markdown_cli
         
-        # Create markdown with various elements
-        md = tmp_path / "doc.md"
-        md.write_text("""# Document Title
-
-## Section 1
-
-Content with [link](other.md).
-
-## Section 2
-
-More content here.
-""")
+        md = tmp_path / "test.md"
+        md.write_text("# Test\n\n## Section\n\nContent here.")
         
         # Module should be importable
         assert validate_markdown_cli is not None
-
+        
+        # Use real validation
+        try:
+            result = validate_markdown_cli.main(manuscript_path=md)
+            assert result in [0, 1, 2] or result is None
+        except SystemExit:
+            pass

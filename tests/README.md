@@ -7,14 +7,15 @@ Comprehensive test suite ensuring coverage requirements for both infrastructure 
 ### Run All Tests
 ```bash
 # With coverage report (both infrastructure and project)
-pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=html
 
 # Using uv
-uv run pytest tests/ --cov=infrastructure --cov=project/src --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=html
 
 # Verify coverage requirements
 pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
-pytest project/tests/ --cov=project/src --cov-fail-under=90
+pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
+pytest projects/prose_project/tests/ --cov=projects/prose_project/src --cov-fail-under=90
 ```
 
 ### Run Specific Tests
@@ -23,7 +24,8 @@ pytest project/tests/ --cov=project/src --cov-fail-under=90
 pytest tests/infrastructure/core/test_config_loader.py -v
 
 # Project tests
-pytest project/tests/test_example.py -v
+pytest projects/code_project/tests/ -v
+pytest projects/prose_project/tests/ -v
 
 # Integration tests
 pytest tests/integration/test_module_interoperability.py -v
@@ -46,7 +48,7 @@ pytest tests/ -x
 
 **Project Test Imports:**
 - Fixed `test_reporting.py` and `test_validation.py` collection errors
-- Updated `projects/project/tests/conftest.py` to add repository root to Python path
+- Updated project test conftest.py files to add repository root to Python path
 - Resolved infrastructure module import issues in project tests
 
 **Core Infrastructure Tests:**
@@ -89,7 +91,7 @@ pytest tests/ --lf
 
 ## Coverage Requirements (pipeline enforced)
 
-- **Project** (`project/src/`): 90% minimum (currently 100% - perfect coverage!)
+- **Projects** (`projects/{name}/src/`): 90% minimum (code_project: 94.1%, prose_project: 91.5%)
 - **Infrastructure** (`infrastructure/`): 60% minimum (currently 83.33% - exceeds stretch goal!)
 - Tests must pass before PDF generation
 - Real data only (no mocks)
@@ -106,7 +108,7 @@ graph TD
 
         INTEGRATION[tests/integration/<br/>Cross-module tests<br/>End-to-end workflows]
 
-        PROJECT[project/tests/<br/>Project-specific tests<br/>90%+ coverage required]
+        PROJECT[projects/{name}/tests/<br/>Project-specific tests<br/>90%+ coverage required]
     end
 
     subgraph InfrastructureTests["Infrastructure Module Tests"]
@@ -280,11 +282,11 @@ tests/
 - `test_logging.py` - Bash logging integration tests
 - `test_bash_utils.sh` - Bash utility function validation
 
-### Project Tests (`project/tests/`)
-- Unit tests for `project/src/` modules (see `project/tests/AGENTS.md`)
-- Integration tests in `project/tests/integration/`
-  - `test_integration_pipeline.py` - Full analysis pipeline
-  - `test_example_figure.py` - Figure generation integration
+### Project Tests (`projects/{name}/tests/`)
+- Unit tests for `projects/{name}/src/` modules (see `projects/{name}/tests/AGENTS.md`)
+- Each project has independent test suite with 90%+ coverage requirement
+- code_project: 28 tests, 94.1% coverage
+- prose_project: 47 tests, 91.5% coverage
   - `test_generate_research_figures.py` - Research figure pipeline
 
 ## Debugging
@@ -351,7 +353,8 @@ The test suite includes comprehensive validation for:
 ## Test Coverage Statistics
 
 ### Overall Coverage (latest)
-- **Project** (`project/src/`): **100%** (Target: 90%+) ✅ Perfect coverage!
+- **code_project** (`projects/code_project/src/`): **94.1%** (Target: 90%+) ✅ Exceeds requirement!
+- **prose_project** (`projects/prose_project/src/`): **91.5%** (Target: 90%+) ✅ Exceeds requirement!
 - **Infrastructure** (`infrastructure/`): **83.33%** (Target: 60%+) ✅ Exceeds stretch goal!
 
 ### Coverage Details
@@ -362,5 +365,6 @@ Both test suites exceed their minimum requirements. For detailed coverage inform
 - [`AGENTS.md`](AGENTS.md) - Detailed testing guide
 - [`conftest.py`](conftest.py) - Test configuration
 - [`../infrastructure/README.md`](../infrastructure/README.md) - Infrastructure modules being tested
-- [`../project/src/README.md`](../project/src/README.md) - Project modules being tested
+- [`../projects/code_project/src/README.md`](../projects/code_project/src/README.md) - code_project modules
+- [`../projects/prose_project/src/README.md`](../projects/prose_project/src/README.md) - prose_project modules
 - [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow

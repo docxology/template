@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from typing import Optional
 
 # Add infrastructure to path for imports
 repo_root = Path(__file__).parent.parent
@@ -171,8 +172,13 @@ def validate_math(md_files: list, repo_root_str: str) -> list:
     return issues
 
 
-def main() -> int:
+def main(manuscript_path: Optional[Path] = None, strict: bool = False) -> int:
     """Main function to run markdown validation.
+
+    Args:
+        manuscript_path: Path to markdown file or directory. If None, automatically
+            detects manuscript directory from repository root.
+        strict: Enable strict validation mode
 
     Returns:
         0 on success, 1 on failure or validation issues
@@ -182,18 +188,13 @@ def main() -> int:
         print(import_error)
         return 1
 
-    strict = "--strict" in sys.argv
-
-    # Check if manuscript directory is provided as argument
-    manuscript_dir_arg = None
-    args = [arg for arg in sys.argv[1:] if not arg.startswith("--")]
-    if args:
-        manuscript_dir_arg = args[0]
-
     try:
-        if manuscript_dir_arg:
-            # Use provided manuscript directory
-            manuscript_dir = Path(manuscript_dir_arg)
+        if manuscript_path is not None:
+            # Use provided path (can be file or directory)
+            manuscript_dir = Path(manuscript_path)
+            # If it's a file, use its parent directory
+            if manuscript_dir.is_file():
+                manuscript_dir = manuscript_dir.parent
         else:
             # Find manuscript directory automatically
             manuscript_dir = find_manuscript_directory(repo_root)
@@ -221,4 +222,30 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    import argparse
+    
+    parser = argparse.ArgumentParser(
+        description="Validate markdown files for integrity issues",
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    
+    parser.add_argument(
+        'manuscript_path',
+        nargs='?',
+        type=Path,
+        help='Path to markdown file or directory (default: auto-detect)'
+    )
+    parser.add_argument(
+        '--strict',
+        action='store_true',
+        help='Enable strict validation mode'
+    )
+    
+    args = parser.parse_args()
+    
+    exit_code = main(
+        manuscript_path=args.manuscript_path,
+        strict=args.strict
+    )
+    
+    sys.exit(exit_code)

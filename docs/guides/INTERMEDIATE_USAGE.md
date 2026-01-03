@@ -51,7 +51,7 @@ For the **full intermediate experience**, work through both guides in order:
 
 - **Beginner?** Start with [Getting Started](GETTING_STARTED.md)
 - **Advanced user?** Check [Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md)
-- **Stuck?** See [troubleshooting guide](../../operational/TROUBLESHOOTING_GUIDE.md)
+- **Stuck?** See [troubleshooting guide](../operational/TROUBLESHOOTING_GUIDE.md)
 
 ---
 

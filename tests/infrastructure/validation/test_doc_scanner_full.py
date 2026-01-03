@@ -1,10 +1,10 @@
 """Comprehensive tests for infrastructure/validation/doc_scanner.py.
 
-Tests documentation scanning functionality comprehensively.
+Tests documentation scanning functionality using real implementations.
+Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
 from datetime import datetime
 

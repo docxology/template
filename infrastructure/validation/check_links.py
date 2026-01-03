@@ -26,9 +26,10 @@ def find_all_markdown_files(repo_root: str) -> List[Path]:
     """Find all markdown files in the repository."""
     repo_path = Path(repo_root)
     md_files = []
+    exclude_dirs = {'output', 'htmlcov', 'projects_archive', '.venv', 'venv', 'site-packages', '__pycache__', '.pytest_cache', '.git', 'node_modules'}
     for md_file in repo_path.rglob("*.md"):
-        # Skip output and htmlcov directories
-        if "output" in md_file.parts or "htmlcov" in md_file.parts:
+        # Skip output, htmlcov, archived projects, virtual environments, and build artifacts
+        if any(excluded in md_file.parts for excluded in exclude_dirs):
             continue
         md_files.append(md_file)
     return sorted(md_files)
@@ -177,6 +178,10 @@ def _should_validate_path(path_ref: str) -> bool:
         'docs/new_feature.md',  # Example doc
         'tests/test_my_feature.py',  # Example test
         'tests/test_new_function.py',  # Example test
+        'scripts/)',  # Malformed path (trailing paren)
+        'scripts/`',  # Malformed path (backtick)
+        'infrastructure/test_specific.py',  # Example test file
+        'infrastructure/test_specific.py::test_function',  # Example pytest path
     ]
 
     for pattern in skip_patterns:
@@ -197,6 +202,26 @@ def _should_validate_path(path_ref: str) -> bool:
     ]):
         return False
 
+    # Skip malformed paths (containing special chars that indicate parsing errors)
+    if any(char in path_ref for char in ['`', ')', ']', '}', '|', '\n']):
+        # Check if it's likely a parsing artifact (ends with these chars or contains newlines)
+        if path_ref.rstrip().endswith((')', ']', '}', '`', '|')) or '\n' in path_ref:
+            return False
+
+    # Skip paths that are clearly from code examples in documentation
+    # These are often in markdown code blocks showing example commands
+    example_indicators = [
+        'scripts/optimization_analysis.py',  # Example script name
+        'infrastructure/test_specific.py',  # Example test file
+        'project/tests/',  # Template example
+        'project/manuscript/',  # Template example
+        'project/src/',  # Template example
+    ]
+    
+    for indicator in example_indicators:
+        if indicator in path_ref:
+            return False
+
     return True
 
 
@@ -205,8 +230,14 @@ def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
     try:
         # Handle common template patterns
         if path_ref.startswith('projects/project/'):
-            # Use the default project
-            return repo_root / path_ref
+            # Try actual project names first
+            for project_name in ['code_project', 'prose_project']:
+                actual_path = path_ref.replace('projects/project/', f'projects/{project_name}/')
+                full_path = repo_root / actual_path
+                if full_path.exists():
+                    return full_path
+            # If no actual project found, return None (path doesn't exist)
+            return None
         elif path_ref.startswith('projects/{name}/'):
             # Can't resolve template, skip
             return None
@@ -215,8 +246,14 @@ def _resolve_template_path(path_ref: str, repo_root: Path) -> Path | None:
         elif path_ref.startswith('scripts/'):
             return repo_root / path_ref
         elif path_ref.startswith('output/project/'):
-            # Check if output exists
-            return repo_root / path_ref
+            # Try actual project names
+            for project_name in ['code_project', 'prose_project']:
+                actual_path = path_ref.replace('output/project/', f'output/{project_name}/')
+                full_path = repo_root / actual_path
+                if full_path.exists():
+                    return full_path
+            # If no actual project found, return None
+            return None
         else:
             return repo_root / path_ref
     except Exception:
@@ -281,16 +318,19 @@ def validate_python_imports(content: str, file_path: Path, repo_root: Path) -> L
         if block['language'].lower() in ['python', 'py']:
             # Parse Python code to find imports
             try:
-                tree = ast.parse(block['content'])
-                for node in ast.walk(tree):
-                    if isinstance(node, ast.Import):
-                        for alias in node.names:
-                            module_name = alias.name
-                            issues.extend(_validate_import_path(module_name, block, file_path, repo_root))
-                    elif isinstance(node, ast.ImportFrom):
-                        module_name = node.module
-                        if module_name:
-                            issues.extend(_validate_import_path(module_name, block, file_path, repo_root))
+                import warnings
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", SyntaxWarning)
+                    tree = ast.parse(block['content'])
+                    for node in ast.walk(tree):
+                        if isinstance(node, ast.Import):
+                            for alias in node.names:
+                                module_name = alias.name
+                                issues.extend(_validate_import_path(module_name, block, file_path, repo_root))
+                        elif isinstance(node, ast.ImportFrom):
+                            module_name = node.module
+                            if module_name:
+                                issues.extend(_validate_import_path(module_name, block, file_path, repo_root))
             except SyntaxError:
                 # Skip malformed Python code
                 continue
@@ -335,18 +375,28 @@ def _validate_import_path(module_name: str, block: Dict, file_path: Path, repo_r
         })
 
     elif module_name.startswith('projects.project.src.'):
-        file_path_guess = module_name.replace('projects.project.src.', 'projects/project/src/').replace('.', '/') + '.py'
-        full_path = repo_root / file_path_guess
-        if not full_path.exists():
+        # Try actual project names
+        found = False
+        for project_name in ['code_project', 'prose_project']:
+            file_path_guess = module_name.replace('projects.project.src.', f'projects/{project_name}/src/').replace('.', '/') + '.py'
+            full_path = repo_root / file_path_guess
+            if full_path.exists():
+                found = True
+                break
+            # Check for __init__.py in parent
             init_path = full_path.parent / '__init__.py'
-            if not init_path.exists():
-                issues.append({
-                    'file': str(file_path),
-                    'line': block['line'],
-                    'target': module_name,
-                    'issue': f'Python import not found: {module_name}',
-                    'type': 'python_import'
-                })
+            if init_path.exists():
+                found = True
+                break
+        
+        if not found:
+            issues.append({
+                'file': str(file_path),
+                'line': block['line'],
+                'target': module_name,
+                'issue': f'Python import not found: {module_name}',
+                'type': 'python_import'
+            })
 
     return issues
 

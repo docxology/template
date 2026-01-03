@@ -148,7 +148,8 @@ def execute_pipeline(
                 } for r in results],
                 total_duration=total_duration,
                 repo_root=repo_root,
-                output_statistics=output_stats
+                output_statistics=output_stats,
+                project_name=project_name
             )
             
             # Save report in multiple formats
@@ -162,6 +163,20 @@ def execute_pipeline(
                 
         except Exception as e:
             logger.warning(f"Failed to generate comprehensive pipeline report: {e}")
+
+        # Verify log file after pipeline execution
+        log_file = output_dir / "logs" / "pipeline.log"
+        if log_file.exists():
+            try:
+                size = log_file.stat().st_size
+                if size > 0:
+                    logger.info(f"Pipeline log file verified: {log_file} ({size:,} bytes)")
+                else:
+                    logger.warning(f"Pipeline log file is empty: {log_file}")
+            except Exception as e:
+                logger.warning(f"Failed to verify pipeline log file: {e}")
+        else:
+            logger.warning(f"Pipeline log file not found: {log_file}")
 
         # Return appropriate exit code
         success = all(r.success for r in results)

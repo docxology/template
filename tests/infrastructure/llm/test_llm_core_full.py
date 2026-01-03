@@ -6,9 +6,11 @@ Tests LLM core functionality using real data (No Mocks Policy):
 """
 
 import pytest
+import requests
 
 from infrastructure.llm.core.client import LLMClient, ResponseMode
 from infrastructure.llm.core.config import LLMConfig, GenerationOptions
+from infrastructure.core.exceptions import LLMConnectionError, LLMError
 
 
 class TestResponseModeDetails:
@@ -340,13 +342,21 @@ class TestLLMQueryModesIntegration:
         if len(result) == 0:
             pytest.skip("Model returned empty response (transient issue)")
     
+    @pytest.mark.timeout(180)  # Extended timeout for network-dependent test
     def test_query_long(self):
         """Test long query mode."""
         client = LLMClient()
-        result = client.query_long("Explain what Python is in detail.")
-        
-        assert result is not None
-        assert len(result) > 0
+        try:
+            result = client.query_long("Explain what Python is in detail.")
+            
+            assert result is not None
+            assert len(result) > 0
+        except (LLMConnectionError, requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+            # Skip on any network/timeout errors - these are external service issues
+            error_str = str(e).lower()
+            if any(keyword in error_str for keyword in ["timed out", "timeout", "connection", "refused"]):
+                pytest.skip(f"Ollama connection/timeout issue (external service): {e}")
+            raise
     
     def test_query_raw(self):
         """Test raw query mode."""

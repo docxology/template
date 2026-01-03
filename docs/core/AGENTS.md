@@ -9,15 +9,15 @@ The `docs/core/` directory contains the fundamental documentation that explains 
 ```
 docs/core/
 ├── AGENTS.md                   # This technical documentation
-├── ../core/ARCHITECTURE.md             # System design and structure
-├── ../core/HOW_TO_USE.md               # Complete usage guide
+├── ARCHITECTURE.md             # System design and structure
+├── HOW_TO_USE.md               # Complete usage guide
 ├── README.md                   # Quick reference
-└── ../core/WORKFLOW.md                 # Development workflow
+└── WORKFLOW.md                 # Development workflow
 ```
 
 ## Key Documentation Files
 
-### How To Use (`../core/HOW_TO_USE.md`)
+### How To Use (`HOW_TO_USE.md`)
 
 **Comprehensive, step-by-step guide for using the Research Project Template:**
 
@@ -45,7 +45,7 @@ docs/core/
 - Log analysis techniques
 - Recovery from failures
 
-### Architecture (`../core/ARCHITECTURE.md`)
+### Architecture (`ARCHITECTURE.md`)
 
 **System design and structural overview:**
 
@@ -67,7 +67,7 @@ docs/core/
 - Configuration management
 - Error handling architecture
 
-### Workflow (`../core/WORKFLOW.md`)
+### Workflow (`WORKFLOW.md`)
 
 **Development and operational workflows:**
 
@@ -94,13 +94,13 @@ docs/core/
 ### Layered Information Architecture
 
 **Progressive Disclosure:**
-- **../core/HOW_TO_USE.md**: Practical, step-by-step instructions
-- **../core/ARCHITECTURE.md**: Design principles and system structure
-- **../core/WORKFLOW.md**: Operational procedures and best practices
+- **HOW_TO_USE.md**: Practical, step-by-step instructions
+- **ARCHITECTURE.md**: Design principles and system structure
+- **WORKFLOW.md**: Operational procedures and best practices
 
 **Information Flow:**
 ```
-../core/HOW_TO_USE.md → ../core/ARCHITECTURE.md → ../core/WORKFLOW.md
+HOW_TO_USE.md → ARCHITECTURE.md → WORKFLOW.md
    ↓               ↓                   ↓
 Practical       Design             Operational
 Usage         Understanding       Excellence
@@ -114,10 +114,10 @@ Usage         Understanding       Excellence
 $ python3 scripts/03_render_pdf.py
 INFO: Loading manuscript configuration...
 INFO: Generating PDF with LaTeX...
-INFO: PDF generated successfully: output/pdf/project_combined.pdf
+INFO: PDF generated successfully: output/code_project/pdf/code_project_combined.pdf
 
 # View the result
-open output/pdf/project_combined.pdf
+open output/code_project/pdf/code_project_combined.pdf
 ```
 
 **Implementation Details:**
@@ -499,9 +499,9 @@ metadata = {
 
 # Publish to Zenodo
 files_to_publish = [
-    'output/pdf/project_combined.pdf',
-    'output/data/analysis_results.json',
-    'project/src/analysis.py'
+    'output/code_project/pdf/code_project_combined.pdf',
+    'output/code_project/data/analysis_results.json',
+    'projects/code_project/src/analysis.py'
 ]
 
 result = publish_to_zenodo(metadata, files_to_publish, zenodo_token)

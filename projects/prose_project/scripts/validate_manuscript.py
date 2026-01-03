@@ -23,7 +23,8 @@ sys.path.insert(0, str(project_root / "src"))
 # Add infrastructure imports (with graceful fallback)
 try:
     # Ensure repo root is on path for infrastructure imports
-    repo_root = Path(__file__).parent.parent.parent
+    # repo_root is 4 levels up: scripts/validate_manuscript.py -> prose_project/ -> projects/ -> repo_root/
+    repo_root = Path(__file__).parent.parent.parent.parent
     sys.path.insert(0, str(repo_root))
 
     from infrastructure.validation import (
@@ -174,8 +175,8 @@ def validate_links():
     print("\nValidating links and references...")
 
     try:
-        # Create link validator
-        link_validator = LinkValidator(project_root)
+        # Create link validator with actual repo root for proper path resolution
+        link_validator = LinkValidator(repo_root)
 
         # Validate manuscript directory
         manuscript_dir = project_root / "manuscript"
@@ -228,7 +229,9 @@ def validate_output_integrity():
 
     try:
         # Run comprehensive integrity check
-        integrity_report = verify_output_integrity(output_dir)
+        # Pass manuscript directory for academic standards check
+        manuscript_dir = project_root / "manuscript"
+        integrity_report = verify_output_integrity(output_dir, manuscript_dir=manuscript_dir)
 
         if integrity_report.issues:
             print(f"❌ Found {len(integrity_report.issues)} integrity errors:")
@@ -262,9 +265,10 @@ def run_comprehensive_audit():
     print("\nRunning comprehensive project audit...")
 
     try:
-        # Run full audit
+        # Run full audit with actual repo root for proper path resolution
+        # This ensures parent directory links (like ../../AGENTS.md) are correctly validated
         from infrastructure.validation import run_comprehensive_audit as audit_func
-        audit_results = audit_func(project_root)
+        audit_results = audit_func(repo_root)
 
         if audit_results:
             print("✅ Comprehensive audit completed")

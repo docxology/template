@@ -1,12 +1,15 @@
 """Comprehensive tests for infrastructure/validation/validate_pdf_cli.py.
 
-Tests PDF validation CLI functionality.
+Tests PDF validation CLI functionality using real implementations.
+Follows No Mocks Policy - all tests use real data and real validation.
 """
 
 import sys
+import subprocess
 from pathlib import Path
-from unittest.mock import MagicMock, patch, ANY
 import pytest
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
 
 class TestValidatePdfCliCore:
@@ -20,154 +23,206 @@ class TestValidatePdfCliCore:
     def test_has_main_function(self):
         """Test that module has main function."""
         from infrastructure.validation import validate_pdf_cli
-        assert hasattr(validate_pdf_cli, 'main') or hasattr(validate_pdf_cli, 'validate_pdf_cli')
+        assert hasattr(validate_pdf_cli, 'main')
 
 
 class TestPdfValidationCommand:
-    """Test PDF validation command."""
+    """Test PDF validation command using real PDFs."""
     
     def test_validate_single_pdf(self, tmp_path):
-        """Test validating a single PDF file."""
+        """Test validating a single PDF file using real PDF."""
         from infrastructure.validation import validate_pdf_cli
         
+        # Create a real PDF
         pdf = tmp_path / "test.pdf"
-        pdf.write_bytes(b"%PDF-1.4\n")
+        c = canvas.Canvas(str(pdf), pagesize=letter)
+        c.drawString(100, 750, "Test content")
+        c.save()
         
-        if hasattr(validate_pdf_cli, 'validate_pdf_file'):
-            result = validate_pdf_cli.validate_pdf_file(str(pdf))
-            assert result is not None
+        # Use real validation
+        exit_code = validate_pdf_cli.main(pdf_path=pdf)
+        assert exit_code in [0, 1, 2]
     
     def test_validate_pdf_directory(self, tmp_path):
-        """Test validating a directory of PDFs."""
+        """Test validating a directory of PDFs using real PDFs."""
         from infrastructure.validation import validate_pdf_cli
         
+        # Create real PDF files
         pdf1 = tmp_path / "a.pdf"
-        pdf1.write_bytes(b"%PDF-1.4\n")
-        pdf2 = tmp_path / "b.pdf"
-        pdf2.write_bytes(b"%PDF-1.4\n")
+        c1 = canvas.Canvas(str(pdf1), pagesize=letter)
+        c1.drawString(100, 750, "PDF A content")
+        c1.save()
         
-        if hasattr(validate_pdf_cli, 'validate_pdf_directory'):
-            result = validate_pdf_cli.validate_pdf_directory(str(tmp_path))
-            assert result is not None
+        pdf2 = tmp_path / "b.pdf"
+        c2 = canvas.Canvas(str(pdf2), pagesize=letter)
+        c2.drawString(100, 750, "PDF B content")
+        c2.save()
+        
+        # Validate first PDF (directory validation not directly supported, test individual)
+        exit_code = validate_pdf_cli.main(pdf_path=pdf1)
+        assert exit_code in [0, 1, 2]
     
     def test_validate_nonexistent_pdf(self, tmp_path):
         """Test validating a nonexistent PDF."""
         from infrastructure.validation import validate_pdf_cli
         
-        if hasattr(validate_pdf_cli, 'validate_pdf_file'):
-            with pytest.raises(Exception):
-                validate_pdf_cli.validate_pdf_file("nonexistent.pdf")
+        missing_pdf = tmp_path / "nonexistent.pdf"
+        exit_code = validate_pdf_cli.main(pdf_path=missing_pdf)
+        assert exit_code == 2
 
 
 class TestPdfCliParsing:
-    """Test CLI argument parsing."""
+    """Test CLI argument parsing via real subprocess."""
     
     def test_parse_args_basic(self):
-        """Test basic argument parsing."""
-        from infrastructure.validation import validate_pdf_cli
-        
-        if hasattr(validate_pdf_cli, 'parse_args'):
-            with patch('sys.argv', ['validate_pdf_cli.py', 'test.pdf']):
-                args = validate_pdf_cli.parse_args()
-                assert args is not None
+        """Test basic argument parsing via real subprocess."""
+        # Create a real PDF for testing
+        from tempfile import TemporaryDirectory
+        with TemporaryDirectory() as tmp_dir:
+            pdf = Path(tmp_dir) / "test.pdf"
+            c = canvas.Canvas(str(pdf), pagesize=letter)
+            c.drawString(100, 750, "Test")
+            c.save()
+            
+            # Run real CLI command via subprocess
+            result = subprocess.run(
+                [sys.executable, '-m', 'infrastructure.validation.validate_pdf_cli', str(pdf)],
+                capture_output=True,
+                text=True,
+                cwd=Path(__file__).parent.parent.parent.parent
+            )
+            
+            # Should execute (may succeed or fail depending on PDF)
+            assert result.returncode in [0, 1, 2]
     
     def test_parse_args_verbose(self):
-        """Test verbose flag parsing."""
-        from infrastructure.validation import validate_pdf_cli
-        
-        if hasattr(validate_pdf_cli, 'parse_args'):
-            with patch('sys.argv', ['validate_pdf_cli.py', 'test.pdf', '--verbose']):
-                args = validate_pdf_cli.parse_args()
-                assert args is not None
+        """Test verbose flag parsing via real subprocess."""
+        # Create a real PDF for testing
+        from tempfile import TemporaryDirectory
+        with TemporaryDirectory() as tmp_dir:
+            pdf = Path(tmp_dir) / "test.pdf"
+            c = canvas.Canvas(str(pdf), pagesize=letter)
+            c.drawString(100, 750, "Test")
+            c.save()
+            
+            # Run real CLI command via subprocess
+            result = subprocess.run(
+                [sys.executable, '-m', 'infrastructure.validation.validate_pdf_cli', str(pdf), '--verbose'],
+                capture_output=True,
+                text=True,
+                cwd=Path(__file__).parent.parent.parent.parent
+            )
+            
+            # Should execute with verbose flag
+            assert result.returncode in [0, 1, 2]
 
 
 class TestPdfValidationOutput:
     """Test PDF validation output formatting."""
     
     def test_format_results(self):
-        """Test result formatting."""
-        from infrastructure.validation import validate_pdf_cli
+        """Test result formatting via print_validation_report."""
+        from infrastructure.validation.validate_pdf_cli import print_validation_report
         
-        results = {
-            'issues': [],
-            'warnings': [],
-            'passed': True
+        report = {
+            'pdf_path': '/path/to/test.pdf',
+            'issues': {
+                'total_issues': 0,
+                'unresolved_references': 0,
+                'warnings': 0,
+                'errors': 0,
+                'missing_citations': 0,
+            },
+            'summary': {
+                'has_issues': False,
+                'word_count': 100,
+            },
+            'first_words': 'Test content here'
         }
         
-        if hasattr(validate_pdf_cli, 'format_results'):
-            output = validate_pdf_cli.format_results(results)
-            assert isinstance(output, str)
+        # Should format without error
+        print_validation_report(report)
+        assert True  # If no exception, test passes
     
     def test_print_summary(self, capsys):
         """Test summary printing."""
-        from infrastructure.validation import validate_pdf_cli
+        from infrastructure.validation.validate_pdf_cli import print_validation_report
         
-        if hasattr(validate_pdf_cli, 'print_summary'):
-            validate_pdf_cli.print_summary({'passed': True, 'checked': 1})
-            captured = capsys.readouterr()
-            assert captured.out or True  # May or may not print
+        report = {
+            'pdf_path': '/path/to/test.pdf',
+            'issues': {
+                'total_issues': 0,
+                'unresolved_references': 0,
+                'warnings': 0,
+                'errors': 0,
+                'missing_citations': 0,
+            },
+            'summary': {
+                'has_issues': False,
+                'word_count': 50,
+            },
+            'first_words': 'Test content'
+        }
+        
+        print_validation_report(report)
+        captured = capsys.readouterr()
+        assert len(captured.out) > 0  # Should produce output
 
 
 class TestPdfCliMain:
-    """Test main entry point."""
+    """Test main entry point using real subprocess execution."""
     
     def test_main_with_valid_pdf(self, tmp_path):
-        """Test main with valid PDF."""
-        from infrastructure.validation import validate_pdf_cli
-        
+        """Test main with valid PDF via real subprocess."""
+        # Create a real PDF
         pdf = tmp_path / "test.pdf"
-        pdf.write_bytes(b"%PDF-1.4\n%%EOF")
+        c = canvas.Canvas(str(pdf), pagesize=letter)
+        c.drawString(100, 750, "Test content")
+        c.save()
         
-        if hasattr(validate_pdf_cli, 'main'):
-            with patch('sys.argv', ['validate_pdf_cli.py', str(pdf)]):
-                with patch('sys.exit') as mock_exit:
-                    try:
-                        validate_pdf_cli.main()
-                    except SystemExit:
-                        pass
+        # Run real CLI command via subprocess
+        result = subprocess.run(
+            [sys.executable, '-m', 'infrastructure.validation.validate_pdf_cli', str(pdf)],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent.parent
+        )
+        
+        # Should execute (may succeed or find issues)
+        assert result.returncode in [0, 1, 2]
     
     def test_main_with_missing_pdf(self, tmp_path):
-        """Test main with missing PDF."""
-        from infrastructure.validation import validate_pdf_cli
+        """Test main with missing PDF via real subprocess."""
+        missing_pdf = tmp_path / "missing.pdf"
         
-        if hasattr(validate_pdf_cli, 'main'):
-            with patch('sys.argv', ['validate_pdf_cli.py', 'missing.pdf']):
-                with patch('sys.exit') as mock_exit:
-                    try:
-                        validate_pdf_cli.main()
-                    except SystemExit:
-                        pass
+        # Run real CLI command via subprocess
+        result = subprocess.run(
+            [sys.executable, '-m', 'infrastructure.validation.validate_pdf_cli', str(missing_pdf)],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent.parent
+        )
+        
+        # Should fail with file not found
+        assert result.returncode == 2
 
 
 class TestValidatePdfCliIntegration:
-    """Integration tests for validate PDF CLI."""
+    """Integration tests for validate PDF CLI using real validation."""
     
     def test_full_validation_workflow(self, tmp_path):
-        """Test complete validation workflow."""
+        """Test complete validation workflow with real PDF."""
         from infrastructure.validation import validate_pdf_cli
         
-        # Create test PDF
+        # Create a real PDF with content
         pdf = tmp_path / "test.pdf"
-        pdf.write_bytes(b"%PDF-1.4\n1 0 obj\n<<>>\nendobj\n%%EOF")
+        c = canvas.Canvas(str(pdf), pagesize=letter)
+        c.drawString(100, 750, "Full test content for integration testing")
+        c.showPage()
+        c.save()
         
-        # Module should be importable
-        assert validate_pdf_cli is not None
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        # Use real validation
+        exit_code = validate_pdf_cli.main(pdf_path=pdf)
+        
+        # Real validation may return 0 or 1 depending on actual PDF content
+        assert exit_code in [0, 1, 2]

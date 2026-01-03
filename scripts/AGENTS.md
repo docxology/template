@@ -16,7 +16,7 @@ Scripts in this directory:
 
 Root scripts are **thin orchestrators** that:
 - Do NOT implement analysis or algorithms
-- Discover and invoke `project/scripts/*.py`
+- Discover and invoke `projects/{name}/scripts/*.py`
 - Handle I/O and orchestration
 - Coordinate between stages
 - Are generic across projects
@@ -577,7 +577,7 @@ log_pipeline_error "Stage X" "failure reason" "$exit_code" \
 
 **Root scripts are generic entry points:**
 - ✅ Work with ANY project
-- ✅ Discover `project/scripts/`
+- ✅ Discover `projects/{name}/scripts/`
 - ✅ Coordinate build stages
 - ❌ Never implement analysis
 - ❌ Never duplicate logic

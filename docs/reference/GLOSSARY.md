@@ -165,7 +165,7 @@ Document setup and styling configuration loaded before content. Defines packages
 
 **File**: `manuscript/preamble.md`
 
-**Location**: [`project/manuscript/preamble.md`](../../projects/project/manuscript/preamble.md)
+**Location**: [`code_project/manuscript/preamble.md`](../../projects/code_project/manuscript/preamble.md)
 
 ## M
 
@@ -319,7 +319,7 @@ Core business logic residing in `src/` directory. Must have comprehensive test c
 - No circular imports
 - Comprehensive test coverage
 
-**See**: [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md), [project/src/AGENTS.md](../../projects/project/src/AGENTS.md)
+**See**: [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md), [code_project/src/AGENTS.md](../../projects/code_project/src/AGENTS.md)
 
 ### Statement Coverage
 Testing metric ensuring every line of code is executed during tests. Required to be 100% for all `src/` code.

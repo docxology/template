@@ -453,7 +453,7 @@ All logging functionality is thoroughly tested:
 pytest tests/infrastructure/core/test_logging_utils.py -v
 
 # Test project logging
-pytest projects/project/tests/test_logging.py -v
+pytest projects/code_project/tests/ -v -k logging
 
 # Test integration logging
 pytest tests/integration/test_logging.py -v
@@ -538,6 +538,6 @@ def setup_project_logging(name: str, level: Optional[int] = None,
 ## See Also
 
 - [Infrastructure Logging Documentation](../infrastructure/core/AGENTS.md)
-- [Project Logging Tests](../projects/project/tests/test_logging.py)
+- [Project Tests](../projects/code_project/tests/)
 - [Infrastructure Logging Tests](../tests/infrastructure/core/test_logging_utils.py)
 - [Integration Logging Tests](../tests/integration/test_logging.py)

@@ -1,10 +1,10 @@
 """Additional phase tests for infrastructure/validation/doc_scanner.py.
 
-Tests documentation scanner phase functionality.
+Tests documentation scanner phase functionality using real implementations.
+Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
 
 from infrastructure.validation.doc_scanner import (

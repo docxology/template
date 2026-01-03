@@ -6,6 +6,7 @@ output directories and files.
 from __future__ import annotations
 
 import shutil
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
@@ -74,6 +75,8 @@ def clean_output_directories(
     Removes all contents from both projects/{project_name}/output/ and output/{project_name}/ directories,
     then recreates the expected subdirectory structure.
 
+    Log files are archived to logs/archive/ before cleanup to preserve execution history.
+
     Also cleans root-level directories from output/ that shouldn't exist.
 
     Args:
@@ -104,6 +107,30 @@ def clean_output_directories(
 
         if output_dir.exists():
             logger.info(f"  Cleaning {relative_path}/...")
+            
+            # Archive log files before cleanup
+            logs_dir = output_dir / "logs"
+            if logs_dir.exists():
+                archive_dir = logs_dir / "archive"
+                archive_dir.mkdir(parents=True, exist_ok=True)
+                
+                # Archive all .log files
+                log_files = list(logs_dir.glob("*.log"))
+                if log_files:
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                    archived_count = 0
+                    for log_file in log_files:
+                        try:
+                            archive_path = archive_dir / f"{log_file.stem}_{timestamp}{log_file.suffix}"
+                            shutil.copy2(log_file, archive_path)
+                            archived_count += 1
+                            logger.debug(f"  Archived log file: {log_file.name} → {archive_path.name}")
+                        except Exception as e:
+                            logger.warning(f"  Failed to archive log file {log_file.name}: {e}")
+                    
+                    if archived_count > 0:
+                        logger.info(f"  Archived {archived_count} log file(s) to logs/archive/")
+            
             # Remove all contents except .checkpoints directory (preserve for pipeline resume)
             for item in output_dir.iterdir():
                 if item.is_dir():
@@ -376,6 +403,27 @@ def copy_final_deliverables(
             file_count = len(file_items)
             stats[stats_key] = file_count
             stats["total_files"] += file_count
+            
+            # Special validation for logs directory
+            if subdir_name == "logs":
+                log_files = [f for f in file_items if f.suffix == ".log"]
+                if not log_files:
+                    logger.warning(
+                        f"  No log files found in {subdir_name}/ directory. "
+                        "Log files should be created during pipeline execution."
+                    )
+                else:
+                    # Verify log files have content
+                    for log_file in log_files:
+                        try:
+                            size = log_file.stat().st_size
+                            if size == 0:
+                                logger.warning(f"  Log file is empty: {log_file.name}")
+                            else:
+                                logger.debug(f"  Found log file: {log_file.name} ({size:,} bytes)")
+                        except Exception as e:
+                            logger.warning(f"  Failed to verify log file {log_file.name}: {e}")
+                    logger.info(f"  Found {len(log_files)} log file(s) in {subdir_name}/")
             
             # Log each file with full path and size
             for file_path in file_items:

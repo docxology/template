@@ -1,10 +1,10 @@
 """Comprehensive tests for infrastructure/validation/repo_scanner.py.
 
-Tests repository scanning functionality thoroughly.
+Tests repository scanning functionality using real implementations.
+Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
 
 from infrastructure.validation import repo_scanner

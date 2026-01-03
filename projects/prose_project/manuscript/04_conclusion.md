@@ -49,3 +49,7 @@ This approach can be extended to:
 The successful completion of this prose project validates the research pipeline's flexibility in handling diverse project types, from code-intensive implementations to manuscript-focused theoretical work. The ability to maintain consistent quality assurance and output generation across different project structures demonstrates the robustness of the underlying infrastructure.
 
 This work contributes to the broader goal of improving research communication through better documentation practices and mathematical presentation standards.
+
+## References
+
+See `references.bib` for the complete bibliography in BibTeX format.

@@ -301,12 +301,12 @@ ls -la .
 df -h .
 
 # Create directories manually if needed
-mkdir -p output/project/{figures,data,tex,pdf,logs,reports,simulations,slides,web,llm}
-mkdir -p projects/project/output/{figures,data,pdf,tex,logs,reports,simulations,slides,web,llm}
+mkdir -p output/code_project/{figures,data,tex,pdf,logs,reports,simulations,slides,web,llm}
+mkdir -p projects/code_project/output/{figures,data,pdf,tex,logs,reports,simulations,slides,web,llm}
 
 # Fix permissions
 chmod 755 output/
-chmod 755 projects/project/output/
+chmod 755 projects/code_project/output/
 ```
 
 #### Dependency Import Failures
@@ -438,7 +438,7 @@ tail -20 output/pdf/_combined_manuscript.tex
 **Figure Path Issues:**
 ```bash
 # Verify figures exist
-ls -la projects/project/output/figures/
+ls -la projects/code_project/output/figures/
 
 # Check for path conversion issues in LaTeX log
 grep "includegraphics" output/pdf/_combined_manuscript.log

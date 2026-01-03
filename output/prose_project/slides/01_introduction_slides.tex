@@ -1,0 +1,229 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Introduction}
+\protect\phantomsection\label{introduction}
+This small prose project demonstrates manuscript-focused research with
+mathematical equations, structured prose, and bullet-point organization.
+The project contains minimal source code to satisfy pipeline
+requirements but focuses on demonstrating the manuscript rendering
+pipeline, including automatic title page generation from metadata
+configuration.
+
+\begin{block}{Research Context}
+\protect\phantomsection\label{research-context}
+Mathematical research often involves complex equations and structured
+argumentation. This project showcases:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Mathematical notation} using LaTeX-style equations
+\item
+  \textbf{Structured prose} with clear paragraphs and sections
+\item
+  \textbf{Bullet-point organization} for key concepts
+\item
+  \textbf{Cross-references} between sections and equations
+\end{itemize}
+\end{block}
+
+\begin{block}{Key Concepts}
+\protect\phantomsection\label{key-concepts}
+The following equation demonstrates a fundamental mathematical
+relationship \cite{stewart2015calculus, apostol1974mathematical}:
+
+\begin{equation}
+\label{eq:fundamental_theorem}
+\frac{d}{dx} \int_a^x f(t) \, dt = f(x)
+\end{equation}
+
+This is the Fundamental Theorem of Calculus, which connects
+differentiation and integration.
+\end{block}
+
+\begin{block}{Template Capabilities Demonstrated}
+\protect\phantomsection\label{template-capabilities-demonstrated}
+This project showcases the research template's comprehensive
+capabilities for mathematical exposition:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Multi-format rendering}: Automatic generation of PDF
+  manuscripts with professional formatting
+\item
+  \textbf{LLM-powered analysis}: Automated scientific review and
+  technical validation
+\item
+  \textbf{Executive reporting}: Cross-project metrics and comparative
+  analysis
+\item
+  \textbf{Comprehensive validation}: Automated checking of mathematical
+  notation and references
+\item
+  \textbf{Flexible project types}: Support for both code-intensive and
+  prose-focused research
+\end{itemize}
+\end{block}
+
+\begin{block}{Methodology}
+\protect\phantomsection\label{methodology}
+Our approach involves:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Theoretical analysis} of mathematical relationships
+\item
+  \textbf{Equation derivation} using standard techniques
+\item
+  \textbf{Documentation} of results in structured format
+\item
+  \textbf{Validation} through mathematical consistency checks
+\end{itemize}
+\end{block}
+
+\begin{block}{Research Questions}
+\protect\phantomsection\label{research-questions}
+This project addresses:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{How can mathematical concepts be effectively communicated?}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Through clear prose and notation
+  \item
+    Using structured manuscript organization
+  \item
+    Employing appropriate mathematical typesetting
+  \end{itemize}
+\item
+  \textbf{What are the key elements of mathematical exposition?}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Precise mathematical notation
+  \item
+    Logical flow of arguments
+  \item
+    Clear section organization
+  \item
+    Proper equation numbering and referencing
+  \end{itemize}
+\end{enumerate}
+\end{block}
+
+\begin{block}{Expected Contributions}
+\protect\phantomsection\label{expected-contributions}
+This work contributes to the understanding of mathematical communication
+by demonstrating:
+
+\begin{itemize}
+\tightlist
+\item
+  Effective use of mathematical typesetting
+\item
+  Structured manuscript organization
+\item
+  Integration of prose and equations
+\item
+  Best practices for technical documentation
+\end{itemize}
+\end{block}
+\end{frame}
+
+\end{document}

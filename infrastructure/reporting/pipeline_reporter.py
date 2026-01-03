@@ -333,6 +333,7 @@ def generate_pipeline_report(
     performance_metrics: Optional[Dict[str, Any]] = None,
     error_summary: Optional[Dict[str, Any]] = None,
     output_statistics: Optional[Dict[str, Any]] = None,
+    project_name: Optional[str] = None,
 ) -> PipelineReport:
     """Generate consolidated pipeline report.
     
@@ -345,6 +346,7 @@ def generate_pipeline_report(
         performance_metrics: Performance metrics (optional)
         error_summary: Error summary (optional)
         output_statistics: Output file statistics (optional)
+        project_name: Project name for log file lookup (optional)
         
     Returns:
         PipelineReport instance
@@ -358,6 +360,16 @@ def generate_pipeline_report(
             duration=result.get('duration', 0.0),
             status=status,
         ))
+    
+    # Add log file info to output_statistics if project_name provided
+    if project_name and output_statistics is not None:
+        log_file = repo_root / 'projects' / project_name / 'output' / 'logs' / 'pipeline.log'
+        log_file_info = {
+            'exists': log_file.exists(),
+            'size': log_file.stat().st_size if log_file.exists() else 0,
+            'path': str(log_file)
+        }
+        output_statistics['log_file'] = log_file_info
     
     report = PipelineReport(
         timestamp=datetime.now().isoformat(),

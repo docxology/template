@@ -1,0 +1,11 @@
+Project,Metric_Category,Metric_Name,Value,Unit,Rank,Percentile,vs_Average,Performance_Rating
+code_project,Manuscript,Total_Words,3075,words,2,0.0%,-7.7%,Poor
+code_project,Manuscript,Sections,7,count,2,0.0%,-6.7%,Poor
+code_project,Codebase,Source_Lines,252,lines,2,0.0%,-25.1%,Poor
+code_project,Pipeline,Duration,96.77905082702637,seconds,1,100.0%,-5.2%,Poor
+code_project,Outputs,Total_Files,16,files,1,100.0%,+0.0%,Excellent
+prose_project,Manuscript,Total_Words,3591,words,1,100.0%,+7.7%,Excellent
+prose_project,Manuscript,Sections,8,count,1,100.0%,+6.7%,Excellent
+prose_project,Codebase,Source_Lines,421,lines,1,100.0%,+25.1%,Excellent
+prose_project,Pipeline,Duration,107.3694920539856,seconds,2,0.0%,+5.2%,Excellent
+prose_project,Outputs,Total_Files,16,files,1,100.0%,+0.0%,Excellent

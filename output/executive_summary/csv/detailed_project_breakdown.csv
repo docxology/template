@@ -1,0 +1,47 @@
+Project,Category,Metric,Value,Unit,Description,Health_Impact,Recommended_Range
+code_project,Manuscript,Total_Words,3075,words,Total words in manuscript sections,High,1000-20000 words
+code_project,Manuscript,Sections,7,count,Number of manuscript sections,Medium,3-20 sections
+code_project,Manuscript,Equations,12,count,Mathematical equations in manuscript,Low,0-50 equations
+code_project,Manuscript,Figures,7,count,Figure references in manuscript,Low,0-20 figures
+code_project,Manuscript,References,6,count,Citation references,Medium,10-200 references
+code_project,Codebase,Source_Files,2,files,Python source files,Medium,1-20 files
+code_project,Codebase,Source_Lines,252,lines,Lines of source code,Medium,100-5000 lines
+code_project,Codebase,Methods,3,count,Function/method definitions,Medium,10-500 methods
+code_project,Codebase,Classes,1,count,Class definitions,Low,0-50 classes
+code_project,Codebase,Scripts,2,files,Analysis scripts,Low,0-10 scripts
+code_project,Testing,Test_Files,2,files,Test files discovered,High,1+ files
+code_project,Testing,Total_Tests,28,tests,Total test cases (-1 = unavailable),High,10-1000 tests
+code_project,Testing,Coverage_Percent,94.12,percent,Code coverage percentage,High,90-100%
+code_project,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
+code_project,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
+code_project,Outputs,PDF_Size_MB,0.98,MB,Total PDF file size,Low,0.1-10 MB
+code_project,Outputs,Figures,6,files,Generated figure files,Medium,0-50 figures
+code_project,Outputs,Slides,4,files,Generated slide files,Medium,0-20 slide sets
+code_project,Outputs,Web_Outputs,4,files,Generated web files,Medium,0-20 web files
+code_project,Pipeline,Total_Duration,96.77905082702637,seconds,Total pipeline execution time,Medium,60-600 seconds
+code_project,Pipeline,Stages_Passed,9,stages,Pipeline stages completed successfully,High,6 stages
+code_project,Pipeline,Bottleneck_Stage,LLM Translations,stage_name,Slowest pipeline stage,Medium,Varies by project
+code_project,Pipeline,Bottleneck_Duration,31.43093991279602,seconds,Time spent in bottleneck stage,Medium,10-300 seconds
+prose_project,Manuscript,Total_Words,3591,words,Total words in manuscript sections,High,1000-20000 words
+prose_project,Manuscript,Sections,8,count,Number of manuscript sections,Medium,3-20 sections
+prose_project,Manuscript,Equations,0,count,Mathematical equations in manuscript,Low,0-50 equations
+prose_project,Manuscript,Figures,0,count,Figure references in manuscript,Low,0-20 figures
+prose_project,Manuscript,References,6,count,Citation references,Medium,10-200 references
+prose_project,Codebase,Source_Files,3,files,Python source files,Medium,1-20 files
+prose_project,Codebase,Source_Lines,421,lines,Lines of source code,Medium,100-5000 lines
+prose_project,Codebase,Methods,9,count,Function/method definitions,Medium,10-500 methods
+prose_project,Codebase,Classes,0,count,Class definitions,Low,0-50 classes
+prose_project,Codebase,Scripts,4,files,Analysis scripts,Low,0-10 scripts
+prose_project,Testing,Test_Files,5,files,Test files discovered,High,1+ files
+prose_project,Testing,Total_Tests,54,tests,Total test cases (-1 = unavailable),High,10-1000 tests
+prose_project,Testing,Coverage_Percent,99.23,percent,Code coverage percentage,High,90-100%
+prose_project,Testing,Execution_Time,0.0,seconds,Test execution time,Low,1-300 seconds
+prose_project,Outputs,PDF_Files,1,files,Generated PDF documents,High,1+ files
+prose_project,Outputs,PDF_Size_MB,0.09,MB,Total PDF file size,Low,0.1-10 MB
+prose_project,Outputs,Figures,2,files,Generated figure files,Medium,0-50 figures
+prose_project,Outputs,Slides,5,files,Generated slide files,Medium,0-20 slide sets
+prose_project,Outputs,Web_Outputs,6,files,Generated web files,Medium,0-20 web files
+prose_project,Pipeline,Total_Duration,107.3694920539856,seconds,Total pipeline execution time,Medium,60-600 seconds
+prose_project,Pipeline,Stages_Passed,9,stages,Pipeline stages completed successfully,High,6 stages
+prose_project,Pipeline,Bottleneck_Stage,LLM Translations,stage_name,Slowest pipeline stage,Medium,Varies by project
+prose_project,Pipeline,Bottleneck_Duration,33.84859323501587,seconds,Time spent in bottleneck stage,Medium,10-300 seconds

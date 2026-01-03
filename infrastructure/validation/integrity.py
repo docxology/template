@@ -265,11 +265,14 @@ def verify_academic_standards(markdown_files: List[Path]) -> Dict[str, bool]:
     return standards
 
 
-def verify_output_integrity(output_dir: Path) -> IntegrityReport:
+def verify_output_integrity(output_dir: Path, manuscript_dir: Optional[Path] = None) -> IntegrityReport:
     """Perform comprehensive integrity verification of all outputs.
 
     Args:
         output_dir: Output directory to verify
+        manuscript_dir: Optional manuscript directory for academic standards check.
+                       If provided, academic standards will be checked against manuscript
+                       files instead of output markdown files.
 
     Returns:
         IntegrityReport with comprehensive verification results
@@ -311,9 +314,19 @@ def verify_output_integrity(output_dir: Path) -> IntegrityReport:
         report.overall_integrity = False
 
     # Verify academic standards
-    report.academic_standards = verify_academic_standards(markdown_files)
+    # Use manuscript directory if provided, otherwise use output markdown files
+    academic_standards_files = markdown_files
+    if manuscript_dir and manuscript_dir.exists():
+        academic_standards_files = list(manuscript_dir.rglob('*.md'))
+        # Exclude documentation files (AGENTS.md, README.md) from academic standards check
+        academic_standards_files = [
+            f for f in academic_standards_files
+            if f.name not in ('AGENTS.md', 'README.md')
+        ]
+    
+    report.academic_standards = verify_academic_standards(academic_standards_files)
 
-    # Check for any academic standards failures
+    # Check for any academic standards failures - only include standards that are actually False
     missing_standards = [k for k, v in report.academic_standards.items() if not v]
     if missing_standards:
         report.warnings.append(f"Missing academic standards: {', '.join(missing_standards)}")

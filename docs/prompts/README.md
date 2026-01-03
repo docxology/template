@@ -167,9 +167,9 @@ cat docs/prompts/validation_quality.md
 - [`../README.md`](../README.md) - Complete documentation hub
 
 ### Project Documentation
-- [`../../projects/project/docs/AGENTS.md`](../../projects/project/docs/AGENTS.md) - Project docs overview
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Development workflow guide
-- [`../../projects/project/docs/standards_compliance.md`](../../projects/project/docs/standards_compliance.md) - Standards compliance matrix
+- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Code project documentation
+- [`../../projects/prose_project/AGENTS.md`](../../projects/prose_project/AGENTS.md) - Prose project documentation
+- [`../../projects/AGENTS.md`](../../projects/AGENTS.md) - Multi-project management guide
 
 ### Standards Reference
 - [`../../.cursorrules/README.md`](../../.cursorrules/README.md) - Development standards overview

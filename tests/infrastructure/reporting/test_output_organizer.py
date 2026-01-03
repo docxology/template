@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Tests for infrastructure/reporting/output_organizer.py
+"""Tests for infrastructure/reporting/output_organizer.py using real implementations.
 
 Tests the unified output organization system for executive summary and
 multi-project summary outputs.
+
+Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 import pytest
 from pathlib import Path
-from unittest.mock import patch
 
 from infrastructure.reporting.output_organizer import (
     FileType,

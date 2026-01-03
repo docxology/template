@@ -1,0 +1,7 @@
+{
+  "function_name": "test_func",
+  "stability_score": 1.0,
+  "expected_behavior": "Stable numerical behavior across input range",
+  "actual_behavior": "Stability score: 1.00",
+  "recommendations": []
+}

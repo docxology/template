@@ -8,7 +8,7 @@ This research template implements a clear two-layer architecture separating gene
 
 | Aspect | **Layer 1: Infrastructure** | **Layer 2: Project** |
 |--------|------------------------------|----------------------|
-| **Location** | `infrastructure/` (root level) | `project/src/` (project-specific) |
+| **Location** | `infrastructure/` (root level) | `projects/{name}/src/` (project-specific) |
 | **Purpose** | Generic, reusable build tools | Domain-specific research code |
 | **Scope** | Works with any project | Specific to this research |
 | **Test Coverage** | 60% minimum (currently 83.33% - exceeds stretch goal!) | 90% minimum (currently 100% - perfect coverage!) |
@@ -82,13 +82,13 @@ fm.register_figure(
 
 ### [LAYER 2: PROJECT] Project-Specific Algorithms & Analysis
 
-**Location:** `project/src/` (project-specific code), `project/scripts/` (project orchestrators)
+**Location:** `projects/{name}/src/` (project-specific code), `projects/{name}/scripts/` (project orchestrators)
 
 **Purpose:** Domain-specific code implementing the research project's scientific algorithms, data processing, analysis, and visualization.
 
 **Modules:**
 ```
-project/src/
+projects/{name}/src/
 ├── example.py                 # Basic operations (template example)
 ├── simulation.py              # Scientific simulation framework
 ├── statistics.py              # Statistical analysis
@@ -161,7 +161,7 @@ graph TB
     end
     
     subgraph L2["LAYER 2: SCIENTIFIC<br/>(Algorithms, analysis, visualization, data)"]
-        subgraph SRC["project/src/"]
+        subgraph SRC["projects/{name}/src/"]
             SRC_MODS[simulation, statistics,<br/>data_processing, metrics,<br/>parameters, performance,<br/>plots, reporting, validation,<br/>visualization, data_generator,<br/>example]
         end
         
@@ -384,7 +384,7 @@ flowchart TD
 
 ```
 ┌─ Is this specific to our research project?
-│  ├─ YES → Layer 2 (project/src/)
+│  ├─ YES → Layer 2 (projects/{name}/src/)
 │  └─ NO  ─┐
 │          └─ Is it about building/validating?
 │             ├─ YES → Layer 1 (infrastructure/)
@@ -407,14 +407,14 @@ flowchart TD
 │
 └─ Is your code reusable across projects?
    ├─ YES → Layer 1 (infrastructure/)
-   └─ NO  → Layer 2 (project/src/)
+   └─ NO  → Layer 2 (projects/{name}/src/)
 ```
 
 ### Adding a New Project Module
 
 1. **Create the module:**
    ```bash
-   vim project/src/new_algorithm.py
+   vim projects/{name}/src/new_algorithm.py
    ```
 
 2. **Implement with type hints and docstrings:**
@@ -439,7 +439,7 @@ flowchart TD
    vim projects/proje../../tests/test_new_algorithm.py
    ```
 
-4. **Add to project/src/__init__.py:**
+4. **Add to projects/{name}/src/__init__.py:**
    ```python
    from .new_algorithm import analyze_data
    ```
@@ -450,8 +450,8 @@ flowchart TD
    ```
 
 6. **Update documentation:**
-   - Add to project/src/AGENTS.md
-   - Add to project/src/README.md
+   - Add to projects/{name}/src/AGENTS.md
+   - Add to projects/{name}/src/README.md
 
 ### Adding a New Infrastructure Module
 
@@ -509,7 +509,7 @@ pytest tes../../infrastructure/ --cov=infrastructure
 
 **Command:**
 ```bash
-pytest projects/proje../../tests/ --cov=project/src
+pytest projects/{name}/tests/ --cov=projects/{name}/src
 ```
 
 ### Integration Tests (tests/integration/)
@@ -521,17 +521,17 @@ pytest projects/proje../../tests/ --cov=project/src
 
 **Command:**
 ```bash
-pytest tests/integration/ --cov=project/src --cov=infrastructure
+pytest tests/integration/ --cov=projects/{name}/src --cov=infrastructure
 ```
 
 ### Full Test Suite
 
 ```bash
 # All tests with coverage
-pytest tests/ projects/proje../../tests/ --cov=infrastructure --cov=project/src --cov-fail-under=70
+pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-fail-under=70
 
 # Generate coverage report
-pytest tests/ projects/proje../../tests/ --cov=infrastructure --cov=project/src --cov-report=html
+pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -559,8 +559,8 @@ open htmlcov/index.html
 
 ✅ **Do:**
 - Use infrastructure tools for document management
-- Follow thin orchestrator pattern in project/scripts/
-- Implement algorithms in project/src/ modules
+- Follow thin orchestrator pattern in projects/{name}/scripts/
+- Implement algorithms in projects/{name}/src/ modules
 - Test with real data
 - Document domain-specific concepts
 
@@ -596,26 +596,26 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 
 1. **Create packages:**
    ```bash
-   mkdir -p infrastructure project/src
+   mkdir -p infrastructure projects/{name}/src
    ```
 
 2. **Move modules:**
    - Infrastructure modules → infrastructure/
-   - Project modules → project/src/
+   - Project modules → projects/{name}/src/
 
 3. **Update imports:**
-   - `from example import` → `from project.src.example import`
+   - `from example import` → `from projects.{name}.src.example import`
    - Build verification is handled by the validation module
 
 4. **Update tests:**
-   - Infrastructure tests → tes../../infrastructure/
-   - Project tests → projects/proje../../tests/
+   - Infrastructure tests → tests/infrastructure/
+   - Project tests → projects/{name}/tests/
    - Update conftest.py if needed
 
 5. **Validate:**
    ```bash
-   pytest tests/ projects/proje../../tests/ --cov=infrastructure --cov=project/src
-   python3 scripts/execute_pipeline.py --core-only
+   pytest tests/ projects/{name}/tests/ --cov=infrastructure --cov=projects/{name}/src
+   python3 scripts/execute_pipeline.py --project {name} --core-only
    ```
 
 ---
@@ -626,10 +626,10 @@ If you have an old project with flat src/, migrating to the two-layer structure:
 
 **Error:** `ModuleNotFoundError: No module named 'project.src'`
 
-**Solution:** Ensure tests/conftest.py includes project/ on path:
+**Solution:** Ensure tests/conftest.py includes projects/{name}/ on path:
 ```python
 import sys
-sys.path.insert(0, os.path.join(repo_root, "project"))
+sys.path.insert(0, os.path.join(repo_root, "projects", project_name))
 ```
 
 ### Layer Violations
@@ -641,8 +641,8 @@ sys.path.insert(0, os.path.join(repo_root, "project"))
 **Check:**
 ```bash
 # Find infrastructure imports of project code
-grep -r "from project.src import" infrastructure/
-grep -r "import project.src" infrastructure/
+grep -r "from projects\." infrastructure/
+grep -r "import projects\." infrastructure/
 ```
 
 ### Mixed Concerns
@@ -663,8 +663,8 @@ grep -r "import project.src" infrastructure/
 ### Layer-Specific Documentation
 - [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md) - Infrastructure layer documentation
 - [infrastructure/README.md](../../infrastructure/README.md) - Infrastructure quick reference
-- [project/src/AGENTS.md](../../projects/project/src/AGENTS.md) - Project layer documentation
-- [project/src/README.md](../../projects/project/src/README.md) - Project quick reference
+- [code_project/src/AGENTS.md](../../projects/code_project/src/AGENTS.md) - Project layer documentation
+- [code_project/src/README.md](../../projects/code_project/src/README.md) - Project quick reference
 
 ### System Documentation
 - [../AGENTS.md](../AGENTS.md) - Complete system documentation

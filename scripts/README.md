@@ -6,11 +6,11 @@ Generic entry point orchestrators for template pipeline. Work with any project s
 
 Root-level scripts are **generic orchestrators** that:
 - Coordinate build pipeline stages
-- Discover and invoke `project/scripts/`
+- Discover and invoke `projects/{name}/scripts/`
 - Handle I/O and orchestration
 - Work with ANY project
 
-Project-specific analysis scripts go in `project/scripts/`, not here.
+Project-specific analysis scripts go in `projects/{name}/scripts/`, not here.
 
 ## Entry Points
 
@@ -83,7 +83,7 @@ Orchestration:
 
 ```bash
 # Single project (core pipeline, no LLM)
-python3 scripts/execute_pipeline.py --project project --core-only
+python3 scripts/execute_pipeline.py --project code_project --core-only
 
 # All projects (core pipeline, no LLM)
 python3 scripts/execute_multi_project.py --no-llm
@@ -173,7 +173,7 @@ The pipeline automatically generates reports in `projects/{name}/output/reports/
 - Generic - does not implement tests
 
 ### Stage 02: Run Analysis
-- **Discovers** `project/scripts/`
+- **Discovers** `projects/{name}/scripts/`
 - **Executes** each script in order
 - Generic orchestrator (not analysis)
 - Works with ANY project
@@ -230,7 +230,7 @@ The pipeline supports automatic checkpointing and resume capability:
 
 ```bash
 # Resume from last checkpoint (Python orchestrator)
-python3 scripts/execute_pipeline.py --project project --core-only --resume
+python3 scripts/execute_pipeline.py --project code_project --core-only --resume
 
 # Resume from last checkpoint (Shell orchestrator)
 ./run.sh --pipeline --resume
@@ -252,10 +252,10 @@ If validation fails, the pipeline starts fresh with a warning.
 python3 -c "from infrastructure.core.checkpoint import CheckpointManager; cm = CheckpointManager(); print('Exists:', cm.checkpoint_exists())"
 
 # View checkpoint contents
-cat projects/project/output/.checkpoints/pipeline_checkpoint.json | python3 -m json.tool
+cat projects/code_project/output/.checkpoints/pipeline_checkpoint.json | python3 -m json.tool
 
 # Clear checkpoint manually
-rm -f projects/project/output/.checkpoints/pipeline_checkpoint.json
+rm -f projects/code_project/output/.checkpoints/pipeline_checkpoint.json
 ```
 
 See [`docs/CHECKPOINT_RESUME.md`](../docs/CHECKPOINT_RESUME.md) for complete documentation.
@@ -361,7 +361,7 @@ flowchart TD
     TESTS -->|✅ Tests pass + coverage| ANALYSIS[Stage 02:<br/>Analysis Discovery]
     TESTS -->|❌ Tests fail| FAIL
 
-    ANALYSIS -->|✅ Scripts found| EXECUTE_SCRIPTS[Execute project/scripts/<br/>Generate figures & data]
+    ANALYSIS -->|✅ Scripts found| EXECUTE_SCRIPTS[Execute projects/{name}/scripts/<br/>Generate figures & data]
     ANALYSIS -->|❌ No scripts| SKIP_SCRIPTS[Continue without analysis]
 
     EXECUTE_SCRIPTS --> RENDER[Stage 03:<br/>PDF Rendering]
@@ -406,7 +406,7 @@ flowchart TD
     A[scripts/02_run_analysis.py<br/>Analysis Stage] --> B[Discover Scripts]
     B --> C{Find Python files<br/>in project/scripts/}
 
-    C -->|✅ Scripts found| D[Sort by filename]
+    C -->|✅ Scripts found| D[Sort by filename<br/>in projects/{name}/scripts/]
     C -->|❌ No scripts| E[Continue to rendering]
 
     D --> F[Execute each script<br/>in order]
@@ -510,7 +510,7 @@ scripts/ (Generic Entry Points)
   ├─ 05_copy_outputs.py → Copy deliverables
   └─ 06_llm_review.py → LLM manuscript review (optional)
 
-project/scripts/ (Project-Specific)
+projects/{name}/scripts/ (Project-Specific)
   ├─ analysis_pipeline.py → Your analysis
   └─ example_figure.py → Your figures
 ```
@@ -527,7 +527,7 @@ This follows the thin orchestrator pattern: utilities in source, scripts orchest
 
 ## Deploying with Different Project
 
-1. Create new `project/` with your research
+1. Create new `projects/{name}/` with your research
 2. Add code to `projects/{name}/src/`
 3. Add scripts to `projects/{name}/scripts/`
 4. Run `./run.sh` - it auto-discovers your code
@@ -538,6 +538,6 @@ Root entry points work with **ANY** project following this structure.
 
 - [`AGENTS.md`](AGENTS.md) - Complete documentation
 - [`../RUN_GUIDE.md`](../RUN_GUIDE.md) - Unified runner guide
-- [`projects/project/scripts/README.md`](../projects/project/scripts/README.md) - Project scripts guide
+- [`projects/code_project/scripts/README.md`](../projects/code_project/scripts/README.md) - Project scripts guide
 - [`../docs/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
 - [`../AGENTS.md`](../AGENTS.md) - Complete system documentation

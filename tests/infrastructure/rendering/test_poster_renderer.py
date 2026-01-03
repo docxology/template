@@ -1,7 +1,9 @@
-"""Tests for infrastructure.rendering.poster_renderer module."""
+"""Tests for infrastructure.rendering.poster_renderer module using real implementations.
+
+Follows No Mocks Policy - all tests use real data and real execution.
+"""
 import pytest
 from pathlib import Path
-from unittest.mock import Mock, patch
 
 from infrastructure.rendering.poster_renderer import PosterRenderer
 from infrastructure.rendering.config import RenderingConfig

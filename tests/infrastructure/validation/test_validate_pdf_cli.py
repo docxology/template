@@ -1,11 +1,11 @@
 """Comprehensive tests for infrastructure/validation/validate_pdf_cli.py.
 
-Tests the PDF validation CLI script.
+Tests the PDF validation CLI script using real implementations.
+Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
 
 from infrastructure.validation import validate_pdf_cli

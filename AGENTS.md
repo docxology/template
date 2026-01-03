@@ -158,9 +158,8 @@ template/                           # Generic template repository
 │       ├── manuscript/            # Research manuscript
 │       └── output/                # Working outputs
 └── output/                         # Final deliverables (organized by project)
-    ├── project/                   # Original project outputs
-    ├── prose_project/       # Prose project outputs
-    └── code_project/        # Code project outputs
+    ├── code_project/        # Code project outputs
+    └── prose_project/       # Prose project outputs
 ```
 
 ## 📚 Directory-Level Documentation
@@ -224,12 +223,11 @@ template/                           # Generic Template
 │   ├── README.md
 │   └── test_*.py
 ├── projects/                       # Multiple research projects directory
-│   ├── project/                    # Original full research template
+│   ├── code_project/               # Code-focused research project
 │   │   ├── src/                    # Project scientific code (Layer 2)
 │   │   │   ├── AGENTS.md           # Project documentation
 │   │   │   ├── README.md
-│   │   │   ├── example.py
-│   │   │   └── ...
+│   │   │   └── *.py                # Research algorithms
 │   │   ├── tests/                  # Project Tests
 │   │   │   ├── AGENTS.md
 │   │   │   ├── README.md
@@ -237,11 +235,11 @@ template/                           # Generic Template
 │   │   ├── scripts/                # Project Analysis Scripts
 │   │   │   ├── AGENTS.md           # Project scripts documentation
 │   │   │   ├── README.md
-│   │   │   ├── analysis_pipeline.py
-│   │   │   └── example_figure.py
+│   │   │   └── *.py                # Analysis workflows
 │   │   ├── manuscript/             # Research Manuscript
 │   │   ├── output/                 # Generated Files (disposable)
 │   │   └── pyproject.toml          # Project configuration
+│   └── prose_project/              # Manuscript-focused project
 ├── docs/                           # Documentation
 │   ├── AGENTS.md
 │   └── README.md
@@ -335,7 +333,7 @@ Environment variables are supported as an alternative configuration method and t
 
 **Priority order**:
 1. Environment variables (highest priority - override config file)
-2. Config file (`project/manuscript/config.yaml`)
+2. Config file (`projects/{name}/manuscript/config.yaml`)
 3. Default values (lowest priority)
 
 ### Configuration Examples
@@ -399,7 +397,7 @@ The template provides **three entry points** for pipeline execution:
 **Alternative: Python Orchestrator**
 ```bash
 # Core pipeline (no LLM) - Python orchestrator
-python3 scripts/execute_pipeline.py --project project --core-only
+python3 scripts/execute_pipeline.py --project code_project --core-only
 ```
 
 **Entry Point Comparison**
@@ -438,28 +436,28 @@ python3 scripts/execute_pipeline.py --project project --core-only
 **Individual Stage Execution:**
 ```bash
 # Environment setup
-python3 scripts/00_setup_environment.py --project project
+python3 scripts/00_setup_environment.py --project code_project
 
 # Test execution (combined infra + project)
-python3 scripts/01_run_tests.py --project project
+python3 scripts/01_run_tests.py --project code_project
 
 # Project analysis scripts
-python3 scripts/02_run_analysis.py --project project
+python3 scripts/02_run_analysis.py --project code_project
 
 # PDF rendering
-python3 scripts/03_render_pdf.py --project project
+python3 scripts/03_render_pdf.py --project code_project
 
 # Output validation
-python3 scripts/04_validate_output.py --project project
+python3 scripts/04_validate_output.py --project code_project
 
 # Copy outputs
-python3 scripts/05_copy_outputs.py --project project
+python3 scripts/05_copy_outputs.py --project code_project
 
 # LLM manuscript review (optional, requires Ollama)
-python3 scripts/06_llm_review.py --project project
+python3 scripts/06_llm_review.py --project code_project
 
 # Generate executive report (multi-project only)
-python3 scripts/07_generate_executive_report.py --project project
+python3 scripts/07_generate_executive_report.py --project code_project
 ```
 
 **Validation Tools:**
@@ -468,7 +466,7 @@ python3 scripts/07_generate_executive_report.py --project project
 python3 -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 
 # Validate PDF outputs
-python3 -m infrastructure.validation.cli pdf output/project/pdf/
+python3 -m infrastructure.validation.cli pdf output/code_project/pdf/
 ```
 
 ## ✅ Validation Systems
@@ -500,7 +498,7 @@ python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 python3 -m infrastructure.validation.cli markdown projects/prose_project/manuscript/
 
 # Strict mode (fail on any issues)
-python3 -m infrastructure.validation.cli markdown project/manuscript/ --strict
+python3 -m infrastructure.validation.cli markdown projects/code_project/manuscript/ --strict
 ```
 
 **Validation Checks**:
@@ -514,7 +512,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/ --strict
 
 ```bash
 # Run both infrastructure and project tests via orchestrator
-python3 scripts/01_run_tests.py --project project
+python3 scripts/01_run_tests.py --project code_project
 
 # Or run manually with coverage reports
 python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
@@ -644,13 +642,13 @@ Tests follow the **thin orchestrator pattern** principles:
 python3 scripts/01_run_tests.py
 
 # Specific test file
-python3 -m pytest project/tests/test_example.py -v
+python3 -m pytest projects/code_project/tests/test_example.py -v
 
 # Infrastructure tests with coverage
 python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
 
 # Project tests with coverage
-python3 -m pytest project/tests/ --cov=project/src --cov-report=html
+python3 -m pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-report=html
 ```
 
 ## 📤 Output Formats
@@ -902,16 +900,16 @@ All advanced modules follow the **thin orchestrator pattern**:
 
 ```bash
 # Open combined PDF
-open output/project/pdf/project_combined.pdf
+open output/code_project/pdf/code_project_combined.pdf
 
 # Open HTML version in browser
-open output/project/project_combined.html
+open output/code_project/code_project_combined.html
 
 # List all generated files
-ls -la output/project/
+ls -la output/code_project/
 
 # Check PDF validation
-python3 -m infrastructure.validation.cli pdf output/project/pdf/
+python3 -m infrastructure.validation.cli pdf output/code_project/pdf/
 ```
 
 ## 🔧 Troubleshooting
@@ -932,7 +930,7 @@ python3 scripts/01_run_tests.py
 
 # Or run individually with coverage reports
 python3 -m pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=49
-python3 -m pytest project/tests/ --cov=project/src --cov-fail-under=70
+python3 -m pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=70
 ```
 
 #### Scripts Failing
@@ -953,7 +951,7 @@ which xelatex
 python3 -m infrastructure.rendering.latex_package_validator
 
 # Validate markdown first
-python3 -m infrastructure.validation.cli markdown project/manuscript/
+python3 -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 
 # Check compilation logs
 ls output/pdf/*_compile.log
@@ -1011,10 +1009,10 @@ brew install --cask mactex
 ```bash
 # Enable verbose logging
 export LOG_LEVEL=0
-python3 scripts/03_render_pdf.py --project project
+python3 scripts/03_render_pdf.py --project code_project
 
 # Run with debug output
-python3 -m infrastructure.validation.cli pdf output/project/pdf/ --verbose
+python3 -m infrastructure.validation.cli pdf output/code_project/pdf/ --verbose
 ```
 
 ### Log Files
@@ -1051,8 +1049,8 @@ Key log files for debugging:
 
 3. **Backup Strategy**
    ```bash
-   # Clean outputs before backup
-   python3 -c "from pathlib import Path; from infrastructure.core.file_operations import clean_output_directories; clean_output_directories(Path('.'), 'project')"
+# Clean outputs before backup
+python3 -c "from pathlib import Path; from infrastructure.core.file_operations import clean_output_directories; clean_output_directories(Path('.'), 'code_project')"
 
    # Backup source files only
    tar -czf project_backup.tar.gz projects/{name}/src/ projects/{name}/tests/ projects/{name}/scripts/ projects/{name}/manuscript/ docs/
@@ -1082,11 +1080,11 @@ The pipeline includes automatic checkpointing for resume capability:
 
 ```bash
 # Resume from last checkpoint
-python3 scripts/execute_pipeline.py --project project --core-only --resume
+python3 scripts/execute_pipeline.py --project code_project --core-only --resume
 ./run.sh --pipeline --resume
 
 # Start fresh (clears checkpoint on success)
-python3 scripts/execute_pipeline.py --project project --core-only
+python3 scripts/execute_pipeline.py --project code_project --core-only
 ./run.sh --pipeline
 ```
 

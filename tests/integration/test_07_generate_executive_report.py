@@ -11,8 +11,8 @@ import pytest
 
 
 @pytest.fixture
-def mock_project_structure(tmp_path):
-    """Create mock project structure for testing."""
+def sample_project_structure(tmp_path):
+    """Create sample project structure for testing."""
     # Create projects directory
     projects_dir = tmp_path / "projects"
     projects_dir.mkdir()
@@ -104,7 +104,7 @@ class TestExecutiveReportScript:
         finally:
             sys.path.remove(str(scripts_path))
     
-    def test_verify_project_completion(self, mock_project_structure):
+    def test_verify_project_completion(self, sample_project_structure):
         """Test project completion verification."""
         # Import verify function
         repo_root = Path(__file__).parent.parent.parent
@@ -121,11 +121,11 @@ class TestExecutiveReportScript:
             spec.loader.exec_module(module)
             
             # Test with valid project
-            is_complete = module.verify_project_completion(mock_project_structure, "project1")
+            is_complete = module.verify_project_completion(sample_project_structure, "project1")
             assert is_complete is True
             
             # Test with invalid project
-            is_complete = module.verify_project_completion(mock_project_structure, "nonexistent")
+            is_complete = module.verify_project_completion(sample_project_structure, "nonexistent")
             assert is_complete is False
             
         finally:

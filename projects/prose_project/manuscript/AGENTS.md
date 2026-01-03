@@ -162,4 +162,4 @@ pandoc 02_methodology.md -t latex | head -50
 
 - [README.md](README.md) - Quick reference
 - [PDF generation script](../../../scripts/03_render_pdf.py) - PDF generation
-- [Validation module](../../../infrastructure/validation/) - Content validation
+- [Validation module](../../../infrastructure/validation/AGENTS.md) - Content validation

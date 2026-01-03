@@ -610,6 +610,11 @@ run_full_pipeline() {
     local project_name="${2:-$CURRENT_PROJECT}"
     local skip_infra="${3:-false}"
 
+    # Set up per-project log file for bash script output
+    local log_dir="$REPO_ROOT/projects/$project_name/output/logs"
+    mkdir -p "$log_dir"
+    export PIPELINE_LOG_FILE="$log_dir/pipeline.log"
+
     # THIN ORCHESTRATOR: Delegate to Python orchestrator script for pipeline execution
     # This follows the thin orchestration pattern - all pipeline logic is in Python infrastructure
     local args="--project $project_name"
@@ -620,15 +625,24 @@ run_full_pipeline() {
         args="$args --resume"
     fi
 
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-
-    # Return the exit code from Python
-    return $?
+    # Redirect output to log file while preserving terminal output
+    if [[ -n "$PIPELINE_LOG_FILE" ]]; then
+        $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
+        return ${PIPESTATUS[0]}  # Return Python script exit code
+    else
+        $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
+        return $?
+    fi
 }
 run_core_pipeline_no_llm() {
     local resume_flag="${1:-}"
     local project_name="${2:-$CURRENT_PROJECT}"
     local skip_infra="${3:-false}"
+
+    # Set up per-project log file for bash script output
+    local log_dir="$REPO_ROOT/projects/$project_name/output/logs"
+    mkdir -p "$log_dir"
+    export PIPELINE_LOG_FILE="$log_dir/pipeline.log"
 
     # Use Python orchestrator script for pipeline execution
     local args="--project $project_name --core-only"
@@ -639,10 +653,14 @@ run_core_pipeline_no_llm() {
         args="$args --resume"
     fi
 
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-
-    # Return the exit code from Python
-    return $?
+    # Redirect output to log file while preserving terminal output
+    if [[ -n "$PIPELINE_LOG_FILE" ]]; then
+        $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
+        return ${PIPESTATUS[0]}  # Return Python script exit code
+    else
+        $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
+        return $?
+    fi
 }
 run_all_projects_full() {
     log_header "RUNNING ALL PROJECTS - FULL PIPELINE (WITH INFRASTRUCTURE TESTS, WITH LLM)"
@@ -908,21 +926,35 @@ run_full_pipeline_no_infra() {
     local resume_flag="${1:-}"
     local project_name="${2:-$CURRENT_PROJECT}"
 
+    # Set up per-project log file for bash script output
+    local log_dir="$REPO_ROOT/projects/$project_name/output/logs"
+    mkdir -p "$log_dir"
+    export PIPELINE_LOG_FILE="$log_dir/pipeline.log"
+
     # Use Python orchestrator script for pipeline execution
     local args="--project $project_name --skip-infra"
     if [[ "$resume_flag" == "--resume" ]]; then
         args="$args --resume"
     fi
 
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-
-    # Return the exit code from Python
-    return $?
+    # Redirect output to log file while preserving terminal output
+    if [[ -n "$PIPELINE_LOG_FILE" ]]; then
+        $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
+        return ${PIPESTATUS[0]}  # Return Python script exit code
+    else
+        $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
+        return $?
+    fi
 }
 
 run_core_pipeline_no_llm_no_infra() {
     local resume_flag="${1:-}"
     local project_name="${2:-$CURRENT_PROJECT}"
+
+    # Set up per-project log file for bash script output
+    local log_dir="$REPO_ROOT/projects/$project_name/output/logs"
+    mkdir -p "$log_dir"
+    export PIPELINE_LOG_FILE="$log_dir/pipeline.log"
 
     # Use Python orchestrator script for pipeline execution
     local args="--project $project_name --core-only --skip-infra"
@@ -930,10 +962,14 @@ run_core_pipeline_no_llm_no_infra() {
         args="$args --resume"
     fi
 
-    $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
-
-    # Return the exit code from Python
-    return $?
+    # Redirect output to log file while preserving terminal output
+    if [[ -n "$PIPELINE_LOG_FILE" ]]; then
+        $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args 2>&1 | tee -a "$PIPELINE_LOG_FILE"
+        return ${PIPESTATUS[0]}  # Return Python script exit code
+    else
+        $(get_python_cmd) "$REPO_ROOT/scripts/execute_pipeline.py" $args
+        return $?
+    fi
 }
 
 show_project_info() {

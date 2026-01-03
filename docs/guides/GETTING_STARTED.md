@@ -430,7 +430,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    }
    ```
 
-**See [project/manuscript/preamble.md](../../projects/project/manuscript/preamble.md) for the LaTeX preamble configuration.**
+**See [code_project/manuscript/preamble.md](../../projects/code_project/manuscript/preamble.md) for the LaTeX preamble configuration.**
 
 ### Add Bibliography
 

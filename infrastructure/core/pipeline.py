@@ -7,6 +7,7 @@ Part of the infrastructure layer (Layer 1) - reusable across all projects.
 """
 from __future__ import annotations
 
+import logging
 import os
 import subprocess
 import time
@@ -14,7 +15,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Optional
 
-from infrastructure.core.logging_utils import get_logger, log_operation, log_stage_with_eta
+from infrastructure.core.logging_utils import get_logger, log_operation, log_stage_with_eta, setup_logger
 from infrastructure.core.checkpoint import CheckpointManager, StageResult
 from infrastructure.core.environment import get_python_command, get_subprocess_env
 
@@ -50,11 +51,42 @@ class PipelineExecutor:
     def __init__(self, config: PipelineConfig):
         """Initialize pipeline executor.
 
+        Sets up per-project log file that captures all pipeline execution logs
+        (Python + subprocess output). Log file is located at:
+        projects/{project_name}/output/logs/pipeline.log
+
         Args:
             config: Pipeline configuration
         """
         self.config = config
         self.checkpoint_manager = CheckpointManager(project_name=config.project_name)
+        
+        # Set up pipeline log file to capture all pipeline logs
+        log_dir = config.repo_root / 'projects' / config.project_name / 'output' / 'logs'
+        log_dir.mkdir(parents=True, exist_ok=True)
+        log_file = log_dir / 'pipeline.log'
+        self.log_file = log_file  # Store for later access
+        
+        # Set up logger for this module
+        setup_logger(__name__, log_file=log_file)
+        
+        # Also add file handler to root logger to capture all pipeline logs
+        # This ensures logs from all modules (scripts, infrastructure, etc.) are captured
+        root_logger = logging.getLogger()
+        
+        # Check if we already have a file handler for this log file to avoid duplicates
+        existing_file_handlers = [
+            h for h in root_logger.handlers
+            if isinstance(h, logging.FileHandler) and h.baseFilename == str(log_file.resolve())
+        ]
+        
+        if not existing_file_handlers:
+            file_handler = logging.FileHandler(log_file)
+            # File logs without emojis, include logger name for context
+            file_formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s')
+            file_handler.setFormatter(file_formatter)
+            root_logger.addHandler(file_handler)
+            logger.debug(f"Added root logger file handler for pipeline log: {log_file}")
 
     def execute_full_pipeline(self) -> list[PipelineStageResult]:
         """Execute complete pipeline (tests → analysis → PDF → validate → copy → LLM).
@@ -402,7 +434,51 @@ class PipelineExecutor:
     def _run_copy_outputs(self) -> bool:
         """Run output copying."""
         logger.info("Running output copying...")
+        
+        # Flush log handlers before copying to ensure log file is written
+        log_verified = self._flush_log_handlers()
+        if not log_verified:
+            logger.warning("Log file not verified before copy - may be missing or empty")
+        
         return self._run_script("05_copy_outputs.py", "--project", self.config.project_name)
+
+    def _flush_log_handlers(self) -> bool:
+        """Flush all log handlers and verify log file exists with content.
+        
+        Returns:
+            True if log file exists and has content, False otherwise
+        """
+        import logging
+        
+        # Flush all file handlers
+        root_logger = logging.getLogger()
+        for handler in root_logger.handlers:
+            if isinstance(handler, logging.FileHandler):
+                handler.flush()
+        
+        # Also flush module-specific loggers
+        for logger_name in logging.Logger.manager.loggerDict:
+            logger_obj = logging.getLogger(logger_name)
+            for handler in logger_obj.handlers:
+                if isinstance(handler, logging.FileHandler):
+                    handler.flush()
+        
+        # Verify log file exists and has content
+        if self.log_file.exists():
+            try:
+                size = self.log_file.stat().st_size
+                if size > 0:
+                    logger.debug(f"Log file verified: {self.log_file} ({size:,} bytes)")
+                    return True
+                else:
+                    logger.warning(f"Log file exists but is empty: {self.log_file}")
+                    return False
+            except Exception as e:
+                logger.warning(f"Failed to verify log file: {e}")
+                return False
+        else:
+            logger.warning(f"Log file not found: {self.log_file}")
+            return False
 
     def _run_script(self, script_name: str, *args: str) -> bool:
         """Run a script with given arguments.

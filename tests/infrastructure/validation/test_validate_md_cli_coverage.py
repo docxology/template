@@ -1,11 +1,12 @@
 """Comprehensive tests for infrastructure/validation/validate_markdown_cli.py.
 
-Tests markdown validation CLI functionality.
+Tests markdown validation CLI functionality using real implementations.
+Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 import sys
+import subprocess
 from pathlib import Path
-from unittest.mock import MagicMock, patch, ANY
 import pytest
 
 
@@ -24,10 +25,10 @@ class TestValidateMarkdownCliCore:
 
 
 class TestMarkdownValidationCommand:
-    """Test markdown validation command."""
+    """Test markdown validation command using real execution."""
     
     def test_validate_single_file(self, tmp_path):
-        """Test validating a single markdown file."""
+        """Test validating a single markdown file using real validation."""
         from infrastructure.validation import validate_markdown_cli
         
         md = tmp_path / "test.md"
@@ -38,7 +39,7 @@ class TestMarkdownValidationCommand:
             assert result is not None
     
     def test_validate_directory(self, tmp_path):
-        """Test validating a directory of markdown files."""
+        """Test validating a directory of markdown files using real validation."""
         from infrastructure.validation import validate_markdown_cli
         
         (tmp_path / "a.md").write_text("# A\n")
@@ -50,29 +51,30 @@ class TestMarkdownValidationCommand:
 
 
 class TestMarkdownCliMain:
-    """Test main entry point."""
+    """Test main entry point using real subprocess execution."""
     
     def test_main_with_valid_markdown(self, tmp_path):
-        """Test main with valid markdown."""
-        from infrastructure.validation import validate_markdown_cli
-        
+        """Test main with valid markdown via real subprocess."""
         md = tmp_path / "test.md"
         md.write_text("# Title\n\nValid content.")
         
-        if hasattr(validate_markdown_cli, 'main'):
-            with patch('sys.argv', ['validate_markdown_cli.py', str(md)]):
-                with patch('sys.exit') as mock_exit:
-                    try:
-                        validate_markdown_cli.main()
-                    except SystemExit:
-                        pass
+        # Run real CLI command via subprocess
+        result = subprocess.run(
+            [sys.executable, '-m', 'infrastructure.validation.validate_markdown_cli', str(md)],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent.parent.parent
+        )
+        
+        # May succeed or fail depending on validation
+        assert result.returncode in [0, 1, 2]
 
 
 class TestValidateMarkdownCliIntegration:
-    """Integration tests for validate markdown CLI."""
+    """Integration tests for validate markdown CLI using real execution."""
     
     def test_full_validation_workflow(self, tmp_path):
-        """Test complete validation workflow."""
+        """Test complete validation workflow with real execution."""
         from infrastructure.validation import validate_markdown_cli
         
         # Create test markdown
@@ -81,22 +83,10 @@ class TestValidateMarkdownCliIntegration:
         
         # Module should be importable
         assert validate_markdown_cli is not None
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
+        # Use real validation
+        try:
+            result = validate_markdown_cli.main(manuscript_path=md)
+            assert result in [0, 1, 2] or result is None
+        except SystemExit:
+            pass

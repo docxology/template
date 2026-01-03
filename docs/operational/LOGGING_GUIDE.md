@@ -343,44 +343,60 @@ set_global_log_level(logging.DEBUG)
 
 ### Pipeline Terminal Output Logging
 
-The pipeline automatically captures all terminal output to log files:
+The pipeline automatically captures all terminal output to per-project log files:
 
-**Location**: `project/output/logs/` (during execution) → `output/logs/` (after copy stage)
+**Location**: 
+- During execution: `projects/{project_name}/output/logs/pipeline.log`
+- After copy stage: `output/{project_name}/logs/pipeline.log`
 
-**Naming**: `pipeline_YYYYMMDD_HHMMSS.log` (e.g., `pipeline_20251205_074830.log`)
+**Naming**: `pipeline.log` (one log file per project per execution)
 
-**Content**: Complete terminal output including:
+**Content**: Complete pipeline execution output including:
 - All bash script output (ANSI colors stripped in file, preserved in terminal)
-- All Python script output
+- All Python script output from all pipeline modules
 - Error messages and stack traces
 - Progress indicators and ETAs
 - Stage completion status
+- All subprocess output from pipeline stages
+
+**Per-Project Logging**:
+Each project has its own log file, enabling:
+- Isolation of logs per project in multi-project workflows
+- Easy debugging of project-specific issues
+- Historical log preservation through archiving
 
 **Usage**:
 ```bash
-# Run pipeline - log file is automatically created
-./run.sh --pipeline
+# Run pipeline - log file is automatically created per project
+./run.sh --pipeline --project code_project
 
-# Log file location is displayed in pipeline summary
-# Example: output/logs/pipeline_20251205_074830.log
+# Log file location:
+# projects/code_project/output/logs/pipeline.log (during execution)
+# output/code_project/logs/pipeline.log (after copy stage)
 ```
 
 **Viewing Logs**:
 ```bash
-# View latest log file
-ls -t output/logs/*.log | head -1 | xargs cat
+# View log file for specific project
+cat output/code_project/logs/pipeline.log
 
-# Search for errors in logs
-grep -i error output/logs/pipeline_*.log
+# Search for errors in project logs
+grep -i error output/code_project/logs/pipeline.log
 
 # View logs from specific stage
-grep "Stage 5" output/logs/pipeline_*.log
+grep "Stage 5" output/code_project/logs/pipeline.log
+
+# View archived logs
+ls -t output/code_project/logs/archive/*.log | head -1 | xargs cat
 ```
 
 **Log File Management**:
-- Old log files are automatically archived to `output/logs/archive/` before cleanup
-- Log files are preserved during pipeline cleanup (not deleted)
-- Log files are copied to root `output/logs/` during the copy outputs stage
+- Log files are created automatically when pipeline starts
+- Old log files are automatically archived to `logs/archive/` before cleanup
+- Archive naming: `pipeline_YYYYMMDD_HHMMSS.log` (timestamped)
+- Log files are preserved during pipeline cleanup (archived, not deleted)
+- Log files are copied to `output/{project_name}/logs/` during the copy outputs stage
+- Warning is logged if no log files are found during copy (helps diagnose logging issues)
 
 ### Log Files (Python Scripts)
 
@@ -701,6 +717,55 @@ realistic, optimistic, pessimistic = calculate_eta_with_confidence(
 5. **Show throughput when relevant** - tokens/sec, items/sec, etc.
 
 ## Troubleshooting
+
+### Missing Log Files
+
+If log files are not being created or are empty:
+
+**Symptoms:**
+- `logs/: 0 file(s)` shown in pipeline output
+- No `pipeline.log` file in `projects/{project_name}/output/logs/`
+- Warning message: "No log files found in logs/ directory"
+
+**Causes and Solutions:**
+
+1. **Log directory not created:**
+   ```bash
+   # Check if log directory exists
+   ls -la projects/{project_name}/output/logs/
+   
+   # If missing, ensure setup stage runs first
+   ./run.sh --pipeline  # Full pipeline includes setup
+   ```
+
+2. **Log file cleaned before writing:**
+   - Log files are archived before cleanup, check `logs/archive/` directory
+   - Ensure pipeline completes successfully (log file written at end)
+   - Check if cleanup stage runs before log file is written
+
+3. **Python logging not configured:**
+   - Verify `PipelineExecutor` is being used (not direct script execution)
+   - Check that root logger file handler is added (see `infrastructure/core/pipeline.py`)
+   - Ensure log file path is correct: `projects/{project_name}/output/logs/pipeline.log`
+
+4. **Bash script logging not enabled:**
+   - Verify `PIPELINE_LOG_FILE` environment variable is set in `run.sh`
+   - Check that log directory exists before setting the variable
+   - Ensure bash logging functions use `log_to_file()` wrapper
+
+**Verification:**
+```bash
+# Check if log file exists during execution
+ls -la projects/{project_name}/output/logs/pipeline.log
+
+# Check archived logs
+ls -la projects/{project_name}/output/logs/archive/
+
+# Check final copied logs
+ls -la output/{project_name}/logs/pipeline.log
+```
+
+### Log File Issues
 
 ### No Log Output
 

@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import pytest
 from pathlib import Path
 import tempfile
+import builtins
+import sys
+import importlib
 
 from src.mathematical_visualization import (
     plot_function_comparison,
@@ -167,3 +170,133 @@ class TestMathematicalVisualization:
 
             assert filepath.exists()
             # Note: We can't easily test DPI in saved file without additional libraries
+
+    def test_save_figure_with_explicit_output_dir(self):
+        """Test save_figure with explicit output_dir parameter (covers line 364)."""
+        fig, ax = plt.subplots()
+        ax.plot([1, 2, 3], [1, 4, 2])
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            explicit_dir = Path(temp_dir) / "custom_output"
+            filepath = save_figure(fig, 'explicit_dir_test', explicit_dir)
+
+            assert filepath.exists()
+            assert filepath.parent == explicit_dir
+            assert filepath.suffix == '.png'
+
+    def test_plot_convergence_analysis_linear_scale(self):
+        """Test convergence analysis with linear scale (use_log_scale=False)."""
+        convergence_data = {
+            'Method1': [1.0, 0.5, 0.25, 0.125],
+            'Method2': [1.0, 0.8, 0.64, 0.512],
+        }
+
+        fig = plot_convergence_analysis(convergence_data, use_log_scale=False)
+        assert isinstance(fig, plt.Figure)
+        # Should use linear scale, not log scale
+        assert fig.axes[0].get_yscale() != 'log'
+        plt.close(fig)
+
+    def test_plot_function_comparison_with_exception_and_logging(self):
+        """Test exception handling in plot_function_comparison with logging available."""
+        # Function that raises exception
+        def bad_function(x):
+            raise ValueError("Test exception for logging")
+
+        functions = {
+            'Good': lambda x: x,
+            'Bad': bad_function,
+            'AnotherGood': lambda x: x**2,
+        }
+
+        # Should handle exception gracefully and continue with other functions
+        fig = plot_function_comparison(functions)
+        assert isinstance(fig, plt.Figure)
+        # Should have lines for good functions (at least 2)
+        assert len(fig.axes[0].lines) >= 2
+        plt.close(fig)
+
+    def test_plot_growth_rates_with_exception_and_logging(self):
+        """Test exception handling in plot_growth_rates with logging available."""
+        # Function that raises exception
+        def bad_growth_function(x):
+            raise RuntimeError("Test exception for growth rates")
+
+        growth_functions = {
+            'Good': lambda x: x,
+            'Bad': bad_growth_function,
+            'AnotherGood': lambda x: np.sqrt(x),
+        }
+
+        # Should handle exception gracefully and continue with other functions
+        fig = plot_growth_rates(growth_functions)
+        assert isinstance(fig, plt.Figure)
+        # Should have lines for good functions (at least 2)
+        assert len(fig.axes[0].lines) >= 2
+        plt.close(fig)
+
+    def test_plot_theoretical_convergence_with_exception_and_logging(self):
+        """Test exception handling in plot_theoretical_convergence with logging available."""
+        # Function that raises exception
+        def bad_convergence_function(x):
+            raise TypeError("Test exception for convergence")
+
+        convergence_functions = {
+            'Good': lambda x: 1 - 0.1 * x,
+            'Bad': bad_convergence_function,
+            'AnotherGood': lambda x: np.exp(-x),
+        }
+
+        # Should handle exception gracefully and continue with other functions
+        fig = plot_theoretical_convergence(convergence_functions)
+        assert isinstance(fig, plt.Figure)
+        # Should have lines for good functions (at least 2)
+        assert len(fig.axes[0].lines) >= 2
+        plt.close(fig)
+
+    def test_module_works_without_logging(self, monkeypatch):
+        """Test that module works when logging infrastructure is unavailable (lines 68-69)."""
+        # Save original if it exists
+        original_logging_utils = sys.modules.get('infrastructure.core.logging_utils')
+        
+        # Remove from sys.modules to force reimport
+        if 'infrastructure.core.logging_utils' in sys.modules:
+            del sys.modules['infrastructure.core.logging_utils']
+        
+        # Temporarily patch __import__ to raise ImportError for logging_utils
+        original_import = builtins.__import__
+        
+        def restricted_import(name, *args, **kwargs):
+            if name == 'infrastructure.core.logging_utils' or name.startswith('infrastructure.core.logging_utils'):
+                raise ImportError("Logging module unavailable for testing")
+            return original_import(name, *args, **kwargs)
+        
+        monkeypatch.setattr(builtins, '__import__', restricted_import)
+        
+        # Reload the module to trigger the ImportError path
+        import src.mathematical_visualization as mv_module
+        importlib.reload(mv_module)
+        
+        # Verify LOGGING_AVAILABLE is False
+        assert mv_module.LOGGING_AVAILABLE is False
+        
+        # Verify functions still work without logging
+        functions = {'Linear': lambda x: x}
+        fig = mv_module.plot_function_comparison(functions)
+        assert isinstance(fig, plt.Figure)
+        plt.close(fig)
+        
+        # Test that exception handling still works (without logging)
+        def bad_function(x):
+            raise ValueError("Test")
+        
+        functions_with_bad = {'Good': lambda x: x, 'Bad': bad_function}
+        fig = mv_module.plot_function_comparison(functions_with_bad)
+        assert isinstance(fig, plt.Figure)
+        # Should still work, just without logging the exception
+        assert len(fig.axes[0].lines) >= 1  # At least the good function
+        plt.close(fig)
+        
+        # Restore original module
+        if original_logging_utils:
+            sys.modules['infrastructure.core.logging_utils'] = original_logging_utils

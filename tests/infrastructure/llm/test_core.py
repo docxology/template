@@ -257,7 +257,7 @@ class TestLLMClientWithOllama:
         assert response is not None
         assert len(response) < 1000  # Should be concise
 
-    @pytest.mark.timeout(-1)  # Disable pytest timeout for network-dependent test
+    @pytest.mark.timeout(180)  # Extended timeout for network-dependent test (3 minutes)
     def test_query_long(self, client, default_config):
         """Test long response mode.
 
@@ -274,9 +274,11 @@ class TestLLMClientWithOllama:
             
             assert response is not None
             assert len(response) > 50  # Should have some content
-        except LLMConnectionError as e:
-            if "timed out" in str(e).lower() or "timeout" in str(e).lower():
-                pytest.skip(f"Ollama timed out on long response (external service issue): {e}")
+        except (LLMConnectionError, requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+            # Skip on any network/timeout errors - these are external service issues
+            error_str = str(e).lower()
+            if any(keyword in error_str for keyword in ["timed out", "timeout", "connection", "refused"]):
+                pytest.skip(f"Ollama connection/timeout issue (external service): {e}")
             raise
 
     def test_query_structured(self, client, default_config):

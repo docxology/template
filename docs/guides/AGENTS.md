@@ -51,17 +51,17 @@ docs/guides/
 **Show, Don't Tell Philosophy:**
 ```bash
 # Good: Complete working example
-$ python3 scripts/03_render_pdf.py
-INFO: Loading configuration from project/manuscript/config.yaml
+$ python3 scripts/03_render_pdf.py --project code_project
+INFO: Loading configuration from projects/code_project/manuscript/config.yaml
 INFO: Generating PDF with LaTeX rendering engine
-INFO: PDF generated successfully: output/pdf/project_combined.pdf
+INFO: PDF generated successfully: output/code_project/pdf/code_project_combined.pdf
 
 # View results
-open output/pdf/project_combined.pdf
+open output/code_project/pdf/code_project_combined.pdf
 
 # Expected output structure:
-# output/
-# ├── pdf/project_combined.pdf     (main manuscript)
+# output/code_project/
+# ├── pdf/code_project_combined.pdf     (main manuscript)
 # ├── pdf/01_abstract.pdf          (individual sections)
 # ├── pdf/02_introduction.pdf
 # └── pdf/03_methodology.pdf
@@ -148,8 +148,8 @@ $ which xelatex
 $ sudo tlmgr install multirow cleveref doi
 
 # Retry generation
-$ python3 scripts/03_render_pdf.py
-SUCCESS: PDF generated at output/pdf/project_combined.pdf
+$ python3 scripts/03_render_pdf.py --project code_project
+SUCCESS: PDF generated at output/code_project/pdf/code_project_combined.pdf
 ```
 
 ### Progressive Complexity

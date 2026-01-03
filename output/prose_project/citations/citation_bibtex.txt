@@ -1,0 +1,10 @@
+@software{templateauthor2024,
+  author = {Template Author},
+  title = {Results},
+  year = {2024},
+  publisher = {Self-published},
+  url = {},
+  license = {Apache-2.0},
+  abstract = {A comprehensive template for research projects with test-driven development and automated PDF generation.},
+  keywords = {research, template, academic, scientific}
+}

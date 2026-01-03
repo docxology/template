@@ -1,10 +1,10 @@
 """Additional tests for infrastructure/rendering/pdf_renderer.py.
 
-Tests PDF rendering functionality.
+Tests PDF rendering functionality using real implementations.
+Follows No Mocks Policy - all tests use real data and real execution.
 """
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
 import pytest
 
 from infrastructure.rendering import pdf_renderer
@@ -78,17 +78,16 @@ class TestPdfRendererErrors:
     """Test error handling."""
     
     def test_handle_latex_error(self, tmp_path):
-        """Test handling LaTeX errors."""
+        """Test handling LaTeX errors with real execution."""
         tex = tmp_path / "bad.tex"
         tex.write_text("\\invalid")
         
         if hasattr(pdf_renderer, 'render_pdf'):
-            with patch('subprocess.run') as mock_run:
-                mock_run.return_value = MagicMock(returncode=1, stderr="Error")
-                try:
-                    result = pdf_renderer.render_pdf(str(tex))
-                except Exception:
-                    pass  # Expected to fail
+            # Use real execution - may fail if LaTeX not available, which is expected
+            try:
+                result = pdf_renderer.render_pdf(str(tex))
+            except Exception:
+                pass  # Expected to fail with invalid LaTeX
     
     def test_handle_missing_file(self, tmp_path):
         """Test handling missing file."""

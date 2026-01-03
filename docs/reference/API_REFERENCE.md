@@ -711,7 +711,7 @@ latex_block = manager.generate_latex_figure_block("fig:convergence")
 
 For complete API documentation of all modules, see:
 - **[Infrastructure Documentation](../../infrastructure/AGENTS.md)** - Complete infrastructure module descriptions
-- **[Project Source Documentation](../../projects/project/src/AGENTS.md)** - Project-specific module descriptions
+- **[Code Project Source Documentation](../../projects/code_project/src/AGENTS.md)** - Project-specific module descriptions
 - **[Scientific Simulation Guide](../modules/SCIENTIFIC_SIMULATION_GUIDE.md)** - Simulation and analysis modules
 - **[Visualization Guide](../usage/VISUALIZATION_GUIDE.md)** - Visualization and figure management
 - **[Image Management Guide](../usage/IMAGE_MANAGEMENT.md)** - Image insertion and cross-referencing
@@ -744,14 +744,14 @@ This API reference covers all public functions and classes in the `infrastructur
 
 For usage examples, see [Modules Guide](../modules/MODULES_GUIDE.md).
 
-For implementation details, see [Infrastructure Documentation](../../infrastructure/AGENTS.md) and [Project Source Documentation](../../projects/project/src/AGENTS.md).
+For implementation details, see [Infrastructure Documentation](../../infrastructure/AGENTS.md) and [Code Project Source Documentation](../../projects/code_project/src/AGENTS.md).
 
 ---
 
 **Related Documentation:**
 - [Modules Guide](../modules/MODULES_GUIDE.md) - Usage examples
 - [Infrastructure Docs](../../infrastructure/AGENTS.md) - Infrastructure module implementation
-- [Project Source Docs](../../projects/project/src/AGENTS.md) - Project module implementation
+- [Code Project Source Docs](../../projects/code_project/src/AGENTS.md) - Project module implementation
 - [Best Practices](../best-practices/BEST_PRACTICES.md) - Usage recommendations
 
 
