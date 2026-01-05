@@ -1,0 +1,55 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: _combined_manuscript.aux
+The style file: plainnat.bst
+Illegal, another \bibstyle command---line 558 of file _combined_manuscript.aux
+ : \bibstyle
+ :          {unsrt}
+I'm skipping whatever remains of this command
+Illegal, another \bibdata command---line 559 of file _combined_manuscript.aux
+ : \bibdata
+ :         {references}
+I'm skipping whatever remains of this command
+Database file #1: references.bib
+You've used 15 entries,
+            2773 wiz_defined-function locations,
+            684 strings with 7189 characters,
+and the built_in function-call counts, 6907 in all, are:
+= -- 582
+> -- 440
+< -- 5
++ -- 150
+- -- 135
+* -- 590
+:= -- 1097
+add.period$ -- 45
+call.type$ -- 15
+change.case$ -- 86
+chr.to.int$ -- 15
+cite$ -- 30
+duplicate$ -- 308
+empty$ -- 554
+format.name$ -- 150
+if$ -- 1406
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 19
+newline$ -- 83
+num.names$ -- 60
+pop$ -- 179
+preamble$ -- 1
+purify$ -- 75
+quote$ -- 0
+skip$ -- 222
+stack$ -- 0
+substring$ -- 241
+swap$ -- 15
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 145
+warning$ -- 0
+while$ -- 61
+width$ -- 0
+write$ -- 196
+(There were 2 error messages)

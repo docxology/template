@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-01-04T16:25:26.765216",
-  "total_duration": 292.6165828704834,
+  "timestamp": "2026-01-04T17:23:00.002803",
+  "total_duration": 289.9071750640869,
   "stages": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.016356229782104492,
+      "duration": 0.01686716079711914,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -14,7 +14,7 @@
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 0.6028239727020264,
+      "duration": 0.6094398498535156,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -23,7 +23,7 @@
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 44.15164399147034,
+      "duration": 44.824726819992065,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -32,7 +32,7 @@
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 61.88885498046875,
+      "duration": 62.915647983551025,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -41,7 +41,7 @@
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 49.989400148391724,
+      "duration": 49.966745138168335,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -50,7 +50,7 @@
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 0.3858828544616699,
+      "duration": 0.38180088996887207,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -59,7 +59,7 @@
     {
       "name": "LLM Scientific Review",
       "exit_code": 0,
-      "duration": 31.72911286354065,
+      "duration": 33.003868103027344,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -68,7 +68,7 @@
     {
       "name": "LLM Translations",
       "exit_code": 0,
-      "duration": 103.29057908058167,
+      "duration": 97.70523500442505,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -77,7 +77,7 @@
     {
       "name": "Copy Outputs",
       "exit_code": 0,
-      "duration": 0.5619287490844727,
+      "duration": 0.48284411430358887,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -93,12 +93,12 @@
       "pdf": {
         "exists": true,
         "file_count": 9,
-        "size_mb": "1.25",
-        "total_size_bytes": 1308609,
+        "size_mb": "1.24",
+        "total_size_bytes": 1302418,
         "largest_files": [
           {
             "name": "ento_linguistics_combined.pdf",
-            "size_mb": "0.85",
+            "size_mb": "0.84",
             "path": "pdf/ento_linguistics_combined.pdf"
           },
           {
@@ -153,8 +153,8 @@
       "slides": {
         "exists": true,
         "file_count": 92,
-        "size_mb": "2.85",
-        "total_size_bytes": 2986367,
+        "size_mb": "2.84",
+        "total_size_bytes": 2980438,
         "largest_files": [
           {
             "name": "04_experimental_results_slides.pdf",
@@ -186,8 +186,8 @@
       "figures": {
         "exists": true,
         "file_count": 37,
-        "size_mb": "4.43",
-        "total_size_bytes": 4644832,
+        "size_mb": "4.45",
+        "total_size_bytes": 4664157,
         "largest_files": [
           {
             "name": "domain_comparison.png",
@@ -196,12 +196,12 @@
           },
           {
             "name": "step_size_analysis.png",
-            "size_mb": "0.33",
+            "size_mb": "0.34",
             "path": "figures/step_size_analysis.png"
           },
           {
             "name": "terminology_network.png",
-            "size_mb": "0.32",
+            "size_mb": "0.31",
             "path": "figures/terminology_network.png"
           }
         ],
@@ -215,7 +215,7 @@
         "exists": true,
         "file_count": 12,
         "size_mb": "0.55",
-        "total_size_bytes": 572602,
+        "total_size_bytes": 572603,
         "largest_files": [
           {
             "name": "literature_corpus.json",
@@ -243,7 +243,7 @@
         "exists": true,
         "file_count": 22,
         "size_mb": "0.06",
-        "total_size_bytes": 64310,
+        "total_size_bytes": 64313,
         "largest_files": [
           {
             "name": "output_statistics.json",
@@ -272,7 +272,7 @@
         "exists": true,
         "file_count": 3,
         "size_mb": "0.05",
-        "total_size_bytes": 51907,
+        "total_size_bytes": 51906,
         "largest_files": [
           {
             "name": "simulation_example.npz",
@@ -299,7 +299,7 @@
         "exists": true,
         "file_count": 6,
         "size_mb": "0.05",
-        "total_size_bytes": 55917,
+        "total_size_bytes": 53049,
         "largest_files": [
           {
             "name": "combined_review.md",
@@ -332,11 +332,11 @@
       }
     },
     "total_files": 195,
-    "total_size_mb": 9.41338062286377,
+    "total_size_mb": 9.417519569396973,
     "largest_files": [
       {
         "name": "ento_linguistics_combined.pdf",
-        "size_mb": "0.85",
+        "size_mb": "0.84",
         "category": "pdf",
         "path": "pdf/ento_linguistics_combined.pdf"
       },
@@ -366,13 +366,13 @@
       },
       {
         "name": "step_size_analysis.png",
-        "size_mb": "0.33",
+        "size_mb": "0.34",
         "category": "figures",
         "path": "figures/step_size_analysis.png"
       },
       {
         "name": "terminology_network.png",
-        "size_mb": "0.32",
+        "size_mb": "0.31",
         "category": "figures",
         "path": "figures/terminology_network.png"
       },
@@ -419,14 +419,14 @@
       ".txt": 1
     },
     "sizes_by_category": {
-      "pdf": 1.2479867935180664,
+      "pdf": 1.2420825958251953,
       "web": 0.17747974395751953,
-      "slides": 2.8480215072631836,
-      "figures": 4.429656982421875,
-      "data": 0.5460758209228516,
-      "reports": 0.06133079528808594,
-      "simulations": 0.04950237274169922,
-      "llm": 0.05332660675048828,
+      "slides": 2.842367172241211,
+      "figures": 4.448086738586426,
+      "data": 0.546076774597168,
+      "reports": 0.061333656311035156,
+      "simulations": 0.04950141906738281,
+      "llm": 0.050591468811035156,
       "logs": 0.0
     },
     "pdf_files": 9,

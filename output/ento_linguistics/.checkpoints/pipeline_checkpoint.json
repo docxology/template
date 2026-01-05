@@ -1,0 +1,64 @@
+{
+  "pipeline_start_time": 1767575890.088084,
+  "last_stage_completed": 8,
+  "stage_results": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.01686716079711914,
+      "timestamp": "2026-01-04 17:22:59",
+      "completed": true
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 0.6094398498535156,
+      "timestamp": "2026-01-04 17:22:59",
+      "completed": true
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 44.824726819992065,
+      "timestamp": "2026-01-04 17:22:59",
+      "completed": true
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 62.915647983551025,
+      "timestamp": "2026-01-04 17:22:59",
+      "completed": true
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 49.966745138168335,
+      "timestamp": "2026-01-04 17:22:59",
+      "completed": true
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 0.38180088996887207,
+      "timestamp": "2026-01-04 17:22:59",
+      "completed": true
+    },
+    {
+      "name": "LLM Scientific Review",
+      "exit_code": 0,
+      "duration": 33.003868103027344,
+      "timestamp": "2026-01-04 17:22:59",
+      "completed": true
+    },
+    {
+      "name": "LLM Translations",
+      "exit_code": 0,
+      "duration": 97.70523500442505,
+      "timestamp": "2026-01-04 17:22:59",
+      "completed": true
+    }
+  ],
+  "total_stages": 9,
+  "checkpoint_time": 1767576179.51636
+}

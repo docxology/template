@@ -1,0 +1,58 @@
+{
+  "timestamp": "2026-01-04T17:19:57.835073",
+  "total_duration": 0.0,
+  "stages": [
+    {
+      "name": "quality_report",
+      "exit_code": 0,
+      "duration": 0.0,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "test_results": null,
+  "validation_results": {
+    "markdown_issues": {
+      "status": "validated",
+      "issues": [],
+      "summary": {
+        "total_issues": 0,
+        "exit_code": 0
+      },
+      "path": "/Users/4d/Documents/GitHub/template/projects/ento_linguistics/manuscript"
+    },
+    "quality_metrics": {
+      "status": "skipped",
+      "reason": "infrastructure.build not available"
+    },
+    "integrity_summary": {
+      "status": "error",
+      "error": "'IntegrityReport' object is not subscriptable",
+      "path": "output"
+    },
+    "reproducibility": {
+      "status": "skipped",
+      "reason": "infrastructure.build not available"
+    },
+    "errors": {
+      "total_errors": 0,
+      "total_warnings": 0,
+      "errors_by_type": {},
+      "warnings_by_type": {},
+      "errors": [],
+      "warnings": []
+    }
+  },
+  "performance_metrics": null,
+  "error_summary": {
+    "total_errors": 0,
+    "total_warnings": 0,
+    "errors_by_type": {},
+    "warnings_by_type": {},
+    "errors": [],
+    "warnings": []
+  },
+  "output_statistics": null
+}

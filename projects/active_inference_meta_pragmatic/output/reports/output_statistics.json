@@ -3,12 +3,12 @@
     "pdf": {
       "exists": true,
       "file_count": 9,
-      "size_mb": "4.69",
-      "total_size_bytes": 4918358,
+      "size_mb": "4.70",
+      "total_size_bytes": 4924291,
       "largest_files": [
         {
           "name": "active_inference_meta_pragmatic_combined.pdf",
-          "size_mb": "4.31",
+          "size_mb": "4.32",
           "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
         },
         {
@@ -63,8 +63,8 @@
     "slides": {
       "exists": true,
       "file_count": 95,
-      "size_mb": "5.42",
-      "total_size_bytes": 5684088,
+      "size_mb": "5.43",
+      "total_size_bytes": 5690034,
       "largest_files": [
         {
           "name": "03_methodology_slides.pdf",
@@ -73,7 +73,7 @@
         },
         {
           "name": "04_experimental_results_slides.pdf",
-          "size_mb": "1.31",
+          "size_mb": "1.32",
           "path": "slides/04_experimental_results_slides.pdf"
         },
         {
@@ -96,8 +96,8 @@
     "figures": {
       "exists": true,
       "file_count": 35,
-      "size_mb": "5.10",
-      "total_size_bytes": 5349654,
+      "size_mb": "5.11",
+      "total_size_bytes": 5355612,
       "largest_files": [
         {
           "name": "quadrant_matrix_enhanced.png",
@@ -147,7 +147,7 @@
       "exists": true,
       "file_count": 7,
       "size_mb": "0.06",
-      "total_size_bytes": 59592,
+      "total_size_bytes": 59591,
       "largest_files": [
         {
           "name": "final_pipeline_report.json",
@@ -181,8 +181,8 @@
     "llm": {
       "exists": true,
       "file_count": 6,
-      "size_mb": "0.04",
-      "total_size_bytes": 47048,
+      "size_mb": "0.05",
+      "total_size_bytes": 47953,
       "largest_files": [
         {
           "name": "combined_review.md",
@@ -215,11 +215,11 @@
     }
   },
   "total_files": 167,
-  "total_size_mb": 15.506193161010742,
+  "total_size_mb": 15.524065971374512,
   "largest_files": [
     {
       "name": "active_inference_meta_pragmatic_combined.pdf",
-      "size_mb": "4.31",
+      "size_mb": "4.32",
       "category": "pdf",
       "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
     },
@@ -231,7 +231,7 @@
     },
     {
       "name": "04_experimental_results_slides.pdf",
-      "size_mb": "1.31",
+      "size_mb": "1.32",
       "category": "slides",
       "path": "slides/04_experimental_results_slides.pdf"
     },
@@ -300,14 +300,14 @@
     ".csv": 1
   },
   "sizes_by_category": {
-    "pdf": 4.690511703491211,
+    "pdf": 4.696169853210449,
     "web": 0.1473989486694336,
-    "slides": 5.420768737792969,
-    "figures": 5.101827621459961,
+    "slides": 5.42643928527832,
+    "figures": 5.107509613037109,
     "data": 0.04398632049560547,
-    "reports": 0.05683135986328125,
+    "reports": 0.056830406188964844,
     "simulations": 0.0,
-    "llm": 0.04486846923828125,
+    "llm": 0.045731544494628906,
     "logs": 0.0
   },
   "pdf_files": 9,

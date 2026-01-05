@@ -1,0 +1,176 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Introduction}
+\protect\phantomsection\label{introduction}
+This small code project demonstrates a fully-tested numerical
+optimization implementation with comprehensive analysis and
+visualization capabilities. The project showcases the complete research
+pipeline from algorithm implementation through testing to result
+visualization, including automatic title page generation from metadata
+configuration.
+
+\begin{block}{Research Context}
+\protect\phantomsection\label{research-context}
+Numerical optimization forms the foundation of many scientific and
+engineering applications \cite{nocedal2006numerical}. This project
+implements and analyzes gradient descent methods for solving
+optimization problems of the form:
+
+\[\min_{x \in \mathbb{R}^n} f(x)\]
+
+where \(f: \mathbb{R}^n \rightarrow \mathbb{R}\) is a continuously
+differentiable objective function.
+\end{block}
+
+\begin{block}{Key Components}
+\protect\phantomsection\label{key-components}
+The implementation includes:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Gradient descent algorithm} with configurable parameters
+\item
+  \textbf{Quadratic function test problems} with known analytical
+  solutions
+\item
+  \textbf{Comprehensive test suite} covering functionality and edge
+  cases
+\item
+  \textbf{Analysis scripts} that generate convergence plots and
+  performance data
+\item
+  \textbf{Manuscript integration} with automatically generated figures
+\item
+  \textbf{Multi-format rendering} supporting PDF, HTML, and presentation
+  slides
+\item
+  \textbf{LLM-powered scientific review} with automated manuscript
+  analysis
+\item
+  \textbf{Executive reporting} for cross-project metrics and comparisons
+\end{itemize}
+\end{block}
+
+\begin{block}{Algorithm Overview}
+\protect\phantomsection\label{algorithm-overview}
+The gradient descent algorithm iteratively updates the solution using:
+
+\[x_{k+1} = x_k - \alpha \nabla f(x_k)\]
+
+where: - \(\alpha > 0\) is the step size (learning rate) -
+\(\nabla f(x_k)\) is the gradient of the objective function at iteration
+\(k\)
+\end{block}
+
+\begin{block}{Implementation Goals}
+\protect\phantomsection\label{implementation-goals}
+This project demonstrates:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Clean, testable code} with proper separation of concerns
+\item
+  \textbf{Numerical accuracy} through comprehensive testing
+\item
+  \textbf{Performance analysis} with convergence visualization
+\item
+  \textbf{Research reproducibility} through automated analysis scripts
+\item
+  \textbf{Documentation integration} with figure generation and
+  referencing
+\end{enumerate}
+\end{block}
+\end{frame}
+
+\end{document}

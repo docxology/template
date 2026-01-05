@@ -1,0 +1,386 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Supplemental Analysis}
+\protect\phantomsection\label{sec:supplemental_analysis}
+This section provides theoretical analysis of meta-cognitive frameworks,
+their implications, and theoretical extensions of the Active Inference
+meta-pragmatic framework.
+
+\begin{block}{Meta-Cognitive Framework Analysis}
+\protect\phantomsection\label{sec:meta_cognitive_frameworks}
+\begin{block}{Hierarchical Meta-Cognition}
+\protect\phantomsection\label{hierarchical-meta-cognition}
+The framework supports three levels of meta-cognitive processing:
+
+\textbf{Level 1 Meta-Cognition:} Monitoring basic inference processes -
+Confidence assessment in posterior beliefs - Attention allocation based
+on uncertainty - Strategy selection for inference tasks
+
+\textbf{Level 2 Meta-Cognition:} Monitoring meta-cognitive processes
+themselves - Evaluating confidence assessment accuracy - Monitoring
+attention allocation effectiveness - Assessing strategy selection
+performance
+
+\textbf{Level 3 Meta-Cognition:} Framework-level monitoring and
+adaptation - Optimizing confidence thresholds - Adapting meta-cognitive
+parameters - Evolving framework structures
+\end{block}
+
+\begin{block}{Self-Modeling Requirements}
+\protect\phantomsection\label{self-modeling-requirements}
+Active Inference requires systems to model themselves within the same
+formalism used to model the world, creating recursive self-reference:
+
+\[q_{self}(s_{self} \mid o_{self}) \propto p_{self}(o_{self} \mid s_{self}) \cdot q_{self}(s_{self})\label{eq:self_modeling}\]
+
+Where the system uses its own generative model to infer its own internal
+states from self-observations.
+\end{block}
+
+\begin{block}{Framework Coherence}
+\protect\phantomsection\label{framework-coherence}
+Meta-cognitive frameworks must maintain internal consistency while
+adapting to changing circumstances:
+
+\textbf{Coherence Constraints:} - Epistemic frameworks must remain
+logically consistent - Pragmatic frameworks must maintain value
+coherence - Meta-cognitive processes must align with cognitive processes
+- Framework adaptations must preserve system integrity
+
+\textbf{Adaptation Dynamics:}
+
+\[\frac{d\Theta}{dt} = -\eta \cdot \nabla_{\Theta} \mathcal{L}(\Theta) + \lambda \cdot \mathcal{R}(\Theta)\label{eq:adaptation_dynamics}\]
+
+Where (\mathcal{R}(\Theta)) ensures framework coherence during
+adaptation.
+\end{block}
+\end{block}
+
+\begin{block}{Theoretical Extensions}
+\protect\phantomsection\label{sec:theoretical_extensions}
+\begin{block}{Multi-Agent Active Inference}
+\protect\phantomsection\label{multi-agent-active-inference}
+Extension of the framework to social cognition and multi-agent systems:
+
+\textbf{Collective EFE:}
+
+\[\mathcal{F}_{collective}(\pi_1, \ldots, \pi_N) = \sum_{i=1}^N \mathcal{F}_i(\pi_i) + \mathcal{F}_{interaction}(\pi_1, \ldots, \pi_N)\label{eq:collective_efe}\]
+
+Where (\mathcal{F}\_\{interaction\}) captures inter-agent dependencies.
+
+\textbf{Social Meta-Cognition:} - Agents model other agents' cognitive
+processes - Collective framework adaptation - Shared epistemic and
+pragmatic landscapes - Emergent group intelligence
+\end{block}
+
+\begin{block}{Temporal Meta-Cognition}
+\protect\phantomsection\label{temporal-meta-cognition}
+Incorporation of temporal dynamics into meta-cognitive processing:
+
+\textbf{Temporal Confidence:}
+
+\[c(t) = f(c(t-1), accuracy(t), consistency(t))\label{eq:temporal_confidence}\]
+
+\textbf{Adaptive Learning Rates:}
+
+\[\eta(t) = g(confidence(t), performance(t), stability(t))\label{eq:adaptive_learning}\]
+
+\textbf{Long-Term Framework Evolution:}
+
+\[\Theta(t+1) = \Theta(t) + \Delta\Theta(t) \cdot w(history(t))\label{eq:framework_evolution}\]
+
+Where history-dependent weighting ensures stable long-term adaptation.
+\end{block}
+
+\begin{block}{Cultural Cognitive Frameworks}
+\protect\phantomsection\label{cultural-cognitive-frameworks}
+Analysis of how cultural contexts shape meta-cognitive frameworks:
+
+\textbf{Cultural Epistemic Frameworks:} - Different cultures develop
+different (A), (B), (D) matrices - Cultural priors influence knowledge
+acquisition - Cultural causal models shape action understanding
+
+\textbf{Cultural Pragmatic Frameworks:} - Value systems vary across
+cultures (different (C) matrices) - Cultural goals influence behavior
+patterns - Collective preferences emerge from cultural contexts
+
+\textbf{Meta-Cultural Analysis:} The framework enables analysis of how
+cultures themselves adapt their cognitive frameworks: - Cultural
+framework evolution - Cross-cultural framework comparison - Cultural
+cognitive security
+\end{block}
+\end{block}
+
+\begin{block}{Implementation Considerations}
+\protect\phantomsection\label{sec:implementation_considerations}
+\begin{block}{Computational Constraints}
+\protect\phantomsection\label{computational-constraints}
+Practical limitations and optimization strategies for meta-level
+processing:
+
+\textbf{Complexity Scaling:} - Quadrant 1: (O(n\_\{\text{states}\}
+\times n\_\{\text{actions}\})) - polynomial - Quadrant 2:
+(O(n\_\{\text{states}\} \times n\_\{\text{actions}\}
+\times n\_\{\text{metadata}\})) - polynomial with metadata - Quadrant 3:
+(O(n\_\{\text{states}\} \times n\_\{\text{actions}\}
+\times n\_\{\text{strategies}\})) - polynomial with strategies -
+Quadrant 4: (O(\text{iterations} \times n\_\{\text{parameters}\}
+\times \text{complexity})) - optimization-dependent
+
+\textbf{Approximation Strategies:} - Variational approximations for
+large state spaces - Sparse representations for high-dimensional models
+- Hierarchical decomposition for complex systems - Parallel computation
+for ensemble methods
+\end{block}
+
+\begin{block}{Learning Dynamics}
+\protect\phantomsection\label{learning-dynamics}
+How meta-cognitive frameworks develop and evolve over time:
+
+\textbf{Developmental Trajectories:} 1. \textbf{Initial Stage:} Basic
+cognitive processing (Quadrant 1) 2. \textbf{Enhancement Stage:}
+Meta-data integration (Quadrant 2) 3. \textbf{Reflection Stage:}
+Self-monitoring emergence (Quadrant 3) 4. \textbf{Evolution Stage:}
+Framework adaptation (Quadrant 4)
+
+\textbf{Learning Mechanisms:} - Experience-driven parameter updates -
+Performance-based framework selection - Error-driven meta-cognitive
+refinement - Success-driven strategy reinforcement
+\end{block}
+
+\begin{block}{Robustness Properties}
+\protect\phantomsection\label{robustness-properties}
+Ensuring meta-cognitive systems remain stable under perturbation:
+
+\textbf{Stability Conditions:} - Framework parameters remain bounded -
+Confidence assessments remain calibrated - Strategy selection remains
+effective - System performance degrades gracefully
+
+\textbf{Robustness Mechanisms:} - Redundant processing pathways -
+Multiple strategy portfolios - Hierarchical error correction - Adaptive
+resource allocation
+\end{block}
+\end{block}
+
+\begin{block}{Cross-Framework Comparisons}
+\protect\phantomsection\label{sec:cross_framework_comparisons}
+\begin{block}{Active Inference vs.~Reinforcement Learning}
+\protect\phantomsection\label{active-inference-vs.-reinforcement-learning}
+\textbf{Fundamental Differences:} - \textbf{Goal Representation:} RL
+uses rewards; Active Inference uses preferences - \textbf{Exploration:}
+RL requires separate mechanisms; Active Inference integrates epistemic
+value - \textbf{Meta-Learning:} RL limited; Active Inference enables
+framework specification - \textbf{Self-Modeling:} RL absent; Active
+Inference includes meta-cognitive layers
+
+\textbf{Complementary Strengths:} - RL: Efficient for well-defined
+reward structures - Active Inference: Flexible for complex value
+landscapes - Combined: Hybrid approaches leverage both frameworks
+\end{block}
+
+\begin{block}{Active Inference vs.~Bayesian Inference}
+\protect\phantomsection\label{active-inference-vs.-bayesian-inference}
+\textbf{Shared Foundations:} - Both use probabilistic generative models
+- Both employ Bayesian updating - Both minimize variational free energy
+
+\textbf{Key Distinctions:} - \textbf{Action Selection:} Active Inference
+includes action; pure Bayesian inference does not - \textbf{Meta-Level:}
+Active Inference enables framework specification; Bayesian inference
+focuses on inference - \textbf{Pragmatic Integration:} Active Inference
+combines epistemic and pragmatic; Bayesian inference emphasizes
+epistemic
+\end{block}
+
+\begin{block}{Active Inference vs.~Predictive Processing}
+\protect\phantomsection\label{active-inference-vs.-predictive-processing}
+\textbf{Theoretical Alignment:} - Both minimize prediction error - Both
+use hierarchical generative models - Both emphasize active inference
+
+\textbf{Framework Contributions:} - \textbf{Meta-Level Analysis:} Our
+framework provides systematic meta-level analysis - \textbf{Quadrant
+Structure:} (2 \times 2) matrix enables systematic exploration -
+\textbf{Framework Specification:} Explicit modeling of epistemic and
+pragmatic frameworks
+\end{block}
+\end{block}
+
+\begin{block}{Advanced Theoretical Implications}
+\protect\phantomsection\label{sec:advanced_implications}
+\begin{block}{Consciousness and Self-Awareness}
+\protect\phantomsection\label{consciousness-and-self-awareness}
+The recursive nature of meta-cognition provides insights into
+consciousness:
+
+\textbf{Self-Modeling Hypothesis:} Consciousness emerges from systems
+modeling their own cognitive processes:
+
+\[consciousness \propto depth(self\_modeling) \times accuracy(self\_modeling)\label{eq:consciousness_modeling}\]
+
+\textbf{Hierarchical Awareness:} - Level 1: Awareness of basic cognitive
+processes - Level 2: Awareness of meta-cognitive processes - Level 3:
+Awareness of framework-level structures
+\end{block}
+
+\begin{block}{Intelligence as Framework Design}
+\protect\phantomsection\label{intelligence-as-framework-design}
+The meta-level perspective suggests intelligence involves:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Epistemic Competence:} Constructing accurate world models
+\item
+  \textbf{Pragmatic Wisdom:} Effective goal-directed action
+\item
+  \textbf{Meta-Cognitive Awareness:} Self-monitoring and adaptation
+\item
+  \textbf{Framework Flexibility:} Modifying fundamental cognitive
+  structures
+\end{enumerate}
+
+\textbf{Intelligence Measure:}
+
+\[intelligence = f(epistemic\_competence, pragmatic\_wisdom, meta\_awareness, framework\_flexibility)\label{eq:intelligence_measure}\]
+\end{block}
+
+\begin{block}{Reality Construction}
+\protect\phantomsection\label{reality-construction}
+The meta-epistemic aspect raises questions about reality and
+representation:
+
+\textbf{Multiple Realities:} Different epistemic frameworks construct
+different worlds:
+
+\[reality_i = f(epistemic\_framework_i, observations)\label{eq:multiple_realities}\]
+
+\textbf{Framework Relativity:} Cognitive adequacy depends on framework
+appropriateness:
+
+\[adequacy = g(epistemic\_framework, pragmatic\_framework, context)\label{eq:framework_adequacy}\]
+\end{block}
+\end{block}
+
+\begin{block}{Future Theoretical Directions}
+\protect\phantomsection\label{sec:future_theoretical}
+\begin{block}{Quantum Active Inference}
+\protect\phantomsection\label{quantum-active-inference}
+Extension to quantum information processing: - Quantum generative models
+- Quantum free energy minimization - Quantum meta-cognition
+\end{block}
+
+\begin{block}{Embodied Cognition Integration}
+\protect\phantomsection\label{embodied-cognition-integration}
+Integration with embodied cognition perspectives: - Sensorimotor
+contingencies - Enactive perception - Embodied meta-cognition
+\end{block}
+
+\begin{block}{Developmental Psychology}
+\protect\phantomsection\label{developmental-psychology}
+Application to cognitive development: - Framework emergence in children
+- Meta-cognitive development trajectories - Educational framework design
+\end{block}
+
+\begin{block}{Clinical Applications}
+\protect\phantomsection\label{clinical-applications}
+Therapeutic interventions targeting specific quadrants: - Quadrant 1:
+Basic cognitive training - Quadrant 2: Meta-data integration therapy -
+Quadrant 3: Meta-cognitive therapy - Quadrant 4: Framework restructuring
+
+This supplemental analysis provides comprehensive theoretical extensions
+and advanced implications of the Active Inference meta-pragmatic
+framework, demonstrating its broad applicability and deep theoretical
+foundations.
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

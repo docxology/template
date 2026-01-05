@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-01-04T17:23:17.325406",
+  "total_projects": 3,
+  "successful_projects": 3,
+  "failed_projects": 0,
+  "total_duration": 1114.1853523254395,
+  "infra_test_duration": 367.56921219825745,
+  "projects": {
+    "active_inference_meta_pragmatic": {
+      "success": true,
+      "duration": 336.43075013160706,
+      "stages_completed": 9,
+      "errors": []
+    },
+    "code_project": {
+      "success": true,
+      "duration": 102.74017333984375,
+      "stages_completed": 9,
+      "errors": []
+    },
+    "ento_linguistics": {
+      "success": true,
+      "duration": 289.9071750640869,
+      "stages_completed": 9,
+      "errors": []
+    }
+  },
+  "performance_analysis": {
+    "slowest_project": "active_inference_meta_pragmatic",
+    "fastest_project": "code_project",
+    "average_duration": 243.02603284517923,
+    "total_pipeline_time": 729.0780985355377
+  },
+  "error_aggregation": {
+    "total_errors": 0,
+    "errors_by_project": {
+      "active_inference_meta_pragmatic": 0,
+      "code_project": 0,
+      "ento_linguistics": 0
+    }
+  },
+  "recommendations": []
+}

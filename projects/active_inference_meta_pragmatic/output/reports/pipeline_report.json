@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-01-04T16:18:52.109818",
-  "total_duration": 335.1050741672516,
+  "timestamp": "2026-01-04T17:16:27.336168",
+  "total_duration": 336.43075013160706,
   "stages": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.025725841522216797,
+      "duration": 0.030862092971801758,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -14,7 +14,7 @@
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 0.676832914352417,
+      "duration": 0.6341507434844971,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -23,7 +23,7 @@
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 5.846637010574341,
+      "duration": 6.663407802581787,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -32,7 +32,7 @@
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 8.834866046905518,
+      "duration": 9.119623184204102,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -41,7 +41,7 @@
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 76.36507415771484,
+      "duration": 75.7909140586853,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -50,7 +50,7 @@
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 0.4139699935913086,
+      "duration": 0.3943028450012207,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -59,7 +59,7 @@
     {
       "name": "LLM Scientific Review",
       "exit_code": 0,
-      "duration": 60.863747119903564,
+      "duration": 60.8915650844574,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -68,7 +68,7 @@
     {
       "name": "LLM Translations",
       "exit_code": 0,
-      "duration": 181.51526808738708,
+      "duration": 182.3484811782837,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -77,7 +77,7 @@
     {
       "name": "Copy Outputs",
       "exit_code": 0,
-      "duration": 0.562952995300293,
+      "duration": 0.5574431419372559,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -93,12 +93,12 @@
       "pdf": {
         "exists": true,
         "file_count": 9,
-        "size_mb": "4.69",
-        "total_size_bytes": 4918358,
+        "size_mb": "4.70",
+        "total_size_bytes": 4924291,
         "largest_files": [
           {
             "name": "active_inference_meta_pragmatic_combined.pdf",
-            "size_mb": "4.31",
+            "size_mb": "4.32",
             "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
           },
           {
@@ -153,8 +153,8 @@
       "slides": {
         "exists": true,
         "file_count": 95,
-        "size_mb": "5.42",
-        "total_size_bytes": 5684088,
+        "size_mb": "5.43",
+        "total_size_bytes": 5690034,
         "largest_files": [
           {
             "name": "03_methodology_slides.pdf",
@@ -163,7 +163,7 @@
           },
           {
             "name": "04_experimental_results_slides.pdf",
-            "size_mb": "1.31",
+            "size_mb": "1.32",
             "path": "slides/04_experimental_results_slides.pdf"
           },
           {
@@ -186,8 +186,8 @@
       "figures": {
         "exists": true,
         "file_count": 35,
-        "size_mb": "5.10",
-        "total_size_bytes": 5349654,
+        "size_mb": "5.11",
+        "total_size_bytes": 5355612,
         "largest_files": [
           {
             "name": "quadrant_matrix_enhanced.png",
@@ -272,8 +272,8 @@
       "llm": {
         "exists": true,
         "file_count": 6,
-        "size_mb": "0.04",
-        "total_size_bytes": 47048,
+        "size_mb": "0.05",
+        "total_size_bytes": 47953,
         "largest_files": [
           {
             "name": "combined_review.md",
@@ -306,11 +306,11 @@
       }
     },
     "total_files": 169,
-    "total_size_mb": 15.51460075378418,
+    "total_size_mb": 15.532474517822266,
     "largest_files": [
       {
         "name": "active_inference_meta_pragmatic_combined.pdf",
-        "size_mb": "4.31",
+        "size_mb": "4.32",
         "category": "pdf",
         "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
       },
@@ -322,7 +322,7 @@
       },
       {
         "name": "04_experimental_results_slides.pdf",
-        "size_mb": "1.31",
+        "size_mb": "1.32",
         "category": "slides",
         "path": "slides/04_experimental_results_slides.pdf"
       },
@@ -392,14 +392,14 @@
       ".txt": 1
     },
     "sizes_by_category": {
-      "pdf": 4.690511703491211,
+      "pdf": 4.696169853210449,
       "web": 0.1473989486694336,
-      "slides": 5.420768737792969,
-      "figures": 5.101827621459961,
+      "slides": 5.42643928527832,
+      "figures": 5.107509613037109,
       "data": 0.04398632049560547,
       "reports": 0.06523895263671875,
       "simulations": 0.0,
-      "llm": 0.04486846923828125,
+      "llm": 0.045731544494628906,
       "logs": 0.0
     },
     "pdf_files": 9,

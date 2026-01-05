@@ -1,0 +1,384 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Supplemental Analysis}
+\protect\phantomsection\label{sec:supplemental_analysis}
+This section provides detailed analytical results and theoretical
+extensions that complement the main findings presented in Sections
+\ref{sec:methodology} and \ref{sec:experimental_results}.
+
+\begin{block}{S3.1 Theoretical Extensions}
+\protect\phantomsection\label{s3.1-theoretical-extensions}
+\begin{block}{S3.1.1 Extended Discourse Analysis Frameworks}
+\protect\phantomsection\label{s3.1.1-extended-discourse-analysis-frameworks}
+Building on our mixed-methodology approach, we extend the theoretical
+framework for analyzing scientific discourse beyond the six
+Ento-Linguistic domains. Our analysis reveals that terminology networks
+serve as both descriptive tools and constitutive elements of scientific
+knowledge production.
+
+\textbf{Extended Constitutive Framework}:
+
+The constitutive role of language in scientific practice extends beyond
+individual terms to encompass entire conceptual networks. We formalize
+this through the concept of \textbf{discursive framing networks}:
+
+\begin{equation}\label{eq:discursive_framing}
+F(D, T) = \sum_{t \in T} w_t \cdot f_t(D) \cdot c_t
+\end{equation}
+
+where \(D\) represents a domain, \(T\) is the terminology set, \(w_t\)
+are term weights, \(f_t(D)\) is the framing function for domain \(D\),
+and \(c_t\) represents contextual factors.
+\end{block}
+
+\begin{block}{S3.1.2 Advanced Ambiguity Classification Systems}
+\protect\phantomsection\label{s3.1.2-advanced-ambiguity-classification-systems}
+Our ambiguity detection framework extends beyond simple polysemy to
+include context-dependent meaning shifts that are characteristic of
+scientific terminology evolution:
+
+\textbf{Multi-Level Ambiguity Classification}:
+
+\begin{enumerate}
+\item **Lexical Ambiguity**: Multiple dictionary meanings (e.g., "individual" in biological vs. psychological contexts)
+\item **Contextual Ambiguity**: Meaning shifts based on research tradition (e.g., "caste" in classical vs. modern entomology)
+\item **Scale Ambiguity**: Meaning variations across biological scales (e.g., "behavior" at individual vs. colony levels)
+\item **Temporal Ambiguity**: Historical meaning evolution (e.g., "superorganism" from 1970s to present)
+\end{enumerate}
+\end{block}
+
+\begin{block}{S3.1.3 Cross-Domain Conceptual Mapping}
+\protect\phantomsection\label{s3.1.3-cross-domain-conceptual-mapping}
+We develop advanced conceptual mapping techniques that reveal
+relationships between domains:
+
+\begin{equation}\label{eq:cross_domain_mapping}
+M_{ij} = \frac{1}{|T_i \cap T_j|} \sum_{t \in T_i \cap T_j} s(t, D_i, D_j)
+\end{equation}
+
+where \(M_{ij}\) is the mapping strength between domains \(D_i\) and
+\(D_j\), and \(s(t, D_i, D_j)\) measures semantic similarity of term
+\(t\) across domains.
+\end{block}
+\end{block}
+
+\begin{block}{S3.2 Extended Framing Analysis Methods}
+\protect\phantomsection\label{s3.2-extended-framing-analysis-methods}
+\begin{block}{S3.2.1 Anthropomorphic Framing Detection}
+\protect\phantomsection\label{s3.2.1-anthropomorphic-framing-detection}
+Advanced anthropomorphic framing detection incorporates linguistic and
+conceptual indicators:
+
+\textbf{Linguistic Indicators}: - Pronominalization (use of ``it''
+vs.~``she/he'' for colonies) - Agency attribution (active vs.~passive
+voice patterns) - Intentionality markers (words implying purpose or
+planning)
+
+\textbf{Conceptual Indicators}: - Social structure projections (human
+hierarchies onto insect societies) - Emotional attribution
+(anthropomorphic emotional terms) - Cultural bias patterns (Western
+social norms in biological descriptions)
+\end{block}
+
+\begin{block}{S3.2.2 Hierarchical Framing Analysis}
+\protect\phantomsection\label{s3.2.2-hierarchical-framing-analysis}
+Extended analysis of hierarchical framing reveals nested levels of
+social structure imposition:
+
+\textbf{Macro-Level Hierarchies}: Colony-level social organization
+(queen → workers → males)
+
+\textbf{Micro-Level Hierarchies}: Individual-level interactions
+(dominant → subordinate nestmates)
+
+\textbf{Inter-Colony Hierarchies}: Population-level relationships
+(territorial dominance, resource competition)
+\end{block}
+\end{block}
+
+\begin{block}{S3.3 Advanced Network Analysis Techniques}
+\protect\phantomsection\label{s3.3-advanced-network-analysis-techniques}
+\begin{block}{S3.3.1 Temporal Network Evolution}
+\protect\phantomsection\label{s3.3.1-temporal-network-evolution}
+Analysis of how terminology networks evolve over time reveals conceptual
+shifts:
+
+\begin{equation}\label{eq:temporal_network_evolution}
+\Delta G(t) = G(t+1) - G(t) = \sum_{e \in E} \delta_e(t) + \sum_{v \in V} \delta_v(t)
+\end{equation}
+
+where \(\delta_e(t)\) and \(\delta_v(t)\) represent edge and vertex
+changes over time periods.
+
+\textbf{Key Evolutionary Patterns}: - \textbf{Network Growth}: Addition
+of new terms and relationships - \textbf{Structural Rearrangements}:
+Changes in network topology - \textbf{Conceptual Consolidation}:
+Strengthening of established relationships - \textbf{Paradigm Shifts}:
+Major restructuring events
+\end{block}
+
+\begin{block}{S3.3.2 Multi-Scale Network Analysis}
+\protect\phantomsection\label{s3.3.2-multi-scale-network-analysis}
+Extending network analysis to multiple scales reveals hierarchical
+organization:
+
+\textbf{Local Scale}: Individual term relationships within domains
+\textbf{Domain Scale}: Inter-term relationships within domains
+\textbf{Cross-Domain Scale}: Relationships between domains \textbf{Field
+Scale}: Relationships across the entire entomological terminology
+network
+\end{block}
+\end{block}
+
+\begin{block}{S3.4 Extended Validation Frameworks}
+\protect\phantomsection\label{s3.4-extended-validation-frameworks}
+\begin{block}{S3.4.1 Inter-Subjectivity Validation}
+\protect\phantomsection\label{s3.4.1-inter-subjectivity-validation}
+Advanced validation incorporates multiple perspectives:
+
+\textbf{Expert Validation}: Entomological domain experts review
+classifications \textbf{Peer Validation}: Interdisciplinary researchers
+assess cross-domain mappings \textbf{Historical Validation}: Analysis of
+terminology evolution against known conceptual shifts
+\textbf{Cross-Cultural Validation}: Comparison with non-English
+entomological literature
+\end{block}
+
+\begin{block}{S3.4.2 Robustness Testing}
+\protect\phantomsection\label{s3.4.2-robustness-testing}
+Comprehensive robustness analysis ensures result stability:
+
+\textbf{Subsampling Stability}: Performance across different corpus
+subsets \textbf{Parameter Sensitivity}: Robustness to algorithmic
+parameter variations \textbf{Annotation Consistency}: Agreement across
+multiple human annotators \textbf{Temporal Stability}: Consistency
+across publication periods
+\end{block}
+\end{block}
+
+\begin{block}{S3.5 Advanced Case Study Analysis}
+\protect\phantomsection\label{s3.5-advanced-case-study-analysis}
+\begin{block}{S3.5.1 Caste Terminology Evolution: 1850-2024}
+\protect\phantomsection\label{s3.5.1-caste-terminology-evolution-1850-2024}
+Ultra-longitudinal analysis reveals century-scale conceptual evolution:
+
+\textbf{Pre-Darwinian Period (1850-1859)}: Essentialist caste categories
+based on morphological differences
+
+\textbf{Darwinian Synthesis (1860-1899)}: Evolutionary explanations for
+caste differences
+
+\textbf{Genetic Revolution (1900-1949)}: Chromosomal mechanisms
+underlying caste determination
+
+\textbf{Molecular Biology Era (1950-1999)}: Gene expression and hormonal
+control of caste differentiation
+
+\textbf{Genomic Era (2000-2024)}: Epigenetic and transcriptomic
+regulation of caste phenotypes
+\end{block}
+
+\begin{block}{S3.5.2 Superorganism Concept Evolution}
+\protect\phantomsection\label{s3.5.2-superorganism-concept-evolution}
+Detailed analysis of the superorganism concept across seven decades:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+\textbf{Era} & \textbf{Dominant Metaphor} & \textbf{Key Evidence} & \textbf{Critiques} & \textbf{Legacy} \\
+\hline
+1960s & Organismic & Division of labor analogies & Ignores individual variation & Established field \\
+1970s & Cybernetic & Communication networks & Mechanistic reductionism & Systems thinking \\
+1980s & Genetic & Kin selection theory & Haplodiploidy focus & Evolutionary framework \\
+1990s & Neuroendocrine & Pheromonal control & Colony complexity & Regulatory mechanisms \\
+2000s & Epigenetic & DNA methylation & Environmental effects & Developmental plasticity \\
+2010s & Microbiome & Symbiont communities & Host-symbiont dynamics & Extended organism concept \\
+\hline
+\end{tabular}
+\caption{Evolution of superorganism concept across research eras}
+\label{tab:superorganism_concept_evolution}
+\end{table}
+\end{block}
+\end{block}
+
+\begin{block}{S3.6 Methodological Reflections}
+\protect\phantomsection\label{s3.6-methodological-reflections}
+\begin{block}{S3.6.1 Mixed-Methodology Integration}
+\protect\phantomsection\label{s3.6.1-mixed-methodology-integration}
+Our approach successfully integrates qualitative and quantitative
+methods:
+
+\textbf{Qualitative Contributions}: - Theoretical framework development
+- Conceptual category identification - Historical context analysis -
+Cross-domain relationship mapping
+
+\textbf{Quantitative Contributions}: - Statistical pattern
+identification - Network structure analysis - Temporal trend
+quantification - Validation metric development
+\end{block}
+
+\begin{block}{S3.6.2 Limitations and Scope Considerations}
+\protect\phantomsection\label{s3.6.2-limitations-and-scope-considerations}
+\textbf{Methodological Limitations}: 1. \textbf{Corpus Scope}: Limited
+to English-language publications 2. \textbf{Temporal Resolution}:
+Decade-level rather than year-level analysis 3. \textbf{Domain
+Boundaries}: Some concepts span multiple domains 4. \textbf{Annotation
+Scalability}: Human validation limits analysis scope
+
+\textbf{Theoretical Scope}: 1. \textbf{Cultural Bias}: Western
+scientific traditions dominate the corpus 2. \textbf{Disciplinary
+Boundaries}: Entomological focus may miss broader patterns 3.
+\textbf{Historical Context}: Analysis reflects current perspectives on
+past work 4. \textbf{Paradigm Dependence}: Results may vary across
+research traditions
+\end{block}
+\end{block}
+
+\begin{block}{S3.7 Future Theoretical Directions}
+\protect\phantomsection\label{s3.7-future-theoretical-directions}
+\begin{block}{S3.7.1 Advanced Semantic Analysis}
+\protect\phantomsection\label{s3.7.1-advanced-semantic-analysis}
+Future work will incorporate advanced semantic techniques:
+
+\textbf{Transformer-Based Embeddings}: Contextual language models for
+more sophisticated semantic analysis
+
+\textbf{Multilingual Extensions}: Cross-language terminology mapping and
+comparison
+
+\textbf{Dynamic Semantic Networks}: Temporal evolution of term meanings
+and relationships
+\end{block}
+
+\begin{block}{S3.7.2 Extended Conceptual Frameworks}
+\protect\phantomsection\label{s3.7.2-extended-conceptual-frameworks}
+Theoretical extensions will address broader questions:
+
+\textbf{Constitutive Linguistics}: How scientific language creates
+research objects and relationships
+
+\textbf{Interdisciplinary Translation}: Mechanisms for translating
+concepts across disciplinary boundaries
+
+\textbf{Knowledge Representation}: Formal ontologies for scientific
+terminology networks
+
+\textbf{Cultural Epistemology}: How cultural contexts shape scientific
+language and concepts
+\end{block}
+
+\begin{block}{S3.7.3 Practical Applications}
+\protect\phantomsection\label{s3.7.3-practical-applications}
+Extended applications will include:
+
+\textbf{Terminology Standards}: Development of evidence-based guidelines
+for scientific communication
+
+\textbf{Educational Interventions}: Training programs for researchers on
+terminological awareness
+
+\textbf{Peer Review Tools}: Automated assistance for evaluating
+terminological clarity
+
+\textbf{Cross-Disciplinary Bridges}: Tools for facilitating
+interdisciplinary communication
+
+This extended analytical framework provides comprehensive theoretical
+and methodological foundations for understanding the constitutive role
+of language in scientific practice, with particular focus on the complex
+interplay between speech and thought in entomological research.
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

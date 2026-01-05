@@ -1,0 +1,440 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Methodology}
+\protect\phantomsection\label{sec:methodology}
+This section presents the core methodological contribution: a (2
+\times 2) matrix framework for understanding Active Inference as a
+meta-pragmatic and meta-epistemic methodology. The framework structures
+cognitive processing along two dimensions: Data/Meta-Data and
+Cognitive/Meta-Cognitive, revealing four distinct quadrants of cognitive
+operation.
+
+\begin{block}{The (2 \times 2) Matrix Framework}
+\protect\phantomsection\label{the-2-matrix-framework}
+Active Inference's meta-level operation becomes apparent when analyzed
+through a framework that distinguishes between data processing and
+meta-data processing, as well as cognitive and meta-cognitive levels of
+operation (Figure \ref{fig:quadrant_matrix}).
+
+\begin{block}{Framework Dimensions}
+\protect\phantomsection\label{framework-dimensions}
+\textbf{Data vs Meta-Data (X-axis):} - \textbf{Data:} Raw sensory inputs
+and immediate cognitive processing - \textbf{Meta-Data:} Information
+about data processing (confidence scores, timestamps, reliability
+metrics, processing provenance)
+
+\textbf{Cognitive vs Meta-Cognitive (Y-axis):} - \textbf{Cognitive:}
+Direct processing and transformation of information -
+\textbf{Meta-Cognitive:} Processing about processing; self-reflection,
+monitoring, and control of cognitive processes
+\end{block}
+
+\begin{block}{Quadrant Definitions}
+\protect\phantomsection\label{quadrant-definitions}
+\begin{block}{Quadrant 1: Data Processing (Cognitive)}
+\protect\phantomsection\label{sec:q1_definition}
+\textbf{Definition:} Basic cognitive processing of raw sensory data at
+the fundamental level of cognition.
+
+\textbf{Active Inference Role:} Baseline pragmatic and epistemic
+processing through Expected Free Energy minimization.
+
+\textbf{Mathematical Formulation:}
+
+\[\mathcal{F}(\pi) = G(\pi) + H[Q(\pi)]\label{eq:efe_simple}\]
+
+Where (G(\pi)) represents pragmatic value (goal achievement) and
+(H{[}Q(\pi){]}) represents epistemic affordance (information gain).
+
+\textbf{Example:} A thermostat maintaining temperature through direct
+sensor readings and immediate action selection.
+\end{block}
+
+\begin{block}{Quadrant 2: Meta-Data Organization (Cognitive)}
+\protect\phantomsection\label{sec:q2_definition}
+\textbf{Definition:} Cognitive processing that incorporates meta-data to
+enhance primary processing.
+
+\textbf{Active Inference Role:} Epistemic processing through meta-data
+integration.
+
+\textbf{Mathematical Formulation:} Extended EFE with meta-data
+weighting:
+
+\[\mathcal{F}(\pi) = w_e \cdot H[Q(\pi)] + w_p \cdot G(\pi) + w_m \cdot M(\pi)\label{eq:efe_metadata}\]
+
+Where (M(\pi)) represents meta-data derived utility and (w) terms are
+adaptive weights.
+
+\textbf{Example:} Processing sensory data with associated confidence
+scores and temporal metadata to improve decision reliability.
+\end{block}
+
+\begin{block}{Quadrant 3: Reflective Processing (Meta-Cognitive)}
+\protect\phantomsection\label{sec:q3_definition}
+\textbf{Definition:} Meta-cognitive evaluation and control of data
+processing.
+
+\textbf{Active Inference Role:} Self-monitoring and adaptive cognitive
+control.
+
+\textbf{Mathematical Formulation:} Hierarchical EFE with
+self-assessment:
+
+\[\mathcal{F}(\pi) = \mathcal{F}_{primary}(\pi) + \lambda \cdot \mathcal{F}_{meta}(\pi)\label{eq:efe_hierarchical}\]
+
+Where (\mathcal{F}\_\{meta\}) evaluates the quality of primary
+processing and (\lambda) controls meta-cognitive influence.
+
+\textbf{Example:} An agent assessing its confidence in inferences and
+adjusting processing strategies accordingly.
+\end{block}
+
+\begin{block}{Quadrant 4: Higher-Order Reasoning (Meta-Cognitive)}
+\protect\phantomsection\label{sec:q4_definition}
+\textbf{Definition:} Meta-cognitive processing of meta-data about
+cognition.
+
+\textbf{Active Inference Role:} Framework-level reasoning and
+meta-theoretical analysis.
+
+\textbf{Mathematical Formulation:} Multi-level hierarchical
+optimization:
+
+\[\min_{\Theta} \mathcal{F}(\pi; \Theta) + \mathcal{R}(\Theta)\label{eq:framework_optimization}\]
+
+Where (\Theta) represents framework parameters and (\mathcal{R}) is a
+regularization term ensuring framework coherence.
+
+\textbf{Example:} Analyzing patterns in meta-cognitive performance to
+adapt fundamental processing frameworks.
+\end{block}
+\end{block}
+\end{block}
+
+\begin{block}{Active Inference as Meta-Epistemic}
+\protect\phantomsection\label{active-inference-as-meta-epistemic}
+Active Inference enables meta-epistemic modeling by allowing researchers
+to specify the epistemological frameworks within which agents operate.
+
+\begin{block}{Epistemic Framework Specification}
+\protect\phantomsection\label{epistemic-framework-specification}
+Through the generative model matrices, researchers define:
+
+\textbf{Observation Model (Matrix (A)):} What can be known about the
+world
+
+\[A = [a_{ij}] \quad a_{ij} = P(o_i \mid s_j)\label{eq:matrix_a}\]
+
+\textbf{Prior Knowledge (Matrix (D)):} Initial assumptions about the
+world
+
+\[D = [d_i] \quad d_i = P(s_i)\label{eq:matrix_d}\]
+
+\textbf{Causal Structure (Matrix (B)):} How actions influence the world
+
+\[B = [b_{ijk}] \quad b_{ijk} = P(s_j \mid s_i, a_k)\label{eq:matrix_b}\]
+\end{block}
+
+\begin{block}{Meta-Epistemic Implications}
+\protect\phantomsection\label{meta-epistemic-implications}
+By specifying these matrices, researchers define not just current
+beliefs, but the fundamental structure of knowledge acquisition and
+representation. This meta-epistemic power enables:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Framework Comparison:} Epistemic frameworks can be compared by
+  varying (A), (B), (D) specifications
+\item
+  \textbf{Knowledge Architecture Design:} The structure of cognition
+  itself becomes a design parameter
+\item
+  \textbf{Epistemological Pluralism:} Different ways of knowing can be
+  modeled and compared
+\end{enumerate}
+\end{block}
+\end{block}
+
+\begin{block}{Active Inference as Meta-Pragmatic}
+\protect\phantomsection\label{active-inference-as-meta-pragmatic}
+Active Inference enables meta-pragmatic modeling by allowing
+specification of pragmatic frameworks beyond simple reward functions.
+
+\begin{block}{Pragmatic Framework Specification}
+\protect\phantomsection\label{pragmatic-framework-specification}
+\textbf{Preference Structure (Matrix (C)):} What matters to the agent
+
+\[C = [c_i] \quad c_i = \log P(o_i)\label{eq:matrix_c}\]
+
+This specification goes beyond traditional reinforcement learning by
+enabling researchers to specify value landscapes.
+\end{block}
+
+\begin{block}{Meta-Pragmatic Implications}
+\protect\phantomsection\label{meta-pragmatic-implications}
+The meta-pragmatic aspect enables:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Value System Design:} Specification of what constitutes
+  ``good'' outcomes
+\item
+  \textbf{Pragmatic Pluralism:} Different pragmatic frameworks can be
+  explored
+\item
+  \textbf{Value Learning:} How value systems themselves evolve and adapt
+\item
+  \textbf{Ethical Framework Integration:} Incorporation of ethical
+  considerations
+\end{enumerate}
+\end{block}
+\end{block}
+
+\begin{block}{Integration Across Quadrants}
+\protect\phantomsection\label{integration-across-quadrants}
+Active Inference operates across all four quadrants simultaneously, with
+different aspects of the framework contributing to each quadrant:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Quadrant 1:} Core EFE computation with basic (A), (B), (C),
+  (D) specifications
+\item
+  \textbf{Quadrant 2:} Meta-data weighted EFE with confidence-weighted
+  processing
+\item
+  \textbf{Quadrant 3:} Self-reflective EFE evaluation and meta-cognitive
+  control
+\item
+  \textbf{Quadrant 4:} Framework-level EFE optimization and
+  meta-theoretical reasoning
+\end{itemize}
+\end{block}
+
+\begin{block}{The Modeler's Dual Role}
+\protect\phantomsection\label{the-modelers-dual-role}
+The framework reveals the dual role of the Active Inference modeler:
+
+\begin{block}{As Architect}
+\protect\phantomsection\label{as-architect}
+\begin{itemize}
+\tightlist
+\item
+  Specifies epistemic frameworks ((A), (B), (D) matrices)
+\item
+  Defines pragmatic landscapes ((C) matrix)
+\item
+  Designs cognitive architectures
+\item
+  Establishes boundary conditions for cognition
+\end{itemize}
+\end{block}
+
+\begin{block}{As Subject}
+\protect\phantomsection\label{as-subject}
+\begin{itemize}
+\tightlist
+\item
+  Uses Active Inference to understand their own cognition
+\item
+  Applies meta-epistemic principles to knowledge acquisition
+\item
+  Employs meta-pragmatic frameworks for decision-making
+\item
+  Engages in recursive self-modeling
+\end{itemize}
+
+This dual role creates a recursive relationship where the tools used to
+model others become tools for self-understanding.
+\end{block}
+\end{block}
+
+\begin{block}{Validation Approach}
+\protect\phantomsection\label{validation-approach}
+The framework's validity is demonstrated through:
+
+\begin{enumerate}
+\tightlist
+\item
+  \textbf{Theoretical Consistency:} Alignment with Free Energy Principle
+  foundations
+\item
+  \textbf{Mathematical Rigor:} Proper formulation of EFE across all
+  quadrants
+\item
+  \textbf{Conceptual Clarity:} Clear distinction between quadrants and
+  processing levels
+\item
+  \textbf{Practical Applicability:} Framework enables systematic
+  analysis of meta-level phenomena
+\end{enumerate}
+
+The following sections provide concrete demonstrations of each quadrant
+with mathematical examples and conceptual analysis.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/quadrant_matrix.png}
+\caption{\(2 \times 2\) Quadrant Framework: Data/Meta-Data \(\times\) Cognitive/Meta-Cognitive processing levels in Active Inference}
+\label{fig:quadrant_matrix}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/efe_decomposition.png}
+\caption{Expected Free Energy decomposition into epistemic and pragmatic components}
+\label{fig:efe_decomposition}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/perception_action_loop.png}
+\caption{Active Inference perception-action loop showing how perception drives action through EFE minimization}
+\label{fig:perception_action_loop}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/generative_model_structure.png}
+\caption{Structure of generative models in Active Inference showing A, B, C, D matrices}
+\label{fig:generative_model_structure}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/meta_level_concepts.png}
+\caption{Meta-pragmatic and meta-epistemic aspects showing modeler specification power}
+\label{fig:meta_level_concepts}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/fep_system_boundaries.png}
+\caption{Free Energy Principle system boundaries showing Markov blanket separating internal and external states}
+\label{fig:fep_system_boundaries}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/free_energy_dynamics.png}
+\caption{Free energy minimization dynamics showing convergence over time and epistemic/pragmatic components}
+\label{fig:free_energy_dynamics}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/structure_preservation.png}
+\caption{Structure preservation dynamics showing how systems maintain internal organization through free energy minimization}
+\label{fig:structure_preservation}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/quadrant_matrix_enhanced.png}
+\caption{\(2 \times 2\) Quadrant Framework with detailed descriptions and examples}
+\label{fig:quadrant_matrix_enhanced}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/physics_cognition_bridge.png}
+\caption{Free Energy Principle as the bridge between physics and cognition domains}
+\label{fig:physics_cognition_bridge}
+\end{figure}
+\end{block}
+\end{frame}
+
+\end{document}
