@@ -1,0 +1,163 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Acknowledgments}
+\protect\phantomsection\label{sec:acknowledgments}
+We gratefully acknowledge the contributions of many individuals and
+institutions that made this research possible.
+
+\begin{block}{Funding}
+\protect\phantomsection\label{funding}
+This work was supported by {[}grant numbers and funding agencies to be
+specified{]}.
+\end{block}
+
+\begin{block}{Computing Resources}
+\protect\phantomsection\label{computing-resources}
+Computational resources were provided by {[}institution/facility
+name{]}, enabling the large-scale experiments reported in Section
+\ref{sec:experimental_results}.
+\end{block}
+
+\begin{block}{Collaborations}
+\protect\phantomsection\label{collaborations}
+We thank our collaborators for valuable discussions and feedback
+throughout the development of this work:
+
+\begin{itemize}
+\tightlist
+\item
+  Prof.~{[}Name{]}, {[}Institution{]} - for insights into the
+  theoretical framework
+\item
+  Dr.~{[}Name{]}, {[}Institution{]} - for providing benchmark datasets
+\item
+  {[}Research Group{]}, {[}Institution{]} - for computational
+  infrastructure support
+\end{itemize}
+\end{block}
+
+\begin{block}{Data and Software}
+\protect\phantomsection\label{data-and-software}
+This research builds upon open-source software tools and publicly
+available datasets. We acknowledge:
+
+\begin{itemize}
+\tightlist
+\item
+  Python scientific computing stack (NumPy, SciPy, Matplotlib)
+\item
+  LaTeX and Pandoc for document preparation
+\item
+  Public datasets used in our evaluation
+\end{itemize}
+\end{block}
+
+\begin{block}{Feedback and Review}
+\protect\phantomsection\label{feedback-and-review}
+We are grateful to the anonymous reviewers whose constructive feedback
+significantly improved this manuscript.
+\end{block}
+
+\begin{block}{Institutional Support}
+\protect\phantomsection\label{institutional-support}
+This research was conducted with the support of {[}Institution Name{]},
+providing research facilities and academic resources essential to this
+work.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\emph{All errors and omissions remain the sole responsibility of the
+authors.}
+\end{frame}
+
+\end{document}

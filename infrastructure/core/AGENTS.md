@@ -57,6 +57,45 @@ The Core module provides fundamental foundation utilities used across the entire
 - System resource queries
 - Performance metrics collection
 
+**performance_monitor.py**
+- Performance monitoring utilities
+- Resource usage tracking
+- System metrics collection
+
+**security.py**
+- Security utilities and input sanitization
+- Security event monitoring
+- Rate limiting and health checks
+
+**health_check.py**
+- System health monitoring
+- Component status checking
+- Health status reporting
+
+**cli.py**
+- Command-line interface utilities
+- CLI argument parsing and validation
+
+**config_cli.py**
+- Configuration CLI commands
+- Config file management from command line
+
+**menu.py**
+- Interactive menu system
+- Menu-driven user interfaces
+
+**logging_formatters.py**
+- Logging formatter utilities
+- Custom log format definitions
+
+**logging_helpers.py**
+- Logging helper functions
+- Additional logging utilities
+
+**logging_progress.py**
+- Progress logging utilities
+- Progress tracking with logging integration
+
 **environment.py**
 - Environment setup and validation
 - Dependency checking and installation
@@ -3204,6 +3243,291 @@ class MultiProjectOrchestrator:
             Multi-project execution result
         """
 ```
+
+### security.py
+
+#### SecurityValidator (class)
+```python
+class SecurityValidator:
+    """Validates and sanitizes input for security."""
+    
+    def validate_llm_input(self, prompt: str) -> str:
+        """Validate and sanitize LLM input.
+        
+        Args:
+            prompt: Input prompt to validate
+            
+        Returns:
+            Sanitized prompt string
+        """
+```
+
+#### SecurityHeaders (class)
+```python
+class SecurityHeaders:
+    """Manages HTTP security headers."""
+    
+    def get_headers(self) -> Dict[str, str]:
+        """Get security headers dictionary."""
+```
+
+#### RateLimiter (class)
+```python
+class RateLimiter:
+    """Rate limiting for API requests."""
+    
+    def check_rate_limit(self, identifier: str) -> bool:
+        """Check if request is within rate limit.
+        
+        Args:
+            identifier: Request identifier
+            
+        Returns:
+            True if within limit, False otherwise
+        """
+```
+
+#### SecurityMonitor (class)
+```python
+class SecurityMonitor:
+    """Monitors security events and violations."""
+    
+    def log_event(self, event_type: str, details: Dict[str, Any]) -> None:
+        """Log a security event.
+        
+        Args:
+            event_type: Type of security event
+            details: Event details
+        """
+```
+
+#### SecurityViolation (class)
+```python
+class SecurityViolation(Exception):
+    """Raised when a security violation is detected."""
+    pass
+```
+
+#### get_security_validator (function)
+```python
+def get_security_validator() -> SecurityValidator:
+    """Get security validator instance."""
+```
+
+#### get_security_headers (function)
+```python
+def get_security_headers() -> Dict[str, str]:
+    """Get security headers dictionary."""
+```
+
+#### get_rate_limiter (function)
+```python
+def get_rate_limiter() -> RateLimiter:
+    """Get rate limiter instance."""
+```
+
+#### get_security_monitor (function)
+```python
+def get_security_monitor() -> SecurityMonitor:
+    """Get security monitor instance."""
+```
+
+#### validate_llm_input (function)
+```python
+def validate_llm_input(prompt: str) -> str:
+    """Validate and sanitize LLM input.
+    
+    Args:
+        prompt: Input prompt to validate
+        
+    Returns:
+        Sanitized prompt string
+    """
+```
+
+#### rate_limit (decorator)
+```python
+@rate_limit(max_requests: int = 100, window_seconds: int = 60)
+def api_function():
+    """Rate-limited function decorator."""
+    pass
+```
+
+### health_check.py
+
+#### SystemHealthChecker (class)
+```python
+class SystemHealthChecker:
+    """Checks system health and component status."""
+    
+    def check_health(self) -> Dict[str, Any]:
+        """Perform comprehensive health check.
+        
+        Returns:
+            Health status dictionary
+        """
+    
+    def check_component(self, component: str) -> Dict[str, Any]:
+        """Check health of specific component.
+        
+        Args:
+            component: Component name to check
+            
+        Returns:
+            Component health status
+        """
+```
+
+#### HealthCheckAPI (class)
+```python
+class HealthCheckAPI:
+    """API for health check operations."""
+    
+    def get_status(self) -> Dict[str, Any]:
+        """Get overall system status."""
+    
+    def get_metrics(self) -> Dict[str, Any]:
+        """Get health metrics."""
+```
+
+#### get_health_api (function)
+```python
+def get_health_api() -> HealthCheckAPI:
+    """Get health check API instance."""
+```
+
+#### quick_health_check (function)
+```python
+def quick_health_check() -> bool:
+    """Perform quick health check.
+    
+    Returns:
+        True if system is healthy, False otherwise
+    """
+```
+
+#### get_health_status (function)
+```python
+def get_health_status() -> Dict[str, Any]:
+    """Get current health status."""
+```
+
+#### get_health_metrics (function)
+```python
+def get_health_metrics() -> Dict[str, Any]:
+    """Get health metrics."""
+```
+
+### cli.py
+
+#### create_parser (function)
+```python
+def create_parser() -> argparse.ArgumentParser:
+    """Create command-line argument parser.
+    
+    Returns:
+        Configured argument parser
+    """
+```
+
+#### main (function)
+```python
+def main() -> int:
+    """Main CLI entry point.
+    
+    Returns:
+        Exit code (0 for success, non-zero for error)
+    """
+```
+
+#### handle_pipeline_command (function)
+```python
+def handle_pipeline_command(args: argparse.Namespace) -> int:
+    """Handle pipeline command.
+    
+    Args:
+        args: Parsed command arguments
+        
+    Returns:
+        Exit code
+    """
+```
+
+#### handle_multi_project_command (function)
+```python
+def handle_multi_project_command(args: argparse.Namespace) -> int:
+    """Handle multi-project command.
+    
+    Args:
+        args: Parsed command arguments
+        
+    Returns:
+        Exit code
+    """
+```
+
+#### handle_inventory_command (function)
+```python
+def handle_inventory_command(args: argparse.Namespace) -> int:
+    """Handle inventory command.
+    
+    Args:
+        args: Parsed command arguments
+        
+    Returns:
+        Exit code
+    """
+```
+
+#### handle_summary_command (function)
+```python
+def handle_summary_command(args: argparse.Namespace) -> int:
+    """Handle summary command.
+    
+    Args:
+        args: Parsed command arguments
+        
+    Returns:
+        Exit code
+    """
+```
+
+#### handle_discover_command (function)
+```python
+def handle_discover_command(args: argparse.Namespace) -> int:
+    """Handle discover command.
+    
+    Args:
+        args: Parsed command arguments
+        
+    Returns:
+        Exit code
+    """
+```
+
+### config_cli.py
+
+This module provides CLI commands for configuration management. See `cli.py` for integration.
+
+### menu.py
+
+This module provides interactive menu system utilities for menu-driven user interfaces.
+
+### logging_formatters.py
+
+This module provides logging formatter utilities and custom log format definitions.
+
+### logging_helpers.py
+
+This module provides additional logging helper functions beyond those in `logging_utils.py`.
+
+### logging_progress.py
+
+This module provides progress logging utilities that integrate progress tracking with logging.
+
+### performance_monitor.py
+
+This module provides performance monitoring utilities, resource usage tracking, and system metrics collection. See `performance.py` for related functionality.
 
 ### pipeline_summary.py
 

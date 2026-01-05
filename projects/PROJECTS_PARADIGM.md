@@ -147,7 +147,7 @@ python3 scripts/03_render_pdf.py --project code_project
 The standalone project paradigm requires **complete compliance** with template development standards defined in `.cursorrules/`. This compliance is not optional - it's a core requirement of the paradigm.
 
 ### ✅ **Testing Standards Compliance (Required)**
-- **90%+ coverage**: Each project must achieve 90% minimum coverage (currently achieved: code_project 96.49%, prose_project 100%)
+- **90%+ coverage**: Each project must achieve 90% minimum coverage (currently achieved: code_project 96.49%, active_inference_meta_pragmatic: varies, ento_linguistics: 83%)
 - **Real data only**: Absolute prohibition on mocks - all tests use real computations
 - **Comprehensive integration**: Tests cover critical workflows and edge cases
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes

@@ -29,6 +29,13 @@ from infrastructure.validation.doc_models import (
     QualityIssue,
     DocumentationFile
 )
+from infrastructure.validation.issue_categorizer import (
+    get_severity_flag,
+    filter_false_positives,
+    prioritize_issues,
+    generate_issue_summary,
+    is_false_positive,
+)
 
 logger = get_logger(__name__)
 
@@ -243,42 +250,72 @@ def _calculate_statistics(scan_results: ScanResults) -> None:
     scan_results.statistics = stats
 
 
-def generate_audit_report(scan_results: ScanResults, output_format: str = 'markdown') -> str:
-    """Generate a formatted audit report.
+def generate_audit_report(scan_results: ScanResults, output_format: str = 'markdown', show_green_flags: bool = False) -> str:
+    """Generate a formatted audit report with severity flag classification.
 
     Args:
         scan_results: Complete scan results
         output_format: Output format ('markdown' or 'json')
+        show_green_flags: Whether to show green flags (known exceptions) in report
 
     Returns:
         Formatted report string
     """
+    # Collect all issues
+    all_issues = []
+    all_issues.extend(scan_results.link_issues)
+    all_issues.extend(scan_results.accuracy_issues)
+    all_issues.extend(scan_results.quality_issues)
+    all_issues.extend(scan_results.completeness_gaps)
+    
+    # Filter false positives and categorize by severity flag
+    red_flags = []
+    yellow_flags = []
+    green_flags = []
+    
+    for issue in all_issues:
+        flag = get_severity_flag(issue)
+        if flag == 'red':
+            red_flags.append(issue)
+        elif flag == 'yellow':
+            yellow_flags.append(issue)
+        else:
+            green_flags.append(issue)
+    
+    # Generate summary statistics
+    summary = generate_issue_summary(all_issues)
+    
     if output_format == 'json':
         import json
         return json.dumps({
             'scan_date': scan_results.scan_date,
-            'total_files': scan_results.total_files,
-            'scan_duration': 0.0,
+            'total_files': scan_results.scanned_files,
+            'scan_duration': scan_results.scan_duration,
             'statistics': scan_results.statistics,
-            'link_issues': [vars(issue) for issue in scan_results.link_issues],
-            'accuracy_issues': [vars(issue) for issue in scan_results.accuracy_issues],
-            'completeness_gaps': [vars(issue) for issue in scan_results.completeness_gaps],
-            'quality_issues': [vars(issue) for issue in scan_results.quality_issues]
+            'severity_flags': {
+                'red': len(red_flags),
+                'yellow': len(yellow_flags),
+                'green': len(green_flags)
+            },
+            'summary': summary,
+            'red_flags': [vars(issue) for issue in red_flags],
+            'yellow_flags': [vars(issue) for issue in yellow_flags],
+            'green_flags': [vars(issue) for issue in green_flags] if show_green_flags else []
         }, indent=2, default=str)
 
-    # Default markdown format
+    # Default markdown format with severity flag organization
     report_lines = [
         "# 📊 Comprehensive Filepath and Reference Audit Report",
         "",
         f"**Generated:** {scan_results.scan_date}",
-        f"**Files Scanned:** {scan_results.total_files}",
-        f"**Scan Duration:** 0.00 seconds",
+        f"**Files Scanned:** {scan_results.scanned_files}",
+        f"**Scan Duration:** {scan_results.scan_duration:.2f} seconds",
         "",
         "## 📈 Executive Summary",
         ""
     ]
 
-    total_issues = sum(scan_results.statistics.values())
+    total_issues = len(all_issues)
     if total_issues == 0:
         report_lines.extend([
             "✅ **ALL VALIDATIONS PASSED!**",
@@ -287,9 +324,25 @@ def generate_audit_report(scan_results: ScanResults, output_format: str = 'markd
             ""
         ])
     else:
+        # Show severity flag summary
         report_lines.extend([
-            f"🚨 **{total_issues} issues** found across {len([k for k, v in scan_results.statistics.items() if v > 0])} categories.",
+            f"**Total Issues Found:** {total_issues}",
             "",
+            "### 🚩 Severity Flag Summary",
+            "",
+            f"🔴 **Red Flags (Critical):** {len(red_flags)} - Issues requiring immediate attention",
+            f"🟡 **Yellow Flags (Warnings):** {len(yellow_flags)} - Issues that should be reviewed",
+            f"🟢 **Green Flags (Exceptions):** {len(green_flags)} - Known exceptions and false positives",
+            "",
+            f"**False Positives Filtered:** {summary.get('false_positives', 0)} ({100 * summary.get('false_positives', 0) / total_issues:.1f}%)" if total_issues > 0 else "",
+            ""
+        ])
+        
+        if total_issues > 0:
+            report_lines.append("")
+
+        # Show category breakdown
+        report_lines.extend([
             "### Issues by Category",
             ""
         ])
@@ -300,49 +353,117 @@ def generate_audit_report(scan_results: ScanResults, output_format: str = 'markd
 
         report_lines.append("")
 
-    # Detailed issues sections
-    if scan_results.link_issues:
+    # Show red flags first (critical issues)
+    if red_flags:
+        prioritized_red = prioritize_issues(red_flags)
         report_lines.extend([
-            "## 🔗 Link Issues",
+            "## 🔴 Red Flags (Critical Issues)",
             "",
-            f"Found {len(scan_results.link_issues)} link validation issues:",
+            f"**{len(red_flags)} critical issues** requiring immediate attention:",
             ""
         ])
-        for issue in scan_results.link_issues[:10]:  # Show first 10
+        for issue in prioritized_red[:20]:  # Show first 20 red flags
+            issue_type = getattr(issue, 'issue_type', 'unknown')
+            target = getattr(issue, 'target', 'N/A')
             report_lines.extend([
                 f"**{issue.file}:{issue.line}**",
-                f"- **Target:** `{issue.target}`",
+                f"- **Type:** {issue_type}",
+                f"- **Target:** `{target}`" if target != 'N/A' else "",
                 f"- **Issue:** {issue.issue_message}",
                 ""
             ])
+        if len(red_flags) > 20:
+            report_lines.append(f"*... and {len(red_flags) - 20} more red flags*")
+            report_lines.append("")
 
-    if scan_results.accuracy_issues:
+    # Show yellow flags second (warnings)
+    if yellow_flags:
+        prioritized_yellow = prioritize_issues(yellow_flags)
         report_lines.extend([
-            "## 🎯 Accuracy Issues",
+            "## 🟡 Yellow Flags (Warnings)",
             "",
-            f"Found {len(scan_results.accuracy_issues)} accuracy validation issues:",
+            f"**{len(yellow_flags)} warnings** that should be reviewed:",
             ""
         ])
-        for issue in scan_results.accuracy_issues[:10]:
+        for issue in prioritized_yellow[:15]:  # Show first 15 yellow flags
+            issue_type = getattr(issue, 'issue_type', 'unknown')
+            target = getattr(issue, 'target', 'N/A')
             report_lines.extend([
                 f"**{issue.file}:{issue.line}**",
+                f"- **Type:** {issue_type}",
+                f"- **Target:** `{target}`" if target != 'N/A' else "",
                 f"- **Issue:** {issue.issue_message}",
                 ""
             ])
+        if len(yellow_flags) > 15:
+            report_lines.append(f"*... and {len(yellow_flags) - 15} more yellow flags*")
+            report_lines.append("")
 
-    if scan_results.quality_issues:
+    # Show green flags last (exceptions) - only if requested
+    if show_green_flags and green_flags:
         report_lines.extend([
-            "## ⭐ Quality Issues",
+            "## 🟢 Green Flags (Known Exceptions)",
             "",
-            f"Found {len(scan_results.quality_issues)} quality validation issues:",
+            f"**{len(green_flags)} known exceptions** (false positives filtered):",
+            "",
+            "*These are typically directory references, template patterns, or formatting artifacts.*",
             ""
         ])
-        for issue in scan_results.quality_issues[:10]:
+        # Group green flags by type for summary
+        green_by_type = {}
+        for issue in green_flags:
+            issue_type = getattr(issue, 'issue_type', 'unknown')
+            green_by_type[issue_type] = green_by_type.get(issue_type, 0) + 1
+        
+        for issue_type, count in sorted(green_by_type.items()):
+            report_lines.append(f"- **{issue_type}:** {count} exceptions")
+        report_lines.append("")
+
+    # Legacy sections for backward compatibility (grouped by issue type)
+    if not red_flags and not yellow_flags:
+        # Only show legacy format if no severity flags were assigned
+        if scan_results.link_issues:
             report_lines.extend([
-                f"**{issue.file}:{issue.line}**",
-                f"- **Type:** {issue.issue_type}",
-                f"- **Issue:** {issue.issue_message}",
+                "## 🔗 Link Issues",
+                "",
+                f"Found {len(scan_results.link_issues)} link validation issues:",
                 ""
             ])
+            for issue in scan_results.link_issues[:10]:
+                report_lines.extend([
+                    f"**{issue.file}:{issue.line}**",
+                    f"- **Target:** `{issue.target}`",
+                    f"- **Issue:** {issue.issue_message}",
+                    ""
+                ])
+
+        if scan_results.accuracy_issues:
+            report_lines.extend([
+                "## 🎯 Accuracy Issues",
+                "",
+                f"Found {len(scan_results.accuracy_issues)} accuracy validation issues:",
+                ""
+            ])
+            for issue in scan_results.accuracy_issues[:10]:
+                report_lines.extend([
+                    f"**{issue.file}:{issue.line}**",
+                    f"- **Issue:** {issue.issue_message}",
+                    ""
+                ])
+
+        if scan_results.quality_issues:
+            report_lines.extend([
+                "## ⭐ Quality Issues",
+                "",
+                f"Found {len(scan_results.quality_issues)} quality validation issues:",
+                ""
+            ])
+            for issue in scan_results.quality_issues[:10]:
+                report_lines.extend([
+                    f"**{issue.file}:{issue.line}**",
+                    f"- **Type:** {issue.issue_type}",
+                    f"- **Issue:** {issue.issue_message}",
+                    ""
+                ])
 
     return "\n".join(report_lines)

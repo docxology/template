@@ -2,8 +2,8 @@
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](docs/operational/BUILD_SYSTEM.md)
 [![Test Coverage](https://img.shields.io/badge/coverage-100%25%20project%20|%2083.33%25%20infra-brightgreen)](docs/operational/BUILD_SYSTEM.md)
-[![Tests](https://img.shields.io/badge/tests-2235%2F2247%20passing%20(99.6%25)-brightgreen)](docs/operational/BUILD_SYSTEM.md)
-[![Documentation](https://img.shields.io/badge/docs-89%20files-blue)](docs/DOCUMENTATION_INDEX.md)
+[![Tests](https://img.shields.io/badge/tests-2116%20passing%20(100%25)-brightgreen)](docs/operational/BUILD_SYSTEM.md)
+[![Documentation](https://img.shields.io/badge/docs-86%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
 
 > **Template Repository** - Click "Use this template" to create a new research project with this structure
@@ -132,7 +132,7 @@ flowchart TD
 
 **📚 [Complete Documentation Index](docs/DOCUMENTATION_INDEX.md)** | **📖 [Documentation Guide](docs/AGENTS.md)** | **🔍 [Quick Reference](docs/README.md)**
 
-The template includes **89 documentation files** organized in the `docs/` directory. Use the visual map below to navigate:
+The template includes **86+ documentation files** organized in the `docs/` directory. Use the visual map below to navigate:
 
 ```mermaid
 graph TB
@@ -234,9 +234,9 @@ This template now supports **multiple research projects** in a single repository
 graph TB
     subgraph Repository["📁 Repository"]
         subgraph Projects["projects/"]
-            P1[project/<br/>Full-featured research]
-            P2[prose_project/<br/>Manuscript-focused]
-            P3[code_project/<br/>Code-focused]
+            P1[code_project/<br/>Code-focused research]
+            P2[active_inference_meta_pragmatic/<br/>Active inference research]
+            P3[ento_linguistics/<br/>Ento-linguistic research]
             PN[your_project/<br/>Your research]
         end
 
@@ -247,9 +247,9 @@ graph TB
         end
 
         subgraph Output["📤 Final Deliverables"]
-            OUT1[output/code_project/<br/>Project PDFs, data]
-            OUT2[output/prose_project/<br/>Prose outputs]
-            OUT3[output/code_project/<br/>Code outputs]
+            OUT1[output/code_project/<br/>Code project outputs]
+            OUT2[output/active_inference_meta_pragmatic/<br/>Active inference outputs]
+            OUT3[output/ento_linguistics/<br/>Ento-linguistics outputs]
             OUTN[output/your_project/<br/>Your deliverables]
         end
     end
@@ -280,10 +280,13 @@ graph TB
 
 ### Example Projects
 
-The template includes two example projects:
+The template includes active example projects:
 
 - **`projects/code_project/`** - Code-focused with analysis pipeline
-- **`projects/prose_project/`** - Manuscript-focused with equations
+- **`projects/active_inference_meta_pragmatic/`** - Active inference and meta-pragmatic research
+- **`projects/ento_linguistics/`** - Ento-linguistic research project
+
+**Note:** Archived projects (e.g., `prose_project/`) are preserved in `projects_archive/` for reference but are not actively executed.
 
 ### Usage
 
@@ -327,7 +330,8 @@ Projects in `projects_archive/` are **preserved but not executed**:
 
 **Current Active Projects:**
 - `code_project/` - Optimization algorithms research
-- `prose_project/` - Prose-focused manuscript with equations
+- `active_inference_meta_pragmatic/` - Active inference and meta-pragmatic research
+- `ento_linguistics/` - Ento-linguistic research project
 
 **To archive a project:** `mv projects/{name}/ projects_archive/{name}/`
 **To reactivate:** `mv projects_archive/{name}/ projects/{name}/`
@@ -369,14 +373,14 @@ open output/pdf/project_combined.pdf
 ```mermaid
 graph LR
     subgraph Status["✅ System Status"]
-        TESTS[Tests: 2235/2247 passing\n1887 infra [3 skipped] + 360 project\n99.6% success rate]
-        COV[Coverage: 92.2% project\n73.3% infra\nMeets requirements]
+        TESTS[Tests: 2116 passing\n1796 infra [2 skipped] + 320 project\n100% success rate]
+        COV[Coverage: 100% project\n83.33% infra\nExceeds requirements]
         BUILD[Build Time: 53s\nOptimal performance\n(without LLM review)]
         PDFS[PDFs: 14/14 generated\nAll sections complete]
     end
 
     subgraph Documentation["📚 Documentation"]
-        DOCS[89 documentation files\nComprehensive coverage]
+        DOCS[86+ documentation files\nComprehensive coverage]
         CROSS[Complete cross-referencing\nAll links validated]
         EXAMPLES[Real-world examples\nMultiple use cases]
     end
@@ -397,11 +401,11 @@ graph LR
 ```
 
 **Key Metrics:**
-- **Test Coverage**: 92.2% project, 73.3% infrastructure (meets requirements) - [Details](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
-- **Build Time**: 152 seconds (comprehensive, with full test suite) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
-- **Tests Passing**: 2235 tests (1887 infrastructure [3 skipped] + 360 project) - [Test Report](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
+- **Test Coverage**: 100% project, 83.33% infrastructure (exceeds requirements) - [Details](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
+- **Build Time**: 84 seconds (comprehensive, with full test suite) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
+- **Tests Passing**: 2116 tests (1796 infrastructure [2 skipped] + 320 project) - [Test Report](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
 - **PDFs Generated**: 14 (all sections) - [Output Summary](docs/operational/BUILD_SYSTEM.md#generated-files)
-- **Documentation**: 89 files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
+- **Documentation**: 86+ files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 
 ## 🎓 Skill-Based Learning Paths
 
@@ -1041,7 +1045,7 @@ pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 - **Real data testing**: Use actual domain data, not synthetic test data
 - **Reproducible**: Fixed seeds and deterministic computation
 
-**Current Status**: 2235 tests passing (1887 infra [3 skipped] + 360 project), 98.03% project coverage - [Full Analysis](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
+**Current Status**: 2116 tests passing (1796 infra [2 skipped] + 320 project), 100% project coverage - [Full Analysis](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
 
 ## 📤 Output
 

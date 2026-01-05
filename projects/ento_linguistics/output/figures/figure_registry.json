@@ -1,0 +1,10 @@
+{
+  "fig:scientific_simulation_timeseries": {
+    "filename": "scientific_simulation_timeseries.png",
+    "caption": "Time series data generated for scientific simulation analysis",
+    "label": "fig:scientific_simulation_timeseries",
+    "section": "experimental_results",
+    "generated_by": "scientific_simulation.py",
+    "parameters": null
+  }
+}

@@ -13,12 +13,21 @@ A complete optimization research project featuring:
 - **Rigorous Testing**: 96%+ test coverage with performance benchmarks
 - **Automated Analysis**: Script-driven figure generation and data visualization
 
-### 📚 **prose_project**: Mathematical Exposition Exemplar
-A comprehensive prose-focused research project demonstrating:
-- **Advanced Mathematics**: Rigorous theorem proofs with numbered equations
-- **Professional Visualizations**: Publication-quality mathematical plots and charts
-- **Academic Writing**: Formal scholarly prose with proper citations
-- **Complete Testing**: 100% test coverage for all visualization utilities
+### 🧠 **active_inference_meta_pragmatic**: Active Inference Research
+A comprehensive active inference research project demonstrating:
+- **Meta-Pragmatic Framework**: Advanced theoretical development
+- **Active Inference Models**: Implementation of active inference principles
+- **Comprehensive Analysis**: Extensive experimental validation
+- **Professional Documentation**: Publication-quality manuscript
+
+### 📚 **ento_linguistics**: Ento-Linguistic Research
+A comprehensive ento-linguistic research project demonstrating:
+- **Domain Analysis**: Term extraction and literature mining
+- **Multi-Domain Taxonomy**: Six-domain classification system
+- **Comprehensive Testing**: 484 tests with 83% coverage
+- **Research Pipeline**: Complete analysis workflows
+
+**Note:** Archived projects (e.g., `prose_project/`) are preserved in `projects_archive/` for reference but are not actively executed.
 
 ## Standalone Project Paradigm
 
@@ -84,9 +93,10 @@ mv projects_archive/myproject projects/myproject
 | Project | Description | Status |
 |---------|-------------|--------|
 | `code_project/` | Minimal optimization algorithms research | ✅ Active |
-| `prose_project/` | Prose-focused manuscript with equations | ✅ Active |
+| `active_inference_meta_pragmatic/` | Active inference and meta-pragmatic research | ✅ Active |
+| `ento_linguistics/` | Ento-linguistic research project | ✅ Active |
 
-**Archived projects** are available in `projects_archive/` for historical reference.
+**Archived projects** (e.g., `prose_project/`) are available in `projects_archive/` for historical reference.
 
 ```mermaid
 graph TD
@@ -94,7 +104,8 @@ graph TD
         ENTO[ento_linguistics/<br/>Ento-Linguistic Analysis<br/>484 tests, 83% coverage]
         ACTIVE[active_inference_meta_pragmatic/<br/>Active Inference Framework<br/>Meta-cognitive analysis]
         SMALL_CODE[code_project/<br/>Optimization Research<br/>Gradient descent algorithms]
-        SMALL_PROSE[prose_project/<br/>Prose-focused Research<br/>Manuscript with equations]
+        ACTIVE_INF[active_inference_meta_pragmatic/<br/>Active Inference Research<br/>Meta-pragmatic framework]
+        ENTO[ento_linguistics/<br/>Ento-Linguistic Research<br/>Domain analysis & taxonomy]
         CUSTOM[your_project/<br/>Custom research<br/>Your algorithms here]
 
         ENTO --> ENTO_SRC[src/<br/>Term extraction,<br/>Domain analysis,<br/>Literature mining]
@@ -277,7 +288,14 @@ projects/
 │   ├── manuscript/       # Research manuscript
 │   ├── output/           # Generated outputs (not in git)
 │   └── pyproject.toml    # Project configuration
-├── prose_project/        # Prose-focused research project
+├── active_inference_meta_pragmatic/  # Active inference research
+│   ├── src/              # Source code
+│   ├── tests/            # Test suite
+│   ├── scripts/          # Analysis scripts
+│   ├── manuscript/       # Research manuscript
+│   ├── output/           # Generated outputs (not in git)
+│   └── pyproject.toml    # Project configuration
+├── ento_linguistics/     # Ento-linguistic research
 │   ├── src/              # Source code
 │   ├── tests/            # Test suite
 │   ├── scripts/          # Analysis scripts
@@ -298,7 +316,7 @@ projects/
 ### Option 1: Copy the Template
 
 ```bash
-# Copy an existing project as a starting point (choose code_project or prose_project)
+# Copy an existing project as a starting point (choose code_project, active_inference_meta_pragmatic, or ento_linguistics)
 cp -r projects/code_project projects/myresearch
 
 # Customize pyproject.toml
@@ -461,7 +479,10 @@ output/
 │   ├── pdf/
 │   ├── figures/
 │   └── ...
-├── prose_project/     # Prose-focused research project
+├── active_inference_meta_pragmatic/  # Active inference outputs
+│   ├── pdf/
+│   └── ...
+├── ento_linguistics/     # Ento-linguistics outputs
 │   ├── pdf/
 │   └── ...
 └── your_project/      # Your custom research project
@@ -655,17 +676,17 @@ vim manuscript/01_introduction.md
 vim manuscript/02_methodology.md
 ```
 
-### Method 3: Prose-Focused Research
+### Method 3: Manuscript-Focused Research
 
 ```bash
-# Use prose template for manuscript-heavy research
-cp -r projects/prose_project projects/literature_review
+# Use active_inference_meta_pragmatic as template for manuscript-heavy research
+cp -r projects/active_inference_meta_pragmatic projects/literature_review
 cd projects/literature_review
 
 # Focus on manuscript content with equations
 vim manuscript/01_abstract.md
 vim manuscript/02_introduction.md
-vim manuscript/03_theoretical_framework.md
+vim manuscript/03_methodology.md
 
 # Add minimal supporting code
 vim src/theoretical_model.py
@@ -867,7 +888,8 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 - **ento_linguistics**: Complete Ento-Linguistic research (484 tests, literature mining)
 - **active_inference_meta_pragmatic**: Meta-cognitive framework (theoretical validation)
 - **code_project**: Optimization algorithms (minimal template)
-- **prose_project**: Prose-focused research (equation-heavy manuscript)
+
+**Note:** Archived projects (e.g., `prose_project/`) are preserved in `projects_archive/` for reference.
 
 ### 🚀 **Workflow**
 1. **Create**: Copy existing project or start from template

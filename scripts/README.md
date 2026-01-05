@@ -92,6 +92,60 @@ python3 scripts/execute_multi_project.py --no-llm
 **Notes:**
 - Checkpoint/resume support is available via `scripts/execute_pipeline.py --resume`.
 
+## Pipeline Architecture
+
+```mermaid
+flowchart TD
+    subgraph EntryPoints["Entry Points"]
+        RUNSH[./run.sh<br/>Interactive Menu<br/>9-stage pipeline]
+        PYTHON[execute_pipeline.py<br/>Programmatic<br/>Core pipeline]
+        MULTI[execute_multi_project.py<br/>Multi-project<br/>Cross-project execution]
+    end
+
+    subgraph CoreStages["Core Pipeline Stages"]
+        STAGE00[00_setup_environment.py<br/>Environment Setup<br/>Dependency validation]
+        STAGE01[01_run_tests.py<br/>Test Execution<br/>Infrastructure + Project]
+        STAGE02[02_run_analysis.py<br/>Analysis Orchestration<br/>Discover project scripts]
+        STAGE03[03_render_pdf.py<br/>PDF Rendering<br/>Markdown → LaTeX → PDF]
+        STAGE04[04_validate_output.py<br/>Output Validation<br/>Quality assurance]
+        STAGE05[05_copy_outputs.py<br/>Copy Deliverables<br/>Final outputs]
+    end
+
+    subgraph ExtendedStages["Extended Pipeline Stages"]
+        STAGE06[06_llm_review.py<br/>LLM Review<br/>Scientific analysis]
+        STAGE07[07_generate_executive_report.py<br/>Executive Report<br/>Multi-project summary]
+    end
+
+    subgraph ProjectScripts["Project Scripts"]
+        PROJ_SCRIPTS[projects/{name}/scripts/<br/>Analysis workflows<br/>Domain-specific]
+    end
+
+    RUNSH --> STAGE00
+    PYTHON --> STAGE00
+    MULTI --> STAGE00
+
+    STAGE00 --> STAGE01
+    STAGE01 --> STAGE02
+    STAGE02 --> PROJ_SCRIPTS
+    PROJ_SCRIPTS --> STAGE03
+    STAGE03 --> STAGE04
+    STAGE04 --> STAGE05
+
+    RUNSH --> STAGE06
+    STAGE05 --> STAGE06
+    STAGE06 --> STAGE07
+
+    classDef entry fill:#e3f2fd,stroke:#1565c0,stroke-width:3px
+    classDef core fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef extended fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef project fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class RUNSH,PYTHON,MULTI entry
+    class STAGE00,STAGE01,STAGE02,STAGE03,STAGE04,STAGE05 core
+    class STAGE06,STAGE07 extended
+    class PROJ_SCRIPTS project
+```
+
 ## Pipeline Stages
 
 ### Core Pipeline (Stages 00-05)

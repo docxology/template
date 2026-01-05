@@ -33,10 +33,14 @@ SRC = os.path.join(ROOT, "src")
 if os.path.exists(SRC) and SRC not in sys.path:
     sys.path.insert(0, SRC)
 
-# Add project/src/ to path for project modules
-PROJECT_SRC = os.path.join(ROOT, "project", "src")
-if os.path.exists(PROJECT_SRC) and PROJECT_SRC not in sys.path:
-    sys.path.insert(0, PROJECT_SRC)
+# Add projects/*/src/ to path for project modules (active projects only)
+# Note: Only active projects in projects/ directory are added here.
+# Archived projects in projects_archive/ are not included.
+active_projects = ["code_project", "active_inference_meta_pragmatic", "ento_linguistics"]
+for project_name in active_projects:
+    project_src = os.path.join(ROOT, "projects", project_name, "src")
+    if os.path.exists(project_src) and project_src not in sys.path:
+        sys.path.insert(0, project_src)
 
 
 # ============================================================================

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_methodology</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:methodology">Methodology</h1>
+<h2
+id="mixed-methodology-framework-for-ento-linguistic-analysis">Mixed-Methodology
+Framework for Ento-Linguistic Analysis</h2>
+<p>Our research employs a comprehensive mixed-methodology framework that
+integrates computational text analysis with theoretical discourse
+examination to systematically investigate how language shapes scientific
+understanding in entomology. This approach combines quantitative pattern
+detection with qualitative conceptual analysis, ensuring both empirical
+rigor and theoretical depth.</p>
+<h2 id="computational-text-analysis-pipeline">Computational Text
+Analysis Pipeline</h2>
+<h3 id="text-processing-and-preprocessing">Text Processing and
+Preprocessing</h3>
+<p>The computational component begins with systematic text processing of
+scientific literature on ant biology and behavior. We implement a
+multi-stage preprocessing pipeline:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:text_processing}
+T \rightarrow T_{\text{normalized}} \rightarrow T_{\text{tokenized}}
+\rightarrow T_{\text{lemmatized}}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(T\)</span> represents raw text, and
+each transformation step standardizes linguistic variation while
+preserving semantic content. This preprocessing enables reliable pattern
+detection across diverse scientific writing styles.</p>
+<h3 id="terminology-extraction-framework">Terminology Extraction
+Framework</h3>
+<p>We develop domain-specific terminology extraction algorithms that
+identify and categorize Ento-Linguistic terms across our six analytical
+domains:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:term_extraction}
+\mathcal{T}_d = \{t \in T \mid \text{domain}(t) = d \wedge
+\text{relevance}(t) &gt; \theta\}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\mathcal{T}_d\)</span> represents
+the set of terms in domain <span class="math inline">\(d\)</span>, and
+<span class="math inline">\(\theta\)</span> is a relevance threshold
+determined through validation against expert-curated term lists. This
+approach ensures systematic identification of domain-relevant
+terminology while minimizing false positives.</p>
+<h3 id="network-construction-and-analysis">Network Construction and
+Analysis</h3>
+<p>Terminology relationships are modeled as networks where nodes
+represent terms and edges represent co-occurrence or semantic
+relationships:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:network_construction}
+G = (V, E), \quad V = \bigcup_{d=1}^{6} \mathcal{T}_d, \quad E = \{(u,v)
+\mid \text{relationship}(u,v) &gt; \phi\}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\phi\)</span> represents the
+relationship threshold. Network analysis reveals structural patterns in
+scientific terminology, including clustering around conceptual domains
+and bridging terms that connect different analytical frameworks.</p>
+<h2 id="theoretical-discourse-analysis-framework">Theoretical Discourse
+Analysis Framework</h2>
+<h3 id="conceptual-mapping-methodology">Conceptual Mapping
+Methodology</h3>
+<p>The theoretical component employs systematic conceptual mapping to
+examine how terminology shapes scientific understanding. We develop a
+framework for analyzing the constitutive role of language in scientific
+practice:</p>
+<p><strong>Term-to-Concept Mapping</strong>: Each identified term is
+mapped to its conceptual implications, revealing how linguistic choices
+influence research questions and methodological approaches.</p>
+<p><strong>Context Analysis</strong>: Terms are analyzed across
+different usage contexts to identify context-dependent meanings and
+potential ambiguities.</p>
+<p><strong>Framing Analysis</strong>: We examine how terminology imposes
+implicit frameworks on ant biology, particularly where human social
+concepts are applied to insect societies.</p>
+<h3 id="domain-specific-analytical-frameworks">Domain-Specific
+Analytical Frameworks</h3>
+<p>Each Ento-Linguistic domain receives specialized analytical
+treatment:</p>
+<p><strong>Unit of Individuality</strong>: Multi-scale analysis
+examining how terms like “individual,” “colony,” and “superorganism”
+create different levels of biological analysis.</p>
+<p><strong>Behavior and Identity</strong>: Identity construction
+analysis investigating how behavioral descriptions create categorical
+identities that may not reflect biological fluidity.</p>
+<p><strong>Power &amp; Labor</strong>: Structural analysis of
+hierarchical terminology and its implications for understanding ant
+social organization.</p>
+<p><strong>Sex &amp; Reproduction</strong>: Conceptual mapping of
+sex/gender terminology and its alignment with ant reproductive
+biology.</p>
+<p><strong>Kin and Relatedness</strong>: Network analysis of relatedness
+concepts and their influence on social structure understanding.</p>
+<p><strong>Economics</strong>: Framework analysis of economic
+terminology applied to resource allocation in ant societies.</p>
+<h2
+id="integration-of-computational-and-theoretical-methods">Integration of
+Computational and Theoretical Methods</h2>
+<h3 id="mixed-method-validation-framework">Mixed-Method Validation
+Framework</h3>
+<p>Results from computational analysis inform theoretical examination,
+while theoretical insights guide computational refinement:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:mixed_validation}
+V(\text{computational}, \text{theoretical}) = \alpha \cdot V_c +
+(1-\alpha) \cdot V_t + \beta \cdot V_{c,t}
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(V_c\)</span> represents
+computational validation metrics, <span
+class="math inline">\(V_t\)</span> represents theoretical validation
+criteria, <span class="math inline">\(V_{c,t}\)</span> represents
+cross-method validation, and <span class="math inline">\(\alpha,
+\beta\)</span> are weighting parameters.</p>
+<h3 id="iterative-refinement-process">Iterative Refinement Process</h3>
+<p>The methodology employs iterative refinement between computational
+findings and theoretical analysis:</p>
+<ol type="1">
+<li><strong>Initial Computational Analysis</strong>: Broad pattern
+detection across literature corpus</li>
+<li><strong>Theoretical Examination</strong>: Deep analysis of
+identified patterns and their implications</li>
+<li><strong>Refined Computational Analysis</strong>: Targeted analysis
+informed by theoretical insights</li>
+<li><strong>Integrated Synthesis</strong>: Combined computational and
+theoretical understanding</li>
+</ol>
+<h2 id="implementation-framework">Implementation Framework</h2>
+<h3 id="computational-infrastructure">Computational Infrastructure</h3>
+<p>The analysis framework is implemented using modular components that
+ensure reproducibility and extensibility. The analytical pipeline
+integrates computational text processing with terminology extraction,
+network construction, and theoretical analysis, employing iterative
+refinement between quantitative and qualitative components as detailed
+in Section <span
+class="math inline">\(\ref{sec:experimental_results}\)</span>.</p>
+<h3 id="data-management-and-curation">Data Management and Curation</h3>
+<p>We implement systematic data management for both literature corpora
+and analytical results:</p>
+<p><strong>Literature Corpus</strong>: Curated collection of scientific
+publications with metadata and full-text access where available.</p>
+<p><strong>Terminology Database</strong>: Structured database of
+identified terms with domain classifications, usage contexts, and
+analytical annotations.</p>
+<p><strong>Analysis Results</strong>: Versioned storage of computational
+outputs, network analyses, and theoretical examinations.</p>
+<h3 id="quality-assurance-framework">Quality Assurance Framework</h3>
+<p>All analytical components include comprehensive validation:</p>
+<p><strong>Computational Validation</strong>: Statistical reliability of
+pattern detection, network construction accuracy, and terminology
+extraction precision.</p>
+<p><strong>Theoretical Validation</strong>: Conceptual coherence,
+alignment with existing literature, and logical consistency of
+analytical frameworks.</p>
+<p><strong>Cross-Method Validation</strong>: Consistency between
+computational findings and theoretical interpretations.</p>
+<h2
+id="reproducibility-and-documentation-infrastructure">Reproducibility
+and Documentation Infrastructure</h2>
+<h3 id="automated-quality-gates">Automated Quality Gates</h3>
+<p>Following the research template’s infrastructure, all methodological
+steps include automated validation:</p>
+<p><strong>Text Processing Validation</strong>: Ensures preprocessing
+maintains semantic integrity while standardizing linguistic
+variation.</p>
+<p><strong>Terminology Validation</strong>: Cross-references extracted
+terms against expert-curated lists and literature usage patterns.</p>
+<p><strong>Network Validation</strong>: Ensures network construction
+reflects meaningful relationships rather than artifacts.</p>
+<p><strong>Theoretical Validation</strong>: Documents analytical
+frameworks and ensures conceptual coherence.</p>
+<h3 id="documentation-and-reporting-framework">Documentation and
+Reporting Framework</h3>
+<p>The methodology integrates with the template’s documentation
+infrastructure:</p>
+<p><strong>Automated Reporting</strong>: Generates comprehensive reports
+of analytical findings with integrated visualizations.</p>
+<p><strong>Cross-Reference Management</strong>: Ensures all analytical
+components are properly linked and referenced.</p>
+<p><strong>Version Control</strong>: Maintains complete provenance of
+analytical decisions and parameter choices.</p>
+<h2 id="performance-and-scalability-analysis">Performance and
+Scalability Analysis</h2>
+<h3 id="computational-complexity">Computational Complexity</h3>
+<p>The computational components are designed for scalability across
+large literature corpora:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:computational_complexity}
+C(n,m) = O(n \log n + m \cdot d)
+\end{equation}\]</span></p>
+<p>where: - <span class="math inline">\(n\)</span> represents the corpus
+size (total words or documents) - <span class="math inline">\(m\)</span>
+is the number of identified terms after extraction and filtering - <span
+class="math inline">\(d\)</span> is the number of Ento-Linguistic
+domains being analyzed (fixed at 6)</p>
+<p>The <span class="math inline">\(n \log n\)</span> term accounts for
+text preprocessing and tokenization operations, while <span
+class="math inline">\(m \cdot d\)</span> represents the domain
+classification and analysis phase. This complexity ensures efficient
+processing of large scientific literature collections while maintaining
+detailed analytical depth.</p>
+<h3 id="memory-and-resource-management">Memory and Resource
+Management</h3>
+<p>The framework includes efficient resource management for large-scale
+analysis:</p>
+<p><strong>Streaming Processing</strong>: Text processing designed for
+memory-efficient handling of large corpora.</p>
+<p><strong>Incremental Analysis</strong>: Network construction that
+scales with corpus size through incremental updates.</p>
+<p><strong>Parallel Processing</strong>: Components designed for
+parallel execution across computational resources.</p>
+<h2 id="validation-and-reliability-framework">Validation and Reliability
+Framework</h2>
+<h3 id="multi-method-triangulation">Multi-Method Triangulation</h3>
+<p>Results are validated through multiple analytical approaches:</p>
+<p><strong>Internal Validation</strong>: Consistency checks within
+computational and theoretical methods.</p>
+<p><strong>Cross-Method Validation</strong>: Agreement between
+computational findings and theoretical analysis.</p>
+<p><strong>External Validation</strong>: Comparison with existing
+literature and expert review.</p>
+<h3 id="error-analysis-and-uncertainty-quantification">Error Analysis
+and Uncertainty Quantification</h3>
+<p>The framework includes systematic error analysis:</p>
+<p><strong>Computational Uncertainty</strong>: Quantification of pattern
+detection reliability and network construction confidence.</p>
+<p><strong>Theoretical Uncertainty</strong>: Documentation of analytical
+assumptions and alternative interpretations.</p>
+<p><strong>Integrated Uncertainty</strong>: Combined uncertainty
+estimates across methodological components.</p>
+<p>This comprehensive methodological framework ensures rigorous,
+reproducible analysis of Ento-Linguistic domains while maintaining the
+flexibility to adapt to new findings and refine analytical
+approaches.</p>
+</body>
+</html>

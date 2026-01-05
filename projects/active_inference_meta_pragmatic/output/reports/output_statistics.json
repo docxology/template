@@ -1,0 +1,316 @@
+{
+  "directories": {
+    "pdf": {
+      "exists": true,
+      "file_count": 9,
+      "size_mb": "4.69",
+      "total_size_bytes": 4918358,
+      "largest_files": [
+        {
+          "name": "active_inference_meta_pragmatic_combined.pdf",
+          "size_mb": "4.31",
+          "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
+        },
+        {
+          "name": "_combined_manuscript.tex",
+          "size_mb": "0.11",
+          "path": "pdf/_combined_manuscript.tex"
+        },
+        {
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.09",
+          "path": "pdf/_combined_manuscript.md"
+        }
+      ],
+      "extensions": {
+        ".md": 1,
+        ".log": 1,
+        ".aux": 1,
+        ".blg": 1,
+        ".bib": 1,
+        ".tex": 1,
+        ".toc": 1,
+        ".bbl": 1,
+        ".pdf": 1
+      }
+    },
+    "web": {
+      "exists": true,
+      "file_count": 13,
+      "size_mb": "0.15",
+      "total_size_bytes": 154559,
+      "largest_files": [
+        {
+          "name": "S01_supplemental_methods.html",
+          "size_mb": "0.02",
+          "path": "web/S01_supplemental_methods.html"
+        },
+        {
+          "name": "09_appendix.html",
+          "size_mb": "0.02",
+          "path": "web/09_appendix.html"
+        },
+        {
+          "name": "05_discussion.html",
+          "size_mb": "0.01",
+          "path": "web/05_discussion.html"
+        }
+      ],
+      "extensions": {
+        ".html": 13
+      }
+    },
+    "slides": {
+      "exists": true,
+      "file_count": 95,
+      "size_mb": "5.42",
+      "total_size_bytes": 5684088,
+      "largest_files": [
+        {
+          "name": "03_methodology_slides.pdf",
+          "size_mb": "2.86",
+          "path": "slides/03_methodology_slides.pdf"
+        },
+        {
+          "name": "04_experimental_results_slides.pdf",
+          "size_mb": "1.31",
+          "path": "slides/04_experimental_results_slides.pdf"
+        },
+        {
+          "name": "S01_supplemental_methods_slides.log",
+          "size_mb": "0.06",
+          "path": "slides/S01_supplemental_methods_slides.log"
+        }
+      ],
+      "extensions": {
+        ".nav": 13,
+        ".pdf": 13,
+        ".toc": 13,
+        ".tex": 13,
+        ".snm": 13,
+        ".aux": 13,
+        ".log": 13,
+        ".vrb": 4
+      }
+    },
+    "figures": {
+      "exists": true,
+      "file_count": 35,
+      "size_mb": "5.10",
+      "total_size_bytes": 5349654,
+      "largest_files": [
+        {
+          "name": "quadrant_matrix_enhanced.png",
+          "size_mb": "0.60",
+          "path": "figures/quadrant_matrix_enhanced.png"
+        },
+        {
+          "name": "quadrant_2_metadata_cognitive.png",
+          "size_mb": "0.45",
+          "path": "figures/quadrant_2_metadata_cognitive.png"
+        },
+        {
+          "name": "structure_preservation.png",
+          "size_mb": "0.38",
+          "path": "figures/structure_preservation.png"
+        }
+      ],
+      "extensions": {
+        ".pdf": 17,
+        ".png": 17,
+        ".json": 1
+      }
+    },
+    "data": {
+      "exists": true,
+      "file_count": 2,
+      "size_mb": "0.04",
+      "total_size_bytes": 46123,
+      "largest_files": [
+        {
+          "name": "theoretical_demonstrations.json",
+          "size_mb": "0.04",
+          "path": "data/theoretical_demonstrations.json"
+        },
+        {
+          "name": "demonstration_data.csv",
+          "size_mb": "0.00",
+          "path": "data/demonstration_data.csv"
+        }
+      ],
+      "extensions": {
+        ".csv": 1,
+        ".json": 1
+      }
+    },
+    "reports": {
+      "exists": true,
+      "file_count": 7,
+      "size_mb": "0.06",
+      "total_size_bytes": 59592,
+      "largest_files": [
+        {
+          "name": "final_pipeline_report.json",
+          "size_mb": "0.05",
+          "path": "reports/final_pipeline_report.json"
+        },
+        {
+          "name": "validation_report.json",
+          "size_mb": "0.00",
+          "path": "reports/validation_report.json"
+        },
+        {
+          "name": "statistical_analysis.json",
+          "size_mb": "0.00",
+          "path": "reports/statistical_analysis.json"
+        }
+      ],
+      "extensions": {
+        ".json": 5,
+        ".md": 2
+      }
+    },
+    "simulations": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    },
+    "llm": {
+      "exists": true,
+      "file_count": 6,
+      "size_mb": "0.04",
+      "total_size_bytes": 47048,
+      "largest_files": [
+        {
+          "name": "combined_review.md",
+          "size_mb": "0.02",
+          "path": "llm/combined_review.md"
+        },
+        {
+          "name": "translation_hi.md",
+          "size_mb": "0.01",
+          "path": "llm/translation_hi.md"
+        },
+        {
+          "name": "translation_ru.md",
+          "size_mb": "0.01",
+          "path": "llm/translation_ru.md"
+        }
+      ],
+      "extensions": {
+        ".md": 5,
+        ".json": 1
+      }
+    },
+    "logs": {
+      "exists": true,
+      "file_count": 0,
+      "size_mb": "0.00",
+      "total_size_bytes": 0,
+      "largest_files": [],
+      "extensions": {}
+    }
+  },
+  "total_files": 167,
+  "total_size_mb": 15.506193161010742,
+  "largest_files": [
+    {
+      "name": "active_inference_meta_pragmatic_combined.pdf",
+      "size_mb": "4.31",
+      "category": "pdf",
+      "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
+    },
+    {
+      "name": "03_methodology_slides.pdf",
+      "size_mb": "2.86",
+      "category": "slides",
+      "path": "slides/03_methodology_slides.pdf"
+    },
+    {
+      "name": "04_experimental_results_slides.pdf",
+      "size_mb": "1.31",
+      "category": "slides",
+      "path": "slides/04_experimental_results_slides.pdf"
+    },
+    {
+      "name": "quadrant_matrix_enhanced.png",
+      "size_mb": "0.60",
+      "category": "figures",
+      "path": "figures/quadrant_matrix_enhanced.png"
+    },
+    {
+      "name": "quadrant_2_metadata_cognitive.png",
+      "size_mb": "0.45",
+      "category": "figures",
+      "path": "figures/quadrant_2_metadata_cognitive.png"
+    },
+    {
+      "name": "structure_preservation.png",
+      "size_mb": "0.38",
+      "category": "figures",
+      "path": "figures/structure_preservation.png"
+    },
+    {
+      "name": "_combined_manuscript.tex",
+      "size_mb": "0.11",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.tex"
+    },
+    {
+      "name": "_combined_manuscript.md",
+      "size_mb": "0.09",
+      "category": "pdf",
+      "path": "pdf/_combined_manuscript.md"
+    },
+    {
+      "name": "S01_supplemental_methods_slides.log",
+      "size_mb": "0.06",
+      "category": "slides",
+      "path": "slides/S01_supplemental_methods_slides.log"
+    },
+    {
+      "name": "final_pipeline_report.json",
+      "size_mb": "0.05",
+      "category": "reports",
+      "path": "reports/final_pipeline_report.json"
+    }
+  ],
+  "missing_expected_files": [
+    "active_inference_meta_pragmatic_combined.pdf or project_combined.pdf"
+  ],
+  "file_counts_by_type": {
+    ".md": 8,
+    ".log": 14,
+    ".aux": 14,
+    ".blg": 1,
+    ".bib": 1,
+    ".tex": 14,
+    ".toc": 14,
+    ".bbl": 1,
+    ".pdf": 31,
+    ".html": 13,
+    ".nav": 13,
+    ".snm": 13,
+    ".vrb": 4,
+    ".png": 17,
+    ".json": 8,
+    ".csv": 1
+  },
+  "sizes_by_category": {
+    "pdf": 4.690511703491211,
+    "web": 0.1473989486694336,
+    "slides": 5.420768737792969,
+    "figures": 5.101827621459961,
+    "data": 0.04398632049560547,
+    "reports": 0.05683135986328125,
+    "simulations": 0.0,
+    "llm": 0.04486846923828125,
+    "logs": 0.0
+  },
+  "pdf_files": 9,
+  "figures": 35,
+  "data_files": 2
+}

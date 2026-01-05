@@ -23,18 +23,14 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-# Add projects/*/src for project-specific imports
-PROJECT_SRC = os.path.join(ROOT, "projects", "project", "src")
-if PROJECT_SRC not in sys.path:
-    sys.path.insert(1, PROJECT_SRC)
-
-SMALL_CODE_SRC = os.path.join(ROOT, "projects", "code_project", "src")
-if SMALL_CODE_SRC not in sys.path:
-    sys.path.insert(1, SMALL_CODE_SRC)
-
-SMALL_PROSE_SRC = os.path.join(ROOT, "projects", "prose_project", "src")
-if SMALL_PROSE_SRC not in sys.path:
-    sys.path.insert(1, SMALL_PROSE_SRC)
+# Add projects/*/src for project-specific imports (active projects only)
+# Note: Only active projects in projects/ directory are added here.
+# Archived projects in projects_archive/ are not included.
+active_projects = ["code_project", "active_inference_meta_pragmatic", "ento_linguistics"]
+for project_name in active_projects:
+    project_src = os.path.join(ROOT, "projects", project_name, "src")
+    if os.path.exists(project_src) and project_src not in sys.path:
+        sys.path.insert(1, project_src)
 
 # Force headless backend for all matplotlib usage
 os.environ.setdefault("MPLBACKEND", "Agg")

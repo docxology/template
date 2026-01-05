@@ -16,6 +16,16 @@ from infrastructure.validation.doc_models import (
     CompletenessGap,
     QualityIssue
 )
+from infrastructure.validation.known_exceptions import (
+    is_valid_directory_reference,
+    is_template_pattern,
+    is_code_example,
+    is_mermaid_artifact,
+    is_table_artifact,
+    is_code_block_artifact,
+    is_latex_reference,
+    is_venv_reference,
+)
 
 # Type alias for any issue type
 Issue = Union[LinkIssue, AccuracyIssue, CompletenessGap, QualityIssue]
@@ -124,38 +134,72 @@ def is_false_positive(issue: Issue) -> bool:
         True if issue appears to be a false positive
     """
     issue_text = _get_issue_text(issue).lower()
-    target = _get_issue_target(issue).lower() if hasattr(issue, 'target') else ''
+    target = _get_issue_target(issue) if hasattr(issue, 'target') else ''
+    target_lower = target.lower()
 
-    # Mermaid diagram artifacts (common false positive)
-    if '\\n' in target or 'generic' in target:
+    # Check valid directory references (directories, not files)
+    if is_valid_directory_reference(target):
         return True
 
-    # LaTeX cross-references (valid in manuscripts)
-    if any(ref in issue_text for ref in ['\\ref{fig:', '\\ref{sec:', '\\ref{eq:', '\\eqref{']):
+    # Check template patterns
+    if is_template_pattern(target):
         return True
 
-    # Markdown table formatting artifacts
-    if 'infrastructure/agents.md]' in target or 'infrastructure/readme.md]' in target:
+    # Check code examples (in target or issue message)
+    if is_code_example(target) or is_code_example(issue_text):
         return True
 
-    # Virtual environment references
-    if '.venv/' in target or '/.venv/' in target or '.venv/' in issue_text:
+    # Check Mermaid diagram artifacts
+    if is_mermaid_artifact(target):
         return True
 
-    # Code block examples that are intentionally generic
-    if any(example in issue_text for example in [
-        'example.com', 'your-domain.com', 'path/to/',
-        'placeholder', 'template', 'sample', 'your_'
-    ]):
+    # Check table formatting artifacts
+    if is_table_artifact(target):
         return True
 
-    # Template placeholders that can't be resolved
-    if '{' in target and '}' in target:
+    # Check code block formatting artifacts
+    if is_code_block_artifact(target):
         return True
 
-    # Common documentation patterns that are valid
-    if target in ['infrastructure/', 'scripts/', 'projects/project/']:
+    # Check LaTeX references (valid in manuscripts)
+    if is_latex_reference(target) or is_latex_reference(issue_text):
         return True
+
+    # Check virtual environment references
+    if is_venv_reference(target) or is_venv_reference(issue_text):
+        return True
+
+    # Markdown table formatting artifacts (specific patterns)
+    if 'infrastructure/agents.md]' in target_lower or 'infrastructure/readme.md]' in target_lower:
+        return True
+
+    # Check if issue message indicates it's a directory reference
+    if 'file does not exist' in issue_text and target.endswith('/'):
+        # If target ends with /, it's likely a directory reference, not a file
+        return True
+    
+    # Check for code literals (numbers, quoted strings) - these are code examples, not file paths
+    import re
+    target_clean = target.strip()
+    if re.match(r'^\d+$', target_clean):  # Pure number like "42"
+        return True
+    if re.match(r'^"[^"]+"$', target_clean):  # Quoted string like "hello"
+        return True
+    if re.match(r"^'[^']+'$", target_clean):  # Single-quoted string
+        return True
+    
+    # Check if target is very short and doesn't look like a path
+    if target_clean and len(target_clean) < 3 and '/' not in target_clean:
+        return True
+
+    # Check for code block path issues that are formatting artifacts
+    if hasattr(issue, 'issue_type') and issue.issue_type == 'code_block_path':
+        # If the path contains formatting artifacts, it's likely a false positive
+        if is_code_block_artifact(target):
+            return True
+        # If the path is clearly a directory reference in a code block
+        if target.endswith('/') and is_valid_directory_reference(target):
+            return True
 
     return False
 
@@ -238,6 +282,7 @@ def generate_issue_summary(issues: List[Issue]) -> Dict[str, int]:
     summary = {
         'total': len(issues),
         'by_severity': {'critical': 0, 'error': 0, 'warning': 0, 'info': 0},
+        'by_severity_flag': {'red': 0, 'yellow': 0, 'green': 0},
         'by_type': {},
         'false_positives': 0
     }
@@ -245,6 +290,9 @@ def generate_issue_summary(issues: List[Issue]) -> Dict[str, int]:
     for issue in issues:
         severity = assign_severity(issue)
         summary['by_severity'][severity] += 1
+
+        severity_flag = get_severity_flag(issue)
+        summary['by_severity_flag'][severity_flag] += 1
 
         issue_type = _get_issue_type(issue)
         summary['by_type'][issue_type] = summary['by_type'].get(issue_type, 0) + 1
@@ -295,6 +343,60 @@ def _get_issue_type(issue: Issue) -> str:
     elif isinstance(issue, QualityIssue):
         return 'quality_issue'
     return 'unknown'
+
+
+def get_severity_flag(issue: Issue) -> str:
+    """Get severity flag for an issue: 'red', 'yellow', or 'green'.
+    
+    Red flags are critical issues that need immediate attention.
+    Yellow flags are warnings that should be reviewed.
+    Green flags are known exceptions or informational issues.
+    
+    Args:
+        issue: Issue to evaluate
+        
+    Returns:
+        Severity flag: 'red', 'yellow', or 'green'
+    """
+    # Known exceptions (false positives) are always green
+    if is_false_positive(issue):
+        return 'green'
+    
+    # Get severity level
+    severity = assign_severity(issue)
+    
+    # Map severity to flags
+    if severity in ['critical', 'error']:
+        return 'red'
+    elif severity == 'warning':
+        return 'yellow'
+    else:
+        return 'green'
+
+
+def is_directory_reference(issue: Issue) -> bool:
+    """Check if issue is about a directory reference (which is valid).
+    
+    Args:
+        issue: Issue to evaluate
+        
+    Returns:
+        True if issue is about a valid directory reference
+    """
+    target = _get_issue_target(issue)
+    if not target:
+        return False
+    
+    # Check if target is a directory reference
+    if is_valid_directory_reference(target):
+        return True
+    
+    # Check if issue message indicates directory
+    issue_text = _get_issue_text(issue).lower()
+    if 'file does not exist' in issue_text and target.endswith('/'):
+        return True
+    
+    return False
 
 
 def validate_issue_patterns() -> Dict[str, List[str]]:

@@ -43,6 +43,8 @@ class TestAuditOrchestrator:
             scan_date="2024-01-01 12:00:00",
             total_files=10
         )
+        results.scanned_files = 10
+        results.scan_duration = 0.0
         results.statistics = {'quality_issues': 5}
 
         # Generate report
@@ -60,6 +62,8 @@ class TestAuditOrchestrator:
             scan_date="2024-01-01 12:00:00",
             total_files=5
         )
+        results.scanned_files = 5
+        results.scan_duration = 0.0
 
         # Generate report
         report = generate_audit_report(results, 'json')

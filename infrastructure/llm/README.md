@@ -25,6 +25,53 @@ python3 scripts/06_llm_review.py --review manuscript.md
 
 ## Architecture
 
+```mermaid
+graph TD
+    subgraph LLMModule["LLM Infrastructure Module"]
+        CORE[core/<br/>LLMClient<br/>Ollama integration]
+        TEMPLATES[templates/<br/>Operation templates<br/>Research workflows]
+        PROMPTS[prompts/<br/>Prompt engineering<br/>Modular fragments]
+        REVIEW[review/<br/>Manuscript review<br/>Scientific analysis]
+        UTILS[utils/<br/>Ollama utilities<br/>Server management]
+        VALIDATION[validation/<br/>Response validation<br/>Quality checks]
+        CLI[cli/<br/>Command-line interface<br/>CLI tools]
+    end
+
+    subgraph DataFlow["Data Flow"]
+        INPUT[Input<br/>Manuscript text<br/>Prompts]
+        PROCESSING[Processing<br/>Template application<br/>LLM query]
+        OUTPUT[Output<br/>Reviews, summaries<br/>Translations]
+    end
+
+    subgraph Integration["Integration Points"]
+        PIPELINE[Pipeline Scripts<br/>06_llm_review.py]
+        PROJECTS[Project Scripts<br/>Analysis workflows]
+    end
+
+    INPUT --> CORE
+    CORE --> TEMPLATES
+    TEMPLATES --> PROMPTS
+    PROMPTS --> REVIEW
+    REVIEW --> VALIDATION
+    VALIDATION --> OUTPUT
+
+    UTILS --> CORE
+    CLI --> CORE
+
+    PIPELINE --> REVIEW
+    PROJECTS --> TEMPLATES
+
+    classDef module fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef flow fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef integration fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class LLMModule module
+    class DataFlow flow
+    class Integration integration
+```
+
+### Module Structure
+
 ```
 infrastructure/llm/
 ├── core/           # Core LLM client and configuration

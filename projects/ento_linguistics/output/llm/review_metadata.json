@@ -1,0 +1,81 @@
+{
+  "model": "gemma3:4b",
+  "timestamp": "2026-01-04T16:25:26.162741",
+  "source_pdf": "/Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/pdf/ento_linguistics_combined.pdf",
+  "reviews_generated": [
+    "translation_zh",
+    "translation_hi",
+    "translation_ru"
+  ],
+  "max_input_length": 500000,
+  "manuscript_metrics": {
+    "total_chars": 52347,
+    "total_words": 6520,
+    "total_tokens_est": 13086,
+    "truncated": false,
+    "truncated_chars": 52347
+  },
+  "review_metrics": {
+    "translation_zh": {
+      "input_chars": 52347,
+      "input_words": 6520,
+      "input_tokens_est": 13086,
+      "output_chars": 4240,
+      "output_words": 482,
+      "output_tokens_est": 1060,
+      "generation_time_seconds": 29.42
+    },
+    "translation_hi": {
+      "input_chars": 52347,
+      "input_words": 6520,
+      "input_tokens_est": 13086,
+      "output_chars": 6006,
+      "output_words": 883,
+      "output_tokens_est": 1501,
+      "generation_time_seconds": 35.18
+    },
+    "translation_ru": {
+      "input_chars": 52347,
+      "input_words": 6520,
+      "input_tokens_est": 13086,
+      "output_chars": 5679,
+      "output_words": 690,
+      "output_tokens_est": 1419,
+      "generation_time_seconds": 31.6
+    }
+  },
+  "format_compliance": {
+    "overall_rate": 66.7,
+    "compliant_reviews": 2,
+    "total_reviews": 3,
+    "per_review": {
+      "translation_zh": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "translation_hi": {
+        "compliant": true,
+        "issues": [],
+        "conversational_phrases": 0
+      },
+      "translation_ru": {
+        "compliant": false,
+        "issues": [
+          "Contains conversational AI phrases: let me know if..."
+        ],
+        "conversational_phrases": 2
+      }
+    }
+  },
+  "total_generation_time_seconds": 96.21,
+  "config": {
+    "temperature_summary": 0.3,
+    "temperature_review": 0.3,
+    "temperature_suggestions": 0.4,
+    "max_tokens": 16384,
+    "max_tokens_source": "default_config",
+    "timeout_seconds": 600.0,
+    "system_prompt": "manuscript_review"
+  }
+}

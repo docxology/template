@@ -1,0 +1,62 @@
+# Code Project Configuration - Optimization Research Exemplar
+# Comprehensive research project demonstrating advanced optimization algorithms
+# with publication-quality analysis, rigorous testing, and automated reporting
+
+paper:
+  title: "Convergence Analysis of Gradient Descent Optimization"
+  subtitle: "Theoretical Bounds and Empirical Performance in Quadratic Minimization"
+  version: "2.0"
+  date: ""  # Auto-generated
+
+authors:
+  - name: "Research Template Author"
+    orcid: "0000-0000-0000-1234"
+    email: "author@research-template.org"
+    affiliation: "Research Template Institute"
+    corresponding: true
+  - name: "Co-Author"
+    orcid: "0000-0000-0000-5678"
+    email: "coauthor@research-template.org"
+    affiliation: "Department of Computational Mathematics"
+
+publication:
+  doi: "10.5281/zenodo.12345678"  # Example DOI
+  journal: "Journal of Optimization Methods"
+  volume: "15"
+  pages: "1-25"
+  year: "2024"
+
+keywords:
+  - "optimization algorithms"
+  - "gradient descent"
+  - "convergence analysis"
+  - "numerical methods"
+  - "mathematical programming"
+
+metadata:
+  license: "MIT"
+  language: "en"
+
+# LLM Review Settings (comprehensive)
+llm:
+  reviews:
+    enabled: true
+    types:
+      - executive_summary  # Default: single review
+      # Uncomment to enable additional reviews:
+      # - quality_review
+      # - methodology_review
+      # - improvement_suggestions
+  translations:
+    enabled: true  # Enable for publication preparation
+    languages:
+      - zh  # Default: single translation (Chinese Simplified)
+      # Uncomment to enable additional languages:
+      # - hi  # Hindi
+      # - ru  # Russian
+
+# Testing Configuration (rigorous)
+testing:
+  max_test_failures: 0
+  max_infra_test_failures: 0
+  max_project_test_failures: 0

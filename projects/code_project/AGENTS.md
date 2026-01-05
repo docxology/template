@@ -447,5 +447,6 @@ Step sizes: 100%|██████████████████| 4/4 [00
 ## See Also
 
 - [Root AGENTS.md](../../AGENTS.md) - Complete template documentation
-- [projects/prose_project/](../prose_project/AGENTS.md) - Mathematical exposition example project
+- [projects/active_inference_meta_pragmatic/](../active_inference_meta_pragmatic/AGENTS.md) - Active inference research example
+- [projects/ento_linguistics/](../ento_linguistics/AGENTS.md) - Ento-linguistic research example
 - [infrastructure/scientific/](../../infrastructure/scientific/AGENTS.md) - Scientific utilities

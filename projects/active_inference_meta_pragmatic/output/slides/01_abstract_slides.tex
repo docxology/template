@@ -1,0 +1,130 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Abstract}
+\protect\phantomsection\label{sec:abstract}
+Active Inference is a theoretical framework that unifies perception,
+action, and learning within a single mathematical formalism.
+Traditionally understood as providing a principled account of how
+biological agents minimize surprise in their interactions with the
+world, Active Inference operates at a fundamentally meta-level. Active
+Inference is both \emph{meta-pragmatic} and \emph{meta-epistemic},
+enabling modelers to specify particular pragmatic and epistemic
+frameworks for the entities they study.
+
+Our analysis introduces a (2 \times 2) matrix framework that structures
+Active Inference's theoretical contributions across four quadrants
+defined by the axes of Data/Meta-Data and Cognitive/Meta-Cognitive
+processing. This framework reveals how Active Inference transcends
+traditional reinforcement learning approaches by enabling modelers to
+specify pragmatic landscapes within which agents operate.
+
+We show that the Expected Free Energy (EFE) formulation, while appearing
+to combine epistemic and pragmatic terms, actually operates at a
+meta-level where the modeler specifies the boundaries of both domains.
+Through this lens, Active Inference becomes a methodology for cognitive
+science that enables researchers to explore how different epistemic and
+pragmatic frameworks shape cognition, decision-making, and behavior.
+
+The implications extend to cognitive security, where understanding
+meta-level cognitive processing becomes crucial for defending against
+manipulation of belief formation and value structures. The framework
+provides a systematic approach for analyzing these meta-level phenomena
+and their societal implications.
+
+\textbf{Keywords:} active inference, free energy principle,
+meta-cognition, meta-pragmatic, meta-epistemic, cognitive science,
+cognitive security
+
+\textbf{MSC2020:} 68T01, 91E10, 92B05
+\end{frame}
+
+\end{document}

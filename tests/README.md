@@ -1,21 +1,20 @@
 # tests/ - Test Suite
 
-Comprehensive test suite ensuring coverage requirements for both infrastructure and project modules (60% infrastructure minimum, 90% project minimum). Current status: **100% project**, **83.33% infrastructure**, **2118 tests passing** (1796 infra [2 skipped] + 320 project).
+Comprehensive test suite ensuring coverage requirements for both infrastructure and project modules (60% infrastructure minimum, 90% project minimum). Current status: **100% project**, **83.33% infrastructure**, **2116 tests passing** (1796 infra [2 skipped] + 320 project).
 
 ## Quick Start
 
 ### Run All Tests
 ```bash
 # With coverage report (both infrastructure and project)
-pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=html
+pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=html
 
 # Using uv
-uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov=projects/prose_project/src --cov-report=html
+uv run pytest tests/ --cov=infrastructure --cov=projects/code_project/src --cov-report=html
 
 # Verify coverage requirements
 pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 pytest projects/code_project/tests/ --cov=projects/code_project/src --cov-fail-under=90
-pytest projects/prose_project/tests/ --cov=projects/prose_project/src --cov-fail-under=90
 ```
 
 ### Run Specific Tests
@@ -25,7 +24,6 @@ pytest tests/infrastructure/core/test_config_loader.py -v
 
 # Project tests
 pytest projects/code_project/tests/ -v
-pytest projects/prose_project/tests/ -v
 
 # Integration tests
 pytest tests/integration/test_module_interoperability.py -v
@@ -353,8 +351,7 @@ The test suite includes comprehensive validation for:
 ## Test Coverage Statistics
 
 ### Overall Coverage (latest)
-- **code_project** (`projects/code_project/src/`): **94.1%** (Target: 90%+) ✅ Exceeds requirement!
-- **prose_project** (`projects/prose_project/src/`): **91.5%** (Target: 90%+) ✅ Exceeds requirement!
+- **code_project** (`projects/code_project/src/`): **100%** (Target: 90%+) ✅ Exceeds requirement!
 - **Infrastructure** (`infrastructure/`): **83.33%** (Target: 60%+) ✅ Exceeds stretch goal!
 
 ### Coverage Details
@@ -366,5 +363,4 @@ Both test suites exceed their minimum requirements. For detailed coverage inform
 - [`conftest.py`](conftest.py) - Test configuration
 - [`../infrastructure/README.md`](../infrastructure/README.md) - Infrastructure modules being tested
 - [`../projects/code_project/src/README.md`](../projects/code_project/src/README.md) - code_project modules
-- [`../projects/prose_project/src/README.md`](../projects/prose_project/src/README.md) - prose_project modules
 - [`../docs/WORKFLOW.md`](../docs/WORKFLOW.md) - Development workflow

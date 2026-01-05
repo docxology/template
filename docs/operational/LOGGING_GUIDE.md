@@ -83,7 +83,7 @@ log_error_with_context "Database connection failed" "db-connection"
 log_pipeline_error "PDF Rendering" "LaTeX compilation failed" 1 \
     "Check LaTeX installation: which xelatex" \
     "Verify manuscript files: ls project/manuscript/*.md" \
-    "Check figure paths: ls projects/project/output/figures/"
+    "Check figure paths: ls projects/code_project/output/figures/"
 ```
 
 #### Resource Usage Logging

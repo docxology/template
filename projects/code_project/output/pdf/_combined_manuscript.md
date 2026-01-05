@@ -43,7 +43,12 @@ This project demonstrates:
 4. **Research reproducibility** through automated analysis scripts
 5. **Documentation integration** with figure generation and referencing
 
+
+
+```{=latex}
 \newpage
+```
+
 
 # Methodology
 
@@ -197,7 +202,12 @@ The analysis script automatically:
 
 This automated approach ensures reproducible research and consistent result generation.
 
+
+
+```{=latex}
 \newpage
+```
+
 
 # Results
 
@@ -364,7 +374,12 @@ Future work could extend this analysis to:
 - Comparison with other optimization algorithms
 - Large-scale problem applications
 
+
+
+```{=latex}
 \newpage
+```
+
 
 # Conclusion
 

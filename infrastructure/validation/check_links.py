@@ -83,16 +83,24 @@ def extract_links(content: str, file_path: Path) -> Tuple[List[Dict], List[Dict]
 
 
 def extract_code_blocks(content: str, file_path: Path) -> List[Dict]:
-    """Extract code blocks from markdown content for validation."""
+    """Extract code blocks from markdown content for validation.
+    
+    Improved to handle multi-line code blocks and filter out formatting artifacts.
+    """
     code_blocks = []
 
-    # Pattern for code blocks: ```language\ncode\n```
-    code_block_pattern = re.compile(r'```(\w+)?\n(.*?)\n```', re.DOTALL)
+    # Pattern for code blocks: ```language\ncode\n``` (handles multi-line)
+    # Use non-greedy matching to avoid capturing too much
+    code_block_pattern = re.compile(r'```(\w+)?\n(.*?)```', re.DOTALL)
 
     for match in code_block_pattern.finditer(content):
         language = match.group(1) or ''
         code_content = match.group(2)
         line_number = content[:match.start()].count('\n') + 1
+
+        # Skip empty code blocks
+        if not code_content.strip():
+            continue
 
         code_blocks.append({
             'language': language,
@@ -105,24 +113,69 @@ def extract_code_blocks(content: str, file_path: Path) -> List[Dict]:
 
 
 def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) -> List[Dict]:
-    """Validate file path references within code blocks."""
+    """Validate file path references within code blocks.
+    
+    Improved to avoid catching formatting artifacts and better handle multi-line paths.
+    """
+    from infrastructure.validation.known_exceptions import (
+        is_code_block_artifact,
+        is_mermaid_artifact,
+        is_valid_directory_reference,
+    )
+    
     issues = []
     code_blocks = extract_code_blocks(content, file_path)
 
     for block in code_blocks:
+        # Skip Mermaid diagrams (they often contain path-like strings that aren't real paths)
+        if block['language'] in ['mermaid', 'graph', 'flowchart']:
+            continue
+        
         # Look for file path patterns in code blocks
         # Common patterns: projects/{name}/, output/{name}/, infrastructure/, scripts/
+        # Improved patterns that avoid catching formatting artifacts
         path_patterns = [
-            r'projects/\{[^}]+\}/[^\'"\s]*',  # projects/{name}/path
-            r'output/\{[^}]+\}/[^\'"\s]*',    # output/{name}/path
-            r'infrastructure/[^\'"\s]*',      # infrastructure/path
-            r'scripts/[^\'"\s]*',             # scripts/path
-            r'projects/project/[^\'"\s]*',    # projects/project/path
+            r'projects/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',  # projects/{name}/path (exclude formatting chars)
+            r'output/\{[^}]+\}/[^\'"\s\n\|`\)\]\}]*',    # output/{name}/path
+            r'infrastructure/[^\'"\s\n\|`\)\]\}]+',      # infrastructure/path (must have something after)
+            r'scripts/[^\'"\s\n\|`\)\]\}]+',             # scripts/path
+            r'projects/[a-zA-Z_][a-zA-Z0-9_]*/[^\'"\s\n\|`\)\]\}]+',  # projects/project_name/path
         ]
 
         for pattern in path_patterns:
             for match in re.finditer(pattern, block['content']):
-                path_ref = match.group(0)
+                path_ref = match.group(0).strip()
+                
+                # Skip empty or very short paths
+                if len(path_ref) < 3:
+                    continue
+                
+                # Skip if it's a formatting artifact
+                if is_code_block_artifact(path_ref):
+                    continue
+                
+                # Skip if it's a Mermaid artifact
+                if is_mermaid_artifact(path_ref):
+                    continue
+                
+                # Skip if it's just a comment line
+                lines = path_ref.split('\n')
+                if any(line.strip().startswith('#') for line in lines if line.strip()):
+                    continue
+                
+                # Skip if it's clearly in a string literal (quotes around it)
+                match_start = match.start()
+                match_end = match.end()
+                context_before = block['content'][max(0, match_start-10):match_start]
+                context_after = block['content'][match_end:min(len(block['content']), match_end+10)]
+                if ('"' in context_before or "'" in context_before) and \
+                   ('"' in context_after or "'" in context_after):
+                    continue
+                
+                # Skip if it's a valid directory reference
+                if is_valid_directory_reference(path_ref):
+                    continue
+                
                 # Skip if it's just a comment or string that doesn't need to exist
                 if not _should_validate_path(path_ref):
                     continue
@@ -130,13 +183,15 @@ def validate_file_paths_in_code(content: str, file_path: Path, repo_root: Path) 
                 # Check if this path exists
                 resolved_path = _resolve_template_path(path_ref, repo_root)
                 if resolved_path and not resolved_path.exists():
-                    issues.append({
-                        'file': str(file_path),
-                        'line': block['line'] + match.start(),
-                        'target': path_ref,
-                        'issue': f'File path in code block does not exist: {path_ref}',
-                        'type': 'code_block_path'
-                    })
+                    # Only flag if it's clearly a file reference (has extension or doesn't end with /)
+                    if resolved_path.suffix or not path_ref.endswith('/'):
+                        issues.append({
+                            'file': str(file_path),
+                            'line': block['line'] + content[:match.start()].count('\n'),
+                            'target': path_ref,
+                            'issue': f'File path in code block does not exist: {path_ref}',
+                            'type': 'code_block_path'
+                        })
 
     return issues
 
@@ -203,9 +258,14 @@ def _should_validate_path(path_ref: str) -> bool:
         return False
 
     # Skip malformed paths (containing special chars that indicate parsing errors)
-    if any(char in path_ref for char in ['`', ')', ']', '}', '|', '\n']):
+    # Improved detection of formatting artifacts
+    if any(char in path_ref for char in ['`', ')', ']', '}', '|', '\n', '\r']):
         # Check if it's likely a parsing artifact (ends with these chars or contains newlines)
-        if path_ref.rstrip().endswith((')', ']', '}', '`', '|')) or '\n' in path_ref:
+        path_stripped = path_ref.rstrip()
+        if path_stripped.endswith((')', ']', '}', '`', '|', '\\n')) or '\n' in path_ref or '\r' in path_ref:
+            return False
+        # Check for patterns like "infrastructure/\nGeneric" (newline in middle)
+        if re.search(r'/\s*\n\s*[A-Z]', path_ref):
             return False
 
     # Skip paths that are clearly from code examples in documentation

@@ -328,7 +328,8 @@ cat docs/architecture/DECISION_TREE.md
 - [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
 - [`../../infrastructure/AGENTS.md`](../../infrastructure/AGENTS.md) - Infrastructure implementation
 - [`../../projects/code_project/src/AGENTS.md`](../../projects/code_project/src/AGENTS.md) - Code project implementation
-- [`../../projects/prose_project/src/AGENTS.md`](../../projects/prose_project/src/AGENTS.md) - Prose project implementation
+- [`../../projects/active_inference_meta_pragmatic/src/AGENTS.md`](../../projects/active_inference_meta_pragmatic/src/AGENTS.md) - Active inference project implementation
+- [`../../projects/ento_linguistics/src/AGENTS.md`](../../projects/ento_linguistics/src/AGENTS.md) - Ento-linguistics project implementation
 
 **System Documentation:**
 - [`../../AGENTS.md`](../../AGENTS.md) - Complete system overview

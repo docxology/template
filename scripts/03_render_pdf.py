@@ -188,17 +188,102 @@ def run_render_pipeline(project_name: str = "project") -> int:
             logger.info(f"✅ Generated combined PDF: {combined_pdf.name}")
             
         except RenderingError as re:
-            logger.warning(f"❌ Rendering error generating combined PDF: {re.message}")
+            logger.error(f"❌ Rendering error generating combined PDF: {re.message}")
+            # Always show full error message (which includes Pandoc output)
+            if re.message:
+                logger.error(f"  Full error details:\n{re.message}")
+            
             if re.context:
-                logger.debug(f"  Context: {re.context}")
+                # Log context information at error level for visibility
+                logger.error(f"  Source file: {re.context.get('source', 'unknown')}")
+                
+                # Log problematic file if identified
+                if 'problematic_file' in re.context:
+                    logger.error(f"  Problematic source file: {re.context['problematic_file']}")
+                    logger.error(f"  File index: {re.context.get('problematic_file_index', 'unknown')}")
+                
+                # Log position information if available
+                if 'error_position' in re.context:
+                    pos = re.context['error_position']
+                    line = re.context.get('error_line', 'unknown')
+                    logger.error(f"  Error at position {pos} (line {line})")
+                
+                # Log error context (content around error)
+                if 'error_context' in re.context:
+                    logger.error(f"  Error context (content around error position):")
+                    # Show context with line numbers if possible
+                    context = re.context['error_context']
+                    lines = context.split('\n')
+                    if len(lines) <= 20:
+                        for i, line in enumerate(lines, 1):
+                            logger.error(f"    {i:3d}: {line}")
+                    else:
+                        logger.error(f"    {context[:500]}...")
+                
+                # Log line content if available
+                if 'error_line_content' in re.context:
+                    logger.error(f"  Problematic line: {repr(re.context['error_line_content'])}")
+                
+                # Log first/last chars if no position info
+                if 'error_position' not in re.context:
+                    if 'first_200_chars' in re.context:
+                        logger.error(f"  First 200 chars: {repr(re.context['first_200_chars'])}")
+                    if 'last_200_chars' in re.context:
+                        logger.error(f"  Last 200 chars: {repr(re.context['last_200_chars'])}")
+                
+                # Log file size
+                if 'total_size' in re.context:
+                    logger.error(f"  Combined markdown size: {re.context['total_size']} characters")
+                
+                # Log suggestions if available
+                if re.suggestions:
+                    logger.error("  Suggestions:")
+                    for suggestion in re.suggestions:
+                        logger.error(f"    • {suggestion}")
+                
+                logger.debug(f"  Full context: {re.context}")
+            
             if re.suggestions:
-                logger.info("  Suggestions:")
+                logger.warning("  Suggestions to fix the error:")
                 for suggestion in re.suggestions:
-                    logger.info(f"    • {suggestion}")
+                    logger.warning(f"    • {suggestion}")
+            else:
+                logger.warning("  No specific suggestions available")
             # Don't fail the entire pipeline for combined PDF generation
+            # The error has already been logged in detail above
+            if rendered_count > 0:
+                logger.info(f"ℹ️  Note: {rendered_count} individual PDF file(s) were generated successfully despite combined PDF failure.")
         except Exception as e:
-            logger.warning(f"❌ Unexpected error generating combined PDF: {e}")
+            # Catch truly unexpected exceptions (not RenderingError)
+            logger.error(f"❌ Unexpected error generating combined PDF: {e}")
+            import traceback
+            logger.error(f"  Error type: {type(e).__name__}")
+            logger.error(f"  This is an unexpected error - please report this issue")
+            logger.error(f"  Full traceback:\n{traceback.format_exc()}")
+            
+            # Try to extract any useful information from the exception
+            if hasattr(e, 'stderr') and e.stderr:
+                logger.error(f"  Full stderr:\n{e.stderr}")
+            if hasattr(e, 'stdout') and e.stdout:
+                logger.error(f"  Full stdout:\n{e.stdout}")
+            
+            # Log combined markdown file location if available
+            combined_md_path = None
+            try:
+                output_dir = Path(manuscript_dir.parent) / "output" / "tex"
+                combined_md_path = output_dir / "_combined_manuscript.md"
+                if combined_md_path.exists():
+                    logger.error(f"  Combined markdown file location: {combined_md_path}")
+                    logger.error(f"  Combined markdown file size: {combined_md_path.stat().st_size} bytes")
+            except Exception:
+                pass
+            
+            logger.warning("  This is an unexpected error - please report this issue")
             # Don't fail the entire pipeline for combined PDF generation
+        
+        # If combined PDF generation failed but individual PDFs were generated, note that
+        if rendered_count > 0:
+            logger.info(f"ℹ️  Note: {rendered_count} individual PDF file(s) were generated successfully despite combined PDF failure.")
     
     # Report results
     logger.info(f"\nRendering Summary:")

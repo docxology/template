@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>03_methodology</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:methodology">Methodology</h1>
+<p>This section presents the core methodological contribution: a (2 )
+matrix framework for understanding Active Inference as a meta-pragmatic
+and meta-epistemic methodology. The framework structures cognitive
+processing along two dimensions: Data/Meta-Data and
+Cognitive/Meta-Cognitive, revealing four distinct quadrants of cognitive
+operation.</p>
+<h2 id="the-2-matrix-framework">The (2 ) Matrix Framework</h2>
+<p>Active Inference’s meta-level operation becomes apparent when
+analyzed through a framework that distinguishes between data processing
+and meta-data processing, as well as cognitive and meta-cognitive levels
+of operation (Figure <span
+class="math inline">\(\ref{fig:quadrant_matrix}\)</span>).</p>
+<h3 id="framework-dimensions">Framework Dimensions</h3>
+<p><strong>Data vs Meta-Data (X-axis):</strong> - <strong>Data:</strong>
+Raw sensory inputs and immediate cognitive processing -
+<strong>Meta-Data:</strong> Information about data processing
+(confidence scores, timestamps, reliability metrics, processing
+provenance)</p>
+<p><strong>Cognitive vs Meta-Cognitive (Y-axis):</strong> -
+<strong>Cognitive:</strong> Direct processing and transformation of
+information - <strong>Meta-Cognitive:</strong> Processing about
+processing; self-reflection, monitoring, and control of cognitive
+processes</p>
+<h3 id="quadrant-definitions">Quadrant Definitions</h3>
+<h4 id="sec:q1_definition">Quadrant 1: Data Processing (Cognitive)</h4>
+<p><strong>Definition:</strong> Basic cognitive processing of raw
+sensory data at the fundamental level of cognition.</p>
+<p><strong>Active Inference Role:</strong> Baseline pragmatic and
+epistemic processing through Expected Free Energy minimization.</p>
+<p><strong>Mathematical Formulation:</strong></p>
+<p>Where (G()) represents pragmatic value (goal achievement) and
+(H[Q()]) represents epistemic affordance (information gain).</p>
+<p><strong>Example:</strong> A thermostat maintaining temperature
+through direct sensor readings and immediate action selection.</p>
+<h4 id="sec:q2_definition">Quadrant 2: Meta-Data Organization
+(Cognitive)</h4>
+<p><strong>Definition:</strong> Cognitive processing that incorporates
+meta-data to enhance primary processing.</p>
+<p><strong>Active Inference Role:</strong> Epistemic processing through
+meta-data integration.</p>
+<p><strong>Mathematical Formulation:</strong> Extended EFE with
+meta-data weighting:</p>
+<p>Where (M()) represents meta-data derived utility and (w) terms are
+adaptive weights.</p>
+<p><strong>Example:</strong> Processing sensory data with associated
+confidence scores and temporal metadata to improve decision
+reliability.</p>
+<h4 id="sec:q3_definition">Quadrant 3: Reflective Processing
+(Meta-Cognitive)</h4>
+<p><strong>Definition:</strong> Meta-cognitive evaluation and control of
+data processing.</p>
+<p><strong>Active Inference Role:</strong> Self-monitoring and adaptive
+cognitive control.</p>
+<p><strong>Mathematical Formulation:</strong> Hierarchical EFE with
+self-assessment:</p>
+<p>Where (_{meta}) evaluates the quality of primary processing and ()
+controls meta-cognitive influence.</p>
+<p><strong>Example:</strong> An agent assessing its confidence in
+inferences and adjusting processing strategies accordingly.</p>
+<h4 id="sec:q4_definition">Quadrant 4: Higher-Order Reasoning
+(Meta-Cognitive)</h4>
+<p><strong>Definition:</strong> Meta-cognitive processing of meta-data
+about cognition.</p>
+<p><strong>Active Inference Role:</strong> Framework-level reasoning and
+meta-theoretical analysis.</p>
+<p><strong>Mathematical Formulation:</strong> Multi-level hierarchical
+optimization:</p>
+<p>Where () represents framework parameters and () is a regularization
+term ensuring framework coherence.</p>
+<p><strong>Example:</strong> Analyzing patterns in meta-cognitive
+performance to adapt fundamental processing frameworks.</p>
+<h2 id="active-inference-as-meta-epistemic">Active Inference as
+Meta-Epistemic</h2>
+<p>Active Inference enables meta-epistemic modeling by allowing
+researchers to specify the epistemological frameworks within which
+agents operate.</p>
+<h3 id="epistemic-framework-specification">Epistemic Framework
+Specification</h3>
+<p>Through the generative model matrices, researchers define:</p>
+<p><strong>Observation Model (Matrix (A)):</strong> What can be known
+about the world</p>
+<p><strong>Prior Knowledge (Matrix (D)):</strong> Initial assumptions
+about the world</p>
+<p><strong>Causal Structure (Matrix (B)):</strong> How actions influence
+the world</p>
+<h3 id="meta-epistemic-implications">Meta-Epistemic Implications</h3>
+<p>By specifying these matrices, researchers define not just current
+beliefs, but the fundamental structure of knowledge acquisition and
+representation. This meta-epistemic power enables:</p>
+<ol type="1">
+<li><strong>Framework Comparison:</strong> Epistemic frameworks can be
+compared by varying (A), (B), (D) specifications</li>
+<li><strong>Knowledge Architecture Design:</strong> The structure of
+cognition itself becomes a design parameter</li>
+<li><strong>Epistemological Pluralism:</strong> Different ways of
+knowing can be modeled and compared</li>
+</ol>
+<h2 id="active-inference-as-meta-pragmatic">Active Inference as
+Meta-Pragmatic</h2>
+<p>Active Inference enables meta-pragmatic modeling by allowing
+specification of pragmatic frameworks beyond simple reward
+functions.</p>
+<h3 id="pragmatic-framework-specification">Pragmatic Framework
+Specification</h3>
+<p><strong>Preference Structure (Matrix (C)):</strong> What matters to
+the agent</p>
+<p>This specification goes beyond traditional reinforcement learning by
+enabling researchers to specify value landscapes.</p>
+<h3 id="meta-pragmatic-implications">Meta-Pragmatic Implications</h3>
+<p>The meta-pragmatic aspect enables:</p>
+<ol type="1">
+<li><strong>Value System Design:</strong> Specification of what
+constitutes “good” outcomes</li>
+<li><strong>Pragmatic Pluralism:</strong> Different pragmatic frameworks
+can be explored</li>
+<li><strong>Value Learning:</strong> How value systems themselves evolve
+and adapt</li>
+<li><strong>Ethical Framework Integration:</strong> Incorporation of
+ethical considerations</li>
+</ol>
+<h2 id="integration-across-quadrants">Integration Across Quadrants</h2>
+<p>Active Inference operates across all four quadrants simultaneously,
+with different aspects of the framework contributing to each
+quadrant:</p>
+<ul>
+<li><strong>Quadrant 1:</strong> Core EFE computation with basic (A),
+(B), (C), (D) specifications</li>
+<li><strong>Quadrant 2:</strong> Meta-data weighted EFE with
+confidence-weighted processing</li>
+<li><strong>Quadrant 3:</strong> Self-reflective EFE evaluation and
+meta-cognitive control</li>
+<li><strong>Quadrant 4:</strong> Framework-level EFE optimization and
+meta-theoretical reasoning</li>
+</ul>
+<h2 id="the-modelers-dual-role">The Modeler’s Dual Role</h2>
+<p>The framework reveals the dual role of the Active Inference
+modeler:</p>
+<h3 id="as-architect">As Architect</h3>
+<ul>
+<li>Specifies epistemic frameworks ((A), (B), (D) matrices)</li>
+<li>Defines pragmatic landscapes ((C) matrix)</li>
+<li>Designs cognitive architectures</li>
+<li>Establishes boundary conditions for cognition</li>
+</ul>
+<h3 id="as-subject">As Subject</h3>
+<ul>
+<li>Uses Active Inference to understand their own cognition</li>
+<li>Applies meta-epistemic principles to knowledge acquisition</li>
+<li>Employs meta-pragmatic frameworks for decision-making</li>
+<li>Engages in recursive self-modeling</li>
+</ul>
+<p>This dual role creates a recursive relationship where the tools used
+to model others become tools for self-understanding.</p>
+<h2 id="validation-approach">Validation Approach</h2>
+<p>The framework’s validity is demonstrated through:</p>
+<ol type="1">
+<li><strong>Theoretical Consistency:</strong> Alignment with Free Energy
+Principle foundations</li>
+<li><strong>Mathematical Rigor:</strong> Proper formulation of EFE
+across all quadrants</li>
+<li><strong>Conceptual Clarity:</strong> Clear distinction between
+quadrants and processing levels</li>
+<li><strong>Practical Applicability:</strong> Framework enables
+systematic analysis of meta-level phenomena</li>
+</ol>
+<p>The following sections provide concrete demonstrations of each
+quadrant with mathematical examples and conceptual analysis.</p>
+</body>
+</html>

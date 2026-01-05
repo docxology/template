@@ -1,3 +1,0 @@
-Project,Health_Score,Health_Grade,Manuscript_Words,Manuscript_Sections,Manuscript_Equations,Manuscript_Figures,Test_Total,Test_Passed,Test_Failed,Test_Coverage_Pct,Test_Execution_Time,Pipeline_Duration,Pipeline_Stages_Passed,Pipeline_Bottleneck_Stage,Pipeline_Bottleneck_Duration,Output_PDFs,Output_PDF_Size_MB,Output_Figures,Output_Slides,Output_Web,Output_Total
-code_project,100.0,A,3075,7,12,7,28,28,0,94.12,0.0,96.77905082702637,9,LLM Translations,31.43093991279602,1,0.9840707778930664,6,4,4,16
-prose_project,100.0,A,3591,8,0,0,54,53,0,99.23,0.0,107.3694920539856,9,LLM Translations,33.84859323501587,1,0.09294605255126953,2,5,6,16

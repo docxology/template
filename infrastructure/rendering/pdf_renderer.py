@@ -270,7 +270,9 @@ class PDFRenderer:
         combined_tex = output_dir / "_combined_manuscript.tex"
         combined_md = output_dir / "_combined_manuscript.md"
         combined_content = self._combine_markdown_files(source_files)
-        combined_md.write_text(combined_content)
+        # Write with explicit UTF-8 encoding
+        combined_md.write_text(combined_content, encoding='utf-8')
+        logger.debug(f"Combined markdown written to: {combined_md} ({len(combined_content)} characters)")
         
         # Convert combined markdown to LaTeX using Pandoc
         # This handles raw LaTeX commands properly
@@ -279,7 +281,7 @@ class PDFRenderer:
             self.config.pandoc_path,
             str(combined_md),
             "-o", str(combined_tex),
-            "--from=markdown",
+            "--from=markdown+tex_math_dollars+raw_tex+header_attributes",  # Preserve LaTeX math, raw blocks, and header attributes like {#sec:...}
             "--to=latex",
             "--standalone",
             "--number-sections",
@@ -301,17 +303,395 @@ class PDFRenderer:
         ])
         
         logger.info(f"Converting combined markdown to LaTeX...")
+        logger.debug(f"Combined markdown file: {combined_md}")
+        
+        # Pre-validate combined markdown for common issues
+        validation_errors = []
+        md_content = ""
+        if combined_md.exists():
+            try:
+                md_content = combined_md.read_text(encoding='utf-8')
+                import re
+                
+                # Validate basic markdown structure
+                # Check for common syntax issues that Pandoc might complain about
+                
+                # Validate section header attributes syntax {#sec:...}
+                # Check for properly formatted header attributes
+                header_attr_pattern = r'\{#([^}]+)\}'
+                header_attrs = re.findall(header_attr_pattern, md_content)
+                for attr in header_attrs:
+                    # Check for balanced braces in the attribute itself
+                    if attr.count('{') != attr.count('}'):
+                        validation_errors.append(
+                            f"Unbalanced braces in section header attribute: {{#{attr}}}"
+                        )
+                    # Check for valid identifier format (alphanumeric, underscore, colon, hyphen)
+                    if not re.match(r'^[a-zA-Z0-9_:.-]+$', attr):
+                        validation_errors.append(
+                            f"Invalid characters in section header attribute: {{#{attr}}}"
+                        )
+                
+                # Check for unmatched opening braces in header attributes
+                # Pattern: # Header {#sec:name} - should have balanced braces
+                header_lines = re.findall(r'^#+\s+.*\{#.*$', md_content, re.MULTILINE)
+                for header_line in header_lines:
+                    # Count braces in header line
+                    open_braces = header_line.count('{')
+                    close_braces = header_line.count('}')
+                    if open_braces != close_braces:
+                        validation_errors.append(
+                            f"Unbalanced braces in header line: {header_line[:80]}"
+                        )
+                
+                # Check for unmatched parentheses in raw LaTeX commands
+                # Pattern: \command{...} or \command[...]{...}
+                latex_commands = re.findall(r'\\([a-zA-Z]+)(?:\[[^\]]*\])?\{([^}]*)\}', md_content)
+                for cmd_name, cmd_content in latex_commands:
+                    # Count parentheses in command content
+                    open_parens = cmd_content.count('(')
+                    close_parens = cmd_content.count(')')
+                    if open_parens != close_parens:
+                        validation_errors.append(
+                            f"Unbalanced parentheses in LaTeX command \\{cmd_name}: "
+                            f"open={open_parens}, close={close_parens}, content: {cmd_content[:50]}"
+                        )
+                
+                # Check for unmatched braces in markdown (outside code blocks)
+                # Remove code blocks first
+                content_for_brace_check = re.sub(r'```.*?```', '', md_content, flags=re.DOTALL)
+                content_for_brace_check = re.sub(r'`[^`]+`', '', content_for_brace_check)
+                
+                # Count braces (but ignore LaTeX commands which use braces)
+                # Simple check: count { and } outside LaTeX commands
+                brace_count = 0
+                in_latex_cmd = False
+                for i, char in enumerate(content_for_brace_check):
+                    if char == '\\' and i < len(content_for_brace_check) - 1:
+                        # Check if this is a LaTeX command start
+                        next_char = content_for_brace_check[i + 1]
+                        if next_char.isalpha():
+                            in_latex_cmd = True
+                            # Skip to end of command
+                            j = i + 2
+                            while j < len(content_for_brace_check) and content_for_brace_check[j].isalpha():
+                                j += 1
+                            # Skip optional arguments and required argument
+                            if j < len(content_for_brace_check):
+                                if content_for_brace_check[j] == '[':
+                                    # Skip optional argument
+                                    depth = 1
+                                    j += 1
+                                    while j < len(content_for_brace_check) and depth > 0:
+                                        if content_for_brace_check[j] == '[':
+                                            depth += 1
+                                        elif content_for_brace_check[j] == ']':
+                                            depth -= 1
+                                        j += 1
+                                if j < len(content_for_brace_check) and content_for_brace_check[j] == '{':
+                                    # Skip required argument
+                                    depth = 1
+                                    j += 1
+                                    while j < len(content_for_brace_check) and depth > 0:
+                                        if content_for_brace_check[j] == '{':
+                                            depth += 1
+                                        elif content_for_brace_check[j] == '}':
+                                            depth -= 1
+                                        j += 1
+                            continue
+                    elif char == '{' and not in_latex_cmd:
+                        brace_count += 1
+                    elif char == '}' and not in_latex_cmd:
+                        brace_count -= 1
+                    in_latex_cmd = False
+                
+                if brace_count != 0:
+                    validation_errors.append(
+                        f"Potential unbalanced braces in markdown: "
+                        f"difference={brace_count} (positive=more {{, negative=more }})"
+                    )
+                
+                # Remove code blocks and image syntax before checking math
+                # This prevents false positives from $ in image paths or code
+                content_for_math_check = md_content
+                
+                # Remove code blocks (```...```)
+                content_for_math_check = re.sub(r'```.*?```', '', content_for_math_check, flags=re.DOTALL)
+                # Remove inline code (`...`)
+                content_for_math_check = re.sub(r'`[^`]+`', '', content_for_math_check)
+                # Remove markdown images (![...](...))
+                content_for_math_check = re.sub(r'!\[.*?\]\([^)]+\)', '', content_for_math_check)
+                
+                # Check for unbalanced parentheses in math mode (both $$ and $)
+                # Only match if content looks like math (contains letters, numbers, operators)
+                math_blocks_double = re.findall(r'\$\$.*?\$\$', content_for_math_check, re.DOTALL)
+                # More precise inline math: must contain math-like content (not just any text)
+                # Pattern: $ followed by content with at least one letter/digit/operator, then $
+                math_blocks_single = re.findall(r'\$[^\s$][^$]*[^\s$]\$', content_for_math_check)
+                # Filter to only those that look like math (contain letters, numbers, or common operators)
+                math_blocks_single = [
+                    block for block in math_blocks_single
+                    if re.search(r'[a-zA-Z0-9+\-*/=<>()\[\]{}.,;:!?]', block)
+                ]
+                
+                for i, block in enumerate(math_blocks_double):
+                    open_parens = block.count('(')
+                    close_parens = block.count(')')
+                    if open_parens != close_parens:
+                        validation_errors.append(
+                            f"Unbalanced parentheses in math block {i+1} ($$...$$): "
+                            f"open={open_parens}, close={close_parens}"
+                        )
+                        logger.warning(f"Unbalanced parentheses in double-dollar math block {i+1}")
+                
+                for i, block in enumerate(math_blocks_single):
+                    open_parens = block.count('(')
+                    close_parens = block.count(')')
+                    if open_parens != close_parens:
+                        validation_errors.append(
+                            f"Unbalanced parentheses in inline math {i+1} ($...$): "
+                            f"open={open_parens}, close={close_parens}, content: {block[:50]}"
+                        )
+                        logger.warning(f"Unbalanced parentheses in inline math {i+1}: {block[:50]}")
+                
+                # Check first 20 characters for obvious syntax issues (only if not in removed sections)
+                first_chars = content_for_math_check[:20]
+                if first_chars and '(' in first_chars:
+                    # Count parentheses in first 20 chars
+                    open_count = first_chars.count('(')
+                    close_count = first_chars.count(')')
+                    if open_count > close_count:
+                        validation_errors.append(
+                            f"Potential unbalanced parentheses near start of file "
+                            f"(first 20 chars: {repr(first_chars)})"
+                        )
+                
+                if validation_errors:
+                    logger.warning(f"Pre-validation found {len(validation_errors)} potential issue(s):")
+                    for err in validation_errors:
+                        logger.warning(f"  • {err}")
+                    # Note: These are warnings only, don't block PDF generation
+                    logger.info("  (These are warnings - PDF generation will proceed)")
+            except Exception as e:
+                logger.debug(f"Pre-validation check failed: {e}")
+                # Try to read content anyway for error reporting
+                try:
+                    md_content = combined_md.read_text(encoding='utf-8')
+                except Exception:
+                    pass
         
         try:
-            subprocess.run(pandoc_to_tex, check=True, capture_output=True, text=True)
+            result = subprocess.run(pandoc_to_tex, check=True, capture_output=True, text=True)
         except subprocess.CalledProcessError as e:
+            # Provide more detailed error information
+            error_msg = f"Failed to convert markdown to LaTeX"
+            
+            # Combine stderr and stdout for comprehensive error extraction
+            all_output = ""
+            if e.stderr:
+                all_output += f"STDERR:\n{e.stderr}\n"
+            if e.stdout:
+                all_output += f"STDOUT:\n{e.stdout}\n"
+            
+            # Extract and format error messages
+            error_lines = []
+            position_info = None
+            
+            # Parse stderr for error messages
+            if e.stderr:
+                stderr_lines = e.stderr.strip().split('\n')
+                for line in stderr_lines:
+                    line_lower = line.lower()
+                    # Look for position errors (e.g., "unbalanced parenthesis at position 7")
+                    if 'position' in line_lower and ('unbalanced' in line_lower or 'parenthesis' in line_lower or 'error' in line_lower):
+                        error_lines.append(f"Pandoc Error: {line}")
+                        # Extract position number
+                        import re
+                        pos_match = re.search(r'position\s+(\d+)', line_lower)
+                        if pos_match:
+                            position_info = int(pos_match.group(1))
+                    elif 'unbalanced' in line_lower or 'parenthesis' in line_lower:
+                        error_lines.append(f"Pandoc Error: {line}")
+                    elif 'error' in line_lower and line.strip():
+                        error_lines.append(f"Pandoc: {line}")
+            
+            # Parse stdout for error messages (Pandoc sometimes outputs errors to stdout)
+            if e.stdout:
+                stdout_lines = e.stdout.strip().split('\n')
+                for line in stdout_lines:
+                    line_lower = line.lower()
+                    if 'position' in line_lower and ('unbalanced' in line_lower or 'parenthesis' in line_lower or 'error' in line_lower):
+                        if f"Pandoc Error: {line}" not in error_lines:
+                            error_lines.append(f"Pandoc Error (stdout): {line}")
+                        # Extract position number if not already found
+                        if position_info is None:
+                            import re
+                            pos_match = re.search(r'position\s+(\d+)', line_lower)
+                            if pos_match:
+                                position_info = int(pos_match.group(1))
+                    elif ('error' in line_lower or 'warning' in line_lower) and line.strip():
+                        if line not in [err.split(':', 1)[-1].strip() for err in error_lines]:
+                            error_lines.append(f"Pandoc (stdout): {line}")
+            
+            # Build error message - always include full Pandoc output for debugging
+            if error_lines:
+                error_msg += "\n\n" + "\n".join(error_lines)
+            
+            # Always include full Pandoc output for comprehensive debugging
+            if all_output:
+                error_msg += f"\n\nFull Pandoc output:\n{all_output}"
+            elif not error_lines:
+                # If no specific errors found and no output, include return code
+                error_msg += f"\n\nPandoc failed with return code {e.returncode} (no output captured)"
+            
+            # Check if combined_md exists and show relevant context
+            context_info = {"source": str(combined_md), "target": str(combined_tex)}
+            suggestions = []
+            
+            if combined_md.exists():
+                try:
+                    # Use md_content if already read, otherwise read it
+                    if not md_content:
+                        md_content = combined_md.read_text(encoding='utf-8')
+                    
+                    context_info["total_size"] = len(md_content)
+                    
+                    # Show content around error position if available
+                    if position_info is not None:
+                        pos = position_info
+                        start = max(0, pos - 150)
+                        end = min(len(md_content), pos + 150)
+                        context_info["error_position"] = pos
+                        context_info["error_context"] = md_content[start:end]
+                        
+                        # Calculate line number for the position
+                        line_num = md_content[:pos].count('\n') + 1
+                        context_info["error_line"] = line_num
+                        
+                        # Extract the line containing the error
+                        lines = md_content.split('\n')
+                        if line_num <= len(lines):
+                            context_info["error_line_content"] = lines[line_num - 1]
+                        
+                        suggestions.append(f"Check character position {pos} (line {line_num}) in combined markdown file")
+                        suggestions.append(f"Review content around position: {repr(md_content[max(0, pos-20):min(len(md_content), pos+20)])}")
+                    else:
+                        # Show first and last 200 chars for context if no position info
+                        context_info["first_200_chars"] = md_content[:200]
+                        context_info["last_200_chars"] = md_content[-200:]
+                    
+                    # Add suggestions based on error type
+                    if 'unbalanced' in error_msg.lower() or 'parenthesis' in error_msg.lower():
+                        suggestions.append("Check for unmatched parentheses, brackets, or braces in markdown")
+                        suggestions.append("Verify LaTeX commands have properly matched delimiters")
+                        suggestions.append("Review math expressions for balanced parentheses")
+                    
+                    suggestions.append(f"Inspect combined markdown file: {combined_md}")
+                    suggestions.append("Try converting individual markdown files to identify the problematic file")
+                    
+                except Exception as ex:
+                    logger.debug(f"Error gathering context: {ex}")
+                    suggestions.append(f"Could not read combined markdown file: {ex}")
+            
+            # Add general suggestions
+            suggestions.extend([
+                "Verify all markdown files are valid",
+                "Check for special characters or encoding issues",
+                "Ensure LaTeX commands in markdown are properly formatted",
+                f"Review Pandoc command: {' '.join(pandoc_to_tex)}"
+            ])
+            
+            # Log full error details at ERROR level
+            logger.error(f"Pandoc conversion failed: {error_msg}")
+            if context_info.get("error_position") is not None:
+                pos = context_info['error_position']
+                line = context_info.get('error_line', 'unknown')
+                logger.error(f"  Error at position {pos} (line {line}) in combined markdown")
+                # Show the actual characters at that position
+                if md_content and pos < len(md_content):
+                    start = max(0, pos - 20)
+                    end = min(len(md_content), pos + 20)
+                    logger.error(f"  Characters around position {pos}: {repr(md_content[start:end])}")
+                    # Show character-by-character analysis
+                    logger.error(f"  Character-by-character analysis (position {pos}):")
+                    for i in range(max(0, pos - 5), min(len(md_content), pos + 6)):
+                        marker = " >>> " if i == pos else "     "
+                        char = md_content[i]
+                        logger.error(f"    {marker}Position {i}: {repr(char)} (ord: {ord(char)})")
+            if context_info.get("error_context"):
+                logger.error(f"  Context around error:\n{context_info['error_context']}")
+            # Always log the combined markdown file location for inspection
+            logger.error(f"  Combined markdown file saved at: {combined_md}")
+            logger.error(f"  Combined markdown file size: {len(md_content)} characters")
+            
+            # Try to identify which source file contains the error
+            if position_info is not None and md_content:
+                # Find which source file the error position corresponds to
+                current_pos = 0
+                for i, source_file in enumerate(source_files):
+                    try:
+                        file_content = source_file.read_text(encoding='utf-8')
+                        # Account for trailing newline and spacing
+                        file_content_processed = file_content.rstrip() + '\n'
+                        file_size = len(file_content_processed)
+                        
+                        # Account for separator between files (if not the last file)
+                        separator_size = 0
+                        if i < len(source_files) - 1:
+                            separator_size = len("\n```{=latex}\n\\newpage\n```\n")
+                        
+                        if current_pos <= position_info < current_pos + file_size:
+                            context_info["problematic_file"] = str(source_file)
+                            context_info["problematic_file_index"] = i + 1
+                            logger.error(f"  Error likely in source file {i+1}/{len(source_files)}: {source_file.name}")
+                            # Show position within that file
+                            file_pos = position_info - current_pos
+                            line_num = file_content[:file_pos].count('\n') + 1
+                            logger.error(f"  Position within file: {file_pos} (line {line_num})")
+                            
+                            # Show context around the error position in the source file
+                            start = max(0, file_pos - 50)
+                            end = min(len(file_content), file_pos + 50)
+                            context_snippet = file_content[start:end]
+                            logger.error(f"  Context in source file (chars {start}-{end}):")
+                            # Show with line numbers if reasonable
+                            lines = context_snippet.split('\n')
+                            if len(lines) <= 10:
+                                for j, line in enumerate(lines):
+                                    actual_line = line_num - (len(lines) - j - 1)
+                                    marker = " >>> " if start + sum(len(l) + 1 for l in lines[:j]) <= file_pos < start + sum(len(l) + 1 for l in lines[:j+1]) else "     "
+                                    logger.error(f"    {marker}Line {actual_line}: {repr(line)}")
+                            else:
+                                logger.error(f"    {repr(context_snippet)}")
+                            
+                            # Show the exact character at the error position
+                            if file_pos < len(file_content):
+                                char_at_pos = file_content[file_pos]
+                                logger.error(f"  Character at error position: {repr(char_at_pos)} (ord: {ord(char_at_pos)})")
+                            break
+                        
+                        # Move to next file position
+                        current_pos += file_size + separator_size
+                    except Exception as ex:
+                        logger.debug(f"Error analyzing file {i+1} ({source_file.name}): {ex}")
+                        pass
+            
             raise RenderingError(
-                f"Failed to convert markdown to LaTeX: {e.stderr}",
-                context={"source": str(combined_md), "target": str(combined_tex)}
+                error_msg,
+                context=context_info,
+                suggestions=suggestions
             )
         
         # Read and process LaTeX content
         tex_content = combined_tex.read_text()
+        
+        # Fix broken math delimiters from Pandoc conversion
+        try:
+            tex_content = self._fix_math_delimiters(tex_content)
+        except Exception as e:
+            logger.warning(f"Math delimiter fixing failed: {e}. Continuing with original LaTeX content.")
+            logger.debug(f"Math delimiter fixing error details: {type(e).__name__}: {e}")
+            # Continue with original tex_content - it may still compile
         
         # Fix figure paths for LaTeX compilation
         tex_content = self._fix_figure_paths(tex_content, manuscript_dir, output_dir)
@@ -660,18 +1040,106 @@ class PDFRenderer:
             
         Returns:
             Combined markdown content
+            
+        Raises:
+            RenderingError: If any file cannot be read or contains invalid content
         """
         combined_parts = []
         
         for i, md_file in enumerate(source_files):
-            content = md_file.read_text()
-            # Add file content
-            combined_parts.append(content)
-            # Add page break between sections
-            if i < len(source_files) - 1:
-                combined_parts.append("\n\\newpage\n")
+            try:
+                # Read with explicit UTF-8 encoding and error handling
+                content = md_file.read_text(encoding='utf-8', errors='strict')
+                
+                # Validate file ends with newline for proper spacing
+                if not content.endswith('\n'):
+                    content += '\n'
+                
+                # Strip trailing whitespace from each file to avoid double newlines
+                # But preserve a single trailing newline
+                content = content.rstrip() + '\n'
+                
+                # Validate section header syntax in this file
+                import re
+                header_attrs = re.findall(r'\{#([^}]+)\}', content)
+                for attr in header_attrs:
+                    # Check for balanced braces
+                    if attr.count('{') != attr.count('}'):
+                        logger.warning(f"Potential unbalanced braces in {md_file.name} header attribute: {{#{attr}}}")
+                
+                # Add file content
+                combined_parts.append(content)
+                
+                # Add page break between sections (only if not the last file)
+                if i < len(source_files) - 1:
+                    # Use Pandoc raw LaTeX block syntax for \newpage command
+                    # This ensures Pandoc properly handles it with +raw_tex extension
+                    # Add proper spacing around the page break
+                    combined_parts.append("\n```{=latex}\n\\newpage\n```\n")
+                    
+            except UnicodeDecodeError as e:
+                raise RenderingError(
+                    f"Failed to read markdown file (encoding error): {md_file.name}",
+                    context={
+                        "file": str(md_file),
+                        "error": str(e),
+                        "position": i + 1,
+                        "total_files": len(source_files)
+                    },
+                    suggestions=[
+                        f"Check file encoding: {md_file}",
+                        "Ensure file is UTF-8 encoded",
+                        "Remove any non-UTF-8 characters from the file"
+                    ]
+                )
+            except Exception as e:
+                raise RenderingError(
+                    f"Failed to read markdown file: {md_file.name}",
+                    context={
+                        "file": str(md_file),
+                        "error": str(e),
+                        "position": i + 1,
+                        "total_files": len(source_files)
+                    },
+                    suggestions=[
+                        f"Verify file exists and is readable: {md_file}",
+                        "Check file permissions",
+                        "Ensure file is valid markdown"
+                    ]
+                )
         
-        return "\n".join(combined_parts)
+        # Join with newlines, ensuring proper spacing
+        combined = "\n\n".join(combined_parts)
+        
+        # Ensure the combined content starts cleanly (no leading whitespace issues)
+        combined = combined.lstrip('\n\r')
+        
+        # Validate that the combined markdown is not empty
+        if not combined.strip():
+            raise RenderingError(
+                "Combined markdown is empty",
+                context={
+                    "source_files": [str(f) for f in source_files],
+                    "file_count": len(source_files)
+                },
+                suggestions=[
+                    "Verify that all source markdown files contain content",
+                    "Check file permissions and encoding"
+                ]
+            )
+        
+        # Validate basic structure - check for common issues at the start
+        # Remove BOM if present (UTF-8 BOM is \ufeff)
+        if combined.startswith('\ufeff'):
+            logger.warning("Removing UTF-8 BOM from combined markdown")
+            combined = combined[1:]
+        
+        # Ensure the file doesn't start with problematic characters
+        # Pandoc might complain about certain characters at position 0
+        if combined and combined[0] in ['(', ')', '[', ']', '{', '}']:
+            logger.warning(f"Combined markdown starts with potentially problematic character: {repr(combined[0])}")
+        
+        return combined
 
     def _extract_preamble(self, preamble_file: Path) -> str:
         """Extract LaTeX preamble from markdown file.
@@ -826,6 +1294,95 @@ class PDFRenderer:
             # No paths fixed - check if there are any figure references at all
             if pattern and re.search(pattern, tex_content):
                 logger.debug("No figure paths needed fixing (already in correct format)")
+        
+        return tex_content
+
+    def _fix_math_delimiters(self, tex_content: str) -> str:
+        r"""Fix broken math delimiters from Pandoc conversion.
+        
+        Pandoc incorrectly converts \[ and \] to {[} and {]}, breaking math mode.
+        This function fixes these issues and restores proper LaTeX math formatting.
+        
+        Args:
+            tex_content: LaTeX content with broken math delimiters
+            
+        Returns:
+            LaTeX content with fixed math delimiters
+        """
+        fixed_count = 0
+        
+        # Helper function to fix math content
+        def fix_math_content(content: str) -> str:
+            """Fix broken patterns within math content."""
+            # 1. Remove all nested {[} and {]} that Pandoc incorrectly inserted
+            content = re.sub(r'\{\[\}', '', content)
+            content = re.sub(r'\{\]\}', '', content)
+            
+            # 2. Fix \mathbb{E}\emph{\{q(s}\tau)\} -> \mathbb{E}_{q(s_\tau)}
+            # Pattern: \mathbb{E}\emph{\{q(s}\tau)\} or \mathbb{E}\emph{\{o}\tau)\}
+            content = re.sub(r'\\mathbb\{E\}\\emph\{\\\{([^}]+)\}([a-zA-Z_]+)\\\}\)', r'\\mathbb{E}_{\1_\2}', content)
+            
+            # 3. Fix broken subscripts: s\_\tau -> s_\tau, o\_\tau -> o_\tau
+            content = re.sub(r'([a-zA-Z])\\_([a-zA-Z_]+)', r'\1_\2', content)
+            
+            # 4. Remove remaining \emph{} wrappers
+            content = re.sub(r'\\emph\{([^}]+)\}', r'\1', content)
+            
+            # 5. Fix \textbar to \mid
+            content = re.sub(r'\\textbar', r'\\mid', content)
+            
+            return content
+        
+        # Step 1: Fix display math with labels: {[} ... {]}\label{eq:...}{]}
+        # Use greedy matching to find the LAST {]} before \label
+        # Pattern: {[} ... (everything) ... {]}\label{...}{]}
+        pattern_with_label = r'\{\[\}(.*)\{\]\}\\label\{([^}]+)\}\{\]\}'
+        
+        def fix_display_math_with_label(match):
+            nonlocal fixed_count
+            math_content = match.group(1)
+            label_name = match.group(2)
+            
+            math_content = fix_math_content(math_content)
+            fixed_count += 1
+            return f'\\[{math_content}\\label{{{label_name}}}\\]'
+        
+        # Step 2: Fix display math without labels: {[} ... {]}
+        # Match greedily to get the last {]} in a paragraph/block
+        pattern_no_label = r'\{\[\}([^{]*?)\{\]\}(?!\\label)(?=\s|$)'
+        
+        def fix_display_math_no_label(match):
+            nonlocal fixed_count
+            math_content = match.group(1)
+            
+            math_content = fix_math_content(math_content)
+            fixed_count += 1
+            return f'\\[{math_content}\\]'
+        
+        # Apply fixes: first with labels (greedy), then without
+        tex_content = re.sub(pattern_with_label, fix_display_math_with_label, tex_content, flags=re.DOTALL)
+        tex_content = re.sub(pattern_no_label, fix_display_math_no_label, tex_content, flags=re.DOTALL | re.MULTILINE)
+        
+        # Step 3: Fix remaining issues globally
+        tex_content = re.sub(r'\\textbar', r'\\mid', tex_content)
+        
+        # Fix broken Greek letters with error handling
+        greek_letters = ['tau', 'pi', 'Theta', 'alpha', 'beta', 'gamma', 'lambda', 'kappa', 'sigma', 'phi', 'eta']
+        for greek in greek_letters:
+            try:
+                # Use re.escape to properly escape the Greek letter name in the regex pattern
+                pattern = rf'\\{re.escape(greek)}\\)'
+                replacement = rf'\\{greek})'
+                tex_content = re.sub(pattern, replacement, tex_content)
+            except re.error as e:
+                logger.warning(f"Failed to fix Greek letter '{greek}': {e}. Skipping this pattern.")
+                continue
+            except Exception as e:
+                logger.warning(f"Unexpected error fixing Greek letter '{greek}': {e}. Skipping this pattern.")
+                continue
+        
+        if fixed_count > 0:
+            logger.info(f"✓ Fixed {fixed_count} math delimiter(s)")
         
         return tex_content
 

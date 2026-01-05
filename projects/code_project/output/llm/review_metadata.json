@@ -1,6 +1,6 @@
 {
   "model": "gemma3:4b",
-  "timestamp": "2026-01-03T14:48:12.386419",
+  "timestamp": "2026-01-04T16:20:33.609557",
   "source_pdf": "/Users/4d/Documents/GitHub/template/projects/code_project/output/pdf/code_project_combined.pdf",
   "reviews_generated": [
     "translation_zh"
@@ -18,10 +18,10 @@
       "input_chars": 23113,
       "input_words": 4583,
       "input_tokens_est": 5778,
-      "output_chars": 3657,
+      "output_chars": 3626,
       "output_words": 396,
-      "output_tokens_est": 914,
-      "generation_time_seconds": 23.7
+      "output_tokens_est": 906,
+      "generation_time_seconds": 22.23
     }
   },
   "format_compliance": {
@@ -36,7 +36,7 @@
       }
     }
   },
-  "total_generation_time_seconds": 23.71,
+  "total_generation_time_seconds": 22.24,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,

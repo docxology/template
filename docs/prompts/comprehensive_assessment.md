@@ -7,12 +7,12 @@ Conduct a comprehensive assessment and review of all methods, tests, documentati
 ## Assessment Scope
 
 ### 1. Test Suite Analysis
-**Current Status**: ✅ All tests passing, 83.33% infrastructure coverage (exceeds 60% requirement), 94.1% code_project coverage, 91.5% prose_project coverage (both exceed 90% requirement)
+**Current Status**: ✅ All tests passing, 83.33% infrastructure coverage (exceeds 60% requirement), code_project coverage exceeds 90% requirement
 
 **Completed Actions**:
-- ✅ All project tests passing (code_project: 28/28, prose_project: 47/48)
+- ✅ All project tests passing (code_project: 28/28, active_inference_meta_pragmatic: varies, ento_linguistics: 484 tests)
 - ✅ Infrastructure test coverage: 83.33% (exceeds 60% minimum by 39%)
-- ✅ Project test coverage: code_project 94.1%, prose_project 91.5% (both exceed 90% minimum)
+- ✅ Project test coverage: code_project 94.1% (exceeds 90% minimum)
 - ✅ No mock methods - all tests use real data and computations
 - ✅ Deterministic test results with fixed seeds
 
@@ -54,11 +54,11 @@ Conduct a comprehensive assessment and review of all methods, tests, documentati
 - `scripts/` - Orchestrator scripts and pipeline stages
 - `tests/` - Test suite architecture and coverage requirements
 - `projects/` - Multi-project management
-- `projects/project/` - Complete research unit
-- `projects/project/src/` - Scientific algorithms
-- `projects/project/tests/` - Project validation
-- `projects/project/scripts/` - Analysis workflows
-- `projects/project/manuscript/` - Research content
+- `projects/{name}/` - Complete research unit (e.g., code_project, active_inference_meta_pragmatic, ento_linguistics)
+- `projects/{name}/src/` - Scientific algorithms
+- `projects/{name}/tests/` - Project validation
+- `projects/{name}/scripts/` - Analysis workflows
+- `projects/{name}/manuscript/` - Research content
 
 **Content Requirements**:
 - Complete function signatures with type hints
@@ -157,13 +157,13 @@ Conduct a comprehensive assessment and review of all methods, tests, documentati
 python3 scripts/01_run_tests.py --project project
 
 # Manuscript validation
-python3 -m infrastructure.validation.cli markdown projects/project/manuscript/
+python3 -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 
 # Output integrity
-python3 -m infrastructure.validation.cli integrity projects/project/output/
+python3 -m infrastructure.validation.cli integrity projects/code_project/output/
 
 # Cross-reference checking
-python3 -m infrastructure.validation.cli refs projects/project/manuscript/
+python3 -m infrastructure.validation.cli refs projects/code_project/manuscript/
 ```
 
 ### 2. Manual Code Review
@@ -189,7 +189,7 @@ python3 -m infrastructure.validation.cli refs projects/project/manuscript/
 
 ### Test Coverage Targets
 - **Infrastructure**: ≥60% coverage (currently 83.33% - exceeds requirement by 39%)
-- **Project Code**: ≥90% coverage (code_project: 94.1%, prose_project: 91.5% - both exceed requirement)
+- **Project Code**: ≥90% coverage (code_project: 94.1% - exceeds requirement)
 - **Integration Tests**: Complete workflow coverage (21/21 tests passing)
 - **Error Paths**: Exception handling validation
 

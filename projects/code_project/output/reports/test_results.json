@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-01-03T14:46:42.026084",
+  "timestamp": "2026-01-04T16:19:01.414273",
   "infrastructure": {},
   "project": {
     "passed": 28,
@@ -11,8 +11,8 @@
     "discovery_count": 28,
     "collection_errors": 0,
     "execution_phases": {
-      "setup": 1.36,
-      "execution": 1.36
+      "setup": 2.23,
+      "execution": 2.23
     },
     "test_categories": {},
     "coverage_percent": 94.12,

@@ -168,7 +168,8 @@ cat docs/prompts/validation_quality.md
 
 ### Project Documentation
 - [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Code project documentation
-- [`../../projects/prose_project/AGENTS.md`](../../projects/prose_project/AGENTS.md) - Prose project documentation
+- [`../../projects/active_inference_meta_pragmatic/AGENTS.md`](../../projects/active_inference_meta_pragmatic/AGENTS.md) - Active inference project documentation
+- [`../../projects/ento_linguistics/AGENTS.md`](../../projects/ento_linguistics/AGENTS.md) - Ento-linguistics project documentation
 - [`../../projects/AGENTS.md`](../../projects/AGENTS.md) - Multi-project management guide
 
 ### Standards Reference

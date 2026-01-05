@@ -13,6 +13,73 @@ The reporting module provides comprehensive reporting capabilities for pipeline 
 - **Executive cross-project summaries and visual dashboards**
 - **Unified output organization system**
 
+## Architecture
+
+```mermaid
+graph TD
+    subgraph InputSources["Input Sources"]
+        PIPELINE[Pipeline Execution<br/>Stage results, durations]
+        TESTS[Test Results<br/>Coverage, pass/fail]
+        VALIDATION[Validation Results<br/>PDF, markdown checks]
+        ERRORS[Error Events<br/>Failures, warnings]
+        PROJECTS[Project Metrics<br/>Multi-project data]
+    end
+
+    subgraph ReportingModules["Reporting Modules"]
+        PIPELINE_REP[pipeline_reporter.py<br/>Pipeline report generation]
+        ERROR_AGG[error_aggregator.py<br/>Error collection & categorization]
+        EXEC_REP[executive_reporter.py<br/>Cross-project summaries]
+        DASHBOARD[dashboard_generator.py<br/>Visual dashboards]
+        OUTPUT_ORG[output_organizer.py<br/>File organization]
+    end
+
+    subgraph OutputFormats["Output Formats"]
+        JSON[JSON Reports<br/>Machine-readable]
+        HTML[HTML Reports<br/>Styled visual format]
+        MARKDOWN[Markdown Reports<br/>Human-readable]
+        PNG[PNG Dashboards<br/>Static charts]
+        PDF[PDF Dashboards<br/>Vector graphics]
+        CSV[CSV Data Tables<br/>Metrics export]
+    end
+
+    PIPELINE --> PIPELINE_REP
+    TESTS --> PIPELINE_REP
+    VALIDATION --> PIPELINE_REP
+    ERRORS --> ERROR_AGG
+    PROJECTS --> EXEC_REP
+
+    PIPELINE_REP --> JSON
+    PIPELINE_REP --> HTML
+    PIPELINE_REP --> MARKDOWN
+
+    ERROR_AGG --> JSON
+    ERROR_AGG --> HTML
+
+    EXEC_REP --> JSON
+    EXEC_REP --> HTML
+    EXEC_REP --> MARKDOWN
+
+    EXEC_REP --> DASHBOARD
+    DASHBOARD --> PNG
+    DASHBOARD --> PDF
+    DASHBOARD --> HTML
+    DASHBOARD --> CSV
+
+    OUTPUT_ORG --> JSON
+    OUTPUT_ORG --> HTML
+    OUTPUT_ORG --> PNG
+    OUTPUT_ORG --> PDF
+    OUTPUT_ORG --> CSV
+
+    classDef input fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef module fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef output fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+
+    class InputSources input
+    class ReportingModules module
+    class OutputFormats output
+```
+
 ## Output Organization
 
 The reporting module includes a unified output organization system that ensures consistent file placement across all reporting operations.

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>S03_supplemental_analysis</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:supplemental_analysis">Supplemental Analysis</h1>
+<p>This section provides detailed analytical results and theoretical
+extensions that complement the main findings presented in Sections <span
+class="math inline">\(\ref{sec:methodology}\)</span> and <span
+class="math inline">\(\ref{sec:experimental_results}\)</span>.</p>
+<h2 id="s3.1-theoretical-extensions">S3.1 Theoretical Extensions</h2>
+<h3 id="s3.1.1-extended-discourse-analysis-frameworks">S3.1.1 Extended
+Discourse Analysis Frameworks</h3>
+<p>Building on our mixed-methodology approach, we extend the theoretical
+framework for analyzing scientific discourse beyond the six
+Ento-Linguistic domains. Our analysis reveals that terminology networks
+serve as both descriptive tools and constitutive elements of scientific
+knowledge production.</p>
+<p><strong>Extended Constitutive Framework</strong>:</p>
+<p>The constitutive role of language in scientific practice extends
+beyond individual terms to encompass entire conceptual networks. We
+formalize this through the concept of <strong>discursive framing
+networks</strong>:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:discursive_framing}
+F(D, T) = \sum_{t \in T} w_t \cdot f_t(D) \cdot c_t
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(D\)</span> represents a domain,
+<span class="math inline">\(T\)</span> is the terminology set, <span
+class="math inline">\(w_t\)</span> are term weights, <span
+class="math inline">\(f_t(D)\)</span> is the framing function for domain
+<span class="math inline">\(D\)</span>, and <span
+class="math inline">\(c_t\)</span> represents contextual factors.</p>
+<h3 id="s3.1.2-advanced-ambiguity-classification-systems">S3.1.2
+Advanced Ambiguity Classification Systems</h3>
+<p>Our ambiguity detection framework extends beyond simple polysemy to
+include context-dependent meaning shifts that are characteristic of
+scientific terminology evolution:</p>
+<p><strong>Multi-Level Ambiguity Classification</strong>:</p>
+<h3 id="s3.1.3-cross-domain-conceptual-mapping">S3.1.3 Cross-Domain
+Conceptual Mapping</h3>
+<p>We develop advanced conceptual mapping techniques that reveal
+relationships between domains:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:cross_domain_mapping}
+M_{ij} = \frac{1}{|T_i \cap T_j|} \sum_{t \in T_i \cap T_j} s(t, D_i,
+D_j)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(M_{ij}\)</span> is the mapping
+strength between domains <span class="math inline">\(D_i\)</span> and
+<span class="math inline">\(D_j\)</span>, and <span
+class="math inline">\(s(t, D_i, D_j)\)</span> measures semantic
+similarity of term <span class="math inline">\(t\)</span> across
+domains.</p>
+<h2 id="s3.2-extended-framing-analysis-methods">S3.2 Extended Framing
+Analysis Methods</h2>
+<h3 id="s3.2.1-anthropomorphic-framing-detection">S3.2.1 Anthropomorphic
+Framing Detection</h3>
+<p>Advanced anthropomorphic framing detection incorporates linguistic
+and conceptual indicators:</p>
+<p><strong>Linguistic Indicators</strong>: - Pronominalization (use of
+“it” vs. “she/he” for colonies) - Agency attribution (active vs. passive
+voice patterns) - Intentionality markers (words implying purpose or
+planning)</p>
+<p><strong>Conceptual Indicators</strong>: - Social structure
+projections (human hierarchies onto insect societies) - Emotional
+attribution (anthropomorphic emotional terms) - Cultural bias patterns
+(Western social norms in biological descriptions)</p>
+<h3 id="s3.2.2-hierarchical-framing-analysis">S3.2.2 Hierarchical
+Framing Analysis</h3>
+<p>Extended analysis of hierarchical framing reveals nested levels of
+social structure imposition:</p>
+<p><strong>Macro-Level Hierarchies</strong>: Colony-level social
+organization (queen → workers → males)</p>
+<p><strong>Micro-Level Hierarchies</strong>: Individual-level
+interactions (dominant → subordinate nestmates)</p>
+<p><strong>Inter-Colony Hierarchies</strong>: Population-level
+relationships (territorial dominance, resource competition)</p>
+<h2 id="s3.3-advanced-network-analysis-techniques">S3.3 Advanced Network
+Analysis Techniques</h2>
+<h3 id="s3.3.1-temporal-network-evolution">S3.3.1 Temporal Network
+Evolution</h3>
+<p>Analysis of how terminology networks evolve over time reveals
+conceptual shifts:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:temporal_network_evolution}
+\Delta G(t) = G(t+1) - G(t) = \sum_{e \in E} \delta_e(t) + \sum_{v \in
+V} \delta_v(t)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\delta_e(t)\)</span> and <span
+class="math inline">\(\delta_v(t)\)</span> represent edge and vertex
+changes over time periods.</p>
+<p><strong>Key Evolutionary Patterns</strong>: - <strong>Network
+Growth</strong>: Addition of new terms and relationships -
+<strong>Structural Rearrangements</strong>: Changes in network topology
+- <strong>Conceptual Consolidation</strong>: Strengthening of
+established relationships - <strong>Paradigm Shifts</strong>: Major
+restructuring events</p>
+<h3 id="s3.3.2-multi-scale-network-analysis">S3.3.2 Multi-Scale Network
+Analysis</h3>
+<p>Extending network analysis to multiple scales reveals hierarchical
+organization:</p>
+<p><strong>Local Scale</strong>: Individual term relationships within
+domains <strong>Domain Scale</strong>: Inter-term relationships within
+domains <strong>Cross-Domain Scale</strong>: Relationships between
+domains <strong>Field Scale</strong>: Relationships across the entire
+entomological terminology network</p>
+<h2 id="s3.4-extended-validation-frameworks">S3.4 Extended Validation
+Frameworks</h2>
+<h3 id="s3.4.1-inter-subjectivity-validation">S3.4.1 Inter-Subjectivity
+Validation</h3>
+<p>Advanced validation incorporates multiple perspectives:</p>
+<p><strong>Expert Validation</strong>: Entomological domain experts
+review classifications <strong>Peer Validation</strong>:
+Interdisciplinary researchers assess cross-domain mappings
+<strong>Historical Validation</strong>: Analysis of terminology
+evolution against known conceptual shifts <strong>Cross-Cultural
+Validation</strong>: Comparison with non-English entomological
+literature</p>
+<h3 id="s3.4.2-robustness-testing">S3.4.2 Robustness Testing</h3>
+<p>Comprehensive robustness analysis ensures result stability:</p>
+<p><strong>Subsampling Stability</strong>: Performance across different
+corpus subsets <strong>Parameter Sensitivity</strong>: Robustness to
+algorithmic parameter variations <strong>Annotation
+Consistency</strong>: Agreement across multiple human annotators
+<strong>Temporal Stability</strong>: Consistency across publication
+periods</p>
+<h2 id="s3.5-advanced-case-study-analysis">S3.5 Advanced Case Study
+Analysis</h2>
+<h3 id="s3.5.1-caste-terminology-evolution-1850-2024">S3.5.1 Caste
+Terminology Evolution: 1850-2024</h3>
+<p>Ultra-longitudinal analysis reveals century-scale conceptual
+evolution:</p>
+<p><strong>Pre-Darwinian Period (1850-1859)</strong>: Essentialist caste
+categories based on morphological differences</p>
+<p><strong>Darwinian Synthesis (1860-1899)</strong>: Evolutionary
+explanations for caste differences</p>
+<p><strong>Genetic Revolution (1900-1949)</strong>: Chromosomal
+mechanisms underlying caste determination</p>
+<p><strong>Molecular Biology Era (1950-1999)</strong>: Gene expression
+and hormonal control of caste differentiation</p>
+<p><strong>Genomic Era (2000-2024)</strong>: Epigenetic and
+transcriptomic regulation of caste phenotypes</p>
+<h3 id="s3.5.2-superorganism-concept-evolution">S3.5.2 Superorganism
+Concept Evolution</h3>
+<p>Detailed analysis of the superorganism concept across seven
+decades:</p>
+<h2 id="s3.6-methodological-reflections">S3.6 Methodological
+Reflections</h2>
+<h3 id="s3.6.1-mixed-methodology-integration">S3.6.1 Mixed-Methodology
+Integration</h3>
+<p>Our approach successfully integrates qualitative and quantitative
+methods:</p>
+<p><strong>Qualitative Contributions</strong>: - Theoretical framework
+development - Conceptual category identification - Historical context
+analysis - Cross-domain relationship mapping</p>
+<p><strong>Quantitative Contributions</strong>: - Statistical pattern
+identification - Network structure analysis - Temporal trend
+quantification - Validation metric development</p>
+<h3 id="s3.6.2-limitations-and-scope-considerations">S3.6.2 Limitations
+and Scope Considerations</h3>
+<p><strong>Methodological Limitations</strong>: 1. <strong>Corpus
+Scope</strong>: Limited to English-language publications 2.
+<strong>Temporal Resolution</strong>: Decade-level rather than
+year-level analysis 3. <strong>Domain Boundaries</strong>: Some concepts
+span multiple domains 4. <strong>Annotation Scalability</strong>: Human
+validation limits analysis scope</p>
+<p><strong>Theoretical Scope</strong>: 1. <strong>Cultural
+Bias</strong>: Western scientific traditions dominate the corpus 2.
+<strong>Disciplinary Boundaries</strong>: Entomological focus may miss
+broader patterns 3. <strong>Historical Context</strong>: Analysis
+reflects current perspectives on past work 4. <strong>Paradigm
+Dependence</strong>: Results may vary across research traditions</p>
+<h2 id="s3.7-future-theoretical-directions">S3.7 Future Theoretical
+Directions</h2>
+<h3 id="s3.7.1-advanced-semantic-analysis">S3.7.1 Advanced Semantic
+Analysis</h3>
+<p>Future work will incorporate advanced semantic techniques:</p>
+<p><strong>Transformer-Based Embeddings</strong>: Contextual language
+models for more sophisticated semantic analysis</p>
+<p><strong>Multilingual Extensions</strong>: Cross-language terminology
+mapping and comparison</p>
+<p><strong>Dynamic Semantic Networks</strong>: Temporal evolution of
+term meanings and relationships</p>
+<h3 id="s3.7.2-extended-conceptual-frameworks">S3.7.2 Extended
+Conceptual Frameworks</h3>
+<p>Theoretical extensions will address broader questions:</p>
+<p><strong>Constitutive Linguistics</strong>: How scientific language
+creates research objects and relationships</p>
+<p><strong>Interdisciplinary Translation</strong>: Mechanisms for
+translating concepts across disciplinary boundaries</p>
+<p><strong>Knowledge Representation</strong>: Formal ontologies for
+scientific terminology networks</p>
+<p><strong>Cultural Epistemology</strong>: How cultural contexts shape
+scientific language and concepts</p>
+<h3 id="s3.7.3-practical-applications">S3.7.3 Practical
+Applications</h3>
+<p>Extended applications will include:</p>
+<p><strong>Terminology Standards</strong>: Development of evidence-based
+guidelines for scientific communication</p>
+<p><strong>Educational Interventions</strong>: Training programs for
+researchers on terminological awareness</p>
+<p><strong>Peer Review Tools</strong>: Automated assistance for
+evaluating terminological clarity</p>
+<p><strong>Cross-Disciplinary Bridges</strong>: Tools for facilitating
+interdisciplinary communication</p>
+<p>This extended analytical framework provides comprehensive theoretical
+and methodological foundations for understanding the constitutive role
+of language in scientific practice, with particular focus on the complex
+interplay between speech and thought in entomological research.</p>
+</body>
+</html>

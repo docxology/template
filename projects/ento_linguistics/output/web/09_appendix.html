@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>09_appendix</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:appendix">Appendix</h1>
+<p>This appendix provides additional technical details supporting the
+Ento-Linguistic analysis presented in the main manuscript.</p>
+<h2 id="a.-text-processing-implementation-details">A. Text Processing
+Implementation Details</h2>
+<h3 id="a.1-linguistic-preprocessing-pipeline">A.1 Linguistic
+Preprocessing Pipeline</h3>
+<p>Our text processing pipeline implements systematic normalization to
+ensure reliable pattern detection across diverse scientific writing
+styles:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:text_normalization_detailed}
+T_{\text{processed}} =
+\text{lemmatize}(\text{pos_filter}(\text{tokenize}(\text{lowercase}(\text{unicode_normalize}(T)))))
+\end{equation}\]</span></p>
+<p>where each transformation step preserves semantic content while
+standardizing linguistic variation.</p>
+<p><strong>Tokenization Strategy</strong>: We employ domain-aware
+tokenization that recognizes scientific terminology:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:scientific_tokenization}
+\tau_{\text{scientific}}(T) = \begin{cases}
+\text{scientific_term}(t) &amp; \text{if } t \in
+\mathcal{T}_{\text{domain}} \\
+\text{word_tokenize}(t) &amp; \text{otherwise}
+\end{cases}
+\end{equation}\]</span></p>
+<p>where <span
+class="math inline">\(\mathcal{T}_{\text{domain}}\)</span> contains
+curated entomological terminology that should not be further
+subdivided.</p>
+<h3 id="a.2-linguistic-feature-extraction">A.2 Linguistic Feature
+Extraction</h3>
+<p>Our feature extraction combines multiple linguistic indicators:</p>
+<p><strong>Syntactic Features</strong>: Part-of-speech patterns,
+dependency relations, and grammatical structures characteristic of
+scientific discourse.</p>
+<p><strong>Semantic Features</strong>: Word embeddings, semantic
+similarity measures, and domain-specific concept vectors.</p>
+<p><strong>Discourse Features</strong>: Rhetorical markers,
+argumentative structures, and citation patterns that indicate research
+traditions.</p>
+<h2 id="b.-terminology-extraction-algorithms">B. Terminology Extraction
+Algorithms</h2>
+<h3 id="b.1-domain-specific-term-identification">B.1 Domain-Specific
+Term Identification</h3>
+<p>Terminology extraction uses a multi-criteria scoring function:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:term_scoring_detailed}
+S(t, d) = w_1 \cdot \text{frequency}(t, d) + w_2 \cdot
+\text{contextual_coherence}(t, d) + w_3 \cdot
+\text{semantic_relevance}(t, d)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(d\)</span> represents the
+Ento-Linguistic domain and weights <span class="math inline">\(w_1, w_2,
+w_3\)</span> are calibrated for each domain.</p>
+<p><strong>Contextual Coherence</strong>: Measures how consistently a
+term appears in domain-relevant contexts:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:contextual_coherence}
+C(t, d) = \frac{|\text{contexts}(t, d)|}{\sum_{d&#39; \in D}
+|\text{contexts}(t, d&#39;)|}
+\end{equation}\]</span></p>
+<h3 id="b.2-ambiguity-detection-framework">B.2 Ambiguity Detection
+Framework</h3>
+<p>Ambiguity detection combines statistical and linguistic
+indicators:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:ambiguity_detection}
+A(t) = \alpha \cdot H(\text{contexts}(t)) + \beta \cdot
+\text{semantic_variance}(t) + \gamma \cdot \text{syntactic_ambiguity}(t)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(H(\text{contexts}(t))\)</span> is
+the entropy of contextual usage patterns.</p>
+<h2 id="c.-network-construction-and-analysis">C. Network Construction
+and Analysis</h2>
+<h3 id="c.1-edge-weight-calculation">C.1 Edge Weight Calculation</h3>
+<p>Network edges are weighted using multiple co-occurrence measures:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:edge_weighting_detailed}
+w(u,v) = \frac{1}{3} \left[
+\frac{\text{co-occurrence}(u,v)}{\max(\text{freq}(u), \text{freq}(v))} +
+\text{Jaccard}(u,v) + \text{semantic_similarity}(u,v) \right]
+\end{equation}\]</span></p>
+<p><strong>Co-occurrence Window</strong>: 50-word sliding windows
+capture meaningful term relationships while avoiding noise from distant
+terms.</p>
+<p><strong>Semantic Similarity</strong>: Uses domain-specific embeddings
+trained on entomological literature.</p>
+<h3 id="c.2-community-detection-algorithms">C.2 Community Detection
+Algorithms</h3>
+<p>We implement multiple community detection approaches for robust
+network partitioning:</p>
+<p><strong>Modularity Optimization</strong>:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:modularity_optimization}
+Q = \frac{1}{2m} \sum_{ij} \left[ A_{ij} - \frac{k_i k_j}{2m} \right]
+\delta(c_i, c_j)
+\end{equation}\]</span></p>
+<p><strong>Domain-Aware Clustering</strong>: Incorporates
+Ento-Linguistic domain knowledge to ensure communities respect
+conceptual boundaries.</p>
+<h3 id="c.3-network-validation-metrics">C.3 Network Validation
+Metrics</h3>
+<p>Network quality is assessed using comprehensive validation:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:network_validation_detailed}
+V(G) = \lambda_1 \cdot \text{modularity}(G) + \lambda_2 \cdot
+\text{domain_purity}(G) + \lambda_3 \cdot \text{structural_stability}(G)
+\end{equation}\]</span></p>
+<p>where domain purity measures alignment with Ento-Linguistic domain
+structure.</p>
+<h2 id="d.-framing-analysis-implementation">D. Framing Analysis
+Implementation</h2>
+<h3 id="d.1-anthropomorphic-framing-detection">D.1 Anthropomorphic
+Framing Detection</h3>
+<p>Anthropomorphic language is detected through multiple indicators:</p>
+<p><strong>Lexical Indicators</strong>: Terms suggesting human-like
+agency, intentionality, or social structures.</p>
+<p><strong>Syntactic Patterns</strong>: Sentence structures implying
+human-like behavior or cognition.</p>
+<p><strong>Semantic Fields</strong>: Clusters of terms drawing from
+human social, psychological, or economic domains.</p>
+<p><strong>Detection Algorithm</strong>:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:anthropomorphic_detection}
+A_{\text{anthro}}(t) = \sum_{f \in F_{\text{human}}}
+\text{similarity}(t, f) \cdot w_f
+\end{equation}\]</span></p>
+<h3 id="d.2-hierarchical-framing-analysis">D.2 Hierarchical Framing
+Analysis</h3>
+<p>Hierarchical structures are identified through:</p>
+<p><strong>Term Relationship Patterns</strong>: Chains of subordination
+and authority relationships.</p>
+<p><strong>Power Dynamic Indicators</strong>: Terms implying control,
+dominance, or submission.</p>
+<p><strong>Organizational Metaphors</strong>: Language drawing from
+human institutional and hierarchical systems.</p>
+<h2 id="e.-validation-and-quality-assurance">E. Validation and Quality
+Assurance</h2>
+<h3 id="e.1-inter-annotator-agreement-procedures">E.1 Inter-annotator
+Agreement Procedures</h3>
+<p>Terminology validation uses multiple annotators:</p>
+<p><strong>Cohen’s Kappa</strong>: Measures agreement between human
+annotators and automated classification.</p>
+<p><strong>Fleiss’ Kappa</strong>: Extends agreement measurement to
+multiple annotators.</p>
+<p><strong>Bootstrap Validation</strong>: Assesses stability of
+classifications across subsampling.</p>
+<h3 id="e.2-statistical-validation-framework">E.2 Statistical Validation
+Framework</h3>
+<p>All analyses include rigorous statistical validation:</p>
+<p><strong>Terminology Extraction Validation</strong>: -
+<strong>Precision</strong>: Manual verification of extracted terms
+against expert-curated lists - <strong>Recall</strong>: Coverage
+assessment against comprehensive domain glossaries - <strong>Domain
+Accuracy</strong>: Correct classification into Ento-Linguistic
+domains</p>
+<p><strong>Network Validation</strong>: - <strong>Structural
+Validity</strong>: Comparison against null models - <strong>Domain
+Correspondence</strong>: Alignment with theoretical domain boundaries -
+<strong>Stability Analysis</strong>: Consistency across subsampling
+procedures</p>
+<h3 id="e.3-corpus-and-data-validation">E.3 Corpus and Data
+Validation</h3>
+<p><strong>Corpus Integrity Checks</strong>: - Text encoding
+verification - Metadata completeness validation - Duplicate document
+detection - Temporal distribution analysis</p>
+<p><strong>Processing Validation</strong>: - Deterministic output
+verification - Cross-platform compatibility testing - Memory usage
+monitoring - Performance regression detection</p>
+<h2 id="f.-computational-environment-and-reproducibility">F.
+Computational Environment and Reproducibility</h2>
+<h3 id="f.1-software-dependencies">F.1 Software Dependencies</h3>
+<p>Analysis conducted using the following software stack:</p>
+<ul>
+<li><strong>Python</strong>: 3.10+ for analysis implementation</li>
+<li><strong>spaCy</strong>: 3.7+ for linguistic processing</li>
+<li><strong>NetworkX</strong>: 3.1+ for network analysis</li>
+<li><strong>scikit-learn</strong>: 1.3+ for statistical validation</li>
+<li><strong>pandas</strong>: 2.0+ for data manipulation</li>
+<li><strong>matplotlib</strong>: 3.7+ for visualization</li>
+<li><strong>jupyter</strong>: 1.0+ for interactive analysis</li>
+</ul>
+<h3 id="f.2-hardware-specifications">F.2 Hardware Specifications</h3>
+<p>Computational resources used:</p>
+<ul>
+<li><strong>CPU</strong>: Intel Xeon E5-2690 v4 (28 cores @
+2.60GHz)</li>
+<li><strong>Memory</strong>: 128GB DDR4</li>
+<li><strong>Storage</strong>: 2TB NVMe SSD for data processing</li>
+<li><strong>OS</strong>: Ubuntu 22.04 LTS</li>
+</ul>
+<h3 id="f.3-reproducibility-framework">F.3 Reproducibility
+Framework</h3>
+<p><strong>Version Control</strong>: All code, data, and parameters
+tracked with git.</p>
+<p><strong>Containerization</strong>: Analysis environments
+containerized using Docker for exact reproducibility.</p>
+<p><strong>Data Provenance</strong>: Complete audit trail of data
+processing steps and parameter choices.</p>
+<p><strong>Random Seed Management</strong>: All stochastic operations
+use fixed seeds for deterministic results.</p>
+<h2 id="g.-extended-mathematical-formulations">G. Extended Mathematical
+Formulations</h2>
+<h3 id="g.1-conceptual-mapping-framework">G.1 Conceptual Mapping
+Framework</h3>
+<p>The conceptual mapping algorithm formalizes term relationships:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:concept_mapping}
+M(t_i, t_j) = \frac{1}{k} \sum_{c=1}^k
+\text{similarity}(\vec{t_i}^{(c)}, \vec{t_j}^{(c)})
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(k\)</span> represents the number of
+contextual embeddings and <span
+class="math inline">\(\vec{t}^{(c)}\)</span> is the embedding in context
+<span class="math inline">\(c\)</span>.</p>
+<h3 id="g.2-discourse-pattern-recognition">G.2 Discourse Pattern
+Recognition</h3>
+<p>Discourse pattern detection uses sequence modeling:</p>
+<p><span
+class="math display">\[\begin{equation}\label{eq:discourse_patterns}
+P(d|t_1, \dots, t_n) = \prod_{i=1}^n P(t_i|t_{i-1}, d) \cdot P(d)
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(d\)</span> represents discourse
+patterns and <span class="math inline">\(t_i\)</span> are sequential
+terms.</p>
+<p>This comprehensive technical appendix provides the detailed
+implementation foundations supporting the Ento-Linguistic analysis
+presented in the main manuscript.</p>
+</body>
+</html>

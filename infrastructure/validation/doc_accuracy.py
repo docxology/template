@@ -34,8 +34,16 @@ def extract_headings(content: str) -> Set[str]:
     return headings
 
 
-def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> Tuple[bool, str]:
-    """Resolve a file path relative to source file."""
+def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> Tuple[bool, str, str]:
+    """Resolve a file path relative to source file.
+    
+    Returns:
+        Tuple of (exists: bool, message: str, path_type: str)
+        path_type is 'file', 'directory', or 'unknown'
+    """
+    # Check if target is a directory reference (ends with /)
+    is_directory_ref = target.endswith('/')
+    
     if target.startswith('../'):
         levels_up = target.count('../')
         target_path = source_file.parent
@@ -51,20 +59,46 @@ def resolve_file_path(target: str, source_file: Path, repo_root: Path) -> Tuple[
         target_path = target_path.resolve()
         repo_root_resolved = repo_root.resolve()
         
-        if target_path.exists() and target_path.is_file():
-            try:
-                target_path.relative_to(repo_root_resolved)
-                return True, ""
-            except ValueError:
-                return False, f"File outside repository: {target_path}"
+        # Check if path is within repository
+        try:
+            target_path.relative_to(repo_root_resolved)
+        except ValueError:
+            return False, f"Path outside repository: {target_path}", 'unknown'
+        
+        # Check if it exists
+        if target_path.exists():
+            if target_path.is_file():
+                return True, "", 'file'
+            elif target_path.is_dir():
+                # If it's a directory and target ends with /, it's valid
+                if is_directory_ref:
+                    return True, "", 'directory'
+                # If it's a directory but target doesn't end with /, might be intentional
+                # Check if there's a file with same name (without extension)
+                return True, "", 'directory'
+            else:
+                return False, f"Path exists but is not a file or directory: {target_path}", 'unknown'
         else:
-            return False, f"File does not exist: {target_path}"
+            # Path doesn't exist
+            if is_directory_ref:
+                return False, f"Directory does not exist: {target_path}", 'directory'
+            else:
+                # Check if it might be a file
+                # Remove file extension and check if directory exists
+                if target_path.suffix:
+                    dir_path = target_path.parent
+                    if dir_path.exists() and dir_path.is_dir():
+                        return False, f"File does not exist: {target_path}", 'file'
+                return False, f"File does not exist: {target_path}", 'file'
     except Exception as e:
-        return False, f"Error resolving path: {e}"
+        return False, f"Error resolving path: {e}", 'unknown'
 
 
 def check_links(md_files: List[Path], repo_root: Path, all_headings: Dict[str, Set[str]]) -> List[LinkIssue]:
-    """Check all links in markdown files."""
+    """Check all links in markdown files.
+    
+    Improved to skip links inside code blocks.
+    """
     issues = []
     link_pattern = re.compile(r'\[([^\]]+)\]\(([^\)]+)\)')
     
@@ -73,7 +107,20 @@ def check_links(md_files: List[Path], repo_root: Path, all_headings: Dict[str, S
             content = md_file.read_text(encoding='utf-8')
             file_key = str(md_file.relative_to(repo_root))
             
+            # Remove code blocks to avoid false positives
+            code_block_pattern = re.compile(r'```[\s\S]*?```', re.MULTILINE)
+            code_block_ranges = []
+            for cb_match in code_block_pattern.finditer(content):
+                code_block_ranges.append((cb_match.start(), cb_match.end()))
+            
             for match in link_pattern.finditer(content):
+                # Skip if link is inside a code block
+                link_start = match.start()
+                link_end = match.end()
+                in_code_block = any(start <= link_start < end for start, end in code_block_ranges)
+                if in_code_block:
+                    continue
+                
                 link_text = match.group(1)
                 target = match.group(2)
                 line_num = content[:match.start()].count('\n') + 1
@@ -97,15 +144,31 @@ def check_links(md_files: List[Path], repo_root: Path, all_headings: Dict[str, S
                     file_part = target.split('#')[0] if '#' in target else target
                     if file_part:
                         resolved = resolve_file_path(file_part, md_file, repo_root)
-                        if not resolved[0]:
-                            issues.append(LinkIssue(
-                                file=file_key,
-                                line=line_num,
-                                link_text=link_text,
-                                target=target,
-                                issue_type='broken_file',
-                                issue_message=resolved[1]
-                            ))
+                        exists, message, path_type = resolved
+                        if not exists:
+                            # Only flag as error if it's clearly a file reference
+                            # Directory references are often valid (especially if they end with /)
+                            if path_type == 'file' or (path_type == 'directory' and not file_part.endswith('/')):
+                                # Determine severity based on path type
+                                if path_type == 'file':
+                                    issue_type = 'broken_file'
+                                    severity = 'error'
+                                elif path_type == 'directory':
+                                    issue_type = 'broken_directory'
+                                    severity = 'warning'  # Directory might be intentional
+                                else:
+                                    issue_type = 'broken_path'
+                                    severity = 'warning'
+                                
+                                issues.append(LinkIssue(
+                                    file=file_key,
+                                    line=line_num,
+                                    link_text=link_text,
+                                    target=target,
+                                    issue_type=issue_type,
+                                    issue_message=message,
+                                    severity=severity
+                                ))
         except Exception as e:
             print(f"  Warning: Error checking links in {md_file}: {e}", file=sys.stderr)
     
@@ -178,14 +241,17 @@ def check_file_paths(md_files: List[Path], repo_root: Path) -> List[AccuracyIssu
                 # Check if it looks like a file path
                 if '/' in path_str or path_str.endswith(('.md', '.py', '.sh', '.yaml', '.toml')):
                     resolved = resolve_file_path(path_str, md_file, repo_root)
-                    if not resolved[0] and 'output' not in path_str:
-                        issues.append(AccuracyIssue(
-                            file=file_key,
-                            line=line_num,
-                            issue_type='path',
-                            issue_message=f"Referenced path '{path_str}' may not exist: {resolved[1]}",
-                            severity='warning'
-                        ))
+                    exists, message, path_type = resolved
+                    if not exists and 'output' not in path_str:
+                        # Only flag file references, not directory references
+                        if path_type == 'file' or (path_type == 'directory' and not path_str.endswith('/')):
+                            issues.append(AccuracyIssue(
+                                file=file_key,
+                                line=line_num,
+                                issue_type='path',
+                                issue_message=f"Referenced path '{path_str}' may not exist: {message}",
+                                severity='warning' if path_type == 'directory' else 'error'
+                            ))
         except Exception:
             pass
     

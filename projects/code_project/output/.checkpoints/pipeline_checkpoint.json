@@ -1,71 +1,71 @@
 {
-  "pipeline_start_time": 1767480396.165909,
+  "pipeline_start_time": 1767572332.191096,
   "last_stage_completed": 9,
   "stage_results": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.014938116073608398,
-      "timestamp": "2026-01-03 14:48:12",
+      "duration": 0.04738593101501465,
+      "timestamp": "2026-01-04 16:20:34",
       "completed": true
     },
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 0.6094729900360107,
-      "timestamp": "2026-01-03 14:48:12",
+      "duration": 1.1452510356903076,
+      "timestamp": "2026-01-04 16:20:34",
       "completed": true
     },
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 5.374895811080933,
-      "timestamp": "2026-01-03 14:48:12",
+      "duration": 8.195966958999634,
+      "timestamp": "2026-01-04 16:20:34",
       "completed": true
     },
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 3.910087823867798,
-      "timestamp": "2026-01-03 14:48:12",
+      "duration": 5.442507982254028,
+      "timestamp": "2026-01-04 16:20:34",
       "completed": true
     },
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 26.64594316482544,
-      "timestamp": "2026-01-03 14:48:12",
+      "duration": 32.13673114776611,
+      "timestamp": "2026-01-04 16:20:34",
       "completed": true
     },
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 0.49761199951171875,
-      "timestamp": "2026-01-03 14:48:12",
+      "duration": 0.3864400386810303,
+      "timestamp": "2026-01-04 16:20:34",
       "completed": true
     },
     {
       "name": "LLM Scientific Review",
       "exit_code": 0,
-      "duration": 27.76049304008484,
-      "timestamp": "2026-01-03 14:48:12",
+      "duration": 25.360692977905273,
+      "timestamp": "2026-01-04 16:20:34",
       "completed": true
     },
     {
       "name": "LLM Translations",
       "exit_code": 0,
-      "duration": 31.43093991279602,
-      "timestamp": "2026-01-03 14:48:12",
+      "duration": 28.732079029083252,
+      "timestamp": "2026-01-04 16:20:34",
       "completed": true
     },
     {
       "name": "Copy Outputs",
       "exit_code": 0,
-      "duration": 0.53466796875,
-      "timestamp": "2026-01-03 14:48:12",
+      "duration": 0.48249292373657227,
+      "timestamp": "2026-01-04 16:20:34",
       "completed": true
     }
   ],
   "total_stages": 9,
-  "checkpoint_time": 1767480492.949572
+  "checkpoint_time": 1767572434.125037
 }

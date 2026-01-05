@@ -1,0 +1,436 @@
+{
+  "timestamp": "2026-01-04T16:25:26.765216",
+  "total_duration": 292.6165828704834,
+  "stages": [
+    {
+      "name": "Clean Output Directories",
+      "exit_code": 0,
+      "duration": 0.016356229782104492,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Environment Setup",
+      "exit_code": 0,
+      "duration": 0.6028239727020264,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Tests",
+      "exit_code": 0,
+      "duration": 44.15164399147034,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Project Analysis",
+      "exit_code": 0,
+      "duration": 61.88885498046875,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "PDF Rendering",
+      "exit_code": 0,
+      "duration": 49.989400148391724,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Output Validation",
+      "exit_code": 0,
+      "duration": 0.3858828544616699,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "LLM Scientific Review",
+      "exit_code": 0,
+      "duration": 31.72911286354065,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "LLM Translations",
+      "exit_code": 0,
+      "duration": 103.29057908058167,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "name": "Copy Outputs",
+      "exit_code": 0,
+      "duration": 0.5619287490844727,
+      "status": "passed",
+      "output_files": [],
+      "errors": [],
+      "warnings": []
+    }
+  ],
+  "test_results": null,
+  "validation_results": null,
+  "performance_metrics": null,
+  "error_summary": null,
+  "output_statistics": {
+    "directories": {
+      "pdf": {
+        "exists": true,
+        "file_count": 9,
+        "size_mb": "1.25",
+        "total_size_bytes": 1308609,
+        "largest_files": [
+          {
+            "name": "ento_linguistics_combined.pdf",
+            "size_mb": "0.85",
+            "path": "pdf/ento_linguistics_combined.pdf"
+          },
+          {
+            "name": "_combined_manuscript.tex",
+            "size_mb": "0.13",
+            "path": "pdf/_combined_manuscript.tex"
+          },
+          {
+            "name": "_combined_manuscript.log",
+            "size_mb": "0.11",
+            "path": "pdf/_combined_manuscript.log"
+          }
+        ],
+        "extensions": {
+          ".md": 1,
+          ".log": 1,
+          ".aux": 1,
+          ".blg": 1,
+          ".bib": 1,
+          ".pdf": 1,
+          ".tex": 1,
+          ".toc": 1,
+          ".bbl": 1
+        }
+      },
+      "web": {
+        "exists": true,
+        "file_count": 14,
+        "size_mb": "0.18",
+        "total_size_bytes": 186101,
+        "largest_files": [
+          {
+            "name": "S01_supplemental_methods.html",
+            "size_mb": "0.02",
+            "path": "web/S01_supplemental_methods.html"
+          },
+          {
+            "name": "05_discussion.html",
+            "size_mb": "0.02",
+            "path": "web/05_discussion.html"
+          },
+          {
+            "name": "S04_supplemental_applications.html",
+            "size_mb": "0.02",
+            "path": "web/S04_supplemental_applications.html"
+          }
+        ],
+        "extensions": {
+          ".html": 14
+        }
+      },
+      "slides": {
+        "exists": true,
+        "file_count": 92,
+        "size_mb": "2.85",
+        "total_size_bytes": 2986367,
+        "largest_files": [
+          {
+            "name": "04_experimental_results_slides.pdf",
+            "size_mb": "0.78",
+            "path": "slides/04_experimental_results_slides.pdf"
+          },
+          {
+            "name": "S02_supplemental_results_slides.pdf",
+            "size_mb": "0.74",
+            "path": "slides/S02_supplemental_results_slides.pdf"
+          },
+          {
+            "name": "09_appendix_slides.log",
+            "size_mb": "0.11",
+            "path": "slides/09_appendix_slides.log"
+          }
+        ],
+        "extensions": {
+          ".nav": 12,
+          ".pdf": 12,
+          ".toc": 12,
+          ".tex": 14,
+          ".aux": 14,
+          ".log": 14,
+          ".snm": 12,
+          ".vrb": 2
+        }
+      },
+      "figures": {
+        "exists": true,
+        "file_count": 37,
+        "size_mb": "4.43",
+        "total_size_bytes": 4644832,
+        "largest_files": [
+          {
+            "name": "domain_comparison.png",
+            "size_mb": "0.41",
+            "path": "figures/domain_comparison.png"
+          },
+          {
+            "name": "step_size_analysis.png",
+            "size_mb": "0.33",
+            "path": "figures/step_size_analysis.png"
+          },
+          {
+            "name": "terminology_network.png",
+            "size_mb": "0.32",
+            "path": "figures/terminology_network.png"
+          }
+        ],
+        "extensions": {
+          ".pdf": 5,
+          ".png": 31,
+          ".json": 1
+        }
+      },
+      "data": {
+        "exists": true,
+        "file_count": 12,
+        "size_mb": "0.55",
+        "total_size_bytes": 572602,
+        "largest_files": [
+          {
+            "name": "literature_corpus.json",
+            "size_mb": "0.42",
+            "path": "data/literature_corpus.json"
+          },
+          {
+            "name": "terminology.json",
+            "size_mb": "0.05",
+            "path": "data/terminology.json"
+          },
+          {
+            "name": "discourse_analysis.json",
+            "size_mb": "0.03",
+            "path": "data/discourse_analysis.json"
+          }
+        ],
+        "extensions": {
+          ".json": 6,
+          ".npz": 2,
+          ".csv": 4
+        }
+      },
+      "reports": {
+        "exists": true,
+        "file_count": 22,
+        "size_mb": "0.06",
+        "total_size_bytes": 64310,
+        "largest_files": [
+          {
+            "name": "output_statistics.json",
+            "size_mb": "0.01",
+            "path": "reports/output_statistics.json"
+          },
+          {
+            "name": "validation_report.json",
+            "size_mb": "0.01",
+            "path": "reports/validation_report.json"
+          },
+          {
+            "name": "conceptual_mapping_report.md",
+            "size_mb": "0.00",
+            "path": "reports/conceptual_mapping_report.md"
+          }
+        ],
+        "extensions": {
+          ".json": 6,
+          ".md": 14,
+          ".txt": 1,
+          ".html": 1
+        }
+      },
+      "simulations": {
+        "exists": true,
+        "file_count": 3,
+        "size_mb": "0.05",
+        "total_size_bytes": 51907,
+        "largest_files": [
+          {
+            "name": "simulation_example.npz",
+            "size_mb": "0.04",
+            "path": "simulations/simulation_example.npz"
+          },
+          {
+            "name": "simulation_example.json",
+            "size_mb": "0.01",
+            "path": "simulations/simulation_example.json"
+          },
+          {
+            "name": "checkpoint_000000.json",
+            "size_mb": "0.00",
+            "path": "simulations/checkpoint_000000.json"
+          }
+        ],
+        "extensions": {
+          ".npz": 1,
+          ".json": 2
+        }
+      },
+      "llm": {
+        "exists": true,
+        "file_count": 6,
+        "size_mb": "0.05",
+        "total_size_bytes": 55917,
+        "largest_files": [
+          {
+            "name": "combined_review.md",
+            "size_mb": "0.02",
+            "path": "llm/combined_review.md"
+          },
+          {
+            "name": "translation_hi.md",
+            "size_mb": "0.01",
+            "path": "llm/translation_hi.md"
+          },
+          {
+            "name": "translation_ru.md",
+            "size_mb": "0.01",
+            "path": "llm/translation_ru.md"
+          }
+        ],
+        "extensions": {
+          ".md": 5,
+          ".json": 1
+        }
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 0,
+        "size_mb": "0.00",
+        "total_size_bytes": 0,
+        "largest_files": [],
+        "extensions": {}
+      }
+    },
+    "total_files": 195,
+    "total_size_mb": 9.41338062286377,
+    "largest_files": [
+      {
+        "name": "ento_linguistics_combined.pdf",
+        "size_mb": "0.85",
+        "category": "pdf",
+        "path": "pdf/ento_linguistics_combined.pdf"
+      },
+      {
+        "name": "04_experimental_results_slides.pdf",
+        "size_mb": "0.78",
+        "category": "slides",
+        "path": "slides/04_experimental_results_slides.pdf"
+      },
+      {
+        "name": "S02_supplemental_results_slides.pdf",
+        "size_mb": "0.74",
+        "category": "slides",
+        "path": "slides/S02_supplemental_results_slides.pdf"
+      },
+      {
+        "name": "literature_corpus.json",
+        "size_mb": "0.42",
+        "category": "data",
+        "path": "data/literature_corpus.json"
+      },
+      {
+        "name": "domain_comparison.png",
+        "size_mb": "0.41",
+        "category": "figures",
+        "path": "figures/domain_comparison.png"
+      },
+      {
+        "name": "step_size_analysis.png",
+        "size_mb": "0.33",
+        "category": "figures",
+        "path": "figures/step_size_analysis.png"
+      },
+      {
+        "name": "terminology_network.png",
+        "size_mb": "0.32",
+        "category": "figures",
+        "path": "figures/terminology_network.png"
+      },
+      {
+        "name": "_combined_manuscript.tex",
+        "size_mb": "0.13",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.tex"
+      },
+      {
+        "name": "_combined_manuscript.log",
+        "size_mb": "0.11",
+        "category": "pdf",
+        "path": "pdf/_combined_manuscript.log"
+      },
+      {
+        "name": "09_appendix_slides.log",
+        "size_mb": "0.11",
+        "category": "slides",
+        "path": "slides/09_appendix_slides.log"
+      }
+    ],
+    "missing_expected_files": [
+      "ento_linguistics_combined.pdf or project_combined.pdf"
+    ],
+    "file_counts_by_type": {
+      ".md": 20,
+      ".log": 15,
+      ".aux": 15,
+      ".blg": 1,
+      ".bib": 1,
+      ".pdf": 18,
+      ".tex": 15,
+      ".toc": 13,
+      ".bbl": 1,
+      ".html": 15,
+      ".nav": 12,
+      ".snm": 12,
+      ".vrb": 2,
+      ".png": 31,
+      ".json": 16,
+      ".npz": 3,
+      ".csv": 4,
+      ".txt": 1
+    },
+    "sizes_by_category": {
+      "pdf": 1.2479867935180664,
+      "web": 0.17747974395751953,
+      "slides": 2.8480215072631836,
+      "figures": 4.429656982421875,
+      "data": 0.5460758209228516,
+      "reports": 0.06133079528808594,
+      "simulations": 0.04950237274169922,
+      "llm": 0.05332660675048828,
+      "logs": 0.0
+    },
+    "pdf_files": 9,
+    "figures": 37,
+    "data_files": 12
+  }
+}

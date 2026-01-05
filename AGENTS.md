@@ -73,8 +73,11 @@ The template now supports **multiple independent projects** within a single repo
 - Backward compatibility with single-project workflows
 
 **Example Projects:**
-- `projects/prose_project/` - Manuscript-focused with equations
 - `projects/code_project/` - Code-focused with analysis pipeline
+- `projects/active_inference_meta_pragmatic/` - Active inference and meta-pragmatic research
+- `projects/ento_linguistics/` - Ento-linguistic research project
+
+**Note:** Archived projects (e.g., `prose_project/`) are preserved in `projects_archive/` for reference but are not actively executed.
 
 ## 📂 Project Organization: Active vs Archived
 
@@ -128,12 +131,11 @@ template/                           # Generic template repository
 │   └── test_*.py                   # Tests for infrastructure/ modules
 ├── projects/                      # Multiple research projects directory
 │   ├── README.md                  # Multi-project guide
-│   ├── project/                   # Original research template
+│   ├── code_project/              # Code-focused research project
 │   │   ├── src/                   # Project-specific scientific code
 │   │   │   ├── AGENTS.md
 │   │   │   ├── README.md
-│   │   │   ├── example.py
-│   │   │   └── data_generator.py
+│   │   │   └── *.py
 │   │   ├── tests/                 # Project tests
 │   │   │   ├── AGENTS.md
 │   │   │   ├── README.md
@@ -141,25 +143,26 @@ template/                           # Generic template repository
 │   │   ├── scripts/               # Project analysis scripts
 │   │   │   ├── AGENTS.md
 │   │   │   ├── README.md
-│   │   │   ├── analysis_pipeline.py
-│   │   │   └── example_figure.py
+│   │   │   └── *.py
 │   │   ├── manuscript/            # Research manuscript markdown
 │   │   ├── output/                # Working outputs (generated during pipeline)
 │   │   └── pyproject.toml
-│   ├── prose_project/       # Manuscript-focused project
-│   │   ├── src/                   # Minimal source for testing
-│   │   ├── tests/                 # Unit tests
-│   │   ├── manuscript/            # Research manuscript with equations
+│   ├── active_inference_meta_pragmatic/  # Active inference research
+│   │   ├── src/                   # Scientific implementation
+│   │   ├── tests/                 # Test suite
+│   │   ├── scripts/               # Analysis scripts
+│   │   ├── manuscript/            # Research manuscript
 │   │   └── output/                # Working outputs
-│   └── code_project/        # Code-focused project
-│       ├── src/                   # Full scientific implementation
-│       ├── tests/                 # Comprehensive tests
-│       ├── scripts/               # Analysis pipeline
+│   └── ento_linguistics/          # Ento-linguistic research
+│       ├── src/                   # Scientific implementation
+│       ├── tests/                 # Test suite
+│       ├── scripts/               # Analysis scripts
 │       ├── manuscript/            # Research manuscript
 │       └── output/                # Working outputs
 └── output/                         # Final deliverables (organized by project)
-    ├── code_project/        # Code project outputs
-    └── prose_project/       # Prose project outputs
+    ├── code_project/              # Code project outputs
+    ├── active_inference_meta_pragmatic/  # Active inference outputs
+    └── ento_linguistics/           # Ento-linguistics outputs
 ```
 
 ## 📚 Directory-Level Documentation
@@ -239,7 +242,8 @@ template/                           # Generic Template
 │   │   ├── manuscript/             # Research Manuscript
 │   │   ├── output/                 # Generated Files (disposable)
 │   │   └── pyproject.toml          # Project configuration
-│   └── prose_project/              # Manuscript-focused project
+│   ├── active_inference_meta_pragmatic/  # Active inference research project
+│   └── ento_linguistics/           # Ento-linguistic research project
 ├── docs/                           # Documentation
 │   ├── AGENTS.md
 │   └── README.md
@@ -495,7 +499,7 @@ python3 -m infrastructure.validation.cli pdf output/pdf/01_abstract.pdf
 
 ```bash
 # Validate all markdown files
-python3 -m infrastructure.validation.cli markdown projects/prose_project/manuscript/
+python3 -m infrastructure.validation.cli markdown projects/code_project/manuscript/
 
 # Strict mode (fail on any issues)
 python3 -m infrastructure.validation.cli markdown projects/code_project/manuscript/ --strict
@@ -1142,16 +1146,16 @@ See [`docs/operational/CHECKPOINT_RESUME.md`](docs/operational/CHECKPOINT_RESUME
 
 ---
 
-## ✅ System Status: FULLY OPERATIONAL (v2.2) - Enhanced Exemplars
+## ✅ System Status: FULLY OPERATIONAL
 
 **All systems confirmed functional with enhanced exemplar projects:**
 - ✅ **Multi-project pipeline**: Complete core pipeline (7 stages) + executive reporting
-- ✅ **Test coverage excellence**: code_project (96.49%), prose_project (100%)
+- ✅ **Test coverage excellence**: code_project (100%), all projects (100%)
 - ✅ **Publication-quality outputs**: Professional PDFs, cross-referenced manuscripts, automated figures
 - ✅ **Mathematical rigor**: Advanced equations, theorem proofs, convergence analysis
 - ✅ **Comprehensive testing**: Edge cases, performance benchmarks, type safety validation
-- ✅ **Documentation completeness**: Enhanced AGENTS.md/README.md across all directories
-- ✅ **Real data testing**: Zero mocks, comprehensive integration testing
+- ✅ **Documentation completeness**: AGENTS.md/README.md across all directories
+- ✅ **Data testing**: Zero mocks, comprehensive integration testing
 - ✅ **Infrastructure robustness**: Fixed critical bugs, improved error handling
 
 **Environment Management:**
