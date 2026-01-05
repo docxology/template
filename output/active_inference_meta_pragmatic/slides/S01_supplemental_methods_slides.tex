@@ -131,7 +131,9 @@
 \protect\phantomsection\label{sec:supplemental_methods}
 This supplemental section provides methodological details, including
 generative model specifications, mathematical derivations, and
-implementation algorithms.
+implementation algorithms. These materials support the main text by
+providing complete technical specifications that enable replication and
+extension of the quadrant structure analysis.
 
 \begin{block}{Generative Model Specifications}
 \protect\phantomsection\label{sec:complete_generative_models}
@@ -147,12 +149,21 @@ P(o_2 \mid s_1) & P(o_2 \mid s_2) & \cdots & P(o_2 \mid s_n) \\
 P(o_m \mid s_1) & P(o_m \mid s_2) & \cdots & P(o_m \mid s_n)
 \end{pmatrix}\]
 
-\textbf{Normalization:} Each column sums to 1, representing a valid
-probability distribution over observations for each state.
+\textbf{Normalization:} Each column sums to 1: (\sum\_i A{[}i,j{]} = 1)
+for all (j), representing a valid probability distribution over
+observations for each state. This ensures that for any hidden state
+(s\_j), the probabilities of all possible observations sum to 1.
 
-\textbf{Interpretation:} - Rows correspond to observation modalities -
-Columns correspond to hidden state conditions - Entry (A{[}i,j{]})
-represents the probability of observing (o\_i) given state (s\_j)
+\textbf{Interpretation:} - Rows correspond to observation modalities
+(different types of sensory inputs: visual, auditory, tactile, etc.) -
+Columns correspond to hidden state conditions (different possible world
+states: object present/absent, temperature high/low, etc.) - Entry
+(A{[}i,j{]}) represents the probability of observing (o\_i) given state
+(s\_j), encoding how reliably observations indicate underlying states -
+High diagonal values ((A{[}i,i{]})) indicate reliable observations
+(state (s\_i) strongly predicts observation (o\_i)) - Non-zero
+off-diagonal values indicate observation ambiguity (multiple states can
+produce the same observation, creating uncertainty)
 \end{block}
 
 \begin{block}{Matrix B: State Transition Dynamics}
@@ -166,12 +177,20 @@ P(s_1' \mid s_2,a) & P(s_2' \mid s_2,a) & \cdots & P(s_n' \mid s_2,a) \\
 P(s_1' \mid s_n,a) & P(s_2' \mid s_n,a) & \cdots & P(s_n' \mid s_n,a) \\
 \end{pmatrix}\]
 
-\textbf{Structure:} 3D tensor with dimensions {[}n\_states, n\_states,
-n\_actions{]}
+\textbf{Structure:} 3D tensor with dimensions (\text{states}
+\times \text{states} \times \text{actions}), where each slice
+(B{[}:,:,a{]}) is a (n\_\{\text{states}\} \times n\_\{\text{states}\})
+transition matrix for action (a).
 
-\textbf{Properties:} - Each B{[}:,:,a{]} is a stochastic matrix (rows
-sum to 1) - Enables modeling of controllable state transitions -
-Different actions can implement different transition dynamics
+\textbf{Properties:} - Each (B{[}:,:,a{]}) is a stochastic matrix:
+(\sum\_j B{[}i,j,a{]} = 1) for all (i, a), ensuring valid probability
+distributions over next states - Enables modeling of controllable state
+transitions: different actions lead to different transition
+probabilities - Different actions can implement different transition
+dynamics: action (a\_1) might make certain transitions likely while
+action (a\_2) makes different transitions likely - The tensor structure
+allows modeling of how the same action can have different effects
+depending on the current state
 \end{block}
 
 \begin{block}{Matrix C: Preference Landscape}
@@ -255,16 +274,12 @@ Incorporate observation confidence into belief updating:
 
 {[}q(s \mid o,c) \propto q(s) \cdot A(o \mid s) \cdot w(c){]}
 
-Where w(c) is a confidence-dependent weighting function:
+Where (w(c)) is a confidence-dependent weighting function:
 
-{[}w(c) =
-
-\begin{cases}
+\[w(c) = \begin{cases}
 c & \text{if } c > \theta \\
 \frac{\theta}{2} & \text{if } c \leq \theta
-\end{cases}
-
-{]}
+\end{cases}\]
 \end{block}
 
 \begin{block}{Temporal Meta-Data Processing}
@@ -274,7 +289,7 @@ Incorporate temporal consistency information:
 {[}q(s\_t \mid o\_\{1:t\}, m\_t) \propto q(s\_t \mid o\_t)
 \cdot \phi(m\_t \mid s\_\{t-1\}){]}
 
-Where ϕ represents temporal meta-data likelihood.
+Where (\phi) represents temporal meta-data likelihood.
 \end{block}
 
 \begin{block}{Multi-Source Meta-Data Fusion}
@@ -283,7 +298,7 @@ Combine multiple meta-data sources:
 
 {[}w\_\{combined\} = \prod\_\{k=1\}\^{}K w\_k(m\_k){]}
 
-Where each w\_k represents a different meta-data weighting function.
+Where each (w\_k) represents a different meta-data weighting function.
 \end{block}
 \end{block}
 
@@ -353,8 +368,9 @@ Optimize framework parameters using performance feedback:
 {[}\Theta\^{}* = \arg\max\emph{\{\Theta\} \mathbb{E}}\{data\}
 {[}\log p(data\textbar{}\Theta) - \lambda \cdot complexity(\Theta){]}{]}
 
-Where Θ includes: - Confidence thresholds - Adaptation rates - Strategy
-selection parameters - Meta-data weighting functions
+Where (\Theta) includes framework parameters: - Confidence thresholds
+(\theta\_c) - Adaptation rates (\alpha) - Strategy selection parameters
+(\beta) - Meta-data weighting functions (w\_k)
 \end{block}
 
 \begin{block}{Hierarchical Optimization}
@@ -381,8 +397,8 @@ Use gradient information for framework adaptation:
 {[}\frac{d\Theta}{dt} = -\eta \cdot \nabla\_\{\Theta\}
 \mathcal{L}(performance, \Theta){]}
 
-Where (\mathcal{L}) measures performance degradation due to suboptimal
-framework parameters.
+Where (\mathcal{L}(\text{performance}, \Theta)) measures performance
+degradation due to suboptimal framework parameters (\Theta).
 \end{block}
 \end{block}
 
@@ -454,7 +470,7 @@ framework parameters.
   \textbf{Meta-Cognitive Assessment:} (O(n\_\{\text{beliefs}\}))
 \item
   \textbf{Framework Optimization:} (O(\text{iterations}
-  \times \text{parameters}))
+  \times n\_\{\text{parameters}\}))
 \end{itemize}
 \end{block}
 

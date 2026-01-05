@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  4 JAN 2026 17:11
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  5 JAN 2026 08:02
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1324,28 +1324,28 @@ utput/slides/S02_supplemental_results_slides.nav)
 (/Users/4d/Documents/GitHub/template/projects/active_inference_meta_pragmatic/o
 utput/slides/S02_supplemental_results_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 20.
+(Font)              scaled to size 7.8961pt on input line 23.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 20.
+(Font)              scaled to size 5.64008pt on input line 23.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2
-0.
+3.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 20.
+(Font)              scaled to size 11.28131pt on input line 23.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 20.
+(Font)              scaled to size 7.89691pt on input line 23.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 20.
+(Font)              scaled to size 5.64066pt on input line 23.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 20.
+(Font)              scaled to size 11.27914pt on input line 23.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 20.
+(Font)              scaled to size 7.8954pt on input line 23.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 20.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 20.
+(Font)              scaled to size 5.63957pt on input line 23.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 23.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1354,7 +1354,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 20.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 23.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1363,6 +1363,10 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
+Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
+ex-text;!
 Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=te
 x-text;!
 Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=te
@@ -1381,12 +1385,16 @@ Missing character: There is no ⋅ (U+22C5) in font [lmsans10-regular]:mapping=t
 x-text;!
 Missing character: There is no ∏ (U+220F) in font [lmsans10-regular]:mapping=te
 x-text;!
+Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ∏ (U+220F) in font [lmsans10-regular]:mapping=te
+x-text;!
 Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
 ex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.61 ...ognitive Selection:} {[}\pi\^{}*(c) = \arg
+l.85 ...ognitive Selection:} {[}\pi\^{}*(c) = \arg
                                                   \max\_\{\pi\}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1399,13 +1407,13 @@ ern Roman (RS)
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.63 
+l.87 
      
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (43.3838pt too wide) in paragraph at lines 71--71
+Overfull \hbox (43.3838pt too wide) in paragraph at lines 95--95
 []\TU/lmtt/m/n/10.95 Confidence Range | Optimal Strategy | Performance Improvem
 ent[] 
  []
@@ -1423,16 +1431,16 @@ x-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.80 \textbf{Optimization Objective:} {[}\max
-                                             \_\{\theta\_c,\alpha,d\}
+l.104 \textbf{Optimization Objective:} {[}\max
+                                              \_\{\theta\_c,\alpha,d\}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.82 
-     
+l.106 
+      
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
@@ -1445,73 +1453,62 @@ ex-text;!
 Missing character: There is no 𝛼 (U+1D6FC) in font [lmsans10-regular]:mapping=t
 ex-text;!
 
-Overfull \hbox (19.46664pt too wide) in alignment at lines 96--100
+Overfull \hbox (19.46664pt too wide) in alignment at lines 120--124
  [] [] [] 
  []
 
 
-Overfull \hbox (19.46664pt too wide) in alignment at lines 100--106
+Overfull \hbox (19.46664pt too wide) in alignment at lines 124--130
  [] [] [] 
+ []
+
+
+Overfull \hbox (28.0011pt too wide) detected at line 169
+[] [] [][] [] [][] [] [] [] [][] [] [] [] [][] [] [] [] [][][][]
  []
 
 Missing character: There is no 𝛽 (U+1D6FD) in font [lmsans10-regular]:mapping=t
 ex-text;!
 Missing character: There is no 𝛽 (U+1D6FD) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ⋅ (U+22C5) in font [lmsans10-regular]:mapping=te
-x-text;!
 Missing character: There is no 𝛽 (U+1D6FD) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ⋅ (U+22C5) in font [lmsans10-regular]:mapping=te
-x-text;!
 Missing character: There is no 𝛽 (U+1D6FD) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ⋅ (U+22C5) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no 𝜖 (U+1D716) in font [lmsans10-regular]:mapping=t
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no β (U+03B2) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ₁ (U+2081) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no β (U+03B2) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ₂ (U+2082) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no β (U+03B2) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ₃ (U+2083) in font [lmsans10-regular]:mapping=te
-x-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmsans10-regular]:mapping=t
+ex-text;!
 
 LaTeX Warning: Reference `fig:efe_decomposition' on page 1 undefined on input l
-ine 184.
+ine 214.
 
 
 LaTeX Warning: Reference `fig:perception_action_loop' on page 1 undefined on in
-put line 185.
+put line 215.
 
 
 LaTeX Warning: Reference `fig:generative_model_structure' on page 1 undefined o
-n input line 187.
+n input line 217.
 
 
 LaTeX Warning: Reference `fig:meta_level_concepts' on page 1 undefined on input
- line 188.
+ line 218.
 
 
 LaTeX Warning: Reference `fig:fep_system_boundaries' on page 1 undefined on inp
-ut line 189.
+ut line 219.
 
 
 LaTeX Warning: Reference `fig:free_energy_dynamics' on page 1 undefined on inpu
-t line 191.
+t line 221.
 
 
 LaTeX Warning: Reference `fig:structure_preservation' on page 1 undefined on in
-put line 192.
+put line 222.
 
 )
-Overfull \vbox (1702.35237pt too high) detected at line 312
+Overfull \vbox (2145.33936pt too high) detected at line 342
  []
 
 
@@ -1541,10 +1538,10 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 31049 strings out of 473832
- 627518 string characters out of 5729482
- 1215306 words of memory out of 5000000
- 53548 multiletter control sequences out of 15000+600000
+ 31050 strings out of 473832
+ 627545 string characters out of 5729482
+ 1228344 words of memory out of 5000000
+ 53549 multiletter control sequences out of 15000+600000
  562388 words of font info for 70 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1119b,904s stack positions out of 10000i,1000n,20000p,200000b,200000s

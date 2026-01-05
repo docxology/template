@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  4 JAN 2026 17:11
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  5 JAN 2026 08:02
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1241,29 +1241,31 @@ utput/slides/09_appendix_slides.nav)
 
 (/Users/4d/Documents/GitHub/template/projects/active_inference_meta_pragmatic/o
 utput/slides/09_appendix_slides.vrb
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 13.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 13.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-3.
 
+LaTeX Warning: Reference `eq:efe' on page 1 undefined on input line 14.
+
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 7.8961pt on input line 16.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 5.64008pt on input line 16.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
+6.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 13.
+(Font)              scaled to size 11.28131pt on input line 16.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 13.
+(Font)              scaled to size 7.89691pt on input line 16.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 13.
+(Font)              scaled to size 5.64066pt on input line 16.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 13.
+(Font)              scaled to size 11.27914pt on input line 16.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 13.
+(Font)              scaled to size 7.8954pt on input line 16.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 13.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 13.
+(Font)              scaled to size 5.63957pt on input line 16.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 16.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1272,7 +1274,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 13.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 16.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1285,7 +1287,7 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
 )
-Overfull \hbox (75.5967pt too wide) detected at line 13
+Overfull \hbox (75.5967pt too wide) detected at line 16
 [][][][] [] [][][][] [][][][][] [] [] [][][][] [] [][][] [] [][][][] [][][][] [
 ] [][][] [] [] [][][][][] [] [] [][][][][][][][][]
  []
@@ -1294,23 +1296,29 @@ Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping
 ex-text;!
 Missing character: There is no 𝜎 (U+1D70E) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=te
-x-text;!
-! Missing $ inserted.
-<inserted text> 
-                $
-l.66 \quad c\_i = \log
-                       P(o\_i){]}
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.67 
-     
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+LaTeX Warning: Reference `eq:matrix_c' on page 1 undefined on input line 43.
+
+
+LaTeX Warning: Reference `eq:matrix_a' on page 1 undefined on input line 44.
+
+
+LaTeX Warning: Reference `eq:matrix_a' on page 1 undefined on input line 54.
+
+Missing character: There is no ∑ (U+2211) in font [lmsans10-regular]:mapping=te
+x-text;!
+LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 59.
+Missing character: There is no ≠ (U+2260) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+LaTeX Warning: Reference `eq:matrix_b' on page 1 undefined on input line 72.
+
+
+LaTeX Warning: Reference `eq:matrix_c' on page 1 undefined on input line 84.
+
+
+LaTeX Warning: Reference `eq:matrix_d' on page 1 undefined on input line 96.
 
 Missing character: There is no 𝜙 (U+1D719) in font [lmsans10-regular]:mapping=t
 ex-text;!
@@ -1321,130 +1329,74 @@ x-text;!
 Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=te
 x-text;!
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.30151pt on input line 320.
+(Font)              scaled to size 10.30151pt on input line 342.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.21106pt on input line 320.
+(Font)              scaled to size 7.21106pt on input line 342.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.15076pt on input line 320.
+(Font)              scaled to size 5.15076pt on input line 342.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.30258pt on input line 320.
+(Font)              scaled to size 10.30258pt on input line 342.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.2118pt on input line 320.
+(Font)              scaled to size 7.2118pt on input line 342.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.15129pt on input line 320.
+(Font)              scaled to size 5.15129pt on input line 342.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.3006pt on input line 320.
+(Font)              scaled to size 10.3006pt on input line 342.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.21042pt on input line 320.
+(Font)              scaled to size 7.21042pt on input line 342.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.1503pt on input line 320.
-! Missing $ inserted.
-<inserted text> 
-                $
-l.427 \begin{pmatrix}
-                     
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
+(Font)              scaled to size 5.1503pt on input line 342.
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.431 \end{pmatrix}
-                   
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
+! LaTeX Error: \symcalallowed only in math mode.
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.437 \begin{pmatrix}
-                      -1.0 \\ 2.0 \\ -1.0 \end{pmatrix}
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.437 ...matrix} -1.0 \\ 2.0 \\ -1.0 \end{pmatrix}
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
                                                   
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
+l.462 The EFE calculation (\mathcal
+                                   {F}(\pi)) balances these two objectives,
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
 
-Missing character: There is no ∝ (U+221D) in font [lmsans10-regular]:mapping=te
+Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=te
 x-text;!
-Missing character: There is no ⋅ (U+22C5) in font [lmsans10-regular]:mapping=te
+Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=te
 x-text;!
-! Missing $ inserted.
-<inserted text> 
-                $
-l.461 ...bf{Confidence Dynamics:} {[}\frac{dc}{dt}
-                                                   = -\alpha (c -
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Extra }, or forgotten $.
-\frac  #1#2->{\begingroup #1\endgroup \@@over #2}
-                                                 
-l.461 ...bf{Confidence Dynamics:} {[}\frac{dc}{dt}
-                                                   = -\alpha (c -
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.463 
-      
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-Missing character: There is no α (U+03B1) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no β (U+03B2) in font [lmsans10-regular]:mapping=te
-x-text;!
-! Missing } inserted.
-<inserted text> 
-                }
-l.466 \end{block}
-                 
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmsans10-regular]:mapping=t
+ex-text;!
 Missing character: There is no 𝛩 (U+1D6E9) in font [lmsans10-regular]:mapping=t
 ex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.470 ...arameter Learning:} {[}\Theta\^{}* = \arg
+l.510 ...arameter Learning:} {[}\Theta\^{}* = \arg
                                                   \max\_\{\Theta\}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-LaTeX Warning: Command \textbar invalid in math mode on input line 471.
+LaTeX Warning: Command \textbar invalid in math mode on input line 511.
 
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.472 
+l.512 
       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝜃 (U+1D703) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmsans10-regular]:mapping=t
+ex-text;!
 )
-Overfull \vbox (4842.43489pt too high) detected at line 719
+Overfull \vbox (5465.87091pt too high) detected at line 760
  []
 
 
@@ -1468,15 +1420,19 @@ utput/slides/09_appendix_slides.aux)
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 29552 strings out of 473832
- 600435 string characters out of 5729482
- 1305912 words of memory out of 5000000
- 52056 multiletter control sequences out of 15000+600000
- 565330 words of font info for 93 fonts, out of 8000000 for 9000
+ 29565 strings out of 473832
+ 600696 string characters out of 5729482
+ 1327668 words of memory out of 5000000
+ 52067 multiletter control sequences out of 15000+600000
+ 565338 words of font info for 94 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,13n,123p,1106b,1105s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,12n,123p,1106b,1105s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/active_inference
 _meta_pragmatic/output/slides/09_appendix_slides.pdf (1 page).

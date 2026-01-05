@@ -11,8 +11,11 @@
 \beamer@slide {matrix-a-observation-likelihoods}{1}
 \beamer@slide {eq:appendix_matrix_a}{1}
 \beamer@slide {matrix-b-state-transitions}{1}
+\beamer@slide {eq:appendix_matrix_b}{1}
 \beamer@slide {matrix-c-preferences}{1}
+\beamer@slide {eq:appendix_matrix_c}{1}
 \beamer@slide {matrix-d-prior-beliefs}{1}
+\beamer@slide {eq:appendix_matrix_d}{1}
 \beamer@slide {sec:fep_details}{1}
 \beamer@slide {variational-free-energy}{1}
 \beamer@slide {eq:variational_free_energy}{1}

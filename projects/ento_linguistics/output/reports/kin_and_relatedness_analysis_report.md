@@ -1,6 +1,6 @@
 # Kin And Relatedness Domain Analysis
 
-**Analysis Date:** 2026-01-04T17:19:45.264948
+**Analysis Date:** 2026-01-05T08:12:43.128755
 **Domain:** kin_and_relatedness
 **Terms Analyzed:** 2
 
@@ -11,7 +11,7 @@ This report presents a detailed analysis of the Kin And Relatedness domain withi
 ## Key Terminology
 
 ### Most Frequent Terms
-- **decision-making**: 5 occurrences
+- **decision-making**: 6 occurrences
 - **morpho-kinematic**: 2 occurrences
 
 ### Term Patterns
@@ -49,7 +49,7 @@ The following assumptions are embedded in the terminology used in this domain:
 ## Detailed Term Analysis
 
 ### Term-by-Term Breakdown
-#### decision-making\n- **Frequency**: 5\n- **Contexts**: 5\n- **Domains**: kin_and_relatedness\n- **Sample Usage**: modeling explore alternatives **decision-making** ensuring sustainable ecosystem\n
+#### decision-making\n- **Frequency**: 6\n- **Contexts**: 5\n- **Domains**: kin_and_relatedness\n- **Sample Usage**: mechanism lambda phage **decision-making** eugenio simao biological\n
 #### morpho-kinematic\n- **Frequency**: 2\n- **Contexts**: 2\n- **Domains**: kin_and_relatedness\n- **Sample Usage**: stress classification based **morpho-kinematic** via biological sectoring\n
 
 ## Implications for Research

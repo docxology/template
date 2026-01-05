@@ -1,6 +1,586 @@
 {
   "publications": [
     {
+      "title": "Does different surgical approaches affect tolerance to postoperative adjuvant chemotherapy in early-stage upper gastric cancer?",
+      "authors": [
+        "Zuo S",
+        "Zhang Y",
+        "Liao X"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41488885",
+      "year": 2025,
+      "journal": "Frontiers in surgery",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Determination of Effective Prophylactic Responses of Truncated Flagellin Protein as a Vaccine Candidate Against Uropathogenic Escherichia coli.",
+      "authors": [
+        "Dehvari A",
+        "Bameri Z",
+        "Asadi Karam MR",
+        "Kord E",
+        "Oloomi M",
+        "Shahraki Zahedani S",
+        "Habibi M",
+        "Hashemzahi Z"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41488806",
+      "year": 2026,
+      "journal": "International journal of microbiology",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "First Measurements of Mixed Floral Traits Influencing Anacardium occidentale (Anacardeacae) Attractiveness to Bees in Côte d'Ivoire: Conservation and Agricultural Implications.",
+      "authors": [
+        "Silué D",
+        "Soro NA",
+        "Kouakou LMM",
+        "Tiho S",
+        "Konate S",
+        "Dekoninck W"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41488795",
+      "year": 2026,
+      "journal": "Ecology and evolution",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "From Leaves to Litter: Use of Anthropogenic Nesting Materials in Hibernation Nests of the European Hedgehog.",
+      "authors": [
+        "Crawford K",
+        "Beardsworth CE",
+        "Hill DL",
+        "MacLeod R",
+        "Nowack J"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41488793",
+      "year": 2026,
+      "journal": "Ecology and evolution",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "PSMD14 drives lung adenocarcinoma progression through HMMR stabilization and dual activation of TGF-β/Smad and PI3K/AKT/mTOR signaling.",
+      "authors": [
+        "Chen R",
+        "Wang S",
+        "Xie J"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41488674",
+      "year": 2025,
+      "journal": "Frontiers in immunology",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Multicomponent synthesis of novel imidazole-pyran derivatives: in silico and in vitro studies.",
+      "authors": [
+        "Jamshidi Z",
+        "Taghdisi SM",
+        "Abnous K",
+        "Ghodsi R",
+        "Hadizadeh F"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41488503",
+      "year": 2025,
+      "journal": "RSC advances",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Micromycete diversity and pathogenic potential in soils of long-term cultivated apple orchards.",
+      "authors": [
+        "Demyanyuk O",
+        "Oliferchuk V",
+        "Yakovenko R",
+        "Synenko D",
+        "Pinheiro MNC",
+        "Symochko L"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41488291",
+      "year": 2025,
+      "journal": "Frontiers in microbiology",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "The genome sequence of the ichneunomid wasp, Ischnus inquisitorius (Muller, 1776) (Hymenoptera: Ichneumonidae).",
+      "authors": [
+        "McCulloch J",
+        "Crowley LM",
+        "De Ketelaere A",
+        "Barclay MVL",
+        "Broad GR",
+        "University of Oxford and Wytham Woods Genome Acquisition Lab",
+        "Natural History Museum Genome Acquisition Lab",
+        "Wellcome Sanger Institute Tree of Life Management, Samples and Laboratory team",
+        "Wellcome Sanger Institute Scientific Operations: Sequencing Operations",
+        "Wellcome Sanger Institute Tree of Life Core Informatics team",
+        "Tree of Life Core Informatics collective",
+        "Darwin Tree of Life Consortium"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41488262",
+      "year": 2025,
+      "journal": "Wellcome open research",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "The genome sequence of the Tenthredid wasp, Eutomostethus luteiventris (Klug, 1816) (Hymenoptera: Tenthredinidae).",
+      "authors": [
+        "Halstead A",
+        "Fowler K",
+        "Natural History Museum Genome Acquisition Lab",
+        "Wellcome Sanger Institute Tree of Life Management, Samples and Laboratory team",
+        "Wellcome Sanger Institute Scientific Operations: Sequencing Operations",
+        "Wellcome Sanger Institute Tree of Life Core Informatics team",
+        "Tree of Life Core Informatics collective",
+        "Darwin Tree of Life Consortium"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41488256",
+      "year": 2025,
+      "journal": "Wellcome open research",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "First photographic evidence of the Egyptian fruit bat, Rousettus aegyptiacus (Pteropodidae) in the King Salman Bin Abdulaziz Royal Nature Reserve, Hail Region, Saudi Arabia.",
+      "authors": [
+        "Bakri M",
+        "Abdulhakeem M",
+        "Alasiri A",
+        "Aloufi T",
+        "Al-Sowayan N"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41488229",
+      "year": 2025,
+      "journal": "F1000Research",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Biosynthesized TiO₂ Nanoparticles to Enhance the Mechanical and Antibacterial Properties of Type-II Glass Ionomer Cement for Dental Restorative Applications.",
+      "authors": [
+        "P S",
+        "Ks H",
+        "S G",
+        "Jannu A",
+        "Kusugal P",
+        "Ruttonji Z"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41487806",
+      "year": 2025,
+      "journal": "Cureus",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Advancing Esophageal Disease Modeling: Microfluidic Platforms for Adult Tissue-Resident Stem Cell Culture and Differentiation.",
+      "authors": [
+        "Hosseini-Farahabadi S",
+        "Abuhussein O",
+        "Stewart C",
+        "Gao G",
+        "Haglund T",
+        "Schaeffer D",
+        "Donnellan F",
+        "McKeon F",
+        "Xian W",
+        "Kelleher D",
+        "Duggan S"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41487456",
+      "year": 2026,
+      "journal": "Gastro hep advances",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Gas exchange dynamics in bottlenose dolphins around 2 min apneas conform to values for terrestrial mammals.",
+      "authors": [
+        "Pedersen MB",
+        "Mikkelsen MVN",
+        "Jensen FH",
+        "Madsen PT",
+        "Malte H"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41487063",
+      "year": 2026,
+      "journal": "The Journal of experimental biology",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Orange peel soil amendments affect Brassica rapa growth and aphid development without disrupting parasitoid foraging behaviour.",
+      "authors": [
+        "Jianye Z",
+        "Xia H",
+        "Ali J",
+        "Jingyu W",
+        "Yang L",
+        "Zhang Y",
+        "Xue X",
+        "Liang J",
+        "Xiao H",
+        "Mahamood M",
+        "Ali H",
+        "Tonga A",
+        "Li Q",
+        "Chen R"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41486871",
+      "year": 2026,
+      "journal": "Bulletin of entomological research",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Hematopoietic effects of tagraxofusp in treatment-naive patients with blastic plasmacytoid dendritic cell neoplasm.",
+      "authors": [
+        "Konopleva M",
+        "Pemmaraju N",
+        "Sweet KL",
+        "Stein AS",
+        "Rizzieri DA",
+        "Wang ES",
+        "Vasu S",
+        "Rosenblat T",
+        "Zuurman M",
+        "Gupta I",
+        "Lane AA"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41486505",
+      "year": 2026,
+      "journal": "Cancer",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Photobiomodulation Reduces the Microbial Load of Acute Burn Wounds in the Burns Outpatient Department.",
+      "authors": [
+        "Perusseau-Lambert A",
+        "Broome E",
+        "Bray E",
+        "Barnes D",
+        "Barabas SP",
+        "Jain S",
+        "Frew Q"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41486500",
+      "year": 2026,
+      "journal": "Lasers in surgery and medicine",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "The evolution of bees: insights from 'omic studies.",
+      "authors": [
+        "Brenman-Suttner D",
+        "Zayed A"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41486496",
+      "year": 2026,
+      "journal": "Genome biology and evolution",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Single-cell omics in investigating the effect of CAFs with KRAS overexpression on the malignant progression of anaplastic thyroid cancer.",
+      "authors": [
+        "Sun H",
+        "Chen Q",
+        "Li G",
+        "Chen M",
+        "Dai J",
+        "Yan M"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41486477",
+      "year": 2026,
+      "journal": "Journal of the Chinese Medical Association : JCMA",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Next-generation polydopamine nanocoatings advancing the understanding of surface properties and antimicrobial efficacy.",
+      "authors": [
+        "Nambiar S",
+        "Nayak DG",
+        "Isloor AM",
+        "Suman E",
+        "Nayak S",
+        "Kabekkodu SP",
+        "Rao RU"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41486295",
+      "year": 2026,
+      "journal": "Scientific reports",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "T-2 toxin induces degradation of chondrocytes extracellular matrix through the methyltransferase-like 3/m6A/Csf1 axis.",
+      "authors": [
+        "Zhang B",
+        "Qi F",
+        "Dong H",
+        "Yu Q",
+        "Li H",
+        "Wang C",
+        "Cheng W",
+        "Wang H",
+        "Yu J"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41486239",
+      "year": 2026,
+      "journal": "Archives of toxicology",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "An improved artificial bee colony algorithm with path relinking strategy for the integrated distributed no-wait flow-shop scheduling and vehicle routing problem.",
+      "authors": [
+        "Dong C",
+        "Zhang H"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41486207",
+      "year": 2026,
+      "journal": "Scientific reports",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Explainable federated transformer framework for joint leukemia classification and stage prediction.",
+      "authors": [
+        "Parwez K",
+        "Sohail SI",
+        "Akram A",
+        "Rashid J",
+        "Atteia G",
+        "Sarwar N"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41486186",
+      "year": 2026,
+      "journal": "Scientific reports",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Prevalence and related influencing factors of depression symptoms among empty-nest elderly in China.",
+      "authors": [
+        "Li D",
+        "Long Z"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41486185",
+      "year": 2026,
+      "journal": "Scientific reports",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "CEST MRI Processing Pipeline in Pilot Study of Alzheimer's Disease Patients.",
+      "authors": [
+        "Asturias A",
+        "Yu FF",
+        "Davenport EM",
+        "Kelley BJ",
+        "Dimitrov IE",
+        "Keupp J",
+        "Vinogradov E"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41486095",
+      "year": 2026,
+      "journal": "Magnetic resonance in medicine",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Enzymatic Potential and Antifungal Susceptibility Profile of Aspergillus terreus Against Essential Oils.",
+      "authors": [
+        "Sana S",
+        "Sana N",
+        "Nadeem A",
+        "Nazir L",
+        "Sattar R",
+        "Ali S",
+        "Ullah N",
+        "Ali El Hadi Mohamed R",
+        "Al-Hoshani N",
+        "Alwethaynani MS",
+        "Al-Joufi FA",
+        "Aziz T"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41485895",
+      "year": 2026,
+      "journal": "Journal of oleo science",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "The Zeb1/System X(c)(-) Axis Safeguards Iron-Loaded Cancer-Associated Fibroblasts Against Ferroptosis and Promotes Immunosuppression in Prostate Cancer.",
+      "authors": [
+        "Zhang Y",
+        "Zhao H",
+        "Xu P",
+        "Liu K",
+        "Du G",
+        "Chen X",
+        "Jing N",
+        "Bao W",
+        "Cheng C",
+        "Wang J",
+        "Wang M",
+        "Wang N",
+        "Xi X",
+        "Liu Y",
+        "Sun Y",
+        "Gao WQ",
+        "Zhu HH",
+        "Zhang K"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41485685",
+      "year": 2026,
+      "journal": "Cancer letters",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Bio-inspired nacre-like glass flake/polymer composites with antibacterial function and translucent appearance.",
+      "authors": [
+        "Sun H",
+        "Luangpattarawong A",
+        "Tabrizian P",
+        "Qambrani A",
+        "Sui T",
+        "Nobbs AH",
+        "Ireland T",
+        "Su B"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41485531",
+      "year": 2026,
+      "journal": "Journal of dentistry",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Measuring brain sensitivity to semantic distance in spoken narrative comprehension.",
+      "authors": [
+        "Mechtenberg H",
+        "Reilly J",
+        "Peelle JE",
+        "Myers EB"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41485418",
+      "year": 2025,
+      "journal": "Cortex; a journal devoted to the study of the nervous system and behavior",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Mechanism of d-Glucaro-1,4-lactone enhancing the anticancer efficacy of lenvatinib via the IFN-γ-STAT3-PD-L1 signaling pathway in hepatocellular carcinoma.",
+      "authors": [
+        "Deng Y",
+        "Hu Q",
+        "Song Z",
+        "Nie M",
+        "Wu Z",
+        "Lei Y",
+        "Liu M",
+        "Zhan D",
+        "Xie B"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41485289",
+      "year": 2025,
+      "journal": "Phytomedicine : international journal of phytotherapy and phytopharmacology",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Taxifolin promotes glioma stem cell differentiation via CYP1B1-mediated EMT suppression.",
+      "authors": [
+        "Li M",
+        "Yang J",
+        "Wang K",
+        "Zhu A",
+        "Yin H",
+        "Li Z",
+        "Zhao H",
+        "Wang Q",
+        "Kalvakolanu DV",
+        "Hao Y",
+        "Cui B",
+        "Zhang L",
+        "Guo B"
+      ],
+      "abstract": null,
+      "doi": null,
+      "pmid": "41485288",
+      "year": 2025,
+      "journal": "Phytomedicine : international journal of phytotherapy and phytopharmacology",
+      "keywords": [],
+      "full_text": null
+    },
+    {
       "title": "CD96 as a Therapeutic Target for CAR T-Cell Therapy in Acute Myeloid Leukemia.",
       "authors": [
         "Gao X",
@@ -4239,555 +4819,183 @@
       "full_text": null
     },
     {
-      "title": "KLHL4 upregulates EGFR signaling to promote the malignant progression of oral squamous cell carcinoma.",
+      "title": "Evolutionary and Structural Constraints Define a Mutation-Resistant Catalytic Core in E. coli Serine Hydroxy methyltransferase (SHMT)",
       "authors": [
-        "Zhang Y",
-        "Ren Y",
-        "Wang Y",
-        "Liu M",
-        "Cheng F",
-        "Li H",
-        "Sun S",
-        "Zhou X",
-        "Yang J",
-        "Li J"
+        "Deeptanshu Pandey",
+        "Dwipanjan Sanyal",
+        "Vladimir N. Uversky",
+        "Daniel C. Zielinski",
+        "Sourav Chowdhury"
       ],
-      "abstract": null,
+      "abstract": "Serine hydroxymethyltransferase is an essential enzyme in the Escherichia coli folate pathway, yet it has not been adopted as an antibacterial target, unlike DHFR, DHPS, or thymidylate synthase. To investigate this discrepancy, we applied a multi-scale computational framework that integrates large-scale sequence analysis of 1000 homologs, coevolutionary interaction mapping, structural community analysis, intrinsic disorder profiling, and adaptive fitness modelling. These analyses converge on a single conclusion: the catalytic core of SHMT forms an exceptionally conserved and tightly coupled structural unit. This region exhibits dense coevolution, strong intramolecular connectivity, minimal disorder, and extremely low mutational tolerance. Peripheral loops and termini, in contrast, are far more flexible. Relative to established folate-pathway antibiotic targets, SHMT active site is even more rigid and evolutionarily constrained. This extreme constraint may limit the emergence of resistance-compatible mutations, providing a plausible explanation for the absence of natural-product inhibitors. Fitness trajectory modelling supports this interpretation, showing that nearly all active-site residues tolerate only rare or neutral substitutions. Together, these findings identify SHMT as a structurally stable and evolutionarily restricted enzyme whose catalytic architecture is unusually protected. This makes SHMT an underexplored yet promising target for the rational design of next-generation antibacterial agents.",
       "doi": null,
-      "pmid": "41452436",
-      "year": 2025,
-      "journal": "Medical oncology (Northwood, London, England)",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Exploring a Flow Cytometry-Based CFU Assay for Functional Assessment of Human HSPCs: a Robust Alternative to Morphological Colony Evaluation.",
-      "authors": [
-        "Revenfeld ALS",
-        "Møller AMJ",
-        "Tylvad M",
-        "Bill M",
-        "Rosenberg CA",
-        "Møller BK"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41452425",
-      "year": 2025,
-      "journal": "Stem cell reviews and reports",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Icaritin suppresses CAD-mediated liver cancer development by targeting miR-18b-5p in a xenograft mouse model.",
-      "authors": [
-        "Wu D",
-        "Mi T",
-        "Tang X",
-        "Jia Y",
-        "Guo T",
-        "Zhou G",
-        "Li W"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41452393",
-      "year": 2025,
-      "journal": "Medical oncology (Northwood, London, England)",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Are Human Super-Predators Always Super-Scary? A Meta-Analysis of Wild Animal Behavioural Responses to Human Interactions.",
-      "authors": [
-        "Dsouza S",
-        "Shanker K",
-        "Thaker M"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41452304",
-      "year": 2025,
-      "journal": "Ecology letters",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "High glucose enhances lung cancer cell aggressiveness: The impacts of GLUT1, UAP1, UGP2, and N-linked Glycosylation.",
-      "authors": [
-        "Phoomak C",
-        "Saengboonmee C",
-        "Baro M",
-        "Piriyapairoje K",
-        "Ittiudomrak T",
-        "Contessa JN",
-        "Wongkham S"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41452006",
-      "year": 2025,
-      "journal": "Glycobiology",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Performance of time-lapsed turbidimetry and agar plating as bacterial quantification methods.",
-      "authors": [
-        "Dewicki A",
-        "Henkel M",
-        "Sugitani N",
-        "Applegate A",
-        "Campfield BT"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41451991",
-      "year": 2025,
-      "journal": "Microbiology spectrum",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "High-Dose Ascorbic Acid Combined With Dihydroartemisinin Inhibits Lung Adenocarcinoma Malignancy by Inducing Ferroptosis via SLC7A11/GPX4 Pathway.",
-      "authors": [
-        "Li L",
-        "Lu F",
-        "Shu S",
-        "Jiang X",
-        "Lu H",
-        "Cao K",
-        "Chen Z",
-        "Gao J",
-        "Liu M",
-        "Chang L",
-        "Li W"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41451920",
-      "year": 2025,
-      "journal": "Journal of cellular and molecular medicine",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Integration of ChatGPT in medical learning: An analysis of interaction and contradictions.",
-      "authors": [
-        "Tai SH",
-        "Yeh CC",
-        "Wang JY",
-        "Hu RH",
-        "Lee PH",
-        "Ho CM"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41451669",
-      "year": 2025,
-      "journal": "Medical teacher",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "The Interplay of Economic Resources, Family Decision Power, and Gender Ideology in China.",
-      "authors": [
-        "Luo MH",
-        "Kan MY"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41451403",
+      "pmid": null,
       "year": 2026,
-      "journal": "Social indicators research",
+      "journal": "arXiv",
       "keywords": [],
       "full_text": null
     },
     {
-      "title": "Evaluation of F18 enterotoxigenic Escherichia coli intestinal attachment and early disease onset in nursery pigs.",
+      "title": "Modeling Epidemic Dynamics of Mutant Strains with Evolutionary Game-based Vaccination Behavior",
       "authors": [
-        "Due EM",
-        "Miller KA",
-        "Burrough ER",
-        "Helm ET",
-        "Gabler NK"
+        "Wenjie Zhang",
+        "Yusheng Li",
+        "Qin Li",
+        "Guojun Huang",
+        "Minyu Feng"
       ],
-      "abstract": null,
+      "abstract": "The outbreak of mutant strains and vaccination behaviors have been the focus of recent epidemiological research, but most existing epidemic models failed to simultaneously capture viral mutation and consider the complexity and behavioral dynamics of vaccination. To address this gap, we develop an extended SIRS model that distinguishes infections with the original strain and a mutant strain, and explicitly introduces a vaccinated compartment state. At the behavioral level, we employ evolutionary game theory to model individual vaccination decisions, where strategies are determined by both neighbors' choices and the current epidemiological situation. This process corresponds to the time-varying vaccination rate of susceptible individuals transitioning to vaccinated individuals at the epidemic spreading level. We then couple the epidemic and vaccination behavioral processes through the microscopic Markov chain approach (MMCA) and finally investigate the evolutionary dynamics via numerical simulations. The results show that our framework can effectively mitigate outbreaks across different disease scenarios. Sensitivity analysis further reveals that vaccination uptake is most strongly influenced by vaccine cost, efficacy, and perceived risk of side effects. Overall, this behavior-aware modeling framework captures the co-evolution of viral mutation and vaccination behavior, providing quantitative and theoretical support for designing effective public health vaccination policies.",
       "doi": null,
-      "pmid": "41451332",
-      "year": 2025,
-      "journal": "Frontiers in veterinary science",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Isolation, identification, and susceptibility testing of Staphylococcus caprae from dairy goats with mastitis to antibiotics and Chinese herbal medicines.",
-      "authors": [
-        "Luo J",
-        "Wang Y",
-        "Zheng W",
-        "Xu C",
-        "Chen J",
-        "Liu B",
-        "Wang X",
-        "Fang M"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41451330",
-      "year": 2025,
-      "journal": "Frontiers in veterinary science",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Retail Food Environment in an Urban Resettlement Colony of Delhi: A Community-Based Cross-Sectional Study.",
-      "authors": [
-        "Seth AK",
-        "Krishnan A",
-        "Nongkynrih B",
-        "Bairwa M"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41451078",
-      "year": 2025,
-      "journal": "Indian journal of community medicine : official publication of Indian Association of Preventive & Social Medicine",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "IGF2BP3-STAT3-METTL3 axis promotes malignant progression in hepatocellular carcinoma (HCC).",
-      "authors": [
-        "Xu Y",
-        "Cao Y",
-        "Yang J",
-        "Yu X",
-        "Yang L",
-        "Xie Y",
-        "Zhao J",
-        "Zhang Y"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41449478",
-      "year": 2025,
-      "journal": "Human genomics",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "MiR-668-3p in M2 macrophage-derived exosomes activates autophagy through the ETS1/EGFR axis and promotes cisplatin resistance in gastric cancer.",
-      "authors": [
-        "Hu Z",
-        "Xu D",
-        "Zheng Z",
-        "Huang X",
-        "Zhu Z",
-        "Zhang X",
-        "Wei Z",
-        "Fu H",
-        "Wang W",
-        "Yang D",
-        "Yan R"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41449382",
-      "year": 2025,
-      "journal": "Cancer cell international",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Theranostic Nonstoichiometric, Multivalent Bismuth (Bi)-Based Nanospheres for Selective Spontaneous Melanoma Treatment.",
-      "authors": [
-        "Chaki Borrás ML",
-        "Barker PJ",
-        "Sluyter R",
-        "Konstantinov K"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41449101",
-      "year": 2025,
-      "journal": "ACS applied materials & interfaces",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Tumour budding in pretreatment cervical biopsies: a prognosticator for personalised therapy in the era of precision oncology.",
-      "authors": [
-        "Lee YS",
-        "Yim K",
-        "Kim CJ",
-        "Kim JH",
-        "Lee YS",
-        "Jeong S",
-        "Lee SH",
-        "Bizzarri N",
-        "Permata TBM",
-        "Kim YS",
-        "Lee SW"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41449070",
-      "year": 2025,
-      "journal": "Histopathology",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Emergence of Order in Chemically Active Droplets: Temporal Dynamics and Collective Behavior.",
-      "authors": [
-        "Ashraf S",
-        "Kumar P",
-        "Dwivedi P",
-        "Blanc F",
-        "Pillai D",
-        "Mangal R"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41448802",
-      "year": 2025,
-      "journal": "Langmuir : the ACS journal of surfaces and colloids",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Adaptive Variation in the Acoustic Sensitivity of California Ground Squirrels (Otospermophilus beecheyi) Living in Higher- and Lower-elevation Habitats.",
-      "authors": [
-        "Tromborg CT",
-        "Coss RG",
-        "Henry KR"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41448475",
-      "year": 2025,
-      "journal": "Behavioural processes",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Inhibiting CCR3 expands cancer stem cells via c-Myc-NTSR1 axis and associates with tumor innervation features.",
-      "authors": [
-        "Peng TJ",
-        "Hwang WL",
-        "Sun WH",
-        "Tang SJ",
-        "Sun KH"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41448270",
-      "year": 2025,
-      "journal": "Translational research : the journal of laboratory and clinical medicine",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "TAF4B knockdown differentially affects erythroid and natural killer cells but not monocytic differentiation from human cord blood HSPCs.",
-      "authors": [
-        "Nakano S",
-        "Niwa A",
-        "Kitagawa Y",
-        "Saito MK"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41447882",
-      "year": 2025,
-      "journal": "Biochemical and biophysical research communications",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Blood chemistry and health status of Eleonora's falcon (Falco eleonorae) nestlings.",
-      "authors": [
-        "Xirouchakis SM",
-        "Baxevani K",
-        "Kardamaki A",
-        "Perodaskalaki A",
-        "Anagnostopoulou A",
-        "Damianakis K"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41447854",
-      "year": 2025,
-      "journal": "Zoology (Jena, Germany)",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "CTHRC1/TGF-β/Smad axis serves as therapeutic targets in inhibiting oral squamous cell carcinoma by mediating ferroptosis.",
-      "authors": [
-        "Huang S",
-        "Jiao Y",
-        "Chang Y",
-        "Feng Y",
-        "Mu G",
-        "Xie L"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41447430",
-      "year": 2025,
-      "journal": "Discover oncology",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Dendritic Cells in the Gastrointestinal System: Division of Labor, Plasticity, and Niche-Specific Adaptation.",
-      "authors": [
-        "Zhou YD",
-        "Komnick MR",
-        "Esterházy D"
-      ],
-      "abstract": null,
-      "doi": null,
-      "pmid": "41446959",
+      "pmid": null,
       "year": 2026,
-      "journal": "Immunological reviews",
+      "journal": "arXiv",
       "keywords": [],
       "full_text": null
     },
     {
-      "title": "Mating Behavior of Manatees Documented in Mississippi Estuarine Waters.",
+      "title": "Gardner volumes and self-organization in a minimal model of complex ecosystems",
       "authors": [
-        "Muraco H",
-        "Virden M",
-        "Chevis M",
-        "Chenier K",
-        "Stratman M",
-        "Free A",
-        "Sparks E"
+        "Frederik J. Thomsen",
+        "Johan L. A. Dubbeldam",
+        "Rudolf Hanel"
       ],
-      "abstract": null,
+      "abstract": "We study self-organization in a minimally nonlinear model of large random ecosystems. Populations evolve over time according to a piecewise linear system of ordinary differential equations subject to a non-negativity constraint resulting in discrete time extinction and revival events. The dynamics are generated by a random elliptic community matrix with tunable correlation strength. We show that, independent of the correlation strength, solutions of the system are confined to subsets of the phase space that can be cast as time-varying Gardner volumes from the theory of learning in neural networks. These volumes decrease with the diversity (i.e. the fraction of extant species) and become exponentially small in the long-time limit. Using standard results from random matrix theory, the changing diversity is then linked to a sequence of contractions and expansions in the spectrum of the community matrix over time, resulting in a sequence of May-type stability problems determining whether the total population evolves toward complete extinction or unbounded growth. In the case of unbounded growth, we show the model allows for a particularly simple nonlinear extension in which the solutions instead evolve towards a new attractor.",
       "doi": null,
-      "pmid": "41446384",
-      "year": 2025,
-      "journal": "Ecology and evolution",
+      "pmid": null,
+      "year": 2026,
+      "journal": "arXiv",
       "keywords": [],
       "full_text": null
     },
     {
-      "title": "Seasonal Dietary Patterns of Tarim Red Deer (Cervus hanglu yarkandensis) Revealed by the trnL Sequencing Approach in the Tarim River Basin (Xinjiang, China).",
+      "title": "Quantum Simulation of Protein Fragment Electronic Structure Using Moment-based Adaptive Variational Quantum Algorithms",
       "authors": [
-        "Qi C",
-        "Tian X",
-        "Cui Y",
-        "Zhu L",
-        "Focardi S",
-        "Zhong L"
+        "Biraja Ghoshal"
       ],
-      "abstract": null,
+      "abstract": "Background: Understanding electronic interactions in protein active sites is fundamental to drug discovery and enzyme engineering, but remains computationally challenging due to exponential scaling of quantum mechanical calculations.\n  Results: We present a quantum-classical hybrid framework for simulating protein fragment electronic structure using variational quantum algorithms. We construct fermionic Hamiltonians from experimentally determined protein structures, map them to qubits via Jordan-Wigner transformation, and optimize ground state energies using the Variational Quantum Eigensolver implemented in pure Python. For a 4-orbital serine protease fragment, we achieve chemical accuracy (< 1.6 mHartree) with 95.3% correlation energy recovery. Systematic analysis reveals three-phase convergence behaviour with exponential decay (α = 0.95), power law optimization (γ = 1.21), and asymptotic approach. Application to SARS-CoV-2 protease inhibition demonstrates predictive accuracy (MAE=0.25 kcal/mol), while cytochrome P450 metabolism predictions achieve 85% site accuracy.\n  Conclusions: This work establishes a pathway for quantum-enhanced biomolecular simulations on near-term quantum hardware, bridging quantum algorithm development with practical biological applications.",
       "doi": null,
-      "pmid": "41446382",
-      "year": 2025,
-      "journal": "Ecology and evolution",
+      "pmid": null,
+      "year": 2026,
+      "journal": "arXiv",
       "keywords": [],
       "full_text": null
     },
     {
-      "title": "Genomic Architecture of Nestmate Recognition Cues in the Desert Ant.",
+      "title": "Quantifying the uncertainty of molecular dynamics simulations : Good-Turing statistics revisited",
       "authors": [
-        "Cohen P",
-        "Inbar S",
-        "Privman E"
+        "Vasiliki Tsampazi",
+        "Nicholas M. Glykos"
       ],
-      "abstract": null,
+      "abstract": "We have previously shown that Good-Turing statistics can be applied to molecular dynamics trajectories to estimate the probability of observing completely new (thus far unobserved) biomolecular structures, and showed that the method is stable, dependable and its predictions verifiable. The major problem with that initial algorithm was the requirement for calculating and storing in memory the two-dimensional RMSD matrix of the currently available trajectory. This requirement precluded the application of the method to very long simulations. Here we describe a new variant of the Good-Turing algorithm whose memory requirements scale linearly with the number of structures in the trajectory, making it suitable even for extremely long simulations. We show that the new method gives essentially identical results with the older implementation, and present results obtained from trajectories containing up to 22 million structures. A computer program implementing the new algorithm is available from standard repositories.",
       "doi": null,
-      "pmid": "41446380",
-      "year": 2025,
-      "journal": "Ecology and evolution",
+      "pmid": null,
+      "year": 2026,
+      "journal": "arXiv",
       "keywords": [],
       "full_text": null
     },
     {
-      "title": "Honey Bee Colony Health in Thiamethoxam-Treated Sugar Beet Fields: A Field-Based Case Study.",
+      "title": "Peak-Nadir Encoding for Efficient CGM Data Compression and High-Fidelity Reconstruction",
       "authors": [
-        "Odemer R",
-        "Berg S",
-        "Pistorius J",
-        "Illies I"
+        "Clara Bender",
+        "Line Davidsen",
+        "Søren Schou Olesen",
+        "Simon Lebech Cichosz"
       ],
-      "abstract": null,
+      "abstract": "Aim/background: Continuous glucose monitoring (CGM) generates dense time-series data, posing challenges for efficient storage, transmission, and analysis. This study evaluates novel encoding strategies that reduce CGM profiles to a compact set of landmark points while maintaining fidelity in reconstructed signals and derived glycemic metrics.\n  Methods: We utilized two complementary CGM datasets, synthetic data generated via a Conditional Generative Adversarial Network (CGAN) and real-world measurements from a randomized crossover trial, to develop and validate three encoding approaches: (1) Peaks & Nadirs (PN), (2) Peaks, Nadirs, and Support Points (PN+), and (3) Uniform Downsampling. Each method compresses CGM profiles by selecting key timestamps and glucose values, followed by signal reconstruction via interpolation. Performance was assessed using compression ratio, mean absolute error (MAE), and R^2 between original and reconstructed clinically relevant CGM-derived metrics. Statistical analyses evaluated the preservation of clinically relevant glucose features.\n  Results: Across varying compression settings, PN+ consistently outperformed PN and downsampling, achieving the highest R^2 and lowest MAE. At a compression ratio of 13 (22 landmark points per 24-hour profile), PN+ reduced MAE by a factor of 3.6 compared to downsampling (0.77 vs. 2.75), with notable improvements in metrics sensitive to glucose excursions. Encoding and decoding required an average of 0.13 seconds per profile. Validation on real-world data confirmed these trends.\n  Conclusions: The proposed PN+ method produces a compact CGM representation that retains critical glycemic dynamics while discarding redundant portions of the profiles. The CGM signal can be reconstructed with high precision from the encoding representation.",
       "doi": null,
-      "pmid": "41446379",
-      "year": 2025,
-      "journal": "Ecology and evolution",
+      "pmid": null,
+      "year": 2026,
+      "journal": "arXiv",
       "keywords": [],
       "full_text": null
     },
     {
-      "title": "Mind the gap: Understanding discordance between culture- and a non-culture-based measure of bacterial burden in murine tuberculosis treatment models.",
+      "title": "The Physics of Causation",
       "authors": [
-        "Tabor ST",
-        "Friesen AD",
-        "Reichlen MJ",
-        "Dide-Agossou C",
-        "McGrath M",
-        "Peterson R",
-        "Ganusov VV",
-        "Robertson GT",
-        "Voskuil MI",
-        "Walter ND"
+        "Leroy Cronin",
+        "Sara I. Walker"
       ],
-      "abstract": null,
+      "abstract": "Assembly theory (AT) introduces a concept of causation as a material property, constitutive of a metrology of evolution and selection. The physical scale for causation is quantified with the assembly index, defined as the minimum number of steps necessary for a distinguishable object to exist, where steps are assembled recursively. Observing countable copies of high assembly index objects indicates that a mechanism to produce them is persistent, such that the object's environment builds a memory that traps causation within a contingent chain. Copy number and assembly index underlie the standardized metrology for detecting causation (assembly index), and evidence of contingency (copy number). Together, these allow the precise definition of a selective threshold in assembly space, understood as the set of all causal possibilities. This threshold demarcates life (and its derivative agential, intelligent and technological forms) as structures with persistent copies beyond the threshold. In introducing a fundamental concept of material causation to explain and measure life, AT represents a departure from prior theories of causation, such as interventional ones, which have so far proven incompatible with fundamental physics. We discuss how AT's concept of causation provides the foundation for a theory of physics where novelty, contingency and the potential for open-endedness are fundamental, and determinism is emergent along assembled lineages.",
       "doi": null,
-      "pmid": "41446251",
-      "year": 2025,
-      "journal": "bioRxiv : the preprint server for biology",
+      "pmid": null,
+      "year": 2026,
+      "journal": "arXiv",
       "keywords": [],
       "full_text": null
     },
     {
-      "title": "Evaluation of the safety and insecticidal efficacy of ivermectin-treated bird feed formulations in different avian species.",
+      "title": "Non-dilemmatic social dynamics promote cooperation in multilayer networks",
       "authors": [
-        "Savran MJ",
-        "Coffin K",
-        "Stewart CM",
-        "Nguyen C",
-        "Puska C",
-        "Ring ME",
-        "Leon AS",
-        "Schweiner P",
-        "Peters T",
-        "Randall JC",
-        "Buczek J",
-        "Lado P",
-        "Gallichotte E",
-        "Clapsaddle B",
-        "Barker CM",
-        "Ebel GD",
-        "Foy BD"
+        "Jnanajyoti Bhaumik",
+        "Naoki Masuda"
       ],
-      "abstract": null,
+      "abstract": "Various theoretical and empirical studies have accounted for why humans cooperate in competitive environments. Although prior work has revealed that network structure and multiplex interactions can promote cooperation, most theory assumes that individuals play similar dilemma games in all social contexts. However, real-world agents may participate in a diversity of interactions, not all of which present dilemmas. We develop an evolutionary game model on multilayer networks in which one layer supports the prisoner's dilemma game, while the other follows constant-selection dynamics, representing biased but non-dilemmatic competition, akin to opinion or fad spreading. Our theoretical analysis reveals that coupling a social dilemma layer to a non-dilemmatic constant-selection layer robustly enhances cooperation in many cases, across different multilayer networks, updating rules, and payoff schemes. These findings suggest that embedding individuals within diverse networked settings -- even those unrelated to direct social dilemmas -- can be a principled approach to engineering cooperation in socio-ecological and organizational systems.",
       "doi": null,
-      "pmid": "41446104",
-      "year": 2025,
-      "journal": "bioRxiv : the preprint server for biology",
+      "pmid": null,
+      "year": 2026,
+      "journal": "arXiv",
       "keywords": [],
       "full_text": null
     },
     {
-      "title": "Insertion of rare autism variants in synaptic genes induce novel behavioral phenotypes in C. elegans.",
+      "title": "Self-assembled versus biological pattern formation in geology",
       "authors": [
-        "Haskell D",
-        "Haury WR",
-        "Granato M",
-        "Bastien BL",
-        "Hart MP"
+        "Julyan H. E. Cartwright",
+        "Charles S. Cockell",
+        "Julie G. Cosmidis",
+        "Silvia Holler",
+        "F. Javier Huertas",
+        "Sean F. Jordan",
+        "Pamela Knoll",
+        "Electra Kotopoulou",
+        "Corentin C. Loron",
+        "Sean McMahon",
+        "Anna Neubeck",
+        "Carlos Pimentel",
+        "C. Ignacio Sainz-Díaz",
+        "Piotr Szymczak"
       ],
-      "abstract": null,
+      "abstract": "Both abiotic self-organization and biological mechanisms have been put forward as the origin of a number of geological patterns. It is important to comprehend the formation mechanisms of such structures both to understand geological self-organization and in order to differentiate them from biological patterns -- fossils and bio-influenced structures -- seen in geological systems. Being able to distinguish the traces of biological activity from geological self-organization is fundamental both for understanding the origin of life on Earth and for the search for life beyond Earth.",
       "doi": null,
-      "pmid": "41446048",
+      "pmid": null,
+      "year": 2026,
+      "journal": "arXiv",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Benchmarking Preprocessing and Integration Methods in Single-Cell Genomics",
+      "authors": [
+        "Ali Anaissi",
+        "Seid Miad Zandavi",
+        "Weidong Huang",
+        "Junaid Akram",
+        "Basem Suleiman",
+        "Ali Braytee",
+        "Jie Hua"
+      ],
+      "abstract": "Single-cell data analysis has the potential to revolutionize personalized medicine by characterizing disease-associated molecular changes at the single-cell level. Advanced single-cell multimodal assays can now simultaneously measure various molecules (e.g., DNA, RNA, Protein) across hundreds of thousands of individual cells, providing a comprehensive molecular readout. A significant analytical challenge is integrating single-cell measurements across different modalities. Various methods have been developed to address this challenge, but there has been no systematic evaluation of these techniques with different preprocessing strategies. This study examines a general pipeline for single-cell data analysis, which includes normalization, data integration, and dimensionality reduction. The performance of different algorithm combinations often depends on the dataset sizes and characteristics. We evaluate six datasets across diverse modalities, tissues, and organisms using three metrics: Silhouette Coefficient Score, Adjusted Rand Index, and Calinski-Harabasz Index. Our experiments involve combinations of seven normalization methods, four dimensional reduction methods, and five integration methods. The results show that Seurat and Harmony excel in data integration, with Harmony being more time-efficient, especially for large datasets. UMAP is the most compatible dimensionality reduction method with the integration techniques, and the choice of normalization method varies depending on the integration method used.",
+      "doi": null,
+      "pmid": null,
+      "year": 2026,
+      "journal": "arXiv",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Non-Contact and Non-Destructive Detection of Structural Defects in Bioprinted Constructs Using Video-Based Vibration Analysis",
+      "authors": [
+        "Md Anisur Rahman",
+        "Md Asif Hasan Khan",
+        "Tuan Mai",
+        "Jinki Kim"
+      ],
+      "abstract": "Bioprinting technology has advanced significantly in the fabrication of tissue-like constructs with complex geometries for regenerative medicine. However, maintaining the structural integrity of bioprinted materials remains a major challenge, primarily due to the frequent and unexpected formation of hidden defects. Traditional defect detection methods often require physical contact that may not be suitable for hydrogel-based biomaterials due to their inherently soft nature, making non-invasive and straightforward structural evaluation necessary in this field. To advance the state of the art, this study presents a novel non-contact method for non-destructively detecting structural defects in bioprinted constructs using video-based vibration analysis. Ear-shaped constructs were fabricated using a bioink composed of sodium alginate and \\k{appa}-carrageenan using extrusion-based bioprinting. To simulate printing defects, controlled geometric, interlayer, and pressure-induced defects were systematically introduced into the samples. The dynamic response of each structure was recorded using a high-speed camera and analyzed via phase-based motion estimation techniques. Experimental results demonstrate that all defective samples exhibit consistent changes in the dynamic characteristics compared to baseline samples, with increasingly pronounced deviation observed as defect severity increases, which reflect changes in effective stiffness and mass distribution induced by internal anomalies, even when such defects are not detectable through surface inspection. The experimental trends were also validated through finite element simulations. Overall, this work demonstrates that video-based vibrometry is a powerful approach for assessing the quality of bioprinted constructs, offering a practical pathway toward robust structural health monitoring in next-generation bio-additive manufacturing workflows.",
+      "doi": null,
+      "pmid": null,
       "year": 2025,
-      "journal": "bioRxiv : the preprint server for biology",
+      "journal": "arXiv",
       "keywords": [],
       "full_text": null
     },
@@ -4797,6 +5005,19 @@
         "Eduardo D. Sontag"
       ],
       "abstract": "Biological systems encode function not primarily in steady states, but in the structure of transient responses elicited by time-varying stimuli. Overshoots, biphasic dynamics, adaptation kinetics, fold-change detection, entrainment, and cumulative exposure effects often determine phenotypic outcomes, yet are poorly captured by classical steady-state or dose-response analyses. This paper develops an input-output perspective on such \"dynamic phenotypes,\" emphasizing how qualitative features of transient behavior constrain underlying network architectures independently of detailed parameter values. A central theme is the role of sign structure and interconnection logic, particularly the contrast between monotone systems and architectures containing antagonistic pathways. We show how incoherent feedforward (IFF) motifs provide a simple and recurrent mechanism for generating non-monotonic and adaptive responses across multiple levels of biological organization, from molecular signaling to immune regulation and population dynamics. Conversely, monotonicity imposes sharp impossibility results that can be used to falsify entire classes of models from transient data alone. Beyond step inputs, we highlight how periodic forcing, ramps, and integral-type readouts such as cumulative dose responses offer powerful experimental probes that reveal otherwise hidden structure, separate competing motifs, and expose invariances such as fold-change detection. Throughout, we illustrate how control-theoretic concepts, including monotonicity, equivariance, and input-output analysis, can be used not as engineering metaphors, but as precise mathematical tools for biological model discrimination. Thus we argue for a shift in emphasis from asymptotic behavior to transient and input-driven dynamics as a primary lens for understanding, testing, and reverse-engineering biological networks.",
+      "doi": null,
+      "pmid": null,
+      "year": 2025,
+      "journal": "arXiv",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Domain-aware priors enable vertical federated learning in data-scarce coral multi-omics",
+      "authors": [
+        "Sam Victor"
+      ],
+      "abstract": "Vertical federated learning enables multi-laboratory collaboration on distributed multi-omics datasets without sharing raw data, but exhibits severe instability under extreme data scarcity (P much greater than N) when applied generically. Here, we investigate how domain-aware design choices, specifically gradient saliency guided feature selection with biologically motivated priors, affect the stability and interpretability of VFL architectures in small-sample coral stress classification (N = 13 samples, P = 90579 features across transcriptomics, proteomics, metabolomics, and microbiome data).\n  We benchmark a domain-aware VFL framework against two baselines on the Montipora capitata thermal stress dataset: (i) a standard NVFlare-based VFL and (ii) LASER, a label-aware VFL method. Domain-aware VFL achieves an AUROC of 0.833 plus or minus 0.030 after reducing dimensionality by 98.6 percent, significantly outperforming NVFlare VFL, which performs at chance level (AUROC 0.500 plus or minus 0.125, p = 0.0058). LASER shows modest improvement (AUROC 0.600 plus or minus 0.215) but exhibits higher variance and does not reach statistical significance.\n  Domain-aware feature selection yields stable top-feature sets across analysis parameters. Negative control experiments using permuted labels produce AUROC values below chance (0.262), confirming the absence of data leakage and indicating that observed performance arises from genuine biological signal. These results motivate design principles for VFL in extreme P much greater than N regimes, emphasizing domain-informed dimensionality reduction and stability-focused evaluation.",
       "doi": null,
       "pmid": null,
       "year": 2025,
@@ -4877,6 +5098,39 @@
         "Zohar Yosibash"
       ],
       "abstract": "High-resolution voxel-based micro-finite element ($μ$FE) models derived from $μ$CT imaging enable detailed investigation of bone mechanics but remain computationally challenging at anatomically relevant scales. This study presents a comprehensive $μ$FE framework for large-scale biomechanical analysis of an intact New Zealand White (NZW) rabbit femur, integrating advanced segmentation, scalable finite element solvers, and experimental validation using predominantly open-source libraries. Bone geometries were segmented from $μ$CT data using the MIA clustering algorithm and converted into voxel-based $μ$FE meshes, which were solved using the open-source MFEM library with algorithms designed for large-scale linear elasticity systems.\n  The numerical solutions were verified by comparing with a commercial finite element solver, and by evaluating the performance of full assembly and element-by-element formulations within MFEM. Models containing over $8\\times10^{8}$ DOFs were solved using moderate HPC resources, demonstrating the feasibility of anatomically realistic $μ$FE simulations at this scale. Resolution effects were investigated by comparing models with voxel sizes of 20, 40, and 80 $μ$m, revealing that 40 $μ$m preserves boundary displacement and principal strain distributions with minimal bias while significantly reducing computational cost. Sensitivity analyses further showed that segmentation parameters influence the global mechanical response.\n  Finally, $μ$FE predictions were coupled with Digital Image Correlation measurements on an NZW rabbit femur under compression to calibrate effective bone material properties at the micron scale. The results demonstrate that large-scale, experimentally informed $μ$FE modeling can be achieved using open-source tools, providing a robust foundation for preclinical assessment of bone mechanics and treatment-related risks.",
+      "doi": null,
+      "pmid": null,
+      "year": 2025,
+      "journal": "arXiv",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Unifying Weak Independence and Signal Hierarchy Theory: Extended Biological Petri Net Formalism with Application to Vibrio fischeri Quorum Sensing",
+      "authors": [
+        "Eugenio Simao"
+      ],
+      "abstract": "Biological Petri Nets (Bio-PNs) require extensions beyond classical formalism to capture biochemical reality: multiple reactions simultaneously affect shared metabolites through convergent production or regulatory coupling, while signal places carry hierarchical control information distinct from material flow. We present a unified 13-tuple Extended Bio-PN formalism integrating two complementary theories: Weak Independence Theory (enabling coupled parallelism despite place-sharing) and Signal Hierarchy Theory (separating information flow from mass transfer). The extended definition adds signal partition (Psi subset P), arc type classification (A), regulatory structure (Sigma), environmental exchange (Theta), dependency taxonomy (Delta), heterogeneous transition types (tau), and biochemical formula tracking (rho). We formalize signal token consumption semantics through two-phase execution (enabling vs. consumption) and prove weak independence correctness for continuous dynamics. Application to Vibrio fischeri quorum sensing demonstrates how energy metabolism (ENERGY signals) orchestrates binary ON/OFF decisions through hierarchical constraint propagation to regulatory signals (LuxR-AHL complex), with 133-fold difference separating states. Analysis reveals signal saturation timing as the orchestrator forcing threshold-crossing, analogous to bacteriophage lambda lysogeny-lysis decisions. This work establishes formal foundations for modeling biological information flow in Petri nets, with implications for systems biology, synthetic circuit design, and parallel biochemical simulation.",
+      "doi": null,
+      "pmid": null,
+      "year": 2025,
+      "journal": "arXiv",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Forking Anatomy: How MorphoDepot Applies the Open-Source Development Model to 3D Digital Morphology",
+      "authors": [
+        "A. Murat Maga",
+        "Steve Pieper",
+        "Cassandra Donatelli",
+        "Paul M Gignac",
+        "Matthew Kolmann",
+        "Christopher Noto",
+        "Adam Summers",
+        "Natalie Taft"
+      ],
+      "abstract": "The increasing use of 3D imaging technologies in biological sciences is generating vast repositories of anatomical data, yet significant barriers prevent this data from reaching its full potential in educational and collaborative contexts. While sharing raw CT and MRI scans has become routine, distributing value-added segmented datasets, where anatomical structures are precisely labeled and delineated, remains difficult and rare. Current repositories function primarily as static archives, lacking mechanisms for iterative refinement, community-driven curation, standardized orientation protocols, and the controlled terminology essential for downstream computational applications, including artificial intelligence, to help us analyze and interpret these unprecedented data resources.\n  We introduce MorphoDepot, a framework that adapts the \"fork-and-contribute\" model, a cornerstone of modern open-source software development, for collaborative management of 3D morphological data. By integrating git version control and GitHub's \"social\" collaborative infrastructure with 3D Slicer and its SlicerMorph extension, MorphoDepot transforms segmented anatomical datasets from static resources into dynamic, community-curated projects. This approach directly addresses the challenges of distributed collaboration, enforces transparent provenance tracking, and creates high-quality, standardized training data for AI model development. The result is a system that embodies FAIR (Findable, Accessible, Interoperable, and Reusable) data principles while creating powerful new opportunities for remote learning and collaborative science for biological sciences in general and evolutionary morphology in particular.",
       "doi": null,
       "pmid": null,
       "year": 2025,
@@ -4994,6 +5248,19 @@
         "Beáta Oborny"
       ],
       "abstract": "The survival of populations hinges on their ability to offset local extinctions through new colonizations. The dispersal area ($A$) plays a crucial role in this process, as it determines the probability of finding colonizable vacant sites. We investigated the spatial colonization-extinction dynamics in a lattice model (a contact process), exploring various finite dispersal areas and estimating the extinction threshold $λ_E(A)$. Our results revealed a consistent $λ_E(A)$ relationship, largely independent of lattice geometry (except for the smallest $A$). This $λ_E(A)$ relationship obeyed universal scaling laws within two broad ranges of $A$. The scaling relations suggest considerable selection upon the increase of dispersal area, particularly at low $A$ values. We discuss these findings in the broader context of the evolution of dispersal area.",
+      "doi": null,
+      "pmid": null,
+      "year": 2025,
+      "journal": "arXiv",
+      "keywords": [],
+      "full_text": null
+    },
+    {
+      "title": "Hierarchical Preemption: A Novel Information-Theoretic Control Mechanism in Lambda Phage Decision-Making",
+      "authors": [
+        "Eugenio Simao"
+      ],
+      "abstract": "Biological systems organize into hierarchies to manage complexity, yet the mechanisms governing hierarchical control remain incompletely understood. Using information theory and the Lambda phage lysis-lysogeny decision as a model system, we discover that hierarchical control operates through hierarchical preemption - higher layers collapse decision space rather than blocking lower-layer signals. Through mutual information (MI) analysis of 200 stochastic simulations, we demonstrate that the UV damage sensor (RecA) achieves 2.01x information advantage over environmental signals by preempting bistable outcomes into monostable attractors (98% lysogenic or 85% lytic). Conditional MI analysis reveals that the integrator signal (CII) carries lower information when RecA is absent (saturated, 0.06 bits) than when RecA is active (subsaturated, 0.38 bits). This saturation effect demonstrates that signals orchestrate compartment behaviors by removing decision space - achieving 85-98% outcome certainty while preserving 2-15% escape routes. These findings establish a quantitative framework for hierarchical information processing in cellular decision-making.",
       "doi": null,
       "pmid": null,
       "year": 2025,
@@ -7487,152 +7754,10 @@
       "journal": "arXiv",
       "keywords": [],
       "full_text": null
-    },
-    {
-      "title": "Parallelism in Neurodegenerative Biomarker Tests: Hidden Errors and the Risk of Misconduct",
-      "authors": [
-        "Axel Petzold",
-        "Joachim Pum",
-        "David P Crabb"
-      ],
-      "abstract": "Biomarkers are critical tools in the diagnosis and monitoring of neurodegenerative diseases. Reliable quantification depends on assay validity, especially the demonstration of parallelism between diluted biological samples and the assay's standard curve. Inadequate parallelism can lead to biased concentration estimates, jeopardizing both clinical and research applications. Here we systematically review the evidence of analytical parallelism in body fluid (serum, plasma, cerebrospinal fluid) biomarker assays for neurodegeneration and evaluate the extent, reproducibility, and reporting quality of partial parallelism.\n  This systematic review was registered on PROSPERO (CRD42024568766) and conducted in accordance with PRISMA guidelines. We included studies published between December 2010 to July 2024 without language restrictions. ...\n  In conclusion, partial parallelism was infrequently observed and inconsistently reported in most biomarker assays for neurodegeneration. Narrow dilution ranges and variable methodologies limit generalizability. Transparent reporting of dilution protocols and adherence to established analytical validation guidelines is needed. This systematic review has practical implications for clinical trial design, regulatory approval processes, and the reliability of biomarker-based diagnostics.",
-      "doi": null,
-      "pmid": null,
-      "year": 2025,
-      "journal": "arXiv",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "On the role of fractional Brownian motion in models of chemotaxis and stochastic gradient ascent",
-      "authors": [
-        "Gustavo Cornejo-Olea",
-        "Lucas Buvinic",
-        "Jerome Darbon",
-        "Radek Erban",
-        "Andrea Ravasio",
-        "Anastasios Matzavinos"
-      ],
-      "abstract": "Cell migration often exhibits long-range temporal correlations and anomalous diffusion, even in the absence of external guidance cues such as chemical gradients or topographical constraints. These observations raise a fundamental question: do such correlations simply reflect internal cellular processes, or do they enhance a cell's ability to navigate complex environments? In this work, we explore how temporally correlated noise (modeled using fractional Brownian motion) influences chemotactic search dynamics. Through computational experiments, we show that superdiffusive motion, when combined with gradient-driven migration, enables robust exploration of the chemoattractant landscape. Cells reliably reach the global maximum of the concentration field, even in the presence of spatial noise, secondary cues, or irregular signal geometry. We quantify this behavior by analyzing the distribution of first hitting times under varying degrees of temporal correlation. Notably, our results are consistent across diverse conditions, including flat and curved substrates, and scenarios involving both primary and self-generated chemotactic signals. Beyond biological implications, these findings also offer insight into the design of optimization and sampling algorithms that benefit from structured stochasticity.",
-      "doi": null,
-      "pmid": null,
-      "year": 2025,
-      "journal": "arXiv",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Learning the principles of T cell antigen discernment",
-      "authors": [
-        "François X. P. Bourassa",
-        "Sooraj Achar",
-        "Grégoire Altan-Bonnet",
-        "Paul François"
-      ],
-      "abstract": "T cells are central to the adaptive immune response, capable of detecting pathogenic antigens while ignoring healthy tissues with remarkable specificity and sensitivity. Quantitatively understanding how T cell receptors (TCRs) discriminate among antigens requires biophysical models and theoretical analysis of signaling networks. Here, we review current theoretical frameworks of antigen recognition in the context of modern experimental and computational advances. Antigen potency spans a continuum and exhibits nonlinear effects within complex mixtures, challenging discrete classification and simple threshold-based models. This complexity motivates the development of models such as adaptive kinetic proofreading, which integrate both activating and inhibitory signals. Advances in high-throughput technologies now generate large-scale, quantitative datasets, enabling the refinement of such models through statistical and machine learning approaches. This convergence of theory, data, and computation promises deeper insights into immune decision-making and opens new avenues for rational immunotherapy design.",
-      "doi": null,
-      "pmid": null,
-      "year": 2025,
-      "journal": "arXiv",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "TRIDENT: A Trimodal Cascade Generative Framework for Drug and RNA-Conditioned Cellular Morphology Synthesis",
-      "authors": [
-        "Rui Peng",
-        "Ziru Liu",
-        "Lingyuan Ye",
-        "Yuxing Lu",
-        "Boxin Shi",
-        "Jinzhuo Wang"
-      ],
-      "abstract": "Accurately modeling the relationship between perturbations, transcriptional responses, and phenotypic changes is essential for building an AI Virtual Cell (AIVC). However, existing methods typically constrained to modeling direct associations, such as Perturbation $\\rightarrow$ RNA or Perturbation $\\rightarrow$ Morphology, overlook the crucial causal link from RNA to morphology. To bridge this gap, we propose TRIDENT, a cascade generative framework that synthesizes realistic cellular morphology by conditioning on both the perturbation and the corresponding gene expression profile. To train and evaluate this task, we construct MorphoGene, a new dataset pairing L1000 gene expression with Cell Painting images for 98 compounds. TRIDENT significantly outperforms state-of-the-art approaches, achieving up to 7-fold improvement with strong generalization to unseen compounds. In a case study on docetaxel, we validate that RNA-guided synthesis accurately produces the corresponding phenotype. An ablation study further confirms that this RNA conditioning is essential for the model's high fidelity. By explicitly modeling transcriptome-phenome mapping, TRIDENT provides a powerful in silico tool and moves us closer to a predictive virtual cell.",
-      "doi": null,
-      "pmid": null,
-      "year": 2025,
-      "journal": "arXiv",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Detecting Discontinuities in the Topology of Alzheimers gene Co-expression",
-      "authors": [
-        "Aya Samadzelkava"
-      ],
-      "abstract": "Alzheimer's disease (AD) emerges from a complex interplay of molecular, cellular, and network-level disturbances that are not easily captured by traditional reductionist frameworks. Conventional analyses of gene expression often rely on thresholded correlation networks or clustering-based module detection, approaches that may obscure nonlinear structure and higher-order organization. Here, we introduce a comparative topological framework that makes use of topological data analysis (TDA) and the Mapper algorithm to detect discontinuities - localized disruptions in the topology of gene co-expression space between healthy and AD brain tissue. Using gene expression data from 3 brain regions, we mapped how AD reshapes the global topology of gene-gene relationships. Discontinuity hotspots were identified via variability-based node scoring and subjected to Gene Ontology Biological Process enrichment analysis. This work illustrates the potential of TDA to uncover disease-relevant structure in high-dimensional transcriptomic data and motivates broader application of shape-based comparative methods in neurodegeneration research and other areas that benefit from comparative analysis.",
-      "doi": null,
-      "pmid": null,
-      "year": 2025,
-      "journal": "arXiv",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "EscalNet: Learn isotropic representation space for biomolecular dynamics based on effective energy",
-      "authors": [
-        "Guanghong Zuo"
-      ],
-      "abstract": "Deep learning has emerged as a powerful framework for analyzing biomolecular dynamics trajectories, enabling efficient representations that capture essential system dynamics and facilitate mechanistic studies. We propose a neural network architecture incorporating Fourier Transform analysis to process trajectory data, achieving dual objectives: eliminating high-frequency noise while preserving biologically critical slow conformational dynamics, and establishing an isotropic representation space through the last hidden layer for enhanced dynamical quantification. Comparative protein simulations demonstrate our approach generates more uniform feature distributions than linear regression methods, evidenced by smoother state similarity matrices and clearer classification boundaries. Moreover, by using saliency score, we identified key structural determinants linked to effective energy landscapes governing system dynamics. We believe that the fusion of neural network features with physical order parameters creates a robust analytical framework for advancing biomolecular trajectory analysis.",
-      "doi": null,
-      "pmid": null,
-      "year": 2025,
-      "journal": "arXiv",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "CLTree: A Tool for Annotating, Rooting, and Evaluating Phylogenetic Trees Leveraging Genomic Lineages",
-      "authors": [
-        "Guanghong Zuo"
-      ],
-      "abstract": "Collapse Lineage Tree (CLTree) is a software tool that annotates, roots, and evaluates phylogenetic trees by using lineages. A recursive algorithm was designed to annotate the branches by the common taxonomic lineage of its descendants in a rooted tree. For an unrooted tree, it determines the root that best conforms to the taxonomic system based on the aforementioned lineage annotations. Based on the lineage annotations of notes, CLTree infers the monophyly of taxonomic units and quantifies the concordance between the phylogenetic tree and the taxonomic system base on Shannon entropy. The core algorithm of CLTree is highly efficient with linear complexity, capable of processing phylogenetic trees with 17,955 terminal nodes within one second. We believe that CLTree will serve as a powerful tool for study of evolution and taxonomy.",
-      "doi": null,
-      "pmid": null,
-      "year": 2025,
-      "journal": "arXiv",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "SynCell: Contextualized Drug Synergy Prediction",
-      "authors": [
-        "Keqin Peng",
-        "Guangxin Su",
-        "Qinshan Shi",
-        "Shuai Gao",
-        "Ren Wang",
-        "Can Chen",
-        "Jun Wen"
-      ],
-      "abstract": "Motivation: Drug synergy is strongly influenced by cellular context. Variations in protein interaction landscapes and pathway activities across cell types can reshape how drugs act in combination. However, most existing models overlook this heterogeneity and rely on static or bulk level protein protein interaction networks that ignore cell specific molecular wiring. With the availability of single cell transcriptomic data, it is now possible to reconstruct cell line specific interactomes, offering a new foundation for contextualized drug synergy modeling.\n  Results: We present SynCell, a contextualized drug synergy framework that integrates drug protein, protein protein, and protein cell line relations within a unified graph architecture. SynCell leverages single cell derived, cell line specific PPI networks to embed the molecular context in which drugs act, and employs graph convolutional learning to model how pharmacological effects propagate through cell specific signaling networks. This formulation treats synergy prediction as a cell line contextualized drug drug interaction problem. Across two large scale benchmarks (NCI ALMANAC and ONeil), SynCell consistently outperforms state of the art baselines including DeepDDS, HypergraphSynergy, and HERMES, especially in predicting synergies involving unseen drugs or novel cell lines. Ablation analyses show that contextualizing PPIs with single cell resolution yields substantial gains in generalization and biological interpretability.",
-      "doi": null,
-      "pmid": null,
-      "year": 2025,
-      "journal": "arXiv",
-      "keywords": [],
-      "full_text": null
-    },
-    {
-      "title": "Dual-Path Knowledge-Augmented Contrastive Alignment Network for Spatially Resolved Transcriptomics",
-      "authors": [
-        "Wei Zhang",
-        "Jiajun Chu",
-        "Xinci Liu",
-        "Chen Tong",
-        "Xinyue Li"
-      ],
-      "abstract": "Spatial Transcriptomics (ST) is a technology that measures gene expression profiles within tissue sections while retaining spatial context. It reveals localized gene expression patterns and tissue heterogeneity, both of which are essential for understanding disease etiology. However, its high cost has driven efforts to predict spatial gene expression from whole slide images. Despite recent advancements, current methods still face significant limitations, such as under-exploitation of high-level biological context, over-reliance on exemplar retrievals, and inadequate alignment of heterogeneous modalities. To address these challenges, we propose DKAN, a novel Dual-path Knowledge-Augmented contrastive alignment Network that predicts spatially resolved gene expression by integrating histopathological images and gene expression profiles through a biologically informed approach. Specifically, we introduce an effective gene semantic representation module that leverages the external gene database to provide additional biological insights, thereby enhancing gene expression prediction. Further, we adopt a unified, one-stage contrastive learning paradigm, seamlessly combining contrastive learning and supervised learning to eliminate reliance on exemplars, complemented with an adaptive weighting mechanism. Additionally, we propose a dual-path contrastive alignment module that employs gene semantic features as dynamic cross-modal coordinators to enable effective heterogeneous feature integration. Through extensive experiments across three public ST datasets, DKAN demonstrates superior performance over state-of-the-art models, establishing a new benchmark for spatial gene expression prediction and offering a powerful tool for advancing biological and clinical research.",
-      "doi": null,
-      "pmid": null,
-      "year": 2025,
-      "journal": "arXiv",
-      "keywords": [],
-      "full_text": null
     }
   ],
   "metadata": {
-    "total_publications": 419,
-    "creation_date": 1767575955.263384
+    "total_publications": 425,
+    "creation_date": 1767629532.344108
   }
 }

@@ -176,42 +176,65 @@
 <body>
 <h1 id="sec:appendix">Appendix</h1>
 <p>This appendix provides technical details, mathematical derivations,
-and extended examples supporting the main text.</p>
+and extended examples supporting the main text. The material is
+organized to support readers who want deeper understanding of the
+mathematical foundations, implementation details, and computational
+aspects of the quadrant structure.</p>
 <h2 id="sec:mathematical_foundations">Mathematical Foundations</h2>
 <h3 id="expected-free-energy-derivation">Expected Free Energy
 Derivation</h3>
 <p>The Expected Free Energy (EFE) combines epistemic and pragmatic
-components:</p>
+components (see also Equation <span
+class="math inline">\(\eqref{eq:efe}\)</span>):</p>
 <h4 id="epistemic-component">Epistemic Component</h4>
 <p>The epistemic affordance measures information gain:</p>
-<p>This term is minimized when executing policy () reduces uncertainty
-about hidden states.</p>
+<p>This term (Equation <span
+class="math inline">\(\eqref{eq:epistemic_component}\)</span>) is
+minimized when executing policy () reduces uncertainty about hidden
+states.</p>
 <h4 id="pragmatic-component">Pragmatic Component</h4>
 <p>The pragmatic value measures goal achievement:</p>
+<p>This term (Equation <span
+class="math inline">\(\eqref{eq:pragmatic_component}\)</span>) measures
+goal achievement through preferred observations.</p>
 <p>Using the generative model, this becomes:</p>
-<p>Where ((C)) represents the softmax normalization of preferences.</p>
+<p>In Equation <span
+class="math inline">\(\eqref{eq:pragmatic_generative}\)</span>, ((C))
+represents the softmax normalization of preferences, where (C) is the
+preference matrix (Equation <span
+class="math inline">\(\eqref{eq:matrix_c}\)</span>) and (A) is the
+observation likelihood matrix (Equation <span
+class="math inline">\(\eqref{eq:matrix_a}\)</span>).</p>
 <h2 id="sec:generative_model_details">Generative Model Details</h2>
 <h3 id="matrix-a-observation-likelihoods">Matrix A: Observation
 Likelihoods</h3>
-<p>The observation model defines how hidden states generate
-observations:</p>
+<p>The observation model defines how hidden states generate observations
+(see also Equation <span
+class="math inline">\(\eqref{eq:matrix_a}\)</span>):</p>
 <p><strong>Properties:</strong> - Each column sums to 1 (valid
-probability distribution) - Rows represent observation modalities -
-Columns represent hidden state conditions</p>
+probability distribution): (<em>i a</em>{ij} = 1) for all (j) - Rows
+represent observation modalities (different types of sensory inputs) -
+Columns represent hidden state conditions (different possible world
+states) - Diagonal dominance indicates reliable observations (high
+(a_{ii}) means state (s_i) reliably produces observation (o_i)) -
+Off-diagonal values indicate observation ambiguity (non-zero (a_{ij})
+for (i j) means state (s_j) can produce observation (o_i), creating
+uncertainty)</p>
 <h3 id="matrix-b-state-transitions">Matrix B: State Transitions</h3>
-<p>The transition model defines how actions change states: [B =
-[b_{ijk}] b_{ijk} = P(s_j s_i, a_k)]</p>
-<p><strong>Structure:</strong> - 3D tensor: ( ) - Each action defines a
-transition matrix - Enables modeling of controllable state changes</p>
+<p>The transition model defines how actions change states (see also
+Equation <span class="math inline">\(\eqref{eq:matrix_b}\)</span>):</p>
+<p><strong>Structure:</strong> - 3D tensor with dimensions ( ) - Each
+action defines a transition matrix - Enables modeling of controllable
+state changes</p>
 <h3 id="matrix-c-preferences">Matrix C: Preferences</h3>
-<p>The preference model defines desired outcomes: [C = [c_i] c_i =
-P(o_i)]</p>
+<p>The preference model defines desired outcomes (see also Equation
+<span class="math inline">\(\eqref{eq:matrix_c}\)</span>):</p>
 <p><strong>Interpretation:</strong> - Positive values: preferred
 observations - Negative values: avoided observations - Zero values:
 neutral observations</p>
 <h3 id="matrix-d-prior-beliefs">Matrix D: Prior Beliefs</h3>
-<p>The prior model defines initial state beliefs: [D = [d_i] d_i =
-P(s_i)]</p>
+<p>The prior model defines initial state beliefs (see also Equation
+<span class="math inline">\(\eqref{eq:matrix_d}\)</span>):</p>
 <p><strong>Role:</strong> - Initial beliefs before observation - Can
 represent learned priors or innate biases - Influences posterior
 inference</p>
@@ -416,7 +439,7 @@ for typical models</li>
 performance</li>
 <li><strong>Meta-Cognitive Assessment</strong>: (O(n_{})) - efficient
 evaluation</li>
-<li><strong>Framework Optimization</strong>: (O( )) - scalable for
+<li><strong>Framework Optimization</strong>: (O( n_{})) - scalable for
 research use</li>
 </ul>
 <h4 id="validation-results">Validation Results</h4>
@@ -438,40 +461,47 @@ Regulation</h3>
 <p><strong>Complete Generative Model:</strong></p>
 <p>States: {cold, comfortable, hot} Observations: {cold_sensor,
 comfortable_sensor, hot_sensor} Actions: {heat, no_change, cool}</p>
-<strong>Matrix Specifications:</strong> [A =
-<span class="math display">\[\begin{pmatrix}
-0.8 &amp; 0.1 &amp; 0.0 \\
-0.1 &amp; 0.8 &amp; 0.1 \\
-0.0 &amp; 0.1 &amp; 0.8
-\end{pmatrix}\]</span>
-<p>]</p>
-[C =
-<span class="math display">\[\begin{pmatrix} -1.0 \\ 2.0 \\ -1.0
-\end{pmatrix}\]</span>
-<p>]</p>
+<p><strong>Matrix Specifications:</strong></p>
 <p><strong>EFE Calculation Example:</strong> - Current state: cold (high
-probability) - Preferred outcome: comfortable (high preference) - Action
-selection favors heating to achieve preferred state</p>
+probability in posterior (q(s))) - Preferred outcome: comfortable (high
+preference in matrix (C), value 2.0) - Action selection: Heating action
+minimizes EFE by both reducing uncertainty about environmental state
+(epistemic) and moving toward preferred comfortable state (pragmatic) -
+The EFE calculation (()) balances these two objectives, with heating
+achieving lower EFE than cooling or no-change actions</p>
 <h3 id="quadrant-2-meta-data-enhanced-processing">Quadrant 2: Meta-Data
 Enhanced Processing</h3>
-<p><strong>Meta-Data Integration:</strong> - Confidence scores:
-P(observation_correct) - Temporal consistency: P(current_observation |
-previous_observations) - Sensor reliability: P(sensor_accurate |
-conditions)</p>
-<p><strong>Enhanced Inference:</strong> [q(s|o,m) q(s|o) w(m)]</p>
-<p>Where m represents meta-data and w(m) is the meta-data weight.</p>
+<p><strong>Meta-Data Integration:</strong> - Confidence scores: (P()) -
+Temporal consistency: (P( )) - Sensor reliability: (P( ))</p>
+<p><strong>Enhanced Inference:</strong></p>
+<p>Where (m) represents meta-data (confidence scores, temporal stamps,
+reliability metrics) and (w(m)) is the meta-data weighting function that
+modulates belief updating based on meta-data quality. When meta-data
+indicates high confidence and reliability, (w(m) &gt; 1), amplifying the
+influence of observations. When meta-data indicates low quality, (w(m)
+&lt; 1), reducing observation influence and encouraging more cautious
+inference. This adaptive weighting enables Quadrant 2 systems to improve
+decision reliability beyond basic data processing.</p>
 <h3 id="quadrant-3-self-reflective-control">Quadrant 3: Self-Reflective
 Control</h3>
-<p><strong>Confidence Dynamics:</strong> [ = -(c - c_{target}) +
-accuracy]</p>
-<p>Where: - c: current confidence - c_target: target confidence based on
-task demands - α: adaptation rate - β: performance feedback strength</p>
+<p><strong>Confidence Dynamics:</strong></p>
+<p>Where: - (c): current confidence level (0 to 1) - (c_{}): target
+confidence based on task demands (higher for critical decisions, lower
+for exploratory tasks) - (): adaptation rate controlling how quickly
+confidence adjusts toward target - (): performance feedback strength
+determining how much actual performance influences confidence
+dynamics</p>
+<p>This differential equation describes how confidence evolves over
+time, converging toward the target confidence level while being
+modulated by actual performance accuracy. When performance is high,
+confidence increases; when performance is low, confidence decreases,
+creating a self-correcting calibration mechanism.</p>
 <h3 id="quadrant-4-framework-optimization">Quadrant 4: Framework
 Optimization</h3>
 <p><strong>Meta-Parameter Learning:</strong> [^* = _{} [p(data|) -
 complexity()]]</p>
-<p>Where Θ includes confidence thresholds, adaptation rates, and
-processing strategies.</p>
+<p>Where () includes framework parameters: confidence thresholds (_c),
+adaptation rates (), and processing strategy parameters.</p>
 <h2 id="sec:validation_results">Validation Results</h2>
 <h3 id="theoretical-correctness">Theoretical Correctness</h3>
 <p>All implementations validated against established Active Inference
@@ -493,10 +523,10 @@ theory:</p>
 <h3 id="performance-benchmarks">Performance Benchmarks</h3>
 <p>Computational performance validated:</p>
 <ul>
-<li>EFE calculation: (O(n_{} n_{}))</li>
+<li>EFE calculation: (O(n_{} n_{} ))</li>
 <li>Inference: (O(n_{} n_{}))</li>
 <li>Meta-cognitive assessment: (O(n_{}))</li>
-<li>Framework optimization: (O( ))</li>
+<li>Framework optimization: (O( n_{}))</li>
 </ul>
 <h2 id="sec:future_extensions">Future Implementation Extensions</h2>
 <h3 id="scalability-improvements">Scalability Improvements</h3>

@@ -31,7 +31,7 @@ Active Inference requires systems to model themselves within the same formalism 
 \[q_{self}(s_{self} \mid o_{self}) \propto p_{self}(o_{self} \mid s_{self}) \cdot q_{self}(s_{self})\label{eq:self_modeling}\]
 ```
 
-Where the system uses its own generative model to infer its own internal states from self-observations.
+In Equation \eqref{eq:self_modeling}, the system uses its own generative model to infer its own internal states from self-observations.
 
 ### Framework Coherence
 
@@ -48,7 +48,7 @@ Meta-cognitive frameworks must maintain internal consistency while adapting to c
 \[\frac{d\Theta}{dt} = -\eta \cdot \nabla_{\Theta} \mathcal{L}(\Theta) + \lambda \cdot \mathcal{R}(\Theta)\label{eq:adaptation_dynamics}\]
 ```
 
-Where \(\mathcal{R}(\Theta)\) ensures framework coherence during adaptation.
+In Equation \eqref{eq:adaptation_dynamics}, \(\mathcal{R}(\Theta)\) ensures framework coherence during adaptation.
 
 ## Theoretical Extensions {#sec:theoretical_extensions}
 
@@ -120,7 +120,7 @@ Practical limitations and optimization strategies for meta-level processing:
 - Quadrant 1: \(O(n_{\text{states}} \times n_{\text{actions}})\) - polynomial
 - Quadrant 2: \(O(n_{\text{states}} \times n_{\text{actions}} \times n_{\text{metadata}})\) - polynomial with metadata
 - Quadrant 3: \(O(n_{\text{states}} \times n_{\text{actions}} \times n_{\text{strategies}})\) - polynomial with strategies
-- Quadrant 4: \(O(\text{iterations} \times n_{\text{parameters}} \times \text{complexity})\) - optimization-dependent
+- Quadrant 4: \(O(\text{iterations} \times n_{\text{parameters}})\) - optimization-dependent
 
 **Approximation Strategies:**
 - Variational approximations for large state spaces

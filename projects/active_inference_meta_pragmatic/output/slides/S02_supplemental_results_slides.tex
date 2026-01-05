@@ -100,7 +100,10 @@
 \begin{frame}[fragile]{Supplemental Results}
 \protect\phantomsection\label{sec:supplemental_results}
 This section provides additional examples and extended analysis
-supporting the main experimental results.
+supporting the main experimental results. The examples demonstrate how
+the quadrant structure applies to diverse domains, showing the
+generality and practical utility of the meta-pragmatic and
+meta-epistemic framework.
 
 \begin{block}{Extended Quadrant Examples}
 \protect\phantomsection\label{sec:extended_quadrant_examples}
@@ -127,8 +130,17 @@ zoom\_out\}
 
 \[C = \begin{pmatrix} 0.5 \\ 0.3 \\ 1.0 \\ 0.8 \end{pmatrix}\]
 
-\textbf{Analysis:} The agent balances information gathering (epistemic)
-with preference for recognizing human-made objects (pragmatic).
+\textbf{Analysis:} The agent balances information gathering (epistemic
+value (H{[}Q(\pi){]})) with preference for recognizing human-made
+objects (pragmatic value (G(\pi))). The (A) matrix shows that geometric
+patterns strongly indicate indoor scenes (0.8) and urban scenes (0.9),
+while organic patterns indicate outdoor scenes (0.8) and natural scenes
+(0.7). The (C) vector shows strongest preference for human-made objects
+(1.0), creating a pragmatic bias toward recognizing urban/indoor scenes.
+The EFE calculation balances this pragmatic preference with epistemic
+value from information gathering, leading to actions that both explore
+the scene (gathering information) and focus on areas likely to contain
+human-made objects (achieving preferences).
 \end{block}
 
 \begin{block}{Quadrant 2: Multi-Modal Meta-Data Integration}
@@ -145,9 +157,21 @@ consistency: (P(\text{current\_reading} \mid \text{previous\_readings}))
 \textbf{Inference:} {[}q(s \mid o,m) \propto q(s \mid o) \cdot \prod\_k
 w\_k(m\_k){]}
 
-\textbf{Performance Improvement:} - Raw accuracy: 85\% - Meta-data
-weighted: 94\% - Temporal consistency bonus: +5\% - Cross-modal
-agreement bonus: +4\%
+Where (q(s \mid o)) is the basic inference from observations, and
+(w\_k(m\_k)) are meta-data weights that modulate the inference based on
+quality information. The product (\prod\_k w\_k(m\_k)) combines multiple
+meta-data sources multiplicatively, so that low confidence in any source
+reduces overall confidence, while high confidence in all sources
+increases overall confidence.
+
+\textbf{Performance Improvement:} - Raw accuracy (Quadrant 1): 85\% -
+basic inference without meta-data - Meta-data weighted (Quadrant 2):
+94\% - incorporating reliability scores improves accuracy by 9\% -
+Temporal consistency bonus: +5\% - using temporal patterns to detect
+anomalies - Cross-modal agreement bonus: +4\% - leveraging agreement
+between different sensor types - Combined improvement: 94\% vs 85\% =
++9\% absolute improvement, demonstrating the value of meta-data
+integration
 \end{block}
 
 \begin{block}{Quadrant 3: Adaptive Learning Strategies}
@@ -239,14 +263,19 @@ t-test: t(29) = 4.67, p \textless{} 0.001 - Effect size: Cohen's d =
 
 \begin{block}{Regression Analysis}
 \protect\phantomsection\label{regression-analysis}
-\textbf{Performance Prediction Model:} {[}performance = \beta\_0 +
-\beta\_1 \cdot meta\_data + \beta\_2 \cdot meta\_cognition + \beta\_3
-\cdot framework + \epsilon{]}
+\textbf{Performance Prediction Model:}
 
-\textbf{Results:} - R² = 0.87 (strong fit) - β₁ = 0.34 (meta-data
-contribution) - β₂ = 0.29 (meta-cognition contribution) - β₃ = 0.23
-(framework contribution) - All coefficients significant (p \textless{}
-0.001)
+\[\text{performance} = \beta_0 + \beta_1 \cdot \text{meta\_data} + \beta_2 \cdot \text{meta\_cognition} + \beta_3 \cdot \text{framework} + \epsilon\label{eq:performance_regression}\]
+
+\textbf{Results:} - (R\^{}2 = 0.87) (strong fit) - (\beta\_1 = 0.34)
+(meta-data contribution) - (\beta\_2 = 0.29) (meta-cognition
+contribution) - (\beta\_3 = 0.23) (framework contribution) - All
+coefficients significant ((p \textless{} 0.001))
+
+The regression model (Equation \eqref{eq:performance_regression})
+demonstrates that meta-data integration ((\beta\_1)), meta-cognitive
+control ((\beta\_2)), and framework optimization ((\beta\_3)) all
+contribute significantly to performance improvement.
 \end{block}
 \end{block}
 
@@ -264,9 +293,10 @@ Quadrant 4: 67ms per decision (+347\%)
 
 \begin{block}{Scalability Assessment}
 \protect\phantomsection\label{scalability-assessment}
-\textbf{State Space Scaling:} - n\_states = 10: All quadrants functional
-- n\_states = 100: Quadrants 1-3 functional, Q4 requires approximation -
-n\_states = 1000: Quadrants 1-2 functional, Q3-4 require hierarchical
+\textbf{State Space Scaling:} - (n\_\{\text{states}\} = 10): All
+quadrants functional - (n\_\{\text{states}\} = 100): Quadrants 1-3
+functional, Quadrant 4 requires approximation - (n\_\{\text{states}\} =
+1000): Quadrants 1-2 functional, Quadrants 3-4 require hierarchical
 methods
 
 \textbf{Optimization Strategies:} - Sparse representations for large

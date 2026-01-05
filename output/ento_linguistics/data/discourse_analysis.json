@@ -1,60 +1,14 @@
 {
   "patterns": {
-    "hierarchical_framing": {
-      "pattern_type": "hierarchical_framing",
-      "examples": [
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 2 hierarchical terms",
-        "Found 2 hierarchical terms",
-        "Found 2 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 2 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 5 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 2 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 5 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 4 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 3 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 3 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms",
-        "Found 1 hierarchical terms"
-      ],
-      "frequency": 42,
-      "domains": [
-        "power_and_labor"
-      ],
-      "rhetorical_function": "Structures social relationships as human-like hierarchies"
-    },
     "economic_metaphors": {
       "pattern_type": "economic_metaphors",
       "examples": [
+        "Found 2 economic metaphors",
+        "Found 1 economic metaphors",
+        "Found 1 economic metaphors",
+        "Found 1 economic metaphors",
+        "Found 1 economic metaphors",
+        "Found 1 economic metaphors",
         "Found 1 economic metaphors",
         "Found 1 economic metaphors",
         "Found 1 economic metaphors",
@@ -87,27 +41,91 @@
         "Found 1 economic metaphors",
         "Found 1 economic metaphors",
         "Found 1 economic metaphors",
-        "Found 5 economic metaphors",
-        "Found 1 economic metaphors",
-        "Found 1 economic metaphors",
-        "Found 1 economic metaphors"
+        "Found 5 economic metaphors"
       ],
-      "frequency": 36,
+      "frequency": 39,
       "domains": [
         "economics"
       ],
       "rhetorical_function": "Applies market logic to biological processes"
+    },
+    "hierarchical_framing": {
+      "pattern_type": "hierarchical_framing",
+      "examples": [
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 2 hierarchical terms",
+        "Found 2 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 2 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 3 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 2 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 5 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 2 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 5 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 4 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 3 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 3 hierarchical terms",
+        "Found 1 hierarchical terms",
+        "Found 1 hierarchical terms"
+      ],
+      "frequency": 45,
+      "domains": [
+        "power_and_labor"
+      ],
+      "rhetorical_function": "Structures social relationships as human-like hierarchies"
     }
   },
-  "argumentative_structures": [],
+  "argumentative_structures": [
+    {
+      "claim": "genome sequence tenthredid wasp eutomostethus luteiventris klug 1816 hymenoptera tenthredinidae halstead fowler k natural history museum genome acquisition lab wellcome sanger institute tree life management sample laboratory team wellcome sanger institute scientific operation sequencing operation wellcome sanger institute tree life core informatics team tree life core informatics collective darwin tree life consortium",
+      "evidence": [],
+      "warrant": "",
+      "qualification": "",
+      "discourse_markers": [
+        "thus"
+      ]
+    }
+  ],
   "rhetorical_strategies": {
     "authority": {
       "frequency": 0,
       "examples": []
     },
     "analogy": {
-      "frequency": 11,
+      "frequency": 13,
       "examples": [
+        "like glass flakepolymer composite ant",
+        "antly fabrication tissue-like ",
         "antitatively mapped via dogsitescorer engine developed novel reaction-first evolutionary metaheuristic algorithm well multi-objective optimization programming assembles novel ligand fragment library guided spatial alignment identified hotspot generative model produced structurally unique chemical entity strong bias toward drug-like ",
         "ant predictor huixin zhan genomic foundation model gfms evolutionary scale modeling esm demonstrated remarkable success variant effect prediction security robustness adversarial manipulation remain largely unexplored address gap introduce secure agentic genomic evaluator sage agentic framework auditing adversarial vulnerability gfms sage function interpretable automated risk auditing loop injects soft prompt perturbation monitor model behavior across training checkpoint computes risk metric auroc aupr generates structured report large language model-based narrative explanation agentic process enables continuous evaluation embedding-space robustness without modifying underlying model using sage find even state-of-the-art gfms like ",
         "ant early diagnosis skin disease melanoma class imbalance skin lesion datasets notably defect representation malignantcancerous case one difficulty deep learning model performance generalization paper offer exhaustive review balancing method aim address class imbalance using example isic 2016 dataset light-weight cnn model mobilenetv2 combined under-sampling over-sampling hybrid balancing method tomek linkstl smote smote tl over-sampling method like ",
@@ -128,8 +146,9 @@
       ]
     },
     "anecdotal": {
-      "frequency": 5,
+      "frequency": 6,
       "examples": [
+        "consider",
         "consider",
         "consider",
         "consider",
@@ -140,6 +159,9 @@
   },
   "narrative_frameworks": {
     "progress_narrative": [
+      "psmd14 drive lung adenocarcinoma progression hmmr stabilization dual activation tgf-βsmad pi3kaktmto...",
+      "orange peel soil amendment affect brassica rapa growth aphid development without disrupting parasito...",
+      "single-cell omics investigating effect cafs kras overexpression malignant progression anaplastic thy...",
       "development bacterin-toxoid vaccine using korean isolate protection caseous lymphadenitis goat h nam...",
       "repression polycomb group factor 1 inhibits emt progression colon cancer cell via wntβ-catenin pi3ka...",
       "epidemiological analysis reveals coral specie affected stony coral tissue loss disease present simil...",
@@ -158,12 +180,15 @@
       "improved storage stability sausage based dual effect sodium nitrite color development bacterial inhi...",
       "histone acetyltransferase kat6a contributes colon cancer malignant progression inhibiting ferroptosi...",
       "role aldo-keto reductase family 1 member c cancer progression special focus role akr1c1 pancreatic c...",
-      "klhl4 upregulates egfr signaling promote malignant progression oral squamous cell carcinoma zhang re...",
-      "icaritin suppresses cad-mediated liver cancer development targeting mir-18b-5p xenograft mouse model...",
-      "igf2bp3-stat3-mettl3 axis promotes malignant progression hepatocellular carcinoma hcc xu cao yang j ...",
+      "quantum simulation protein fragment electronic structure using moment-based adaptive variational qua...",
+      "peak-nadir encoding efficient cgm data compression high-fidelity reconstruction clara bender line da...",
+      "benchmarking preprocessing integration method single-cell genomics ali anaissi seid miad zandavi wei...",
+      "non-contact non-destructive detection structural defect bioprinted construct using video-based vibra...",
+      "domain-aware prior enable vertical federated learning data-scarce coral multi-omics sam victor verti...",
       "muscle synergy pattern running coordinative mechanism neuromechanical perspective ye shixin lin shen...",
       "epigenetic control reprogramming-induced potential landscape gene regulatory network quantitative th...",
       "finite element analysis large bone model based micro-ct scan shani martinez-weissberg pazner zohar y...",
+      "forking anatomy morphodepot applies open-source development model 3d digital morphology murat maga s...",
       "stochastic multi-step cell size homeostasis model cycling human cell sayeh rezaee cesar nieto abhyud...",
       "body compute comment informational embodiment computational role information structure code robot pi...",
       "liveproteinbench contamination-free benchmark assessing model specialized capability protein science...",
@@ -202,15 +227,12 @@
       "assessment simulation-based inference method stochastic compartmental model vincent wieland nil wass...",
       "transienttrack advanced multi-object tracking classification cancer cell transient fluorescent signa...",
       "personalized optimization pediatric hd-tdcs dose consistency target engagement zeming liu mo wang xu...",
-      "disentangling proxy demographic adjustment clinical equation aashna p shah james diao emma pierson c...",
-      "learning principle cell antigen discernment françois x p bourassa sooraj achar grégoire altan-bonnet...",
-      "trident trimodal cascade generative framework drug rna-conditioned cellular morphology synthesis rui...",
-      "dual-path knowledge-augmented contrastive alignment network spatially resolved transcriptomics wei z..."
+      "disentangling proxy demographic adjustment clinical equation aashna p shah james diao emma pierson c..."
     ],
     "conflict_narrative": [
       "root functional specialization dalbergia odorifera reveals localized molecular adaptation karst rock...",
       "multi-agv path planning method textile industry based improved ant colony optimization algorithm r-t...",
-      "dendritic cell gastrointestinal system division labor plasticity niche-specific adaptation zhou yd k...",
+      "non-dilemmatic social dynamic promote cooperation multilayer network jnanajyoti bhaumik naoki masuda...",
       "dynamic response phenotype model discrimination system synthetic biology eduardo sontag biological s...",
       "trimming coexistence dispersal strategy accounted resource management elena braverman jenny lawson t...",
       "cytodino risk-aware biologically-informed adaptation dinov3 bone marrow cytomorphology aziz muminov ...",
@@ -232,13 +254,19 @@
       "root functional specialization dalbergia odorifera reveals localized molecular adaptation karst rock...",
       "fast food gps tracking reveals behavior-specific habitat selection cattle farm subsidy three sympatr...",
       "comprehensive cancer analysis reveals cfh immune-related prognostic marker zheng x lv c guo x...",
-      "seasonal dietary pattern tarim red deer cervus hanglu yarkandensis revealed trnl sequencing approach...",
+      "evolutionary structural constraint define mutation-resistant catalytic core e coli serine hydroxy me...",
+      "modeling epidemic dynamic mutant strain evolutionary game-based vaccination behavior wenjie zhang yu...",
+      "quantum simulation protein fragment electronic structure using moment-based adaptive variational qua...",
+      "non-dilemmatic social dynamic promote cooperation multilayer network jnanajyoti bhaumik naoki masuda...",
       "dynamic response phenotype model discrimination system synthetic biology eduardo sontag biological s...",
       "muscle synergy pattern running coordinative mechanism neuromechanical perspective ye shixin lin shen...",
       "finite element analysis large bone model based micro-ct scan shani martinez-weissberg pazner zohar y...",
+      "unifying weak independence signal hierarchy theory extended biological petri net formalism applicati...",
+      "forking anatomy morphodepot applies open-source development model 3d digital morphology murat maga s...",
       "stochastic multi-step cell size homeostasis model cycling human cell sayeh rezaee cesar nieto abhyud...",
       "qsar-guided generative framework discovery synthetically viable odorants tim c pearce ahmed ibrahim ...",
       "effect dispersal area extinction threshold róbert juhász igor kovács beáta oborny survival populatio...",
+      "hierarchical preemption novel information-theoretic control mechanism lambda phage decision-making e...",
       "heterogeneous fragmentation empty site promotes cooperation phenotypically diverse population tag-me...",
       "characterizing fungal infection u research program md fantacher islam emeral norzagaray corneliu ant...",
       "drug discovery guided maximum drug likeness hao-yu zhu shi-jie du lu xu wei shi overcome high attrit...",
@@ -304,17 +332,19 @@
       "automated statistical machine learning platform biological research luke rimmo lego samantha gauthie...",
       "multivariate functional data analysis uncovers behavioral fingerprint invertebrate locomotor respons...",
       "beyond protein language model agentic llm framework mechanistic enzyme design bruno jacob khushbu ag...",
-      "many-eyes sentinel selfish cooperative group charlie pilgrim andrew bate anna sigalou mélisande aell...",
-      "role fractional brownian motion model chemotaxis stochastic gradient ascent gustavo cornejo-olea luc...",
-      "detecting discontinuity topology alzheimers gene co-expression aya samadzelkava alzheimers disease a...",
-      "dual-path knowledge-augmented contrastive alignment network spatially resolved transcriptomics wei z..."
+      "many-eyes sentinel selfish cooperative group charlie pilgrim andrew bate anna sigalou mélisande aell..."
     ],
     "complexity_narrative": [
       "comparison acinetobacter calcoaceticus-baumannii complex identification maldi-tof mass spectrometry ...",
       "anticancer activity alectinib hydroxypropyl-β-cyclodextrin complexation vitro evaluation a549 lung c...",
+      "modeling epidemic dynamic mutant strain evolutionary game-based vaccination behavior wenjie zhang yu...",
+      "gardner volume self-organization minimal model complex ecosystem frederik j thomsen johan l dubbelda...",
+      "non-contact non-destructive detection structural defect bioprinted construct using video-based vibra...",
+      "unifying weak independence signal hierarchy theory extended biological petri net formalism applicati...",
       "high-fidelity robotic pcr amplification dna data storage vincent beguin jean grétillat kornelija kam...",
       "integrated quantitative single-objective light-sheet microscope subcellular dynamic embryo cultured ...",
       "decoding architecture living system manlio de domenico possibility evolutionary force together funda...",
+      "hierarchical preemption novel information-theoretic control mechanism lambda phage decision-making e...",
       "heterogeneous fragmentation empty site promotes cooperation phenotypically diverse population tag-me...",
       "measuring time-scale-dependent information flow maternal fetal heartbeat third trimester nicolas b g...",
       "insight spatially resolved survival modelling routine histology crosslinked molecular profiling reve...",
@@ -352,11 +382,7 @@
       "tissue stress measurement bayesian inversion stress microscopy l anger schoenit f wodrascka c rossé ...",
       "approximate bayesian computation made easy practical guide abc-smc dynamical system textttpymc mario...",
       "statistical framework comparing epidemic forest cyril geismar peter j white anne cori thibaut jombar...",
-      "expectation-enforcing strategy repeated game nikos dimou alex mcavoy originating evolutionary game t...",
-      "role fractional brownian motion model chemotaxis stochastic gradient ascent gustavo cornejo-olea luc...",
-      "learning principle cell antigen discernment françois x p bourassa sooraj achar grégoire altan-bonnet...",
-      "detecting discontinuity topology alzheimers gene co-expression aya samadzelkava alzheimers disease a...",
-      "cltree tool annotating rooting evaluating phylogenetic tree leveraging genomic lineage guanghong zuo..."
+      "expectation-enforcing strategy repeated game nikos dimou alex mcavoy originating evolutionary game t..."
     ]
   },
   "persuasive_techniques": {
@@ -378,10 +404,10 @@
     }
   },
   "summary": {
-    "total_texts": 419,
-    "avg_text_length": 626.3007159904535,
+    "total_texts": 425,
+    "avg_text_length": 640.6305882352941,
     "total_patterns_identified": 2,
-    "total_pattern_instances": 78,
-    "argumentative_structures_found": 0
+    "total_pattern_instances": 84,
+    "argumentative_structures_found": 1
   }
 }

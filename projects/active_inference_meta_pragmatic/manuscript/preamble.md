@@ -45,4 +45,9 @@ This file contains LaTeX packages and commands that are automatically included i
 
 % Conditional probability notation
 \newcommand{\given}{\mid}
+
+% Ensure proper text justification (left-aligned, not center-aligned)
+% Default LaTeX behavior is justified text, but we explicitly ensure no center alignment
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
 ```

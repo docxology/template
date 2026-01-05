@@ -1,6 +1,6 @@
 {
   "model": "gemma3:4b",
-  "timestamp": "2026-01-04T17:16:26.555904",
+  "timestamp": "2026-01-05T08:09:11.816332",
   "source_pdf": "/Users/4d/Documents/GitHub/template/projects/active_inference_meta_pragmatic/output/pdf/active_inference_meta_pragmatic_combined.pdf",
   "reviews_generated": [
     "translation_zh",
@@ -9,39 +9,39 @@
   ],
   "max_input_length": 500000,
   "manuscript_metrics": {
-    "total_chars": 100855,
-    "total_words": 17567,
-    "total_tokens_est": 25213,
+    "total_chars": 156460,
+    "total_words": 24427,
+    "total_tokens_est": 39115,
     "truncated": false,
-    "truncated_chars": 100855
+    "truncated_chars": 156460
   },
   "review_metrics": {
     "translation_zh": {
-      "input_chars": 100855,
-      "input_words": 17567,
-      "input_tokens_est": 25213,
-      "output_chars": 3280,
-      "output_words": 361,
-      "output_tokens_est": 820,
-      "generation_time_seconds": 56.12
+      "input_chars": 156460,
+      "input_words": 24427,
+      "input_tokens_est": 39115,
+      "output_chars": 3413,
+      "output_words": 379,
+      "output_tokens_est": 853,
+      "generation_time_seconds": 80.14
     },
     "translation_hi": {
-      "input_chars": 100855,
-      "input_words": 17567,
-      "input_tokens_est": 25213,
-      "output_chars": 4606,
-      "output_words": 665,
-      "output_tokens_est": 1151,
-      "generation_time_seconds": 58.57
+      "input_chars": 156460,
+      "input_words": 24427,
+      "input_tokens_est": 39115,
+      "output_chars": 4746,
+      "output_words": 667,
+      "output_tokens_est": 1186,
+      "generation_time_seconds": 83.48
     },
     "translation_ru": {
-      "input_chars": 100855,
-      "input_words": 17567,
-      "input_tokens_est": 25213,
-      "output_chars": 5028,
-      "output_words": 597,
-      "output_tokens_est": 1257,
-      "generation_time_seconds": 60.5
+      "input_chars": 156460,
+      "input_words": 24427,
+      "input_tokens_est": 39115,
+      "output_chars": 4616,
+      "output_words": 558,
+      "output_tokens_est": 1154,
+      "generation_time_seconds": 82.92
     }
   },
   "format_compliance": {
@@ -66,7 +66,7 @@
       }
     }
   },
-  "total_generation_time_seconds": 175.2,
+  "total_generation_time_seconds": 246.56,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,

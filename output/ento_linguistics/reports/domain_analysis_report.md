@@ -1,6 +1,90 @@
 # Ento-Linguistic Domain Analysis Report
 
-Analysis performed on 2026-01-04T17:19:56.511717
+Analysis performed on 2026-01-05T08:12:54.679078
+
+
+# Behavior And Identity Domain Analysis
+
+## Key Terms
+foraging, behavioral, behavior
+
+## Term Patterns
+
+
+## Framing Assumptions
+- Behavioral categories reflect discrete identities
+- Task performance defines individual identity
+- Behavioral specialization is fixed and heritable
+- Foraging behavior indicates specialized role
+
+## Ambiguities Identified
+- **forager**: Identity vs behavior vs observation (contexts: observed carrying food, genetically predisposed, temporarily assigned)
+- **worker**: Reproductive status vs behavioral role (contexts: sterile female, non-reproductive adult, task-performing individual)
+
+## Recommendations
+- Distinguish between behavioral observations and identities
+- Specify whether roles are fixed or plastic
+- Use 'behavioral specialization' rather than 'caste identity'
+- Avoid assuming heritability of behavioral roles
+
+
+---
+
+
+# Economics Domain Analysis
+
+## Key Terms
+trade-off, cost-effective
+
+## Term Patterns
+- compound: 2
+
+## Framing Assumptions
+- Colony economics mirror human market systems
+- Resource allocation follows market principles
+- Costs and benefits analogous to human economics
+- Optimization implies conscious decision-making
+
+## Ambiguities Identified
+- **trade**: Biological exchange vs economic metaphor (contexts: resource exchange, trophallaxis, metaphorical usage)
+- **cost**: Multiple types of costs conflated (contexts: energetic expenditure, risk, opportunity cost)
+
+## Recommendations
+- Specify type of resource allocation mechanism
+- Use 'resource exchange' rather than 'trade'
+- Specify cost type (energetic, risk, opportunity)
+- Avoid assuming conscious economic decision-making
+
+
+---
+
+
+# Unit Of Individuality Domain Analysis
+
+## Key Terms
+colony
+
+## Term Patterns
+
+
+## Framing Assumptions
+- Individuality exists on a single biological scale
+- Colony-level traits are emergent rather than individual
+- Superorganism concept implies loss of individual agency
+- Nestmate recognition defines individual boundaries
+
+## Ambiguities Identified
+- **colony**: Shifts meaning across biological scales (contexts: reproductive unit, behavioral entity, ecological unit)
+- **individual**: Multiple biological scales of individuality (contexts: nestmate, colony member, genetic individual)
+
+## Recommendations
+- Specify biological scale when using individuality terms
+- Distinguish between genetic, physiological, and social individuality
+- Use 'colony-level' vs 'individual-level' traits explicitly
+- Avoid assuming single scale of biological organization
+
+
+---
 
 
 # Sex And Reproduction Domain Analysis
@@ -31,62 +115,6 @@ reproduction
 ---
 
 
-# Behavior And Identity Domain Analysis
-
-## Key Terms
-behavioral, behavior, foraging
-
-## Term Patterns
-
-
-## Framing Assumptions
-- Behavioral categories reflect discrete identities
-- Task performance defines individual identity
-- Behavioral specialization is fixed and heritable
-- Foraging behavior indicates specialized role
-
-## Ambiguities Identified
-- **forager**: Identity vs behavior vs observation (contexts: observed carrying food, genetically predisposed, temporarily assigned)
-- **worker**: Reproductive status vs behavioral role (contexts: sterile female, non-reproductive adult, task-performing individual)
-
-## Recommendations
-- Distinguish between behavioral observations and identities
-- Specify whether roles are fixed or plastic
-- Use 'behavioral specialization' rather than 'caste identity'
-- Avoid assuming heritability of behavioral roles
-
-
----
-
-
-# Economics Domain Analysis
-
-## Key Terms
-cost-effective, trade-off
-
-## Term Patterns
-- compound: 2
-
-## Framing Assumptions
-- Colony economics mirror human market systems
-- Resource allocation follows market principles
-- Costs and benefits analogous to human economics
-- Optimization implies conscious decision-making
-
-## Ambiguities Identified
-- **trade**: Biological exchange vs economic metaphor (contexts: resource exchange, trophallaxis, metaphorical usage)
-- **cost**: Multiple types of costs conflated (contexts: energetic expenditure, risk, opportunity cost)
-
-## Recommendations
-- Specify type of resource allocation mechanism
-- Use 'resource exchange' rather than 'trade'
-- Specify cost type (energetic, risk, opportunity)
-- Avoid assuming conscious economic decision-making
-
-
----
-
-
 # Kin And Relatedness Domain Analysis
 
 ## Key Terms
@@ -110,34 +138,6 @@ decision-making
 - Use 'relatedness coefficient' for genetic measures
 - Avoid 'family' for insect groupings
 - Specify mechanisms of kin recognition
-
-
----
-
-
-# Unit Of Individuality Domain Analysis
-
-## Key Terms
-colony
-
-## Term Patterns
-
-
-## Framing Assumptions
-- Individuality exists on a single biological scale
-- Colony-level traits are emergent rather than individual
-- Superorganism concept implies loss of individual agency
-- Nestmate recognition defines individual boundaries
-
-## Ambiguities Identified
-- **colony**: Shifts meaning across biological scales (contexts: reproductive unit, behavioral entity, ecological unit)
-- **individual**: Multiple biological scales of individuality (contexts: nestmate, colony member, genetic individual)
-
-## Recommendations
-- Specify biological scale when using individuality terms
-- Distinguish between genetic, physiological, and social individuality
-- Use 'colony-level' vs 'individual-level' traits explicitly
-- Avoid assuming single scale of biological organization
 
 
 ---

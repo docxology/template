@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  4 JAN 2026 17:11
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  5 JAN 2026 08:02
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1252,28 +1252,28 @@ utput/slides/S01_supplemental_methods_slides.nav)
 (/Users/4d/Documents/GitHub/template/projects/active_inference_meta_pragmatic/o
 utput/slides/S01_supplemental_methods_slides.vrb
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 14.
+(Font)              scaled to size 7.8961pt on input line 16.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 14.
+(Font)              scaled to size 5.64008pt on input line 16.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-4.
+6.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 14.
+(Font)              scaled to size 11.28131pt on input line 16.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 14.
+(Font)              scaled to size 7.89691pt on input line 16.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 14.
+(Font)              scaled to size 5.64066pt on input line 16.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 14.
+(Font)              scaled to size 11.27914pt on input line 16.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 14.
+(Font)              scaled to size 7.8954pt on input line 16.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 14.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 14.
+(Font)              scaled to size 5.63957pt on input line 16.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 16.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1282,7 +1282,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 14.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 16.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1291,12 +1291,16 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
+Missing character: There is no ∑ (U+2211) in font [lmsans10-regular]:mapping=te
+x-text;!
+Missing character: There is no ∑ (U+2211) in font [lmsans10-regular]:mapping=te
+x-text;!
 Missing character: There is no ∝ (U+221D) in font [lmsans10-regular]:mapping=te
 x-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.58 normalization: (P(o) \propto \exp
+l.77 normalization: (P(o) \propto \exp
                                       (C))
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1309,13 +1313,13 @@ ern Roman (RS)
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.59 \end{block}
+l.78 \end{block}
                 
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-Overfull \hbox (109.65675pt too wide) detected at line 79
+Overfull \hbox (109.65675pt too wide) detected at line 98
 [][][][] [] [] [] []
  []
 
@@ -1328,13 +1332,13 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.87 \mathbb
-            {E}\emph{\{q(s}\tau \mid \pi)\}{[}\log q(s\_\tau \mid \pi){]} -
+l.106 \mathbb
+             {E}\emph{\{q(s}\tau \mid \pi)\}{[}\log q(s\_\tau \mid \pi){]} -
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 87.
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 106.
 Missing character: There is no 𝜏 (U+1D70F) in font [lmsans10-regular]:mapping=t
 ex-text;!
 Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=te
@@ -1344,7 +1348,7 @@ ex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.87 \mathbb{E}\emph{\{q(s}\tau \mid \pi)\}{[}\log
+l.106 ...hbb{E}\emph{\{q(s}\tau \mid \pi)\}{[}\log
                                                    q(s\_\tau \mid \pi){]} -
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1356,15 +1360,15 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.88 \mathbb{E}\emph{\{q(s}\tau
-                                \mid \pi)\}{[}\log p(s\_\tau \mid \pi){]}{]}
+l.107 \mathbb{E}\emph{\{q(s}\tau
+                                 \mid \pi)\}{[}\log p(s\_\tau \mid \pi){]}{]}
 Please use the math alphabet \mathit instead of the \itshape command. 
 
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.89 
-     
+l.108 
+      
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
@@ -1391,7 +1395,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.101 \mathbb
+l.120 \mathbb
              {E}\emph{\{q(o}\tau,s\_\tau\textbar{}\pi)\}{[}\log p(o\_\tau,s\...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -1406,18 +1410,18 @@ ex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.101 ...\{q(o}\tau,s\_\tau\textbar{}\pi)\}{[}\log
+l.120 ...\{q(o}\tau,s\_\tau\textbar{}\pi)\}{[}\log
                                                    p(o\_\tau,s\_\tau)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 
-LaTeX Warning: Command \textbar invalid in math mode on input line 102.
+LaTeX Warning: Command \textbar invalid in math mode on input line 121.
 
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.103 
+l.122 
       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1431,7 +1435,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.107 \mathbb
+l.126 \mathbb
              {E}\emph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log p(o\_\tau \mid s...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -1448,7 +1452,7 @@ ex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.107 ...mph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log
+l.126 ...mph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log
                                                    p(o\_\tau \mid s\_\tau)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1456,7 +1460,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.110 
+l.129 
       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1470,7 +1474,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.114 \mathbb
+l.133 \mathbb
              {E}\emph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log \tilde{A}(o\_\ta...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -1487,7 +1491,7 @@ ex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.114 ...mph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log
+l.133 ...mph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log
                                                    \tilde{A}(o\_\tau,s\_\tau)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1495,7 +1499,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.116 
+l.135 
       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1503,7 +1507,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.117 Where (\tilde
+l.136 Where (\tilde
                    {A}) includes the preference weighting.
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1511,7 +1515,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.118 \end{block}
+l.137 \end{block}
                  
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1526,25 +1530,6 @@ Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=t
 x-text;!
 Missing character: There is no ⋅ (U+22C5) in font [lmsans10-regular]:mapping=te
 x-text;!
-! Missing $ inserted.
-<inserted text> 
-                $
-l.133 \begin{cases}
-                   
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.136 \end{cases}
-                 
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
 Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=te
 x-text;!
 Missing character: There is no ∝ (U+221D) in font [lmsans10-regular]:mapping=te
@@ -1557,18 +1542,18 @@ Missing character: There is no 𝜙 (U+1D719) in font [lmsans10-regular]:mapping
 ex-text;!
 Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=te
 x-text;!
-Missing character: There is no ϕ (U+03D5) in font [lmsans10-regular]:mapping=te
-x-text;!
+Missing character: There is no 𝜙 (U+1D719) in font [lmsans10-regular]:mapping=t
+ex-text;!
 Missing character: There is no ∏ (U+220F) in font [lmsans10-regular]:mapping=te
 x-text;!
 LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 167.
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 182.
 Missing character: There is no 𝛩 (U+1D6E9) in font [lmsans10-regular]:mapping=t
 ex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.224 {[}\Theta\^{}* = \arg
+l.239 {[}\Theta\^{}* = \arg
                            \max\emph{\{\Theta\} \mathbb{E}}\{data\}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1580,27 +1565,35 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.224 ... = \arg\max\emph{\{\Theta\} \mathbb{E}}\{
+l.239 ... = \arg\max\emph{\{\Theta\} \mathbb{E}}\{
                                                   data\}
 Please use the math alphabet \mathit instead of the \itshape command. 
 
 
-LaTeX Warning: Command \textbar invalid in math mode on input line 225.
+LaTeX Warning: Command \textbar invalid in math mode on input line 240.
 
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.226 
+l.241 
       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 Missing character: There is no 𝛩 (U+1D6E9) in font [lmsans10-regular]:mapping=t
 ex-text;!
+Missing character: There is no 𝜃 (U+1D703) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmsans10-regular]:mapping=t
+ex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.252 {[}\frac{d\Theta}{dt}
+l.268 {[}\frac{d\Theta}{dt}
                             = -\eta \cdot \nabla\_\{\Theta\}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1608,7 +1601,7 @@ you left one out. Proceed, with fingers crossed.
 ! Extra }, or forgotten $.
 \frac  #1#2->{\begingroup #1\endgroup \@@over #2}
                                                  
-l.252 {[}\frac{d\Theta}{dt}
+l.268 {[}\frac{d\Theta}{dt}
                             = -\eta \cdot \nabla\_\{\Theta\}
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -1619,7 +1612,7 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.254 
+l.270 
       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1631,15 +1624,19 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.255 Where (\mathcal
-                     {L}) measures performance degradation due to suboptimal
+l.271 Where (\mathcal
+                     {L}(\text{performance}, \Theta)) measures performance
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmsans10-regular]:mapping=t
+ex-text;!
 ! Missing } inserted.
 <inserted text> 
                 }
-l.257 \end{block}
+l.273 \end{block}
                  
 I've inserted something that you may have forgotten.
 (See the <inserted text> above.)
@@ -1648,7 +1645,7 @@ really didn't forget anything, try typing `2' now; then
 my insertion and my current dilemma will both disappear.
 
 )
-Overfull \vbox (2796.03854pt too high) detected at line 501
+Overfull \vbox (3050.21507pt too high) detected at line 517
  []
 
 
@@ -1676,11 +1673,11 @@ L3 programming layer <2025-01-18>
 Here is how much of TeX's memory you used:
  29901 strings out of 473832
  604931 string characters out of 5729482
- 1246921 words of memory out of 5000000
+ 1255920 words of memory out of 5000000
  52412 multiletter control sequences out of 15000+600000
  562412 words of font info for 73 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,16n,123p,1119b,904s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,15n,123p,1119b,904s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/active_inference
 _meta_pragmatic/output/slides/S01_supplemental_methods_slides.pdf (1 page).

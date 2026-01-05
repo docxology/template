@@ -1,12 +1,12 @@
 # Appendix {#sec:appendix}
 
-This appendix provides technical details, mathematical derivations, and extended examples supporting the main text.
+This appendix provides technical details, mathematical derivations, and extended examples supporting the main text. The material is organized to support readers who want deeper understanding of the mathematical foundations, implementation details, and computational aspects of the quadrant structure.
 
 ## Mathematical Foundations {#sec:mathematical_foundations}
 
 ### Expected Free Energy Derivation
 
-The Expected Free Energy (EFE) combines epistemic and pragmatic components:
+The Expected Free Energy (EFE) combines epistemic and pragmatic components (see also Equation \eqref{eq:efe}):
 
 ```{=latex}
 \[\mathcal{F}(\pi) = \mathbb{E}_{q(s_\tau)}[\log q(s_\tau) - \log p(s_\tau \mid \pi)] + \mathbb{E}_{q(o_\tau)}[\log p(o_\tau \mid s_\tau) + \log p(s_\tau) - \log q(s_\tau)]\label{eq:efe_complete}\]
@@ -18,49 +18,57 @@ The epistemic affordance measures information gain:
 \[H[Q(\pi)] = \mathbb{E}_{q(s_\tau)}[\log q(s_\tau) - \log p(s_\tau \mid \pi)]\label{eq:epistemic_component}\]
 ```
 
-This term is minimized when executing policy \(\pi\) reduces uncertainty about hidden states.
+This term (Equation \eqref{eq:epistemic_component}) is minimized when executing policy \(\pi\) reduces uncertainty about hidden states.
 
 #### Pragmatic Component
 The pragmatic value measures goal achievement:
 ```{=latex}
-\[G(\pi) = \mathbb{E}_{q(o_\tau)}[\log p(o_\tau|s_\tau) + \log p(s_\tau) - \log q(s_\tau)]\label{eq:pragmatic_component}\]
+\[G(\pi) = \mathbb{E}_{q(o_\tau)}[\log p(o_\tau \mid s_\tau) + \log p(s_\tau) - \log q(s_\tau)]\label{eq:pragmatic_component}\]
 ```
+
+This term (Equation \eqref{eq:pragmatic_component}) measures goal achievement through preferred observations.
 
 Using the generative model, this becomes:
 ```{=latex}
 \[G(\pi) = \mathbb{E}_{q(o_\tau)}[\log \sigma(C) + \log A - \log q(s_\tau)]\label{eq:pragmatic_generative}\]
 ```
 
-Where \(\sigma(C)\) represents the softmax normalization of preferences.
+In Equation \eqref{eq:pragmatic_generative}, \(\sigma(C)\) represents the softmax normalization of preferences, where \(C\) is the preference matrix (Equation \eqref{eq:matrix_c}) and \(A\) is the observation likelihood matrix (Equation \eqref{eq:matrix_a}).
 
 ## Generative Model Details {#sec:generative_model_details}
 
 ### Matrix A: Observation Likelihoods
 
-The observation model defines how hidden states generate observations:
+The observation model defines how hidden states generate observations (see also Equation \eqref{eq:matrix_a}):
 ```{=latex}
 \[A = [a_{ij}] \quad a_{ij} = P(o_i \mid s_j)\label{eq:appendix_matrix_a}\]
 ```
 
 **Properties:**
-- Each column sums to 1 (valid probability distribution)
-- Rows represent observation modalities
-- Columns represent hidden state conditions
+- Each column sums to 1 (valid probability distribution): \(\sum_i a_{ij} = 1\) for all \(j\)
+- Rows represent observation modalities (different types of sensory inputs)
+- Columns represent hidden state conditions (different possible world states)
+- Diagonal dominance indicates reliable observations (high \(a_{ii}\) means state \(s_i\) reliably produces observation \(o_i\))
+- Off-diagonal values indicate observation ambiguity (non-zero \(a_{ij}\) for \(i \neq j\) means state \(s_j\) can produce observation \(o_i\), creating uncertainty)
 
 ### Matrix B: State Transitions
 
-The transition model defines how actions change states:
-\[B = [b_{ijk}] \quad b_{ijk} = P(s_j \mid s_i, a_k)\]
+The transition model defines how actions change states (see also Equation \eqref{eq:matrix_b}):
+```{=latex}
+\[B = [b_{ijk}] \quad b_{ijk} = P(s_j \mid s_i, a_k)\label{eq:appendix_matrix_b}\]
+```
 
 **Structure:**
-- 3D tensor: \(\text{states} \times \text{states} \times \text{actions}\)
+- 3D tensor with dimensions \(\text{states} \times \text{states} \times \text{actions}\)
 - Each action defines a transition matrix
 - Enables modeling of controllable state changes
 
 ### Matrix C: Preferences
 
-The preference model defines desired outcomes:
-\[C = [c_i] \quad c_i = \log P(o_i)\]
+The preference model defines desired outcomes (see also Equation \eqref{eq:matrix_c}):
+```{=latex}
+\[C = [c_i] \quad c_i = \log P(o_i)\label{eq:appendix_matrix_c}\]
+```
 
 **Interpretation:**
 - Positive values: preferred observations
@@ -69,8 +77,10 @@ The preference model defines desired outcomes:
 
 ### Matrix D: Prior Beliefs
 
-The prior model defines initial state beliefs:
-\[D = [d_i] \quad d_i = P(s_i)\]
+The prior model defines initial state beliefs (see also Equation \eqref{eq:matrix_d}):
+```{=latex}
+\[D = [d_i] \quad d_i = P(s_i)\label{eq:appendix_matrix_d}\]
+```
 
 **Role:**
 - Initial beliefs before observation
@@ -244,7 +254,7 @@ All scripts follow the thin orchestrator pattern: import business logic from `sr
 - **EFE Calculation**: \(O(n_{\text{states}} \times n_{\text{actions}} \times \text{horizon})\) - sub-millisecond for typical models
 - **Inference**: \(O(n_{\text{states}} \times n_{\text{observations}})\) - real-time performance
 - **Meta-Cognitive Assessment**: \(O(n_{\text{beliefs}})\) - efficient evaluation
-- **Framework Optimization**: \(O(\text{iterations} \times \text{parameters})\) - scalable for research use
+- **Framework Optimization**: \(O(\text{iterations} \times n_{\text{parameters}})\) - scalable for research use
 
 #### Validation Results
 - **Theoretical Correctness**: All mathematical derivations validated
@@ -264,48 +274,59 @@ Observations: {cold_sensor, comfortable_sensor, hot_sensor}
 Actions: {heat, no_change, cool}
 
 **Matrix Specifications:**
+```{=latex}
 \[A = \begin{pmatrix}
 0.8 & 0.1 & 0.0 \\
 0.1 & 0.8 & 0.1 \\
 0.0 & 0.1 & 0.8
 \end{pmatrix}\]
+```
 
+```{=latex}
 \[C = \begin{pmatrix} -1.0 \\ 2.0 \\ -1.0 \end{pmatrix}\]
+```
 
 **EFE Calculation Example:**
-- Current state: cold (high probability)
-- Preferred outcome: comfortable (high preference)
-- Action selection favors heating to achieve preferred state
+- Current state: cold (high probability in posterior \(q(s)\))
+- Preferred outcome: comfortable (high preference in matrix \(C\), value 2.0)
+- Action selection: Heating action minimizes EFE by both reducing uncertainty about environmental state (epistemic) and moving toward preferred comfortable state (pragmatic)
+- The EFE calculation \(\mathcal{F}(\pi)\) balances these two objectives, with heating achieving lower EFE than cooling or no-change actions
 
 ### Quadrant 2: Meta-Data Enhanced Processing
 
 **Meta-Data Integration:**
-- Confidence scores: P(observation_correct)
-- Temporal consistency: P(current_observation | previous_observations)
-- Sensor reliability: P(sensor_accurate | conditions)
+- Confidence scores: \(P(\text{observation\_correct})\)
+- Temporal consistency: \(P(\text{current\_observation} \mid \text{previous\_observations})\)
+- Sensor reliability: \(P(\text{sensor\_accurate} \mid \text{conditions})\)
 
 **Enhanced Inference:**
-\[q(s|o,m) \propto q(s|o) \cdot w(m)\]
+```{=latex}
+\[q(s \mid o,m) \propto q(s \mid o) \cdot w(m)\]
+```
 
-Where m represents meta-data and w(m) is the meta-data weight.
+Where \(m\) represents meta-data (confidence scores, temporal stamps, reliability metrics) and \(w(m)\) is the meta-data weighting function that modulates belief updating based on meta-data quality. When meta-data indicates high confidence and reliability, \(w(m) > 1\), amplifying the influence of observations. When meta-data indicates low quality, \(w(m) < 1\), reducing observation influence and encouraging more cautious inference. This adaptive weighting enables Quadrant 2 systems to improve decision reliability beyond basic data processing.
 
 ### Quadrant 3: Self-Reflective Control
 
 **Confidence Dynamics:**
-\[\frac{dc}{dt} = -\alpha (c - c_{target}) + \beta \cdot accuracy\]
+```{=latex}
+\[\frac{dc}{dt} = -\alpha (c - c_{\text{target}}) + \beta \cdot \text{accuracy}\]
+```
 
 Where:
-- c: current confidence
-- c_target: target confidence based on task demands
-- α: adaptation rate
-- β: performance feedback strength
+- \(c\): current confidence level (0 to 1)
+- \(c_{\text{target}}\): target confidence based on task demands (higher for critical decisions, lower for exploratory tasks)
+- \(\alpha\): adaptation rate controlling how quickly confidence adjusts toward target
+- \(\beta\): performance feedback strength determining how much actual performance influences confidence dynamics
+
+This differential equation describes how confidence evolves over time, converging toward the target confidence level while being modulated by actual performance accuracy. When performance is high, confidence increases; when performance is low, confidence decreases, creating a self-correcting calibration mechanism.
 
 ### Quadrant 4: Framework Optimization
 
 **Meta-Parameter Learning:**
 \[\Theta^* = \arg\max_{\Theta} \mathbb{E}[\log p(data|\Theta) - complexity(\Theta)]\]
 
-Where Θ includes confidence thresholds, adaptation rates, and processing strategies.
+Where \(\Theta\) includes framework parameters: confidence thresholds \(\theta_c\), adaptation rates \(\alpha\), and processing strategy parameters.
 
 ## Validation Results {#sec:validation_results}
 
@@ -331,10 +352,10 @@ Implementation tested for numerical stability:
 
 Computational performance validated:
 
-- EFE calculation: \(O(n_{\text{states}} \times n_{\text{actions}})\)
+- EFE calculation: \(O(n_{\text{states}} \times n_{\text{actions}} \times \text{horizon})\)
 - Inference: \(O(n_{\text{states}} \times n_{\text{observations}})\)
 - Meta-cognitive assessment: \(O(n_{\text{beliefs}})\)
-- Framework optimization: \(O(\text{iterations} \times \text{complexity})\)
+- Framework optimization: \(O(\text{iterations} \times n_{\text{parameters}})\)
 
 ## Future Implementation Extensions {#sec:future_extensions}
 

@@ -1,6 +1,6 @@
 # Supplemental Results {#sec:supplemental_results}
 
-This section provides additional examples and extended analysis supporting the main experimental results.
+This section provides additional examples and extended analysis supporting the main experimental results. The examples demonstrate how the quadrant structure applies to diverse domains, showing the generality and practical utility of the meta-pragmatic and meta-epistemic framework.
 
 ## Extended Quadrant Examples {#sec:extended_quadrant_examples}
 
@@ -27,7 +27,7 @@ This section provides additional examples and extended analysis supporting the m
 \[C = \begin{pmatrix} 0.5 \\ 0.3 \\ 1.0 \\ 0.8 \end{pmatrix}\]
 ```
 
-**Analysis:** The agent balances information gathering (epistemic) with preference for recognizing human-made objects (pragmatic).
+**Analysis:** The agent balances information gathering (epistemic value \(H[Q(\pi)]\)) with preference for recognizing human-made objects (pragmatic value \(G(\pi)\)). The \(A\) matrix shows that geometric patterns strongly indicate indoor scenes (0.8) and urban scenes (0.9), while organic patterns indicate outdoor scenes (0.8) and natural scenes (0.7). The \(C\) vector shows strongest preference for human-made objects (1.0), creating a pragmatic bias toward recognizing urban/indoor scenes. The EFE calculation balances this pragmatic preference with epistemic value from information gathering, leading to actions that both explore the scene (gathering information) and focus on areas likely to contain human-made objects (achieving preferences).
 
 ### Quadrant 2: Multi-Modal Meta-Data Integration
 
@@ -42,11 +42,14 @@ This section provides additional examples and extended analysis supporting the m
 **Inference:**
 \[q(s \mid o,m) \propto q(s \mid o) \cdot \prod_k w_k(m_k)\]
 
+Where \(q(s \mid o)\) is the basic inference from observations, and \(w_k(m_k)\) are meta-data weights that modulate the inference based on quality information. The product \(\prod_k w_k(m_k)\) combines multiple meta-data sources multiplicatively, so that low confidence in any source reduces overall confidence, while high confidence in all sources increases overall confidence.
+
 **Performance Improvement:**
-- Raw accuracy: 85%
-- Meta-data weighted: 94%
-- Temporal consistency bonus: +5%
-- Cross-modal agreement bonus: +4%
+- Raw accuracy (Quadrant 1): 85% - basic inference without meta-data
+- Meta-data weighted (Quadrant 2): 94% - incorporating reliability scores improves accuracy by 9%
+- Temporal consistency bonus: +5% - using temporal patterns to detect anomalies
+- Cross-modal agreement bonus: +4% - leveraging agreement between different sensor types
+- Combined improvement: 94% vs 85% = +9% absolute improvement, demonstrating the value of meta-data integration
 
 ### Quadrant 3: Adaptive Learning Strategies
 
@@ -130,14 +133,18 @@ Confidence Range | Optimal Strategy | Performance Improvement
 ### Regression Analysis
 
 **Performance Prediction Model:**
-\[performance = \beta_0 + \beta_1 \cdot meta\_data + \beta_2 \cdot meta\_cognition + \beta_3 \cdot framework + \epsilon\]
+```{=latex}
+\[\text{performance} = \beta_0 + \beta_1 \cdot \text{meta\_data} + \beta_2 \cdot \text{meta\_cognition} + \beta_3 \cdot \text{framework} + \epsilon\label{eq:performance_regression}\]
+```
 
 **Results:**
-- R² = 0.87 (strong fit)
-- β₁ = 0.34 (meta-data contribution)
-- β₂ = 0.29 (meta-cognition contribution)
-- β₃ = 0.23 (framework contribution)
-- All coefficients significant (p < 0.001)
+- \(R^2 = 0.87\) (strong fit)
+- \(\beta_1 = 0.34\) (meta-data contribution)
+- \(\beta_2 = 0.29\) (meta-cognition contribution)
+- \(\beta_3 = 0.23\) (framework contribution)
+- All coefficients significant (\(p < 0.001\))
+
+The regression model (Equation \eqref{eq:performance_regression}) demonstrates that meta-data integration (\(\beta_1\)), meta-cognitive control (\(\beta_2\)), and framework optimization (\(\beta_3\)) all contribute significantly to performance improvement.
 
 ## Computational Benchmarks {#sec:computational_benchmarks}
 
@@ -158,9 +165,9 @@ Confidence Range | Optimal Strategy | Performance Improvement
 ### Scalability Assessment
 
 **State Space Scaling:**
-- n_states = 10: All quadrants functional
-- n_states = 100: Quadrants 1-3 functional, Q4 requires approximation
-- n_states = 1000: Quadrants 1-2 functional, Q3-4 require hierarchical methods
+- \(n_{\text{states}} = 10\): All quadrants functional
+- \(n_{\text{states}} = 100\): Quadrants 1-3 functional, Quadrant 4 requires approximation
+- \(n_{\text{states}} = 1000\): Quadrants 1-2 functional, Quadrants 3-4 require hierarchical methods
 
 **Optimization Strategies:**
 - Sparse representations for large state spaces

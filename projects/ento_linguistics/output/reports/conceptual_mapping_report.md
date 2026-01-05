@@ -6,7 +6,7 @@ This report presents the results of conceptual mapping analysis, showing how ter
 
 ## Analysis Summary
 
-- **Terms Extracted**: 109
+- **Terms Extracted**: 115
 - **Concepts Mapped**: 6
 - **Relationships Identified**: 2
 
@@ -19,37 +19,37 @@ The following concepts form the foundation of the Ento-Linguistic framework:
 - **Description**: Concepts related to what constitutes a biological individual
 - **Associated Terms**: 5 terms
 - **Domains**: unit_of_individuality
-- **Sample Terms**: individual, holobiont, colony, organism, superorganism
+- **Sample Terms**: organism, individual, colony, superorganism, holobiont
 
 #### social_organization
 - **Description**: Principles of social organization and structure
 - **Associated Terms**: 8 terms
-- **Domains**: behavior_and_identity, power_and_labor
-- **Sample Terms**: behavior, division of labor, hierarchy, caste, behaviors
+- **Domains**: power_and_labor, behavior_and_identity
+- **Sample Terms**: behavioral, caste, division of labor, foraging, hierarchy
 
 #### reproductive_biology
 - **Description**: Reproductive systems and sex determination
 - **Associated Terms**: 5 terms
 - **Domains**: sex_and_reproduction
-- **Sample Terms**: sex determination, mating, haplodiploidy, reproduction, parthenogenesis
+- **Sample Terms**: mating, sex determination, reproduction, parthenogenesis, haplodiploidy
 
 #### kinship_systems
 - **Description**: Genetic and social relatedness structures
 - **Associated Terms**: 5 terms
 - **Domains**: kin_and_relatedness
-- **Sample Terms**: inclusive fitness, relatedness, kin selection, decision-making, altruism
+- **Sample Terms**: altruism, kin selection, relatedness, inclusive fitness, decision-making
 
 #### resource_economics
 - **Description**: Resource allocation and economic principles
 - **Associated Terms**: 6 terms
 - **Domains**: economics
-- **Sample Terms**: trade, resource allocation, cost-benefit, trade-off, cost-effective
+- **Sample Terms**: trade-off, trade, resource allocation, foraging efficiency, cost-benefit
 
 #### behavioral_ecology
 - **Description**: Behavioral adaptations and ecological contexts
 - **Associated Terms**: 10 terms
-- **Domains**: behavior_and_identity, economics
-- **Sample Terms**: adaptation, behavior, optimization, behaviors, trade-off
+- **Domains**: economics, behavior_and_identity
+- **Sample Terms**: behavioral, trade-off, foraging, optimization, fitness
 
 
 ## Concept Relationships
@@ -60,16 +60,16 @@ The following concepts form the foundation of the Ento-Linguistic framework:
 ## Terminology-Concept Mapping
 
 ### Most Connected Terms
-- **foraging**: Connected to 1 concepts (behavioral_ecology)
 - **colony**: Connected to 1 concepts (biological_individuality)
+- **foraging**: Connected to 1 concepts (behavioral_ecology)
 - **behavior**: Connected to 1 concepts (behavioral_ecology)
-- **genetics**: Connected to 0 concepts ()
-- **micro-ct**: Connected to 0 concepts ()
-- **δmathcala_ell**: Connected to 0 concepts ()
-- **d-ribose-5-phosphate**: Connected to 0 concepts ()
-- **inf-net**: Connected to 0 concepts ()
-- **spef-phixer**: Connected to 0 concepts ()
-- **dual-channel**: Connected to 0 concepts ()
+- **label-free**: Connected to 0 concepts ()
+- **chain-of-thought**: Connected to 0 concepts ()
+- **light-sheet**: Connected to 0 concepts ()
+- **level-1**: Connected to 0 concepts ()
+- **selection**: Connected to 0 concepts ()
+- **likelihood-free**: Connected to 0 concepts ()
+- **long-term**: Connected to 0 concepts ()
 
 
 ## Domain Analysis

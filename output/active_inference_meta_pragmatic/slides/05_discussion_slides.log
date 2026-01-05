@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  4 JAN 2026 17:11
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  5 JAN 2026 08:02
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1237,28 +1237,28 @@ Package microtype Info: Loading generic protrusion settings for font family
 (/Users/4d/Documents/GitHub/template/projects/active_inference_meta_pragmatic/o
 utput/slides/05_discussion_slides.nav)
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 382.
+(Font)              scaled to size 7.8961pt on input line 598.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 382.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 3
-82.
+(Font)              scaled to size 5.64008pt on input line 598.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 5
+98.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 382.
+(Font)              scaled to size 11.28131pt on input line 598.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 382.
+(Font)              scaled to size 7.89691pt on input line 598.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 382.
+(Font)              scaled to size 5.64066pt on input line 598.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 382.
+(Font)              scaled to size 11.27914pt on input line 598.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 382.
+(Font)              scaled to size 7.8954pt on input line 598.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 382.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 382
+(Font)              scaled to size 5.63957pt on input line 598.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 598
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1267,7 +1267,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 382
+LaTeX Font Info:    Trying to load font information for U+msb on input line 598
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1276,7 +1276,100 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msb.cfg
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-Overfull \vbox (2537.32884pt too high) detected at line 382
+
+LaTeX Warning: Reference `eq:matrix_c' on page 1 undefined on input line 598.
+
+
+LaTeX Warning: Reference `eq:matrix_a' on page 1 undefined on input line 598.
+
+
+LaTeX Warning: Reference `eq:matrix_b' on page 1 undefined on input line 598.
+
+
+LaTeX Warning: Reference `eq:matrix_d' on page 1 undefined on input line 598.
+
+
+LaTeX Warning: Reference `eq:matrix_b' on page 1 undefined on input line 598.
+
+
+LaTeX Warning: Reference `eq:matrix_a' on page 1 undefined on input line 598.
+
+
+LaTeX Warning: Reference `eq:matrix_d' on page 1 undefined on input line 598.
+
+
+LaTeX Warning: Reference `eq:matrix_a' on page 1 undefined on input line 598.
+
+
+LaTeX Warning: Reference `eq:matrix_a' on page 1 undefined on input line 598.
+
+
+LaTeX Warning: Reference `eq:matrix_c' on page 1 undefined on input line 598.
+
+
+LaTeX Warning: Reference `eq:matrix_b' on page 1 undefined on input line 598.
+
+
+LaTeX Warning: Reference `eq:matrix_d' on page 1 undefined on input line 598.
+
+Missing character: There is no 𝜆 (U+1D706) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛾 (U+1D6FE) in font [lmsans10-regular]:mapping=t
+ex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.598 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmsans10-regular]:mapping=t
+ex-text;!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.598 \end{frame}
+                 
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
+File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
+ern Roman (RS)
+)
+! Missing $ inserted.
+<inserted text> 
+                $
+l.598 \end{frame}
+                 
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (87.56804pt too wide) in paragraph at lines 598--598
+[][][][][][][][][][][][][][][][][][][][][][][][][][][] [][][][][][][][][][][][]
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] [] 
+ []
+
+
+Overfull \hbox (121.55864pt too wide) in paragraph at lines 598--598
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+$  
+ []
+
+
+Overfull \vbox (5204.52873pt too high) detected at line 598
  []
 
 
@@ -1300,15 +1393,19 @@ utput/slides/05_discussion_slides.aux)
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 29328 strings out of 473832
- 592917 string characters out of 5729482
- 1261672 words of memory out of 5000000
- 51873 multiletter control sequences out of 15000+600000
- 562348 words of font info for 65 fonts, out of 8000000 for 9000
+ 29429 strings out of 473832
+ 596709 string characters out of 5729482
+ 1442021 words of memory out of 5000000
+ 51955 multiletter control sequences out of 15000+600000
+ 562380 words of font info for 69 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,12n,123p,1108b,813s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,12n,123p,1108b,878s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/active_inference
 _meta_pragmatic/output/slides/05_discussion_slides.pdf (1 page).

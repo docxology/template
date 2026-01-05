@@ -1,16 +1,16 @@
 # Executive Summary - All Projects
 
-**Generated**: 2026-01-04T17:23:00.091748
+**Generated**: 2026-01-05T08:16:04.733721
 **Total Projects**: 3
 
 ## Executive Overview
 
 ### Key Findings
-- **Portfolio Size**: 31,341 total manuscript words across 3 projects
-- **Average Project**: 10,447 words per project
-- **Largest Project**: ento_linguistics (16,738 words)
+- **Portfolio Size**: 39,094 total manuscript words across 3 projects
+- **Average Project**: 13,031 words per project
+- **Largest Project**: active_inference_meta_pragmatic (19,281 words)
 - **Smallest Project**: code_project (3,075 words)
-- **Most Efficient**: ento_linguistics (0.26 outputs/second)
+- **Most Efficient**: ento_linguistics (0.25 outputs/second)
 
 ### Health Status
 ✅ **All projects** are in good health
@@ -18,7 +18,7 @@
 ## Aggregate Metrics
 
 ### Manuscript
-- **Total Words**: 31,341
+- **Total Words**: 39,094
 - **Total Sections**: 40
 - **Total Equations**: 84
 - **Total Figures**: 7
@@ -38,24 +38,24 @@
 
 
 ### Outputs
-- **PDFs**: 3 files (6.1 MB)
+- **PDFs**: 3 files (6.2 MB)
 - **Figures**: 76
 - **Slides**: 29
 - **Web Pages**: 31
 
 ### Pipeline
-- **Total Duration**: 729s
-- **Average Duration**: 243s
+- **Total Duration**: 847s
+- **Average Duration**: 282s
 - **Stages Passed**: 27
 
 ## Project Comparison
 
 | Project | Words | Tests | Coverage | Duration | PDF Size |
 |---------|-------|-------|----------|----------|----------|
-| active_inference_meta_pragmatic | 11,528 | 360 | 92.0% | 336s | 4.3 MB |
-| code_project | 3,075 | 28 | 94.1% | 103s | 1.0 MB |
-| ento_linguistics | 16,738 | 555 | 70.3% | 290s | 0.8 MB |
-| **TOTAL** | **31,341** | **943** | **85.5%** | **729s** | **6.1 MB** |
+| active_inference_meta_pragmatic | 19,281 | 360 | 92.0% | 436s | 4.4 MB |
+| code_project | 3,075 | 28 | 94.1% | 106s | 1.0 MB |
+| ento_linguistics | 16,738 | 555 | 70.3% | 305s | 0.8 MB |
+| **TOTAL** | **39,094** | **943** | **85.5%** | **847s** | **6.2 MB** |
 
 ## Actionable Recommendations
 
@@ -65,13 +65,13 @@
 
 ### Medium Priority
 
-⚠️ **MEDIUM**: 📚 **Comprehensive Research**: ento_linguistics has extensive manuscript (16,738 words). Consider if other projects could benefit from similar depth.
+⚠️ **MEDIUM**: 📚 **Comprehensive Research**: active_inference_meta_pragmatic has extensive manuscript (19,281 words). Consider if other projects could benefit from similar depth.
 
 ### Low Priority
 
 ℹ️ **LOW**: 🎉 **Portfolio Health**: Excellent overall project health across all metrics.
 ℹ️ **LOW**: ✅ **Test Integrity**: All tests passing across all projects.
-ℹ️ **LOW**: ⏱️ **Performance**: active_inference_meta_pragmatic bottleneck in LLM Translations (54% of time). Action: Review and optimize the slowest stage.
+ℹ️ **LOW**: ⏱️ **Performance**: active_inference_meta_pragmatic bottleneck in LLM Translations (58% of time). Action: Review and optimize the slowest stage.
 
 
 ## Visual Dashboards

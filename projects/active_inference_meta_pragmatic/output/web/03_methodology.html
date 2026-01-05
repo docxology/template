@@ -176,17 +176,23 @@
 <body>
 <h1 id="sec:methodology">Methodology</h1>
 <p>This section presents the core methodological contribution: a (2 )
-matrix framework for understanding Active Inference as a meta-pragmatic
-and meta-epistemic methodology. The framework structures cognitive
+matrix structure for understanding Active Inference as a meta-pragmatic
+and meta-epistemic methodology. The structure organizes cognitive
 processing along two dimensions: Data/Meta-Data and
 Cognitive/Meta-Cognitive, revealing four distinct quadrants of cognitive
-operation.</p>
+operation. Each quadrant represents a different combination of
+processing level (cognitive vs. meta-cognitive) and data type (data
+vs. meta-data), enabling systematic analysis of how Active Inference
+operates across multiple levels of abstraction.</p>
 <h2 id="the-2-matrix-framework">The (2 ) Matrix Framework</h2>
 <p>Active Inference’s meta-level operation becomes apparent when
-analyzed through a framework that distinguishes between data processing
+analyzed through a structure that distinguishes between data processing
 and meta-data processing, as well as cognitive and meta-cognitive levels
 of operation (Figure <span
-class="math inline">\(\ref{fig:quadrant_matrix}\)</span>).</p>
+class="math inline">\(\ref{fig:quadrant_matrix}\)</span>). This (2 )
+organization reveals how Active Inference operates simultaneously across
+multiple levels, from basic data processing to framework-level
+reasoning.</p>
 <h3 id="framework-dimensions">Framework Dimensions</h3>
 <p><strong>Data vs Meta-Data (X-axis):</strong> - <strong>Data:</strong>
 Raw sensory inputs and immediate cognitive processing -
@@ -201,56 +207,123 @@ processes</p>
 <h3 id="quadrant-definitions">Quadrant Definitions</h3>
 <h4 id="sec:q1_definition">Quadrant 1: Data Processing (Cognitive)</h4>
 <p><strong>Definition:</strong> Basic cognitive processing of raw
-sensory data at the fundamental level of cognition.</p>
+sensory data at the fundamental level of cognition, where agents
+directly process observations without incorporating quality information
+or self-reflection.</p>
 <p><strong>Active Inference Role:</strong> Baseline pragmatic and
-epistemic processing through Expected Free Energy minimization.</p>
+epistemic processing through Expected Free Energy minimization,
+providing the foundation upon which all other quadrants build. This
+quadrant implements the core Active Inference mechanism in its simplest
+form.</p>
 <p><strong>Mathematical Formulation:</strong></p>
 <p>Where (G()) represents pragmatic value (goal achievement) and
-(H[Q()]) represents epistemic affordance (information gain).</p>
+(H[Q()]) represents epistemic affordance (information gain). This
+formulation is shown in Equation <span
+class="math inline">\(\eqref{eq:efe_simple}\)</span>.</p>
 <p><strong>Example:</strong> A thermostat maintaining temperature
-through direct sensor readings and immediate action selection.</p>
+through direct sensor readings and immediate action selection. The
+thermostat processes temperature data at the cognitive level, selecting
+heating or cooling actions to minimize EFE. The pragmatic component
+(G()) reflects the preference for comfortable temperature (minimizing
+deviation from setpoint), while the epistemic component (H[Q()])
+captures information gain about environmental conditions (learning
+whether the environment is heating or cooling). This basic operation
+demonstrates the fundamental balance between goal achievement and
+information gathering that characterizes all Active Inference
+systems.</p>
 <h4 id="sec:q2_definition">Quadrant 2: Meta-Data Organization
 (Cognitive)</h4>
 <p><strong>Definition:</strong> Cognitive processing that incorporates
-meta-data to enhance primary processing.</p>
-<p><strong>Active Inference Role:</strong> Epistemic processing through
-meta-data integration.</p>
+meta-data (information about data quality, reliability, and provenance)
+to enhance primary data processing, improving decision reliability
+beyond what basic data processing can achieve.</p>
+<p><strong>Active Inference Role:</strong> Enhanced epistemic and
+pragmatic processing through meta-data integration, extending Quadrant 1
+operations by weighting observations and inferences based on quality
+information.</p>
 <p><strong>Mathematical Formulation:</strong> Extended EFE with
 meta-data weighting:</p>
-<p>Where (M()) represents meta-data derived utility and (w) terms are
-adaptive weights.</p>
+<p>Where (M()) represents meta-data derived utility, (w_e) is the
+epistemic weight, (w_p) is the pragmatic weight, and (w_m) is the
+meta-data weight. These weights adapt based on context and processing
+requirements. This extended formulation is shown in Equation <span
+class="math inline">\(\eqref{eq:efe_metadata}\)</span>.</p>
 <p><strong>Example:</strong> Processing sensory data with associated
-confidence scores and temporal metadata to improve decision
-reliability.</p>
+confidence scores and temporal metadata to improve decision reliability.
+For instance, a navigation system might weight GPS readings by signal
+strength (confidence (c(t))) and temporal consistency (meta-data ((t))),
+giving less weight to readings that conflict with recent measurements or
+have low signal quality. The meta-data weight (w_m) adapts dynamically:
+when confidence is high and temporal consistency is good, (w_m)
+increases, allowing the system to rely more heavily on the meta-data
+enhanced inference. This adaptive weighting demonstrates how meta-data
+integration improves cognitive performance beyond basic data
+processing.</p>
 <h4 id="sec:q3_definition">Quadrant 3: Reflective Processing
 (Meta-Cognitive)</h4>
 <p><strong>Definition:</strong> Meta-cognitive evaluation and control of
-data processing.</p>
+data processing, where agents reflect on their own cognitive processes,
+assess inference quality, and adaptively adjust processing strategies
+based on self-assessment.</p>
 <p><strong>Active Inference Role:</strong> Self-monitoring and adaptive
-cognitive control.</p>
+cognitive control through hierarchical EFE evaluation, enabling systems
+to regulate their own cognitive operations based on confidence and
+performance assessment.</p>
 <p><strong>Mathematical Formulation:</strong> Hierarchical EFE with
 self-assessment:</p>
 <p>Where (_{meta}) evaluates the quality of primary processing and ()
-controls meta-cognitive influence.</p>
+controls meta-cognitive influence. The hierarchical structure enables
+self-monitoring by evaluating primary cognitive processes through
+meta-level assessment. This hierarchical formulation is shown in
+Equation <span
+class="math inline">\(\eqref{eq:efe_hierarchical}\)</span>.</p>
 <p><strong>Example:</strong> An agent assessing its confidence in
-inferences and adjusting processing strategies accordingly.</p>
+inferences and adjusting processing strategies accordingly. When
+confidence drops below threshold (), the meta-cognitive control
+parameter () increases, amplifying the influence of (<em>{meta}()) in
+policy selection. This triggers adaptive responses: allocating more
+computational resources to inference, switching to more conservative
+decision-making strategies, or seeking additional information before
+acting. The hierarchical structure (() = </em>{primary}() + _{meta}())
+enables the system to monitor and regulate its own cognitive processes,
+demonstrating self-awareness and adaptive control.</p>
 <h4 id="sec:q4_definition">Quadrant 4: Higher-Order Reasoning
 (Meta-Cognitive)</h4>
 <p><strong>Definition:</strong> Meta-cognitive processing of meta-data
-about cognition.</p>
+about cognition itself, where systems analyze patterns in their own
+meta-cognitive performance to optimize fundamental framework parameters,
+enabling recursive self-analysis at the highest level of cognitive
+abstraction.</p>
 <p><strong>Active Inference Role:</strong> Framework-level reasoning and
-meta-theoretical analysis.</p>
+meta-theoretical analysis through parameter optimization, allowing
+systems to evolve their cognitive architectures based on higher-order
+performance analysis.</p>
 <p><strong>Mathematical Formulation:</strong> Multi-level hierarchical
 optimization:</p>
-<p>Where () represents framework parameters and () is a regularization
-term ensuring framework coherence.</p>
+<p>Where () represents framework parameters and (()) is a regularization
+term ensuring framework coherence. This optimization enables the system
+to adapt its fundamental cognitive architecture through recursive
+self-analysis. The framework optimization is shown in Equation <span
+class="math inline">\(\eqref{eq:framework_optimization}\)</span>.</p>
 <p><strong>Example:</strong> Analyzing patterns in meta-cognitive
-performance to adapt fundamental processing frameworks.</p>
+performance to adapt fundamental processing frameworks. A system might
+observe that its confidence assessments are consistently miscalibrated
+(average confidence ({c}) deviates from actual accuracy), leading it to
+optimize framework parameters () including confidence thresholds
+(<em>c), adaptation rates (), and strategy selection parameters (). The
+optimization (</em>{} (; ) + ()) balances performance improvement with
+framework coherence, ensuring that parameter changes maintain system
+stability. This recursive self-analysis enables the system to evolve its
+fundamental cognitive architecture, representing the highest level of
+meta-cognitive operation.</p>
 <h2 id="active-inference-as-meta-epistemic">Active Inference as
 Meta-Epistemic</h2>
-<p>Active Inference enables meta-epistemic modeling by allowing
+<p>Active Inference supports meta-epistemic modeling by allowing
 researchers to specify the epistemological frameworks within which
-agents operate.</p>
+agents operate. This specification power transforms epistemology from an
+external constraint into an internal design parameter, enabling
+systematic exploration of how different ways of knowing shape
+cognition.</p>
 <h3 id="epistemic-framework-specification">Epistemic Framework
 Specification</h3>
 <p>Through the generative model matrices, researchers define:</p>
@@ -263,20 +336,49 @@ the world</p>
 <h3 id="meta-epistemic-implications">Meta-Epistemic Implications</h3>
 <p>By specifying these matrices, researchers define not just current
 beliefs, but the fundamental structure of knowledge acquisition and
-representation. This meta-epistemic power enables:</p>
+representation. This meta-epistemic power supports systematic
+exploration of epistemological questions that were previously difficult
+to formalize:</p>
 <ol type="1">
-<li><strong>Framework Comparison:</strong> Epistemic frameworks can be
-compared by varying (A), (B), (D) specifications</li>
-<li><strong>Knowledge Architecture Design:</strong> The structure of
-cognition itself becomes a design parameter</li>
-<li><strong>Epistemological Pluralism:</strong> Different ways of
-knowing can be modeled and compared</li>
+<li><p><strong>Framework Comparison:</strong> Epistemic frameworks can
+be compared by varying (A), (B), (D) specifications. For example,
+comparing empirical frameworks (high diagonal values in (A), indicating
+strong trust in observations) versus skeptical frameworks (lower
+diagonal values, indicating greater uncertainty) reveals how different
+assumptions about observation reliability shape knowledge acquisition
+strategies. Researchers can systematically explore how different
+epistemic assumptions lead to different cognitive behaviors, learning
+speeds, and adaptation patterns. This comparative approach enables
+formal analysis of epistemological questions that were previously
+limited to philosophical discourse.</p></li>
+<li><p><strong>Knowledge Architecture Design:</strong> The structure of
+cognition itself becomes a design parameter. Researchers can design
+knowledge architectures optimized for specific tasks, environments, or
+constraints, exploring how different epistemic structures enable or
+constrain cognitive capabilities. For instance, designing an (A) matrix
+with high off-diagonal values creates an epistemic framework that
+maintains uncertainty longer, requiring more evidence before committing
+to beliefs—useful for environments with high observation noise.</p></li>
+<li><p><strong>Epistemological Pluralism:</strong> Different ways of
+knowing can be modeled and compared within the same mathematical
+structure. This supports systematic analysis of how different epistemic
+approaches (empirical, theoretical, intuitive) lead to different
+cognitive outcomes, providing a formal basis for epistemological
+analysis. The structure allows researchers to explore questions like:
+How does an empirical epistemic framework (high observation reliability)
+compare to a theoretical framework (strong prior structure in (D)) in
+terms of learning speed, robustness, and adaptability? This pluralistic
+approach enables formal comparison of epistemological traditions that
+were previously considered incommensurable.</p></li>
 </ol>
 <h2 id="active-inference-as-meta-pragmatic">Active Inference as
 Meta-Pragmatic</h2>
-<p>Active Inference enables meta-pragmatic modeling by allowing
-specification of pragmatic frameworks beyond simple reward
-functions.</p>
+<p>Active Inference supports meta-pragmatic modeling by allowing
+specification of pragmatic frameworks beyond simple reward functions.
+This specification power transforms value system design from an external
+constraint into an internal research question, enabling systematic
+exploration of how different value structures shape cognition and
+behavior.</p>
 <h3 id="pragmatic-framework-specification">Pragmatic Framework
 Specification</h3>
 <p><strong>Preference Structure (Matrix (C)):</strong> What matters to
@@ -284,34 +386,74 @@ the agent</p>
 <p>This specification goes beyond traditional reinforcement learning by
 enabling researchers to specify value landscapes.</p>
 <h3 id="meta-pragmatic-implications">Meta-Pragmatic Implications</h3>
-<p>The meta-pragmatic aspect enables:</p>
+<p>The meta-pragmatic aspect supports systematic exploration of value
+systems and their cognitive consequences, making value system design a
+research question:</p>
 <ol type="1">
-<li><strong>Value System Design:</strong> Specification of what
-constitutes “good” outcomes</li>
-<li><strong>Pragmatic Pluralism:</strong> Different pragmatic frameworks
-can be explored</li>
-<li><strong>Value Learning:</strong> How value systems themselves evolve
-and adapt</li>
-<li><strong>Ethical Framework Integration:</strong> Incorporation of
-ethical considerations</li>
+<li><p><strong>Value System Design:</strong> Specification of what
+constitutes “good” outcomes through matrix (C) enables researchers to
+design value systems optimized for specific goals, constraints, or
+ethical principles. This goes beyond simple reward functions to enable
+complex value hierarchies with trade-offs. For example, a (C) matrix can
+encode preferences that balance individual benefit with collective
+welfare, or that prioritize long-term sustainability over short-term
+gains, revealing how different value structures shape decision-making
+patterns.</p></li>
+<li><p><strong>Pragmatic Pluralism:</strong> Different pragmatic
+frameworks can be explored and compared. Researchers can model how
+different value systems (utilitarian, deontological, virtue-based) shape
+decision-making and behavior, revealing the cognitive consequences of
+different ethical frameworks. A utilitarian (C) matrix might prioritize
+outcomes that maximize aggregate utility, while a deontological matrix
+might encode categorical imperatives, enabling systematic comparison of
+how these different ethical approaches lead to different cognitive and
+behavioral patterns.</p></li>
+<li><p><strong>Value Learning:</strong> How value systems themselves
+evolve and adapt can be modeled through learning mechanisms that update
+matrix (C) based on experience, feedback, or reflection. This supports
+exploration of how agents develop their own value systems over time,
+modeling processes like moral development, cultural value acquisition,
+and personal preference formation. The structure allows researchers to
+study how value systems change in response to experience, social
+influence, or self-reflection, providing formal models of value system
+dynamics that were previously difficult to formalize.</p></li>
+<li><p><strong>Ethical Framework Integration:</strong> Incorporation of
+ethical considerations directly into the preference landscape enables
+agents to reason about moral implications of actions. This provides a
+formal framework for exploring how ethical principles shape cognition
+and behavior, enabling systematic analysis of questions like: How do
+different ethical frameworks (encoded in (C)) influence decision-making
+under uncertainty? How do value conflicts (competing preferences in (C))
+get resolved?</p></li>
 </ol>
 <h2 id="integration-across-quadrants">Integration Across Quadrants</h2>
 <p>Active Inference operates across all four quadrants simultaneously,
-with different aspects of the framework contributing to each
-quadrant:</p>
+with different aspects of the structure contributing to each quadrant.
+This integration creates a hierarchical cognitive architecture where
+lower quadrants provide foundations for higher quadrants:</p>
 <ul>
-<li><strong>Quadrant 1:</strong> Core EFE computation with basic (A),
-(B), (C), (D) specifications</li>
-<li><strong>Quadrant 2:</strong> Meta-data weighted EFE with
-confidence-weighted processing</li>
-<li><strong>Quadrant 3:</strong> Self-reflective EFE evaluation and
-meta-cognitive control</li>
-<li><strong>Quadrant 4:</strong> Framework-level EFE optimization and
-meta-theoretical reasoning</li>
+<li><strong>Quadrant 1 (Foundation):</strong> Core EFE computation with
+basic (A), (B), (C), (D) specifications provides the fundamental
+cognitive processing layer</li>
+<li><strong>Quadrant 2 (Enhancement):</strong> Meta-data weighted EFE
+with confidence-weighted processing enhances Quadrant 1 operations by
+incorporating quality information</li>
+<li><strong>Quadrant 3 (Reflection):</strong> Self-reflective EFE
+evaluation and meta-cognitive control monitors and regulates Quadrants 1
+and 2, enabling adaptive strategy selection</li>
+<li><strong>Quadrant 4 (Evolution):</strong> Framework-level EFE
+optimization and meta-theoretical reasoning analyzes patterns across all
+lower quadrants to evolve the cognitive architecture itself</li>
 </ul>
+<p>This hierarchical structure enables systems to operate at multiple
+levels simultaneously: processing data (Q1), incorporating meta-data
+(Q2), reflecting on processing quality (Q3), and evolving framework
+parameters (Q4). The relative influence of each quadrant adapts
+dynamically based on context, uncertainty, and performance
+requirements.</p>
 <h2 id="the-modelers-dual-role">The Modeler’s Dual Role</h2>
-<p>The framework reveals the dual role of the Active Inference
-modeler:</p>
+<p>The structure reveals the dual role of the Active Inference modeler,
+who operates at both the cognitive and meta-cognitive levels:</p>
 <h3 id="as-architect">As Architect</h3>
 <ul>
 <li>Specifies epistemic frameworks ((A), (B), (D) matrices)</li>
@@ -327,20 +469,97 @@ modeler:</p>
 <li>Engages in recursive self-modeling</li>
 </ul>
 <p>This dual role creates a recursive relationship where the tools used
-to model others become tools for self-understanding.</p>
+to model others become tools for self-understanding. The modeler, in
+specifying frameworks for studied systems, implicitly reveals their own
+epistemic and pragmatic assumptions. This recursive self-modeling
+enables researchers to apply Active Inference principles to understand
+their own cognitive processes, creating a virtuous cycle where modeling
+improves self-understanding, which in turn improves modeling
+capabilities.</p>
 <h2 id="validation-approach">Validation Approach</h2>
-<p>The framework’s validity is demonstrated through:</p>
+<p>The structure’s validity is demonstrated through multiple
+complementary approaches that together provide strong theoretical and
+practical support:</p>
 <ol type="1">
-<li><strong>Theoretical Consistency:</strong> Alignment with Free Energy
-Principle foundations</li>
-<li><strong>Mathematical Rigor:</strong> Proper formulation of EFE
-across all quadrants</li>
-<li><strong>Conceptual Clarity:</strong> Clear distinction between
-quadrants and processing levels</li>
-<li><strong>Practical Applicability:</strong> Framework enables
-systematic analysis of meta-level phenomena</li>
+<li><p><strong>Theoretical Consistency:</strong> Alignment with Free
+Energy Principle foundations ensures that all quadrant formulations
+minimize variational free energy at their respective levels, maintaining
+theoretical coherence with established Active Inference
+principles.</p></li>
+<li><p><strong>Mathematical Rigor:</strong> Proper formulation of EFE
+across all quadrants, with each quadrant’s mathematical structure
+building systematically on previous quadrants. All formulations are
+grounded in established Active Inference theory and maintain
+probabilistic consistency.</p></li>
+<li><p><strong>Conceptual Clarity:</strong> Clear distinction between
+quadrants and processing levels enables systematic analysis. The (2 )
+structure provides unambiguous categorization of cognitive operations,
+facilitating both theoretical analysis and experimental design.</p></li>
+<li><p><strong>Practical Applicability:</strong> Framework enables
+systematic analysis of meta-level phenomena that were previously
+difficult to formalize. The quadrant structure provides a practical tool
+for researchers to target specific processing levels in experimental
+design and theoretical development.</p></li>
 </ol>
 <p>The following sections provide concrete demonstrations of each
-quadrant with mathematical examples and conceptual analysis.</p>
+quadrant with mathematical examples and conceptual analysis, showing how
+the structure applies to real cognitive scenarios. These demonstrations
+reveal the practical utility of the quadrant organization for
+understanding, designing, and improving cognitive systems.</p>
+<p>The (2 ) matrix structure, illustrated in Figure <span
+class="math inline">\(\ref{fig:quadrant_matrix}\)</span>, organizes our
+analysis of Active Inference as a meta-pragmatic and meta-epistemic
+methodology. This structure reveals four distinct quadrants of cognitive
+operation, each representing different combinations of data/meta-data
+processing and cognitive/meta-cognitive levels, enabling systematic
+exploration of how Active Inference operates across multiple scales of
+cognitive abstraction.</p>
+<p>The Expected Free Energy (EFE) formulation (Equation <span
+class="math inline">\(\eqref{eq:efe}\)</span>) combines epistemic and
+pragmatic components, as shown in Figure <span
+class="math inline">\(\ref{fig:efe_decomposition}\)</span>. This
+decomposition reveals how Active Inference balances information
+gathering (epistemic value, Equation <span
+class="math inline">\(\eqref{eq:epistemic_component}\)</span>) with goal
+achievement (pragmatic value, Equation <span
+class="math inline">\(\eqref{eq:pragmatic_component}\)</span>) in a
+principled mathematical framework.</p>
+<p>The perception-action loop in Active Inference, illustrated in Figure
+<span class="math inline">\(\ref{fig:perception_action_loop}\)</span>,
+demonstrates how agents continuously update beliefs and select actions
+to minimize expected free energy.</p>
+<p>The generative model structure, shown in Figure <span
+class="math inline">\(\ref{fig:generative_model_structure}\)</span>,
+illustrates how the four core matrices ((A), (B), (C), (D)) define the
+epistemic and pragmatic frameworks within which agents operate. These
+matrices are defined in Equations <span
+class="math inline">\(\eqref{eq:matrix_a}\)</span>, <span
+class="math inline">\(\eqref{eq:matrix_b}\)</span>, <span
+class="math inline">\(\eqref{eq:matrix_c}\)</span>, and <span
+class="math inline">\(\eqref{eq:matrix_d}\)</span>.</p>
+<p>The meta-level aspects of Active Inference, demonstrated in Figure
+<span class="math inline">\(\ref{fig:meta_level_concepts}\)</span>,
+reveal how modelers specify both epistemic and pragmatic frameworks,
+transcending traditional approaches to cognition.</p>
+<p>The Free Energy Principle provides the theoretical foundation for
+Active Inference, as illustrated in Figure <span
+class="math inline">\(\ref{fig:fep_system_boundaries}\)</span>, showing
+how systems maintain their structure through boundary maintenance.</p>
+<p>Free energy minimization dynamics, shown in Figure <span
+class="math inline">\(\ref{fig:free_energy_dynamics}\)</span>,
+demonstrate how systems converge toward stable states through continuous
+optimization.</p>
+<p>Structure preservation, illustrated in Figure <span
+class="math inline">\(\ref{fig:structure_preservation}\)</span>, shows
+how systems maintain their internal organization despite environmental
+perturbations.</p>
+<p>The enhanced quadrant matrix, shown in Figure <span
+class="math inline">\(\ref{fig:quadrant_matrix_enhanced}\)</span>,
+provides detailed descriptions and examples for each quadrant,
+facilitating systematic analysis of cognitive processes.</p>
+<p>The Free Energy Principle serves as a unifying bridge between physics
+and cognition, as demonstrated in Figure <span
+class="math inline">\(\ref{fig:physics_cognition_bridge}\)</span>,
+revealing deep connections across domains.</p>
 </body>
 </html>

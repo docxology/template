@@ -1,21 +1,23 @@
 # Conclusion {#sec:conclusion}
 
-This paper has presented a framework for understanding Active Inference as a meta-pragmatic and meta-epistemic methodology. Through the \(2 \times 2\) matrix analysis of Data/Meta-Data \(\times\) Cognitive/Meta-Cognitive processing, we have demonstrated how Active Inference operates across three levels of cognitive abstraction, enabling researchers to specify not just current beliefs and goals, but the very frameworks within which cognition occurs.
+This paper has presented a systematic structure for understanding Active Inference as a meta-pragmatic and meta-epistemic methodology. Through the \(2 \times 2\) matrix analysis of Data/Meta-Data \(\times\) Cognitive/Meta-Cognitive processing, we have demonstrated how Active Inference operates across four distinct quadrants, each representing different combinations of processing levels and data types. This structure enables researchers to specify not just current beliefs and goals, but the very frameworks within which cognition occurs—making framework design itself a research question in cognitive science. The quadrant organization reveals how Active Inference operates simultaneously across multiple levels, from basic data processing (Quadrant 1) through meta-data integration (Quadrant 2), meta-cognitive reflection (Quadrant 3), to framework-level optimization (Quadrant 4), creating a comprehensive view of multi-level cognitive operation.
 
 ## Summary of Contributions {#sec:contributions_summary}
 
 ### Theoretical Framework
 
-We introduced a systematic framework for analyzing Active Inference's meta-level operation:
+We introduced a systematic \(2 \times 2\) matrix structure for analyzing Active Inference's meta-level operation, revealing four distinct quadrants that organize cognitive processing along two dimensions:
 
-1. **Quadrant 1 (Data, Cognitive):** Baseline EFE computation with direct sensory processing
-2. **Quadrant 2 (Meta-Data, Cognitive):** Processing with meta-information integration
-3. **Quadrant 3 (Data, Meta-Cognitive):** Self-reflective processing and adaptive control
-4. **Quadrant 4 (Meta-Data, Meta-Cognitive):** Framework-level reasoning and meta-theoretical analysis
+1. **Quadrant 1 (Data, Cognitive):** Baseline EFE computation (Equation \eqref{eq:efe_simple}) with direct sensory processing, providing the fundamental cognitive layer
+2. **Quadrant 2 (Meta-Data, Cognitive):** Extended EFE with meta-data weighting (Equation \eqref{eq:efe_metadata}), enhancing processing through quality information integration
+3. **Quadrant 3 (Data, Meta-Cognitive):** Hierarchical EFE with self-assessment (Equation \eqref{eq:efe_hierarchical}), enabling self-monitoring and adaptive control
+4. **Quadrant 4 (Meta-Data, Meta-Cognitive):** Framework-level optimization (Equation \eqref{eq:framework_optimization}), allowing recursive self-analysis and cognitive architecture evolution
+
+This structure provides a systematic way to analyze how Active Inference operates across multiple levels of cognitive abstraction, from basic data processing (Quadrant 1) to framework-level reasoning (Quadrant 4), revealing the hierarchical relationships between different cognitive operations and enabling targeted research at specific processing levels.
 
 ### Meta-Pragmatic Insights
 
-Active Inference enables specification of pragmatic frameworks through matrix \(C\), going beyond simple reward functions to allow modeling of:
+Active Inference enables specification of pragmatic frameworks through matrix \(C\) (Equation \eqref{eq:matrix_c}), going beyond simple reward functions to allow modeling of:
 
 - Complex value hierarchies with trade-offs
 - Ethical and social considerations
@@ -24,7 +26,7 @@ Active Inference enables specification of pragmatic frameworks through matrix \(
 
 ### Meta-Epistemic Insights
 
-Active Inference enables specification of epistemic frameworks through matrices \(A\), \(B\), and \(D\), enabling modeling of:
+Active Inference enables specification of epistemic frameworks through matrices \(A\) (Equation \eqref{eq:matrix_a}), \(B\) (Equation \eqref{eq:matrix_b}), and \(D\) (Equation \eqref{eq:matrix_d}), enabling modeling of:
 
 - Different approaches to knowledge acquisition
 - Varied assumptions about causality and observation
@@ -156,10 +158,12 @@ Meta-level cognition raises important ethical questions:
 
 Active Inference represents more than a theory of cognition—it is a meta-methodology that enables us to understand and design the very frameworks within which intelligence operates. By revealing the meta-pragmatic and meta-epistemic nature of cognition, the framework opens new avenues for understanding intelligence, consciousness, and adaptive behavior.
 
-The recursive relationship between modeler and modeled system creates a virtuous cycle where insights from Active Inference modeling enhance our understanding of cognition, leading to better models and deeper insights. This recursive self-improvement suggests that our understanding of Active Inference will continue to evolve as we apply its principles to understand cognition itself.
+The recursive relationship between modeler and modeled system creates a virtuous cycle: insights from Active Inference modeling enhance our understanding of cognition, leading to better models and deeper insights. As modelers specify frameworks for studied systems, they reveal their own epistemic and pragmatic assumptions, enabling recursive self-modeling. This recursive self-improvement suggests that our understanding of Active Inference will continue to evolve as we apply its principles to understand cognition itself—each application reveals new meta-level insights that inform future modeling efforts.
 
-The framework challenges us to think differently about intelligence—not just as information processing or goal achievement, but as the design and adaptation of the fundamental frameworks that make cognition possible. In this view, intelligence is ultimately about framework flexibility, meta-level awareness, and the recursive application of knowledge to improve the processes of knowing itself.
+The structure challenges us to think differently about intelligence—not just as information processing or goal achievement, but as the design and adaptation of the fundamental frameworks that make cognition possible. In this view, intelligence emerges from four key capabilities: (1) epistemic competence in constructing accurate world models (Quadrant 1), (2) pragmatic wisdom in effective goal-directed action (Quadrant 1), (3) meta-cognitive awareness enabling self-monitoring and adaptation (Quadrants 3 and 4), and (4) framework flexibility allowing modification of fundamental cognitive structures (Quadrant 4). Intelligence is ultimately about framework flexibility, meta-level awareness, and the recursive application of knowledge to improve the processes of knowing itself.
 
-The implications extend far beyond academic cognitive science, touching on fundamental questions about how we understand reality, design artificial minds, secure our cognitive infrastructures, and educate the next generation. Active Inference, through its meta-level operation, provides a powerful lens for addressing these profound challenges.
+The implications extend far beyond academic cognitive science, touching on fundamental questions about how we understand reality, design artificial minds, secure our cognitive infrastructures, and educate the next generation. Active Inference, through its meta-level operation, provides a powerful lens for addressing these profound challenges. The quadrant structure enables systematic analysis of cognitive processes across multiple scales, from basic data processing to framework-level reasoning, creating tools for understanding, designing, and improving cognitive systems—whether biological, artificial, or hybrid.
+
+The meta-pragmatic and meta-epistemic dimensions reveal that cognition is not just about processing information or achieving goals, but about the frameworks within which these processes occur. By making framework specification a research question rather than an external constraint, Active Inference opens new possibilities for understanding intelligence, consciousness, and adaptive behavior across diverse domains.
 
 As we continue to explore the meta-level dimensions of cognition, we move closer to understanding intelligence—one that encompasses not just what we know and value, but how we come to know and value in the first place.

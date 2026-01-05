@@ -10,6 +10,7 @@
 \beamer@slide {sec:statistical_validation}{1}
 \beamer@slide {hypothesis-testing}{1}
 \beamer@slide {regression-analysis}{1}
+\beamer@slide {eq:performance_regression}{1}
 \beamer@slide {sec:computational_benchmarks}{1}
 \beamer@slide {performance-metrics}{1}
 \beamer@slide {scalability-assessment}{1}

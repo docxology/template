@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  4 JAN 2026 17:12
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  5 JAN 2026 08:03
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -927,40 +927,40 @@ Package natbib Warning: Citation `tschantz2020scaling' multiply defined.
 )
 \openout1 = `_combined_manuscript.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 150.
-LaTeX Font Info:    ... okay on input line 150.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 155.
+LaTeX Font Info:    ... okay on input line 155.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 150.
+(Font)                  OT1/lmr/m/n --> TU/lmr/m/n on input line 155.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 150.
+(Font)                  OT1/lmr/m/it --> TU/lmr/m/it on input line 155.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 150.
+(Font)                  OT1/lmr/bx/n --> TU/lmr/bx/n on input line 155.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 150.
+(Font)                  OT1/lmss/m/n --> TU/lmss/m/n on input line 155.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 150.
+(Font)                  OT1/lmss/bx/n --> TU/lmss/bx/n on input line 155.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 150.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/m/n on input line 155.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 150.
+(Font)                  OT1/lmtt/m/n --> TU/lmtt/bx/n on input line 155.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -991,7 +991,7 @@ pt=math;language=dflt;"
 pt=math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(0)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 150.
+(Font)              scaled to size 10.0pt on input line 155.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -1034,18 +1034,18 @@ ath.otf]/OT:script=math;language=dflt;+ssty=1;"
 pt=math;language=dflt;"
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.0pt on input line 150.
+(Font)              scaled to size 10.0pt on input line 155.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 150.
+(Font)              `operators' in the math version `normal' on input line 155.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/lmr/m/n --> TU/latinmodern-math.otf(1)/m/n on input
- line 150.
+ line 155.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 150.
+(Font)              `operators' in the math version `bold' on input line 155.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/lmr/bx/n --> TU/latinmodern-math.otf(1)/b/n on inpu
-t line 150.
+t line 155.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -1119,15 +1119,15 @@ ript=math;language=dflt;"<6-8.5>s*[1.000096459334209]"[latinmodern-math.otf]/OT
 t=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `normal' on input line 150.
+(Font)              `symbols' in the math version `normal' on input line 155.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `normal'
 (Font)                  OMS/lmsy/m/n --> TU/latinmodern-math.otf(2)/m/n on inpu
-t line 150.
+t line 155.
 LaTeX Font Info:    Encoding `OMS' has changed to `TU' for symbol font
-(Font)              `symbols' in the math version `bold' on input line 150.
+(Font)              `symbols' in the math version `bold' on input line 155.
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/lmsy/b/n --> TU/latinmodern-math.otf(2)/b/n on inpu
-t line 150.
+t line 155.
 
 Package fontspec Info: 
 (fontspec)             latinmodern-math scale = 0.9999964596882403.
@@ -1196,23 +1196,23 @@ pt=math;language=dflt;"
 
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
 (Font)              `largesymbols' in the math version `normal' on input line 1
-50.
+55.
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `normal'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/m/n on inpu
-t line 150.
+t line 155.
 LaTeX Font Info:    Encoding `OMX' has changed to `TU' for symbol font
-(Font)              `largesymbols' in the math version `bold' on input line 150
+(Font)              `largesymbols' in the math version `bold' on input line 155
 .
 LaTeX Font Info:    Overwriting symbol font `largesymbols' in version `bold'
 (Font)                  OMX/lmex/m/n --> TU/latinmodern-math.otf(3)/b/n on inpu
-t line 150.
-LaTeX Info: Redefining \microtypecontext on input line 150.
-Package microtype Info: Applying patch `item' on input line 150.
-Package microtype Info: Applying patch `toc' on input line 150.
-Package microtype Info: Applying patch `eqnum' on input line 150.
-Package microtype Info: Applying patch `footnote' on input line 150.
-Package microtype Info: Applying patch `verbatim' on input line 150.
-LaTeX Info: Redefining \microtypesetup on input line 150.
+t line 155.
+LaTeX Info: Redefining \microtypecontext on input line 155.
+Package microtype Info: Applying patch `item' on input line 155.
+Package microtype Info: Applying patch `toc' on input line 155.
+Package microtype Info: Applying patch `eqnum' on input line 155.
+Package microtype Info: Applying patch `footnote' on input line 155.
+Package microtype Info: Applying patch `verbatim' on input line 155.
+LaTeX Info: Redefining \microtypesetup on input line 155.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: No adjustment of tracking.
@@ -1223,7 +1223,7 @@ Package microtype Info: No adjustment of kerning.
 File: mt-LatinModernRoman.cfg 2021/02/21 v1.1 microtype config. file: Latin Mod
 ern Roman (RS)
 )
-Package hyperref Info: Link coloring OFF on input line 150.
+Package hyperref Info: Link coloring OFF on input line 155.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1260,29 +1260,29 @@ Package hyperref Info: Link coloring OFF on input line 150.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 12.0pt on input line 153.
+(Font)              scaled to size 12.0pt on input line 158.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 8.0pt on input line 153.
+(Font)              scaled to size 8.0pt on input line 158.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 6.0pt on input line 153.
+(Font)              scaled to size 6.0pt on input line 158.
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-53.
+58.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 12.0011pt on input line 153.
+(Font)              scaled to size 12.0011pt on input line 158.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 8.00073pt on input line 153.
+(Font)              scaled to size 8.00073pt on input line 158.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 6.00055pt on input line 153.
+(Font)              scaled to size 6.00055pt on input line 158.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.99872pt on input line 153.
+(Font)              scaled to size 11.99872pt on input line 158.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.99915pt on input line 153.
+(Font)              scaled to size 7.99915pt on input line 158.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.99936pt on input line 153.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 153
+(Font)              scaled to size 5.99936pt on input line 158.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 158
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1291,7 +1291,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 153
+LaTeX Font Info:    Trying to load font information for U+msb on input line 158
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1336,7 +1336,58 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 
 
 [6]
-Overfull \hbox (1.0654pt too wide) in paragraph at lines 227--227
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.233 (\mathbb
+              {E}\emph{\{q(s}\tau)\}{[}\log q(s\_\tau) -
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜏 (U+1D70F) in font [lmroman10-regular]:mapping=
+tex-text;!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.233 (\mathbb{E}\emph{\{q(s}\tau)\}{[}\log
+                                            q(s\_\tau) -
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.245 
+      
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (4.74376pt too wide) in paragraph at lines 232--245
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] [][][][][][][] [] [
+][][][][] []
+ []
+
+
+Overfull \hbox (1167.52245pt too wide) in paragraph at lines 232--245
+[][][][] [] [] [][][][][][] [] [] [][][][][][][][][] [][][][][][][][][][][] [] 
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] [][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][] [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][] [][][][] [][][][] [][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][] [][][][][][][][][][][][][][][][] []
+
+ []
+
+
+Overfull \hbox (1.0654pt too wide) in paragraph at lines 247--247
 []\TU/lmr/bx/n/12 Beyond the Traditional View: Active Inference as Meta-Methodo
 logy 
  []
@@ -1348,18 +1399,34 @@ ex-text;!
 
 
 [7]
+File: ../figures/quadrant_matrix.png Graphic file (type bmp)
+<../figures/quadrant_matrix.png>
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
 
 [8]
-Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
-tex-text;!
-Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
-tex-text;!
-Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
-tex-text;!
-
 
 [9]
-Underfull \hbox (badness 1590) in paragraph at lines 394--396
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+
+[10]
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜏 (U+1D70F) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+Underfull \hbox (badness 1590) in paragraph at lines 495--499
  \TU/lmr/bx/n/10 3.1.2.3 Quadrant 3: Reflective Processing (Meta-Cognitive)[] D
 efinition: \TU/lmr/m/n/10 Meta-
  []
@@ -1371,13 +1438,80 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.405 Where (\mathcal
+l.510 Where (\mathcal
                      {F}\_\{meta\}) evaluates the quality of primary
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 Missing character: There is no 𝜆 (U+1D706) in font [lmroman10-regular]:mapping=
 tex-text;!
+Missing character: There is no 𝛾 (U+1D6FE) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜆 (U+1D706) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.519 ...es, amplifying the influence of (\mathcal
+                                                  {F}\emph{\{meta\}(\pi))
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-italic]:mapping=t
+ex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.524 \mathcal{F}}
+                  \{primary\}(\pi) + \lambda \cdot \mathcal{F}\_\{meta\}(\pi))
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-italic]:mapping=t
+ex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.524 \mathcal{F}}
+                  \{primary\}(\pi) + \lambda \cdot \mathcal{F}\_\{meta\}(\pi))
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜆 (U+1D706) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no ⋅ (U+22C5) in font [lmroman10-regular]:mapping=t
+ex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.524 ...\{primary\}(\pi) + \lambda \cdot \mathcal
+                                                  {F}\_\{meta\}(\pi))
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+
+[11]
 Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
 tex-text;!
 
@@ -1387,24 +1521,478 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.425 ...esents framework parameters and (\mathcal
-                                                  {R}) is a
+l.547 ...esents framework parameters and (\mathcal
+                                                  {R}(\Theta))
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+tex-text;!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.556 confidence (\bar
+                      \{c\}) deviates from actual accuracy), leading it to
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman10-italic]:mapping=t
+ex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-italic]:mapping=t
+ex-text;!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Extra }, or forgotten $.
+\textdef@ ...th {#1}\let \f@size #2\selectfont #3}
+                                                  }
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten $.
+\textdef@ ...h {#1}\let \f@size #2\selectfont #3}}
+                                                  
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten $.
+\text@ ...e {\textdef@ \displaystyle \f@size {#1}}
+                                                  {\textdef@ \textstyle \f@s...
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
+tex-text;!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Extra }, or forgotten $.
+\textdef@ ...th {#1}\let \f@size #2\selectfont #3}
+                                                  }
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten $.
+\textdef@ ...h {#1}\let \f@size #2\selectfont #3}}
+                                                  
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten $.
+\text@ ...xtstyle \f@size {\firstchoice@false #1}}
+                                                  {\textdef@ \textstyle \sf@...
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman7-italic]:mapping=te
+x-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman7-italic]:mapping=te
+x-text;!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Extra }, or forgotten $.
+\textdef@ ...th {#1}\let \f@size #2\selectfont #3}
+                                                  }
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten $.
+\textdef@ ...h {#1}\let \f@size #2\selectfont #3}}
+                                                  
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten $.
+\text@ ...tstyle \sf@size {\firstchoice@false #1}}
+                                                  {\textdef@ \textstyle \ssf...
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman5-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman5-regular]:mapping=t
+ex-text;!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Extra }, or forgotten $.
+\textdef@ ...th {#1}\let \f@size #2\selectfont #3}
+                                                  }
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten $.
+\textdef@ ...h {#1}\let \f@size #2\selectfont #3}}
+                                                  
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten $.
+\text@ ...style \ssf@size {\firstchoice@false #1}}
+                                                  \check@mathfonts }
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Extra }, or forgotten $.
+\text@ ...firstchoice@false #1}}\check@mathfonts }
+                                                  
+l.559 parameters (\beta). The optimization (\min}
+                                                 \{\Theta\} \mathcal{F}(\pi;
+I've deleted a group-closing symbol because it seems to be
+spurious, as in `$x}$'. But perhaps the } is legitimate and
+you forgot something else, as in `\hbox{$x}'. In such cases
+the way to recover is to insert both the forgotten and the
+deleted material, e.g., by typing `I$}'.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.565 
+      
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.566 \subsection
+                 {Active Inference as
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.566 \subsection
+                 {Active Inference as
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.566 \subsection
+                 {Active Inference as
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.566 \subsection
+                 {Active Inference as
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing { inserted.
+<to be read again> 
+                   $
+l.566 \subsection
+                 {Active Inference as
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing { inserted.
+<to be read again> 
+                   $
+l.566 \subsection
+                 {Active Inference as
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing { inserted.
+<to be read again> 
+                   $
+l.566 \subsection
+                 {Active Inference as
+A left brace was mandatory here, so I've put one in.
+You might want to delete and/or insert some corrections
+so that I will find a matching right brace soon.
+(If you're confused by all this, try typing `I}' now.)
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Missing } inserted.
+<inserted text> 
+                }
+l.566 \subsection
+                 {Active Inference as
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
 
 
-[10]
+Overfull \hbox (168.21211pt too wide) in paragraph at lines 553--566
+\TU/lmr/m/n/10 (average confidence ($[][][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][] [][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][]$ 
+ []
 
-[11]
-File: ../figures/quadrant_matrix.png Graphic file (type bmp)
-<../figures/quadrant_matrix.png>
 
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+[12]
 
+[13]
+
+[14]
+
+[15]
 File: ../figures/efe_decomposition.png Graphic file (type bmp)
 <../figures/efe_decomposition.png>
+
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -1431,7 +2019,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 File: ../figures/free_energy_dynamics.png Graphic file (type bmp)
 <../figures/free_energy_dynamics.png>
 
-Underfull \hbox (badness 1783) in paragraph at lines 640--640
+Underfull \hbox (badness 1783) in paragraph at lines 905--905
 []\TU/lmr/m/n/10 Figure 7: []Free energy minimization dynamics showing converge
 nce over time and epis-
  []
@@ -1456,19 +2044,71 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
-[12]
+[16]
+
+[17]
+Missing character: There is no ⊙ (U+2299) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1017 (\mathcal
+                {F}(\pi\_1) = 0.23) - Policy (\pi\_2) (cool):
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
 tex-text;!
 Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
 tex-text;!
 
+! LaTeX Error: \symcalallowed only in math mode.
 
-[13]
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1018 (\mathcal
+                {F}(\pi\_2) = 1.45)
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1020 ...valuation demonstrates how EFE (\mathcal
+                                                  {F}(\pi)) (Equation
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
 Missing character: There is no ∈ (U+2208) in font [lmroman10-regular]:mapping=t
 ex-text;!
 Missing character: There is no 𝜏 (U+1D70F) in font [lmroman10-regular]:mapping=
 tex-text;!
 Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+
+[18]
+Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝜏 (U+1D70F) in font [lmroman10-regular]:mapping=
 tex-text;!
 Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman10-regular]:mapping=
 tex-text;!
@@ -1476,9 +2116,6 @@ Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mappin
 tex-text;!
 Missing character: There is no 𝛾 (U+1D6FE) in font [lmroman10-regular]:mapping=
 tex-text;!
-
-
-[14]
 Missing character: There is no 𝜆 (U+1D706) in font [lmroman10-regular]:mapping=
 tex-text;!
 
@@ -1488,8 +2125,27 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.781 ...increases with low confidence - (\mathcal
-                                                  {R}(\pi))
+l.1122 strategies - (\mathcal
+                             {R}(\pi)) penalizes complex strategies when
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+
+[19]
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1152 ..., c)). The regularization term (\mathcal
+                                                  {R}(\pi)) penalizes
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
@@ -1498,289 +2154,288 @@ tex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.810 (\bar
-           \{c\} = \frac{1}{T} \sum\_t c(t)) - Strategy effectiveness:
+l.1174 (\bar
+            \{c\} = \frac{1}{T} \sum\_\{t=1\}\^{}T c(t)) - Strategy
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+LaTeX Warning: Command \^ invalid in math mode on input line 1174.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1180 
+       
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (48.58347pt too wide) in paragraph at lines 1173--1180
+[][][][][][][][][][][][][][][][][][][][][] [] [][][][][] [] [][][] [] [][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] []
+ []
+
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜃 (U+1D703) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+
+[20]
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+tex-text;!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1230 metrics ((\bar
+                     \{c\}), (e(\sigma)), (\kappa)) to optimize the framework
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.813 
-      
+l.1232 
+       
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
-Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1242 ...ognitive processing, computing (\mathcal
+                                                  {F}(\pi) = G(\pi) +
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1247 ...eliability by extending EFE to (\mathcal
+                                                  {F}(\pi) = w\_e
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no ⋅ (U+22C5) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ⋅ (U+22C5) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no ⋅ (U+22C5) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
 tex-text;!
 
 
-[15]
+[21]
 
-[16]
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1253 control through hierarchical EFE (\mathcal
+                                                 {F}(\pi) =
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1254 \mathcal
+               {F}\emph{\{primary\}(\pi) +
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-italic]:mapping=t
+ex-text;!
+Missing character: There is no 𝜆 (U+1D706) in font [lmroman10-italic]:mapping=t
+ex-text;!
+Missing character: There is no ⋅ (U+22C5) in font [lmroman10-italic]:mapping=te
+x-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1255 \lambda \cdot \mathcal{F}}
+                                 \{meta\}(\pi)) (see Equation
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+tex-text;!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1261 (\min
+            \_\{\Theta\} \mathcal{F}(\pi; \Theta) + \mathcal{R}(\Theta)) (see
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1264 
+       
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (302.22467pt too wide) in paragraph at lines 1259--1264
+\TU/lmr/m/n/10 framework parameters (𝛩) through ($[] [][][][][][][][] [][] [] [
+][][][][][][][][][][][][][][][][][][][] [][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][][][][][][][]$ 
+ []
+
+
+
+[22]
+
+[23]
+Overfull \hbox (0.21739pt too wide) in paragraph at lines 1422--1428
+\TU/lmr/m/n/10 structure for understanding multi-level cognitive operation, fro
+m basic data processing to framework-
+ []
+
 File: ../figures/quadrant_1_data_cognitive.png Graphic file (type bmp)
 <../figures/quadrant_1_data_cognitive.png>
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 File: ../figures/quadrant_2_metadata_cognitive.png Graphic file (type bmp)
 <../figures/quadrant_2_metadata_cognitive.png>
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
+Missing character: There is no 𝜏 (U+1D70F) in font [lmroman10-regular]:mapping=
+tex-text;!
 File: ../figures/quadrant_3_data_metacognitive.png Graphic file (type bmp)
 <../figures/quadrant_3_data_metacognitive.png>
+
+
+[24]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 File: ../figures/quadrant_4_metadata_metacognitive.png Graphic file (type bmp)
 <../figures/quadrant_4_metadata_metacognitive.png>
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1480 confidence (\bar
+                       \{c\}), strategy effectiveness (e(\sigma)), and
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
 
-LaTeX Warning: `h' float specifier changed to `ht'.
+
+LaTeX Warning: Command \textbackslash invalid in math mode on input line 1487.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1488 
+       
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
 
 
+Overfull \hbox (412.52733pt too wide) in paragraph at lines 1473--1488
+ \TU/lmr/m/n/10 ($[][][][][] [][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][] [][][][][][][][][][][][][][][][][][][][][][][][][] [][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][] [][][][][][][][][][][][][][][][] [][]
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][] [] 
+ []
 
-[17]
 
-[18]
-
-[19]
-
-[20]
-
-[21]
-
-[22]
-
-[23]
-
-[24]
 
 [25]
 
 [26]
 
 [27]
-Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
-tex-text;!
-Missing character: There is no 𝜎 (U+1D70E) in font [lmroman10-regular]:mapping=
-tex-text;!
-Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
-ex-text;!
-
 
 [28]
-! Missing $ inserted.
-<inserted text> 
-                $
-l.1707 \quad c\_i = \log
-                         P(o\_i){]}
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.1708 
-       
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-Missing character: There is no 𝜙 (U+1D719) in font [lmroman10-regular]:mapping=
+Missing character: There is no 𝜆 (U+1D706) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛾 (U+1D6FE) in font [lmroman10-regular]:mapping=
 tex-text;!
 
-Overfull \hbox (7.89938pt too wide) in paragraph at lines 1752--1760
-\TU/lmr/m/n/10 (\TU/lmtt/m/n/10 get_logger\TU/lmr/m/n/10 ), exceptions (\TU/lmt
-t/m/n/10 ValidationError\TU/lmr/m/n/10 ), and file management - \TU/lmtt/m/n/10
- infrastructure/validation/\TU/lmr/m/n/10 :
- []
+! LaTeX Error: \symcalallowed only in math mode.
 
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1735 through regularization terms (\mathcal
+                                             {R}(\Theta)) that penalize
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
 
-Underfull \hbox (badness 6157) in paragraph at lines 1752--1760
-\TU/lmr/m/n/10 TeX/PDF generation with bibliography processing - \TU/lmtt/m/n/1
-0 infrastructure/figure_manager/\TU/lmr/m/n/10 :
- []
-
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+tex-text;!
 
 
 [29]
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 1773.
-
-Underfull \hbox (badness 3895) in paragraph at lines 1786--1794
-\TU/lmr/m/n/10 FEP framework with system state modeling - \TU/lmtt/m/n/10 calcu
-late_free_energy()\TU/lmr/m/n/10 : Variational
- []
-
-
-Underfull \hbox (badness 5832) in paragraph at lines 1786--1794
-\TU/lmr/m/n/10 free energy computation - \TU/lmtt/m/n/10 define_system_boundary
-()\TU/lmr/m/n/10 : Markov blanket identification
- []
-
-
-Underfull \hbox (badness 5050) in paragraph at lines 1786--1794
-\TU/lmr/m/n/10 - \TU/lmtt/m/n/10 demonstrate_structure_preservation()\TU/lmr/m/
-n/10 : Long-term system organization dynamics -
- []
-
-
-Overfull \hbox (51.03038pt too wide) in paragraph at lines 1798--1807
-\TU/lmtt/m/n/10 create_quadrant_matrix_visualization()\TU/lmr/m/n/10 : Figure d
-ata generation - \TU/lmtt/m/n/10 demonstrate_quadrant_framework()\TU/lmr/m/n/10
- :
- []
-
-Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
-ex-text;!
-
-Underfull \hbox (badness 1122) in paragraph at lines 1811--1821
- \TU/lmr/bx/n/10 8.4.2.4 Generative Models (\TU/lmtt/b/n/10 src/generative_mode
-ls.py\TU/lmr/bx/n/10 )[] Purpose\TU/lmr/m/n/10 : Probabilistic gen-
- []
-
-
-Underfull \hbox (badness 3281) in paragraph at lines 1811--1821
-\TU/lmr/m/n/10 Bayesian inference (P(s ∣o)) - \TU/lmtt/m/n/10 demonstrate_gener
-ative_model_concepts()\TU/lmr/m/n/10 : Conceptual
- []
-
-
-Underfull \hbox (badness 3428) in paragraph at lines 1825--1834
- \TU/lmr/bx/n/10 8.4.2.5 Meta-Cognition (\TU/lmtt/b/n/10 src/meta_cognition.py\
-TU/lmr/bx/n/10 )[] Purpose\TU/lmr/m/n/10 : Meta-cognitive monitor-
- []
-
-
-Underfull \hbox (badness 1158) in paragraph at lines 1825--1834
-\TU/lmr/m/n/10 ing, confidence assessment, and adaptive control \TU/lmr/bx/n/10
- Key Classes\TU/lmr/m/n/10 : - \TU/lmtt/m/n/10 MetaCognitiveSystem\TU/lmr/m/n/1
-0 :
- []
-
-
 
 [30]
-Underfull \hbox (badness 6608) in paragraph at lines 1838--1847
- \TU/lmr/bx/n/10 8.4.2.6 Modeler Perspective (\TU/lmtt/b/n/10 src/modeler_persp
-ective.py\TU/lmr/bx/n/10 )[] Purpose\TU/lmr/m/n/10 : Dual role
- []
-
-
-Underfull \hbox (badness 4913) in paragraph at lines 1838--1847
-\TU/lmr/m/n/10 ary definition - \TU/lmtt/m/n/10 specify_pragmatic_framework()\T
-U/lmr/m/n/10 : Pragmatic landscape specification -
- []
-
-
-Overfull \hbox (117.4504pt too wide) in paragraph at lines 1838--1847
-\TU/lmtt/m/n/10 analyze_self_reflective_modeling()\TU/lmr/m/n/10 : Recursive se
-lf-modeling analysis - \TU/lmtt/m/n/10 synthesize_meta_theoretical_perspective(
-)\TU/lmr/m/n/10 :
- []
-
-
 
 [31]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1893 (\min
+            \_\{\Theta\} \mathcal{F}(\pi; \Theta) + \mathcal{R}(\Theta))
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.1897 
+       
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
 
 [32]
-! Missing $ inserted.
-<inserted text> 
-                $
-l.2050 \begin{pmatrix}
-                      
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.2054 \end{pmatrix}
-                    
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.2060 \begin{pmatrix}
-                       -1.0 \\ 2.0 \\ -1.0 \end{pmatrix}
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.2060 ...atrix} -1.0 \\ 2.0 \\ -1.0 \end{pmatrix}
-                                                  
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
-
-Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
-ex-text;!
-! Missing $ inserted.
-<inserted text> 
-                $
-l.2084 ...f{Confidence Dynamics:} {[}\frac{dc}{dt}
-                                                   = -\alpha (c -
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Extra }, or forgotten $.
-\frac  #1#2->{\begingroup #1\endgroup \@@over #2}
-                                                 
-l.2084 ...f{Confidence Dynamics:} {[}\frac{dc}{dt}
-                                                   = -\alpha (c -
-I've deleted a group-closing symbol because it seems to be
-spurious, as in `$x}$'. But perhaps the } is legitimate and
-you forgot something else, as in `\hbox{$x}'. In such cases
-the way to recover is to insert both the forgotten and the
-deleted material, e.g., by typing `I$}'.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.2086 
-       
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-Missing character: There is no α (U+03B1) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no β (U+03B2) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
-tex-text;!
-! Missing $ inserted.
-<inserted text> 
-                $
-l.2093 ...rameter Learning:} {[}\Theta\^{}* = \arg
-                                                  \max\_\{\Theta\}
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.2095 
-       
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-
 
 [33]
 
@@ -1789,12 +2444,112 @@ you left one out. Proceed, with fingers crossed.
 [35]
 
 [36]
+
+[37]
+
+[38]
+
+[39]
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜎 (U+1D70E) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no ∑ (U+2211) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ≠ (U+2260) in font [lmroman10-regular]:mapping=t
+ex-text;!
+
+
+[40]
+
+[41]
+Missing character: There is no 𝜙 (U+1D719) in font [lmroman10-regular]:mapping=
+tex-text;!
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 2554.
+
+
+[42]
+Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
+ex-text;!
+
+
+[43]
+
+[44]
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.2844 The EFE calculation (\mathcal
+                                    {F}(\pi)) balances these two objectives,
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+
+[45]
+Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+tex-text;!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.2892 ...rameter Learning:} {[}\Theta\^{}* = \arg
+                                                  \max\_\{\Theta\}
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.2894 
+       
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜃 (U+1D703) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+
+[46]
+
+[47]
+
+[48]
+Missing character: There is no ∑ (U+2211) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ∑ (U+2211) in font [lmroman10-regular]:mapping=t
+ex-text;!
+
+
+[49]
 Missing character: There is no ∝ (U+221D) in font [lmroman10-regular]:mapping=t
 ex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2300 normalization: (P(o) \propto \exp
+l.3119 normalization: (P(o) \propto \exp
                                         (C))
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1802,11 +2557,14 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2301 
+l.3120 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
+
+
+[50]
 
 ! LaTeX Error: \symbballowed only in math mode.
 
@@ -1814,7 +2572,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.2327 \mathbb
+l.3146 \mathbb
               {E}\emph{\{q(s}\tau \mid \pi)\}\[\log q(s\_\tau \mid \pi)\] -
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -1832,7 +2590,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.2328 \mathbb
+l.3147 \mathbb
               {E}\emph{\{q(s}\tau \mid \pi)\}{[}\log p(s\_\tau \mid \pi){]}{]}
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -1846,7 +2604,7 @@ tex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2328 ...bb{E}\emph{\{q(s}\tau \mid \pi)\}{[}\log
+l.3147 ...bb{E}\emph{\{q(s}\tau \mid \pi)\}{[}\log
                                                    p(s\_\tau \mid \pi){]}{]}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1854,7 +2612,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2329 
+l.3148 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1875,9 +2633,6 @@ Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=
 ex-text;!
 Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
 tex-text;!
-
-
-[37]
 Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
 tex-text;!
 
@@ -1887,7 +2642,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.2341 \mathbb
+l.3160 \mathbb
               {E}\emph{\{q(o}\tau,s\_\tau\mid{}\pi)\}{[}\log p(o\_\tau,s\_\tau)
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -1904,7 +2659,7 @@ tex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2341 ...ph{\{q(o}\tau,s\_\tau\mid{}\pi)\}{[}\log
+l.3160 ...ph{\{q(o}\tau,s\_\tau\mid{}\pi)\}{[}\log
                                                    p(o\_\tau,s\_\tau)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1912,7 +2667,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2343 
+l.3162 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1926,7 +2681,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.2347 \mathbb
+l.3166 \mathbb
               {E}\emph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log p(o\_\tau \mid ...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -1943,7 +2698,7 @@ tex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2347 ...ph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log
+l.3166 ...ph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log
                                                    p(o\_\tau \mid s\_\tau)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1951,7 +2706,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2350 
+l.3169 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1965,7 +2720,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.2354 \mathbb
+l.3173 \mathbb
               {E}\emph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log \tilde{A}(o\_\t...
 
 You're in trouble here.  Try typing  <return>  to proceed.
@@ -1982,7 +2737,7 @@ tex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2354 ...ph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log
+l.3173 ...ph{\{q(o}\tau,s\_\tau \mid \pi)\}{[}\log
                                                    \tilde{A}(o\_\tau,s\_\tau)
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1990,7 +2745,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2356 
+l.3175 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -1998,7 +2753,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2357 Where (\tilde
+l.3176 Where (\tilde
                     {A}) includes the preference weighting.
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2006,29 +2761,10 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2358 
+l.3177 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.2373 \begin{cases}
-                    
-I've inserted a begin-math/end-math symbol since I think
-you left one out. Proceed, with fingers crossed.
-
-! Missing $ inserted.
-<inserted text> 
-                $
-l.2376 \end{cases}
-                  
-I've inserted something that you may have forgotten.
-(See the <inserted text> above.)
-With luck, this will get me unwedged. But if you
-really didn't forget anything, try typing `2' now; then
-my insertion and my current dilemma will both disappear.
 
 Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
 ex-text;!
@@ -2042,21 +2778,22 @@ Missing character: There is no 𝜙 (U+1D719) in font [lmroman10-regular]:mappin
 tex-text;!
 Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ϕ (U+03D5) in font [lmroman10-regular]:mapping=t
-ex-text;!
+Missing character: There is no 𝜙 (U+1D719) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+
+[51]
 Missing character: There is no ∏ (U+220F) in font [lmroman10-regular]:mapping=t
 ex-text;!
 
 
-[38]
-
-[39]
+[52]
 Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
 tex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2463 {[}\Theta\^{}* = \arg
+l.3278 {[}\Theta\^{}* = \arg
                             \max\emph{\{\Theta\} \mathbb{E}}\{data\}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2070,7 +2807,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.2463 ...* = \arg\max\emph{\{\Theta\} \mathbb{E}}
+l.3278 ...* = \arg\max\emph{\{\Theta\} \mathbb{E}}
                                                   \{data\}
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -2084,17 +2821,25 @@ x-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2465 
+l.3280 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
 
 Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
 tex-text;!
+Missing character: There is no 𝜃 (U+1D703) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+tex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2492 {[}\frac{d\Theta}{dt}
+l.3308 {[}\frac{d\Theta}{dt}
                              = -\eta \cdot \nabla\_\{\Theta\}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2102,7 +2847,7 @@ you left one out. Proceed, with fingers crossed.
 ! Extra }, or forgotten $.
 \frac  #1#2->{\begingroup #1\endgroup \@@over #2}
                                                  
-l.2492 {[}\frac{d\Theta}{dt}
+l.3308 {[}\frac{d\Theta}{dt}
                              = -\eta \cdot \nabla\_\{\Theta\}
 I've deleted a group-closing symbol because it seems to be
 spurious, as in `$x}$'. But perhaps the } is legitimate and
@@ -2113,7 +2858,7 @@ deleted material, e.g., by typing `I$}'.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2494 
+l.3310 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2125,21 +2870,24 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.2495 Where (\mathcal
-                      {L}) measures performance degradation due to suboptimal
+l.3311 Where (\mathcal
+                      {L}(\text{performance}, \Theta)) measures performance
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+tex-text;!
 
 
-[40]
+[53]
 
-[41]
-Underfull \hbox (badness 10000) in paragraph at lines 2622--2627
-\TU/lmr/m/n/10 ometric_patterns, organic_patterns, human_made_objects, natural_
-elements} \TU/lmr/bx/n/10 Actions:
- []
-
+[54]
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
+tex-text;!
 Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
 ex-text;!
 Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
@@ -2149,19 +2897,18 @@ ex-text;!
 Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
 ex-text;!
 
-Overfull \hbox (2.64542pt too wide) in paragraph at lines 2649--2655
-\TU/lmr/m/n/10 sistency: (P([] ∣[])) - Cross-modal agreement: (P([]
- []
 
-
-
-[42]
+[55]
+Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ∏ (U+220F) in font [lmroman10-regular]:mapping=t
+ex-text;!
 Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
 tex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2671 ...nitive Selection:} {[}\pi\^{}*(c) = \arg
+l.3511 ...nitive Selection:} {[}\pi\^{}*(c) = \arg
                                                   \max\_\{\pi\}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2169,7 +2916,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2673 
+l.3513 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2187,7 +2934,7 @@ ex-text;!
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2690 \textbf{Optimization Objective:} {[}\max
+l.3530 \textbf{Optimization Objective:} {[}\max
                                                \_\{\theta\_c,\alpha,d\}
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2195,7 +2942,7 @@ you left one out. Proceed, with fingers crossed.
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.2692 
+l.3532 
        
 I've inserted a begin-math/end-math symbol since I think
 you left one out. Proceed, with fingers crossed.
@@ -2208,26 +2955,24 @@ Missing character: There is no 𝜃 (U+1D703) in font [lmroman10-regular]:mappin
 tex-text;!
 Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman10-regular]:mapping=
 tex-text;!
+[56]
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
+tex-text;!
+Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
+tex-text;!
 
 
-[43]
-Missing character: There is no β (U+03B2) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ₁ (U+2081) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no β (U+03B2) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ₂ (U+2082) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no β (U+03B2) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ₃ (U+2083) in font [lmroman10-regular]:mapping=t
-ex-text;!
+[57]
 
-
-[44]
-
-[45]
+[58]
 
 ! LaTeX Error: \symcalallowed only in math mode.
 
@@ -2235,8 +2980,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.2868 Where (\mathcal
-                      {R}(\Theta)) ensures framework coherence during
+l.3714 ...eqref{eq:adaptation_dynamics}, (\mathcal
+                                                  {R}(\Theta))
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
@@ -2244,7 +2989,7 @@ Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mappin
 tex-text;!
 
 
-[46]
+[59]
 
 ! LaTeX Error: \symcalallowed only in math mode.
 
@@ -2252,17 +2997,17 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.2882 Where (\mathcal
+l.3728 Where (\mathcal
                       {F}\_\{interaction\}) captures inter-agent dependencies.
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
 
-[47]
+[60]
 
-[48]
-Overfull \hbox (33.89175pt too wide) detected at line 3054
+[61]
+Overfull \hbox (33.89175pt too wide) detected at line 3900
 [][][][][][][][][][][][] [] [][][][][][][][][][][][][][][][][][][][][][][] [][]
 [][][][][][][][][][][][][][][] [][][][][][][][][][][][][][][] [][][][][][][][][
 ][][][][][][][][][][][][][][]
@@ -2270,9 +3015,9 @@ Overfull \hbox (33.89175pt too wide) detected at line 3054
 
 
 
-[49]
+[62]
 
-[50]
+[63]
 
 ! LaTeX Error: \symcalallowed only in math mode.
 
@@ -2280,8 +3025,8 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.3124 (\mathcal
-                {F}(\pi)) & Expected Free Energy for policy (\pi) & ℝ \\
+l.3970 (\mathcal
+                {F}(\pi)) & Expected Free Energy for policy (\pi) &
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
@@ -2289,26 +3034,72 @@ Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mappin
 tex-text;!
 Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
 tex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3971 (\mathbb
+               {R}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
 tex-text;!
 Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
 tex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3972 ...agmatic value of policy (\pi) & (\mathbb
+                                                  {R}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜋 (U+1D70B) in font [lmroman10-regular]:mapping=
 tex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⁿ (U+207F) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⁿ (U+207F) in font [lmroman10-regular]:mapping=t
-ex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3974 (\mathbb
+               {R}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3975 ...or beliefs over hidden states & (\mathbb
+                                                  {R}\^{}n) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3976 ...or beliefs over hidden states & (\mathbb
+                                                  {R}\^{}n) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
 ex-text;!
 
@@ -2318,7 +3109,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.3129 ...kelihood matrix (P(o \mid s)) & (\mathbb
+l.3977 ...kelihood matrix (P(o \mid s)) & (\mathbb
                                                   {R}\^{}\{m
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -2332,75 +3123,11 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.3131 ...tion matrix (P(s' \mid s, a)) & (\mathbb
+l.3979 ...tion matrix (P(s' \mid s, a)) & (\mathbb
                                                   {R}\^{}\{n
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-
-! LaTeX Error: Bad math environment delimiter.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.3148 (c) & Confidence score & \[0,1\]
-                                        \\
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-Missing character: There is no 𝜆 (U+1D706) in font [lmroman10-regular]:mapping=
-tex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
-tex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmroman10-regular]:mapping=t
-ex-text;!
-
-! LaTeX Error: \symcalallowed only in math mode.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.3174 (\mathcal
-                {F}) & Variational free energy & ℝ \\
-You're in trouble here.  Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-
-! LaTeX Error: \symcalallowed only in math mode.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.3175 (\mathcal
-                {S}) & Surprise (-log evidence) & ℝ \\
-You're in trouble here.  Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no 𝜙 (U+1D719) in font [lmroman10-regular]:mapping=
-tex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-[51]
 
 ! LaTeX Error: \symbballowed only in math mode.
 
@@ -2408,7 +3135,134 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.3221 (\mathbb
+l.3982 (\mathbb
+               {R}\^{}m) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3983 ...r beliefs over initial states & (\mathbb
+                                                  {R}\^{}n) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜆 (U+1D706) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3998 ...ta-cognitive weighting factor & (\mathbb
+                                                  {R}\^{}+) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3999 (\Theta) & Framework parameters & (\mathbb
+                                                 {R}\^{}d) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4000 ... Meta-data weighting function & (\mathbb
+                                                  {R}\^{}+) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4023 (\mathcal
+                {F}) & Variational free energy & (\mathbb{R}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4023 ...F}) & Variational free energy & (\mathbb
+                                                  {R}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4024 (\mathcal
+                {S}) & Surprise (-log evidence) & (\mathbb{R}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4024 ...}) & Surprise (-log evidence) & (\mathbb
+                                                  {R}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜙 (U+1D719) in font [lmroman10-regular]:mapping=
+tex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4025 (\phi) & System parameters & (\mathbb
+                                            {R}\^{}p) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+[64]
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4070 (\mathbb
                {E}{[}\cdot{]}) & Expectation operator & Functional \\
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -2417,84 +3271,143 @@ Missing character: There is no ⋅ (U+22C5) in font [lmroman10-regular]:mapping=
 ex-text;!
 Missing character: There is no ∣ (U+2223) in font [lmroman10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmroman10-regular]:mapping=t
-ex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4072 (\mathbb
+               {R}\^{}+) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜎 (U+1D70E) in font [lmroman10-regular]:mapping=
 tex-text;!
 Missing character: There is no ⋅ (U+22C5) in font [lmroman10-regular]:mapping=t
 ex-text;!
 Missing character: There is no ∇ (U+2207) in font [lmroman10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℕ (U+2115) in font [lmroman10-regular]:mapping=t
-ex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4088 (t) & Time step & (\mathbb
+                                 {N}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜏 (U+1D70F) in font [lmroman10-regular]:mapping=
 tex-text;!
-Missing character: There is no ℕ (U+2115) in font [lmroman10-regular]:mapping=t
-ex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4089 (\tau) & Temporal horizon & (\mathbb
+                                           {N}) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜂 (U+1D702) in font [lmroman10-regular]:mapping=
 tex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmroman10-regular]:mapping=t
-ex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4090 (\eta) & Learning rate & (\mathbb
+                                        {R}\^{}+) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝛼 (U+1D6FC) in font [lmroman10-regular]:mapping=
 tex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmroman10-regular]:mapping=t
-ex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4091 (\alpha) & Adaptation rate & (\mathbb
+                                            {R}\^{}+) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝛽 (U+1D6FD) in font [lmroman10-regular]:mapping=
 tex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmroman10-regular]:mapping=t
-ex-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmroman10-regular]:mapping=t
-ex-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4092 (\beta) & Feedback strength & (\mathbb
+                                             {R}\^{}+) \\
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
 
 
-[52] (./_combined_manuscript.bbl) (./_combined_manuscript.bbl
 
-[53])
+[65] (./_combined_manuscript.bbl) (./_combined_manuscript.bbl
+
+[66])
 
 Package natbib Warning: There were multiply defined citations.
 
 
 
-[54]
+[67]
 
-[55]
+[68]
 
-[56]
+[69]
 
-[57]
+[70]
 
-[58]
+[71]
 
-[59]
+[72]
 
-[60]
+[73]
 
-[61]
+[74]
 
-[62] (./_combined_manuscript.aux)
+[75]
+
+[76]
+
+[77]
+
+[78]
+
+[79] (./_combined_manuscript.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
  )
-(\end occurred inside a group at level 2)
+(\end occurred inside a group at level 1)
 
-### simple group (level 2) entered at line 2492 ({)
-### simple group (level 1) entered at line 2084 ({)
+### simple group (level 1) entered at line 3308 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 31105 strings out of 473832
- 605726 string characters out of 5729482
- 1163920 words of memory out of 5000000
- 53653 multiletter control sequences out of 15000+600000
+ 31109 strings out of 473832
+ 605819 string characters out of 5729482
+ 1198858 words of memory out of 5000000
+ 53657 multiletter control sequences out of 15000+600000
  565304 words of font info for 91 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 90i,10n,114p,1017b,625s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,16n,114p,1341b,562s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on _combined_manuscript.pdf (62 pages).
+Output written on _combined_manuscript.pdf (79 pages).

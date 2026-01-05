@@ -1,6 +1,6 @@
 {
   "model": "gemma3:4b",
-  "timestamp": "2026-01-04T17:22:59.481646",
+  "timestamp": "2026-01-05T08:16:03.510501",
   "source_pdf": "/Users/4d/Documents/GitHub/template/projects/ento_linguistics/output/pdf/ento_linguistics_combined.pdf",
   "reviews_generated": [
     "translation_zh",
@@ -20,28 +20,28 @@
       "input_chars": 52347,
       "input_words": 6520,
       "input_tokens_est": 13086,
-      "output_chars": 3806,
-      "output_words": 408,
-      "output_tokens_est": 951,
-      "generation_time_seconds": 29.05
+      "output_chars": 4100,
+      "output_words": 434,
+      "output_tokens_est": 1025,
+      "generation_time_seconds": 30.9
     },
     "translation_hi": {
       "input_chars": 52347,
       "input_words": 6520,
       "input_tokens_est": 13086,
-      "output_chars": 5872,
-      "output_words": 846,
-      "output_tokens_est": 1468,
-      "generation_time_seconds": 33.41
+      "output_chars": 5123,
+      "output_words": 741,
+      "output_tokens_est": 1280,
+      "generation_time_seconds": 31.29
     },
     "translation_ru": {
       "input_chars": 52347,
       "input_words": 6520,
       "input_tokens_est": 13086,
-      "output_chars": 4736,
-      "output_words": 554,
-      "output_tokens_est": 1184,
-      "generation_time_seconds": 28.44
+      "output_chars": 5131,
+      "output_words": 609,
+      "output_tokens_est": 1282,
+      "generation_time_seconds": 31.48
     }
   },
   "format_compliance": {
@@ -66,7 +66,7 @@
       }
     }
   },
-  "total_generation_time_seconds": 90.91,
+  "total_generation_time_seconds": 93.68,
   "config": {
     "temperature_summary": 0.3,
     "temperature_review": 0.3,

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  4 JAN 2026 17:11
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  5 JAN 2026 08:02
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1236,29 +1236,32 @@ Package microtype Info: Loading generic protrusion settings for font family
 
 (/Users/4d/Documents/GitHub/template/projects/active_inference_meta_pragmatic/o
 utput/slides/03_methodology_slides.nav)
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.8961pt on input line 438.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.64008pt on input line 438.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 4
-38.
 
+LaTeX Warning: Reference `fig:quadrant_matrix' on page 1 undefined on input lin
+e 651.
+
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 7.8961pt on input line 651.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 5.64008pt on input line 651.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 6
+51.
 (/usr/local/texlive/2025/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 11.28131pt on input line 438.
+(Font)              scaled to size 11.28131pt on input line 651.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.89691pt on input line 438.
+(Font)              scaled to size 7.89691pt on input line 651.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.64066pt on input line 438.
+(Font)              scaled to size 5.64066pt on input line 651.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 11.27914pt on input line 438.
+(Font)              scaled to size 11.27914pt on input line 651.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.8954pt on input line 438.
+(Font)              scaled to size 7.8954pt on input line 651.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.63957pt on input line 438.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 438
+(Font)              scaled to size 5.63957pt on input line 651.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 651
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
@@ -1267,7 +1270,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 438
+LaTeX Font Info:    Trying to load font information for U+msb on input line 651
 .
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -1282,6 +1285,12 @@ Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping
 ex-text;!
 Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
 ex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝜏 (U+1D70F) in font [lmsans10-regular]:mapping=t
+ex-text;!
 
 ! LaTeX Error: \symcalallowed only in math mode.
 
@@ -1289,12 +1298,78 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.438 \end{frame}
+l.651 \end{frame}
                  
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 Missing character: There is no 𝜆 (U+1D706) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝛾 (U+1D6FE) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝜆 (U+1D706) in font [lmsans10-regular]:mapping=t
+ex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.651 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+LaTeX Font Info:    Font shape `TU/lmss/m/it' in size <10.95> not available
+(Font)              Font shape `TU/lmss/m/sl' tried instead on input line 651.
+Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-oblique]:mapping=t
+ex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.651 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-oblique]:mapping=t
+ex-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.651 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no 𝜆 (U+1D706) in font [lmsans10-regular]:mapping=t
+ex-text;!
+Missing character: There is no ⋅ (U+22C5) in font [lmsans10-regular]:mapping=te
+x-text;!
+
+! LaTeX Error: \symcalallowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.651 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
 ex-text;!
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/microtype/mt-LatinModernRoman.cfg
@@ -1310,35 +1385,128 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.438 \end{frame}
+l.651 \end{frame}
                  
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-File: ../figures/quadrant_matrix.png Graphic file (type bmp)
-<../figures/quadrant_matrix.png>
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 10.30151pt on input line 438.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.21106pt on input line 438.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.15076pt on input line 438.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.30258pt on input line 438.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.2118pt on input line 438.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.15129pt on input line 438.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 10.3006pt on input line 438.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 7.21042pt on input line 438.
-LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 5.1503pt on input line 438.
+Missing character: There is no 𝛩 (U+1D6E9) in font [lmsans10-regular]:mapping=t
+ex-text;!
+! Missing $ inserted.
+<inserted text> 
+                $
+l.651 \end{frame}
+                 
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+! LaTeX Error: Command \itshape invalid in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.651 \end{frame}
+                 
+Please use the math alphabet \mathit instead of the \itshape command. 
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.651 \end{frame}
+                 
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+
+Overfull \hbox (744.85104pt too wide) in paragraph at lines 651--651
+\TU/lmss/m/n/10.95 ($[][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][] [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][] [][] [] 
+ []
+
+
+Overfull \hbox (423.68251pt too wide) in paragraph at lines 651--651
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][] [][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][]
+[][][][][][][][][] [] 
+ []
+
+
+Overfull \hbox (243.94461pt too wide) in paragraph at lines 651--651
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][][][][][][][] [][][][][][][][][][][
+][][][][][][][][][][][][][][][][][][][][][][] [] 
+ []
+
+
+LaTeX Warning: Reference `fig:quadrant_matrix' on page 1 undefined on input lin
+e 651.
+
+
+LaTeX Warning: Reference `eq:efe' on page 1 undefined on input line 651.
+
+
+LaTeX Warning: Reference `eq:epistemic_component' on page 1 undefined on input 
+line 651.
+
+
+LaTeX Warning: Reference `eq:pragmatic_component' on page 1 undefined on input 
+line 651.
+
 File: ../figures/efe_decomposition.png Graphic file (type bmp)
 <../figures/efe_decomposition.png>
+
+LaTeX Warning: Reference `eq:efe' on page 1 undefined on input line 651.
+
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 10.30151pt on input line 651.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 7.21106pt on input line 651.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
+(Font)              scaled to size 5.15076pt on input line 651.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 10.30258pt on input line 651.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 7.2118pt on input line 651.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
+(Font)              scaled to size 5.15129pt on input line 651.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 10.3006pt on input line 651.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 7.21042pt on input line 651.
+LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
+(Font)              scaled to size 5.1503pt on input line 651.
+
+LaTeX Warning: Reference `eq:epistemic_component' on page 1 undefined on input 
+line 651.
+
+
+LaTeX Warning: Reference `eq:pragmatic_component' on page 1 undefined on input 
+line 651.
+
+
+LaTeX Warning: Reference `eq:efe' on page 1 undefined on input line 651.
+
+
+LaTeX Warning: Reference `eq:epistemic_component' on page 1 undefined on input 
+line 651.
+
+
+LaTeX Warning: Reference `eq:pragmatic_component' on page 1 undefined on input 
+line 651.
+
 File: ../figures/perception_action_loop.png Graphic file (type bmp)
 <../figures/perception_action_loop.png>
+
+LaTeX Warning: Reference `eq:efe' on page 1 undefined on input line 651.
+
+
+LaTeX Warning: Reference `eq:efe' on page 1 undefined on input line 651.
+
 File: ../figures/generative_model_structure.png Graphic file (type bmp)
 <../figures/generative_model_structure.png>
 File: ../figures/meta_level_concepts.png Graphic file (type bmp)
@@ -1354,7 +1522,7 @@ File: ../figures/quadrant_matrix_enhanced.png Graphic file (type bmp)
 File: ../figures/physics_cognition_bridge.png Graphic file (type bmp)
 <../figures/physics_cognition_bridge.png>
 
-Overfull \vbox (4278.2997pt too high) detected at line 438
+Overfull \vbox (7675.74951pt too high) detected at line 651
  []
 
 
@@ -1378,15 +1546,19 @@ utput/slides/03_methodology_slides.aux)
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 29603 strings out of 473832
- 602615 string characters out of 5729482
- 1272914 words of memory out of 5000000
+ 29605 strings out of 473832
+ 602571 string characters out of 5729482
+ 1543854 words of memory out of 5000000
  52104 multiletter control sequences out of 15000+600000
- 565298 words of font info for 89 fonts, out of 8000000 for 9000
+ 565314 words of font info for 91 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 128i,11n,123p,1109b,1123s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 128i,11n,123p,1220b,1123s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on /Users/4d/Documents/GitHub/template/projects/active_inference
 _meta_pragmatic/output/slides/03_methodology_slides.pdf (1 page).

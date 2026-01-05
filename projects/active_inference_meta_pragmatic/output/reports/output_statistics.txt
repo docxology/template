@@ -5,21 +5,21 @@ OUTPUT STATISTICS REPORT
 Output Directory: /Users/4d/Documents/GitHub/template/output/active_inference_meta_pragmatic
 
 Total Files: 167
-Total Size: 15.52 MB
+Total Size: 15.95 MB
 
 Files by Category:
-  • pdf: 9 files (4.70 MB)
-  • web: 13 files (0.15 MB)
-  • slides: 95 files (5.43 MB)
-  • figures: 35 files (5.11 MB)
+  • pdf: 9 files (4.91 MB)
+  • web: 13 files (0.20 MB)
+  • slides: 95 files (5.59 MB)
+  • figures: 35 files (5.10 MB)
   • data: 2 files (0.04 MB)
   • reports: 7 files (0.06 MB)
   • llm: 6 files (0.05 MB)
 
 Largest Files:
-  • active_inference_meta_pragmatic_combined.pdf: 4.32 MB (pdf)
-  • 03_methodology_slides.pdf: 2.86 MB (slides)
-  • 04_experimental_results_slides.pdf: 1.32 MB (slides)
+  • active_inference_meta_pragmatic_combined.pdf: 4.37 MB (pdf)
+  • 03_methodology_slides.pdf: 2.72 MB (slides)
+  • 04_experimental_results_slides.pdf: 1.33 MB (slides)
   • quadrant_matrix_enhanced.png: 0.60 MB (figures)
   • quadrant_2_metadata_cognitive.png: 0.45 MB (figures)
 

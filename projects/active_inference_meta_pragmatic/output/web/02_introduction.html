@@ -179,17 +179,18 @@
 cognition, perception, and action. Originating from the Free Energy
 Principle <span class="citation"
 data-cites="friston2010free">[@friston2010free]</span>, Active Inference
-provides a unified mathematical framework for understanding biological
+provides a unified mathematical formalism for understanding biological
 agents as systems that minimize variational free energy through
-perception and action. While the framework has been successfully applied
-to diverse domains including neuroscience <span class="citation"
+perception and action. While Active Inference has been successfully
+applied to diverse domains including neuroscience <span class="citation"
 data-cites="friston2012prediction">[@friston2012prediction]</span>,
 psychiatry <span class="citation"
 data-cites="friston2014active">[@friston2014active]</span>, and
 artificial intelligence <span class="citation"
 data-cites="tani2016exploring">[@tani2016exploring]</span>, its
-fundamental nature as a meta-theoretical methodology has remained
-underexplored.</p>
+fundamental nature as a meta-theoretical methodology—enabling
+specification of the frameworks within which cognition occurs—has
+remained underexplored.</p>
 <h2
 id="the-traditional-view-active-inference-as-free-energy-minimization">The
 Traditional View: Active Inference as Free Energy Minimization</h2>
@@ -197,68 +198,119 @@ Traditional View: Active Inference as Free Energy Minimization</h2>
 agents act to fulfill prior preferences while gathering information
 about their environment. The Expected Free Energy (EFE) formulation
 combines epistemic and pragmatic terms:</p>
-<p>The first term represents <em>epistemic value</em> (information
-gain), while the second represents <em>pragmatic value</em> (goal
-achievement). Action selection minimizes EFE, balancing exploration and
-exploitation.</p>
+<p>The first term in Equation <span
+class="math inline">\(\eqref{eq:efe}\)</span>, (<em>{q(s</em>)}[q(s_) -
+p(s_)]), represents <em>epistemic value</em>: information gain about
+hidden states through policy execution. The second term,
+(<em>{q(o</em>)}[p(o_s_) + p(s_) - q(s_)]), represents <em>pragmatic
+value</em>: goal achievement through preferred observations. Action
+selection minimizes EFE, balancing exploration (epistemic) and
+exploitation (pragmatic) in a principled manner. Critically, both terms
+depend on generative model specifications (matrices (A), (B), (C), and
+(D)) that the modeler defines, revealing the meta-level nature of the
+framework.</p>
 <h2
 id="beyond-the-traditional-view-active-inference-as-meta-methodology">Beyond
 the Traditional View: Active Inference as Meta-Methodology</h2>
-<p>Active Inference operates at a fundamentally meta-level. Rather than
-simply providing another algorithm for decision-making, Active Inference
-enables researchers to specify the very frameworks within which
-cognition occurs. This meta-level operation manifests in two key
-dimensions:</p>
+<p>Active Inference operates at a fundamentally meta-level that
+distinguishes it from traditional decision-making algorithms. Rather
+than simply providing another method for selecting actions given fixed
+observation models and reward functions, Active Inference allows
+researchers to specify the very frameworks within which cognition
+occurs. This meta-level operation manifests in two key dimensions that
+together create a meta-methodology for cognitive science:</p>
 <h3 id="meta-epistemic-aspect">Meta-Epistemic Aspect</h3>
-<p>Active Inference enables modelers to specify epistemic frameworks
-through generative model matrices (A), (B), (C), and (D). Matrix (A)
-defines observation likelihoods (P(o s)), establishing what can be known
-about the world. Matrix (D) defines prior beliefs (P(s)), setting
-initial assumptions. Matrix (B) defines state transitions (P(s’ s, a)),
-specifying causal relationships. Through these specifications,
-researchers define not just current beliefs, but the epistemological
-boundaries of cognition itself.</p>
+<p>Active Inference allows modelers to specify epistemic frameworks
+through generative model matrices (A), (B), and (D). Matrix (A) defines
+observation likelihoods (P(o s)) (see Equation <span
+class="math inline">\(\eqref{eq:matrix_a}\)</span>), establishing what
+can be known about the world and how reliably observations indicate
+underlying states. Matrix (D) defines prior beliefs (P(s)) (see Equation
+<span class="math inline">\(\eqref{eq:matrix_d}\)</span>), setting
+initial assumptions about the world’s structure. Matrix (B) defines
+state transitions (P(s’ s, a)) (see Equation <span
+class="math inline">\(\eqref{eq:matrix_b}\)</span>), specifying causal
+relationships and how actions influence state changes. Through these
+specifications, researchers define not just current beliefs, but the
+epistemological boundaries of cognition itself—determining what
+knowledge is possible, how evidence accumulates, and what causal
+structures are assumed. This specification power transforms framework
+design from an external constraint into an internal research
+question.</p>
 <h3 id="meta-pragmatic-aspect">Meta-Pragmatic Aspect</h3>
-<p>Beyond epistemic specification, Active Inference enables
-meta-pragmatic modeling through matrix (C), which defines preference
-priors. Unlike traditional reinforcement learning where rewards are
-externally specified, Active Inference enables modelers to specify
-pragmatic landscapes. The modeler specifies what constitutes “value” for
-the agent, enabling exploration of how different value systems shape
-cognition and behavior.</p>
+<p>Beyond epistemic specification, Active Inference supports
+meta-pragmatic modeling through matrix (C) (see Equation <span
+class="math inline">\(\eqref{eq:matrix_c}\)</span>), which defines
+preference priors. Unlike traditional reinforcement learning where
+rewards are externally specified, Active Inference allows modelers to
+specify pragmatic landscapes. The modeler specifies what constitutes
+“value” for the agent, creating opportunities to explore how different
+value systems shape cognition and behavior. This specification power
+extends beyond simple reward functions to enable complex value
+hierarchies, trade-offs, and ethical considerations.</p>
 <h2 id="the-2-framework-datameta-data-cognitivemeta-cognitive">The (2 )
 Framework: Data/Meta-Data () Cognitive/Meta-Cognitive</h2>
 <p>To systematically analyze Active Inference’s meta-level
 contributions, we introduce a (2 ) matrix framework (Figure <span
 class="math inline">\(\ref{fig:quadrant_matrix}\)</span>) with axes of
 Data/Meta-Data and Cognitive/Meta-Cognitive processing.</p>
-<p><strong>Data Processing (Cognitive Level):</strong> Basic cognitive
-processing of raw sensory data, implementing baseline pragmatic and
-epistemic functionality through EFE minimization.</p>
-<p><strong>Meta-Data Processing (Cognitive Level):</strong> Processing
-that incorporates meta-information (confidence scores, timestamps,
-reliability metrics) to improve cognitive performance.</p>
-<p><strong>Data Processing (Meta-Cognitive Level):</strong> Reflective
-processing where agents evaluate their own cognitive processes,
-implementing self-monitoring and adaptive control.</p>
-<p><strong>Meta-Data Processing (Meta-Cognitive Level):</strong>
-Higher-order reasoning involving meta-data about meta-cognition,
-enabling framework-level adaptation and meta-theoretical analysis.</p>
+<p><strong>Quadrant 1 - Data Processing (Cognitive Level):</strong>
+Basic cognitive processing of raw sensory data, implementing baseline
+pragmatic and epistemic functionality through EFE minimization. This
+quadrant represents the fundamental Active Inference mechanism where
+agents process observations, update beliefs, and select actions to
+minimize expected free energy. It provides the foundation for all
+higher-level cognitive operations.</p>
+<p><strong>Quadrant 2 - Meta-Data Processing (Cognitive Level):</strong>
+Processing that incorporates meta-information (confidence scores,
+timestamps, reliability metrics) to enhance primary data processing.
+This quadrant extends Quadrant 1 by weighting observations and
+inferences based on quality information, improving decision reliability
+in uncertain conditions. Meta-data integration allows systems to adapt
+their processing based on information quality rather than treating all
+data equally.</p>
+<p><strong>Quadrant 3 - Data Processing (Meta-Cognitive Level):</strong>
+Reflective processing where agents evaluate their own cognitive
+processes, implementing self-monitoring and adaptive control. This
+quadrant allows systems to assess their own inference quality and adjust
+processing strategies accordingly, demonstrating meta-cognitive
+self-regulation. The hierarchical structure enables systems to monitor
+and regulate their own cognitive operations.</p>
+<p><strong>Quadrant 4 - Meta-Data Processing (Meta-Cognitive
+Level):</strong> Higher-order reasoning involving meta-data about
+meta-cognition, supporting framework-level adaptation and
+meta-theoretical analysis. This quadrant represents the highest level of
+cognitive abstraction, where systems analyze patterns in their own
+meta-cognitive performance to optimize fundamental framework parameters.
+Recursive self-analysis enables continuous improvement of cognitive
+architectures.</p>
 <h2 id="contributions-and-implications">Contributions and
 Implications</h2>
-<p>This framework reveals Active Inference as a methodology that
-transcends traditional approaches to cognition. By enabling meta-level
+<p>This structure reveals Active Inference as a meta-methodology that
+transcends traditional approaches to cognition. By allowing meta-level
 specification of epistemic and pragmatic frameworks, Active Inference
-provides tools for understanding:</p>
+provides systematic tools for understanding:</p>
 <ol type="1">
-<li><strong>Cognitive Architecture Design:</strong> How different
-epistemic and pragmatic frameworks shape cognition</li>
-<li><strong>Meta-Cognitive Processing:</strong> Self-reflective
-cognitive mechanisms and their societal implications</li>
-<li><strong>Cognitive Security:</strong> Vulnerabilities arising from
-meta-level cognitive manipulation</li>
-<li><strong>Unification of Cognitive Science:</strong> Bridging
-biological and artificial cognition through shared principles</li>
+<li><p><strong>Cognitive Architecture Design:</strong> How different
+epistemic frameworks (specified through matrices (A), (B), (D)) and
+pragmatic frameworks (specified through matrix (C)) shape cognition,
+decision-making, and behavior. Framework design itself becomes a
+research question.</p></li>
+<li><p><strong>Meta-Cognitive Processing:</strong> Self-reflective
+cognitive mechanisms operating across Quadrants 3 and 4, enabling
+systems to monitor, regulate, and evolve their own cognitive processes.
+These mechanisms have profound implications for understanding
+consciousness, self-awareness, and adaptive intelligence.</p></li>
+<li><p><strong>Cognitive Security:</strong> Vulnerabilities arising from
+meta-level cognitive manipulation, where attackers target confidence
+assessment (Quadrant 3) or framework parameters (Quadrant 4) rather than
+just beliefs or actions. The structure provides systematic defense
+strategies operating at multiple levels, enabling protection against
+sophisticated attacks that exploit meta-cognitive processes.</p></li>
+<li><p><strong>Unification of Cognitive Science:</strong> Bridging
+biological and artificial cognition through shared principles of free
+energy minimization operating across multiple scales, from physical
+systems to cognitive agents to scientific communities.</p></li>
 </ol>
 <h2 id="paper-structure">Paper Structure</h2>
 <p>Section <a href="#sec:methodology">3</a> introduces the (2 ) matrix

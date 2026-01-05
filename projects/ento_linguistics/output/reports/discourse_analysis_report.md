@@ -6,93 +6,93 @@ This report analyzes discourse patterns, rhetorical strategies, and argumentativ
 
 ## Analysis Summary
 
-- **Texts Analyzed**: 419
+- **Texts Analyzed**: 425
 - **Discourse Patterns**: 2
-- **Argumentative Structures**: 28
+- **Argumentative Structures**: 30
 
 ## Discourse Patterns
 
 ### Identified Patterns
-#### Hierarchical Framing
-- **Frequency**: 40
-- **Rhetorical Function**: Structures social relationships as human-like hierarchies
-- **Domains**: power_and_labor
-- **Examples**: 40 instances
-
 #### Economic Metaphors
-- **Frequency**: 27
+- **Frequency**: 28
 - **Rhetorical Function**: Applies market logic to biological processes
 - **Domains**: economics
-- **Examples**: 27 instances
+- **Examples**: 28 instances
+
+#### Hierarchical Framing
+- **Frequency**: 43
+- **Rhetorical Function**: Structures social relationships as human-like hierarchies
+- **Domains**: power_and_labor
+- **Examples**: 43 instances
 
 
 ## Argumentative Structures
 
 ### Common Argument Patterns
+#### "The genome sequence of the Tenthredid wasp, Eutomo..."
+- **Occurrences**: 1
+- **Evidence Types**: 
+- **Discourse Markers**: thus
+
+#### "Quantifying the uncertainty of molecular dynamics ..."
+- **Occurrences**: 1
+- **Evidence Types**: 
+- **Discourse Markers**: thus
+
 #### "Thus we argue for a shift in emphasis from asympto..."
 - **Occurrences**: 1
 - **Evidence Types**: 
-- **Discourse Markers**: thus, often, but, yet
+- **Discourse Markers**: but, thus, yet, often
 
 #### "Therefore, this study aims to characterize these i..."
 - **Occurrences**: 1
 - **Evidence Types**: 
-- **Discourse Markers**: often, therefore, however, but
+- **Discourse Markers**: however, but, therefore, often
 
 #### "Reliable deployment therefore requires robust OOD ..."
 - **Occurrences**: 1
 - **Evidence Types**: 
-- **Discourse Markers**: generally, but, yet, therefore
-
-#### "However, these oscillations -- which can be exacer..."
-- **Occurrences**: 1
-- **Evidence Types**: 
-- **Discourse Markers**: thus, however
-
-#### "Plate designs must therefore deconvolve this techn..."
-- **Occurrences**: 1
-- **Evidence Types**: 
-- **Discourse Markers**: therefore, may, however, but
+- **Discourse Markers**: but, yet, generally, therefore
 
 
 ## Rhetorical Strategies
 
 ### Persuasive Techniques Used
 #### Authority
-- **Frequency**: 11
-- **Examples**: 11 instances
-
-#### Analogy
 - **Frequency**: 10
 - **Examples**: 10 instances
 
+#### Analogy
+- **Frequency**: 12
+- **Examples**: 12 instances
+
 #### Generalization
-- **Frequency**: 3
-- **Examples**: 3 instances
+- **Frequency**: 4
+- **Examples**: 4 instances
 
 #### Anecdotal
-- **Frequency**: 58
-- **Examples**: 56 instances
+- **Frequency**: 56
+- **Examples**: 54 instances
 
 
 ## Narrative Frameworks
 
 ### Story Patterns in Scientific Writing
 #### Progress Narrative
-- **Occurrences**: 66
-- **Examples**: 66 text segments
+- **Occurrences**: 69
+- **Examples**: 69 text segments
 
 #### Conflict Narrative
 - **Occurrences**: 15
 - **Examples**: 15 text segments
 
 #### Discovery Narrative
-- **Occurrences**: 83
-- **Examples**: 83 text segments
+- **Occurrences**: 86
+- **Examples**: 86 text segments
 
 #### Complexity Narrative
-- **Occurrences**: 47
-- **Examples**: 47 text segments
+- **Occurrences**: 48
+- **Examples**: 48 text segments
 
 
 ## Persuasive Techniques
@@ -102,13 +102,13 @@ This report analyzes discourse patterns, rhetorical strategies, and argumentativ
 - **Count**: 1
 
 #### Metaphorical Language
-- **Count**: 58
+- **Count**: 62
 
 #### Quantitative Emphasis
 - **Count**: 2
 
 #### Authoritative Citations
-- **Count**: 11
+- **Count**: 10
 
 
 ## Implications for Scientific Communication

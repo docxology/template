@@ -4,7 +4,7 @@
       "exists": true,
       "file_count": 9,
       "size_mb": "1.24",
-      "total_size_bytes": 1302418,
+      "total_size_bytes": 1303043,
       "largest_files": [
         {
           "name": "ento_linguistics_combined.pdf",
@@ -64,7 +64,7 @@
       "exists": true,
       "file_count": 92,
       "size_mb": "2.84",
-      "total_size_bytes": 2980438,
+      "total_size_bytes": 2976864,
       "largest_files": [
         {
           "name": "04_experimental_results_slides.pdf",
@@ -96,8 +96,8 @@
     "figures": {
       "exists": true,
       "file_count": 37,
-      "size_mb": "4.45",
-      "total_size_bytes": 4664157,
+      "size_mb": "4.42",
+      "total_size_bytes": 4639468,
       "largest_files": [
         {
           "name": "domain_comparison.png",
@@ -106,12 +106,12 @@
         },
         {
           "name": "step_size_analysis.png",
-          "size_mb": "0.34",
+          "size_mb": "0.33",
           "path": "figures/step_size_analysis.png"
         },
         {
           "name": "terminology_network.png",
-          "size_mb": "0.31",
+          "size_mb": "0.32",
           "path": "figures/terminology_network.png"
         }
       ],
@@ -124,12 +124,12 @@
     "data": {
       "exists": true,
       "file_count": 12,
-      "size_mb": "0.55",
-      "total_size_bytes": 572603,
+      "size_mb": "0.57",
+      "total_size_bytes": 592466,
       "largest_files": [
         {
           "name": "literature_corpus.json",
-          "size_mb": "0.42",
+          "size_mb": "0.44",
           "path": "data/literature_corpus.json"
         },
         {
@@ -153,7 +153,7 @@
       "exists": true,
       "file_count": 20,
       "size_mb": "0.05",
-      "total_size_bytes": 54952,
+      "total_size_bytes": 54896,
       "largest_files": [
         {
           "name": "validation_report.json",
@@ -208,7 +208,7 @@
       "exists": true,
       "file_count": 6,
       "size_mb": "0.05",
-      "total_size_bytes": 53049,
+      "total_size_bytes": 52407,
       "largest_files": [
         {
           "name": "combined_review.md",
@@ -241,7 +241,7 @@
     }
   },
   "total_files": 193,
-  "total_size_mb": 9.408592224121094,
+  "total_size_mb": 9.400511741638184,
   "largest_files": [
     {
       "name": "ento_linguistics_combined.pdf",
@@ -263,7 +263,7 @@
     },
     {
       "name": "literature_corpus.json",
-      "size_mb": "0.42",
+      "size_mb": "0.44",
       "category": "data",
       "path": "data/literature_corpus.json"
     },
@@ -275,13 +275,13 @@
     },
     {
       "name": "step_size_analysis.png",
-      "size_mb": "0.34",
+      "size_mb": "0.33",
       "category": "figures",
       "path": "figures/step_size_analysis.png"
     },
     {
       "name": "terminology_network.png",
-      "size_mb": "0.31",
+      "size_mb": "0.32",
       "category": "figures",
       "path": "figures/terminology_network.png"
     },
@@ -327,14 +327,14 @@
     ".csv": 4
   },
   "sizes_by_category": {
-    "pdf": 1.2420825958251953,
+    "pdf": 1.2426786422729492,
     "web": 0.17747974395751953,
-    "slides": 2.842367172241211,
-    "figures": 4.448086738586426,
-    "data": 0.546076774597168,
-    "reports": 0.05240631103515625,
+    "slides": 2.838958740234375,
+    "figures": 4.424541473388672,
+    "data": 0.5650196075439453,
+    "reports": 0.0523529052734375,
     "simulations": 0.04950141906738281,
-    "llm": 0.050591468811035156,
+    "llm": 0.049979209899902344,
     "logs": 0.0
   },
   "pdf_files": 9,

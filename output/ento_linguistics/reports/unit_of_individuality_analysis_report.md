@@ -1,6 +1,6 @@
 # Unit Of Individuality Domain Analysis
 
-**Analysis Date:** 2026-01-04T17:19:43.907009
+**Analysis Date:** 2026-01-05T08:12:41.718262
 **Domain:** unit_of_individuality
 **Terms Analyzed:** 3
 
@@ -11,9 +11,9 @@ This report presents a detailed analysis of the Unit Of Individuality domain wit
 ## Key Terminology
 
 ### Most Frequent Terms
-- **colony**: 9 occurrences
-- **colony-stimulating**: 2 occurrences
+- **colony**: 7 occurrences
 - **eusocial**: 2 occurrences
+- **colony-stimulating**: 2 occurrences
 
 ### Term Patterns
 - compound: 1 instances
@@ -50,9 +50,9 @@ The following assumptions are embedded in the terminology used in this domain:
 ## Detailed Term Analysis
 
 ### Term-by-Term Breakdown
-#### colony\n- **Frequency**: 9\n- **Contexts**: 5\n- **Domains**: unit_of_individuality\n- **Sample Usage**: based improved ant **colony** optimization algorithm r-tree\n
-#### colony-stimulating\n- **Frequency**: 2\n- **Contexts**: 2\n- **Domains**: unit_of_individuality\n- **Sample Usage**: successful treatment granulocyte **colony-stimulating** factor-related aortitis prostate\n
+#### colony\n- **Frequency**: 7\n- **Contexts**: 5\n- **Domains**: unit_of_individuality\n- **Sample Usage**: improved artificial bee **colony** algorithm path relinking\n
 #### eusocial\n- **Frequency**: 2\n- **Contexts**: 2\n- **Domains**: unit_of_individuality\n- **Sample Usage**: artificial light phototaxis **eusocial** non-**eusocial** bees webster\n
+#### colony-stimulating\n- **Frequency**: 2\n- **Contexts**: 2\n- **Domains**: unit_of_individuality\n- **Sample Usage**: successful treatment granulocyte **colony-stimulating** factor-related aortitis prostate\n
 
 ## Implications for Research
 

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  4 JAN 2026 17:11
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  5 JAN 2026 08:02
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1329,7 +1329,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.133 \end{frame}
+l.136 \end{frame}
                  
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -1338,26 +1338,72 @@ Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping
 ex-text;!
 Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.136 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
 ex-text;!
 Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.136 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜋 (U+1D70B) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ⁿ (U+207F) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ⁿ (U+207F) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.136 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.136 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.136 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no ∣ (U+2223) in font [lmsans10-regular]:mapping=te
 x-text;!
 
@@ -1367,7 +1413,7 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.133 \end{frame}
+l.136 \end{frame}
                  
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -1381,17 +1427,37 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.133 \end{frame}
+l.136 \end{frame}
                  
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
 
-Overfull \vbox (33.84879pt too high) detected at line 133
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.136 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.136 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \vbox (33.84879pt too high) detected at line 136
  []
 
 
@@ -1401,18 +1467,44 @@ Overfull \vbox (33.84879pt too high) detected at line 133
 ]
 Missing character: There is no 𝜆 (U+1D706) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.153 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝛩 (U+1D6E9) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.153 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.153 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 
 
 [3
@@ -1425,13 +1517,23 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.177 \end{frame}
+l.180 \end{frame}
                  
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.180 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 
 ! LaTeX Error: \symcalallowed only in math mode.
 
@@ -1439,17 +1541,37 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.177 \end{frame}
+l.180 \end{frame}
                  
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.180 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜙 (U+1D719) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.180 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 
 
 [4
@@ -1466,17 +1588,25 @@ See the LaTeX manual or LaTeX Companion for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.223 \end{frame}
+l.227 \end{frame}
                  
 You're in trouble here.  Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 Missing character: There is no ⋅ (U+22C5) in font [lmsans10-regular]:mapping=te
 x-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.227 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜎 (U+1D70E) in font [lmsans10-regular]:mapping=t
 ex-text;!
 Missing character: There is no ⋅ (U+22C5) in font [lmsans10-regular]:mapping=te
@@ -1488,30 +1618,74 @@ x-text;!
 [6
 
 ]
-Missing character: There is no ℕ (U+2115) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.245 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜏 (U+1D70F) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℕ (U+2115) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.245 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝜂 (U+1D702) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.245 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝛼 (U+1D6FC) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.245 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 Missing character: There is no 𝛽 (U+1D6FD) in font [lmsans10-regular]:mapping=t
 ex-text;!
-Missing character: There is no ℝ (U+211D) in font [lmsans10-regular]:mapping=te
-x-text;!
-Missing character: There is no ⁺ (U+207A) in font [lmsans10-regular]:mapping=te
-x-text;!
+
+! LaTeX Error: \symbballowed only in math mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.245 \end{frame}
+                 
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
 
 
 [7
@@ -1537,7 +1711,7 @@ L3 programming layer <2025-01-18>
 Here is how much of TeX's memory you used:
  30806 strings out of 473832
  619024 string characters out of 5729482
- 1159432 words of memory out of 5000000
+ 1159431 words of memory out of 5000000
  53364 multiletter control sequences out of 15000+600000
  559505 words of font info for 47 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

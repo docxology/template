@@ -234,36 +234,49 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <script defer=""
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
-  type="text/javascript"></script>
 </head>
 <body>
 <h1 id="sec:supplemental_methods">Supplemental Methods</h1>
 <p>This supplemental section provides methodological details, including
 generative model specifications, mathematical derivations, and
-implementation algorithms.</p>
+implementation algorithms. These materials support the main text by
+providing complete technical specifications that enable replication and
+extension of the quadrant structure analysis.</p>
 <h2 id="sec:complete_generative_models">Generative Model
 Specifications</h2>
 <h3 id="matrix-a-observation-likelihoods">Matrix A: Observation
 Likelihoods</h3>
 <p>The observation likelihood matrix defines the probabilistic mapping
 from hidden states to observations:</p>
-<p><strong>Normalization:</strong> Each column sums to 1, representing a
-valid probability distribution over observations for each state.</p>
+<p><strong>Normalization:</strong> Each column sums to 1: (_i A[i,j] =
+1) for all (j), representing a valid probability distribution over
+observations for each state. This ensures that for any hidden state
+(s_j), the probabilities of all possible observations sum to 1.</p>
 <p><strong>Interpretation:</strong> - Rows correspond to observation
-modalities - Columns correspond to hidden state conditions - Entry
-(A[i,j]) represents the probability of observing (o_i) given state
-(s_j)</p>
+modalities (different types of sensory inputs: visual, auditory,
+tactile, etc.) - Columns correspond to hidden state conditions
+(different possible world states: object present/absent, temperature
+high/low, etc.) - Entry (A[i,j]) represents the probability of observing
+(o_i) given state (s_j), encoding how reliably observations indicate
+underlying states - High diagonal values ((A[i,i])) indicate reliable
+observations (state (s_i) strongly predicts observation (o_i)) -
+Non-zero off-diagonal values indicate observation ambiguity (multiple
+states can produce the same observation, creating uncertainty)</p>
 <h3 id="matrix-b-state-transition-dynamics">Matrix B: State Transition
 Dynamics</h3>
 <p>The transition matrix defines how actions influence state
 changes:</p>
-<p><strong>Structure:</strong> 3D tensor with dimensions [n_states,
-n_states, n_actions]</p>
-<p><strong>Properties:</strong> - Each B[:,:,a] is a stochastic matrix
-(rows sum to 1) - Enables modeling of controllable state transitions -
-Different actions can implement different transition dynamics</p>
+<p><strong>Structure:</strong> 3D tensor with dimensions ( ), where each
+slice (B[:,:,a]) is a (n_{} n_{}) transition matrix for action (a).</p>
+<p><strong>Properties:</strong> - Each (B[:,:,a]) is a stochastic
+matrix: (_j B[i,j,a] = 1) for all (i, a), ensuring valid probability
+distributions over next states - Enables modeling of controllable state
+transitions: different actions lead to different transition
+probabilities - Different actions can implement different transition
+dynamics: action (a_1) might make certain transitions likely while
+action (a_2) makes different transitions likely - The tensor structure
+allows modeling of how the same action can have different effects
+depending on the current state</p>
 <h3 id="matrix-c-preference-landscape">Matrix C: Preference
 Landscape</h3>
 <p>The preference matrix defines the desirability of different
@@ -302,23 +315,17 @@ Expansion</h3>
 Inference</h3>
 <p>Incorporate observation confidence into belief updating:</p>
 <p>[q(s o,c) q(s) A(o s) w(c)]</p>
-<p>Where w(c) is a confidence-dependent weighting function:</p>
-[w(c) =
-<span class="math display">\[\begin{cases}
-c &amp; \text{if } c &gt; \theta \\
-\frac{\theta}{2} &amp; \text{if } c \leq \theta
-\end{cases}\]</span>
-<p>]</p>
+<p>Where (w(c)) is a confidence-dependent weighting function:</p>
 <h3 id="temporal-meta-data-processing">Temporal Meta-Data
 Processing</h3>
 <p>Incorporate temporal consistency information:</p>
 <p>[q(s_t o_{1:t}, m_t) q(s_t o_t) (m_t s_{t-1})]</p>
-<p>Where ϕ represents temporal meta-data likelihood.</p>
+<p>Where () represents temporal meta-data likelihood.</p>
 <h3 id="multi-source-meta-data-fusion">Multi-Source Meta-Data
 Fusion</h3>
 <p>Combine multiple meta-data sources:</p>
 <p>[w_{combined} = _{k=1}^K w_k(m_k)]</p>
-<p>Where each w_k represents a different meta-data weighting
+<p>Where each (w_k) represents a different meta-data weighting
 function.</p>
 <h2 id="sec:meta_cognitive_algorithms">Meta-Cognitive Control
 Algorithms</h2>
@@ -370,8 +377,9 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a hr
 <h3 id="meta-parameter-learning">Meta-Parameter Learning</h3>
 <p>Optimize framework parameters using performance feedback:</p>
 <p>[^* = <em>{} </em>{data} [p(data|) - complexity()]]</p>
-<p>Where Θ includes: - Confidence thresholds - Adaptation rates -
-Strategy selection parameters - Meta-data weighting functions</p>
+<p>Where () includes framework parameters: - Confidence thresholds (_c)
+- Adaptation rates () - Strategy selection parameters () - Meta-data
+weighting functions (w_k)</p>
 <h3 id="hierarchical-optimization">Hierarchical Optimization</h3>
 <p>Multi-level optimization for complex systems:</p>
 <ol type="1">
@@ -385,8 +393,8 @@ long-term adaptation</li>
 <h3 id="gradient-based-meta-learning">Gradient-Based Meta-Learning</h3>
 <p>Use gradient information for framework adaptation:</p>
 <p>[ = -_{} (performance, )]</p>
-<p>Where () measures performance degradation due to suboptimal framework
-parameters.</p>
+<p>Where ((, )) measures performance degradation due to suboptimal
+framework parameters ().</p>
 <h2 id="sec:implementation_validation">Implementation Validation</h2>
 <h3 id="numerical-stability-tests">Numerical Stability Tests</h3>
 <ul>
@@ -427,7 +435,7 @@ solutions</li>
 <li><strong>EFE Calculation:</strong> (O(n_{} n_{} ))</li>
 <li><strong>Inference:</strong> (O(n_{} n_{}))</li>
 <li><strong>Meta-Cognitive Assessment:</strong> (O(n_{}))</li>
-<li><strong>Framework Optimization:</strong> (O( ))</li>
+<li><strong>Framework Optimization:</strong> (O( n_{}))</li>
 </ul>
 <h3 id="space-complexity">Space Complexity</h3>
 <ul>

@@ -1,6 +1,6 @@
 # Behavior And Identity Domain Analysis
 
-**Analysis Date:** 2026-01-04T17:19:44.288220
+**Analysis Date:** 2026-01-05T08:12:42.118278
 **Domain:** behavior_and_identity
 **Terms Analyzed:** 4
 
@@ -11,10 +11,10 @@ This report presents a detailed analysis of the Behavior And Identity domain wit
 ## Key Terminology
 
 ### Most Frequent Terms
-- **behavior**: 23 occurrences
-- **behavioral**: 12 occurrences
-- **behaviors**: 4 occurrences
-- **foraging**: 3 occurrences
+- **behavior**: 22 occurrences
+- **behavioral**: 14 occurrences
+- **behaviors**: 6 occurrences
+- **foraging**: 4 occurrences
 
 ### Term Patterns
 
@@ -51,10 +51,10 @@ The following assumptions are embedded in the terminology used in this domain:
 ## Detailed Term Analysis
 
 ### Term-by-Term Breakdown
-#### behavior\n- **Frequency**: 23\n- **Contexts**: 5\n- **Domains**: behavior_and_identity\n- **Sample Usage**: intensity modulates locomotor **behavior** predation different color\n
-#### behavioral\n- **Frequency**: 12\n- **Contexts**: 5\n- **Domains**: behavior_and_identity\n- **Sample Usage**: **behavioral** epileptic phenotypes chd2-related\n
-#### behaviors\n- **Frequency**: 4\n- **Contexts**: 4\n- **Domains**: behavior_and_identity\n- **Sample Usage**: investigating high-order **behaviors** multivariate cardiovascular interactions\n
-#### foraging\n- **Frequency**: 3\n- **Contexts**: 3\n- **Domains**: behavior_and_identity\n- **Sample Usage**: climate variability benthic **foraging** marine predator bartes\n
+#### behavior\n- **Frequency**: 22\n- **Contexts**: 5\n- **Domains**: behavior_and_identity\n- **Sample Usage**: intensity modulates locomotor **behavior** predation different color\n
+#### behavioral\n- **Frequency**: 14\n- **Contexts**: 5\n- **Domains**: behavior_and_identity\n- **Sample Usage**: **behavioral** epileptic phenotypes chd2-related\n
+#### behaviors\n- **Frequency**: 6\n- **Contexts**: 5\n- **Domains**: behavior_and_identity\n- **Sample Usage**: mutant strains vaccination **behaviors** focus recent epidemiological\n
+#### foraging\n- **Frequency**: 4\n- **Contexts**: 4\n- **Domains**: behavior_and_identity\n- **Sample Usage**: without disrupting parasitoid **foraging** behaviour jianye z\n
 
 ## Implications for Research
 

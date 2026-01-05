@@ -122,8 +122,8 @@ formalism used to model the world, creating recursive self-reference:
 
 \[q_{self}(s_{self} \mid o_{self}) \propto p_{self}(o_{self} \mid s_{self}) \cdot q_{self}(s_{self})\label{eq:self_modeling}\]
 
-Where the system uses its own generative model to infer its own internal
-states from self-observations.
+In Equation \eqref{eq:self_modeling}, the system uses its own generative
+model to infer its own internal states from self-observations.
 \end{block}
 
 \begin{block}{Framework Coherence}
@@ -140,8 +140,8 @@ coherence - Meta-cognitive processes must align with cognitive processes
 
 \[\frac{d\Theta}{dt} = -\eta \cdot \nabla_{\Theta} \mathcal{L}(\Theta) + \lambda \cdot \mathcal{R}(\Theta)\label{eq:adaptation_dynamics}\]
 
-Where (\mathcal{R}(\Theta)) ensures framework coherence during
-adaptation.
+In Equation \eqref{eq:adaptation_dynamics}, (\mathcal{R}(\Theta))
+ensures framework coherence during adaptation.
 \end{block}
 \end{block}
 
@@ -213,8 +213,8 @@ processing:
 \times n\_\{\text{metadata}\})) - polynomial with metadata - Quadrant 3:
 (O(n\_\{\text{states}\} \times n\_\{\text{actions}\}
 \times n\_\{\text{strategies}\})) - polynomial with strategies -
-Quadrant 4: (O(\text{iterations} \times n\_\{\text{parameters}\}
-\times \text{complexity})) - optimization-dependent
+Quadrant 4: (O(\text{iterations} \times n\_\{\text{parameters}\})) -
+optimization-dependent
 
 \textbf{Approximation Strategies:} - Variational approximations for
 large state spaces - Sparse representations for high-dimensional models
