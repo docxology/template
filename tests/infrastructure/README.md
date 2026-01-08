@@ -1,6 +1,6 @@
 # tests/infrastructure/ - Infrastructure Module Tests
 
-Comprehensive test suite for reusable infrastructure modules (60%+ coverage required).
+test suite for reusable infrastructure modules (60%+ coverage required).
 
 ## Quick Start
 
@@ -62,6 +62,6 @@ pytest tests/infrastructure/validation/ -v
 
 ## See Also
 
-- [`AGENTS.md`](AGENTS.md) - Complete documentation
+- [`AGENTS.md`](AGENTS.md) - documentation
 - [`../../infrastructure/README.md`](../../infrastructure/README.md) - Module overview
 

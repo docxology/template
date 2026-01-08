@@ -23,7 +23,7 @@ print(f"Optimal solution: {result.solution}")
 - **Gradient descent** optimization algorithm
 - **Quadratic function** evaluation and gradients
 - **Reproducible results** with deterministic behavior
-- **Type-safe** with comprehensive type hints
+- **Type-safe** with type hints
 
 ## Common Commands
 
@@ -59,4 +59,4 @@ graph TD
 
 ## More Information
 
-See [AGENTS.md](AGENTS.md) for complete technical documentation.
+See [AGENTS.md](AGENTS.md) for technical documentation.

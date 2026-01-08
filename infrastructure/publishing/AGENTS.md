@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Publishing module provides comprehensive tools for academic publishing workflows. It enables DOI management, citation generation in multiple formats, publication metadata extraction, and automated publishing to major academic platforms (Zenodo, arXiv, GitHub).
+The Publishing module provides tools for academic publishing workflows. It enables DOI management, citation generation in multiple formats, publication metadata extraction, and automated publishing to major academic platforms (Zenodo, arXiv, GitHub).
 
 ## Architecture
 
@@ -98,7 +98,7 @@ Publishing module is used by:
 - Verify markdown files contain required metadata fields
 - Check YAML frontmatter format is correct
 - Ensure author information is properly formatted
-- Review config.yaml for complete metadata
+- Review config.yaml for metadata
 - Check file encoding (UTF-8 required)
 
 ### DOI Validation Errors
@@ -162,7 +162,7 @@ Publishing module is used by:
 
 ### Metadata Management
 
-- **Complete Metadata**: Include all required fields in config.yaml
+- **Metadata**: Include all required fields in config.yaml
 - **Version Control**: Keep metadata in version-controlled config file
 - **Consistent Formatting**: Use consistent author name formatting
 - **Validate Early**: Validate metadata before publishing

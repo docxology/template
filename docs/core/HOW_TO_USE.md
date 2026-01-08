@@ -1,12 +1,12 @@
 # 🚀 HOW TO USE: Research Project Template
 
-> **Complete Usage Guide** - Navigation hub for all skill levels
+> **Usage Guide** - Navigation hub for all skill levels
 
 This is the **master navigation guide** for using the Research Project Template. Whether you're just getting started or building advanced research workflows, this guide will direct you to the right resources.
 
-## 📚 Complete Guide Organization
+## 📚 Guide Organization
 
-The complete guide is organized into **skill-level focused documents**:
+The guide is organized into **skill-level focused documents**:
 
 - **[Levels 1-3](#levels-1-3-getting-started)**: Just write documents (no programming)
 - **[Levels 4-6](#levels-4-6-intermediate-usage)**: Add figures and automation
@@ -41,23 +41,23 @@ Plus:
 3. **Install dependencies**: `uv sync`
 4. **Generate your first document**: `python3 scripts/execute_pipeline.py --core-only`
 
-That's it! You now have a complete research project structure.
+That's it! You now have a research project structure.
 
 ### What You Get Immediately
 
-- ✅ **Complete project structure** with clear organization
+- ✅ **project structure** with clear organization
 - ✅ **Professional PDF generation** from markdown
 - ✅ **Cross-referencing system** for equations and figures
 - ✅ **Automated testing** framework (2118 tests: 1796 infrastructure [2 skipped] + 320 project, all passing)
 - ✅ **Build pipeline** that validates everything (58-second builds)
 - ✅ **Terminal output logging** - all pipeline output saved to timestamped log files
-- ✅ **25+ comprehensive guides** for all skill levels
+- ✅ **25+ guides** for all skill levels
 
 ## 📖 Guides by Skill Level
 
 ### Levels 1-3: Getting Started
 
-**Perfect for**: Users who just want to write documents without programming
+**for**: Users who just want to write documents without programming
 
 **[📘 Read Getting Started Guide](../guides/GETTING_STARTED.md)**
 
@@ -76,7 +76,7 @@ That's it! You now have a complete research project structure.
 
 ### Levels 4-6: Intermediate Usage
 
-**Perfect for**: Users ready to add custom figures and automation
+**for**: Users ready to add custom figures and automation
 
 **[📗 Read Figures and Analysis Guide](../guides/FIGURES_AND_ANALYSIS.md)**
 
@@ -85,40 +85,40 @@ That's it! You now have a complete research project structure.
 - Understand the thin orchestrator pattern
 - Add new Python modules with testing
 - Create data analysis pipelines
-- Automate complete workflows
+- Automate workflows
 
 **Time**: 1-2 days
 
 **Skills required**: Basic Python, matplotlib knowledge
 
-**Prerequisites**: Complete [Getting Started Guide](../guides/GETTING_STARTED.md)
+**Prerequisites**: [Getting Started Guide](../guides/GETTING_STARTED.md)
 
 ---
 
 ### Levels 7-9: Advanced Usage
 
-**Perfect for**: Developers ready for test-driven development
+**for**: Developers ready for test-driven development
 
 **[📕 Read Testing and Reproducibility Guide](../guides/TESTING_AND_REPRODUCIBILITY.md)**
 
 **What you'll learn**:
 - Practice test-driven development (TDD)
-- Achieve and maintain comprehensive test coverage
+- Achieve and maintain test coverage
 - Build complex mathematical workflows
-- Implement comprehensive testing strategies
+- Implement testing strategies
 - Ensure reproducible research results
 
 **Time**: 1-2 weeks
 
 **Skills required**: Strong Python, testing knowledge
 
-**Prerequisites**: Complete [Figures and Analysis Guide](../guides/FIGURES_AND_ANALYSIS.md)
+**Prerequisites**: [Figures and Analysis Guide](../guides/FIGURES_AND_ANALYSIS.md)
 
 ---
 
 ### Levels 10-12: Expert Usage
 
-**Perfect for**: Expert developers building custom systems
+**for**: Expert developers building custom systems
 
 **[📙 Read Extending and Automation Guide](../guides/EXTENDING_AND_AUTOMATION.md)**
 
@@ -134,7 +134,7 @@ That's it! You now have a complete research project structure.
 
 **Skills required**: Expert Python, DevOps, system design
 
-**Prerequisites**: Complete [Testing and Reproducibility Guide](../guides/TESTING_AND_REPRODUCIBILITY.md)
+**Prerequisites**: [Testing and Reproducibility Guide](../guides/TESTING_AND_REPRODUCIBILITY.md)
 
 ---
 
@@ -143,12 +143,12 @@ That's it! You now have a complete research project structure.
 ### Quick Start Cheatsheet
 **[📋 One-page essential commands](../reference/QUICK_START_CHEATSHEET.md)**
 
-Essential commands, quick syntax reference, troubleshooting, and decision tree. Perfect for bookmarking.
+Essential commands, quick syntax reference, troubleshooting, and decision tree. for bookmarking.
 
 ### Common Workflows
 **[📝 Step-by-step recipes](../reference/COMMON_WORKFLOWS.md)**
 
-Complete workflows for common tasks:
+workflows for common tasks:
 - Write your first document
 - Add a new section
 - Create a figure with data
@@ -166,11 +166,11 @@ Complete workflows for common tasks:
 ### Glossary
 **[📖 Terms and definitions](../reference/GLOSSARY.md)**
 
-Comprehensive glossary of all terms and concepts used in the template. Alphabetically organized with cross-references.
+glossary of all terms and concepts used in the template. Alphabetically organized with cross-references.
 
 ---
 
-## 🗺️ Complete Learning Path
+## 🗺️ Learning Path
 
 ```
 Level 1-3: Getting Started (2-3 hours)
@@ -229,17 +229,17 @@ Level 10-12: Expert Usage (1-2 months)
 ## 📚 Related Documentation
 
 ### Core Documentation
-- **[AGENTS.md](../AGENTS.md)** - Complete system reference
+- **[AGENTS.md](../AGENTS.md)** - system reference
 - **[Architecture](../core/ARCHITECTURE.md)** - System design
 - **[Thin Orchestrator Pattern](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Core pattern
 - **[Workflow](../core/WORKFLOW.md)** - Development process
 
 ### Build System
-- **[Build System](../operational/BUILD_SYSTEM.md)** - Complete reference (status, performance, fixes)
+- **[Build System](../operational/BUILD_SYSTEM.md)** - reference (status, performance, fixes)
 - **[PDF Validation](../modules/PDF_VALIDATION.md)** - Quality checks
 
 ### Writing & Formatting
-- **[Markdown Template Guide](../usage/MARKDOWN_TEMPLATE_GUIDE.md)** - Complete formatting reference
+- **[Markdown Template Guide](../usage/MARKDOWN_TEMPLATE_GUIDE.md)** - formatting reference
 - **[Manuscript Numbering](../usage/MANUSCRIPT_NUMBERING_SYSTEM.md)** - Section organization
 - **[LaTeX Preamble](../../projects_archive/ento_linguistics/manuscript/preamble.md)** - Styling configuration example
 
@@ -256,13 +256,13 @@ Level 10-12: Expert Usage (1-2 months)
 - **[Roadmap](../development/ROADMAP.md)** - Future plans
 
 ### Reference
-- **[Documentation Index](../DOCUMENTATION_INDEX.md)** - Complete index
+- **[Documentation Index](../DOCUMENTATION_INDEX.md)** - index
 - **[Copypasta](../reference/COPYPASTA.md)** - Shareable content
-- **[API Reference](../reference/API_REFERENCE.md)** - Complete API documentation
+- **[API Reference](../reference/API_REFERENCE.md)** - API documentation
 - **[Best Practices](../best-practices/BEST_PRACTICES.md)** - Consolidated best practices
 
 ### Advanced Topics
-- **[Two-Layer Architecture](../architecture/TWO_LAYER_ARCHITECTURE.md)** - Complete architecture guide
+- **[Two-Layer Architecture](../architecture/TWO_LAYER_ARCHITECTURE.md)** - architecture guide
 - **[Modules Guide](../modules/MODULES_GUIDE.md)** - Using all 7 modules
 - **[Dependency Management](../operational/DEPENDENCY_MANAGEMENT.md)** - uv package manager guide
 - **[CI/CD Integration](../operational/CI_CD_INTEGRATION.md)** - GitHub Actions setup
@@ -273,7 +273,7 @@ Level 10-12: Expert Usage (1-2 months)
 
 Having issues? Here's where to look:
 
-1. **[Troubleshooting Guide](../operational/TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting
+1. **[Troubleshooting Guide](../operational/TROUBLESHOOTING_GUIDE.md)** - troubleshooting
 2. **[FAQ](../reference/FAQ.md)** - Common questions and solutions
 3. **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step help
 4. **[Quick Start Cheatsheet](../reference/QUICK_START_CHEATSHEET.md)** - Quick troubleshooting section

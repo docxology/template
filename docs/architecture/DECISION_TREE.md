@@ -244,7 +244,7 @@ def plot_experimental_results(
 
 ## Practical Workflow
 
-### Starting a New Feature
+### Starting a Feature
 
 **Feature:** Add convergence analysis with custom stopping criterion
 

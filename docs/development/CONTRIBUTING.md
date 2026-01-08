@@ -14,7 +14,7 @@ The best way to contribute is to **use this template** for your own research pro
 
 ### 🔧 **Code Contributions**
 - **Bug fixes** for any issues you encounter
-- **New features** that would benefit all users
+- **features** that would benefit all users
 - **Improvements** to existing functionality
 - **Tests** to ensure code quality
 
@@ -60,7 +60,7 @@ pytest --cov=src --cov-report=html
 - **Keep functions focused** and single-purpose
 
 ### 📚 **Documentation**
-- **Update README.md** if adding new features
+- **Update README.md** if adding features
 - **Add docstrings** to new functions
 - **Update relevant guides** in the docs/ directory
 - **Include examples** for new functionality
@@ -117,7 +117,7 @@ python3 scripts/execute_pipeline.py --core-only
 
 ### 🔧 **Medium Priority**
 - **New utility functions** that benefit many users
-- **Enhanced error handling** and user feedback
+- **error handling** and user feedback
 - **Additional output formats** (HTML, Word, etc.)
 - **Integration examples** with popular tools
 

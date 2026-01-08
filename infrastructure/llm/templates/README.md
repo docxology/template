@@ -25,7 +25,7 @@ review = template.generate_review(
 
 ### Manuscript Review Template
 
-Comprehensive manuscript review:
+manuscript review:
 
 ```python
 from infrastructure.llm.templates import ManuscriptReviewTemplate
@@ -220,7 +220,7 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete templates documentation
+- [AGENTS.md](AGENTS.md) - templates documentation
 - [../core/README.md](../core/README.md) - LLM core functionality
 - [../prompts/README.md](../prompts/README.md) - Prompt system
 - [../review/README.md](../review/README.md) - Review generation

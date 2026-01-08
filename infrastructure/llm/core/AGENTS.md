@@ -316,7 +316,7 @@ def test_generation_options_conversion():
 **End-to-End Query Testing:**
 ```python
 def test_llm_client_query_integration():
-    """Test complete LLM query workflow."""
+    """Test LLM query workflow."""
     # This would require a mock Ollama server
     # Tests connection, request formatting, response processing
 

@@ -51,7 +51,7 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 ### Generative Models (`src/generative_models.py`)
 **Purpose**: Probabilistic generative model implementations (A, B, C, D matrices)
 **Key Classes**:
-- `GenerativeModel`: Complete generative model with matrix validation
+- `GenerativeModel`: generative model with matrix validation
 **Key Methods**:
 - `predict_observations()`: Forward prediction P(o|s)
 - `predict_state_transition()`: Transition prediction P(s'|s,a)
@@ -78,7 +78,7 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 - `specify_epistemic_framework()`: Epistemic boundary definition
 - `specify_pragmatic_framework()`: Pragmatic landscape specification
 - `analyze_self_reflective_modeling()`: Recursive self-modeling analysis
-- `synthesize_meta_theoretical_perspective()`: Complete meta-theory synthesis
+- `synthesize_meta_theoretical_perspective()`: meta-theory synthesis
 **Validation**: Framework consistency and recursive logic
 
 ## Analysis Scripts
@@ -87,7 +87,7 @@ This project implements Active Inference as a meta-(pragmatic/epistemic) methodo
 All scripts follow the thin orchestrator pattern: import business logic from `src/` modules, handle I/O and coordination only.
 
 ### Pipeline Scripts
-- `analysis_pipeline.py`: Complete workflow orchestration (6 stages)
+- `analysis_pipeline.py`: workflow orchestration (6 stages)
 - `generate_quadrant_matrix.py`: Quadrant visualization with detailed annotations
 - `generate_active_inference_concepts.py`: Core concept visualizations (EFE, perception-action loop, generative models)
 - `generate_fep_visualizations.py`: Free Energy Principle diagrams (system boundaries, minimization dynamics)
@@ -116,7 +116,7 @@ from utils.figure_manager import FigureManager
 ### Coverage Requirements
 - **Project Code**: 90% minimum coverage (currently 91.44% achieved)
 - **Utilities**: Local utilities with basic functionality
-- **No Mocks Policy**: All tests use real data and computations
+- **No Mocks Policy**: All tests use data and computations
 - **Theoretical Validation**: Mathematics correctness verification
 
 ### Test Categories
@@ -159,7 +159,7 @@ from utils.figure_manager import FigureManager
 
 ### Performance Benchmarks
 - **Runtime**: EFE calculation < 50ms for typical models
-- **Memory**: < 10MB for complete analysis pipeline
+- **Memory**: < 10MB for analysis pipeline
 - **Scalability**: Handles models up to 1000+ states
 - **Accuracy**: 99%+ theoretical correctness on validation suite
 
@@ -172,8 +172,8 @@ from utils.figure_manager import FigureManager
 4. Update manuscript sections with new analysis
 
 ### Integrating New Theories
-1. Create new module in `src/` following established patterns
-2. Add comprehensive tests with 90%+ coverage
+1. Create module in `src/` following established patterns
+2. Add tests with 90%+ coverage
 3. Integrate with existing visualization framework
 4. Update manuscript with theoretical integration
 
@@ -199,18 +199,18 @@ from utils.figure_manager import FigureManager
 
 ## Development Workflow
 
-### Adding New Features
+### Adding Features
 1. Implement in appropriate `src/` module with type hints and docstrings
-2. Add comprehensive tests achieving 90%+ coverage
+2. Add tests achieving 90%+ coverage
 3. Update visualization scripts if needed
 4. Integrate with analysis pipeline
 5. Update manuscript and documentation
-6. Validate complete system functionality
+6. Validate system functionality
 
 ### Code Quality Standards
-- **Type Hints**: All public APIs must have complete type annotations
+- **Type Hints**: All public APIs must have type annotations
 - **Documentation**: Google-style docstrings with theoretical context
-- **Testing**: Comprehensive test suite with real data (no mocks)
+- **Testing**: test suite with data (no mocks)
 - **Style**: Black formatting with 88-character line limits
 - **Imports**: Absolute imports with proper module organization
 
@@ -219,6 +219,6 @@ from utils.figure_manager import FigureManager
 2. **Integration Tests**: Cross-module interaction verification
 3. **Theoretical Validation**: Mathematical correctness checking
 4. **Performance Testing**: Runtime and memory benchmarking
-5. **Rendering Validation**: Complete manuscript processing verification
+5. **Rendering Validation**: manuscript processing verification
 
-This comprehensive framework provides a solid foundation for implementing, validating, and extending Active Inference as a meta-(pragmatic/epistemic) methodology, with rigorous theoretical foundations and practical implementation quality.
+This framework provides a solid foundation for implementing, validating, and extending Active Inference as a meta-(pragmatic/epistemic) methodology, with rigorous theoretical foundations and practical implementation quality.

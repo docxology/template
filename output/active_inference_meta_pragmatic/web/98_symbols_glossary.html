@@ -169,6 +169,9 @@
       vertical-align: middle;
     }
   </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
 </head>
 <body>
 <h1 id="sec:symbols_glossary">Symbols and Notation</h1>
@@ -189,49 +192,54 @@ Notation</h2>
 </thead>
 <tbody>
 <tr>
-<td>(())</td>
-<td>Expected Free Energy for policy ()</td>
-<td>()</td>
+<td><span class="math inline">\(\mathcal{F}(\pi)\)</span></td>
+<td>Expected Free Energy for policy <span
+class="math inline">\(\pi\)</span></td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
 </tr>
 <tr>
-<td>(G())</td>
-<td>Pragmatic value of policy ()</td>
-<td>()</td>
+<td><span class="math inline">\(G(\pi)\)</span></td>
+<td>Pragmatic value of policy <span
+class="math inline">\(\pi\)</span></td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
 </tr>
 <tr>
-<td>(H[Q()])</td>
+<td><span class="math inline">\(H[Q(\pi)]\)</span></td>
 <td>Epistemic affordance (information gain)</td>
-<td>()</td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
 </tr>
 <tr>
-<td>(q(s))</td>
+<td><span class="math inline">\(q(s)\)</span></td>
 <td>Posterior beliefs over hidden states</td>
-<td>(^n)</td>
+<td><span class="math inline">\(\mathbb{R}^n\)</span></td>
 </tr>
 <tr>
-<td>(p(s))</td>
+<td><span class="math inline">\(p(s)\)</span></td>
 <td>Prior beliefs over hidden states</td>
-<td>(^n)</td>
+<td><span class="math inline">\(\mathbb{R}^n\)</span></td>
 </tr>
 <tr>
-<td>(A)</td>
-<td>Observation likelihood matrix (P(o s))</td>
-<td>(^{m n})</td>
+<td><span class="math inline">\(A\)</span></td>
+<td>Observation likelihood matrix <span class="math inline">\(P(o \mid
+s)\)</span></td>
+<td><span class="math inline">\(\mathbb{R}^{m \times n}\)</span></td>
 </tr>
 <tr>
-<td>(B)</td>
-<td>State transition matrix (P(s’ s, a))</td>
-<td>(^{n n k})</td>
+<td><span class="math inline">\(B\)</span></td>
+<td>State transition matrix <span class="math inline">\(P(s&#39; \mid s,
+a)\)</span></td>
+<td><span class="math inline">\(\mathbb{R}^{n \times n \times
+k}\)</span></td>
 </tr>
 <tr>
-<td>(C)</td>
+<td><span class="math inline">\(C\)</span></td>
 <td>Preference matrix (log priors over observations)</td>
-<td>(^m)</td>
+<td><span class="math inline">\(\mathbb{R}^m\)</span></td>
 </tr>
 <tr>
-<td>(D)</td>
+<td><span class="math inline">\(D\)</span></td>
 <td>Prior beliefs over initial states</td>
-<td>(^n)</td>
+<td><span class="math inline">\(\mathbb{R}^n\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -246,24 +254,24 @@ Notation</h2>
 </thead>
 <tbody>
 <tr>
-<td>(c)</td>
+<td><span class="math inline">\(c\)</span></td>
 <td>Confidence score</td>
-<td>([0,1])</td>
+<td><span class="math inline">\([0,1]\)</span></td>
 </tr>
 <tr>
-<td>()</td>
+<td><span class="math inline">\(\lambda\)</span></td>
 <td>Meta-cognitive weighting factor</td>
-<td>(^+)</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
 </tr>
 <tr>
-<td>()</td>
+<td><span class="math inline">\(\Theta\)</span></td>
 <td>Framework parameters</td>
-<td>(^d)</td>
+<td><span class="math inline">\(\mathbb{R}^d\)</span></td>
 </tr>
 <tr>
-<td>(w(m))</td>
+<td><span class="math inline">\(w(m)\)</span></td>
 <td>Meta-data weighting function</td>
-<td>(^+)</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
 </tr>
 </tbody>
 </table>
@@ -283,22 +291,22 @@ Notation</h2>
 </thead>
 <tbody>
 <tr>
-<td>()</td>
+<td><span class="math inline">\(\mathcal{F}\)</span></td>
 <td>Variational free energy</td>
-<td>()</td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
 </tr>
 <tr>
-<td>()</td>
+<td><span class="math inline">\(\mathcal{S}\)</span></td>
 <td>Surprise (-log evidence)</td>
-<td>()</td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
 </tr>
 <tr>
-<td>()</td>
+<td><span class="math inline">\(\phi\)</span></td>
 <td>System parameters</td>
-<td>(^p)</td>
+<td><span class="math inline">\(\mathbb{R}^p\)</span></td>
 </tr>
 <tr>
-<td>(p(o,s))</td>
+<td><span class="math inline">\(p(o,s)\)</span></td>
 <td>Joint distribution over observations and states</td>
 <td>Probability space</td>
 </tr>
@@ -320,22 +328,22 @@ Notation</h2>
 </thead>
 <tbody>
 <tr>
-<td>(Q1)</td>
+<td><span class="math inline">\(Q1\)</span></td>
 <td>Data processing (cognitive) quadrant</td>
 <td>Framework element</td>
 </tr>
 <tr>
-<td>(Q2)</td>
+<td><span class="math inline">\(Q2\)</span></td>
 <td>Meta-data organization (cognitive) quadrant</td>
 <td>Framework element</td>
 </tr>
 <tr>
-<td>(Q3)</td>
+<td><span class="math inline">\(Q3\)</span></td>
 <td>Reflective processing (meta-cognitive) quadrant</td>
 <td>Framework element</td>
 </tr>
 <tr>
-<td>(Q4)</td>
+<td><span class="math inline">\(Q4\)</span></td>
 <td>Higher-order reasoning (meta-cognitive) quadrant</td>
 <td>Framework element</td>
 </tr>
@@ -352,22 +360,22 @@ Notation</h2>
 </thead>
 <tbody>
 <tr>
-<td>([])</td>
+<td><span class="math inline">\(\mathbb{E}[\cdot]\)</span></td>
 <td>Expectation operator</td>
 <td>Functional</td>
 </tr>
 <tr>
-<td>(KL[p|q])</td>
+<td><span class="math inline">\(KL[p\|q]\)</span></td>
 <td>Kullback-Leibler divergence</td>
-<td>(^+)</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
 </tr>
 <tr>
-<td>(())</td>
+<td><span class="math inline">\(\sigma(\cdot)\)</span></td>
 <td>Softmax function</td>
 <td>Mapping to probabilities</td>
 </tr>
 <tr>
-<td>()</td>
+<td><span class="math inline">\(\nabla\)</span></td>
 <td>Gradient operator</td>
 <td>Functional</td>
 </tr>
@@ -384,29 +392,29 @@ Notation</h2>
 </thead>
 <tbody>
 <tr>
-<td>(t)</td>
+<td><span class="math inline">\(t\)</span></td>
 <td>Time step</td>
-<td>()</td>
+<td><span class="math inline">\(\mathbb{N}\)</span></td>
 </tr>
 <tr>
-<td>()</td>
+<td><span class="math inline">\(\tau\)</span></td>
 <td>Temporal horizon</td>
-<td>()</td>
+<td><span class="math inline">\(\mathbb{N}\)</span></td>
 </tr>
 <tr>
-<td>()</td>
+<td><span class="math inline">\(\eta\)</span></td>
 <td>Learning rate</td>
-<td>(^+)</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
 </tr>
 <tr>
-<td>()</td>
+<td><span class="math inline">\(\alpha\)</span></td>
 <td>Adaptation rate</td>
-<td>(^+)</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
 </tr>
 <tr>
-<td>()</td>
+<td><span class="math inline">\(\beta\)</span></td>
 <td>Feedback strength</td>
-<td>(^+)</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
 </tr>
 </tbody>
 </table>

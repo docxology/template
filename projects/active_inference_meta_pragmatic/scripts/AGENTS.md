@@ -40,9 +40,9 @@ def main():
 
 ## Pipeline Architecture
 
-### Complete Analysis Pipeline (`analysis_pipeline.py`)
+### Analysis Pipeline (`analysis_pipeline.py`)
 
-**Purpose**: Orchestrates the complete analysis workflow with 6 stages
+**Purpose**: Orchestrates the analysis workflow with 6 stages
 
 **Stages**:
 1. **Theoretical Demonstrations**: Generate concept demonstrations using `src/` modules
@@ -55,7 +55,7 @@ def main():
 **Key Features**:
 - Modular stage execution
 - Progress tracking and error handling
-- Comprehensive logging
+- logging
 - Output organization
 - Cross-stage data flow
 
@@ -80,7 +80,7 @@ def main():
 
 **Outputs**:
 - `efe_decomposition.png/pdf`: EFE component breakdown
-- `perception_action_loop.png/pdf`: Complete AI cycle
+- `perception_action_loop.png/pdf`: AI cycle
 - `generative_model_structure.png/pdf`: A, B, C, D matrix relationships
 - `meta_level_concepts.png/pdf`: Meta-epistemic/pragmatic concepts
 
@@ -104,7 +104,7 @@ def main():
 
 **Outputs**:
 - `quadrant_1_data_cognitive.png/pdf`: Basic EFE processing
-- `quadrant_2_metadata_cognitive.png/pdf`: Meta-data enhanced processing
+- `quadrant_2_metadata_cognitive.png/pdf`: Meta-data processing
 - `quadrant_3_data_metacognitive.png/pdf`: Self-reflective processing
 - `quadrant_4_metadata_metacognitive.png/pdf`: Higher-order reasoning
 
@@ -232,7 +232,7 @@ def multi_step_process():
 # Register figures for manuscript cross-referencing
 fig_meta = figure_manager.register_figure(
     filename="figure_name.png",
-    caption="Complete figure caption for manuscript",
+    caption="figure caption for manuscript",
     section="methodology",  # or "experimental_results", etc.
     generated_by="script_name.py",
     parameters={"key": "value"}  # Optional metadata
@@ -296,7 +296,7 @@ def main():
 ### Adding New Scripts
 1. Follow thin orchestrator pattern strictly
 2. Use established path setup and imports
-3. Include comprehensive logging and error handling
+3. Include logging and error handling
 4. Register all generated figures
 5. Add appropriate tests
 6. Update this documentation
@@ -310,7 +310,7 @@ def main():
 
 ### Script Quality Standards
 - **No Business Logic**: All algorithms in `src/` modules
-- **Comprehensive Logging**: Progress and error reporting
+- **Logging**: Progress and error reporting
 - **Error Handling**: Graceful failure with informative messages
 - **Documentation**: Clear docstrings and comments
 - **Testing**: Integration tests for orchestration logic
@@ -332,7 +332,7 @@ python scripts/script_name.py
 # Run specific stages
 python projects/active_inference_meta_pragmatic/scripts/analysis_pipeline.py --stages 2
 
-# Run complete pipeline
+# Run pipeline
 python projects/active_inference_meta_pragmatic/scripts/analysis_pipeline.py
 ```
 

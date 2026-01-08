@@ -6,7 +6,7 @@
 
 ## Overview
 
-The `docs/prompts/` directory contains specialized prompt templates designed to guide AI assistants and developers in creating work that fully complies with the template's comprehensive standards and architecture. Each prompt leverages specific documentation sources to ensure high-quality, standards-compliant output.
+The `docs/prompts/` directory contains specialized prompt templates designed to guide AI assistants and developers in creating work that complies with the template's standards and architecture. Each prompt leverages specific documentation sources to ensure high-quality, standards-compliant output.
 
 ## Architecture Integration
 
@@ -17,7 +17,7 @@ All prompts enforce the template's two-layer architecture:
 **Infrastructure Layer (Generic)**
 - Reusable across research projects
 - Domain-independent utilities
-- Comprehensive testing (60%+ coverage)
+- testing (60%+ coverage)
 - Stable, version-controlled APIs
 
 **Project Layer (Domain-Specific)**
@@ -80,9 +80,9 @@ Links to relevant docs
 ### Manuscript Creation Prompt (`manuscript_creation.md`)
 
 **Technical Details:**
-- **Target:** Complete manuscript generation from research description
+- **Target:** manuscript generation from research description
 - **Complexity:** High - requires understanding of full research workflow
-- **Output:** Complete manuscript structure with all sections
+- **Output:** manuscript structure with all sections
 
 **Documentation Leveraged:**
 - [`../../projects/project/docs/manuscript_style_guide.md`](../../projects/project/docs/manuscript_style_guide.md) - Section numbering, cross-references, equation formatting
@@ -100,7 +100,7 @@ Links to relevant docs
 **Architecture Compliance:**
 - Generates project structure following two-layer architecture
 - Includes scripts for analysis workflows
-- Creates tests with real data (no mocks)
+- Creates tests with data (no mocks)
 - Produces documentation following AGENTS.md patterns
 
 ### Code Development Prompt (`code_development.md`)
@@ -121,31 +121,31 @@ Links to relevant docs
 - Logging using unified `get_logger(__name__)` system
 - Code style following Black formatting and isort
 - API design with consistent signatures and keyword-only parameters
-- Comprehensive docstrings (Google-style)
+- docstrings (Google-style)
 
 **Architecture Compliance:**
 - Places code in appropriate layer (infrastructure vs project)
 - Follows thin orchestrator pattern for scripts
-- Includes comprehensive testing with real data
-- Provides complete documentation (AGENTS.md, README.md)
+- Includes testing with data
+- Provides documentation (AGENTS.md, README.md)
 
 ### Test Creation Prompt (`test_creation.md`)
 
 **Technical Details:**
-- **Target:** Comprehensive test suite creation
+- **Target:** test suite creation
 - **Complexity:** Medium - requires understanding of testing standards
-- **Output:** Complete test suite with high coverage
+- **Output:** test suite with high coverage
 
 **Documentation Leveraged:**
 - [`../../projects/project/docs/testing_expansion_plan.md`](../../projects/project/docs/testing_expansion_plan.md) - Testing expansion strategy
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing standards and no-mocks policy
 
 **Key Requirements Enforced:**
-- **No Mocks Policy:** Real data testing only (pytest-httpserver for HTTP)
+- **No Mocks Policy:** data testing only (pytest-httpserver for HTTP)
 - **Coverage Requirements:** 90% project, 60% infrastructure minimum
 - **Test Organization:** Clear structure with fixtures and parametrization
 - **TDD Approach:** Tests written before/alongside code
-- **Real Data Patterns:** Use actual datasets, not synthetic mocks
+- **Data Patterns:** Use actual datasets, not synthetic mocks
 
 **Architecture Compliance:**
 - Tests appropriate layer (infrastructure vs project tests)
@@ -180,19 +180,19 @@ Links to relevant docs
 ### Feature Addition Prompt (`feature_addition.md`)
 
 **Technical Details:**
-- **Target:** New feature development with architecture compliance
+- **Target:** feature development with architecture compliance
 - **Complexity:** High - requires understanding of full development workflow
-- **Output:** Complete feature implementation with all supporting elements
+- **Output:** feature implementation with all supporting elements
 
 **Documentation Leveraged:**
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Complete development workflow
+- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - development workflow
 - [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - Architecture principles
 - [`../../docs/core/WORKFLOW.md`](../../docs/core/WORKFLOW.md) - Development workflow
 
 **Key Requirements Enforced:**
 - **Two-Layer Architecture:** Correct layer placement (infrastructure vs project)
 - **Thin Orchestrator Pattern:** Proper separation of computation and coordination
-- **Complete Workflow:** Planning through validation
+- **Workflow:** Planning through validation
 - **Testing Requirements:** 90% coverage for project features, 60% for infrastructure
 - **Documentation:** AGENTS.md, README.md, and inline documentation
 
@@ -207,14 +207,14 @@ Links to relevant docs
 **Technical Details:**
 - **Target:** Standards-compliant documentation creation
 - **Complexity:** Medium - requires understanding of documentation standards
-- **Output:** Complete AGENTS.md and README.md files
+- **Output:** AGENTS.md and README.md files
 
 **Documentation Leveraged:**
 - [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) - Documentation writing standards
 - [`../../docs/AGENTS.md`](../../docs/AGENTS.md) - Documentation organization guide
 
 **Key Requirements Enforced:**
-- **AGENTS.md Structure:** Comprehensive technical documentation with all required sections
+- **AGENTS.md Structure:** technical documentation with all required sections
 - **README.md Pattern:** Quick reference with Mermaid diagrams
 - **Code Documentation:** Google-style docstrings with examples
 - **Cross-References:** Proper linking between documents using relative paths
@@ -231,7 +231,7 @@ Links to relevant docs
 **Technical Details:**
 - **Target:** Generic, reusable infrastructure module development
 - **Complexity:** High - requires understanding of infrastructure standards
-- **Output:** Production-ready infrastructure module with comprehensive testing
+- **Output:** Production-ready infrastructure module with testing
 
 **Documentation Leveraged:**
 - [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
@@ -240,9 +240,9 @@ Links to relevant docs
 **Key Requirements Enforced:**
 - **Generic Focus:** Reusable across research projects, domain-independent
 - **60% Coverage:** Minimum test coverage requirement
-- **Public API:** Clear `__init__.py` exports, comprehensive documentation
+- **Public API:** Clear `__init__.py` exports, documentation
 - **Error Handling:** Custom exceptions with proper context
-- **Type Hints:** Complete type annotations on all APIs
+- **Type Hints:** type annotations on all APIs
 
 **Architecture Compliance:**
 - Strictly infrastructure layer (generic utilities)
@@ -255,7 +255,7 @@ Links to relevant docs
 **Technical Details:**
 - **Target:** Quality assurance and validation procedures
 - **Complexity:** Medium - requires understanding of validation frameworks
-- **Output:** Comprehensive validation and quality assessment
+- **Output:** validation and quality assessment
 
 **Documentation Leveraged:**
 - [`../../projects/project/docs/validation_guide.md`](../../projects/project/docs/validation_guide.md) - Validation procedures
@@ -265,7 +265,7 @@ Links to relevant docs
 - **Input Validation:** Data quality and format compliance checking
 - **Process Validation:** Workflow correctness and error handling
 - **Output Validation:** Result quality and format standards
-- **Quality Metrics:** Comprehensive assessment frameworks
+- **Quality Metrics:** assessment frameworks
 - **Validation Reporting:** Clear error reporting and recommendations
 
 **Architecture Compliance:**
@@ -279,7 +279,7 @@ Links to relevant docs
 ### Development Phase Integration
 
 **Phase 1: Planning**
-- Use `feature_addition.md` for new feature planning
+- Use `feature_addition.md` for feature planning
 - Use `infrastructure_module.md` for infrastructure planning
 - Use `manuscript_creation.md` for new project planning
 
@@ -305,14 +305,13 @@ Each prompt includes verification checklists:
 - [ ] API design consistency
 
 **Testing Standards:**
-- [ ] No mocks policy (real data only)
+- [ ] No mocks policy (data only)
 - [ ] Coverage requirements met (90% project, 60% infrastructure)
 - [ ] Test organization (fixtures, parametrization)
 - [ ] TDD approach followed
 
 **Documentation Standards:**
-- [ ] AGENTS.md structure complete
-- [ ] README.md with Mermaid diagrams
+- [ ] AGENTS.md structure - [ ] README.md with Mermaid diagrams
 - [ ] Cross-references working
 - [ ] Examples runnable and accurate
 
@@ -417,7 +416,7 @@ prompt_validation:
 **Prompt Structure Consistency:**
 - All prompts follow identical structure for predictability
 - Documentation references use relative paths for portability
-- Requirements checklists ensure comprehensive coverage
+- Requirements checklists ensure coverage
 - Examples demonstrate practical application
 
 **Standards Integration:**

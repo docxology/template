@@ -1,6 +1,6 @@
 # Scientific Infrastructure Tests - Quick Reference
 
-Comprehensive tests for scientific computing utilities.
+tests for scientific computing utilities.
 
 ## Overview
 
@@ -112,6 +112,6 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete test documentation
+- [AGENTS.md](AGENTS.md) - test documentation
 - [../../infrastructure/scientific/README.md](../../infrastructure/scientific/README.md) - Scientific module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

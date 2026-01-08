@@ -6,7 +6,7 @@
 
 ## Purpose
 
-The `docs/` directory contains comprehensive project documentation organized by purpose and audience. This is the central hub for all project documentation beyond code comments.
+The `docs/` directory contains project documentation organized by purpose and audience. This is the central hub for all project documentation beyond code comments.
 
 ## Documentation Organization
 
@@ -16,7 +16,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| `core/HOW_TO_USE.md` | Complete usage guide from basic to advanced | New users, developers |
+| `core/HOW_TO_USE.md` | usage guide from basic to advanced | New users, developers |
 | `core/ARCHITECTURE.md` | System design and structure | Developers, architects |
 | `core/WORKFLOW.md` | Development workflow and best practices | Developers |
 
@@ -33,7 +33,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| `architecture/TWO_LAYER_ARCHITECTURE.md` | Complete two-layer architecture guide | Developers, architects |
+| `architecture/TWO_LAYER_ARCHITECTURE.md` | two-layer architecture guide | Developers, architects |
 | `architecture/THIN_ORCHESTRATOR_SUMMARY.md` | Architecture pattern details | Developers |
 | `architecture/DECISION_TREE.md` | Code placement decisions | Developers |
 
@@ -52,7 +52,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 | File | Purpose | Audience |
 |------|---------|----------|
 | `operational/BUILD_SYSTEM.md` | Build pipeline and execution details | Developers |
-| `operational/TROUBLESHOOTING_GUIDE.md` | Comprehensive troubleshooting | All users |
+| `operational/TROUBLESHOOTING_GUIDE.md` | troubleshooting | All users |
 | `operational/CONFIGURATION.md` | Configuration system guide | All users |
 
 ### Reference Materials (`reference/`)
@@ -60,7 +60,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 | File | Purpose | Audience |
 |------|---------|----------|
 | `reference/FAQ.md` | Frequently asked questions | All users |
-| `reference/API_REFERENCE.md` | Complete API documentation | Developers |
+| `reference/API_REFERENCE.md` | API documentation | Developers |
 | `reference/GLOSSARY.md` | Terms and definitions | All users |
 | `reference/QUICK_START_CHEATSHEET.md` | Essential commands reference | All users |
 | `reference/../reference/COMMON_WORKFLOWS.md` | Step-by-step workflow recipes | All users |
@@ -99,11 +99,11 @@ Documentation is organized into modular subdirectories by purpose and audience:
 |------|---------|----------|
 | `prompts/README.md` | Quick reference guide for all prompts | All users |
 | `prompts/AGENTS.md` | Technical documentation for prompt templates | Developers |
-| `prompts/manuscript_creation.md` | Complete manuscript creation from research description | Researchers |
+| `prompts/manuscript_creation.md` | manuscript creation from research description | Researchers |
 | `prompts/code_development.md` | Standards-compliant code development | Developers |
-| `prompts/test_creation.md` | Comprehensive test creation (no mocks) | Developers |
+| `prompts/test_creation.md` | test creation (no mocks) | Developers |
 | `prompts/refactoring.md` | Clean break code refactoring | Developers |
-| `prompts/feature_addition.md` | New feature development with architecture compliance | Developers |
+| `prompts/feature_addition.md` | feature development with architecture compliance | Developers |
 | `prompts/documentation_creation.md` | AGENTS.md and README.md creation | Technical writers |
 | `prompts/infrastructure_module.md` | Generic infrastructure module development | Architects |
 | `prompts/validation_quality.md` | Quality assurance and validation | QA engineers |
@@ -114,22 +114,22 @@ The `.cursorrules/` directory contains modular development rules that complement
 
 | Rule Module | Focus Area |
 |-------------|-----------|
-| [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) | Complete overview and navigation guide |
-| [`../.cursorrules/README.md`](../.cursorrules/README.md) | Quick reference and patterns |
-| [`../.cursorrules/error_handling.md`](../.cursorrules/error_handling.md) | Exception handling patterns |
-| [`../.cursorrules/security.md`](../.cursorrules/security.md) | Security standards and guidelines |
-| [`../.cursorrules/python_logging.md`](../.cursorrules/python_logging.md) | Logging standards and best practices |
-| [`../.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md) | Infrastructure module development |
-| [`../.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md) | Testing patterns and coverage standards |
-| [`../.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md) | AGENTS.md and README.md writing guide |
-| [`../.cursorrules/type_hints_standards.md`](../.cursorrules/type_hints_standards.md) | Type annotation patterns |
-| [`../.cursorrules/llm_standards.md`](../.cursorrules/llm_standards.md) | LLM/Ollama integration patterns |
-| [`../.cursorrules/code_style.md`](../.cursorrules/code_style.md) | Code formatting and style standards |
-| [`../.cursorrules/git_workflow.md`](../.cursorrules/git_workflow.md) | Git workflow and commit standards |
-| [`../.cursorrules/api_design.md`](../.cursorrules/api_design.md) | API design and interface standards |
-| [`../.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md) | Manuscript formatting and style standards |
+| [`../../.cursorrules/AGENTS.md`](../../.cursorrules/AGENTS.md) | Overview and navigation guide |
+| [`../../.cursorrules/README.md`](../../.cursorrules/README.md) | Quick reference and patterns |
+| [`../../.cursorrules/error_handling.md`](../../.cursorrules/error_handling.md) | Exception handling patterns |
+| [`../../.cursorrules/security.md`](../../.cursorrules/security.md) | Security standards and guidelines |
+| [`../../.cursorrules/python_logging.md`](../../.cursorrules/python_logging.md) | Logging standards and best practices |
+| [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) | Infrastructure module development |
+| [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) | Testing patterns and coverage standards |
+| [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) | AGENTS.md and README.md writing guide |
+| [`../../.cursorrules/type_hints_standards.md`](../../.cursorrules/type_hints_standards.md) | Type annotation patterns |
+| [`../../.cursorrules/llm_standards.md`](../../.cursorrules/llm_standards.md) | LLM/Ollama integration patterns |
+| [`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md) | Code formatting and style standards |
+| [`../../.cursorrules/git_workflow.md`](../../.cursorrules/git_workflow.md) | Git workflow and commit standards |
+| [`../../.cursorrules/api_design.md`](../../.cursorrules/api_design.md) | API design and interface standards |
+| [`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md) | Manuscript formatting and style standards |
 
-**Quick Access**: Use `.cursorrules/` files for rule reference during development; consult `docs/` files for comprehensive guides.
+**Quick Access**: Use `.cursorrules/` files for rule reference during development; consult `docs/` files for guides.
 
 ## Documentation Philosophy
 
@@ -144,7 +144,7 @@ Documentation should demonstrate through examples rather than lengthy explanatio
 ### Layered Information
 - **README.md**: Quick start, essential links
 - **core/HOW_TO_USE.md**: Step-by-step usage
-- **AGENTS.md**: Complete technical reference
+- **AGENTS.md**: technical reference
 - **Specialized docs**: Deep dives into specific topics (organized by subdirectory)
 
 ### Keep Current
@@ -225,12 +225,12 @@ See https://pandoc.org/MANUAL.html
 - > Blockquotes for important notes
 
 ### Examples
-Always include complete, runnable examples:
+Always include, runnable examples:
 ```bash
 # Bad: Incomplete example
 pytest tests/
 
-# Good: Complete with output
+# Good: with output
 $ pytest tests/ --cov=src
 ===== Coverage: 100% =====
 ```
@@ -279,7 +279,7 @@ usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
   - reference/FAQ.md (troubleshooting)
 
 - **core/ARCHITECTURE.md** references:
-  - architecture/TWO_LAYER_ARCHITECTURE.md (complete architecture guide)
+  - architecture/TWO_LAYER_ARCHITECTURE.md (architecture guide)
   - architecture/THIN_ORCHESTRATOR_SUMMARY.md (pattern details)
   - core/WORKFLOW.md (how to work with architecture)
   - ../../infrastructure/AGENTS.md (infrastructure implementation details)
@@ -308,7 +308,7 @@ usage/EXAMPLES.md  core/WORKFLOW.md    Technical Docs
 
 ### Documentation Checklist
 - [ ] Clear purpose stated at the top
-- [ ] Examples are complete and runnable
+- [ ] Examples are and runnable
 - [ ] Links use relative paths for internal docs
 - [ ] Code blocks specify language
 - [ ] Headings are hierarchical
@@ -338,7 +338,7 @@ Master index of all documentation:
 
 ### For New Users
 1. Start with `../README.md` (project overview)
-2. Read `core/HOW_TO_USE.md` (complete guide)
+2. Read `core/HOW_TO_USE.md` (guide)
 3. Review `usage/EXAMPLES.md` (usage patterns)
 4. Check `reference/FAQ.md` (common questions)
 
@@ -356,8 +356,8 @@ Master index of all documentation:
 
 ## See Also
 
-- [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) - Complete documentation index
-- [`core/HOW_TO_USE.md`](core/HOW_TO_USE.md) - Comprehensive usage guide
+- [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) - documentation index
+- [`core/HOW_TO_USE.md`](core/HOW_TO_USE.md) - usage guide
 - [`../AGENTS.md`](../AGENTS.md) - Root system documentation
 - [`../README.md`](../README.md) - Project overview
 

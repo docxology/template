@@ -4,48 +4,39 @@ Research manuscript for "Active Inference as a Meta-Pragmatic and Meta-Epistemic
 
 ## Manuscript Structure
 
-This project includes the following sections:
+### Main Sections
 
-### Main Sections (01-09)
-- `01_abstract.md` - Research overview and key contributions
-- `02_introduction.md` - Motivation, background, and research questions
-- `03_methodology.md` - Core 2×2 framework and theoretical development
-- `04_experimental_results.md` - Quadrant demonstrations and validation
-- `05_discussion.md` - Theoretical implications and interpretations
-- `06_conclusion.md` - Summary, contributions, and future directions
-- `08_acknowledgments.md` - Funding and acknowledgments
-- `09_appendix.md` - Technical details and extended derivations
+| Section | File | Description |
+|---------|------|-------------|
+| Abstract | `01_abstract.md` | Research overview and key contributions |
+| **Background** | `02_background.md` | FEP, EFE, generative models, meta-aspects |
+| **Quadrant Model** | `03_quadrant_model.md` | 2×2 framework with inline visualizations |
+| **Security** | `04_security_implications.md` | Cognitive security and AI safety |
+| **Discussion** | `05_discussion.md` | Implications, limitations, conclusions |
+| Acknowledgments | `06_acknowledgments.md` | Credits and acknowledgments |
+| Appendix | `07_appendix.md` | Technical details and derivations |
 
-### Supplemental Sections (S01-S03)
-- `S01_supplemental_methods.md` - Extended methodological details
-- `S02_supplemental_results.md` - Additional examples and analysis
-- `S03_supplemental_analysis.md` - Advanced theoretical analysis
+### Reference Sections
 
-### Reference Sections (98-99)
 - `98_symbols_glossary.md` - Mathematical notation and symbols
-- `99_references.bib` - Bibliography in BibTeX format
+- `99_references.md` - Bibliography references
 
 ### Configuration Files
+
 - `config.yaml` - Paper metadata and rendering configuration
 - `preamble.md` - LaTeX preamble customizations
+- `references.bib` - BibTeX bibliography
 
-## Rendering Process
+## Key Features
 
-The manuscript is rendered through these stages:
+- **Consolidated 4-section structure** (Background, Quadrant Model, Security, Discussion)
+- **Inline figures** placed with their introductions, not at document end
+- **LaTeX mathematical notation** (equations, matrices, cross-references)
+- **Academic citations** via BibTeX
 
-1. **Discovery**: All `.md` files are discovered and categorized
-2. **Individual Rendering**: Each section rendered to PDF separately
-3. **Combination**: All sections combined into single manuscript PDF
-4. **Output**: Generated files placed in `../../output/pdf/`
-
-View detailed rendering logs to see which sections were included.
-
-## Quick Start
+## Rendering
 
 ```bash
-# Edit manuscript sections
-vim 03_methodology.md
-
 # Generate PDF
 python3 ../../scripts/03_render_pdf.py --project active_inference_meta_pragmatic
 
@@ -53,30 +44,8 @@ python3 ../../scripts/03_render_pdf.py --project active_inference_meta_pragmatic
 open ../../output/active_inference_meta_pragmatic/pdf/active_inference_meta_pragmatic_combined.pdf
 ```
 
-## Key Features
+## Validation
 
-- **Academic paper structure** (abstract, introduction, methods, results, discussion, conclusion)
-- **LaTeX mathematical notation** (equations, matrices, cross-references)
-- **Cross-references** to figures, equations, and sections
-- **BibTeX bibliography** with academic citations
-- **Supplemental materials** for extended analysis
-
-## Common Commands
-
-### Edit Sections
-```bash
-vim 01_abstract.md       # Research summary
-vim 03_methodology.md   # Theoretical framework
-vim 04_experimental_results.md  # Demonstrations
-vim 05_discussion.md     # Implications
-```
-
-### Generate PDF
-```bash
-python3 ../../scripts/03_render_pdf.py --project active_inference_meta_pragmatic
-```
-
-### Validate Content
 ```bash
 python3 -m infrastructure.validation.cli markdown .
 ```
@@ -86,17 +55,16 @@ python3 -m infrastructure.validation.cli markdown .
 ```mermaid
 graph TD
     A[01_abstract.md] --> B[Research Overview]
-    C[02_introduction.md] --> D[Background & Motivation]
-    E[03_methodology.md] --> F[2×2 Framework]
-    G[04_experimental_results.md] --> H[Quadrant Demonstrations]
-    I[05_discussion.md] --> J[Theoretical Implications]
-    K[06_conclusion.md] --> L[Summary & Future Work]
+    C[02_background.md] --> D[FEP + EFE + Models + Meta-Aspects]
+    E[03_quadrant_model.md] --> F[2×2 Framework + Q1-Q4 Demos]
+    G[04_security_implications.md] --> H[Vulnerabilities + Defenses + AI Safety]
+    I[05_discussion.md] --> J[Implications + Conclusions]
     
-    M[S01-S03] --> N[Supplemental Materials]
-    O[98_symbols_glossary.md] --> P[Mathematical Notation]
-    Q[99_references.bib] --> R[Bibliography]
+    K[06_acknowledgments.md] --> L[Credits]
+    M[07_appendix.md] --> N[Technical Details]
+    O[99_references.md] --> P[Bibliography]
 ```
 
 ## More Information
 
-See [AGENTS.md](AGENTS.md) for complete technical documentation.
+See [AGENTS.md](AGENTS.md) for technical documentation.

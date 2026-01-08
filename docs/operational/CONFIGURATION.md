@@ -1,6 +1,6 @@
 # Configuration Guide
 
-> **Complete reference** for all configuration options and environment variables
+> **reference** for all configuration options and environment variables
 
 **Quick Reference:** [Troubleshooting Guide](../operational/TROUBLESHOOTING_GUIDE.md) | [Performance Optimization](../operational/PERFORMANCE_OPTIMIZATION.md) | [Build System](../operational/BUILD_SYSTEM.md)
 
@@ -148,7 +148,7 @@ def risky_operation():
 
 ### LLM Integration
 
-See [LLM Configuration](../../infrastructure/llm/README.md) for complete options.
+See [LLM Configuration](../../infrastructure/llm/README.md) for options.
 
 **Key Variables:**
 - `OLLAMA_HOST` - Ollama server URL (default: `http://localhost:11434`)

@@ -21,7 +21,7 @@ infrastructure/llm/prompts/
 │   ├── system_prompts.json         # System-level instructions
 │   ├── token_budget_awareness.json  # Token usage optimization
 │   └── validation_hints.json       # Input validation guidance
-└── templates/             # Complete prompt templates
+└── templates/             # prompt templates
     ├── manuscript_reviews.json     # Review generation templates
     └── paper_summarization.json    # Summarization templates
 ```
@@ -46,7 +46,7 @@ class PromptComposer:
 
     def compose_prompt(self, template_name: str, variables: Dict[str, Any],
                       options: CompositionOptions = None) -> str:
-        """Compose a complete prompt from template and variables.
+        """Compose a prompt from template and variables.
 
         Process:
         1. Load template structure
@@ -61,7 +61,7 @@ class PromptComposer:
             options: Composition options
 
         Returns:
-            Complete assembled prompt
+            assembled prompt
         """
 ```
 
@@ -192,7 +192,7 @@ class PromptLoader:
 
 #### Template Validation
 
-**Comprehensive Template Validation:**
+**Template Validation:**
 ```python
 def validate_template(self, template: Dict[str, Any]) -> None:
     """Validate template structure and content."""
@@ -227,7 +227,7 @@ def validate_template(self, template: Dict[str, Any]) -> None:
 **Quality and completeness requirements:**
 ```json
 {
-  "content": "Ensure your response demonstrates:\n- Deep understanding of the subject matter\n- Clear and logical reasoning\n- Evidence-based conclusions\n- Appropriate level of technical detail\n- Comprehensive coverage of key aspects\n- Balanced perspective on limitations and assumptions"
+  "content": "Ensure your response demonstrates:\n- Deep understanding of the subject matter\n- Clear and logical reasoning\n- Evidence-based conclusions\n- Appropriate level of technical detail\n- coverage of key aspects\n- Balanced perspective on limitations and assumptions"
 }
 ```
 
@@ -335,7 +335,7 @@ def _compose_fragments(self, fragment_names: List[str]) -> str:
 ```json
 {
   "name": "manuscript_reviews",
-  "description": "Comprehensive manuscript review template",
+  "description": "manuscript review template",
   "version": "1.0",
   "variables": {
     "manuscript_content": {
@@ -416,7 +416,7 @@ def test_fragment_loading():
 **Prompt Assembly Tests:**
 ```python
 def test_prompt_composition():
-    """Test complete prompt composition workflow."""
+    """Test prompt composition workflow."""
 
     composer = PromptComposer()
 
@@ -451,7 +451,7 @@ def test_variable_substitution():
 
     result = composer._substitute_variables(template_parts, variables)
 
-    assert result[0] == "Review type: comprehensive"
+    assert result[0] == "Review type:"
     assert result[1] == "Content: test content"
 ```
 
@@ -505,10 +505,10 @@ def _optimize_prompt_size(self, prompt: str, max_tokens: int = None) -> str:
 
 ### Template Validation Errors
 
-**Comprehensive Validation:**
+**Validation:**
 ```python
 def _validate_template_structure(self, template: Dict[str, Any]) -> None:
-    """Validate complete template structure."""
+    """Validate template structure."""
 
     # Required fields
     required = ['name', 'description', 'parts', 'variables']
@@ -729,5 +729,5 @@ print(f"Prompt length: {len(prompt)} characters")
 - [`../review/AGENTS.md`](../review/AGENTS.md) - Review generation
 
 **System Documentation:**
-- [`../../../AGENTS.md`](../../../AGENTS.md) - Complete system overview
+- [`../../../AGENTS.md`](../../../AGENTS.md) - system overview
 - [`../../../../../docs/development/CONTRIBUTING.md`](../../../../../docs/development/CONTRIBUTING.md) - Template development guide

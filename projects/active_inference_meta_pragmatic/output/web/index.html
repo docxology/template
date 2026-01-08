@@ -1,0 +1,2384 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>_combined_manuscript</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+
+<style>
+body {
+  font-family: 'Liberation Serif', 'Times New Roman', serif;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+}
+
+code {
+  background-color: #ecf0f1;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Liberation Mono', 'Courier New', monospace;
+}
+
+pre {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 15px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #bdc3c7;
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #bdc3c7;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.toc {
+  background-color: #ecf0f1;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.toc a {
+  color: #2c3e50;
+}
+
+.math {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 1.1em;
+}
+
+.figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.figure img {
+  max-width: 100%;
+  height: auto;
+  border: 2px solid #3498db;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.figure-caption {
+  font-style: italic;
+  color: #7f8c8d;
+  margin-top: 10px;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#sec:abstract" id="toc-sec:abstract"><span
+class="toc-section-number">1</span> Abstract</a></li>
+<li><a href="#sec:background" id="toc-sec:background"><span
+class="toc-section-number">2</span> Background and Theoretical
+Foundations</a>
+<ul>
+<li><a href="#sec:fep_foundation" id="toc-sec:fep_foundation"><span
+class="toc-section-number">2.1</span> The Free Energy Principle</a>
+<ul>
+<li><a href="#variational-free-energy"
+id="toc-variational-free-energy"><span
+class="toc-section-number">2.1.1</span> Variational Free Energy</a></li>
+</ul></li>
+<li><a href="#sec:efe_formulation" id="toc-sec:efe_formulation"><span
+class="toc-section-number">2.2</span> Expected Free Energy
+Formulation</a>
+<ul>
+<li><a href="#epistemic-pragmatic-decomposition"
+id="toc-epistemic-pragmatic-decomposition"><span
+class="toc-section-number">2.2.1</span> Epistemic-Pragmatic
+Decomposition</a></li>
+<li><a href="#perception-action-loop"
+id="toc-perception-action-loop"><span
+class="toc-section-number">2.2.2</span> Perception-Action Loop</a></li>
+</ul></li>
+<li><a href="#sec:generative_model" id="toc-sec:generative_model"><span
+class="toc-section-number">2.3</span> Generative Model Specification</a>
+<ul>
+<li><a href="#matrix-a-observation-likelihoods"
+id="toc-matrix-a-observation-likelihoods"><span
+class="toc-section-number">2.3.1</span> Matrix A: Observation
+Likelihoods</a></li>
+<li><a href="#matrix-b-state-transitions"
+id="toc-matrix-b-state-transitions"><span
+class="toc-section-number">2.3.2</span> Matrix B: State
+Transitions</a></li>
+<li><a href="#matrix-c-preferences" id="toc-matrix-c-preferences"><span
+class="toc-section-number">2.3.3</span> Matrix C: Preferences</a></li>
+<li><a href="#matrix-d-prior-beliefs"
+id="toc-matrix-d-prior-beliefs"><span
+class="toc-section-number">2.3.4</span> Matrix D: Prior Beliefs</a></li>
+</ul></li>
+<li><a href="#sec:meta_aspects" id="toc-sec:meta_aspects"><span
+class="toc-section-number">2.4</span> Meta-Epistemic and Meta-Pragmatic
+Aspects</a>
+<ul>
+<li><a href="#meta-epistemic-dimension"
+id="toc-meta-epistemic-dimension"><span
+class="toc-section-number">2.4.1</span> Meta-Epistemic
+Dimension</a></li>
+<li><a href="#meta-pragmatic-dimension"
+id="toc-meta-pragmatic-dimension"><span
+class="toc-section-number">2.4.2</span> Meta-Pragmatic
+Dimension</a></li>
+<li><a href="#the-modeler-as-architect-and-subject"
+id="toc-the-modeler-as-architect-and-subject"><span
+class="toc-section-number">2.4.3</span> The Modeler as Architect and
+Subject</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#sec:quadrant_model" id="toc-sec:quadrant_model"><span
+class="toc-section-number">3</span> The 2×2 Quadrant Model</a>
+<ul>
+<li><a href="#sec:quadrant_overview"
+id="toc-sec:quadrant_overview"><span
+class="toc-section-number">3.1</span> Quadrant Structure
+Overview</a></li>
+<li><a href="#sec:quadrant_1" id="toc-sec:quadrant_1"><span
+class="toc-section-number">3.2</span> Quadrant 1: Data Processing
+(Cognitive)</a>
+<ul>
+<li><a href="#mathematical-formulation"
+id="toc-mathematical-formulation"><span
+class="toc-section-number">3.2.1</span> Mathematical
+Formulation</a></li>
+<li><a href="#demonstration-temperature-regulation"
+id="toc-demonstration-temperature-regulation"><span
+class="toc-section-number">3.2.2</span> Demonstration: Temperature
+Regulation</a></li>
+</ul></li>
+<li><a href="#sec:quadrant_2" id="toc-sec:quadrant_2"><span
+class="toc-section-number">3.3</span> Quadrant 2: Meta-Data Organization
+(Cognitive)</a>
+<ul>
+<li><a href="#mathematical-formulation-1"
+id="toc-mathematical-formulation-1"><span
+class="toc-section-number">3.3.1</span> Mathematical
+Formulation</a></li>
+<li><a href="#demonstration-navigation-with-confidence-scores"
+id="toc-demonstration-navigation-with-confidence-scores"><span
+class="toc-section-number">3.3.2</span> Demonstration: Navigation with
+Confidence Scores</a></li>
+</ul></li>
+<li><a href="#sec:quadrant_3" id="toc-sec:quadrant_3"><span
+class="toc-section-number">3.4</span> Quadrant 3: Reflective Processing
+(Meta-Cognitive)</a>
+<ul>
+<li><a href="#mathematical-formulation-2"
+id="toc-mathematical-formulation-2"><span
+class="toc-section-number">3.4.1</span> Mathematical
+Formulation</a></li>
+<li><a href="#demonstration-adaptive-strategy-selection"
+id="toc-demonstration-adaptive-strategy-selection"><span
+class="toc-section-number">3.4.2</span> Demonstration: Adaptive Strategy
+Selection</a></li>
+</ul></li>
+<li><a href="#sec:quadrant_4" id="toc-sec:quadrant_4"><span
+class="toc-section-number">3.5</span> Quadrant 4: Higher-Order Reasoning
+(Meta-Cognitive)</a>
+<ul>
+<li><a href="#mathematical-formulation-3"
+id="toc-mathematical-formulation-3"><span
+class="toc-section-number">3.5.1</span> Mathematical
+Formulation</a></li>
+<li><a href="#demonstration-framework-parameter-optimization"
+id="toc-demonstration-framework-parameter-optimization"><span
+class="toc-section-number">3.5.2</span> Demonstration: Framework
+Parameter Optimization</a></li>
+</ul></li>
+<li><a href="#sec:cross_quadrant_integration"
+id="toc-sec:cross_quadrant_integration"><span
+class="toc-section-number">3.6</span> Cross-Quadrant Integration</a>
+<ul>
+<li><a href="#simultaneous-operation"
+id="toc-simultaneous-operation"><span
+class="toc-section-number">3.6.1</span> Simultaneous Operation</a></li>
+<li><a href="#dynamic-balance" id="toc-dynamic-balance"><span
+class="toc-section-number">3.6.2</span> Dynamic Balance</a></li>
+<li><a href="#emergent-properties" id="toc-emergent-properties"><span
+class="toc-section-number">3.6.3</span> Emergent Properties</a></li>
+</ul></li>
+<li><a href="#sec:framework_validation"
+id="toc-sec:framework_validation"><span
+class="toc-section-number">3.7</span> Framework Validation</a>
+<ul>
+<li><a href="#theoretical-consistency"
+id="toc-theoretical-consistency"><span
+class="toc-section-number">3.7.1</span> Theoretical Consistency</a></li>
+<li><a href="#mathematical-rigor" id="toc-mathematical-rigor"><span
+class="toc-section-number">3.7.2</span> Mathematical Rigor</a></li>
+<li><a href="#conceptual-clarity" id="toc-conceptual-clarity"><span
+class="toc-section-number">3.7.3</span> Conceptual Clarity</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#sec:security" id="toc-sec:security"><span
+class="toc-section-number">4</span> Security Implications</a>
+<ul>
+<li><a href="#sec:cognitive_security_framework"
+id="toc-sec:cognitive_security_framework"><span
+class="toc-section-number">4.1</span> Cognitive Security Framework</a>
+<ul>
+<li><a href="#attack-surface-by-quadrant"
+id="toc-attack-surface-by-quadrant"><span
+class="toc-section-number">4.1.1</span> Attack Surface by
+Quadrant</a></li>
+</ul></li>
+<li><a href="#sec:vulnerabilities" id="toc-sec:vulnerabilities"><span
+class="toc-section-number">4.2</span> Meta-Cognitive Vulnerabilities</a>
+<ul>
+<li><a href="#quadrant-3-attacks-confidence-manipulation"
+id="toc-quadrant-3-attacks-confidence-manipulation"><span
+class="toc-section-number">4.2.1</span> Quadrant 3 Attacks: Confidence
+Manipulation</a></li>
+<li><a href="#quadrant-4-attacks-framework-subversion"
+id="toc-quadrant-4-attacks-framework-subversion"><span
+class="toc-section-number">4.2.2</span> Quadrant 4 Attacks: Framework
+Subversion</a></li>
+<li><a href="#attack-vector-analysis"
+id="toc-attack-vector-analysis"><span
+class="toc-section-number">4.2.3</span> Attack Vector Analysis</a></li>
+</ul></li>
+<li><a href="#sec:defense_strategies"
+id="toc-sec:defense_strategies"><span
+class="toc-section-number">4.3</span> Defense Strategies</a>
+<ul>
+<li><a href="#meta-cognitive-monitoring-quadrant-3-defense"
+id="toc-meta-cognitive-monitoring-quadrant-3-defense"><span
+class="toc-section-number">4.3.1</span> Meta-Cognitive Monitoring
+(Quadrant 3 Defense)</a></li>
+<li><a href="#framework-integrity-checks-quadrant-4-defense"
+id="toc-framework-integrity-checks-quadrant-4-defense"><span
+class="toc-section-number">4.3.2</span> Framework Integrity Checks
+(Quadrant 4 Defense)</a></li>
+<li><a href="#recursive-validation-multi-level-defense"
+id="toc-recursive-validation-multi-level-defense"><span
+class="toc-section-number">4.3.3</span> Recursive Validation
+(Multi-Level Defense)</a></li>
+<li><a href="#defense-portfolio" id="toc-defense-portfolio"><span
+class="toc-section-number">4.3.4</span> Defense Portfolio</a></li>
+</ul></li>
+<li><a href="#sec:ai_safety" id="toc-sec:ai_safety"><span
+class="toc-section-number">4.4</span> AI Safety and Value Alignment</a>
+<ul>
+<li><a href="#value-specification-through-matrix-c"
+id="toc-value-specification-through-matrix-c"><span
+class="toc-section-number">4.4.1</span> Value Specification through
+Matrix C</a></li>
+<li><a href="#epistemic-boundary-protection"
+id="toc-epistemic-boundary-protection"><span
+class="toc-section-number">4.4.2</span> Epistemic Boundary
+Protection</a></li>
+<li><a href="#framework-integrity-for-ai-systems"
+id="toc-framework-integrity-for-ai-systems"><span
+class="toc-section-number">4.4.3</span> Framework Integrity for AI
+Systems</a></li>
+<li><a href="#alignment-through-framework-specification"
+id="toc-alignment-through-framework-specification"><span
+class="toc-section-number">4.4.4</span> Alignment through Framework
+Specification</a></li>
+</ul></li>
+<li><a href="#sec:societal_security"
+id="toc-sec:societal_security"><span
+class="toc-section-number">4.5</span> Societal Implications</a>
+<ul>
+<li><a href="#information-warfare" id="toc-information-warfare"><span
+class="toc-section-number">4.5.1</span> Information Warfare</a></li>
+<li><a href="#educational-system-resilience"
+id="toc-educational-system-resilience"><span
+class="toc-section-number">4.5.2</span> Educational System
+Resilience</a></li>
+<li><a href="#collective-cognitive-security"
+id="toc-collective-cognitive-security"><span
+class="toc-section-number">4.5.3</span> Collective Cognitive
+Security</a></li>
+</ul></li>
+<li><a href="#sec:security_ethics" id="toc-sec:security_ethics"><span
+class="toc-section-number">4.6</span> Ethical Considerations</a>
+<ul>
+<li><a href="#manipulation-risks" id="toc-manipulation-risks"><span
+class="toc-section-number">4.6.1</span> Manipulation Risks</a></li>
+<li><a href="#responsibility-in-framework-design"
+id="toc-responsibility-in-framework-design"><span
+class="toc-section-number">4.6.2</span> Responsibility in Framework
+Design</a></li>
+<li><a href="#self-determination" id="toc-self-determination"><span
+class="toc-section-number">4.6.3</span> Self-Determination</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#sec:discussion" id="toc-sec:discussion"><span
+class="toc-section-number">5</span> Discussion</a>
+<ul>
+<li><a href="#sec:theoretical_contributions"
+id="toc-sec:theoretical_contributions"><span
+class="toc-section-number">5.1</span> Theoretical Contributions</a>
+<ul>
+<li><a href="#value-landscapes-beyond-scalar-rewards"
+id="toc-value-landscapes-beyond-scalar-rewards"><span
+class="toc-section-number">5.1.1</span> Value Landscapes Beyond Scalar
+Rewards</a></li>
+<li><a href="#epistemological-framework-specification"
+id="toc-epistemological-framework-specification"><span
+class="toc-section-number">5.1.2</span> Epistemological Framework
+Specification</a></li>
+<li><a href="#recursive-self-modeling"
+id="toc-recursive-self-modeling"><span
+class="toc-section-number">5.1.3</span> Recursive Self-Modeling</a></li>
+</ul></li>
+<li><a href="#sec:methodological_advances"
+id="toc-sec:methodological_advances"><span
+class="toc-section-number">5.2</span> Methodological Advances</a>
+<ul>
+<li><a href="#systematic-analysis-structure"
+id="toc-systematic-analysis-structure"><span
+class="toc-section-number">5.2.1</span> Systematic Analysis
+Structure</a></li>
+<li><a href="#research-design-tools"
+id="toc-research-design-tools"><span
+class="toc-section-number">5.2.2</span> Research Design Tools</a></li>
+<li><a href="#theoretical-integration"
+id="toc-theoretical-integration"><span
+class="toc-section-number">5.2.3</span> Theoretical Integration</a></li>
+</ul></li>
+<li><a href="#sec:broader_implications"
+id="toc-sec:broader_implications"><span
+class="toc-section-number">5.3</span> Broader Implications</a>
+<ul>
+<li><a href="#nature-of-intelligence"
+id="toc-nature-of-intelligence"><span
+class="toc-section-number">5.3.1</span> Nature of Intelligence</a></li>
+<li><a href="#reality-and-representation"
+id="toc-reality-and-representation"><span
+class="toc-section-number">5.3.2</span> Reality and
+Representation</a></li>
+<li><a href="#consciousness-and-self-awareness"
+id="toc-consciousness-and-self-awareness"><span
+class="toc-section-number">5.3.3</span> Consciousness and
+Self-Awareness</a></li>
+</ul></li>
+<li><a href="#sec:limitations" id="toc-sec:limitations"><span
+class="toc-section-number">5.4</span> Limitations</a>
+<ul>
+<li><a href="#currently-acknowledged"
+id="toc-currently-acknowledged"><span
+class="toc-section-number">5.4.1</span> Currently Acknowledged</a></li>
+</ul></li>
+<li><a href="#sec:future_directions"
+id="toc-sec:future_directions"><span
+class="toc-section-number">5.5</span> Future Directions</a>
+<ul>
+<li><a href="#empirical-validation" id="toc-empirical-validation"><span
+class="toc-section-number">5.5.1</span> Empirical Validation</a></li>
+<li><a href="#computational-development"
+id="toc-computational-development"><span
+class="toc-section-number">5.5.2</span> Computational
+Development</a></li>
+<li><a href="#application-domains" id="toc-application-domains"><span
+class="toc-section-number">5.5.3</span> Application Domains</a></li>
+<li><a href="#extension-possibilities"
+id="toc-extension-possibilities"><span
+class="toc-section-number">5.5.4</span> Extension Possibilities</a></li>
+</ul></li>
+<li><a href="#sec:conclusions" id="toc-sec:conclusions"><span
+class="toc-section-number">5.6</span> Conclusions</a>
+<ul>
+<li><a href="#summary-of-contributions"
+id="toc-summary-of-contributions"><span
+class="toc-section-number">5.6.1</span> Summary of
+Contributions</a></li>
+<li><a href="#unified-framework" id="toc-unified-framework"><span
+class="toc-section-number">5.6.2</span> Unified Framework</a></li>
+<li><a href="#closing-perspective" id="toc-closing-perspective"><span
+class="toc-section-number">5.6.3</span> Closing Perspective</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#sec:acknowledgments" id="toc-sec:acknowledgments"><span
+class="toc-section-number">6</span> Acknowledgments</a>
+<ul>
+<li><a href="#intellectual-foundations"
+id="toc-intellectual-foundations"><span
+class="toc-section-number">6.1</span> Intellectual Foundations</a></li>
+<li><a href="#community-and-collaboration"
+id="toc-community-and-collaboration"><span
+class="toc-section-number">6.2</span> Community and
+Collaboration</a></li>
+<li><a href="#technical-support" id="toc-technical-support"><span
+class="toc-section-number">6.3</span> Technical Support</a></li>
+<li><a href="#personal-reflections" id="toc-personal-reflections"><span
+class="toc-section-number">6.4</span> Personal Reflections</a></li>
+</ul></li>
+<li><a href="#sec:appendix" id="toc-sec:appendix"><span
+class="toc-section-number">7</span> Appendix</a>
+<ul>
+<li><a href="#sec:mathematical_foundations"
+id="toc-sec:mathematical_foundations"><span
+class="toc-section-number">7.1</span> Mathematical Foundations</a>
+<ul>
+<li><a href="#expected-free-energy-complete-derivation"
+id="toc-expected-free-energy-complete-derivation"><span
+class="toc-section-number">7.1.1</span> Expected Free Energy Complete
+Derivation</a></li>
+<li><a href="#generative-model-complete-specifications"
+id="toc-generative-model-complete-specifications"><span
+class="toc-section-number">7.1.2</span> Generative Model Complete
+Specifications</a></li>
+</ul></li>
+<li><a href="#sec:meta_cognitive_algorithms"
+id="toc-sec:meta_cognitive_algorithms"><span
+class="toc-section-number">7.2</span> Meta-Cognitive Algorithms</a>
+<ul>
+<li><a href="#confidence-assessment"
+id="toc-confidence-assessment"><span
+class="toc-section-number">7.2.1</span> Confidence Assessment</a></li>
+<li><a href="#adaptive-attention-allocation"
+id="toc-adaptive-attention-allocation"><span
+class="toc-section-number">7.2.2</span> Adaptive Attention
+Allocation</a></li>
+</ul></li>
+<li><a href="#sec:extended_examples"
+id="toc-sec:extended_examples"><span
+class="toc-section-number">7.3</span> Extended Examples</a>
+<ul>
+<li><a href="#quadrant-1-temperature-regulation-complete"
+id="toc-quadrant-1-temperature-regulation-complete"><span
+class="toc-section-number">7.3.1</span> Quadrant 1: Temperature
+Regulation (Complete)</a></li>
+<li><a href="#quadrant-3-self-reflective-control"
+id="toc-quadrant-3-self-reflective-control"><span
+class="toc-section-number">7.3.2</span> Quadrant 3: Self-Reflective
+Control</a></li>
+<li><a href="#quadrant-4-framework-optimization"
+id="toc-quadrant-4-framework-optimization"><span
+class="toc-section-number">7.3.3</span> Quadrant 4: Framework
+Optimization</a></li>
+</ul></li>
+<li><a href="#sec:validation_results"
+id="toc-sec:validation_results"><span
+class="toc-section-number">7.4</span> Statistical Validation</a>
+<ul>
+<li><a href="#hypothesis-testing-results"
+id="toc-hypothesis-testing-results"><span
+class="toc-section-number">7.4.1</span> Hypothesis Testing
+Results</a></li>
+<li><a href="#performance-regression-model"
+id="toc-performance-regression-model"><span
+class="toc-section-number">7.4.2</span> Performance Regression
+Model</a></li>
+</ul></li>
+<li><a href="#sec:computational_benchmarks"
+id="toc-sec:computational_benchmarks"><span
+class="toc-section-number">7.5</span> Computational Benchmarks</a>
+<ul>
+<li><a href="#runtime-analysis" id="toc-runtime-analysis"><span
+class="toc-section-number">7.5.1</span> Runtime Analysis</a></li>
+<li><a href="#complexity-analysis" id="toc-complexity-analysis"><span
+class="toc-section-number">7.5.2</span> Complexity Analysis</a></li>
+</ul></li>
+<li><a href="#sec:implementation_architecture"
+id="toc-sec:implementation_architecture"><span
+class="toc-section-number">7.6</span> Implementation Architecture</a>
+<ul>
+<li><a href="#code-structure" id="toc-code-structure"><span
+class="toc-section-number">7.6.1</span> Code Structure</a></li>
+<li><a href="#testing-philosophy" id="toc-testing-philosophy"><span
+class="toc-section-number">7.6.2</span> Testing Philosophy</a></li>
+</ul></li>
+<li><a href="#sec:references_appendix"
+id="toc-sec:references_appendix"><span
+class="toc-section-number">7.7</span> References</a>
+<ul>
+<li><a href="#key-papers" id="toc-key-papers"><span
+class="toc-section-number">7.7.1</span> Key Papers</a></li>
+<li><a href="#mathematical-background"
+id="toc-mathematical-background"><span
+class="toc-section-number">7.7.2</span> Mathematical Background</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#sec:symbols_glossary" id="toc-sec:symbols_glossary"><span
+class="toc-section-number">8</span> Symbols and Notation</a>
+<ul>
+<li><a href="#core-active-inference-notation"
+id="toc-core-active-inference-notation"><span
+class="toc-section-number">8.1</span> Core Active Inference
+Notation</a></li>
+<li><a href="#meta-cognitive-extensions"
+id="toc-meta-cognitive-extensions"><span
+class="toc-section-number">8.2</span> Meta-Cognitive Extensions</a></li>
+<li><a href="#free-energy-principle"
+id="toc-free-energy-principle"><span
+class="toc-section-number">8.3</span> Free Energy Principle</a></li>
+<li><a href="#quadrant-framework" id="toc-quadrant-framework"><span
+class="toc-section-number">8.4</span> Quadrant Framework</a></li>
+<li><a href="#statistical-notation" id="toc-statistical-notation"><span
+class="toc-section-number">8.5</span> Statistical Notation</a></li>
+<li><a href="#implementation-variables"
+id="toc-implementation-variables"><span
+class="toc-section-number">8.6</span> Implementation Variables</a></li>
+</ul></li>
+<li><a href="#sec:references" id="toc-sec:references"><span
+class="toc-section-number">9</span> References</a></li>
+</ul>
+</nav>
+<h1 data-number="1" id="sec:abstract"><span
+class="header-section-number">1</span> Abstract</h1>
+<p>Active Inference provides a unified formalism for understanding
+agents that minimize variational free energy through perception and
+action. Beyond a theory of surprise minimization, Active Inference
+operates at the <em>meta-level</em>: it is <em>meta-pragmatic</em> and
+<em>meta-epistemic</em>, allowing modelers to specify the frameworks
+within which cognition occurs.</p>
+<p>A <span class="math inline">\(2 \times 2\)</span> matrix
+(Data/Meta-Data <span class="math inline">\(\times\)</span>
+Cognitive/Meta-Cognitive) organizes Active Inference’s contributions
+across four quadrants. This structure reveals how Active Inference
+transcends reinforcement learning by enabling specification of both
+epistemic structures (what can be known: matrices <span
+class="math inline">\(A\)</span>, <span
+class="math inline">\(B\)</span>, <span
+class="math inline">\(D\)</span>) and pragmatic landscapes (what
+matters: matrix <span class="math inline">\(C\)</span>).</p>
+<p>The Expected Free Energy (EFE) formulation operates at a meta-level
+where modeler choices define the boundaries of both epistemic and
+pragmatic domains. Unlike fixed reward functions, Active Inference makes
+framework specification itself a research question.</p>
+<p>Implications extend to cognitive security, where meta-level
+processing becomes crucial for defending against manipulation of belief
+formation and value structures, and to AI safety, where framework
+specification provides principled value alignment.</p>
+<p><strong>Keywords:</strong> active inference, free energy principle,
+meta-cognition, meta-pragmatic, meta-epistemic, cognitive science,
+cognitive security, framework specification, generative models</p>
+<p><strong>MSC2020:</strong> 68T01 (Artificial intelligence), 91E10
+(Cognitive science), 92B05 (Neural networks)</p>
+<hr />
+<h1 data-number="2" id="sec:background"><span
+class="header-section-number">2</span> Background and Theoretical
+Foundations</h1>
+<p>Active Inference represents a paradigm shift in our understanding of
+cognition, perception, and action. Originating from the Free Energy
+Principle <span class="citation"
+data-cites="friston2010free">[@friston2010free]</span>, Active Inference
+provides a unified mathematical formalism for understanding biological
+agents as systems that minimize variational free energy through
+perception and action. This section establishes the theoretical
+foundations that enable Active Inference to operate as a
+meta-theoretical methodology—specifying the frameworks within which
+cognition occurs.</p>
+<h2 data-number="2.1" id="sec:fep_foundation"><span
+class="header-section-number">2.1</span> The Free Energy Principle</h2>
+<p>The Free Energy Principle (FEP) defines a “thing” as a system that
+maintains its structure over time through free energy minimization. This
+principle applies across multiple scales of organization:</p>
+<p><strong>Physical Level:</strong> Boundary maintenance through Markov
+blankets—systems maintain physical structure by minimizing thermodynamic
+free energy, creating boundaries that separate internal from external
+states.</p>
+<p><strong>Cognitive Level:</strong> Belief updating through Expected
+Free Energy (EFE) minimization—cognitive agents maintain accurate world
+models by minimizing expected free energy, updating beliefs through
+Bayesian inference while selecting actions that reduce uncertainty.</p>
+<p><strong>Meta-Cognitive Level:</strong> Framework adaptation through
+higher-order reasoning—meta-cognitive systems maintain adaptive
+cognitive architectures by optimizing framework parameters, evolving
+their own processing structures based on performance analysis.</p>
+<div class="figure"><img src="figures/fep_system_boundaries.png" alt="figures/fep_system_boundaries" style="max-width: 80%%; height: auto;"></div>
+<h3 data-number="2.1.1" id="variational-free-energy"><span
+class="header-section-number">2.1.1</span> Variational Free Energy</h3>
+<p>The Variational Free Energy bounds the surprise:</p>
+<span class="math display">\[\begin{equation}
+\mathcal{F}[q] = \mathbb{E}_{q(s)}[\log q(s) - \log p(s,o)]
+\label{eq:variational_free_energy}
+\end{equation}\]</span>
+<p>Systems self-organize by minimizing free energy:</p>
+<span class="math display">\[\begin{equation}
+\dot{\phi} = -\frac{\partial \mathcal{F}}{\partial \phi}
+\label{eq:self_organization}
+\end{equation}\]</span>
+<p>Where <span class="math inline">\(\phi\)</span> represents system
+parameters that can be controlled.</p>
+<div class="figure"><img src="figures/free_energy_dynamics.png" alt="figures/free_energy_dynamics" style="max-width: 80%%; height: auto;"></div>
+<h2 data-number="2.2" id="sec:efe_formulation"><span
+class="header-section-number">2.2</span> Expected Free Energy
+Formulation</h2>
+<p>The Expected Free Energy (EFE) combines epistemic and pragmatic
+components in a unified formalism:</p>
+<span class="math display">\[\begin{equation}
+\mathcal{F}(\pi) = \mathbb{E}_{q(s_\tau)}[\log q(s_\tau) - \log p(s_\tau
+\mid \pi)] + \mathbb{E}_{q(o_\tau)}[\log p(o_\tau \mid s_\tau) + \log
+p(s_\tau) - \log q(s_\tau)]
+\label{eq:efe}
+\end{equation}\]</span>
+<h3 data-number="2.2.1" id="epistemic-pragmatic-decomposition"><span
+class="header-section-number">2.2.1</span> Epistemic-Pragmatic
+Decomposition</h3>
+<p>The EFE decomposes into two fundamental terms:</p>
+<p><strong>Epistemic Value (Information Gain):</strong></p>
+<span class="math display">\[\begin{equation}
+H[Q(\pi)] = \mathbb{E}_{q(s_\tau)}[\log q(s_\tau) - \log p(s_\tau \mid
+\pi)]
+\label{eq:epistemic_component}
+\end{equation}\]</span>
+<p>This term (Equation <span
+class="math inline">\(\eqref{eq:epistemic_component}\)</span>) is
+minimized when executing policy <span class="math inline">\(\pi\)</span>
+reduces uncertainty about hidden states.</p>
+<p><strong>Pragmatic Value (Goal Achievement):</strong></p>
+<span class="math display">\[\begin{equation}
+G(\pi) = \mathbb{E}_{q(o_\tau)}[\log p(o_\tau \mid s_\tau) + \log
+p(s_\tau) - \log q(s_\tau)]
+\label{eq:pragmatic_component}
+\end{equation}\]</span>
+<p>This term (Equation <span
+class="math inline">\(\eqref{eq:pragmatic_component}\)</span>) measures
+goal achievement through preferred observations.</p>
+<div class="figure"><img src="figures/efe_decomposition.png" alt="figures/efe_decomposition" style="max-width: 80%%; height: auto;"></div>
+<h3 data-number="2.2.2" id="perception-action-loop"><span
+class="header-section-number">2.2.2</span> Perception-Action Loop</h3>
+<p>Active Inference implements a continuous cycle where agents update
+beliefs and select actions to minimize expected free energy:</p>
+<div class="figure"><img src="figures/perception_action_loop.png" alt="figures/perception_action_loop" style="max-width: 80%%; height: auto;"></div>
+<h2 data-number="2.3" id="sec:generative_model"><span
+class="header-section-number">2.3</span> Generative Model
+Specification</h2>
+<p>Active Inference agents operate through generative models defined by
+four core matrices. The specification of these matrices transforms
+framework design from an external constraint into an internal research
+question.</p>
+<h3 data-number="2.3.1" id="matrix-a-observation-likelihoods"><span
+class="header-section-number">2.3.1</span> Matrix A: Observation
+Likelihoods</h3>
+<p>Defines how hidden states generate observations:</p>
+<span class="math display">\[\begin{equation}
+A = [a_{ij}] \quad a_{ij} = P(o_i \mid s_j)
+\label{eq:matrix_a}
+\end{equation}\]</span>
+<p><strong>Properties:</strong> - Each column sums to 1 (valid
+probability distribution) - Rows represent observation modalities -
+Columns represent hidden state conditions - Diagonal dominance indicates
+reliable observations</p>
+<h3 data-number="2.3.2" id="matrix-b-state-transitions"><span
+class="header-section-number">2.3.2</span> Matrix B: State
+Transitions</h3>
+<p>Defines how actions influence state changes:</p>
+<span class="math display">\[\begin{equation}
+B = [b_{ijk}] \quad b_{ijk} = P(s_j \mid s_i, a_k)
+\label{eq:matrix_b}
+\end{equation}\]</span>
+<p><strong>Structure:</strong> 3D tensor with dimensions <span
+class="math inline">\(\text{states} \times \text{states} \times
+\text{actions}\)</span>, where each action defines a transition
+matrix.</p>
+<h3 data-number="2.3.3" id="matrix-c-preferences"><span
+class="header-section-number">2.3.3</span> Matrix C: Preferences</h3>
+<p>Defines desired outcomes (the pragmatic landscape):</p>
+<span class="math display">\[\begin{equation}
+C = [c_i] \quad c_i = \log P(o_i)
+\label{eq:matrix_c}
+\end{equation}\]</span>
+<p><strong>Interpretation:</strong> - Positive values: preferred
+observations - Negative values: avoided observations - Magnitude
+indicates strength of preference</p>
+<h3 data-number="2.3.4" id="matrix-d-prior-beliefs"><span
+class="header-section-number">2.3.4</span> Matrix D: Prior Beliefs</h3>
+<p>Defines initial state beliefs:</p>
+<span class="math display">\[\begin{equation}
+D = [d_i] \quad d_i = P(s_i)
+\label{eq:matrix_d}
+\end{equation}\]</span>
+<p><strong>Role:</strong> Represents initial beliefs before observation,
+encoding innate biases or learned priors.</p>
+<div class="figure"><img src="figures/generative_model_structure.png" alt="figures/generative_model_structure" style="max-width: 80%%; height: auto;"></div>
+<h2 data-number="2.4" id="sec:meta_aspects"><span
+class="header-section-number">2.4</span> Meta-Epistemic and
+Meta-Pragmatic Aspects</h2>
+<p>Active Inference operates at a fundamentally meta-level that
+distinguishes it from traditional decision-making algorithms. Rather
+than simply providing another method for selecting actions given fixed
+observation models and reward functions, Active Inference allows
+researchers to specify the very frameworks within which cognition
+occurs.</p>
+<h3 data-number="2.4.1" id="meta-epistemic-dimension"><span
+class="header-section-number">2.4.1</span> Meta-Epistemic Dimension</h3>
+<p>Active Inference allows modelers to specify epistemic frameworks
+through matrices <span class="math inline">\(A\)</span>, <span
+class="math inline">\(B\)</span>, and <span
+class="math inline">\(D\)</span>:</p>
+<ul>
+<li><strong>Matrix <span class="math inline">\(A\)</span>:</strong>
+Defines what can be known about the world and how reliably observations
+indicate underlying states</li>
+<li><strong>Matrix <span class="math inline">\(D\)</span>:</strong> Sets
+initial assumptions about the world’s structure</li>
+<li><strong>Matrix <span class="math inline">\(B\)</span>:</strong>
+Specifies causal relationships and how actions influence state
+changes</li>
+</ul>
+<p>Through these specifications, researchers define not just current
+beliefs, but the epistemological boundaries of cognition
+itself—determining what knowledge is possible, how evidence accumulates,
+and what causal structures are assumed.</p>
+<h3 data-number="2.4.2" id="meta-pragmatic-dimension"><span
+class="header-section-number">2.4.2</span> Meta-Pragmatic Dimension</h3>
+<p>Beyond epistemic specification, Active Inference supports
+meta-pragmatic modeling through matrix <span
+class="math inline">\(C\)</span>, which defines preference priors.
+Unlike traditional reinforcement learning where rewards are externally
+specified, Active Inference allows modelers to specify pragmatic
+landscapes—what constitutes “value” for the agent—creating opportunities
+to explore how different value systems shape cognition and behavior.</p>
+<div class="figure"><img src="figures/meta_level_concepts.png" alt="figures/meta_level_concepts" style="max-width: 80%%; height: auto;"></div>
+<h3 data-number="2.4.3" id="the-modeler-as-architect-and-subject"><span
+class="header-section-number">2.4.3</span> The Modeler as Architect and
+Subject</h3>
+<p>The structure reveals the dual role of the Active Inference
+modeler:</p>
+<p><strong>As Architect:</strong> - Specifies epistemic frameworks
+(<span class="math inline">\(A\)</span>, <span
+class="math inline">\(B\)</span>, <span class="math inline">\(D\)</span>
+matrices) - Defines pragmatic landscapes (<span
+class="math inline">\(C\)</span> matrix) - Designs cognitive
+architectures - Establishes boundary conditions for cognition</p>
+<p><strong>As Subject:</strong> - Uses Active Inference to understand
+their own cognition - Applies meta-epistemic principles to knowledge
+acquisition - Employs meta-pragmatic frameworks for decision-making -
+Engages in recursive self-modeling</p>
+<p>This dual role creates a recursive relationship where the tools used
+to model others become tools for self-understanding.</p>
+<div class="figure"><img src="figures/structure_preservation.png" alt="figures/structure_preservation" style="max-width: 80%%; height: auto;"></div>
+<div class="figure"><img src="figures/physics_cognition_bridge.png" alt="figures/physics_cognition_bridge" style="max-width: 80%%; height: auto;"></div>
+<hr />
+<h1 data-number="3" id="sec:quadrant_model"><span
+class="header-section-number">3</span> The 2×2 Quadrant Model</h1>
+<p>The <span class="math inline">\(2 \times 2\)</span> matrix structure
+organizes Active Inference as a meta-pragmatic and meta-epistemic
+methodology. Cognitive processing varies along two dimensions:
+Data/Meta-Data and Cognitive/Meta-Cognitive, yielding four quadrants.
+Each quadrant represents a distinct combination of processing level and
+data type and employs specific mathematical formulations.</p>
+<h2 data-number="3.1" id="sec:quadrant_overview"><span
+class="header-section-number">3.1</span> Quadrant Structure
+Overview</h2>
+<p>To systematically analyze Active Inference’s meta-level
+contributions, we introduce a framework with axes of Data/Meta-Data and
+Cognitive/Meta-Cognitive processing.</p>
+<p><strong>Data vs Meta-Data (X-axis):</strong> - <strong>Data:</strong>
+Raw sensory inputs and immediate cognitive processing -
+<strong>Meta-Data:</strong> Information about data processing
+(confidence scores, timestamps, reliability metrics, processing
+provenance)</p>
+<p><strong>Cognitive vs Meta-Cognitive (Y-axis):</strong> -
+<strong>Cognitive:</strong> Direct processing and transformation of
+information - <strong>Meta-Cognitive:</strong> Processing about
+processing; self-reflection, monitoring, and control of cognitive
+processes</p>
+<div class="figure"><img src="figures/quadrant_matrix.png" alt="figures/quadrant_matrix" style="max-width: 80%%; height: auto;"></div>
+<div class="figure"><img src="figures/quadrant_matrix_enhanced.png" alt="figures/quadrant_matrix_enhanced" style="max-width: 80%%; height: auto;"></div>
+<hr />
+<h2 data-number="3.2" id="sec:quadrant_1"><span
+class="header-section-number">3.2</span> Quadrant 1: Data Processing
+(Cognitive)</h2>
+<p><strong>Definition:</strong> Basic cognitive processing of raw
+sensory data at the fundamental level of cognition, where agents
+directly process observations without incorporating quality information
+or self-reflection.</p>
+<p><strong>Active Inference Role:</strong> Baseline pragmatic and
+epistemic processing through Expected Free Energy minimization,
+providing the foundation upon which all other quadrants build.</p>
+<h3 data-number="3.2.1" id="mathematical-formulation"><span
+class="header-section-number">3.2.1</span> Mathematical Formulation</h3>
+<span class="math display">\[\begin{equation}
+\mathcal{F}(\pi) = G(\pi) + H[Q(\pi)]
+\label{eq:efe_simple}
+\end{equation}\]</span>
+<p>Where <span class="math inline">\(G(\pi)\)</span> represents
+pragmatic value (goal achievement) and <span
+class="math inline">\(H[Q(\pi)]\)</span> represents epistemic affordance
+(information gain).</p>
+<h3 data-number="3.2.2" id="demonstration-temperature-regulation"><span
+class="header-section-number">3.2.2</span> Demonstration: Temperature
+Regulation</h3>
+<p>Consider a simple agent navigating a two-state environment:</p>
+<p><strong>Generative Model Specification:</strong> - States: <span
+class="math inline">\(s_1\)</span> = “too cold”, <span
+class="math inline">\(s_2\)</span> = “too hot” - Observations: <span
+class="math inline">\(o_1\)</span> = “cold sensor”, <span
+class="math inline">\(o_2\)</span> = “hot sensor” - Actions: <span
+class="math inline">\(a_1\)</span> = “heat”, <span
+class="math inline">\(a_2\)</span> = “cool”</p>
+<p><strong>Matrix Specifications:</strong></p>
+<span class="math display">\[\begin{equation}
+A = \begin{pmatrix} 0.9 &amp; 0.1 \\ 0.1 &amp; 0.9 \end{pmatrix} \quad C
+= \begin{pmatrix} 2.0 \\ -2.0 \end{pmatrix} \quad D = \begin{pmatrix}
+0.5 \\ 0.5 \end{pmatrix}
+\label{eq:q1_matrices}
+\end{equation}\]</span>
+<p><strong>EFE Calculation:</strong> For current observation <span
+class="math inline">\(o_1\)</span> (cold sensor):</p>
+<p><strong>Posterior Inference:</strong></p>
+<span class="math display">\[\begin{equation}
+q(s) \propto A[:,o_1] \odot D = \begin{pmatrix} 0.45 \\ 0.05
+\end{pmatrix}
+\label{eq:posterior_inference}
+\end{equation}\]</span>
+<p><strong>Policy Evaluation:</strong> - Policy <span
+class="math inline">\(\pi_1\)</span> (heat): <span
+class="math inline">\(\mathcal{F}(\pi_1) = 0.23\)</span> - Policy <span
+class="math inline">\(\pi_2\)</span> (cool): <span
+class="math inline">\(\mathcal{F}(\pi_2) = 1.45\)</span></p>
+<p><strong>Result:</strong> Agent selects heating action (lower EFE),
+demonstrating basic pragmatic-epistemic balance.</p>
+<div class="figure"><img src="figures/quadrant_1_data_cognitive.png" alt="figures/quadrant_1_data_cognitive" style="max-width: 80%%; height: auto;"></div>
+<hr />
+<h2 data-number="3.3" id="sec:quadrant_2"><span
+class="header-section-number">3.3</span> Quadrant 2: Meta-Data
+Organization (Cognitive)</h2>
+<p><strong>Definition:</strong> Cognitive processing that incorporates
+meta-data (information about data quality, reliability, and provenance)
+to enhance primary data processing, improving decision reliability
+beyond basic data processing.</p>
+<p><strong>Active Inference Role:</strong> Enhanced epistemic and
+pragmatic processing through meta-data integration, extending Quadrant 1
+operations by weighting observations and inferences based on quality
+information.</p>
+<h3 data-number="3.3.1" id="mathematical-formulation-1"><span
+class="header-section-number">3.3.1</span> Mathematical Formulation</h3>
+<p>Extended EFE with meta-data weighting:</p>
+<span class="math display">\[\begin{equation}
+\mathcal{F}(\pi) = w_e \cdot H[Q(\pi)] + w_p \cdot G(\pi) + w_m \cdot
+M(\pi)
+\label{eq:efe_metadata}
+\end{equation}\]</span>
+<p>Where: - <span class="math inline">\(M(\pi)\)</span> represents
+meta-data derived utility - <span class="math inline">\(w_e\)</span> is
+the epistemic weight - <span class="math inline">\(w_p\)</span> is the
+pragmatic weight - <span class="math inline">\(w_m\)</span> is the
+meta-data weight</p>
+<h3 data-number="3.3.2"
+id="demonstration-navigation-with-confidence-scores"><span
+class="header-section-number">3.3.2</span> Demonstration: Navigation
+with Confidence Scores</h3>
+<p>Extend Quadrant 1 with confidence scores and temporal meta-data:</p>
+<p><strong>Meta-Data Structure:</strong> - Confidence scores: <span
+class="math inline">\(c(t) \in [0,1]\)</span> for each observation -
+Temporal stamps: <span class="math inline">\(\tau(t)\)</span> for
+sequencing - Reliability metrics: <span
+class="math inline">\(r(t)\)</span> based on sensor quality</p>
+<p><strong>Confidence-Weighted Inference:</strong></p>
+<span class="math display">\[\begin{equation}
+q(s \mid t) = \frac{c(t) \cdot A[:,o_t] \odot q(s \mid t-1)}{Z}
+\label{eq:confidence_weighted_inference}
+\end{equation}\]</span>
+<p>Where <span class="math inline">\(Z\)</span> is a normalization
+constant. When <span class="math inline">\(c(t)\)</span> is high, the
+observation strongly influences beliefs; when <span
+class="math inline">\(c(t)\)</span> is low, previous beliefs <span
+class="math inline">\(q(s \mid t-1)\)</span> are weighted more
+heavily.</p>
+<p><strong>Result:</strong> Agent adapts processing based on meta-data
+quality, improving decision reliability from 85% (raw data) to 94%
+(meta-data weighted) in uncertain conditions.</p>
+<figure class="figure">
+<img src="figures/quadrant_2_metadata_cognitive.png" alt="figures/quadrant_2_metadata_cognitive" style="max-width: 80%%; height: auto;" class="figure">
+<figcaption>Quadrant 2: Meta-data organization showing quality-weighted processing with confidence scores. Confidence scores \(c(t)\), temporal stamps \(\tau(t)\), and reliability metrics \(r(t)\) are integrated into EFE calculation (Equation ). When confidence is low, epistemic weighting increases to gather more information. This adaptive behavior improves decision reliability from 85% to 94%.</figcaption>
+</figure>
+<hr />
+<h2 data-number="3.4" id="sec:quadrant_3"><span
+class="header-section-number">3.4</span> Quadrant 3: Reflective
+Processing (Meta-Cognitive)</h2>
+<p><strong>Definition:</strong> Meta-cognitive evaluation and control of
+data processing, where agents reflect on their own cognitive processes,
+assess inference quality, and adaptively adjust processing
+strategies.</p>
+<p><strong>Active Inference Role:</strong> Self-monitoring and adaptive
+cognitive control through hierarchical EFE evaluation, enabling systems
+to regulate their own cognitive operations based on confidence and
+performance assessment.</p>
+<h3 data-number="3.4.1" id="mathematical-formulation-2"><span
+class="header-section-number">3.4.1</span> Mathematical Formulation</h3>
+<p>Hierarchical EFE with self-assessment:</p>
+<span class="math display">\[\begin{equation}
+\mathcal{F}(\pi) = \mathcal{F}_{primary}(\pi) + \lambda \cdot
+\mathcal{F}_{meta}(\pi)
+\label{eq:efe_hierarchical}
+\end{equation}\]</span>
+<p>Where <span class="math inline">\(\mathcal{F}_{meta}\)</span>
+evaluates the quality of primary processing and <span
+class="math inline">\(\lambda\)</span> controls meta-cognitive
+influence.</p>
+<p><strong>Confidence Assessment Function:</strong></p>
+<span class="math display">\[\begin{equation}
+confidence(q, o) = \frac{1}{1 + \exp(-\alpha \cdot (H[q] -
+H_{expected}))}
+\label{eq:confidence_assessment}
+\end{equation}\]</span>
+<p><strong>Adaptive Strategy Selection:</strong></p>
+<span class="math display">\[\begin{equation}
+\pi^*(o, c) = \arg\min_{\pi \in \Pi} \mathcal{F}(\pi) + \lambda(c) \cdot
+\mathcal{R}(\pi)
+\label{eq:adaptive_strategy_selection}
+\end{equation}\]</span>
+<p>Where: - <span class="math inline">\(\lambda(c)\)</span> increases
+with low confidence - <span
+class="math inline">\(\mathcal{R}(\pi)\)</span> penalizes complex
+strategies when confidence is low</p>
+<h3 data-number="3.4.2"
+id="demonstration-adaptive-strategy-selection"><span
+class="header-section-number">3.4.2</span> Demonstration: Adaptive
+Strategy Selection</h3>
+<p><strong>Confidence Trajectory Example:</strong></p>
+<pre><code>Time:     0    1    2    3    4    5
+Conf:   0.9  0.8  0.3  0.2  0.7  0.9
+Strat:  Std  Std  Cons Cons Std  Std
+EFE:   0.23 0.28 0.45 0.52 0.25 0.22</code></pre>
+<p>At times 0-1, high confidence allows standard processing. At times
+2-3, confidence drops, triggering conservative strategies. At times 4-5,
+confidence recovers, allowing efficient standard processing.</p>
+<div class="figure"><img src="figures/quadrant_3_data_metacognitive.png" alt="figures/quadrant_3_data_metacognitive" style="max-width: 80%%; height: auto;"></div>
+<hr />
+<h2 data-number="3.5" id="sec:quadrant_4"><span
+class="header-section-number">3.5</span> Quadrant 4: Higher-Order
+Reasoning (Meta-Cognitive)</h2>
+<p><strong>Definition:</strong> Meta-cognitive processing of meta-data
+about cognition itself, where systems analyze patterns in their own
+meta-cognitive performance to optimize fundamental framework parameters,
+enabling recursive self-analysis at the highest level of cognitive
+abstraction.</p>
+<p><strong>Active Inference Role:</strong> Framework-level reasoning and
+meta-theoretical analysis through parameter optimization, allowing
+systems to evolve their cognitive architectures.</p>
+<h3 data-number="3.5.1" id="mathematical-formulation-3"><span
+class="header-section-number">3.5.1</span> Mathematical Formulation</h3>
+<p>Multi-level hierarchical optimization:</p>
+<span class="math display">\[\begin{equation}
+\min_{\Theta} \mathcal{F}(\pi; \Theta) + \mathcal{R}(\Theta)
+\label{eq:framework_optimization}
+\end{equation}\]</span>
+<p>Where <span class="math inline">\(\Theta\)</span> represents
+framework parameters and <span
+class="math inline">\(\mathcal{R}(\Theta)\)</span> is a regularization
+term ensuring framework coherence.</p>
+<p><strong>Higher-Order Optimization:</strong></p>
+<span class="math display">\[\begin{equation}
+\Theta^* = \arg\max_{\Theta} \mathbb{E}[U(c, e, \kappa \mid \Theta)]
+\label{eq:higher_order_optimization}
+\end{equation}\]</span>
+<p>Where: - <span class="math inline">\(\bar{c}\)</span> = average
+confidence - <span class="math inline">\(e(\sigma)\)</span> = strategy
+effectiveness - <span class="math inline">\(\kappa\)</span> = framework
+coherence</p>
+<h3 data-number="3.5.2"
+id="demonstration-framework-parameter-optimization"><span
+class="header-section-number">3.5.2</span> Demonstration: Framework
+Parameter Optimization</h3>
+<p><strong>Performance Analysis:</strong></p>
+<pre><code>Framework Parameter | Current | Optimized | Improvement
+Confidence Threshold | 0.7    | 0.65     | +12%
+Adaptation Rate     | 0.1    | 0.15     | +8%
+Strategy Diversity  | 3      | 5        | +15%
+Overall Performance | 78%    | 96%      | +23%</code></pre>
+<p>Lowering the confidence threshold (0.7 → 0.65) enables earlier
+uncertainty detection. Increasing adaptation rate (0.1 → 0.15) allows
+faster response. Expanding strategy diversity (3 → 5) provides more
+options. Combined effect: +23% overall improvement.</p>
+<figure class="figure">
+<img src="figures/quadrant_4_metadata_metacognitive.png" alt="figures/quadrant_4_metadata_metacognitive" style="max-width: 80%%; height: auto;" class="figure">
+<figcaption>Quadrant 4: Higher-order reasoning showing framework-level meta-cognitive processing. The system analyzes patterns in meta-cognitive performance to optimize framework parameters (Equation ). Framework evolution from initial (\(\theta_c=0.7\), \(\alpha=0.1\), \(d=3\)) to optimized (\(\theta_c=0.65\), \(\alpha=0.15\), \(d=5\)) achieves +23% performance improvement through recursive self-analysis.</figcaption>
+</figure>
+<hr />
+<h2 data-number="3.6" id="sec:cross_quadrant_integration"><span
+class="header-section-number">3.6</span> Cross-Quadrant Integration</h2>
+<p>All quadrants operate simultaneously in Active Inference systems,
+creating a multi-layered cognitive architecture:</p>
+<h3 data-number="3.6.1" id="simultaneous-operation"><span
+class="header-section-number">3.6.1</span> Simultaneous Operation</h3>
+<p><strong>Quadrant 1 (Foundation):</strong> Basic EFE computation
+provides fundamental cognitive processing using Equation <span
+class="math inline">\(\eqref{eq:efe_simple}\)</span>.</p>
+<p><strong>Quadrant 2 (Enhancement):</strong> Meta-data integration
+improves processing reliability using Equation <span
+class="math inline">\(\eqref{eq:efe_metadata}\)</span>.</p>
+<p><strong>Quadrant 3 (Reflection):</strong> Self-monitoring enables
+adaptive control using Equation <span
+class="math inline">\(\eqref{eq:efe_hierarchical}\)</span>.</p>
+<p><strong>Quadrant 4 (Evolution):</strong> Framework-level reasoning
+drives system improvement using Equation <span
+class="math inline">\(\eqref{eq:framework_optimization}\)</span>.</p>
+<h3 data-number="3.6.2" id="dynamic-balance"><span
+class="header-section-number">3.6.2</span> Dynamic Balance</h3>
+<p>The relative influence of each quadrant adapts based on context: -
+<strong>Routine Conditions:</strong> Quadrant 1 dominates with efficient
+processing - <strong>Uncertainty:</strong> Quadrant 2 increases
+meta-data weighting - <strong>Errors:</strong> Quadrant 3 triggers
+self-reflection and strategy adjustment - <strong>Novelty:</strong>
+Quadrant 4 enables framework adaptation</p>
+<h3 data-number="3.6.3" id="emergent-properties"><span
+class="header-section-number">3.6.3</span> Emergent Properties</h3>
+<p>The integration produces meta-level cognitive capabilities: 1.
+<strong>Self-Awareness:</strong> Quadrant 3 enables monitoring of
+cognitive processes 2. <strong>Adaptability:</strong> Quadrant 4 allows
+framework evolution 3. <strong>Robustness:</strong> Multiple processing
+levels provide failure resilience 4. <strong>Learning:</strong>
+Framework adaptation enables cumulative improvement</p>
+<hr />
+<h2 data-number="3.7" id="sec:framework_validation"><span
+class="header-section-number">3.7</span> Framework Validation</h2>
+<h3 data-number="3.7.1" id="theoretical-consistency"><span
+class="header-section-number">3.7.1</span> Theoretical Consistency</h3>
+<p>The quadrant structure maintains consistency with Active Inference
+principles: - <strong>Free Energy Principle:</strong> All quadrants
+minimize variational free energy at their respective levels -
+<strong>Generative Models:</strong> Each quadrant utilizes <span
+class="math inline">\(A\)</span>, <span
+class="math inline">\(B\)</span>, <span
+class="math inline">\(C\)</span>, <span class="math inline">\(D\)</span>
+matrices appropriately - <strong>Hierarchical Processing:</strong>
+Quadrants represent increasing levels of abstraction</p>
+<h3 data-number="3.7.2" id="mathematical-rigor"><span
+class="header-section-number">3.7.2</span> Mathematical Rigor</h3>
+<p>All formulations are grounded in established Active Inference theory:
+- EFE formulations follow standard derivations - Meta-data integration
+uses probabilistic weighting - Meta-cognitive control employs
+hierarchical optimization - Framework adaptation uses evolutionary
+principles</p>
+<h3 data-number="3.7.3" id="conceptual-clarity"><span
+class="header-section-number">3.7.3</span> Conceptual Clarity</h3>
+<p>The structure provides clear distinctions: - <strong>Data vs
+Meta-Data:</strong> Raw inputs vs quality information -
+<strong>Cognitive vs Meta-Cognitive:</strong> Direct processing vs
+self-reflection - <strong>Quadrant Boundaries:</strong> Clear
+categorization enabling systematic analysis</p>
+<hr />
+<h1 data-number="4" id="sec:security"><span
+class="header-section-number">4</span> Security Implications</h1>
+<p>The meta-level framework has significant implications for cognitive
+security, AI safety, and the robustness of belief systems. Understanding
+meta-cognitive processing reveals vulnerabilities that traditional
+security models miss, while also suggesting principled defense
+strategies.</p>
+<h2 data-number="4.1" id="sec:cognitive_security_framework"><span
+class="header-section-number">4.1</span> Cognitive Security
+Framework</h2>
+<p>Active Inference’s quadrant structure provides a systematic way to
+analyze cognitive vulnerabilities. Each quadrant represents a potential
+attack surface with distinct vulnerability profiles and defense
+requirements.</p>
+<h3 data-number="4.1.1" id="attack-surface-by-quadrant"><span
+class="header-section-number">4.1.1</span> Attack Surface by
+Quadrant</h3>
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 19%" />
+<col style="width: 36%" />
+<col style="width: 19%" />
+</colgroup>
+<thead>
+<tr>
+<th>Quadrant</th>
+<th>Target</th>
+<th>Vulnerability</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td>Sensory data</td>
+<td>Observation manipulation</td>
+<td>Belief distortion</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>Meta-data</td>
+<td>Quality score falsification</td>
+<td>Confidence miscalibration</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>Self-monitoring</td>
+<td>Confidence mechanism hijacking</td>
+<td>Strategy corruption</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>Framework parameters</td>
+<td>Epistemic/pragmatic subversion</td>
+<td>Architectural compromise</td>
+</tr>
+</tbody>
+</table>
+<p>Higher quadrants represent more fundamental vulnerabilities: while
+Quadrant 1 attacks can distort specific beliefs, Quadrant 4 attacks can
+compromise the entire cognitive architecture.</p>
+<h2 data-number="4.2" id="sec:vulnerabilities"><span
+class="header-section-number">4.2</span> Meta-Cognitive
+Vulnerabilities</h2>
+<h3 data-number="4.2.1"
+id="quadrant-3-attacks-confidence-manipulation"><span
+class="header-section-number">4.2.1</span> Quadrant 3 Attacks:
+Confidence Manipulation</h3>
+<p>Manipulation of confidence assessment mechanisms can undermine
+meta-cognitive control:</p>
+<p><strong>False Confidence Calibration:</strong> Adversaries provide
+feedback that systematically miscalibrates confidence assessments,
+causing agents to over-trust or under-trust their inferences.</p>
+<p><strong>Induced Over/Under-Confidence:</strong> By manipulating
+confidence assessment inputs, attackers can cause agents to: - Become
+overly conservative when exploration is needed - Become overconfident
+when caution is warranted - Switch strategies inappropriately</p>
+<p><strong>Meta-Cognitive Hijacking:</strong> Direct manipulation of
+meta-cognitive control parameters:</p>
+<span class="math display">\[\begin{equation}
+\{\lambda, \alpha, \beta, \gamma\} \rightarrow \{\lambda&#39;,
+\alpha&#39;, \beta&#39;, \gamma&#39;\}
+\label{eq:metacog_hijack}
+\end{equation}\]</span>
+<p>Where corrupted parameters <span
+class="math inline">\(\lambda&#39;\)</span>, <span
+class="math inline">\(\alpha&#39;\)</span>, <span
+class="math inline">\(\beta&#39;\)</span>, <span
+class="math inline">\(\gamma&#39;\)</span> redirect cognitive resources
+or disable adaptive mechanisms.</p>
+<h3 data-number="4.2.2"
+id="quadrant-4-attacks-framework-subversion"><span
+class="header-section-number">4.2.2</span> Quadrant 4 Attacks: Framework
+Subversion</h3>
+<p>Framework-level manipulation targets the fundamental cognitive
+architecture:</p>
+<p><strong>Epistemic Framework Subversion:</strong> Altering matrices
+<span class="math inline">\(A\)</span>, <span
+class="math inline">\(B\)</span>, or <span
+class="math inline">\(D\)</span> through learning or external influence
+can fundamentally change what an agent believes is knowable:</p>
+<span class="math display">\[\begin{equation}
+A_{true} \rightarrow A_{corrupted}: \text{perception of reality
+distorted}
+\label{eq:epistemic_subversion}
+\end{equation}\]</span>
+<p><strong>Pragmatic Landscape Alteration:</strong> Modifying matrix
+<span class="math inline">\(C\)</span> changes what the agent
+values:</p>
+<span class="math display">\[\begin{equation}
+C_{original} \rightarrow C_{corrupted}: \text{goal structure
+compromised}
+\label{eq:pragmatic_alteration}
+\end{equation}\]</span>
+<p>This potentially redirects all goal-directed behavior without the
+agent’s awareness.</p>
+<p><strong>Higher-Order Reasoning Corruption:</strong> Manipulating
+framework optimization processes (Equation <span
+class="math inline">\(\eqref{eq:framework_optimization}\)</span>) can
+cause agents to evolve toward vulnerable or exploitable cognitive
+architectures.</p>
+<h3 data-number="4.2.3" id="attack-vector-analysis"><span
+class="header-section-number">4.2.3</span> Attack Vector Analysis</h3>
+<p><strong>Gradual vs. Sudden Attacks:</strong> - Gradual: Slow
+parameter drift below detection threshold - Sudden: Rapid framework
+changes triggering immediate adaptation</p>
+<p><strong>External vs. Internal:</strong> - External: Environmental
+manipulation of observations - Internal: Direct parameter injection
+through learning mechanisms</p>
+<p><strong>Targeted vs. Systemic:</strong> - Targeted: Specific quadrant
+or parameter manipulation - Systemic: Cascading attacks affecting
+multiple levels</p>
+<h2 data-number="4.3" id="sec:defense_strategies"><span
+class="header-section-number">4.3</span> Defense Strategies</h2>
+<p>The framework suggests defense approaches operating at multiple
+levels, with higher-level defenses providing more fundamental
+protection.</p>
+<h3 data-number="4.3.1"
+id="meta-cognitive-monitoring-quadrant-3-defense"><span
+class="header-section-number">4.3.1</span> Meta-Cognitive Monitoring
+(Quadrant 3 Defense)</h3>
+<p>Continuous validation of confidence assessments:</p>
+<span class="math display">\[\begin{equation}
+validation(c) = |accuracy_{predicted}(c) - accuracy_{actual}|
+\label{eq:confidence_validation}
+\end{equation}\]</span>
+<p><strong>Defense Mechanisms:</strong> - Cross-validation of confidence
+with actual performance - Detection of miscalibration patterns - Anomaly
+detection for confidence trajectories - Automatic recalibration when
+drift detected</p>
+<h3 data-number="4.3.2"
+id="framework-integrity-checks-quadrant-4-defense"><span
+class="header-section-number">4.3.2</span> Framework Integrity Checks
+(Quadrant 4 Defense)</h3>
+<p>Verification of epistemic and pragmatic consistency:</p>
+<span class="math display">\[\begin{equation}
+integrity(\Theta) = \|\Theta_t - \Theta_{baseline}\| &lt; \epsilon
+\label{eq:framework_integrity}
+\end{equation}\]</span>
+<p><strong>Defense Mechanisms:</strong> - Monitoring framework
+parameters for unexpected changes - Detecting drift in matrices <span
+class="math inline">\(A\)</span>, <span
+class="math inline">\(B\)</span>, <span
+class="math inline">\(C\)</span>, <span class="math inline">\(D\)</span>
+- Regularization terms <span
+class="math inline">\(\mathcal{R}(\Theta)\)</span> penalizing
+inconsistent specifications - Framework coherence validation</p>
+<h3 data-number="4.3.3"
+id="recursive-validation-multi-level-defense"><span
+class="header-section-number">4.3.3</span> Recursive Validation
+(Multi-Level Defense)</h3>
+<p>Higher-order checking of meta-level processes:</p>
+<p><strong>Three-Layer Validation:</strong> 1. <strong>Level 1:</strong>
+Validate primary inference processes 2. <strong>Level 2:</strong>
+Validate meta-cognitive monitoring itself 3. <strong>Level 3:</strong>
+Validate framework integrity checking</p>
+<p>This recursive structure ensures that each security layer is itself
+protected by higher layers.</p>
+<h3 data-number="4.3.4" id="defense-portfolio"><span
+class="header-section-number">4.3.4</span> Defense Portfolio</h3>
+<table>
+<thead>
+<tr>
+<th>Defense Layer</th>
+<th>Mechanism</th>
+<th>Protects Against</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Observation validation</td>
+<td>Signal integrity</td>
+<td>Q1 attacks</td>
+</tr>
+<tr>
+<td>Meta-data verification</td>
+<td>Source authentication</td>
+<td>Q2 attacks</td>
+</tr>
+<tr>
+<td>Confidence monitoring</td>
+<td>Calibration checking</td>
+<td>Q3 attacks</td>
+</tr>
+<tr>
+<td>Framework integrity</td>
+<td>Parameter bounds</td>
+<td>Q4 attacks</td>
+</tr>
+<tr>
+<td>Recursive validation</td>
+<td>Self-checking</td>
+<td>Multi-level attacks</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="4.4" id="sec:ai_safety"><span
+class="header-section-number">4.4</span> AI Safety and Value
+Alignment</h2>
+<p>The framework provides principled approaches to AI safety
+challenges:</p>
+<h3 data-number="4.4.1" id="value-specification-through-matrix-c"><span
+class="header-section-number">4.4.1</span> Value Specification through
+Matrix C</h3>
+<p>Active Inference enables precise value specification:</p>
+<span class="math display">\[\begin{equation}
+C_{safe} = \text{specification of safe preferences}
+\label{eq:safe_preferences}
+\end{equation}\]</span>
+<p><strong>Advantages over reward functions:</strong> -
+Multi-dimensional preference landscapes - Trade-off specification
+between competing values - Ethical considerations directly encoded -
+Value hierarchies with priority structures</p>
+<h3 data-number="4.4.2" id="epistemic-boundary-protection"><span
+class="header-section-number">4.4.2</span> Epistemic Boundary
+Protection</h3>
+<p>Clear limits on what AI systems can know and assume:</p>
+<p><strong>Bounded Epistemic Frameworks:</strong> - Matrix <span
+class="math inline">\(A\)</span> specifications limit observation
+reliability assumptions - Matrix <span class="math inline">\(D\)</span>
+priors constrain initial state assumptions - Matrix <span
+class="math inline">\(B\)</span> causal models bound action effect
+assumptions</p>
+<h3 data-number="4.4.3" id="framework-integrity-for-ai-systems"><span
+class="header-section-number">4.4.3</span> Framework Integrity for AI
+Systems</h3>
+<p>Protection against value drift and epistemic corruption:</p>
+<p><strong>Meta-Monitoring Requirements:</strong> - Self-watchful AI
+systems monitoring their own frameworks - Anomaly detection for
+framework parameter changes - Rollback capabilities for detected
+corruption - Human-in-the-loop for framework modifications</p>
+<h3 data-number="4.4.4"
+id="alignment-through-framework-specification"><span
+class="header-section-number">4.4.4</span> Alignment through Framework
+Specification</h3>
+<p>The meta-pragmatic aspect enables principled alignment: 1.
+<strong>Value Learning:</strong> Systems develop value structures
+through matrix <span class="math inline">\(C\)</span> optimization 2.
+<strong>Epistemic Constraints:</strong> Matrix <span
+class="math inline">\(A\)</span>, <span
+class="math inline">\(B\)</span>, <span class="math inline">\(D\)</span>
+specifications limit inference scope 3. <strong>Meta-Cognitive
+Oversight:</strong> Quadrant 3 monitoring ensures alignment maintenance
+4. <strong>Framework Stability:</strong> Quadrant 4 regularization
+prevents unauthorized evolution</p>
+<h2 data-number="4.5" id="sec:societal_security"><span
+class="header-section-number">4.5</span> Societal Implications</h2>
+<h3 data-number="4.5.1" id="information-warfare"><span
+class="header-section-number">4.5.1</span> Information Warfare</h3>
+<p>The framework reveals meta-level manipulation of public belief
+systems:</p>
+<p><strong>Epistemic Attacks on Societies:</strong> - Systematic
+manipulation of information quality (meta-data) - Undermining confidence
+in legitimate information sources - Framework-level attacks on shared
+epistemological foundations</p>
+<p><strong>Defense Implications:</strong> - Education in meta-cognitive
+awareness - Institutional meta-data verification - Collective framework
+integrity monitoring</p>
+<h3 data-number="4.5.2" id="educational-system-resilience"><span
+class="header-section-number">4.5.2</span> Educational System
+Resilience</h3>
+<p>Development of curricula building meta-cognitive resilience:</p>
+<p><strong>Training Quadrant 3 Skills:</strong> - Self-monitoring and
+confidence assessment - Strategy adaptation under uncertainty -
+Meta-cognitive awareness</p>
+<p><strong>Training Quadrant 4 Skills:</strong> - Framework evaluation
+and critique - Epistemic framework comparison - Value system
+analysis</p>
+<h3 data-number="4.5.3" id="collective-cognitive-security"><span
+class="header-section-number">4.5.3</span> Collective Cognitive
+Security</h3>
+<p>Protection of group-level cognitive processes:</p>
+<p><strong>Shared Framework Protection:</strong> - Collective monitoring
+of epistemic drift - Group-level confidence calibration - Democratic
+framework governance</p>
+<p><strong>Institutional Safeguards:</strong> - Verification of
+information sources - Meta-data authenticity standards - Framework
+change transparency</p>
+<h2 data-number="4.6" id="sec:security_ethics"><span
+class="header-section-number">4.6</span> Ethical Considerations</h2>
+<h3 data-number="4.6.1" id="manipulation-risks"><span
+class="header-section-number">4.6.1</span> Manipulation Risks</h3>
+<p>Meta-level cognition raises concerns about: - Potential for
+sophisticated cognitive manipulation - Exploitation of framework
+vulnerabilities - Asymmetric knowledge advantages</p>
+<h3 data-number="4.6.2" id="responsibility-in-framework-design"><span
+class="header-section-number">4.6.2</span> Responsibility in Framework
+Design</h3>
+<p>Designers of cognitive systems bear responsibility for: - Secure
+framework specifications - Robust defense mechanisms - Transparent
+vulnerability disclosure</p>
+<h3 data-number="4.6.3" id="self-determination"><span
+class="header-section-number">4.6.3</span> Self-Determination</h3>
+<p>Protection of individual and collective: - Epistemic autonomy:
+freedom to form beliefs - Pragmatic autonomy: freedom to set values -
+Meta-cognitive autonomy: freedom to adapt frameworks</p>
+<hr />
+<h1 data-number="5" id="sec:discussion"><span
+class="header-section-number">5</span> Discussion</h1>
+<p>The <span class="math inline">\(2 \times 2\)</span> matrix
+(Data/Meta-Data × Cognitive/Meta-Cognitive) positions Active Inference
+as a meta-level methodology with far-reaching implications for cognitive
+science, artificial intelligence, and our understanding of intelligence
+itself. Framework specification—not just inference—becomes the research
+variable.</p>
+<h2 data-number="5.1" id="sec:theoretical_contributions"><span
+class="header-section-number">5.1</span> Theoretical Contributions</h2>
+<h3 data-number="5.1.1"
+id="value-landscapes-beyond-scalar-rewards"><span
+class="header-section-number">5.1.1</span> Value Landscapes Beyond
+Scalar Rewards</h3>
+<p>Active Inference’s meta-pragmatic nature transcends traditional
+approaches to goal-directed behavior. Unlike reinforcement learning,
+which specifies rewards as scalar values:</p>
+<span class="math display">\[\begin{equation}
+R(s,a) \in \mathbb{R}
+\label{eq:traditional_reward}
+\end{equation}\]</span>
+<p>Active Inference enables specification of preference landscapes:</p>
+<span class="math display">\[\begin{equation}
+C(o) \in \mathbb{R}^{|\mathcal{O}|}
+\label{eq:active_inference_preferences}
+\end{equation}\]</span>
+<p>This supports modeling of value systems far richer than scalar
+rewards: - <strong>Complex Value Structures:</strong> Multi-dimensional
+preferences with trade-offs - <strong>Ethical Considerations:</strong>
+Moral and social values in the preference landscape - <strong>Contextual
+Goals:</strong> Situation-dependent value hierarchies -
+<strong>Meta-Preferences:</strong> Preferences about preference
+structures themselves</p>
+<h3 data-number="5.1.2"
+id="epistemological-framework-specification"><span
+class="header-section-number">5.1.2</span> Epistemological Framework
+Specification</h3>
+<p>Active Inference supports specification of epistemic frameworks
+through matrices <span class="math inline">\(A\)</span>, <span
+class="math inline">\(B\)</span>, and <span
+class="math inline">\(D\)</span>, making epistemology a design
+parameter:</p>
+<p><strong>Empirical Framework:</strong></p>
+<span class="math display">\[\begin{equation}
+A_{\text{empirical}} = \begin{pmatrix} 0.95 &amp; 0.05 \\ 0.05 &amp;
+0.95 \end{pmatrix}
+\label{eq:empirical_framework}
+\end{equation}\]</span>
+<p>High confidence in observations, rapid inference.</p>
+<p><strong>Skeptical Framework:</strong></p>
+<span class="math display">\[\begin{equation}
+A_{\text{skeptical}} = \begin{pmatrix} 0.6 &amp; 0.4 \\ 0.4 &amp; 0.6
+\end{pmatrix}
+\label{eq:skeptical_framework}
+\end{equation}\]</span>
+<p>Lower confidence, requires more evidence before committing to
+beliefs.</p>
+<p>Different epistemic frameworks lead to different cognitive behaviors,
+learning speeds, and adaptation patterns—enabling formal analysis of
+epistemological questions previously limited to philosophical
+discourse.</p>
+<h3 data-number="5.1.3" id="recursive-self-modeling"><span
+class="header-section-number">5.1.3</span> Recursive Self-Modeling</h3>
+<p>The framework reveals the recursive relationship between modeler and
+modeled system:</p>
+<ol type="1">
+<li>Modeler uses Active Inference to model cognitive systems</li>
+<li>Insights improve understanding of modeler’s own cognition</li>
+<li>Improved self-understanding leads to better models</li>
+<li>Cycle continues with increasing sophistication</li>
+</ol>
+<h2 data-number="5.2" id="sec:methodological_advances"><span
+class="header-section-number">5.2</span> Methodological Advances</h2>
+<h3 data-number="5.2.1" id="systematic-analysis-structure"><span
+class="header-section-number">5.2.1</span> Systematic Analysis
+Structure</h3>
+<p>The quadrant structure provides tools for analyzing meta-level
+phenomena: - <strong>Clear Processing Level Distinctions:</strong>
+Unambiguous cognitive operation categories - <strong>Hierarchical
+Organization:</strong> Higher quadrants build on lower ones -
+<strong>Multi-Scale Integration:</strong> Processes at different scales
+analyzed together</p>
+<h3 data-number="5.2.2" id="research-design-tools"><span
+class="header-section-number">5.2.2</span> Research Design Tools</h3>
+<p>The framework enables researchers to: - Design experiments targeting
+specific quadrants - Compare interventions across processing levels -
+Develop targeted cognitive enhancement strategies - Bridge biological
+and artificial cognition</p>
+<h3 data-number="5.2.3" id="theoretical-integration"><span
+class="header-section-number">5.2.3</span> Theoretical Integration</h3>
+<p>The framework bridges multiple traditions: - <strong>Active Inference
++ Meta-Cognition:</strong> Formalizes self-monitoring within
+mathematical structure - <strong>FEP + Cognitive Architectures:</strong>
+Shows multi-level operation of FEP principles - <strong>Pragmatic +
+Epistemic Reasoning:</strong> Unifies value systems and knowledge
+frameworks</p>
+<h2 data-number="5.3" id="sec:broader_implications"><span
+class="header-section-number">5.3</span> Broader Implications</h2>
+<h3 data-number="5.3.1" id="nature-of-intelligence"><span
+class="header-section-number">5.3.1</span> Nature of Intelligence</h3>
+<p>Active Inference suggests intelligence emerges from: -
+<strong>Epistemic Competence:</strong> Constructing accurate world
+models - <strong>Pragmatic Wisdom:</strong> Effective goal-directed
+behavior - <strong>Meta-Level Reflection:</strong> Self-awareness and
+adaptive control - <strong>Framework Flexibility:</strong> Modifying
+fundamental cognitive structures</p>
+<p>Intelligence, in this view, is framework flexibility: the capacity to
+modify the structures within which cognition operates.</p>
+<h3 data-number="5.3.2" id="reality-and-representation"><span
+class="header-section-number">5.3.2</span> Reality and
+Representation</h3>
+<p>The meta-epistemic aspect raises fundamental questions: -
+<strong>Multiple Realities:</strong> Different epistemic frameworks
+construct different worlds - <strong>Framework Relativity:</strong>
+Cognitive adequacy depends on framework appropriateness -
+<strong>Reality Construction:</strong> Cognition as active construction,
+not passive reception</p>
+<h3 data-number="5.3.3" id="consciousness-and-self-awareness"><span
+class="header-section-number">5.3.3</span> Consciousness and
+Self-Awareness</h3>
+<p>The recursive nature of meta-cognition provides insights into
+consciousness: - <strong>Self-Modeling:</strong> Consciousness as
+modeling one’s own cognitive processes - <strong>Hierarchical
+Self-Awareness:</strong> Multiple levels of self-reflection -
+<strong>Emergent Properties:</strong> Consciousness arising from
+meta-level organization</p>
+<h2 data-number="5.4" id="sec:limitations"><span
+class="header-section-number">5.4</span> Limitations</h2>
+<h3 data-number="5.4.1" id="currently-acknowledged"><span
+class="header-section-number">5.4.1</span> Currently Acknowledged</h3>
+<p><strong>Empirical Validation:</strong> The framework is primarily
+theoretical; systematic empirical validation is needed to confirm
+quadrant distinctions correspond to measurable processing
+differences.</p>
+<p><strong>Computational Complexity:</strong> Higher quadrants involve
+complex optimization. Quadrant 4’s framework-level optimization requires
+searching high-dimensional parameter spaces, which can be
+computationally expensive.</p>
+<p><strong>Measurement Challenges:</strong> Meta-level processes are
+difficult to measure directly. Novel measurement techniques combining
+behavioral, neural, and computational approaches are needed.</p>
+<p><strong>Scale Issues:</strong> Scaling to complex real-world systems
+with thousands of states requires further development, particularly for
+Quadrants 3 and 4.</p>
+<h2 data-number="5.5" id="sec:future_directions"><span
+class="header-section-number">5.5</span> Future Directions</h2>
+<h3 data-number="5.5.1" id="empirical-validation"><span
+class="header-section-number">5.5.1</span> Empirical Validation</h3>
+<ul>
+<li><strong>Experimental Paradigms:</strong> Tasks targeting specific
+quadrants</li>
+<li><strong>Measurement Techniques:</strong> Novel meta-cognitive
+process assessment</li>
+<li><strong>Longitudinal Studies:</strong> Tracking meta-cognitive
+development</li>
+<li><strong>Cross-Cultural Research:</strong> Comparing frameworks
+across cultures</li>
+</ul>
+<h3 data-number="5.5.2" id="computational-development"><span
+class="header-section-number">5.5.2</span> Computational
+Development</h3>
+<ul>
+<li><strong>Efficient Algorithms:</strong> Approximate methods for
+framework optimization</li>
+<li><strong>Hierarchical Techniques:</strong> Leveraging quadrant
+structure</li>
+<li><strong>Parallel Computation:</strong> Scaling to large systems</li>
+</ul>
+<h3 data-number="5.5.3" id="application-domains"><span
+class="header-section-number">5.5.3</span> Application Domains</h3>
+<ul>
+<li><strong>Clinical Interventions:</strong> Therapeutic approaches
+targeting specific quadrants</li>
+<li><strong>Educational Technology:</strong> Meta-cognitive training
+systems</li>
+<li><strong>AI Development:</strong> Implementation in artificial
+cognitive systems</li>
+<li><strong>Policy Development:</strong> Applications of cognitive
+security insights</li>
+</ul>
+<h3 data-number="5.5.4" id="extension-possibilities"><span
+class="header-section-number">5.5.4</span> Extension Possibilities</h3>
+<ul>
+<li><strong>Multi-Agent Systems:</strong> Extension to social
+cognition</li>
+<li><strong>Developmental Psychology:</strong> Cognitive development
+trajectories</li>
+<li><strong>Quantum Extensions:</strong> Quantum information
+processing</li>
+<li><strong>Embodied Cognition:</strong> Sensorimotor integration</li>
+</ul>
+<h2 data-number="5.6" id="sec:conclusions"><span
+class="header-section-number">5.6</span> Conclusions</h2>
+<h3 data-number="5.6.1" id="summary-of-contributions"><span
+class="header-section-number">5.6.1</span> Summary of Contributions</h3>
+<p>We introduced a systematic <span class="math inline">\(2 \times
+2\)</span> matrix structure for analyzing Active Inference’s meta-level
+operation:</p>
+<ol type="1">
+<li><strong>Quadrant 1:</strong> Baseline EFE computation with direct
+sensory processing</li>
+<li><strong>Quadrant 2:</strong> Extended EFE with meta-data weighting
+and quality integration</li>
+<li><strong>Quadrant 3:</strong> Hierarchical EFE with self-assessment
+and adaptive control</li>
+<li><strong>Quadrant 4:</strong> Framework-level optimization enabling
+cognitive architecture evolution</li>
+</ol>
+<p>This structure provides: - <strong>Meta-Pragmatic Insights:</strong>
+Complex value hierarchies beyond reward functions -
+<strong>Meta-Epistemic Insights:</strong> Epistemology as design
+parameter - <strong>Security Framework:</strong> Systematic analysis of
+cognitive vulnerabilities - <strong>Methodological Tools:</strong>
+Experimental targeting of specific processing levels</p>
+<h3 data-number="5.6.2" id="unified-framework"><span
+class="header-section-number">5.6.2</span> Unified Framework</h3>
+<p>Active Inference, through its meta-level operation, provides a
+unified framework for understanding: - <strong>Perception as
+Inference:</strong> Bayesian hypothesis testing - <strong>Action as Free
+Energy Minimization:</strong> Goal-directed behavior - <strong>Learning
+as Model Refinement:</strong> Generative model adaptation -
+<strong>Meta-Cognition as Self-Modeling:</strong> Recursive cognitive
+awareness</p>
+<h3 data-number="5.6.3" id="closing-perspective"><span
+class="header-section-number">5.6.3</span> Closing Perspective</h3>
+<p>The capacity to specify epistemic frameworks (what can be known) and
+pragmatic landscapes (what matters) makes Active Inference not merely a
+theory of cognition but a <strong>meta-theory</strong>—a methodology for
+understanding how cognitive theories themselves are constructed and
+evaluated.</p>
+<p>Intelligence, ultimately, is <strong>framework flexibility</strong>:
+the capacity to modify the structures within which cognition operates.
+The quadrant structure reveals how this flexibility operates across
+multiple levels, from basic data processing to fundamental cognitive
+architecture evolution.</p>
+<hr />
+<h1 data-number="6" id="sec:acknowledgments"><span
+class="header-section-number">6</span> Acknowledgments</h1>
+<p>I would like to acknowledge the contributions and support that made
+this work possible.</p>
+<h2 data-number="6.1" id="intellectual-foundations"><span
+class="header-section-number">6.1</span> Intellectual Foundations</h2>
+<p>This work builds upon the foundational contributions of Karl Friston
+and the Active Inference research community. The Free Energy Principle
+and Active Inference framework provide the theoretical foundation for
+understanding cognition as free energy minimization.</p>
+<h2 data-number="6.2" id="community-and-collaboration"><span
+class="header-section-number">6.2</span> Community and
+Collaboration</h2>
+<p>I am grateful to the active inference research community for their
+ongoing work in developing and applying these ideas across diverse
+domains including neuroscience, psychiatry, artificial intelligence, and
+cognitive science.</p>
+<h2 data-number="6.3" id="technical-support"><span
+class="header-section-number">6.3</span> Technical Support</h2>
+<p>The implementation and validation of these concepts was made possible
+through open-source tools and frameworks that enable reproducible
+research and scientific computing.</p>
+<h2 data-number="6.4" id="personal-reflections"><span
+class="header-section-number">6.4</span> Personal Reflections</h2>
+<p>This work represents a personal exploration of the meta-level
+implications of Active Inference, inspired by the profound insights that
+emerge when viewing cognition through the lens of recursive
+self-modeling.</p>
+<hr />
+<h1 data-number="7" id="sec:appendix"><span
+class="header-section-number">7</span> Appendix</h1>
+<p>This appendix provides technical details, mathematical derivations,
+extended examples, and implementation specifications supporting the main
+text.</p>
+<h2 data-number="7.1" id="sec:mathematical_foundations"><span
+class="header-section-number">7.1</span> Mathematical Foundations</h2>
+<h3 data-number="7.1.1"
+id="expected-free-energy-complete-derivation"><span
+class="header-section-number">7.1.1</span> Expected Free Energy Complete
+Derivation</h3>
+<p>The Expected Free Energy combines epistemic and pragmatic components
+(see Equation <span class="math inline">\(\eqref{eq:efe}\)</span>):</p>
+<span class="math display">\[\begin{equation}
+\mathcal{F}(\pi) = \mathbb{E}_{q(s_\tau)}[\log q(s_\tau) - \log p(s_\tau
+\mid \pi)] + \mathbb{E}_{q(o_\tau)}[\log p(o_\tau \mid s_\tau) + \log
+p(s_\tau) - \log q(s_\tau)]
+\label{eq:efe_complete}
+\end{equation}\]</span>
+<p>Using the generative model, the pragmatic component becomes:</p>
+<span class="math display">\[\begin{equation}
+G(\pi) = \mathbb{E}_{q(o_\tau)}[\log \sigma(C) + \log A - \log
+q(s_\tau)]
+\label{eq:pragmatic_generative}
+\end{equation}\]</span>
+<p>Where <span class="math inline">\(\sigma(C)\)</span> represents the
+softmax normalization of preferences.</p>
+<h3 data-number="7.1.2"
+id="generative-model-complete-specifications"><span
+class="header-section-number">7.1.2</span> Generative Model Complete
+Specifications</h3>
+<p><strong>Matrix A (Observation Likelihoods):</strong></p>
+<p><strong>Normalization:</strong> Each column sums to 1: <span
+class="math inline">\(\sum_i A[i,j] = 1\)</span> for all <span
+class="math inline">\(j\)</span>.</p>
+<p><strong>Matrix B (State Transitions):</strong></p>
+<p><strong>Structure:</strong> 3D tensor <span
+class="math inline">\(\text{states} \times \text{states} \times
+\text{actions}\)</span>.</p>
+<h2 data-number="7.2" id="sec:meta_cognitive_algorithms"><span
+class="header-section-number">7.2</span> Meta-Cognitive Algorithms</h2>
+<h3 data-number="7.2.1" id="confidence-assessment"><span
+class="header-section-number">7.2.1</span> Confidence Assessment</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> assess_confidence(posterior_beliefs, observation_uncertainty):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    entropy <span class="op">=</span> <span class="op">-</span>np.<span class="bu">sum</span>(posterior_beliefs <span class="op">*</span> np.log(posterior_beliefs <span class="op">+</span> <span class="fl">1e-10</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    max_belief <span class="op">=</span> np.<span class="bu">max</span>(posterior_beliefs)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    normalized_entropy <span class="op">=</span> <span class="fl">1.0</span> <span class="op">-</span> entropy <span class="op">/</span> np.log(<span class="bu">len</span>(posterior_beliefs))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    confidence <span class="op">=</span> (<span class="fl">0.4</span> <span class="op">*</span> max_belief <span class="op">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                 <span class="fl">0.3</span> <span class="op">*</span> normalized_entropy <span class="op">+</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                 <span class="fl">0.2</span> <span class="op">*</span> (<span class="fl">1.0</span> <span class="op">-</span> np.std(posterior_beliefs)) <span class="op">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                 <span class="fl">0.1</span> <span class="op">*</span> (<span class="fl">1.0</span> <span class="op">-</span> observation_uncertainty))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">min</span>(<span class="bu">max</span>(confidence, <span class="fl">0.0</span>), <span class="fl">1.0</span>)</span></code></pre></div>
+<h3 data-number="7.2.2" id="adaptive-attention-allocation"><span
+class="header-section-number">7.2.2</span> Adaptive Attention
+Allocation</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> allocate_attention(confidence_level, available_resources):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    base_allocation <span class="op">=</span> {k: <span class="fl">1.0</span> <span class="op">/</span> <span class="bu">len</span>(available_resources)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                      <span class="cf">for</span> k <span class="kw">in</span> available_resources.keys()}</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> confidence_level <span class="op">&lt;</span> <span class="fl">0.7</span>:</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        adjustments <span class="op">=</span> {<span class="st">&#39;inference_monitoring&#39;</span>: <span class="fl">1.5</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;basic_processing&#39;</span>: <span class="fl">0.8</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                       <span class="st">&#39;strategy_evaluation&#39;</span>: <span class="fl">1.2</span>}</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        adjustments <span class="op">=</span> {k: <span class="fl">1.0</span> <span class="cf">for</span> k <span class="kw">in</span> available_resources.keys()}</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    allocation <span class="op">=</span> {k: base <span class="op">*</span> adjustments.get(k, <span class="fl">1.0</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                 <span class="cf">for</span> k, base <span class="kw">in</span> base_allocation.items()}</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="bu">sum</span>(allocation.values())</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {k: v <span class="op">/</span> total <span class="cf">for</span> k, v <span class="kw">in</span> allocation.items()}</span></code></pre></div>
+<h2 data-number="7.3" id="sec:extended_examples"><span
+class="header-section-number">7.3</span> Extended Examples</h2>
+<h3 data-number="7.3.1"
+id="quadrant-1-temperature-regulation-complete"><span
+class="header-section-number">7.3.1</span> Quadrant 1: Temperature
+Regulation (Complete)</h3>
+<p><strong>Generative Model:</strong> - States: {cold, comfortable, hot}
+- Observations: {cold_sensor, comfortable_sensor, hot_sensor} - Actions:
+{heat, no_change, cool}</p>
+<p><strong>Matrix Specifications:</strong></p>
+<h3 data-number="7.3.2" id="quadrant-3-self-reflective-control"><span
+class="header-section-number">7.3.2</span> Quadrant 3: Self-Reflective
+Control</h3>
+<p><strong>Confidence Dynamics:</strong></p>
+<p>Where: - <span class="math inline">\(c\)</span>: current confidence
+(0 to 1) - <span class="math inline">\(c_{\text{target}}\)</span>:
+target confidence based on task demands - <span
+class="math inline">\(\alpha\)</span>: adaptation rate - <span
+class="math inline">\(\beta\)</span>: performance feedback strength</p>
+<h3 data-number="7.3.3" id="quadrant-4-framework-optimization"><span
+class="header-section-number">7.3.3</span> Quadrant 4: Framework
+Optimization</h3>
+<p><strong>Meta-Parameter Learning:</strong></p>
+<h2 data-number="7.4" id="sec:validation_results"><span
+class="header-section-number">7.4</span> Statistical Validation</h2>
+<h3 data-number="7.4.1" id="hypothesis-testing-results"><span
+class="header-section-number">7.4.1</span> Hypothesis Testing
+Results</h3>
+<p><strong>H1: Meta-data integration improves performance</strong> -
+t-test: t(98) = 5.23, p &lt; 0.001 - Effect size: Cohen’s d = 1.05
+(large)</p>
+<p><strong>H2: Meta-cognitive control enhances robustness</strong> -
+ANOVA: F(3,96) = 12.45, p &lt; 0.001 - Post-hoc: All quadrant pairs
+significant (p &lt; 0.01)</p>
+<p><strong>H3: Framework optimization provides adaptive
+advantage</strong> - Paired t-test: t(29) = 4.67, p &lt; 0.001 - Effect
+size: Cohen’s d = 0.85 (large)</p>
+<h3 data-number="7.4.2" id="performance-regression-model"><span
+class="header-section-number">7.4.2</span> Performance Regression
+Model</h3>
+<span class="math display">\[\begin{equation}
+\text{performance} = \beta_0 + \beta_1 \cdot \text{meta\_data} + \beta_2
+\cdot \text{meta\_cognition} + \beta_3 \cdot \text{framework} + \epsilon
+\label{eq:performance_regression}
+\end{equation}\]</span>
+<p>Results: <span class="math inline">\(R^2 = 0.87\)</span>; All
+coefficients significant (<span class="math inline">\(p &lt;
+0.001\)</span>).</p>
+<h2 data-number="7.5" id="sec:computational_benchmarks"><span
+class="header-section-number">7.5</span> Computational Benchmarks</h2>
+<h3 data-number="7.5.1" id="runtime-analysis"><span
+class="header-section-number">7.5.1</span> Runtime Analysis</h3>
+<table>
+<thead>
+<tr>
+<th>Quadrant</th>
+<th>Runtime</th>
+<th>Overhead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td>15ms</td>
+<td>baseline</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>28ms</td>
+<td>+87%</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>42ms</td>
+<td>+180%</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>67ms</td>
+<td>+347%</td>
+</tr>
+</tbody>
+</table>
+<h3 data-number="7.5.2" id="complexity-analysis"><span
+class="header-section-number">7.5.2</span> Complexity Analysis</h3>
+<ul>
+<li><strong>EFE Calculation:</strong> <span
+class="math inline">\(O(n_{\text{states}} \times n_{\text{actions}}
+\times \text{horizon})\)</span></li>
+<li><strong>Inference:</strong> <span
+class="math inline">\(O(n_{\text{states}} \times
+n_{\text{observations}})\)</span></li>
+<li><strong>Meta-Cognitive Assessment:</strong> <span
+class="math inline">\(O(n_{\text{beliefs}})\)</span></li>
+<li><strong>Framework Optimization:</strong> <span
+class="math inline">\(O(\text{iterations} \times
+n_{\text{parameters}})\)</span></li>
+</ul>
+<h2 data-number="7.6" id="sec:implementation_architecture"><span
+class="header-section-number">7.6</span> Implementation
+Architecture</h2>
+<h3 data-number="7.6.1" id="code-structure"><span
+class="header-section-number">7.6.1</span> Code Structure</h3>
+<p><strong>Infrastructure Layer:</strong> -
+<code>infrastructure/core/</code>: Logging, exceptions, file management
+- <code>infrastructure/validation/</code>: PDF and markdown validation -
+<code>infrastructure/rendering/</code>: LaTeX/PDF generation -
+<code>infrastructure/figure_manager/</code>: Automated figure
+registration</p>
+<p><strong>Project Layer:</strong> -
+<code>src/active_inference.py</code>: EFE calculations and policy
+selection - <code>src/free_energy_principle.py</code>: FEP system
+boundary analysis - <code>src/quadrant_framework.py</code>: 2×2 matrix
+framework - <code>src/generative_models.py</code>: A, B, C, D matrix
+implementations - <code>src/meta_cognition.py</code>: Confidence
+assessment and adaptive control</p>
+<h3 data-number="7.6.2" id="testing-philosophy"><span
+class="header-section-number">7.6.2</span> Testing Philosophy</h3>
+<p><strong>No Mocks Policy:</strong> All tests use real data and
+computations only.</p>
+<p><strong>Coverage Requirements:</strong> - Project Code: 90% minimum
+(currently 91.44%) - Infrastructure Code: 60% minimum (currently
+83.3%)</p>
+<h2 data-number="7.7" id="sec:references_appendix"><span
+class="header-section-number">7.7</span> References</h2>
+<h3 data-number="7.7.1" id="key-papers"><span
+class="header-section-number">7.7.1</span> Key Papers</h3>
+<ul>
+<li>Friston, K. (2010). The free-energy principle: a unified brain
+theory?</li>
+<li>Friston, K., et al. (2012). Active inference and epistemic
+value</li>
+<li>Parr, T., &amp; Friston, K. J. (2017). The active inference
+framework</li>
+<li>Tschantz, A., et al. (2020). Scaling active inference</li>
+</ul>
+<h3 data-number="7.7.2" id="mathematical-background"><span
+class="header-section-number">7.7.2</span> Mathematical Background</h3>
+<ul>
+<li>Bishop, C. M. (2006). Pattern recognition and machine learning</li>
+<li>MacKay, D. J. C. (2003). Information theory, inference, and learning
+algorithms</li>
+<li>Jaynes, E. T. (2003). Probability theory: The logic of science</li>
+</ul>
+<hr />
+<h1 data-number="8" id="sec:symbols_glossary"><span
+class="header-section-number">8</span> Symbols and Notation</h1>
+<h2 data-number="8.1" id="core-active-inference-notation"><span
+class="header-section-number">8.1</span> Core Active Inference
+Notation</h2>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 43%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Description</th>
+<th>Domain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(\mathcal{F}(\pi)\)</span></td>
+<td>Expected Free Energy for policy <span
+class="math inline">\(\pi\)</span></td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(G(\pi)\)</span></td>
+<td>Pragmatic value of policy <span
+class="math inline">\(\pi\)</span></td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(H[Q(\pi)]\)</span></td>
+<td>Epistemic affordance (information gain)</td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(q(s)\)</span></td>
+<td>Posterior beliefs over hidden states</td>
+<td><span class="math inline">\(\mathbb{R}^n\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(p(s)\)</span></td>
+<td>Prior beliefs over hidden states</td>
+<td><span class="math inline">\(\mathbb{R}^n\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(A\)</span></td>
+<td>Observation likelihood matrix <span class="math inline">\(P(o \mid
+s)\)</span></td>
+<td><span class="math inline">\(\mathbb{R}^{m \times n}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(B\)</span></td>
+<td>State transition matrix <span class="math inline">\(P(s&#39; \mid s,
+a)\)</span></td>
+<td><span class="math inline">\(\mathbb{R}^{n \times n \times
+k}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(C\)</span></td>
+<td>Preference matrix (log priors over observations)</td>
+<td><span class="math inline">\(\mathbb{R}^m\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(D\)</span></td>
+<td>Prior beliefs over initial states</td>
+<td><span class="math inline">\(\mathbb{R}^n\)</span></td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="8.2" id="meta-cognitive-extensions"><span
+class="header-section-number">8.2</span> Meta-Cognitive Extensions</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Description</th>
+<th>Domain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(c\)</span></td>
+<td>Confidence score</td>
+<td><span class="math inline">\([0,1]\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\lambda\)</span></td>
+<td>Meta-cognitive weighting factor</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\Theta\)</span></td>
+<td>Framework parameters</td>
+<td><span class="math inline">\(\mathbb{R}^d\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(w(m)\)</span></td>
+<td>Meta-data weighting function</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="8.3" id="free-energy-principle"><span
+class="header-section-number">8.3</span> Free Energy Principle</h2>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 43%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Description</th>
+<th>Domain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(\mathcal{F}\)</span></td>
+<td>Variational free energy</td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathcal{S}\)</span></td>
+<td>Surprise (-log evidence)</td>
+<td><span class="math inline">\(\mathbb{R}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\phi\)</span></td>
+<td>System parameters</td>
+<td><span class="math inline">\(\mathbb{R}^p\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(p(o,s)\)</span></td>
+<td>Joint distribution over observations and states</td>
+<td>Probability space</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="8.4" id="quadrant-framework"><span
+class="header-section-number">8.4</span> Quadrant Framework</h2>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 43%" />
+<col style="width: 30%" />
+</colgroup>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Description</th>
+<th>Domain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(Q1\)</span></td>
+<td>Data processing (cognitive) quadrant</td>
+<td>Framework element</td>
+</tr>
+<tr>
+<td><span class="math inline">\(Q2\)</span></td>
+<td>Meta-data organization (cognitive) quadrant</td>
+<td>Framework element</td>
+</tr>
+<tr>
+<td><span class="math inline">\(Q3\)</span></td>
+<td>Reflective processing (meta-cognitive) quadrant</td>
+<td>Framework element</td>
+</tr>
+<tr>
+<td><span class="math inline">\(Q4\)</span></td>
+<td>Higher-order reasoning (meta-cognitive) quadrant</td>
+<td>Framework element</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="8.5" id="statistical-notation"><span
+class="header-section-number">8.5</span> Statistical Notation</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Description</th>
+<th>Domain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(\mathbb{E}[\cdot]\)</span></td>
+<td>Expectation operator</td>
+<td>Functional</td>
+</tr>
+<tr>
+<td><span class="math inline">\(KL[p\|q]\)</span></td>
+<td>Kullback-Leibler divergence</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\sigma(\cdot)\)</span></td>
+<td>Softmax function</td>
+<td>Mapping to probabilities</td>
+</tr>
+<tr>
+<td><span class="math inline">\(\nabla\)</span></td>
+<td>Gradient operator</td>
+<td>Functional</td>
+</tr>
+</tbody>
+</table>
+<h2 data-number="8.6" id="implementation-variables"><span
+class="header-section-number">8.6</span> Implementation Variables</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Description</th>
+<th>Domain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(t\)</span></td>
+<td>Time step</td>
+<td><span class="math inline">\(\mathbb{N}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\tau\)</span></td>
+<td>Temporal horizon</td>
+<td><span class="math inline">\(\mathbb{N}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\eta\)</span></td>
+<td>Learning rate</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\alpha\)</span></td>
+<td>Adaptation rate</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\beta\)</span></td>
+<td>Feedback strength</td>
+<td><span class="math inline">\(\mathbb{R}^+\)</span></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 data-number="9" id="sec:references"><span
+class="header-section-number">9</span> References</h1>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # tests/ - Test Suite
 
-Comprehensive test suite ensuring coverage requirements for both infrastructure and project modules (60% infrastructure minimum, 90% project minimum). Current status: **100% project**, **83.33% infrastructure**, **2116 tests passing** (1796 infra [2 skipped] + 320 project).
+test suite ensuring coverage requirements for both infrastructure and project modules (60% infrastructure minimum, 90% project minimum). Current status: **100% project**, **83.33% infrastructure**, **2116 tests passing** (1796 infra [2 skipped] + 320 project).
 
 ## Quick Start
 
@@ -57,8 +57,8 @@ pytest tests/ -x
 - **Integration Tests**: Corrected type assertions for integrity verification functions
 
 **LLM Tests (Partial):**
-- Migrated `test_query_fallback_on_connection_error` to real HTTP calls
-- Enhanced `ollama_test_server` fixture for model-specific responses
+- Migrated `test_query_fallback_on_connection_error` to HTTP calls
+- `ollama_test_server` fixture for model-specific responses
 - Established pattern for no-mocks LLM testing
 
 **Output & Bash Tests:**
@@ -92,7 +92,7 @@ pytest tests/ --lf
 - **Projects** (`projects/{name}/src/`): 90% minimum (code_project: 94.1%, prose_project: 91.5%)
 - **Infrastructure** (`infrastructure/`): 60% minimum (currently 83.33% - exceeds stretch goal!)
 - Tests must pass before PDF generation
-- Real data only (no mocks)
+- data only (no mocks)
 - Coverage report: `htmlcov/index.html`
 
 ## Test Organization
@@ -127,7 +127,7 @@ graph TD
         OUTPUT[test_output_copying.py<br/>File operations]
         EDGES[test_edge_cases_and_error_paths.py<br/>Error conditions]
         SCRIPTS[test_run_sh.py<br/>Script orchestration]
-        EXEC[test_07_generate_executive_report.py<br/>Executive reporting]
+        EXEC[test_executive_report_generation.py<br/>Executive reporting]
         LOGGING[test_logging.py<br/>Bash logging]
         BASH[test_bash_utils.sh<br/>Bash utilities]
     end
@@ -171,12 +171,11 @@ tests/
 ├── conftest.py                          # Root test configuration
 │
 │ # Note: Multiple test files with suffixes (_coverage, _full, _comprehensive)
-│ # exist to achieve comprehensive coverage across scenarios and edge cases
+│ # exist to achieve coverage across scenarios and edge cases
 ├── infrastructure/                      # Infrastructure module tests
 │   ├── conftest.py                      # Infrastructure test configuration
-│   ├── test_project_discovery.py        # Project discovery and validation
-│   ├── build/                           # Build validation tests
 │   ├── core/                            # Core utilities tests
+│   │   ├── test_project_discovery.py    # Project discovery and validation
 │   ├── documentation/                   # Documentation handling tests
 │   ├── llm/                             # LLM integration tests
 │   ├── publishing/                      # Publishing tools tests
@@ -186,7 +185,7 @@ tests/
 │   └── validation/                      # Validation tests
 └── integration/                         # Integration tests
     ├── conftest.py                      # Integration test configuration
-    ├── test_07_generate_executive_report.py # Executive report generation
+    ├── test_executive_report_generation.py  # Executive report generation
     ├── test_bash_utils.sh               # Bash utility tests
     ├── test_edge_cases_and_error_paths.py # Edge cases and error handling
     ├── test_figure_equation_citation.py # Fig/Eq/Citation tests
@@ -266,7 +265,7 @@ tests/
 - `test_pdf_validator.py` - PDF validation
 - `test_integrity.py` - Integrity verification
 - `test_check_links.py` - Documentation link checking
-- `test_doc_scanner.py` - Comprehensive documentation scanning
+- `test_doc_scanner.py` - documentation scanning
 - `test_repo_scanner.py` - Repository accuracy/completeness
 - `test_cli.py` - CLI wrapper for validation
 
@@ -276,7 +275,7 @@ tests/
 - `test_output_copying.py` - Output file handling and copying
 - `test_edge_cases_and_error_paths.py` - Edge cases and error handling
 - `test_run_sh.py` - Script orchestration and CLI testing
-- `test_07_generate_executive_report.py` - Executive report generation
+- `test_executive_report_generation.py` - Executive report generation
 - `test_logging.py` - Bash logging integration tests
 - `test_bash_utils.sh` - Bash utility function validation
 
@@ -322,7 +321,7 @@ def test_error_handling():
 
 ## Figure, Equation, and Citation Tests
 
-The test suite includes comprehensive validation for:
+The test suite includes validation for:
 
 ### Figure Handling
 - Figure generation with proper paths
@@ -343,7 +342,7 @@ The test suite includes comprehensive validation for:
 - Citation extraction and validation
 
 ### Integrated Workflows
-- Complete manuscript sections with all elements
+- manuscript sections with all elements
 - Cross-section references
 - Validation integration
 - PDF generation integration

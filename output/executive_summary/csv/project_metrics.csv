@@ -1,4 +1,3 @@
 Project,Health_Score,Health_Grade,Manuscript_Words,Manuscript_Sections,Manuscript_Equations,Manuscript_Figures,Test_Total,Test_Passed,Test_Failed,Test_Coverage_Pct,Test_Execution_Time,Pipeline_Duration,Pipeline_Stages_Passed,Pipeline_Bottleneck_Stage,Pipeline_Bottleneck_Duration,Output_PDFs,Output_PDF_Size_MB,Output_Figures,Output_Slides,Output_Web,Output_Total
-active_inference_meta_pragmatic,100.0,A,19281,16,72,0,360,360,0,92.03,0.0,436.3333570957184,9,LLM Translations,253.91888999938965,1,4.370429039001465,34,13,13,63
-code_project,100.0,A,3075,7,12,7,28,28,0,94.12,0.0,106.09501481056213,9,PDF Rendering,36.371325969696045,1,0.9827337265014648,6,4,4,16
-ento_linguistics,80.0,B,16738,17,0,0,555,548,0,70.28,0.0,304.78529715538025,9,LLM Translations,100.67616581916809,1,0.8441762924194336,36,12,14,75
+active_inference_meta_pragmatic,100.0,A,7324,12,37,0,360,360,0,92.03,0.0,78.06343293190002,7,PDF Rendering,64.18328928947449,1,4.250082969665527,34,9,10,56
+code_project,100.0,A,3145,7,0,7,28,28,0,94.12,0.0,33.51111125946045,7,PDF Rendering,23.819551944732666,1,0.9839611053466797,6,4,5,17

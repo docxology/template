@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-01-05T08:10:59.373148",
-  "total_duration": 106.09501481056213,
+  "timestamp": "2026-01-08T14:58:06.572329",
+  "total_duration": 33.51111125946045,
   "stages": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.025241851806640625,
+      "duration": 0.010730981826782227,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -14,7 +14,7 @@
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 0.7365388870239258,
+      "duration": 0.5610790252685547,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -23,7 +23,7 @@
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 7.2693932056427,
+      "duration": 4.767409086227417,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -32,7 +32,7 @@
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 5.006772041320801,
+      "duration": 3.746250867843628,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -41,7 +41,7 @@
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 36.371325969696045,
+      "duration": 23.819551944732666,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -50,25 +50,7 @@
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 0.4699101448059082,
-      "status": "passed",
-      "output_files": [],
-      "errors": [],
-      "warnings": []
-    },
-    {
-      "name": "LLM Scientific Review",
-      "exit_code": 0,
-      "duration": 25.6336190700531,
-      "status": "passed",
-      "output_files": [],
-      "errors": [],
-      "warnings": []
-    },
-    {
-      "name": "LLM Translations",
-      "exit_code": 0,
-      "duration": 30.00922989845276,
+      "duration": 0.2960832118988037,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -77,7 +59,7 @@
     {
       "name": "Copy Outputs",
       "exit_code": 0,
-      "duration": 0.5729837417602539,
+      "duration": 0.31000614166259766,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -94,7 +76,7 @@
         "exists": true,
         "file_count": 9,
         "size_mb": "1.09",
-        "total_size_bytes": 1144382,
+        "total_size_bytes": 1147754,
         "largest_files": [
           {
             "name": "code_project_combined.pdf",
@@ -126,35 +108,36 @@
       },
       "web": {
         "exists": true,
-        "file_count": 4,
-        "size_mb": "0.04",
-        "total_size_bytes": 43260,
+        "file_count": 6,
+        "size_mb": "0.10",
+        "total_size_bytes": 109083,
         "largest_files": [
+          {
+            "name": "index.html",
+            "size_mb": "0.04",
+            "path": "web/index.html"
+          },
+          {
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.02",
+            "path": "web/_combined_manuscript.md"
+          },
           {
             "name": "03_results.html",
             "size_mb": "0.02",
             "path": "web/03_results.html"
-          },
-          {
-            "name": "02_methodology.html",
-            "size_mb": "0.01",
-            "path": "web/02_methodology.html"
-          },
-          {
-            "name": "04_conclusion.html",
-            "size_mb": "0.01",
-            "path": "web/04_conclusion.html"
           }
         ],
         "extensions": {
-          ".html": 4
+          ".md": 1,
+          ".html": 5
         }
       },
       "slides": {
         "exists": true,
         "file_count": 29,
         "size_mb": "1.27",
-        "total_size_bytes": 1327182,
+        "total_size_bytes": 1331898,
         "largest_files": [
           {
             "name": "03_results_slides.pdf",
@@ -187,7 +170,7 @@
         "exists": true,
         "file_count": 7,
         "size_mb": "0.90",
-        "total_size_bytes": 942796,
+        "total_size_bytes": 943617,
         "largest_files": [
           {
             "name": "algorithm_complexity.png",
@@ -230,7 +213,7 @@
         "exists": true,
         "file_count": 11,
         "size_mb": "0.02",
-        "total_size_bytes": 16394,
+        "total_size_bytes": 16103,
         "largest_files": [
           {
             "name": "output_statistics.json",
@@ -265,42 +248,31 @@
       },
       "llm": {
         "exists": true,
-        "file_count": 4,
-        "size_mb": "0.02",
-        "total_size_bytes": 17181,
-        "largest_files": [
-          {
-            "name": "combined_review.md",
-            "size_mb": "0.01",
-            "path": "llm/combined_review.md"
-          },
-          {
-            "name": "translation_zh.md",
-            "size_mb": "0.00",
-            "path": "llm/translation_zh.md"
-          },
-          {
-            "name": "executive_summary.md",
-            "size_mb": "0.00",
-            "path": "llm/executive_summary.md"
-          }
-        ],
-        "extensions": {
-          ".md": 3,
-          ".json": 1
-        }
-      },
-      "logs": {
-        "exists": true,
         "file_count": 0,
         "size_mb": "0.00",
         "total_size_bytes": 0,
         "largest_files": [],
         "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.01",
+        "total_size_bytes": 8702,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.01",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
       }
     },
-    "total_files": 65,
-    "total_size_mb": 3.3296899795532227,
+    "total_files": 64,
+    "total_size_mb": 3.3925962448120117,
     "largest_files": [
       {
         "name": "code_project_combined.pdf",
@@ -351,24 +323,24 @@
         "path": "pdf/_combined_manuscript.log"
       },
       {
+        "name": "index.html",
+        "size_mb": "0.04",
+        "category": "web",
+        "path": "web/index.html"
+      },
+      {
         "name": "_combined_manuscript.tex",
         "size_mb": "0.03",
         "category": "pdf",
         "path": "pdf/_combined_manuscript.tex"
-      },
-      {
-        "name": "03_results.html",
-        "size_mb": "0.02",
-        "category": "web",
-        "path": "web/03_results.html"
       }
     ],
     "missing_expected_files": [
       "code_project_combined.pdf or project_combined.pdf"
     ],
     "file_counts_by_type": {
-      ".md": 6,
-      ".log": 5,
+      ".md": 4,
+      ".log": 6,
       ".aux": 5,
       ".blg": 1,
       ".bib": 1,
@@ -376,25 +348,25 @@
       ".tex": 5,
       ".toc": 5,
       ".bbl": 1,
-      ".html": 5,
+      ".html": 6,
       ".snm": 4,
       ".nav": 4,
       ".vrb": 1,
       ".png": 6,
-      ".json": 9,
+      ".json": 8,
       ".csv": 1,
       ".txt": 1
     },
     "sizes_by_category": {
-      "pdf": 1.0913677215576172,
-      "web": 0.041255950927734375,
-      "slides": 1.2656993865966797,
-      "figures": 0.8991203308105469,
+      "pdf": 1.094583511352539,
+      "web": 0.10402965545654297,
+      "slides": 1.2701969146728516,
+      "figures": 0.8999032974243164,
       "data": 0.0002269744873046875,
-      "reports": 0.015634536743164062,
+      "reports": 0.015357017517089844,
       "simulations": 0.0,
-      "llm": 0.01638507843017578,
-      "logs": 0.0
+      "llm": 0.0,
+      "logs": 0.008298873901367188
     },
     "pdf_files": 9,
     "figures": 7,

@@ -1,6 +1,6 @@
 # Reporting Infrastructure Tests - Quick Reference
 
-Comprehensive tests for pipeline reporting and error aggregation.
+tests for pipeline reporting and error aggregation.
 
 ## Overview
 
@@ -125,6 +125,6 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete test documentation
+- [AGENTS.md](AGENTS.md) - test documentation
 - [../../infrastructure/reporting/README.md](../../infrastructure/reporting/README.md) - Reporting module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

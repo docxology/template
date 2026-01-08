@@ -1,11 +1,11 @@
 # Testing Guide
 
-> **Test-driven development** with comprehensive coverage requirements
+> **Test-driven development** with coverage requirements
 
 **Quick Reference:** [Logging Guide](../operational/LOGGING_GUIDE.md) | [Error Handling Guide](../operational/ERROR_HANDLING_GUIDE.md)
 
 **For detailed testing standards and patterns, see:**
-- **[Testing Standards](../../.cursorrules/testing_standards.md)** - Complete testing patterns, coverage requirements, and best practices
+- **[Testing Standards](../../.cursorrules/testing_standards.md)** - testing patterns, coverage requirements, and best practices
 - **[Testing and Reproducibility](../guides/TESTING_AND_REPRODUCIBILITY.md)** - Test-driven development (TDD) workflow guide
 
 ## Quick Start
@@ -168,9 +168,9 @@ def test_with_fixture(temp_data_file):
 
 ## Coverage Requirements
 
-- **90% minimum** for project/src/ (currently achieving 100% - perfect coverage!)
+- **90% minimum** for project/src/ (currently achieving 100% - coverage!)
 - **60% minimum** for infrastructure/ (currently achieving 83.33% - exceeds stretch goal!)
-- **ABSOLUTE PROHIBITION**: Never use mock methods - use real data only
+- **ABSOLUTE PROHIBITION**: Never use mock methods - use data only
 - Test all error paths
 
 ```bash
@@ -183,7 +183,7 @@ open htmlcov/index.html
 
 ### Do's ✅
 - Write tests first (TDD)
-- Use real data, no mocks
+- Use data, no mocks
 - Test error paths
 - Use descriptive names
 - One assertion per concept

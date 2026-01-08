@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Perform comprehensive validation and quality assurance on Research Project Template components, ensuring all outputs meet standards and requirements through systematic validation procedures.
+Perform validation and quality assurance on Research Project Template components, ensuring all outputs meet standards and requirements through systematic validation procedures.
 
 ## Context
 
@@ -15,7 +15,7 @@ This prompt leverages the validation infrastructure to ensure quality and compli
 ## Prompt Template
 
 ```
-You are performing comprehensive validation and quality assurance for the Research Project Template. Use the validation infrastructure to ensure all components meet standards and requirements.
+You are performing validation and quality assurance for the Research Project Template. Use the validation infrastructure to ensure all components meet standards and requirements.
 
 VALIDATION TARGET: [Specify what to validate: "code", "documentation", "manuscript", "project", "infrastructure"]
 TARGET SCOPE: [Specify scope: "module", "project", "all_projects", "infrastructure"]
@@ -36,18 +36,18 @@ from infrastructure.validation import (
     validate_documentation_completeness
 )
 
-# Comprehensive validation result
+# validation result
 from infrastructure.validation.core import ValidationResult, ValidationReport
 
 def run_comprehensive_validation(target: str, scope: str) -> ValidationReport:
-    """Run comprehensive validation suite.
+    """Run validation suite.
 
     Args:
         target: What to validate ('code', 'documentation', 'manuscript', 'project', 'infrastructure')
         scope: Scope of validation ('module', 'project', 'all_projects', 'infrastructure')
 
     Returns:
-        Comprehensive validation report
+        validation report
     """
     report = ValidationReport(target=target, scope=scope)
 
@@ -219,7 +219,7 @@ def calculate_accuracy(output: Any, reference: Any) -> float:
     if isinstance(output, (list, np.ndarray)) and isinstance(reference, (list, np.ndarray)):
         return np.mean(np.abs(np.array(output) - np.array(reference)) < 1e-6)
     # Add more accuracy calculations as needed
-    return 1.0  # Default to perfect accuracy if can't calculate
+    return 1.0  # Default to accuracy if can't calculate
 
 def validate_output_format(output: Any, format_reqs: Dict[str, Any]) -> ValidationResult:
     """Validate output format against requirements."""
@@ -244,7 +244,7 @@ def validate_output_format(output: Any, format_reqs: Dict[str, Any]) -> Validati
 ### Code Quality Validation
 ```python
 def validate_code_quality(module_path: Path) -> ValidationReport:
-    """Comprehensive code quality validation.
+    """code quality validation.
 
     Args:
         module_path: Path to module to validate
@@ -479,7 +479,7 @@ def validate_section_numbering(filename: str) -> bool:
 ### Project Validation
 ```python
 def validate_project_structure(project_path: Path) -> ValidationReport:
-    """Validate complete project structure and compliance.
+    """Validate project structure and compliance.
 
     Args:
         project_path: Path to project directory
@@ -552,11 +552,11 @@ def validate_test_coverage(project_path: Path) -> ValidationResult:
 
 ## 3. Validation Reporting and Analysis
 
-### Comprehensive Validation Reports
+### Validation Reports
 ```python
 @dataclass
 class ValidationReport:
-    """Comprehensive validation report with detailed results."""
+    """validation report with detailed results."""
 
     target: str
     scope: str
@@ -642,7 +642,7 @@ class ValidationReport:
 
 - [ ] Use infrastructure validation modules for all checks
 - [ ] Validate appropriate quality standards (90% project, 60% infrastructure coverage)
-- [ ] Perform comprehensive input, process, and output validation
+- [ ] Perform input, process, and output validation
 - [ ] Generate detailed validation reports with metrics
 - [ ] Check cross-references and integration points
 - [ ] Validate documentation completeness and accuracy
@@ -654,13 +654,13 @@ class ValidationReport:
 ### Quality Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
 - [ ] Coverage requirements met (90% project, 60% infrastructure)
 - [ ] No mocks policy maintained
-- [ ] Real data validation throughout
+- [ ] data validation throughout
 
 ### Validation Standards ([`../../projects/project/docs/validation_guide.md`](../../projects/project/docs/validation_guide.md))
 - [ ] Input validation patterns implemented
 - [ ] Process validation procedures followed
 - [ ] Output quality assessment completed
-- [ ] Comprehensive reporting generated
+- [ ] reporting generated
 
 ### Code Quality Standards ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
 - [ ] Type hints validated
@@ -674,11 +674,10 @@ class ValidationReport:
 ```
 VALIDATION TARGET: project
 TARGET SCOPE: projects/project
-QUALITY LEVEL: comprehensive
-```
+QUALITY LEVEL: ```
 
 **Expected Output:**
-- Complete validation report with pass/fail status for all components
+- validation report with pass/fail status for all components
 - Coverage analysis (90%+ for project code)
 - Code quality assessment (linting, type checking, formatting)
 - Documentation validation (completeness, cross-references, examples)
@@ -688,7 +687,7 @@ QUALITY LEVEL: comprehensive
 
 ## Related Documentation
 
-- [`../../projects/project/docs/validation_guide.md`](../../projects/project/docs/validation_guide.md) - Complete validation procedures
+- [`../../projects/project/docs/validation_guide.md`](../../projects/project/docs/validation_guide.md) - validation procedures
 - [`../../infrastructure/validation/`](../../infrastructure/validation/) - Validation implementation modules
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing and quality standards
 ```

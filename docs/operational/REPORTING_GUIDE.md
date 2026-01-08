@@ -2,7 +2,7 @@
 
 ## Overview
 
-The research project template includes a comprehensive reporting system that generates detailed reports at every pipeline stage. This guide explains the reporting features, output locations, and how to interpret the generated reports.
+The research project template includes a reporting system that generates detailed reports at every pipeline stage. This guide explains the reporting features, output locations, and how to interpret the generated reports.
 
 ## Report Types
 
@@ -13,7 +13,7 @@ The research project template includes a comprehensive reporting system that gen
 **Formats**: JSON, HTML, Markdown
 
 **Contents**:
-- Complete stage execution results
+- stage execution results
 - Stage durations and success/failure status
 - Test results and coverage data
 - Validation results

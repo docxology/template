@@ -1,6 +1,6 @@
 # Core Infrastructure Tests - Quick Reference
 
-Comprehensive test suite for core infrastructure utilities.
+test suite for core infrastructure utilities.
 
 ## Overview
 
@@ -160,7 +160,7 @@ Core infrastructure tests maintain high coverage:
 
 - **Target**: 60% minimum (currently exceeds)
 - **Focus**: Critical path coverage
-- **Quality**: Real data, no mocks
+- **Quality**: data, no mocks
 
 ## Running Tests
 
@@ -237,6 +237,6 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete test documentation
+- [AGENTS.md](AGENTS.md) - test documentation
 - [../../infrastructure/core/README.md](../../infrastructure/core/README.md) - Core module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

@@ -1,0 +1,342 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Background and Theoretical Foundations}
+\protect\phantomsection\label{sec:background}
+Active Inference represents a paradigm shift in our understanding of
+cognition, perception, and action. Originating from the Free Energy
+Principle {[}@friston2010free{]}, Active Inference provides a unified
+mathematical formalism for understanding biological agents as systems
+that minimize variational free energy through perception and action.
+This section establishes the theoretical foundations that enable Active
+Inference to operate as a meta-theoretical methodology---specifying the
+frameworks within which cognition occurs.
+
+\begin{block}{The Free Energy Principle}
+\protect\phantomsection\label{sec:fep_foundation}
+The Free Energy Principle (FEP) defines a ``thing'' as a system that
+maintains its structure over time through free energy minimization. This
+principle applies across multiple scales of organization:
+
+\textbf{Physical Level:} Boundary maintenance through Markov
+blankets---systems maintain physical structure by minimizing
+thermodynamic free energy, creating boundaries that separate internal
+from external states.
+
+\textbf{Cognitive Level:} Belief updating through Expected Free Energy
+(EFE) minimization---cognitive agents maintain accurate world models by
+minimizing expected free energy, updating beliefs through Bayesian
+inference while selecting actions that reduce uncertainty.
+
+\textbf{Meta-Cognitive Level:} Framework adaptation through higher-order
+reasoning---meta-cognitive systems maintain adaptive cognitive
+architectures by optimizing framework parameters, evolving their own
+processing structures based on performance analysis.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/fep_system_boundaries.png}
+\caption{Free Energy Principle system boundaries showing Markov blanket separating internal and external states. The Markov blanket defines the boundary between a system (internal states) and its environment (external states) through sensory and active states. Systems maintain their structure by minimizing variational free energy $\mathcal{F}[q]$, which bounds surprise.}
+\label{fig:fep_system_boundaries}
+\end{figure}
+
+\begin{block}{Variational Free Energy}
+\protect\phantomsection\label{variational-free-energy}
+The Variational Free Energy bounds the surprise:
+
+\[\mathcal{F}[q] = \mathbb{E}_{q(s)}[\log q(s) - \log p(s,o)]\label{eq:variational_free_energy}\]
+
+Systems self-organize by minimizing free energy:
+
+\[\dot{\phi} = -\frac{\partial \mathcal{F}}{\partial \phi}\label{eq:self_organization}\]
+
+Where \(\phi\) represents system parameters that can be controlled.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/free_energy_dynamics.png}
+\caption{Free energy minimization dynamics showing convergence over time and epistemic/pragmatic components. The trajectory shows how variational free energy $\mathcal{F}[q]$ decreases over time as the system updates its beliefs and actions.}
+\label{fig:free_energy_dynamics}
+\end{figure}
+\end{block}
+\end{block}
+
+\begin{block}{Expected Free Energy Formulation}
+\protect\phantomsection\label{sec:efe_formulation}
+The Expected Free Energy (EFE) combines epistemic and pragmatic
+components in a unified formalism:
+
+\[\mathcal{F}(\pi) = \mathbb{E}_{q(s_\tau)}[\log q(s_\tau) - \log p(s_\tau \mid \pi)] + \mathbb{E}_{q(o_\tau)}[\log p(o_\tau \mid s_\tau) + \log p(s_\tau) - \log q(s_\tau)]\label{eq:efe}\]
+
+\begin{block}{Epistemic-Pragmatic Decomposition}
+\protect\phantomsection\label{epistemic-pragmatic-decomposition}
+The EFE decomposes into two fundamental terms:
+
+\textbf{Epistemic Value (Information Gain):}
+
+\[H[Q(\pi)] = \mathbb{E}_{q(s_\tau)}[\log q(s_\tau) - \log p(s_\tau \mid \pi)]\label{eq:epistemic_component}\]
+
+This term (Equation \eqref{eq:epistemic_component}) is minimized when
+executing policy \(\pi\) reduces uncertainty about hidden states.
+
+\textbf{Pragmatic Value (Goal Achievement):}
+
+\[G(\pi) = \mathbb{E}_{q(o_\tau)}[\log p(o_\tau \mid s_\tau) + \log p(s_\tau) - \log q(s_\tau)]\label{eq:pragmatic_component}\]
+
+This term (Equation \eqref{eq:pragmatic_component}) measures goal
+achievement through preferred observations.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/efe_decomposition.png}
+\caption{Expected Free Energy (EFE) decomposition into epistemic and pragmatic components (Equation \eqref{eq:efe}). The EFE $\mathcal{F}(\pi)$ combines epistemic affordance $H[Q(\pi)]$ (information gain) and pragmatic value $G(\pi)$ (goal achievement), enabling systematic analysis of how agents balance exploration and exploitation.}
+\label{fig:efe_decomposition}
+\end{figure}
+\end{block}
+
+\begin{block}{Perception-Action Loop}
+\protect\phantomsection\label{perception-action-loop}
+Active Inference implements a continuous cycle where agents update
+beliefs and select actions to minimize expected free energy:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/perception_action_loop.png}
+\caption{Active Inference perception-action loop showing how perception drives action through EFE minimization (Equation \eqref{eq:efe}). The cycle consists of: (1) Observation of sensory data; (2) Bayesian inference updating posterior beliefs $q(s)$ about hidden states; (3) Policy evaluation computing EFE $\mathcal{F}(\pi)$ for candidate actions; (4) Action selection minimizing EFE; (5) Action execution generating new observations.}
+\label{fig:perception_action_loop}
+\end{figure}
+\end{block}
+\end{block}
+
+\begin{block}{Generative Model Specification}
+\protect\phantomsection\label{sec:generative_model}
+Active Inference agents operate through generative models defined by
+four core matrices. The specification of these matrices transforms
+framework design from an external constraint into an internal research
+question.
+
+\begin{block}{Matrix A: Observation Likelihoods}
+\protect\phantomsection\label{matrix-a-observation-likelihoods}
+Defines how hidden states generate observations:
+
+\[A = [a_{ij}] \quad a_{ij} = P(o_i \mid s_j)\label{eq:matrix_a}\]
+
+\textbf{Properties:} - Each column sums to 1 (valid probability
+distribution) - Rows represent observation modalities - Columns
+represent hidden state conditions - Diagonal dominance indicates
+reliable observations
+\end{block}
+
+\begin{block}{Matrix B: State Transitions}
+\protect\phantomsection\label{matrix-b-state-transitions}
+Defines how actions influence state changes:
+
+\[B = [b_{ijk}] \quad b_{ijk} = P(s_j \mid s_i, a_k)\label{eq:matrix_b}\]
+
+\textbf{Structure:} 3D tensor with dimensions
+\(\text{states} \times \text{states} \times \text{actions}\), where each
+action defines a transition matrix.
+\end{block}
+
+\begin{block}{Matrix C: Preferences}
+\protect\phantomsection\label{matrix-c-preferences}
+Defines desired outcomes (the pragmatic landscape):
+
+\[C = [c_i] \quad c_i = \log P(o_i)\label{eq:matrix_c}\]
+
+\textbf{Interpretation:} - Positive values: preferred observations -
+Negative values: avoided observations - Magnitude indicates strength of
+preference
+\end{block}
+
+\begin{block}{Matrix D: Prior Beliefs}
+\protect\phantomsection\label{matrix-d-prior-beliefs}
+Defines initial state beliefs:
+
+\[D = [d_i] \quad d_i = P(s_i)\label{eq:matrix_d}\]
+
+\textbf{Role:} Represents initial beliefs before observation, encoding
+innate biases or learned priors.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/generative_model_structure.png}
+\caption{Structure of generative models in Active Inference showing $A$, $B$, $C$, $D$ matrices and their relationships. Matrix $A$ (Equation \eqref{eq:matrix_a}) defines observation likelihoods. Matrix $B$ (Equation \eqref{eq:matrix_b}) defines state transitions. Matrix $C$ (Equation \eqref{eq:matrix_c}) defines preferences. Matrix $D$ (Equation \eqref{eq:matrix_d}) defines prior beliefs.}
+\label{fig:generative_model_structure}
+\end{figure}
+\end{block}
+\end{block}
+
+\begin{block}{Meta-Epistemic and Meta-Pragmatic Aspects}
+\protect\phantomsection\label{sec:meta_aspects}
+Active Inference operates at a fundamentally meta-level that
+distinguishes it from traditional decision-making algorithms. Rather
+than simply providing another method for selecting actions given fixed
+observation models and reward functions, Active Inference allows
+researchers to specify the very frameworks within which cognition
+occurs.
+
+\begin{block}{Meta-Epistemic Dimension}
+\protect\phantomsection\label{meta-epistemic-dimension}
+Active Inference allows modelers to specify epistemic frameworks through
+matrices \(A\), \(B\), and \(D\):
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Matrix \(A\):} Defines what can be known about the world and
+  how reliably observations indicate underlying states
+\item
+  \textbf{Matrix \(D\):} Sets initial assumptions about the world's
+  structure
+\item
+  \textbf{Matrix \(B\):} Specifies causal relationships and how actions
+  influence state changes
+\end{itemize}
+
+Through these specifications, researchers define not just current
+beliefs, but the epistemological boundaries of cognition
+itself---determining what knowledge is possible, how evidence
+accumulates, and what causal structures are assumed.
+\end{block}
+
+\begin{block}{Meta-Pragmatic Dimension}
+\protect\phantomsection\label{meta-pragmatic-dimension}
+Beyond epistemic specification, Active Inference supports meta-pragmatic
+modeling through matrix \(C\), which defines preference priors. Unlike
+traditional reinforcement learning where rewards are externally
+specified, Active Inference allows modelers to specify pragmatic
+landscapes---what constitutes ``value'' for the agent---creating
+opportunities to explore how different value systems shape cognition and
+behavior.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/meta_level_concepts.png}
+\caption{Meta-pragmatic and meta-epistemic aspects showing modeler specification power. The meta-epistemic dimension enables specification of knowledge acquisition frameworks through matrices $A$, $B$, and $D$. The meta-pragmatic dimension enables specification of value landscapes through matrix $C$. This dual specification power makes Active Inference a meta-methodology for cognitive science.}
+\label{fig:meta_level_concepts}
+\end{figure}
+\end{block}
+
+\begin{block}{The Modeler as Architect and Subject}
+\protect\phantomsection\label{the-modeler-as-architect-and-subject}
+The structure reveals the dual role of the Active Inference modeler:
+
+\textbf{As Architect:} - Specifies epistemic frameworks (\(A\), \(B\),
+\(D\) matrices) - Defines pragmatic landscapes (\(C\) matrix) - Designs
+cognitive architectures - Establishes boundary conditions for cognition
+
+\textbf{As Subject:} - Uses Active Inference to understand their own
+cognition - Applies meta-epistemic principles to knowledge acquisition -
+Employs meta-pragmatic frameworks for decision-making - Engages in
+recursive self-modeling
+
+This dual role creates a recursive relationship where the tools used to
+model others become tools for self-understanding.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/structure_preservation.png}
+\caption{Structure preservation dynamics showing how systems maintain internal organization through free energy minimization. Despite external perturbations and environmental changes, systems maintain stable internal states through active inference. This principle explains how biological systems, cognitive agents, and even social structures maintain their identity over time.}
+\label{fig:structure_preservation}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../figures/physics_cognition_bridge.png}
+\caption{Free Energy Principle as the bridge between physics and cognition domains. The same mathematical principle—variational free energy minimization—applies across multiple scales: physical systems, biological systems, cognitive systems, and meta-cognitive systems. This unification enables understanding of intelligence as a natural extension of physical principles.}
+\label{fig:physics_cognition_bridge}
+\end{figure}
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

@@ -220,7 +220,7 @@ if args.short:
 ```python
 if args.long:
     response = client.query_long(args.prompt, options=options)
-    # Additional validation for comprehensive responses
+    # Additional validation for responses
 ```
 
 **Structured Mode (JSON):**
@@ -521,7 +521,7 @@ python3 -m infrastructure.llm.cli query "Generate a Python docstring for this fu
 
 ### Planned Features
 
-**Enhanced CLI Capabilities:**
+**CLI Capabilities:**
 - **Interactive Mode**: Multi-turn conversations
 - **Batch Processing**: Multiple queries from file
 - **Output Formatting**: Markdown, JSON, CSV export

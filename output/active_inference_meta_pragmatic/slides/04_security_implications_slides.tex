@@ -1,0 +1,393 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\author{\texorpdfstring{}{}}
+\date{}
+
+\begin{document}
+
+\begin{frame}{Security Implications}
+\protect\phantomsection\label{sec:security}
+The meta-level framework has significant implications for cognitive
+security, AI safety, and the robustness of belief systems. Understanding
+meta-cognitive processing reveals vulnerabilities that traditional
+security models miss, while also suggesting principled defense
+strategies.
+
+\begin{block}{Cognitive Security Framework}
+\protect\phantomsection\label{sec:cognitive_security_framework}
+Active Inference's quadrant structure provides a systematic way to
+analyze cognitive vulnerabilities. Each quadrant represents a potential
+attack surface with distinct vulnerability profiles and defense
+requirements.
+
+\begin{block}{Attack Surface by Quadrant}
+\protect\phantomsection\label{attack-surface-by-quadrant}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.2439}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1951}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.3659}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 6\tabcolsep) * \real{0.1951}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Quadrant
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Target
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Vulnerability
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Impact
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+Q1 & Sensory data & Observation manipulation & Belief distortion \\
+Q2 & Meta-data & Quality score falsification & Confidence
+miscalibration \\
+Q3 & Self-monitoring & Confidence mechanism hijacking & Strategy
+corruption \\
+Q4 & Framework parameters & Epistemic/pragmatic subversion &
+Architectural compromise \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+
+Higher quadrants represent more fundamental vulnerabilities: while
+Quadrant 1 attacks can distort specific beliefs, Quadrant 4 attacks can
+compromise the entire cognitive architecture.
+\end{block}
+\end{block}
+
+\begin{block}{Meta-Cognitive Vulnerabilities}
+\protect\phantomsection\label{sec:vulnerabilities}
+\begin{block}{Quadrant 3 Attacks: Confidence Manipulation}
+\protect\phantomsection\label{quadrant-3-attacks-confidence-manipulation}
+Manipulation of confidence assessment mechanisms can undermine
+meta-cognitive control:
+
+\textbf{False Confidence Calibration:} Adversaries provide feedback that
+systematically miscalibrates confidence assessments, causing agents to
+over-trust or under-trust their inferences.
+
+\textbf{Induced Over/Under-Confidence:} By manipulating confidence
+assessment inputs, attackers can cause agents to: - Become overly
+conservative when exploration is needed - Become overconfident when
+caution is warranted - Switch strategies inappropriately
+
+\textbf{Meta-Cognitive Hijacking:} Direct manipulation of meta-cognitive
+control parameters:
+
+\[\{\lambda, \alpha, \beta, \gamma\} \rightarrow \{\lambda', \alpha', \beta', \gamma'\}\label{eq:metacog_hijack}\]
+
+Where corrupted parameters \(\lambda'\), \(\alpha'\), \(\beta'\),
+\(\gamma'\) redirect cognitive resources or disable adaptive mechanisms.
+\end{block}
+
+\begin{block}{Quadrant 4 Attacks: Framework Subversion}
+\protect\phantomsection\label{quadrant-4-attacks-framework-subversion}
+Framework-level manipulation targets the fundamental cognitive
+architecture:
+
+\textbf{Epistemic Framework Subversion:} Altering matrices \(A\), \(B\),
+or \(D\) through learning or external influence can fundamentally change
+what an agent believes is knowable:
+
+\[A_{true} \rightarrow A_{corrupted}: \text{perception of reality distorted}\label{eq:epistemic_subversion}\]
+
+\textbf{Pragmatic Landscape Alteration:} Modifying matrix \(C\) changes
+what the agent values:
+
+\[C_{original} \rightarrow C_{corrupted}: \text{goal structure compromised}\label{eq:pragmatic_alteration}\]
+
+This potentially redirects all goal-directed behavior without the
+agent's awareness.
+
+\textbf{Higher-Order Reasoning Corruption:} Manipulating framework
+optimization processes (Equation \eqref{eq:framework_optimization}) can
+cause agents to evolve toward vulnerable or exploitable cognitive
+architectures.
+\end{block}
+
+\begin{block}{Attack Vector Analysis}
+\protect\phantomsection\label{attack-vector-analysis}
+\textbf{Gradual vs.~Sudden Attacks:} - Gradual: Slow parameter drift
+below detection threshold - Sudden: Rapid framework changes triggering
+immediate adaptation
+
+\textbf{External vs.~Internal:} - External: Environmental manipulation
+of observations - Internal: Direct parameter injection through learning
+mechanisms
+
+\textbf{Targeted vs.~Systemic:} - Targeted: Specific quadrant or
+parameter manipulation - Systemic: Cascading attacks affecting multiple
+levels
+\end{block}
+\end{block}
+
+\begin{block}{Defense Strategies}
+\protect\phantomsection\label{sec:defense_strategies}
+The framework suggests defense approaches operating at multiple levels,
+with higher-level defenses providing more fundamental protection.
+
+\begin{block}{Meta-Cognitive Monitoring (Quadrant 3 Defense)}
+\protect\phantomsection\label{meta-cognitive-monitoring-quadrant-3-defense}
+Continuous validation of confidence assessments:
+
+\[validation(c) = |accuracy_{predicted}(c) - accuracy_{actual}|\label{eq:confidence_validation}\]
+
+\textbf{Defense Mechanisms:} - Cross-validation of confidence with
+actual performance - Detection of miscalibration patterns - Anomaly
+detection for confidence trajectories - Automatic recalibration when
+drift detected
+\end{block}
+
+\begin{block}{Framework Integrity Checks (Quadrant 4 Defense)}
+\protect\phantomsection\label{framework-integrity-checks-quadrant-4-defense}
+Verification of epistemic and pragmatic consistency:
+
+\[integrity(\Theta) = \|\Theta_t - \Theta_{baseline}\| < \epsilon\label{eq:framework_integrity}\]
+
+\textbf{Defense Mechanisms:} - Monitoring framework parameters for
+unexpected changes - Detecting drift in matrices \(A\), \(B\), \(C\),
+\(D\) - Regularization terms \(\mathcal{R}(\Theta)\) penalizing
+inconsistent specifications - Framework coherence validation
+\end{block}
+
+\begin{block}{Recursive Validation (Multi-Level Defense)}
+\protect\phantomsection\label{recursive-validation-multi-level-defense}
+Higher-order checking of meta-level processes:
+
+\textbf{Three-Layer Validation:} 1. \textbf{Level 1:} Validate primary
+inference processes 2. \textbf{Level 2:} Validate meta-cognitive
+monitoring itself 3. \textbf{Level 3:} Validate framework integrity
+checking
+
+This recursive structure ensures that each security layer is itself
+protected by higher layers.
+\end{block}
+
+\begin{block}{Defense Portfolio}
+\protect\phantomsection\label{defense-portfolio}
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+Defense Layer & Mechanism & Protects Against \\
+\midrule\noalign{}
+\endhead
+Observation validation & Signal integrity & Q1 attacks \\
+Meta-data verification & Source authentication & Q2 attacks \\
+Confidence monitoring & Calibration checking & Q3 attacks \\
+Framework integrity & Parameter bounds & Q4 attacks \\
+Recursive validation & Self-checking & Multi-level attacks \\
+\bottomrule\noalign{}
+\end{longtable}
+}
+\end{block}
+\end{block}
+
+\begin{block}{AI Safety and Value Alignment}
+\protect\phantomsection\label{sec:ai_safety}
+The framework provides principled approaches to AI safety challenges:
+
+\begin{block}{Value Specification through Matrix C}
+\protect\phantomsection\label{value-specification-through-matrix-c}
+Active Inference enables precise value specification:
+
+\[C_{safe} = \text{specification of safe preferences}\label{eq:safe_preferences}\]
+
+\textbf{Advantages over reward functions:} - Multi-dimensional
+preference landscapes - Trade-off specification between competing values
+- Ethical considerations directly encoded - Value hierarchies with
+priority structures
+\end{block}
+
+\begin{block}{Epistemic Boundary Protection}
+\protect\phantomsection\label{epistemic-boundary-protection}
+Clear limits on what AI systems can know and assume:
+
+\textbf{Bounded Epistemic Frameworks:} - Matrix \(A\) specifications
+limit observation reliability assumptions - Matrix \(D\) priors
+constrain initial state assumptions - Matrix \(B\) causal models bound
+action effect assumptions
+\end{block}
+
+\begin{block}{Framework Integrity for AI Systems}
+\protect\phantomsection\label{framework-integrity-for-ai-systems}
+Protection against value drift and epistemic corruption:
+
+\textbf{Meta-Monitoring Requirements:} - Self-watchful AI systems
+monitoring their own frameworks - Anomaly detection for framework
+parameter changes - Rollback capabilities for detected corruption -
+Human-in-the-loop for framework modifications
+\end{block}
+
+\begin{block}{Alignment through Framework Specification}
+\protect\phantomsection\label{alignment-through-framework-specification}
+The meta-pragmatic aspect enables principled alignment: 1. \textbf{Value
+Learning:} Systems develop value structures through matrix \(C\)
+optimization 2. \textbf{Epistemic Constraints:} Matrix \(A\), \(B\),
+\(D\) specifications limit inference scope 3. \textbf{Meta-Cognitive
+Oversight:} Quadrant 3 monitoring ensures alignment maintenance 4.
+\textbf{Framework Stability:} Quadrant 4 regularization prevents
+unauthorized evolution
+\end{block}
+\end{block}
+
+\begin{block}{Societal Implications}
+\protect\phantomsection\label{sec:societal_security}
+\begin{block}{Information Warfare}
+\protect\phantomsection\label{information-warfare}
+The framework reveals meta-level manipulation of public belief systems:
+
+\textbf{Epistemic Attacks on Societies:} - Systematic manipulation of
+information quality (meta-data) - Undermining confidence in legitimate
+information sources - Framework-level attacks on shared epistemological
+foundations
+
+\textbf{Defense Implications:} - Education in meta-cognitive awareness -
+Institutional meta-data verification - Collective framework integrity
+monitoring
+\end{block}
+
+\begin{block}{Educational System Resilience}
+\protect\phantomsection\label{educational-system-resilience}
+Development of curricula building meta-cognitive resilience:
+
+\textbf{Training Quadrant 3 Skills:} - Self-monitoring and confidence
+assessment - Strategy adaptation under uncertainty - Meta-cognitive
+awareness
+
+\textbf{Training Quadrant 4 Skills:} - Framework evaluation and critique
+- Epistemic framework comparison - Value system analysis
+\end{block}
+
+\begin{block}{Collective Cognitive Security}
+\protect\phantomsection\label{collective-cognitive-security}
+Protection of group-level cognitive processes:
+
+\textbf{Shared Framework Protection:} - Collective monitoring of
+epistemic drift - Group-level confidence calibration - Democratic
+framework governance
+
+\textbf{Institutional Safeguards:} - Verification of information sources
+- Meta-data authenticity standards - Framework change transparency
+\end{block}
+\end{block}
+
+\begin{block}{Ethical Considerations}
+\protect\phantomsection\label{sec:security_ethics}
+\begin{block}{Manipulation Risks}
+\protect\phantomsection\label{manipulation-risks}
+Meta-level cognition raises concerns about: - Potential for
+sophisticated cognitive manipulation - Exploitation of framework
+vulnerabilities - Asymmetric knowledge advantages
+\end{block}
+
+\begin{block}{Responsibility in Framework Design}
+\protect\phantomsection\label{responsibility-in-framework-design}
+Designers of cognitive systems bear responsibility for: - Secure
+framework specifications - Robust defense mechanisms - Transparent
+vulnerability disclosure
+\end{block}
+
+\begin{block}{Self-Determination}
+\protect\phantomsection\label{self-determination}
+Protection of individual and collective: - Epistemic autonomy: freedom
+to form beliefs - Pragmatic autonomy: freedom to set values -
+Meta-cognitive autonomy: freedom to adapt frameworks
+\end{block}
+\end{block}
+\end{frame}
+
+\end{document}

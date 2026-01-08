@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Core module provides fundamental foundation utilities used across the entire infrastructure layer. It includes configuration management, unified logging, and a comprehensive exception hierarchy with context preservation.
+The Core module provides fundamental foundation utilities used across the entire infrastructure layer. It includes configuration management, unified logging, and a exception hierarchy with context preservation.
 
 ## Architecture
 
@@ -926,7 +926,7 @@ class ProgressBar:
         """
 
     def finish(self) -> None:
-        """Mark progress as complete and finalize display."""
+        """Mark progress as and finalize display."""
 ```
 
 #### SubStageProgress (class)
@@ -967,7 +967,7 @@ class SubStageProgress:
         """
 
     def finish_stage(self) -> None:
-        """Mark current substage as complete."""
+        """Mark current substage as."""
 ```
 
 ### checkpoint.py
@@ -1231,7 +1231,7 @@ def setup_environment(
     check_tools: bool = True,
     create_dirs: bool = True
 ) -> Dict[str, Any]:
-    """Perform complete environment setup and validation.
+    """Perform environment setup and validation.
 
     Args:
         repo_root: Repository root directory
@@ -1342,7 +1342,7 @@ def copy_final_deliverables(
 #### generate_file_inventory (function)
 ```python
 def generate_file_inventory(directory: Path) -> Dict[str, Any]:
-    """Generate comprehensive file inventory for a directory.
+    """Generate file inventory for a directory.
 
     Args:
         directory: Directory to inventory
@@ -1417,7 +1417,7 @@ class PipelineExecutor:
         start_stage: Optional[str] = None,
         resume: bool = False
     ) -> Dict[str, Any]:
-        """Execute complete pipeline with optional resume capability.
+        """Execute pipeline with optional resume capability.
 
         Args:
             start_stage: Stage to start execution from
@@ -1510,7 +1510,7 @@ def generate_pipeline_summary(
     pipeline_results: Dict[str, Any],
     repo_root: Path
 ) -> Dict[str, Any]:
-    """Generate comprehensive pipeline summary with metrics.
+    """Generate pipeline summary with metrics.
 
     Args:
         pipeline_results: Results from pipeline execution
@@ -2353,7 +2353,7 @@ def start_substage(self, substage_num: int, substage_name: str = "") -> None:
 #### complete_substage (method)
 ```python
 def complete_substage(self) -> None:
-    """Mark current sub-stage as complete."""
+    """Mark current sub-stage as."""
 ```
 
 #### get_eta (method)
@@ -3097,7 +3097,7 @@ def copy_final_deliverables(project_root: Path, output_dir: Path) -> Dict:
     """Copy all project outputs to top-level output directory.
 
     Recursively copies entire project/output/ directory structure, preserving:
-    - pdf/ - Complete PDF directory with manuscript and metadata
+    - pdf/ - PDF directory with manuscript and metadata
     - web/ - HTML web outputs
     - slides/ - Beamer slides and metadata
     - figures/ - Generated figures and visualizations
@@ -3176,7 +3176,7 @@ class PipelineExecutor:
         """
 
     def execute_full_pipeline(self) -> List[StageResult]:
-        """Execute complete pipeline with all stages.
+        """Execute pipeline with all stages.
 
         Returns:
             List of stage results
@@ -3361,7 +3361,7 @@ class SystemHealthChecker:
     """Checks system health and component status."""
     
     def check_health(self) -> Dict[str, Any]:
-        """Perform comprehensive health check.
+        """Perform health check.
         
         Returns:
             Health status dictionary

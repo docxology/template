@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `tests/infrastructure/publishing/` directory contains comprehensive tests for the academic publishing infrastructure. These tests validate the functionality for publishing research outputs to platforms like Zenodo, arXiv, and GitHub.
+The `tests/infrastructure/publishing/` directory contains tests for the academic publishing infrastructure. These tests validate the functionality for publishing research outputs to platforms like Zenodo, arXiv, and GitHub.
 
 ## Directory Structure
 
@@ -60,7 +60,7 @@ tests/infrastructure/publishing/
 - Publication status tracking
 
 **Test Scenarios:**
-- Complete publication workflows
+- publication workflows
 - Partial failure recovery
 - Metadata validation
 - File handling edge cases
@@ -71,7 +71,7 @@ tests/infrastructure/publishing/
 - End-to-end publishing workflows
 - Cross-component integration
 - Real API interactions (with proper mocking)
-- Complete user journey validation
+- user journey validation
 
 ### Edge Case and Error Testing
 
@@ -104,7 +104,7 @@ Due to the nature of external API interactions, these tests use extensive mockin
 - Authentication tokens replaced with test tokens
 - File uploads virtualized
 
-### Comprehensive Coverage
+### Coverage
 
 **Coverage Goals:**
 - All publishing workflows tested
@@ -172,7 +172,7 @@ def test_cli_publish_command():
 **End-to-End Publishing:**
 ```python
 def test_complete_publishing_workflow():
-    """Test complete publishing workflow from start to finish."""
+    """Test publishing workflow from start to finish."""
     with tempfile.TemporaryDirectory() as tmp:
         # Setup test files and metadata
         test_dir = Path(tmp)
@@ -195,7 +195,7 @@ def test_complete_publishing_workflow():
             # Execute publishing workflow
             result = publish_to_zenodo(metadata, test_files, 'test_token')
 
-            # Verify complete workflow
+            # Verify workflow
             assert result['doi'] == '10.5281/zenodo.12345'
             mock_instance.create_deposition.assert_called_once()
             mock_instance.upload_files.assert_called_once()
@@ -206,7 +206,7 @@ def test_complete_publishing_workflow():
 
 ### Mock Setup
 
-**Comprehensive Mocking:**
+**Mocking:**
 ```python
 @pytest.fixture
 def mock_zenodo_api():
@@ -250,7 +250,7 @@ def sample_metadata():
             {'name': 'Dr. Jane Smith', 'orcid': '0000-0000-0000-1234'},
             {'name': 'Dr. John Doe'}
         ],
-        'description': 'Comprehensive test publication for validation',
+        'description': 'test publication for validation',
         'keywords': ['research', 'testing', 'validation'],
         'license': 'MIT',
         'doi': '10.5281/zenodo.12345'
@@ -284,12 +284,12 @@ pytest tests/infrastructure/publishing/ --cov=infrastructure.publishing --cov-fa
 
 ## Test Maintenance
 
-### Adding New Tests
+### Adding Tests
 
 **Development Process:**
 1. Identify new publishing functionality
 2. Create appropriate test file
-3. Implement comprehensive mocking
+3. Implement mocking
 4. Test both success and failure scenarios
 5. Ensure integration with existing tests
 
@@ -402,14 +402,14 @@ print(mock_api.call_args_list)
 
 ### Planned Improvements
 
-**Enhanced Testing:**
+**Testing:**
 - Integration with real API testing (with test accounts)
 - Performance testing for large uploads
 - Cross-platform compatibility testing
 - Automated API schema validation
 
 **Test Infrastructure:**
-- Enhanced mocking utilities
+- mocking utilities
 - Test data generation tools
 - Result validation frameworks
 - Historical test performance tracking

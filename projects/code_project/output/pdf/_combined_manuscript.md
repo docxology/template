@@ -1,12 +1,15 @@
 # Introduction
 
-This small code project demonstrates a fully-tested numerical optimization implementation with comprehensive analysis and visualization capabilities. The project showcases the complete research pipeline from algorithm implementation through testing to result visualization, including automatic title page generation from metadata configuration.
+This small code project demonstrates a-tested numerical optimization implementation with analysis and visualization capabilities. The project showcases the research pipeline from algorithm implementation through testing to result visualization, including automatic title page generation from metadata configuration.
 
 ## Research Context
 
 Numerical optimization forms the foundation of many scientific and engineering applications \cite{nocedal2006numerical}. This project implements and analyzes gradient descent methods for solving optimization problems of the form:
 
-$$\min_{x \in \mathbb{R}^n} f(x)$$
+\begin{equation}
+\label{eq:optimization_problem}
+\min_{x \in \mathbb{R}^n} f(x)
+\end{equation}
 
 where $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is a continuously differentiable objective function.
 
@@ -16,7 +19,7 @@ The implementation includes:
 
 - **Gradient descent algorithm** with configurable parameters
 - **Quadratic function test problems** with known analytical solutions
-- **Comprehensive test suite** covering functionality and edge cases
+- **test suite** covering functionality and edge cases
 - **Analysis scripts** that generate convergence plots and performance data
 - **Manuscript integration** with automatically generated figures
 - **Multi-format rendering** supporting PDF, HTML, and presentation slides
@@ -27,7 +30,10 @@ The implementation includes:
 
 The gradient descent algorithm iteratively updates the solution using:
 
-$$x_{k+1} = x_k - \alpha \nabla f(x_k)$$
+\begin{equation}
+\label{eq:gradient_descent_update}
+x_{k+1} = x_k - \alpha \nabla f(x_k)
+\end{equation}
 
 where:
 - $\alpha > 0$ is the step size (learning rate)
@@ -38,7 +44,7 @@ where:
 This project demonstrates:
 
 1. **Clean, testable code** with proper separation of concerns
-2. **Numerical accuracy** through comprehensive testing
+2. **Numerical accuracy** through testing
 3. **Performance analysis** with convergence visualization
 4. **Research reproducibility** through automated analysis scripts
 5. **Documentation integration** with figure generation and referencing
@@ -82,7 +88,10 @@ The algorithm follows the fundamental principle of steepest descent, moving in t
 
 We use quadratic functions of the form:
 
-$$f(x) = \frac{1}{2} x^T A x - b^T x$$
+\begin{equation}
+\label{eq:quadratic_objective}
+f(x) = \frac{1}{2} x^T A x - b^T x
+\end{equation}
 
 where:
 - $A$ is a positive definite matrix
@@ -91,11 +100,17 @@ where:
 
 For the simple case $A = I$ and $b = 1$, we have:
 
-$$f(x) = \frac{1}{2} x^2 - x$$
+\begin{equation}
+\label{eq:simple_quadratic}
+f(x) = \frac{1}{2} x^2 - x
+\end{equation}
 
 with gradient:
 
-$$\nabla f(x) = x - 1$$
+\begin{equation}
+\label{eq:simple_gradient}
+\nabla f(x) = x - 1
+\end{equation}
 
 The analytical minimum occurs at $x = 1$ with $f(1) = -\frac{1}{2}$.
 
@@ -107,13 +122,19 @@ The theoretical foundations of convergence analysis for gradient descent methods
 
 For strongly convex functions with condition number $\kappa = \frac{\lambda_{\max}}{\lambda_{\min}}$, the convergence rate of gradient descent satisfies:
 
-$$\frac{\|x_{k+1} - x^*\|}{\|x_k - x^*\|} \leq \sqrt{\frac{\kappa - 1}{\kappa + 1}}$$
+\begin{equation}
+\label{eq:convergence_rate}
+\frac{\|x_{k+1} - x^*\|}{\|x_k - x^*\|} \leq \sqrt{\frac{\kappa - 1}{\kappa + 1}}
+\end{equation}
 
 where $x^*$ denotes the optimal solution. This bound shows linear convergence with rate $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}} < 1$.
 
 For quadratic functions $f(x) = \frac{1}{2}x^T A x - b^T x$ where $A$ is positive definite, the convergence factor becomes:
 
-$$\rho = \frac{|\lambda_{\max} - \alpha\lambda_{\min}|}{|\lambda_{\min} + \alpha\lambda_{\max}|}$$
+\begin{equation}
+\label{eq:convergence_factor}
+\rho = \frac{|\lambda_{\max} - \alpha\lambda_{\min}|}{|\lambda_{\min} + \alpha\lambda_{\max}|}
+\end{equation}
 
 where $\alpha$ is the step size. Optimal convergence occurs when $\alpha = \frac{2}{\lambda_{\min} + \lambda_{\max}}$, yielding $\rho = \frac{\kappa - 1}{\kappa + 1}$.
 
@@ -121,7 +142,10 @@ where $\alpha$ is the step size. Optimal convergence occurs when $\alpha = \frac
 
 The optimal constant step size for quadratic functions is:
 
-$$\alpha = \frac{2}{\lambda_{\min} + \lambda_{\max}}$$
+\begin{equation}
+\label{eq:optimal_step_size}
+\alpha = \frac{2}{\lambda_{\min} + \lambda_{\max}}
+\end{equation}
 
 For our test problem with $\lambda_{\min} = \lambda_{\max} = 1$, this gives $\alpha = 1$.
 
@@ -179,7 +203,7 @@ Input validation ensures algorithmic reliability:
 
 ### Testing Strategy and Validation
 
-Comprehensive test suite covers multiple dimensions:
+test suite covers multiple dimensions:
 
 - **Functional correctness**: Analytical gradient verification against finite differences
 - **Convergence behavior**: Multiple step sizes and tolerance levels
@@ -258,11 +282,17 @@ Figure \ref{fig:convergence_rate} provides a comparative analysis of convergence
 
 The theoretical convergence rate for our quadratic problem satisfies:
 
-$$\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - \frac{2\alpha(1 - \alpha)}{1} = 1 - 2\alpha(1 - \alpha)$$
+\begin{equation}
+\label{eq:convergence_bound}
+\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - \frac{2\alpha(1 - \alpha)}{1} = 1 - 2\alpha(1 - \alpha)
+\end{equation}
 
 For the optimal step size $\alpha = 0.5$, this bound becomes:
 
-$$\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - 2(0.5)(1 - 0.5) = 0.5$$
+\begin{equation}
+\label{eq:optimal_step_convergence}
+\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - 2(0.5)(1 - 0.5) = 0.5
+\end{equation}
 
 However, our empirical analysis uses more conservative step sizes ($\alpha \leq 0.2$) to ensure stability.
 
@@ -270,7 +300,10 @@ However, our empirical analysis uses more conservative step sizes ($\alpha \leq 
 
 The error after $k$ iterations is bounded by:
 
-$$\|x_k - x^*\| \leq \left(\frac{\kappa - 1}{\kappa + 1}\right)^k \|x_0 - x^*\|$$
+\begin{equation}
+\label{eq:error_bound}
+\|x_k - x^*\| \leq \left(\frac{\kappa - 1}{\kappa + 1}\right)^k \|x_0 - x^*\|
+\end{equation}
 
 where $\kappa = 1$ for our problem, giving linear convergence with rate approaching 1.
 
@@ -278,7 +311,10 @@ where $\kappa = 1$ for our problem, giving linear convergence with rate approach
 
 **Iteration Complexity**: The number of iterations required to achieve accuracy $\epsilon$ is:
 
-$$k \geq \frac{\log(\epsilon)}{\log(\rho)}$$
+\begin{equation}
+\label{eq:iteration_complexity}
+k \geq \frac{\log(\epsilon)}{\log(\rho)}
+\end{equation}
 
 where $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}$ is the convergence factor \cite{polyak1964some}.
 
@@ -320,7 +356,7 @@ This demonstrates the algorithm's ability to solve simple quadratic optimization
 
 ### Algorithm Complexity Visualization
 
-Figure \ref{fig:complexity} provides a comprehensive visualization of the algorithm's computational characteristics, including time and space complexity analysis across different problem scales.
+Figure \ref{fig:complexity} provides a visualization of the algorithm's computational characteristics, including time and space complexity analysis across different problem scales.
 
 ![Algorithm complexity analysis showing computational requirements and scalability characteristics of the gradient descent implementation.](../output/figures/algorithm_complexity.png){#fig:complexity}
 
@@ -383,14 +419,14 @@ Future work could extend this analysis to:
 
 # Conclusion
 
-This small code project successfully demonstrated a complete research pipeline from algorithm implementation through testing, analysis, and manuscript generation.
+This small code project successfully demonstrated a research pipeline from algorithm implementation through testing, analysis, and manuscript generation.
 
 ## Project Achievements
 
 The implementation achieved all major objectives:
 
 1. **Clean Codebase**: Well-structured, documented, and testable code
-2. **Comprehensive Testing**: 100% test coverage with meaningful assertions
+2. **Testing**: 100% test coverage with meaningful assertions
 3. **Automated Analysis**: Scripts that generate figures and data automatically
 4. **Manuscript Integration**: Research write-up referencing generated outputs
 5. **Pipeline Compatibility**: Full integration with the research template system
@@ -424,13 +460,13 @@ The project validates the research template's ability to handle:
 - **Testing requirements**: Maintaining quality standards
 - **Multi-project support**: Running multiple independent research projects
 - **LLM integration**: Automated scientific review and manuscript analysis
-- **Executive reporting**: Cross-project metrics and comprehensive dashboards
+- **Executive reporting**: Cross-project metrics and dashboards
 - **Multi-format output**: PDF, HTML, and presentation generation
 
 ## Key Insights
 
 1. **Step Size Selection**: Critical for convergence speed and stability
-2. **Testing Importance**: Comprehensive tests catch numerical issues early
+2. **Testing Importance**: tests catch numerical issues early
 3. **Automation Benefits**: Scripts ensure reproducible analysis
 4. **Documentation Value**: Clear code and manuscripts improve research quality
 
@@ -445,6 +481,6 @@ This foundation could be extended to:
 
 ## Final Assessment
 
-The small code project successfully demonstrates that the research template can support projects ranging from prose-focused manuscripts to fully-tested algorithmic implementations. The combination of rigorous testing, automated analysis, and integrated documentation provides a solid foundation for reproducible computational research.
+The small code project successfully demonstrates that the research template can support projects ranging from prose-focused manuscripts to-tested algorithmic implementations. The combination of rigorous testing, automated analysis, and integrated documentation provides a solid foundation for reproducible computational research.
 
-This work contributes to the broader goal of improving research software quality and reproducibility through standardized development practices and comprehensive testing strategies.
+This work contributes to the broader goal of improving research software quality and reproducibility through standardized development practices and testing strategies.

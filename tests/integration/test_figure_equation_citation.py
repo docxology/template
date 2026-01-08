@@ -17,6 +17,7 @@ from pathlib import Path
 import numpy as np
 
 
+@pytest.mark.integration
 class TestFigureGeneration:
     """Test figure generation and integration."""
 
@@ -142,6 +143,7 @@ Figure \ref{fig:figure1} shows X, while Figure \ref{fig:figure2} shows Y.
         assert r'\ref{fig:figure2}' in content
 
 
+@pytest.mark.integration
 class TestEquationHandling:
     """Test equation labeling and cross-referencing."""
 
@@ -238,6 +240,7 @@ x = y + z
         assert r'\label{eq:' not in content
 
 
+@pytest.mark.integration
 class TestCitationHandling:
     """Test citation and bibliography handling."""
 
@@ -303,6 +306,7 @@ for solving this problem.
         assert r'\cite{smith2023,jones2024,brown2022}' in content
 
 
+@pytest.mark.integration
 class TestIntegratedWorkflow:
     """Test integrated workflow of figures, equations, and citations."""
 
@@ -415,6 +419,7 @@ yields the convergence shown in Figure \ref{fig:convergence}.
         assert r'\ref{fig:convergence}' in results
 
 
+@pytest.mark.integration
 class TestValidationIntegration:
     """Test integration with validation systems."""
 
@@ -470,6 +475,7 @@ See equation \eqref{eq:nonexistent} for details.
         assert r'\eqref{eq:nonexistent}' in content
 
 
+@pytest.mark.integration
 class TestPDFGenerationIntegration:
     """Test integration with PDF generation pipeline."""
 

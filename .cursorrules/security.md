@@ -13,7 +13,7 @@ This guide covers **development security standards** for the Research Project Te
 from infrastructure.core.exceptions import ValidationError
 
 def process_user_data(data: dict) -> dict:
-    """Process user data with comprehensive validation."""
+    """Process user data with validation."""
     # Validate required fields
     if not isinstance(data, dict):
         raise ValidationError("Data must be a dictionary")

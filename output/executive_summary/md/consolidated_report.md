@@ -1,16 +1,16 @@
 # Executive Summary - All Projects
 
-**Generated**: 2026-01-05T08:16:04.733721
-**Total Projects**: 3
+**Generated**: 2026-01-08T14:58:06.602181
+**Total Projects**: 2
 
 ## Executive Overview
 
 ### Key Findings
-- **Portfolio Size**: 39,094 total manuscript words across 3 projects
-- **Average Project**: 13,031 words per project
-- **Largest Project**: active_inference_meta_pragmatic (19,281 words)
-- **Smallest Project**: code_project (3,075 words)
-- **Most Efficient**: ento_linguistics (0.25 outputs/second)
+- **Portfolio Size**: 10,469 total manuscript words across 2 projects
+- **Average Project**: 5,234 words per project
+- **Largest Project**: active_inference_meta_pragmatic (7,324 words)
+- **Smallest Project**: code_project (3,145 words)
+- **Most Efficient**: active_inference_meta_pragmatic (0.72 outputs/second)
 
 ### Health Status
 ✅ **All projects** are in good health
@@ -18,60 +18,57 @@
 ## Aggregate Metrics
 
 ### Manuscript
-- **Total Words**: 39,094
-- **Total Sections**: 40
-- **Total Equations**: 84
+- **Total Words**: 10,469
+- **Total Sections**: 19
+- **Total Equations**: 37
 - **Total Figures**: 7
-- **Total References**: 33
+- **Total References**: 8
 
 ### Codebase
-- **Source Lines**: 11,346
-- **Methods**: 450
-- **Classes**: 53
-- **Scripts**: 20
+- **Source Lines**: 3,891
+- **Methods**: 134
+- **Classes**: 15
+- **Scripts**: 8
 
 ### Testing
-- **Total Tests**: 943 (936 passed)
-- **Average Coverage**: 85.5%
+- **Total Tests**: 388 (388 passed)
+- **Average Coverage**: 93.1%
 - **Total Execution Time**: 0.0s
-- **Projects with Test Data**: 3/3
+- **Projects with Test Data**: 2/2
 
 
 ### Outputs
-- **PDFs**: 3 files (6.2 MB)
-- **Figures**: 76
-- **Slides**: 29
-- **Web Pages**: 31
+- **PDFs**: 2 files (5.2 MB)
+- **Figures**: 40
+- **Slides**: 13
+- **Web Pages**: 15
 
 ### Pipeline
-- **Total Duration**: 847s
-- **Average Duration**: 282s
-- **Stages Passed**: 27
+- **Total Duration**: 112s
+- **Average Duration**: 56s
+- **Stages Passed**: 14
 
 ## Project Comparison
 
 | Project | Words | Tests | Coverage | Duration | PDF Size |
 |---------|-------|-------|----------|----------|----------|
-| active_inference_meta_pragmatic | 19,281 | 360 | 92.0% | 436s | 4.4 MB |
-| code_project | 3,075 | 28 | 94.1% | 106s | 1.0 MB |
-| ento_linguistics | 16,738 | 555 | 70.3% | 305s | 0.8 MB |
-| **TOTAL** | **39,094** | **943** | **85.5%** | **847s** | **6.2 MB** |
+| active_inference_meta_pragmatic | 7,324 | 360 | 92.0% | 78s | 4.3 MB |
+| code_project | 3,145 | 28 | 94.1% | 34s | 1.0 MB |
+| **TOTAL** | **10,469** | **388** | **93.1%** | **112s** | **5.2 MB** |
 
 ## Actionable Recommendations
 
-### High Priority
-
-🚨 **HIGH**: 📊 **Test Coverage**: ento_linguistics below 90% threshold (lowest: 70.3%). Action: Add unit tests for uncovered functions, especially in `src/` modules. Target: Aim for 95%+ coverage for critical functionality.
-
 ### Medium Priority
 
-⚠️ **MEDIUM**: 📚 **Comprehensive Research**: active_inference_meta_pragmatic has extensive manuscript (19,281 words). Consider if other projects could benefit from similar depth.
+⚠️ **MEDIUM**: ⏱️ **PDF Performance**: active_inference_meta_pragmatic bottleneck in LaTeX compilation. Action: Check for complex equations or large figures. Consider using lighter LaTeX packages or optimizing figure resolution.
+⚠️ **MEDIUM**: ⏱️ **PDF Performance**: code_project bottleneck in LaTeX compilation. Action: Check for complex equations or large figures. Consider using lighter LaTeX packages or optimizing figure resolution.
+⚠️ **MEDIUM**: 📚 **Comprehensive Research**: active_inference_meta_pragmatic has extensive manuscript (7,324 words). Consider if other projects could benefit from similar depth.
 
 ### Low Priority
 
 ℹ️ **LOW**: 🎉 **Portfolio Health**: Excellent overall project health across all metrics.
+ℹ️ **LOW**: ✅ **Test Coverage**: All projects meet or exceed 90% coverage threshold. Maintain this standard with comprehensive test suites.
 ℹ️ **LOW**: ✅ **Test Integrity**: All tests passing across all projects.
-ℹ️ **LOW**: ⏱️ **Performance**: active_inference_meta_pragmatic bottleneck in LLM Translations (58% of time). Action: Review and optimize the slowest stage.
 
 
 ## Visual Dashboards

@@ -1,13 +1,13 @@
 # Generic Project Development Workflow: The Pipeline Orchestrator Paradigm
 
-> **Complete development workflow** ensuring source code, tests, and documentation coherence
+> **development workflow** ensuring source code, tests, and documentation coherence
 
 **Quick Reference:** [How To Use](../core/HOW_TO_USE.md) | [Architecture](../core/ARCHITECTURE.md) | [Common Workflows](../reference/COMMON_WORKFLOWS.md)
 
-This document explains the complete development workflow that ensures source code, tests, and documentation remain in perfect coherence.
+This document explains the development workflow that ensures source code, tests, and documentation remain in coherence.
 
 **For related information:**
-- **[How To Use](../core/HOW_TO_USE.md)** - Complete usage guide from basic to advanced
+- **[How To Use](../core/HOW_TO_USE.md)** - usage guide from basic to advanced
 - **[Architecture](../core/ARCHITECTURE.md)** - System design overview
 - **[Thin Orchestrator Summary](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation details
 - **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes for common tasks
@@ -17,12 +17,12 @@ This document explains the complete development workflow that ensures source cod
 The generic project template implements a **unified test-driven development paradigm** where:
 
 - **Source code** implements mathematical functionality
-- **Tests** validate all functionality with comprehensive coverage (60% infra, 90% project minimum)
+- **Tests** validate all functionality with coverage (60% infra, 90% project minimum)
 - **Scripts** are **thin orchestrators** that import and use `src/` methods
 - **Documentation** references code and displays generated outputs
 - **`scripts/execute_pipeline.py`** orchestrates the entire 6-stage pipeline
 
-## Complete Workflow Diagram
+## Workflow Diagram
 
 ```mermaid
 graph TB
@@ -75,7 +75,7 @@ graph TB
 
 ## How the Pipeline Orchestrator Works with Markdown and Code
 
-The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes 6 stages sequentially, ensuring complete coherence between all components:
+The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) executes 6 stages sequentially, ensuring coherence between all components:
 
 ### 1. Code Validation Phase
 - **Runs all generation scripts** - This validates that `src/` code works correctly
@@ -98,7 +98,7 @@ The `scripts/execute_pipeline.py` orchestrator (or `./run.sh --pipeline`) execut
 
 ## Test Suite and Code Connections
 
-The test suite ensures comprehensive coverage of all modules and validates the entire pipeline:
+The test suite ensures coverage of all modules and validates the entire pipeline:
 
 ### What Tests Validate
 - **Mathematical correctness** - All functions produce expected results
@@ -117,8 +117,8 @@ flowchart TD
     ADD_TESTS --> VALIDATE
     VALIDATE -->|Coverage = 100%| INTEGRATION[Test Script Integration]
     INTEGRATION --> DOCS[Update Documentation]
-    DOCS --> PIPELINE[Run Complete Pipeline]
-    PIPELINE --> SUCCESS[Development Complete]
+    DOCS --> PIPELINE[Run Pipeline]
+    PIPELINE --> SUCCESS[Development]
 
     classDef process fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef decision fill:#fff3e0,stroke:#e65100,stroke-width:2px
@@ -132,7 +132,7 @@ flowchart TD
 2. **Implement functionality** - Write code to pass tests
 3. **Validate integration** - Ensure scripts can use the code
 4. **Update documentation** - Reflect changes in markdown
-5. **Run complete pipeline** - Use `python3 scripts/execute_pipeline.py --core-only` to validate coherence
+5. **Run pipeline** - Use `python3 scripts/execute_pipeline.py --core-only` to validate coherence
 
 ## Step-by-Step Workflow
 
@@ -167,7 +167,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 ### 3. Integration Phase
 
 ```bash
-# Run the complete pipeline (all 6 stages)
+# Run the pipeline (all 6 stages)
 python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
@@ -192,7 +192,7 @@ The pipeline orchestrator executes 6 stages:
 **Critical Principle**: ALL business logic and algorithms must live in `src/` modules.
 
 ### Tests (`tests/`)
-- **90% minimum coverage** for project/src/ (currently achieving 100% - perfect coverage!)
+- **90% minimum coverage** for project/src/ (currently achieving 100% - coverage!)
 - **60% minimum coverage** for infrastructure/ (currently achieving 83.33% - exceeds stretch goal!)
 - **Real numerical examples** (no mocks)
 - **Deterministic RNG seeds** for reproducibility
@@ -235,7 +235,7 @@ output/
 - Error handling for edge cases
 
 ### Test Validation
-- Comprehensive statement and branch coverage (90% project, 60% infra minimum)
+- statement and branch coverage (90% project, 60% infra minimum)
 - All tests must pass
 - No network or file-system writes outside output/
 - Deterministic execution
@@ -256,7 +256,7 @@ uv run python scripts/generate_research_figures.py
 # Validate markdown
 python3 -m infrastructure.validation.cli markdown project/manuscript/
 
-# Build complete PDF pipeline
+# Build PDF pipeline
 python3 scripts/execute_pipeline.py --core-only
 
 # Clean all generated outputs (regeneratable)
@@ -303,7 +303,7 @@ All directories under `output/` are disposable and can be safely cleaned.
 2. **Validation**: Automatic checking of all references and outputs
 3. **Reproducibility**: Deterministic generation of all artifacts
 4. **Maintainability**: Clear separation of concerns with unified workflow
-5. **Quality**: Comprehensive test coverage enforced automatically
+5. **Quality**: test coverage enforced automatically
 6. **Documentation**: Auto-generated API references and validation
 7. **Thin Orchestrator Pattern**: Scripts use tested src/ methods, not duplicate logic
 
@@ -345,12 +345,12 @@ The workflow enforces a **thin orchestrator pattern** where:
 
 - **`src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`scripts/`** are lightweight wrappers that import and use `src/` methods
-- **`tests/`** ensures comprehensive coverage of all functionality
+- **`tests/`** ensures coverage of all functionality
 - **`scripts/execute_pipeline.py`** orchestrates the entire 6-stage pipeline
 
 This ensures:
 - **Maintainability**: Single source of truth for business logic
-- **Testability**: Fully tested core functionality
+- **Testability**: tested core functionality
 - **Reusability**: Scripts can use any `src/` method
 - **Clarity**: Clear separation of concerns
 - **Quality**: Automated validation of the entire system

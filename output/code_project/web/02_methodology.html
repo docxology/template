@@ -204,17 +204,25 @@ objective function <span class="math inline">\(f: \mathbb{R}^d
 <h3 id="test-problem-quadratic-minimization">Test Problem: Quadratic
 Minimization</h3>
 <p>We use quadratic functions of the form:</p>
-<p><span class="math display">\[f(x) = \frac{1}{2} x^T A x - b^T
-x\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:quadratic_objective}
+f(x) = \frac{1}{2} x^T A x - b^T x
+\end{equation}\]</span></p>
 <p>where: - <span class="math inline">\(A\)</span> is a positive
 definite matrix - <span class="math inline">\(b\)</span> is the linear
 term vector - The gradient is: <span class="math inline">\(\nabla f(x) =
 A x - b\)</span></p>
 <p>For the simple case <span class="math inline">\(A = I\)</span> and
 <span class="math inline">\(b = 1\)</span>, we have:</p>
-<p><span class="math display">\[f(x) = \frac{1}{2} x^2 - x\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:simple_quadratic}
+f(x) = \frac{1}{2} x^2 - x
+\end{equation}\]</span></p>
 <p>with gradient:</p>
-<p><span class="math display">\[\nabla f(x) = x - 1\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:simple_gradient}
+\nabla f(x) = x - 1
+\end{equation}\]</span></p>
 <p>The analytical minimum occurs at <span class="math inline">\(x =
 1\)</span> with <span class="math inline">\(f(1) =
 -\frac{1}{2}\)</span>.</p>
@@ -227,8 +235,11 @@ descent methods are well-established in the optimization literature
 class="math inline">\(\kappa =
 \frac{\lambda_{\max}}{\lambda_{\min}}\)</span>, the convergence rate of
 gradient descent satisfies:</p>
-<p><span class="math display">\[\frac{\|x_{k+1} - x^*\|}{\|x_k - x^*\|}
-\leq \sqrt{\frac{\kappa - 1}{\kappa + 1}}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:convergence_rate}
+\frac{\|x_{k+1} - x^*\|}{\|x_k - x^*\|} \leq \sqrt{\frac{\kappa -
+1}{\kappa + 1}}
+\end{equation}\]</span></p>
 <p>where <span class="math inline">\(x^*\)</span> denotes the optimal
 solution. This bound shows linear convergence with rate <span
 class="math inline">\(\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}} &lt;
@@ -237,17 +248,21 @@ class="math inline">\(\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}} &lt;
 \frac{1}{2}x^T A x - b^T x\)</span> where <span
 class="math inline">\(A\)</span> is positive definite, the convergence
 factor becomes:</p>
-<p><span class="math display">\[\rho = \frac{|\lambda_{\max} -
-\alpha\lambda_{\min}|}{|\lambda_{\min} +
-\alpha\lambda_{\max}|}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:convergence_factor}
+\rho = \frac{|\lambda_{\max} - \alpha\lambda_{\min}|}{|\lambda_{\min} +
+\alpha\lambda_{\max}|}
+\end{equation}\]</span></p>
 <p>where <span class="math inline">\(\alpha\)</span> is the step size.
 Optimal convergence occurs when <span class="math inline">\(\alpha =
 \frac{2}{\lambda_{\min} + \lambda_{\max}}\)</span>, yielding <span
 class="math inline">\(\rho = \frac{\kappa - 1}{\kappa + 1}\)</span>.</p>
 <h3 id="step-size-selection-criteria">Step Size Selection Criteria</h3>
 <p>The optimal constant step size for quadratic functions is:</p>
-<p><span class="math display">\[\alpha = \frac{2}{\lambda_{\min} +
-\lambda_{\max}}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:optimal_step_size}
+\alpha = \frac{2}{\lambda_{\min} + \lambda_{\max}}
+\end{equation}\]</span></p>
 <p>For our test problem with <span class="math inline">\(\lambda_{\min}
 = \lambda_{\max} = 1\)</span>, this gives <span
 class="math inline">\(\alpha = 1\)</span>.</p>
@@ -312,7 +327,7 @@ values</li>
 </ul>
 <h3 id="testing-strategy-and-validation">Testing Strategy and
 Validation</h3>
-<p>Comprehensive test suite covers multiple dimensions:</p>
+<p>test suite covers multiple dimensions:</p>
 <ul>
 <li><strong>Functional correctness</strong>: Analytical gradient
 verification against finite differences</li>

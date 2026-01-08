@@ -14,7 +14,7 @@ git clone https://github.com/docxology/template.git
 # Install dependencies
 uv sync
 
-# Run complete build
+# Run build
 python3 scripts/execute_pipeline.py --core-only
 ```
 
@@ -35,7 +35,7 @@ open output/project_combined.pdf  # Top-level output
 
 ### Build Pipeline Commands
 ```bash
-# Complete pipeline execution
+# pipeline execution
 python3 scripts/execute_pipeline.py --core-only
 
 # With specific stage
@@ -168,7 +168,7 @@ Reference it: \ref{fig:my_figure}
 - **Coverage**: 100% project, 83.33% infra (exceeds requirements by 39%!)
 - **Build Time**: 84 seconds (without optional LLM review)
 - **PDFs Generated**: 13 sections
-- **Documentation**: 25+ comprehensive guides
+- **Documentation**: 25+ guides
 
 **See [Build System](../operational/BUILD_SYSTEM.md) for details**
 
@@ -185,7 +185,7 @@ Reference it: \ref{fig:my_figure}
 
 ## 🔗 Essential Links
 
-- **[Complete Guide](../core/HOW_TO_USE.md)** - All 12 skill levels
+- **[Guide](../core/HOW_TO_USE.md)** - All 12 skill levels
 - **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
 - **[FAQ](../reference/FAQ.md)** - Common questions
 - **[Glossary](../reference/GLOSSARY.md)** - Terms and definitions
@@ -196,7 +196,7 @@ Reference it: \ref{fig:my_figure}
 1. **Always run tests first**: `pytest tests/` before building
 2. **Use thin orchestrator pattern**: Scripts import from `src/`
 3. **Coverage requirements**: 90% minimum for project code, 60% for infrastructure
-4. **Run complete pipeline**: `python3 scripts/execute_pipeline.py --core-only` executes all stages
+4. **Run pipeline**: `python3 scripts/execute_pipeline.py --core-only` executes all stages
 5. **Pipeline stages**: 6 stages (00-05) from setup to final deliverables
 6. **Read build logs**: Check `project/output/pdf/*_compile.log` for errors
 7. **Individual stages**: Run `python3 scripts/XX_stage_name.py` for specific stages
@@ -204,7 +204,7 @@ Reference it: \ref{fig:my_figure}
 
 ---
 
-**Need more details?** See **[Complete Documentation Index](../DOCUMENTATION_INDEX.md)**
+**Need more details?** See **[Documentation Index](../DOCUMENTATION_INDEX.md)**
 
 **System Status**: ✅ All operational | [Build System](../operational/BUILD_SYSTEM.md)
 

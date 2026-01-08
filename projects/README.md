@@ -4,28 +4,28 @@ This directory contains multiple **standalone research projects**, each with ind
 
 ## Exemplar Projects Showcase
 
-This directory contains **two comprehensive exemplar projects** demonstrating the template's full capabilities:
+This directory contains **two exemplar projects** demonstrating the template's full capabilities:
 
 ### 🚀 **code_project**: Computational Research Exemplar
-A complete optimization research project featuring:
+A optimization research project featuring:
 - **Advanced Algorithms**: Full gradient descent implementation with convergence analysis
 - **Publication-Quality Output**: Professional LaTeX manuscript with cross-references
 - **Rigorous Testing**: 96%+ test coverage with performance benchmarks
 - **Automated Analysis**: Script-driven figure generation and data visualization
 
 ### 🧠 **active_inference_meta_pragmatic**: Active Inference Research
-A comprehensive active inference research project demonstrating:
+A active inference research project demonstrating:
 - **Meta-Pragmatic Framework**: Advanced theoretical development
 - **Active Inference Models**: Implementation of active inference principles
-- **Comprehensive Analysis**: Extensive experimental validation
+- **Analysis**: Extensive experimental validation
 - **Professional Documentation**: Publication-quality manuscript
 
 ### 📚 **ento_linguistics**: Ento-Linguistic Research
-A comprehensive ento-linguistic research project demonstrating:
+A ento-linguistic research project demonstrating:
 - **Domain Analysis**: Term extraction and literature mining
 - **Multi-Domain Taxonomy**: Six-domain classification system
-- **Comprehensive Testing**: 484 tests with 83% coverage
-- **Research Pipeline**: Complete analysis workflows
+- **Testing**: 484 tests with 83% coverage
+- **Research Pipeline**: analysis workflows
 
 **Note:** Archived projects (e.g., `prose_project/`) are preserved in `projects_archive/` for reference but are not actively executed.
 
@@ -35,7 +35,7 @@ Each project in `projects/` is **completely self-contained** with three critical
 
 ### 🔒 **Tests**: Independent Test Suites
 - Each project has its own `tests/` directory with 90%+ coverage requirement
-- Tests use real data only (no mocks policy)
+- Tests use data only (no mocks policy)
 - Tests import from `projects/{name}/src/` and `infrastructure/`
 - Can be run independently: `pytest projects/{name}/tests/`
 
@@ -155,7 +155,7 @@ graph TD
 
 ## Infrastructure Compliance
 
-Each project is **operated upon** by infrastructure modules while maintaining complete independence:
+Each project is **operated upon** by infrastructure modules while maintaining independence:
 
 ### 🔍 **Project Discovery** (`infrastructure.project.discovery`)
 ```python
@@ -216,7 +216,7 @@ python3 scripts/05_copy_outputs.py --project ento_linguistics
 
 ## Project Isolation Principles
 
-### ✅ **Complete Independence**
+### ✅ **Independence**
 - **Source Code**: Each project has independent `src/` with unique algorithms
 - **Test Suites**: Separate `tests/` directories with project-specific coverage
 - **Manuscripts**: Independent `manuscript/` with own content and references
@@ -238,18 +238,18 @@ Every project must comply with development standards defined in `.cursorrules/`:
 
 ### ✅ **Testing Standards** (`.cursorrules/testing_standards.md`)
 - [ ] **90% minimum coverage** for project code (`projects/{name}/src/`)
-- [ ] **Real data only** - No mocks in test suites
-- [ ] **Comprehensive integration tests** for critical workflows
+- [ ] **data only** - No mocks in test suites
+- [ ] **integration tests** for critical workflows
 - [ ] **Deterministic results** with seeded randomness
 
 ### ✅ **Documentation Standards** (`.cursorrules/documentation_standards.md`)
-- [ ] **`AGENTS.md`** in each directory with comprehensive technical documentation
+- [ ] **`AGENTS.md`** in each directory with technical documentation
 - [ ] **`README.md`** in each directory with quick reference and Mermaid diagrams
-- [ ] **Complete docstrings** with examples for all public APIs
+- [ ] **docstrings** with examples for all public APIs
 - [ ] **Cross-references** to related documentation sections
 
 ### ✅ **Type Hints Standards** (`.cursorrules/type_hints_standards.md`)
-- [ ] **Complete type annotations** on all public APIs
+- [ ] **type annotations** on all public APIs
 - [ ] **Generic types** where appropriate (List, Dict, Optional, etc.)
 - [ ] **Consistent type hint patterns** across modules
 
@@ -405,7 +405,7 @@ uv run python scripts/manage_workspace.py update
 ### Command Line - Single Project
 
 ```bash
-# Run complete pipeline for specific project
+# Run pipeline for specific project
 ./run.sh --project myresearch --pipeline
 
 # Run individual stages
@@ -520,10 +520,10 @@ Required checks:
 
 ### ✅ **Standards Compliance Across All Projects**
 
-All projects in this directory fully comply with template development standards:
+All projects in this directory comply with template development standards:
 
-- **Testing**: 90%+ coverage, real data only, comprehensive integration tests
-- **Documentation**: Complete AGENTS.md + README.md in each directory
+- **Testing**: 90%+ coverage, data only, integration tests
+- **Documentation**: AGENTS.md + README.md in each directory
 - **Type Safety**: Full type hints on all public APIs
 - **Code Quality**: Black formatting, descriptive naming, proper imports
 - **Error Handling**: Context preservation, informative messages
@@ -550,7 +550,7 @@ python3 -c "import ast; import inspect; # Type checking logic"
 - Use meaningful project names (not `project1`, `project2`)
 - Include `README.md` in each project
 - Add `pyproject.toml` with metadata
-- Write comprehensive tests
+- Write tests
 - Document your code
 - Follow .cursorrules standards for all development
 
@@ -572,7 +572,7 @@ if [[ -d "project" ]] && [[ ! -d "projects" ]]; then
     echo "Migrating to multi-project structure..."
     mkdir -p projects
     mv project projects/project
-    echo "✓ Migration complete"
+    echo "✓ Migration"
 fi
 ```
 
@@ -581,7 +581,7 @@ Available projects are automatically discovered - use `--project {name}` to spec
 ## Real Project Examples
 
 ### 🦗 **Ento-Linguistic Research** (`projects/ento_linguistics/`)
-Complete research project analyzing how language shapes entomological understanding:
+research project analyzing how language shapes entomological understanding:
 
 **Standalone Guarantees:**
 - **Tests**: 484 tests passing, 83.74% coverage, real literature data from PubMed/arXiv
@@ -629,7 +629,7 @@ Minimal project demonstrating gradient descent algorithms:
 
 **Infrastructure Operations:**
 ```bash
-# Complete pipeline execution
+# pipeline execution
 python3 scripts/execute_pipeline.py --project code_project --core-only
 ```
 
@@ -638,7 +638,7 @@ python3 scripts/execute_pipeline.py --project code_project --core-only
 ### Method 1: Copy Existing Project (Recommended)
 
 ```bash
-# Copy a complete, working project as template
+# Copy a, working project as template
 cp -r projects/code_project projects/my_research
 cd projects/my_research
 
@@ -862,14 +862,14 @@ LOG_LEVEL=0 python3 scripts/03_render_pdf.py --project myproject
 
 - [Infrastructure Project Discovery](../infrastructure/project/AGENTS.md) - Project discovery API
 - [Scripts Documentation](../scripts/AGENTS.md) - Pipeline orchestration
-- [Root AGENTS.md](../AGENTS.md) - Complete system documentation
+- [Root AGENTS.md](../AGENTS.md) - system documentation
 
 ## Summary
 
 The `projects/` directory implements a **standalone project paradigm** with infrastructure compliance:
 
 ### 🔒 **Standalone Guarantees**
-- **Tests**: Independent test suites (90%+ coverage, real data only)
+- **Tests**: Independent test suites (90%+ coverage, data only)
 - **Methods**: Isolated business logic with no cross-project imports
 - **Manuscript**: Independent content with own references and metadata
 
@@ -881,11 +881,11 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 
 ### 📋 **Compliance Framework**
 - **.cursorrules Standards**: Testing, documentation, type hints, error handling, logging
-- **Quality Gates**: 90% coverage, complete documentation, type safety
+- **Quality Gates**: 90% coverage, documentation, type safety
 - **Infrastructure Access**: Import from `infrastructure/` modules for shared utilities
 
 ### 🎯 **Real Examples**
-- **ento_linguistics**: Complete Ento-Linguistic research (484 tests, literature mining)
+- **ento_linguistics**: Ento-Linguistic research (484 tests, literature mining)
 - **active_inference_meta_pragmatic**: Meta-cognitive framework (theoretical validation)
 - **code_project**: Optimization algorithms (minimal template)
 
@@ -898,4 +898,4 @@ The `projects/` directory implements a **standalone project paradigm** with infr
 4. **Execute**: Run via infrastructure scripts for testing, analysis, rendering
 5. **Deliver**: Final outputs organized in `output/{project}/`
 
-Each project is **completely independent** yet fully integrated with the template's infrastructure for quality assurance, rendering, and validation.
+Each project is **completely independent** yet integrated with the template's infrastructure for quality assurance, rendering, and validation.

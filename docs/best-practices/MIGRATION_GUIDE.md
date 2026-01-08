@@ -4,7 +4,7 @@
 
 **Quick Reference:** [Getting Started](../guides/GETTING_STARTED.md) | [Architecture](../core/ARCHITECTURE.md) | [Common Workflows](../reference/COMMON_WORKFLOWS.md)
 
-This guide provides comprehensive instructions for migrating existing projects to the Research Project Template structure, ensuring a smooth transition while preserving your work.
+This guide provides instructions for migrating existing projects to the Research Project Template structure, ensuring a smooth transition while preserving your work.
 
 ## Overview
 
@@ -580,7 +580,7 @@ Migration checklist:
 1. **Preparation** - Backup, plan, branch
 2. **Structure** - Set up template directories
 3. **Code** - Move and adapt source code
-4. **Tests** - Create comprehensive tests
+4. **Tests** - Create tests
 5. **Scripts** - Convert to thin orchestrators
 6. **Documentation** - Migrate and format
 7. **Configuration** - Update settings

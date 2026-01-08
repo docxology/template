@@ -57,7 +57,7 @@ Types:
 
 | Type | Description | Example |
 |------|-------------|---------|
-| `feat` | New feature | `feat(literature): add arXiv search support` |
+| `feat` | feature | `feat(literature): add arXiv search support` |
 | `fix` | Bug fix | `fix(pdf): resolve rendering crash on empty sections` |
 | `docs` | Documentation | `docs(api): update LLM integration guide` |
 | `style` | Code style | `style(core): format imports with isort` |
@@ -152,7 +152,7 @@ Brief description of changes and why they're needed.
 ## Type of Change
 
 - [ ] Bug fix (non-breaking)
-- [ ] New feature (non-breaking)
+- [ ] feature (non-breaking)
 - [ ] Breaking change
 - [ ] Documentation update
 - [ ] Performance improvement
@@ -177,9 +177,7 @@ Brief description of changes and why they're needed.
 - [ ] Documentation updated (AGENTS.md, README.md)
 - [ ] No breaking changes without migration guide
 - [ ] Commit messages follow standards
-- [ ] PR description is clear and complete
-
-## Breaking Changes
+- [ ] PR description is clear and ## Breaking Changes
 
 List any breaking changes and migration instructions:
 
@@ -219,7 +217,7 @@ git commit -m "feat(core): add new validation function
 Add validate_input() function to core/validators.py
 - Validates string inputs for length and format
 - Raises ValidationError with context
-- Includes comprehensive tests"
+- Includes tests"
 
 # 4. Push and create PR
 git push origin feature/add-new-functionality

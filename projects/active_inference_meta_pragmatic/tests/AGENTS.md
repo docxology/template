@@ -2,12 +2,12 @@
 
 ## Overview
 
-This directory contains the comprehensive test suite for the Active Inference meta-pragmatic framework. The test suite achieves 90%+ coverage of project code and follows strict no-mocks policy, ensuring all tests validate real functionality with actual data.
+This directory contains the test suite for the Active Inference meta-pragmatic framework. The test suite achieves 90%+ coverage of project code and follows strict no-mocks policy, ensuring all tests validate real functionality with actual data.
 
 ## Testing Philosophy
 
 ### No Mocks Policy
-**Absolute Requirement**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **real data** and **real computations only**.
+**Absolute Requirement**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **data** and **computations only**.
 
 **Rationale**:
 - Tests validate actual behavior, not mocked behavior
@@ -15,9 +15,9 @@ This directory contains the comprehensive test suite for the Active Inference me
 - Code is tested in realistic conditions
 - No false confidence from mocked tests
 
-### Real Data Testing Patterns
+### Data Testing Patterns
 ```python
-# GOOD: Real data generation
+# GOOD: data generation
 def test_algorithm():
     # Generate actual test data
     data = generate_synthetic_data(n_samples=100, distribution="normal")
@@ -267,7 +267,7 @@ def test_active_inference_meta_cognition_integration():
 ### Pipeline Testing
 ```python
 def test_analysis_pipeline():
-    """Test complete analysis pipeline integration."""
+    """Test analysis pipeline integration."""
     # This would test the full pipeline execution
     # with temporary directories and mock data
 
@@ -387,7 +387,7 @@ pytest --profile
 
 ## Maintenance Guidelines
 
-### Adding New Tests
+### Adding Tests
 1. Follow established naming conventions (`test_*.py`)
 2. Achieve 90%+ coverage for new code
 3. Include edge cases and error conditions
@@ -403,9 +403,9 @@ pytest --profile
 
 ### Test Quality Assurance
 1. **No Mocks**: Never use mocking frameworks
-2. **Real Data**: Always use actual computations
+2. **Data**: Always use actual computations
 3. **Comprehensive**: Cover all code paths
 4. **Maintainable**: Clear, well-documented tests
 5. **Fast**: Optimize for quick execution
 
-This comprehensive test suite ensures the theoretical correctness, numerical stability, and practical reliability of the Active Inference meta-pragmatic framework implementation.
+This test suite ensures the theoretical correctness, numerical stability, and practical reliability of the Active Inference meta-pragmatic framework implementation.

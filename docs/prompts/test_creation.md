@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Create comprehensive test suites that validate code functionality using real data only, ensuring full compliance with testing standards and coverage requirements.
+Create test suites that validate code functionality using data only, ensuring full compliance with testing standards and coverage requirements.
 
 ## Context
 
@@ -15,7 +15,7 @@ This prompt enforces the strict no-mocks testing policy and leverages testing st
 ## Prompt Template
 
 ```
-You are creating comprehensive tests for the Research Project Template. ALL TESTS MUST USE REAL DATA ONLY - NO MOCKS, NO PATCHING, NO SIMULATIONS. Tests must validate actual functionality with real inputs and outputs.
+You are creating tests for the Research Project Template. ALL TESTS MUST USE DATA ONLY - NO MOCKS, NO PATCHING, NO SIMULATIONS. Tests must validate actual functionality with real inputs and outputs.
 
 CODE TO TEST: [Specify the module/function/class to test]
 LAYER: [Specify: "infrastructure" (60% coverage) OR "project" (90% coverage)]
@@ -24,37 +24,37 @@ TESTING REQUIREMENTS:
 
 ## 1. No Mocks Policy - ABSOLUTE REQUIREMENT
 
-**CRITICAL**: Under no circumstances use MagicMock, mocker.patch, unittest.mock, or any mocking framework. All tests must use real data and real computations only.
+**CRITICAL**: Under no circumstances use MagicMock, mocker.patch, unittest.mock, or any mocking framework. All tests must use data and computations only.
 
 ### Valid Testing Approaches
 ```python
-# ✅ GOOD: Real HTTP testing with pytest-httpserver
+# ✅ GOOD: HTTP testing with pytest-httpserver
 def test_api_call(httpserver):
     """Test real API call with local test server."""
     httpserver.expect_request("/api/data").respond_with_json({"result": "ok"})
 
     client = APIClient(base_url=httpserver.url_for("/"))
-    response = client.get_data()  # Real HTTP request
+    response = client.get_data()  # HTTP request
 
     assert response["result"] == "ok"
 
-# ✅ GOOD: Real file system operations
+# ✅ GOOD: file system operations
 def test_file_processing(tmp_path):
     """Test file processing with real temporary files."""
     test_file = tmp_path / "test.txt"
     test_file.write_text("test content")
 
     processor = FileProcessor()
-    result = processor.process_file(test_file)  # Real file operations
+    result = processor.process_file(test_file)  # file operations
 
     assert result is not None
 
-# ✅ GOOD: Real database operations (with test database)
+# ✅ GOOD: database operations (with test database)
 def test_database_operations(test_db):
-    """Test database operations with real test database."""
+    """Test database operations with test database."""
     repo = DataRepository(connection=test_db)
 
-    # Real database operations
+    # database operations
     repo.save_data({"key": "value"})
     retrieved = repo.get_data("key")
 
@@ -113,7 +113,7 @@ class TestResearchAlgorithm:
 
     @pytest.fixture
     def sample_data(self):
-        """Provide real test data."""
+        """Provide test data."""
         return np.random.randn(100, 5)
 
     @pytest.fixture
@@ -130,7 +130,7 @@ class TestResearchAlgorithm:
         assert algo.max_iter == 100
 
     def test_algorithm_execution(self, sample_data, algorithm_instance):
-        """Test algorithm execution with real data."""
+        """Test algorithm execution with data."""
         result = algorithm_instance.run(sample_data)
 
         assert result is not None
@@ -159,7 +159,7 @@ class TestResearchAlgorithm:
 ### Test Data Management
 ```python
 class TestDataFixtures:
-    """Real test data fixtures and generators."""
+    """test data fixtures and generators."""
 
     @pytest.fixture
     def synthetic_dataset(self, tmp_path):
@@ -188,11 +188,11 @@ class TestDataFixtures:
 
 ## 4. Testing Patterns
 
-### Unit Testing with Real Data
+### Unit Testing with Data
 ```python
 def test_data_preprocessing():
-    """Test data preprocessing with real dataset."""
-    # Load real test dataset
+    """Test data preprocessing with dataset."""
+    # Load test dataset
     raw_data = load_test_dataset('raw_data.csv')
 
     # Apply preprocessing
@@ -208,12 +208,12 @@ def test_data_preprocessing():
 ### Integration Testing
 ```python
 def test_complete_workflow(tmp_path):
-    """Test complete research workflow integration."""
-    # Setup real data
+    """Test research workflow integration."""
+    # Setup data
     data_file = tmp_path / "experiment_data.csv"
     generate_experiment_data(data_file)
 
-    # Execute complete workflow
+    # Execute workflow
     workflow = ResearchWorkflow(config={"output_dir": tmp_path})
     results = workflow.run(data_file)
 
@@ -230,7 +230,7 @@ def test_complete_workflow(tmp_path):
 ### Performance Testing
 ```python
 def test_algorithm_performance():
-    """Test algorithm performance with real data."""
+    """Test algorithm performance with data."""
     data = generate_large_dataset(size=10000)
 
     algo = ResearchAlgorithm()
@@ -241,7 +241,7 @@ def test_algorithm_performance():
     execution_time = time.time() - start_time
 
     # Performance assertions
-    assert execution_time < 60  # Must complete within 1 minute
+    assert execution_time < 60  # Must within 1 minute
     assert result.memory_usage < 500 * 1024 * 1024  # Under 500MB
     assert result.converged
 ```
@@ -293,7 +293,7 @@ def test_optimization_results():
     assert result.converged, "Algorithm must converge for valid optimization"
     assert result.final_loss < result.initial_loss * 0.1, "Must achieve significant loss reduction"
     assert np.all(np.isfinite(result.parameters)), "Parameters must be finite (no NaN/inf)"
-    assert 0 < result.execution_time < 300, "Execution must complete in reasonable time"
+    assert 0 < result.execution_time < 300, "Execution must in reasonable time"
 ```
 
 ## 6. Test Organization
@@ -308,7 +308,7 @@ tests/
 ├── test_validation.py            # Validation function tests
 ├── test_integration.py           # End-to-end workflow tests
 ├── test_performance.py           # Performance regression tests
-└── test_data/                    # Real test data files
+└── test_data/                    # test data files
     ├── small_dataset.csv
     ├── large_dataset.csv
     └── edge_cases.json
@@ -333,7 +333,7 @@ def test_data_dir():
 
 @pytest.fixture
 def real_dataset(test_data_dir):
-    """Load real test dataset."""
+    """Load test dataset."""
     import pandas as pd
     return pd.read_csv(test_data_dir / "real_dataset.csv")
 ```
@@ -366,10 +366,10 @@ def test_unhandled_edge_case():
 
 ## Key Requirements
 
-- [ ] **NO MOCKS**: Real data and computations only
+- [ ] **NO MOCKS**: data and computations only
 - [ ] Coverage requirements met (90% project, 60% infrastructure)
-- [ ] Real test data generation and management
-- [ ] Comprehensive error condition testing
+- [ ] test data generation and management
+- [ ] error condition testing
 - [ ] Integration testing for workflows
 - [ ] Performance testing with time/memory limits
 - [ ] Edge case validation
@@ -383,7 +383,7 @@ def test_unhandled_edge_case():
 - [ ] Coverage requirements achieved (90% project, 60% infrastructure)
 - [ ] Test organization with clear structure
 - [ ] TDD approach (tests before/ alongside code)
-- [ ] Real data testing patterns
+- [ ] data testing patterns
 - [ ] Integration testing included
 
 ### Code Quality Standards
@@ -401,8 +401,8 @@ LAYER: project
 ```
 
 **Expected Output:**
-- Complete `tests/test_optimization.py` with 90%+ coverage
-- Real data fixtures for all test cases
+- `tests/test_optimization.py` with 90%+ coverage
+- data fixtures for all test cases
 - Edge case testing with actual error conditions
 - Integration tests for optimization workflows
 - Performance validation tests
@@ -411,6 +411,6 @@ LAYER: project
 ## Related Documentation
 
 - [`../../projects/project/docs/testing_expansion_plan.md`](../../projects/project/docs/testing_expansion_plan.md) - Testing expansion strategy
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Complete testing standards
+- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - testing standards
 - [`../../projects/project/docs/standards_compliance.md`](../../projects/project/docs/standards_compliance.md) - Standards compliance matrix
 ```

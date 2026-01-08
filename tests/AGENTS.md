@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The `tests/` directory ensures **comprehensive test coverage** for all modules (90% project minimum, 60% infrastructure minimum). Tests validate that core business logic works correctly using real data and real computations.
+The `tests/` directory ensures **test coverage** for all modules (90% project minimum, 60% infrastructure minimum). Tests validate that core business logic works correctly using data and computations.
 
 ## Testing Philosophy
 
@@ -14,7 +14,7 @@ The `tests/` directory ensures **comprehensive test coverage** for all modules (
 
 ### ABSOLUTE PROHIBITION: No Mocks Policy
 
-**🔄 CURRENT STATUS: MAJOR PROGRESS** - Significant infrastructure test fixes completed, LLM tests partially migrated to real HTTP calls.
+**🔄 CURRENT STATUS: MAJOR PROGRESS** - Significant infrastructure test fixes completed, LLM tests partially migrated to HTTP calls.
 
 **✅ COMPLETED FIXES:**
 - **Project Test Imports**: Fixed `test_reporting.py` and `test_validation.py` import errors by updating conftest.py to add repository root to Python path
@@ -26,17 +26,17 @@ The `tests/` directory ensures **comprehensive test coverage** for all modules (
 - **Bash Logging Tests**: Added ANSI color code stripping for proper output comparison
 - **Output Copying Tests**: Updated missing file handling assertions to match current implementation labels
 
-**🔄 LLM TESTS (PARTIALLY COMPLETE):**
-- **✅ Fallback Logic**: Successfully migrated `test_query_fallback_on_connection_error` to use real HTTP calls with test server
+**🔄 LLM TESTS (PARTIALLY):**
+- **✅ Fallback Logic**: Successfully migrated `test_query_fallback_on_connection_error` to use HTTP calls with test server
 - **⏳ Remaining**: 32 additional LLM tests need server modifications for edge cases (structured JSON parsing, streaming, model discovery, etc.)
 
 **⏳ REMAINING PHASES:**
-- Complete LLM test migration (HTTP testing with pytest-httpserver)
+- LLM test migration (HTTP testing with pytest-httpserver)
 - Publishing module tests (Zenodo/arXiv/GitHub integration)
 - Validation & Rendering (CLI and file operations)
 - Supporting Infrastructure & QA
 
-**NON-NEGOTIABLE REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **real data** and **real computations only**.
+**NON-NEGOTIABLE REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **data** and **computations only**.
 
 **See `MOCK_ELIMINATION_GUIDE.md`** for systematic elimination plan.
 
@@ -50,10 +50,10 @@ This is a fundamental testing principle that ensures:
 - `MagicMock()`, `mocker.patch()`, `unittest.mock`
 - Any form of dependency injection for testing
 - Mocking external services or APIs
-- Creating fake test data instead of real data
+- Creating fake test data instead of data
 
 **ALWAYS USE REAL OPERATIONS:**
-- Real data and real computations
+- data and computations
 - Create temporary directories/files for testing
 - Use deterministic seeds for reproducibility
 - Test real integration between components
@@ -75,14 +75,14 @@ def ollama_test_server():
 def test_llm_query(ollama_test_server):
     config = LLMConfig(base_url=ollama_test_server.url_for("/"))
     client = LLMClient(config)
-    response = client.query("test")  # Real HTTP request
+    response = client.query("test")  # HTTP request
     assert "Test response" in response
 ```
 
-**CLI Testing with Real Subprocess:**
+**CLI Testing with Subprocess:**
 ```python
 def test_cli_validation(tmp_path):
-    # Create real test file
+    # Create test file
     pdf_file = tmp_path / "test.pdf"
     from reportlab.pdfgen import canvas
     c = canvas.Canvas(str(pdf_file))
@@ -97,16 +97,16 @@ def test_cli_validation(tmp_path):
     assert result.returncode == 0
 ```
 
-**PDF Processing with Real Files:**
+**PDF Processing with Files:**
 ```python
 def test_pdf_extraction(tmp_path):
-    # Create real PDF
+    # Create PDF
     pdf_file = tmp_path / "test.pdf"
     c = canvas.Canvas(str(pdf_file))
     c.drawString(100, 750, "Extracted content")
     c.save()
 
-    # Test real PDF extraction
+    # Test PDF extraction
     text = extract_manuscript_text(str(pdf_file))
     assert "Extracted content" in text
 ```
@@ -120,7 +120,7 @@ For modules requiring external services (LLM, Literature, Publishing):
 - Skip integration tests with: `pytest -m "not requires_ollama"`
 
 ### Coverage Requirements
-- All projects/{name}/src/ modules must meet 90% minimum coverage (currently 100% - perfect coverage!)
+- All projects/{name}/src/ modules must meet 90% minimum coverage (currently 100% - coverage!)
 - Infrastructure modules must meet 60% minimum coverage (currently 83.33% - exceeds stretch goal!)
 - Tests must pass before PDF generation proceeds
 - Coverage validated by `pyproject.toml` configuration (`[tool.coverage.*]` sections)
@@ -128,21 +128,11 @@ For modules requiring external services (LLM, Literature, Publishing):
 
 ## Test Organization
 
-Tests are organized to mirror `infrastructure/` module structure. Note: Multiple test files with suffixes like `_coverage`, `_full`, `_comprehensive` exist to achieve comprehensive test coverage across different scenarios and edge cases. These files are intentionally split rather than consolidated to ensure thorough validation of complex functionality:
+Tests are organized to mirror `infrastructure/` module structure. Note: Multiple test files with suffixes like `_coverage`, `_full`, `_comprehensive` exist to achieve test coverage across different scenarios and edge cases. These files are intentionally split rather than consolidated to ensure thorough validation of complex functionality:
 
 ```
 tests/
 ├── conftest.py                          # Root test configuration and fixtures
-├── infrastructure/                      # Infrastructure module tests
-│   ├── conftest.py                      # Infrastructure test configuration
-│   ├── test_project_discovery.py        # Project discovery and validation (284 lines)
-│   ├── build/                           # Build system tests
-│   │   ├── test_build_verifier.py       # Build verification (400 lines)
-│   │   ├── test_build_verifier_*.py     # Additional build verifier tests
-│   │   ├── test_quality_checker.py      # Document quality analysis (463 lines)
-│   │   └── test_quality_checker_*.py    # Additional quality checker tests
-│   │   └── test_reproducibility.py      # Environment tracking (427 lines)
-│   │   └── test_reproducibility_*.py    # Additional reproducibility tests
 │   ├── core/                            # Core utilities tests
 │   │   ├── test_checkpoint.py           # Checkpoint/resume functionality
 │   │   ├── test_config_cli_coverage.py  # Config CLI coverage
@@ -154,6 +144,7 @@ tests/
 │   │   ├── test_logging_*.py            # Logging system tests
 │   │   ├── test_performance.py          # Performance monitoring
 │   │   ├── test_progress.py             # Progress tracking
+│   │   ├── test_project_discovery.py    # Project discovery and validation
 │   │   ├── test_retry.py                # Retry mechanisms
 │   │   └── test_script_discovery.py     # Script discovery
 │   ├── documentation/                   # Documentation tools tests
@@ -212,11 +203,13 @@ tests/
 │   │   ├── test_scientific_dev.py       # Scientific development utilities
 │   │   └── test_scientific_dev_edge_cases.py # Edge case handling
 │   └── validation/                      # Validation system tests
+│       ├── test_audit_orchestrator.py   # Audit orchestration
 │       ├── test_check_links*.py         # Link validation (core/coverage/full/edge_cases)
 │       ├── test_cli.py                  # CLI interface
 │       ├── test_doc_scanner*.py         # Document scanning (core/coverage/full/phases)
 │       ├── test_figure_validator.py     # Figure validation
 │       ├── test_integrity*.py           # Integrity verification (core/edge_cases)
+│       ├── test_issue_categorizer.py    # Issue categorization
 │       ├── test_markdown_validator.py   # Markdown validation
 │       ├── test_output_validator.py     # Output validation
 │       ├── test_pdf_validator.py        # PDF validation (328 lines)
@@ -226,7 +219,7 @@ tests/
 │       └── test_validation_cli.py       # General validation CLI
 └── integration/                         # Integration tests
     ├── conftest.py                      # Integration test configuration
-    ├── test_07_generate_executive_report.py # Executive report generation
+    ├── test_executive_report_generation.py  # Executive report generation
     ├── test_bash_utils.sh               # Bash utility function tests
     ├── test_edge_cases_and_error_paths.py # Edge cases and error handling
     ├── test_figure_equation_citation.py # Figure/equation/citation handling
@@ -467,7 +460,7 @@ def test_double(input, expected):
 **Project Modules** (`projects/{name}/src/`):
 - **code_project**: **94.1%** (Target: 90%+) ✅ Exceeds requirement!
 - **prose_project**: **91.5%** (Target: 90%+) ✅ Exceeds requirement!
-- Comprehensive test coverage ensures research code reliability
+- test coverage ensures research code reliability
 
 **Infrastructure Modules** (`infrastructure/`): **83.33%** (Target: 60%+)
 - Exceeds the 60% minimum requirement by 39%!
@@ -522,7 +515,7 @@ def test_something():
 
 ### Do's
 - ✅ Test all public APIs
-- ✅ Use real data and computations
+- ✅ Use data and computations
 - ✅ Test edge cases and error conditions
 - ✅ Use descriptive test names
 - ✅ Test one thing per test function
@@ -566,13 +559,13 @@ pytest projects/prose_project/tests/ --cov=projects/prose_project/src --cov-fail
 open htmlcov/index.html
 ```
 
-## Adding New Tests
+## Adding Tests
 
 ### Checklist
 1. Determine if code is project-specific (`projects/{name}/src/`) or infrastructure (`infrastructure/`)
 2. Create test file in appropriate location (`projects/{name}/tests/` or `tests/infrastructure/`)
 3. Import functions to test from correct module path
-4. Write comprehensive test cases using real data (no mocks)
+4. Write test cases using data (no mocks)
 5. Ensure coverage requirements met (90% project, 60% infrastructure)
 6. Run full test suite to verify
 7. Update this documentation if needed
@@ -665,7 +658,7 @@ def test_publish_to_zenodo(zenodo_credentials, tmp_path):
 - Tests automatically clean up artifacts (depositions, releases)
 - Tokens should have minimum required scopes
 
-See **[docs/TESTING_WITH_CREDENTIALS.md](../docs/development/TESTING_WITH_CREDENTIALS.md)** for complete setup guide.
+See **[docs/TESTING_WITH_CREDENTIALS.md](../docs/development/TESTING_WITH_CREDENTIALS.md)** for setup guide.
 
 ## See Also
 

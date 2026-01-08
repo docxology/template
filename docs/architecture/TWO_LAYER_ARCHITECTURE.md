@@ -11,7 +11,7 @@ This research template implements a clear two-layer architecture separating gene
 | **Location** | `infrastructure/` (root level) | `projects/{name}/src/` (project-specific) |
 | **Purpose** | Generic, reusable build tools | Domain-specific research code |
 | **Scope** | Works with any project | Specific to this research |
-| **Test Coverage** | 60% minimum (currently 83.33% - exceeds stretch goal!) | 90% minimum (currently 100% - perfect coverage!) |
+| **Test Coverage** | 60% minimum (currently 83.33% - exceeds stretch goal!) | 90% minimum (currently 100% - coverage!) |
 | **Scripts** | `scripts/` (root, generic orchestrators) | `project/scripts/` (project orchestrators) |
 | **Tests** | `tes../../infrastructure/` (root level) | `projects/proje../../tests/` (project-specific) |
 | **Imports** | `from infrastructure.module import` | `from project.src.module import` |
@@ -117,7 +117,7 @@ project/scripts/
 - Domain-specific and research-focused
 - Implements algorithms and computations
 - Calls infrastructure when needed
-- 90% minimum test coverage (currently achieving 100% - perfect coverage!)
+- 90% minimum test coverage (currently achieving 100% - coverage!)
 - Follows thin orchestrator pattern
 
 **Usage Pattern:**
@@ -434,7 +434,7 @@ flowchart TD
        pass
    ```
 
-3. **Write comprehensive tests:**
+3. **Write tests:**
    ```bash
    vim projects/proje../../tests/test_new_algorithm.py
    ```
@@ -469,7 +469,7 @@ flowchart TD
        pass
    ```
 
-3. **Write comprehensive tests:**
+3. **Write tests:**
    ```bash
    vim tes../../infrastructure/test_validation/test_new_validator.py
    ```
@@ -561,7 +561,7 @@ open htmlcov/index.html
 - Use infrastructure tools for document management
 - Follow thin orchestrator pattern in projects/{name}/scripts/
 - Implement algorithms in projects/{name}/src/ modules
-- Test with real data
+- Test with data
 - Document domain-specific concepts
 
 ❌ **Don't:**
@@ -656,7 +656,7 @@ grep -r "import projects\." infrastructure/
 ## References
 
 ### Architecture Documentation
-- [../core/ARCHITECTURE.md](../core/ARCHITECTURE.md) - Complete system architecture overview
+- [../core/ARCHITECTURE.md](../core/ARCHITECTURE.md) - system architecture overview
 - [DECISION_TREE.md](../architecture/DECISION_TREE.md) - Code placement flowchart
 - [THIN_ORCHESTRATOR_SUMMARY.md](../architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Thin orchestrator pattern details
 
@@ -667,9 +667,9 @@ grep -r "import projects\." infrastructure/
 - [code_project/src/README.md](../../projects/code_project/src/README.md) - Project quick reference
 
 ### System Documentation
-- [../AGENTS.md](../AGENTS.md) - Complete system documentation
+- [../AGENTS.md](../AGENTS.md) - system documentation
 - [../README.md](../README.md) - Project overview
-- [../core/HOW_TO_USE.md](../core/HOW_TO_USE.md) - Complete usage guide
+- [../core/HOW_TO_USE.md](../core/HOW_TO_USE.md) - usage guide
 
 ---
 

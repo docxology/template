@@ -17,7 +17,7 @@ This guide has been **split into specialized guides** for better organization. C
 - Integrate figures into your manuscript
 - Understand the thin orchestrator pattern
 
-**Perfect for:** Researchers who want to add visual elements to their work
+**for:** Researchers who want to add visual elements to their work
 
 ### 🔄 [Extending and Automation](EXTENDING_AND_AUTOMATION.md)
 **Extend the template and automate your workflows**
@@ -28,7 +28,7 @@ This guide has been **split into specialized guides** for better organization. C
 - Automate repetitive research tasks
 - Modify and extend template functionality
 
-**Perfect for:** Developers who want to customize the research workflow
+**for:** Developers who want to customize the research workflow
 
 ## 🎯 Quick Start by Goal
 
@@ -40,7 +40,7 @@ This guide has been **split into specialized guides** for better organization. C
 | Add custom Python modules | [Extending and Automation](EXTENDING_AND_AUTOMATION.md) |
 | Extend template functionality | [Extending and Automation](EXTENDING_AND_AUTOMATION.md) |
 
-## 📖 Complete Learning Path
+## 📖 Learning Path
 
 For the **full intermediate experience**, work through both guides in order:
 

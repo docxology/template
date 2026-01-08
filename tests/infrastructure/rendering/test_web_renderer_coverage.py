@@ -130,7 +130,80 @@ class TestWebRendererIntegration:
         assert web_renderer is not None
 
 
+class TestCombinedHtmlRendering:
+    """Test combined HTML rendering functionality."""
 
+    def test_render_combined_creates_index_html(self, tmp_path):
+        """Test that render_combined creates index.html with TOC."""
+        from infrastructure.rendering.config import RenderingConfig
+        from infrastructure.rendering.web_renderer import WebRenderer
+
+        # Create test markdown files
+        md1 = tmp_path / "01_intro.md"
+        md1.write_text("# Introduction\n\nThis is the introduction.")
+
+        md2 = tmp_path / "02_methods.md"
+        md2.write_text("# Methods\n\nThis describes the methods.")
+
+        md3 = tmp_path / "03_results.md"
+        md3.write_text("# Results\n\n$E = mc^2$\n\nSome results here.")
+
+        # Setup config
+        web_dir = tmp_path / "output" / "web"
+        web_dir.mkdir(parents=True, exist_ok=True)
+
+        config = RenderingConfig(
+            web_dir=str(web_dir),
+            output_dir=str(tmp_path / "output"),
+        )
+
+        # Test render_combined
+        renderer = WebRenderer(config)
+        source_files = [md1, md2, md3]
+        
+        result = renderer.render_combined(source_files, tmp_path, "test_project")
+
+        # Verify index.html was created
+        assert result.name == "index.html"
+        assert result.exists()
+        assert result.stat().st_size > 0
+
+        # Verify content includes TOC and sections
+        content = result.read_text()
+        # Pandoc generates TOC with nav id="TOC" element, not "Table of Contents" text
+        assert 'id="TOC"' in content or 'id="toc"' in content
+        assert "Introduction" in content
+        assert "Methods" in content
+        assert "Results" in content
+        # Pandoc generates IDs from heading text (e.g., id="introduction"), not section-N
+        assert 'id="introduction"' in content
+        assert 'id="methods"' in content
+        assert 'id="results"' in content
+
+    def test_render_manager_combined_web(self, tmp_path):
+        """Test RenderManager.render_combined_web method."""
+        from infrastructure.rendering.core import RenderManager
+        from infrastructure.rendering.config import RenderingConfig
+
+        # Create test files
+        md1 = tmp_path / "a.md"
+        md1.write_text("# Section A\n\nContent A.")
+
+        md2 = tmp_path / "b.md"
+        md2.write_text("# Section B\n\nContent B.")
+
+        # Setup config
+        web_dir = tmp_path / "output" / "web"
+        config = RenderingConfig(
+            web_dir=str(web_dir),
+            output_dir=str(tmp_path / "output"),
+        )
+
+        manager = RenderManager(config)
+        result = manager.render_combined_web([md1, md2], tmp_path, "test")
+
+        assert result.exists()
+        assert result.name == "index.html"
 
 
 

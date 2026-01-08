@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  5 JAN 2026 08:09
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.3.8)  8 JAN 2026 14:57
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -1296,13 +1296,13 @@ LaTeX Warning: Citation `cauchy1847methode' on page 1 undefined on input line 3
 
 
 LaTeX Warning: Citation `bertsekas1999nonlinear' on page 1 undefined on input l
-ine 65.
+ine 74.
 
 
-LaTeX Warning: Citation `boyd2004convex' on page 1 undefined on input line 65.
+LaTeX Warning: Citation `boyd2004convex' on page 1 undefined on input line 74.
 
 )
-Overfull \vbox (1717.61252pt too high) detected at line 321
+Overfull \vbox (1717.61252pt too high) detected at line 339
  []
 
 
@@ -1332,10 +1332,10 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 29412 strings out of 473832
- 596154 string characters out of 5729482
- 1191828 words of memory out of 5000000
- 51935 multiletter control sequences out of 15000+600000
+ 29418 strings out of 473832
+ 596283 string characters out of 5729482
+ 1193032 words of memory out of 5000000
+ 51941 multiletter control sequences out of 15000+600000
  562372 words of font info for 68 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,11n,123p,1090b,905s stack positions out of 10000i,1000n,20000p,200000b,200000s

@@ -1,6 +1,6 @@
 # Validation Infrastructure Tests - Quick Reference
 
-Comprehensive tests for quality assurance and validation systems.
+tests for quality assurance and validation systems.
 
 ## Overview
 
@@ -152,6 +152,6 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete test documentation
+- [AGENTS.md](AGENTS.md) - test documentation
 - [../../infrastructure/validation/README.md](../../infrastructure/validation/README.md) - Validation module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

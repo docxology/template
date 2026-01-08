@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>02_background</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="sec:background">Background and Theoretical Foundations</h1>
+<p>Active Inference represents a paradigm shift in our understanding of
+cognition, perception, and action. Originating from the Free Energy
+Principle <span class="citation"
+data-cites="friston2010free">[@friston2010free]</span>, Active Inference
+provides a unified mathematical formalism for understanding biological
+agents as systems that minimize variational free energy through
+perception and action. This section establishes the theoretical
+foundations that enable Active Inference to operate as a
+meta-theoretical methodology—specifying the frameworks within which
+cognition occurs.</p>
+<h2 id="sec:fep_foundation">The Free Energy Principle</h2>
+<p>The Free Energy Principle (FEP) defines a “thing” as a system that
+maintains its structure over time through free energy minimization. This
+principle applies across multiple scales of organization:</p>
+<p><strong>Physical Level:</strong> Boundary maintenance through Markov
+blankets—systems maintain physical structure by minimizing thermodynamic
+free energy, creating boundaries that separate internal from external
+states.</p>
+<p><strong>Cognitive Level:</strong> Belief updating through Expected
+Free Energy (EFE) minimization—cognitive agents maintain accurate world
+models by minimizing expected free energy, updating beliefs through
+Bayesian inference while selecting actions that reduce uncertainty.</p>
+<p><strong>Meta-Cognitive Level:</strong> Framework adaptation through
+higher-order reasoning—meta-cognitive systems maintain adaptive
+cognitive architectures by optimizing framework parameters, evolving
+their own processing structures based on performance analysis.</p>
+<h3 id="variational-free-energy">Variational Free Energy</h3>
+<p>The Variational Free Energy bounds the surprise:</p>
+<span class="math display">\[\begin{equation}
+\mathcal{F}[q] = \mathbb{E}_{q(s)}[\log q(s) - \log p(s,o)]
+\label{eq:variational_free_energy}
+\end{equation}\]</span>
+<p>Systems self-organize by minimizing free energy:</p>
+<span class="math display">\[\begin{equation}
+\dot{\phi} = -\frac{\partial \mathcal{F}}{\partial \phi}
+\label{eq:self_organization}
+\end{equation}\]</span>
+<p>Where <span class="math inline">\(\phi\)</span> represents system
+parameters that can be controlled.</p>
+<h2 id="sec:efe_formulation">Expected Free Energy Formulation</h2>
+<p>The Expected Free Energy (EFE) combines epistemic and pragmatic
+components in a unified formalism:</p>
+<span class="math display">\[\begin{equation}
+\mathcal{F}(\pi) = \mathbb{E}_{q(s_\tau)}[\log q(s_\tau) - \log p(s_\tau
+\mid \pi)] + \mathbb{E}_{q(o_\tau)}[\log p(o_\tau \mid s_\tau) + \log
+p(s_\tau) - \log q(s_\tau)]
+\label{eq:efe}
+\end{equation}\]</span>
+<h3 id="epistemic-pragmatic-decomposition">Epistemic-Pragmatic
+Decomposition</h3>
+<p>The EFE decomposes into two fundamental terms:</p>
+<p><strong>Epistemic Value (Information Gain):</strong></p>
+<span class="math display">\[\begin{equation}
+H[Q(\pi)] = \mathbb{E}_{q(s_\tau)}[\log q(s_\tau) - \log p(s_\tau \mid
+\pi)]
+\label{eq:epistemic_component}
+\end{equation}\]</span>
+<p>This term (Equation <span
+class="math inline">\(\eqref{eq:epistemic_component}\)</span>) is
+minimized when executing policy <span class="math inline">\(\pi\)</span>
+reduces uncertainty about hidden states.</p>
+<p><strong>Pragmatic Value (Goal Achievement):</strong></p>
+<span class="math display">\[\begin{equation}
+G(\pi) = \mathbb{E}_{q(o_\tau)}[\log p(o_\tau \mid s_\tau) + \log
+p(s_\tau) - \log q(s_\tau)]
+\label{eq:pragmatic_component}
+\end{equation}\]</span>
+<p>This term (Equation <span
+class="math inline">\(\eqref{eq:pragmatic_component}\)</span>) measures
+goal achievement through preferred observations.</p>
+<h3 id="perception-action-loop">Perception-Action Loop</h3>
+<p>Active Inference implements a continuous cycle where agents update
+beliefs and select actions to minimize expected free energy:</p>
+<h2 id="sec:generative_model">Generative Model Specification</h2>
+<p>Active Inference agents operate through generative models defined by
+four core matrices. The specification of these matrices transforms
+framework design from an external constraint into an internal research
+question.</p>
+<h3 id="matrix-a-observation-likelihoods">Matrix A: Observation
+Likelihoods</h3>
+<p>Defines how hidden states generate observations:</p>
+<span class="math display">\[\begin{equation}
+A = [a_{ij}] \quad a_{ij} = P(o_i \mid s_j)
+\label{eq:matrix_a}
+\end{equation}\]</span>
+<p><strong>Properties:</strong> - Each column sums to 1 (valid
+probability distribution) - Rows represent observation modalities -
+Columns represent hidden state conditions - Diagonal dominance indicates
+reliable observations</p>
+<h3 id="matrix-b-state-transitions">Matrix B: State Transitions</h3>
+<p>Defines how actions influence state changes:</p>
+<span class="math display">\[\begin{equation}
+B = [b_{ijk}] \quad b_{ijk} = P(s_j \mid s_i, a_k)
+\label{eq:matrix_b}
+\end{equation}\]</span>
+<p><strong>Structure:</strong> 3D tensor with dimensions <span
+class="math inline">\(\text{states} \times \text{states} \times
+\text{actions}\)</span>, where each action defines a transition
+matrix.</p>
+<h3 id="matrix-c-preferences">Matrix C: Preferences</h3>
+<p>Defines desired outcomes (the pragmatic landscape):</p>
+<span class="math display">\[\begin{equation}
+C = [c_i] \quad c_i = \log P(o_i)
+\label{eq:matrix_c}
+\end{equation}\]</span>
+<p><strong>Interpretation:</strong> - Positive values: preferred
+observations - Negative values: avoided observations - Magnitude
+indicates strength of preference</p>
+<h3 id="matrix-d-prior-beliefs">Matrix D: Prior Beliefs</h3>
+<p>Defines initial state beliefs:</p>
+<span class="math display">\[\begin{equation}
+D = [d_i] \quad d_i = P(s_i)
+\label{eq:matrix_d}
+\end{equation}\]</span>
+<p><strong>Role:</strong> Represents initial beliefs before observation,
+encoding innate biases or learned priors.</p>
+<h2 id="sec:meta_aspects">Meta-Epistemic and Meta-Pragmatic Aspects</h2>
+<p>Active Inference operates at a fundamentally meta-level that
+distinguishes it from traditional decision-making algorithms. Rather
+than simply providing another method for selecting actions given fixed
+observation models and reward functions, Active Inference allows
+researchers to specify the very frameworks within which cognition
+occurs.</p>
+<h3 id="meta-epistemic-dimension">Meta-Epistemic Dimension</h3>
+<p>Active Inference allows modelers to specify epistemic frameworks
+through matrices <span class="math inline">\(A\)</span>, <span
+class="math inline">\(B\)</span>, and <span
+class="math inline">\(D\)</span>:</p>
+<ul>
+<li><strong>Matrix <span class="math inline">\(A\)</span>:</strong>
+Defines what can be known about the world and how reliably observations
+indicate underlying states</li>
+<li><strong>Matrix <span class="math inline">\(D\)</span>:</strong> Sets
+initial assumptions about the world’s structure</li>
+<li><strong>Matrix <span class="math inline">\(B\)</span>:</strong>
+Specifies causal relationships and how actions influence state
+changes</li>
+</ul>
+<p>Through these specifications, researchers define not just current
+beliefs, but the epistemological boundaries of cognition
+itself—determining what knowledge is possible, how evidence accumulates,
+and what causal structures are assumed.</p>
+<h3 id="meta-pragmatic-dimension">Meta-Pragmatic Dimension</h3>
+<p>Beyond epistemic specification, Active Inference supports
+meta-pragmatic modeling through matrix <span
+class="math inline">\(C\)</span>, which defines preference priors.
+Unlike traditional reinforcement learning where rewards are externally
+specified, Active Inference allows modelers to specify pragmatic
+landscapes—what constitutes “value” for the agent—creating opportunities
+to explore how different value systems shape cognition and behavior.</p>
+<h3 id="the-modeler-as-architect-and-subject">The Modeler as Architect
+and Subject</h3>
+<p>The structure reveals the dual role of the Active Inference
+modeler:</p>
+<p><strong>As Architect:</strong> - Specifies epistemic frameworks
+(<span class="math inline">\(A\)</span>, <span
+class="math inline">\(B\)</span>, <span class="math inline">\(D\)</span>
+matrices) - Defines pragmatic landscapes (<span
+class="math inline">\(C\)</span> matrix) - Designs cognitive
+architectures - Establishes boundary conditions for cognition</p>
+<p><strong>As Subject:</strong> - Uses Active Inference to understand
+their own cognition - Applies meta-epistemic principles to knowledge
+acquisition - Employs meta-pragmatic frameworks for decision-making -
+Engages in recursive self-modeling</p>
+<p>This dual role creates a recursive relationship where the tools used
+to model others become tools for self-understanding.</p>
+</body>
+</html>

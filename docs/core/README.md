@@ -12,14 +12,14 @@ The `core/` directory contains the essential documentation that all users should
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) | Complete usage guide from basic to advanced (all 12 levels) | New users, developers |
+| [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) | usage guide from basic to advanced (all 12 levels) | New users, developers |
 | [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) | System design and structure overview | Developers, architects |
 | [`../core/WORKFLOW.md`](../core/WORKFLOW.md) | Development workflow and best practices | Developers |
 
 ## Quick Navigation
 
 ### For New Users
-1. Start with [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) - Complete usage guide
+1. Start with [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) - usage guide
 2. Review [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Understand system design
 3. Follow [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Learn development process
 
@@ -37,7 +37,7 @@ The `core/` directory contains the essential documentation that all users should
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Complete documentation index
+- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 - [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
 

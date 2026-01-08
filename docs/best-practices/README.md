@@ -43,7 +43,7 @@ The `best-practices/` directory contains consolidated best practices, project ma
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Complete documentation index
+- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 
 

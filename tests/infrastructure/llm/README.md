@@ -1,6 +1,6 @@
 # tests/infrastructure/llm/ - LLM Integration Tests
 
-Comprehensive test suite for local LLM integration (91%+ coverage).
+test suite for local LLM integration (91%+ coverage).
 
 ## Quick Start
 
@@ -50,7 +50,7 @@ pytest tests/infrastructure/llm/ -m requires_ollama -v
 
 ## See Also
 
-- [`AGENTS.md`](AGENTS.md) - Complete LLM test documentation
+- [`AGENTS.md`](AGENTS.md) - LLM test documentation
 - [`../../infrastructure/llm/README.md`](../../infrastructure/llm/README.md) - LLM module overview
 
 

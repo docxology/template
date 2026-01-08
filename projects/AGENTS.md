@@ -8,10 +8,10 @@ The `projects/` directory implements a **standalone project paradigm** where eac
 
 Each project in `projects/{name}/` provides **three critical guarantees**:
 
-### 🔒 **Tests**: Independent Test Suites (90%+ Coverage, Real Data Only)
+### 🔒 **Tests**: Independent Test Suites (90%+ Coverage, Data Only)
 - **Location**: `projects/{name}/tests/`
 - **Coverage**: 90% minimum for `projects/{name}/src/` code
-- **Policy**: No mocks - all tests use real data and computations
+- **Policy**: No mocks - all tests use data and computations
 - **Execution**: Can run independently via `pytest projects/{name}/tests/`
 - **Infrastructure Integration**: Orchestrated by `scripts/01_run_tests.py`
 
@@ -138,7 +138,7 @@ projects/{name}/
 
 ## Infrastructure Compliance
 
-Projects are **operated upon** by infrastructure modules while maintaining complete independence:
+Projects are **operated upon** by infrastructure modules while maintaining independence:
 
 ### 🔍 **Project Discovery** (`infrastructure.project.discovery`)
 
@@ -336,12 +336,12 @@ open htmlcov/index.html
 **Rationale:**
 - Tests must validate actual behavior, not mocked behavior
 - Integration points must be truly tested
-- Code must work with real data and computations
+- Code must work with data and computations
 - No false confidence from mocked tests
 
 **Correct Testing Patterns:**
 ```python
-# ✅ GOOD: Test with real data and computations
+# ✅ GOOD: Test with data and computations
 def test_term_extraction_real_data():
     """Test term extraction with real entomological texts."""
     extractor = TerminologyExtractor()
@@ -361,13 +361,13 @@ def test_term_extraction_real_data():
 
 **Network-Dependent Testing:**
 ```python
-# ✅ GOOD: Use pytest-httpserver for real HTTP testing
+# ✅ GOOD: Use pytest-httpserver for HTTP testing
 @pytest.mark.requires_ollama
 def test_llm_integration_real_http(ollama_test_server):
-    """Test LLM integration with real HTTP server."""
+    """Test LLM integration with HTTP server."""
     config = LLMConfig(base_url=ollama_test_server.url_for("/"))
     client = LLMClient(config)
-    response = client.query("test prompt")  # Real HTTP request
+    response = client.query("test prompt")  # HTTP request
     assert "response" in response.lower()
 ```
 
@@ -485,22 +485,22 @@ output/ento_linguistics/
 
 ## .cursorrules Compliance Verification
 
-All projects in this directory fully comply with the template's development standards defined in `.cursorrules/`.
+All projects in this directory comply with the template's development standards defined in `.cursorrules/`.
 
 ### ✅ **Testing Standards Compliance**
 - **90%+ coverage**: All active projects achieve required coverage thresholds (code_project: 96.49%, active_inference_meta_pragmatic: varies, ento_linguistics: 83%)
-- **Real data only**: All tests use real computations, no mocks
-- **Comprehensive integration**: Tests cover algorithm convergence, mathematical functions, and figure generation
+- **data only**: All tests use computations, no mocks
+- **integration**: Tests cover algorithm convergence, mathematical functions, and figure generation
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
 
 ### ✅ **Documentation Standards Compliance**
-- **AGENTS.md + README.md**: Complete technical documentation in each directory
-- **Type hints**: All public APIs have complete type annotations
-- **Docstrings**: Comprehensive docstrings with examples for all functions
+- **AGENTS.md + README.md**: technical documentation in each directory
+- **Type hints**: All public APIs have type annotations
+- **Docstrings**: docstrings with examples for all functions
 - **Cross-references**: Links between related documentation sections
 
 ### ✅ **Type Hints Standards Compliance**
-- **Complete annotations**: All public functions have type hints
+- **annotations**: All public functions have type hints
 - **Generic types**: Uses `List`, `Dict`, `Optional`, `Callable` appropriately
 - **Consistent patterns**: Follows template conventions throughout
 
@@ -527,13 +527,13 @@ All projects in this directory fully comply with the template's development stan
 - **code_project**: 96.00% coverage (13 tests passed) ✅
 - **active_inference_meta_pragmatic**: Coverage varies by module ✅
 - **ento_linguistics**: 83% coverage (484 tests passed) ✅
-- **Combined**: All tests use real data, no mocks detected ✅
+- **Combined**: All tests use data, no mocks detected ✅
 
 #### Documentation Standards Results
-- **AGENTS.md**: Complete in all directories (projects/, code_project/, active_inference_meta_pragmatic/, ento_linguistics/) ✅
-- **README.md**: Complete in all directories (projects/, code_project/, active_inference_meta_pragmatic/, ento_linguistics/) ✅
+- **AGENTS.md**: in all directories (projects/, code_project/, active_inference_meta_pragmatic/, ento_linguistics/) ✅
+- **README.md**: in all directories (projects/, code_project/, active_inference_meta_pragmatic/, ento_linguistics/) ✅
 - **Docstrings**: 100% coverage - all Python files have docstrings ✅
-- **Type hints**: All public APIs have complete annotations ✅
+- **Type hints**: All public APIs have annotations ✅
 
 #### Code Quality Standards Results
 - **Black formatting**: Applied consistently across all projects ✅
@@ -561,18 +561,18 @@ All projects must follow standards defined in `.cursorrules/`:
 
 #### ✅ **Testing Standards** (`.cursorrules/testing_standards.md`)
 - [ ] 90%+ coverage for project code
-- [ ] Real data only (no mocks)
-- [ ] Comprehensive integration tests
+- [ ] data only (no mocks)
+- [ ] integration tests
 - [ ] Deterministic results with seeded randomness
 
 #### ✅ **Documentation Standards** (`.cursorrules/documentation_standards.md`)
-- [ ] `AGENTS.md` in each directory with complete technical docs
+- [ ] `AGENTS.md` in each directory with technical docs
 - [ ] `README.md` in each directory with quick reference
-- [ ] Complete docstrings with examples for public APIs
+- [ ] docstrings with examples for public APIs
 - [ ] Cross-references to related documentation
 
 #### ✅ **Type Hints Standards** (`.cursorrules/type_hints_standards.md`)
-- [ ] Complete type annotations on all public functions
+- [ ] type annotations on all public functions
 - [ ] Generic types (List, Dict, Optional, etc.)
 - [ ] Consistent patterns across modules
 
@@ -601,7 +601,7 @@ from src.domain_analysis import DomainAnalyzer           # ✅ Import algorithms
 from infrastructure.figure_manager import FigureManager  # ✅ Import utilities
 
 def main():
-    """Run complete analysis pipeline."""
+    """Run analysis pipeline."""
     # Import and use project algorithms
     extractor = TerminologyExtractor()
     terms = extractor.extract_terms(texts)
@@ -790,7 +790,7 @@ def main():
     logger.info("Starting analysis")
     algo = MyAlgorithm()
     results = algo.run()
-    logger.info(f"Analysis complete: {results}")
+    logger.info(f"Analysis: {results}")
 
 if __name__ == "__main__":
     main()
@@ -876,7 +876,7 @@ python3 scripts/03_render_pdf.py --project ento_linguistics
 
 **Infrastructure Operations:**
 ```bash
-# Complete pipeline via infrastructure
+# pipeline via infrastructure
 python3 scripts/execute_pipeline.py --project active_inference_meta_pragmatic --core-only
 ```
 
@@ -887,14 +887,14 @@ python3 scripts/execute_pipeline.py --project active_inference_meta_pragmatic --
 - [../infrastructure/project/AGENTS.md](../infrastructure/project/AGENTS.md) - Infrastructure project management
 - [../infrastructure/project/README.md](../infrastructure/project/README.md) - Project management quick reference
 - [../.cursorrules/AGENTS.md](../.cursorrules/AGENTS.md) - Development standards overview
-- [../AGENTS.md](../AGENTS.md) - Complete template documentation
+- [../AGENTS.md](../AGENTS.md) - template documentation
 
 ## Summary
 
 The `projects/` directory implements **standalone project paradigm** with infrastructure compliance:
 
 ### 🔒 **Standalone Guarantees**
-- **Tests**: Independent 90%+ coverage test suites with real data only
+- **Tests**: Independent 90%+ coverage test suites with data only
 - **Methods**: Isolated business logic with no cross-project dependencies
 - **Manuscript**: Independent content with own references and publication metadata
 
@@ -905,8 +905,8 @@ The `projects/` directory implements **standalone project paradigm** with infras
 - **Quality Assurance**: PDF/markdown validation and integrity checking
 
 ### 📋 **Compliance Framework**
-- **.cursorrules Standards**: Complete adherence to testing, documentation, type hints, error handling, and logging standards
+- **.cursorrules Standards**: adherence to testing, documentation, type hints, error handling, and logging standards
 - **Quality Gates**: Automated coverage checks, documentation validation, type safety verification
 - **Operational Patterns**: Thin orchestrator scripts, infrastructure utility imports, project isolation
 
-Each project maintains complete independence while benefiting from shared infrastructure for common research operations, ensuring reproducible, high-quality scientific computing with rigorous testing and validation.
+Each project maintains independence while benefiting from shared infrastructure for common research operations, ensuring reproducible, high-quality scientific computing with rigorous testing and validation.

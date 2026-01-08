@@ -1,22 +1,22 @@
-# 🏗️ Generic Project Architecture: Complete System Overview
+# 🏗️ Generic Project Architecture: System Overview
 
-> **Comprehensive overview** of the template's design, components, and build pipeline
+> **overview** of the template's design, components, and build pipeline
 
 **Quick Reference:** [How To Use](../core/HOW_TO_USE.md) | [Two-Layer Architecture](../architecture/TWO_LAYER_ARCHITECTURE.md) | [Workflow](../core/WORKFLOW.md) | [Thin Orchestrator Summary](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)
 
-This document provides a comprehensive overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline.
+This document provides a overview of how the generic project template architecture works, explaining the connections between source code, tests, documentation, and the build pipeline.
 
 **For detailed information on specific topics:**
-- **[Two-Layer Architecture](../architecture/TWO_LAYER_ARCHITECTURE.md)** - Complete guide to Layer 1 (Infrastructure) vs Layer 2 (Project) separation
+- **[Two-Layer Architecture](../architecture/TWO_LAYER_ARCHITECTURE.md)** - guide to Layer 1 (Infrastructure) vs Layer 2 (Project) separation
 - **[Thin Orchestrator Pattern](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Detailed implementation of the thin orchestrator pattern
-- **[Workflow](../core/WORKFLOW.md)** - Complete development workflow and pipeline orchestration
-- **[How To Use](../core/HOW_TO_USE.md)** - Complete usage guide from basic to advanced
+- **[Workflow](../core/WORKFLOW.md)** - development workflow and pipeline orchestration
+- **[How To Use](../core/HOW_TO_USE.md)** - usage guide from basic to advanced
 
 ## Development Rules
 
 For specific architectural rules and standards during development, see:
 
-- **[`.cursorrules/AGENTS.md`](../../.cursorrules/AGENTS.md)** - Complete development standards and guidelines
+- **[`.cursorrules/AGENTS.md`](../../.cursorrules/AGENTS.md)** - Development standards and guidelines
 - **[`.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md)** - Infrastructure module development
 - **[`.cursorrules/README.md`](../../.cursorrules/README.md)** - Quick reference and patterns
 - **[`THIN_ORCHESTRATOR_SUMMARY.md`](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
@@ -94,7 +94,7 @@ graph TB
 - `infrastructure/scientific/` - Scientific dev tools
 
 ### 2. [LAYER 2] Project Code (`project/src/`)
-**Purpose**: Implements mathematical functionality and business logic with comprehensive test coverage.
+**Purpose**: Implements mathematical functionality and business logic with test coverage.
 
 **Key Modules**:
 - `example.py`: Basic mathematical functions (add, multiply, average, etc.)
@@ -119,11 +119,11 @@ graph TB
 - **CRITICAL**: Contain ALL business logic and algorithms
 
 ### 2. Test Suite (`tests/`)
-**Purpose**: Validates all source code functionality with comprehensive coverage.
+**Purpose**: Validates all source code functionality with coverage.
 
 **Coverage Requirements**:
 - **Infrastructure**: 60% minimum (currently achieving 83.33% - exceeds stretch goal!)
-- **Project code**: 90% minimum (currently achieving 100% - perfect coverage!)
+- **Project code**: 90% minimum (currently achieving 100% - coverage!)
 - **No mocks**: All tests use real numerical examples
 - **Deterministic**: Fixed RNG seeds for reproducible results
 
@@ -202,7 +202,7 @@ graph LR
 
 ## The Pipeline Orchestrator
 
-### Complete Pipeline Flow
+### Pipeline Flow
 
 ```mermaid
 flowchart TD
@@ -404,7 +404,7 @@ See Figure \ref{fig:example} and Equation \eqref{eq:example}.
 
 ### 2. Validation
 ```bash
-# Run complete test suite
+# Run test suite
 uv run pytest tests/ --cov=src --cov-report=term-missing
 
 # Generate figures and validate
@@ -414,7 +414,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 ### 3. Integration
 ```bash
-# Run complete pipeline
+# Run pipeline
 python3 scripts/execute_pipeline.py --core-only
 
 # Or individual stages
@@ -430,7 +430,7 @@ python3 scripts/03_render_pdf.py  # PDF generation
 2. **Validation**: Automatic checking of all references and outputs
 3. **Reproducibility**: Deterministic generation of all artifacts
 4. **Maintainability**: Clear separation of concerns with unified workflow
-5. **Quality**: Comprehensive test coverage enforced automatically
+5. **Quality**: test coverage enforced automatically
 6. **Documentation**: Auto-generated API references and validation
 7. **Thin Orchestrator Pattern**: Scripts use tested project/src/ methods, not duplicate logic
 
@@ -449,12 +449,12 @@ The architecture enforces a **thin orchestrator pattern** where:
 
 - **`project/src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`project/scripts/`** are lightweight wrappers that import and use `project/src/` methods
-- **`proje../../tests/`** ensures comprehensive coverage of `project/src/` functionality
+- **`proje../../tests/`** ensures coverage of `project/src/` functionality
 - **`scripts/execute_pipeline.py`** orchestrates the entire 6-stage pipeline
 
 This ensures:
 - **Maintainability**: Single source of truth for business logic
-- **Testability**: Fully tested core functionality
+- **Testability**: tested core functionality
 - **Reusability**: Scripts can use any `project/src/` method
 - **Clarity**: Clear separation of concerns
 - **Quality**: Automated validation of the entire system
@@ -462,6 +462,6 @@ This ensures:
 This architecture ensures that the generic project template maintains the highest standards of code quality, documentation coherence, and maintainability while providing a clear, scalable structure for development and collaboration.
 
 For more details on implementation, see:
-- **[`TWO_LAYER_ARCHITECTURE.md`](../architecture/TWO_LAYER_ARCHITECTURE.md)** - Complete two-layer architecture guide
+- **[`TWO_LAYER_ARCHITECTURE.md`](../architecture/TWO_LAYER_ARCHITECTURE.md)** - two-layer architecture guide
 - **[`THIN_ORCHESTRATOR_SUMMARY.md`](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern details
 - **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)** - Development workflow

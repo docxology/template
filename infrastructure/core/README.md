@@ -162,12 +162,11 @@ flowchart TD
 
     classDef init fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef op fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef complete fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
 
     class Initialization init
     class Operation op
-    class Completion complete
-```
+    class Completion ```
 
 ## Error Handling Flow
 
@@ -384,7 +383,7 @@ with log_operation("Stage execution", logger):
 
 ### Error Handling Integration
 ```python
-# Comprehensive error handling pattern
+# error handling pattern
 from infrastructure.core import (
     TemplateError, ValidationError,
     raise_with_context, chain_exceptions

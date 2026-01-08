@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `docs/architecture/` directory contains comprehensive documentation of the Research Project Template's system architecture, design patterns, and implementation decisions. This directory provides the technical foundation for understanding how the template is structured and why.
+The `docs/architecture/` directory contains documentation of the Research Project Template's system architecture, design patterns, and implementation decisions. This directory provides the technical foundation for understanding how the template is structured and why.
 
 ## Directory Structure
 
@@ -12,14 +12,14 @@ docs/architecture/
 ├── DECISION_TREE.md            # Code placement decision guide
 ├── README.md                   # Quick reference and navigation
 ├── THIN_ORCHESTRATOR_SUMMARY.md # Thin orchestrator pattern details
-└── TWO_LAYER_ARCHITECTURE.md   # Complete architecture specification
+└── TWO_LAYER_ARCHITECTURE.md   # architecture specification
 ```
 
 ## Key Documentation Files
 
 ### Two-Layer Architecture (`TWO_LAYER_ARCHITECTURE.md`)
 
-**Comprehensive architecture specification covering:**
+**architecture specification covering:**
 - **Layer 1 (Infrastructure)**: Generic, reusable build/validation tools
 - **Layer 2 (Project)**: Domain-specific algorithms and analysis
 - **Separation principles**: Clear boundaries between generic and project-specific code
@@ -71,7 +71,7 @@ docs/architecture/
 **Infrastructure Layer (Layer 1)**
 - Generic tools reusable across projects
 - Domain-independent functionality
-- Comprehensive testing (60-100% coverage)
+- testing (60-100% coverage)
 - Version-controlled with project
 
 **Project Layer (Layer 2)**
@@ -98,7 +98,7 @@ docs/architecture/
 **Module Organization:**
 - Each module has single responsibility
 - Clear public APIs with type hints
-- Comprehensive documentation
+- documentation
 - Independent testability
 
 **Inter-Module Communication:**
@@ -159,7 +159,7 @@ project/
 - 60%+ coverage requirement for infrastructure
 
 **Test Principles:**
-- Real data analysis (no mocks)
+- data analysis (no mocks)
 - Deterministic, reproducible results
 - Integration testing for end-to-end workflows
 - Performance benchmarking included
@@ -238,7 +238,7 @@ cat docs/architecture/DECISION_TREE.md
 # 3. Create orchestrator script
 # Thin script in scripts/ or project/scripts/
 
-# 4. Add comprehensive tests
+# 4. Add tests
 # Mirror code structure in tests/ directory
 
 # 5. Update documentation
@@ -252,7 +252,7 @@ cat docs/architecture/DECISION_TREE.md
 1. **Create module directory**: `infrastructure/new_module/`
 2. **Implement core logic**: `infrastructure/new_module/core.py`
 3. **Add CLI interface**: `infrastructure/new_module/cli.py` (optional)
-4. **Write comprehensive tests**: `tests/infrastructure/test_new_module/`
+4. **Write tests**: `tests/infrastructure/test_new_module/`
 5. **Document functionality**: `infrastructure/new_module/AGENTS.md`
 6. **Update system docs**: Modify root `AGENTS.md` and architecture docs
 
@@ -300,12 +300,12 @@ cat docs/architecture/DECISION_TREE.md
 
 **Modular Expansion:**
 - Additional infrastructure modules (data visualization, collaboration tools)
-- Enhanced LLM integration capabilities
+- LLM integration capabilities
 - Extended publishing platform support
 
 **Architecture Improvements:**
 - Plugin system for custom modules
-- Enhanced configuration management
+- configuration management
 - Improved cross-project reusability
 
 ### Maintenance Guidelines
@@ -332,6 +332,6 @@ cat docs/architecture/DECISION_TREE.md
 - [`../../projects/ento_linguistics/src/AGENTS.md`](../../projects/ento_linguistics/src/AGENTS.md) - Ento-linguistics project implementation
 
 **System Documentation:**
-- [`../../AGENTS.md`](../../AGENTS.md) - Complete system overview
+- [`../../AGENTS.md`](../../AGENTS.md) - system overview
 - [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
 - [`../../README.md`](../../README.md) - Project overview

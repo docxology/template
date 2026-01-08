@@ -168,7 +168,7 @@ authors:
 
 ## Testing
 
-The project module includes comprehensive tests:
+The project module includes tests:
 
 ```bash
 # Test project discovery functionality
@@ -239,7 +239,7 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete technical documentation
+- [AGENTS.md](AGENTS.md) - technical documentation
 - [manuscript/README.md](manuscript/README.md) - Manuscript utilities
 - [../../scripts/AGENTS.md](../../scripts/AGENTS.md) - Pipeline integration
 - [../../projects/AGENTS.md](../../projects/AGENTS.md) - Multi-project overview

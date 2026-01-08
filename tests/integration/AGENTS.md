@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The `tests/integration/` directory contains integration tests that validate the interaction between multiple modules and components. These tests ensure that the complete system works together correctly, from data generation through analysis to output generation.
+The `tests/integration/` directory contains integration tests that validate the interaction between multiple modules and components. These tests ensure that the system works together correctly, from data generation through analysis to output generation.
 
 **Testing Philosophy:** Integration tests follow the "no mocks" policy - all tests use real implementations. Network-dependent tests are marked with `@pytest.mark.requires_ollama` (or similar) and skip gracefully when services are unavailable.
 
@@ -11,7 +11,7 @@ The `tests/integration/` directory contains integration tests that validate the 
 Integration tests complement unit tests by validating:
 
 - **Cross-module interactions** - How different components work together
-- **End-to-end workflows** - Complete pipelines from input to output
+- **End-to-end workflows** - pipelines from input to output
 - **File I/O coordination** - Proper handling of generated files and directories
 - **Error propagation** - How errors are handled across module boundaries
 
@@ -19,11 +19,12 @@ Integration tests complement unit tests by validating:
 
 ```
 tests/integration/
-├── conftest.py                          # Integration test configuration
-├── test_07_generate_executive_report.py # Executive report generation tests
+├── conftest.py                          # Integration test configuration (expanded)
 ├── test_bash_utils.sh                   # Bash utility function tests
 ├── test_edge_cases_and_error_paths.py   # Edge cases and error handling
 ├── test_environment_setup.py            # Environment setup integration tests
+├── test_execute_pipeline_cli.py         # Pipeline CLI surface tests
+├── test_executive_report_generation.py  # Executive report generation tests
 ├── test_figure_equation_citation.py     # Figure/equation/citation handling
 ├── test_logging.py                      # Bash logging integration tests
 ├── test_module_interoperability.py      # Cross-module interaction validation
@@ -35,7 +36,7 @@ tests/integration/
 
 ### Environment Setup (`test_environment_setup.py`)
 
-**Purpose:** Validate complete environment setup workflow with real system operations
+**Purpose:** Validate environment setup workflow with real system operations
 
 **Test Coverage:**
 - uv package manager integration and fallback behavior
@@ -54,7 +55,7 @@ All tests use actual system calls and filesystem operations:
 - Real `importlib.import_module()` for dependency checking
 - Real `os.environ` manipulation and restoration
 - Real directory creation and validation
-- Real subprocess execution with error handling
+- subprocess execution with error handling
 
 **Skip Patterns:**
 Tests use `@pytest.mark.integration` and skip gracefully when dependencies unavailable:
@@ -69,7 +70,7 @@ def test_uv_sync_when_available(tmp_path):
 **Example Test:**
 ```python
 def test_complete_setup_with_uv(tmp_path):
-    """Test complete setup when uv is available."""
+    """Test setup when uv is available."""
     if not shutil.which('uv'):
         pytest.skip("uv not installed")
 
@@ -77,7 +78,7 @@ def test_complete_setup_with_uv(tmp_path):
     pyproject = tmp_path / "pyproject.toml"
     pyproject.write_text('[project]\nname="test"\n')
 
-    # Real subprocess call
+    # subprocess call
     result = subprocess.run(['uv', 'sync'], cwd=str(tmp_path))
 
     # Validate real results
@@ -138,7 +139,7 @@ def test_output_directory_structure(tmp_path):
     assert (base_dir / "output" / "pdf").exists()
 ```
 
-### Executive Reporting (`test_07_generate_executive_report.py`)
+### Executive Reporting (`test_executive_report_generation.py`)
 
 **Purpose:** Test the executive report generation pipeline (Stage 10)
 
@@ -151,7 +152,7 @@ def test_output_directory_structure(tmp_path):
 **Example Test:**
 ```python
 def test_executive_report_generation():
-    """Test complete executive report generation workflow."""
+    """Test executive report generation workflow."""
     from scripts.generate_executive_report import generate_executive_report
 
     # Generate report for all projects
@@ -225,7 +226,7 @@ Integration tests simulate real usage patterns:
 
 ```python
 def test_complete_figure_generation_workflow():
-    """Test complete figure generation from data to output."""
+    """Test figure generation from data to output."""
     # Generate test data
     data = generate_test_data()
 
@@ -243,11 +244,11 @@ def test_complete_figure_generation_workflow():
 
 ### End-to-End Validation
 
-Tests validate complete workflows:
+Tests validate workflows:
 
 ```python
 def test_manuscript_compilation_pipeline():
-    """Test complete manuscript compilation workflow."""
+    """Test manuscript compilation workflow."""
     # Setup test manuscript
     manuscript_dir = create_test_manuscript()
 
@@ -307,49 +308,74 @@ pytest tests/integration/test_output_copying.py -v
 
 ### conftest.py
 
-Integration test configuration provides:
+Integration test configuration provides fixtures:
 
 ```python
 import pytest
-import tempfile
 from pathlib import Path
 
+# Path fixtures - get repository locations
 @pytest.fixture
-def temp_project_dir():
-    """Create temporary project directory structure."""
-    with tempfile.TemporaryDirectory() as tmp:
-        project_dir = Path(tmp) / "project"
-        project_dir.mkdir()
-
-        # Create standard subdirectories
-        (project_dir / "src").mkdir()
-        (project_dir / "tests").mkdir()
-        (project_dir / "manuscript").mkdir()
-        (project_dir / "output").mkdir()
-
-        yield project_dir
+def repo_root() -> Path:
+    """Get the repository root directory."""
+    ...
 
 @pytest.fixture
-def temp_project_dir():
-    """Create temporary project directory structure."""
-    with tempfile.TemporaryDirectory() as tmp:
-        project_dir = Path(tmp) / "project"
-        project_dir.mkdir()
+def scripts_path(repo_root: Path) -> Path:
+    """Get the scripts directory path."""
+    ...
 
-        # Create standard subdirectories
-        (project_dir / "src").mkdir()
-        (project_dir / "tests").mkdir()
-        (project_dir / "manuscript").mkdir()
-        (project_dir / "output").mkdir()
+# Project structure fixtures - create test environments
+@pytest.fixture
+def temp_project_dir(tmp_path: Path):
+    """Create temporary project with src/, tests/, manuscript/, output/."""
+    ...
 
-        yield project_dir
+@pytest.fixture
+def sample_project_structure(tmp_path: Path):
+    """Create multi-project structure with sample content."""
+    ...
+
+@pytest.fixture
+def sample_manuscript_files(temp_project_dir: Path):
+    """Create sample markdown manuscript files with LaTeX content."""
+    ...
+
+# Subprocess helpers - run commands in tests
+@pytest.fixture
+def run_bash_command():
+    """Helper to run bash commands and capture output."""
+    ...
+
+@pytest.fixture
+def run_python_script(repo_root: Path):
+    """Helper to run Python scripts with arguments."""
+    ...
+
+# Script path fixtures
+@pytest.fixture
+def bash_utils_path(repo_root: Path) -> Path:
+    """Get path to scripts/bash_utils.sh."""
+    ...
+
+@pytest.fixture
+def run_sh_path(repo_root: Path) -> Path:
+    """Get path to run.sh."""
+    ...
+
+# Cleanup fixtures
+@pytest.fixture
+def cleanup_temp_files(tmp_path: Path):
+    """Register paths for automatic cleanup on teardown."""
+    ...
 ```
+
 
 ## Integration Test Development
 
 ### Environment Setup Testing Patterns
 
-**Real Subprocess Testing:**
+**Subprocess Testing:**
 ```python
 def test_real_subprocess_execution():
     """Test subprocess execution with real commands."""
@@ -373,11 +399,11 @@ def test_uv_sync_integration(tmp_path):
     pyproject = tmp_path / "pyproject.toml"
     pyproject.write_text('[project]\nname="test"\n')
 
-    # Execute real subprocess
+    # Execute subprocess
     result = subprocess.run(['uv', 'sync'], cwd=str(tmp_path))
     assert result.returncode == 0
 
-    # Validate real filesystem changes
+    # Validate filesystem changes
     assert (tmp_path / ".venv").exists()
     assert (tmp_path / "uv.lock").exists()
 ```
@@ -488,7 +514,7 @@ def sample_manuscript_files(temp_project_dir):
 
 ```python
 def test_build_pipeline_integration():
-    """Test complete build pipeline from setup to output."""
+    """Test build pipeline from setup to output."""
     # 1. Environment setup
     setup_environment()
 
@@ -603,7 +629,7 @@ def test_integration_state_inspection(tmp_path):
 Integration tests run as part of the standard test suite:
 
 ```bash
-# Complete test execution (unit + integration)
+# test execution (unit + integration)
 python3 scripts/01_run_tests.py
 
 # Integration tests only
@@ -625,7 +651,7 @@ When integration tests fail:
 
 - ✅ **Test realistic scenarios** - Simulate actual usage patterns
 - ✅ **Use temporary directories** - Avoid conflicts with real project files
-- ✅ **Validate end-to-end workflows** - Test complete user journeys
+- ✅ **Validate end-to-end workflows** - Test user journeys
 - ✅ **Check error propagation** - Ensure errors are handled gracefully
 - ✅ **Document test purpose** - Clear docstrings explaining what is integrated
 
@@ -640,7 +666,7 @@ When integration tests fail:
 ## See Also
 
 - [`README.md`](README.md) - Quick reference guide
-- [`../../tests/AGENTS.md`](../../tests/AGENTS.md) - Complete test suite documentation
+- [`../../tests/AGENTS.md`](../../tests/AGENTS.md) - test suite documentation
 - [`../../docs/TESTING_GUIDE.md`](../../docs/TESTING_GUIDE.md) - Testing best practices
 - [`../../scripts/AGENTS.md`](../../scripts/AGENTS.md) - Build pipeline documentation
 

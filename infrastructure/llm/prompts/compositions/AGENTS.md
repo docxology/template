@@ -91,7 +91,7 @@ infrastructure/llm/prompts/compositions/
 }
 ```
 
-**Purpose:** Ensures comprehensive methodology evaluation with complete section coverage.
+**Purpose:** Ensures methodology evaluation with section coverage.
 
 **Required Sections:**
 - Research design and approach
@@ -112,7 +112,7 @@ infrastructure/llm/prompts/compositions/
 }
 ```
 
-**Purpose:** Provides clear, actionable improvement guidance with complete context.
+**Purpose:** Provides clear, actionable improvement guidance with context.
 
 **Suggestion Structure:**
 - **WHAT**: Specific issue or area needing improvement
@@ -294,12 +294,11 @@ def test_composition_application():
     base_prompt = "Review this content."
 
     # Apply composition
-    enhanced = enhancer.apply_composition(base_prompt, 'off_topic_reinforcement')
+    = enhancer.apply_composition(base_prompt, 'off_topic_reinforcement')
 
     # Verify enhancement
-    assert enhanced != base_prompt
-    assert 'IMPORTANT:' in enhanced
-    assert base_prompt in enhanced  # Original content preserved
+    assert != base_prompt
+    assert 'IMPORTANT:' in assert base_prompt in # Original content preserved
 ```
 
 ### Integration Testing
@@ -307,7 +306,7 @@ def test_composition_application():
 **End-to-End Composition Testing:**
 ```python
 def test_composition_pipeline():
-    """Test complete composition enhancement pipeline."""
+    """Test composition enhancement pipeline."""
 
     # Setup test scenario
     base_prompt = "Analyze this manuscript."
@@ -320,16 +319,12 @@ def test_composition_pipeline():
     # Apply multiple compositions
     enhancer = PromptEnhancer()
 
-    enhanced = enhancer.apply_composition(base_prompt, 'off_topic_reinforcement', context)
-    enhanced = enhancer.apply_composition(enhanced, 'format_enforcement.executive_summary', context)
-    enhanced = enhancer.apply_composition(enhanced, 'quality_review', context)
+    = enhancer.apply_composition(base_prompt, 'off_topic_reinforcement', context)
+    = enhancer.apply_composition(enhanced, 'format_enforcement.executive_summary', context)
+    = enhancer.apply_composition(enhanced, 'quality_review', context)
 
     # Verify all enhancements applied
-    assert 'ACTUAL manuscript text' in enhanced
-    assert '## Overview' in enhanced
-    assert '**Score: [1-5]**' in enhanced
-    assert base_prompt in enhanced
-```
+    assert 'ACTUAL manuscript text' in assert '## Overview' in assert '**Score: [1-5]**' in assert base_prompt in ```
 
 ## Performance Considerations
 
@@ -392,7 +387,7 @@ def apply_compositions_selectively(self, prompt: str,
 **Robust Composition Handling:**
 ```python
 def load_composition_safely(self, name: str) -> Optional[Dict[str, Any]]:
-    """Load composition with comprehensive error handling."""
+    """Load composition with error handling."""
 
     try:
         return self.load_composition(name)
@@ -552,7 +547,7 @@ class EnhancedReviewGenerator(ReviewGenerator):
             base_prompt, context
         )
 
-        # Generate review with enhanced prompt
+        # Generate review with prompt
         return self.client.query(enhanced_prompt)
 ```
 
@@ -593,5 +588,5 @@ class EnhancedPromptComposer(PromptComposer):
 - [`../templates/AGENTS.md`](../templates/AGENTS.md) - Template system
 
 **System Documentation:**
-- [`../../../../AGENTS.md`](../../../../AGENTS.md) - Complete system overview
+- [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
 - [`../../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM troubleshooting guide

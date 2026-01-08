@@ -8,8 +8,12 @@
 \beamer@slide {convergence-rate-analysis}{1}
 \beamer@slide {theoretical-vs-empirical-convergence}{1}
 \beamer@slide {fig:convergence_rate}{1}
+\beamer@slide {eq:convergence_bound}{1}
+\beamer@slide {eq:optimal_step_convergence}{1}
 \beamer@slide {error-bounds}{1}
+\beamer@slide {eq:error_bound}{1}
 \beamer@slide {performance-metrics}{1}
+\beamer@slide {eq:iteration_complexity}{1}
 \beamer@slide {performance-analysis}{1}
 \beamer@slide {convergence-speed}{1}
 \beamer@slide {solution-accuracy}{1}

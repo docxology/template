@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide provides comprehensive formatting standards for writing research manuscripts in the `project/manuscript/` directory. All manuscript content must follow these standards to ensure consistency, proper rendering, and correct cross-referencing.
+This guide provides formatting standards for writing research manuscripts in the `project/manuscript/` directory. All manuscript content must follow these standards to ensure consistency, proper rendering, and correct cross-referencing.
 
 ## Lists
 
@@ -320,7 +320,7 @@ All figures must use relative paths from the manuscript directory.
 
 ### Figure Captions
 
-Captions must be descriptive and complete sentences.
+Captions must be descriptive and sentences.
 
 **Format:**
 - Start with capital letter
@@ -331,7 +331,7 @@ Captions must be descriptive and complete sentences.
 **Good Examples:**
 ```markdown
 \caption{Algorithm convergence comparison showing performance improvement over baseline methods.}
-\caption{Experimental setup diagram illustrating the complete data processing pipeline.}
+\caption{Experimental setup diagram illustrating the data processing pipeline.}
 \caption{Scalability analysis demonstrating $O(n \log n)$ computational complexity.}
 ```
 
@@ -473,7 +473,7 @@ Our Method & 0.92 & 8.5 \\
 Follow the same caption guidelines as figures.
 
 **Format:**
-- Descriptive and complete sentences
+- Descriptive and sentences
 - Start with capital letter
 - End with period
 - Place above table (before `\label`)
@@ -810,7 +810,7 @@ Reference tables using `\ref{tab:name}`.
 ```markdown
 Table \ref{tab:performance_comparison} summarizes...
 The data (Table \ref{tab:dataset}) shows...
-See \ref{tab:results} for complete statistics.
+See \ref{tab:results} for statistics.
 ```
 
 ### Multiple References
@@ -977,7 +977,7 @@ f(x) = x^2
 
 ## Examples
 
-### Complete Figure Example
+### Figure Example
 
 ```markdown
 \begin{figure}[h]
@@ -993,7 +993,7 @@ As shown in Figure \ref{fig:convergence_plot}, our method achieves
 faster convergence than existing approaches.
 ```
 
-### Complete Table Example
+### Table Example
 
 ```markdown
 \begin{table}[h]
@@ -1015,7 +1015,7 @@ Table \ref{tab:performance_comparison} demonstrates that our method
 achieves higher accuracy with reduced computation time.
 ```
 
-### Complete Equation Example
+### Equation Example
 
 ```markdown
 The optimization problem we solve is:
@@ -1032,7 +1032,7 @@ the iterative algorithm described in Section \ref{sec:algorithm}.
 
 ## See Also
 
-- [code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) - Complete manuscript documentation
+- [code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) - manuscript documentation
 - [code_project/manuscript/README.md](../projects/code_project/manuscript/README.md) - Quick reference for manuscript
 - [docs/MARKDOWN_TEMPLATE_GUIDE.md](../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown and cross-referencing guide
 - [docs/MANUSCRIPT_NUMBERING_SYSTEM.md](../docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md) - Section numbering system

@@ -103,14 +103,7 @@ flowchart TD
     class CORE_MOD,VALIDATION_MOD,DOCUMENTATION_MOD,RENDERING_MOD,LLM_MOD,PUBLISHING_MOD,REPORTING_MOD infra
     class OUTPUTS output
 ```
-    classDef orchestrator fill:#fce4ec,stroke:#c2185b,stroke-width:3px
 
-    class CORE,EXCEPTIONS core
-    class DOC,RENDER,VALIDATION doc
-    class LLM,PUBLISHING,SCIENTIFIC integration
-    class REPORTING build
-    class PROJECT_SCRIPTS orchestrator
-```
 
 ## Module Dependency Flow
 
@@ -326,12 +319,12 @@ pytest tests/infrastructure/core/ -v
 - **Scripts** provide thin orchestration layer
 - **Clean separation** between reusable code and project-specific logic
 
-### Real Data Policy
+### Data Policy
 - **No mock methods** in business logic
-- **Real computations** with actual data
+- **computations** with actual data
 - **Deterministic outputs** for reproducibility
 
-### Comprehensive Validation
+### Validation
 - **Quality assurance** for all outputs
 - **Integration testing** across modules
 - **Error handling** with informative messages
@@ -360,13 +353,13 @@ infrastructure/new_module/
 ## Quality Standards
 
 - **Test Coverage**: Minimum 60% for infrastructure modules
-- **Documentation**: Complete AGENTS.md for all modules
-- **Error Handling**: Comprehensive exception handling
+- **Documentation**: AGENTS.md for all modules
+- **Error Handling**: exception handling
 - **Performance**: Efficient resource usage
 - **Security**: Safe credential handling
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete infrastructure documentation
+- [AGENTS.md](AGENTS.md) - infrastructure documentation
 - [../tests/infrastructure/](../tests/infrastructure/) - Infrastructure test suite
 - [../scripts/](../scripts/) - Orchestration scripts

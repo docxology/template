@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `tests/infrastructure/core/` directory contains comprehensive test suites for the core infrastructure utilities. These tests ensure the reliability and correctness of shared utilities used across all infrastructure modules.
+The `tests/infrastructure/core/` directory contains test suites for the core infrastructure utilities. These tests ensure the reliability and correctness of shared utilities used across all infrastructure modules.
 
 ## Directory Structure
 
@@ -40,7 +40,7 @@ tests/infrastructure/core/
 **Configuration Test Patterns:**
 ```python
 def test_config_loading(project_config_file):
-    """Test config loading with real file structure"""
+    """Test config loading with file structure"""
     config = load_config(project_config_file)
     assert config['paper']['title'] == 'Test Research Paper'
 
@@ -64,7 +64,7 @@ def test_translation_languages(tmp_path, sample_project_config):
 
 **Environment Setup (Moved to Integration Tests)**
 - Environment tests moved to `tests/integration/test_environment_setup.py`
-- Real subprocess execution, filesystem operations, and system integration
+- subprocess execution, filesystem operations, and system integration
 - No mocks - uses actual `uv sync`, `shutil.which()`, directory creation
 
 **Credentials Management (`test_credentials.py`)**
@@ -144,15 +144,15 @@ def test_translation_languages(tmp_path, sample_project_config):
 
 ## Test Design Principles
 
-### Real Data Testing
+### Data Testing
 
 **No Mocks Philosophy:**
-- All tests use real data and actual functionality
+- All tests use data and actual functionality
 - No mock objects or simulated responses
 - Integration testing with actual dependencies
 - Deterministic, reproducible test results
 
-### Comprehensive Coverage
+### Coverage
 
 **Coverage Goals:**
 - 100% line coverage for core utilities
@@ -300,13 +300,13 @@ pytest tests/infrastructure/core/test_logging_utils.py -s --pdb
 
 ## Test Maintenance
 
-### Adding New Tests
+### Adding Tests
 
 **Test Development Process:**
 1. Identify functionality to test
 2. Create test file if needed
 3. Write test functions with descriptive names
-4. Use real data and actual functionality
+4. Use data and actual functionality
 5. Ensure test isolation and cleanup
 6. Verify coverage includes new code
 
@@ -334,7 +334,7 @@ class TestModuleName:
 ### Test Quality Assurance
 
 **Test Review Checklist:**
-- [ ] Tests use real data, no mocks
+- [ ] Tests use data, no mocks
 - [ ] All code paths covered
 - [ ] Error conditions tested
 - [ ] Test isolation maintained
@@ -417,7 +417,7 @@ pytest tests/infrastructure/core/ --durations=10
 
 ### Planned Improvements
 
-**Enhanced Testing:**
+**Testing:**
 - Property-based testing with Hypothesis
 - Performance regression testing
 - Integration with mutation testing
@@ -425,7 +425,7 @@ pytest tests/infrastructure/core/ --durations=10
 
 **Test Infrastructure:**
 - Test parallelization improvements
-- Enhanced fixture reusability
+- fixture reusability
 - Test result visualization
 - Historical performance tracking
 

@@ -264,7 +264,7 @@ success = md_integration.insert_figure_in_section(
 These utilities are designed to work alongside the generic infrastructure modules:
 
 - **Logging**: For advanced logging features, see `infrastructure.core.logging_utils`
-- **Figure Management**: For comprehensive figure management, see `infrastructure.documentation.figure_manager`
+- **Figure Management**: For figure management, see `infrastructure.documentation.figure_manager`
 - **Markdown Integration**: For full markdown processing, see `infrastructure.documentation.markdown_integration`
 - **Validation**: For validation utilities, see `infrastructure.validation`
 

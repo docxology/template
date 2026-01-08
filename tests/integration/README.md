@@ -1,6 +1,6 @@
 # tests/integration/ - Integration Test Suite
 
-Cross-module integration tests validating complete system workflows.
+Cross-module integration tests validating system workflows.
 
 ## Quick Start
 
@@ -17,7 +17,7 @@ pytest tests/integration/ -vs
 pytest tests/integration/test_module_interoperability.py -v  # Cross-module tests
 pytest tests/integration/test_output_copying.py -v           # File handling tests
 pytest tests/integration/test_run_sh.py -v                   # Script orchestration tests
-pytest tests/integration/test_07_generate_executive_report.py -v  # Executive reporting
+pytest tests/integration/test_executive_report_generation.py -v   # Executive reporting
 pytest tests/integration/test_bash_utils.sh                  # Bash utilities (run directly)
 ```
 
@@ -31,7 +31,7 @@ pytest tests/integration/test_bash_utils.sh                  # Bash utilities (r
 
 ### Script and Build System Tests
 - `test_run_sh.py` - Script orchestration and project discovery
-- `test_07_generate_executive_report.py` - Executive report generation (Stage 10)
+- `test_executive_report_generation.py` - Executive report generation (Stage 10)
 - `test_logging.py` - Bash logging integration tests
 - `test_bash_utils.sh` - Bash utility function validation
 
@@ -46,21 +46,5 @@ Integration tests validate that multiple components work together correctly, inc
 
 ## See Also
 
-- [`AGENTS.md`](AGENTS.md) - Complete documentation
+- [`AGENTS.md`](AGENTS.md) - documentation
 - [`../../tests/README.md`](../../tests/README.md) - Test suite overview
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -6,7 +6,7 @@
 [![Documentation](https://img.shields.io/badge/docs-86%2B%20files-blue)](docs/DOCUMENTATION_INDEX.md)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16903352.svg)](https://doi.org/10.5281/zenodo.16903352)
 
-> **Template Repository** - Click "Use this template" to create a new research project with this structure
+> **Template Repository** - Click "Use this template" to create a research project with this structure
 
 A system for research and development projects. This template provides a test-driven structure with automated PDF generation, professional documentation, and validated build pipelines.
 
@@ -15,7 +15,7 @@ A system for research and development projects. This template provides a test-dr
 This is a **GitHub Template Repository** that gives you:
 
 - ✅ **Multi-project support** - Run multiple projects in one repository
-- ✅ **Complete project structure** with clear separation of concerns
+- ✅ **Project structure** with clear separation of concerns
 - ✅ **Test-driven development** setup with coverage requirements
 - ✅ **Automated PDF generation** from markdown sources
 - ✅ **Thin orchestrator pattern** for maintainable code
@@ -26,7 +26,7 @@ This is a **GitHub Template Repository** that gives you:
 - ✅ **Integrity verification** and validation
 - ✅ **Publishing tools** for academic dissemination
 - ✅ **Scientific development** best practices
-- ✅ **Comprehensive reporting** with error aggregation and performance metrics
+- ✅ **Reporting** with error aggregation and performance metrics
 
 ## 🗺️ Choose Your Path
 
@@ -77,11 +77,11 @@ flowchart TD
 | Step | Document | Purpose |
 |------|---------|---------|
 | 1 | **[Quick Start](#quick-start)** | Get running in 5 minutes |
-| 2 | **[docs/guides/GETTING_STARTED.md](docs/guides/GETTING_STARTED.md)** | Complete beginner's guide (Levels 1-3) |
+| 2 | **[docs/guides/GETTING_STARTED.md](docs/guides/GETTING_STARTED.md)** | Beginner's guide (Levels 1-3) |
 | 3 | **[docs/reference/QUICK_START_CHEATSHEET.md](docs/reference/QUICK_START_CHEATSHEET.md)** | One-page command reference |
 | 4 | **[docs/reference/COMMON_WORKFLOWS.md](docs/reference/COMMON_WORKFLOWS.md)** | Step-by-step recipes for common tasks |
-| 5 | **[docs/core/HOW_TO_USE.md](docs/core/HOW_TO_USE.md)** | Complete usage from basic to advanced |
-| 6 | **[docs/usage/EXAMPLES_SHOWCASE.md](docs/usage/EXAMPLES_SHOWCASE.md)** | Real-world applications |
+| 5 | **[docs/core/HOW_TO_USE.md](docs/core/HOW_TO_USE.md)** | Usage from basic to advanced |
+| 6 | **[docs/usage/EXAMPLES_SHOWCASE.md](docs/usage/EXAMPLES_SHOWCASE.md)** | Applications |
 | 7 | **[docs/reference/FAQ.md](docs/reference/FAQ.md)** | Common questions answered |
 
 **Learn by example:** See **[docs/usage/TEMPLATE_DESCRIPTION.md](docs/usage/TEMPLATE_DESCRIPTION.md)** and **[docs/usage/EXAMPLES.md](docs/usage/EXAMPLES.md)**
@@ -94,7 +94,7 @@ flowchart TD
 |------|---------|---------|
 | 1 | **[docs/core/ARCHITECTURE.md](docs/core/ARCHITECTURE.md)** | System design overview |
 | 2 | **[docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md](docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md)** | Core architecture pattern |
-| 3 | **[docs/core/WORKFLOW.md](docs/core/WORKFLOW.md)** | Complete development process |
+| 3 | **[docs/core/WORKFLOW.md](docs/core/WORKFLOW.md)** | Development process |
 | 4 | **[docs/usage/MARKDOWN_TEMPLATE_GUIDE.md](docs/usage/MARKDOWN_TEMPLATE_GUIDE.md)** | Writing and formatting guide |
 | 5 | **[docs/guides/FIGURES_AND_ANALYSIS.md](docs/guides/FIGURES_AND_ANALYSIS.md)** | Add figures and automation (Levels 4-6) |
 
@@ -120,17 +120,17 @@ flowchart TD
 
 | Step | Document | Purpose |
 |------|---------|---------|
-| 1 | **[AGENTS.md](AGENTS.md)** | Complete system reference |
-| 2 | **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)** | Complete build system reference |
+| 1 | **[AGENTS.md](AGENTS.md)** | System reference |
+| 2 | **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)** | Build system reference |
 | 3 | **[docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md](docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md)** | Section organization |
-| 4 | **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** | Complete documentation index |
+| 4 | **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** | Documentation index |
 | 5 | **[docs/modules/MODULES_GUIDE.md](docs/modules/MODULES_GUIDE.md)** | All 7 modules |
 
 **Technical resources:** See **[docs/reference/COPYPASTA.md](docs/reference/COPYPASTA.md)** for LaTeX preamble examples
 
 ## 🧭 Documentation Hub
 
-**📚 [Complete Documentation Index](docs/DOCUMENTATION_INDEX.md)** | **📖 [Documentation Guide](docs/AGENTS.md)** | **🔍 [Quick Reference](docs/README.md)**
+**📚 [Documentation Index](docs/DOCUMENTATION_INDEX.md)** | **📖 [Documentation Guide](docs/AGENTS.md)** | **🔍 [Quick Reference](docs/README.md)**
 
 The template includes **86+ documentation files** organized in the `docs/` directory. Use the visual map below to navigate:
 
@@ -368,7 +368,7 @@ open output/pdf/project_combined.pdf
 
 ## 📊 System Health & Metrics
 
-**Current Build Status** (See **[Build System](docs/operational/BUILD_SYSTEM.md)** for complete analysis):
+**Current Build Status** (See **[Build System](docs/operational/BUILD_SYSTEM.md)** for analysis):
 
 ```mermaid
 graph LR
@@ -376,16 +376,16 @@ graph LR
         TESTS[Tests: 2116 passing\n1796 infra [2 skipped] + 320 project\n100% success rate]
         COV[Coverage: 100% project\n83.33% infra\nExceeds requirements]
         BUILD[Build Time: 53s\nOptimal performance\n(without LLM review)]
-        PDFS[PDFs: 14/14 generated\nAll sections complete]
+        PDFS[PDFs: 14/14 generated\nAll sections]
     end
 
     subgraph Documentation["📚 Documentation"]
         DOCS[86+ documentation files\nComprehensive coverage]
-        CROSS[Complete cross-referencing\nAll links validated]
-        EXAMPLES[Real-world examples\nMultiple use cases]
+        CROSS[Cross-referencing\nAll links validated]
+        EXAMPLES[Examples\nMultiple use cases]
     end
 
-    TESTS --> VERIFIED[✅ System Fully\nOperational]
+    TESTS --> VERIFIED[✅ System\nOperational]
     COV --> VERIFIED
     BUILD --> VERIFIED
     PDFS --> VERIFIED
@@ -401,10 +401,10 @@ graph LR
 ```
 
 **Key Metrics:**
-- **Test Coverage**: 100% project, 83.33% infrastructure (exceeds requirements) - [Details](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
-- **Build Time**: 84 seconds (comprehensive, with full test suite) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
-- **Tests Passing**: 2116 tests (1796 infrastructure [2 skipped] + 320 project) - [Test Report](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
-- **PDFs Generated**: 14 (all sections) - [Output Summary](docs/operational/BUILD_SYSTEM.md#generated-files)
+- **Test Coverage**: 100% project, 83.33% infrastructure (exceeds requirements) - [Details](docs/operational/BUILD_SYSTEM.md#-detailed-performance-analysis)
+- **Build Time**: 84 seconds (with full test suite) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#-detailed-performance-analysis)
+- **Tests Passing**: 2116 tests (1796 infrastructure [2 skipped] + 320 project) - [Test Report](docs/operational/BUILD_SYSTEM.md#-detailed-performance-analysis)
+- **PDFs Generated**: 14 (all sections) - [Output Summary](docs/operational/BUILD_SYSTEM.md#-generated-files)
 - **Documentation**: 86+ files - [Documentation Index](docs/DOCUMENTATION_INDEX.md)
 
 ## 🎓 Skill-Based Learning Paths
@@ -463,7 +463,7 @@ flowchart LR
 
 → **[docs/guides/EXTENDING_AND_AUTOMATION.md](docs/guides/EXTENDING_AND_AUTOMATION.md)** | **[AGENTS.md](AGENTS.md)** | **[docs/architecture/TWO_LAYER_ARCHITECTURE.md](docs/architecture/TWO_LAYER_ARCHITECTURE.md)** | **[docs/modules/MODULES_GUIDE.md](docs/modules/MODULES_GUIDE.md)**
 
-**📖 Complete Guide:** **[docs/core/HOW_TO_USE.md](docs/core/HOW_TO_USE.md)** covers all 12 skill levels from basic to expert
+**📖 Guide:** **[docs/core/HOW_TO_USE.md](docs/core/HOW_TO_USE.md)** covers all 12 skill levels from basic to expert
 
 ## 🏗️ Project Structure
 
@@ -484,7 +484,7 @@ graph TB
     end
 
     subgraph DOCS["📚 Documentation Hub"]
-        DOCS_DIR[docs/\n50+ comprehensive guides\n📖 docs/DOCUMENTATION_INDEX.md]
+        DOCS_DIR[docs/\n50+ guides\n📖 docs/DOCUMENTATION_INDEX.md]
     end
 
     subgraph CONTENT["📝 Content & Output"]
@@ -729,13 +729,13 @@ flowchart TD
 | **`projects/code_project/manuscript/`** | Research manuscript sections | [projects/code_project/manuscript/AGENTS.md](projects/code_project/manuscript/AGENTS.md) |
 | **`output/`** | Generated outputs (disposable) | Regenerated by build pipeline |
 
-**📚 Explore Documentation:** See **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** for complete documentation structure
+**📚 Explore Documentation:** See **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** for documentation structure
 
 ## 🔑 Key Architectural Principles
 
 ### Thin Orchestrator Pattern
 
-**[Complete details](docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md)** | **[Architecture Overview](docs/core/ARCHITECTURE.md)**
+**[Details](docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md)** | **[Architecture Overview](docs/core/ARCHITECTURE.md)**
 
 The project follows a **thin orchestrator pattern** where:
 
@@ -747,14 +747,14 @@ The project follows a **thin orchestrator pattern** where:
 **Benefits:** [Read more](docs/core/ARCHITECTURE.md#thin-orchestrator-pattern)
 
 - **Maintainability**: Single source of truth for business logic
-- **Testability**: Fully tested core functionality
+- **Testability**: tested core functionality
 - **Reusability**: Scripts can use any `src/` method
 - **Clarity**: Clear separation of concerns
 - **Quality**: Automated validation of the entire system
 
 ### Scripts as Integration Examples
 
-**[Complete guide](scripts/AGENTS.md)** | **[Writing Guide](docs/usage/MARKDOWN_TEMPLATE_GUIDE.md)**
+**[Guide](scripts/AGENTS.md)** | **[Writing Guide](docs/usage/MARKDOWN_TEMPLATE_GUIDE.md)**
 
 Scripts in `projects/{name}/scripts/` demonstrate proper integration with `projects/{name}/src/` modules:
 
@@ -769,11 +769,11 @@ Scripts in `projects/{name}/scripts/` demonstrate proper integration with `proje
 ## ✨ Key Features
 
 ### Test-Driven Development
-**[Complete guide](docs/core/WORKFLOW.md)**
+**[Guide](docs/core/WORKFLOW.md)**
 
-All source code must meet **test coverage requirements** (90% project, 60% infrastructure) before PDF generation proceeds. This ensures that the methods used by scripts are fully validated.
+All source code must meet **test coverage requirements** (90% project, 60% infrastructure) before PDF generation proceeds. This ensures that the methods used by scripts are validated.
 
-**Current Coverage**: 100% project, 83.33% infrastructure (exceeds requirements by 39%!) - [Test Report](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
+**Current Coverage**: 100% project, 83.33% infrastructure (exceeds requirements by 39%!) - [Test Report](docs/operational/BUILD_SYSTEM.md#-detailed-performance-analysis)
 
 ### Automated Script Execution
 **[Script guide](scripts/AGENTS.md)** | **[Examples](docs/usage/EXAMPLES_SHOWCASE.md)**
@@ -785,21 +785,21 @@ Project-specific scripts in the `projects/{name}/scripts/` directory are automat
 
 Manuscript sections are converted to individual PDFs with proper figure integration, and a combined manuscript document is generated with cross-referencing.
 
-**Build Performance**: 53 seconds for complete regeneration (without optional LLM review) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
+**Build Performance**: 53 seconds for regeneration (without optional LLM review) - [Performance Analysis](docs/operational/BUILD_SYSTEM.md#-detailed-performance-analysis)
 
 ### Build System Validation
-**[Build System](docs/operational/BUILD_SYSTEM.md)** - Complete reference (status, performance, fixes)
+**[Build System](docs/operational/BUILD_SYSTEM.md)** - Reference (status, performance, fixes)
 
 The build system has been validated:
 - All 14 PDFs generate successfully
 - No critical errors or warnings
 - Optimized 84-second build time (without optional LLM review)
-- Complete documentation of system health
+- Documentation of system health
 
 ### Generic and Reusable
 **[Template description](docs/usage/TEMPLATE_DESCRIPTION.md)** | **[Copypasta](docs/reference/COPYPASTA.md)**
 
-The utility scripts can be used with any project that follows this structure, making it easy to adopt for new research projects.
+The utility scripts can be used with any project that follows this structure, making it easy to adopt research projects.
 
 ## 🔒 Security & Monitoring
 
@@ -807,11 +807,11 @@ The utility scripts can be used with any project that follows this structure, ma
 
 The template includes enterprise-grade security features:
 
-- **Input Sanitization**: Comprehensive LLM prompt validation and sanitization
-- **Security Monitoring**: Real-time security event tracking and threat detection
+- **Input Sanitization**: LLM prompt validation and sanitization
+- **Security Monitoring**: Security event tracking and threat detection
 - **Rate Limiting**: Configurable request rate limiting
 - **Health Checks**: System health monitoring with component-level status
-- **Security Headers**: Complete HTTP security header implementation
+- **Security Headers**: HTTP security header implementation
 
 **Usage:**
 ```python
@@ -915,7 +915,7 @@ See `Dockerfile` and `docker-compose.yml` for configuration details.
 
 ### Project Metadata Configuration
 
-**[Complete configuration guide](AGENTS.md#configuration-system)**
+**[Configuration guide](AGENTS.md#configuration-system)**
 
 The system supports **two configuration methods**:
 
@@ -1036,16 +1036,16 @@ pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 
 **Test Requirements (Infrastructure Layer - Layer 1):**
 - **60% minimum coverage**: Currently achieving 83.33% (exceeds stretch goal!)
-- **No mocks**: All tests use real data and computations
+- **No mocks**: All tests use data and computations
 - **Deterministic**: Fixed RNG seeds for reproducible results
 - **Integration testing**: Cross-module interaction validation
 
 **Test Requirements (Project Layer - Layer 2):**
-- **90% minimum coverage**: Currently achieving 100% (perfect coverage!)
-- **Real data testing**: Use actual domain data, not synthetic test data
+- **90% minimum coverage**: Currently achieving 100%
+- **Data testing**: Use actual domain data, not synthetic test data
 - **Reproducible**: Fixed seeds and deterministic computation
 
-**Current Status**: 2116 tests passing (1796 infra [2 skipped] + 320 project), 100% project coverage - [Full Analysis](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
+**Current Status**: 2116 tests passing (1796 infra [2 skipped] + 320 project), 100% project coverage - [Full Analysis](docs/operational/BUILD_SYSTEM.md#-detailed-performance-analysis)
 
 ## 📤 Output
 
@@ -1078,11 +1078,11 @@ graph TD
 
 **All files in `output/` are disposable and regenerated by the build pipeline.**
 
-**Generation Time**: 53 seconds for complete rebuild (without optional LLM review) - [Performance Details](docs/operational/BUILD_SYSTEM.md#detailed-performance-analysis)
+**Generation Time**: 53 seconds for rebuild (without optional LLM review) - [Performance Details](docs/operational/BUILD_SYSTEM.md#-detailed-performance-analysis)
 
 ## 🔍 How It Works
 
-**[Complete workflow](docs/core/WORKFLOW.md)** | **[Architecture](docs/core/ARCHITECTURE.md)** | **[Build System](docs/operational/BUILD_SYSTEM.md)** | **[Run Guide](RUN_GUIDE.md)**
+**[Workflow](docs/core/WORKFLOW.md)** | **[Architecture](docs/core/ARCHITECTURE.md)** | **[Build System](docs/operational/BUILD_SYSTEM.md)** | **[Run Guide](RUN_GUIDE.md)**
 
 The template provides **two main entry points** for pipeline operations:
 
@@ -1110,7 +1110,7 @@ flowchart TD
     STAGE7 --> STAGE8[Stage 8: LLM Scientific Review\n[8/9]\nOptional, requires Ollama]
     STAGE8 --> STAGE9[Stage 9: LLM Translations\n[9/9]\nOptional, requires Ollama]
     STAGE9 --> STAGE10[Stage 10: Copy Outputs\nFinal deliverables]
-    STAGE10 --> SUCCESS[✅ Build Complete\n~84s core + LLM time]
+    STAGE10 --> SUCCESS[✅ Build\n~84s core + LLM time]
 
     STAGE2 -->|Fail| FAIL[❌ Pipeline Failed]
     STAGE3 -->|Fail| FAIL
@@ -1142,7 +1142,7 @@ flowchart TD
 | Stage | Script | Purpose |
 |-------|--------|---------|
 | 00 | `00_setup_environment.py` | Environment setup & validation |
-| 01 | `01_run_tests.py` | Run complete test suite (infrastructure + project) |
+| 01 | `01_run_tests.py` | Run test suite (infrastructure + project) |
 | 02 | `02_run_analysis.py` | Discover & run `projects/{name}/scripts/` |
 | 03 | `03_render_pdf.py` | PDF rendering orchestration |
 | 04 | `04_validate_output.py` | Output validation & reporting |
@@ -1152,19 +1152,19 @@ flowchart TD
 - `./run.sh`: 9 stages displayed as [1/9] to [9/9] in logs (Clean Output Directories through Copy Outputs)
 - `execute_pipeline.py --core-only`: Core pipeline stages (no LLM stages)
 
-**See [RUN_GUIDE.md](RUN_GUIDE.md) for complete pipeline documentation.**
+**See [RUN_GUIDE.md](RUN_GUIDE.md) for pipeline documentation.**
 
-## 📚 Complete Documentation Index
+## 📚 Documentation Index
 
 ### Core Documentation (Essential Reading)
-- **[AGENTS.md](AGENTS.md)** - Complete system reference - Everything you need to know
-- **[docs/core/HOW_TO_USE.md](docs/core/HOW_TO_USE.md)** - Complete usage guide from basic to advanced (12 skill levels)
+- **[AGENTS.md](AGENTS.md)** - System reference - Everything you need to know
+- **[docs/core/HOW_TO_USE.md](docs/core/HOW_TO_USE.md)** - usage guide from basic to advanced (12 skill levels)
 - **[docs/core/ARCHITECTURE.md](docs/core/ARCHITECTURE.md)** - System design and architecture overview
 - **[docs/core/WORKFLOW.md](docs/core/WORKFLOW.md)** - Development workflow and best practices
-- **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** - Complete documentation index
+- **[docs/DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** - documentation index
 
 ### Getting Started
-- **[docs/guides/GETTING_STARTED.md](docs/guides/GETTING_STARTED.md)** - Complete beginner's guide (Levels 1-3)
+- **[docs/guides/GETTING_STARTED.md](docs/guides/GETTING_STARTED.md)** - beginner's guide (Levels 1-3)
 - **[docs/reference/QUICK_START_CHEATSHEET.md](docs/reference/QUICK_START_CHEATSHEET.md)** - One-page command reference
 - **[docs/reference/COMMON_WORKFLOWS.md](docs/reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes for common tasks
 - **[docs/usage/TEMPLATE_DESCRIPTION.md](docs/usage/TEMPLATE_DESCRIPTION.md)** - Template overview and features
@@ -1173,7 +1173,7 @@ flowchart TD
 - **[docs/reference/FAQ.md](docs/reference/FAQ.md)** - Frequently asked questions and solutions
 
 ### Build System & Quality
-- **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)** - Complete build system reference (status, performance, fixes)
+- **[docs/operational/BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md)** - build system reference (status, performance, fixes)
 - **[docs/modules/PDF_VALIDATION.md](docs/modules/PDF_VALIDATION.md)** - PDF quality validation system
 
 ### Development & Architecture
@@ -1209,7 +1209,7 @@ flowchart TD
 
 ### Advanced Modules
 - **[docs/modules/MODULES_GUIDE.md](docs/modules/MODULES_GUIDE.md)** - Guide for all modules
-- **[docs/reference/API_REFERENCE.md](docs/reference/API_REFERENCE.md)** - Complete API documentation for all modules
+- **[docs/reference/API_REFERENCE.md](docs/reference/API_REFERENCE.md)** - API documentation for all modules
 - **[infrastructure/validation/integrity.py](infrastructure/validation/integrity.py)** - File integrity and cross-reference validation
 - **[infrastructure/publishing/core.py](infrastructure/publishing/core.py)** - Academic publishing workflow tools
 - **[infrastructure/scientific/](infrastructure/scientific/)** - Scientific computing best practices (modular: stability, benchmarking, documentation, validation, templates)
@@ -1224,10 +1224,10 @@ flowchart TD
 - **Simulation** (`projects/{name}/src/`): `simulation.py`, `parameters.py`, `performance.py`, `reporting.py`
 
 ### Operational Guides
-- **[docs/operational/DEPENDENCY_MANAGEMENT.md](docs/operational/DEPENDENCY_MANAGEMENT.md)** - Complete guide for uv package manager
+- **[docs/operational/DEPENDENCY_MANAGEMENT.md](docs/operational/DEPENDENCY_MANAGEMENT.md)** - guide for uv package manager
 - **[docs/operational/PERFORMANCE_OPTIMIZATION.md](docs/operational/PERFORMANCE_OPTIMIZATION.md)** - Build time optimization and caching strategies
 - **[docs/operational/CI_CD_INTEGRATION.md](docs/operational/CI_CD_INTEGRATION.md)** - GitHub Actions and CI/CD integration guide
-- **[docs/operational/TROUBLESHOOTING_GUIDE.md](docs/operational/TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting guide
+- **[docs/operational/TROUBLESHOOTING_GUIDE.md](docs/operational/TROUBLESHOOTING_GUIDE.md)** - troubleshooting guide
 
 ### Best Practices & Reference
 - **[docs/best-practices/BEST_PRACTICES.md](docs/best-practices/BEST_PRACTICES.md)** - Consolidated best practices compilation
@@ -1238,7 +1238,7 @@ flowchart TD
 
 ## 🤝 Contributing
 
-**[Complete contribution guide](docs/development/CONTRIBUTING.md)** | **[Code of conduct](docs/development/CODE_OF_CONDUCT.md)** | **[Roadmap](docs/development/ROADMAP.md)**
+**[contribution guide](docs/development/CONTRIBUTING.md)** | **[Code of conduct](docs/development/CODE_OF_CONDUCT.md)** | **[Roadmap](docs/development/ROADMAP.md)**
 
 We welcome contributions! To contribute:
 
@@ -1249,7 +1249,7 @@ We welcome contributions! To contribute:
 5. **Maintain thin orchestrator pattern** - scripts use src/ methods - [Pattern Guide](docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md)
 
 **Recent Improvements:**
-- Build system optimizations - [Details](docs/operational/BUILD_SYSTEM.md#historical-fixes)
+- Build system optimizations - [Details](docs/operational/BUILD_SYSTEM.md#-historical-fixes)
 - Test suite enhancements
 - Simplified directory structure with markdown/ elimination
 
@@ -1284,7 +1284,7 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 
 ## 🆘 Troubleshooting
 
-**[Complete troubleshooting guide](docs/operational/TROUBLESHOOTING_GUIDE.md)** | **[FAQ](docs/reference/FAQ.md)** | **[Build System](docs/operational/BUILD_SYSTEM.md)**
+**[troubleshooting guide](docs/operational/TROUBLESHOOTING_GUIDE.md)** | **[FAQ](docs/reference/FAQ.md)** | **[Build System](docs/operational/BUILD_SYSTEM.md)**
 
 ### Common Issues
 
@@ -1292,7 +1292,7 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 - **Scripts Fail**: Check Python dependencies and error handling - [Script Guide](scripts/AGENTS.md)
 - **PDF Generation Fails**: Verify pandoc and xelatex installation - [Build System](docs/operational/BUILD_SYSTEM.md#troubleshooting)
 - **Coverage Below 100%**: Add tests for uncovered code - [Workflow](docs/core/WORKFLOW.md)
-- **Build System Issues**: Check recent fixes - [Build System](docs/operational/BUILD_SYSTEM.md#historical-fixes)
+- **Build System Issues**: Check recent fixes - [Build System](docs/operational/BUILD_SYSTEM.md#-historical-fixes)
 - **PDF Quality Issues**: Run validation - [PDF Validation](docs/modules/PDF_VALIDATION.md)
 - **Reference Issues**: Check markdown validation - [Markdown Guide](docs/usage/MARKDOWN_TEMPLATE_GUIDE.md)
 
@@ -1303,11 +1303,11 @@ Daniel Ari Friedman. (2025). docxology/template: 0.1 (0.1). Zenodo. https://doi.
 - Review the **[scripts/README.md](scripts/README.md)** for entry point information
 - Review the test output for specific error messages
 - Ensure all required dependencies are installed
-- See **[DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** for complete reference
+- See **[DOCUMENTATION_INDEX.md](docs/DOCUMENTATION_INDEX.md)** for reference
 
 ### Debug Resources
 
-- **Build System**: [BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md) - Complete reference (performance, status, fixes)
+- **Build System**: [BUILD_SYSTEM.md](docs/operational/BUILD_SYSTEM.md) - reference (performance, status, fixes)
 - **PDF Quality**: [PDF_VALIDATION.md](docs/modules/PDF_VALIDATION.md)
 
 ## 🔄 Migration from Other Projects
@@ -1324,19 +1324,19 @@ To adapt this template for your existing project:
 
 ## 🏗️ Architecture Benefits
 
-**[Complete architecture guide](docs/core/ARCHITECTURE.md)** | **[Thin orchestrator pattern](docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md)**
+**[architecture guide](docs/core/ARCHITECTURE.md)** | **[Thin orchestrator pattern](docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md)**
 
 The thin orchestrator pattern provides:
 
 - **Maintainability**: Single source of truth for business logic
-- **Testability**: Fully tested core functionality (100% project coverage)
+- **Testability**: tested core functionality (100% project coverage)
 - **Reusability**: Scripts can use any module's methods
 - **Clarity**: Clear separation of concerns
 - **Quality**: Automated validation of the entire system
-- **Performance**: 84-second build time for complete regeneration (without optional LLM review)
+- **Performance**: 84-second build time for regeneration (without optional LLM review)
 - **Reliability**: 2118 tests passing (100% success rate)
 
-**System Status**: ✅ **FULLY OPERATIONAL** - [Build System](docs/operational/BUILD_SYSTEM.md)
+**System Status**: ✅ **OPERATIONAL** - [Build System](docs/operational/BUILD_SYSTEM.md)
 
 ---
 

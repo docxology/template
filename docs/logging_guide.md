@@ -2,14 +2,14 @@
 
 ## Overview
 
-This guide documents the comprehensive logging system used across the research template. The logging infrastructure provides clear, consistent, and well-tested logging functionality at both the infrastructure and project levels.
+This guide documents the logging system used across the research template. The logging infrastructure provides clear, consistent, and well-tested logging functionality at both the infrastructure and project levels.
 
 ## Architecture
 
 ### Two-Level Logging System
 
 1. **Infrastructure Logging** (`infrastructure.core.logging_utils`)
-   - Comprehensive logging utilities
+   - logging utilities
    - Environment-based configuration
    - Context managers and decorators
    - Progress tracking and resource monitoring
@@ -291,7 +291,7 @@ log.info("This still works")  # Basic functionality preserved
 
 ```python
 #!/usr/bin/env python3
-"""Research analysis script with comprehensive logging."""
+"""Research analysis script with logging."""
 
 from utils.logging import get_logger
 
@@ -307,7 +307,7 @@ def main():
         log.substep("Cleaning data")
         clean_data = preprocess_data(data)
 
-    log.progress(25, 100, "Preprocessing complete")
+    log.progress(25, 100, "Preprocessing")
 
     with log.operation("Statistical analysis"):
         log.substep("Running statistical tests")
@@ -331,31 +331,31 @@ from utils.logging import get_logger
 log = get_logger(__name__)
 
 def run_pipeline():
-    """Complete research pipeline with stage logging."""
+    """research pipeline with stage logging."""
 
     # Stage 1: Data Collection
     log.stage(1, 4, "Data Collection")
     with log.operation("Collecting research data"):
         data = collect_data()
-    log.progress(25, 100, "Data collection complete")
+    log.progress(25, 100, "Data collection")
 
     # Stage 2: Data Processing
     log.stage(2, 4, "Data Processing")
     with log.operation("Processing and cleaning data"):
         processed = process_data(data)
-    log.progress(50, 100, "Data processing complete")
+    log.progress(50, 100, "Data processing")
 
     # Stage 3: Analysis
     log.stage(3, 4, "Analysis")
     with log.operation("Running statistical analysis"):
         results = analyze_data(processed)
-    log.progress(75, 100, "Analysis complete")
+    log.progress(75, 100, "Analysis")
 
     # Stage 4: Reporting
     log.stage(4, 4, "Reporting")
     with log.operation("Generating reports and figures"):
         generate_report(results)
-    log.progress(100, 100, "Pipeline complete")
+    log.progress(100, 100, "Pipeline")
 
     log.success("Research pipeline completed successfully")
 ```
@@ -488,7 +488,7 @@ log.info("Message")
 1. **Consistency**: Same interface across all projects
 2. **Features**: Progress tracking, context managers, resource monitoring
 3. **Fallback**: Graceful degradation when infrastructure unavailable
-4. **Testing**: Comprehensive test coverage and validation
+4. **Testing**: test coverage and validation
 5. **Documentation**: Well-documented API and best practices
 
 ## API Reference

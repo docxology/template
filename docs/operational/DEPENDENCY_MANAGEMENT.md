@@ -1,10 +1,10 @@
 # Dependency Management Guide
 
-> **Complete guide** for managing dependencies with uv package manager
+> **guide** for managing dependencies with uv package manager
 
 **Quick Reference:** [Quick Start Cheatsheet](../reference/QUICK_START_CHEATSHEET.md) | [Common Workflows](../reference/COMMON_WORKFLOWS.md) | [Troubleshooting Guide](../operational/TROUBLESHOOTING_GUIDE.md)
 
-This guide provides comprehensive instructions for managing Python dependencies using the `uv` package manager, which is the recommended tool for this template.
+This guide provides instructions for managing Python dependencies using the `uv` package manager, which is the recommended tool for this template.
 
 ## Overview
 

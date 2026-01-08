@@ -2,11 +2,11 @@
 
 ## Overview
 
-All public APIs and module-level code must have complete type hints. This ensures code clarity, enables IDE support, and catches errors early.
+All public APIs and module-level code must have type hints. This ensures code clarity, enables IDE support, and catches errors early.
 
 ## Coverage Requirements
 
-- **Comprehensive for public APIs** - All functions exposed in `__init__.py`
+- **for public APIs** - All functions exposed in `__init__.py`
 - **Thorough for module code** - All functions in `core.py`, `cli.py`, etc.
 - **Required for** - Function parameters, return types, variables
 - **Optional for** - Internal helper functions, temporary variables (use sparingly)
@@ -16,7 +16,7 @@ All public APIs and module-level code must have complete type hints. This ensure
 ### Function Parameters and Returns
 
 ```python
-# ✅ GOOD: Complete type hints
+# ✅ GOOD: type hints
 def process_data(input_data: str, count: int = 10) -> dict:
     """Process data with type hints on all parameters."""
     return {"processed": input_data, "count": count}

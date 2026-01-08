@@ -2,13 +2,13 @@
 
 ## Overview
 
-This directory contains comprehensive development standards, coding guidelines, and best practices for the Research Project Template system. All code must follow these standards.
+This directory contains development standards, coding guidelines, and best practices for the Research Project Template system. All code must follow these standards.
 
 ## Files
 
 | File | Purpose | Best For |
 |------|---------|----------|
-| [AGENTS.md](AGENTS.md) | This file - overview and navigation | Understanding the complete system |
+| [AGENTS.md](AGENTS.md) | This file - overview and navigation | Understanding the system |
 | [README.md](README.md) | Quick reference guide | Finding quick answers |
 | [folder_structure.md](folder_structure.md) | Folder structure documentation standard | Understanding folder organization |
 | [error_handling.md](error_handling.md) | Error handling and exception patterns | Writing error handling code |
@@ -41,7 +41,7 @@ This directory contains comprehensive development standards, coding guidelines, 
 - Location: `projects/{name}/src/` (project-specific code)
 - Research-specific code
 - Uses infrastructure utilities
-- 90% minimum test coverage (currently 100% - perfect coverage!)
+- 90% minimum test coverage (currently 100% - coverage!)
 - Tests: `projects/{name}/tests/`
 - Scripts: `projects/{name}/scripts/` (thin orchestrators)
 
@@ -53,7 +53,7 @@ This directory contains comprehensive development standards, coding guidelines, 
 
 ### 3. Quality Standards
 
-- **Testing**: 90%+ coverage required (60% infra, 90% project), real data only
+- **Testing**: 90%+ coverage required (60% infra, 90% project), data only
 - **Documentation**: AGENTS.md + README.md for each directory
 - **Type Safety**: Type hints on all public APIs
 - **Error Handling**: Use custom exception hierarchy
@@ -67,7 +67,7 @@ The template provides **two pipeline orchestrators** with different scope:
 - **Use for**: Full pipeline with optional LLM stages
 - **Stages**: 0-9 (stage 0 cleanup, stages 1-9 displayed as [1/9] to [9/9])
 - **Features**: Interactive menu, literature search, LLM reviews, translations
-- **When to use**: Comprehensive builds, LLM features needed
+- **When to use**: builds, LLM features needed
 
 **Python Orchestrator (`python3 scripts/run_all.py`)**
 - **Use for**: Core pipeline only, programmatic execution
@@ -79,7 +79,7 @@ The template provides **two pipeline orchestrators** with different scope:
 
 ### For AI Agents (New to the System)
 
-1. **Start here**: Read [AGENTS.md](AGENTS.md) (this file) for complete overview
+1. **Start here**: Read [AGENTS.md](AGENTS.md) (this file) for overview
 2. **Pick your task** - Read the appropriate guide:
    - **Writing code**: [error_handling.md](error_handling.md), [python_logging.md](python_logging.md), [type_hints_standards.md](type_hints_standards.md)
    - **Creating modules**: [infrastructure_modules.md](infrastructure_modules.md), [testing_standards.md](testing_standards.md)
@@ -118,8 +118,7 @@ The template provides **two pipeline orchestrators** with different scope:
 1. ✅ Test coverage requirements met (60% infra, 90% project)
 2. ✅ All tests pass
 3. ✅ No linter errors
-4. ✅ Documentation complete
-5. ✅ AGENTS.md and README.md updated
+4. ✅ Documentation 5. ✅ AGENTS.md and README.md updated
 
 ## Standards by Topic
 
@@ -168,7 +167,7 @@ See [infrastructure_modules.md](infrastructure_modules.md)
 **Key Points**:
 - Generic and domain-independent only
 - 60% minimum test coverage required (currently 61.48% achieved)
-- Complete AGENTS.md + README.md
+- AGENTS.md + README.md
 - Public API in `__init__.py`
 - Type hints on all functions
 - Follow thin orchestrator pattern
@@ -215,7 +214,7 @@ As shown in \eqref{eq:objective}, the objective function...
 ```
 
 **Related Documentation:**
-- [manuscript_style.md](manuscript_style.md) - Complete manuscript formatting guide
+- [manuscript_style.md](manuscript_style.md) - manuscript formatting guide
 - [../projects/code_project/manuscript/AGENTS.md](../projects/code_project/manuscript/AGENTS.md) - Manuscript documentation
 - [../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md](../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown guide
 
@@ -224,7 +223,7 @@ As shown in \eqref{eq:objective}, the objective function...
 ### Coverage Requirements
 
 - **Infrastructure**: 60% minimum (currently achieving 83.33% - exceeds stretch goal!)
-- **Project code**: 90% minimum (currently achieving 100% - perfect coverage!)
+- **Project code**: 90% minimum (currently achieving 100% - coverage!)
 - **Integration tests**: All critical workflows covered
 
 ### Test Organization
@@ -242,7 +241,7 @@ tests/
 
 ### Test Principles
 
-1. **No mocks** for core logic - use real data
+1. **No mocks** for core logic - use data
 2. **Test behavior**, not implementation
 3. **Clear names** - test should be self-documenting
 4. **Fast execution** - unit tests < 1s each
@@ -254,7 +253,7 @@ tests/
 
 Every directory must have:
 
-1. **AGENTS.md** - Comprehensive documentation
+1. **AGENTS.md** - documentation
    - Purpose and architecture
    - Usage examples
    - Configuration options
@@ -407,8 +406,7 @@ template/
 - [ ] Test coverage requirements met (60% infra, 90% project)
 - [ ] All tests pass
 - [ ] No linter errors
-- [ ] AGENTS.md complete
-- [ ] README.md updated
+- [ ] AGENTS.md - [ ] README.md updated
 - [ ] Code reviewed against standards
 - [ ] Integration tests pass
 
@@ -419,7 +417,7 @@ template/
 - [Root AGENTS.md](../AGENTS.md) - System overview
 - [Infrastructure AGENTS.md](../infrastructure/AGENTS.md) - Infrastructure layer
 - [Projects AGENTS.md](../projects/AGENTS.md) - Projects layer
-- [Documentation Hub](../docs/AGENTS.md) - Comprehensive guides
+- [Documentation Hub](../docs/AGENTS.md) - guides
 
 ### External Resources
 
@@ -439,7 +437,7 @@ This directory provides modular development standards. Each file covers specific
 | [error_handling.md](error_handling.md) | Exception patterns | Writing error handling |
 | [security.md](security.md) | Security standards | Writing secure code |
 | [python_logging.md](python_logging.md) | Logging standards | Adding logging to code |
-| [infrastructure_modules.md](infrastructure_modules.md) | Infrastructure development | Creating new modules |
+| [infrastructure_modules.md](infrastructure_modules.md) | Infrastructure development | Creating modules |
 | [testing_standards.md](testing_standards.md) | Testing patterns | Writing tests |
 | [documentation_standards.md](documentation_standards.md) | Documentation guidelines | Writing docs |
 | [type_hints_standards.md](type_hints_standards.md) | Type annotation patterns | Adding type hints |
@@ -488,7 +486,7 @@ The .cursorrules standards align with and support the main documentation:
 
 **For Code Quality:**
 → Check [error_handling.md](error_handling.md) and [python_logging.md](python_logging.md)  
-→ Read [../docs/best-practices/BEST_PRACTICES.md](../docs/best-practices/BEST_PRACTICES.md) for comprehensive practices  
+→ Read [../docs/best-practices/BEST_PRACTICES.md](../docs/best-practices/BEST_PRACTICES.md) for practices  
 → See [../docs/operational/ERROR_HANDLING_GUIDE.md](../docs/operational/ERROR_HANDLING_GUIDE.md) for detailed patterns
 
 ## Quick Navigation Guide
@@ -525,16 +523,16 @@ The .cursorrules standards align with and support the main documentation:
 - [code_style.md](code_style.md) - Code formatting standards
 - [git_workflow.md](git_workflow.md) - Git workflow standards
 
-**Comprehensive Guides (300-600 lines)**
+**Guides (300-600 lines)**
 - [api_design.md](api_design.md) - API design standards
-- [testing_standards.md](testing_standards.md) - Complete testing guide
+- [testing_standards.md](testing_standards.md) - testing guide
 - [infrastructure_modules.md](infrastructure_modules.md) - Module development guide
 - [documentation_standards.md](documentation_standards.md) - Documentation writing guide
 - [llm_standards.md](llm_standards.md) - LLM/Ollama integration guide
 - [manuscript_style.md](manuscript_style.md) - Manuscript formatting and style guide
 
 **System Overview (400+ lines)**
-- [AGENTS.md](AGENTS.md) - This file - complete system overview
+- [AGENTS.md](AGENTS.md) - This file - system overview
 
 ## Maintenance
 
@@ -563,7 +561,7 @@ When creating a new .cursorrules file:
 
 **Development Standards:**
 - [`README.md`](README.md) - Quick reference guide
-- [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
+- [`../AGENTS.md`](../AGENTS.md) - system documentation
 - [`../infrastructure/AGENTS.md`](../infrastructure/AGENTS.md) - Infrastructure layer documentation
 - [`../projects/AGENTS.md`](../projects/AGENTS.md) - Projects layer documentation
 
@@ -576,5 +574,5 @@ When creating a new .cursorrules file:
 
 **Version**: 2.4.0
 **Last Updated**: 2025-12-03
-**Status**: All 13 guideline files complete and cross-referenced
+**Status**: All 13 guideline files and cross-referenced
 **Maintainer**: Template Team

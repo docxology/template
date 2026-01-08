@@ -6,7 +6,7 @@
 
 ## Purpose
 
-This directory contains expertly crafted prompt templates that leverage the extensive project documentation to guide AI assistants and developers in creating work that fully complies with the template's standards and best practices.
+This directory contains expertly crafted prompt templates that leverage the extensive project documentation to guide AI assistants and developers in creating work that complies with the template's standards and best practices.
 
 ## Prompt Categories
 
@@ -14,10 +14,10 @@ This directory contains expertly crafted prompt templates that leverage the exte
 
 | Prompt | Purpose | Use Case |
 |--------|---------|----------|
-| [`manuscript_creation.md`](manuscript_creation.md) | Create complete manuscripts from scratch | New research projects requiring full manuscript structure |
+| [`manuscript_creation.md`](manuscript_creation.md) | Create manuscripts from scratch | New research projects requiring full manuscript structure |
 | [`code_development.md`](code_development.md) | Develop code following all standards | Adding new algorithms, analysis methods, or utilities |
-| [`test_creation.md`](test_creation.md) | Write comprehensive tests | Testing new functionality with real data (no mocks) |
-| [`feature_addition.md`](feature_addition.md) | Add new features compliantly | Extending project capabilities while maintaining architecture |
+| [`test_creation.md`](test_creation.md) | Write tests | Testing new functionality with data (no mocks) |
+| [`feature_addition.md`](feature_addition.md) | Add features compliantly | Extending project capabilities while maintaining architecture |
 
 ### Advanced Development Prompts
 
@@ -33,13 +33,13 @@ This directory contains expertly crafted prompt templates that leverage the exte
 ```mermaid
 graph TD
     subgraph NewProject["🚀 Starting New Project"]
-        MS[manuscript_creation.md<br/>Create complete manuscript<br/>from research description]
+        MS[manuscript_creation.md<br/>Create manuscript<br/>from research description]
         CD[code_development.md<br/>Develop compliant code<br/>following all standards]
-        TC[test_creation.md<br/>Write comprehensive tests<br/>with real data]
+        TC[test_creation.md<br/>Write tests<br/>with data]
     end
 
     subgraph ExistingProject["🔧 Extending Existing Project"]
-        FA[feature_addition.md<br/>Add new features<br/>architecture-compliant]
+        FA[feature_addition.md<br/>Add features<br/>architecture-compliant]
         REF[refactoring.md<br/>Refactor code<br/>clean break approach]
         VAL[validation_quality.md<br/>Quality assurance<br/>and validation]
     end
@@ -125,7 +125,7 @@ All prompts reference and require compliance with:
 |-------------|--------|---------------|
 | **Project Coverage** | 90% minimum | All development prompts |
 | **Infrastructure Coverage** | 60% minimum | Infrastructure prompts |
-| **Real Data Testing** | No mocks allowed | All testing prompts |
+| **Data Testing** | No mocks allowed | All testing prompts |
 | **Documentation Standards** | AGENTS.md structure | All prompts |
 
 ## Example Usage
@@ -143,7 +143,7 @@ cat docs/prompts/code_development.md
 
 # 3. Use test creation prompt
 cat docs/prompts/test_creation.md
-# Copy the prompt template for comprehensive testing
+# Copy the prompt template for testing
 ```
 
 ### Extending an Existing Project
@@ -151,7 +151,7 @@ cat docs/prompts/test_creation.md
 ```bash
 # 1. Use feature addition prompt
 cat docs/prompts/feature_addition.md
-# Plan new feature with architecture compliance
+# Plan feature with architecture compliance
 
 # 2. Use validation prompt
 cat docs/prompts/validation_quality.md
@@ -164,7 +164,7 @@ cat docs/prompts/validation_quality.md
 - [`AGENTS.md`](AGENTS.md) - Technical documentation for all prompts
 - [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - System design principles
 - [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
-- [`../README.md`](../README.md) - Complete documentation hub
+- [`../README.md`](../README.md) - documentation hub
 
 ### Project Documentation
 - [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Code project documentation

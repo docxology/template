@@ -6,7 +6,7 @@
 
 ## Purpose
 
-The `docs/` directory contains comprehensive project documentation organized by purpose and audience. This is the central hub for all project documentation beyond code comments.
+The `docs/` directory contains project documentation organized by purpose and audience. This is the central hub for all project documentation beyond code comments.
 
 ## Documentation Navigation Map
 
@@ -14,8 +14,8 @@ The `docs/` directory contains comprehensive project documentation organized by 
 graph TD
     subgraph EntryPoints["📖 Entry Points"]
         README[README.md<br/>Project Overview<br/>Quick Start]
-        DOC_INDEX[DOCUMENTATION_INDEX.md<br/>Complete Index<br/>All 89 Files]
-        HOW_TO[core/HOW_TO_USE.md<br/>Complete Usage Guide<br/>12 Skill Levels]
+        DOC_INDEX[DOCUMENTATION_INDEX.md<br/>Index<br/>All 89 Files]
+        HOW_TO[core/HOW_TO_USE.md<br/>Usage Guide<br/>12 Skill Levels]
     end
 
     subgraph CoreDocs["📚 Core Documentation"]
@@ -40,7 +40,7 @@ graph TD
     subgraph Reference["📑 Reference"]
         FAQ[reference/FAQ.md<br/>Common Questions]
         CHEATSHEET[reference/QUICK_START_CHEATSHEET.md<br/>Command Reference]
-        API[reference/API_REFERENCE.md<br/>Complete API Docs]
+        API[reference/API_REFERENCE.md<br/>API Docs]
     end
 
     subgraph Usage["📝 Usage & Examples"]
@@ -123,7 +123,7 @@ Documentation is organized into modular subdirectories:
 
 ### New Users Start Here
 1. [`../README.md`](../README.md) - Project overview
-2. [`core/HOW_TO_USE.md`](core/HOW_TO_USE.md) - Complete usage guide
+2. [`core/HOW_TO_USE.md`](core/HOW_TO_USE.md) - usage guide
 3. [`guides/GETTING_STARTED.md`](guides/GETTING_STARTED.md) - Getting started (Levels 1-3)
 4. [`reference/FAQ.md`](reference/FAQ.md) - Common questions
 
@@ -139,9 +139,9 @@ Documentation is organized into modular subdirectories:
 Development standards are defined in the `.cursorrules/` directory. Start with:
 
 - [`../.cursorrules/README.md`](../.cursorrules/README.md) - Quick reference and patterns
-- [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) - Complete development standards
+- [`../.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md) - development standards
 - [`../.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md) - Testing patterns and coverage
-- See [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) for complete rules reference
+- See [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) for rules reference
 
 ## Quick Links
 
@@ -157,7 +157,7 @@ Development standards are defined in the `.cursorrules/` directory. Start with:
 ## See Also
 
 - [`AGENTS.md`](AGENTS.md) - Detailed documentation guide
-- [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) - Complete index
+- [`DOCUMENTATION_INDEX.md`](DOCUMENTATION_INDEX.md) - index
 - [`prompts/README.md`](prompts/README.md) - AI prompt templates for development
 - [`../AGENTS.md`](../AGENTS.md) - System documentation
 

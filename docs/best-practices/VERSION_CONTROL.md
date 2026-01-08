@@ -4,7 +4,7 @@
 
 **Quick Reference:** [Contributing](../development/CONTRIBUTING.md) | [Workflow](../core/WORKFLOW.md) | [Best Practices](../best-practices/BEST_PRACTICES.md)
 
-This guide provides comprehensive best practices for using Git version control with the Research Project Template, including workflows, branching strategies, commit guidelines, and collaboration patterns.
+This guide provides best practices for using Git version control with the Research Project Template, including workflows, branching strategies, commit guidelines, and collaboration patterns.
 
 ## Overview
 
@@ -30,7 +30,7 @@ git checkout -b feature/new-feature
 git add .
 
 # 5. Commit with clear message
-git commit -m "feat: add new feature"
+git commit -m "feat: add feature"
 
 # 6. Push branch
 git push origin feature/new-feature
@@ -62,7 +62,7 @@ main (production-ready)
 ```
 
 **Branch naming conventions:**
-- `feature/` - New features
+- `feature/` - features
 - `fix/` - Bug fixes
 - `docs/` - Documentation updates
 - `refactor/` - Code refactoring
@@ -116,7 +116,7 @@ git push origin --delete feature/merged-feature
 ```
 
 **Types:**
-- `feat` - New feature
+- `feat` - feature
 - `fix` - Bug fix
 - `docs` - Documentation
 - `style` - Formatting
@@ -178,12 +178,12 @@ git commit -m "update"
 **Version format:** `MAJOR.MINOR.PATCH`
 
 - **MAJOR** - Breaking changes
-- **MINOR** - New features (backward compatible)
+- **MINOR** - features (backward compatible)
 - **PATCH** - Bug fixes
 
 **Examples:**
 - `0.1.0` - Initial release
-- `0.2.0` - New features
+- `0.2.0` - features
 - `0.2.1` - Bug fixes
 - `1.0.0` - Stable release
 
@@ -256,7 +256,7 @@ git merge main
 # 3. Stage resolved files
 git add resolved-file.py
 
-# 4. Complete merge
+# 4. merge
 git commit -m "merge: resolve conflicts with main"
 ```
 
@@ -525,7 +525,7 @@ Version control best practices:
 4. **Tags** - Semantic versioning for releases
 5. **Collaboration** - Clear PR process, thorough reviews
 6. **Configuration** - Proper Git setup
-7. **Ignoring** - Comprehensive .gitignore
+7. **Ignoring** - .gitignore
 
 For more information, see:
 - [Contributing Guide](../development/CONTRIBUTING.md) - Contribution workflow

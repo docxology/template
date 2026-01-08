@@ -284,6 +284,22 @@ def run_render_pipeline(project_name: str = "project") -> int:
         # If combined PDF generation failed but individual PDFs were generated, note that
         if rendered_count > 0:
             logger.info(f"ℹ️  Note: {rendered_count} individual PDF file(s) were generated successfully despite combined PDF failure.")
+        
+        # Generate combined HTML from all markdown files
+        try:
+            logger.info("\n" + "="*60)
+            logger.info("Generating combined HTML manuscript...")
+            combined_html = manager.render_combined_web(md_files, manuscript_dir, project_name)
+            logger.info(f"✅ Generated combined HTML: {combined_html.name}")
+            
+        except RenderingError as re:
+            logger.warning(f"⚠️  Rendering error generating combined HTML: {re.message}")
+            if re.context:
+                logger.debug(f"  Context: {re.context}")
+            # Non-fatal - don't fail pipeline for HTML generation
+        except Exception as e:
+            logger.warning(f"⚠️  Unexpected error generating combined HTML: {e}")
+            # Non-fatal - don't fail pipeline for HTML generation
     
     # Report results
     logger.info(f"\nRendering Summary:")
@@ -317,6 +333,7 @@ def generate_rendering_summary(project_name: str = "project") -> dict:
         "project": project_name,
         "individual_pdfs": [],
         "combined_pdf": None,
+        "combined_html": None,
         "web_outputs": [],
         "slides": [],
         "total_size_kb": 0
@@ -345,15 +362,28 @@ def generate_rendering_summary(project_name: str = "project") -> dict:
         }
         summary["total_size_kb"] += size_kb
 
-    # Collect web outputs
+    # Check combined HTML
     web_dir = output_dir / "web"
     if web_dir.exists():
+        combined_html = web_dir / "index.html"
+        if combined_html.exists():
+            size_kb = combined_html.stat().st_size / 1024
+            summary["combined_html"] = {
+                "name": combined_html.name,
+                "size_kb": size_kb,
+                "path": str(combined_html)
+            }
+            summary["total_size_kb"] += size_kb
+
+    # Collect web outputs (excluding index.html)
+    if web_dir.exists():
         for html in sorted(web_dir.glob("*.html")):
-            size_kb = html.stat().st_size / 1024
-            summary["web_outputs"].append({
-                "name": html.name,
-                "size_kb": size_kb
-            })
+            if html.name != "index.html":
+                size_kb = html.stat().st_size / 1024
+                summary["web_outputs"].append({
+                    "name": html.name,
+                    "size_kb": size_kb
+                })
 
     # Collect slides
     slides_dir = output_dir / "slides"
@@ -380,6 +410,12 @@ def log_rendering_summary(summary: dict) -> None:
         logger.info(f"\n📕 Combined Manuscript PDF:")
         logger.info(f"   {pdf['name']:<40} {pdf['size_kb']:>8.1f} KB")
         logger.info(f"   Location: {pdf['path']}")
+
+    if summary['combined_html']:
+        html = summary['combined_html']
+        logger.info(f"\n🌐 Combined Manuscript HTML:")
+        logger.info(f"   {html['name']:<40} {html['size_kb']:>8.1f} KB")
+        logger.info(f"   Location: {html['path']}")
 
     if summary['individual_pdfs']:
         logger.info(f"\n📄 Individual Section PDFs ({len(summary['individual_pdfs'])}):")

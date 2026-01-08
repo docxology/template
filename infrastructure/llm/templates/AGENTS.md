@@ -171,7 +171,7 @@ def extract_structured_response(response: str, expected_fields: List[str]) -> Di
 
 #### Manuscript Review Template
 
-**Comprehensive Review Generation:**
+**Review Generation:**
 ```python
 class ManuscriptReviewTemplate(BaseTemplate):
     """Template for generating manuscript reviews."""
@@ -319,7 +319,7 @@ class TemplateResult:
 ### Template Categories
 
 **Manuscript Templates:**
-- **ManuscriptReviewTemplate**: Comprehensive manuscript evaluation
+- **ManuscriptReviewTemplate**: manuscript evaluation
 - **ManuscriptSummaryTemplate**: Executive and technical summaries
 - **ManuscriptOutlineTemplate**: Structure and organization review
 
@@ -444,7 +444,7 @@ def test_manuscript_review_template():
 **End-to-End Template Testing:**
 ```python
 def test_template_pipeline_integration():
-    """Test complete template pipeline."""
+    """Test template pipeline."""
 
     # Setup test environment
     manuscript = create_test_manuscript()
@@ -525,7 +525,7 @@ class TemplateCache:
 
 ### Template-Specific Errors
 
-**Comprehensive Error Management:**
+**Error Management:**
 ```python
 class TemplateError(Exception):
     """Base exception for template errors."""
@@ -540,7 +540,7 @@ class TemplateExecutionError(TemplateError):
     pass
 
 def apply_with_error_handling(self, **kwargs) -> TemplateResult:
-    """Apply template with comprehensive error handling."""
+    """Apply template with error handling."""
 
     try:
         # Validate inputs
@@ -749,5 +749,5 @@ result = template.apply(manuscript=text)
 - [`../review/AGENTS.md`](../review/AGENTS.md) - Review generation
 
 **System Documentation:**
-- [`../../../../AGENTS.md`](../../../../AGENTS.md) - Complete system overview
+- [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
 - [`../../../../../docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md`](../../../../../docs/usage/MANUSCRIPT_NUMBERING_SYSTEM.md) - Manuscript handling guide

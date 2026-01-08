@@ -12,7 +12,7 @@ The `reference/` directory contains quick reference materials, API documentation
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`API_REFERENCE.md`](API_REFERENCE.md) | Complete API documentation | Developers |
+| [`API_REFERENCE.md`](API_REFERENCE.md) | API documentation | Developers |
 | [`GLOSSARY.md`](GLOSSARY.md) | Terms and definitions | All users |
 | [`FAQ.md`](FAQ.md) | Frequently asked questions | All users |
 | [`QUICK_START_CHEATSHEET.md`](QUICK_START_CHEATSHEET.md) | Essential commands reference | All users |
@@ -28,7 +28,7 @@ The `reference/` directory contains quick reference materials, API documentation
 → Use **[Quick Start Cheatsheet](QUICK_START_CHEATSHEET.md)** - Essential commands
 
 ### Need API Details?
-→ Reference **[API Reference](API_REFERENCE.md)** - Complete API docs
+→ Reference **[API Reference](API_REFERENCE.md)** - API docs
 
 ### Understanding Terms?
 → Consult **[Glossary](GLOSSARY.md)** - Definitions
@@ -38,13 +38,13 @@ The `reference/` directory contains quick reference materials, API documentation
 
 ## Related Documentation
 
-- **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** - Complete usage guide
+- **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** - usage guide
 - **[`../guides/`](../guides/)** - Skill-level specific guides
 - **[`../operational/TROUBLESHOOTING_GUIDE.md`](../operational/TROUBLESHOOTING_GUIDE.md)** - Troubleshooting
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Complete documentation index
+- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 
 

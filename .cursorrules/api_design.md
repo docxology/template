@@ -521,10 +521,10 @@ result = process_data(data)  # Latest version (v2)
 
 ## API Documentation
 
-### Comprehensive Docstrings
+### Docstrings
 
 ```python
-# ✅ GOOD: Comprehensive API documentation
+# ✅ GOOD: API documentation
 def analyze_dataset(
     dataset: "Dataset",
     *,
@@ -535,7 +535,7 @@ def analyze_dataset(
 ) -> AnalysisResult:
     """Analyze dataset using specified method.
 
-    This function performs comprehensive analysis on the input dataset,
+    This function performs analysis on the input dataset,
     applying statistical methods, outlier detection, and trend analysis.
     Results include summary statistics, visualizations, and insights.
 
@@ -656,11 +656,11 @@ def test_api_composition():
 ```python
 # ✅ GOOD: Maintain backward compatibility
 def process_data_v2(data: list[dict], *, enhanced: bool = False) -> dict:
-    """Process data with enhanced features (v2).
+    """Process data with features (v2).
 
     Args:
         data: Data to process (same as v1)
-        enhanced: Enable enhanced processing features
+        enhanced: Enable processing features
 
     Returns:
         Same structure as v1, with additional fields when enhanced=True
@@ -703,7 +703,7 @@ def new_function_name(parameter: str) -> str:
 ### Do's ✅
 
 - ✅ **Use descriptive names** that clearly indicate purpose
-- ✅ **Provide comprehensive type hints** for all parameters and returns
+- ✅ **Provide type hints** for all parameters and returns
 - ✅ **Use keyword-only parameters** for optional/advanced settings
 - ✅ **Document exceptions** in docstrings with context
 - ✅ **Maintain backward compatibility** when possible
@@ -731,5 +731,5 @@ def new_function_name(parameter: str) -> str:
 - [error_handling.md](error_handling.md) - Exception handling in APIs
 - [testing_standards.md](testing_standards.md) - Testing API contracts
 - [infrastructure_modules.md](infrastructure_modules.md) - Module API design
-- [../docs/reference/API_REFERENCE.md](../docs/reference/API_REFERENCE.md) - Complete API documentation
+- [../docs/reference/API_REFERENCE.md](../docs/reference/API_REFERENCE.md) - API documentation
 - [../docs/core/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) - API architecture design

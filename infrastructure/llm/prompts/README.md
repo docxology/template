@@ -73,7 +73,7 @@ prompt = apply_template(
 ### Research Review Prompts
 
 ```python
-# Comprehensive manuscript review
+# manuscript review
 review_prompt = composer.compose(
     fragments=[
         "system_prompts.research_reviewer",
@@ -184,7 +184,7 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete prompts module documentation
+- [AGENTS.md](AGENTS.md) - prompts module documentation
 - [fragments/README.md](fragments/README.md) - Fragment library details
 - [compositions/README.md](compositions/README.md) - Composition system
 - [templates/README.md](templates/README.md) - Template system

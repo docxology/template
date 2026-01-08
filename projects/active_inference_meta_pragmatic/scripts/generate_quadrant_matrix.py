@@ -78,7 +78,7 @@ def create_enhanced_quadrant_diagram(viz_engine: VisualizationEngine,
     # Create larger figure for detailed information
     fig, axes = plt.subplots(2, 2, figsize=(16, 12))
     fig.suptitle('Active Inference Meta-Pragmatic Framework:\n2×2 Quadrant Analysis',
-                fontsize=16, fontweight='bold', y=0.95)
+                fontsize=18, fontweight='bold', y=0.95)
 
     quadrant_names = ['Q1_data_cognitive', 'Q2_metadata_cognitive',
                      'Q3_data_metacognitive', 'Q4_metadata_metacognitive']
@@ -99,12 +99,12 @@ def create_enhanced_quadrant_diagram(viz_engine: VisualizationEngine,
 
         # Add quadrant title
         ax.text(0.5, 0.95, quadrant_info['name'], ha='center', va='top',
-               fontsize=14, fontweight='bold', transform=ax.transAxes)
+               fontsize=16, fontweight='bold', transform=ax.transAxes)
 
         # Add description
         description = quadrant_info['description'][:200] + "..."  # Truncate for space
         ax.text(0.5, 0.7, description, ha='center', va='top',
-               fontsize=10, wrap=True, transform=ax.transAxes)
+               fontsize=12, wrap=True, transform=ax.transAxes)
 
         # Add examples
         if 'examples' in quadrant_info:
@@ -113,7 +113,7 @@ def create_enhanced_quadrant_diagram(viz_engine: VisualizationEngine,
                 examples_text += f"• {example[:100]}...\n"
 
             ax.text(0.5, 0.3, examples_text, ha='center', va='top',
-                   fontsize=9, transform=ax.transAxes)
+                   fontsize=11, transform=ax.transAxes)
 
         # Remove axes
         ax.set_xlim(0, 1)
@@ -127,9 +127,9 @@ def create_enhanced_quadrant_diagram(viz_engine: VisualizationEngine,
 
     # Add axis labels
     fig.text(0.5, 0.02, 'Information Type: Data → Meta-Data',
-            ha='center', fontsize=14, fontweight='bold')
+            ha='center', fontsize=16, fontweight='bold')
     fig.text(0.02, 0.5, 'Processing Level: Cognitive → Meta-Cognitive',
-            va='center', rotation='vertical', fontsize=14, fontweight='bold')
+            va='center', rotation='vertical', fontsize=16, fontweight='bold')
 
     plt.tight_layout()
 

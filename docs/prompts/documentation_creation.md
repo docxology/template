@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Create comprehensive technical documentation (AGENTS.md) and quick reference guides (README.md) that follow the template's documentation standards and provide clear navigation.
+Create technical documentation (AGENTS.md) and quick reference guides (README.md) that follow the template's documentation standards and provide clear navigation.
 
 ## Context
 
-This prompt leverages the complete documentation standards to create professional documentation:
+This prompt leverages the documentation standards to create professional documentation:
 
 - [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) - Documentation writing standards
 - [`../../docs/AGENTS.md`](../../docs/AGENTS.md) - Documentation organization guide
@@ -15,7 +15,7 @@ This prompt leverages the complete documentation standards to create professiona
 ## Prompt Template
 
 ```
-You are creating documentation for the Research Project Template. All documentation must follow the AGENTS.md and README.md standards with clear structure, comprehensive technical details, and proper cross-referencing.
+You are creating documentation for the Research Project Template. All documentation must follow the AGENTS.md and README.md standards with clear structure, technical details, and proper cross-referencing.
 
 DOCUMENTATION TARGET: [Specify what to document: "module", "project", "feature", "system"]
 TARGET NAME: [Name of the module/project/feature/system]
@@ -25,7 +25,7 @@ DOCUMENTATION REQUIREMENTS:
 
 ## 1. AGENTS.md Technical Documentation
 
-Create comprehensive technical documentation following the AGENTS.md standard:
+Create technical documentation following the AGENTS.md standard:
 
 ### Required Structure
 ```markdown
@@ -37,7 +37,7 @@ Create comprehensive technical documentation following the AGENTS.md standard:
 
 ## Overview
 
-[Comprehensive description of what is being documented, its purpose, architecture, and integration points.]
+[description of what is being documented, its purpose, architecture, and integration points.]
 
 ## [Section 1 - Core Concept]
 
@@ -57,7 +57,7 @@ Create comprehensive technical documentation following the AGENTS.md standard:
 
 ## [Section 3 - API Reference/Usage]
 
-[Complete API documentation or usage instructions with examples.]
+[API documentation or usage instructions with examples.]
 
 ### Classes/Functions/Modules
 
@@ -121,11 +121,11 @@ assert result['processing_time'] < 5.0
 ```
 ```
 
-**Comprehensive API Documentation:**
+**API Documentation:**
 ```markdown
 #### `DataProcessor`
 
-Main class for data processing operations with comprehensive validation and error handling.
+Main class for data processing operations with validation and error handling.
 
 **Parameters:**
 - `config` (Dict[str, Any]): Configuration dictionary
@@ -217,7 +217,7 @@ Create concise quick reference guide following README.md standards:
 
 ## Documentation
 
-See [`AGENTS.md`](AGENTS.md) for complete technical documentation.
+See [`AGENTS.md`](AGENTS.md) for technical documentation.
 
 ## See Also
 
@@ -318,7 +318,7 @@ See [`.cursorrules/documentation_standards.md`](../../../.cursorrules/documentat
 
 ## Key Requirements
 
-- [ ] AGENTS.md with complete technical documentation structure
+- [ ] AGENTS.md with technical documentation structure
 - [ ] README.md with quick reference and navigation
 - [ ] All public APIs documented with examples
 - [ ] Cross-references using relative paths
@@ -358,7 +358,7 @@ TARGET PATH: infrastructure/data_quality/
 ```
 
 **Expected Output:**
-- Complete `infrastructure/data_quality/AGENTS.md` with full technical documentation
+- `infrastructure/data_quality/AGENTS.md` with full technical documentation
 - Concise `infrastructure/data_quality/README.md` with quick reference
 - All APIs documented with examples
 - Architecture diagrams and integration information

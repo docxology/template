@@ -10,7 +10,7 @@ The `docs/core/` directory contains the fundamental documentation that explains 
 docs/core/
 ├── AGENTS.md                   # This technical documentation
 ├── ARCHITECTURE.md             # System design and structure
-├── HOW_TO_USE.md               # Complete usage guide
+├── HOW_TO_USE.md               # usage guide
 ├── README.md                   # Quick reference
 └── WORKFLOW.md                 # Development workflow
 ```
@@ -110,7 +110,7 @@ Usage         Understanding       Excellence
 
 **Practical Examples:**
 ```bash
-# Good: Complete command with context
+# Good: command with context
 $ python3 scripts/03_render_pdf.py
 INFO: Loading manuscript configuration...
 INFO: Generating PDF with LaTeX...
@@ -143,7 +143,7 @@ print(f"Title: {project_title}")
 **Infrastructure Layer (Generic):**
 - Reusable across research projects
 - Domain-independent utilities
-- Comprehensive testing (60%+ coverage)
+- testing (60%+ coverage)
 - Stable, version-controlled APIs
 
 **Project Layer (Domain-Specific):**
@@ -173,7 +173,7 @@ def main():
     # Validate outputs
     validation_report = validate_pdf_rendering('output/manuscript.pdf')
 
-    logger.info(f"Analysis complete: {validation_report}")
+    logger.info(f"Analysis: {validation_report}")
 ```
 
 ### Thin Orchestrator Pattern
@@ -311,13 +311,13 @@ export LOG_LEVEL=0  # Debug mode
 - Project code: 90% minimum coverage
 - Infrastructure code: 60% minimum coverage
 - Integration tests for end-to-end workflows
-- Real data analysis (no mocks)
+- data analysis (no mocks)
 
 **Testing Workflow:**
 ```python
-# Comprehensive test example
+# test example
 def test_research_algorithm():
-    """Test research algorithm with real data."""
+    """Test research algorithm with data."""
     # Load actual test dataset
     test_data = load_research_dataset('test_data.csv')
 
@@ -516,6 +516,6 @@ print(f"Published with DOI: {result['doi']}")
 - [`../development/`](../development/) - Development and contribution guidelines
 
 **System Documentation:**
-- [`../AGENTS.md`](../AGENTS.md) - Complete system overview
+- [`../AGENTS.md`](../AGENTS.md) - system overview
 - [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
 - [`../../AGENTS.md`](../../AGENTS.md) - Root system documentation

@@ -91,12 +91,11 @@
 
 \begin{frame}{Introduction}
 \protect\phantomsection\label{introduction}
-This small code project demonstrates a fully-tested numerical
-optimization implementation with comprehensive analysis and
-visualization capabilities. The project showcases the complete research
-pipeline from algorithm implementation through testing to result
-visualization, including automatic title page generation from metadata
-configuration.
+This small code project demonstrates a-tested numerical optimization
+implementation with analysis and visualization capabilities. The project
+showcases the research pipeline from algorithm implementation through
+testing to result visualization, including automatic title page
+generation from metadata configuration.
 
 \begin{block}{Research Context}
 \protect\phantomsection\label{research-context}
@@ -105,7 +104,10 @@ engineering applications \cite{nocedal2006numerical}. This project
 implements and analyzes gradient descent methods for solving
 optimization problems of the form:
 
-\[\min_{x \in \mathbb{R}^n} f(x)\]
+\begin{equation}
+\label{eq:optimization_problem}
+\min_{x \in \mathbb{R}^n} f(x)
+\end{equation}
 
 where \(f: \mathbb{R}^n \rightarrow \mathbb{R}\) is a continuously
 differentiable objective function.
@@ -123,8 +125,7 @@ The implementation includes:
   \textbf{Quadratic function test problems} with known analytical
   solutions
 \item
-  \textbf{Comprehensive test suite} covering functionality and edge
-  cases
+  \textbf{test suite} covering functionality and edge cases
 \item
   \textbf{Analysis scripts} that generate convergence plots and
   performance data
@@ -145,7 +146,10 @@ The implementation includes:
 \protect\phantomsection\label{algorithm-overview}
 The gradient descent algorithm iteratively updates the solution using:
 
-\[x_{k+1} = x_k - \alpha \nabla f(x_k)\]
+\begin{equation}
+\label{eq:gradient_descent_update}
+x_{k+1} = x_k - \alpha \nabla f(x_k)
+\end{equation}
 
 where: - \(\alpha > 0\) is the step size (learning rate) -
 \(\nabla f(x_k)\) is the gradient of the objective function at iteration
@@ -161,7 +165,7 @@ This project demonstrates:
 \item
   \textbf{Clean, testable code} with proper separation of concerns
 \item
-  \textbf{Numerical accuracy} through comprehensive testing
+  \textbf{Numerical accuracy} through testing
 \item
   \textbf{Performance analysis} with convergence visualization
 \item

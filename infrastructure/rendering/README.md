@@ -73,7 +73,7 @@ graph TD
 - **Multiple Outputs**: PDF, Slides (Beamer/HTML), Web, Posters.
 - **Title Page Generation**: Automatic title page from `config.yaml`.
 - **Figure Integration**: Automatic figure path resolution and verification.
-- **Quality Control**: Automated compilation checks and comprehensive logging.
+- **Quality Control**: Automated compilation checks and logging.
 - **Package Validation**: Pre-flight checks for LaTeX packages.
 
 ## LaTeX Package Requirements
@@ -106,9 +106,9 @@ python3 scripts/03_render_pdf.py
 - **No kpsewhich found**: Install BasicTeX or MacTeX
 - **Permission denied**: Use `sudo` for tlmgr commands
 
-### Full MacTeX (Complete Installation)
+### Full MacTeX (Installation)
 
-For a complete installation with all packages, install **MacTeX**:
+For a installation with all packages, install **MacTeX**:
 ```bash
 brew install --cask mactex
 ```
@@ -310,7 +310,7 @@ graph TD
 | **config.py** | Configuration management | `RenderingConfig` - Settings management | environment variables |
 | **cli.py** | Command-line interface | CLI commands for all renderers | All renderer modules |
 
-## Comprehensive Usage Guide
+## Usage Guide
 
 ### Advanced PDF Rendering
 
@@ -327,7 +327,7 @@ config = RenderingConfig(
 
 manager = RenderManager(config)
 
-# Render with comprehensive error handling
+# Render with error handling
 try:
     pdf_path = manager.render_pdf(Path("manuscript/main.tex"))
     print(f"PDF generated successfully: {pdf_path}")
@@ -390,7 +390,7 @@ else:
 
 ## LaTeX Package Management
 
-### Comprehensive Package Validation
+### Package Validation
 
 ```python
 from infrastructure.rendering.latex_package_validator import validate_preamble_packages
@@ -467,7 +467,7 @@ manager = RenderManager(config)
 
 ## CLI Operations
 
-### Complete Rendering Workflow
+### Rendering Workflow
 
 ```bash
 # Render to all formats
@@ -564,7 +564,7 @@ flowchart TD
 
 ## Error Handling and Recovery
 
-### Comprehensive Error Management
+### Error Management
 
 ```python
 from infrastructure.rendering import RenderManager
@@ -803,7 +803,7 @@ rendering:
 - **Test Rendering**: Regularly test full rendering pipeline
 - **Document Configurations**: Maintain rendering configuration documentation
 
-For complete function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
+For function signatures and API documentation, see [`AGENTS.md`](AGENTS.md).
 
 ## Troubleshooting
 

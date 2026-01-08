@@ -1,6 +1,6 @@
 # Rendering Infrastructure Tests - Quick Reference
 
-Comprehensive tests for multi-format output generation.
+tests for multi-format output generation.
 
 ## Overview
 
@@ -171,6 +171,6 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete test documentation
+- [AGENTS.md](AGENTS.md) - test documentation
 - [../../infrastructure/rendering/README.md](../../infrastructure/rendering/README.md) - Rendering module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

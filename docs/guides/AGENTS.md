@@ -50,7 +50,7 @@ docs/guides/
 
 **Show, Don't Tell Philosophy:**
 ```bash
-# Good: Complete working example
+# Good: working example
 $ python3 scripts/03_render_pdf.py --project code_project
 INFO: Loading configuration from projects/code_project/manuscript/config.yaml
 INFO: Generating PDF with LaTeX rendering engine
@@ -91,11 +91,11 @@ python3 scripts/03_render_pdf.py
 ```
 ```
 
-### Complete Examples
+### Examples
 
 **Runnable Code Examples:**
 ```python
-# Complete working example from GETTING_STARTED.md
+# working example from GETTING_STARTED.md
 from infrastructure.core import load_config
 
 # Load your project configuration
@@ -112,7 +112,7 @@ print(f"Author: {config.get('author_name', 'Researcher')}")
 
 **Command Sequences:**
 ```bash
-# Complete workflow from FIGURES_AND_ANALYSIS.md
+# workflow from FIGURES_AND_ANALYSIS.md
 # 1. Set up environment
 python3 scripts/00_setup_environment.py
 
@@ -160,7 +160,7 @@ SUCCESS: PDF generated at output/code_project/pdf/code_project_combined.pdf
 - Basic concepts only
 - Step-by-step tutorials
 - No assumptions about prior knowledge
-- Complete command sequences
+- command sequences
 
 **Intermediate (Levels 4-6):**
 - Configuration customization
@@ -186,7 +186,7 @@ SUCCESS: PDF generated at output/code_project/pdf/code_project_combined.pdf
 
 **Regular Review Cycle:**
 - Monthly review of all guides
-- Update examples for new features
+- Update examples for features
 - Validate all command sequences
 - Test examples in clean environments
 
@@ -247,7 +247,7 @@ Main usage patterns.
 ## Common Issues
 
 ### Problem: Error Message
-Solution with complete commands.
+Solution with commands.
 
 ### Problem: Unexpected Behavior
 Diagnosis and resolution steps.
@@ -388,7 +388,7 @@ project/
 ### Usage Analytics
 
 **Guide Effectiveness:**
-- Time to complete guided tasks
+- Time to guided tasks
 - Success rates for examples
 - Common failure points
 - User feedback and ratings
@@ -434,12 +434,12 @@ GETTING_STARTED.md → FIGURES_AND_ANALYSIS.md → TESTING_AND_REPRODUCIBILITY.m
 
 **Version Consistency:**
 - Keep guides in sync with template versions
-- Update examples for new features
+- Update examples for features
 - Maintain backward compatibility
 - Archive outdated content appropriately
 
 **Related Documentation Links:**
-- [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) - Complete usage guide
+- [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md) - usage guide
 - [`../operational/`](../operational/) - Operational procedures
 - [`../reference/`](../reference/) - Reference materials
 - [`../development/`](../development/) - Development guides
@@ -453,6 +453,6 @@ GETTING_STARTED.md → FIGURES_AND_ANALYSIS.md → TESTING_AND_REPRODUCIBILITY.m
 - [`EXTENDING_AND_AUTOMATION.md`](EXTENDING_AND_AUTOMATION.md) - Expert-level usage
 
 **System Documentation:**
-- [`../AGENTS.md`](../AGENTS.md) - Complete system overview
+- [`../AGENTS.md`](../AGENTS.md) - system overview
 - [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
 - [`../../AGENTS.md`](../../AGENTS.md) - Root system documentation

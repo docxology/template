@@ -3,23 +3,23 @@
     "pdf": {
       "exists": true,
       "file_count": 9,
-      "size_mb": "4.91",
-      "total_size_bytes": 5151031,
+      "size_mb": "4.49",
+      "total_size_bytes": 4707529,
       "largest_files": [
         {
           "name": "active_inference_meta_pragmatic_combined.pdf",
-          "size_mb": "4.37",
+          "size_mb": "4.25",
           "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
         },
         {
           "name": "_combined_manuscript.tex",
-          "size_mb": "0.17",
+          "size_mb": "0.07",
           "path": "pdf/_combined_manuscript.tex"
         },
         {
-          "name": "_combined_manuscript.md",
-          "size_mb": "0.14",
-          "path": "pdf/_combined_manuscript.md"
+          "name": "_combined_manuscript.log",
+          "size_mb": "0.05",
+          "path": "pdf/_combined_manuscript.log"
         }
       ],
       "extensions": {
@@ -36,68 +36,69 @@
     },
     "web": {
       "exists": true,
-      "file_count": 13,
-      "size_mb": "0.20",
-      "total_size_bytes": 208785,
+      "file_count": 11,
+      "size_mb": "0.24",
+      "total_size_bytes": 255052,
       "largest_files": [
         {
-          "name": "04_experimental_results.html",
-          "size_mb": "0.03",
-          "path": "web/04_experimental_results.html"
+          "name": "index.html",
+          "size_mb": "0.10",
+          "path": "web/index.html"
         },
         {
-          "name": "05_discussion.html",
-          "size_mb": "0.03",
-          "path": "web/05_discussion.html"
+          "name": "_combined_manuscript.md",
+          "size_mb": "0.05",
+          "path": "web/_combined_manuscript.md"
         },
         {
-          "name": "03_methodology.html",
-          "size_mb": "0.03",
-          "path": "web/03_methodology.html"
+          "name": "07_appendix.html",
+          "size_mb": "0.02",
+          "path": "web/07_appendix.html"
         }
       ],
       "extensions": {
-        ".html": 13
+        ".html": 10,
+        ".md": 1
       }
     },
     "slides": {
       "exists": true,
-      "file_count": 95,
-      "size_mb": "5.59",
-      "total_size_bytes": 5863011,
+      "file_count": 65,
+      "size_mb": "4.94",
+      "total_size_bytes": 5181635,
       "largest_files": [
         {
-          "name": "03_methodology_slides.pdf",
-          "size_mb": "2.72",
-          "path": "slides/03_methodology_slides.pdf"
+          "name": "02_background_slides.pdf",
+          "size_mb": "2.10",
+          "path": "slides/02_background_slides.pdf"
         },
         {
-          "name": "04_experimental_results_slides.pdf",
-          "size_mb": "1.33",
-          "path": "slides/04_experimental_results_slides.pdf"
+          "name": "03_quadrant_model_slides.pdf",
+          "size_mb": "2.08",
+          "path": "slides/03_quadrant_model_slides.pdf"
         },
         {
-          "name": "02_introduction_slides.pdf",
-          "size_mb": "0.20",
-          "path": "slides/02_introduction_slides.pdf"
+          "name": "07_appendix_slides.log",
+          "size_mb": "0.05",
+          "path": "slides/07_appendix_slides.log"
         }
       ],
       "extensions": {
-        ".nav": 13,
-        ".pdf": 13,
-        ".toc": 13,
-        ".tex": 13,
-        ".snm": 13,
-        ".aux": 13,
-        ".log": 13,
-        ".vrb": 4
+        ".nav": 9,
+        ".log": 9,
+        ".snm": 9,
+        ".aux": 9,
+        ".toc": 9,
+        ".tex": 9,
+        ".pdf": 9,
+        ".vrb": 2
       }
     },
     "figures": {
       "exists": true,
       "file_count": 35,
       "size_mb": "5.10",
-      "total_size_bytes": 5349005,
+      "total_size_bytes": 5345913,
       "largest_files": [
         {
           "name": "quadrant_matrix_enhanced.png",
@@ -125,7 +126,7 @@
       "exists": true,
       "file_count": 2,
       "size_mb": "0.04",
-      "total_size_bytes": 46124,
+      "total_size_bytes": 46122,
       "largest_files": [
         {
           "name": "theoretical_demonstrations.json",
@@ -147,7 +148,7 @@
       "exists": true,
       "file_count": 7,
       "size_mb": "0.06",
-      "total_size_bytes": 59594,
+      "total_size_bytes": 59591,
       "largest_files": [
         {
           "name": "final_pipeline_report.json",
@@ -180,60 +181,49 @@
     },
     "llm": {
       "exists": true,
-      "file_count": 6,
-      "size_mb": "0.05",
-      "total_size_bytes": 47924,
-      "largest_files": [
-        {
-          "name": "combined_review.md",
-          "size_mb": "0.02",
-          "path": "llm/combined_review.md"
-        },
-        {
-          "name": "translation_hi.md",
-          "size_mb": "0.01",
-          "path": "llm/translation_hi.md"
-        },
-        {
-          "name": "translation_ru.md",
-          "size_mb": "0.01",
-          "path": "llm/translation_ru.md"
-        }
-      ],
-      "extensions": {
-        ".md": 5,
-        ".json": 1
-      }
-    },
-    "logs": {
-      "exists": true,
       "file_count": 0,
       "size_mb": "0.00",
       "total_size_bytes": 0,
       "largest_files": [],
       "extensions": {}
+    },
+    "logs": {
+      "exists": true,
+      "file_count": 1,
+      "size_mb": "0.00",
+      "total_size_bytes": 3052,
+      "largest_files": [
+        {
+          "name": "pipeline.log",
+          "size_mb": "0.00",
+          "path": "logs/pipeline.log"
+        }
+      ],
+      "extensions": {
+        ".log": 1
+      }
     }
   },
-  "total_files": 167,
-  "total_size_mb": 15.950654983520508,
+  "total_files": 130,
+  "total_size_mb": 14.876264572143555,
   "largest_files": [
     {
       "name": "active_inference_meta_pragmatic_combined.pdf",
-      "size_mb": "4.37",
+      "size_mb": "4.25",
       "category": "pdf",
       "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
     },
     {
-      "name": "03_methodology_slides.pdf",
-      "size_mb": "2.72",
+      "name": "02_background_slides.pdf",
+      "size_mb": "2.10",
       "category": "slides",
-      "path": "slides/03_methodology_slides.pdf"
+      "path": "slides/02_background_slides.pdf"
     },
     {
-      "name": "04_experimental_results_slides.pdf",
-      "size_mb": "1.33",
+      "name": "03_quadrant_model_slides.pdf",
+      "size_mb": "2.08",
       "category": "slides",
-      "path": "slides/04_experimental_results_slides.pdf"
+      "path": "slides/03_quadrant_model_slides.pdf"
     },
     {
       "name": "quadrant_matrix_enhanced.png",
@@ -254,61 +244,61 @@
       "path": "figures/structure_preservation.png"
     },
     {
-      "name": "02_introduction_slides.pdf",
-      "size_mb": "0.20",
-      "category": "slides",
-      "path": "slides/02_introduction_slides.pdf"
+      "name": "index.html",
+      "size_mb": "0.10",
+      "category": "web",
+      "path": "web/index.html"
     },
     {
       "name": "_combined_manuscript.tex",
-      "size_mb": "0.17",
+      "size_mb": "0.07",
       "category": "pdf",
       "path": "pdf/_combined_manuscript.tex"
     },
     {
-      "name": "_combined_manuscript.md",
-      "size_mb": "0.14",
+      "name": "_combined_manuscript.log",
+      "size_mb": "0.05",
       "category": "pdf",
-      "path": "pdf/_combined_manuscript.md"
+      "path": "pdf/_combined_manuscript.log"
     },
     {
-      "name": "final_pipeline_report.json",
+      "name": "_combined_manuscript.md",
       "size_mb": "0.05",
-      "category": "reports",
-      "path": "reports/final_pipeline_report.json"
+      "category": "web",
+      "path": "web/_combined_manuscript.md"
     }
   ],
   "missing_expected_files": [
     "active_inference_meta_pragmatic_combined.pdf or project_combined.pdf"
   ],
   "file_counts_by_type": {
-    ".md": 8,
-    ".log": 14,
-    ".aux": 14,
+    ".md": 4,
+    ".log": 11,
+    ".aux": 10,
     ".blg": 1,
     ".bib": 1,
-    ".tex": 14,
-    ".toc": 14,
+    ".tex": 10,
+    ".toc": 10,
     ".bbl": 1,
-    ".pdf": 31,
-    ".html": 13,
-    ".nav": 13,
-    ".snm": 13,
-    ".vrb": 4,
+    ".pdf": 27,
+    ".html": 10,
+    ".nav": 9,
+    ".snm": 9,
+    ".vrb": 2,
     ".png": 17,
-    ".json": 8,
+    ".json": 7,
     ".csv": 1
   },
   "sizes_by_category": {
-    "pdf": 4.912405967712402,
-    "web": 0.1991128921508789,
-    "slides": 5.591403007507324,
-    "figures": 5.101208686828613,
-    "data": 0.043987274169921875,
-    "reports": 0.05683326721191406,
+    "pdf": 4.489449501037598,
+    "web": 0.24323654174804688,
+    "slides": 4.941592216491699,
+    "figures": 5.098259925842285,
+    "data": 0.04398536682128906,
+    "reports": 0.056830406188964844,
     "simulations": 0.0,
-    "llm": 0.045703887939453125,
-    "logs": 0.0
+    "llm": 0.0,
+    "logs": 0.002910614013671875
   },
   "pdf_files": 9,
   "figures": 35,

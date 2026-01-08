@@ -2,14 +2,14 @@
 
 ## Overview
 
-All code in this repository requires **comprehensive test coverage** with **real data only** (no mocks). Tests must be fast, deterministic, and self-documenting.
+All code in this repository requires **test coverage** with **data only** (no mocks). Tests must be fast, deterministic, and self-documenting.
 
 ## Coverage Requirements
 
 ### Mandatory Standards
 
 - **Infrastructure modules**: 60% minimum coverage (currently achieving 83.33% - exceeds stretch goal!)
-- **Project code**: 90% minimum coverage (currently achieving 100% - perfect coverage!)
+- **Project code**: 90% minimum coverage (currently achieving 100% - coverage!)
 - **Integration tests**: All critical workflows covered
 - **Edge cases**: All error paths tested
 
@@ -69,10 +69,10 @@ tests/infrastructure/test_<module>/
 
 ### 1. ABSOLUTE PROHIBITION: Never Use Mocks
 
-**ABSOLUTE REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **real data** and **real computations only**.
+**ABSOLUTE REQUIREMENT**: Under no circumstances use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use **data** and **computations only**.
 
 ```python
-# ✅ GOOD: Test with real data
+# ✅ GOOD: Test with data
 def test_validation_passes():
     data = {"name": "Alice", "age": 30}
     assert validate_data(data) is True
@@ -301,7 +301,7 @@ def test_operation_is_logged(caplog):
 ```python
 # tests/integration/test_validation_pipeline.py
 def test_full_validation_pipeline():
-    """Test complete validation workflow."""
+    """Test validation workflow."""
     # 1. Load data from file
     data = load_test_data("sample.csv")
     
@@ -496,7 +496,7 @@ Before committing tests:
 - [ ] Tests run in < 30 seconds total
 - [ ] Test names are clear and descriptive
 - [ ] No mocks or patches used
-- [ ] Real data used in all tests
+- [ ] data used in all tests
 - [ ] Edge cases tested
 - [ ] Error conditions tested
 - [ ] Documentation added to AGENTS.md and README.md

@@ -44,7 +44,7 @@
 
 3. **Generate the PDF**
    ```bash
-   # Run complete pipeline (all 6 stages)
+   # Run pipeline (all 6 stages)
    python3 scripts/execute_pipeline.py --core-only
    ```
 
@@ -326,7 +326,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
        return calculate_variance(values) ** 0.5
    ```
 
-2. **Create comprehensive tests**
+2. **Create tests**
    ```bash
    vim tests/test_statistics.py
    ```
@@ -345,7 +345,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
        assert abs(std - 1.5811388) < 1e-6
    ```
 
-3. **Ensure comprehensive coverage**
+3. **Ensure coverage**
    ```bash
    pytest tests/test_statistics.py --cov=src.statistics --cov-report=term-missing
    ```
@@ -359,11 +359,11 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
    # Script handles visualization...
    ```
 
-**Expected Result**: Fully tested module ready for use
+**Expected Result**: tested module ready for use
 
 **Key Rules**:
 - ALL business logic in `src/`
-- Comprehensive test coverage required (90% project, 60% infra)
+- test coverage required (90% project, 60% infra)
 - Scripts only orchestrate, never implement algorithms
 
 **See Also**: [Thin Orchestrator Pattern](../architecture/THIN_ORCHESTRATOR_SUMMARY.md)
@@ -372,7 +372,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 
 ## Write Tests for My Code
 
-**Goal**: Achieve comprehensive test coverage for src/ modules
+**Goal**: Achieve test coverage for src/ modules
 
 **Prerequisites**: Understanding of pytest
 
@@ -422,7 +422,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 **Requirements**:
 - Statement coverage: 100%
 - Branch coverage: 100%
-- No mocks: Use real data
+- No mocks: Use data
 
 **See Also**: [Testing Guide](../../tests/AGENTS.md) | [Workflow](../core/WORKFLOW.md)
 
@@ -534,7 +534,7 @@ def test_process_negative():
 
 **Steps**:
 
-1. **Run complete pipeline (recommended)**
+1. **Run pipeline (recommended)**
    ```bash
    # Standard build - executes all 6 stages (00-05)
    python3 scripts/execute_pipeline.py --core-only
@@ -709,7 +709,7 @@ def test_process_negative():
    pytest tests/ --cov=src --cov-report=term-missing
    ```
 
-5. **Run complete build**
+5. **Run build**
    ```bash
    # Standard build - executes all 6 stages
    python3 scripts/execute_pipeline.py --core-only
@@ -721,7 +721,7 @@ def test_process_negative():
 6. **Commit changes**
    ```bash
    git add .
-   git commit -m "feat: add new feature"
+   git commit -m "feat: add feature"
    ```
 
 7. **Push and create PR**
@@ -736,19 +736,17 @@ def test_process_negative():
 - [ ] Documentation updated
 - [ ] Thin orchestrator pattern followed
 - [ ] Commit messages clear
-- [ ] PR description complete
-
-**See Also**: [Contributing Guide](../development/CONTRIBUTING.md) | [Code of Conduct](../development/CODE_OF_CONDUCT.md)
+- [ ] PR description **See Also**: [Contributing Guide](../development/CONTRIBUTING.md) | [Code of Conduct](../development/CODE_OF_CONDUCT.md)
 
 ---
 
 ## 🔗 Related Documentation
 
 - **[Quick Start Cheatsheet](../reference/QUICK_START_CHEATSHEET.md)** - One-page reference
-- **[Getting Started](../guides/GETTING_STARTED.md)** - Comprehensive beginner guide
+- **[Getting Started](../guides/GETTING_STARTED.md)** - beginner guide
 - **[FAQ](../reference/FAQ.md)** - Common questions
 - **[Glossary](../reference/GLOSSARY.md)** - Terms and definitions
-- **[Complete Guide](../core/HOW_TO_USE.md)** - All 12 skill levels
+- **[Guide](../core/HOW_TO_USE.md)** - All 12 skill levels
 
 ---
 

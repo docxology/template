@@ -4,7 +4,7 @@ Automated manuscript review generation using Large Language Models.
 
 ## Overview
 
-The review module generates comprehensive scientific reviews of research manuscripts using local LLM models. It provides structured analysis, quality assessment, and improvement suggestions.
+The review module generates scientific reviews of research manuscripts using local LLM models. It provides structured analysis, quality assessment, and improvement suggestions.
 
 ## Quick Start
 
@@ -14,7 +14,7 @@ from infrastructure.llm.review import ReviewGenerator
 # Create review generator
 generator = ReviewGenerator()
 
-# Generate comprehensive review
+# Generate review
 review = generator.generate_review(
     manuscript_path=Path("manuscript/combined.md"),
     review_type="comprehensive"
@@ -27,7 +27,7 @@ methodology_review = generator.generate_methodology_review(manuscript_text)
 
 ## Key Features
 
-- **Comprehensive Reviews**: Full manuscript analysis with structured sections
+- **Reviews**: Full manuscript analysis with structured sections
 - **Quality Assessment**: Automated quality scoring and recommendations
 - **Section-Specific Reviews**: Focused analysis of methodology, results, conclusions
 - **Improvement Suggestions**: Actionable recommendations for enhancement
@@ -81,7 +81,7 @@ print(f"Tokens used: {metrics.total_tokens}")
 
 ## Review Types
 
-### Comprehensive Review
+### Review
 
 Full manuscript analysis including:
 - Executive summary
@@ -172,6 +172,6 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete review module documentation
+- [AGENTS.md](AGENTS.md) - review module documentation
 - [../core/README.md](../core/README.md) - LLM core functionality
 - [../templates/README.md](../templates/README.md) - Review templates

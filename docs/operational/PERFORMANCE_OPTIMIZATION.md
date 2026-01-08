@@ -7,7 +7,7 @@ This guide provides strategies for optimizing pipeline performance and identifyi
 The pipeline tracks performance metrics for each stage:
 
 - **Stage Duration**: Time taken for each stage
-- **Total Duration**: Complete pipeline execution time
+- **Total Duration**: pipeline execution time
 - **Bottleneck Identification**: Automatic detection of slowest stages
 - **ETA Calculations**: Estimated time remaining during execution
 
@@ -283,7 +283,7 @@ grep "Completed in" project/output/*.log | awk '{print $NF}'
 
 ### Production Workflow
 
-1. **Full Pipeline**: Run complete pipeline for final builds
+1. **Full Pipeline**: Run pipeline for final builds
 2. **Performance Baseline**: Establish performance benchmarks
 3. **Monitoring**: Track performance over time
 4. **Optimization**: Address bottlenecks systematically

@@ -185,6 +185,6 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete fragments documentation
+- [AGENTS.md](AGENTS.md) - fragments documentation
 - [../README.md](../README.md) - Prompts module overview
 - [../../composer.py](../composer.py) - Fragment composition utilities

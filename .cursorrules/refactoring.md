@@ -13,7 +13,7 @@
 
 - Backward compatibility adds technical debt
 - Legacy code paths increase complexity and maintenance burden
-- Clean breaks force comprehensive updates and prevent fragmented codebases
+- Clean breaks force updates and prevent fragmented codebases
 - All code should use the current, best structure
 
 ### Refactoring Process
@@ -30,7 +30,7 @@ When modularizing or restructuring:
 
 ### File Organization Best Practices
 
-**Maximum file length**: 600 lines (excluding comprehensive docstrings)
+**Maximum file length**: 600 lines (excluding docstrings)
 
 **When to split a file**:
 - Multiple independent classes/functions that could be separate modules
@@ -66,7 +66,7 @@ grep -r "import old_module" .
 ### Documentation Updates
 
 Update in this order:
-1. Module docstrings in new files
+1. Module docstrings in files
 2. `__init__.py` exports with clear API
 3. `AGENTS.md` with new architecture
 4. `README.md` with new import examples
@@ -120,7 +120,7 @@ Migration guide:
 
 ## Modularization Checklist
 
-Before marking refactoring complete:
+Before marking refactoring:
 
 - [ ] New modular structure created
 - [ ] Old file(s) deleted completely
@@ -141,7 +141,7 @@ Before marking refactoring complete:
 1. **Clarity**: Only one way to import things
 2. **Maintainability**: No legacy code paths to maintain
 3. **Performance**: No deprecation warnings at runtime
-4. **Quality**: Forces comprehensive updates
+4. **Quality**: Forces updates
 5. **Documentation**: Documentation stays current
 6. **Testing**: Tests reflect actual usage
 7. **Simplicity**: Codebase easier to understand

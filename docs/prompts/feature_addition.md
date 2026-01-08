@@ -2,13 +2,13 @@
 
 ## Purpose
 
-Add new features to the Research Project Template while maintaining full architecture compliance, testing standards, and development workflow integrity.
+Add features to the Research Project Template while maintaining full architecture compliance, testing standards, and development workflow integrity.
 
 ## Context
 
-This prompt ensures new features integrate properly with the existing system:
+This prompt ensures features integrate properly with the existing system:
 
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Complete development workflow
+- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - development workflow
 - [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - Architecture principles
 - [`../../docs/core/WORKFLOW.md`](../../docs/core/WORKFLOW.md) - Development workflow
 - [`../../.cursorrules/`](../../.cursorrules/) directory - All development standards
@@ -16,9 +16,9 @@ This prompt ensures new features integrate properly with the existing system:
 ## Prompt Template
 
 ```
-You are adding a new feature to the Research Project Template. The feature must integrate seamlessly with the existing two-layer architecture and thin orchestrator pattern while meeting all quality and testing standards.
+You are adding a feature to the Research Project Template. The feature must integrate seamlessly with the existing two-layer architecture and thin orchestrator pattern while meeting all quality and testing standards.
 
-FEATURE DESCRIPTION: [Describe the new feature to implement]
+FEATURE DESCRIPTION: [Describe the feature to implement]
 TARGET PROJECT: [Specify which project: "project", "code_project", "prose_project", or new project name]
 LAYER: [Specify: "infrastructure" for generic/shared OR "project" for domain-specific]
 
@@ -46,7 +46,7 @@ FEATURE REQUIREMENTS:
 **Business Logic Placement:**
 - All computational logic in `src/` modules (infrastructure or project)
 - Pure functions and classes with clear responsibilities
-- Comprehensive error handling with custom exceptions
+- error handling with custom exceptions
 - Logging using unified `get_logger(__name__)` system
 
 **Orchestration Layer:**
@@ -55,7 +55,7 @@ FEATURE REQUIREMENTS:
 - Handle I/O, configuration, and user interaction
 - Minimal business logic (prefer module delegation)
 
-## 2. Complete Development Workflow
+## 2. Development Workflow
 
 ### Phase 1: Planning and Design
 
@@ -63,7 +63,7 @@ FEATURE REQUIREMENTS:
 ```python
 # Feature requirements specification
 class FeatureRequirements:
-    """Specification for new feature requirements."""
+    """Specification for feature requirements."""
 
     def __init__(self, feature_name: str):
         self.feature_name = feature_name
@@ -119,7 +119,7 @@ class NewFeature:
         self.logger = get_logger(__name__)
 
     def execute(self, input_data: Any) -> Any:
-        """Execute feature with comprehensive error handling."""
+        """Execute feature with error handling."""
         try:
             self._validate_input(input_data)
             result = self._perform_feature_logic(input_data)
@@ -145,7 +145,7 @@ class NewFeature:
 ```python
 # infrastructure/new_feature/ (for infrastructure features)
 """
-New feature module providing reusable functionality.
+feature module providing reusable functionality.
 
 This module implements [feature description] with full compliance
 to template architecture and quality standards.
@@ -170,9 +170,9 @@ __all__ = [
 ```python
 # scripts/run_new_feature.py (thin orchestrator)
 """
-Orchestrate new feature execution.
+Orchestrate feature execution.
 
-This script coordinates the execution of the new feature
+This script coordinates the execution of the feature
 using the thin orchestrator pattern.
 """
 
@@ -184,7 +184,7 @@ logger = get_logger(__name__)
 
 def main():
     """Main orchestration function."""
-    logger.info("Starting new feature execution")
+    logger.info("Starting feature execution")
 
     # Load configuration
     config = load_config()
@@ -204,18 +204,18 @@ def main():
     # Generate reports
     generate_feature_report(result, config['report_path'])
 
-    logger.info("New feature execution completed")
+    logger.info("feature execution completed")
 
 if __name__ == "__main__":
     main()
 ```
 
-### Phase 3: Comprehensive Testing
+### Phase 3: Testing
 
 **Test Suite Implementation:**
 ```python
 # tests/test_new_feature.py (90%+ coverage for project features)
-"""Tests for new feature implementation."""
+"""Tests for feature implementation."""
 import pytest
 import numpy as np
 from pathlib import Path
@@ -223,7 +223,7 @@ from pathlib import Path
 from infrastructure.new_feature import NewFeature, FeatureExecutionError
 
 class TestNewFeature:
-    """Comprehensive test suite for new feature."""
+    """test suite for feature."""
 
     @pytest.fixture
     def sample_config(self):
@@ -241,7 +241,7 @@ class TestNewFeature:
 
     @pytest.fixture
     def real_test_data(self):
-        """Generate real test data."""
+        """Generate test data."""
         np.random.seed(42)  # Reproducible
         return {
             'data': np.random.randn(100, 5),
@@ -257,7 +257,7 @@ class TestNewFeature:
         assert hasattr(feature, 'logger')
 
     def test_feature_execution(self, feature_instance, real_test_data):
-        """Test feature execution with real data."""
+        """Test feature execution with data."""
         result = feature_instance.execute(real_test_data)
 
         assert result is not None
@@ -308,11 +308,11 @@ class TestNewFeature:
 
 **AGENTS.md Documentation:**
 ```markdown
-# New Feature Module
+# Feature Module
 
 ## Overview
 
-[Comprehensive description of the new feature, its purpose, and integration with the research workflow.]
+[description of the feature, its purpose, and integration with the research workflow.]
 
 ## Architecture
 
@@ -345,7 +345,7 @@ new_feature/
 
 #### `NewFeature`
 
-Main class implementing the new feature functionality.
+Main class implementing the feature functionality.
 
 **Parameters:**
 - `config` (Dict[str, Any]): Feature configuration dictionary
@@ -424,18 +424,18 @@ from infrastructure.new_feature import NewFeature
 from infrastructure.data_processing import DataProcessor
 
 class ResearchPipeline:
-    """Complete research pipeline with new feature."""
+    """research pipeline with feature."""
 
     def __init__(self, config):
         self.data_processor = DataProcessor(config['data'])
         self.new_feature = NewFeature(config['feature'])
 
     def run_pipeline(self, raw_data):
-        """Run complete research pipeline."""
+        """Run research pipeline."""
         # Process data
         processed_data = self.data_processor.process(raw_data)
 
-        # Apply new feature
+        # Apply feature
         result = self.new_feature.execute(processed_data)
 
         return result
@@ -447,7 +447,7 @@ class ResearchPipeline:
 
 - **Infrastructure Features**: 60% minimum coverage
 - **Project Features**: 90% minimum coverage
-- **No Mocks Policy**: Real data testing only
+- **No Mocks Policy**: data testing only
 
 ### Test Categories
 
@@ -516,9 +516,9 @@ FeatureError (base exception)
 
 **README.md Quick Reference:**
 ```markdown
-# New Feature
+# Feature
 
-[Brief description of the new feature and its purpose.]
+[Brief description of the feature and its purpose.]
 
 ## Quick Start
 
@@ -536,7 +536,7 @@ result = feature.execute(data)
 
 ## Documentation
 
-See [`AGENTS.md`](AGENTS.md) for complete technical documentation.
+See [`AGENTS.md`](AGENTS.md) for technical documentation.
 ```
 
 ## 3. Quality Assurance and Validation
@@ -547,7 +547,7 @@ See [`AGENTS.md`](AGENTS.md) for complete technical documentation.
 from infrastructure.validation import validate_module_implementation
 
 def validate_new_feature():
-    """Validate new feature implementation."""
+    """Validate feature implementation."""
     validation_result = validate_module_implementation('infrastructure.new_feature')
 
     assert validation_result['coverage'] >= 60  # Infrastructure requirement
@@ -571,7 +571,7 @@ def benchmark_feature():
     execution_time = time.time() - start_time
 
     # Performance assertions
-    assert execution_time < 30  # Must complete within 30 seconds
+    assert execution_time < 30  # Must within 30 seconds
     assert result['memory_peak'] < 500 * 1024 * 1024  # Under 500MB
 
     return {
@@ -585,11 +585,11 @@ def benchmark_feature():
 
 - [ ] Two-layer architecture compliance (correct layer placement)
 - [ ] Thin orchestrator pattern implementation
-- [ ] Complete development workflow (planning → implementation → testing → documentation)
+- [ ] development workflow (planning → implementation → testing → documentation)
 - [ ] Coverage requirements met (90% project, 60% infrastructure)
-- [ ] No mocks policy (real data testing only)
+- [ ] No mocks policy (data testing only)
 - [ ] Type hints on all public APIs
-- [ ] Comprehensive error handling
+- [ ] error handling
 - [ ] Unified logging integration
 - [ ] AGENTS.md and README.md documentation
 - [ ] Integration with existing systems
@@ -611,13 +611,13 @@ def benchmark_feature():
 - [ ] Unified logging system integration
 
 ### Testing Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
-- [ ] No mocks policy (real data only)
+- [ ] No mocks policy (data only)
 - [ ] Coverage requirements achieved
 - [ ] Test organization and structure
 - [ ] Integration and performance testing
 
 ### Documentation Standards ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
-- [ ] AGENTS.md with complete technical documentation
+- [ ] AGENTS.md with technical documentation
 - [ ] README.md with Mermaid diagrams
 - [ ] Cross-references between documents
 - [ ] Examples over explanations
@@ -632,16 +632,16 @@ LAYER: infrastructure
 ```
 
 **Expected Output:**
-- Complete `infrastructure/data_quality/` module with assessment algorithms
+- `infrastructure/data_quality/` module with assessment algorithms
 - `scripts/assess_data_quality.py` thin orchestrator script
-- Comprehensive test suite (60%+ coverage) with real data
+- test suite (60%+ coverage) with data
 - AGENTS.md and README.md documentation
 - Integration with existing data processing pipeline
 - Quality validation and performance benchmarking
 
 ## Related Documentation
 
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Complete development workflow
+- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - development workflow
 - [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - Architecture principles
 - [`../../docs/core/WORKFLOW.md`](../../docs/core/WORKFLOW.md) - Development workflow
 - [`../../.cursorrules/`](../../.cursorrules/) - All development standards

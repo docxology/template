@@ -78,4 +78,4 @@ graph TD
 
 ## More Information
 
-See [AGENTS.md](AGENTS.md) for complete technical documentation.
+See [AGENTS.md](AGENTS.md) for technical documentation.

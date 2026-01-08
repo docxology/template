@@ -4,7 +4,7 @@
 
 **Quick Reference:** [Common Workflows](../reference/COMMON_WORKFLOWS.md) | [Troubleshooting Guide](../operational/TROUBLESHOOTING_GUIDE.md) | [Version Control](../best-practices/VERSION_CONTROL.md)
 
-This guide provides comprehensive strategies for backing up your research projects and recovering from data loss or corruption.
+This guide provides strategies for backing up your research projects and recovering from data loss or corruption.
 
 ## Overview
 
@@ -113,7 +113,7 @@ git push origin main
 
 ## Recovery Procedures
 
-### Complete Recovery
+### Recovery
 
 **From Git repository:**
 ```bash
@@ -177,7 +177,7 @@ git checkout <good-commit-hash> -- corrupted-file.py
 
 **Ensure these are backed up:**
 1. **Source code** - All `src/` modules
-2. **Tests** - Complete test suite
+2. **Tests** - test suite
 3. **Manuscript** - All markdown files
 4. **Configuration** - `pyproject.toml`, environment variables
 5. **Custom scripts** - Project-specific scripts
@@ -197,7 +197,7 @@ git checkout <good-commit-hash> -- corrupted-file.py
 
 ## Disaster Recovery
 
-### Complete System Failure
+### System Failure
 
 **Recovery steps:**
 1. **Restore from backup** - Latest backup archive

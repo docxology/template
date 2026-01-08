@@ -381,7 +381,7 @@ def validate_configuration(config: Dict[str, Any], schema: Dict[str, Any]) -> No
             validate_generic_input(config[field], field_schema)
 ```
 
-### Comprehensive Testing (60% Coverage)
+### Testing (60% Coverage)
 ```python
 # tests/test_core.py
 """Tests for infrastructure module core functionality."""
@@ -527,7 +527,7 @@ infrastructure/[module_name]/
 ├── exceptions.py       # Custom exception hierarchy
 ├── validators.py       # Generic validation functions
 ├── types.py            # Type definitions and protocols
-└── tests/              # Comprehensive test suite (60%+ coverage)
+└── tests/              # test suite (60%+ coverage)
 ```
 
 ## API Reference
@@ -646,7 +646,7 @@ class ResearchAnalyzer:
 
 ### Coverage Requirements
 - **60% minimum coverage** for infrastructure modules
-- **Real data testing** (no mocks)
+- **data testing** (no mocks)
 - **Integration testing** across module components
 
 ### Test Categories
@@ -683,9 +683,9 @@ class ResearchAnalyzer:
 - [ ] Clean public API with `__all__` exports
 - [ ] Type hints on all public interfaces
 - [ ] Custom exception hierarchy
-- [ ] Comprehensive AGENTS.md documentation
+- [ ] AGENTS.md documentation
 - [ ] Configuration-driven behavior
-- [ ] Real data testing (no mocks)
+- [ ] data testing (no mocks)
 
 ## Standards Compliance Checklist
 
@@ -693,7 +693,7 @@ class ResearchAnalyzer:
 - [ ] Generic focus (domain-independent)
 - [ ] 60% minimum test coverage achieved
 - [ ] Public API with clear `__all__` exports
-- [ ] Comprehensive AGENTS.md documentation
+- [ ] AGENTS.md documentation
 - [ ] Error handling with custom exceptions
 - [ ] Type hints on all public APIs
 
@@ -704,7 +704,7 @@ class ResearchAnalyzer:
 - [ ] Consistent API design
 
 ### Testing Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
-- [ ] No mocks policy (real data only)
+- [ ] No mocks policy (data only)
 - [ ] Coverage validation (pytest-cov)
 - [ ] Test organization and structure
 - [ ] Integration testing included
@@ -719,10 +719,10 @@ REUSABILITY SCOPE: All research projects needing data validation and quality met
 ```
 
 **Expected Output:**
-- Complete `infrastructure/data_quality/` module with generic quality assessment
-- 60%+ test coverage with real data testing
+- `infrastructure/data_quality/` module with generic quality assessment
+- 60%+ test coverage with data testing
 - Clean public API for use across projects
-- Comprehensive documentation and examples
+- documentation and examples
 - Integration with existing validation infrastructure
 
 ## Related Documentation

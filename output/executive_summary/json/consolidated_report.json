@@ -1,58 +1,58 @@
 {
-  "timestamp": "2026-01-05T08:16:04.733721",
-  "total_projects": 3,
+  "timestamp": "2026-01-08T14:58:06.602181",
+  "total_projects": 2,
   "aggregate_metrics": {
     "manuscript": {
-      "total_words": 39094,
-      "total_sections": 40,
-      "total_equations": 84,
+      "total_words": 10469,
+      "total_sections": 19,
+      "total_equations": 37,
       "total_figures": 7,
-      "total_references": 33,
+      "total_references": 8,
       "words_stats": {
-        "min": 3075,
-        "max": 19281,
-        "median": 16738,
-        "avg": 13031.333333333334
+        "min": 3145,
+        "max": 7324,
+        "median": 5234.5,
+        "avg": 5234.5
       }
     },
     "codebase": {
-      "total_source_lines": 11346,
-      "total_methods": 450,
-      "total_classes": 53,
-      "total_scripts": 20
+      "total_source_lines": 3891,
+      "total_methods": 134,
+      "total_classes": 15,
+      "total_scripts": 8
     },
     "tests": {
-      "total_tests": 943,
-      "total_passed": 936,
+      "total_tests": 388,
+      "total_passed": 388,
       "total_failed": 0,
-      "average_coverage": 85.47666666666667,
+      "average_coverage": 93.075,
       "coverage_stats": {
-        "min": 70.28,
+        "min": 92.03,
         "max": 94.12,
-        "median": 92.03,
-        "avg": 85.47666666666667
+        "median": 93.075,
+        "avg": 93.075
       },
       "total_execution_time": 0.0,
-      "projects_with_test_data": 3,
-      "total_projects": 3
+      "projects_with_test_data": 2,
+      "total_projects": 2
     },
     "outputs": {
-      "total_pdfs": 3,
-      "total_size_mb": 6.197339057922363,
-      "total_figures": 76,
-      "total_slides": 29,
-      "total_web": 31
+      "total_pdfs": 2,
+      "total_size_mb": 5.234044075012207,
+      "total_figures": 40,
+      "total_slides": 13,
+      "total_web": 15
     },
     "pipeline": {
-      "total_duration": 847.2136690616608,
-      "average_duration": 282.4045563538869,
+      "total_duration": 111.57454419136047,
+      "average_duration": 55.78727209568024,
       "duration_stats": {
-        "min": 106.09501481056213,
-        "max": 436.3333570957184,
-        "median": 304.78529715538025,
-        "avg": 282.4045563538869
+        "min": 33.51111125946045,
+        "max": 78.06343293190002,
+        "median": 55.78727209568024,
+        "avg": 55.78727209568024
       },
-      "total_stages_passed": 27,
+      "total_stages_passed": 14,
       "total_stages_failed": 0
     }
   },
@@ -60,30 +60,26 @@
     {
       "name": "active_inference_meta_pragmatic",
       "manuscript": {
-        "sections": 16,
-        "total_words": 19281,
-        "total_lines": 2558,
+        "sections": 12,
+        "total_words": 7324,
+        "total_lines": 1380,
         "markdown_files": [
-          "04_experimental_results.md",
-          "09_appendix.md",
+          "04_security_implications.md",
           "05_discussion.md",
-          "S01_supplemental_methods.md",
           "99_references.md",
-          "S02_supplemental_results.md",
           "98_symbols_glossary.md",
-          "03_methodology.md",
-          "06_conclusion.md",
           "README.md",
-          "08_acknowledgments.md",
+          "06_acknowledgments.md",
           "preamble.md",
+          "02_background.md",
+          "03_quadrant_model.md",
           "AGENTS.md",
-          "S03_supplemental_analysis.md",
           "01_abstract.md",
-          "02_introduction.md"
+          "07_appendix.md"
         ],
-        "equations": 72,
+        "equations": 37,
         "figures": 0,
-        "references": 5
+        "references": 2
       },
       "codebase": {
         "source_files": 16,
@@ -104,28 +100,28 @@
       },
       "outputs": {
         "pdf_files": 1,
-        "pdf_size_mb": 4.370429039001465,
+        "pdf_size_mb": 4.250082969665527,
         "figures": 34,
         "data_files": 2,
-        "slides": 13,
-        "web_outputs": 13,
-        "total_outputs": 63
+        "slides": 9,
+        "web_outputs": 10,
+        "total_outputs": 56
       },
       "pipeline": {
-        "total_duration": 436.3333570957184,
-        "stages_passed": 9,
+        "total_duration": 78.06343293190002,
+        "stages_passed": 7,
         "stages_failed": 0,
-        "bottleneck_stage": "LLM Translations",
-        "bottleneck_duration": 253.91888999938965,
-        "bottleneck_percent": 58.19378369086906
+        "bottleneck_stage": "PDF Rendering",
+        "bottleneck_duration": 64.18328928947449,
+        "bottleneck_percent": 82.21940398837684
       }
     },
     {
       "name": "code_project",
       "manuscript": {
         "sections": 7,
-        "total_words": 3075,
-        "total_lines": 660,
+        "total_words": 3145,
+        "total_lines": 696,
         "markdown_files": [
           "03_results.md",
           "01_introduction.md",
@@ -135,7 +131,7 @@
           "preamble.md",
           "AGENTS.md"
         ],
-        "equations": 12,
+        "equations": 0,
         "figures": 7,
         "references": 6
       },
@@ -158,84 +154,20 @@
       },
       "outputs": {
         "pdf_files": 1,
-        "pdf_size_mb": 0.9827337265014648,
+        "pdf_size_mb": 0.9839611053466797,
         "figures": 6,
         "data_files": 1,
         "slides": 4,
-        "web_outputs": 4,
-        "total_outputs": 16
+        "web_outputs": 5,
+        "total_outputs": 17
       },
       "pipeline": {
-        "total_duration": 106.09501481056213,
-        "stages_passed": 9,
+        "total_duration": 33.51111125946045,
+        "stages_passed": 7,
         "stages_failed": 0,
         "bottleneck_stage": "PDF Rendering",
-        "bottleneck_duration": 36.371325969696045,
-        "bottleneck_percent": 34.28184258670291
-      }
-    },
-    {
-      "name": "ento_linguistics",
-      "manuscript": {
-        "sections": 17,
-        "total_words": 16738,
-        "total_lines": 3376,
-        "markdown_files": [
-          "04_experimental_results.md",
-          "09_appendix.md",
-          "05_discussion.md",
-          "S01_supplemental_methods.md",
-          "99_references.md",
-          "S02_supplemental_results.md",
-          "98_symbols_glossary.md",
-          "03_methodology.md",
-          "06_conclusion.md",
-          "README.md",
-          "08_acknowledgments.md",
-          "preamble.md",
-          "AGENTS.md",
-          "S03_supplemental_analysis.md",
-          "01_abstract.md",
-          "S04_supplemental_applications.md",
-          "02_introduction.md"
-        ],
-        "equations": 0,
-        "figures": 0,
-        "references": 22
-      },
-      "codebase": {
-        "source_files": 28,
-        "source_lines": 7455,
-        "scripts": 12,
-        "script_lines": 3448,
-        "methods": 316,
-        "classes": 38
-      },
-      "tests": {
-        "test_files": 55,
-        "total_tests": 555,
-        "passed": 548,
-        "failed": 0,
-        "skipped": 7,
-        "coverage_percent": 70.28,
-        "execution_time": 0.0
-      },
-      "outputs": {
-        "pdf_files": 1,
-        "pdf_size_mb": 0.8441762924194336,
-        "figures": 36,
-        "data_files": 12,
-        "slides": 12,
-        "web_outputs": 14,
-        "total_outputs": 75
-      },
-      "pipeline": {
-        "total_duration": 304.78529715538025,
-        "stages_passed": 9,
-        "stages_failed": 0,
-        "bottleneck_stage": "LLM Translations",
-        "bottleneck_duration": 100.67616581916809,
-        "bottleneck_percent": 33.03183150853998
+        "bottleneck_duration": 23.819551944732666,
+        "bottleneck_percent": 71.07956450715498
       }
     }
   ],
@@ -260,12 +192,12 @@
         "manuscript_size": {
           "score": 20,
           "grade": "A",
-          "reason": "Comprehensive manuscript (19281 words)"
+          "reason": "Comprehensive manuscript (7324 words)"
         },
         "outputs": {
           "score": 10,
           "grade": "A",
-          "reason": "Rich outputs (61 files)"
+          "reason": "Rich outputs (54 files)"
         }
       }
     },
@@ -289,41 +221,12 @@
         "manuscript_size": {
           "score": 20,
           "grade": "A",
-          "reason": "Comprehensive manuscript (3075 words)"
+          "reason": "Comprehensive manuscript (3145 words)"
         },
         "outputs": {
           "score": 10,
           "grade": "A",
-          "reason": "Rich outputs (15 files)"
-        }
-      }
-    },
-    "ento_linguistics": {
-      "score": 80,
-      "max_score": 100,
-      "percentage": 80.0,
-      "grade": "B",
-      "status": "Good",
-      "factors": {
-        "test_coverage": {
-          "score": 20,
-          "grade": "C",
-          "reason": "Adequate coverage \u226570%"
-        },
-        "test_failures": {
-          "score": 30,
-          "grade": "A",
-          "reason": "No test failures"
-        },
-        "manuscript_size": {
-          "score": 20,
-          "grade": "A",
-          "reason": "Comprehensive manuscript (16738 words)"
-        },
-        "outputs": {
-          "score": 10,
-          "grade": "A",
-          "reason": "Rich outputs (63 files)"
+          "reason": "Rich outputs (16 files)"
         }
       }
     }
@@ -332,24 +235,17 @@
     "manuscript_comparison": [
       {
         "project": "active_inference_meta_pragmatic",
-        "words": 19281,
-        "sections": 16,
-        "equations": 72,
+        "words": 7324,
+        "sections": 12,
+        "equations": 37,
         "figures": 0
       },
       {
         "project": "code_project",
-        "words": 3075,
+        "words": 3145,
         "sections": 7,
-        "equations": 12,
-        "figures": 7
-      },
-      {
-        "project": "ento_linguistics",
-        "words": 16738,
-        "sections": 17,
         "equations": 0,
-        "figures": 0
+        "figures": 7
       }
     ],
     "test_comparison": [
@@ -366,22 +262,15 @@
         "passed": 28,
         "coverage": "94.1%",
         "time": "0.0s"
-      },
-      {
-        "project": "ento_linguistics",
-        "tests": 555,
-        "passed": 548,
-        "coverage": "70.3%",
-        "time": "0.0s"
       }
     ],
     "output_comparison": [
       {
         "project": "active_inference_meta_pragmatic",
         "pdfs": 1,
-        "size_mb": "4.4",
+        "size_mb": "4.3",
         "figures": 34,
-        "slides": 13
+        "slides": 9
       },
       {
         "project": "code_project",
@@ -389,41 +278,29 @@
         "size_mb": "1.0",
         "figures": 6,
         "slides": 4
-      },
-      {
-        "project": "ento_linguistics",
-        "pdfs": 1,
-        "size_mb": "0.8",
-        "figures": 36,
-        "slides": 12
       }
     ],
     "pipeline_comparison": [
       {
         "project": "active_inference_meta_pragmatic",
-        "duration": "436s",
-        "bottleneck": "LLM Translations",
-        "bottleneck_pct": "58%"
+        "duration": "78s",
+        "bottleneck": "PDF Rendering",
+        "bottleneck_pct": "82%"
       },
       {
         "project": "code_project",
-        "duration": "106s",
+        "duration": "34s",
         "bottleneck": "PDF Rendering",
-        "bottleneck_pct": "34%"
-      },
-      {
-        "project": "ento_linguistics",
-        "duration": "305s",
-        "bottleneck": "LLM Translations",
-        "bottleneck_pct": "33%"
+        "bottleneck_pct": "71%"
       }
     ]
   },
   "recommendations": [
     "\ud83c\udf89 **Portfolio Health**: Excellent overall project health across all metrics.",
-    "\ud83d\udcca **Test Coverage**: ento_linguistics below 90% threshold (lowest: 70.3%). Action: Add unit tests for uncovered functions, especially in `src/` modules. Target: Aim for 95%+ coverage for critical functionality.",
+    "\u2705 **Test Coverage**: All projects meet or exceed 90% coverage threshold. Maintain this standard with comprehensive test suites.",
     "\u2705 **Test Integrity**: All tests passing across all projects.",
-    "\u23f1\ufe0f **Performance**: active_inference_meta_pragmatic bottleneck in LLM Translations (58% of time). Action: Review and optimize the slowest stage.",
-    "\ud83d\udcda **Comprehensive Research**: active_inference_meta_pragmatic has extensive manuscript (19,281 words). Consider if other projects could benefit from similar depth."
+    "\u23f1\ufe0f **PDF Performance**: active_inference_meta_pragmatic bottleneck in LaTeX compilation. Action: Check for complex equations or large figures. Consider using lighter LaTeX packages or optimizing figure resolution.",
+    "\u23f1\ufe0f **PDF Performance**: code_project bottleneck in LaTeX compilation. Action: Check for complex equations or large figures. Consider using lighter LaTeX packages or optimizing figure resolution.",
+    "\ud83d\udcda **Comprehensive Research**: active_inference_meta_pragmatic has extensive manuscript (7,324 words). Consider if other projects could benefit from similar depth."
   ]
 }

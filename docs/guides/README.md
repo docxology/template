@@ -19,7 +19,7 @@ The `guides/` directory contains skill-level specific usage guides that progress
 
 ## Learning Path
 
-### Complete Learning Journey
+### Learning Journey
 1. **[Getting Started](GETTING_STARTED.md)** - Write your first document (Levels 1-3)
 2. **[Figures and Analysis](FIGURES_AND_ANALYSIS.md)** - Add figures and automation (Levels 4-6)
 3. **[Testing and Reproducibility](TESTING_AND_REPRODUCIBILITY.md)** - Test-driven development and reproducibility (Levels 7-9)
@@ -41,14 +41,14 @@ The `guides/` directory contains skill-level specific usage guides that progress
 
 ## Related Documentation
 
-- **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** - Complete usage guide (navigation hub)
+- **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** - usage guide (navigation hub)
 - **[`../usage/`](../usage/)** - Usage examples and patterns
 - **[`../reference/COMMON_WORKFLOWS.md`](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
 - **[`../reference/QUICK_START_CHEATSHEET.md`](../reference/QUICK_START_CHEATSHEET.md)** - Quick reference
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Complete documentation index
+- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 
 

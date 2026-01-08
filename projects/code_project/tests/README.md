@@ -1,6 +1,6 @@
 # tests/ - Test Suite
 
-Comprehensive tests for optimization algorithms using real computations.
+tests for optimization algorithms using computations.
 
 ## Quick Start
 
@@ -17,7 +17,7 @@ pytest -k "TestGradientDescent" -v
 
 ## Key Features
 
-- **Real data testing** (no mocks)
+- **data testing** (no mocks)
 - **Numerical accuracy validation**
 - **Edge case coverage**
 - **Deterministic results**
@@ -54,4 +54,4 @@ graph TD
 
 ## More Information
 
-See [AGENTS.md](AGENTS.md) for complete technical documentation.
+See [AGENTS.md](AGENTS.md) for technical documentation.

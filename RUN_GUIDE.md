@@ -78,7 +78,7 @@ graph TD
 ✅ **Reusability**: Infrastructure modules work across all projects
 ✅ **Testability**: Business logic isolated and thoroughly tested
 ✅ **Maintainability**: Changes to algorithms don't affect orchestration
-✅ **Extensibility**: New projects inherit complete infrastructure
+✅ **Extensibility**: New projects inherit infrastructure
 
 ### Examples
 
@@ -235,9 +235,9 @@ Executes the core pipeline (stages 0-6) without LLM features.
 - Suitable for CI/CD environments
 
 #### Option 8: Run Full Pipeline
-Executes the complete 9-stage build pipeline (displayed as [1/9] to [9/9]):
+Executes the 9-stage build pipeline (displayed as [1/9] to [9/9]):
 - Includes all core stages plus LLM review and translations
-- Comprehensive manuscript generation with AI assistance
+- manuscript generation with AI assistance
 - Automatic checkpointing and resume capability
 
 **Note**: The pipeline stages are displayed as [1/9] to [9/9] in progress logs. Clean Output Directories is stage 1.
@@ -474,7 +474,7 @@ ollama pull llama3-gradient
 ## See Also
 
 - [`scripts/README.md`](scripts/README.md) - Stage orchestrators documentation
-- [`scripts/AGENTS.md`](scripts/AGENTS.md) - Complete scripts documentation
-- [`AGENTS.md`](AGENTS.md) - Complete system documentation
+- [`scripts/AGENTS.md`](scripts/AGENTS.md) - scripts documentation
+- [`AGENTS.md`](AGENTS.md) - system documentation
 - [`docs/core/WORKFLOW.md`](docs/core/WORKFLOW.md) - Development workflow
 - [`docs/operational/BUILD_SYSTEM.md`](docs/operational/BUILD_SYSTEM.md) - Detailed build system reference

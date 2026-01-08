@@ -1,6 +1,6 @@
 # Publishing Infrastructure Tests - Quick Reference
 
-Comprehensive tests for academic publishing infrastructure.
+tests for academic publishing infrastructure.
 
 ## Overview
 
@@ -190,6 +190,6 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete test documentation
+- [AGENTS.md](AGENTS.md) - test documentation
 - [../../infrastructure/publishing/README.md](../../infrastructure/publishing/README.md) - Publishing module overview
 - [../../../tests/README.md](../../../tests/README.md) - Test suite overview

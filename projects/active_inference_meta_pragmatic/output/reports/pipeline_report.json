@@ -1,11 +1,11 @@
 {
-  "timestamp": "2026-01-05T08:09:13.266919",
-  "total_duration": 436.3333570957184,
+  "timestamp": "2026-01-08T14:57:33.055042",
+  "total_duration": 78.06343293190002,
   "stages": [
     {
       "name": "Clean Output Directories",
       "exit_code": 0,
-      "duration": 0.012487173080444336,
+      "duration": 0.015540838241577148,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -14,7 +14,7 @@
     {
       "name": "Environment Setup",
       "exit_code": 0,
-      "duration": 0.6100196838378906,
+      "duration": 0.5558710098266602,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -23,7 +23,7 @@
     {
       "name": "Project Tests",
       "exit_code": 0,
-      "duration": 6.065042734146118,
+      "duration": 6.309171199798584,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -32,7 +32,7 @@
     {
       "name": "Project Analysis",
       "exit_code": 0,
-      "duration": 8.399430751800537,
+      "duration": 6.225344896316528,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -41,7 +41,7 @@
     {
       "name": "PDF Rendering",
       "exit_code": 0,
-      "duration": 80.58361291885376,
+      "duration": 64.18328928947449,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -50,25 +50,7 @@
     {
       "name": "Output Validation",
       "exit_code": 0,
-      "duration": 0.47460484504699707,
-      "status": "passed",
-      "output_files": [],
-      "errors": [],
-      "warnings": []
-    },
-    {
-      "name": "LLM Scientific Review",
-      "exit_code": 0,
-      "duration": 85.47135019302368,
-      "status": "passed",
-      "output_files": [],
-      "errors": [],
-      "warnings": []
-    },
-    {
-      "name": "LLM Translations",
-      "exit_code": 0,
-      "duration": 253.91888999938965,
+      "duration": 0.42491984367370605,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -77,7 +59,7 @@
     {
       "name": "Copy Outputs",
       "exit_code": 0,
-      "duration": 0.7979187965393066,
+      "duration": 0.34929585456848145,
       "status": "passed",
       "output_files": [],
       "errors": [],
@@ -93,23 +75,23 @@
       "pdf": {
         "exists": true,
         "file_count": 9,
-        "size_mb": "4.91",
-        "total_size_bytes": 5151031,
+        "size_mb": "4.49",
+        "total_size_bytes": 4707529,
         "largest_files": [
           {
             "name": "active_inference_meta_pragmatic_combined.pdf",
-            "size_mb": "4.37",
+            "size_mb": "4.25",
             "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
           },
           {
             "name": "_combined_manuscript.tex",
-            "size_mb": "0.17",
+            "size_mb": "0.07",
             "path": "pdf/_combined_manuscript.tex"
           },
           {
-            "name": "_combined_manuscript.md",
-            "size_mb": "0.14",
-            "path": "pdf/_combined_manuscript.md"
+            "name": "_combined_manuscript.log",
+            "size_mb": "0.05",
+            "path": "pdf/_combined_manuscript.log"
           }
         ],
         "extensions": {
@@ -126,68 +108,69 @@
       },
       "web": {
         "exists": true,
-        "file_count": 13,
-        "size_mb": "0.20",
-        "total_size_bytes": 208785,
+        "file_count": 11,
+        "size_mb": "0.24",
+        "total_size_bytes": 255052,
         "largest_files": [
           {
-            "name": "04_experimental_results.html",
-            "size_mb": "0.03",
-            "path": "web/04_experimental_results.html"
+            "name": "index.html",
+            "size_mb": "0.10",
+            "path": "web/index.html"
           },
           {
-            "name": "05_discussion.html",
-            "size_mb": "0.03",
-            "path": "web/05_discussion.html"
+            "name": "_combined_manuscript.md",
+            "size_mb": "0.05",
+            "path": "web/_combined_manuscript.md"
           },
           {
-            "name": "03_methodology.html",
-            "size_mb": "0.03",
-            "path": "web/03_methodology.html"
+            "name": "07_appendix.html",
+            "size_mb": "0.02",
+            "path": "web/07_appendix.html"
           }
         ],
         "extensions": {
-          ".html": 13
+          ".html": 10,
+          ".md": 1
         }
       },
       "slides": {
         "exists": true,
-        "file_count": 95,
-        "size_mb": "5.59",
-        "total_size_bytes": 5863011,
+        "file_count": 65,
+        "size_mb": "4.94",
+        "total_size_bytes": 5181635,
         "largest_files": [
           {
-            "name": "03_methodology_slides.pdf",
-            "size_mb": "2.72",
-            "path": "slides/03_methodology_slides.pdf"
+            "name": "02_background_slides.pdf",
+            "size_mb": "2.10",
+            "path": "slides/02_background_slides.pdf"
           },
           {
-            "name": "04_experimental_results_slides.pdf",
-            "size_mb": "1.33",
-            "path": "slides/04_experimental_results_slides.pdf"
+            "name": "03_quadrant_model_slides.pdf",
+            "size_mb": "2.08",
+            "path": "slides/03_quadrant_model_slides.pdf"
           },
           {
-            "name": "02_introduction_slides.pdf",
-            "size_mb": "0.20",
-            "path": "slides/02_introduction_slides.pdf"
+            "name": "07_appendix_slides.log",
+            "size_mb": "0.05",
+            "path": "slides/07_appendix_slides.log"
           }
         ],
         "extensions": {
-          ".nav": 13,
-          ".pdf": 13,
-          ".toc": 13,
-          ".tex": 13,
-          ".snm": 13,
-          ".aux": 13,
-          ".log": 13,
-          ".vrb": 4
+          ".nav": 9,
+          ".log": 9,
+          ".snm": 9,
+          ".aux": 9,
+          ".toc": 9,
+          ".tex": 9,
+          ".pdf": 9,
+          ".vrb": 2
         }
       },
       "figures": {
         "exists": true,
         "file_count": 35,
         "size_mb": "5.10",
-        "total_size_bytes": 5349005,
+        "total_size_bytes": 5345913,
         "largest_files": [
           {
             "name": "quadrant_matrix_enhanced.png",
@@ -215,7 +198,7 @@
         "exists": true,
         "file_count": 2,
         "size_mb": "0.04",
-        "total_size_bytes": 46124,
+        "total_size_bytes": 46122,
         "largest_files": [
           {
             "name": "theoretical_demonstrations.json",
@@ -236,8 +219,8 @@
       "reports": {
         "exists": true,
         "file_count": 9,
-        "size_mb": "0.07",
-        "total_size_bytes": 68380,
+        "size_mb": "0.06",
+        "total_size_bytes": 67972,
         "largest_files": [
           {
             "name": "final_pipeline_report.json",
@@ -271,60 +254,49 @@
       },
       "llm": {
         "exists": true,
-        "file_count": 6,
-        "size_mb": "0.05",
-        "total_size_bytes": 47924,
-        "largest_files": [
-          {
-            "name": "combined_review.md",
-            "size_mb": "0.02",
-            "path": "llm/combined_review.md"
-          },
-          {
-            "name": "translation_hi.md",
-            "size_mb": "0.01",
-            "path": "llm/translation_hi.md"
-          },
-          {
-            "name": "translation_ru.md",
-            "size_mb": "0.01",
-            "path": "llm/translation_ru.md"
-          }
-        ],
-        "extensions": {
-          ".md": 5,
-          ".json": 1
-        }
-      },
-      "logs": {
-        "exists": true,
         "file_count": 0,
         "size_mb": "0.00",
         "total_size_bytes": 0,
         "largest_files": [],
         "extensions": {}
+      },
+      "logs": {
+        "exists": true,
+        "file_count": 1,
+        "size_mb": "0.00",
+        "total_size_bytes": 3127,
+        "largest_files": [
+          {
+            "name": "pipeline.log",
+            "size_mb": "0.00",
+            "path": "logs/pipeline.log"
+          }
+        ],
+        "extensions": {
+          ".log": 1
+        }
       }
     },
-    "total_files": 169,
-    "total_size_mb": 15.959033966064453,
+    "total_files": 132,
+    "total_size_mb": 14.884328842163086,
     "largest_files": [
       {
         "name": "active_inference_meta_pragmatic_combined.pdf",
-        "size_mb": "4.37",
+        "size_mb": "4.25",
         "category": "pdf",
         "path": "pdf/active_inference_meta_pragmatic_combined.pdf"
       },
       {
-        "name": "03_methodology_slides.pdf",
-        "size_mb": "2.72",
+        "name": "02_background_slides.pdf",
+        "size_mb": "2.10",
         "category": "slides",
-        "path": "slides/03_methodology_slides.pdf"
+        "path": "slides/02_background_slides.pdf"
       },
       {
-        "name": "04_experimental_results_slides.pdf",
-        "size_mb": "1.33",
+        "name": "03_quadrant_model_slides.pdf",
+        "size_mb": "2.08",
         "category": "slides",
-        "path": "slides/04_experimental_results_slides.pdf"
+        "path": "slides/03_quadrant_model_slides.pdf"
       },
       {
         "name": "quadrant_matrix_enhanced.png",
@@ -345,62 +317,62 @@
         "path": "figures/structure_preservation.png"
       },
       {
-        "name": "02_introduction_slides.pdf",
-        "size_mb": "0.20",
-        "category": "slides",
-        "path": "slides/02_introduction_slides.pdf"
+        "name": "index.html",
+        "size_mb": "0.10",
+        "category": "web",
+        "path": "web/index.html"
       },
       {
         "name": "_combined_manuscript.tex",
-        "size_mb": "0.17",
+        "size_mb": "0.07",
         "category": "pdf",
         "path": "pdf/_combined_manuscript.tex"
       },
       {
-        "name": "_combined_manuscript.md",
-        "size_mb": "0.14",
+        "name": "_combined_manuscript.log",
+        "size_mb": "0.05",
         "category": "pdf",
-        "path": "pdf/_combined_manuscript.md"
+        "path": "pdf/_combined_manuscript.log"
       },
       {
-        "name": "final_pipeline_report.json",
+        "name": "_combined_manuscript.md",
         "size_mb": "0.05",
-        "category": "reports",
-        "path": "reports/final_pipeline_report.json"
+        "category": "web",
+        "path": "web/_combined_manuscript.md"
       }
     ],
     "missing_expected_files": [
       "active_inference_meta_pragmatic_combined.pdf or project_combined.pdf"
     ],
     "file_counts_by_type": {
-      ".md": 8,
-      ".log": 14,
-      ".aux": 14,
+      ".md": 4,
+      ".log": 11,
+      ".aux": 10,
       ".blg": 1,
       ".bib": 1,
-      ".tex": 14,
-      ".toc": 14,
+      ".tex": 10,
+      ".toc": 10,
       ".bbl": 1,
-      ".pdf": 31,
-      ".html": 13,
-      ".nav": 13,
-      ".snm": 13,
-      ".vrb": 4,
+      ".pdf": 27,
+      ".html": 10,
+      ".nav": 9,
+      ".snm": 9,
+      ".vrb": 2,
       ".png": 17,
-      ".json": 9,
+      ".json": 8,
       ".csv": 1,
       ".txt": 1
     },
     "sizes_by_category": {
-      "pdf": 4.912405967712402,
-      "web": 0.1991128921508789,
-      "slides": 5.591403007507324,
-      "figures": 5.101208686828613,
-      "data": 0.043987274169921875,
-      "reports": 0.06521224975585938,
+      "pdf": 4.489449501037598,
+      "web": 0.24323654174804688,
+      "slides": 4.941592216491699,
+      "figures": 5.098259925842285,
+      "data": 0.04398536682128906,
+      "reports": 0.06482315063476562,
       "simulations": 0.0,
-      "llm": 0.045703887939453125,
-      "logs": 0.0
+      "llm": 0.0,
+      "logs": 0.0029821395874023438
     },
     "pdf_files": 9,
     "figures": 35,

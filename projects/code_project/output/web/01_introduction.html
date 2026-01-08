@@ -175,18 +175,19 @@
 </head>
 <body>
 <h1 id="introduction">Introduction</h1>
-<p>This small code project demonstrates a fully-tested numerical
-optimization implementation with comprehensive analysis and
-visualization capabilities. The project showcases the complete research
-pipeline from algorithm implementation through testing to result
-visualization, including automatic title page generation from metadata
-configuration.</p>
+<p>This small code project demonstrates a-tested numerical optimization
+implementation with analysis and visualization capabilities. The project
+showcases the research pipeline from algorithm implementation through
+testing to result visualization, including automatic title page
+generation from metadata configuration.</p>
 <h2 id="research-context">Research Context</h2>
 <p>Numerical optimization forms the foundation of many scientific and
 engineering applications . This project implements and analyzes gradient
 descent methods for solving optimization problems of the form:</p>
-<p><span class="math display">\[\min_{x \in \mathbb{R}^n}
-f(x)\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:optimization_problem}
+\min_{x \in \mathbb{R}^n} f(x)
+\end{equation}\]</span></p>
 <p>where <span class="math inline">\(f: \mathbb{R}^n \rightarrow
 \mathbb{R}\)</span> is a continuously differentiable objective
 function.</p>
@@ -197,8 +198,8 @@ function.</p>
 parameters</li>
 <li><strong>Quadratic function test problems</strong> with known
 analytical solutions</li>
-<li><strong>Comprehensive test suite</strong> covering functionality and
-edge cases</li>
+<li><strong>test suite</strong> covering functionality and edge
+cases</li>
 <li><strong>Analysis scripts</strong> that generate convergence plots
 and performance data</li>
 <li><strong>Manuscript integration</strong> with automatically generated
@@ -213,8 +214,10 @@ comparisons</li>
 <h2 id="algorithm-overview">Algorithm Overview</h2>
 <p>The gradient descent algorithm iteratively updates the solution
 using:</p>
-<p><span class="math display">\[x_{k+1} = x_k - \alpha \nabla
-f(x_k)\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:gradient_descent_update}
+x_{k+1} = x_k - \alpha \nabla f(x_k)
+\end{equation}\]</span></p>
 <p>where: - <span class="math inline">\(\alpha &gt; 0\)</span> is the
 step size (learning rate) - <span class="math inline">\(\nabla
 f(x_k)\)</span> is the gradient of the objective function at iteration
@@ -224,8 +227,7 @@ f(x_k)\)</span> is the gradient of the objective function at iteration
 <ol type="1">
 <li><strong>Clean, testable code</strong> with proper separation of
 concerns</li>
-<li><strong>Numerical accuracy</strong> through comprehensive
-testing</li>
+<li><strong>Numerical accuracy</strong> through testing</li>
 <li><strong>Performance analysis</strong> with convergence
 visualization</li>
 <li><strong>Research reproducibility</strong> through automated analysis

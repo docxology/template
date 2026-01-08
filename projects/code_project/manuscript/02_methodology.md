@@ -30,7 +30,10 @@ The algorithm follows the fundamental principle of steepest descent, moving in t
 
 We use quadratic functions of the form:
 
-$$f(x) = \frac{1}{2} x^T A x - b^T x$$
+\begin{equation}
+\label{eq:quadratic_objective}
+f(x) = \frac{1}{2} x^T A x - b^T x
+\end{equation}
 
 where:
 - $A$ is a positive definite matrix
@@ -39,11 +42,17 @@ where:
 
 For the simple case $A = I$ and $b = 1$, we have:
 
-$$f(x) = \frac{1}{2} x^2 - x$$
+\begin{equation}
+\label{eq:simple_quadratic}
+f(x) = \frac{1}{2} x^2 - x
+\end{equation}
 
 with gradient:
 
-$$\nabla f(x) = x - 1$$
+\begin{equation}
+\label{eq:simple_gradient}
+\nabla f(x) = x - 1
+\end{equation}
 
 The analytical minimum occurs at $x = 1$ with $f(1) = -\frac{1}{2}$.
 
@@ -55,13 +64,19 @@ The theoretical foundations of convergence analysis for gradient descent methods
 
 For strongly convex functions with condition number $\kappa = \frac{\lambda_{\max}}{\lambda_{\min}}$, the convergence rate of gradient descent satisfies:
 
-$$\frac{\|x_{k+1} - x^*\|}{\|x_k - x^*\|} \leq \sqrt{\frac{\kappa - 1}{\kappa + 1}}$$
+\begin{equation}
+\label{eq:convergence_rate}
+\frac{\|x_{k+1} - x^*\|}{\|x_k - x^*\|} \leq \sqrt{\frac{\kappa - 1}{\kappa + 1}}
+\end{equation}
 
 where $x^*$ denotes the optimal solution. This bound shows linear convergence with rate $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}} < 1$.
 
 For quadratic functions $f(x) = \frac{1}{2}x^T A x - b^T x$ where $A$ is positive definite, the convergence factor becomes:
 
-$$\rho = \frac{|\lambda_{\max} - \alpha\lambda_{\min}|}{|\lambda_{\min} + \alpha\lambda_{\max}|}$$
+\begin{equation}
+\label{eq:convergence_factor}
+\rho = \frac{|\lambda_{\max} - \alpha\lambda_{\min}|}{|\lambda_{\min} + \alpha\lambda_{\max}|}
+\end{equation}
 
 where $\alpha$ is the step size. Optimal convergence occurs when $\alpha = \frac{2}{\lambda_{\min} + \lambda_{\max}}$, yielding $\rho = \frac{\kappa - 1}{\kappa + 1}$.
 
@@ -69,7 +84,10 @@ where $\alpha$ is the step size. Optimal convergence occurs when $\alpha = \frac
 
 The optimal constant step size for quadratic functions is:
 
-$$\alpha = \frac{2}{\lambda_{\min} + \lambda_{\max}}$$
+\begin{equation}
+\label{eq:optimal_step_size}
+\alpha = \frac{2}{\lambda_{\min} + \lambda_{\max}}
+\end{equation}
 
 For our test problem with $\lambda_{\min} = \lambda_{\max} = 1$, this gives $\alpha = 1$.
 
@@ -127,7 +145,7 @@ Input validation ensures algorithmic reliability:
 
 ### Testing Strategy and Validation
 
-Comprehensive test suite covers multiple dimensions:
+test suite covers multiple dimensions:
 
 - **Functional correctness**: Analytical gradient verification against finite differences
 - **Convergence behavior**: Multiple step sizes and tolerance levels

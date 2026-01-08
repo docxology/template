@@ -8,7 +8,7 @@ This directory contains generated audit reports from repository-wide validation 
 
 ## Contents
 
-- **FILEPATH_AUDIT_REPORT.md** - Comprehensive filepath and reference audit report
+- **FILEPATH_AUDIT_REPORT.md** - filepath and reference audit report
   - Link validation issues
   - Quality issues
   - File existence checks
@@ -36,6 +36,6 @@ Audit reports typically include:
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete audit documentation
+- [AGENTS.md](AGENTS.md) - audit documentation
 - [`../operational/TROUBLESHOOTING_GUIDE.md`](../operational/TROUBLESHOOTING_GUIDE.md) - Troubleshooting guide
 - [`../reference/FAQ.md`](../reference/FAQ.md) - Common questions

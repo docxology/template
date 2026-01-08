@@ -6,7 +6,7 @@ Develop standards-compliant code for the Research Project Template, ensuring ful
 
 ## Context
 
-This prompt leverages comprehensive development standards to create production-ready code:
+This prompt leverages development standards to create production-ready code:
 
 - [`../../.cursorrules/`](../../.cursorrules/) directory - All development standards
 - [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Development workflow
@@ -16,7 +16,7 @@ This prompt leverages comprehensive development standards to create production-r
 ## Prompt Template
 
 ```
-You are developing code for the Research Project Template. All code must follow the comprehensive development standards and architecture patterns. Choose the appropriate layer and implement according to the thin orchestrator pattern.
+You are developing code for the Research Project Template. All code must follow the development standards and architecture patterns. Choose the appropriate layer and implement according to the thin orchestrator pattern.
 
 CODE TASK: [Describe the specific code to implement - algorithm, utility, analysis method, etc.]
 
@@ -107,7 +107,7 @@ from infrastructure.core.logging_utils import get_logger
 logger = get_logger(__name__)
 
 def research_algorithm(data: List[float]) -> Dict[str, Any]:
-    """Execute research algorithm with comprehensive logging.
+    """Execute research algorithm with logging.
 
     Args:
         data: Input data for algorithm
@@ -160,7 +160,7 @@ def analyze_dataset(
 ## 3. Documentation Requirements
 
 ### Docstrings ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
-- **Google Style**: Complete with Args, Returns, Raises sections
+- **Google Style**: with Args, Returns, Raises sections
 - **Examples**: Include runnable code examples
 - **Comprehensive**: Cover all parameters, return values, exceptions
 
@@ -169,8 +169,7 @@ def analyze_dataset(
 """Research algorithm implementations.
 
 This module provides optimized implementations of research algorithms
-for data analysis and processing. All algorithms include comprehensive
-validation, error handling, and performance monitoring.
+for data analysis and processing. All algorithms include validation, error handling, and performance monitoring.
 
 Example:
     >>> from research_algorithms import optimize_parameters
@@ -185,10 +184,10 @@ __author__ = "Research Team"
 ## 4. Testing Integration
 
 ### Test Structure ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
-- **No Mocks Policy**: Real data testing only
+- **No Mocks Policy**: data testing only
 - **Coverage Requirements**: 90% (project) or 60% (infrastructure)
 - **Test Organization**: Clear class/method structure
-- **Real Data**: Use actual datasets, not synthetic mocks
+- **Data**: Use actual datasets, not synthetic mocks
 
 ### Test Implementation
 ```python
@@ -203,7 +202,7 @@ class TestParameterOptimization:
 
     def test_basic_optimization(self):
         """Test basic parameter optimization functionality."""
-        # Use real test data
+        # Use test data
         test_data = np.random.randn(100, 5)
         target = np.random.randn(100)
 
@@ -283,13 +282,13 @@ projects/research/src/
 - [ ] Correct layer placement (infrastructure vs project)
 - [ ] Thin orchestrator pattern compliance
 - [ ] Type hints on all public APIs
-- [ ] Comprehensive error handling with custom exceptions
+- [ ] error handling with custom exceptions
 - [ ] Unified logging system integration
 - [ ] Black formatting and isort compliance
 - [ ] Google-style docstrings with examples
-- [ ] No mocks testing with real data
+- [ ] No mocks testing with data
 - [ ] Coverage requirements met (90% project, 60% infrastructure)
-- [ ] Complete AGENTS.md and README.md documentation
+- [ ] AGENTS.md and README.md documentation
 - [ ] Architecture pattern validation
 
 ## Standards Compliance Checklist
@@ -302,12 +301,12 @@ projects/research/src/
 - [ ] API design consistency ([`../../.cursorrules/api_design.md`](../../.cursorrules/api_design.md))
 
 ### Testing Standards
-- [ ] No mocks policy (real data only) ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
+- [ ] No mocks policy (data only) ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
 - [ ] Coverage requirements met ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
 - [ ] Test organization and structure ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
 
 ### Documentation Standards
-- [ ] AGENTS.md with complete technical documentation ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
+- [ ] AGENTS.md with technical documentation ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
 - [ ] README.md with Mermaid diagrams ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
 - [ ] Cross-references between documents ([`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md))
 
@@ -325,15 +324,15 @@ LAYER: project
 ```
 
 **Expected Output:**
-- Complete `src/optimization.py` module with gradient descent implementation
-- Comprehensive type hints and error handling
+- `src/optimization.py` module with gradient descent implementation
+- type hints and error handling
 - Full test suite in `tests/test_optimization.py` (90% coverage)
 - AGENTS.md and README.md documentation
 - Integration with logging and validation systems
 
 ## Related Documentation
 
-- [`../../.cursorrules/README.md`](../../.cursorrules/README.md) - Complete development standards overview
+- [`../../.cursorrules/README.md`](../../.cursorrules/README.md) - development standards overview
 - [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Development workflow guide
 - [`../../projects/project/docs/standards_compliance.md`](../../projects/project/docs/standards_compliance.md) - Standards compliance matrix
 - [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - Architecture principles

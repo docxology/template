@@ -37,7 +37,7 @@ logger.debug("Variable value: {value}")
 
 ### Shell Scripts
 
-The template includes comprehensive bash script logging through `scripts/bash_utils.sh` and the `run.sh` orchestrator. Bash scripts use structured logging functions for consistent output and error handling.
+The template includes bash script logging through `scripts/bash_utils.sh` and the `run.sh` orchestrator. Bash scripts use structured logging functions for consistent output and error handling.
 
 #### Basic Logging Functions
 
@@ -101,11 +101,11 @@ log_resource_usage "PDF Rendering" 125 "memory: 2.1GB"
 #### Pipeline Progress Logging
 
 ```bash
-# Enhanced stage logging with ETA and resource monitoring
+# stage logging with ETA and resource monitoring
 log_stage_progress 2 "Project Tests" 9 "$pipeline_start" "$stage_start"
 
 # Shows progress percentage, elapsed time, and ETA
-# [2/9] Project Tests (22% complete)
+# [2/9] Project Tests (22%)
 #   Elapsed: 1m 30s | ETA: 5m 45s
 #   Stage elapsed: 45s
 ```
@@ -143,11 +143,11 @@ log_resource_usage "PDF Rendering" "$duration"
 
 #### Log File Format
 
-Pipeline logs include comprehensive information:
+Pipeline logs include information:
 
 ```
 ===========================================================
-  COMPLETE RESEARCH PROJECT PIPELINE
+  RESEARCH PROJECT PIPELINE
 ===========================================================
 
 Repository: /Users/user/research-project
@@ -155,15 +155,13 @@ Python: Python 3.13.11
 Log file: output/logs/pipeline_20251228_134833.log
 Pipeline started: Sat Dec 28 13:48:33 PST 2025
 
-[1/9] Clean Output Directories (11% complete)
+[1/9] Clean Output Directories (11%)
   Elapsed: 0m 0s | ETA: 0m 0s
 ✓ Output directories cleaned
 
-[2/9] Environment Setup (22% complete)
+[2/9] Environment Setup (22%)
   Elapsed: 0m 5s | ETA: 0m 40s
-✓ Environment setup complete
-
-[3/9] Project Tests (33% complete)
+✓ Environment setup [3/9] Project Tests (33%)
   Elapsed: 0m 25s | ETA: 0m 50s
 ✓ Project tests passed
 
@@ -351,7 +349,7 @@ The pipeline automatically captures all terminal output to per-project log files
 
 **Naming**: `pipeline.log` (one log file per project per execution)
 
-**Content**: Complete pipeline execution output including:
+**Content**: pipeline execution output including:
 - All bash script output (ANSI colors stripped in file, preserved in terminal)
 - All Python script output from all pipeline modules
 - Error messages and stack traces
@@ -477,7 +475,7 @@ def main():
     try:
         with log_operation("Execute analysis scripts", logger):
             run_scripts()
-        log_success("Analysis complete", logger)
+        log_success("Analysis", logger)
         return 0
     except Exception as e:
         logger.error(f"Analysis failed: {e}", exc_info=True)
@@ -619,7 +617,7 @@ log_progress_bar(current=15, total=100, message="Processing files")
 progress = StreamingProgress(total=1000, message="Generating tokens")
 for chunk in stream:
     progress.update(len(chunk))
-progress.finish("Generation complete")
+progress.finish("Generation")
 
 # Spinner for long-running operations
 with log_with_spinner("Loading model...", logger):
@@ -628,7 +626,7 @@ with log_with_spinner("Loading model...", logger):
 
 #### Advanced Progress Tracking with ETA
 
-The template includes enhanced progress tracking with exponential moving average (EMA) for more accurate ETA estimates:
+The template includes progress tracking with exponential moving average (EMA) for more accurate ETA estimates:
 
 ```python
 from infrastructure.core.progress import SubStageProgress, ProgressBar, LLMProgressTracker
@@ -805,11 +803,11 @@ ls -la output/{project_name}/logs/pipeline.log
 
 ## Examples
 
-### Complete Script Example
+### Script Example
 
 ```python
 #!/usr/bin/env python3
-"""Analysis script with comprehensive logging."""
+"""Analysis script with logging."""
 from pathlib import Path
 import sys
 

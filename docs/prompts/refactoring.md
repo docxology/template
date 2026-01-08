@@ -16,7 +16,7 @@ This prompt enforces the clean break refactoring approach and leverages refactor
 ## Prompt Template
 
 ```
-You are refactoring code in the Research Project Template using the CLEAN BREAK APPROACH. This means NO BACKWARD COMPATIBILITY - complete migration with full testing and documentation updates.
+You are refactoring code in the Research Project Template using the CLEAN BREAK APPROACH. This means NO BACKWARD COMPATIBILITY - migration with full testing and documentation updates.
 
 CODE TO REFACTOR: [Specify the file/module/function to refactor]
 REFACTORING GOAL: [Describe what improvement to achieve - readability, performance, maintainability, etc.]
@@ -25,7 +25,7 @@ REFACTORING REQUIREMENTS:
 
 ## 1. Clean Break Approach - CRITICAL REQUIREMENT
 
-**NO BACKWARD COMPATIBILITY**: Complete rewrite with new APIs. Old code is replaced entirely.
+**NO BACKWARD COMPATIBILITY**: rewrite with new APIs. Old code is replaced entirely.
 
 ### Migration Strategy
 ```python
@@ -38,7 +38,7 @@ def old_function(data):
         result.append(processed)
     return result
 
-# AFTER: New API (complete replacement)
+# AFTER: New API (replacement)
 def process_data_items(items: List[float]) -> List[float]:
     """Process data items with clear separation of concerns.
 
@@ -75,7 +75,7 @@ def validate_item(item: float) -> None:
         raise ValueError(f"Item must be numeric, got {type(item)}")
 ```
 
-### Complete Migration Process
+### Migration Process
 1. **Create new implementation** with improved design
 2. **Update all callers** to use new API
 3. **Remove old code entirely**
@@ -202,7 +202,7 @@ class DataProcessor:
 
 ### Phase 3: Testing and Validation
 
-**Comprehensive Testing During Refactoring:**
+**Testing During Refactoring:**
 ```python
 # Test new implementation thoroughly
 def test_refactored_data_processor():
@@ -234,16 +234,16 @@ def test_old_api_removed():
 
 ### Phase 4: Documentation Updates
 
-**Complete Documentation Migration:**
+**Documentation Migration:**
 ```markdown
 # BEFORE: Inadequate documentation
 ## DataProcessor
 Processes data by multiplying by 2.
 
-# AFTER: Comprehensive documentation
+# AFTER: documentation
 ## Data Processing Module
 
-This module provides comprehensive data processing capabilities with clear separation of concerns.
+This module provides data processing capabilities with clear separation of concerns.
 
 ### Classes
 
@@ -270,7 +270,7 @@ Handles data transformation operations.
 Main orchestrator class for data processing operations.
 
 **Methods:**
-- `process(data: List[float]) -> List[float]`: Processes complete dataset
+- `process(data: List[float]) -> List[float]`: Processes dataset
 
 ### Usage Example
 
@@ -331,7 +331,7 @@ def send_user_notification(email: str) -> None:
     pass
 
 def process_user_registration(user_data: Dict[str, Any]) -> int:
-    """Process complete user registration workflow.
+    """Process user registration workflow.
 
     Args:
         user_data: User registration data
@@ -465,7 +465,7 @@ def process_supplier_order(order_data: Dict[str, Any]) -> OrderResult:
 ## 4. Safety Measures
 
 ### Testing Throughout Refactoring
-- **Start with comprehensive tests** of existing functionality
+- **Start with tests** of existing functionality
 - **Test after each change** to ensure preservation of behavior
 - **Add tests for new code** as it's written
 - **Performance regression testing** to ensure no degradation
@@ -474,9 +474,9 @@ def process_supplier_order(order_data: Dict[str, Any]) -> OrderResult:
 ```python
 # Refactoring workflow with validation
 def refactor_with_safety(original_function, new_implementation):
-    """Safely refactor function with comprehensive validation."""
+    """Safely refactor function with validation."""
 
-    # 1. Create comprehensive test suite for original
+    # 1. Create test suite for original
     test_suite = create_test_suite_for_function(original_function)
 
     # 2. Run tests to establish baseline
@@ -530,11 +530,11 @@ class RefactoringCheckpoint:
 
 ## Key Requirements
 
-- [ ] **Clean break approach**: No backward compatibility, complete migration
-- [ ] Comprehensive testing before, during, and after refactoring
+- [ ] **Clean break approach**: No backward compatibility, migration
+- [ ] testing before, during, and after refactoring
 - [ ] Modularization with clear separation of concerns
 - [ ] Improved code quality metrics (complexity, maintainability)
-- [ ] Complete documentation updates
+- [ ] documentation updates
 - [ ] Type hints on all new APIs
 - [ ] Error handling standardization
 - [ ] Logging integration
@@ -559,7 +559,7 @@ class RefactoringCheckpoint:
 ### Testing Standards ([`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md))
 - [ ] No mocks policy maintained
 - [ ] Coverage requirements met (90% project, 60% infrastructure)
-- [ ] Real data testing throughout refactoring
+- [ ] data testing throughout refactoring
 - [ ] Integration testing for refactored modules
 
 ## Example Usage
@@ -572,14 +572,14 @@ REFACTORING GOAL: Separate concerns into validator, transformer, and orchestrato
 
 **Expected Output:**
 - New modular classes: `DataValidator`, `DataTransformer`, `DataProcessor`
-- Complete test suite ensuring identical functionality
+- test suite ensuring identical functionality
 - Updated AGENTS.md and README.md documentation
 - All callers updated to use new API
 - Old monolithic code completely removed
 
 ## Related Documentation
 
-- [`../../projects/project/docs/refactor_playbook.md`](../../projects/project/docs/refactor_playbook.md) - Complete refactoring procedures
+- [`../../projects/project/docs/refactor_playbook.md`](../../projects/project/docs/refactor_playbook.md) - refactoring procedures
 - [`../../projects/project/docs/refactor_hotspots.md`](../../projects/project/docs/refactor_hotspots.md) - Code quality analysis
 - [`../../.cursorrules/refactoring.md`](../../.cursorrules/refactoring.md) - Clean break refactoring standards
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing during refactoring

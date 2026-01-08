@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Documentation module provides comprehensive tools for managing figures, images, and markdown integration in research manuscripts. It enables automatic figure numbering, cross-reference management, and API documentation generation.
+The Documentation module provides tools for managing figures, images, and markdown integration in research manuscripts. It enables automatic figure numbering, cross-reference management, and API documentation generation.
 
 ## Architecture
 
@@ -121,7 +121,7 @@ def generate_latex_figure_block(
         placement: LaTeX placement specifier
 
     Returns:
-        Complete LaTeX figure environment
+        LaTeX figure environment
     """
 ```
 
@@ -596,7 +596,7 @@ Documentation module is used by:
 
 ### API Documentation
 
-- **Complete Docstrings**: Write comprehensive docstrings
+- **Docstrings**: Write docstrings
 - **Type Hints**: Include type hints for better documentation
 - **Examples**: Provide usage examples in docstrings
 - **Keep Current**: Update documentation with code changes

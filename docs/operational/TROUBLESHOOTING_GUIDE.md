@@ -1,4 +1,4 @@
-# Comprehensive Troubleshooting Guide
+# Troubleshooting Guide
 
 > **Systematic approach** to resolving issues and errors
 
@@ -79,12 +79,12 @@ tes../../infrastructure/publishing/test_publishing.py::TestEdgeCases::test_extra
 ```
 
 **Cause:**
-This template **absolutely prohibits** the use of mocks. All tests must use real data and real computations only.
+This template **absolutely prohibits** the use of mocks. All tests must use data and computations only.
 
 **Solution:**
-Instead of mocking, ensure tests use real data:
+Instead of mocking, ensure tests use data:
 ```python
-# ✅ CORRECT: Use real data
+# ✅ CORRECT: Use data
 def test_function_with_real_data():
     real_data = load_test_dataset("sample.csv")
     result = process_data(real_data)
@@ -97,7 +97,7 @@ def test_function_with_real_data():
 ```
 
 **Prevention:**
-- Always use real data in tests
+- Always use data in tests
 - Create test datasets when needed
 - Test real integration between components
 - Follow the "No Mocks Policy" strictly
@@ -271,7 +271,7 @@ brew install --cask basictex
 sudo tlmgr update --self
 sudo tlmgr install multirow cleveref doi newunicodechar
 
-# macOS (MacTeX - complete):
+# macOS (MacTeX -):
 brew install pandoc
 brew install --cask mactex
 
@@ -480,7 +480,7 @@ python3 -c "from infrastructure.core.environment import validate_uv_sync_result;
 git pull origin main  # or your branch
 ```
 
-#### Real Subprocess Execution Testing Issues
+#### Subprocess Execution Testing Issues
 
 **Symptom (in test environment):**
 ```
@@ -546,7 +546,7 @@ python3 scripts/02_run_analysis.py
 
 **Verification:**
 ```bash
-# Should complete without errors
+# Should without errors
 python3 scripts/02_run_analysis.py
 
 # Check generated figures
@@ -688,7 +688,7 @@ Infrastructure tests: 5 failures (max allowed: 3)
 
 ### Environment Variables Reference
 
-Complete list of environment variables affecting system behavior:
+list of environment variables affecting system behavior:
 
 | Variable | Default | Purpose | Example |
 |----------|---------|---------|---------|
@@ -1284,7 +1284,7 @@ git diff uv.lock
 
 **Diagnostic:**
 ```bash
-# Run complete pipeline with all stages
+# Run pipeline with all stages
 python3 scripts/execute_pipeline.py --core-only
 
 # Or use unified interactive menu
@@ -1292,7 +1292,7 @@ python3 scripts/execute_pipeline.py --core-only
 
 # Check each stage individually
 uv run pytest tests/ --cov=src
-# Run complete pipeline (includes script execution)
+# Run pipeline (includes script execution)
 python3 scripts/execute_pipeline.py --core-only
 ```
 
@@ -1442,8 +1442,7 @@ ls -la output/figures/
 **Check:**
 1. **Formatting** - LaTeX styling correct
 2. **Cross-references** - All references resolved
-3. **Citations** - Bibliography complete
-4. **Figures** - All figures included
+3. **Citations** - Bibliography 4. **Figures** - All figures included
 
 **Tools:**
 ```bash
@@ -1481,7 +1480,7 @@ uv run pytest tests/ --cache-clear && uv run pytest tests/
 3. **Increase memory** - System configuration
 4. **Optimize code** - Reduce memory usage
 
-## New Features Troubleshooting
+## Features Troubleshooting
 
 ### Checkpoint System
 
@@ -1570,7 +1569,7 @@ python3 scripts/execute_pipeline.py --core-only
 
 ## Recovery Procedures
 
-### Complete Reset
+### Reset
 
 **If everything fails, reset completely:**
 ```bash
@@ -1582,7 +1581,7 @@ rm uv.lock
 uv sync
 uv run pytest tests/
 
-# Rebuild complete pipeline
+# Rebuild pipeline
 python3 scripts/execute_pipeline.py --core-only
 ```
 
@@ -1784,7 +1783,7 @@ SyntaxWarning: invalid escape sequence '\m' in line 257
 
 ### Diagnostic Script
 
-**Run comprehensive diagnostics:**
+**Run diagnostics:**
 ```bash
 #!/bin/bash
 echo "=== System Information ==="

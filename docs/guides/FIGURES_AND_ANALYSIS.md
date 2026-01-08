@@ -4,7 +4,7 @@
 
 **Previous**: [Getting Started](../guides/GETTING_STARTED.md) (Levels 1-3) | **Next**: [Testing and Reproducibility](../guides/TESTING_AND_REPRODUCIBILITY.md) (Levels 7-9)
 
-This guide covers **Levels 4-6** of the Research Project Template. Perfect for users ready to add custom figures, data analysis, and automated workflows.
+This guide covers **Levels 4-6** of the Research Project Template. for users ready to add custom figures, data analysis, and automated workflows.
 
 ## 📚 What You'll Learn
 
@@ -14,7 +14,7 @@ By the end of this guide, you'll be able to:
 - ✅ Understand and apply the thin orchestrator pattern
 - ✅ Add new Python modules with proper testing
 - ✅ Create data analysis pipelines
-- ✅ Automate complete workflows
+- ✅ Automate workflows
 
 **Estimated Time:** 1-2 days
 
@@ -71,7 +71,7 @@ By the end of this guide, you'll be able to:
 - **Reusability**: Use same logic in multiple scripts
 - **Clarity**: Clear separation of concerns
 
-**See [THIN_ORCHESTRATOR_SUMMARY.md](../architecture/THIN_ORCHESTRATOR_SUMMARY.md) for complete details.**
+**See [THIN_ORCHESTRATOR_SUMMARY.md](../architecture/THIN_ORCHESTRATOR_SUMMARY.md) for details.**
 
 ### Using Existing Figure Scripts
 
@@ -169,7 +169,7 @@ def calculate_std_dev(values):
     return calculate_variance(values) ** 0.5
 ```
 
-**Step 3: Create tests (comprehensive coverage required)**
+**Step 3: Create tests (coverage required)**
 
 ```python
 # tests/test_statistics.py
@@ -319,7 +319,7 @@ import pytest
 from correlation import calculate_correlation, calculate_r_squared, linear_regression
 
 def test_calculate_correlation_perfect():
-    """Test perfect positive correlation."""
+    """Test positive correlation."""
     x = [1, 2, 3, 4, 5]
     y = [2, 4, 6, 8, 10]
     corr = calculate_correlation(x, y)
@@ -491,7 +491,7 @@ print('output/data/analysis_data.csv')
 
 ## Level 6: Automated Workflows
 
-**Goal**: Automate complete research workflows
+**Goal**: Automate research workflows
 
 **Time**: 2-3 hours
 
@@ -508,7 +508,7 @@ python3 scripts/execute_pipeline.py --core-only
 2. **Scripts** (1s) - Executes all figure generation
 3. **Utilities** (1s) - Validates markdown, generates glossary
 4. **Individual PDFs** (32s) - Builds each section
-5. **Combined PDF** (10s) - Assembles complete document
+5. **Combined PDF** (10s) - Assembles document
 6. **Validation** (1s) - Checks for rendering issues
 
 **Total**: ~84 seconds (without optional LLM review)
@@ -557,7 +557,7 @@ pytest tests/test_my_module.py --cov=src.my_module
 # 4. Create/update script
 vim scripts/my_figure.py
 
-# 5. Run complete build
+# 5. Run build
 python3 scripts/execute_pipeline.py --core-only
 
 # 6. View result (top-level output after stage 5)
@@ -605,7 +605,7 @@ pandoc manuscript/04_experimental_results.md \
     -o output/pdf/04_experimental_results.pdf \
     --pdf-engine=xelatex
 
-echo "Custom build complete!"
+echo "Custom build!"
 ```
 
 ### Batch Processing Multiple Datasets
@@ -683,7 +683,7 @@ with Pool() as pool:
 | Mistake | Problem | Solution |
 |---------|---------|----------|
 | **Implementing logic in scripts** | Not testable, duplicated code | Move to `project/src/`, test thoroughly |
-| **Not testing edge cases** | Fails on real data | Test empty lists, single values, etc. |
+| **Not testing edge cases** | Fails on data | Test empty lists, single values, etc. |
 | **Hardcoded paths** | Breaks on other systems | Use `os.path.join()`, relative paths |
 | **Not using seeds** | Non-reproducible results | Set `np.random.seed(42)` |
 | **Ignoring coverage gaps** | Untested code paths | Check `--cov-report=term-missing` |
@@ -723,9 +723,9 @@ with Pool() as pool:
 
 - **[Quick Start Cheatsheet](../reference/QUICK_START_CHEATSHEET.md)** - Essential commands
 - **[Glossary](../reference/GLOSSARY.md)** - Terms and definitions
-- **[Build System](../operational/BUILD_SYSTEM.md)** - Complete build system reference
+- **[Build System](../operational/BUILD_SYSTEM.md)** - build system reference
 - **[Examples Showcase](../usage/EXAMPLES_SHOWCASE.md)** - Real-world applications
-- **[Documentation Index](../DOCUMENTATION_INDEX.md)** - Complete reference
+- **[Documentation Index](../DOCUMENTATION_INDEX.md)** - reference
 
 ---
 

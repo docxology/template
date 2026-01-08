@@ -45,7 +45,7 @@ The `development/` directory contains documentation for contributing to the proj
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Complete documentation index
+- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 
 

@@ -2,14 +2,14 @@
 
 ## Overview
 
-This directory contains the complete research manuscript for "Active Inference as a Meta-Pragmatic and Meta-Epistemic Method". The manuscript is structured with numbered sections, cross-references, and comprehensive documentation.
+This directory contains the research manuscript for "Active Inference as a Meta-Pragmatic and Meta-Epistemic Method". The manuscript is structured with numbered sections, cross-references, and documentation.
 
 ## File Structure
 
 ### Main Sections (01-09)
 - `01_abstract.md` - Research overview and key contributions
 - `02_introduction.md` - Motivation, background, and research questions
-- `03_methodology.md` - Core \(2 \times 2\) framework and theoretical development
+- `03_methodology.md` - Core $2 \times 2$ framework and theoretical development
 - `04_experimental_results.md` - Quadrant demonstrations and validation
 - `05_discussion.md` - Theoretical implications and interpretations
 - `06_conclusion.md` - Summary, contributions, and future directions

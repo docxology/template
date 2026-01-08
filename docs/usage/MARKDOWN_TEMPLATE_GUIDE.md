@@ -1,14 +1,14 @@
 # Markdown Template Guide
 
-This document explains the comprehensive markdown template structure and cross-referencing system implemented in this project. For related information, see **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** for complete usage guidance, **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)**, **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)**, and **[`../README.md`](../README.md)**.
+This document explains the markdown template structure and cross-referencing system implemented in this project. For related information, see **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** for usage guidance, **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)**, **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)**, and **[`../README.md`](../README.md)**.
 
 ## Template Structure
 
-The template demonstrates a complete academic paper structure with the following markdown files:
+The template demonstrates a academic paper structure with the following markdown files:
 
 ### Core Sections
 
-1. **`manuscript/preamble.md`** - LaTeX preamble with enhanced styling and packages
+1. **`manuscript/preamble.md`** - LaTeX preamble with styling and packages
 2. **`manuscript/01_abstract.md`** - Research overview and key contributions
 3. **`manuscript/02_introduction.md`** - Introduction with section references and overview
 4. **`manuscript/03_methodology.md`** - Mathematical framework with numbered equations
@@ -135,7 +135,7 @@ Demonstrates various cross-reference patterns:
 The template includes two figure generation scripts that demonstrate the **thin orchestrator pattern**:
 
 1. **`example_figure.py`** - Basic example figure using `projects/{name}/src/` methods
-2. **`generate_research_figures.py`** - Comprehensive research figures using `projects/{name}/src/` methods
+2. **`generate_research_figures.py`** - research figures using `projects/{name}/src/` methods
 
 ### Thin Orchestrator Pattern
 
@@ -211,7 +211,7 @@ This:
 
 ## Build Process
 
-### Complete Pipeline
+### Pipeline
 
 The pipeline orchestrator (`scripts/execute_pipeline.py`):
 
@@ -280,8 +280,8 @@ Generated outputs include:
 
 ### Adding New Source Code
 
-1. **Create new modules** in `projects/{name}/src/` directory
-2. **Add comprehensive tests** in `proje../../tests/` directory (coverage requirements apply)
+1. **Create modules** in `projects/{name}/src/` directory
+2. **Add tests** in `proje../../tests/` directory (coverage requirements apply)
 3. **Update scripts** to import and use new `projects/{name}/src/` methods
 4. **Validate integration** through the build pipeline
 
@@ -319,7 +319,7 @@ This template enforces the **thin orchestrator pattern** where:
 
 - **`projects/{name}/src/`** contains ALL business logic, algorithms, and mathematical implementations
 - **`projects/{name}/scripts/`** are lightweight wrappers that import and use `projects/{name}/src/` methods
-- **`projects/{name}/tests/`** ensures comprehensive coverage of `projects/{name}/src/` functionality
+- **`projects/{name}/tests/`** ensures coverage of `projects/{name}/src/` functionality
 - **`scripts/execute_pipeline.py`** orchestrates the entire 6-stage pipeline
 
 ### Script Requirements
@@ -340,10 +340,10 @@ Scripts MUST NOT:
 
 ## Summary
 
-This template provides a complete framework for academic writing with:
+This template provides a framework for academic writing with:
 
 - **Structured organization** of content into logical sections
-- **Comprehensive cross-referencing** system for equations, figures, and sections
+- **cross-referencing** system for equations, figures, and sections
 - **Automated figure generation** with proper integration using `projects/{name}/src/` methods
 - **Validation system** ensuring document integrity
 - **Build pipeline** generating both individual and combined PDFs
@@ -354,8 +354,8 @@ The system demonstrates best practices for academic writing while maintaining th
 
 For more details on architecture and workflow, see:
 - **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)** - System design overview
-- **[`TWO_LAYER_ARCHITECTURE.md`](../core/ARCHITECTURE.md)** - Complete two-layer architecture guide
+- **[`TWO_LAYER_ARCHITECTURE.md`](../core/ARCHITECTURE.md)** - two-layer architecture guide
 - **[`../core/WORKFLOW.md`](../core/WORKFLOW.md)** - Development workflow
 
-For comprehensive manuscript formatting standards, see:
-- **[`.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md)** - Complete manuscript formatting and style guide (equations, figures, tables, citations, lists, cross-references)
+For manuscript formatting standards, see:
+- **[`.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md)** - manuscript formatting and style guide (equations, figures, tables, citations, lists, cross-references)

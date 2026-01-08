@@ -11,7 +11,7 @@ The `infrastructure/` directory contains **reusable, generic build and validatio
 ```
 infrastructure/<module>/
 ├── __init__.py           # Public API exports
-├── AGENTS.md            # Comprehensive documentation
+├── AGENTS.md            # documentation
 ├── README.md            # Quick reference
 ├── core.py              # Core functionality
 ├── api.py               # External API integrations (if needed)
@@ -23,8 +23,8 @@ infrastructure/<module>/
 
 1. **Generic First**: Reusable across all projects
 2. **Domain-Independent**: No research-specific assumptions
-3. **Well-Tested**: 60% minimum coverage with real data (currently 83.33% achieved - exceeds stretch goal!)
-4. **Well-Documented**: Complete AGENTS.md and README.md
+3. **Well-Tested**: 60% minimum coverage with data (currently 83.33% achieved - exceeds stretch goal!)
+4. **Well-Documented**: AGENTS.md and README.md
 5. **Type-Hinted**: All public APIs have type annotations
 
 ## Testing Standards
@@ -43,8 +43,8 @@ tests/infrastructure/test_<module>/
 ### Coverage Requirements
 
 - **60% minimum coverage** required for infrastructure code (currently 83.33% achieved - exceeds stretch goal!)
-- **No mock methods** - test with real data
-- **Integration tests** demonstrating complete workflows
+- **No mock methods** - test with data
+- **Integration tests** demonstrating workflows
 - **Edge cases** and error conditions tested
 
 ## Import Standards
@@ -117,7 +117,7 @@ logger.info(f"Processing {count} items")
 ### Publishing Module
 
 - **Platform-independent**: Support multiple publishing platforms
-- **Metadata-rich**: Complete metadata for all outputs
+- **Metadata-rich**: metadata for all outputs
 - **Compliance**: Check platform-specific requirements
 - **Automation**: Minimize manual intervention
 
@@ -160,7 +160,7 @@ class ModuleConfig:
 ### Public API
 
 - Export in `__init__.py`
-- Document with comprehensive docstrings
+- Document with docstrings
 - Type-hint all parameters and returns
 - Use descriptive names
 
@@ -255,8 +255,7 @@ Before committing:
 
 - [ ] Test coverage requirements met (60% minimum, currently 83.33% achieved - exceeds stretch goal!)
 - [ ] All tests pass
-- [ ] AGENTS.md complete
-- [ ] README.md written
+- [ ] AGENTS.md - [ ] README.md written
 - [ ] Type hints on all public APIs
 - [ ] Docstrings on all functions
 - [ ] infrastructure/__init__.py updated
@@ -279,10 +278,10 @@ Before committing:
 - Keep modules focused and single-purpose
 - Use configuration for flexibility
 - Provide clear error messages
-- Test with real data
+- Test with data
 - Design for reusability
 
-## Complete Example Module
+## Example Module
 
 ### Module Structure
 
@@ -292,7 +291,7 @@ infrastructure/example_module/
 ├── core.py              # Core functionality
 ├── cli.py               # Command-line interface (optional)
 ├── config.py            # Configuration management (optional)
-├── AGENTS.md            # Comprehensive documentation
+├── AGENTS.md            # documentation
 └── README.md            # Quick reference
 ```
 
@@ -301,7 +300,7 @@ infrastructure/example_module/
 ```python
 """Example module - brief description.
 
-Complete module description including main features and use cases.
+module description including main features and use cases.
 
 Example:
     >>> from infrastructure.example_module import process_data
@@ -474,8 +473,8 @@ Before merging a new infrastructure module:
 ## References
 
 - [Infrastructure AGENTS.md](../infrastructure/AGENTS.md) - Module organization
-- [Modules Guide](../docs/modules/MODULES_GUIDE.md) - Complete guide to all advanced modules
-- [API Reference](../docs/reference/API_REFERENCE.md) - Complete API documentation for all modules
+- [Modules Guide](../docs/modules/MODULES_GUIDE.md) - guide to all advanced modules
+- [API Reference](../docs/reference/API_REFERENCE.md) - API documentation for all modules
 - [Two-Layer Architecture](../docs/architecture/TWO_LAYER_ARCHITECTURE.md) - Architecture explanation
 - [Testing Guide](testing_standards.md) - Testing infrastructure code
 - [Error Handling Guide](error_handling.md) - Exception patterns

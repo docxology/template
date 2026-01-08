@@ -5,7 +5,7 @@ Development standards and coding guidelines for the Research Project Template.
 ## Files
 
 ### Main Documents
-- **AGENTS.md** - Complete overview and navigation (start here)
+- **AGENTS.md** - overview and navigation (start here)
 - **README.md** - This file (quick reference)
 
 ### Development Standards
@@ -36,7 +36,7 @@ Development standards and coding guidelines for the Research Project Template.
 - **Layer 2: Project** (`project/`): Research-specific code
   - Domain-specific algorithms and analysis
   - Uses Layer 1 tools
-  - 90% minimum test coverage required (currently achieving 100% - perfect coverage!)
+  - 90% minimum test coverage required (currently achieving 100% - coverage!)
 
 ### Thin Orchestrator Pattern
 
@@ -47,7 +47,7 @@ Development standards and coding guidelines for the Research Project Template.
 
 ### Quality Standards
 
-- **Tests**: 60% infrastructure minimum, 90% project minimum (currently 83.33% infra, 100% project) with real data (no mocks)
+- **Tests**: 60% infrastructure minimum, 90% project minimum (currently 83.33% infra, 100% project) with data (no mocks)
 - **Types**: Type hints on all public APIs and functions
 - **Docs**: AGENTS.md + README.md for every directory
 - **Errors**: Use custom exception hierarchy from `infrastructure.core.exceptions`
@@ -128,7 +128,7 @@ def process_data(items: list[str], count: int = 10) -> dict[str, int]:
 import pytest
 
 def test_feature_with_real_data():
-    """Test feature using real test data (no mocks)."""
+    """Test feature using test data (no mocks)."""
     result = function({"name": "Alice", "age": 30})
     assert result["valid"] is True
 
@@ -176,7 +176,7 @@ def test_feature_error_condition():
 [3-5 most used tasks]
 
 ## More Information
-See [AGENTS.md](AGENTS.md) for comprehensive docs
+See [AGENTS.md](AGENTS.md) for docs
 ```
 
 ### Manuscript Formatting
@@ -226,9 +226,7 @@ Before commit:
 - [ ] All tests pass
 - [ ] No linter errors
 - [ ] Docs updated
-- [ ] Type hints complete
-
-## Navigation Tips
+- [ ] Type hints ## Navigation Tips
 
 **Pick your task:**
 - Writing code → [type_hints_standards.md](type_hints_standards.md)
@@ -243,8 +241,8 @@ Before commit:
 
 ## More Info
 
-- See [AGENTS.md](AGENTS.md) for comprehensive documentation and navigation guide
+- See [AGENTS.md](AGENTS.md) for documentation and navigation guide
 - See [Quick Navigation Guide](AGENTS.md#quick-navigation-guide) for activity-based guidance
 - See [../docs/AGENTS.md](../docs/AGENTS.md) for main project documentation
-- See [../docs/core/HOW_TO_USE.md](../docs/core/HOW_TO_USE.md) for complete usage guide
+- See [../docs/core/HOW_TO_USE.md](../docs/core/HOW_TO_USE.md) for usage guide
 - See [../docs/development/SECURITY.md](../docs/development/SECURITY.md) for security policy

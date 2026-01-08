@@ -12,7 +12,7 @@ The `architecture/` directory contains detailed documentation about the system a
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md) | Complete two-layer architecture guide | Developers, architects |
+| [`TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md) | two-layer architecture guide | Developers, architects |
 | [`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md) | Thin orchestrator pattern implementation | Developers |
 | [`DECISION_TREE.md`](DECISION_TREE.md) | Decision tree for code placement | Developers |
 
@@ -20,7 +20,7 @@ The `architecture/` directory contains detailed documentation about the system a
 
 ### Understanding the Architecture
 1. Read [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - System overview
-2. Study [`TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md) - Complete architecture guide
+2. Study [`TWO_LAYER_ARCHITECTURE.md`](TWO_LAYER_ARCHITECTURE.md) - architecture guide
 3. Learn [`THIN_ORCHESTRATOR_SUMMARY.md`](THIN_ORCHESTRATOR_SUMMARY.md) - Pattern details
 
 ### Making Design Decisions
@@ -34,7 +34,7 @@ The `architecture/` directory contains detailed documentation about the system a
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Complete documentation index
+- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 
 

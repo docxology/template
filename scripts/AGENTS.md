@@ -85,7 +85,7 @@ Creates multi-project directory structure:
 **Error Handling:**
 - Graceful fallback from uv to pip-based installation
 - Clear error messages with actionable recovery steps
-- Comprehensive logging with debug-level subprocess details
+- logging with debug-level subprocess details
 
 **Generic:** Works for any project in the multi-project template structure
 
@@ -158,7 +158,7 @@ Creates multi-project directory structure:
 
 ### 6. Audit Filepaths (`audit_filepaths.py`)
 
-**Purpose:** Comprehensive audit of filepaths, references, and documentation accuracy using modular infrastructure validation.
+**Purpose:** audit of filepaths, references, and documentation accuracy using modular infrastructure validation.
 
 **Core Functionality:**
 - Thin orchestrator that coordinates `infrastructure.validation.audit_orchestrator`
@@ -175,7 +175,7 @@ Creates multi-project directory structure:
 def main():
     """Main entry point for the audit script."""
     # Parse command line arguments
-    # Run comprehensive audit via audit_orchestrator
+    # Run audit via audit_orchestrator
     # Generate and save report
     # Exit with appropriate code based on issues found
 ```
@@ -202,7 +202,7 @@ python scripts/audit_filepaths.py --project myproject
 **Purpose:** Generate cross-project executive summaries and dashboards
 
 - Discovers all projects in repository
-- Collects comprehensive metrics across all projects
+- Collects metrics across all projects
 - Generates comparative analysis and recommendations
 - Creates visual dashboards (PNG, PDF, HTML)
 - Saves reports to `output/executive_summary/`
@@ -259,7 +259,7 @@ def execute_pipeline(
     resume: bool = False,
     start_stage: str = None
 ) -> int:
-    \"\"\"Execute complete pipeline for a project.\"\"\"
+    \"\"\"Execute pipeline for a project.\"\"\"
     pass
 
 def main():
@@ -405,7 +405,7 @@ from scientific.data_generator import generate_synthetic_data
 
 ## Integration with Build Pipeline
 
-Complete pipeline execution (single project):
+pipeline execution (single project):
 
 ```bash
 python3 scripts/execute_pipeline.py --project project --core-only
@@ -494,7 +494,7 @@ Root entry points work with **ANY** project that follows this structure.
 - [`../README.md`](../README.md) - Quick reference
 - [`../projects/code_project/scripts/AGENTS.md`](../projects/code_project/scripts/AGENTS.md) - Project scripts example
 - [`../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md`](../docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md) - Pattern explanation
-- [`../AGENTS.md`](../AGENTS.md) - Complete system documentation
+- [`../AGENTS.md`](../AGENTS.md) - system documentation
 
 ## Testing and Logging Standards
 
@@ -518,7 +518,7 @@ Root scripts (`run.sh`, `scripts/bash_utils.sh`) are tested using Python subproc
 - ✅ **Error Path Tests** - Edge cases and failure modes
 
 **Testing Philosophy:**
-- Use real subprocess calls (no mocks for bash functions)
+- Use subprocess calls (no mocks for bash functions)
 - Test command-line interfaces as users would use them
 - Verify error handling and graceful degradation
 - Ensure compatibility across different environments
@@ -552,7 +552,7 @@ log_pipeline_error "Stage X" "failure reason" "$exit_code" \
 ```
 
 **Progress Tracking:**
-- `log_stage_progress` - Enhanced stage logging with ETA and resource monitoring
+- `log_stage_progress` - stage logging with ETA and resource monitoring
 - `STAGE_RESULTS[]` and `STAGE_DURATIONS[]` - Track pipeline execution metrics
 - Resource usage logging for performance monitoring
 

@@ -15,7 +15,7 @@ Following the **thin orchestrator pattern**, the implementation consists of:
 1. **Business Logic** (`infrastructure/validation/pdf_validator.py`): Core validation algorithms
 2. **CLI Interface** (`infrastructure/validation/cli.py`): Command-line interface
 3. **Orchestrator** (`scripts/04_validate_output.py`): Pipeline integration
-4. **Tests** (`tes../../infrastructure/test_validation/`): Comprehensive coverage with real data
+4. **Tests** (`tes../../infrastructure/test_validation/`): coverage with data
 5. **Integration** (`scripts/execute_pipeline.py`): Automated validation in build pipeline (Stage 04)
 
 ## Components
@@ -31,7 +31,7 @@ Core validation module containing all business logic:
   - Errors  
   - Missing citations [?]
 - `extract_first_n_words(text, n)`: Extract first N words for structure verification
-- `validate_pdf_rendering(pdf_path, n_words)`: Complete validation report
+- `validate_pdf_rendering(pdf_path, n_words)`: validation report
 
 ### infrastructure/validation/cli.py
 
@@ -113,8 +113,8 @@ Conference on Machine Learning, pages 456–467. ICML, 2022...
 
 ### Unit Tests (test_pdf_validator.py)
 
-- ✅ Comprehensive test coverage of `infrastructure/validation/pdf_validator.py`
-- ✅ Tests with real PDFs (no mocks)
+- ✅ test coverage of `infrastructure/validation/pdf_validator.py`
+- ✅ Tests with PDFs (no mocks)
 - ✅ Tests edge cases and error handling
 - ✅ Validates against actual project PDF when available
 
@@ -218,7 +218,7 @@ Generate PDFs first:
 python3 scripts/execute_pipeline.py --core-only
 ```
 
-Or run the complete pipeline:
+Or run the pipeline:
 
 ```bash
 # Standard build with validation

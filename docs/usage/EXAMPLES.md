@@ -39,7 +39,7 @@ LICENSE="MIT"
 # Project Identity
 PROJECT_NAME="pandas-extension-toolkit"
 PROJECT_CALLSIGN="PET"
-PROJECT_DESCRIPTION="A comprehensive toolkit of pandas extensions for advanced data manipulation and analysis"
+PROJECT_DESCRIPTION="A toolkit of pandas extensions for advanced data manipulation and analysis"
 
 # Author Information
 AUTHOR_NAME="Sarah Johnson"
@@ -59,7 +59,7 @@ LICENSE="Apache-2.0"
 # Project Identity
 PROJECT_NAME="quantum-computing-survey"
 PROJECT_CALLSIGN="QCS"
-PROJECT_DESCRIPTION="A comprehensive survey of quantum computing algorithms and their applications in optimization"
+PROJECT_DESCRIPTION="A survey of quantum computing algorithms and their applications in optimization"
 
 # Author Information
 AUTHOR_NAME="Prof. Michael Rodriguez"
@@ -81,7 +81,7 @@ graph TB
     subgraph "Renamed Project"
         ROOT[project_name/]
         SRC[src/<br/>Core business logic]
-        TESTS[tests/<br/>Comprehensive tests]
+        TESTS[tests/<br/>tests]
         SCRIPTS[scripts/<br/>Thin orchestrators]
         MANUSCRIPT[manuscript/<br/>Research manuscript]
         REPO_UTILS[repo_utilities/<br/>Build tools]
@@ -323,8 +323,8 @@ After renaming, ensure:
 The `rename_project.sh` script transforms the generic template into a project-specific structure while maintaining:
 
 - **Thin orchestrator pattern** - Scripts use src/ methods
-- **Comprehensive test coverage** - All functionality validated
-- **Automated build pipeline** - Complete PDF generation
+- **test coverage** - All functionality validated
+- **Automated build pipeline** - PDF generation
 - **Generic utilities** - Reusable across projects
 - **Clear architecture** - Separation of concerns
 

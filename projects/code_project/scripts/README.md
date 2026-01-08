@@ -5,7 +5,7 @@ Thin orchestrators that demonstrate proper integration with `src/` modules.
 ## Quick Start
 
 ```bash
-# Run complete analysis pipeline
+# Run analysis pipeline
 python3 scripts/optimization_analysis.py
 
 # View generated outputs
@@ -14,7 +14,7 @@ ls -la ../output/
 
 ## Key Features
 
-- **Complete analysis pipeline** (experiments + visualization)
+- **analysis pipeline** (experiments + visualization)
 - **Automated figure generation** (convergence plots)
 - **Data export** (optimization results to CSV)
 - **Manuscript integration** (figure registration)
@@ -50,4 +50,4 @@ graph TD
 
 ## More Information
 
-See [AGENTS.md](AGENTS.md) for complete technical documentation.
+See [AGENTS.md](AGENTS.md) for technical documentation.

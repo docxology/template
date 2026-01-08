@@ -2,11 +2,11 @@
 
 ## Overview
 
-The `tests/` directory contains comprehensive tests for the optimization algorithms in `src/`. These tests validate correctness, numerical accuracy, and edge case handling without using mocks - all tests use real computations.
+The `tests/` directory contains tests for the optimization algorithms in `src/`. These tests validate correctness, numerical accuracy, and edge case handling without using mocks - all tests use computations.
 
 ## Key Concepts
 
-- **Real data testing**: No mocks, all tests use actual mathematical computations
+- **data testing**: No mocks, all tests use actual mathematical computations
 - **Numerical accuracy**: Tests verify mathematical correctness and convergence
 - **Edge case coverage**: Tests handle boundary conditions and error cases
 - **Deterministic results**: Fixed seeds ensure reproducible test outcomes
@@ -16,7 +16,7 @@ The `tests/` directory contains comprehensive tests for the optimization algorit
 ```
 tests/
 ├── __init__.py
-├── test_optimizer.py          # Comprehensive optimizer tests
+├── test_optimizer.py          # optimizer tests
 ├── AGENTS.md                 # This technical documentation
 └── README.md                 # Quick reference
 ```
@@ -80,10 +80,10 @@ Tests use hardcoded parameters for consistency:
 
 ### No Mocks Policy
 
-All tests use **real computations** without mocks:
+All tests use **computations** without mocks:
 
 - ✅ **Mathematical correctness**: Tests verify actual mathematical results
-- ✅ **Integration validation**: Tests validate complete function pipelines
+- ✅ **Integration validation**: Tests validate function pipelines
 - ✅ **Numerical accuracy**: Tests check convergence and precision
 - ❌ **No mock objects**: Every test exercises real algorithms
 
@@ -207,7 +207,7 @@ pytest tests/ --cov=../src --cov-report=term-missing
 
 - **Deterministic tests**: No random number generation in tests
 - **Numerical stability**: Use appropriate tolerances for floating-point comparisons
-- **Complete coverage**: Test all code paths including error conditions
+- **coverage**: Test all code paths including error conditions
 - **Clear assertions**: Use descriptive assertion messages
 - **Independent tests**: Each test should be runnable in isolation
 

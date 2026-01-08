@@ -21,7 +21,7 @@ infrastructure/project/manuscript/
 **Purpose:**
 - Document public APIs from `project/src/` modules
 - Provide technical reference for research implementations
-- Generate comprehensive function and class documentation
+- Generate function and class documentation
 - Integrate seamlessly into manuscript as Section 98
 
 **Content Structure:**
@@ -68,7 +68,7 @@ def render_manuscript_with_glossary():
         glossary_content
     )
 
-    # Render complete manuscript
+    # Render manuscript
     render_pdf('project/manuscript/', 'output/pdf/project_combined.pdf')
 ```
 
@@ -105,7 +105,7 @@ python3 -m infrastructure.validation.cli markdown project/manuscript/
 ```python
 from infrastructure.documentation.glossary_gen import generate_api_glossary
 
-# Generate comprehensive API documentation
+# Generate API documentation
 glossary_markdown = generate_api_glossary('project/src/')
 
 # Save to manuscript
@@ -395,7 +395,7 @@ glossary = generate_api_glossary(
 - `typing` - Type annotations
 
 **Optional Dependencies:**
-- `markdown` - Enhanced markdown processing
+- `markdown` - markdown processing
 - `pygments` - Syntax highlighting for code examples
 
 ## Troubleshooting
@@ -495,7 +495,7 @@ print('Integration test passed')
 
 ### Planned Features
 
-**Enhanced Documentation:**
+**Documentation:**
 - Interactive HTML glossary generation
 - API usage examples in glossary
 - Cross-reference linking between symbols
@@ -521,6 +521,6 @@ print('Integration test passed')
 - [`../../scripts/AGENTS.md`](../../scripts/AGENTS.md) - Build pipeline documentation
 
 **System Integration:**
-- [`../../AGENTS.md`](../../AGENTS.md) - Complete system overview
+- [`../../AGENTS.md`](../../AGENTS.md) - system overview
 - [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - System architecture
 - [`../../docs/operational/BUILD_SYSTEM.md`](../../docs/operational/BUILD_SYSTEM.md) - Build system details

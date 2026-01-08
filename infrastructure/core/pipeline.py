@@ -61,32 +61,61 @@ class PipelineExecutor:
         self.config = config
         self.checkpoint_manager = CheckpointManager(project_name=config.project_name)
         
-        # Set up pipeline log file to capture all pipeline logs
+        # Define log file path (will be created by _setup_log_file_handler)
         log_dir = config.repo_root / 'projects' / config.project_name / 'output' / 'logs'
-        log_dir.mkdir(parents=True, exist_ok=True)
         log_file = log_dir / 'pipeline.log'
         self.log_file = log_file  # Store for later access
+        self._log_handler: logging.FileHandler | None = None  # Track our file handler
+        
+        # Set up log file handler initially
+        # NOTE: This will be called again after clean stage to recreate the log file
+        self._setup_log_file_handler()
+
+    def _setup_log_file_handler(self) -> None:
+        """Set up or recreate the log file handler.
+        
+        Creates the log directory and file, and adds a file handler to the root
+        logger. This method is idempotent - it removes any existing handler for
+        this log file before creating a new one.
+        
+        This is called both during initialization and after the clean stage runs,
+        since the clean stage may delete the log file.
+        """
+        # Ensure log directory exists
+        self.log_file.parent.mkdir(parents=True, exist_ok=True)
         
         # Set up logger for this module
-        setup_logger(__name__, log_file=log_file)
+        setup_logger(__name__, log_file=self.log_file)
         
-        # Also add file handler to root logger to capture all pipeline logs
-        # This ensures logs from all modules (scripts, infrastructure, etc.) are captured
+        # Get root logger
         root_logger = logging.getLogger()
         
-        # Check if we already have a file handler for this log file to avoid duplicates
-        existing_file_handlers = [
+        # Remove any existing file handler for this log file
+        handlers_to_remove = [
             h for h in root_logger.handlers
-            if isinstance(h, logging.FileHandler) and h.baseFilename == str(log_file.resolve())
+            if isinstance(h, logging.FileHandler) and 
+               hasattr(h, 'baseFilename') and 
+               Path(h.baseFilename).resolve() == self.log_file.resolve()
         ]
+        for handler in handlers_to_remove:
+            handler.close()
+            root_logger.removeHandler(handler)
+            logger.debug(f"Removed existing log file handler: {handler.baseFilename}")
         
-        if not existing_file_handlers:
-            file_handler = logging.FileHandler(log_file)
-            # File logs without emojis, include logger name for context
-            file_formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s')
-            file_handler.setFormatter(file_formatter)
-            root_logger.addHandler(file_handler)
-            logger.debug(f"Added root logger file handler for pipeline log: {log_file}")
+        # Also track and close our own handler if it exists
+        if self._log_handler is not None:
+            try:
+                self._log_handler.close()
+            except Exception:
+                pass
+        
+        # Create new file handler
+        self._log_handler = logging.FileHandler(self.log_file)
+        # File logs without emojis, include logger name for context
+        file_formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s')
+        self._log_handler.setFormatter(file_formatter)
+        root_logger.addHandler(self._log_handler)
+        logger.debug(f"Set up log file handler: {self.log_file}")
 
     def execute_full_pipeline(self) -> list[PipelineStageResult]:
         """Execute complete pipeline (tests → analysis → PDF → validate → copy → LLM).
@@ -383,11 +412,21 @@ class PipelineExecutor:
     # the existing bash functions or Python equivalents
 
     def _run_clean_outputs(self) -> bool:
-        """Clean output directories for a fresh run."""
+        """Clean output directories for a fresh run.
+        
+        After cleaning, recreates the log file handler since clean_output_directories
+        may have deleted the log file.
+        """
         from infrastructure.core.file_operations import clean_output_directories
 
         logger.info("Cleaning output directories...")
         clean_output_directories(self.config.repo_root, self.config.project_name)
+        
+        # Recreate log file handler after clean deleted the log directory
+        # This ensures logs for subsequent stages are captured
+        self._setup_log_file_handler()
+        logger.info(f"Recreated pipeline log file: {self.log_file}")
+        
         return True
 
     def _run_setup_environment(self) -> bool:

@@ -41,11 +41,11 @@ The `usage/` directory contains practical examples, usage patterns, and guides f
 
 - **[`../guides/`](../guides/)** - Skill-level specific guides
 - **[`../reference/COMMON_WORKFLOWS.md`](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
-- **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** - Complete usage guide
+- **[`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)** - usage guide
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Complete documentation index
+- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 
 

@@ -9,7 +9,7 @@ The `docs/reference/` directory contains reference materials, quick lookups, and
 ```
 docs/reference/
 ├── AGENTS.md                       # This technical documentation
-├── API_REFERENCE.md                # Complete API documentation
+├── API_REFERENCE.md                # API documentation
 ├── ../reference/COMMON_WORKFLOWS.md             # Step-by-step workflow recipes
 ├── COPYPASTA.md                    # Reusable documentation snippets
 ├── FAQ.md                          # Frequently asked questions
@@ -22,7 +22,7 @@ docs/reference/
 
 ### API Reference (`API_REFERENCE.md`)
 
-**Comprehensive API documentation for all modules:**
+**API documentation for all modules:**
 
 **Infrastructure APIs:**
 - Core utilities (logging, configuration, exceptions)
@@ -92,7 +92,7 @@ docs/reference/
 
 **Command Reference:**
 ```bash
-# Complete pipeline execution
+# pipeline execution
 python3 scripts/execute_pipeline.py --core-only
 
 # Individual stage execution
@@ -190,9 +190,9 @@ python3 scripts/03_render_pdf.py --config custom.yaml
 - Memory errors → Reduce `PDF_MEMORY_LIMIT`
 ```
 
-### Comprehensive Coverage
+### Coverage
 
-**Complete Command Reference:**
+**Command Reference:**
 ```markdown
 ## All Pipeline Stages
 
@@ -225,7 +225,7 @@ python3 scripts/03_render_pdf.py --config custom.yaml
 ### Content Freshness
 
 **Regular Updates:**
-- Update command examples with new features
+- Update command examples with features
 - Refresh version-specific information
 - Validate all code snippets regularly
 - Update FAQ based on user questions
@@ -269,7 +269,7 @@ QUICK_START_CHEATSHEET.md → ../reference/COMMON_WORKFLOWS.md → FAQ.md
 
 **Reference Hierarchy:**
 - **Cheatsheet**: Immediate command reference
-- **Common Workflows**: Complete task procedures
+- **Common Workflows**: task procedures
 - **FAQ**: Problem-specific solutions
 - **API Reference**: Technical implementation details
 - **Glossary**: Concept definitions
@@ -280,7 +280,7 @@ QUICK_START_CHEATSHEET.md → ../reference/COMMON_WORKFLOWS.md → FAQ.md
 ```markdown
 ## Related Information
 
-- **Complete Setup**: See [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)
+- **Setup**: See [`../core/HOW_TO_USE.md`](../core/HOW_TO_USE.md)
 - **Troubleshooting**: See [`../operational/TROUBLESHOOTING_GUIDE.md`](../operational/TROUBLESHOOTING_GUIDE.md)
 - **Configuration**: See [`../operational/CONFIGURATION.md`](../operational/CONFIGURATION.md)
 - **API Details**: See [`API_REFERENCE.md`](API_REFERENCE.md)
@@ -333,7 +333,7 @@ with open('config_example.yaml') as f:
 
 **Content Standards:**
 - Use active voice in instructions
-- Provide complete, working examples
+- Provide, working examples
 - Include error handling in code snippets
 - Document prerequisites and assumptions
 
@@ -419,7 +419,7 @@ if issues:
 
 **Standardized Templates:**
 ```yaml
-# Complete project configuration template
+# project configuration template
 # Copy and customize for new projects
 
 paper:
@@ -467,7 +467,7 @@ llm:
 
 ### Planned Improvements
 
-**Enhanced Reference Materials:**
+**Reference Materials:**
 - Interactive command reference
 - Video tutorials for complex workflows
 - API playground for testing calls
@@ -498,6 +498,6 @@ llm:
 - [`API_REFERENCE.md`](API_REFERENCE.md) - Technical API details
 
 **System Documentation:**
-- [`../AGENTS.md`](../AGENTS.md) - Complete system overview
+- [`../AGENTS.md`](../AGENTS.md) - system overview
 - [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Documentation index
 - [`../../AGENTS.md`](../../AGENTS.md) - Root system documentation

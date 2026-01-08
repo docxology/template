@@ -16,7 +16,7 @@ This index provides an overview of all documentation files in the Research Proje
 ### 👨‍💻 **Developer / Researcher**
 **Goal:** Add figures, data analysis, and automation
 
-1. **[core/HOW_TO_USE.md](core/HOW_TO_USE.md)** - Complete usage guide (all 12 levels)
+1. **[core/HOW_TO_USE.md](core/HOW_TO_USE.md)** - usage guide (all 12 levels)
 2. **[guides/FIGURES_AND_ANALYSIS.md](guides/FIGURES_AND_ANALYSIS.md)** - Add figures and automation (Levels 4-6)
 3. **[core/ARCHITECTURE.md](core/ARCHITECTURE.md)** - Understand system design
 4. **[architecture/THIN_ORCHESTRATOR_SUMMARY.md](architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Learn the pattern
@@ -34,7 +34,7 @@ This index provides an overview of all documentation files in the Research Proje
 ### 🔍 **Troubleshooter**
 **Goal:** Fix issues and understand problems
 
-1. **[operational/TROUBLESHOOTING_GUIDE.md](operational/TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting
+1. **[operational/TROUBLESHOOTING_GUIDE.md](operational/TROUBLESHOOTING_GUIDE.md)** - troubleshooting
 2. **[reference/FAQ.md](reference/FAQ.md)** - Common questions and solutions
 3. **[operational/BUILD_SYSTEM.md](operational/BUILD_SYSTEM.md)** - Build system details
 4. **[operational/PERFORMANCE_OPTIMIZATION.md](operational/PERFORMANCE_OPTIMIZATION.md)** - Performance issues
@@ -45,22 +45,22 @@ This index provides an overview of all documentation files in the Research Proje
 
 Development standards are documented in the `.cursorrules/` directory:
 
-- **[`.cursorrules/AGENTS.md`](../.cursorrules/AGENTS.md)** - Complete overview and navigation guide
-- **[`.cursorrules/README.md`](../.cursorrules/README.md)** - Quick reference and patterns
-- **[`.cursorrules/error_handling.md`](../.cursorrules/error_handling.md)** - Exception handling patterns
-- **[`.cursorrules/security.md`](../.cursorrules/security.md)** - Security standards and guidelines
-- **[`.cursorrules/python_logging.md`](../.cursorrules/python_logging.md)** - Logging standards and best practices
-- **[`.cursorrules/infrastructure_modules.md`](../.cursorrules/infrastructure_modules.md)** - Infrastructure module development
-- **[`.cursorrules/testing_standards.md`](../.cursorrules/testing_standards.md)** - Testing patterns and coverage standards
-- **[`.cursorrules/documentation_standards.md`](../.cursorrules/documentation_standards.md)** - AGENTS.md and README.md writing guide
-- **[`.cursorrules/type_hints_standards.md`](../.cursorrules/type_hints_standards.md)** - Type annotation patterns
-- **[`.cursorrules/llm_standards.md`](../.cursorrules/llm_standards.md)** - LLM/Ollama integration patterns
-- **[`.cursorrules/code_style.md`](../.cursorrules/code_style.md)** - Code formatting and style standards
-- **[`.cursorrules/git_workflow.md`](../.cursorrules/git_workflow.md)** - Git workflow and commit standards
-- **[`.cursorrules/api_design.md`](../.cursorrules/api_design.md)** - API design and interface standards
-- **[`.cursorrules/manuscript_style.md`](../.cursorrules/manuscript_style.md)** - Manuscript formatting and style standards
-- **[`.cursorrules/reporting.md`](../.cursorrules/reporting.md)** - Reporting module standards and outputs
-- **[`.cursorrules/refactoring.md`](../.cursorrules/refactoring.md)** - Refactoring and modularization standards
+- **[`.cursorrules/AGENTS.md`](../../.cursorrules/AGENTS.md)** - Overview and navigation guide
+- **[`.cursorrules/README.md`](../../.cursorrules/README.md)** - Quick reference and patterns
+- **[`.cursorrules/error_handling.md`](../../.cursorrules/error_handling.md)** - Exception handling patterns
+- **[`.cursorrules/security.md`](../../.cursorrules/security.md)** - Security standards and guidelines
+- **[`.cursorrules/python_logging.md`](../../.cursorrules/python_logging.md)** - Logging standards and best practices
+- **[`.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md)** - Infrastructure module development
+- **[`.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md)** - Testing patterns and coverage standards
+- **[`.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md)** - AGENTS.md and README.md writing guide
+- **[`.cursorrules/type_hints_standards.md`](../../.cursorrules/type_hints_standards.md)** - Type annotation patterns
+- **[`.cursorrules/llm_standards.md`](../../.cursorrules/llm_standards.md)** - LLM/Ollama integration patterns
+- **[`.cursorrules/code_style.md`](../../.cursorrules/code_style.md)** - Code formatting and style standards
+- **[`.cursorrules/git_workflow.md`](../../.cursorrules/git_workflow.md)** - Git workflow and commit standards
+- **[`.cursorrules/api_design.md`](../../.cursorrules/api_design.md)** - API design and interface standards
+- **[`.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md)** - Manuscript formatting and style standards
+- **[`.cursorrules/reporting.md`](../../.cursorrules/reporting.md)** - Reporting module standards and outputs
+- **[`.cursorrules/refactoring.md`](../../.cursorrules/refactoring.md)** - Refactoring and modularization standards
 
 **Note**: Use `.cursorrules/` files as quick reference during development. Corresponding `docs/` files provide guides.
 
@@ -68,15 +68,15 @@ Development standards are documented in the `.cursorrules/` directory:
 
 ### **Primary Entry Points**
 - **[`README.md`](../README.md)** - **Main project overview** and quick start guide
-- **[`AGENTS.md`](../AGENTS.md)** - **Complete system documentation** - Everything you need to know
-- **[`docs/core/HOW_TO_USE.md`](core/HOW_TO_USE.md)** - **Complete usage guide** from basic to advanced levels
+- **[`AGENTS.md`](../AGENTS.md)** - **system documentation** - Everything you need to know
+- **[`docs/core/HOW_TO_USE.md`](core/HOW_TO_USE.md)** - **usage guide** from basic to advanced levels
 
 ### **Quick Reference**
 - **[`docs/reference/COPYPASTA.md`](reference/COPYPASTA.md)** - Ready-to-use content for sharing the template
 - **[`docs/reference/FAQ.md`](reference/FAQ.md)** - Frequently asked questions and common issues
 - **[`docs/reference/QUICK_START_CHEATSHEET.md`](reference/QUICK_START_CHEATSHEET.md)** - One-page essential commands reference
 - **[`docs/reference/COMMON_WORKFLOWS.md`](reference/COMMON_WORKFLOWS.md)** - Step-by-step workflow recipes
-- **[`docs/reference/GLOSSARY.md`](reference/GLOSSARY.md)** - Comprehensive glossary of terms
+- **[`docs/reference/GLOSSARY.md`](reference/GLOSSARY.md)** - glossary of terms
 - **[`scripts/README.md`](../scripts/README.md)** - Detailed utility documentation
 - **[`tests/README.md`](../tests/README.md)** - Test suite guide and commands
 - **[`tests/AGENTS.md`](../tests/AGENTS.md)** - Testing philosophy and structure
@@ -84,8 +84,8 @@ Development standards are documented in the `.cursorrules/` directory:
 ## 🏗️ **Architecture & Design**
 
 ### **System Architecture**
-- **[`docs/core/ARCHITECTURE.md`](core/ARCHITECTURE.md)** - Complete system design overview
-- **[`docs/architecture/TWO_LAYER_ARCHITECTURE.md`](architecture/TWO_LAYER_ARCHITECTURE.md)** - Complete two-layer architecture guide
+- **[`docs/core/ARCHITECTURE.md`](core/ARCHITECTURE.md)** - system design overview
+- **[`docs/architecture/TWO_LAYER_ARCHITECTURE.md`](architecture/TWO_LAYER_ARCHITECTURE.md)** - two-layer architecture guide
 - **[`docs/architecture/THIN_ORCHESTRATOR_SUMMARY.md`](architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Thin orchestrator pattern implementation
 - **[`docs/core/WORKFLOW.md`](core/WORKFLOW.md)** - Development workflow and build pipeline
 
@@ -130,23 +130,23 @@ Development standards are documented in the `.cursorrules/` directory:
 
 ### **Module Guides**
 - **[`docs/modules/MODULES_GUIDE.md`](modules/MODULES_GUIDE.md)** - Guide for all 7 modules
-- **[`docs/reference/API_REFERENCE.md`](reference/API_REFERENCE.md)** - Complete API documentation for all src/ modules
+- **[`docs/reference/API_REFERENCE.md`](reference/API_REFERENCE.md)** - API documentation for all src/ modules
 
 ## ⚙️ **Operational Guides**
 
 ### **Dependency & Build Management**
-- **[`docs/operational/DEPENDENCY_MANAGEMENT.md`](operational/DEPENDENCY_MANAGEMENT.md)** - Complete guide for uv package manager
-- **[`docs/operational/BUILD_SYSTEM.md`](operational/BUILD_SYSTEM.md)** - Complete build system reference
+- **[`docs/operational/DEPENDENCY_MANAGEMENT.md`](operational/DEPENDENCY_MANAGEMENT.md)** - guide for uv package manager
+- **[`docs/operational/BUILD_SYSTEM.md`](operational/BUILD_SYSTEM.md)** - build system reference
 - **[`docs/operational/PERFORMANCE_OPTIMIZATION.md`](operational/PERFORMANCE_OPTIMIZATION.md)** - Build time optimization and caching strategies
 
 ### **CI/CD & Automation**
 - **[`docs/operational/CI_CD_INTEGRATION.md`](operational/CI_CD_INTEGRATION.md)** - GitHub Actions and CI/CD integration guide
 
 ### **Pipeline Orchestration**
-- **[`../RUN_GUIDE.md`](../RUN_GUIDE.md)** - Complete pipeline orchestration guide (run.sh)
+- **[`../RUN_GUIDE.md`](../RUN_GUIDE.md)** - pipeline orchestration guide (run.sh)
 
 ### **Troubleshooting & Support**
-- **[`docs/operational/TROUBLESHOOTING_GUIDE.md`](operational/TROUBLESHOOTING_GUIDE.md)** - Comprehensive troubleshooting guide
+- **[`docs/operational/TROUBLESHOOTING_GUIDE.md`](operational/TROUBLESHOOTING_GUIDE.md)** - troubleshooting guide
 - **[`docs/reference/FAQ.md`](reference/FAQ.md)** - Frequently asked questions and common issues
 - **[`docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](operational/LLM_REVIEW_TROUBLESHOOTING.md)** - LLM-specific troubleshooting
 - **[`docs/operational/CHECKPOINT_RESUME.md`](operational/CHECKPOINT_RESUME.md)** - Checkpoint and resume system
@@ -176,10 +176,10 @@ Development standards are documented in the `.cursorrules/` directory:
 #### **Core Development Prompts**
 - **[`docs/prompts/README.md`](prompts/README.md)** - Navigation guide for all prompt templates
 - **[`docs/prompts/AGENTS.md`](prompts/AGENTS.md)** - Technical documentation for prompt templates
-- **[`docs/prompts/manuscript_creation.md`](prompts/manuscript_creation.md)** - Complete manuscript creation from research description
+- **[`docs/prompts/manuscript_creation.md`](prompts/manuscript_creation.md)** - manuscript creation from research description
 - **[`docs/prompts/code_development.md`](prompts/code_development.md)** - Standards-compliant code development
-- **[`docs/prompts/test_creation.md`](prompts/test_creation.md)** - Comprehensive test creation (no mocks policy)
-- **[`docs/prompts/feature_addition.md`](prompts/feature_addition.md)** - New feature development with architecture compliance
+- **[`docs/prompts/test_creation.md`](prompts/test_creation.md)** - test creation (no mocks policy)
+- **[`docs/prompts/feature_addition.md`](prompts/feature_addition.md)** - feature development with architecture compliance
 
 #### **Advanced Development Prompts**
 - **[`docs/prompts/refactoring.md`](prompts/refactoring.md)** - Clean break code refactoring
@@ -194,11 +194,11 @@ Development standards are documented in the `.cursorrules/` directory:
 docs/
 ├── README.md                           # Main docs entry point
 ├── AGENTS.md                           # Directory documentation guide
-├── DOCUMENTATION_INDEX.md              # Complete documentation index (this file)
+├── DOCUMENTATION_INDEX.md              # documentation index (this file)
 │
 ├── core/                               # Essential documentation
 │   ├── README.md                       # Core docs overview
-│   ├── HOW_TO_USE.md                   # Complete usage guide
+│   ├── HOW_TO_USE.md                   # usage guide
 │   ├── ARCHITECTURE.md                 # System design
 │   └── WORKFLOW.md                     # Development workflow
 │
@@ -211,7 +211,7 @@ docs/
 │
 ├── architecture/                       # Architecture documentation
 │   ├── README.md                       # Architecture overview
-│   ├── TWO_LAYER_ARCHITECTURE.md       # Complete architecture guide
+│   ├── TWO_LAYER_ARCHITECTURE.md       # architecture guide
 │   ├── THIN_ORCHESTRATOR_SUMMARY.md    # Pattern implementation
 │   └── DECISION_TREE.md                # Code placement decisions
 │
@@ -240,7 +240,7 @@ docs/
 │
 ├── reference/                          # Reference materials
 │   ├── README.md                       # Reference docs overview
-│   ├── API_REFERENCE.md                # Complete API docs
+│   ├── API_REFERENCE.md                # API docs
 │   ├── GLOSSARY.md                     # Terms and definitions
 │   ├── FAQ.md                          # Common questions
 │   ├── QUICK_START_CHEATSHEET.md       # Quick reference
@@ -288,16 +288,16 @@ docs/
 
 ## 🔗 **Cross-Referencing System**
 
-All documentation files include comprehensive cross-references:
+All documentation files include cross-references:
 
 - **README.md** → Links to all major documentation directories
-- **core/HOW_TO_USE.md** → Complete usage guide with all sections
+- **core/HOW_TO_USE.md** → usage guide with all sections
 - **core/ARCHITECTURE.md** → System design with related documentation links
 - **All files** → Include context about related information
 
 ## 📖 **Detailed Reading Paths**
 
-### **New Users - Complete Learning Path**
+### **New Users - Learning Path**
 1. **[README.md](../README.md)** - Project overview (5 min)
 2. **[guides/GETTING_STARTED.md](guides/GETTING_STARTED.md)** - Write first document (30 min)
 3. **[reference/QUICK_START_CHEATSHEET.md](reference/QUICK_START_CHEATSHEET.md)** - Essential commands reference
@@ -306,14 +306,14 @@ All documentation files include comprehensive cross-references:
 
 ### **Developers - Architecture & Patterns**
 1. **[core/ARCHITECTURE.md](core/ARCHITECTURE.md)** - System design overview (15 min)
-2. **[architecture/TWO_LAYER_ARCHITECTURE.md](architecture/TWO_LAYER_ARCHITECTURE.md)** - Complete architecture guide (30 min)
+2. **[architecture/TWO_LAYER_ARCHITECTURE.md](architecture/TWO_LAYER_ARCHITECTURE.md)** - architecture guide (30 min)
 3. **[architecture/THIN_ORCHESTRATOR_SUMMARY.md](architecture/THIN_ORCHESTRATOR_SUMMARY.md)** - Pattern implementation (20 min)
 4. **[core/WORKFLOW.md](core/WORKFLOW.md)** - Development process (20 min)
 5. **[guides/FIGURES_AND_ANALYSIS.md](guides/FIGURES_AND_ANALYSIS.md)** - Add figures and automation
 
 ### **Contributors - Standards & Process**
 1. **[development/CONTRIBUTING.md](development/CONTRIBUTING.md)** - Contribution guidelines (10 min)
-2. **[.cursorrules/AGENTS.md](../.cursorrules/AGENTS.md)** - Development standards (30 min)
+2. **[.cursorrules/AGENTS.md](../../.cursorrules/AGENTS.md)** - Development standards (30 min)
 3. **[guides/TESTING_AND_REPRODUCIBILITY.md](guides/TESTING_AND_REPRODUCIBILITY.md)** - TDD workflow (45 min)
 4. **[development/TESTING_GUIDE.md](development/TESTING_GUIDE.md)** - Testing requirements (20 min)
 5. **[development/CODE_OF_CONDUCT.md](development/CODE_OF_CONDUCT.md)** - Community standards (5 min)
@@ -321,7 +321,7 @@ All documentation files include comprehensive cross-references:
 ## 🎯 **Documentation Quality**
 
 ### **Standards Applied**
-- ✅ **Comprehensive coverage** - All features and workflows documented
+- ✅ **coverage** - All features and workflows documented
 - ✅ **Cross-referencing** - All files include links to related content
 - ✅ **Professional structure** - Clear organization and navigation
 - ✅ **Practical examples** - Real-world usage patterns included
@@ -329,16 +329,16 @@ All documentation files include comprehensive cross-references:
 - ✅ **Best practices** - Established patterns and guidelines included
 
 ### **Build System**
-- **[`docs/operational/BUILD_SYSTEM.md`](operational/BUILD_SYSTEM.md)** - Complete build system reference (status, performance, fixes)
+- **[`docs/operational/BUILD_SYSTEM.md`](operational/BUILD_SYSTEM.md)** - build system reference (status, performance, fixes)
 
 ### **Documentation Completeness**
 - ✅ **52+ documentation files** covering all aspects (including root-level guides)
-- ✅ **Complete cross-referencing** system
+- ✅ **cross-referencing** system
 - ✅ **Real-world examples** and showcase projects
 - ✅ **Technical implementation** details
 - ✅ **Build system analysis** and performance metrics
 - ✅ **Troubleshooting** and FAQ sections
-- ✅ **Advanced modules** comprehensive guides
+- ✅ **Advanced modules** guides
 - ✅ **Operational workflows** (CI/CD, dependencies, performance)
 - ✅ **Reference materials** (API, best practices, migration)
 - ✅ **Future development** roadmap

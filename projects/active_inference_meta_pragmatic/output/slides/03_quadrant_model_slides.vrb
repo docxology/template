@@ -1,0 +1,66 @@
+\begin{block}{Quadrant 4: Higher-Order Reasoning (Meta-Cognitive)}
+\protect\phantomsection\label{sec:quadrant_4}
+\textbf{Definition:} Meta-cognitive processing of meta-data about
+cognition itself, where systems analyze patterns in their own
+meta-cognitive performance to optimize fundamental framework parameters,
+enabling recursive self-analysis at the highest level of cognitive
+abstraction.
+
+\textbf{Active Inference Role:} Framework-level reasoning and
+meta-theoretical analysis through parameter optimization, allowing
+systems to evolve their cognitive architectures.
+
+\begin{block}{Mathematical Formulation}
+\protect\phantomsection\label{mathematical-formulation-3}
+Multi-level hierarchical optimization:
+
+\begin{equation}
+\min_{\Theta} \mathcal{F}(\pi; \Theta) + \mathcal{R}(\Theta)
+\label{eq:framework_optimization}
+\end{equation}
+
+Where \(\Theta\) represents framework parameters and
+\(\mathcal{R}(\Theta)\) is a regularization term ensuring framework
+coherence.
+
+\textbf{Higher-Order Optimization:}
+
+\begin{equation}
+\Theta^* = \arg\max_{\Theta} \mathbb{E}[U(c, e, \kappa \mid \Theta)]
+\label{eq:higher_order_optimization}
+\end{equation}
+
+Where: - \(\bar{c}\) = average confidence - \(e(\sigma)\) = strategy
+effectiveness - \(\kappa\) = framework coherence
+\end{block}
+
+\begin{block}{Demonstration: Framework Parameter Optimization}
+\protect\phantomsection\label{demonstration-framework-parameter-optimization}
+\textbf{Performance Analysis:}
+
+\begin{verbatim}
+Framework Parameter | Current | Optimized | Improvement
+Confidence Threshold | 0.7    | 0.65     | +12%
+Adaptation Rate     | 0.1    | 0.15     | +8%
+Strategy Diversity  | 3      | 5        | +15%
+Overall Performance | 78%    | 96%      | +23%
+\end{verbatim}
+
+Lowering the confidence threshold (0.7 → 0.65) enables earlier
+uncertainty detection. Increasing adaptation rate (0.1 → 0.15) allows
+faster response. Expanding strategy diversity (3 → 5) provides more
+options. Combined effect: +23\% overall improvement.
+
+\textbackslash begin\{figure\}{[}h{]} \centering
+\includegraphics[width=0.8\textwidth]{../figures/quadrant_4_metadata_metacognitive.png}
+\textbackslash caption\{Quadrant 4: Higher-order reasoning showing
+framework-level meta-cognitive processing. The system analyzes patterns
+in meta-cognitive performance to optimize framework parameters (Equation
+\eqref{eq:higher_order_optimization}). Framework evolution from initial
+(\(\theta_c=0.7\), \(\alpha=0.1\), \(d=3\)) to optimized
+(\(\theta_c=0.65\), \(\alpha=0.15\), \(d=5\)) achieves +23\% performance
+improvement through recursive self-analysis.\}
+\label{fig:quadrant_4_metadata_metacognitive}
+\textbackslash end\{figure\}
+\end{block}
+\end{block}

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `infrastructure/llm/validation/` directory contains validation utilities for ensuring the quality, consistency, and reliability of LLM-generated content. These modules provide comprehensive checks for content quality, format compliance, structural integrity, and output validation across all LLM operations in the research template system.
+The `infrastructure/llm/validation/` directory contains validation utilities for ensuring the quality, consistency, and reliability of LLM-generated content. These modules provide checks for content quality, format compliance, structural integrity, and output validation across all LLM operations in the research template system.
 
 ## Directory Structure
 
@@ -267,7 +267,7 @@ class SemanticRepetitionDetector(BaseValidator):
 
 #### Document Structure Validator
 
-**Comprehensive Structure Analysis:**
+**Structure Analysis:**
 ```python
 class DocumentStructureValidator(BaseValidator):
     """Validate document structure and organization."""
@@ -350,7 +350,7 @@ class ContentFlowValidator(BaseValidator):
 **Multi-Validator Orchestration:**
 ```python
 class ValidationOrchestrator:
-    """Orchestrate multiple validators for comprehensive validation."""
+    """Orchestrate multiple validators for validation."""
 
     def __init__(self, validators: List[BaseValidator] = None):
         self.validators = validators or self._create_default_validators()
@@ -470,10 +470,10 @@ def test_repetition_detector():
 
 ### Integration Testing
 
-**Comprehensive Validation Tests:**
+**Validation Tests:**
 ```python
 def test_validation_orchestrator():
-    """Test complete validation orchestration."""
+    """Test validation orchestration."""
 
     orchestrator = ValidationOrchestrator()
 
@@ -498,7 +498,7 @@ def test_validation_orchestrator():
 
     context = {'document_type': 'research_paper'}
 
-    # Run comprehensive validation
+    # Run validation
     result = orchestrator.validate_comprehensive(test_content, context)
 
     # Should detect some issues (repetition)
@@ -598,7 +598,7 @@ class ParallelValidationOrchestrator(ValidationOrchestrator):
 ```python
 def validate_with_error_handling(self, content: str,
                                 context: Dict[str, Any] = None) -> ValidationResult:
-    """Validate with comprehensive error handling."""
+    """Validate with error handling."""
 
     try:
         # Input validation
@@ -662,7 +662,7 @@ else:
     print(f"Validation issues: {result.issues}")
 ```
 
-### Comprehensive Validation
+### Validation
 
 **Multi-Validator Assessment:**
 ```python
@@ -812,5 +812,5 @@ result = validator.validate(content, context)
 - [`../review/AGENTS.md`](../review/AGENTS.md) - Review generation
 
 **System Documentation:**
-- [`../../../../AGENTS.md`](../../../../AGENTS.md) - Complete system overview
+- [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
 - [`../../../../../docs/operational/VALIDATION_GUIDE.md`](../../../../../../docs/operational/VALIDATION_GUIDE.md) - Validation usage guide

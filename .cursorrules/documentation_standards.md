@@ -4,16 +4,16 @@
 
 Every directory in the repository must have two documentation files:
 
-1. **AGENTS.md** - Comprehensive documentation (detailed)
+1. **AGENTS.md** - documentation (detailed)
 2. **README.md** - Quick reference guide (concise)
 
-This ensures complete information is available while also providing fast lookup.
+This ensures information is available while also providing fast lookup.
 
 ## Documentation Purpose
 
-### AGENTS.md - Comprehensive Guide
+### AGENTS.md - Guide
 
-**Purpose**: Complete, detailed documentation for understanding and working with the code.
+**Purpose**:, detailed documentation for understanding and working with the code.
 
 **Audience**: Developers who need deep understanding, AI agents seeking implementation details.
 
@@ -67,7 +67,7 @@ This ensures complete information is available while also providing fast lookup.
 7. **Testing** (for modules with tests)
    - How to run tests
    - Test structure
-   - Writing new tests
+   - Writing tests
 
 8. **API Reference** (for modules)
    - Key classes and functions
@@ -189,7 +189,7 @@ command here
 
 ## More Information
 
-See [AGENTS.md](AGENTS.md) for comprehensive documentation.
+See [AGENTS.md](AGENTS.md) for documentation.
 ```
 
 ## Code Documentation Standards
@@ -472,7 +472,7 @@ output here
 ### Update AGENTS.md When
 
 - Architecture changes
-- New features added
+- features added
 - API changes
 - Best practices discovered
 - Examples become outdated
@@ -523,7 +523,7 @@ Before committing documentation:
 
 ### Good AGENTS.md References
 
-- [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) - Complete module docs
+- [infrastructure/AGENTS.md](../infrastructure/AGENTS.md) - module docs
 - [code_project/src/AGENTS.md](../projects/code_project/src/AGENTS.md) - Project code docs
 - [tests/AGENTS.md](../tests/AGENTS.md) - Test framework docs
 
@@ -537,7 +537,7 @@ Before committing documentation:
 
 - [testing_standards.md](testing_standards.md) - Document tests properly
 - [type_hints_standards.md](type_hints_standards.md) - Type hint documentation
-- [../docs/DOCUMENTATION_INDEX.md](../docs/DOCUMENTATION_INDEX.md) - Complete documentation index
+- [../docs/DOCUMENTATION_INDEX.md](../docs/DOCUMENTATION_INDEX.md) - documentation index
 - [../docs/AGENTS.md](../docs/AGENTS.md) - Main project documentation
 - [../AGENTS.md](../AGENTS.md) - Root documentation
 - [../docs/core/ARCHITECTURE.md](../docs/core/ARCHITECTURE.md) - System architecture

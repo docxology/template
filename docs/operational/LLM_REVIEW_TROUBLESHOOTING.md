@@ -738,4 +738,4 @@ cat project/output/llm/quality_review.md
 ---
 
 **Last Updated**: Documentation review 2025-01-03
-**Status**: Complete troubleshooting guide for LLM review features
+**Status**: troubleshooting guide for LLM review features

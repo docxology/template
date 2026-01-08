@@ -2,7 +2,7 @@
 
 > **Definitions** of key concepts and terminology
 
-**Quick Reference:** [Cheatsheet](../reference/QUICK_START_CHEATSHEET.md) | [FAQ](../reference/FAQ.md) | [Complete Guide](../core/HOW_TO_USE.md)
+**Quick Reference:** [Cheatsheet](../reference/QUICK_START_CHEATSHEET.md) | [FAQ](../reference/FAQ.md) | [Guide](../core/HOW_TO_USE.md)
 
 ---
 
@@ -20,7 +20,7 @@
 ## A
 
 ### AGENTS.md
-Comprehensive technical documentation files found in each directory. Contains detailed information for developers and advanced users. Complemented by README.md files for quick reference.
+technical documentation files found in each directory. Contains detailed information for developers and advanced users. Complemented by README.md files for quick reference.
 
 **See**: [Directory Documentation](#directory-documentation)
 
@@ -44,7 +44,7 @@ Automated sequence of operations that validates tests, runs scripts, generates d
 **See**: [BUILD_SYSTEM.md](../operational/BUILD_SYSTEM.md)
 
 ### Business Logic
-Core algorithms, mathematical functions, and computational methods. Must reside in `src/` directory with comprehensive test coverage. Scripts should never implement business logic.
+Core algorithms, mathematical functions, and computational methods. Must reside in `src/` directory with test coverage. Scripts should never implement business logic.
 
 **See**: [Thin Orchestrator Pattern](#thin-orchestrator-pattern)
 
@@ -58,7 +58,7 @@ Single PDF document containing all manuscript sections in proper order. Generate
 **See**: [PDF Generation](#pdf-generation)
 
 ### Coverage Requirement
-Comprehensive test coverage required: 90% minimum for project code, 60% minimum for infrastructure. Enforced by build pipeline before PDF generation.
+test coverage required: 90% minimum for project code, 60% minimum for infrastructure. Enforced by build pipeline before PDF generation.
 
 **Check**: `pytest tests/ --cov=src --cov-report=term-missing`
 
@@ -78,7 +78,7 @@ Internal link between document parts (sections, equations, figures, tables) usin
 
 ### Directory Documentation
 Each major directory contains two documentation files:
-- **AGENTS.md**: Comprehensive technical reference
+- **AGENTS.md**: technical reference
 - **README.md**: Quick reference and navigation
 
 **Directories**: `src/`, `tests/`, `scripts/`, `manuscript/`, `docs/`, `repo_utilities/`
@@ -189,7 +189,7 @@ Automated checking of markdown files for broken references, missing images, inva
 **See**: [MARKDOWN_TEMPLATE_GUIDE.md](../usage/MARKDOWN_TEMPLATE_GUIDE.md)
 
 ### Mock Method
-**ABSOLUTELY PROHIBITED**: Fake implementation of function for testing purposes. **STRICTLY FORBIDDEN** in this template - all tests must use real data and real methods only.
+**ABSOLUTELY PROHIBITED**: Fake implementation of function for testing purposes. **STRICTLY FORBIDDEN** in this template - all tests must use data and real methods only.
 
 **Philosophy**: Test actual behavior, not mocked behavior. Mocking undermines test reliability and integration validation.
 
@@ -230,7 +230,7 @@ Process of converting markdown sources to professional PDF documents using Pando
 
 **Pipeline**: Markdown → Pandoc → LaTeX → XeLaTeX → PDF
 
-**Time**: ~84 seconds for complete rebuild (without optional LLM review)
+**Time**: ~84 seconds for rebuild (without optional LLM review)
 
 **See**: [BUILD_SYSTEM.md](../operational/BUILD_SYSTEM.md)
 
@@ -277,12 +277,12 @@ LaTeX-based cross-referencing that automatically numbers and links sections, equ
 **See**: [Cross-Reference](#cross-reference)
 
 ### Render Pipeline
-Another name for [Build Pipeline](#build-pipeline). The complete sequence from tests to final PDF.
+Another name for [Build Pipeline](#build-pipeline). The sequence from tests to final PDF.
 
 **Script**: `python3 scripts/execute_pipeline.py --core-only`
 
 ### Reproducibility
-Ability to regenerate exact same results from source. Ensured through deterministic RNG seeds, fixed dependencies, and comprehensive testing.
+Ability to regenerate exact same results from source. Ensured through deterministic RNG seeds, fixed dependencies, and testing.
 
 **Tools**: Version locking, seed fixing, environment capture
 
@@ -311,13 +311,13 @@ Unique identifier for manuscript section used in cross-references.
 **See**: [Cross-Reference](#cross-reference)
 
 ### Source Code
-Core business logic residing in `src/` directory. Must have comprehensive test coverage.
+Core business logic residing in `src/` directory. Must have test coverage.
 
 **Requirements**:
 - Type hints on public APIs
 - Docstrings on all functions
 - No circular imports
-- Comprehensive test coverage
+- test coverage
 
 **See**: [infrastructure/AGENTS.md](../../infrastructure/AGENTS.md), [code_project/src/AGENTS.md](../../projects/code_project/src/AGENTS.md)
 
@@ -370,12 +370,12 @@ Collection of all test files in `tests/` directory. Ensures all functionality wo
 **See**: [tests/AGENTS.md](../../tests/AGENTS.md)
 
 ### Testing
-Process of validating code correctness through automated test cases. **ABSOLUTE PROHIBITION**: No mocks allowed - all tests must use real data and real computations only.
+Process of validating code correctness through automated test cases. **ABSOLUTE PROHIBITION**: No mocks allowed - all tests must use data and computations only.
 
 **Requirements**:
-- 90% minimum for project code (currently 100% - perfect coverage!)
+- 90% minimum for project code (currently 100% - coverage!)
 - 60% minimum for infrastructure (currently 83.33% - exceeds stretch goal!)
-- Real data (no mocks)
+- data (no mocks)
 - Deterministic results
 - All tests must pass
 
@@ -386,7 +386,7 @@ Core architectural principle where scripts are lightweight wrappers that import 
 **Principles**:
 - ALL business logic in `src/`
 - Scripts only orchestrate
-- Comprehensive test coverage of `src/`
+- test coverage of `src/`
 - Clear separation of concerns
 
 **Benefits**: Maintainability, testability, reusability, clarity
@@ -466,7 +466,7 @@ LaTeX engine that supports Unicode and modern fonts. Used for PDF generation.
 - **[Quick Start Cheatsheet](../reference/QUICK_START_CHEATSHEET.md)** - Essential commands
 - **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
 - **[FAQ](../reference/FAQ.md)** - Frequently asked questions
-- **[Complete Guide](../core/HOW_TO_USE.md)** - All skill levels
+- **[Guide](../core/HOW_TO_USE.md)** - All skill levels
 - **[Architecture](../core/ARCHITECTURE.md)** - System design
 - **[Documentation Index](../DOCUMENTATION_INDEX.md)** - All documentation
 

@@ -248,6 +248,6 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete utils documentation
+- [AGENTS.md](AGENTS.md) - utils documentation
 - [../core/README.md](../core/README.md) - LLM core functionality
 - [../cli/README.md](../cli/README.md) - CLI interface

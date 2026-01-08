@@ -17,7 +17,7 @@ infrastructure/llm/utils/
 
 ### Ollama Utilities (`ollama.py`)
 
-**Comprehensive Ollama server and model management utilities:**
+**Ollama server and model management utilities:**
 
 #### Server Status Checking
 
@@ -44,7 +44,7 @@ def check_ollama_health(base_url: str = "http://localhost:11434",
                        timeout: float = 5.0) -> Dict[str, Any]:
     """Perform detailed Ollama server health check.
 
-    Returns comprehensive health information including:
+    Returns health information including:
     - Server responsiveness
     - Available models
     - API version information
@@ -177,11 +177,11 @@ def start_ollama_server(wait_for_ready: bool = True,
     """
 ```
 
-**Comprehensive Server Status:**
+**Server Status:**
 ```python
 def get_server_status(base_url: str = "http://localhost:11434",
                       timeout: float = 5.0) -> Dict[str, Any]:
-    """Get comprehensive Ollama server status.
+    """Get Ollama server status.
 
     Returns detailed server information:
     - Server version and build info
@@ -308,7 +308,7 @@ def test_model_preloading():
 **End-to-End Utility Testing:**
 ```python
 def test_complete_ollama_workflow():
-    """Test complete Ollama server interaction workflow."""
+    """Test Ollama server interaction workflow."""
 
     # Check server status
     assert is_ollama_running()
@@ -399,7 +399,7 @@ def _handle_network_errors(func):
 
 ### Logging Integration
 
-**Comprehensive Logging:**
+**Logging:**
 ```python
 # Debug level for detailed operations
 logger.debug(f"Checking Ollama server at {base_url}")
@@ -506,7 +506,7 @@ else:
 ```python
 from infrastructure.llm.utils.ollama import get_server_status
 
-# Get comprehensive server information
+# Get server information
 status = get_server_status()
 print(f"Ollama version: {status.get('version', 'unknown')}")
 print(f"Running models: {len(status.get('running_models', []))}")
@@ -588,7 +588,7 @@ models = get_available_models()  # Will show detailed debug logs
 **Diagnostic Function:**
 ```python
 def diagnose_ollama_setup():
-    """Comprehensive Ollama setup diagnosis."""
+    """Ollama setup diagnosis."""
     from infrastructure.llm.utils.ollama import (
         is_ollama_running, get_available_models,
         check_ollama_health, get_server_status
@@ -620,7 +620,7 @@ def diagnose_ollama_setup():
 
 ### Planned Improvements
 
-**Enhanced Server Management:**
+**Server Management:**
 - **Automatic Server Restart**: Detect and restart crashed servers
 - **Load Balancing**: Distribute requests across multiple Ollama instances
 - **Model Auto-Update**: Automatically pull latest model versions

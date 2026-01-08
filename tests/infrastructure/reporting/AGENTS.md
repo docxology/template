@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `tests/infrastructure/reporting/` directory contains comprehensive tests for the pipeline reporting and error aggregation infrastructure. These tests validate the reporting system's ability to generate consolidated pipeline reports, test results, and validation summaries.
+The `tests/infrastructure/reporting/` directory contains tests for the pipeline reporting and error aggregation infrastructure. These tests validate the reporting system's ability to generate consolidated pipeline reports, test results, and validation summaries.
 
 ## Directory Structure
 
@@ -192,12 +192,12 @@ def test_html_template_error_handling():
 
 ## Test Design Principles
 
-### Comprehensive Reporting Validation
+### Reporting Validation
 
-**Real Data Testing Approach:**
+**Data Testing Approach:**
 - Unlike many infrastructure tests, reporting tests use realistic pipeline data
 - Generate actual report files for validation
-- Test file I/O operations with real file system
+- Test file I/O operations with file system
 - Validate report content and structure thoroughly
 
 **Multi-Format Validation:**
@@ -535,7 +535,7 @@ def debug_error_categorization():
 
 ### Planned Improvements
 
-**Enhanced Testing:**
+**Testing:**
 - **Visual Report Testing**: Validate HTML report appearance
 - **Performance Benchmarking**: Track report generation speed
 - **Load Testing**: Test with large pipeline result sets

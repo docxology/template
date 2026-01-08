@@ -163,6 +163,6 @@ pytest tests/infrastructure/llm/test_core.py -m requires_ollama -v
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete technical documentation
+- [AGENTS.md](AGENTS.md) - technical documentation
 - [../README.md](../README.md) - LLM infrastructure overview
 - [../../core/](../../core/) - Core infrastructure utilities

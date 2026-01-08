@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `infrastructure/llm/prompts/fragments/` directory contains reusable prompt components that can be assembled into complete prompts. These fragments provide standardized, modular pieces for consistent LLM interactions across the research template system.
+The `infrastructure/llm/prompts/fragments/` directory contains reusable prompt components that can be assembled into prompts. These fragments provide standardized, modular pieces for consistent LLM interactions across the research template system.
 
 ## Directory Structure
 
@@ -25,7 +25,7 @@ infrastructure/llm/prompts/fragments/
 
 ```json
 {
-  "content": "You are an expert research assistant specializing in academic writing and scientific analysis. Your responses should be:\n- Accurate and evidence-based\n- Clear and accessible to educated readers\n- Methodologically sound\n- Ethically responsible\n- Critically thoughtful\n- Comprehensive yet concise\n- Well-structured and logically organized"
+  "content": "You are an expert research assistant specializing in academic writing and scientific analysis. Your responses should be:\n- Accurate and evidence-based\n- Clear and accessible to educated readers\n- Methodologically sound\n- Ethically responsible\n- Critically thoughtful\n- yet concise\n- Well-structured and logically organized"
 }
 ```
 
@@ -51,7 +51,7 @@ infrastructure/llm/prompts/fragments/
 
 ```json
 {
-  "content": "Ensure your response demonstrates:\n- Deep understanding of the subject matter\n- Clear and logical reasoning supported by evidence\n- Balanced consideration of multiple perspectives\n- Appropriate level of technical detail for the audience\n- Comprehensive coverage of key aspects and implications\n- Acknowledgment of limitations and uncertainties\n- Practical relevance and actionable insights"
+  "content": "Ensure your response demonstrates:\n- Deep understanding of the subject matter\n- Clear and logical reasoning supported by evidence\n- Balanced consideration of multiple perspectives\n- Appropriate level of technical detail for the audience\n- coverage of key aspects and implications\n- Acknowledgment of limitations and uncertainties\n- Practical relevance and actionable insights"
 }
 ```
 
@@ -115,7 +115,7 @@ infrastructure/llm/prompts/fragments/
 
 ```json
 {
-  "content": "When processing input, ensure:\n- Content is relevant to the requested task\n- Information is sufficiently complete for meaningful analysis\n- Data quality is adequate for the intended purpose\n- Assumptions are clearly stated when information is incomplete\n- Uncertainty is acknowledged and quantified where appropriate\n- Edge cases and special conditions are considered\n- Validation results are clearly communicated to the user"
+  "content": "When processing input, ensure:\n- Content is relevant to the requested task\n- Information is sufficiently for meaningful analysis\n- Data quality is adequate for the intended purpose\n- Assumptions are clearly stated when information is incomplete\n- Uncertainty is acknowledged and quantified where appropriate\n- Edge cases and special conditions are considered\n- Validation results are clearly communicated to the user"
 }
 ```
 
@@ -333,7 +333,7 @@ def test_fragment_substitution():
 **End-to-End Fragment Testing:**
 ```python
 def test_fragment_integration():
-    """Test fragments work correctly in complete prompts."""
+    """Test fragments work correctly in prompts."""
 
     # Create template using multiple fragments
     template = {
@@ -348,7 +348,7 @@ def test_fragment_integration():
 
     variables = {'content': 'Sample manuscript content...'}
 
-    # Compose complete prompt
+    # Compose prompt
     prompt = composer.compose_prompt(template, variables)
 
     # Verify all fragments are included
@@ -411,7 +411,7 @@ def load_fragment_efficiently(self, name: str) -> str:
 **Robust Error Recovery:**
 ```python
 def load_fragment_safely(self, name: str) -> str:
-    """Load fragment with comprehensive error handling."""
+    """Load fragment with error handling."""
 
     try:
         return self.load_fragment(name)
@@ -547,5 +547,5 @@ def audit_fragments(self) -> Dict[str, List[str]]:
 - [`../../templates/AGENTS.md`](../../templates/AGENTS.md) - Template system
 
 **System Documentation:**
-- [`../../../../AGENTS.md`](../../../../AGENTS.md) - Complete system overview
+- [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
 - [`../../../../../docs/development/CONTRIBUTING.md`](../../../../../docs/development/CONTRIBUTING.md) - Development guide

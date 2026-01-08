@@ -38,7 +38,7 @@ graph TD
     subgraph Infrastructure["Infrastructure Modules"]
         INFRA_LOGGING[infrastructure.core.logging_utils<br/>Advanced logging]
         INFRA_FIGURES[infrastructure.documentation.figure_manager<br/>Full figure management]
-        INFRA_MARKDOWN[infrastructure.documentation.markdown_integration<br/>Complete markdown processing]
+        INFRA_MARKDOWN[infrastructure.documentation.markdown_integration<br/>markdown processing]
     end
 
     LOGGING -.->|For advanced features| INFRA_LOGGING
@@ -95,10 +95,10 @@ metadata = fig_manager.register_figure(
 For advanced features, use infrastructure modules:
 - **Logging**: `infrastructure.core.logging_utils` for advanced logging
 - **Figures**: `infrastructure.documentation.figure_manager` for full figure management
-- **Markdown**: `infrastructure.documentation.markdown_integration` for complete markdown processing
+- **Markdown**: `infrastructure.documentation.markdown_integration` for markdown processing
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete technical documentation
+- [AGENTS.md](AGENTS.md) - technical documentation
 - [../AGENTS.md](../AGENTS.md) - Project source documentation
 - [../../../../infrastructure/core/AGENTS.md](../../../../infrastructure/core/AGENTS.md) - Infrastructure utilities

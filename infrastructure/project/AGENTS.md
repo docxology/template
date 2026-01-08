@@ -352,7 +352,7 @@ projects = discover_projects(repo_root)
 
 ## Testing
 
-The module includes comprehensive tests in `tests/infrastructure/test_project_discovery.py`:
+The module includes tests in `tests/infrastructure/test_project_discovery.py`:
 
 ```bash
 # Run project discovery tests
@@ -370,7 +370,7 @@ python3 -m pytest tests/infrastructure/test_project_discovery.py -v
 - [`infrastructure/core/script_discovery.py`](../core/script_discovery.py) - Analysis script discovery
 - [`infrastructure/core/file_operations.py`](../core/file_operations.py) - File operations with project support
 - [`scripts/AGENTS.md`](../../scripts/AGENTS.md) - Generic entry point orchestrators
-- [`AGENTS.md`](../../AGENTS.md) - Complete system documentation
+- [`AGENTS.md`](../../AGENTS.md) - system documentation
 
 ## Summary
 

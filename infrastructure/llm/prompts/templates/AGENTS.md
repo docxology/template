@@ -2,14 +2,14 @@
 
 ## Overview
 
-The `infrastructure/llm/prompts/templates/` directory contains complete, pre-built prompt templates for common research tasks. These templates combine fragments and variables to provide ready-to-use prompts for manuscript review, paper summarization, and other academic workflows.
+The `infrastructure/llm/prompts/templates/` directory contains, pre-built prompt templates for common research tasks. These templates combine fragments and variables to provide ready-to-use prompts for manuscript review, paper summarization, and other academic workflows.
 
 ## Directory Structure
 
 ```
 infrastructure/llm/prompts/templates/
 ├── AGENTS.md                       # This technical documentation
-├── manuscript_reviews.json         # Comprehensive manuscript review template
+├── manuscript_reviews.json         # manuscript review template
 └── paper_summarization.json        # Research paper summarization template
 ```
 
@@ -53,12 +53,12 @@ infrastructure/llm/prompts/templates/
 
 ### Manuscript Reviews (`manuscript_reviews.json`)
 
-**Comprehensive manuscript evaluation template:**
+**manuscript evaluation template:**
 
 ```json
 {
   "name": "manuscript_reviews",
-  "description": "Complete manuscript review template for academic papers",
+  "description": "manuscript review template for academic papers",
   "version": "1.0",
   "variables": {
     "manuscript_content": {
@@ -176,7 +176,7 @@ infrastructure/llm/prompts/templates/
     },
     {
       "type": "instruction",
-      "content": "Create a concise, comprehensive summary of the following research paper for a {audience_level} audience."
+      "content": "Create a concise, summary of the following research paper for a {audience_level} audience."
     },
     {
       "type": "instruction",
@@ -364,7 +364,7 @@ def discover_available_templates(self) -> List[str]:
 **Template Information Retrieval:**
 ```python
 def get_template_info(self, name: str) -> Dict[str, Any]:
-    """Get comprehensive template information."""
+    """Get template information."""
 
     template = self.load_template(name)
 
@@ -384,7 +384,7 @@ def get_template_info(self, name: str) -> Dict[str, Any]:
 
 ### Template Validation Testing
 
-**Comprehensive Template Tests:**
+**Template Tests:**
 ```python
 def test_template_validation():
     """Test all templates load and validate correctly."""
@@ -474,7 +474,7 @@ def benchmark_template_composition():
 
     # Verify output quality
     assert len(prompt) > 1000  # Reasonable output length
-    assert 'comprehensive review' in prompt.lower()
+    assert 'review' in prompt.lower()
 ```
 
 ## Error Handling
@@ -484,7 +484,7 @@ def benchmark_template_composition():
 **Robust Template Loading:**
 ```python
 def load_template_safely(self, name: str) -> Optional[Dict[str, Any]]:
-    """Load template with comprehensive error handling."""
+    """Load template with error handling."""
 
     try:
         return self.load_template(name, validate=True)
@@ -644,5 +644,5 @@ def audit_templates(self) -> Dict[str, List[str]]:
 - [`../composer.py`](../composer.py) - Composition logic
 
 **System Documentation:**
-- [`../../../../AGENTS.md`](../../../../AGENTS.md) - Complete system overview
+- [`../../../../AGENTS.md`](../../../../AGENTS.md) - system overview
 - [`../../../../../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md`](../../../../../docs/usage/MARKDOWN_TEMPLATE_GUIDE.md) - Template usage guide

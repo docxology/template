@@ -1,8 +1,8 @@
-# Comprehensive Assessment and Review Prompt
+# Assessment and Review Prompt
 
 ## Purpose
 
-Conduct a comprehensive assessment and review of all methods, tests, documentation, sections, and markdown files in the research template system. Ensure full test success, validate all real (no mocks) data analysis, and verify proper matched manuscript references.
+Conduct a assessment and review of all methods, tests, documentation, sections, and markdown files in the research template system. Ensure full test success, validate all real (no mocks) data analysis, and verify proper matched manuscript references.
 
 ## Assessment Scope
 
@@ -13,7 +13,7 @@ Conduct a comprehensive assessment and review of all methods, tests, documentati
 - ✅ All project tests passing (code_project: 28/28, active_inference_meta_pragmatic: varies, ento_linguistics: 484 tests)
 - ✅ Infrastructure test coverage: 83.33% (exceeds 60% minimum by 39%)
 - ✅ Project test coverage: code_project 94.1% (exceeds 90% minimum)
-- ✅ No mock methods - all tests use real data and computations
+- ✅ No mock methods - all tests use data and computations
 - ✅ Deterministic test results with fixed seeds
 
 ### 2. Code Quality Review
@@ -33,7 +33,7 @@ Conduct a comprehensive assessment and review of all methods, tests, documentati
 
 #### Source Modules
 - **Business Logic**: Ensure all algorithms in src/ modules
-- **Real Data Processing**: Validate no mock data usage
+- **Data Processing**: Validate no mock data usage
 - **API Consistency**: Check function signatures and return types
 - **Edge Case Handling**: Test boundary conditions and error scenarios
 
@@ -54,14 +54,14 @@ Conduct a comprehensive assessment and review of all methods, tests, documentati
 - `scripts/` - Orchestrator scripts and pipeline stages
 - `tests/` - Test suite architecture and coverage requirements
 - `projects/` - Multi-project management
-- `projects/{name}/` - Complete research unit (e.g., code_project, active_inference_meta_pragmatic, ento_linguistics)
+- `projects/{name}/` - research unit (e.g., code_project, active_inference_meta_pragmatic, ento_linguistics)
 - `projects/{name}/src/` - Scientific algorithms
 - `projects/{name}/tests/` - Project validation
 - `projects/{name}/scripts/` - Analysis workflows
 - `projects/{name}/manuscript/` - Research content
 
 **Content Requirements**:
-- Complete function signatures with type hints
+- function signatures with type hints
 - Usage examples and integration patterns
 - Architecture diagrams (Mermaid format)
 - Cross-reference validation
@@ -105,12 +105,10 @@ Conduct a comprehensive assessment and review of all methods, tests, documentati
 - **Test Success**: All tests must pass before PDF generation
 - **Coverage Requirements**: Infrastructure ≥60%, Project ≥90%
 - **Manuscript Validation**: No unresolved references or broken links
-- **Output Integrity**: All generated files must be valid and complete
-
-### 6. Integration Testing
+- **Output Integrity**: All generated files must be valid and ### 6. Integration Testing
 
 #### End-to-End Workflows
-- **Data Generation → Analysis → Visualization**: Complete pipeline testing
+- **Data Generation → Analysis → Visualization**: pipeline testing
 - **Manuscript → PDF → Validation**: Document generation verification
 - **Multi-Project Execution**: Parallel project processing
 - **Cross-Component Integration**: Module interoperability validation
@@ -124,7 +122,7 @@ Conduct a comprehensive assessment and review of all methods, tests, documentati
 ### 7. Performance and Scalability
 
 #### Execution Time
-- **Test Suite**: Complete execution under 60 seconds
+- **Test Suite**: execution under 60 seconds
 - **Individual Tests**: No test exceeding 10 seconds
 - **Build Pipeline**: Full pipeline completion under 5 minutes
 - **Memory Usage**: Reasonable resource consumption
@@ -147,7 +145,7 @@ Conduct a comprehensive assessment and review of all methods, tests, documentati
 - **Graceful Degradation**: System functionality when components fail
 - **Informative Messages**: Clear error reporting for debugging
 - **Recovery Mechanisms**: Automatic retry and recovery logic
-- **Logging**: Comprehensive operation tracking
+- **Logging**: operation tracking
 
 ## Assessment Methodology
 
@@ -190,18 +188,18 @@ python3 -m infrastructure.validation.cli refs projects/code_project/manuscript/
 ### Test Coverage Targets
 - **Infrastructure**: ≥60% coverage (currently 83.33% - exceeds requirement by 39%)
 - **Project Code**: ≥90% coverage (code_project: 94.1% - exceeds requirement)
-- **Integration Tests**: Complete workflow coverage (21/21 tests passing)
+- **Integration Tests**: workflow coverage (21/21 tests passing)
 - **Error Paths**: Exception handling validation
 
 ### Documentation Standards
 - **Function Documentation**: 100% of public APIs documented
-- **Module Documentation**: Complete AGENTS.md for all modules
+- **Module Documentation**: AGENTS.md for all modules
 - **Usage Examples**: Working code samples in documentation
 - **Cross-References**: Valid internal and external links
 
 ### Code Quality Standards
 - **Type Hints**: All public functions with type annotations
-- **Error Handling**: Comprehensive exception management
+- **Error Handling**: exception management
 - **Logging**: Consistent structured logging
 - **Patterns**: Adherence to thin orchestrator principles
 
@@ -214,8 +212,8 @@ python3 -m infrastructure.validation.cli refs projects/code_project/manuscript/
 4. ✅ Validate manuscript cross-reference integrity - COMPLETED
 
 ### High Priority (Quality)
-1. Complete AGENTS.md documentation audit
-2. Implement comprehensive error handling
+1. AGENTS.md documentation audit
+2. Implement error handling
 3. Add missing type hints and docstrings
 4. Validate integration test coverage
 
@@ -237,10 +235,10 @@ python3 -m infrastructure.validation.cli refs projects/code_project/manuscript/
 - ✅ 0 failing tests
 - ✅ ≥60% infrastructure coverage
 - ✅ ≥90% project coverage
-- ✅ All real data analysis (no mocks)
+- ✅ All data analysis (no mocks)
 
 ### Documentation
-- ✅ Complete AGENTS.md coverage
+- ✅ AGENTS.md coverage
 - ✅ Accurate technical documentation
 - ✅ Working code examples
 - ✅ Clear navigation and signposting
@@ -248,8 +246,7 @@ python3 -m infrastructure.validation.cli refs projects/code_project/manuscript/
 ### Manuscript
 - ✅ All cross-references resolved
 - ✅ Figure/table citations match generated content
-- ✅ Bibliography entries complete
-- ✅ Mathematical notation validated
+- ✅ Bibliography entries - ✅ Mathematical notation validated
 
 ### Build System
 - ✅ All pipeline stages functional
@@ -259,7 +256,7 @@ python3 -m infrastructure.validation.cli refs projects/code_project/manuscript/
 
 ### Code Quality
 - ✅ Type hints on all public APIs
-- ✅ Comprehensive error handling
+- ✅ error handling
 - ✅ Consistent logging patterns
 - ✅ Thin orchestrator pattern compliance
 
@@ -295,7 +292,7 @@ Test Status: ✅ PASSED | ❌ FAILED
 - Project: X% coverage (target: 90%)
 - Failures: X (target: 0)
 
-Documentation: ✅ COMPLETE | ❌ INCOMPLETE
+Documentation: ✅ | ❌ INCOMPLETE
 - AGENTS.md files: X/Y present
 - README.md files: X/Y present
 - Cross-references: ✅ VALID | ❌ BROKEN
@@ -303,7 +300,7 @@ Documentation: ✅ COMPLETE | ❌ INCOMPLETE
 Manuscript: ✅ VALID | ❌ INVALID
 - References resolved: X/Y
 - Figures matched: X/Y
-- Citations complete: X/Y
+- Citations: X/Y
 
 Code Quality: ✅ PASSING | ❌ FAILING
 - Type hints: X% coverage
@@ -325,7 +322,7 @@ Code Quality: ✅ PASSING | ❌ FAILING
 ## Usage
 
 This prompt should be used for:
-- **Code Reviews**: Comprehensive assessment of codebase health
+- **Code Reviews**: assessment of codebase health
 - **Pre-Release Validation**: Ensuring system readiness
 - **Quality Assurance**: Maintaining high standards
 - **Onboarding**: Understanding system requirements and status

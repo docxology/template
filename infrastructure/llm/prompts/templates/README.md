@@ -28,7 +28,7 @@ prompt = apply_template(
 Structured review templates:
 
 ```python
-# Comprehensive review
+# review
 prompt = apply_template(
     template="comprehensive_review",
     variables={
@@ -246,7 +246,7 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete templates documentation
+- [AGENTS.md](AGENTS.md) - templates documentation
 - [../README.md](../README.md) - Prompts module overview
 - [../fragments/README.md](../fragments/README.md) - Fragment system
 - [../compositions/README.md](../compositions/README.md) - Composition system

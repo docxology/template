@@ -1,10 +1,10 @@
 # 🚀 Getting Started Guide
 
-> **Complete beginner's guide** to using the Research Project Template
+> **beginner's guide** to using the Research Project Template
 
 **Quick Reference:** [Cheatsheet](../reference/QUICK_START_CHEATSHEET.md) | [Common Workflows](../reference/COMMON_WORKFLOWS.md) | [FAQ](../reference/FAQ.md)
 
-This guide covers **Levels 1-3** of the Research Project Template. Perfect for users who just want to write documents without programming.
+This guide covers **Levels 1-3** of the Research Project Template. for users who just want to write documents without programming.
 
 ## 📚 What You'll Learn
 
@@ -170,7 +170,7 @@ manuscript/
 
 ### Generate Your PDF
 
-1. **Run complete pipeline**
+1. **Run pipeline**
    ```bash
    # Runs all 6 stages including cleanup
    python3 scripts/execute_pipeline.py --core-only
@@ -297,9 +297,9 @@ Figure \ref{fig:example} demonstrates the algorithm's performance.
 - `caption{}` - Description below figure
 - `label{}` - Unique name for referencing
 
-### Complete Example
+### Example
 
-Here's a complete methodology section with equations and references:
+Here's a methodology section with equations and references:
 
 ```markdown
 # Methodology {#sec:methodology}
@@ -462,7 +462,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
    ```markdown
    Recent advances \cite{smith2020climate} demonstrate...
    
-   For comprehensive review, see \cite{jones2019ai}.
+   For review, see \cite{jones2019ai}.
    ```
 
 4. **Rebuild to see citations**
@@ -549,7 +549,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 **Solutions**:
 1. Check relative path: `../output/figures/name.png`
 2. Verify file exists: `ls project/output/figures/`
-3. Run complete pipeline (includes script execution): `python3 scripts/execute_pipeline.py --core-only`
+3. Run pipeline (includes script execution): `python3 scripts/execute_pipeline.py --core-only`
 
 ---
 
@@ -577,7 +577,7 @@ The template uses `manuscript/preamble.md` for styling. You can modify:
 - **[Quick Start Cheatsheet](../reference/QUICK_START_CHEATSHEET.md)** - One-page reference
 - **[Common Workflows](../reference/COMMON_WORKFLOWS.md)** - Step-by-step recipes
 - **[Glossary](../reference/GLOSSARY.md)** - Terms and definitions
-- **[Markdown Template Guide](../usage/MARKDOWN_TEMPLATE_GUIDE.md)** - Complete formatting reference
+- **[Markdown Template Guide](../usage/MARKDOWN_TEMPLATE_GUIDE.md)** - formatting reference
 - **[Documentation Index](../DOCUMENTATION_INDEX.md)** - All documentation
 
 ---

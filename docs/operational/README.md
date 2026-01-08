@@ -12,13 +12,13 @@ The `operational/` directory contains documentation for operating, configuring, 
 
 | File | Purpose | Audience |
 |------|---------|----------|
-| [`BUILD_SYSTEM.md`](BUILD_SYSTEM.md) | Complete build system reference | Developers |
+| [`BUILD_SYSTEM.md`](BUILD_SYSTEM.md) | build system reference | Developers |
 | [`CI_CD_INTEGRATION.md`](CI_CD_INTEGRATION.md) | CI/CD integration guide | Developers |
 | [`DEPENDENCY_MANAGEMENT.md`](DEPENDENCY_MANAGEMENT.md) | Package management guide | Developers |
 | [`PERFORMANCE_OPTIMIZATION.md`](PERFORMANCE_OPTIMIZATION.md) | Performance tuning guide | Developers |
 | [`CONFIGURATION.md`](CONFIGURATION.md) | Configuration system guide | All users |
 | [`CHECKPOINT_RESUME.md`](CHECKPOINT_RESUME.md) | Checkpoint and resume system | All users |
-| [`TROUBLESHOOTING_GUIDE.md`](TROUBLESHOOTING_GUIDE.md) | Comprehensive troubleshooting | All users |
+| [`TROUBLESHOOTING_GUIDE.md`](TROUBLESHOOTING_GUIDE.md) | troubleshooting | All users |
 | [`LLM_REVIEW_TROUBLESHOOTING.md`](LLM_REVIEW_TROUBLESHOOTING.md) | LLM-specific troubleshooting | Advanced users |
 | [`ERROR_HANDLING_GUIDE.md`](ERROR_HANDLING_GUIDE.md) | Error handling patterns | Developers |
 | [`LOGGING_GUIDE.md`](LOGGING_GUIDE.md) | Logging system guide | Developers |
@@ -48,7 +48,7 @@ The `operational/` directory contains documentation for operating, configuring, 
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Complete documentation index
+- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 
 

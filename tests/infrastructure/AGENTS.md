@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The `tests/infrastructure/` directory contains comprehensive tests for the reusable infrastructure modules in `infrastructure/`. These tests validate the build tools, validation systems, documentation utilities, and integration components that support research projects.
+The `tests/infrastructure/` directory contains tests for the reusable infrastructure modules in `infrastructure/`. These tests validate the build tools, validation systems, documentation utilities, and integration components that support research projects.
 
 ## Coverage Requirements
 
@@ -13,18 +13,17 @@ The `tests/infrastructure/` directory contains comprehensive tests for the reusa
 ```
 tests/infrastructure/
 ├── conftest.py                      # Shared test configuration and fixtures
-├── test_utils.py                    # Test utility functions and helpers
-├── test_project_discovery.py        # Project discovery and validation (284 lines)
+├── _test_helpers.py                 # Test utility functions (underscore = not a test file)
 ├── build/                          # Build system tests
 │   ├── test_build_additional.py    # Additional build tests
-│   ├── test_build_complete.py      # Comprehensive build tests
-│   ├── test_build_verifier_complete_coverage.py # Complete build verifier coverage
+│   ├── test_build_complete.py      # build tests
+│   ├── test_build_verifier_complete_coverage.py # build verifier coverage
 │   ├── test_build_verifier_coverage.py # Build verifier coverage
 │   ├── test_build_verifier.py      # Build verification (400 lines)
-│   ├── test_quality_checker_complete_coverage.py # Complete quality checker coverage
+│   ├── test_quality_checker_complete_coverage.py # quality checker coverage
 │   ├── test_quality_checker_coverage.py # Quality checker coverage
 │   ├── test_quality_checker.py     # Quality analysis (463 lines)
-│   ├── test_reproducibility_complete_coverage.py # Complete reproducibility coverage
+│   ├── test_reproducibility_complete_coverage.py # reproducibility coverage
 │   ├── test_reproducibility_coverage.py # Reproducibility coverage
 │   └── test_reproducibility.py     # Reproducibility tracking (427 lines)
 ├── core/                           # Core utilities tests
@@ -34,6 +33,7 @@ tests/infrastructure/
 │   ├── test_exceptions.py          # Exception handling
 │   ├── test_logging_utils.py       # Logging system
 │   ├── test_progress.py            # Progress tracking
+│   ├── test_project_discovery.py   # Project discovery and validation (284 lines)
 │   └── test_retry.py               # Retry mechanisms
 ├── documentation/                  # Documentation tools tests
 │   ├── test_figure_manager.py      # Figure management (registry, numbering)
@@ -71,7 +71,7 @@ tests/infrastructure/
 │   ├── test_core.py                # Core LLM functionality
 │   ├── test_llm_core_additional.py # Additional core tests
 │   ├── test_llm_core_coverage.py   # Coverage-focused tests
-│   ├── test_llm_core_full.py       # Comprehensive core tests
+│   ├── test_llm_core_full.py       # core tests
 │   ├── test_llm_review.py          # LLM manuscript review tests
 │   ├── test_ollama_utils.py        # Ollama client utilities
 │   ├── test_prompts_composer.py    # Prompt composition utilities
@@ -105,15 +105,16 @@ tests/infrastructure/
 │   ├── test_renderers.py           # General rendering tests
 │   ├── test_rendering_cli_full.py  # Full CLI tests
 │   ├── test_rendering_cli.py       # CLI functionality
-│   ├── test_slides_renderer_comprehensive.py # Comprehensive slides
+│   ├── test_slides_renderer_comprehensive.py # slides
 │   ├── test_slides_renderer_coverage.py # Slides coverage
 │   └── test_web_renderer_coverage.py # Web rendering coverage
 ├── scientific/                     # Scientific tools tests
 │   ├── test_scientific_dev_edge_cases.py # Edge case handling
 │   └── test_scientific_dev.py      # Scientific development utilities
 ├── validation/                     # Validation system tests
+│   ├── test_audit_orchestrator.py  # Audit orchestration (moved from root)
 │   ├── test_check_links.py         # Link validation
-│   ├── test_check_links_comprehensive.py # Comprehensive link tests
+│   ├── test_check_links_comprehensive.py # link tests
 │   ├── test_check_links_edge_cases.py # Edge case link tests
 │   ├── test_check_links_full.py    # Full link validation
 │   ├── test_cli.py                 # CLI interface
@@ -121,20 +122,24 @@ tests/infrastructure/
 │   ├── test_doc_scanner_coverage.py # Coverage-focused scanning
 │   ├── test_doc_scanner_full.py    # Full document scanning
 │   ├── test_doc_scanner_phases.py  # Scanning phases
+│   ├── test_figure_validator.py    # Figure validation
 │   ├── test_integrity.py           # Integrity verification (496 lines)
+│   ├── test_integrity_edge_cases.py # Edge case integrity tests
+│   ├── test_issue_categorizer.py   # Issue categorization (moved from root)
 │   ├── test_markdown_validator.py  # Markdown validation
+│   ├── test_output_validator.py    # Output validation
 │   ├── test_pdf_validator.py       # PDF validation (328 lines)
 │   ├── test_repo_scanner.py        # Repository scanning
 │   ├── test_repo_scanner_additional.py # Additional repo scanning
-│   ├── test_repo_scanner_comprehensive.py # Comprehensive repo scanning
+│   ├── test_repo_scanner_comprehensive.py # repo scanning
 │   ├── test_repo_scanner_coverage.py # Coverage repo scanning
 │   ├── test_repo_scanner_full.py   # Full repo scanning
 │   ├── test_validate_markdown_cli.py # Markdown CLI
-│   ├── test_validate_markdown_cli_comprehensive.py # Comprehensive CLI
+│   ├── test_validate_markdown_cli_comprehensive.py # CLI
 │   ├── test_validate_markdown_cli_full.py # Full CLI tests
 │   ├── test_validate_md_cli_coverage.py # Coverage CLI tests
 │   ├── test_validate_pdf_cli.py    # PDF CLI
-│   ├── test_validate_pdf_cli_comprehensive.py # Comprehensive PDF CLI
+│   ├── test_validate_pdf_cli_comprehensive.py # PDF CLI
 │   ├── test_validate_pdf_cli_coverage.py # Coverage PDF CLI
 │   ├── test_validate_pdf_cli_full.py # Full PDF CLI
 │   └── test_validation_cli.py      # General validation CLI
@@ -169,16 +174,16 @@ def output_directory_structure(tmp_path):
 
 @pytest.fixture
 def pdf_file_fixture(tmp_path):
-    """Create real PDF file using reportlab (or fallback if not available)"""
+    """Create PDF file using reportlab (or fallback if not available)"""
 
 @pytest.fixture
 def output_with_pdf(output_directory_structure, pdf_file_fixture):
     """Create output directory with PDF in correct pdf/ subdirectory location"""
 ```
 
-### Test Utilities (`test_utils.py`)
+### Test Utilities (`_test_helpers.py`)
 
-The `test_utils.py` module provides helper functions for creating test data:
+The `_test_helpers.py` module provides helper functions for creating test data:
 
 #### Configuration Helpers
 ```python
@@ -198,7 +203,7 @@ def create_output_directory_structure(output_dir: Path) -> None:
     """Create pdf/, web/, slides/, figures/, data/, etc. subdirectories"""
 
 def create_pdf_file(pdf_path: Path, content: str = "Test PDF", size_kb: int = 100) -> None:
-    """Create real PDF file with specified content and size"""
+    """Create PDF file with specified content and size"""
 
 def create_output_with_pdf(output_dir: Path, pdf_name: str = "project_combined.pdf") -> Path:
     """Create output structure with PDF in correct location"""
@@ -221,7 +226,7 @@ def cleanup_test_directory(test_dir: Path) -> None:
 #### Testing Configuration Loading
 ```python
 def test_config_loading(project_config_file):
-    """Test config loading with real file structure"""
+    """Test config loading with file structure"""
     config = load_config(project_config_file)
     assert config['paper']['title'] == 'Test Research Paper'
 ```
@@ -299,22 +304,22 @@ def test_custom_config(tmp_path):
 **Purpose:** Validate build verification and quality assurance
 
 - **`test_build_additional.py`** - Additional build verification tests
-- **`test_build_complete.py`** - Comprehensive build system tests
-- **`test_build_verifier_complete_coverage.py`** - Complete coverage for build verifier
+- **`test_build_complete.py`** - build system tests
+- **`test_build_verifier_complete_coverage.py`** - coverage for build verifier
 - **`test_build_verifier_coverage.py`** - Build verifier coverage tests
 - **`test_build_verifier.py`** (400 lines) - Build process validation
   - Artifact verification and integrity
   - Build reproducibility testing
   - Environment consistency checking
 
-- **`test_quality_checker_complete_coverage.py`** - Complete coverage for quality checker
+- **`test_quality_checker_complete_coverage.py`** - coverage for quality checker
 - **`test_quality_checker_coverage.py`** - Quality checker coverage tests
 - **`test_quality_checker.py`** (463 lines) - Document quality analysis
   - Readability metrics (Flesch score, Fog index)
   - Academic writing standards compliance
   - Quality scoring and reporting
 
-- **`test_reproducibility_complete_coverage.py`** - Complete coverage for reproducibility
+- **`test_reproducibility_complete_coverage.py`** - coverage for reproducibility
 - **`test_reproducibility_coverage.py`** - Reproducibility coverage tests
 - **`test_reproducibility.py`** (427 lines) - Environment tracking
   - Build manifest generation
@@ -421,7 +426,7 @@ def test_custom_config(tmp_path):
   - Legal PDF source discovery
 
 - **`test_workflow.py`** - Literature workflow tests
-  - Complete workflow validation
+  - workflow validation
   - Workflow state management
 
 - **`test_workflow_skip_existing.py`** - Workflow with skip existing
@@ -538,7 +543,7 @@ def test_custom_config(tmp_path):
   - Internal and external link checking
   - Reference resolution validation
 
-- **`test_check_links_comprehensive.py`** - Comprehensive link tests
+- **`test_check_links_comprehensive.py`** - link tests
 - **`test_check_links_edge_cases.py`** - Edge case link tests
 - **`test_check_links_full.py`** - Full link validation
 
@@ -575,17 +580,17 @@ def test_custom_config(tmp_path):
   - Documentation completeness checking
 
 - **`test_repo_scanner_additional.py`** - Additional repo scanning
-- **`test_repo_scanner_comprehensive.py`** - Comprehensive repo scanning
+- **`test_repo_scanner_comprehensive.py`** - repo scanning
 - **`test_repo_scanner_coverage.py`** - Coverage repo scanning
 - **`test_repo_scanner_full.py`** - Full repo scanning
 
 - **`test_validate_markdown_cli.py`** - Markdown CLI
-- **`test_validate_markdown_cli_comprehensive.py`** - Comprehensive CLI
+- **`test_validate_markdown_cli_comprehensive.py`** - CLI
 - **`test_validate_markdown_cli_full.py`** - Full CLI tests
 - **`test_validate_md_cli_coverage.py`** - Coverage CLI tests
 
 - **`test_validate_pdf_cli.py`** - PDF CLI
-- **`test_validate_pdf_cli_comprehensive.py`** - Comprehensive PDF CLI
+- **`test_validate_pdf_cli_comprehensive.py`** - PDF CLI
 - **`test_validate_pdf_cli_coverage.py`** - Coverage PDF CLI
 - **`test_validate_pdf_cli_full.py`** - Full PDF CLI
 
@@ -593,11 +598,11 @@ def test_custom_config(tmp_path):
 
 ## Testing Approach
 
-### Real Data and Real Services
+### Data and Real Services
 
 All infrastructure tests use **real implementations** without mocks:
 
-- **Literature tests**: Real PDF downloads from arXiv/Semantic Scholar
+- **Literature tests**: PDF downloads from arXiv/Semantic Scholar
 - **Publishing tests**: Real API calls to Zenodo sandbox and GitHub
 - **Rendering tests**: Real LaTeX/Pandoc compilation
 - **LLM tests**: Real Ollama service connections
@@ -697,14 +702,14 @@ def test_config_parsing():
 
 Infrastructure tests use real implementations where possible:
 
-- **Real file I/O** with temporary directories
+- **file I/O** with temporary directories
 - **Actual subprocess calls** for CLI validation
-- **Real data structures** and processing
+- **data structures** and processing
 - **Integration testing** of actual workflows
 
 ### Error Condition Testing
 
-Comprehensive error handling validation:
+error handling validation:
 
 ```python
 def test_api_rate_limit_handling():
@@ -773,7 +778,7 @@ open htmlcov/index.html
 
 ### Automatic Execution
 
-Infrastructure tests run as part of the complete test suite:
+Infrastructure tests run as part of the test suite:
 
 ```bash
 # Stage 1: Run all tests
@@ -820,7 +825,7 @@ class TestClassToTest:
 
     @pytest.mark.integration
     def test_full_workflow(self):
-        """Test complete workflow integration."""
+        """Test workflow integration."""
         # Test end-to-end functionality
         pass
 ```
@@ -903,7 +908,7 @@ pytest tests/infrastructure/ --durations=10
 
 **Pure logic tests** validate configuration, result processing, and citation generation without network calls.
 
-**Integration tests** validate complete search-download-cite workflows.
+**Integration tests** validate search-download-cite workflows.
 
 ### LLM Module
 

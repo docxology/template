@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `infrastructure/llm/review/` directory contains the manuscript review system that leverages Large Language Models to provide comprehensive feedback on research documents. This module analyzes academic writing, suggests improvements, and ensures quality standards are met.
+The `infrastructure/llm/review/` directory contains the manuscript review system that leverages Large Language Models to provide feedback on research documents. This module analyzes academic writing, suggests improvements, and ensures quality standards are met.
 
 ## Directory Structure
 
@@ -23,10 +23,10 @@ infrastructure/llm/review/
 
 #### Review Generation Engine
 
-**Comprehensive Review Creation:**
+**Review Creation:**
 ```python
 class ReviewGenerator:
-    """Generates comprehensive manuscript reviews using LLM."""
+    """Generates manuscript reviews using LLM."""
 
     def __init__(self, llm_client: LLMClient, config: ReviewConfig = None):
         self.client = llm_client
@@ -156,7 +156,7 @@ class ReviewIO:
 **Markdown Review Reports:**
 ```python
 def _save_markdown_review(self, review: ReviewResult, output_path: Path) -> None:
-    """Generate comprehensive markdown review report."""
+    """Generate markdown review report."""
 
     content = f"""# Manuscript Review Report
 
@@ -237,7 +237,7 @@ class ReviewMetrics:
 
 #### Manuscript Quality Scoring
 
-**Comprehensive Quality Assessment:**
+**Quality Assessment:**
 ```python
 def assess_manuscript_quality(self, manuscript: str, review: ReviewResult) -> QualityReport:
     """Assess overall manuscript quality based on review."""
@@ -277,7 +277,7 @@ def assess_manuscript_quality(self, manuscript: str, review: ReviewResult) -> Qu
 from infrastructure.llm.review import ReviewGenerator, ReviewIO
 
 def perform_manuscript_review(manuscript_path: Path) -> None:
-    """Complete manuscript review workflow."""
+    """manuscript review workflow."""
 
     # Load manuscript
     manuscript = load_manuscript(manuscript_path)
@@ -570,7 +570,7 @@ print(f"Priority improvements: {quality_report.priority_improvements}")
 **Robust Error Recovery:**
 ```python
 def generate_review_safely(self, manuscript: str) -> ReviewResult:
-    """Generate review with comprehensive error handling."""
+    """Generate review with error handling."""
 
     try:
         # Validate input
@@ -602,7 +602,7 @@ def generate_review_safely(self, manuscript: str) -> ReviewResult:
 
 **Script Integration (`scripts/06_llm_review.py`):**
 ```bash
-# Generate comprehensive review
+# Generate review
 python3 scripts/06_llm_review.py --review manuscript.md
 
 # Generate reviews only (no other operations)
@@ -696,5 +696,5 @@ def review_large_manuscript(manuscript: str, chunk_size: int = 10000):
 - [`../AGENTS.md`](../AGENTS.md) - LLM module overview
 
 **System Documentation:**
-- [`../../../AGENTS.md`](../../../AGENTS.md) - Complete system overview
+- [`../../../AGENTS.md`](../../../AGENTS.md) - system overview
 - [`../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md`](../../../../docs/operational/LLM_REVIEW_TROUBLESHOOTING.md) - LLM review troubleshooting

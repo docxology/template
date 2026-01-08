@@ -17,7 +17,7 @@ python3 scripts/06_llm_review.py --review manuscript.md
 
 ## Features
 
-- **Manuscript Review**: Comprehensive academic paper evaluation
+- **Manuscript Review**: academic paper evaluation
 - **Summarization**: Research paper and document summaries
 - **Prompt Engineering**: Modular prompt templates and fragments
 - **Local Processing**: Privacy-first with no external API calls

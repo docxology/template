@@ -1,6 +1,6 @@
 # tests/ - Test Suite
 
-Comprehensive tests for Active Inference framework using real computations.
+tests for Active Inference framework using computations.
 
 ## Quick Start
 
@@ -18,7 +18,7 @@ pytest test_quadrant_framework.py -v
 
 ## Key Features
 
-- **Real data testing** (no mocks)
+- **data testing** (no mocks)
 - **Mathematical correctness validation**
 - **Theoretical framework verification**
 - **Edge case coverage**
@@ -71,4 +71,4 @@ graph TD
 
 ## More Information
 
-See [AGENTS.md](AGENTS.md) for complete technical documentation.
+See [AGENTS.md](AGENTS.md) for technical documentation.

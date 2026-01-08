@@ -224,7 +224,7 @@ summarize:
 	@python3 -m infrastructure.llm.cli.main template summarize_abstract --input "$(shell cat manuscript/abstract.md)" > summary.txt
 
 research: analyze summarize
-	@echo "Research workflow complete"
+	@echo "Research workflow"
 ```
 
 ## Troubleshooting
@@ -306,7 +306,7 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete CLI documentation
+- [AGENTS.md](AGENTS.md) - CLI documentation
 - [../core/README.md](../core/README.md) - LLM core functionality
 - [../templates/README.md](../templates/README.md) - Template system
 - [../../../AGENTS.md](../../../AGENTS.md) - LLM infrastructure overview

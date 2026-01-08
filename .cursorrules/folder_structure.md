@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document establishes the mandatory folder structure documentation pattern that applies to every directory in the Research Project Template. Every directory must follow this pattern to ensure consistent, comprehensive documentation across the entire codebase.
+This document establishes the mandatory folder structure documentation pattern that applies to every directory in the Research Project Template. Every directory must follow this pattern to ensure consistent, documentation across the entire codebase.
 
 ## Core Documentation Pattern
 
@@ -10,7 +10,7 @@ This document establishes the mandatory folder structure documentation pattern t
 
 Every directory **must** contain exactly two documentation files:
 
-1. **`AGENTS.md`** - Comprehensive technical documentation
+1. **`AGENTS.md`** - technical documentation
 2. **`README.md`** - Quick human reference guide
 
 ### Pattern Enforcement
@@ -19,7 +19,7 @@ This pattern is **mandatory** at all folder levels:
 
 ```
 directory/
-├── AGENTS.md          # REQUIRED: Complete technical documentation for AI agents and developers
+├── AGENTS.md          # REQUIRED: technical documentation for AI agents and developers
 ├── README.md          # REQUIRED: Quick reference with signposting and Mermaid diagrams
 ├── [optional].md      # OPTIONAL: Additional specialized documentation
 └── [code files]
@@ -30,9 +30,9 @@ directory/
 ## AGENTS.md Requirements
 
 ### Purpose
-- **Complete technical documentation** for understanding and working with directory contents
+- **technical documentation** for understanding and working with directory contents
 - **AI agent friendly** - structured for automated parsing and comprehension
-- **Developer reference** - comprehensive details for implementation and maintenance
+- **Developer reference** - details for implementation and maintenance
 
 ### Content Structure
 1. **Overview** (50-100 words) - What this directory does, why it exists, who uses it
@@ -41,7 +41,7 @@ directory/
 4. **Installation/Setup** (if applicable) - Prerequisites, installation steps, configuration
 5. **Usage Examples** - Common tasks, real-world scenarios, copy-paste ready examples
 6. **Configuration** (if applicable) - All options, environment variables, config files
-7. **Testing** (for directories with tests) - How to run tests, test structure, writing new tests
+7. **Testing** (for directories with tests) - How to run tests, test structure, writing tests
 8. **API Reference** (for modules) - Key classes, functions, import statements, parameters, returns
 9. **Troubleshooting** - Common issues, solutions, debug tips
 10. **Best Practices** - Do's and don'ts, performance tips, security considerations
@@ -65,7 +65,7 @@ directory/
 3. **Key Features** - 3-5 bullet points highlighting capabilities
 4. **Installation** - Copy-paste ready commands (if applicable)
 5. **Common Commands** - 3-5 most frequently used operations
-6. **More Information** - Link to AGENTS.md for comprehensive details
+6. **More Information** - Link to AGENTS.md for details
 
 ### Length Guidelines
 - **Typical**: 50-150 lines
@@ -78,7 +78,7 @@ directory/
 
 | Directory | AGENTS.md | README.md | Purpose |
 |-----------|-----------|-----------|---------|
-| `infrastructure/` | ✅ Complete module documentation | ✅ Quick reference | Generic build/validation tools |
+| `infrastructure/` | ✅ module documentation | ✅ Quick reference | Generic build/validation tools |
 | `scripts/` | ✅ Entry point documentation | ✅ Quick reference | Orchestration scripts |
 | `tests/` | ✅ Testing philosophy | ✅ Quick reference | Test suites |
 | `project/` | ✅ Project structure guide | ✅ Quick reference | Research code |
@@ -92,7 +92,7 @@ All `infrastructure/` subdirectories follow the pattern:
 ```
 infrastructure/module/
 ├── __init__.py           # Public API exports
-├── AGENTS.md            # REQUIRED: Complete technical documentation
+├── AGENTS.md            # REQUIRED: technical documentation
 ├── README.md            # REQUIRED: Quick reference
 ├── core.py              # Core functionality
 ├── cli.py               # Command-line interface (optional)
@@ -168,7 +168,7 @@ Additional documentation files should only be added when:
 | `CHANGELOG.md` | Version history, migration notes | Versioned infrastructure modules |
 | `EXAMPLES.md` | Extended usage examples | Complex modules with many use cases |
 | `TROUBLESHOOTING.md` | Detailed troubleshooting | Error-prone modules (LLM, rendering) |
-| `API.md` | Complete API reference | Large public-facing modules |
+| `API.md` | API reference | Large public-facing modules |
 | `DESIGN.md` | Design decisions, rationale | Complex architectural decisions |
 | `DEPENDENCIES.md` | External dependencies | Modules with complex requirements |
 
@@ -205,7 +205,7 @@ graph TD
 ```
 infrastructure/llm/
 ├── __init__.py
-├── AGENTS.md          # Complete LLM integration documentation
+├── AGENTS.md          # LLM integration documentation
 ├── README.md          # Quick LLM setup and usage
 ├── core/
 │   ├── __init__.py
@@ -224,7 +224,7 @@ infrastructure/llm/
 ```
 project/src/
 ├── __init__.py
-├── AGENTS.md          # Complete research code documentation
+├── AGENTS.md          # research code documentation
 ├── README.md          # Quick research code reference
 ├── data_processing.py
 ├── simulation.py

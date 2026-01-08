@@ -1,10 +1,10 @@
 # API Reference
 
-> **Complete API documentation** for all infrastructure modules
+> **API documentation** for all infrastructure modules
 
 **Quick Reference:** [Modules Guide](../modules/MODULES_GUIDE.md) | [Infrastructure Docs](../../infrastructure/AGENTS.md) | [Getting Started](../guides/GETTING_STARTED.md)
 
-This document provides comprehensive API reference for all public functions and classes in the `infrastructure/` modules. All modules follow the thin orchestrator pattern with comprehensive test coverage.
+This document provides API reference for all public functions and classes in the `infrastructure/` modules. All modules follow the thin orchestrator pattern with test coverage.
 
 **Note**: These modules are part of the infrastructure layer. For project-specific code, see `project/src/`.
 
@@ -349,7 +349,7 @@ print(preview)
 
 #### `validate_pdf_rendering(pdf_path: Path, n_words: int = 200) -> Dict[str, Any]`
 
-Perform comprehensive validation of PDF rendering.
+Perform validation of PDF rendering.
 
 **Parameters:**
 - `pdf_path` (Path): Path to PDF file to validate
@@ -400,7 +400,7 @@ Container for integrity verification results.
 
 #### `verify_output_integrity(output_dir: Path) -> IntegrityReport`
 
-Perform comprehensive integrity verification.
+Perform integrity verification.
 
 **Parameters:**
 - `output_dir` (Path): Output directory to verify
@@ -709,8 +709,8 @@ latex_block = manager.generate_latex_figure_block("fig:convergence")
 
 ## Additional Modules
 
-For complete API documentation of all modules, see:
-- **[Infrastructure Documentation](../../infrastructure/AGENTS.md)** - Complete infrastructure module descriptions
+For API documentation of all modules, see:
+- **[Infrastructure Documentation](../../infrastructure/AGENTS.md)** - infrastructure module descriptions
 - **[Code Project Source Documentation](../../projects/code_project/src/AGENTS.md)** - Project-specific module descriptions
 - **[Scientific Simulation Guide](../modules/SCIENTIFIC_SIMULATION_GUIDE.md)** - Simulation and analysis modules
 - **[Visualization Guide](../usage/VISUALIZATION_GUIDE.md)** - Visualization and figure management
@@ -739,7 +739,7 @@ This API reference covers all public functions and classes in the `infrastructur
 
 - Follow the thin orchestrator pattern
 - Maintain required test coverage (90% project, 60% infra)
-- Include comprehensive type hints
+- Include type hints
 - Provide detailed docstrings
 
 For usage examples, see [Modules Guide](../modules/MODULES_GUIDE.md).

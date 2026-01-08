@@ -6,7 +6,7 @@ The LLM module provides a unified interface for interacting with local large lan
 
 - **Flexible response modes**: Short, long, structured (JSON), raw
 - **Per-query configuration**: Temperature, seed, stop sequences, max_tokens
-- **Comprehensive output validation**: JSON, length, structure, citations
+- **output validation**: JSON, length, structure, citations
 - **Conversation context management**: System prompt injection, token limits
 - **Environment-based configuration**: OLLAMA_* and LLM_* environment variables
 
@@ -76,7 +76,7 @@ infrastructure/llm/
    - Variable substitution
    - Template registry
 
-6. **OutputValidator** - Comprehensive output quality assurance
+6. **OutputValidator** - output quality assurance
    - JSON validation and parsing
    - Response length checking
    - Format validation
@@ -218,8 +218,7 @@ answer = client.query_short("What is machine learning?")
 - Definitions
 - Brief explanations
 
-### 3. Long Responses (> 500 tokens)
-Comprehensive, detailed answers with extended output:
+### 3. Long Responses (> 500 tokens), detailed answers with extended output:
 
 ```python
 explanation = client.query_long("Explain neural networks in detail")
@@ -402,7 +401,7 @@ result = template.render(aspect="limitations", content="...")
 
 ## Validation
 
-The `OutputValidator` provides comprehensive output quality assurance:
+The `OutputValidator` provides output quality assurance:
 
 ### JSON Validation
 
@@ -444,7 +443,7 @@ citations = OutputValidator.validate_citations(content)
 # Extracts: (Author Year), [1], @bibtexkey formats
 ```
 
-### Comprehensive Validation
+### Validation
 
 ```python
 OutputValidator.validate_complete(
@@ -461,7 +460,7 @@ OutputValidator.validate_complete(
 Following the project's **No Mocks Policy**, LLM tests are structured as:
 
 1. **Pure Logic Tests** (93 tests) - Test configuration, validation, context, templates
-   - Use real data and computations
+   - Use data and computations
    - No MagicMock, mocker.patch, or unittest.mock
    - Run without network access
 
@@ -559,7 +558,7 @@ Retry behavior:
 
 - Use `seed` parameter for deterministic outputs
 - Set via `GenerationOptions(seed=42)` or `LLM_SEED` env var
-- Combined with `temperature=0.0` for fully reproducible results
+- Combined with `temperature=0.0` for reproducible results
 
 ### Model Fallback
 
@@ -693,7 +692,7 @@ except ValidationError as e:
 
 ## Manuscript Review Integration
 
-The LLM module is used by `scripts/06_llm_review.py` to generate comprehensive manuscript reviews. This section documents best practices for long-form review generation.
+The LLM module is used by `scripts/06_llm_review.py` to generate manuscript reviews. This section documents best practices for long-form review generation.
 
 ### Review Generation Best Practices
 
@@ -922,7 +921,7 @@ The validation system accepts multiple valid formats:
 
 ## Format Compliance Validation
 
-The validation system includes comprehensive format compliance checking that detects common LLM failure modes:
+The validation system includes format compliance checking that detects common LLM failure modes:
 
 ### Detection Categories
 
@@ -950,7 +949,7 @@ has_tables = detect_tables(response)  # Returns bool
 phrases = detect_conversational_phrases(response)  # Returns list of phrases
 refs = detect_hallucinated_sections(response)      # Returns list of refs
 
-# Comprehensive check
+# check
 is_compliant, issues, details = check_format_compliance(response)
 # issues: ["Contains 3 emoji(s) - violates format requirements", ...]
 # details: {"emojis_found": [...], "has_tables": False, ...}
@@ -1008,11 +1007,11 @@ REQUIRED FORMAT - Use ONLY these exact headers:
 ```markdown
 ## Overview 🔑
 
-Based on the document you shared, this is an excellent manuscript! 🚀
+Based on the document you shared, this is an manuscript! 🚀
 
 | Aspect | Assessment |
 |--------|------------|
-| Quality | Excellent |
+| Quality | |
 
 As described in Section 12.8.1, the framework provides great results.
 Let me know if you need more details!
@@ -1027,7 +1026,7 @@ The manuscript presents a research framework for optimization algorithms.
 ## Key Contributions
 
 - Novel algorithm design with improved convergence
-- Comprehensive experimental validation
+- experimental validation
 - Open-source implementation
 
 ## Methodology Summary

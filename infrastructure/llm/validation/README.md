@@ -4,7 +4,7 @@ Input validation and quality checks for LLM interactions.
 
 ## Overview
 
-The validation module provides comprehensive validation for LLM inputs, outputs, and interactions. It ensures prompt quality, response validation, and security checks.
+The validation module provides validation for LLM inputs, outputs, and interactions. It ensures prompt quality, response validation, and security checks.
 
 ## Quick Start
 
@@ -296,6 +296,6 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete validation documentation
+- [AGENTS.md](AGENTS.md) - validation documentation
 - [../core/README.md](../core/README.md) - LLM core functionality
 - [../utils/README.md](../utils/README.md) - Utility functions

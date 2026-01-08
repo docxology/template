@@ -2,13 +2,13 @@
 
 ## Overview
 
-Comprehensive test suite for the LLM module with **88%+ coverage** following the **No Mocks Policy**. All tests use real data and real computations.
+test suite for the LLM module with **88%+ coverage** following the **No Mocks Policy**. All tests use data and computations.
 
 ## Test Migration Progress
 
 ### ✅ Completed Migrations
 
-**Real HTTP Testing Pattern:**
+**HTTP Testing Pattern:**
 ```python
 def test_query_fallback_on_connection_error(ollama_test_server):
     """Test fallback models on primary connection error."""
@@ -27,7 +27,7 @@ def test_query_fallback_on_connection_error(ollama_test_server):
 ```
 
 **Key Patterns:**
-- Use `ollama_test_server` fixture for real HTTP server
+- Use `ollama_test_server` fixture for HTTP server
 - Configure server responses based on model parameter in request
 - Test JSON format handling via `format: "json"` field in request payload
 - Test actual fallback logic with real network calls
@@ -36,7 +36,7 @@ def test_query_fallback_on_connection_error(ollama_test_server):
 ### 🔄 Migration Status
 
 **✅ COMPLETED (1/33 tests):**
-- `test_query_fallback_on_connection_error` - Real HTTP fallback testing
+- `test_query_fallback_on_connection_error` - HTTP fallback testing
 
 **⏳ REMAINING (32 tests in test_llm_core_additional.py):**
 - Structured JSON parsing edge cases
@@ -51,7 +51,7 @@ def test_query_fallback_on_connection_error(ollama_test_server):
 **Migration Strategy:**
 1. **Server Enhancement**: Extend `ollama_test_server` fixture to handle model-specific responses and JSON format requests
 2. **JSON Format Support**: Test server checks `format: "json"` field and returns valid JSON for structured queries
-3. **Test-by-Test Migration**: Convert individual tests to use real HTTP calls
+3. **Test-by-Test Migration**: Convert individual tests to use HTTP calls
 4. **Edge Case Handling**: Configure server for various error conditions and response formats
 5. **Validation**: Ensure all tests pass with real network interactions
 
@@ -66,7 +66,7 @@ tests/infrastructure/llm/
 ├── test_core.py             # Core LLMClient tests (26 tests)
 ├── test_llm_core_additional.py   # Additional core coverage (33 tests)
 ├── test_llm_core_coverage.py     # Extended coverage tests (28 tests)
-├── test_llm_core_full.py         # Complete feature tests (26 tests)
+├── test_llm_core_full.py         # feature tests (26 tests)
 ├── test_ollama_utils.py     # Model discovery tests (24 tests)
 ├── test_templates.py        # Template tests (4 tests)
 └── test_validation.py       # Validation tests (51 tests)
@@ -227,7 +227,7 @@ def test_query_structured(self, ...):
 | `cli.py` | 60% | Command-line interface |
 | **Total** | **88%** | All critical paths covered |
 
-## Adding New Tests
+## Adding Tests
 
 ### For Pure Logic
 

@@ -215,6 +215,30 @@ class RenderManager:
         Returns:
             Path to generated poster
         """
+
+    def render_combined_pdf(self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project") -> Path:
+        """Render combined PDF from multiple markdown files.
+
+        Args:
+            source_files: List of markdown files in order to combine
+            manuscript_dir: Directory containing manuscript files (for preamble/bib)
+            project_name: Name of the project for filename generation
+
+        Returns:
+            Path to generated combined PDF file
+        """
+
+    def render_combined_web(self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project") -> Path:
+        """Render combined HTML from multiple markdown files.
+
+        Args:
+            source_files: List of markdown files in order to combine
+            manuscript_dir: Directory containing manuscript files
+            project_name: Name of the project for filename generation
+
+        Returns:
+            Path to generated combined HTML file (index.html)
+        """
 ```
 
 ### pdf_renderer.py
@@ -318,6 +342,46 @@ class WebRenderer:
         Returns:
             Path to generated HTML
         """
+
+    def render_combined(self, source_files: List[Path], manuscript_dir: Path, project_name: str = "project") -> Path:
+        """Render multiple markdown files as a combined HTML document.
+
+        Combines all source files, applies CSS styling, and generates a single index.html
+        with table of contents and embedded CSS.
+
+        Args:
+            source_files: List of markdown files in order
+            manuscript_dir: Directory containing manuscript files
+            project_name: Name of the project for filename generation
+
+        Returns:
+            Path to generated combined HTML file (index.html)
+
+        Raises:
+            RenderingError: If combination or rendering fails
+        """
+
+    def _combine_markdown_files(self, source_files: List[Path]) -> str:
+        """Combine multiple markdown files into one.
+
+        Args:
+            source_files: List of markdown files in order
+
+        Returns:
+            Combined markdown content
+
+        Raises:
+            RenderingError: If any file cannot be read or contains invalid content
+        """
+
+    def _embed_css(self, html_file: Path) -> None:
+        """Embed CSS styling directly into HTML file.
+
+        Reads ide_style.css and inserts it into the <head> section of the HTML.
+
+        Args:
+            html_file: Path to HTML file to modify
+        """
 ```
 
 ### slides_renderer.py
@@ -347,9 +411,9 @@ class SlidesRenderer:
 
     def _render_beamer_with_paths(self, source_file: Path, output_file: Path,
                                    manuscript_dir: Optional[Path], figures_dir: Optional[Path]) -> Path:
-        """Render beamer slides with enhanced error reporting.
+        """Render beamer slides with error reporting.
 
-        Enhanced error handling includes:
+        error handling includes:
         - LaTeX log file path and last 20 lines for context
         - Specific error type detection (missing \end, undefined commands, missing files)
         - Actionable suggestions for common LaTeX compilation issues
@@ -365,7 +429,7 @@ class SlidesRenderer:
             Path to generated PDF
 
         Raises:
-            RenderingError: With enhanced error context and suggestions
+            RenderingError: With error context and suggestions
         """
 ```
 
@@ -653,8 +717,7 @@ The `render_combined()` method executes this sequence:
 
 This ensures:
 - All citations are resolved correctly
-- Cross-references are complete
-- Table of contents is accurate
+- Cross-references are - Table of contents is accurate
 - Bibliography is properly formatted
 
 ### Troubleshooting Citations
@@ -758,7 +821,7 @@ Verifying 14 figure reference(s)...
 Found: 13/14 figures
 ```
 
-**Enhanced Path Resolution Features**:
+**Path Resolution Features**:
 - Unicode normalization for special characters
 - Multiple path format support
 - Graceful handling of missing figures

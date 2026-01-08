@@ -39,13 +39,13 @@ The `modules/` directory contains documentation for the advanced infrastructure 
 
 ## Related Documentation
 
-- **[`../reference/API_REFERENCE.md`](../reference/API_REFERENCE.md)** - Complete API documentation
+- **[`../reference/API_REFERENCE.md`](../reference/API_REFERENCE.md)** - API documentation
 - **[`../operational/BUILD_SYSTEM.md`](../operational/BUILD_SYSTEM.md)** - Build system integration
 - **[`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md)** - System architecture
 
 ## See Also
 
-- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - Complete documentation index
+- [`../DOCUMENTATION_INDEX.md`](../DOCUMENTATION_INDEX.md) - documentation index
 - [`../README.md`](../README.md) - Documentation hub overview
 
 

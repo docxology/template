@@ -293,29 +293,39 @@ bounds and observed performance.</figcaption>
 </figure>
 <p>The theoretical convergence rate for our quadratic problem
 satisfies:</p>
-<p><span class="math display">\[\frac{\|x_{k+1} - x^*\|^2}{\|x_k -
-x^*\|^2} \leq 1 - \frac{2\alpha(1 - \alpha)}{1} = 1 - 2\alpha(1 -
-\alpha)\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:convergence_bound}
+\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - \frac{2\alpha(1 -
+\alpha)}{1} = 1 - 2\alpha(1 - \alpha)
+\end{equation}\]</span></p>
 <p>For the optimal step size <span class="math inline">\(\alpha =
 0.5\)</span>, this bound becomes:</p>
-<p><span class="math display">\[\frac{\|x_{k+1} - x^*\|^2}{\|x_k -
-x^*\|^2} \leq 1 - 2(0.5)(1 - 0.5) = 0.5\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:optimal_step_convergence}
+\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - 2(0.5)(1 - 0.5) =
+0.5
+\end{equation}\]</span></p>
 <p>However, our empirical analysis uses more conservative step sizes
 (<span class="math inline">\(\alpha \leq 0.2\)</span>) to ensure
 stability.</p>
 <h3 id="error-bounds">Error Bounds</h3>
 <p>The error after <span class="math inline">\(k\)</span> iterations is
 bounded by:</p>
-<p><span class="math display">\[\|x_k - x^*\| \leq \left(\frac{\kappa -
-1}{\kappa + 1}\right)^k \|x_0 - x^*\|\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:error_bound}
+\|x_k - x^*\| \leq \left(\frac{\kappa - 1}{\kappa + 1}\right)^k \|x_0 -
+x^*\|
+\end{equation}\]</span></p>
 <p>where <span class="math inline">\(\kappa = 1\)</span> for our
 problem, giving linear convergence with rate approaching 1.</p>
 <h3 id="performance-metrics">Performance Metrics</h3>
 <p><strong>Iteration Complexity</strong>: The number of iterations
 required to achieve accuracy <span
 class="math inline">\(\epsilon\)</span> is:</p>
-<p><span class="math display">\[k \geq
-\frac{\log(\epsilon)}{\log(\rho)}\]</span></p>
+<p><span class="math display">\[\begin{equation}
+\label{eq:iteration_complexity}
+k \geq \frac{\log(\epsilon)}{\log(\rho)}
+\end{equation}\]</span></p>
 <p>where <span class="math inline">\(\rho = \sqrt{\frac{\kappa -
 1}{\kappa + 1}}\)</span> is the convergence factor .</p>
 <p>For our results, the convergence factors are: - <span
@@ -367,7 +377,7 @@ characteristics</li>
 <h3 id="algorithm-complexity-visualization">Algorithm Complexity
 Visualization</h3>
 <p>Figure <span class="math inline">\(\ref{fig:complexity}\)</span>
-provides a comprehensive visualization of the algorithm’s computational
+provides a visualization of the algorithm’s computational
 characteristics, including time and space complexity analysis across
 different problem scales.</p>
 <figure id="fig:complexity">

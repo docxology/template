@@ -25,7 +25,7 @@ prompt = composition.apply(context={
 
 ### Manuscript Review (`retry_prompts.json`)
 
-Comprehensive manuscript review with retry logic:
+manuscript review with retry logic:
 
 ```python
 from infrastructure.llm.prompts.compositions import load_retry_composition
@@ -80,7 +80,7 @@ Compositions are defined in JSON:
     ],
     "context_variables": ["manuscript", "focus_areas"],
     "metadata": {
-      "description": "Comprehensive manuscript review",
+      "description": "manuscript review",
       "version": "1.0"
     }
   }
@@ -184,6 +184,6 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete compositions documentation
+- [AGENTS.md](AGENTS.md) - compositions documentation
 - [../README.md](../README.md) - Prompts module overview
 - [../fragments/README.md](../fragments/README.md) - Fragment library

@@ -225,7 +225,7 @@ if validation_results['errors']:
 | **glossary_gen.py** | API documentation from source | `build_api_index()`, `generate_markdown_table()` | Automatic glossary generation |
 | **generate_glossary_cli.py** | CLI for glossary generation | `main()` | Pipeline integration script |
 
-## Comprehensive Figure Management
+## Figure Management
 
 ### Figure Registration and Numbering
 
@@ -336,7 +336,7 @@ mi.generate_table_of_figures(
 ### Manuscript Validation
 
 ```python
-# Comprehensive manuscript validation
+# manuscript validation
 validation = mi.validate_manuscript()
 
 print("Validation Results:")
@@ -441,7 +441,7 @@ python3 scripts/03_render_pdf.py --project project
 ### Figure Statistics and Analytics
 
 ```python
-# Collect comprehensive figure statistics
+# Collect figure statistics
 stats = mi.collect_figure_statistics()
 
 print("Figure Statistics:")
@@ -624,7 +624,7 @@ except Exception as e:
 
 ### API Documentation
 
-- **Complete Docstrings**: Ensure all public functions have docstrings
+- **Docstrings**: Ensure all public functions have docstrings
 - **Type Hints**: Use type annotations for better documentation
 - **Examples**: Include usage examples in docstrings
 - **Regular Updates**: Keep API documentation current with code changes
@@ -643,7 +643,7 @@ except Exception as e:
 - **Selective Updates**: Update only changed content
 - **Resource Monitoring**: Monitor memory and disk usage for large projects
 
-For detailed function signatures and complete API documentation, see [AGENTS.md](AGENTS.md).
+For detailed function signatures and API documentation, see [AGENTS.md](AGENTS.md).
 
 ## Key Classes
 

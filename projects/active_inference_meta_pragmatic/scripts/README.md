@@ -5,7 +5,7 @@ Thin orchestrators that coordinate Active Inference analysis workflows.
 ## Quick Start
 
 ```bash
-# Run complete analysis pipeline
+# Run analysis pipeline
 python3 scripts/analysis_pipeline.py
 
 # Generate quadrant matrix visualizations
@@ -20,7 +20,7 @@ ls -la ../output/figures/
 
 ## Key Features
 
-- **Complete analysis pipeline** (6-stage workflow)
+- **analysis pipeline** (6-stage workflow)
 - **Automated figure generation** (quadrant matrices, concept visualizations)
 - **Statistical analysis** (validation and verification)
 - **Manuscript integration** (figure registration and cross-referencing)
@@ -31,7 +31,7 @@ ls -la ../output/figures/
 ```bash
 python3 analysis_pipeline.py
 ```
-Executes complete 6-stage analysis workflow.
+Executes 6-stage analysis workflow.
 
 ### Generate Specific Visualizations
 ```bash
@@ -71,4 +71,4 @@ graph TD
 
 ## More Information
 
-See [AGENTS.md](AGENTS.md) for complete technical documentation.
+See [AGENTS.md](AGENTS.md) for technical documentation.

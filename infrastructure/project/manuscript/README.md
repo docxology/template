@@ -10,7 +10,7 @@ The manuscript utilities provide automated generation of API documentation and t
 
 - **API Glossary Generation**: Auto-generated technical appendices from source code
 - **Manuscript Integration**: Seamless integration into Section 98 of manuscripts
-- **AST-based Analysis**: Python source code parsing for comprehensive documentation
+- **AST-based Analysis**: Python source code parsing for documentation
 - **Markdown Formatting**: Research manuscript-compatible output
 
 ## Quick Start
@@ -163,5 +163,5 @@ graph TD
 
 ## See Also
 
-- [AGENTS.md](AGENTS.md) - Complete technical documentation
+- [AGENTS.md](AGENTS.md) - technical documentation
 - [../../../scripts/AGENTS.md](../../../scripts/AGENTS.md) - Build pipeline integration

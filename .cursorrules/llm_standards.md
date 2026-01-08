@@ -93,7 +93,7 @@ answer = client.query_short("What is machine learning?")
 response = client.query("Explain this concept...")
 
 # Long detailed response (> 4096 tokens)
-analysis = client.query_long("Provide comprehensive analysis...")
+analysis = client.query_long("Provide analysis...")
 
 # Structured JSON response
 result = client.query_structured(
@@ -156,7 +156,7 @@ OutputValidator.validate_long_response(response)   # > 500 tokens
 # Validate structure
 OutputValidator.validate_structure(data, schema)
 
-# Comprehensive validation
+# validation
 OutputValidator.validate_complete(response, mode="structured", schema=schema)
 ```
 
@@ -565,7 +565,7 @@ llm:
 
 The translation template generates:
 1. A 200-400 word technical abstract in English
-2. A complete translation in the target language
+2. A translation in the target language
 3. Both sections with proper headers
 
 ## Context Management
@@ -781,6 +781,6 @@ with patch("infrastructure.llm.LLMClient"):  # NEVER use mocks
 
 **Version**: 1.1.0  
 **Last Updated**: 2025-12-02  
-**Status**: Complete (includes translation feature)  
+**Status**: (includes translation feature)  
 **Maintainer**: Template Team
 

@@ -47,11 +47,17 @@ Figure \ref{fig:convergence_rate} provides a comparative analysis of convergence
 
 The theoretical convergence rate for our quadratic problem satisfies:
 
-$$\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - \frac{2\alpha(1 - \alpha)}{1} = 1 - 2\alpha(1 - \alpha)$$
+\begin{equation}
+\label{eq:convergence_bound}
+\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - \frac{2\alpha(1 - \alpha)}{1} = 1 - 2\alpha(1 - \alpha)
+\end{equation}
 
 For the optimal step size $\alpha = 0.5$, this bound becomes:
 
-$$\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - 2(0.5)(1 - 0.5) = 0.5$$
+\begin{equation}
+\label{eq:optimal_step_convergence}
+\frac{\|x_{k+1} - x^*\|^2}{\|x_k - x^*\|^2} \leq 1 - 2(0.5)(1 - 0.5) = 0.5
+\end{equation}
 
 However, our empirical analysis uses more conservative step sizes ($\alpha \leq 0.2$) to ensure stability.
 
@@ -59,7 +65,10 @@ However, our empirical analysis uses more conservative step sizes ($\alpha \leq 
 
 The error after $k$ iterations is bounded by:
 
-$$\|x_k - x^*\| \leq \left(\frac{\kappa - 1}{\kappa + 1}\right)^k \|x_0 - x^*\|$$
+\begin{equation}
+\label{eq:error_bound}
+\|x_k - x^*\| \leq \left(\frac{\kappa - 1}{\kappa + 1}\right)^k \|x_0 - x^*\|
+\end{equation}
 
 where $\kappa = 1$ for our problem, giving linear convergence with rate approaching 1.
 
@@ -67,7 +76,10 @@ where $\kappa = 1$ for our problem, giving linear convergence with rate approach
 
 **Iteration Complexity**: The number of iterations required to achieve accuracy $\epsilon$ is:
 
-$$k \geq \frac{\log(\epsilon)}{\log(\rho)}$$
+\begin{equation}
+\label{eq:iteration_complexity}
+k \geq \frac{\log(\epsilon)}{\log(\rho)}
+\end{equation}
 
 where $\rho = \sqrt{\frac{\kappa - 1}{\kappa + 1}}$ is the convergence factor \cite{polyak1964some}.
 
@@ -109,7 +121,7 @@ This demonstrates the algorithm's ability to solve simple quadratic optimization
 
 ### Algorithm Complexity Visualization
 
-Figure \ref{fig:complexity} provides a comprehensive visualization of the algorithm's computational characteristics, including time and space complexity analysis across different problem scales.
+Figure \ref{fig:complexity} provides a visualization of the algorithm's computational characteristics, including time and space complexity analysis across different problem scales.
 
 ![Algorithm complexity analysis showing computational requirements and scalability characteristics of the gradient descent implementation.](../output/figures/algorithm_complexity.png){#fig:complexity}
 

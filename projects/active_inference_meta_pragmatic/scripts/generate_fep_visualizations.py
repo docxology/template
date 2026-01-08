@@ -75,53 +75,53 @@ def create_system_boundary_diagram(viz_engine: VisualizationEngine,
     ax.add_patch(plt.Rectangle((1, 1), 10, 6, fill=True, alpha=0.1,
                              edgecolor='blue', linewidth=2, linestyle='--'))
     ax.text(6, 7.2, 'External Environment', ha='center', va='center',
-            fontsize=12, fontweight='bold')
+            fontsize=14, fontweight='bold')
 
     # Draw Markov blanket (system boundary)
     ax.add_patch(plt.Rectangle((3, 2.5), 6, 3, fill=True, alpha=0.2,
                              edgecolor='red', linewidth=3))
     ax.text(6, 4, 'Markov Blanket\n(System Boundary)', ha='center', va='center',
-            fontsize=11, fontweight='bold', color='red')
+            fontsize=13, fontweight='bold', color='red')
 
     # Draw internal states
     ax.add_patch(plt.Circle((6, 4), 0.8, fill=True, alpha=0.3, color='green'))
     ax.text(6, 4, 'Internal\nStates', ha='center', va='center',
-            fontsize=10, fontweight='bold')
+            fontsize=11, fontweight='bold')
 
     # Draw sensory states
     ax.add_patch(plt.Rectangle((2.5, 3.5), 1.5, 1, fill=True, alpha=0.4, color='orange'))
     ax.text(3.25, 4, 'Sensory\nStates', ha='center', va='center',
-            fontsize=9, fontweight='bold')
+            fontsize=11, fontweight='bold')
 
     # Draw active states
     ax.add_patch(plt.Rectangle((8.0, 3.5), 1.5, 1, fill=True, alpha=0.4, color='purple'))
     ax.text(8.75, 4, 'Active\nStates', ha='center', va='center',
-            fontsize=9, fontweight='bold')
+            fontsize=11, fontweight='bold')
 
     # Draw information flows
     # External to sensory
     ax.arrow(2, 4, 0.4, 0, head_width=0.1, head_length=0.2,
              fc='orange', ec='orange', alpha=0.7)
-    ax.text(2.2, 4.2, 'External\ninfluences', fontsize=8, color='orange')
+    ax.text(2.2, 4.2, 'External\ninfluences', fontsize=11, color='orange')
 
     # Sensory to internal
     ax.arrow(4, 4, 1.8, 0, head_width=0.1, head_length=0.2,
              fc='blue', ec='blue', alpha=0.7)
-    ax.text(5, 4.2, 'Sensory\ninput', fontsize=8, color='blue')
+    ax.text(5, 4.2, 'Sensory\ninput', fontsize=11, color='blue')
 
     # Internal to active
     ax.arrow(6.8, 4, 1.2, 0, head_width=0.1, head_length=0.2,
              fc='purple', ec='purple', alpha=0.7)
-    ax.text(7.5, 4.2, 'Action\nselection', fontsize=8, color='purple')
+    ax.text(7.5, 4.2, 'Action\nselection', fontsize=11, color='purple')
 
     # Active to external
     ax.arrow(9.5, 4, 0.5, 0, head_width=0.1, head_length=0.2,
              fc='red', ec='red', alpha=0.7)
-    ax.text(9.8, 4.2, 'External\nactions', fontsize=8, color='red')
+    ax.text(9.8, 4.2, 'External\nactions', fontsize=11, color='red')
 
     # Add FEP principle
     ax.text(6, 1.5, 'Free Energy Principle:\nSystems minimize variational free energy\nto maintain structural integrity',
-            ha='center', va='center', fontsize=10,
+            ha='center', va='center', fontsize=12,
             bbox=dict(boxstyle="round,pad=0.5", facecolor='lightyellow', alpha=0.5))
 
     plt.tight_layout()
@@ -169,7 +169,7 @@ def create_free_energy_dynamics(viz_engine: VisualizationEngine,
     final_fe = free_energy[-10:].mean()
     ax1.axhline(y=final_fe, color='red', linestyle='--', alpha=0.7)
     ax1.text(time_steps * 0.8, final_fe + 0.1, '.3f',
-            fontsize=10, color='red', fontweight='bold')
+            fontsize=12, color='red', fontweight='bold')
 
     # Bottom plot: Free energy components
     epistemic = 0.4 * free_energy * (0.8 + 0.4 * np.sin(t / 10))
@@ -238,7 +238,7 @@ def create_structure_preservation(viz_engine: VisualizationEngine,
     converged = np.std(fe_history[-10:]) < 0.01
     status_color = 'green' if converged else 'orange'
     axes[1].text(time_steps * 0.7, max(fe_history) * 0.8,
-                f'Converged: {converged}', fontsize=12, color=status_color,
+                f'Converged: {converged}', fontsize=13, color=status_color,
                 bbox=dict(boxstyle="round,pad=0.3", facecolor=status_color, alpha=0.2))
 
     # Plot structure preservation metric
@@ -285,7 +285,7 @@ def create_physics_cognition_bridge(viz_engine: VisualizationEngine,
     # Left side: Physics
     ax.add_patch(plt.Rectangle((1, 2), 4, 4, fill=True, alpha=0.2, color='blue'))
     ax.text(3, 5, 'PHYSICS\nDOMAIN', ha='center', va='center',
-            fontsize=14, fontweight='bold', color='blue')
+            fontsize=16, fontweight='bold', color='blue')
 
     physics_concepts = [
         'Thermodynamics',
@@ -296,12 +296,12 @@ def create_physics_cognition_bridge(viz_engine: VisualizationEngine,
     ]
 
     for i, concept in enumerate(physics_concepts):
-        ax.text(1.5, 3.5 - i*0.6, f'• {concept}', fontsize=10, color='blue')
+        ax.text(1.5, 3.5 - i*0.6, f'• {concept}', fontsize=12, color='blue')
 
     # Right side: Cognition
     ax.add_patch(plt.Rectangle((9, 2), 4, 4, fill=True, alpha=0.2, color='green'))
     ax.text(11, 5, 'COGNITION\nDOMAIN', ha='center', va='center',
-            fontsize=14, fontweight='bold', color='green')
+            fontsize=16, fontweight='bold', color='green')
 
     cognition_concepts = [
         'Perception',
@@ -312,12 +312,12 @@ def create_physics_cognition_bridge(viz_engine: VisualizationEngine,
     ]
 
     for i, concept in enumerate(cognition_concepts):
-        ax.text(9.5, 3.5 - i*0.6, f'• {concept}', fontsize=10, color='green')
+        ax.text(9.5, 3.5 - i*0.6, f'• {concept}', fontsize=12, color='green')
 
     # Center: FEP as bridge
     ax.add_patch(plt.Rectangle((6, 3), 2, 2, fill=True, alpha=0.3, color='red'))
     ax.text(7, 4, 'FREE ENERGY\nPRINCIPLE', ha='center', va='center',
-            fontsize=12, fontweight='bold', color='red')
+            fontsize=14, fontweight='bold', color='red')
 
     bridge_concepts = [
         'Unified formalism',
@@ -328,16 +328,16 @@ def create_physics_cognition_bridge(viz_engine: VisualizationEngine,
     ]
 
     for i, concept in enumerate(bridge_concepts):
-        ax.text(6.2, 3.5 - i*0.3, f'• {concept}', fontsize=9, color='red')
+        ax.text(6.2, 3.5 - i*0.3, f'• {concept}', fontsize=11, color='red')
 
     # Connecting arrows
     ax.arrow(5, 4, 0.8, 0, head_width=0.1, head_length=0.2,
              fc='purple', ec='purple', alpha=0.7)
-    ax.text(5.5, 4.2, 'Unifies', fontsize=10, color='purple')
+    ax.text(5.5, 4.2, 'Unifies', fontsize=12, color='purple')
 
     ax.arrow(8.2, 4, 0.8, 0, head_width=0.1, head_length=0.2,
              fc='purple', ec='purple', alpha=0.7)
-    ax.text(8.7, 4.2, 'Explains', fontsize=10, color='purple')
+    ax.text(8.7, 4.2, 'Explains', fontsize=12, color='purple')
 
     # Add explanatory text
     explanation = """
@@ -345,12 +345,12 @@ def create_physics_cognition_bridge(viz_engine: VisualizationEngine,
     Diverse phenomena - from thermodynamic systems to cognitive agents - can be understood as minimizing
     variational free energy to maintain structural integrity and adapt to their environments.
     """
-    ax.text(7, 1.5, explanation, ha='center', va='center', fontsize=10,
+    ax.text(7, 1.5, explanation, ha='center', va='center', fontsize=11,
             bbox=dict(boxstyle="round,pad=0.5", facecolor='lightyellow', alpha=0.3))
 
     # Add Active Inference connection
     ax.text(7, 1, 'Active Inference applies FEP to cognitive systems',
-            ha='center', va='center', fontsize=11, fontweight='bold',
+            ha='center', va='center', fontsize=13, fontweight='bold',
             bbox=dict(boxstyle="round,pad=0.3", facecolor='lightgreen', alpha=0.5))
 
     plt.tight_layout()

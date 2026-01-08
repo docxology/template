@@ -17,7 +17,7 @@ This is a research project template with a test-driven development workflow, aut
 ./run.sh --pipeline
 
 # Core pipeline only (6 stages: no LLM)
-python3 scripts/execute_pipeline.py --project <project_name> --core-only
+python3 scripts/execute_pipeline.py --project {project_name} --core-only
 
 # Resume from checkpoint
 ./run.sh --pipeline --resume
@@ -26,13 +26,13 @@ python3 scripts/execute_pipeline.py --project <project_name> --core-only
 ### Testing
 ```bash
 # Run all tests (infrastructure + project)
-python3 scripts/01_run_tests.py --project <project_name>
+python3 scripts/01_run_tests.py --project {project_name}
 
 # Infrastructure tests only (60% coverage minimum)
 uv run pytest tests/infrastructure/ --cov=infrastructure --cov-fail-under=60
 
 # Project tests only (90% coverage minimum)
-uv run pytest projects/<project_name>/tests/ --cov=projects/<project_name>/src --cov-fail-under=90
+uv run pytest projects/{project_name}/tests/ --cov=projects/{project_name}/src --cov-fail-under=90
 
 # Run specific test file
 uv run pytest tests/infrastructure/test_specific.py -v
@@ -48,13 +48,13 @@ uv run python scripts/manage_workspace.py status
 uv run python scripts/manage_workspace.py add <package> --project <name>
 
 # Validate markdown
-python3 -m infrastructure.validation.cli markdown projects/<project_name>/manuscript/
+python3 -m infrastructure.validation.cli markdown projects/{project_name}/manuscript/
 
 # Validate PDFs
-python3 -m infrastructure.validation.cli pdf output/<project_name>/pdf/
+python3 -m infrastructure.validation.cli pdf output/{project_name}/pdf/
 
 # Generate API documentation
-python3 -m infrastructure.documentation.generate_glossary_cli --project <project_name>
+python3 -m infrastructure.documentation.generate_glossary_cli --project {project_name}
 ```
 
 ### Multi-Project Operations
@@ -79,16 +79,16 @@ python3 -c "from infrastructure.project.discovery import discover_projects; from
 - `tests/` - Infrastructure test suite
 
 **Layer 2: Projects (Domain-Specific)**
-- `projects/<name>/src/` - Project-specific algorithms and code
-- `projects/<name>/tests/` - Project test suite
-- `projects/<name>/scripts/` - Analysis scripts (thin orchestrators)
-- `projects/<name>/manuscript/` - Markdown manuscript sections
-- `projects/<name>/output/` - Working outputs (disposable)
-- `output/<name>/` - Final deliverables
+- `projects/{name}/src/` - Project-specific algorithms and code
+- `projects/{name}/tests/` - Project test suite
+- `projects/{name}/scripts/` - Analysis scripts (thin orchestrators)
+- `projects/{name}/manuscript/` - Markdown manuscript sections
+- `projects/{name}/output/` - Working outputs (disposable)
+- `output/{name}/` - Final deliverables
 
 ### Thin Orchestrator Pattern
 
-**CRITICAL PRINCIPLE**: All business logic resides in either `infrastructure/` (generic) or `projects/<name>/src/` (project-specific). Scripts are lightweight coordinators that:
+**CRITICAL PRINCIPLE**: All business logic resides in either `infrastructure/` (generic) or `projects/{name}/src/` (project-specific). Scripts are lightweight coordinators that:
 
 1. Import methods from infrastructure or project modules
 2. Handle I/O, visualization, and orchestration
@@ -127,12 +127,12 @@ avg = calculate_average(data)  # Use tested method
 - **`projects/`** - Active projects (discovered and executed by infrastructure)
 - **`projects_archive/`** - Archived projects (preserved but not executed)
 
-To archive: `mv projects/<name>/ projects_archive/<name>/`
-To reactivate: `mv projects_archive/<name>/ projects/<name>/`
+To archive: `mv projects/{name}/ projects_archive/{name}/`
+To reactivate: `mv projects_archive/{name}/ projects/{name}/`
 
 ### Standard Project Layout
 ```
-projects/<project_name>/
+projects/{project_name}/
 ├── src/                    # Project-specific code (100% test coverage target)
 │   ├── __init__.py
 │   └── *.py               # Domain algorithms and logic
@@ -154,7 +154,7 @@ projects/<project_name>/
 ### Output Organization
 ```
 output/
-├── <project_name>/         # Project-specific outputs
+├── {project_name}/         # Project-specific outputs
 │   ├── pdf/               # Individual + combined PDFs
 │   ├── figures/           # Generated figures
 │   ├── data/              # Analysis data files
@@ -169,7 +169,7 @@ output/
 1. **Setup Environment** - Validate dependencies, discover projects (not shown in progress)
 2. **Infrastructure Tests** - Run infrastructure test suite (may be skipped, not shown in progress)
 3. **Run Tests** - Project test suite (90% coverage minimum)
-4. **Run Analysis** - Execute `projects/<name>/scripts/` to generate figures/data
+4. **Run Analysis** - Execute `projects/{name}/scripts/` to generate figures/data
 5. **Render PDF** - Convert markdown to professional PDFs
 6. **Validate Output** - Quality checks on PDFs and content
 7. **Copy Outputs** - Copy final deliverables to `output/<name>/`
@@ -182,12 +182,12 @@ output/
 ## Testing Requirements
 
 ### No Mocks Policy
-**ABSOLUTE REQUIREMENT**: Never use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use real data and real computations.
+**ABSOLUTE REQUIREMENT**: Never use `MagicMock`, `mocker.patch`, `unittest.mock`, or any mocking framework. All tests must use data and computations.
 
 **Patterns**:
 - HTTP testing: Use `pytest-httpserver` for local test servers
-- CLI testing: Execute real subprocess commands
-- PDF testing: Create real PDFs with `reportlab`
+- CLI testing: Execute subprocess commands
+- PDF testing: Create PDFs with `reportlab`
 - File operations: Use real temp files with `tmp_path` fixture
 
 ### Coverage Requirements
@@ -199,11 +199,11 @@ output/
 ### Running Tests
 ```bash
 # All tests
-python3 scripts/01_run_tests.py --project <project_name>
+python3 scripts/01_run_tests.py --project {project_name}
 
 # With coverage report
 uv run pytest tests/infrastructure/ --cov=infrastructure --cov-report=html
-uv run pytest projects/<name>/tests/ --cov=projects/<name>/src --cov-report=html
+uv run pytest projects/{name}/tests/ --cov=projects/{name}/src --cov-report=html
 
 # Specific test
 uv run pytest tests/infrastructure/test_specific.py::test_function -v
@@ -211,7 +211,7 @@ uv run pytest tests/infrastructure/test_specific.py::test_function -v
 
 ## Configuration
 
-### Project Metadata (`projects/<name>/manuscript/config.yaml`)
+### Project Metadata (`projects/{name}/manuscript/config.yaml`)
 ```yaml
 paper:
   title: "Your Research Title"
@@ -245,9 +245,9 @@ llm:
 
 ## Development Workflow
 
-### Adding New Features
-1. Write tests first (TDD) in `projects/<name>/tests/` or `tests/infrastructure/`
-2. Implement in `projects/<name>/src/` or `infrastructure/`
+### Adding Features
+1. Write tests first (TDD) in `projects/{name}/tests/` or `tests/infrastructure/`
+2. Implement in `projects/{name}/src/` or `infrastructure/`
 3. Ensure coverage requirements met
 4. Update documentation if needed
 5. Run full pipeline to validate
@@ -269,8 +269,8 @@ cp projects/code_project/manuscript/config.yaml projects/my_project/manuscript/
 ```
 
 ### Working with Scripts
-Scripts in `projects/<name>/scripts/` should:
-- Import from `projects/<name>/src/` for computation
+Scripts in `projects/{name}/scripts/` should:
+- Import from `projects/{name}/src/` for computation
 - Import from `infrastructure/` for utilities
 - Handle only I/O, visualization, and orchestration
 - Print output paths to stdout for manifest collection
@@ -279,10 +279,10 @@ Scripts in `projects/<name>/scripts/` should:
 
 ## Key Architectural Principles
 
-1. **Single Source of Truth**: Business logic lives only in `infrastructure/` or `projects/<name>/src/`
+1. **Single Source of Truth**: Business logic lives only in `infrastructure/` or `projects/{name}/src/`
 2. **Test-Driven Development**: 90%+ coverage enforced before PDF generation
 3. **Thin Orchestrator Pattern**: Scripts coordinate, modules implement
-4. **No Mocks**: All tests use real data and computations
+4. **No Mocks**: All tests use data and computations
 5. **Multi-Project Support**: One repository, multiple independent projects
 6. **Reproducibility**: Deterministic outputs with fixed seeds
 7. **Disposable Outputs**: Everything in `output/` is regeneratable
@@ -321,7 +321,7 @@ if __name__ == "__main__":
     main()
 ```
 
-### Adding a New Test
+### Adding a Test
 ```python
 #!/usr/bin/env python3
 """Test following no-mocks policy."""
@@ -331,11 +331,11 @@ from pathlib import Path
 from projects.my_project.src.analysis import run_analysis
 
 def test_analysis_produces_correct_output(tmp_path):
-    """Test with real data and real computation."""
-    # Use real data
+    """Test with data and computation."""
+    # Use data
     input_data = [1.0, 2.0, 3.0, 4.0, 5.0]
 
-    # Execute real computation
+    # Execute computation
     result = run_analysis(input_data)
 
     # Validate real output
@@ -349,7 +349,7 @@ def test_analysis_produces_correct_output(tmp_path):
 """New infrastructure module.
 
 All infrastructure modules must:
-1. Have comprehensive docstrings
+1. Have docstrings
 2. Include type hints on all public APIs
 3. Be generic and reusable across projects
 4. Have 60%+ test coverage
@@ -388,27 +388,27 @@ sudo tlmgr install multirow cleveref doi newunicodechar
 
 **Import Errors**: Ensure project structure correct
 ```bash
-python3 -c "import sys; sys.path.insert(0, 'projects/<name>/src'); import <module>"
+python3 -c "import sys; sys.path.insert(0, 'projects/{name}/src'); import {module}"
 ```
 
 **Markdown Validation Errors**: Check image paths and references
 ```bash
-python3 -m infrastructure.validation.cli markdown projects/<name>/manuscript/
+python3 -m infrastructure.validation.cli markdown projects/{name}/manuscript/
 ```
 
 ### Debug Mode
 ```bash
 export LOG_LEVEL=0  # Enable debug logging
-python3 scripts/03_render_pdf.py --project <name>
+python3 scripts/03_render_pdf.py --project {name}
 ```
 
 ## Documentation Resources
 
 - **README.md** - Project overview and quick start
-- **AGENTS.md** - Complete system reference (this complements CLAUDE.md)
+- **AGENTS.md** - system reference (this complements CLAUDE.md)
 - **docs/core/ARCHITECTURE.md** - Detailed architecture guide
 - **docs/core/WORKFLOW.md** - Development workflow details
-- **docs/core/HOW_TO_USE.md** - Complete usage guide (12 skill levels)
+- **docs/core/HOW_TO_USE.md** - usage guide (12 skill levels)
 - **docs/DOCUMENTATION_INDEX.md** - Index of all 89+ documentation files
 
 ## Important Notes
