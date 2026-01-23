@@ -9,8 +9,8 @@ Create generic, reusable infrastructure modules that provide domain-independent 
 This prompt enforces infrastructure module standards for reusable components:
 
 - [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
-- [`../../projects/project/docs/infrastructure_usage.md`](../../projects/project/docs/infrastructure_usage.md) - Infrastructure usage guide
-- [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - Infrastructure layer requirements
+- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Infrastructure layer architecture
+- [`../architecture/TWO_LAYER_ARCHITECTURE.md`](../architecture/TWO_LAYER_ARCHITECTURE.md) - Two-layer architecture guide
 
 ## Prompt Template
 
@@ -728,6 +728,6 @@ REUSABILITY SCOPE: All research projects needing data validation and quality met
 ## Related Documentation
 
 - [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
-- [`../../projects/project/docs/infrastructure_usage.md`](../../projects/project/docs/infrastructure_usage.md) - Infrastructure usage guide
-- [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - Infrastructure layer architecture
+- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Infrastructure layer architecture
+- [`../architecture/TWO_LAYER_ARCHITECTURE.md`](../architecture/TWO_LAYER_ARCHITECTURE.md) - Two-layer architecture guide
 ```

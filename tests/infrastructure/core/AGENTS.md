@@ -11,17 +11,26 @@ tests/infrastructure/core/
 ├── AGENTS.md                           # This technical documentation
 ├── __init__.py                         # Test package initialization
 ├── test_checkpoint.py                  # Checkpoint management tests
+├── test_cli.py                         # CLI interface tests
 ├── test_config_cli_coverage.py         # Configuration CLI coverage tests
 ├── test_config_loader.py               # Configuration loading tests
 ├── test_credentials.py                 # Credential handling tests
-├── test_environment.py                 # (Moved to integration tests)
+├── test_credentials_module.py          # Credential manager comprehensive tests
+├── test_environment.py                 # Environment validation tests
 ├── test_exceptions.py                  # Exception hierarchy tests
+├── test_file_inventory.py              # File inventory tests
 ├── test_file_operations.py             # File operation tests
 ├── test_logging_helpers.py             # Logging helper tests
 ├── test_logging_progress.py            # Progress logging tests
 ├── test_logging_utils.py               # Logging utility tests
+├── test_menu.py                        # Menu utilities tests
+├── test_multi_project.py               # Multi-project orchestration tests
 ├── test_performance.py                 # Performance monitoring tests
+├── test_pipeline.py                    # Pipeline execution tests
+├── test_pipeline_summary.py            # Pipeline summary tests
 ├── test_progress.py                    # Progress tracking tests
+├── test_project_discovery.py           # Project discovery tests
+├── test_project_logger.py              # Project logger tests
 ├── test_retry.py                       # Retry logic tests
 └── test_script_discovery.py            # Script discovery tests
 ```

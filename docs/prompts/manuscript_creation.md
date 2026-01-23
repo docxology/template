@@ -8,10 +8,10 @@ Create a, compliant research manuscript from scratch based on a research descrip
 
 This prompt leverages extensive project documentation to create manuscripts that follow professional academic standards:
 
-- [`../../projects/project/docs/manuscript_style_guide.md`](../../projects/project/docs/manuscript_style_guide.md) - Section numbering, cross-references, equations, figures
-- [`../../projects/project/docs/standards_compliance.md`](../../projects/project/docs/standards_compliance.md) - Manuscript formatting standards
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Research workflow integration
-- [`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md) - Manuscript style standards
+- [`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md) - Section numbering, cross-references, equations, figures
+- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Research workflow integration
+- [`../usage/MARKDOWN_TEMPLATE_GUIDE.md`](../usage/MARKDOWN_TEMPLATE_GUIDE.md) - Markdown authoring guide
 
 ## Prompt Template
 

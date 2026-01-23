@@ -8,9 +8,9 @@ Create test suites that validate code functionality using data only, ensuring fu
 
 This prompt enforces the strict no-mocks testing policy and leverages testing standards:
 
-- [`../../projects/project/docs/testing_expansion_plan.md`](../../projects/project/docs/testing_expansion_plan.md) - Testing expansion strategy
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing standards and no-mocks policy
-- [`../../projects/project/docs/standards_compliance.md`](../../projects/project/docs/standards_compliance.md) - Standards compliance matrix
+- [`../development/TESTING_GUIDE.md`](../development/TESTING_GUIDE.md) - Testing guide and expansion strategy
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow integration
 
 ## Prompt Template
 
@@ -410,7 +410,7 @@ LAYER: project
 
 ## Related Documentation
 
-- [`../../projects/project/docs/testing_expansion_plan.md`](../../projects/project/docs/testing_expansion_plan.md) - Testing expansion strategy
-- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - testing standards
-- [`../../projects/project/docs/standards_compliance.md`](../../projects/project/docs/standards_compliance.md) - Standards compliance matrix
+- [`../development/TESTING_GUIDE.md`](../development/TESTING_GUIDE.md) - Testing guide and expansion strategy
+- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing standards
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow integration
 ```

@@ -8,9 +8,8 @@ Add features to the Research Project Template while maintaining full architectur
 
 This prompt ensures features integrate properly with the existing system:
 
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - development workflow
-- [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - Architecture principles
-- [`../../docs/core/WORKFLOW.md`](../../docs/core/WORKFLOW.md) - Development workflow
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
+- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Architecture principles
 - [`../../.cursorrules/`](../../.cursorrules/) directory - All development standards
 
 ## Prompt Template
@@ -641,8 +640,7 @@ LAYER: infrastructure
 
 ## Related Documentation
 
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - development workflow
-- [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - Architecture principles
-- [`../../docs/core/WORKFLOW.md`](../../docs/core/WORKFLOW.md) - Development workflow
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
+- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Architecture principles
 - [`../../.cursorrules/`](../../.cursorrules/) - All development standards
 ```

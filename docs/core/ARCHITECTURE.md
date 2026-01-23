@@ -28,11 +28,11 @@ graph TB
     subgraph "Generic Project Repository"
         subgraph "Core Components"
             INFRA[Infrastructure<br/>infrastructure/]
-            PROJECT[Project Code<br/>project/src/]
-            TESTS[Tests<br/>tests/ & proje../../tests/]
-            SCRIPTS[Scripts<br/>scripts/ & project/scripts/]
+            PROJECT[Project Code<br/>projects/*/src/]
+            TESTS[Tests<br/>tests/ & projects/*/tests/]
+            SCRIPTS[Scripts<br/>scripts/ & projects/*/scripts/]
             MD[Documentation<br/>docs/]
-            MANUSCRIPT[Manuscript<br/>project/manuscript/]
+            MANUSCRIPT[Manuscript<br/>projects/*/manuscript/]
         end
 
         subgraph "Thin Orchestrator Pattern"

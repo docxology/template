@@ -9,8 +9,8 @@ Create technical documentation (AGENTS.md) and quick reference guides (README.md
 This prompt leverages the documentation standards to create professional documentation:
 
 - [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) - Documentation writing standards
-- [`../../docs/AGENTS.md`](../../docs/AGENTS.md) - Documentation organization guide
-- [`../../projects/project/docs/AGENTS.md`](../../projects/project/docs/AGENTS.md) - Project documentation example
+- [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
+- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Project documentation example
 
 ## Prompt Template
 
@@ -367,7 +367,7 @@ TARGET PATH: infrastructure/data_quality/
 ## Related Documentation
 
 - [`../../.cursorrules/documentation_standards.md`](../../.cursorrules/documentation_standards.md) - Documentation writing standards
-- [`../../docs/AGENTS.md`](../../docs/AGENTS.md) - Documentation organization guide
-- [`../../projects/project/docs/AGENTS.md`](../../projects/project/docs/AGENTS.md) - Project documentation example
-- [`../../docs/core/README.md`](../../docs/core/README.md) - README.md standards example
+- [`../AGENTS.md`](../AGENTS.md) - Documentation organization guide
+- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Project documentation example
+- [`../../README.md`](../../README.md) - README.md standards example
 ```

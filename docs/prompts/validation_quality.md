@@ -8,7 +8,7 @@ Perform validation and quality assurance on Research Project Template components
 
 This prompt leverages the validation infrastructure to ensure quality and compliance:
 
-- [`../../projects/project/docs/validation_guide.md`](../../projects/project/docs/validation_guide.md) - Validation procedures
+- [`../../infrastructure/validation/AGENTS.md`](../../infrastructure/validation/AGENTS.md) - Validation procedures
 - [`../../infrastructure/validation/`](../../infrastructure/validation/) modules - Validation implementation
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Quality standards
 
@@ -656,7 +656,7 @@ class ValidationReport:
 - [ ] No mocks policy maintained
 - [ ] data validation throughout
 
-### Validation Standards ([`../../projects/project/docs/validation_guide.md`](../../projects/project/docs/validation_guide.md))
+### Validation Standards ([`../../infrastructure/validation/AGENTS.md`](../../infrastructure/validation/AGENTS.md))
 - [ ] Input validation patterns implemented
 - [ ] Process validation procedures followed
 - [ ] Output quality assessment completed
@@ -687,7 +687,7 @@ QUALITY LEVEL: ```
 
 ## Related Documentation
 
-- [`../../projects/project/docs/validation_guide.md`](../../projects/project/docs/validation_guide.md) - validation procedures
+- [`../../infrastructure/validation/AGENTS.md`](../../infrastructure/validation/AGENTS.md) - Validation procedures
 - [`../../infrastructure/validation/`](../../infrastructure/validation/) - Validation implementation modules
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing and quality standards
 ```

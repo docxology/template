@@ -10,7 +10,7 @@ Conduct a assessment and review of all methods, tests, documentation, sections, 
 **Current Status**: ✅ All tests passing, 83.33% infrastructure coverage (exceeds 60% requirement), code_project coverage exceeds 90% requirement
 
 **Completed Actions**:
-- ✅ All project tests passing (code_project: 28/28, active_inference_meta_pragmatic: varies, ento_linguistics: 484 tests)
+- ✅ All project tests passing (code_project: 28/28, active_inference_meta_pragmatic: varies)
 - ✅ Infrastructure test coverage: 83.33% (exceeds 60% minimum by 39%)
 - ✅ Project test coverage: code_project 94.1% (exceeds 90% minimum)
 - ✅ No mock methods - all tests use data and computations
@@ -54,7 +54,7 @@ Conduct a assessment and review of all methods, tests, documentation, sections, 
 - `scripts/` - Orchestrator scripts and pipeline stages
 - `tests/` - Test suite architecture and coverage requirements
 - `projects/` - Multi-project management
-- `projects/{name}/` - research unit (e.g., code_project, active_inference_meta_pragmatic, ento_linguistics)
+- `projects/{name}/` - research unit (e.g., code_project, active_inference_meta_pragmatic)
 - `projects/{name}/src/` - Scientific algorithms
 - `projects/{name}/tests/` - Project validation
 - `projects/{name}/scripts/` - Analysis workflows

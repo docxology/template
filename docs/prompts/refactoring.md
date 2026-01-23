@@ -8,9 +8,8 @@ Refactor existing code following the clean break approach, ensuring improved mai
 
 This prompt enforces the clean break refactoring approach and leverages refactoring standards:
 
-- [`../../projects/project/docs/refactor_playbook.md`](../../projects/project/docs/refactor_playbook.md) - Refactoring procedures
-- [`../../projects/project/docs/refactor_hotspots.md`](../../projects/project/docs/refactor_hotspots.md) - Code quality analysis
-- [`../../.cursorrules/refactoring.md`](../../.cursorrules/refactoring.md) - Clean break refactoring standards
+- [`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md) - Code quality and style standards
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow and refactoring
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing during refactoring
 
 ## Prompt Template
@@ -542,7 +541,7 @@ class RefactoringCheckpoint:
 
 ## Standards Compliance Checklist
 
-### Refactoring Standards ([`../../.cursorrules/refactoring.md`](../../.cursorrules/refactoring.md))
+### Refactoring Standards ([`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md))
 - [ ] Clean break approach (no backward compatibility)
 - [ ] Modularization with single responsibility principle
 - [ ] Testing during refactoring (full coverage maintained)
@@ -579,8 +578,7 @@ REFACTORING GOAL: Separate concerns into validator, transformer, and orchestrato
 
 ## Related Documentation
 
-- [`../../projects/project/docs/refactor_playbook.md`](../../projects/project/docs/refactor_playbook.md) - refactoring procedures
-- [`../../projects/project/docs/refactor_hotspots.md`](../../projects/project/docs/refactor_hotspots.md) - Code quality analysis
-- [`../../.cursorrules/refactoring.md`](../../.cursorrules/refactoring.md) - Clean break refactoring standards
+- [`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md) - Code quality and style standards
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow and refactoring
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing during refactoring
 ```

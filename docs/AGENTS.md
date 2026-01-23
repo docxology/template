@@ -63,7 +63,7 @@ Documentation is organized into modular subdirectories by purpose and audience:
 | `reference/API_REFERENCE.md` | API documentation | Developers |
 | `reference/GLOSSARY.md` | Terms and definitions | All users |
 | `reference/QUICK_START_CHEATSHEET.md` | Essential commands reference | All users |
-| `reference/../reference/COMMON_WORKFLOWS.md` | Step-by-step workflow recipes | All users |
+| `reference/COMMON_WORKFLOWS.md` | Step-by-step workflow recipes | All users |
 | `reference/COPYPASTA.md` | Reusable documentation snippets | Documentation writers |
 
 ### Advanced Modules (`modules/`)

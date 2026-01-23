@@ -9,9 +9,9 @@ Develop standards-compliant code for the Research Project Template, ensuring ful
 This prompt leverages development standards to create production-ready code:
 
 - [`../../.cursorrules/`](../../.cursorrules/) directory - All development standards
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Development workflow
-- [`../../projects/project/docs/standards_compliance.md`](../../projects/project/docs/standards_compliance.md) - Standards compliance matrix
-- [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - Architecture principles
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
+- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
+- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Architecture principles
 
 ## Prompt Template
 
@@ -333,7 +333,7 @@ LAYER: project
 ## Related Documentation
 
 - [`../../.cursorrules/README.md`](../../.cursorrules/README.md) - development standards overview
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Development workflow guide
-- [`../../projects/project/docs/standards_compliance.md`](../../projects/project/docs/standards_compliance.md) - Standards compliance matrix
-- [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - Architecture principles
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow guide
+- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
+- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Architecture principles
 ```

@@ -85,9 +85,9 @@ Links to relevant docs
 - **Output:** manuscript structure with all sections
 
 **Documentation Leveraged:**
-- [`../../projects/project/docs/manuscript_style_guide.md`](../../projects/project/docs/manuscript_style_guide.md) - Section numbering, cross-references, equation formatting
-- [`../../projects/project/docs/standards_compliance.md`](../../projects/project/docs/standards_compliance.md) - Manuscript standards compliance
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Research workflow integration
+- [`../../.cursorrules/manuscript_style.md`](../../.cursorrules/manuscript_style.md) - Section numbering, cross-references, equation formatting
+- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing and standards compliance
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Research workflow integration
 
 **Key Requirements Enforced:**
 - Section numbering system (01-09, S01-S0N, 98-99)
@@ -112,8 +112,8 @@ Links to relevant docs
 
 **Documentation Leveraged:**
 - [`../../.cursorrules/`](../../.cursorrules/) directory - All development standards
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Development workflow
-- [`../../projects/project/docs/standards_compliance.md`](../../projects/project/docs/standards_compliance.md) - Standards compliance matrix
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
+- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
 
 **Key Requirements Enforced:**
 - Type hints on all public APIs (mypy compliant)
@@ -137,8 +137,8 @@ Links to relevant docs
 - **Output:** test suite with high coverage
 
 **Documentation Leveraged:**
-- [`../../projects/project/docs/testing_expansion_plan.md`](../../projects/project/docs/testing_expansion_plan.md) - Testing expansion strategy
 - [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Testing standards and no-mocks policy
+- [`../development/TESTING_GUIDE.md`](../development/TESTING_GUIDE.md) - Testing expansion strategy
 
 **Key Requirements Enforced:**
 - **No Mocks Policy:** data testing only (pytest-httpserver for HTTP)
@@ -161,8 +161,8 @@ Links to relevant docs
 - **Output:** Improved code with maintained functionality
 
 **Documentation Leveraged:**
-- [`../../projects/project/docs/refactor_playbook.md`](../../projects/project/docs/refactor_playbook.md) - Refactoring procedures
-- [`../../projects/project/docs/refactor_hotspots.md`](../../projects/project/docs/refactor_hotspots.md) - Code quality analysis
+- [`../../.cursorrules/code_style.md`](../../.cursorrules/code_style.md) - Code quality standards
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow and refactoring
 
 **Key Requirements Enforced:**
 - **Clean Break Approach:** No backward compatibility, full migration
@@ -185,9 +185,9 @@ Links to relevant docs
 - **Output:** feature implementation with all supporting elements
 
 **Documentation Leveraged:**
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - development workflow
-- [`../../docs/core/ARCHITECTURE.md`](../../docs/core/ARCHITECTURE.md) - Architecture principles
-- [`../../docs/core/WORKFLOW.md`](../../docs/core/WORKFLOW.md) - Development workflow
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow
+- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Architecture principles
+- [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Module development standards
 
 **Key Requirements Enforced:**
 - **Two-Layer Architecture:** Correct layer placement (infrastructure vs project)
@@ -235,7 +235,7 @@ Links to relevant docs
 
 **Documentation Leveraged:**
 - [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure development standards
-- [`../../projects/project/docs/infrastructure_usage.md`](../../projects/project/docs/infrastructure_usage.md) - Infrastructure usage guide
+- [`../core/ARCHITECTURE.md`](../core/ARCHITECTURE.md) - Infrastructure layer architecture
 
 **Key Requirements Enforced:**
 - **Generic Focus:** Reusable across research projects, domain-independent
@@ -258,7 +258,7 @@ Links to relevant docs
 - **Output:** validation and quality assessment
 
 **Documentation Leveraged:**
-- [`../../projects/project/docs/validation_guide.md`](../../projects/project/docs/validation_guide.md) - Validation procedures
+- [`../../infrastructure/validation/AGENTS.md`](../../infrastructure/validation/AGENTS.md) - Validation procedures
 - [`../../infrastructure/validation/`](../../infrastructure/validation/) modules - Validation implementation
 
 **Key Requirements Enforced:**
@@ -405,9 +405,9 @@ prompt_validation:
 - [`../../.cursorrules/infrastructure_modules.md`](../../.cursorrules/infrastructure_modules.md) - Infrastructure standards
 
 ### Project Documentation
-- [`../../projects/project/docs/AGENTS.md`](../../projects/project/docs/AGENTS.md) - Project documentation overview
-- [`../../projects/project/docs/development_workflow.md`](../../projects/project/docs/development_workflow.md) - Development workflow guide
-- [`../../projects/project/docs/standards_compliance.md`](../../projects/project/docs/standards_compliance.md) - Standards compliance matrix
+- [`../../projects/code_project/AGENTS.md`](../../projects/code_project/AGENTS.md) - Code project documentation
+- [`../core/WORKFLOW.md`](../core/WORKFLOW.md) - Development workflow guide
+- [`../../.cursorrules/testing_standards.md`](../../.cursorrules/testing_standards.md) - Standards compliance
 
 ---
 
